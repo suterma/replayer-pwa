@@ -1,0 +1,7 @@
+/* This file contains specific modifications for the replayer-pwa application
+ */
+
+/* text, and list item bullets close to the text */
+#content p {
+    text-align: left;
+}
