@@ -34,6 +34,15 @@
                     >RealFaviconGenerator</a
                 >Favicon Generator. For real. (free to use)
             </li>
+            <li>
+                <a
+                    href="https://github.com/gildas-lormeau/zip.js"
+                    target="_blank"
+                    >zip.js</a
+                >zip.js is an open-source library for zipping and unzipping
+                files in the browser. (BSD-3-Clause license) //TODO later decide
+                on the JSZip library?
+            </li>
         </ul>
 
         <h1>License</h1>

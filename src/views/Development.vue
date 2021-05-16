@@ -2,12 +2,9 @@
     <div class="development">
         <img alt="Vue logo" src="../assets/logo.png" />
 <p>
+     <RezLoader />
         //TODO's
         <ul>
-            <li>LOAD a REZ file and show the content/file names                
-            </li>
-            <li>Play the first mp3 file automatically                
-            </li>
             <li>Parse the XML compilation and show the content
             </li>
             <li>Select a UI framework
@@ -18,10 +15,13 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { Options, Vue } from "vue-class-component";
+import RezLoader from "@/components/RezLoader.vue"; // @ is an alias to /src
 
 @Options({
-    components: {},
+  components: {
+    RezLoader,
+  },
 })
-export default class Development extends Vue {}
+export default class Home extends Vue {}
 </script>
