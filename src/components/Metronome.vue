@@ -13,21 +13,26 @@
     {{ sequnceTapCount }}{{ click }} BPM:{{ beatsPerMinute }} Running:
     {{ isRunning }}
     Sound:
-    <audio src="../../audio/drumsticks.wav" id="soundelement" controls></audio>
+    <!-- The audio element is not shown. All relevant controls are provided as separate elements -->
+    <audio src="../../audio/drumsticks.wav" id="soundelement"></audio>
 
     <input
         type="range"
         id="volume"
         min="0"
         max="2"
-        @change="fade"
         v-model="volume"
         step="0.01"
     />Volume: {{ volume }}
-
+    <h1>Credits</h1>
     <p>
-        Taken from https://freesound.org/people/PrimeJunt/sounds/135627/# and
-        minified
+        <a href="https://freesound.org/people/PrimeJunt/sounds/135627/#"
+            >Drum stick sample</a
+        >
+        (c) by Prime Junt, minified. Licensed under
+        <a href="https://creativecommons.org/licenses/by/3.0/"
+            >Creative Commons Attribution 3.0 Unported (CC BY 3.0)</a
+        >
     </p>
 </template>
 
@@ -57,6 +62,14 @@ export default defineComponent({
 
             //audioContext: new AudioContext()
         };
+    },
+    watch: {
+        /** Watches for changes on the volume and immediately applies them
+         * @remarks using the change event on the input control does only trigger the function call upon mouse up
+         */
+        volume(newVal, oldVal) {
+            gainNode.gain.value = newVal;
+        },
     },
     methods: {
         tap(event: Event): void {
@@ -133,10 +146,10 @@ export default defineComponent({
                 this.click = false;
             });
         },
-        fade(event: Event): void {
-            console.debug('fade');
-            gainNode.gain.value = this.volume;
-        },
+        // fade(event: Event): void {
+        //     console.debug('fade');
+        //     gainNode.gain.value = this.volume;
+        // },
     },
     created() {
         console.log('Metronome::created');
