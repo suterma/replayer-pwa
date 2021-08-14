@@ -2,9 +2,6 @@
     <div class="development">
         <img alt="Vue logo" src="../assets/logo.png" />
 <p>
-  //Metronome
-  <Metronome/>
-
      <RezLoader />
         //TODO's
         <ul>
@@ -20,12 +17,10 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import RezLoader from "@/components/RezLoader.vue"; // @ is an alias to /src
-import Metronome from "@/components/Metronome.vue"; // @ is an alias to /src
 
 @Options({
   components: {
-    RezLoader,
-    Metronome
+    RezLoader
   },
 })
 export default class Home extends Vue {}
