@@ -14,7 +14,12 @@
             @change="previewFiles"
         />
 
-        <h2>2) See the list of included MP3 files //TODO</h2>
+        <h2>2) See the list of included MP3 files (loaded Tracks)</h2>
+        <ul>
+            <li v-for="track in tracks" :key="track">
+                {{ track }}
+            </li>
+        </ul>
 
         <h2>3) The first mp3 will play now</h2>
 
@@ -34,6 +39,7 @@ import { Options, Vue } from 'vue-class-component';
 import JSZip from 'jszip';
 import AudioElement from '@/components/AudioElement.vue';
 import { ref, watch } from 'vue';
+import store from '@/store';
 
 export default {
     components: { AudioElement },
@@ -67,10 +73,11 @@ export default {
                             // 2) print entries
                             console.log('relativePath: ' + relativePath);
                             console.log('un-ZIP content: ' + zipEntry.name);
+                            store.commit('addTrack', zipEntry.name);
                             zipEntry
                                 .async('nodebuffer')
                                 .then(function (content): void {
-                                    console.log('content', content);
+                                    //console.debug('content', content);
 
                                     //TODO later do this via a property/separate component
                                     //https://stackoverflow.com/questions/21737224/using-local-file-as-audio-src
@@ -101,6 +108,11 @@ export default {
                 .then(function () {
                     console.debug('Loading selected REZ file done.');
                 });
+        },
+    },
+    computed: {
+        tracks(): Array<string> {
+            return store.getters.tracks;
         },
     },
 };
