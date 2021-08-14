@@ -44,14 +44,14 @@ import store from '@/store';
 export default {
     components: { AudioElement },
     props: {
-        selectedFileUrl: String,
+        //selectedFileUrl: String,
     },
 
     setup() {
         /** The URL of the selected file
          * @remarks For a REZ source, this is an Object URL from a file blob in the zip file.
          */
-        const selectedFileUrl = ref('test');
+        //const selectedFileUrl = ref('test');
         return {};
     },
     methods: {
