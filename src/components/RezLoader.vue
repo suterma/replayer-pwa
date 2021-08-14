@@ -4,7 +4,7 @@
 
         <p>This component loads a .REZ Compilaton into the local storage</p>
 
-        <h2>1) Select a REZ or ZIP file (will omit metadata)</h2>
+        <h2>1) Select a REZ or ZIP file (will currently omit metadata)</h2>
 
         <!-- REZ files are ZIP-Files, with just the ending being .REZ -->
         <input
@@ -18,9 +18,9 @@
 
         <h2>3) The first mp3 will play now</h2>
 
-        <audio id="audioelement" controls autoplay></audio>
+        <!-- <audio id="audioelement" controls autoplay></audio>
         <div>Selected File URL: {{ sf }}</div>
-        ----
+        ---- -->
         <AudioElement title="TestTitle" artist="TestArtist" album="TestAlbum" />
         <p>
             //TODO later, just display and play the audio selected from the list
@@ -53,11 +53,10 @@ export default {
          * @remarks Displays the contained media files and allows the user to select one for playback
          */
         async previewFiles(event: any) {
-            //this.selectedFileUrl = 'previewing...;';
-            console.debug('Loading selected REZ file...');
-            //TODO probably later use async/await as in the example from zip.js
-            console.log(event.target.files);
-            //const fileInput = document.getElementById('file-input');
+            console.debug(
+                'Loading selected REZ file from selection: ',
+                event.target.files
+            );
             //TODO Check that there is actually a REZ file selected, probably throw when more than 1
             var selectedFile = event.target.files[0];
 
@@ -66,6 +65,7 @@ export default {
                     function (zip) {
                         zip.forEach(function (relativePath, zipEntry) {
                             // 2) print entries
+                            console.log('relativePath: ' + relativePath);
                             console.log('un-ZIP content: ' + zipEntry.name);
                             zipEntry
                                 .async('nodebuffer')
