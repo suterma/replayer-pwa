@@ -19,19 +19,17 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { defineComponent } from 'vue';
 import RezLoader from '@/components/RezLoader.vue'; // @ is an alias to /src
 import store from '@/store';
 
-@Options({
+export default defineComponent({
     components: {
         RezLoader,
     },
-})
-export default class Home extends Vue {
     //TODO currently not used here, tracks are shown in the loader only, currently
     // tracks(): Array<string> {
     //     return store.getters.tracks;
     // }
-}
+});
 </script>
