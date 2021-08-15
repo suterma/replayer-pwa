@@ -1,12 +1,9 @@
 <template>
     <div class="development">
-        <img alt="Vue logo" src="../assets/logo.png" />
-
         <RezLoader />
 
         //TODO's
         <ul>
-            <li>Add a spinner while loading the REZ file</li>
             <li>
                 Use a proper vuex store, with proper types for compilations. See
                 https://next.vuex.vuejs.org/guide/typescript-support.html

@@ -2,7 +2,7 @@
     <div>
         <h1>REZ loader</h1>
 
-        <p>This component loads a .REZ Compilaton into the local storage</p>
+        <p>This component loads a .REZ Compilaton into memory</p>
 
         <h2>1) Select a REZ or ZIP file (will currently omit metadata)</h2>
 
@@ -13,6 +13,8 @@
             accept=".rez,.zip"
             @change="previewFiles"
         />
+
+        Progress: {{ progressMessage }}
 
         <h2>2) See the list of included MP3 files (loaded Tracks)</h2>
         <ul>
@@ -45,40 +47,42 @@ export default {
     components: { AudioElement },
     props: {
         //selectedFileUrl: String,
-    },
-
-    setup() {
-        /** The URL of the selected file
-         * @remarks For a REZ source, this is an Object URL from a file blob in the zip file.
-         */
-        //const selectedFileUrl = ref('test');
-        return {};
+        //statusMessage: String,
     },
     methods: {
         /** Handles the selection of a REZ file
          * @remarks Displays the contained media files and allows the user to select one for playback
          */
         async previewFiles(event: any) {
-            console.debug(
-                'Loading selected REZ file from selection: ',
-                event.target.files
+            store.commit(
+                'setProgressMessage',
+                'Loading selected file from selection'
             );
             //TODO Check that there is actually a REZ file selected, probably throw when more than 1
             var selectedFile = event.target.files[0];
+            store.commit(
+                'setProgressMessage',
+                'Loading ' +
+                    selectedFile.name +
+                    ' (' +
+                    selectedFile.size / 1000000 +
+                    'MB)'
+            );
 
             JSZip.loadAsync(selectedFile) // 1) read the Blob
                 .then(
                     function (zip) {
                         zip.forEach(function (relativePath, zipEntry) {
                             // 2) print entries
-                            console.log('relativePath: ' + relativePath);
-                            console.log('un-ZIP content: ' + zipEntry.name);
+                            store.commit(
+                                'setProgressMessage',
+                                'Processing content: ' + zipEntry.name
+                            );
                             store.commit('addTrack', zipEntry.name);
+
                             zipEntry
                                 .async('nodebuffer')
                                 .then(function (content): void {
-                                    //console.debug('content', content);
-
                                     //TODO later do this via a property/separate component
                                     //https://stackoverflow.com/questions/21737224/using-local-file-as-audio-src
                                     const blob = new Blob([content], {
@@ -92,7 +96,10 @@ export default {
                                     audio.src = fileURL;
                                     audio.play();
 
-                                    //this.selectedFileUrl = fileURL;
+                                    store.commit(
+                                        'setProgressMessage',
+                                        'Ready to play fileURL: ' + fileURL
+                                    );
                                 });
                         });
                     },
@@ -106,13 +113,19 @@ export default {
                     }
                 )
                 .then(function () {
-                    console.debug('Loading selected REZ file done.');
+                    store.commit(
+                        'setProgressMessage',
+                        'Loading selected REZ file done.'
+                    );
                 });
         },
     },
     computed: {
         tracks(): Array<string> {
             return store.getters.tracks;
+        },
+        progressMessage(): string {
+            return store.getters.progressMessage;
         },
     },
 };
