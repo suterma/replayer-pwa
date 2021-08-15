@@ -1,7 +1,9 @@
 <template>
     <div class="home">
         <img alt="Vue logo" src="../assets/logo.png" />
-        <HelloWorld msg="Welcome the Replayer PWA (Vue.js + TypeScript) App" />
+        <HelloWorld
+            msg="Welcome to the Replayer PWA (Vue.js + TypeScript) App"
+        />
     </div>
 </template>
 
