@@ -8,16 +8,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-@Options({
-    props: {
-        title: String,
-        artist: String,
-        album: String,
+export default defineComponent({
+    data() {
+        return {
+            title: '',
+            artist: '',
+            album: '',
+        };
     },
-})
-export default class AudioElement extends Vue {
-    title!: string;
-    artist!: string;
-    album!: string;
-}
+});
 </script>

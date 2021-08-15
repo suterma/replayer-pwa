@@ -40,7 +40,6 @@
 import { defineComponent } from 'vue';
 import JSZip from 'jszip';
 import AudioElement from '@/components/AudioElement.vue';
-import { ref, watch, defineComponent } from 'vue';
 import store from '@/store';
 
 export default defineComponent({

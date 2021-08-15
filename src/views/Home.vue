@@ -8,13 +8,12 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { defineComponent } from 'vue';
 import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
 
-@Options({
+export default defineComponent({
     components: {
         HelloWorld,
     },
-})
-export default class Home extends Vue {}
+});
 </script>
