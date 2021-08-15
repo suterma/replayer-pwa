@@ -37,13 +37,13 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { defineComponent } from 'vue';
 import JSZip from 'jszip';
 import AudioElement from '@/components/AudioElement.vue';
-import { ref, watch } from 'vue';
+import { ref, watch, defineComponent } from 'vue';
 import store from '@/store';
 
-export default {
+export default defineComponent({
     components: { AudioElement },
     props: {
         //selectedFileUrl: String,
@@ -128,5 +128,5 @@ export default {
             return store.getters.progressMessage;
         },
     },
-};
+});
 </script>
