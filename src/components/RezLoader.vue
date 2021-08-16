@@ -40,7 +40,8 @@
 import { defineComponent } from 'vue';
 import JSZip from 'jszip';
 import AudioElement from '@/components/AudioElement.vue';
-import { MutationTypes } from '../store/mutation-types'
+import { MutationTypes } from '../store/mutation-types';
+import { Store } from '@/store/store';
 
 export default defineComponent({
     name: 'RezLoader',
@@ -54,10 +55,15 @@ export default defineComponent({
          * @remarks Displays the contained media files and allows the user to select one for playback
          */
         async previewFiles(event: any) {
-            this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE     ,           'Loading selected file from selection'            );
+            this.$store.commit(
+                MutationTypes.SET_PROGRESS_MESSAGE,
+                'Loading selected file from selection'
+            );
             //TODO Check that there is actually a REZ file selected, probably throw when more than 1
             var selectedFile = event.target.files[0];
-            this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE     ,                   'Loading ' +
+            this.$store.commit(
+                MutationTypes.SET_PROGRESS_MESSAGE,
+                'Loading ' +
                     selectedFile.name +
                     ' (' +
                     selectedFile.size / 1000000 +
@@ -66,35 +72,45 @@ export default defineComponent({
 
             JSZip.loadAsync(selectedFile) // 1) read the Blob
                 .then(
-                    function (zip) {
-                        zip.forEach(function (relativePath, zipEntry) {
-                            // 2) print entries
-                            this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE     ,        
-                                'Processing content: ' + zipEntry.name
-                            );
-                            this.$store.commit(MutationTypes.ADD_TRACK     ,        zipEntry.name);
+                    (zip: JSZip) => {
+                        zip.forEach(
+                            (
+                                relativePath: string,
+                                zipEntry: JSZip.JSZipObject
+                            ) => {
+                                // 2) print entries
+                                this.$store.commit(
+                                    MutationTypes.SET_PROGRESS_MESSAGE,
+                                    'Processing content: ' + zipEntry.name
+                                );
+                                this.$store.commit(
+                                    MutationTypes.ADD_TRACK,
+                                    zipEntry.name
+                                );
 
-                            zipEntry
-                                .async('nodebuffer')
-                                .then(function (content): void {
-                                    //TODO later do this via a property/separate component
-                                    //https://stackoverflow.com/questions/21737224/using-local-file-as-audio-src
-                                    const blob = new Blob([content], {
-                                        type: 'audio/mp3',
+                                zipEntry
+                                    .async('nodebuffer')
+                                    .then(function (content: Buffer): void {
+                                        //TODO later do this via a property/separate component
+                                        //https://stackoverflow.com/questions/21737224/using-local-file-as-audio-src
+                                        const blob = new Blob([content], {
+                                            type: 'audio/mp3',
+                                        });
+                                        var fileURL = URL.createObjectURL(blob);
+                                        console.debug('fileURL', fileURL);
+                                        var audio = document.getElementById(
+                                            'audioelement'
+                                        ) as HTMLAudioElement;
+                                        audio.src = fileURL;
+                                        audio.play();
+
+                                        // this.$store.commit(
+                                        //     MutationTypes.SET_PROGRESS_MESSAGE,
+                                        //     'Ready to play fileURL: ' + fileURL
+                                        // );
                                     });
-                                    var fileURL = URL.createObjectURL(blob);
-                                    console.debug('fileURL', fileURL);
-                                    var audio = document.getElementById(
-                                        'audioelement'
-                                    ) as HTMLAudioElement;
-                                    audio.src = fileURL;
-                                    audio.play();
-
-                                    this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE     ,        
-                                        'Ready to play fileURL: ' + fileURL
-                                    );
-                                });
-                        });
+                            }
+                        );
                     },
                     function (e) {
                         console.error(
@@ -105,8 +121,9 @@ export default defineComponent({
                         );
                     }
                 )
-                .then(function () {
-                    this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE     ,        
+                .then(() => {
+                    this.$store.commit(
+                        MutationTypes.SET_PROGRESS_MESSAGE,
                         'Loading selected REZ file done.'
                     );
                 });
