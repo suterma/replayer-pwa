@@ -21,15 +21,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import RezLoader from '@/components/RezLoader.vue'; // @ is an alias to /src
-import store from '@/store';
 
 export default defineComponent({
     components: {
         RezLoader,
     },
-    //TODO currently not used here, tracks are shown in the loader only, currently
-    // tracks(): Array<string> {
-    //     return store.getters.tracks;
-    // }
 });
 </script>

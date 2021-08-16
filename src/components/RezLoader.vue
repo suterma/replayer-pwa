@@ -40,9 +40,10 @@
 import { defineComponent } from 'vue';
 import JSZip from 'jszip';
 import AudioElement from '@/components/AudioElement.vue';
-import store from '@/store';
+import { MutationTypes } from '../store/mutation-types'
 
 export default defineComponent({
+    name: 'RezLoader',
     components: { AudioElement },
     props: {
         //selectedFileUrl: String,
@@ -53,15 +54,10 @@ export default defineComponent({
          * @remarks Displays the contained media files and allows the user to select one for playback
          */
         async previewFiles(event: any) {
-            store.commit(
-                'setProgressMessage',
-                'Loading selected file from selection'
-            );
+            this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE     ,           'Loading selected file from selection'            );
             //TODO Check that there is actually a REZ file selected, probably throw when more than 1
             var selectedFile = event.target.files[0];
-            store.commit(
-                'setProgressMessage',
-                'Loading ' +
+            this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE     ,                   'Loading ' +
                     selectedFile.name +
                     ' (' +
                     selectedFile.size / 1000000 +
@@ -73,11 +69,10 @@ export default defineComponent({
                     function (zip) {
                         zip.forEach(function (relativePath, zipEntry) {
                             // 2) print entries
-                            store.commit(
-                                'setProgressMessage',
+                            this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE     ,        
                                 'Processing content: ' + zipEntry.name
                             );
-                            store.commit('addTrack', zipEntry.name);
+                            this.$store.commit(MutationTypes.ADD_TRACK     ,        zipEntry.name);
 
                             zipEntry
                                 .async('nodebuffer')
@@ -95,8 +90,7 @@ export default defineComponent({
                                     audio.src = fileURL;
                                     audio.play();
 
-                                    store.commit(
-                                        'setProgressMessage',
+                                    this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE     ,        
                                         'Ready to play fileURL: ' + fileURL
                                     );
                                 });
@@ -112,19 +106,20 @@ export default defineComponent({
                     }
                 )
                 .then(function () {
-                    store.commit(
-                        'setProgressMessage',
+                    this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE     ,        
                         'Loading selected REZ file done.'
                     );
                 });
         },
     },
+    //TODO SEE Options API in https://dev.to/3vilarthas/vuex-typescript-m4j for better typing
     computed: {
+        //TODO see why this types are not available: https://github.com/andrewvasilchuk/vuex-typescript/blob/master/src/components/OptionsAPIComponent.vue
         tracks(): Array<string> {
-            return store.getters.tracks;
+            return this.$store.getters.tracks;
         },
         progressMessage(): string {
-            return store.getters.progressMessage;
+            return this.$store.getters.progressMessage;
         },
     },
 });
