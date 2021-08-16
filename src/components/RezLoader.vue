@@ -17,22 +17,17 @@
         Progress: {{ progressMessage }}
 
         <h2>2) See the list of included MP3 files (loaded Tracks)</h2>
+        <span v-for="track in tracks" :key="track"
+            >&nbsp; {{ track }}&nbsp;
+        </span>
+
+        <h2>3) Play an arbitrary track</h2>
+
         <ul>
-            <li v-for="track in tracks" :key="track">
-                {{ track }}
+            <li v-for="fileUrl in fileUrls" :key="fileUrl">
+                <AudioElement :title="fileUrl" :src="fileUrl"></AudioElement>
             </li>
         </ul>
-
-        <h2>3) The first mp3 will play now</h2>
-
-        <!-- <audio id="audioelement" controls autoplay></audio>
-        <div>Selected File URL: {{ sf }}</div>
-        ---- -->
-        <AudioElement title="TestTitle" artist="TestArtist" album="TestAlbum" />
-        <p>
-            //TODO later, just display and play the audio selected from the list
-            above
-        </p>
     </div>
 </template>
 
@@ -41,7 +36,6 @@ import { defineComponent } from 'vue';
 import JSZip from 'jszip';
 import AudioElement from '@/components/AudioElement.vue';
 import { MutationTypes } from '../store/mutation-types';
-import { Store } from '@/store/store';
 
 export default defineComponent({
     name: 'RezLoader',
@@ -90,7 +84,7 @@ export default defineComponent({
 
                                 zipEntry
                                     .async('nodebuffer')
-                                    .then(function (content: Buffer): void {
+                                    .then((content: Buffer): void => {
                                         //TODO later do this via a property/separate component
                                         //https://stackoverflow.com/questions/21737224/using-local-file-as-audio-src
                                         const blob = new Blob([content], {
@@ -98,16 +92,20 @@ export default defineComponent({
                                         });
                                         var fileURL = URL.createObjectURL(blob);
                                         console.debug('fileURL', fileURL);
-                                        var audio = document.getElementById(
-                                            'audioelement'
-                                        ) as HTMLAudioElement;
-                                        audio.src = fileURL;
-                                        audio.play();
+                                        // var audio = document.getElementById(
+                                        //     'audioelement'
+                                        // ) as HTMLAudioElement;
+                                        // audio.src = fileURL;
+                                        // audio.play();
 
-                                        // this.$store.commit(
-                                        //     MutationTypes.SET_PROGRESS_MESSAGE,
-                                        //     'Ready to play fileURL: ' + fileURL
-                                        // );
+                                        this.$store.commit(
+                                            MutationTypes.SET_PROGRESS_MESSAGE,
+                                            'Ready to play fileURL: ' + fileURL
+                                        );
+                                        this.$store.commit(
+                                            MutationTypes.ADD_FILE_URL,
+                                            fileURL
+                                        );
                                     });
                             }
                         );
@@ -129,14 +127,15 @@ export default defineComponent({
                 });
         },
     },
-    //TODO SEE Options API in https://dev.to/3vilarthas/vuex-typescript-m4j for better typing
     computed: {
-        //TODO see why this types are not available: https://github.com/andrewvasilchuk/vuex-typescript/blob/master/src/components/OptionsAPIComponent.vue
         tracks(): Array<string> {
             return this.$store.getters.tracks;
         },
         progressMessage(): string {
             return this.$store.getters.progressMessage;
+        },
+        fileUrls(): Array<string> {
+            return this.$store.getters.fileUrls;
         },
     },
 });

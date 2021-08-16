@@ -1,7 +1,7 @@
 <template>
     <div>
         {{ title }} by {{ artist }} on {{ album }}
-        <audio id="audioelement" controls autoplay></audio>
+        <audio :id="'audioelement' + src" :src="src" controls></audio>
     </div>
 </template>
 
@@ -9,12 +9,11 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-    data() {
-        return {
-            title: '',
-            artist: '',
-            album: '',
-        };
+    props: {
+        title: String,
+        artist: String,
+        album: String,
+        src: String,
     },
 });
 </script>

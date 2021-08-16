@@ -1,7 +1,7 @@
 <template>
     <div class="development">
         <RezLoader />
-
+        <hr />
         //TODO's
         <ul>
             <li>
