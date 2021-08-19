@@ -51,7 +51,7 @@ export default defineComponent({
         async previewFiles(event: any) {
             this.$store.commit(
                 MutationTypes.SET_PROGRESS_MESSAGE,
-                'Loading selected file from selection'
+                'Loading selected file...'
             );
             //TODO Check that there is actually a REZ file selected, probably throw when more than 1
             var selectedFile = event.target.files[0];
@@ -91,7 +91,7 @@ export default defineComponent({
                                             type: 'audio/mp3',
                                         });
                                         var fileURL = URL.createObjectURL(blob);
-                                        console.debug('fileURL', fileURL);
+                                        //console.debug('fileURL', fileURL);
                                         // var audio = document.getElementById(
                                         //     'audioelement'
                                         // ) as HTMLAudioElement;

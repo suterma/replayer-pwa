@@ -9,8 +9,9 @@ export type Mutations<S = State> = {
 };
 
 export const mutations: MutationTree<State> & Mutations = {
-    [MutationTypes.SET_PROGRESS_MESSAGE](state, payload: string) {
-        state.progressMessage = payload;
+    [MutationTypes.SET_PROGRESS_MESSAGE](state, message: string) {
+        state.progressMessage = message;
+        console.log(message);
     },
     [MutationTypes.ADD_TRACK](state, payload: string) {
         state.compilation.push(payload);
