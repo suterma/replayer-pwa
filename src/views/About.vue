@@ -11,8 +11,12 @@
         </p>
         <p>
             This project is in early alpha stage. It's aim is to replace the
-            classic, WinForms based, RePlayer desktop application with a
-            progressive web app, that is locally installable on devices.
+            classic, WinForms based,
+            <a href="https://github.com/suterma/replayer" target="_blank"
+                >RePlayer</a
+            >
+            desktop application with a progressive web app, that is locally
+            installable on devices.
         </p>
         <p>
             The latest version is available at
@@ -37,13 +41,17 @@
                 >Favicon Generator. For real. (free to use)
             </li>
             <li>
+                <a href="https://stuk.github.io/jszip/" target="_blank">JSZip</a
+                >JSZip is a javascript library for creating, reading and editing
+                .zip files, with a lovely and simple API. (Released under the
+                MIT License)
+            </li>
+            <li>
                 <a
-                    href="https://github.com/gildas-lormeau/zip.js"
+                    href="https://github.com/paanSinghCoder/OutFrontJS"
                     target="_blank"
-                    >zip.js</a
-                >zip.js is an open-source library for zipping and unzipping
-                files in the browser. (BSD-3-Clause license) //TODO later decide
-                on the JSZip library?
+                    >OutFrontJS</a
+                >Console for mobile browsers. (Released under the MIT License)
             </li>
         </ul>
 

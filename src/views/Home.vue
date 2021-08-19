@@ -1,19 +1,23 @@
 <template>
     <div class="home">
         <img alt="Vue logo" src="../assets/logo.png" />
-        <HelloWorld
-            msg="Welcome to the Replayer PWA (Vue.js + TypeScript) App"
-        />
+        <p>
+            The classic
+            <a href="https://github.com/suterma/replayer" target="_blank"
+                >RePlayer</a
+            >, as a Progressive Web App
+        </p>
+        <p>
+            Go to <router-link to="/development">Development</router-link> to
+            try the current version.
+        </p>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
 
 export default defineComponent({
-    components: {
-        HelloWorld,
-    },
+    components: {},
 });
 </script>
