@@ -1,7 +1,10 @@
+import { MediaFile } from './state-types';
+import { Compilation } from './compilation-types';
+
 export const state = {
-    compilation: new Array<string>(),
-    /** A set of File URL's from a REZ compilation, representing playable buffers */
-    fileUrls: new Array<string>(),
+    compilation: new Compilation(),
+    /** A set of media files from a REZ compilation, representing playable buffers */
+    fileUrls: new Array<MediaFile>(),
 
     progressMessage: '',
 };
