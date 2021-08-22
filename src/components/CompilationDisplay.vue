@@ -13,12 +13,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import JSZip from 'jszip';
-import xml2js from 'xml2js';
-import AudioElement from '@/components/AudioElement.vue';
-import { MutationTypes } from '../store/mutation-types';
-import { MediaFile, RezMimeTypes } from '@/store/state-types';
-import { Compilation, ICompilation, ITrack } from '@/store/compilation-types';
+import { Compilation, ITrack } from '@/store/compilation-types';
 
 export default defineComponent({
     name: 'CompilationDisplay',
@@ -28,11 +23,10 @@ export default defineComponent({
     },
     methods: {},
     computed: {
-        tracks(): Array<ITrack> {
-            if (this.compilation) {
-                return (this.compilation as ICompilation).Tracks;
-            } else return new Array<ITrack>();
+        tracks(): Array<ITrack> | undefined {
+            return this.compilation?.Tracks;
         },
+        //TODO display the ready-state of the corresponding file object
     },
 });
 </script>
