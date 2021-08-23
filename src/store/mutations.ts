@@ -5,6 +5,8 @@ import {
     ICompilation,
     ITrack,
     Track,
+    ICue,
+    Cue
 } from './compilation-types';
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
@@ -56,7 +58,7 @@ function UpdateFromXmlTracks(stateTracks: ITrack[], xmlTracks: any) {
     }
 
     xmlTracks.forEach((xmlTrack: any) => {
-        console.debug('parsed: ', xmlTrack);
+        //console.debug('parsed: ', xmlTrack);
         //TODO Update instead of push, if exists
         const track = new Track();
         track.Album = FirstStringOf(xmlTrack.Album);
@@ -67,10 +69,29 @@ function UpdateFromXmlTracks(stateTracks: ITrack[], xmlTracks: any) {
         track.Url = FirstStringOf(xmlTrack.Url);
         stateTracks.push(track);
 
-        //TODO Cues
+        const xmlCues = xmlTrack.Cues[0].Cue;
+        UpdateFromXmlCues(track.Cues,xmlCues);
     });
 }
 
+
+/** @devdoc The XML type contains all properties as arrays, even the singe item ones. This is a limitation of the used XML-To-JS converter */
+function UpdateFromXmlCues(stateCues: ICue[], xmlCues: any) {
+    if (!stateCues) {
+        stateCues = new Array<ICue>();
+    }
+
+    xmlCues.forEach((xmlCue: any) => {
+        console.debug('parsed: ', xmlCue);
+        //TODO Update instead of push, if exists
+        const cue = new Cue();
+        cue.Description = FirstStringOf(xmlCue.Description);
+        cue.Time = FirstNumberOf(xmlCue.Time);
+        cue.Id = FirstStringOf(xmlCue.Id);
+        cue.Shortcut = FirstStringOf(xmlCue.Shortcut);
+        stateCues.push(cue);
+    });
+}
 export const mutations: MutationTree<State> & Mutations = {
     [MutationTypes.SET_PROGRESS_MESSAGE](state, message: string) {
         state.progressMessage = message;

@@ -4,8 +4,7 @@
 
         <ul>
             <li v-for="track in tracks" :key="track.Id">
-                {{ track.Name }} ( by {{ track.Artist }} on {{ track.Album }} )
-                <small>{{ track.Url }})</small>
+                <TrackDisplay :track="track" />
             </li>
         </ul>
     </div>
@@ -14,10 +13,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Compilation, ITrack } from '@/store/compilation-types';
+import TrackDisplay from '@/components/TrackDisplay.vue';
 
 export default defineComponent({
     name: 'CompilationDisplay',
-    components: {},
+    components: { TrackDisplay },
     props: {
         compilation: Compilation,
     },

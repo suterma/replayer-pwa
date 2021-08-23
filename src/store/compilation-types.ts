@@ -42,7 +42,7 @@ export interface ITrack {
      */
     Album: string;
     /** The measure in beats per minute. */
-    Measure: number;
+    Measure: number |null;
 
     /** The URL for the media file.
      * @remarks Currently, only local file paths are supported.
@@ -61,7 +61,7 @@ export interface ICue {
     Description: string;
     Id: string;
     Shortcut: string;
-    Time: string;
+    Time: number |null;
 }
 
 /** Implements a rehearsal Compilation, consisting of a set of tracks with their cuepoints.
@@ -88,7 +88,17 @@ export class Track implements ITrack {
     Artist = '';
     Name = '';
     Album = '';
-    Measure = 0;
+    Measure: number |null = null;
     Url = '';
     Id = '';
+}
+
+/** Implements a Replayer cue
+ *  @inheritdoc */
+ export class Cue implements ICue {
+     Description = '';
+     Id = '';
+     Shortcut = '';
+     Time: number |null = null;
+
 }
