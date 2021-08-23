@@ -4,7 +4,7 @@
 
         <p>This component loads a .REZ Compilaton into memory</p>
 
-        <h2>1) Select a REZ or ZIP file (will currently omit metadata)</h2>
+        <h2>1) Select a REZ or ZIP file</h2>
 
         <!-- REZ files are ZIP-Files, with just the ending being .REZ -->
         <input
@@ -45,10 +45,6 @@ import { ICompilation, ITrack } from '@/store/compilation-types';
 export default defineComponent({
     name: 'RezLoader',
     components: { AudioElement, CompilationDisplay },
-    props: {
-        //selectedFileUrl: String,
-        //statusMessage: String,
-    },
     methods: {
         /** Handles the selection of a REZ file
          * @remarks Displays the contained media files and allows the user to select one for playback
