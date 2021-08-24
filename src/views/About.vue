@@ -53,6 +53,14 @@
                     >OutFrontJS</a
                 >Console for mobile browsers. (Released under the MIT License)
             </li>
+            <li>
+                <a
+                    href="https://github.com/Leonidas-from-XIV/node-xml2js"
+                    target="_blank"
+                    >node-xml2js</a
+                >Simple XML to JavaScript object converter. (Released under the
+                MIT License)
+            </li>
         </ul>
 
         <h1>License</h1>
