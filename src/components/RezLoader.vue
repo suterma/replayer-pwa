@@ -1,11 +1,5 @@
 <template>
     <div>
-        <h1>REZ loader</h1>
-
-        <p>This component loads a .REZ Compilaton into memory</p>
-
-        <h2>1) Select a REZ or ZIP file</h2>
-
         <!-- REZ files are ZIP-Files, with just the ending being .REZ -->
         <input
             type="file"
@@ -13,20 +7,6 @@
             accept=".rez,.zip"
             @change="previewFiles"
         />
-
-        <h2>2) See the compilation</h2>
-        <CompilationDisplay :compilation="compilation" />
-
-        <h2>3) Play an arbitrary MP3 file (loaded Track)</h2>
-
-        <ul>
-            <li v-for="fileUrl in fileUrls" :key="fileUrl.objectUrl">
-                <AudioElement
-                    :title="fileUrl.fileName"
-                    :src="fileUrl.objectUrl"
-                ></AudioElement>
-            </li>
-        </ul>
     </div>
 </template>
 
@@ -34,15 +14,12 @@
 import { defineComponent } from 'vue'
 import JSZip from 'jszip'
 import xml2js from 'xml2js'
-import AudioElement from '@/components/AudioElement.vue'
-import CompilationDisplay from '@/components/CompilationDisplay.vue'
 import { MutationTypes } from '../store/mutation-types'
 import { MediaFile, RezMimeTypes } from '@/store/state-types'
-import { ICompilation, ITrack } from '@/store/compilation-types'
 
 export default defineComponent({
     name: 'RezLoader',
-    components: { AudioElement, CompilationDisplay },
+    components: {},
     methods: {
         /** Handles the selection of a REZ file
          * @remarks Displays the contained media files and allows the user to select one for playback
@@ -186,20 +163,6 @@ export default defineComponent({
             )
         },
     },
-    computed: {
-        tracks(): Array<string> {
-            return (this.$store.getters.compilation as ICompilation).Tracks.map(
-                function (item: ITrack) {
-                    return item.Name
-                },
-            )
-        },
-        fileUrls(): Array<MediaFile> {
-            return this.$store.getters.fileUrls
-        },
-        compilation(): ICompilation {
-            return this.$store.getters.compilation
-        },
-    },
+    computed: {},
 })
 </script>

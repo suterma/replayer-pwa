@@ -32,16 +32,18 @@
         <p>This project uses</p>
         <ul>
             <li>
-                Vue.js, the progressive JavaScript framework (Released under the
-                MIT License, Copyright © 2014-2021 Evan You)
+                <a href="https://vuejs.org/" target="_blank">Vue.js</a>, the
+                progressive JavaScript framework (Released under the MIT
+                License, Copyright © 2014-2021 Evan You)
             </li>
             <li>
                 <a href="https://realfavicongenerator.net" target="_blank"
-                    >RealFaviconGenerator</a
+                    >RealFaviconGenerator </a
                 >Favicon Generator. For real. (free to use)
             </li>
             <li>
-                <a href="https://stuk.github.io/jszip/" target="_blank">JSZip</a
+                <a href="https://stuk.github.io/jszip/" target="_blank"
+                    >JSZip </a
                 >JSZip is a javascript library for creating, reading and editing
                 .zip files, with a lovely and simple API. (Released under the
                 MIT License)
@@ -50,16 +52,21 @@
                 <a
                     href="https://github.com/paanSinghCoder/OutFrontJS"
                     target="_blank"
-                    >OutFrontJS</a
+                    >OutFrontJS </a
                 >Console for mobile browsers. (Released under the MIT License)
             </li>
             <li>
                 <a
                     href="https://github.com/Leonidas-from-XIV/node-xml2js"
                     target="_blank"
-                    >node-xml2js</a
+                    >node-xml2js </a
                 >Simple XML to JavaScript object converter. (Released under the
-                MIT License)
+                MIT License, by Jeremy Thomas)
+            </li>
+            <li>
+                <a href="https://bulma.io/" target="_blank">Bulma</a>, the
+                modern CSS framework that just works (Released under the MIT
+                License)
             </li>
         </ul>
 
