@@ -6,7 +6,7 @@ import { MediaFile } from './state-types';
 export type Getters = {
     compilation(state: State): ICompilation;
     fileUrls(state: State): Array<MediaFile>;
-    progressMessage(state: State): string;
+    progressMessage(state: State): string | null;
 };
 
 export const getters: GetterTree<State, State> & Getters = {
