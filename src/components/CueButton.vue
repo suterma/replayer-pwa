@@ -1,17 +1,21 @@
 <template>
-    <span
-        >{{ cue.Description }} {{ minutes }}:{{ twoDigitSeconds }} [{{
-            cue.Shortcut
-        }}]</span
+    <button
+        class="button is-primary has-background-primary-light has-text-dark"
     >
+        <span
+            >{{ cue.Description }} {{ minutes }}:{{ twoDigitSeconds }} [{{
+                cue.Shortcut
+            }}]</span
+        >
+    </button>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { Cue, ICue } from '@/store/compilation-types';
+import { defineComponent } from 'vue'
+import { Cue, ICue } from '@/store/compilation-types'
 
 export default defineComponent({
-    name: 'CueDisplay',
+    name: 'CueButton',
     components: {},
     props: {
         cue: Cue,
@@ -21,19 +25,19 @@ export default defineComponent({
         /** Gets the whole minutes of the timestamp  */
         minutes(): number | null {
             if (this.cue && this.cue?.Time != null) {
-                var minutes = Math.floor(this.cue.Time / 60);
-                return minutes;
+                var minutes = Math.floor(this.cue.Time / 60)
+                return minutes
             }
-            return null;
+            return null
         },
 
         /** Gets the rounded seconds (without whole minutes) of the timestamp  */
         seconds(): number | null {
             if (this.minutes != null && this.cue && this.cue?.Time != null) {
-                var seconds = Math.round(this.cue?.Time - this.minutes * 60);
-                return seconds;
+                var seconds = Math.round(this.cue?.Time - this.minutes * 60)
+                return seconds
             }
-            return null;
+            return null
         },
 
         /** Gets a string representation of the seconds part, with 2 digits fixed
@@ -44,9 +48,16 @@ export default defineComponent({
                 return this.seconds.toLocaleString('en-US', {
                     minimumIntegerDigits: 2,
                     useGrouping: false,
-                });
-            } else return '';
+                })
+            } else return ''
         },
     },
-});
+})
 </script>
+
+<style scoped>
+.has-background-primary-light {
+    /** A specific light color for better use of a black text color */
+    background-color: hsl(171, 100%, 80%) !important;
+}
+</style>

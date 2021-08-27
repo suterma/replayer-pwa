@@ -1,8 +1,6 @@
 <template>
-    <div class="development">
-        <RezLoader />
-        <CompilationDisplay :compilation="compilation" />
-    </div>
+    <RezLoader />
+    <CompilationDisplay :compilation="compilation" />
 </template>
 
 <script lang="ts">

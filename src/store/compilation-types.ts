@@ -61,7 +61,7 @@ export interface ICue {
     Description: string;
     Id: string;
     Shortcut: string;
-    Time: number |null;
+    Time: number | null;
 }
 
 /** Implements a rehearsal Compilation, consisting of a set of tracks with their cuepoints.
