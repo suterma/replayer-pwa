@@ -2,11 +2,14 @@
     <button
         class="button is-primary has-background-primary-light has-text-dark"
     >
-        <span
-            >{{ cue.Description }} {{ minutes }}:{{ twoDigitSeconds }} [{{
-                cue.Shortcut
-            }}]</span
-        >
+        <span class="icon"> ▶ </span>
+        <span class="has-text-weight-semibold">{{ cue.Description }}</span>
+        &nbsp;
+        <span class="has-opacity-half">
+            {{ minutes }}:{{ twoDigitSeconds }}
+        </span>
+        &nbsp;&nbsp;
+        <span class="tag is-primary is-light">{{ cue.Shortcut }}</span>
     </button>
 </template>
 
@@ -59,5 +62,9 @@ export default defineComponent({
 .has-background-primary-light {
     /** A specific light color for better use of a black text color */
     background-color: hsl(171, 100%, 80%) !important;
+}
+
+.has-opacity-half {
+    opacity: 50%;
 }
 </style>
