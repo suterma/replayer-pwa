@@ -14,8 +14,7 @@ export const getters: GetterTree<State, State> & Getters = {
         return state.compilation as ICompilation;
     },
     fileUrls: (state) => {
-        const fileUrls = state.fileUrls.filter((fileUrl) => fileUrl);
-        return fileUrls;
+        return state.fileUrls as  Array<MediaFile>;
     },
     progressMessage: (state) => {
         return state.progressMessage;

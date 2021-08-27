@@ -28,30 +28,55 @@
                         <CueButton :cue="cue" />
                     </template>
                 </div>
+                <AudioElement
+                    :title="trackFileUrl?.fileName"
+                    :src="trackFileUrl?.objectUrl"
+                ></AudioElement>
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { Track, ICue } from '@/store/compilation-types'
-import CueButton from '@/components/CueButton.vue'
+import { defineComponent } from 'vue';
+import { Track, ICue } from '@/store/compilation-types';
+import CueButton from '@/components/CueButton.vue';
+import AudioElement from '@/components/AudioElement.vue';
+import { MediaFile } from '@/store/state-types';
 
 export default defineComponent({
     name: 'TrackTile',
-    components: { CueButton },
+    components: { CueButton, AudioElement },
     props: {
         track: Track,
     },
     methods: {},
     computed: {
         cues(): Array<ICue> | undefined {
-            return this.track?.Cues
+            return this.track?.Cues;
+        },
+        /** Returns the media file (playable file content) for a track's file name (from a compilation track) */
+
+        trackFileUrl(): MediaFile | null {
+            const fileUrls = this.$store.getters.fileUrls as Array<MediaFile>;
+
+            console.debug('TrackTile::fileUrls', fileUrls);
+            console.debug('TrackTile::Track URL', this.track?.Url);
+
+            if (fileUrls) {
+                //TODO maybe only match case-insensitive, and without special chars
+                const matchingFileUrl = fileUrls.filter((fileUrl: MediaFile) =>
+                    this.track?.Url.endsWith(fileUrl.fileName),
+                );
+
+                return matchingFileUrl[0];
+            } else {
+                return null;
+            }
         },
         //TODO display the ready-state of the corresponding file object
     },
-})
+});
 </script>
 <style scoped>
 .has-opacity-half {

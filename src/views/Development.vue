@@ -25,20 +25,20 @@
         //TODO's
         <ul>
             <li>
-                Create players for all files individually. Find a suitable
-                ready-made component for this
+                Find a suitable ready-made component for for the audio player
+                (for VueJs), if available
             </li>
         </ul>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import RezLoader from '@/components/RezLoader.vue' // @ is an alias to /src
-import { ICompilation, ITrack } from '@/store/compilation-types'
-import CompilationDisplay from '@/components/CompilationDisplay.vue'
-import AudioElement from '@/components/AudioElement.vue'
-import { MediaFile } from '@/store/state-types'
+import { defineComponent } from 'vue';
+import RezLoader from '@/components/RezLoader.vue'; // @ is an alias to /src
+import { ICompilation, ITrack } from '@/store/compilation-types';
+import CompilationDisplay from '@/components/CompilationDisplay.vue';
+import AudioElement from '@/components/AudioElement.vue';
+import { MediaFile } from '@/store/state-types';
 
 export default defineComponent({
     components: {
@@ -48,18 +48,20 @@ export default defineComponent({
     },
     computed: {
         compilation(): ICompilation {
-            return this.$store.getters.compilation
+            return this.$store.getters.compilation;
         },
         tracks(): Array<string> {
             return (this.$store.getters.compilation as ICompilation).Tracks.map(
                 function (item: ITrack) {
-                    return item.Name
+                    return item.Name;
                 },
-            )
+            );
         },
         fileUrls(): Array<MediaFile> {
-            return this.$store.getters.fileUrls
+            const fileUrls = this.$store.getters.fileUrls;
+            console.debug('Development::FILEURLS', fileUrls);
+            return fileUrls;
         },
     },
-})
+});
 </script>
