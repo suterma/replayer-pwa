@@ -61,7 +61,7 @@
                     target="_blank"
                     >node-xml2js </a
                 >Simple XML to JavaScript object converter. (Released under the
-                MIT License, by Jeremy Thomas)
+                MIT License, by Marek Kubica)
             </li>
             <li>
                 <a href="https://bulma.io/" target="_blank">Bulma</a>, the
