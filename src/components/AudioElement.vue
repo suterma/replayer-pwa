@@ -1,6 +1,9 @@
 <template>
     <div>
-        {{ title }} by {{ artist }} on {{ album }}
+        <span class="has-opacity-half">
+            {{ title }}
+        </span>
+
         <audio :id="'audioelement' + src" :src="src" controls></audio>
     </div>
 </template>
@@ -11,9 +14,12 @@ import { defineComponent } from 'vue';
 export default defineComponent({
     props: {
         title: String,
-        artist: String,
-        album: String,
         src: String,
     },
 });
 </script>
+<style scoped>
+.has-opacity-half {
+    opacity: 50%;
+}
+</style>

@@ -4,21 +4,21 @@
         <div class="tile is-vertical is-parent">
             <div class="tile is-child box has-background-info-light">
                 <h2 class="subtitle">
-                    {{ track.Name }}
+                    {{ track?.Name }}
 
                     <span class="is-pulled-right is-size-7 has-text-right">
-                        <span v-if="track.Artist" class="has-opacity-half">
+                        <span v-if="track?.Artist" class="has-opacity-half">
                             by
                         </span>
                         <span class="is-italic">
-                            {{ track.Artist }}
+                            {{ track?.Artist }}
                         </span>
                         <br />
-                        <span v-if="track.Album" class="has-opacity-half">
+                        <span v-if="track?.Album" class="has-opacity-half">
                             on
                         </span>
                         <span class="is-italic">
-                            {{ track.Album }}
+                            {{ track?.Album }}
                         </span>
                     </span>
                 </h2>
@@ -50,7 +50,34 @@ export default defineComponent({
     props: {
         track: Track,
     },
-    methods: {},
+    methods: {
+        /** Finds the matching the media file (playable file content) for a track's file name*/
+        getMatchingFileUrl(
+            fileName: string | undefined,
+            fileUrls: Array<MediaFile>,
+        ) {
+            if (fileUrls && fileName) {
+                let url = fileUrls.filter((fileUrl: MediaFile) =>
+                    fileName.endsWith(fileUrl.fileName),
+                )[0];
+                if (!url) {
+                    //In case of possible weird characters, or case mismatch, try an more lazy match. See https://stackoverflow.com/a/9364527/79485
+                    const lazyFileName = fileName
+                        .toLowerCase()
+                        .replace(/\W/g, '');
+                    //console.debug('lazyFileName: ', lazyFileName);
+                    url = fileUrls.filter((fileUrl: MediaFile) =>
+                        lazyFileName.endsWith(
+                            fileUrl.fileName.toLowerCase().replace(/\W/g, ''),
+                        ),
+                    )[0];
+                }
+                return url;
+            } else {
+                return null;
+            }
+        },
+    },
     computed: {
         cues(): Array<ICue> | undefined {
             return this.track?.Cues;
@@ -63,16 +90,7 @@ export default defineComponent({
             console.debug('TrackTile::fileUrls', fileUrls);
             console.debug('TrackTile::Track URL', this.track?.Url);
 
-            if (fileUrls) {
-                //TODO maybe only match case-insensitive, and without special chars
-                const matchingFileUrl = fileUrls.filter((fileUrl: MediaFile) =>
-                    this.track?.Url.endsWith(fileUrl.fileName),
-                );
-
-                return matchingFileUrl[0];
-            } else {
-                return null;
-            }
+            return this.getMatchingFileUrl(this.track?.Url, fileUrls);
         },
         //TODO display the ready-state of the corresponding file object
     },
