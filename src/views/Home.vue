@@ -1,32 +1,30 @@
 <template>
-    <div>
-        <article class="message is-danger">
-            <div class="message-header">
-                <p>Under construction</p>
-            </div>
-            <div class="message-body">
-                <p>
-                    The classic
-                    <a
-                        href="https://github.com/suterma/replayer"
-                        target="_blank"
-                        >RePlayer</a
-                    >, as a Progressive Web App
-                </p>
-                <p>
-                    Go to
-                    <router-link to="/development">Development</router-link> to
-                    try the current version.
-                </p>
-            </div>
-        </article>
-    </div>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <p class="title">Under construction</p>
+            <p class="subtitle">
+                The classic
+                <a href="https://github.com/suterma/replayer" target="_blank"
+                    >RePlayer</a
+                >, as a Progressive Web App
+            </p>
+        </div>
+    </section>
+    <section class="section">
+        <div class="">
+            <p>
+                Go to
+                <router-link to="/development">Development</router-link> to try
+                upcoming features.
+            </p>
+        </div>
+    </section>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 
 export default defineComponent({
     components: {},
-})
+});
 </script>
