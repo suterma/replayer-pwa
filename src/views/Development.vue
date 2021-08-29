@@ -6,27 +6,26 @@
 
         <!-- //TODO later only show when something is loaded -->
         <template v-if="true">
-            <h1>2) See the compilation</h1>
+            <h1>2) See and play the compilation</h1>
             <CompilationDisplay :compilation="compilation" />
-
-            <h1>3) Play an arbitrary MP3 file (loaded Track)</h1>
-
-            <ul>
-                <li v-for="fileUrl in fileUrls" :key="fileUrl.objectUrl">
-                    <AudioElement
-                        :title="fileUrl.fileName"
-                        :src="fileUrl.objectUrl"
-                    ></AudioElement>
-                </li>
-            </ul>
         </template>
 
         <hr />
         //TODO's
         <ul>
+            <li>Make the cues hideable (but still showing a minimal player)</li>
             <li>
-                Find a suitable ready-made component for for the audio player
-                (for VueJs), if available
+                Stop playing when another player starts playing (by default).
+                For this propagate the playing state to the global store. Then,
+                create a watch that watches for events on OTHER players.
+            </li>
+            <li>
+                Make a "tracking" option, that allows to play more than one
+                track simultaneously, in synch
+            </li>
+            <li>Make the players "full width", when showing the cues</li>
+            <li>
+                Create a "live" view, with just one track in full screen mode
             </li>
         </ul>
     </div>
@@ -37,14 +36,11 @@ import { defineComponent } from 'vue';
 import RezLoader from '@/components/RezLoader.vue'; // @ is an alias to /src
 import { ICompilation, ITrack } from '@/store/compilation-types';
 import CompilationDisplay from '@/components/CompilationDisplay.vue';
-import AudioElement from '@/components/AudioElement.vue';
-import { MediaFile } from '@/store/state-types';
 
 export default defineComponent({
     components: {
         RezLoader,
         CompilationDisplay,
-        AudioElement,
     },
     computed: {
         compilation(): ICompilation {
@@ -56,11 +52,6 @@ export default defineComponent({
                     return item.Name;
                 },
             );
-        },
-        fileUrls(): Array<MediaFile> {
-            const fileUrls = this.$store.getters.fileUrls;
-            console.debug('Development::FILEURLS', fileUrls);
-            return fileUrls;
         },
     },
 });

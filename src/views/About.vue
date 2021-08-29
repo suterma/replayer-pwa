@@ -64,6 +64,14 @@
                 MIT License, by Marek Kubica)
             </li>
             <li>
+                <a
+                    href="https://vuejsexamples.com/html5-basic-audio-player-with-vue-js/"
+                    target="_blank"
+                    >HTML5 Basic Audio Player with vue.js</a
+                >
+                Example code (modified)
+            </li>
+            <li>
                 <a href="https://bulma.io/" target="_blank">Bulma</a>, the
                 modern CSS framework that just works (Released under the MIT
                 License)

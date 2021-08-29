@@ -11,6 +11,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+//TODO currently not used, remove?
 export default defineComponent({
     props: {
         title: String,

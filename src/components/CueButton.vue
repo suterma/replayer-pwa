@@ -1,6 +1,7 @@
 <template>
     <button
         class="button is-primary has-background-primary-light has-text-dark"
+        @click="invokeCue"
     >
         <span class="icon"> ▶ </span>
         <span class="has-text-weight-semibold">{{ cue?.Description }}</span>
@@ -29,7 +30,15 @@ export default defineComponent({
     props: {
         cue: Cue,
     },
-    methods: {},
+    methods: {
+        invokeCue(event: Event) {
+            // `this` inside methods points to the current active instance
+            // `event` is the native DOM event
+            if (event) {
+                this.$emit('click');
+            }
+        },
+    },
     computed: {
         /** Gets the whole minutes of the timestamp  */
         minutes(): number | null {
