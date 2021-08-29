@@ -25,13 +25,14 @@
 
                 <div class="buttons">
                     <template v-for="cue in cues" :key="cue.Id">
-                        <CueButton :cue="cue" />
+                        <CueButton :cue="cue" @click="cueClick(cue.Time)" />
                     </template>
                 </div>
-                <AudioElement
+                <AudioPlayer
+                    ref="player"
                     :title="trackFileUrl?.fileName"
                     :src="trackFileUrl?.objectUrl"
-                ></AudioElement>
+                ></AudioPlayer>
             </div>
         </div>
     </div>
@@ -41,16 +42,21 @@
 import { defineComponent } from 'vue';
 import { Track, ICue } from '@/store/compilation-types';
 import CueButton from '@/components/CueButton.vue';
-import AudioElement from '@/components/AudioElement.vue';
+import AudioPlayer from '@/components/AudioPlayer.vue';
 import { MediaFile } from '@/store/state-types';
 
 export default defineComponent({
     name: 'TrackTile',
-    components: { CueButton, AudioElement },
+    components: { CueButton, AudioPlayer },
     props: {
         track: Track,
     },
     methods: {
+        cueClick(time: number) {
+            (this.$refs.player as InstanceType<typeof AudioPlayer>).playFrom(
+                time,
+            );
+        },
         /** Finds the matching the media file (playable file content) for a track's file name*/
         getMatchingFileUrl(
             fileName: string | undefined,
