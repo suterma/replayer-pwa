@@ -6,7 +6,7 @@ import {
     ITrack,
     Track,
     ICue,
-    Cue
+    Cue,
 } from './compilation-types';
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
@@ -23,7 +23,7 @@ export type Mutations<S = State> = {
 /** @devdoc The XML type contains all properties as arrays, even the singe item ones. This is a limitation of the used XML-To-JS converter */
 function UpdateFromXmlCompilation(
     stateCompilation: ICompilation,
-    xmlCompilation: any
+    xmlCompilation: any,
 ) {
     if (!stateCompilation) {
         stateCompilation = new Compilation();
@@ -70,10 +70,9 @@ function UpdateFromXmlTracks(stateTracks: ITrack[], xmlTracks: any) {
         stateTracks.push(track);
 
         const xmlCues = xmlTrack.Cues[0].Cue;
-        UpdateFromXmlCues(track.Cues,xmlCues);
+        UpdateFromXmlCues(track.Cues, xmlCues);
     });
 }
-
 
 /** @devdoc The XML type contains all properties as arrays, even the singe item ones. This is a limitation of the used XML-To-JS converter */
 function UpdateFromXmlCues(stateCues: ICue[], xmlCues: any) {
@@ -82,7 +81,7 @@ function UpdateFromXmlCues(stateCues: ICue[], xmlCues: any) {
     }
 
     xmlCues.forEach((xmlCue: any) => {
-        console.debug('parsed: ', xmlCue);
+        //console.debug('parsed: ', xmlCue);
         //TODO Update instead of push, if exists
         const cue = new Cue();
         cue.Description = FirstStringOf(xmlCue.Description);

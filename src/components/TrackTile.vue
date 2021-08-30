@@ -102,8 +102,3 @@ export default defineComponent({
     },
 });
 </script>
-<style scoped>
-.has-opacity-half {
-    opacity: 50%;
-}
-</style>

@@ -7845,3 +7845,17 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 .footer {
   background-color: #fafafa;
   padding: 3rem 1.5rem 6rem; }
+
+/** Application-specific add-ons/modifications to the Bulma CSS */
+/* A variant for a dimmed item (e.g. supporitve/informational text parts)*/
+.has-opacity-half {
+  opacity: 50%; }
+
+/** A specific light color for better use of a black text color */
+.has-background-primary-light {
+  background-color: #6bffe9 !important; }
+
+/* Improve text legibility */
+#app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }

@@ -72,14 +72,3 @@ export default defineComponent({
     },
 });
 </script>
-
-<style scoped>
-.has-background-primary-light {
-    /** A specific light color for better use of a black text color */
-    background-color: hsl(171, 100%, 80%) !important;
-}
-
-.has-opacity-half {
-    opacity: 50%;
-}
-</style>
