@@ -6,6 +6,21 @@
                 <h2 class="subtitle">
                     {{ track?.Name }}
 
+                    <!-- The Navbar burger -->
+                    <a
+                        @click="toggleBurger"
+                        role="button"
+                        class="navbar-burger is-pulled-left2"
+                        aria-label="menu"
+                        aria-expanded="false"
+                        data-target="navbarAppMenu"
+                        v-bind:class="{ 'is-active': activator }"
+                    >
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+
                     <span class="is-pulled-right is-size-7 has-text-right">
                         <span v-if="track?.Artist" class="has-opacity-half">
                             by
@@ -23,16 +38,19 @@
                     </span>
                 </h2>
 
-                <div class="buttons">
-                    <template v-for="cue in cues" :key="cue.Id">
-                        <CueButton :cue="cue" @click="cueClick(cue.Time)" />
-                    </template>
+                <div v-show="activator">
+                    <div class="buttons">
+                        <template v-for="cue in cues" :key="cue.Id">
+                            <CueButton :cue="cue" @click="cueClick(cue.Time)" />
+                        </template>
+                    </div>
+
+                    <AudioPlayer
+                        ref="player"
+                        :title="trackFileUrl?.fileName"
+                        :src="trackFileUrl?.objectUrl"
+                    ></AudioPlayer>
                 </div>
-                <AudioPlayer
-                    ref="player"
-                    :title="trackFileUrl?.fileName"
-                    :src="trackFileUrl?.objectUrl"
-                ></AudioPlayer>
             </div>
         </div>
     </div>
@@ -51,7 +69,18 @@ export default defineComponent({
     props: {
         track: Track,
     },
+    data() {
+        return {
+            msg: '',
+            activator: false,
+        };
+    },
     methods: {
+        toggleBurger() {
+            this.activator = !this.activator;
+            return this.activator;
+        },
+
         cueClick(time: number) {
             (this.$refs.player as InstanceType<typeof AudioPlayer>).playFrom(
                 time,
