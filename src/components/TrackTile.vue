@@ -4,23 +4,43 @@
         <div class="tile is-vertical is-parent">
             <div class="tile is-child box has-background-info-light">
                 <h2 class="subtitle">
-                    {{ track?.Name }}
+                    <span class="">{{ track?.Name }}</span>
 
-                    <!-- The Navbar burger -->
-                    <a
-                        @click="toggleBurger"
-                        role="button"
-                        class="navbar-burger is-pulled-left2"
-                        aria-label="menu"
-                        aria-expanded="false"
-                        data-target="navbarAppMenu"
-                        v-bind:class="{ 'is-active': activator }"
+                    <!-- Text colors similar to cues -->
+                    <span
+                        v-if="!showCues"
+                        class="
+                            is-pulled-right
+                            ml-3
+                            tag
+                            is-primary
+                            has-background-primary-light has-text-dark
+                        "
+                        ><a @click="toggleBurger" role="button">
+                            <!-- Text colors similar to cues -->
+                            <span
+                                class="icon-text is-size-7 has-text-dark"
+                                v-if="!showCues"
+                            >
+                                Show
+                                {{ track?.Cues?.length }} cues</span
+                            >
+                        </a></span
                     >
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                    </a>
+                    <span
+                        v-if="showCues"
+                        class="is-pulled-right ml-3 tag is-dark"
+                        ><a @click="toggleBurger" role="button">
+                            <span
+                                class="icon-text is-size-7 has-text-light"
+                                v-if="showCues"
+                            >
+                                Hide cues</span
+                            >
+                        </a></span
+                    >
 
+                    <!-- Artist info -->
                     <span class="is-pulled-right is-size-7 has-text-right">
                         <span v-if="track?.Artist" class="has-opacity-half">
                             by
@@ -38,7 +58,7 @@
                     </span>
                 </h2>
 
-                <div v-show="activator">
+                <div v-show="showCues">
                     <div class="buttons">
                         <template v-for="cue in cues" :key="cue.Id">
                             <CueButton :cue="cue" @click="cueClick(cue.Time)" />
@@ -72,19 +92,21 @@ export default defineComponent({
     data() {
         return {
             msg: '',
-            activator: false,
+            showCues: true,
         };
     },
     methods: {
         toggleBurger() {
-            this.activator = !this.activator;
-            return this.activator;
+            this.showCues = !this.showCues;
+            return this.showCues;
         },
 
-        cueClick(time: number) {
-            (this.$refs.player as InstanceType<typeof AudioPlayer>).playFrom(
-                time,
-            );
+        cueClick(time: number | null) {
+            if (time) {
+                (
+                    this.$refs.player as InstanceType<typeof AudioPlayer>
+                ).playFrom(time);
+            }
         },
         /** Finds the matching the media file (playable file content) for a track's file name*/
         getMatchingFileUrl(
