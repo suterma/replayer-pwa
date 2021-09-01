@@ -4,42 +4,54 @@
         <input
             type="file"
             id="file-input"
-            accept=".rez,.zip"
-            @change="previewFiles"
+            accept=".rex,.rez,.zip,.mp3"
+            multiple
+            @change="loadFile"
         />
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import JSZip from 'jszip'
-import xml2js from 'xml2js'
-import { MutationTypes } from '../store/mutation-types'
-import { MediaFile, RezMimeTypes } from '@/store/state-types'
+import { defineComponent } from 'vue';
+import JSZip from 'jszip';
+import xml2js from 'xml2js';
+import { MutationTypes } from '../store/mutation-types';
+import { MediaFile, RezMimeTypes } from '@/store/state-types';
 
 export default defineComponent({
     name: 'RezLoader',
     components: {},
     methods: {
-        /** Handles the selection of a REZ file
-         * @remarks Displays the contained media files and allows the user to select one for playback
+        /** Handles the selection of a file by loading it's content
+         * @remarks Parses the contained metadata and loads the media files
          */
-        async previewFiles(event: any) {
+        async loadFile(event: any) {
             this.$store.commit(
                 MutationTypes.SET_PROGRESS_MESSAGE,
-                'Loading selected file...',
-            )
-            //TODO Check that there is actually a REZ file selected, probably throw when more than 1
-            var selectedFile = event.target.files[0]
-            this.$store.commit(
-                MutationTypes.SET_PROGRESS_MESSAGE,
-                'Loading ' +
-                    selectedFile.name +
-                    ' (' +
-                    selectedFile.size / 1000000 +
-                    'MB)',
-            )
+                'Loading selected file(s)...',
+            );
+            Array.from(event.target.files as File[]).forEach((file) => {
+                this.$store.commit(
+                    MutationTypes.SET_PROGRESS_MESSAGE,
+                    'Loading ' + file.name + ' (' + file.size / 1000000 + 'MB)',
+                );
 
+                //Determine the file type
+                if (file.name.toLowerCase().endsWith('.rez')) {
+                    this.loadFileAsRez(file);
+                }
+                if (file.name.toLowerCase().endsWith('.rex')) {
+                    this.loadFileAsRex(file);
+                }
+                if (file.name.toLowerCase().endsWith('.mp3')) {
+                    this.loadFileAsMp3(file);
+                }
+            });
+        },
+
+        /** Loads the given file as a REZ compilation (XML metadata and included media files)
+         */
+        loadFileAsRez(selectedFile: File) {
             JSZip.loadAsync(selectedFile) // 1) read the Blob
                 .then(
                     (zip: JSZip) => {
@@ -52,16 +64,16 @@ export default defineComponent({
                                 this.$store.commit(
                                     MutationTypes.SET_PROGRESS_MESSAGE,
                                     'Processing content: ' + zipEntry.name,
-                                )
+                                );
                                 this.$store.commit(
                                     MutationTypes.ADD_TRACK,
                                     zipEntry.name,
-                                )
+                                );
 
                                 zipEntry
                                     .async('nodebuffer')
                                     .then((content: Buffer): void => {
-                                        var mediaFileName = zipEntry.name
+                                        var mediaFileName = zipEntry.name;
 
                                         if (
                                             mediaFileName.endsWith(
@@ -71,19 +83,19 @@ export default defineComponent({
                                             this.handleAsCompilation(
                                                 content,
                                                 RezMimeTypes.TEXT_XML,
-                                            )
+                                            );
                                         } else if (
                                             mediaFileName.endsWith('.mp3')
                                         ) {
-                                            this.handleAsMedia(
+                                            this.handleAsMediaFromContent(
                                                 mediaFileName,
                                                 content,
                                                 RezMimeTypes.AUDIO_MP3,
-                                            )
+                                            );
                                         }
-                                    })
+                                    });
                             },
-                        )
+                        );
                     },
                     function (e) {
                         console.error(
@@ -91,50 +103,89 @@ export default defineComponent({
                                 selectedFile.name +
                                 ': ' +
                                 e.message,
-                        )
+                        );
                     },
                 )
                 .then(() => {
                     this.$store.commit(
                         MutationTypes.SET_PROGRESS_MESSAGE,
                         'Loading selected REZ file done.',
-                    )
-                })
+                    );
+                });
         },
-        /** Handles the given content as the XML compilation meta data
+
+        /** Loads the given file as a REX compilation (XML metadata only)
+         * @remarks Media files could later be retrieved by trying to download with the metadata info or by explicit file selection by the user
+         */
+        loadFileAsRex(selectedFile: File) {
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                //console.debug(                    'RezLoader::loadFileAsRex:reader.result',                    reader.result,                );
+                const content = Buffer.from(reader.result as string);
+                //console.debug('RezLoader::loadFileAsRex:content', content);
+
+                this.handleAsCompilation(content, RezMimeTypes.TEXT_XML);
+            };
+            reader.onerror = (event) => {
+                // Failed
+                console.error(
+                    'Failed to read file ' +
+                        selectedFile.name +
+                        ': ' +
+                        reader.error,
+                );
+                reader.abort(); // (...does this do anything useful in an onerror handler?)
+            };
+            reader.readAsText(selectedFile);
+        },
+
+        /** Loads the given file as a mp3 media file
+         * @remarks
+         */
+        loadFileAsMp3(selectedFile: File) {
+            this.handleAsMediaFromBlob(selectedFile.name, selectedFile);
+        },
+
+        /** Handles the given content as the compilation meta data
          */
         handleAsCompilation(content: Buffer, mimeType: RezMimeTypes) {
-            console.debug('RezLoader::handleAsCompilation')
+            console.debug('RezLoader::handleAsCompilation:content', content);
             this.$store.commit(
                 MutationTypes.SET_PROGRESS_MESSAGE,
                 'Parsing compilation (of type ' + mimeType + ')...',
-            )
+                content,
+            );
 
             xml2js
                 .parseStringPromise(content /*, options */)
                 .then((result: any) => {
-                    console.debug('Parsed compilation: ', result)
+                    console.debug('Parsed compilation: ', result);
 
                     //Apply the compilation content to the store
-                    this.$store.commit(MutationTypes.UPDATE_COMPILATION, result)
+                    this.$store.commit(
+                        MutationTypes.UPDATE_COMPILATION,
+                        result,
+                    );
 
-                    console.log(mimeType + ' compilation parsing done')
+                    console.log(mimeType + ' compilation parsing done');
                     this.$store.commit(
                         MutationTypes.SET_PROGRESS_MESSAGE,
                         'Compilation parsing (of type ' + mimeType + ') done',
-                    )
+                    );
                 })
                 .catch(function (err: any) {
                     // Failed
                     console.error(
                         mimeType + ' compilation parsing error: ',
                         err,
-                    )
-                })
+                    );
+                });
         },
         /** Handles the given content as media file of the given type
+         * @devdoc This is used when a file is read from the ZIP package and not yet available as blob
          */
-        handleAsMedia(
+        handleAsMediaFromContent(
             mediaFileName: string,
             content: Buffer,
             mimeType: RezMimeTypes,
@@ -142,12 +193,24 @@ export default defineComponent({
             console.debug(
                 'RezLoader::handleAsMedia:mediaFileName:',
                 mediaFileName,
-            )
+            );
             //TODO https://stackoverflow.com/questions/21737224/using-local-file-as-audio-src
             const blob = new Blob([content], {
                 type: mimeType,
-            })
-            var objectUrl = URL.createObjectURL(blob)
+            });
+            this.handleAsMediaFromBlob(mediaFileName, blob);
+        },
+
+        /** Handles the given blob as media file of the given type
+         * @devdoc This is used when a file is already available as blob
+         */
+        handleAsMediaFromBlob(mediaFileName: string, blob: Blob) {
+            console.debug(
+                'RezLoader::handleAsMediaFromBlob:mediaFileName:',
+                mediaFileName,
+            );
+
+            var objectUrl = URL.createObjectURL(blob);
 
             this.$store.commit(
                 MutationTypes.SET_PROGRESS_MESSAGE,
@@ -156,13 +219,13 @@ export default defineComponent({
                     ' (from ' +
                     mediaFileName +
                     ')',
-            )
+            );
             this.$store.commit(
                 MutationTypes.ADD_FILE_URL,
                 new MediaFile(mediaFileName, objectUrl),
-            )
+            );
         },
     },
     computed: {},
-})
+});
 </script>

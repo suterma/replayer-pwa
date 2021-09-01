@@ -108,11 +108,11 @@ export default defineComponent({
                 ).playFrom(time);
             }
         },
-        /** Finds the matching the media file (playable file content) for a track's file name*/
-        getMatchingFileUrl(
+        /** Finds the matching the media file (playable file content) for a track's file name, from an already loaded package */
+        getMatchingPackageFileUrl(
             fileName: string | undefined,
             fileUrls: Array<MediaFile>,
-        ) {
+        ): MediaFile | null {
             if (fileUrls && fileName) {
                 let url = fileUrls.filter((fileUrl: MediaFile) =>
                     fileName.endsWith(fileUrl.fileName),
@@ -134,12 +134,26 @@ export default defineComponent({
                 return null;
             }
         },
+        /** Finds the matching the media file (playable file content) for a track's file name, from the local file system */
+        getMatchingLocalFileUrl(
+            fileName: string | undefined,
+        ): MediaFile | null {
+            // if (fileName) {
+            //     var objectUrl = URL.createObjectURL(blob);
+
+            //     const objectURL = window.URL.createObjectURL(file);
+            // }
+            return null; //TODO load the file
+        },
     },
     computed: {
         cues(): Array<ICue> | undefined {
             return this.track?.Cues;
         },
-        /** Returns the media file (playable file content) for a track's file name (from a compilation track) */
+        /** Returns the media file (playable file content) for a track's file name
+         * @remarks if available, the tracks from a compilation package are used, otherwise the
+         * files are to be loaded from the file system or from the internet
+         */
 
         trackFileUrl(): MediaFile | null {
             const fileUrls = this.$store.getters.fileUrls as Array<MediaFile>;
@@ -147,7 +161,14 @@ export default defineComponent({
             console.debug('TrackTile::fileUrls', fileUrls);
             console.debug('TrackTile::Track URL', this.track?.Url);
 
-            return this.getMatchingFileUrl(this.track?.Url, fileUrls);
+            let fileUrl = this.getMatchingPackageFileUrl(
+                this.track?.Url,
+                fileUrls,
+            );
+            if (fileUrl === null) {
+                fileUrl = this.getMatchingLocalFileUrl(this.track?.Url);
+            }
+            return fileUrl;
         },
         //TODO display the ready-state of the corresponding file object
     },
