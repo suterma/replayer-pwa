@@ -8,6 +8,12 @@
             multiple
             @change="loadFile"
         />
+
+        <p>This component loads Compilatons into memory</p>
+        The following files are supported: REZ Packages (ZIP Archive with an XML
+        compilation and the media files embedded) Single Compilation.xml file
+        Single mp3 file Multiple files of the above (Compilations and media
+        files are matched by file name)
     </div>
 </template>
 
