@@ -2,7 +2,6 @@
     <div class="development">
         <h1>1) Select a REZ or ZIP file</h1>
         <RezLoader />
-        <p>This component loads a .REZ Compilaton into memory</p>
 
         <!-- //TODO later only show when something is loaded -->
         <template v-if="true">
