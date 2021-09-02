@@ -21,6 +21,7 @@
 import { defineComponent } from 'vue';
 import JSZip from 'jszip';
 import xml2js from 'xml2js';
+import bplist from 'bplist-parser';
 import { MutationTypes } from '../store/mutation-types';
 import { MediaFile, RezMimeTypes } from '@/store/state-types';
 
@@ -43,7 +44,10 @@ export default defineComponent({
                 );
 
                 //Determine the file type
-                if (file.name.toLowerCase().endsWith('.rez')) {
+                if (
+                    file.name.toLowerCase().endsWith('.rez') ||
+                    file.name.toLowerCase().endsWith('.zip')
+                ) {
                     this.loadFileAsRez(file);
                 }
                 if (file.name.toLowerCase().endsWith('.rex')) {
@@ -51,6 +55,13 @@ export default defineComponent({
                 }
                 if (file.name.toLowerCase().endsWith('.mp3')) {
                     this.loadFileAsMp3(file);
+                }
+                //Is a LivePlayback playlist?
+                if (
+                    file.name.toLowerCase().endsWith('.bplist') ||
+                    file.name.toLowerCase().endsWith('playlist')
+                ) {
+                    this.loadFileAsLivePlaybackPlaylist(file);
                 }
             });
         },
@@ -144,6 +155,46 @@ export default defineComponent({
                 reader.abort(); // (...does this do anything useful in an onerror handler?)
             };
             reader.readAsText(selectedFile);
+        },
+
+        /** Loads the given file as a Livelayback playlist (iOS binary property list)
+         * @remarks Media files could later be retrieved by trying to download with the metadata info or by explicit file selection by the user
+         */
+        loadFileAsLivePlaybackPlaylist(selectedFile: File) {
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                //console.debug(                    'RezLoader::loadFileAsRex:reader.result',                    reader.result,                );
+                const content = Buffer.from(reader.result as string);
+                console.debug(
+                    'RezLoader::loadFileAsLivePlaybackPlaylist:content',
+                    content,
+                );
+                //TODO unfortunately, the buffer is 52210 bytes long as from the content, but the correct size (from the hex editor) should be 45416 bytes
+                //TODO we should read the buffer corectly. The initial string bplist00 is correct though
+                //TODO probably there is a confusion when reading as binary string (with UTF-8 or some escape characters??)
+                //this.handleAsCompilation(content, RezMimeTypes.TEXT_XML);
+
+                (async () => {
+                    const obj = await bplist.parseFile(content);
+
+                    console.debug(
+                        'RezLoader::loadFileAsLivePlaybackPlaylist:obj',
+                        obj,
+                    ); //console.log(JSON.stringify(obj));
+                })();
+            };
+            reader.onerror = (event) => {
+                // Failed
+                console.error(
+                    'Failed to read file ' +
+                        selectedFile.name +
+                        ': ' +
+                        reader.error,
+                );
+                reader.abort(); // (...does this do anything useful in an onerror handler?)
+            };
+            reader.readAsBinaryString(selectedFile);
         },
 
         /** Loads the given file as a mp3 media file
