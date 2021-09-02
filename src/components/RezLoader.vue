@@ -189,9 +189,9 @@ export default defineComponent({
                     console.log(JSON.stringify(obj));
                     //TODO parse the resulting object
                     //This will be a tedious process
-                    //See http://www.mac4n6.com/blog/2016/1/1/manual-analysis-of-nskeyedarchiver-formatted-plist-files-a-review-of-the-new-os-x-1011-recent-items
-                    //as a starting point
-                    //maybe also another library will be of help to create back the tree
+                    //See http://www.mac4n6.com/blog/2016/1/1/manual-analysis-of-nskeyedarchiver-formatted-plist-files-a-review-of-the-new-os-x-1011-recent-items as a starting point
+                    //See also https://digitalinvestigation.wordpress.com/2012/04/04/geek-post-nskeyedarchiver-files-what-are-they-and-how-can-i-use-them/
+                    //Probably there should be a deserializer library for this. On NPM?
                 })();
             };
             reader.onerror = (event) => {
