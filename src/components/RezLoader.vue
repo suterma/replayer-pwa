@@ -158,16 +158,20 @@ export default defineComponent({
             const reader = new FileReader();
 
             reader.onload = () => {
-                //console.debug(                    'RezLoader::loadFileAsRex:reader.result',                    reader.result,                );
-                const content = Buffer.from(reader.result as string);
+                console.debug(
+                    'RezLoader::loadFileAsLivePlaybackPlaylist:reader.result',
+                    reader.result,
+                );
+                console.debug(
+                    'RezLoader::loadFileAsLivePlaybackPlaylist:reader.reader.result?.toString().length',
+                    reader.result?.toString().length,
+                );
+                var content = Buffer.from(reader.result as ArrayBuffer);
+                //content = Buffer.from(reader.result as string);
                 console.debug(
                     'RezLoader::loadFileAsLivePlaybackPlaylist:content',
                     content,
                 );
-                //TODO unfortunately, the buffer is 52210 bytes long as from the content, but the correct size (from the hex editor) should be 45416 bytes
-                //TODO we should read the buffer corectly. The initial string bplist00 is correct though
-                //TODO probably there is a confusion when reading as binary string (with UTF-8 or some escape characters??)
-                //this.handleAsCompilation(content, RezMimeTypes.TEXT_XML);
 
                 (async () => {
                     const obj = await bplist.parseFile(content);
@@ -175,7 +179,13 @@ export default defineComponent({
                     console.debug(
                         'RezLoader::loadFileAsLivePlaybackPlaylist:obj',
                         obj,
-                    ); //console.log(JSON.stringify(obj));
+                    );
+                    console.log(JSON.stringify(obj));
+                    //TODO parse the resulting object
+                    //This will be a tedious process
+                    //See http://www.mac4n6.com/blog/2016/1/1/manual-analysis-of-nskeyedarchiver-formatted-plist-files-a-review-of-the-new-os-x-1011-recent-items
+                    //as a starting point
+                    //maybe also another library will be of help to create back the tree
                 })();
             };
             reader.onerror = (event) => {
@@ -188,7 +198,7 @@ export default defineComponent({
                 );
                 reader.abort(); // (...does this do anything useful in an onerror handler?)
             };
-            reader.readAsBinaryString(selectedFile);
+            reader.readAsArrayBuffer(selectedFile);
         },
 
         /** Loads the given file as a mp3 media file

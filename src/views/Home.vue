@@ -23,12 +23,8 @@
         <div class="hero-body">
             <p class="title">Continue at:</p>
             <p class="">
-                //TODO unfortunately, the buffer is 52210 bytes long as from the
-                content, but the correct size (from the hex editor) should be
-                45416 bytes //TODO we should read the buffer corectly. The
-                initial string bplist00 is correct though //TODO probably there
-                is a confusion when reading as binary string (with UTF-8 or some
-                escape characters??)
+                //TODO recreate the object tree from the NSKeyedArchiver data in
+                the plist file
             </p>
         </div>
     </section>
