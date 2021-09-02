@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@zip.js/zip.js": "^2.2.33",
+    "bplist-parser": "^0.3.0",
     "core-js": "^3.6.5",
     "jszip": "^3.7.1",
     "outfront": "^1.1.1",
