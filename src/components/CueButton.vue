@@ -1,8 +1,5 @@
 <template>
-    <button
-        class="button is-primary has-background-primary-light has-text-dark"
-        @click="invokeCue"
-    >
+    <button class="button is-primary" @click="invokeCue">
         <span class="icon"> ▶ </span>
         <span class="has-text-weight-semibold">{{ cue?.Description }}</span>
         <!-- On small devices, hide the informational time stamp to save screen real estate -->

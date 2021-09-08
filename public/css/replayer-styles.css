@@ -7852,9 +7852,6 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   opacity: 50%; }
 
 /** A specific light color for better use of a black text color */
-.has-background-primary-light {
-  background-color: #6bffe9 !important; }
-
 /* Improve text legibility */
 #app {
   -webkit-font-smoothing: antialiased;

@@ -9,17 +9,11 @@
                     <!-- Text colors similar to cues -->
                     <span
                         v-if="!showCues"
-                        class="
-                            is-pulled-right
-                            ml-3
-                            tag
-                            is-primary
-                            has-background-primary-light has-text-dark
-                        "
+                        class="is-pulled-right ml-3 tag is-primary"
                         ><a @click="toggleBurger" role="button">
                             <!-- Text colors similar to cues -->
                             <span
-                                class="icon-text is-size-7 has-text-dark"
+                                class="icon-text is-size-7 has-text-light"
                                 v-if="!showCues"
                             >
                                 Show
