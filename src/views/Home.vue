@@ -8,15 +8,31 @@
                     >RePlayer</a
                 >, as a Progressive Web App
             </p>
-        </div>
-    </section>
-    <section class="section">
-        <div class="">
             <p>
                 Go to
                 <router-link to="/development">Development</router-link> to try
                 upcoming features.
             </p>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="notification is-warning">Use with caution</div>
+            <p>RePlayer supports</p>
+            <ul>
+                <li>Loading of .REZ / .ZIP compilations</li>
+            </ul>
+            <p>
+                The following features might be implemented soon (see also the
+                <a href="https://github.com/suterma/replayer-pwa/issues"
+                    >issues on the GitHub repository</a
+                >)
+            </p>
+            <ul>
+                <li>Dark theme</li>
+                <li>Loading of LivePlayer compilations</li>
+                <li>Visual indication of already passed cues in the track</li>
+            </ul>
         </div>
     </section>
     <section class="hero is-danger">
