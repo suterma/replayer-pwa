@@ -1,5 +1,5 @@
 <template>
-    <button class="button is-primary" @click="invokeCue">
+    <button class="button is-warning" @click="invokeCue">
         <span class="icon"> ▶ </span>
         <span class="has-text-weight-semibold">{{ cue?.Description }}</span>
         <!-- On small devices, hide the informational time stamp to save screen real estate -->
@@ -12,7 +12,7 @@
         <!-- On touch devices, the key shortcuts are probably not used, thus hide them to save screen real estate -->
         <span class="is-hidden-touch">
             &nbsp;&nbsp;
-            <span class="tag is-primary is-light">{{ cue?.Shortcut }}</span>
+            <span class="tag is-warning is-light">{{ cue?.Shortcut }}</span>
         </span>
     </button>
 </template>

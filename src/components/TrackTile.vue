@@ -2,68 +2,73 @@
     <!-- Each track is a tile (vertically distributed), and contains all the cues -->
     <div class="tile is-ancestor">
         <div class="tile is-vertical is-parent">
-            <div class="tile is-child box has-background-info-light">
-                <h2 class="subtitle">
-                    <span class="">{{ track?.Name }}</span>
+            <div class="tile is-child card">
+                <div class="card-content">
+                    <h2 class="subtitle">
+                        <span class="">{{ track?.Name }}</span>
 
-                    <!-- Text colors similar to cues -->
-                    <span
-                        v-if="!showCues"
-                        class="is-pulled-right ml-3 tag is-primary"
-                        ><a @click="toggleBurger" role="button">
-                            <!-- Text colors similar to cues -->
-                            <span
-                                class="icon-text is-size-7 has-text-light"
-                                v-if="!showCues"
-                            >
-                                Show
-                                {{ track?.Cues?.length }} cues</span
-                            >
-                        </a></span
-                    >
-                    <span
-                        v-if="showCues"
-                        class="is-pulled-right ml-3 tag is-dark"
-                        ><a @click="toggleBurger" role="button">
-                            <span
-                                class="icon-text is-size-7 has-text-light"
-                                v-if="showCues"
-                            >
-                                Hide cues</span
-                            >
-                        </a></span
-                    >
+                        <!-- Text colors similar to cues -->
+                        <span
+                            v-if="!showCues"
+                            class="is-pulled-right ml-3 tag is-warning"
+                            ><a @click="toggleBurger" role="button">
+                                <!-- Text colors similar to cues -->
+                                <span
+                                    class="icon-text is-size-7 has-text-light"
+                                    v-if="!showCues"
+                                >
+                                    Show
+                                    {{ track?.Cues?.length }} cues</span
+                                >
+                            </a></span
+                        >
+                        <span
+                            v-if="showCues"
+                            class="is-pulled-right ml-3 tag is-dark"
+                            ><a @click="toggleBurger" role="button">
+                                <span
+                                    class="icon-text is-size-7 has-text-light"
+                                    v-if="showCues"
+                                >
+                                    Hide cues</span
+                                >
+                            </a></span
+                        >
 
-                    <!-- Artist info -->
-                    <span class="is-pulled-right is-size-7 has-text-right">
-                        <span v-if="track?.Artist" class="has-opacity-half">
-                            by
+                        <!-- Artist info -->
+                        <span class="is-pulled-right is-size-7 has-text-right">
+                            <span v-if="track?.Artist" class="has-opacity-half">
+                                by
+                            </span>
+                            <span class="is-italic">
+                                {{ track?.Artist }}
+                            </span>
+                            <br />
+                            <span v-if="track?.Album" class="has-opacity-half">
+                                on
+                            </span>
+                            <span class="is-italic">
+                                {{ track?.Album }}
+                            </span>
                         </span>
-                        <span class="is-italic">
-                            {{ track?.Artist }}
-                        </span>
-                        <br />
-                        <span v-if="track?.Album" class="has-opacity-half">
-                            on
-                        </span>
-                        <span class="is-italic">
-                            {{ track?.Album }}
-                        </span>
-                    </span>
-                </h2>
+                    </h2>
 
-                <div v-show="showCues">
-                    <div class="buttons">
-                        <template v-for="cue in cues" :key="cue.Id">
-                            <CueButton :cue="cue" @click="cueClick(cue.Time)" />
-                        </template>
+                    <div v-show="showCues">
+                        <div class="buttons">
+                            <template v-for="cue in cues" :key="cue.Id">
+                                <CueButton
+                                    :cue="cue"
+                                    @click="cueClick(cue.Time)"
+                                />
+                            </template>
+                        </div>
+
+                        <AudioPlayer
+                            ref="player"
+                            :title="trackFileUrl?.fileName"
+                            :src="trackFileUrl?.objectUrl"
+                        ></AudioPlayer>
                     </div>
-
-                    <AudioPlayer
-                        ref="player"
-                        :title="trackFileUrl?.fileName"
-                        :src="trackFileUrl?.objectUrl"
-                    ></AudioPlayer>
                 </div>
             </div>
         </div>

@@ -1,5 +1,13 @@
 @charset "utf-8";
+
+/** Using Bulma CSS with a theme for Bulma */
+
+@import '../node_modules/bulmaswatch/slate/_variables.scss';
 @import '../node_modules/bulma/bulma.sass';
+@import '../node_modules/bulmaswatch/slate/_overrides.scss';
+
+//TODO /* Replayer-specific add-on: for the slate theme: Cues should be in an outstanding color, not the primary color */
+//$outstading: $orange;
 
 /** Application-specific add-ons/modifications to the Bulma CSS */
 

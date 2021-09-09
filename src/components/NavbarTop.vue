@@ -2,7 +2,7 @@
     <!-- The Navbar -->
     <!-- using a fixed top navbar, see https://bulma.io/documentation/components/navbar/#fixed-navbar -->
     <nav
-        class="navbar is-fixed-top is-light"
+        class="navbar is-fixed-top"
         role="navigation"
         aria-label="main navigation"
     >
@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 
 /** A top navbar for the application*/
 export default defineComponent({
@@ -71,13 +71,13 @@ export default defineComponent({
         return {
             msg: '',
             activator: false,
-        }
+        };
     },
     methods: {
         toggleBurger() {
-            this.activator = !this.activator
-            return this.activator
+            this.activator = !this.activator;
+            return this.activator;
         },
     },
-})
+});
 </script>

@@ -1,10 +1,6 @@
 <template>
     <!-- The footer (as fixed navbar) -->
-    <nav
-        class="navbar is-fixed-bottom is-light"
-        role="footer"
-        aria-label="footer"
-    >
+    <nav class="navbar is-fixed-bottom" role="footer" aria-label="footer">
         <div class="navbar-start">
             <div class="navbar-item">
                 <div class="field">
@@ -24,12 +20,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import ProgressText from '@/components/ProgressText.vue'
+import { defineComponent } from 'vue';
+import ProgressText from '@/components/ProgressText.vue';
 
 /** A top navbar for the application*/
 export default defineComponent({
     name: 'NavbarBottom',
     components: { ProgressText },
-})
+});
 </script>
