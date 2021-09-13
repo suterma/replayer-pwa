@@ -24,6 +24,7 @@ import xml2js from 'xml2js';
 import bplist from 'bplist-parser';
 import { MutationTypes } from '../store/mutation-types';
 import { MediaFile, RezMimeTypes } from '@/store/state-types';
+import NSKeyedUnarchiver from 'nskeyedunarchiver-liveplayback/src/NSKeyedUnarchiver';
 
 export default defineComponent({
     name: 'RezLoader',
@@ -180,18 +181,18 @@ export default defineComponent({
                 );
 
                 (async () => {
-                    const obj = await bplist.parseFile(content);
+                    const inputPropertyList = await bplist.parseFile(content);
 
                     console.debug(
-                        'RezLoader::loadFileAsLivePlaybackPlaylist:obj',
-                        obj,
+                        'RezLoader::loadFileAsLivePlaybackPlaylist:inputPropertyList',
+                        inputPropertyList,
                     );
-                    console.log(JSON.stringify(obj));
-                    //TODO parse the resulting object
-                    //This will be a tedious process
-                    //See http://www.mac4n6.com/blog/2016/1/1/manual-analysis-of-nskeyedarchiver-formatted-plist-files-a-review-of-the-new-os-x-1011-recent-items as a starting point
-                    //See also https://digitalinvestigation.wordpress.com/2012/04/04/geek-post-nskeyedarchiver-files-what-are-they-and-how-can-i-use-them/
-                    //Probably there should be a deserializer library for this. On NPM?
+                    console.log(JSON.stringify(inputPropertyList));
+
+                    var unarchivedObject = new NSKeyedUnarchiver().unarchive(
+                        inputPropertyList,
+                    );
+                    console.log(unarchivedObject);
                 })();
             };
             reader.onerror = (event) => {
