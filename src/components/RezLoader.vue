@@ -1,19 +1,32 @@
 <template>
     <div>
-        <!-- REZ files are ZIP-Files, with just the ending being .REZ -->
-        <input
-            type="file"
-            id="file-input"
-            accept=".rex,.rez,.zip,.mp3"
-            multiple
-            @change="loadFile"
-        />
+        <p>
+            <!-- REZ files are ZIP-Files, with just the ending being .REZ -->
+            <input
+                type="file"
+                id="file-input"
+                accept=".rex,.rez,.zip,.mp3,PlayList"
+                multiple
+                @change="loadFile"
+            />
+        </p>
+        <p>
+            This component loads Compilatons into memory. The following files
+            are supported (See also the documentation for RePlayer Classic)
+        </p>
 
-        <p>This component loads Compilatons into memory</p>
-        The following files are supported: REZ Packages (ZIP Archive with an XML
-        compilation and the media files embedded) Single Compilation.xml file
-        Single mp3 file Multiple files of the above (Compilations and media
-        files are matched by file name)
+        <ul>
+            <li>Compilation XML file (.rex)</li>
+            <li>Compilation bplist file (From LivePlayback, PlayList)</li>
+            <li>
+                Zipped archives of the above, including the media files (.zip,
+                .rez)
+            </li>
+        </ul>
+        <p>
+            Note: Media files are matched by name. Only .mp3 are supported
+            currently.
+        </p>
     </div>
 </template>
 
@@ -111,6 +124,20 @@ export default defineComponent({
                                                 RezMimeTypes.AUDIO_MP3,
                                             );
                                         }
+                                        //Is a LivePlayback playlist?
+                                        if (
+                                            mediaFileName
+                                                .toLowerCase()
+                                                .endsWith('.bplist') ||
+                                            mediaFileName
+                                                .toLowerCase()
+                                                .endsWith('playlist')
+                                        ) {
+                                            this.handleAsLivePlaybackPlaylist(
+                                                content,
+                                                RezMimeTypes.APPLICATION_XBPLIST,
+                                            );
+                                        }
                                     });
                             },
                         );
@@ -180,20 +207,10 @@ export default defineComponent({
                     content,
                 );
 
-                (async () => {
-                    const inputPropertyList = await bplist.parseFile(content);
-
-                    console.debug(
-                        'RezLoader::loadFileAsLivePlaybackPlaylist:inputPropertyList',
-                        inputPropertyList,
-                    );
-                    console.log(JSON.stringify(inputPropertyList));
-
-                    var unarchivedObject = new NSKeyedUnarchiver().unarchive(
-                        inputPropertyList,
-                    );
-                    console.log(unarchivedObject);
-                })();
+                this.handleAsLivePlaybackPlaylist(
+                    content,
+                    RezMimeTypes.APPLICATION_XBPLIST,
+                );
             };
             reader.onerror = (event) => {
                 // Failed
@@ -232,7 +249,7 @@ export default defineComponent({
 
                     //Apply the compilation content to the store
                     this.$store.commit(
-                        MutationTypes.UPDATE_COMPILATION,
+                        MutationTypes.UPDATE_COMPILATION_FROM_XML,
                         result,
                     );
 
@@ -250,6 +267,51 @@ export default defineComponent({
                     );
                 });
         },
+        /** Handles the given content as the compilation meta data
+         */
+        handleAsLivePlaybackPlaylist(content: Buffer, mimeType: RezMimeTypes) {
+            console.debug(
+                'RezLoader::handleAsLivePlaybackPlaylist:content',
+                content,
+            );
+            this.$store.commit(
+                MutationTypes.SET_PROGRESS_MESSAGE,
+                'Parsing compilation (of type ' + mimeType + ')...',
+                content,
+            );
+
+            (async () => {
+                const inputPropertyList = await bplist.parseFile(content);
+
+                // console.debug(
+                //     'RezLoader::loadFileAsLivePlaybackPlaylist:inputPropertyList',
+                //     inputPropertyList,
+                // );
+                //console.log(JSON.stringify(inputPropertyList));
+
+                var unarchivedObject = new NSKeyedUnarchiver().unarchive(
+                    inputPropertyList,
+                );
+                console.log(unarchivedObject);
+
+                //Convert into compilation object
+
+                console.debug('Parsed compilation: ', unarchivedObject);
+
+                //Apply the compilation content to the store
+                this.$store.commit(
+                    MutationTypes.UPDATE_COMPILATION_FROM_PLIST,
+                    unarchivedObject,
+                );
+
+                console.log(mimeType + ' compilation parsing done');
+                this.$store.commit(
+                    MutationTypes.SET_PROGRESS_MESSAGE,
+                    'Compilation parsing (of type ' + mimeType + ') done',
+                );
+            })();
+        },
+
         /** Handles the given content as media file of the given type
          * @devdoc This is used when a file is read from the ZIP package and not yet available as blob
          */
