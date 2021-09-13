@@ -12,7 +12,7 @@
         <hr />
         //TODO's
         <ul>
-            <li>Make the cues hideable (but still showing a minimal player)</li>
+            <li>Make the track players responsive</li>
             <li>
                 Stop playing when another player starts playing (by default).
                 For this propagate the playing state to the global store. Then,
