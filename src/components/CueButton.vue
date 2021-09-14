@@ -10,10 +10,11 @@
             </span>
         </span>
         <!-- On touch devices, the key shortcuts are probably not used, thus hide them to save screen real estate -->
-        <span class="is-hidden-touch">
+        <!-- //TODO Cue shortcuts are currently not yet supported, so do not show them at all now -->
+        <!-- <span class="is-hidden-touch">
             &nbsp;&nbsp;
             <span class="tag is-warning is-light">{{ cue?.Shortcut }}</span>
-        </span>
+        </span> -->
     </button>
 </template>
 
