@@ -270,10 +270,6 @@ export default defineComponent({
         /** Handles the given content as the compilation meta data
          */
         handleAsLivePlaybackPlaylist(content: Buffer, mimeType: RezMimeTypes) {
-            console.debug(
-                'RezLoader::handleAsLivePlaybackPlaylist:content',
-                content,
-            );
             this.$store.commit(
                 MutationTypes.SET_PROGRESS_MESSAGE,
                 'Parsing compilation (of type ' + mimeType + ')...',
@@ -282,22 +278,9 @@ export default defineComponent({
 
             (async () => {
                 const inputPropertyList = await bplist.parseFile(content);
-
-                // console.debug(
-                //     'RezLoader::loadFileAsLivePlaybackPlaylist:inputPropertyList',
-                //     inputPropertyList,
-                // );
-                //console.log(JSON.stringify(inputPropertyList));
-
                 var unarchivedObject = new NSKeyedUnarchiver().unarchive(
                     inputPropertyList,
                 );
-                console.log(unarchivedObject);
-
-                //Convert into compilation object
-
-                console.debug('Parsed compilation: ', unarchivedObject);
-
                 //Apply the compilation content to the store
                 this.$store.commit(
                     MutationTypes.UPDATE_COMPILATION_FROM_PLIST,

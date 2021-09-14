@@ -101,13 +101,15 @@ export default defineComponent({
         },
 
         cueClick(time: number | null) {
-            if (time) {
+            if (time != null) {
                 (
                     this.$refs.player as InstanceType<typeof AudioPlayer>
                 ).playFrom(time);
             }
         },
-        /** Finds the matching the media file (playable file content) for a track's file name, from an already loaded package */
+        /** Finds the matching the media file (playable file content) for a track's file name, from an already loaded package
+         * @remarks If strict file names do not match, a more lazy approach without case and without non-ascii characters is attempted
+         */
         getMatchingPackageFileUrl(
             fileName: string | undefined,
             fileUrls: Array<MediaFile>,
@@ -117,16 +119,29 @@ export default defineComponent({
                     fileName.endsWith(fileUrl.fileName),
                 )[0];
                 if (!url) {
-                    //In case of possible weird characters, or case mismatch, try an more lazy match. See https://stackoverflow.com/a/9364527/79485
+                    //In case of possible weird characters, or case mismatch, try a more lazy match.
+                    //See https://stackoverflow.com/a/9364527/79485 and
+                    //https://stackoverflow.com/questions/20856197/remove-non-ascii-character-in-string
                     const lazyFileName = fileName
                         .toLowerCase()
-                        .replace(/\W/g, '');
-                    //console.debug('lazyFileName: ', lazyFileName);
-                    url = fileUrls.filter((fileUrl: MediaFile) =>
-                        lazyFileName.endsWith(
-                            fileUrl.fileName.toLowerCase().replace(/\W/g, ''),
-                        ),
-                    )[0];
+                        // eslint-disable-next-line
+                        .replace(/[^\x00-\x7F]/g, '');
+                    console.debug(
+                        'Trying to match fileName: "' +
+                            fileName +
+                            '" / lazyFileName: "' +
+                            lazyFileName +
+                            '" with fileUrls: "',
+                        fileUrls,
+                    );
+                    url = fileUrls.filter((fileUrl: MediaFile) => {
+                        var lazyUrlFileName = fileUrl.fileName
+                            .toLowerCase()
+                            // eslint-disable-next-line
+                            .replace(/[^\x00-\x7F]/g, '');
+                        console.debug('lazyUrlFileName: ', lazyUrlFileName);
+                        lazyFileName.endsWith(lazyUrlFileName);
+                    })[0];
                 }
                 return url;
             } else {
@@ -157,8 +172,7 @@ export default defineComponent({
         trackFileUrl(): MediaFile | null {
             const fileUrls = this.$store.getters.fileUrls as Array<MediaFile>;
 
-            console.debug('TrackTile::fileUrls', fileUrls);
-            console.debug('TrackTile::Track URL', this.track?.Url);
+            // console.debug('TrackTile::Track URL', this.track?.Url);
 
             let fileUrl = this.getMatchingPackageFileUrl(
                 this.track?.Url,
