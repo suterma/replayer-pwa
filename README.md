@@ -1,4 +1,4 @@
-# replayer-pwa (alpha)
+# replayer-pwa (beta)
 
 ![License](https://img.shields.io/github/license/suterma/replayer-pwa.svg)
 ![GitHub All Releases](https://img.shields.io/github/downloads/suterma/replayer-pwa/total.svg)
