@@ -116,7 +116,7 @@ export default defineComponent({
         ): MediaFile | null {
             if (fileUrls && fileName) {
                 let url = fileUrls.filter((fileUrl: MediaFile) =>
-                    fileName.endsWith(fileUrl.fileName),
+                    fileName.normalize().endsWith(fileUrl.fileName.normalize()),
                 )[0];
                 if (!url) {
                     //In case of possible weird characters, or case mismatch, try a more lazy match.
@@ -140,7 +140,7 @@ export default defineComponent({
                             // eslint-disable-next-line
                             .replace(/[^\x00-\x7F]/g, '');
                         console.debug('lazyUrlFileName: ', lazyUrlFileName);
-                        lazyFileName.endsWith(lazyUrlFileName);
+                        return lazyFileName.endsWith(lazyUrlFileName);
                     })[0];
                 }
                 return url;

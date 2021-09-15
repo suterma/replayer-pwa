@@ -47,10 +47,11 @@ function UpdateFromPListCompilation(
         stateCompilation = new Compilation();
     }
     //NOTE: the plist compilation type does not have overall data, corresponding to a compilation
+    //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
     stateCompilation.Type = CompilationType.XML; //TODO do we need a type here at all?
-    stateCompilation.MediaPath = ''; //TODO from ZIP filename
-    stateCompilation.Title = 'Imported from LivePlayback'; //TODO from ZIP filename
-    stateCompilation.Url = ''; //TODO from ZIP filename
+    stateCompilation.MediaPath = ''.normalize(); //TODO from ZIP filename
+    stateCompilation.Title = 'Imported from LivePlayback'.normalize(); //TODO from ZIP filename
+    stateCompilation.Url = ''.normalize(); //TODO from ZIP filename
     stateCompilation.Id = '0'; //TODO use a hash of some sort, maybe?
     UpdateFromPlistTracks(stateCompilation.Tracks, plistCompilation);
 }
@@ -101,14 +102,16 @@ function UpdateFromPlistTracks(stateTracks: ITrack[], plistTracks: any[]) {
     plistTracks.forEach((plistTrack: any) => {
         //Only for tracks with real data (LivePlayback may have empty slots in the tracks list)
         if (plistTrack.Duration && plistTrack.Name && plistTrack.Path) {
+            //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
             //TODO Update instead of push, if exists
             const track = new Track();
-            track.Album = '';
-            track.Artist = '';
+            track.Album = ''.normalize();
+            track.Artist = ''.normalize();
             track.Id = ''; //TODO use some form of hash maybe?
             track.Measure = null;
-            track.Name = plistTrack.Name;
-            track.Url = decodeURI(plistTrack.Path); //URL-Decode because LivePlayback stores file names as URIs
+            track.Name = plistTrack.Name.normalize();
+            //URL-Decode because LivePlayback stores file names as URIs
+            track.Url = decodeURI(plistTrack.Path).normalize();
             stateTracks.push(track);
 
             const plistCues = plistTrack.Markers;
@@ -126,11 +129,12 @@ function UpdateFromXmlCues(stateCues: ICue[], xmlCues: any) {
     xmlCues.forEach((xmlCue: any) => {
         //console.debug('parsed: ', xmlCue);
         //TODO Update instead of push, if exists
+        //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
         const cue = new Cue();
-        cue.Description = FirstStringOf(xmlCue.Description);
+        cue.Description = FirstStringOf(xmlCue.Description).normalize();
         cue.Time = FirstNumberOf(xmlCue.Time);
         cue.Id = FirstStringOf(xmlCue.Id);
-        cue.Shortcut = FirstStringOf(xmlCue.Shortcut);
+        cue.Shortcut = FirstStringOf(xmlCue.Shortcut).normalize();
         stateCues.push(cue);
     });
 }

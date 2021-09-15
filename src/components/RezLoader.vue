@@ -104,7 +104,9 @@ export default defineComponent({
                                 zipEntry
                                     .async('nodebuffer')
                                     .then((content: Buffer): void => {
-                                        var mediaFileName = zipEntry.name;
+                                        //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
+                                        var mediaFileName =
+                                            zipEntry.name.normalize();
 
                                         if (
                                             mediaFileName.endsWith(
