@@ -10,23 +10,7 @@
                 @change="loadFile"
             />
         </p>
-        <p>
-            This component loads Compilatons into memory. The following files
-            are supported (See also the documentation for RePlayer Classic)
-        </p>
-
-        <ul>
-            <li>Compilation XML file (.rex)</li>
-            <li>Compilation bplist file (From LivePlayback, PlayList)</li>
-            <li>
-                Zipped archives of the above, including the media files (.zip,
-                .rez)
-            </li>
-        </ul>
-        <p>
-            Note: Media files are matched by name. Only .mp3 are supported
-            currently.
-        </p>
+        <p>This component loads Compilatons from a local file.</p>
     </div>
 </template>
 
