@@ -8119,7 +8119,20 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 .has-opacity-half {
   opacity: 50%; }
 
-/** A specific light color for better use of a black text color */
+/* Style to properly show SVG icons, with appropriate sizing */
+[class*=' icon'],
+[class^='icon'] {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+  line-height: 1;
+  position: relative;
+  top: -0.05em;
+  vertical-align: middle; }
+
 /* Player styles (to be used for the audio player) */
 .player {
   background-color: #3a3f44;
@@ -8149,7 +8162,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 .player-timeline {
   background-color: #1e2023;
   height: 50%;
-  min-width: 200px;
+  min-width: 2em;
   position: relative; }
   .player-timeline .player-progress,
   .player-timeline .player-seeker {

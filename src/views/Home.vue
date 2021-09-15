@@ -19,7 +19,6 @@
 
                 to try upcoming features.
             </p>
-            <!-- <div class="notification is-warning">Use with caution</div> -->
             <h1>Current features</h1>
             <ul>
                 <li>

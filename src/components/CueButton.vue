@@ -1,5 +1,9 @@
 <template>
-    <button class="button is-warning" @click="invokeCue">
+    <button
+        class="button is-warning is-large"
+        @click="invokeCue"
+        :title="'Play from ' + cue?.Description"
+    >
         <span class="icon"> ▶ </span>
         <span class="has-text-weight-semibold">{{ cue?.Description }}</span>
         <!-- On small devices, hide the informational time stamp to save screen real estate -->

@@ -6,9 +6,6 @@
 @import '../node_modules/bulma/bulma.sass';
 @import '../node_modules/bulmaswatch/slate/_overrides.scss';
 
-//TODO /* Replayer-specific add-on: for the slate theme: Cues should be in an outstanding color, not the primary color */
-//$outstading: $orange;
-
 /** Application-specific add-ons/modifications to the Bulma CSS */
 
 /* A variant for a dimmed item (e.g. supporitve/informational text parts)*/
@@ -16,14 +13,24 @@
     opacity: 50%;
 }
 
-/** A specific light color for better use of a black text color */
-//TODO decide on use or delete
-// .has-background-primary-light {
-//     background-color: hsl(171, 100%, 71%) !important;
-// }
+/* Style to properly show SVG icons, with appropriate sizing */
+[class*=' icon'],
+[class^='icon'] {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
+    line-height: 1;
+    position: relative;
+    top: -0.05em;
+    vertical-align: middle;
+}
 
 /* Player styles (to be used for the audio player) */
-continue.... (Export in its own scss file)
+// continue.... (Export in its own scss file)
+//TODO remove unused player css
 $player-bg: $button-background-color; //from BULMA-Swatch theme
 $player-border-color: darken($player-bg, 12%);
 $player-link-color: darken($player-bg, 75%);
@@ -71,7 +78,7 @@ $player-playing-color: rgb(8, 196, 39); //TODO use success color from bulma?
 .player-timeline {
     background-color: $player-timeline-color;
     height: 50%;
-    min-width: 200px;
+    min-width: 2em;
     position: relative;
 
     .player-progress,

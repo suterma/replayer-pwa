@@ -54,13 +54,12 @@
                     </h2>
 
                     <div v-show="showCues">
-                        <div class="buttons">
-                            <AudioPlayer
-                                ref="player"
-                                :title="trackFileUrl?.fileName"
-                                :src="trackFileUrl?.objectUrl"
-                            ></AudioPlayer>
-                        </div>
+                        <AudioPlayer
+                            ref="player"
+                            :title="trackFileUrl?.fileName"
+                            :src="trackFileUrl?.objectUrl"
+                        ></AudioPlayer>
+
                         <div class="buttons">
                             <template v-for="cue in cues" :key="cue.Id">
                                 <CueButton
