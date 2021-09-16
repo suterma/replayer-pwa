@@ -54,11 +54,21 @@
                     </h2>
 
                     <div v-show="showCues">
+                        <!-- The audio player, but only shown when the source is available -->
                         <AudioPlayer
+                            v-if="trackFileUrl?.objectUrl"
                             ref="player"
                             :title="trackFileUrl?.fileName"
                             :src="trackFileUrl?.objectUrl"
                         ></AudioPlayer>
+
+                        <!-- Otherwise show a placeholder -->
+                        <p v-else>
+                            <span class="has-opacity-half"> Waiting for </span>
+                            <span class="is-italic">
+                                {{ track?.Url }}
+                            </span>
+                        </p>
 
                         <div class="buttons">
                             <template v-for="cue in cues" :key="cue.Id">
