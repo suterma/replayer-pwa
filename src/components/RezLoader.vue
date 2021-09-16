@@ -12,10 +12,11 @@
                     name="resume"
                 />
                 <span class="file-cta">
-                    <span class="file-icon">
+                    <!-- //TODO use an SVG upload icon -->
+                    <!-- <span class="file-icon">
                         <i class="fas fa-upload"></i>
-                    </span>
-                    <span class="file-label"> Choose a file… </span>
+                    </span> -->
+                    <span class="file-label"> Choose a compilation file… </span>
                 </span>
                 <!-- <span class="file-name">
                     {{selectedFile}}}
@@ -23,7 +24,7 @@
             </label>
         </div>
 
-        <p>This component loads Compilatons from a local file.</p>
+        <p>This component loads Compilations from a local file.</p>
     </div>
 </template>
 
