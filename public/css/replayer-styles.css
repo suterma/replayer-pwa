@@ -8134,36 +8134,22 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   vertical-align: middle; }
 
 /* Player styles (to be used for the audio player) */
+/* Player styles (to be used for the audio player)
+ * These styles are based on a dark bulmaswatch theme and borrow variables from there
+ */
+/* The playing color should be non-distracting, but be strong enough to visually indicate the playing state*/
 .player {
   background-color: #3a3f44;
-  border-radius: 5px;
-  border: 1px solid #1e2023;
-  color: black;
   display: inline-block;
   line-height: 1.5625;
   position: relative; }
 
-.player-controls {
-  display: flex; }
-  .player-controls > div {
-    border-right: 1px solid #1e2023; }
-    .player-controls > div:last-child {
-      border-right: none; }
-    .player-controls > div a {
-      color: black;
-      display: block;
-      line-height: 0;
-      padding: 1em;
-      text-decoration: none; }
-      .player-controls > div a svg {
-        display: inline-block;
-        width: 1.125rem; }
-
 .player-timeline {
-  background-color: #1e2023;
-  height: 50%;
+  height: 100%;
   min-width: 2em;
-  position: relative; }
+  position: relative;
+  /* A player progress as simple vertical handle */
+  /* A player progress as a progess bar (alternative, currently not used) */ }
   .player-timeline .player-progress,
   .player-timeline .player-seeker {
     bottom: 0;
@@ -8172,19 +8158,20 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
     position: absolute;
     top: 0; }
   .player-timeline .player-progress {
-    background-color: black;
+    border-right-width: 0.4em;
+    border-right-color: #fafafa;
+    border-right-style: solid;
     z-index: 1; }
   .player-timeline .player-seeker {
     cursor: pointer;
     width: 100%;
     z-index: 2; }
 
-.player-playing-indication {
-  background-color: #08c427; }
-
 .player-time {
   display: flex;
-  justify-content: space-between; }
+  justify-content: space-between;
+  /* Keep some disctanc from the edge, to better show the times*/
+  padding: 1em; }
   .player-time .player-time-current {
     font-weight: 700;
     padding-left: 5px; }
@@ -8197,6 +8184,25 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   height: 1.1rem;
   margin: 0 0 0 2px;
   width: 6rem; }
+
+/* The player should take full witdth */
+.player-panel {
+  width: 100%; }
+
+/** The seekbar. It should always be visible, taking up what's available, however small on small devices */
+.player-seekbar {
+  /* Width takes max available space among siblings */
+  width: inherit;
+  /* Height similar to the used large buttons */
+  height: 60px;
+  background-color: #272b30;
+  /* outline more like a button, with border (However, no rounded corners, and with other text alignment) */
+  border: 1px solid #5d656d;
+  margin-right: -1px; }
+
+/* When playing, overrides the non-playing default background */
+.player-playing-indication {
+  background-color: #205420; }
 
 /* Improve text legibility */
 #app {

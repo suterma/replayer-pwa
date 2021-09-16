@@ -1,0 +1,102 @@
+@charset "utf-8";
+
+/* Player styles (to be used for the audio player)
+ * These styles are based on a dark bulmaswatch theme and borrow variables from there
+ */
+
+$player-progress-color: $green; //from BULMA-Swatch theme
+$player-timeline-color: $grey-darker;
+/* The playing color should be non-distracting, but be strong enough to visually indicate the playing state*/
+$player-playing-color: darken($green, 35%);
+// $player-playing-color: lighten($green, 35%);
+// $player-playing-color: $green;
+
+.player {
+    background-color: $button-background-color; //from BULMA-Swatch theme
+    display: inline-block;
+    line-height: 1.5625;
+    position: relative;
+}
+
+.player-timeline {
+    height: 100%;
+    min-width: 2em;
+    position: relative;
+
+    .player-progress,
+    .player-seeker {
+        bottom: 0;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+    }
+
+    /* A player progress as simple vertical handle */
+    .player-progress {
+        border-right-width: 0.4em;
+        border-right-color: $button-color;
+        border-right-style: solid;
+        z-index: 1;
+    }
+
+    /* A player progress as a progess bar (alternative, currently not used) */
+    // .player-progress {
+    //     background-color: $player-progress-color;
+    //     z-index: 1;
+    // }
+
+    .player-seeker {
+        cursor: pointer;
+        width: 100%;
+        z-index: 2;
+    }
+}
+
+.player-time {
+    display: flex;
+    justify-content: space-between;
+
+    /* Keep some disctanc from the edge, to better show the times*/
+    padding: 1em;
+
+    .player-time-current {
+        font-weight: 700;
+        padding-left: 5px;
+    }
+
+    .player-time-total {
+        opacity: 0.5;
+        padding-right: 5px;
+    }
+}
+
+.player-volume {
+    display: inline-block;
+    height: 1.1rem;
+    margin: 0 0 0 2px;
+    width: 6rem;
+}
+
+/* The player should take full witdth */
+.player-panel {
+    width: 100%;
+}
+
+/** The seekbar. It should always be visible, taking up what's available, however small on small devices */
+.player-seekbar {
+    /* Width takes max available space among siblings */
+    width: inherit;
+    /* Height similar to the used large buttons */
+    height: 60px;
+
+    background-color: $player-timeline-color;
+    /* outline more like a button, with border (However, no rounded corners, and with other text alignment) */
+    border: $button-border-width solid $button-border-color;
+    margin-right: -1px;
+}
+
+/* When playing, overrides the non-playing default background */
+.player-playing-indication {
+    background-color: $player-playing-color;
+}

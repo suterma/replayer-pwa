@@ -62,14 +62,13 @@
                     class="player-seeker"
                     title="Seek"
                 ></div>
-            </div>
-            <div class="player-time">
-                <div class="player-time-current">
-                    {{ convertToDisplayTime(currentSeconds) }}
-                </div>
-                <!-- The total track duration, hide on small devices -->
-                <div class="player-time-total is-hidden-mobile">
-                    {{ convertToDisplayTime(durationSeconds) }}
+                <div class="player-time">
+                    <div class="player-time-current">
+                        {{ convertToDisplayTime(currentSeconds) }}
+                    </div>
+                    <div class="player-time-total is-hidden-mobile">
+                        {{ convertToDisplayTime(durationSeconds) }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -96,6 +95,7 @@
                 </span>
             </span>
         </p>
+        <!-- Loop -->
         <p class="control">
             <span
                 class="button is-large"
@@ -152,6 +152,7 @@
                 </span>
             </span>
         </p>
+        <!-- Volume -->
         <p class="control">
             <span
                 class="button is-large"
@@ -324,17 +325,4 @@ export default defineComponent({
     },
 });
 </script>
-<style scoped>
-/* //TODO test styles, later copy to global css */
-.player-panel {
-    width: 100%;
-}
-.player-seekbar {
-    /* Width takes max available space among siblings */
-    width: inherit;
-    /* Height similar to the used large buttons */
-    height: 60px;
-
-    /* //TODO make it look more like a button, with border  */
-}
-</style>
+<style scoped></style>

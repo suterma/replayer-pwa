@@ -1,7 +1,6 @@
 @charset "utf-8";
 
 /** Using Bulma CSS with a theme for Bulma */
-
 @import '../node_modules/bulmaswatch/slate/_variables.scss';
 @import '../node_modules/bulma/bulma.sass';
 @import '../node_modules/bulmaswatch/slate/_overrides.scss';
@@ -29,104 +28,7 @@
 }
 
 /* Player styles (to be used for the audio player) */
-// continue.... (Export in its own scss file)
-//TODO remove unused player css
-$player-bg: $button-background-color; //from BULMA-Swatch theme
-$player-border-color: darken($player-bg, 12%);
-$player-link-color: darken($player-bg, 75%);
-$player-progress-color: $player-link-color;
-$player-text-color: $player-link-color;
-$player-timeline-color: $player-border-color;
-$player-playing-color: rgb(8, 196, 39); //TODO use success color from bulma?
-
-.player {
-    background-color: $player-bg;
-    border-radius: 5px;
-    border: 1px solid $player-border-color;
-    // box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15);
-    color: $player-text-color;
-    display: inline-block;
-    line-height: 1.5625;
-    position: relative;
-}
-
-.player-controls {
-    display: flex;
-
-    > div {
-        border-right: 1px solid $player-border-color;
-
-        &:last-child {
-            border-right: none;
-        }
-
-        a {
-            color: $player-link-color;
-            display: block;
-            line-height: 0;
-            padding: 1em;
-            text-decoration: none;
-
-            svg {
-                display: inline-block;
-                width: 1.125rem;
-            }
-        }
-    }
-}
-
-.player-timeline {
-    background-color: $player-timeline-color;
-    height: 50%;
-    min-width: 2em;
-    position: relative;
-
-    .player-progress,
-    .player-seeker {
-        bottom: 0;
-        height: 100%;
-        left: 0;
-        position: absolute;
-        top: 0;
-    }
-
-    .player-progress {
-        background-color: $player-progress-color;
-        z-index: 1;
-    }
-
-    .player-seeker {
-        cursor: pointer;
-        width: 100%;
-        z-index: 2;
-    }
-}
-
-.player-playing-indication {
-    background-color: $player-playing-color;
-}
-
-.player-time {
-    display: flex;
-    justify-content: space-between;
-
-    .player-time-current {
-        font-weight: 700;
-        padding-left: 5px;
-    }
-
-    .player-time-total {
-        opacity: 0.5;
-        padding-right: 5px;
-    }
-}
-
-.player-volume {
-    display: inline-block;
-    height: 1.1rem;
-    margin: 0 0 0 2px;
-    width: 6rem;
-}
+@import 'replayer-player-styles.scss';
 
 /* Improve text legibility */
 #app {
