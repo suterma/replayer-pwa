@@ -11,4 +11,4 @@ The classic [RePlayer](https://github.com/suterma/replayer), as a Progressive We
 
 It's aim is to replace the classic, Microsoft Windows based, RePlayer desktop application with a progressive web app, that is locally installable on devices.
 
-The latest version is available at https://replayer.ch Source code is availabe at GitHub
+The latest version is available at https://app-test.replayer.ch Source code is availabe at GitHub
