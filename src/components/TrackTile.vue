@@ -117,6 +117,10 @@ export default defineComponent({
                 ).playFrom(time);
             }
         },
+        /** Determines, whether one of the given string ends with the other */
+        endWithOneAnother(first: string, second: string): boolean {
+            return first.endsWith(second) || second.endsWith(first);
+        },
         /** Finds the matching the media file (playable file content) for a track's file name, from an already loaded package
          * @remarks If strict file names do not match, a more lazy approach without case and without non-ascii characters is attempted
          */
@@ -125,9 +129,9 @@ export default defineComponent({
             fileUrls: Array<MediaFile>,
         ): MediaFile | null {
             if (fileUrls && fileName) {
-                let url = fileUrls.filter((fileUrl: MediaFile) =>
-                    fileName.normalize().endsWith(fileUrl.fileName.normalize()),
-                )[0];
+                let url = fileUrls.filter((fileUrl: MediaFile) => {
+                    return this.endWithOneAnother(fileName, fileUrl.fileName);
+                })[0];
                 if (!url) {
                     //In case of possible weird characters, or case mismatch, try a more lazy match.
                     //See https://stackoverflow.com/a/9364527/79485 and
@@ -141,7 +145,7 @@ export default defineComponent({
                             fileName +
                             '" / lazyFileName: "' +
                             lazyFileName +
-                            '" with fileUrls: "',
+                            '" with fileUrls: ',
                         fileUrls,
                     );
                     url = fileUrls.filter((fileUrl: MediaFile) => {
@@ -150,7 +154,10 @@ export default defineComponent({
                             // eslint-disable-next-line
                             .replace(/[^\x00-\x7F]/g, '');
                         console.debug('lazyUrlFileName: ', lazyUrlFileName);
-                        return lazyFileName.endsWith(lazyUrlFileName);
+                        return this.endWithOneAnother(
+                            lazyFileName,
+                            lazyUrlFileName,
+                        );
                     })[0];
                 }
                 return url;
