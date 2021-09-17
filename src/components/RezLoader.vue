@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="file is-primary is-large">
+        <div class="file is-primary">
             <label class="file-label">
                 <input
                     class="file-input"

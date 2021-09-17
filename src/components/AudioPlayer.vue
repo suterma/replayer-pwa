@@ -152,8 +152,8 @@
                 </span>
             </span>
         </p>
-        <!-- Volume -->
-        <p class="control">
+        <!-- Volume (do not show on small devices, user still can use the device volume) -->
+        <p class="control is-hidden-mobile">
             <span
                 class="button is-large"
                 v-on:click.prevent=""
