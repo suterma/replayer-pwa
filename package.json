@@ -1,50 +1,69 @@
 {
-  "name": "replayer",
-  "version": "0.2.0",
-  "private": true,
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "css-build": "node-sass --omit-source-map-url sass/replayer-styles.scss public/css/replayer-styles.css",
-    "css-watch": "npm run css-build -- --watch",
-    "start": "npm run css-watch"
-  },
-  "dependencies": {
-    "@zip.js/zip.js": "^2.2.33",
-    "bplist-parser": "^0.3.0",
-    "bulmaswatch": "^0.8.1",
-    "core-js": "^3.6.5",
-    "jszip": "^3.7.1",
-    "nskeyedunarchiver-liveplayback": "file:../node-NSKeyedUnarchiver",
-    "outfront": "^1.1.1",
-    "register-service-worker": "^1.7.1",
-    "vue": "^3.0.0",
-    "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0",
-    "xml2js": "^0.4.23"
-  },
-  "devDependencies": {
-    "@types/xml2js": "^0.4.9",
-    "@typescript-eslint/eslint-plugin": "^4.18.0",
-    "@typescript-eslint/parser": "^4.18.0",
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-pwa": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-typescript": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.0",
-    "@vue/eslint-config-prettier": "^6.0.0",
-    "@vue/eslint-config-typescript": "^7.0.0",
-    "bulma": "^0.9.3",
-    "eslint": "^6.7.2",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-vue": "^7.0.0",
-    "prettier": "^2.2.1",
-    "typescript": "~4.1.5",
-    "node-sass": "^6.0.1",
-    "sass-loader": "^10"
-  }
+    "name": "replayer",
+    "version": "0.2.1",
+    "description": "Replayer is a free media player for use during rehearsals with playback music. It's main feature is fast navigation to predefined cue points in the playback media.",
+    "homepage": "https://replayer.app",
+    "main": "./public/index.html",
+    "private": true,
+    "keywords": [
+        "Replayer, Web App, free, rehearsal, media, player"
+    ],
+    "author": {
+        "name": "Marcel Suter",
+        "email": "node-NSKeyedUnarchiver-LivePlayback@marcelsuter.ch",
+        "url": "https://marcelsuter.ch"
+    },
+    "license": "MIT",
+    "scripts": {
+        "serve": "vue-cli-service serve",
+        "build": "vue-cli-service build",
+        "lint": "vue-cli-service lint",
+        "css-build": "node-sass --omit-source-map-url sass/replayer-styles.scss public/css/replayer-styles.css",
+        "css-watch": "npm run css-build -- --watch",
+        "start": "npm run css-watch"
+    },
+    "dependencies": {
+        "@zip.js/zip.js": "^2.2.33",
+        "bplist-parser": "^0.3.0",
+        "bulmaswatch": "^0.8.1",
+        "core-js": "^3.6.5",
+        "jszip": "^3.7.1",
+        "nskeyedunarchiver-liveplayback": "file:../node-NSKeyedUnarchiver",
+        "outfront": "^1.1.1",
+        "register-service-worker": "^1.7.1",
+        "vue": "^3.0.0",
+        "vue-router": "^4.0.0-0",
+        "vuex": "^4.0.0-0",
+        "xml2js": "^0.4.23"
+    },
+    "devDependencies": {
+        "@types/xml2js": "^0.4.9",
+        "@typescript-eslint/eslint-plugin": "^4.18.0",
+        "@typescript-eslint/parser": "^4.18.0",
+        "@vue/cli-plugin-babel": "~4.5.0",
+        "@vue/cli-plugin-eslint": "~4.5.0",
+        "@vue/cli-plugin-pwa": "~4.5.0",
+        "@vue/cli-plugin-router": "~4.5.0",
+        "@vue/cli-plugin-typescript": "~4.5.0",
+        "@vue/cli-plugin-vuex": "~4.5.0",
+        "@vue/cli-service": "~4.5.0",
+        "@vue/compiler-sfc": "^3.0.0",
+        "@vue/eslint-config-prettier": "^6.0.0",
+        "@vue/eslint-config-typescript": "^7.0.0",
+        "bulma": "^0.9.3",
+        "eslint": "^6.7.2",
+        "eslint-plugin-prettier": "^3.3.1",
+        "eslint-plugin-vue": "^7.0.0",
+        "prettier": "^2.2.1",
+        "typescript": "~4.1.5",
+        "node-sass": "^6.0.1",
+        "sass-loader": "^10"
+    },
+    "bugs": {
+        "url": "https://github.com/suterma/replayer-pwa/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/suterma/replayer-pwa.git"
+    }
 }
