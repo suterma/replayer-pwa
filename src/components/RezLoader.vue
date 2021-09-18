@@ -86,19 +86,14 @@ export default defineComponent({
                     (zip: JSZip) => {
                         zip.forEach(
                             (
-                                relativePath: string,
+                                _relativePath: string,
                                 zipEntry: JSZip.JSZipObject,
-                            ) => {
+                            ): void => {
                                 // 2) print entries
                                 this.$store.commit(
                                     MutationTypes.SET_PROGRESS_MESSAGE,
                                     'Processing content: ' + zipEntry.name,
                                 );
-                                this.$store.commit(
-                                    MutationTypes.ADD_TRACK,
-                                    zipEntry.name,
-                                );
-
                                 zipEntry
                                     .async('nodebuffer')
                                     .then((content: Buffer): void => {
@@ -172,7 +167,7 @@ export default defineComponent({
 
                 this.handleAsCompilation(content, RezMimeTypes.TEXT_XML);
             };
-            reader.onerror = (event) => {
+            reader.onerror = (_event): void => {
                 // Failed
                 console.error(
                     'Failed to read file ' +
@@ -212,7 +207,7 @@ export default defineComponent({
                     RezMimeTypes.APPLICATION_XBPLIST,
                 );
             };
-            reader.onerror = (event) => {
+            reader.onerror = (_event): void => {
                 // Failed
                 console.error(
                     'Failed to read file ' +

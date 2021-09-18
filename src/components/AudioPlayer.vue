@@ -250,13 +250,15 @@ export default defineComponent({
     },
 
     watch: {
-        playing(value) {
+        /** Watch whether the player state changed, and then update the audio element accordingly  */
+        playing(value): Promise<void> | undefined {
             if (value) {
                 return (this.$refs.audio as InstanceType<typeof Audio>).play();
             }
             (this.$refs.audio as InstanceType<typeof Audio>).pause();
         },
-        volume(value) {
+        /** Watch whether the volume changed, and then update the audio element accordingly  */
+        volume(): void {
             (this.$refs.audio as InstanceType<typeof Audio>).volume =
                 this.volume / 100;
         },
@@ -309,7 +311,8 @@ export default defineComponent({
             this.playing = false;
             (this.$refs.audio as InstanceType<typeof Audio>).currentTime = 0;
         },
-        update(e: any) {
+        /** Updates the current seconds display with the temporal position of the player */
+        update() {
             this.currentSeconds = (
                 this.$refs.audio as InstanceType<typeof Audio>
             ).currentTime;

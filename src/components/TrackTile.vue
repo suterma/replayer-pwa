@@ -167,7 +167,7 @@ export default defineComponent({
         },
         /** Finds the matching the media file (playable file content) for a track's file name, from the local file system */
         getMatchingLocalFileUrl(
-            fileName: string | undefined,
+            _fileName: string | undefined,
         ): MediaFile | null {
             // if (fileName) {
             //     var objectUrl = URL.createObjectURL(blob);

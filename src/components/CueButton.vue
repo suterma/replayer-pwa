@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Cue, ICue } from '@/store/compilation-types';
+import { Cue } from '@/store/compilation-types';
 
 export default defineComponent({
     name: 'CueButton',

@@ -14,7 +14,6 @@ import { MediaFile } from './state-types';
 
 export type Mutations<S = State> = {
     [MutationTypes.SET_PROGRESS_MESSAGE](state: S, payload: string): void;
-    [MutationTypes.ADD_TRACK](state: S, payload: string): void;
     [MutationTypes.ADD_FILE_URL](state: S, payload: MediaFile): void;
     /** @devdoc //TODO the playload should be of a to be defined compilation type */
     [MutationTypes.UPDATE_COMPILATION_FROM_XML](state: S, payload: any): void;
@@ -159,10 +158,6 @@ export const mutations: MutationTree<State> & Mutations = {
     [MutationTypes.SET_PROGRESS_MESSAGE](state, message: string) {
         state.progressMessage = message;
         console.log(message);
-    },
-    [MutationTypes.ADD_TRACK](state, payload: string) {
-        //TODO remove this mutation
-        //state.compilation.push(payload);
     },
     [MutationTypes.ADD_FILE_URL](state, payload: MediaFile) {
         state.fileUrls.push(payload);
