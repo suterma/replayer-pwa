@@ -29,7 +29,7 @@ function UpdateFromXmlCompilation(
         stateCompilation = new Compilation();
     }
     stateCompilation.Type = CompilationType.XML;
-    stateCompilation.MediaPath = ''; //TODO from ZIP filename
+    stateCompilation.MediaPath = xmlCompilation.MediaPath;
     stateCompilation.Title = FirstStringOf(xmlCompilation.Title);
     stateCompilation.Url = ''; //TODO from ZIP filename
     stateCompilation.Id = FirstStringOf(xmlCompilation.Id);

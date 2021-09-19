@@ -10,7 +10,7 @@
     ],
     "author": {
         "name": "Marcel Suter",
-        "email": "node-NSKeyedUnarchiver-LivePlayback@marcelsuter.ch",
+        "email": "replayer.app@marcelsuter.ch",
         "url": "https://marcelsuter.ch"
     },
     "license": "MIT",
@@ -23,12 +23,12 @@
         "start": "npm run css-watch"
     },
     "dependencies": {
+        "@suterma/nskeyedunarchiver-liveplayback": "^0.1.1",
         "@zip.js/zip.js": "^2.2.33",
         "bplist-parser": "^0.3.0",
         "bulmaswatch": "^0.8.1",
         "core-js": "^3.6.5",
         "jszip": "^3.7.1",
-        "nskeyedunarchiver-liveplayback": "file:../node-NSKeyedUnarchiver",
         "outfront": "^1.1.1",
         "register-service-worker": "^1.7.1",
         "vue": "^3.0.0",
@@ -54,10 +54,10 @@
         "eslint": "^6.7.2",
         "eslint-plugin-prettier": "^3.3.1",
         "eslint-plugin-vue": "^7.0.0",
-        "prettier": "^2.2.1",
-        "typescript": "~4.1.5",
         "node-sass": "^6.0.1",
-        "sass-loader": "^10"
+        "prettier": "^2.2.1",
+        "sass-loader": "^10",
+        "typescript": "~4.1.5"
     },
     "bugs": {
         "url": "https://github.com/suterma/replayer-pwa/issues"

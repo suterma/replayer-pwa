@@ -35,7 +35,7 @@ import xml2js from 'xml2js';
 import bplist from 'bplist-parser';
 import { MutationTypes } from '../store/mutation-types';
 import { MediaFile, RezMimeTypes } from '@/store/state-types';
-import NSKeyedUnarchiver from 'nskeyedunarchiver-liveplayback';
+import NSKeyedUnarchiver from '@suterma/nskeyedunarchiver-liveplayback';
 
 export default defineComponent({
     name: 'RezLoader',

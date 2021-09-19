@@ -1,0 +1,22 @@
+import { ICue, Cue } from '@/store/compilation-types';
+import { XmlCue } from './XmlCue';
+
+/** @class Implements an XML-Representation of a Cues set
+ * @remarks This is intended to define the export structure for xml2js exp
+ */
+export class XmlCues {
+    /** @constructor
+     * @param {ICue[]} cues - The set of cues to represent
+     */
+    constructor(cues: ICue[] | undefined) {
+        if (cues) {
+            cues.forEach((cue: Cue) => {
+                this.Cue.push(new XmlCue(cue));
+            });
+        }
+    }
+    /** The set of cues; will be rendered as an XML sequence
+     * @remarks This is named singular because this is the name it should have in the XML sequence
+     */
+    Cue: XmlCue[] = new Array<XmlCue>();
+}
