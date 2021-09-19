@@ -1,8 +1,7 @@
 import { Cue } from '@/store/compilation-types';
 
 /** @class Implements an XML-Representation of a Cue
- * @remarks This is intended to define the export structure for xml2js exp
- */
+ * @remarks This is intended to define the export structure for a compilation, for export with the xml2js module */
 export class XmlCue {
     /** @constructor
      * @param {Cue} cue - The Typescript cue object to represent

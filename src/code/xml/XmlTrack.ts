@@ -2,8 +2,7 @@ import { Track } from '@/store/compilation-types';
 import { XmlCues } from './XmlCues';
 
 /** @class Implements an XML-Representation of a Track
- * @remarks This is intended to define the export structure for xml2js exp
- */
+ * @remarks This is intended to define the export structure for a compilation, for export with the xml2js module */
 export class XmlTrack {
     /** @constructor
      * @param {Track} track - The Typescript track object to represent
