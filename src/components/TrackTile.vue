@@ -73,6 +73,7 @@
                         <div class="buttons">
                             <template v-for="cue in cues" :key="cue.Id">
                                 <CueButton
+                                    :disabled="!trackFileUrl?.objectUrl"
                                     :cue="cue"
                                     @click="cueClick(cue.Time)"
                                 />
