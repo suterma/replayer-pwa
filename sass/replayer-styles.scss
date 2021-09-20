@@ -7,6 +7,18 @@
 
 /** Application-specific add-ons/modifications to the Bulma CSS */
 
+/* Disable overscroll page refresh */
+html,
+body {
+    overscroll-behavior-y: none;
+}
+
+/* Disable overscroll page navigation */
+html,
+body {
+    overscroll-behavior-x: none;
+}
+
 /* A variant for a dimmed item (e.g. supporitve/informational text parts)*/
 .has-opacity-half {
     opacity: 50%;
