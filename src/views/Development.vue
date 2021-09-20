@@ -2,7 +2,7 @@
     <h1>1) Select a REZ or ZIP file</h1>
     <RezLoader />
 
-    <template v-if="compilation">
+    <template v-if="hasCompilation">
         <h1>2) See the compilation as XML</h1>
         <CompilationXmlDisplay :compilation="compilation" />
     </template>
@@ -22,6 +22,9 @@ export default defineComponent({
     computed: {
         compilation(): ICompilation {
             return this.$store.getters.compilation;
+        },
+        hasCompilation(): boolean {
+            return this.$store.getters.hasCompilation;
         },
     },
 });
