@@ -18,7 +18,7 @@
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",
-        "css-build": "node-sass --omit-source-map-url sass/replayer-styles.scss public/css/replayer-styles.css",
+        "css-build": "sass --no-source-map sass/replayer-styles.scss public/css/replayer-styles.css",
         "css-watch": "npm run css-build -- --watch",
         "start": "npm run css-watch"
     },
@@ -56,10 +56,11 @@
         "eslint": "^6.7.2",
         "eslint-plugin-prettier": "^3.3.1",
         "eslint-plugin-vue": "^7.0.0",
-        "node-sass": "^6.0.1",
         "prettier": "^2.2.1",
-        "sass-loader": "^10",
-        "typescript": "~4.1.5"
+        "sass": "^1.42.0",
+        "sass-loader": "^10.2.0",
+        "typescript": "~4.1.5",
+        "webpack": "^4.46.0"
     },
     "bugs": {
         "url": "https://github.com/suterma/replayer-pwa/issues"
