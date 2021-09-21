@@ -11,6 +11,7 @@ import {
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
 import { MediaFile } from './state-types';
+import uuidv4 from 'uuid';
 
 export type Mutations<S = State> = {
     [MutationTypes.SET_PROGRESS_MESSAGE](state: S, payload: string): void;
@@ -45,13 +46,13 @@ function UpdateFromPListCompilation(
     if (!stateCompilation) {
         stateCompilation = new Compilation();
     }
-    //NOTE: the plist compilation type does not have overall data, corresponding to a compilation
+    //NOTE: the plist compilation type does not have all data corresponding to a RePlayer compilation. Thus some of the information like the GUID, is just made up    .
     //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
     stateCompilation.Type = CompilationType.XML; //TODO do we need a type here at all?
     stateCompilation.MediaPath = ''.normalize(); //TODO from ZIP filename
     stateCompilation.Title = 'Imported from LivePlayback'.normalize(); //TODO from ZIP filename
     stateCompilation.Url = ''.normalize(); //TODO from ZIP filename
-    stateCompilation.Id = '0'; //TODO use a hash of some sort, maybe?
+    stateCompilation.Id = uuidv4.v4();
     UpdateFromPlistTracks(stateCompilation.Tracks, plistCompilation);
 }
 
@@ -101,12 +102,13 @@ function UpdateFromPlistTracks(stateTracks: ITrack[], plistTracks: any[]) {
     plistTracks.forEach((plistTrack: any) => {
         //Only for tracks with real data (LivePlayback may have empty slots in the tracks list)
         if (plistTrack.Duration && plistTrack.Name && plistTrack.Path) {
+            //NOTE: the plist compilation type does not have all data corresponding to a RePlayer compilation. Thus some of the information like the GUID, is just made up    .
             //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
             //TODO Update instead of push, if exists
             const track = new Track();
             track.Album = ''.normalize();
             track.Artist = ''.normalize();
-            track.Id = ''; //TODO use some form of hash maybe?
+            track.Id = uuidv4.v4();
             track.Measure = null;
             track.Name = plistTrack.Name.normalize();
             //URL-Decode because LivePlayback stores file names as URIs
@@ -144,11 +146,12 @@ function UpdateFromPlistCues(stateCues: ICue[], plistCues: any[]) {
     }
 
     plistCues.forEach((plistCue: any) => {
+        //NOTE: the plist compilation type does not have all data corresponding to a RePlayer compilation. Thus some of the information like the GUID, is just made up    .
         //TODO Update instead of push, if exists
         const cue = new Cue();
         cue.Description = plistCue.Name;
         cue.Time = plistCue.Position;
-        cue.Id = ''; //TODO use some form of hash maybe?
+        cue.Id = uuidv4.v4();
         cue.Shortcut = plistCue.ShortCut;
         stateCues.push(cue);
     });
