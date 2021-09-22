@@ -3,7 +3,7 @@ export enum CompilationType {
     XML = 'XML',
 }
 
-/** @interface Defines a rehearsal Compilation, consisting of a set of tracks with their cuepoints.
+/** @interface Defines a Replayer Compilation, consisting of a set of tracks with their cuepoints.
  * @remarks This definition corresponds to the defitions in https://github.com/suterma/Replayer/blob/master/SOURCE/Replayer.Model/ICompilation.cs for the classic WinForms Replayer
  * @remarks The implemented type is advertised as the Type. Using this pattern saves the code from implementing a full blown plugin architecture.
  */
@@ -15,6 +15,7 @@ export interface ICompilation {
      * @remarks Applies to all included media files, but may be overridden by specific paths to individual files
      */
     MediaPath: string;
+
     /** The title for this Compilation. */
     Title: string;
 
@@ -31,9 +32,11 @@ export interface ICompilation {
 }
 /** @interface Defines a Replayer track */
 export interface ITrack {
+    /** The cues */
     Cues: Array<ICue>;
     /** The artist */
     Artist: string;
+
     /** The name of the track */
     Name: string;
 
@@ -65,15 +68,9 @@ export interface ICue {
     Time: number | null;
 }
 
-/** Implements a rehearsal Compilation, consisting of a set of tracks with their cuepoints.
+/** Implements a Replayer Compilation, consisting of a set of tracks with their cuepoints.
  *  @inheritdoc */
 export class Compilation implements ICompilation {
-    // /** @constructor
-    //  * @param {Array<ITrack>} tracks - The set of tracks
-    //  */
-    // constructor(tracks: Array<ITrack>) {
-    //     this.Tracks = tracks;
-    // }
     Type: CompilationType = CompilationType.XML;
     MediaPath = '';
     Title = '';
