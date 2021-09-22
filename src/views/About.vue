@@ -90,6 +90,19 @@
                 >, a binary Mac OS X Plist (property list) parser. (Released
                 under the MIT License)
             </li>
+            <li>
+                <a
+                    href="https://github.com/eligrey/FileSaver.js"
+                    target="_blank"
+                    >FileSaver.js</a
+                >, the solution to saving files on the client-side. (Released
+                under the MIT License)
+            </li>
+            <li>
+                <a href="https://github.com/uuidjs/uuid" target="_blank">uuid</a
+                >, for the creation of RFC4122 UUIDs. (Released under the MIT
+                License)
+            </li>
         </ul>
 
         <h1>License</h1>
