@@ -41,8 +41,9 @@ export interface ITrack {
      * @remarks This is a more descriptive information and not intended to uniquely identify an album.
      */
     Album: string;
-    /** The measure in beats per minute. */
-    Measure: number | null;
+
+    /** The measure in beats per minute (Zero for no value). */
+    Measure: number;
 
     /** The URL for the media file.
      * @remarks Currently, only local file paths are supported.
@@ -88,7 +89,7 @@ export class Track implements ITrack {
     Artist = '';
     Name = '';
     Album = '';
-    Measure: number | null = null;
+    Measure = 0;
     Url = '';
     Id = '';
 }

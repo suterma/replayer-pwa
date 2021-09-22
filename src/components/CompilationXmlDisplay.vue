@@ -13,7 +13,7 @@
     <div class="field">
         <div class="control">
             <button class="button is-primary" @click="downloadXml">
-                Download .rez file
+                Download XML (.rex) file
             </button>
         </div>
     </div>
@@ -37,7 +37,7 @@ export default defineComponent({
             var blob = new Blob([this.xml], {
                 type: 'text/xml;charset=utf-8',
             });
-            FileSaver.saveAs(blob, 'ZIP-Compilation.rez');
+            FileSaver.saveAs(blob, 'ZIP-Compilation.rex');
         },
     },
     computed: {

@@ -109,7 +109,7 @@ function UpdateFromPlistTracks(stateTracks: ITrack[], plistTracks: any[]) {
             track.Album = ''.normalize();
             track.Artist = ''.normalize();
             track.Id = uuidv4.v4();
-            track.Measure = null;
+            track.Measure = 0;
             track.Name = plistTrack.Name.normalize();
             //URL-Decode because LivePlayback stores file names as URIs
             track.Url = decodeURI(plistTrack.Path).normalize();
