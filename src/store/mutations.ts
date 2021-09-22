@@ -11,7 +11,7 @@ import {
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
 import { MediaFile } from './state-types';
-import uuidv4 from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 export type Mutations<S = State> = {
     [MutationTypes.SET_PROGRESS_MESSAGE](state: S, payload: string): void;
@@ -52,7 +52,7 @@ function UpdateFromPListCompilation(
     stateCompilation.MediaPath = ''.normalize(); //TODO from ZIP filename
     stateCompilation.Title = 'Imported from LivePlayback'.normalize(); //TODO from ZIP filename
     stateCompilation.Url = ''.normalize(); //TODO from ZIP filename
-    stateCompilation.Id = uuidv4.v4();
+    stateCompilation.Id = uuidv4();
     UpdateFromPlistTracks(stateCompilation.Tracks, plistCompilation);
 }
 
@@ -108,7 +108,7 @@ function UpdateFromPlistTracks(stateTracks: ITrack[], plistTracks: any[]) {
             const track = new Track();
             track.Album = ''.normalize();
             track.Artist = ''.normalize();
-            track.Id = uuidv4.v4();
+            track.Id = uuidv4();
             track.Measure = 0;
             track.Name = plistTrack.Name.normalize();
             //URL-Decode because LivePlayback stores file names as URIs
@@ -151,7 +151,7 @@ function UpdateFromPlistCues(stateCues: ICue[], plistCues: any[]) {
         const cue = new Cue();
         cue.Description = plistCue.Name;
         cue.Time = plistCue.Position;
-        cue.Id = uuidv4.v4();
+        cue.Id = uuidv4();
         cue.Shortcut = plistCue.ShortCut;
         stateCues.push(cue);
     });

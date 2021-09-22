@@ -76,6 +76,10 @@ export default defineComponent({
                     this.loadFileAsLivePlaybackPlaylist(file);
                 }
             });
+            this.$store.commit(
+                MutationTypes.SET_PROGRESS_MESSAGE,
+                'Done loading selected file(s).',
+            );
         },
 
         /** Loads the given file as a REZ compilation (XML metadata and included media files)
