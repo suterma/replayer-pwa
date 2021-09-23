@@ -80,6 +80,9 @@ export default defineComponent({
                 MutationTypes.SET_PROGRESS_MESSAGE,
                 'Done loading selected file(s).',
             );
+
+            //Finish off with the progress
+            //this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE, '');
         },
 
         /** Loads the given file as a REZ compilation (XML metadata and included media files)
@@ -155,6 +158,8 @@ export default defineComponent({
                         MutationTypes.SET_PROGRESS_MESSAGE,
                         'Loading selected REZ file done.',
                     );
+                    //Finish off by hiding the progress
+                    this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE, '');
                 });
         },
 
@@ -170,6 +175,8 @@ export default defineComponent({
                 //console.debug('RezLoader::loadFileAsRex:content', content);
 
                 this.handleAsCompilation(content, RezMimeTypes.TEXT_XML);
+                //Finish off by hiding the progress
+                this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE, '');
             };
             reader.onerror = (_event): void => {
                 // Failed
@@ -179,6 +186,8 @@ export default defineComponent({
                         ': ' +
                         reader.error,
                 );
+                //Finish off by hiding the progress
+                this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE, '');
                 reader.abort(); // (...does this do anything useful in an onerror handler?)
             };
             reader.readAsText(selectedFile);
@@ -191,25 +200,13 @@ export default defineComponent({
             const reader = new FileReader();
 
             reader.onload = () => {
-                console.debug(
-                    'RezLoader::loadFileAsLivePlaybackPlaylist:reader.result',
-                    reader.result,
-                );
-                console.debug(
-                    'RezLoader::loadFileAsLivePlaybackPlaylist:reader.reader.result?.toString().length',
-                    reader.result?.toString().length,
-                );
                 var content = Buffer.from(reader.result as ArrayBuffer);
-                //content = Buffer.from(reader.result as string);
-                console.debug(
-                    'RezLoader::loadFileAsLivePlaybackPlaylist:content',
-                    content,
-                );
-
                 this.handleAsLivePlaybackPlaylist(
                     content,
                     RezMimeTypes.APPLICATION_XBPLIST,
                 );
+                //Finish off by hiding the progress
+                this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE, '');
             };
             reader.onerror = (_event): void => {
                 // Failed
@@ -219,6 +216,8 @@ export default defineComponent({
                         ': ' +
                         reader.error,
                 );
+                //Finish off by hiding the progress
+                this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE, '');
                 reader.abort(); // (...does this do anything useful in an onerror handler?)
             };
             reader.readAsArrayBuffer(selectedFile);
@@ -229,6 +228,8 @@ export default defineComponent({
          */
         loadFileAsMp3(selectedFile: File) {
             this.handleAsMediaFromBlob(selectedFile.name, selectedFile);
+            //Finish off by hiding the progress
+            this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE, '');
         },
 
         /** Handles the given content as the compilation meta data
@@ -286,12 +287,14 @@ export default defineComponent({
                     unarchivedObject,
                 );
 
-                console.log(mimeType + ' compilation parsing done');
                 this.$store.commit(
                     MutationTypes.SET_PROGRESS_MESSAGE,
                     'Compilation parsing (of type ' + mimeType + ') done',
                 );
-            })();
+            })().then(() => {
+                //Finish off with the progress
+                this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE, '');
+            });
         },
 
         /** Handles the given content as media file of the given type
@@ -323,15 +326,6 @@ export default defineComponent({
             );
 
             var objectUrl = URL.createObjectURL(blob);
-
-            this.$store.commit(
-                MutationTypes.SET_PROGRESS_MESSAGE,
-                'Ready to play objectUrl: ' +
-                    objectUrl +
-                    ' (from ' +
-                    mediaFileName +
-                    ')',
-            );
             this.$store.commit(
                 MutationTypes.ADD_FILE_URL,
                 new MediaFile(mediaFileName, objectUrl),

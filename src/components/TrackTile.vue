@@ -141,20 +141,20 @@ export default defineComponent({
                         .toLowerCase()
                         // eslint-disable-next-line
                         .replace(/[^\x00-\x7F]/g, '');
-                    console.debug(
-                        'Trying to match fileName: "' +
-                            fileName +
-                            '" / lazyFileName: "' +
-                            lazyFileName +
-                            '" with fileUrls: ',
-                        fileUrls,
-                    );
+                    // console.debug(
+                    //     'Trying to match fileName: "' +
+                    //         fileName +
+                    //         '" / lazyFileName: "' +
+                    //         lazyFileName +
+                    //         '" with fileUrls: ',
+                    //     fileUrls,
+                    // );
                     url = fileUrls.filter((fileUrl: MediaFile) => {
                         var lazyUrlFileName = fileUrl.fileName
                             .toLowerCase()
                             // eslint-disable-next-line
                             .replace(/[^\x00-\x7F]/g, '');
-                        console.debug('lazyUrlFileName: ', lazyUrlFileName);
+                        //console.debug('lazyUrlFileName: ', lazyUrlFileName);
                         return this.endWithOneAnother(
                             lazyFileName,
                             lazyUrlFileName,
