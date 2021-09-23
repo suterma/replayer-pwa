@@ -15,6 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export type Mutations<S = State> = {
     [MutationTypes.SET_PROGRESS_MESSAGE](state: S, payload: string): void;
+    [MutationTypes.END_PROGRESS](state: S): void;
     [MutationTypes.ADD_FILE_URL](state: S, payload: MediaFile): void;
     /** @devdoc //TODO the playload should be of a to be defined compilation type */
     [MutationTypes.UPDATE_COMPILATION_FROM_XML](state: S, payload: any): void;
@@ -158,15 +159,19 @@ function UpdateFromPlistCues(stateCues: ICue[], plistCues: any[]) {
 }
 
 export const mutations: MutationTree<State> & Mutations = {
-    [MutationTypes.SET_PROGRESS_MESSAGE](state, message: string) {
-        state.progressMessage = message;
-        console.log(message);
+    [MutationTypes.SET_PROGRESS_MESSAGE](state: State, message: string) {
+        state.workMessageStack.push(message);
+        console.log('PROGRESS: ' + message);
     },
-    [MutationTypes.ADD_FILE_URL](state, payload: MediaFile) {
+    [MutationTypes.END_PROGRESS](state: State) {
+        const message = state.workMessageStack.pop();
+        console.debug('END_PROGRESS: ' + message);
+    },
+    [MutationTypes.ADD_FILE_URL](state: State, payload: MediaFile) {
         state.fileUrls.push(payload);
     },
     /** @devdoc //TODO the playload should be of a to be defined compilation type */
-    [MutationTypes.UPDATE_COMPILATION_FROM_XML](state, payload: any) {
+    [MutationTypes.UPDATE_COMPILATION_FROM_XML](state: State, payload: any) {
         //TODO add compilation properties
         console.debug(
             'mutations::UPDATE_COMPILATION_FROM_XML:payload',
@@ -178,7 +183,7 @@ export const mutations: MutationTree<State> & Mutations = {
         UpdateFromXmlCompilation(state.compilation, xmlCompilation);
     },
     /** @devdoc //TODO the playload should be of a to be defined compilation type */
-    [MutationTypes.UPDATE_COMPILATION_FROM_PLIST](state, payload: any) {
+    [MutationTypes.UPDATE_COMPILATION_FROM_PLIST](state: State, payload: any) {
         //TODO add compilation properties
         console.debug(
             'mutations::UPDATE_COMPILATION_FROM_PLIST:payload',

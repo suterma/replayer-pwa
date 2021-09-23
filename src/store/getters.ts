@@ -26,6 +26,8 @@ export const getters: GetterTree<State, State> & Getters = {
         return state.fileUrls as Array<MediaFile>;
     },
     progressMessage: (state) => {
-        return state.progressMessage;
+        const progressMessage = state.workMessageStack[0];
+        console.debug(progressMessage);
+        return progressMessage;
     },
 };

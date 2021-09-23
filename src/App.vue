@@ -4,6 +4,7 @@
     <!-- The page content -->
     <section class="section">
         <div id="content" class="content">
+            {{ progressMessage }}
             <router-view />
             <div :class="{ modal: true, 'is-active': hasProgressMessage }">
                 <div class="modal-background"></div>
