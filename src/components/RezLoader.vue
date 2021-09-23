@@ -8,7 +8,7 @@
                     id="file-input"
                     accept=".rex,.rez,.zip,.mp3,PlayList"
                     multiple
-                    @change="loadFile"
+                    @change="loadFiles"
                     name="resume"
                 />
                 <span class="file-cta">
@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, nextTick } from 'vue';
 import JSZip from 'jszip';
 import xml2js from 'xml2js';
 import bplist from 'bplist-parser';
@@ -44,106 +44,134 @@ export default defineComponent({
         /** Executes a function with a progress message.
          * @param message - The message to use for the progress indication
          * @param work - The fuction to call
+         * @devdoc Unfortunately nexttick does not work here for single files (The time for render might be too short).
+         * Possibly use the hack https://www.npmjs.com/package/vue-force-next-tick if non-rendering of the overlay is
+         * actually a relevant problem in the future.
          */
         withProgress(message: string, work: () => void) {
-            this.$store.commit(MutationTypes.SET_PROGRESS_MESSAGE, message);
-            work();
-            this.$store.commit(MutationTypes.END_PROGRESS);
+            (async () => {
+                nextTick()
+                    .then(() =>
+                        this.$store.commit(
+                            MutationTypes.SET_PROGRESS_MESSAGE,
+                            message,
+                        ),
+                    )
+                    .then(() => work())
+                    .finally(() => {
+                        this.$store.commit(MutationTypes.END_PROGRESS);
+                    });
+            })();
         },
 
-        /** Handles the selection of a file by loading it's content
-         * @remarks Parses the contained metadata and loads the media files
+        /** Handles the selection of one or more files by loading their content
          */
-        async loadFile(event: any) {
-            Array.from(event.target.files as File[]).forEach((file) => {
-                this.withProgress(
-                    `Loading file ${file.name} (${file.size / 1000000}MB)`,
-                    () => {
-                        //Determine the file type
-                        if (
-                            file.name.toLowerCase().endsWith('.rez') ||
-                            file.name.toLowerCase().endsWith('.zip')
-                        ) {
-                            this.loadFileAsRez(file);
-                        }
-                        if (file.name.toLowerCase().endsWith('.rex')) {
-                            this.loadFileAsRex(file);
-                        }
-                        if (file.name.toLowerCase().endsWith('.mp3')) {
-                            this.loadFileAsMp3(file);
-                        }
-                        //Is a LivePlayback playlist?
-                        if (
-                            file.name.toLowerCase().endsWith('.bplist') ||
-                            file.name.toLowerCase().endsWith('playlist')
-                        ) {
-                            this.loadFileAsLivePlaybackPlaylist(file);
-                        }
-                    },
-                );
+        async loadFiles(event: any) {
+            this.withProgress(`Loading files...`, () => {
+                Array.from(event.target.files as File[]).forEach((file) => {
+                    this.loadFile(file);
+                });
             });
+        },
+
+        /** Loads a single file (from a selection of one or more files) by loading their content
+         */
+        async loadFile(file: File) {
+            this.withProgress(
+                `Loading file ${file.name} (${file.size / 1000000}MB)`,
+                () => {
+                    //Determine the file type
+                    if (
+                        file.name.toLowerCase().endsWith('.rez') ||
+                        file.name.toLowerCase().endsWith('.zip')
+                    ) {
+                        this.loadFileAsRez(file);
+                    }
+                    if (file.name.toLowerCase().endsWith('.rex')) {
+                        this.loadFileAsRex(file);
+                    }
+                    if (file.name.toLowerCase().endsWith('.mp3')) {
+                        this.loadFileAsMp3(file);
+                    }
+                    //Is a LivePlayback playlist?
+                    if (
+                        file.name.toLowerCase().endsWith('.bplist') ||
+                        file.name.toLowerCase().endsWith('playlist')
+                    ) {
+                        this.loadFileAsLivePlaybackPlaylist(file);
+                    }
+                },
+            );
         },
 
         /** Loads the given file as a REZ package (Package of a Compilation and included media files)
          */
         loadFileAsRez(selectedFile: File) {
-            this.withProgress(`Processing file: ${selectedFile.name}`, () => {
-                // 1) read the Blob
-                JSZip.loadAsync(selectedFile).then(
+            this.$store.commit(
+                //Set the progress message, before using any of the async functions
+                MutationTypes.SET_PROGRESS_MESSAGE,
+                `Processing file: ${selectedFile.name}`,
+            );
+            // 1) read the Blob
+            JSZip.loadAsync(selectedFile)
+                .then(
                     (zip: JSZip) => {
                         zip.forEach(
                             (
                                 _relativePath: string,
                                 zipEntry: JSZip.JSZipObject,
-                            ): void =>
-                                this.withProgress(
+                            ): void => {
+                                this.$store.commit(
+                                    //Set the progress message, before using any of the async functions
+                                    MutationTypes.SET_PROGRESS_MESSAGE,
                                     `Processing content: ${zipEntry.name}`,
-                                    () => {
-                                        // 2) handle entries
-                                        zipEntry
-                                            .async('nodebuffer')
-                                            .then((content: Buffer): void => {
-                                                //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
-                                                var mediaFileName =
-                                                    zipEntry.name.normalize();
+                                );
+                                zipEntry
+                                    .async('nodebuffer')
+                                    .then((content: Buffer): void => {
+                                        //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
+                                        var mediaFileName =
+                                            zipEntry.name.normalize();
 
-                                                if (
-                                                    mediaFileName.endsWith(
-                                                        'ZIP-Compilation.rex',
-                                                    )
-                                                ) {
-                                                    this.handleAsCompilation(
-                                                        content,
-                                                        RezMimeTypes.TEXT_XML,
-                                                    );
-                                                } else if (
-                                                    mediaFileName.endsWith(
-                                                        '.mp3',
-                                                    )
-                                                ) {
-                                                    this.handleAsMediaFromContent(
-                                                        mediaFileName,
-                                                        content,
-                                                        RezMimeTypes.AUDIO_MP3,
-                                                    );
-                                                }
-                                                //Is a LivePlayback playlist?
-                                                if (
-                                                    mediaFileName
-                                                        .toLowerCase()
-                                                        .endsWith('.bplist') ||
-                                                    mediaFileName
-                                                        .toLowerCase()
-                                                        .endsWith('playlist')
-                                                ) {
-                                                    this.handleAsLivePlaybackPlaylist(
-                                                        content,
-                                                        RezMimeTypes.APPLICATION_XBPLIST,
-                                                    );
-                                                }
-                                            });
-                                    },
-                                ),
+                                        if (
+                                            mediaFileName.endsWith(
+                                                'ZIP-Compilation.rex',
+                                            )
+                                        ) {
+                                            this.handleAsCompilation(
+                                                content,
+                                                RezMimeTypes.TEXT_XML,
+                                            );
+                                        } else if (
+                                            mediaFileName.endsWith('.mp3')
+                                        ) {
+                                            this.handleAsMediaFromContent(
+                                                mediaFileName,
+                                                content,
+                                                RezMimeTypes.AUDIO_MP3,
+                                            );
+                                        }
+                                        //Is a LivePlayback playlist?
+                                        if (
+                                            mediaFileName
+                                                .toLowerCase()
+                                                .endsWith('.bplist') ||
+                                            mediaFileName
+                                                .toLowerCase()
+                                                .endsWith('playlist')
+                                        ) {
+                                            this.handleAsLivePlaybackPlaylist(
+                                                content,
+                                                RezMimeTypes.APPLICATION_XBPLIST,
+                                            );
+                                        }
+                                    })
+                                    .finally(() => {
+                                        this.$store.commit(
+                                            MutationTypes.END_PROGRESS,
+                                        );
+                                    });
+                            },
                         );
                     },
                     function (e) {
@@ -154,8 +182,10 @@ export default defineComponent({
                                 e.message,
                         );
                     },
-                );
-            });
+                )
+                .finally(() => {
+                    this.$store.commit(MutationTypes.END_PROGRESS);
+                });
         },
 
         /** Loads the given file as a REX compilation (XML metadata only)
@@ -166,17 +196,14 @@ export default defineComponent({
                 `Loading .rex file '${selectedFile.name}'`,
                 () => {
                     const reader = new FileReader();
-
                     reader.onload = () => {
                         const content = Buffer.from(reader.result as string);
-
                         this.handleAsCompilation(
                             content,
                             RezMimeTypes.TEXT_XML,
                         );
                     };
                     reader.onerror = (_event): void => {
-                        // Failed
                         console.error(
                             'Failed to read file ' +
                                 selectedFile.name +
@@ -289,33 +316,22 @@ export default defineComponent({
             content: Buffer,
             mimeType: RezMimeTypes,
         ) {
-            this.withProgress(
-                `Loading ${mediaFileName} (of type ${mimeType})`,
-                () => {
-                    console.debug(
-                        'RezLoader::handleAsMedia:mediaFileName:',
-                        mediaFileName,
-                    );
-                    //TODO https://stackoverflow.com/questions/21737224/using-local-file-as-audio-src
-                    const blob = new Blob([content], {
-                        type: mimeType,
-                    });
-                    this.handleAsMediaFromBlob(mediaFileName, blob);
-                },
-            );
+            //TODO https://stackoverflow.com/questions/21737224/using-local-file-as-audio-src
+            const blob = new Blob([content], {
+                type: mimeType,
+            });
+            this.handleAsMediaFromBlob(mediaFileName, blob);
         },
 
         /** Handles the given blob as media file of the given type
          * @devdoc This is used when a file is already available as blob
          */
         handleAsMediaFromBlob(mediaFileName: string, blob: Blob) {
-            this.withProgress(`Handling blob from ${mediaFileName}`, () => {
-                var objectUrl = URL.createObjectURL(blob);
-                this.$store.commit(
-                    MutationTypes.ADD_FILE_URL,
-                    new MediaFile(mediaFileName, objectUrl),
-                );
-            });
+            var objectUrl = URL.createObjectURL(blob);
+            this.$store.commit(
+                MutationTypes.ADD_FILE_URL,
+                new MediaFile(mediaFileName, objectUrl),
+            );
         },
     },
     computed: {},

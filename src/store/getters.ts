@@ -25,9 +25,10 @@ export const getters: GetterTree<State, State> & Getters = {
     fileUrls: (state) => {
         return state.fileUrls as Array<MediaFile>;
     },
+    /** Gets the latest (newest) progress message from the stack */
     progressMessage: (state) => {
-        const progressMessage = state.workMessageStack[0];
-        console.debug(progressMessage);
+        const progressMessage =
+            state.workMessageStack[state.workMessageStack.length - 1];
         return progressMessage;
     },
 };

@@ -12,7 +12,7 @@ interface IState {
     /** An application work message stack, used for progress indication
      * @remarks during ongoing work, the stack is non-empty
      */
-    workMessageStack: Array<string>;
+    progressMessageStack: Array<string>;
 }
 
 export const state: IState = {
@@ -21,7 +21,7 @@ export const state: IState = {
 
     fileUrls: new Array<MediaFile>(),
 
-    workMessageStack: new Array<string>(),
+    progressMessageStack: new Array<string>(),
 };
 
 export type State = typeof state;
