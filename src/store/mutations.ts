@@ -160,11 +160,11 @@ function UpdateFromPlistCues(stateCues: ICue[], plistCues: any[]) {
 
 export const mutations: MutationTree<State> & Mutations = {
     [MutationTypes.SET_PROGRESS_MESSAGE](state: State, message: string) {
-        state.workMessageStack.push(message);
+        state.progressMessageStack.push(message);
         console.log('PROGRESS: ' + message);
     },
     [MutationTypes.END_PROGRESS](state: State) {
-        const message = state.workMessageStack.pop();
+        const message = state.progressMessageStack.pop();
         console.debug('END_PROGRESS: ' + message);
     },
     [MutationTypes.ADD_FILE_URL](state: State, payload: MediaFile) {
