@@ -18,6 +18,10 @@ html,
 body {
     overscroll-behavior-x: none;
 }
+/* Only show the vertical scrollbar if necessary */
+html {
+    overflow-y: auto;
+}
 
 /* A variant for a dimmed item (e.g. supporitve/informational text parts)*/
 .has-opacity-half {
