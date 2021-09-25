@@ -28,7 +28,7 @@ export const getters: GetterTree<State, State> & Getters = {
     /** Gets the latest (newest) progress message from the stack */
     progressMessage: (state) => {
         const progressMessage =
-            state.workMessageStack[state.workMessageStack.length - 1];
+            state.progressMessageStack[state.progressMessageStack.length - 1];
         return progressMessage;
     },
 };
