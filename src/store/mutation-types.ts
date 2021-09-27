@@ -8,4 +8,6 @@ export enum MutationTypes {
     UPDATE_COMPILATION_FROM_XML = 'UPDATE_COMPILATION_FROM_XML',
     /** Updates the intenal with newly available data */
     UPDATE_COMPILATION_FROM_PLIST = 'UPDATE_COMPILATION_FROM_PLIST',
+    /** Invokes the cue with the global media player */
+    INVOKE_CUE = 'INVOKE_CUE',
 }

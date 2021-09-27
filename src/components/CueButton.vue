@@ -1,6 +1,9 @@
 <template>
     <button
-        class="button is-warning"
+        :class="{
+            'button is-warning': true,
+            'is-inverted': isCueSelected,
+        }"
         @click="invokeCue"
         :title="'Play from ' + cue?.Description"
     >
@@ -25,6 +28,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Cue } from '@/store/compilation-types';
+import { MutationTypes } from '@/store/mutation-types';
 
 export default defineComponent({
     name: 'CueButton',
@@ -38,6 +42,9 @@ export default defineComponent({
             // `event` is the native DOM event
             if (event) {
                 this.$emit('click');
+
+                //Set the global player state with this cue
+                this.$store.commit(MutationTypes.INVOKE_CUE, this.cue);
             }
         },
     },
@@ -70,6 +77,10 @@ export default defineComponent({
                     useGrouping: false,
                 });
             } else return '';
+        },
+        /* Determines whether this cue is currently selected */
+        isCueSelected(): boolean {
+            return this.$store.getters.selectedCue.Id == this.cue?.Id;
         },
     },
 });

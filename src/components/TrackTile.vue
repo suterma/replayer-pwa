@@ -141,14 +141,6 @@ export default defineComponent({
                         .toLowerCase()
                         // eslint-disable-next-line
                         .replace(/[^\x00-\x7F]/g, '');
-                    // console.debug(
-                    //     'Trying to match fileName: "' +
-                    //         fileName +
-                    //         '" / lazyFileName: "' +
-                    //         lazyFileName +
-                    //         '" with fileUrls: ',
-                    //     fileUrls,
-                    // );
                     url = fileUrls.filter((fileUrl: MediaFile) => {
                         var lazyUrlFileName = fileUrl.fileName
                             .toLowerCase()
@@ -201,7 +193,6 @@ export default defineComponent({
             }
             return fileUrl;
         },
-        //TODO display the ready-state of the corresponding file object
     },
 });
 </script>
