@@ -14,8 +14,15 @@ It's aim is to replace the classic, Microsoft Windows based, RePlayer desktop ap
 The latest version is available at https://app-test.replayer.ch Source code is availabe at GitHub
 
 # Glossary / Terms
-- A **package** is a set of media files and compilations. The tracks typically reference to the media files.
-- A **compilation** is a set of tracks.
-- A **track** represents a single media file and a set of cues for it.
-- A **cue** represents a named temporal position in a track. A cue can have a shortcut.
-- A **shortcut** is a short moniker for a cue, to speed up navigation within a track or compilation
+- A **package** is a zip file (*.zip, *.rez) which contains a set of media files and typically one compilation. The tracks reference to the media files.
+- A **compilation** is a set of tracks, usually representing a playlist for a concert or rehearsal session.
+- A **track** represents a single media file and a set of cues for it. Within a compilation, more than one track may reference the same media file, to simplify rehearsal variants e.g. for different voices or parts in large pieces.
+- A **media file** is a binary file, containing playable music. Currently only local files of type MPEG Layer 3 (*.mp3) from a local file system are supported.
+- A **cue** represents a named temporal position in a track. A cue can have a (keyboard) shortcut.
+- A **shortcut** is a short moniker for a cue, to speed up navigation within a track or compilation.
+
+# Behaviour
+-  Opening a new package removes all previously open files and compilations.
+-  Opening a new / multiple compilations merges the contained tracks with the already open compilation.
+-  Opening a new / multiple media files adds them to the set of currently available media files.
+-  
