@@ -8,9 +8,8 @@
         </div>
     </section>
 
-    <!-- The progress modal -->
+    <!-- The progress overlay -->
     <ProgressOverlay />
-    <NavbarBottom />
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
