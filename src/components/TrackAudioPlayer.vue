@@ -199,6 +199,7 @@
 </template>
 
 <script lang="ts">
+import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent } from 'vue';
 /** A simple vue audio player, for a single track
  * @devdoc based on https://vuejsexamples.com/html5-basic-audio-player-with-vue-js/
@@ -310,6 +311,7 @@ export default defineComponent({
         stop() {
             this.playing = false;
             (this.$refs.audio as InstanceType<typeof Audio>).currentTime = 0;
+            this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, undefined);
         },
         /** Updates the current seconds display with the temporal position of the player */
         update() {

@@ -42,9 +42,7 @@ export default defineComponent({
             // `event` is the native DOM event
             if (event) {
                 this.$emit('click');
-
-                //Set the global player state with this cue
-                this.$store.commit(MutationTypes.INVOKE_CUE, this.cue);
+                this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, this.cue);
             }
         },
     },
@@ -80,7 +78,7 @@ export default defineComponent({
         },
         /* Determines whether this cue is currently selected */
         isCueSelected(): boolean {
-            return this.$store.getters.selectedCue.Id == this.cue?.Id;
+            return this.$store.getters.selectedCue?.Id == this.cue?.Id;
         },
     },
 });
