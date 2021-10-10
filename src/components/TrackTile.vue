@@ -71,8 +71,6 @@
                             </span>
                         </p>
 
-                        //TODO {{ currentSeconds }}
-
                         <div class="buttons">
                             <template v-for="cue in cues" :key="cue.Id">
                                 <CueButton
@@ -180,7 +178,7 @@ export default defineComponent({
         /** Updates the current seconds property with the temporal position of the track audio player
          * @remarks This is used to control the cue display for this track's cues
          */
-        updateTime(currentTime: number) {
+        updateTime(currentTime: any) {
             this.currentSeconds = currentTime;
         },
     },

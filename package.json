@@ -1,12 +1,12 @@
 {
     "name": "replayer",
-    "version": "0.2.1",
-    "description": "Replayer is a free media player for use during rehearsals with playback music. It's main feature is fast navigation to predefined cue points in the playback media.",
+    "version": "0.2.2",
+    "description": "Replayer is a free, cue-based media player for rehearsals with playback music. By the click of a button, Replayer starts to play at predefined times in the audio file.",
     "homepage": "https://replayer.app",
     "main": "./public/index.html",
     "private": true,
     "keywords": [
-        "Replayer, Web App, free, rehearsal, media, player"
+        "mp3, wav, ogg, flac, player, start, point, time, button, click, link, music, file, voice, choir, singer, solo, song, software, app, free, fast, simple, Spotify, YouTube, Vimeo, SoundCloud, SATB, Soprano, Alto, Tenor, Bass, drum, track, entertainer, dancer"
     ],
     "author": {
         "name": "Marcel Suter",

@@ -8,15 +8,11 @@
                 {{ progressMessage }}
             </div>
         </div>
-        <!-- <button
-                    class="modal-close is-large"
-                    aria-label="close"
-                ></button> -->
     </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-
+/** A simple overlay display of the latest application progress message, if any */
 export default defineComponent({
     name: 'App',
     components: {},
