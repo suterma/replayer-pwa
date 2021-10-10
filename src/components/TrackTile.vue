@@ -55,12 +55,12 @@
 
                     <div v-show="showCues">
                         <!-- The audio player, but only shown when the source is available -->
-                        <AudioPlayer
+                        <TrackAudioPlayer
                             v-if="trackFileUrl?.objectUrl"
                             ref="player"
                             :title="trackFileUrl?.fileName"
                             :src="trackFileUrl?.objectUrl"
-                        ></AudioPlayer>
+                        ></TrackAudioPlayer>
 
                         <!-- Otherwise show a placeholder -->
                         <p v-else>
@@ -90,12 +90,12 @@
 import { defineComponent } from 'vue';
 import { Track, ICue } from '@/store/compilation-types';
 import CueButton from '@/components/CueButton.vue';
-import AudioPlayer from '@/components/AudioPlayer.vue';
+import TrackAudioPlayer from '@/components/TrackAudioPlayer.vue';
 import { MediaFile } from '@/store/state-types';
 
 export default defineComponent({
     name: 'TrackTile',
-    components: { CueButton, AudioPlayer },
+    components: { CueButton, TrackAudioPlayer },
     props: {
         track: Track,
     },
@@ -114,7 +114,7 @@ export default defineComponent({
         cueClick(time: number | null) {
             if (time != null) {
                 (
-                    this.$refs.player as InstanceType<typeof AudioPlayer>
+                    this.$refs.player as InstanceType<typeof TrackAudioPlayer>
                 ).playFrom(time);
             }
         },

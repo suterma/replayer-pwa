@@ -200,12 +200,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-/** A simple, global vue audio player, which follows the global player state
+/** A simple vue audio player, for a single track
  * @devdoc based on https://vuejsexamples.com/html5-basic-audio-player-with-vue-js/
- * //TODO This component is not yet developed, and currently only a copy of TrackAudioPlayer
  */
 export default defineComponent({
-    name: 'AudioPlayer',
+    name: 'TrackAudioPlayer',
     props: {
         //TODO use the title at a useful place
         title: String,
@@ -263,7 +262,6 @@ export default defineComponent({
             (this.$refs.audio as InstanceType<typeof Audio>).volume =
                 this.volume / 100;
         },
-        //TODO watch the global cue state, using a computed function
     },
     methods: {
         convertToDisplayTime(seconds: number): string {
