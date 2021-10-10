@@ -1,5 +1,5 @@
 import { GetterTree } from 'vuex';
-import { ICompilation } from './compilation-types';
+import { Cue, ICompilation } from './compilation-types';
 import { State } from './state';
 import { MediaFile } from './state-types';
 
@@ -9,6 +9,8 @@ export type Getters = {
     hasCompilation(state: State): boolean;
     fileUrls(state: State): Array<MediaFile>;
     progressMessage(state: State): string | null;
+    isSelected(state: State, cue: Cue): boolean;
+    selectedCue(state: State): Cue;
 };
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -30,5 +32,16 @@ export const getters: GetterTree<State, State> & Getters = {
         const progressMessage =
             state.progressMessageStack[state.progressMessageStack.length - 1];
         return progressMessage;
+    },
+    /** Determines whether the given cue is the currently selected one
+     * devdoc parametrized call currently do not work, reason is unknown
+     */
+    isSelected: (state, cue: Cue) => {
+        return cue.Id == state.selectedCue.Id;
+    },
+    /** Gets the currently selected cue
+     */
+    selectedCue: (state) => {
+        return state.selectedCue;
     },
 };

@@ -189,7 +189,7 @@
         :loop="looping"
         ref="audio"
         :src="src"
-        v-on:timeupdate="update"
+        v-on:timeupdate="updateTime"
         v-on:loadeddata="load"
         v-on:pause="playing = false"
         v-on:play="playing = true"
@@ -199,13 +199,13 @@
 </template>
 
 <script lang="ts">
+import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent } from 'vue';
-/** A simple, global vue audio player, which follows the global player state
+/** A simple vue audio player, for a single track
  * @devdoc based on https://vuejsexamples.com/html5-basic-audio-player-with-vue-js/
- * //TODO This component is not yet developed, and currently only a copy of TrackAudioPlayer
  */
 export default defineComponent({
-    name: 'AudioPlayer',
+    name: 'TrackAudioPlayer',
     props: {
         //TODO use the title at a useful place
         title: String,
@@ -223,6 +223,7 @@ export default defineComponent({
         },
     },
     data: () => ({
+        /** The playback progress in the current track, in [seconds] */
         currentSeconds: 0,
         durationSeconds: 0,
         loaded: false,
@@ -236,6 +237,7 @@ export default defineComponent({
         muted(): boolean {
             return this.volume / 100 === 0;
         },
+        /** The playback progress in the current track, in [percent] */
         percentComplete(): number {
             return (this.currentSeconds / this.durationSeconds) * 100;
         },
@@ -263,7 +265,6 @@ export default defineComponent({
             (this.$refs.audio as InstanceType<typeof Audio>).volume =
                 this.volume / 100;
         },
-        //TODO watch the global cue state, using a computed function
     },
     methods: {
         convertToDisplayTime(seconds: number): string {
@@ -312,13 +313,18 @@ export default defineComponent({
         stop() {
             this.playing = false;
             (this.$refs.audio as InstanceType<typeof Audio>).currentTime = 0;
+            this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, undefined);
         },
-        /** Updates the current seconds display with the temporal position of the player */
-        update() {
+        /** Updates the current seconds display and emits an event with the temporal position of the player
+         * @devdoc This must get only privately called from the audio player
+         */
+        updateTime() {
             this.currentSeconds = (
                 this.$refs.audio as InstanceType<typeof Audio>
             ).currentTime;
+            this.$emit('timeupdate', this.currentSeconds);
         },
+        /** Starts playback from the given temporal position */
         playFrom(position: number): void {
             (this.$refs.audio as InstanceType<typeof Audio>).currentTime =
                 position;

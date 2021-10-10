@@ -55,12 +55,13 @@
 
                     <div v-show="showCues">
                         <!-- The audio player, but only shown when the source is available -->
-                        <AudioPlayer
+                        <TrackAudioPlayer
                             v-if="trackFileUrl?.objectUrl"
                             ref="player"
                             :title="trackFileUrl?.fileName"
                             :src="trackFileUrl?.objectUrl"
-                        ></AudioPlayer>
+                            v-on:timeupdate="updateTime"
+                        ></TrackAudioPlayer>
 
                         <!-- Otherwise show a placeholder -->
                         <p v-else>
@@ -70,11 +71,14 @@
                             </span>
                         </p>
 
+                        //TODO {{ currentSeconds }}
+
                         <div class="buttons">
                             <template v-for="cue in cues" :key="cue.Id">
                                 <CueButton
                                     :disabled="!trackFileUrl?.objectUrl"
                                     :cue="cue"
+                                    :currentSeconds="currentSeconds"
                                     @click="cueClick(cue.Time)"
                                 />
                             </template>
@@ -90,12 +94,12 @@
 import { defineComponent } from 'vue';
 import { Track, ICue } from '@/store/compilation-types';
 import CueButton from '@/components/CueButton.vue';
-import AudioPlayer from '@/components/AudioPlayer.vue';
+import TrackAudioPlayer from '@/components/TrackAudioPlayer.vue';
 import { MediaFile } from '@/store/state-types';
 
 export default defineComponent({
     name: 'TrackTile',
-    components: { CueButton, AudioPlayer },
+    components: { CueButton, TrackAudioPlayer },
     props: {
         track: Track,
     },
@@ -103,6 +107,10 @@ export default defineComponent({
         return {
             msg: '',
             showCues: true,
+            /** The playback progress in the current track, in [seconds]
+             * @remarks This is used for progress display within the set of cues
+             */
+            currentSeconds: 0,
         };
     },
     methods: {
@@ -114,7 +122,7 @@ export default defineComponent({
         cueClick(time: number | null) {
             if (time != null) {
                 (
-                    this.$refs.player as InstanceType<typeof AudioPlayer>
+                    this.$refs.player as InstanceType<typeof TrackAudioPlayer>
                 ).playFrom(time);
             }
         },
@@ -141,14 +149,6 @@ export default defineComponent({
                         .toLowerCase()
                         // eslint-disable-next-line
                         .replace(/[^\x00-\x7F]/g, '');
-                    // console.debug(
-                    //     'Trying to match fileName: "' +
-                    //         fileName +
-                    //         '" / lazyFileName: "' +
-                    //         lazyFileName +
-                    //         '" with fileUrls: ',
-                    //     fileUrls,
-                    // );
                     url = fileUrls.filter((fileUrl: MediaFile) => {
                         var lazyUrlFileName = fileUrl.fileName
                             .toLowerCase()
@@ -177,6 +177,12 @@ export default defineComponent({
             // }
             return null; //TODO load the file
         },
+        /** Updates the current seconds property with the temporal position of the track audio player
+         * @remarks This is used to control the cue display for this track's cues
+         */
+        updateTime(currentTime: number) {
+            this.currentSeconds = currentTime;
+        },
     },
     computed: {
         cues(): Array<ICue> | undefined {
@@ -201,7 +207,6 @@ export default defineComponent({
             }
             return fileUrl;
         },
-        //TODO display the ready-state of the corresponding file object
     },
 });
 </script>
