@@ -12,3 +12,18 @@ The classic [RePlayer](https://github.com/suterma/replayer), as a Progressive We
 It's aim is to replace the classic, Microsoft Windows based, RePlayer desktop application with a progressive web app, that is locally installable on devices.
 
 The latest version is available at https://app-test.replayer.ch Source code is availabe at GitHub
+
+# Glossary
+
+-   A **package** is a zip file (_.zip, _.rez) which contains a set of media files and typically one compilation. The tracks reference to the media files.
+-   A **compilation** is a set of tracks, usually representing a playlist for a concert or rehearsal session.
+-   A **track** represents a single media file and a set of cues for it. Within a compilation, more than one track may reference the same media file, to simplify rehearsal variants e.g. for different voices or parts in large pieces.
+-   A **media file** is a binary file, containing playable music. Currently only files of type [MP3](https://en.wikipedia.org/wiki/MP3) (\*.mp3) from a local file system are supported.
+-   A **cue** represents a named temporal position in a track. A cue can have a (keyboard) shortcut.
+-   A **shortcut** is a short mnemonic for a cue, to speed up navigation within a track or compilation, using a keyboard.
+
+# Behaviour
+
+-   Opening a new package removes all previously open files and compilations.
+-   Opening a new / multiple compilations merges the contained tracks with the already open compilation.
+-   Opening a new / multiple media files adds them to the set of currently available media files.
