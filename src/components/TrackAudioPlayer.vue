@@ -189,7 +189,7 @@
         :loop="looping"
         ref="audio"
         :src="src"
-        v-on:timeupdate="update"
+        v-on:timeupdate="updateTime"
         v-on:loadeddata="load"
         v-on:pause="playing = false"
         v-on:play="playing = true"
@@ -223,6 +223,7 @@ export default defineComponent({
         },
     },
     data: () => ({
+        /** The playback progress in the current track, in [seconds] */
         currentSeconds: 0,
         durationSeconds: 0,
         loaded: false,
@@ -236,6 +237,7 @@ export default defineComponent({
         muted(): boolean {
             return this.volume / 100 === 0;
         },
+        /** The playback progress in the current track, in [percent] */
         percentComplete(): number {
             return (this.currentSeconds / this.durationSeconds) * 100;
         },
@@ -313,12 +315,16 @@ export default defineComponent({
             (this.$refs.audio as InstanceType<typeof Audio>).currentTime = 0;
             this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, undefined);
         },
-        /** Updates the current seconds display with the temporal position of the player */
-        update() {
+        /** Updates the current seconds display and emits an event with the temporal position of the player
+         * @devdoc This must get only privately called from the audio player
+         */
+        updateTime() {
             this.currentSeconds = (
                 this.$refs.audio as InstanceType<typeof Audio>
             ).currentTime;
+            this.$emit('timeupdate', this.currentSeconds);
         },
+        /** Starts playback from the given temporal position */
         playFrom(position: number): void {
             (this.$refs.audio as InstanceType<typeof Audio>).currentTime =
                 position;

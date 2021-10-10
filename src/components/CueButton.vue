@@ -3,6 +3,7 @@
         :class="{
             'button is-warning': true,
             'is-inverted': isCueSelected,
+            'is-light': hasCuePassed,
         }"
         @click="invokeCue"
         :title="'Play from ' + cue?.Description"
@@ -35,6 +36,10 @@ export default defineComponent({
     components: {},
     props: {
         cue: Cue,
+        /** The playback progress in the current track, in [seconds]
+         * @remarks This is used for progress display within the set of cues
+         */
+        currentSeconds: Number,
     },
     methods: {
         invokeCue(event: Event) {
@@ -79,6 +84,15 @@ export default defineComponent({
         /* Determines whether this cue is currently selected */
         isCueSelected(): boolean {
             return this.$store.getters.selectedCue?.Id == this.cue?.Id;
+        },
+        /* Determines whether playback of this cue has already passed */
+        hasCuePassed(): boolean {
+            if (this.currentSeconds) {
+                if (this.cue && this.cue.Time !== null) {
+                    return this.cue.Time < this.currentSeconds;
+                }
+            }
+            return false;
         },
     },
 });

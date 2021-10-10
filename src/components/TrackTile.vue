@@ -60,6 +60,7 @@
                             ref="player"
                             :title="trackFileUrl?.fileName"
                             :src="trackFileUrl?.objectUrl"
+                            v-on:timeupdate="updateTime"
                         ></TrackAudioPlayer>
 
                         <!-- Otherwise show a placeholder -->
@@ -70,11 +71,14 @@
                             </span>
                         </p>
 
+                        //TODO {{ currentSeconds }}
+
                         <div class="buttons">
                             <template v-for="cue in cues" :key="cue.Id">
                                 <CueButton
                                     :disabled="!trackFileUrl?.objectUrl"
                                     :cue="cue"
+                                    :currentSeconds="currentSeconds"
                                     @click="cueClick(cue.Time)"
                                 />
                             </template>
@@ -103,6 +107,10 @@ export default defineComponent({
         return {
             msg: '',
             showCues: true,
+            /** The playback progress in the current track, in [seconds]
+             * @remarks This is used for progress display within the set of cues
+             */
+            currentSeconds: 0,
         };
     },
     methods: {
@@ -168,6 +176,12 @@ export default defineComponent({
             //     const objectURL = window.URL.createObjectURL(file);
             // }
             return null; //TODO load the file
+        },
+        /** Updates the current seconds property with the temporal position of the track audio player
+         * @remarks This is used to control the cue display for this track's cues
+         */
+        updateTime(currentTime: number) {
+            this.currentSeconds = currentTime;
         },
     },
     computed: {

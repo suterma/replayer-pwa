@@ -11,7 +11,7 @@ interface IState {
     fileUrls: Array<MediaFile>;
 
     /** The currently selected cue.
-     *  @remarks This controls the global media player
+     * @remarks This does not control the playback itself. It is intended for display purposes.
      */
     selectedCue: Cue;
 
