@@ -8,7 +8,7 @@
         <p>
             The classic
             <a href="https://github.com/suterma/replayer" target="_blank"
-                >RePlayer</a
+                >Replayer</a
             >, as a Progressive Web App. Created by
             <a href="https://marcelsuter.ch" target="_blank">Marcel Suter</a>
         </p>
@@ -19,17 +19,16 @@
         <p>
             It's aim is to replace the classic, Microsoft Windows based,
             <a href="https://github.com/suterma/replayer" target="_blank"
-                >RePlayer</a
+                >Replayer</a
             >
             desktop application with a progressive web app, that is locally
             installable on devices.
         </p>
         <p>
-            The latest version is available at
-            <a href="https://replayer.ch" target="_blank"
-                >https://replayer.ch</a
-            >
-            Source code is availabe at
+            The latest test version is available at
+            <a href="https://web-test.replayer.app" target="_blank"
+                >https://replayer.app</a
+            >. Source code is availabe at
             <a href="https://github.com/suterma/replayer-pwa" target="_blank"
                 >GitHub</a
             >
@@ -107,7 +106,7 @@
 
         <h1>License</h1>
         <p>
-            RePlayer is licensed to you under the
+            Replayer is licensed to you under the
             <a
                 href="https://github.com/suterma/replayer-pwa/blob/main/LICENSE"
                 target="_blank"

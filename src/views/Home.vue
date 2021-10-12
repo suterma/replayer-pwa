@@ -5,7 +5,7 @@
             <p class="subtitle">
                 The classic
                 <a href="https://github.com/suterma/replayer" target="_blank"
-                    >RePlayer</a
+                    >Replayer</a
                 >, as a Progressive Web App
             </p>
         </div>
@@ -32,7 +32,7 @@
 
         <p>
             The following file types are supported (See also the documentation
-            for RePlayer Classic)
+            for Replayer Classic)
         </p>
 
         <ul>

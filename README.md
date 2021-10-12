@@ -5,13 +5,14 @@
 ![Release](https://img.shields.io/github/release/suterma/replayer-pwa.svg)
 ![Language](https://img.shields.io/github/languages/top/suterma/replayer-pwa.svg)
 
-The classic [RePlayer](https://github.com/suterma/replayer), as a Progressive Web App.
+The classic [Replayer](https://github.com/suterma/replayer), as a Progressive Web App.
 
 # Goal
 
-It's aim is to replace the classic, Microsoft Windows based, RePlayer desktop application with a progressive web app, that is locally installable on devices.
+It's aim is to replace the classic, Microsoft Windows based, [Replayer](https://github.com/suterma/replayer) desktop application with a progressive web app, that is locally installable on devices.
 
-The latest version is available at https://app-test.replayer.ch Source code is availabe at GitHub
+-   The latest test version is available at https://web-test.replayer.app
+-   Source code is availabe at [GitHub](https://github.com/suterma/replayer-pwa)
 
 # Glossary
 

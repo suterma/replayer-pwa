@@ -26,7 +26,7 @@ import xml2js from 'xml2js';
 import FileSaver from 'file-saver';
 import { XmlCompilation } from '@/code/xml/XmlCompilation';
 
-/** Displays the currently loaded compilation as an XML-Structure, for export to RePlayer Classic */
+/** Displays the currently loaded compilation as an XML-Structure, for export to Replayer Classic */
 export default defineComponent({
     name: 'CompilationXmlDisplay',
     props: {

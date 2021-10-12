@@ -7,7 +7,7 @@
         aria-label="main navigation"
     >
         <div class="navbar-brand">
-            <a class="navbar-item" href="https://replayer.ch">
+            <a class="navbar-item" href="#">
                 <!-- HINT: Provide explicit height and widht as an optimization measure -->
                 <img src="../assets/logo.png" width="28" height="28" />
             </a>

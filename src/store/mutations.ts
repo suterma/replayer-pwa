@@ -48,7 +48,7 @@ function UpdateFromPListCompilation(
     if (!stateCompilation) {
         stateCompilation = new Compilation();
     }
-    //NOTE: the plist compilation type does not have all data corresponding to a RePlayer compilation. Thus some of the information like the GUID, is just made up    .
+    //NOTE: the plist compilation type does not have all data corresponding to a Replayer compilation. Thus some of the information like the GUID, is just made up    .
     //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
     stateCompilation.Type = CompilationType.XML; //TODO do we need a type here at all?
     stateCompilation.MediaPath = ''.normalize(); //TODO from ZIP filename
@@ -104,7 +104,7 @@ function UpdateFromPlistTracks(stateTracks: ITrack[], plistTracks: any[]) {
     plistTracks.forEach((plistTrack: any) => {
         //Only for tracks with real data (LivePlayback may have empty slots in the tracks list)
         if (plistTrack.Duration && plistTrack.Name && plistTrack.Path) {
-            //NOTE: the plist compilation type does not have all data corresponding to a RePlayer compilation. Thus some of the information like the GUID, is just made up    .
+            //NOTE: the plist compilation type does not have all data corresponding to a Replayer compilation. Thus some of the information like the GUID, is just made up    .
             //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
             //TODO Update instead of push, if exists
             const track = new Track();
@@ -148,7 +148,7 @@ function UpdateFromPlistCues(stateCues: ICue[], plistCues: any[]) {
     }
 
     plistCues.forEach((plistCue: any) => {
-        //NOTE: the plist compilation type does not have all data corresponding to a RePlayer compilation. Thus some of the information like the GUID, is just made up    .
+        //NOTE: the plist compilation type does not have all data corresponding to a Replayer compilation. Thus some of the information like the GUID, is just made up    .
         //TODO Update instead of push, if exists
         const cue = new Cue();
         cue.Description = plistCue.Name;
