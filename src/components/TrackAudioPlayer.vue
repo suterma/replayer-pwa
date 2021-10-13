@@ -2,12 +2,8 @@
     <div class="field has-addons player-panel">
         <!-- Stop (do not show on small devices, user still can use play/pause) -->
         <p class="control is-hidden-mobile">
-            <span
-                class="button is-large"
-                v-on:click.prevent="stop"
-                title="Stop"
-            >
-                <span class="icon is-large">
+            <span class="button" v-on:click.prevent="stop" title="Stop">
+                <span class="icon">
                     <i>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -23,11 +19,11 @@
         </p>
         <p class="control">
             <span
-                class="button is-large"
+                class="button"
                 v-on:click.prevent="playing = !playing"
                 :title="playing ? 'Pause' : 'Play'"
             >
-                <span class="icon is-large">
+                <span class="icon">
                     <i>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -76,11 +72,11 @@
         <p class="control is-hidden-mobile">
             <span
                 v-show="!showVolume"
-                class="button is-large"
+                class="button"
                 v-on:click.prevent="download"
                 title="Download"
             >
-                <span class="icon is-large">
+                <span class="icon">
                     <i>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -98,12 +94,12 @@
         <!-- Loop -->
         <p class="control">
             <span
-                class="button is-large"
+                class="button"
                 v-show="!showVolume"
                 v-on:click.prevent="looping = !looping"
                 title="Loop"
             >
-                <span class="icon is-large">
+                <span class="icon">
                     <i>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -126,12 +122,8 @@
         </p>
         <!-- Mute (do not show on small devices, user still can use the volume) -->
         <p class="control is-hidden-mobile">
-            <span
-                class="button is-large"
-                v-on:click.prevent="mute"
-                title="Mute"
-            >
-                <span class="icon is-large">
+            <span class="button" v-on:click.prevent="mute" title="Mute">
+                <span class="icon">
                     <i>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -155,13 +147,13 @@
         <!-- Volume (do not show on small devices, user still can use the device volume) -->
         <p class="control is-hidden-mobile">
             <span
-                class="button is-large"
+                class="button"
                 v-on:click.prevent=""
                 v-on:mouseenter="showVolume = true"
                 v-on:mouseleave="showVolume = false"
                 :title="volumeTitle"
             >
-                <span class="icon is-large">
+                <span class="icon">
                     <i>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -241,8 +233,15 @@ export default defineComponent({
         percentComplete(): number {
             return (this.currentSeconds / this.durationSeconds) * 100;
         },
+        /** Returns the progress style, dynamically depending on the actual progress in the track
+         * @remarks Calculates the witdh with respect to the progress bar width from the player styles (which is a border)
+         * max-width makes sure, the progress bar never overflows the given space.
+         */
         progressStyle() {
-            return { width: `${this.percentComplete}%` };
+            return {
+                width: `calc(${this.percentComplete}% + 0.4em)`,
+                'max-width': '100%',
+            };
         },
         volumeTitle(): string {
             return `Volume (${this.volume}%)`;

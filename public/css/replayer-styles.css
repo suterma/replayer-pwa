@@ -10715,8 +10715,8 @@ html {
 .player-time {
   display: flex;
   justify-content: space-between;
-  /* Keep some disctanc from the edge, to better show the times*/
-  padding: 1em;
+  /* Keep some disctanc from the edge, to better show the times, for height according to standard buttons */
+  padding: 0.5em;
 }
 .player-time .player-time-current {
   font-weight: 700;
@@ -10743,8 +10743,8 @@ html {
 .player-seekbar {
   /* Width takes max available space among siblings */
   width: inherit;
-  /* Height similar to the used large buttons */
-  height: 60px;
+  /* Height similar to the used standard buttons */
+  height: 40px;
   background-color: #272b30;
   /* outline more like a button, with border (However, no rounded corners, and with other text alignment) */
   border: 1px solid #5d656d;
