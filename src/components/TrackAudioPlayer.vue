@@ -122,7 +122,12 @@
         </p>
         <!-- Mute (do not show on small devices, user still can use the volume) -->
         <p class="control is-hidden-mobile">
-            <span class="button" v-on:click.prevent="mute" title="Mute">
+            <span
+                class="button"
+                v-show="!showVolume"
+                v-on:click.prevent="mute"
+                title="Mute"
+            >
                 <span class="icon">
                     <i>
                         <svg
@@ -198,6 +203,7 @@ import { defineComponent } from 'vue';
  */
 export default defineComponent({
     name: 'TrackAudioPlayer',
+    emits: ['timeupdate'],
     props: {
         //TODO use the title at a useful place
         title: String,
