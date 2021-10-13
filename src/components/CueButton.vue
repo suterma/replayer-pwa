@@ -16,6 +16,8 @@
             <span class="has-opacity-half">
                 {{ minutes }}:{{ twoDigitSeconds }}
             </span>
+
+            {{ duration }}
         </span>
         <!-- On touch devices, the key shortcuts are probably not used, thus hide them to save screen real estate -->
         <!-- //TODO Cue shortcuts are currently not yet supported, so do not show them at all now -->
@@ -36,6 +38,10 @@ export default defineComponent({
     components: {},
     props: {
         cue: Cue,
+        /** The duration of this cue
+         * @remarks This is either the time until next cue, or end of track
+         */
+        duration: Number,
         /** The playback progress in the current track, in [seconds]
          * @remarks This is used for progress display within the set of cues
          */

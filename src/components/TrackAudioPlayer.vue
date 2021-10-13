@@ -223,6 +223,9 @@ export default defineComponent({
     data: () => ({
         /** The playback progress in the current track, in [seconds] */
         currentSeconds: 0,
+        /** Gets the duration of the current track, in [seconds]
+         * @remarks This is only available after successful load of the media file
+         */
         durationSeconds: 0,
         loaded: false,
         looping: false,
@@ -239,6 +242,7 @@ export default defineComponent({
         percentComplete(): number {
             return (this.currentSeconds / this.durationSeconds) * 100;
         },
+
         /** Returns the progress style, dynamically depending on the actual progress in the track
          * @remarks Calculates the witdh with respect to the progress bar width from the player styles (which is a border)
          * max-width makes sure, the progress bar never overflows the given space.

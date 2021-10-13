@@ -76,6 +76,7 @@
                                 <CueButton
                                     :disabled="!trackFileUrl?.objectUrl"
                                     :cue="cue"
+                                    :duration="getCueDuration(cue, track)"
                                     :currentSeconds="currentSeconds"
                                     @click="cueClick(cue.Time)"
                                 />
@@ -106,7 +107,7 @@ export default defineComponent({
             msg: '',
             showCues: true,
             /** The playback progress in the current track, in [seconds]
-             * @remarks This is used for progress display within the set of cues
+             * @remarks This is used for track progress display within the set of cues
              */
             currentSeconds: 0,
         };
@@ -180,6 +181,51 @@ export default defineComponent({
          */
         updateTime(currentTime: any) {
             this.currentSeconds = currentTime;
+        },
+        /** For a given cue in a track, get the duration of the cue
+         * @remarks Gets the duration by finding the next larger cue time after this cue's time (or the track duration, if available)
+         */
+        getCueDuration(cue: ICue, track: Track | undefined): number {
+            //TODO cleanup
+            --
+            if (track) {
+                var cueTime = cue?.Time ?? 0;
+                if (cueTime) {
+                    var trackCueTimes = track.Cues.map((c) => {
+                        return c.Time;
+                    })
+                        .filter(function (el) {
+                            return el != null;
+                        })
+                        .map(Number);
+
+                    var laterTrackCueTimes = trackCueTimes.filter(function (
+                        t: number | null,
+                    ) {
+                        return ((t ?? 0) as number) > cueTime;
+                    });
+
+                    console.debug('cue', cue);
+                    console.debug('cueTime', cueTime);
+                    console.debug('trackCueTimes', trackCueTimes);
+                    console.debug('laterTrackCueTimes', laterTrackCueTimes);
+
+                    if (laterTrackCueTimes.length > 0) {
+                        var nextCueTime = Math.min(...laterTrackCueTimes);
+                        return nextCueTime - cueTime;
+                    } else {
+                        //There is no next time, just use the track duration, if available
+                        var trackAudioPlayer = this.$refs
+                            .player as InstanceType<typeof TrackAudioPlayer>;
+                        console.debug('trackAudioPlayer', trackAudioPlayer);
+
+                        if (trackAudioPlayer) {
+                            return trackAudioPlayer.durationSeconds - cueTime;
+                        }
+                    }
+                }
+            }
+            return 0;
         },
     },
     computed: {
