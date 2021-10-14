@@ -40,12 +40,6 @@ $player-playing-color: darken($green, 35%);
         z-index: 1;
     }
 
-    /* A player progress as a progess bar (alternative, currently not used) */
-    // .player-progress {
-    //     background-color: $player-progress-color;
-    //     z-index: 1;
-    // }
-
     .player-seeker {
         cursor: pointer;
         width: 100%;
@@ -57,7 +51,7 @@ $player-playing-color: darken($green, 35%);
     display: flex;
     justify-content: space-between;
 
-    /* Keep some disctanc from the edge, to better show the times, for height according to standard buttons */
+    /* Keep some distance from the edge, to better show the times, for height according to standard buttons */
     padding: 0.5em;
 
     .player-time-current {

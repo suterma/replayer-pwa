@@ -249,7 +249,7 @@ export default defineComponent({
          * @remarks Calculates the witdh with respect to the progress bar width from the player styles (which is a border)
          * max-width makes sure, the progress bar never overflows the given space.
          */
-        progressStyle() {
+        progressStyle(): any {
             return {
                 width: `calc(${this.percentComplete}% + 0.4em)`,
                 'max-width': '100%',

@@ -194,7 +194,7 @@ export default defineComponent({
             );
 
             const originalCues = this.cues?.filter(function (el) {
-                return el.Time != null;
+                return el.Time !== null;
             });
             if (originalCues && originalCues.length > 0) {
                 //Create a shallow, backward sorted copy of the cue list, to iterate through, and setting the duration of the cue objects
@@ -205,7 +205,7 @@ export default defineComponent({
                 var lastTime: number | null = trackDurationSeconds;
 
                 sortedBackwards.forEach((element) => {
-                    if (lastTime && element.Time) {
+                    if (lastTime && element.Time !== null) {
                         element.Duration = lastTime - element.Time;
                     }
                     lastTime = element.Time;

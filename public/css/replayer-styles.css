@@ -10654,6 +10654,16 @@ html {
   opacity: 50%;
 }
 
+/* A variant for a slightly dimmed item (e.g. supporitve/informational text parts)*/
+.has-opacity-quarter {
+  opacity: 25%;
+}
+
+/* A variant for a slightly dimmed item (e.g. supporitve/informational text parts)*/
+.has-opacity-third {
+  opacity: 33%;
+}
+
 /* Currently only apply to the player, as we only there use SVG icons.
 //TODO Later, apply to all icons, as soon as only svg icons are used everywhere.*/
 .player-panel {
@@ -10690,7 +10700,6 @@ html {
   min-width: 2em;
   position: relative;
   /* A player progress as simple vertical handle */
-  /* A player progress as a progess bar (alternative, currently not used) */
 }
 .player-timeline .player-progress,
 .player-timeline .player-seeker {
@@ -10715,7 +10724,7 @@ html {
 .player-time {
   display: flex;
   justify-content: space-between;
-  /* Keep some disctanc from the edge, to better show the times, for height according to standard buttons */
+  /* Keep some distance from the edge, to better show the times, for height according to standard buttons */
   padding: 0.5em;
 }
 .player-time .player-time-current {

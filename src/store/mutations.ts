@@ -68,7 +68,7 @@ function FirstStringOf(array: string[]): string {
 /** Return the first item in the array, if defined. Otherwise, the number 0 is returned as a default. */
 function FirstNumberOf(array: number[]): number {
     if (array) {
-        return array[0] === undefined ? 0 : array[0];
+        return Number(array[0] === undefined ? 0 : array[0]);
     }
     return 0;
 }

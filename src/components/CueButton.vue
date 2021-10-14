@@ -1,23 +1,30 @@
 <template>
     <button
         :class="{
-            'button is-warning': true,
-            'is-inverted': isCueSelected,
-            'is-light': hasCuePassed,
+            button: true,
+            'is-warning': !isCueSelected,
+            'is-success': isCueSelected,
         }"
         @click="invokeCue"
         :title="'Play from ' + cue?.Description"
     >
-        <span class="icon is-hidden-mobile"> ▶ </span>
-        <span class="has-text-weight-semibold">{{ cue?.Description }}</span>
-        <!-- On small devices, hide the informational time stamp to save screen real estate -->
-        <span class="is-hidden-mobile">
-            &nbsp;
-            <span class="has-opacity-half">
-                {{ minutes }}:{{ twoDigitSeconds }}
-            </span>
+        <span class="player-timeline">
+            <span
+                class="player-progress has-opacity-third"
+                :style="progressStyle"
+            ></span>
 
-            {{ cue?.Duration }}
+            <span class="icon is-hidden-mobile foreground"> ▶ </span>
+            <span class="has-text-weight-semibold foreground">{{
+                cue?.Description
+            }}</span>
+            <!-- On small devices, hide the informational time stamp to save screen real estate -->
+            <span class="is-hidden-mobile">
+                &nbsp;
+                <span class="has-opacity-half foreground">
+                    {{ minutes }}:{{ twoDigitSeconds }}
+                </span>
+            </span>
         </span>
         <!-- On touch devices, the key shortcuts are probably not used, thus hide them to save screen real estate -->
         <!-- //TODO Cue shortcuts are currently not yet supported, so do not show them at all now -->
@@ -54,6 +61,37 @@ export default defineComponent({
         },
     },
     computed: {
+        /** The playback progress in the current cue, in [percent] */
+        percentComplete(): number {
+            if (this.hasCuePassed) {
+                return 100; //percent
+            }
+            if (this.isCueAhead) {
+                return 0; //percent
+            }
+            if (this.currentSeconds !== undefined) {
+                if (
+                    this.cue &&
+                    this.cue.Time !== null &&
+                    this.cue.Duration !== null
+                ) {
+                    return (
+                        (100 / this.cue.Duration) *
+                        (this.currentSeconds - this.cue.Time)
+                    );
+                }
+            }
+            return 50; //percent
+        },
+        /** Returns the progress style, dynamically depending on the actual progress in the cue duration
+         * max-width makes sure, the progress bar never overflows the given space.
+         */
+        progressStyle(): any {
+            return {
+                width: `calc(${this.percentComplete}%)`,
+                'max-width': '100%',
+            };
+        },
         /** Gets the whole minutes of the timestamp  */
         minutes(): number | null {
             if (this.cue && this.cue?.Time != null) {
@@ -89,9 +127,28 @@ export default defineComponent({
         },
         /* Determines whether playback of this cue has already passed */
         hasCuePassed(): boolean {
-            if (this.currentSeconds) {
-                if (this.cue && this.cue.Time !== null) {
-                    return this.cue.Time < this.currentSeconds;
+            if (this.currentSeconds !== undefined) {
+                if (
+                    this.cue &&
+                    this.cue.Time !== null &&
+                    this.cue.Duration !== null
+                ) {
+                    return (
+                        this.cue.Time + this.cue.Duration < this.currentSeconds
+                    );
+                }
+            }
+            return false;
+        },
+        /* Determines whether playback of this cue has not yet started */
+        isCueAhead(): boolean {
+            if (this.currentSeconds !== undefined) {
+                if (
+                    this.cue &&
+                    this.cue.Time !== null &&
+                    this.cue.Duration !== null
+                ) {
+                    return this.currentSeconds < this.cue.Time;
                 }
             }
             return false;
@@ -99,3 +156,25 @@ export default defineComponent({
     },
 });
 </script>
+<style scoped>
+.player-timeline .player-progress {
+    background-color: black;
+    border-right-width: 1px;
+    border-right-color: black;
+    border-right-style: solid;
+}
+
+.player-timeline {
+    /** dont use a relative position */
+    position: unset;
+    /* z-index: 0 important!; */
+}
+/* //TODO cleanup : remove z-index if possible
+use the positilon relative also direclty on the the audio player to have a better slider
+make the button edges pretty by applying special styles for 0 and 100% progress on the buttons
+ */
+.foreground {
+    position: relative;
+    z-index: 2;
+}
+</style>
