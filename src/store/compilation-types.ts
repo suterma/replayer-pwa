@@ -66,6 +66,11 @@ export interface ICue {
     Id: string;
     Shortcut: string;
     Time: number | null;
+    /** The calculated duration of the cue
+     * @remarks This is only defined if there is a subsequent cue, or if it is the last queue in a track, the track lenght is known.
+     * @devdoc This must get recalculated if the set of cues changes, or the track is loaded/unloaded. It must never get persisted.
+     */
+    Duration: number | null;
 }
 
 /** Implements a Replayer Compilation, consisting of a set of tracks with their cuepoints.
@@ -94,8 +99,14 @@ export class Track implements ITrack {
 /** Implements a Replayer cue
  *  @inheritdoc */
 export class Cue implements ICue {
+    /**   @inheritdoc */
     Description = '';
+    /**   @inheritdoc */
     Id = '';
+    /**   @inheritdoc */
     Shortcut = '';
+    /**   @inheritdoc */
     Time: number | null = null;
+    /**   @inheritdoc */
+    Duration: number | null = null;
 }

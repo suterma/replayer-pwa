@@ -61,6 +61,7 @@
                             :title="trackFileUrl?.fileName"
                             :src="trackFileUrl?.objectUrl"
                             v-on:timeupdate="updateTime"
+                            v-on:trackLoaded="calculateCueDurations"
                         ></TrackAudioPlayer>
 
                         <!-- Otherwise show a placeholder -->
@@ -76,7 +77,6 @@
                                 <CueButton
                                     :disabled="!trackFileUrl?.objectUrl"
                                     :cue="cue"
-                                    :duration="getCueDuration(cue, track)"
                                     :currentSeconds="currentSeconds"
                                     @click="cueClick(cue.Time)"
                                 />
@@ -117,7 +117,7 @@ export default defineComponent({
             this.showCues = !this.showCues;
             return this.showCues;
         },
-
+        /** Handles the click of a cue button, by playing from there */
         cueClick(time: number | null) {
             if (time != null) {
                 (
@@ -126,7 +126,7 @@ export default defineComponent({
             }
         },
         /** Determines, whether one of the given string ends with the other */
-        endWithOneAnother(first: string, second: string): boolean {
+        isEndingWithOneAnother(first: string, second: string): boolean {
             return first.endsWith(second) || second.endsWith(first);
         },
         /** Finds the matching the media file (playable file content) for a track's file name, from an already loaded package
@@ -138,7 +138,10 @@ export default defineComponent({
         ): MediaFile | null {
             if (fileUrls && fileName) {
                 let url = fileUrls.filter((fileUrl: MediaFile) => {
-                    return this.endWithOneAnother(fileName, fileUrl.fileName);
+                    return this.isEndingWithOneAnother(
+                        fileName,
+                        fileUrl.fileName,
+                    );
                 })[0];
                 if (!url) {
                     //In case of possible weird characters, or case mismatch, try a more lazy match.
@@ -153,8 +156,7 @@ export default defineComponent({
                             .toLowerCase()
                             // eslint-disable-next-line
                             .replace(/[^\x00-\x7F]/g, '');
-                        //console.debug('lazyUrlFileName: ', lazyUrlFileName);
-                        return this.endWithOneAnother(
+                        return this.isEndingWithOneAnother(
                             lazyFileName,
                             lazyUrlFileName,
                         );
@@ -182,50 +184,37 @@ export default defineComponent({
         updateTime(currentTime: any) {
             this.currentSeconds = currentTime;
         },
-        /** For a given cue in a track, get the duration of the cue
-         * @remarks Gets the duration by finding the next larger cue time after this cue's time (or the track duration, if available)
-         */
-        getCueDuration(cue: ICue, track: Track | undefined): number {
-            //TODO cleanup
-            --
-            if (track) {
-                var cueTime = cue?.Time ?? 0;
-                if (cueTime) {
-                    var trackCueTimes = track.Cues.map((c) => {
-                        return c.Time;
-                    })
-                        .filter(function (el) {
-                            return el != null;
-                        })
-                        .map(Number);
+        /** Calculates the cue durations
+         * @remarks Using the existing cues, and the now available track duration, calculates the durations of all cues, including the last one
+         * @devdoc The calculated durations are only valid as long as the cues, their times, and the track does not change */
+        calculateCueDurations(trackDurationSeconds: number) {
+            console.debug(
+                'TrackTile::calculateCueDurations:trackDurationSeconds',
+                trackDurationSeconds,
+            );
 
-                    var laterTrackCueTimes = trackCueTimes.filter(function (
-                        t: number | null,
-                    ) {
-                        return ((t ?? 0) as number) > cueTime;
-                    });
+            const originalCues = this.cues?.filter(function (el) {
+                return el.Time != null;
+            });
+            if (originalCues && originalCues.length > 0) {
+                //Create a shallow, backward sorted copy of the cue list, to iterate through, and setting the duration of the cue objects
+                const sortedBackwards = [...originalCues].sort(
+                    (a, b) => (b.Time ?? 0) - (a.Time ?? 0),
+                );
 
-                    console.debug('cue', cue);
-                    console.debug('cueTime', cueTime);
-                    console.debug('trackCueTimes', trackCueTimes);
-                    console.debug('laterTrackCueTimes', laterTrackCueTimes);
+                var lastTime: number | null = trackDurationSeconds;
 
-                    if (laterTrackCueTimes.length > 0) {
-                        var nextCueTime = Math.min(...laterTrackCueTimes);
-                        return nextCueTime - cueTime;
-                    } else {
-                        //There is no next time, just use the track duration, if available
-                        var trackAudioPlayer = this.$refs
-                            .player as InstanceType<typeof TrackAudioPlayer>;
-                        console.debug('trackAudioPlayer', trackAudioPlayer);
-
-                        if (trackAudioPlayer) {
-                            return trackAudioPlayer.durationSeconds - cueTime;
-                        }
+                sortedBackwards.forEach((element) => {
+                    if (lastTime && element.Time) {
+                        element.Duration = lastTime - element.Time;
                     }
-                }
+                    lastTime = element.Time;
+                });
+                console.debug(
+                    'TrackTile::calculateCueDurations:originalCues',
+                    originalCues,
+                );
             }
-            return 0;
         },
     },
     computed: {
@@ -239,9 +228,6 @@ export default defineComponent({
 
         trackFileUrl(): MediaFile | null {
             const fileUrls = this.$store.getters.fileUrls as Array<MediaFile>;
-
-            // console.debug('TrackTile::Track URL', this.track?.Url);
-
             let fileUrl = this.getMatchingPackageFileUrl(
                 this.track?.Url,
                 fileUrls,

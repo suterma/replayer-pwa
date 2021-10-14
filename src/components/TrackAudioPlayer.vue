@@ -199,11 +199,13 @@
 import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent } from 'vue';
 /** A simple vue audio player, for a single track
+ * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playing
+ * @remarks Emits 'trackLoaded' with the track duration in seconds, once after successful load of the track's media file
  * @devdoc based on https://vuejsexamples.com/html5-basic-audio-player-with-vue-js/
  */
 export default defineComponent({
     name: 'TrackAudioPlayer',
-    emits: ['timeupdate'],
+    emits: ['timeupdate', 'trackLoaded'],
     props: {
         //TODO use the title at a useful place
         title: String,
@@ -295,6 +297,8 @@ export default defineComponent({
                     this.$refs.audio as InstanceType<typeof Audio>
                 ).duration;
 
+                this.$emit('trackLoaded', this.durationSeconds);
+
                 return (this.playing = this.autoPlay);
             }
 
@@ -327,10 +331,11 @@ export default defineComponent({
         /** Updates the current seconds display and emits an event with the temporal position of the player
          * @devdoc This must get only privately called from the audio player
          */
-        updateTime() {
+        updateTime(e: Event) {
             this.currentSeconds = (
-                this.$refs.audio as InstanceType<typeof Audio>
+                e.target as InstanceType<typeof Audio>
             ).currentTime;
+
             this.$emit('timeupdate', this.currentSeconds);
         },
         /** Starts playback from the given temporal position */
