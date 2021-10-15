@@ -11,7 +11,7 @@
                         <span
                             v-if="!showCues"
                             class="is-pulled-right ml-3 tag is-warning"
-                            ><a @click="toggleBurger" role="button">
+                            ><a @click="toggleCueDisplay" role="button">
                                 <!-- Text colors similar to cues -->
                                 <span
                                     class="icon-text is-size-7 has-text-light"
@@ -25,7 +25,7 @@
                         <span
                             v-if="showCues"
                             class="is-pulled-right ml-3 tag is-dark"
-                            ><a @click="toggleBurger" role="button">
+                            ><a @click="toggleCueDisplay" role="button">
                                 <span
                                     class="icon-text is-size-7 has-text-light"
                                     v-if="showCues"
@@ -104,7 +104,6 @@ export default defineComponent({
     },
     data() {
         return {
-            msg: '',
             showCues: true,
             /** The playback progress in the current track, in [seconds]
              * @remarks This is used for track progress display within the set of cues
@@ -113,16 +112,25 @@ export default defineComponent({
         };
     },
     methods: {
-        toggleBurger() {
+        /** Toggles the display of the cue buttons */
+        toggleCueDisplay() {
             this.showCues = !this.showCues;
             return this.showCues;
         },
-        /** Handles the click of a cue button, by playing from there */
+        /** Handles the click of a cue button, by toggling playback and seeking to it */
         cueClick(time: number | null) {
+            console.debug('TrackTime::cueClick:time', time);
             if (time != null) {
-                (
-                    this.$refs.player as InstanceType<typeof TrackAudioPlayer>
-                ).playFrom(time);
+                var trackPlayer = this.$refs.player as InstanceType<
+                    typeof TrackAudioPlayer
+                >;
+
+                if (trackPlayer.playing === true) {
+                    trackPlayer.pause();
+                    trackPlayer.seekTo(time);
+                } else {
+                    trackPlayer.playFrom(time);
+                }
             }
         },
         /** Determines, whether one of the given string ends with the other */

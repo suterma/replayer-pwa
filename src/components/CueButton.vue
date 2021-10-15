@@ -69,10 +69,10 @@ export default defineComponent({
     },
     methods: {
         invokeCue(event: Event) {
+            console.debug('CueButton::invokeCue:event', event);
             // `this` inside methods points to the current active instance
             // `event` is the native DOM event
             if (event) {
-                this.$emit('click');
                 this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, this.cue);
             }
         },

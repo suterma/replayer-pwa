@@ -328,6 +328,10 @@ export default defineComponent({
             (this.$refs.audio as InstanceType<typeof Audio>).currentTime = 0;
             this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, undefined);
         },
+        /** Pauses playback, keeping the position at the current position */
+        pause() {
+            this.playing = false;
+        },
         /** Updates the current seconds display and emits an event with the temporal position of the player
          * @devdoc This must get only privately called from the audio player
          */
@@ -340,9 +344,13 @@ export default defineComponent({
         },
         /** Starts playback from the given temporal position */
         playFrom(position: number): void {
+            this.seekTo(position);
+            this.playing = true;
+        },
+        /** Transports (seeks) the playback to the given temporal position */
+        seekTo(position: number): void {
             (this.$refs.audio as InstanceType<typeof Audio>).currentTime =
                 position;
-            this.playing = true;
         },
     },
     created() {
