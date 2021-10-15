@@ -56,11 +56,18 @@ html {
         vertical-align: middle;
     }
 }
-/* Player styles (to be used for the audio player) */
-@import 'replayer-player-styles.scss';
+
+/* Disable touch callout on menu items */
+a.navbar-item {
+    /*Nonstandard, only expected to work on Safari on iOS*/
+    -webkit-touch-callout: none;
+}
 
 /* Improve text legibility */
 #app {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
+/* Player styles (to be used for the audio player) */
+@import 'replayer-player-styles.scss';

@@ -10683,6 +10683,18 @@ html {
   vertical-align: middle;
 }
 
+/* Disable touch callout on menu items */
+a.navbar-item {
+  touch-action: none;
+  -webkit-touch-callout: none;
+}
+
+/* Improve text legibility */
+#app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 /* Player styles (to be used for the audio player) */
 /* Player styles (to be used for the audio player)
  * These styles are based on a dark bulmaswatch theme and borrow variables from there
@@ -10763,10 +10775,4 @@ html {
 /* When playing, overrides the non-playing default background */
 .player-playing-indication {
   background-color: #205420;
-}
-
-/* Improve text legibility */
-#app {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
