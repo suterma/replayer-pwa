@@ -10,7 +10,11 @@
     >
         <span class="player-timeline">
             <span
-                class="player-progress has-opacity-third"
+                :class="{
+                    'player-progress': true,
+                    'has-opacity-third': true,
+                    'player-progress-full': hasCuePassed,
+                }"
                 :style="progressStyle"
             ></span>
 
@@ -158,10 +162,22 @@ export default defineComponent({
 </script>
 <style scoped>
 .player-timeline .player-progress {
+    /* Smooth psrogress shade, with no visible border or slider line */
     background-color: black;
     border-right-width: 1px;
-    border-right-color: black;
+    border-right-color: transparent;
     border-right-style: solid;
+
+    /* Progress shade to appear inside button area (creates outlined style)  */
+    border-right-style: none;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.player-timeline .player-progress.player-progress-full {
+    /* 100% Progress shade to appear inside button area (creates outlined style)  */
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 .player-timeline {

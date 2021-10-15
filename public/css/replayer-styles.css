@@ -10685,7 +10685,7 @@ html {
 
 /* Disable touch callout on menu items */
 a.navbar-item {
-  touch-action: none;
+  /*Nonstandard, only expected to work on Safari on iOS*/
   -webkit-touch-callout: none;
 }
 
