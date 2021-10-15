@@ -12,8 +12,9 @@
             <span
                 :class="{
                     'player-progress': true,
-                    'has-opacity-third': true,
-                    'player-progress-full': hasCuePassed,
+                    'player-progress-full':
+                        hasCuePassed || percentComplete >= 100,
+                    'player-progress-none': isCueAhead || percentComplete <= 0,
                 }"
                 :style="progressStyle"
             ></span>
@@ -65,8 +66,8 @@ export default defineComponent({
         },
     },
     computed: {
-        /** The playback progress in the current cue, in [percent] */
-        percentComplete(): number {
+        /** The playback progress in the current cue, in [percent], or null if not appliccable */
+        percentComplete(): number | null {
             if (this.hasCuePassed) {
                 return 100; //percent
             }
@@ -85,7 +86,7 @@ export default defineComponent({
                     );
                 }
             }
-            return 50; //percent
+            return null;
         },
         /** Returns the progress style, dynamically depending on the actual progress in the cue duration
          * max-width makes sure, the progress bar never overflows the given space.
@@ -161,15 +162,16 @@ export default defineComponent({
 });
 </script>
 <style scoped>
+/* //TODO later put these into a scss file for player and progress */
 .player-timeline .player-progress {
     /* Smooth psrogress shade, with no visible border or slider line */
-    background-color: black;
+    /** similar to has-opacity-third */
+    background-color: rgba(0, 0, 0, 0.33);
     border-right-width: 1px;
-    border-right-color: transparent;
+    border-right-color: black;
     border-right-style: solid;
 
     /* Progress shade to appear inside button area (creates outlined style)  */
-    border-right-style: none;
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
 }
@@ -178,6 +180,10 @@ export default defineComponent({
     /* 100% Progress shade to appear inside button area (creates outlined style)  */
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
+    border-right: none;
+}
+.player-timeline .player-progress.player-progress-none {
+    border-right: none;
 }
 
 .player-timeline {
