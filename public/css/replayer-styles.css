@@ -10689,6 +10689,14 @@ a.navbar-item {
   -webkit-touch-callout: none;
 }
 
+/* Multiline buttons (use <br/> in a button text to force multiline) */
+.button.is-multiline {
+  min-height: 2.25em;
+  white-space: unset;
+  height: auto;
+  flex-direction: column;
+}
+
 /* Improve text legibility */
 #app {
   -webkit-font-smoothing: antialiased;

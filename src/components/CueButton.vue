@@ -2,6 +2,8 @@
     <button
         :class="{
             button: true,
+            'is-multiline': true,
+            'has-text-left': true,
             'is-warning': !isCueSelected,
             'is-success': isCueSelected,
         }"
@@ -23,20 +25,30 @@
             <span class="has-text-weight-semibold foreground">{{
                 cue?.Description
             }}</span>
-            <!-- On small devices, hide the informational time stamp to save screen real estate -->
-            <span class="is-hidden-mobile">
-                &nbsp;
-                <span class="has-opacity-half foreground">
-                    {{ minutes }}:{{ twoDigitSeconds }}
-                </span>
+
+            <br />
+
+            <span class="has-opacity-half foreground">
+                {{ minutes }}:{{ twoDigitSeconds }}
             </span>
+
+            <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibilty as possible -->
+            <!-- <span
+                class="
+                    tag
+                    is-warning is-light is-outlined
+                    foreground
+                    has-opacity-third
+                    is-pulled-right
+                "
+                >{{ cue?.Shortcut }}</span
+            > -->
+            <!-- spacer -->
+            &nbsp; &nbsp;
+            <span class="has-opacity-half foreground is-pulled-right"
+                >[{{ cue?.Shortcut }}]</span
+            >
         </span>
-        <!-- On touch devices, the key shortcuts are probably not used, thus hide them to save screen real estate -->
-        <!-- //TODO Cue shortcuts are currently not yet supported, so do not show them at all now -->
-        <!-- <span class="is-hidden-touch">
-            &nbsp;&nbsp;
-            <span class="tag is-warning is-light">{{ cue?.Shortcut }}</span>
-        </span> -->
     </button>
 </template>
 
@@ -198,5 +210,11 @@ make the button edges pretty by applying special styles for 0 and 100% progress 
 .foreground {
     position: relative;
     z-index: 2;
+}
+
+/** A standrd-sized cue button only has a small left/right padding */
+button {
+    padding-left: 7px;
+    padding-right: 7px;
 }
 </style>
