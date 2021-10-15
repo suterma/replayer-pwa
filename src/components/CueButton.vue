@@ -15,8 +15,11 @@
                 :class="{
                     'player-progress': true,
                     'player-progress-full':
-                        hasCuePassed || percentComplete >= 100,
-                    'player-progress-none': isCueAhead || percentComplete <= 0,
+                        hasCuePassed ||
+                        (percentComplete !== null && percentComplete >= 100),
+                    'player-progress-none':
+                        isCueAhead ||
+                        (percentComplete !== null && percentComplete <= 0),
                 }"
                 :style="progressStyle"
             ></span>
@@ -214,7 +217,7 @@ make the button edges pretty by applying special styles for 0 and 100% progress 
 
 /** A standrd-sized cue button only has a small left/right padding */
 button {
-    padding-left: 7px;
-    padding-right: 7px;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 </style>
