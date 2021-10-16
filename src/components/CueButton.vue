@@ -11,6 +11,7 @@
         :title="'Play from ' + cue?.Description"
     >
         <span class="player-timeline">
+            <!-- first line -->
             <span
                 :class="{
                     'player-progress': true,
@@ -30,9 +31,9 @@
             }}</span>
 
             <br />
-
+            <!-- second line -->
             <span class="has-opacity-half foreground">
-                {{ minutes }}:{{ twoDigitSeconds }}
+                {{ convertToDisplayTime }}
             </span>
 
             <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibilty as possible -->
@@ -116,34 +117,21 @@ export default defineComponent({
                 'max-width': '100%',
             };
         },
-        /** Gets the whole minutes of the timestamp  */
-        minutes(): number | null {
-            if (this.cue && this.cue?.Time != null) {
-                var minutes = Math.floor(this.cue.Time / 60);
-                return minutes;
-            }
-            return null;
-        },
-
-        /** Gets the rounded seconds (without whole minutes) of the timestamp  */
-        seconds(): number | null {
-            if (this.minutes != null && this.cue && this.cue?.Time != null) {
-                var seconds = Math.round(this.cue?.Time - this.minutes * 60);
-                return seconds;
-            }
-            return null;
-        },
-
-        /** Gets a string representation of the seconds part, with 2 digits fixed
-         * @devdoc Makes sure, that nothing is shown for actual null values
+        /** Converts the cue's total seconds into a conveniently displayable hh:mm:ss.s format.
+         * @remarks Omits the hour part, if not appliccable
          */
-        twoDigitSeconds(): string {
-            if (this.seconds != null) {
-                return this.seconds.toLocaleString('en-US', {
-                    minimumIntegerDigits: 2,
-                    useGrouping: false,
-                });
-            } else return '';
+        convertToDisplayTime(): string | null {
+            const seconds = this.cue?.Time;
+            if (seconds != null) {
+                //Uses the hour, minute, seconds, and 1 digit of the milliseconds part
+                const hhmmss = new Date(seconds * 1000)
+                    .toISOString()
+                    .substr(11, 10);
+                //skip the hour part, if not used
+                return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss;
+            } else {
+                return null;
+            }
         },
         /** Determines whether this cue is currently selected
          * @remarks Note: only one cue in a compilation may be selected */
@@ -209,18 +197,18 @@ export default defineComponent({
 .player-timeline {
     /** dont use a relative position */
     position: unset;
-    /* z-index: 0 important!; */
 }
-/* //TODO cleanup : remove z-index if possible
-use the positilon relative also direclty on the the audio player to have a better slider
-make the button edges pretty by applying special styles for 0 and 100% progress on the buttons
- */
-.foreground {
+
+/** Allows to show elements in front of the player-progress background span
+   * @devdoc Otherwise, due to unknown reasons, these elements would be shown behind the progress shade, regardless of that they are defined after the progress shade.
+   */
+.player-timeline .foreground {
+    /* //TODO maybe use a similar css directly on the the audio player progress to have the progress bar behind the text there, too */
     position: relative;
     z-index: 2;
 }
 
-/** A standrd-sized cue button only has a small left/right padding */
+/** A standard-sized cue button only should have a small left/right padding, to save real estate and to look better */
 .button {
     padding-left: 8px;
     padding-right: 8px;

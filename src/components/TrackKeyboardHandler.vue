@@ -6,7 +6,7 @@ import { defineComponent } from 'vue';
 import TrackAudioPlayer from '@/components/TrackAudioPlayer.vue';
 import { Track } from '@/store/compilation-types';
 
-/** A keyboard handler, which translates keyboard shortcuts into trackk audio player actions, for a single track
+/** A keyboard handler, which translates keyboard shortcuts into track audio player actions, for a single track
  */
 export default defineComponent({
     name: 'TrackKeyboardHandler',

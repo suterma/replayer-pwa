@@ -233,7 +233,7 @@ export default defineComponent({
         loaded: false,
         looping: false,
         playing: false,
-        previousVolume: 35,
+        previousVolume: 50,
         showVolume: false,
         /** Default value, user may change later */
         volume: 25,
@@ -280,9 +280,14 @@ export default defineComponent({
         },
     },
     methods: {
+        /** Converts the total seconds into a conveniently displayable hh:mm:ss.s format.
+         * @remarks Omits the hour part, if not appliccable
+         */
         convertToDisplayTime(seconds: number): string {
             //Uses the hour, minute, seconds, and 1 digit of the milliseconds part
-            let hhmmss = new Date(seconds * 1000).toISOString().substr(11, 10);
+            const hhmmss = new Date(seconds * 1000)
+                .toISOString()
+                .substr(11, 10);
             //skip the hour part, if not used
             return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss;
         },
@@ -300,6 +305,9 @@ export default defineComponent({
                 ).duration;
 
                 this.$emit('trackLoaded', this.durationSeconds);
+
+                //Apply the initial volume. This is a hack to trigger the volumes watcher here, to apply some form of default other than 100
+                this.volume = this.previousVolume;
 
                 return (this.playing = this.autoPlay);
             }
