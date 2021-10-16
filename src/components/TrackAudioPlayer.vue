@@ -235,7 +235,8 @@ export default defineComponent({
         playing: false,
         previousVolume: 35,
         showVolume: false,
-        volume: 50,
+        /** Default value, user may change later */
+        volume: 25,
     }),
     computed: {
         muted(): boolean {

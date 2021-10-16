@@ -1,6 +1,8 @@
 <template>
     <h1 class="title">{{ compilation?.Title }}</h1>
-    <!-- <h2 class="subtitle">
+    <!--
+        In Edit mode, later show this
+         <h2 class="subtitle">
             {{ compilation?.MediaPath }}
         </h2> -->
 
@@ -10,10 +12,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { Compilation, ITrack } from '@/store/compilation-types'
-import TrackTile from '@/components/TrackTile.vue'
+import { defineComponent } from 'vue';
+import { Compilation, ITrack } from '@/store/compilation-types';
+import TrackTile from '@/components/TrackTile.vue';
 
+/** Displays the contained list of tracks as tiles  */
 export default defineComponent({
     name: 'CompilationDisplay',
     components: { TrackTile },
@@ -22,10 +25,10 @@ export default defineComponent({
     },
     methods: {},
     computed: {
+        /** Gets the list of tracks within this compilation */
         tracks(): Array<ITrack> | undefined {
-            return this.compilation?.Tracks
+            return this.compilation?.Tracks;
         },
-        //TODO display the ready-state of the corresponding file object
     },
-})
+});
 </script>

@@ -60,6 +60,9 @@ import { defineComponent } from 'vue';
 import { Cue } from '@/store/compilation-types';
 import { MutationTypes } from '@/store/mutation-types';
 
+/** A button for displaying and invoking a cue
+ * @remarks Shows playback progress with an inline progress bar
+ */
 export default defineComponent({
     name: 'CueButton',
     components: {},
@@ -71,6 +74,7 @@ export default defineComponent({
         currentSeconds: Number,
     },
     methods: {
+        /** Invokes this cue by setting it as the current cue in the store */
         invokeCue(event: Event) {
             console.debug('CueButton::invokeCue:event', event);
             // `this` inside methods points to the current active instance
@@ -81,7 +85,7 @@ export default defineComponent({
         },
     },
     computed: {
-        /** The playback progress in the current cue, in [percent], or null if not appliccable */
+        /** The playback progress within this cue, in [percent], or null if not appliccable */
         percentComplete(): number | null {
             if (this.hasCuePassed) {
                 return 100; //percent
@@ -103,8 +107,8 @@ export default defineComponent({
             }
             return null;
         },
-        /** Returns the progress style, dynamically depending on the actual progress in the cue duration
-         * max-width makes sure, the progress bar never overflows the given space.
+        /** Returns the progress as width style, for use as a css style set, dynamically depending on the actual progress in the cue duration
+         * @devdoc max-width makes sure, the progress bar never overflows the given space.
          */
         progressStyle(): any {
             return {
@@ -141,7 +145,8 @@ export default defineComponent({
                 });
             } else return '';
         },
-        /* Determines whether this cue is currently selected */
+        /** Determines whether this cue is currently selected
+         * @remarks Note: only one cue in a compilation may be selected */
         isCueSelected(): boolean {
             return this.$store.getters.selectedCue?.Id == this.cue?.Id;
         },
