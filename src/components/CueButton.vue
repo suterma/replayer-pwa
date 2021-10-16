@@ -216,7 +216,7 @@ make the button edges pretty by applying special styles for 0 and 100% progress 
 }
 
 /** A standrd-sized cue button only has a small left/right padding */
-button {
+.button {
     padding-left: 8px;
     padding-right: 8px;
 }
