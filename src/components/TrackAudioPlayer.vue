@@ -20,7 +20,7 @@
         <p class="control">
             <span
                 class="button"
-                v-on:click.prevent="playing = !playing"
+                v-on:click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
             >
                 <span class="icon">
@@ -198,6 +198,7 @@
 <script lang="ts">
 import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent } from 'vue';
+
 /** A simple vue audio player, for a single track
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playing
  * @remarks Emits 'trackLoaded' with the track duration in seconds, once after successful load of the track's media file
@@ -234,7 +235,7 @@ export default defineComponent({
         playing: false,
         previousVolume: 35,
         showVolume: false,
-        volume: 100,
+        volume: 50,
     }),
     computed: {
         muted(): boolean {
@@ -327,6 +328,15 @@ export default defineComponent({
             this.playing = false;
             (this.$refs.audio as InstanceType<typeof Audio>).currentTime = 0;
             this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, undefined);
+        },
+        togglePlayback() {
+            this.playing = !this.playing;
+        },
+        volumeDown() {
+            this.volume = this.volume * 0.71;
+        },
+        volumeUp() {
+            this.volume = Math.min(this.volume * 1.41, 100);
         },
         /** Pauses playback, keeping the position at the current position */
         pause() {
