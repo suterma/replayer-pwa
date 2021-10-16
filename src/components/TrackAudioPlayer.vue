@@ -323,7 +323,7 @@ export default defineComponent({
             this.volume = 0;
         },
         seekByClick(e: MouseEvent) {
-            console.debug('AudioPlayer::seek', e);
+            console.debug('TrackAudioPlayer::seekByClick', e);
             if (!this.loaded) return;
 
             const bounds = (e.target as HTMLDivElement).getBoundingClientRect();
@@ -339,12 +339,15 @@ export default defineComponent({
             this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, undefined);
         },
         togglePlayback() {
+            console.debug('TrackAudioPlayer::togglePlayback', this.playing);
             this.playing = !this.playing;
         },
         volumeDown() {
+            console.debug('TrackAudioPlayer::volumeDown', this.volume);
             this.volume = this.volume * 0.71;
         },
         volumeUp() {
+            console.debug('TrackAudioPlayer::volumeUp', this.volume);
             this.volume = Math.min(this.volume * 1.41, 100);
         },
         /** Pauses playback, keeping the position at the current position */

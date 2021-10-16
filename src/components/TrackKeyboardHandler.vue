@@ -1,70 +1,68 @@
-<template></template>
+<template>
+    <!-- eslint-disable-line -->
+    <GlobalEvents
+        @keyup.prevent.enter="togglePlayback"
+        @keyup.prevent.space="togglePlayback"
+        @keyup.prevent.left="backToCue"
+        @keyup.prevent.-="volumeDown"
+        @keyup.prevent.+="volumeUp"
+        @keyup.prevent.0="backToCue"
+    />
+    <!-- page-down / page-up to navigate between tracks? -->
+</template>
 
 <script lang="ts">
-import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent } from 'vue';
 import TrackAudioPlayer from '@/components/TrackAudioPlayer.vue';
-import { Track } from '@/store/compilation-types';
+import { ICue, Track } from '@/store/compilation-types';
+import { GlobalEvents } from 'vue-global-events';
 
 /** A keyboard handler, which translates keyboard shortcuts into track audio player actions, for a single track
+ * @remarks This handler does not check whether the track is the active one,
+ * this must be handeled outside this handler, using a v-if clause for this component
  */
 export default defineComponent({
     name: 'TrackKeyboardHandler',
-    components: { TrackAudioPlayer },
+    components: { GlobalEvents },
     props: {
-        playerInstance: {
-            type: TrackAudioPlayer,
-            default: null,
-        },
+        /** The player instance (of type TrackAudioPlayer) which is to be manipulated. */
+        playerInstance: Object,
         track: {
             type: Track,
             default: null,
         },
     },
-    data: () => ({}),
-    computed: {},
+    computed: {
+        /** For typing convenience, provides the player instance as instance of type TrackAudioPlayer */
+        trackPlayerInstance(): InstanceType<typeof TrackAudioPlayer> {
+            return this.playerInstance as InstanceType<typeof TrackAudioPlayer>;
+        },
+        selectedCue(): ICue {
+            return this.$store.getters.selectedCue as ICue;
+        },
+    },
 
     watch: {},
     methods: {
-        stop() {
-            this.playing = false;
-            (this.$refs.audio as InstanceType<typeof Audio>).currentTime = 0;
-            this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, undefined);
-        },
+        /** Toggles playback */
         togglePlayback() {
-            this.playing = !this.playing;
+            this.trackPlayerInstance.togglePlayback();
         },
+        /** Decreases the volume */
         volumeDown() {
-            this.volume = this.volume * 0.71;
+            this.trackPlayerInstance.volumeDown();
         },
+        /** Increases the volume */
         volumeUp() {
-            this.volume = Math.min(this.volume * 1.41, 100);
+            this.trackPlayerInstance.volumeUp();
         },
-        /** Pauses playback, keeping the position at the current position */
-        pause() {
-            this.playing = false;
-        },
-        /** Updates the current seconds display and emits an event with the temporal position of the player
-         * @devdoc This must get only privately called from the audio player
-         */
-        updateTime(e: Event) {
-            this.currentSeconds = (
-                e.target as InstanceType<typeof Audio>
-            ).currentTime;
-
-            this.$emit('timeupdate', this.currentSeconds);
-        },
-        /** Starts playback from the given temporal position */
-        playFrom(position: number): void {
-            this.seekTo(position);
-            this.playing = true;
-        },
-        /** Transports (seeks) the playback to the given temporal position */
-        seekTo(position: number): void {
-            (this.$refs.audio as InstanceType<typeof Audio>).currentTime =
-                position;
+        /** Seeks back to the temporal position of the currently selected cue */
+        backToCue() {
+            if (this.selectedCue?.Time) {
+                this.trackPlayerInstance.pause();
+                this.trackPlayerInstance.seekTo(this.selectedCue.Time);
+            }
         },
     },
 });
 </script>
-<style scoped></style>

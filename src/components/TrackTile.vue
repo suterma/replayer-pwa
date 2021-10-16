@@ -87,13 +87,11 @@
             </div>
         </div>
     </div>
-
-    <!-- Handle player-related shortcuts here (Because this is the place to decide whether this is the acive track and here we have access to the player instance)-->
-    <GlobalEvents
+    <!-- Handle the keyboard shortcuts for this track, if it is the active one -->
+    <TrackKeyboardHandler
         v-if="isActiveTrack"
-        @keyup.prevent.enter="togglePlayback"
-        @keyup.prevent.-="volumeDown"
-        @keyup.prevent.+="volumeUp"
+        :track="track"
+        :playerInstance="$refs.player"
     />
 </template>
 
@@ -103,11 +101,11 @@ import { Track, ICue } from '@/store/compilation-types';
 import CueButton from '@/components/CueButton.vue';
 import TrackAudioPlayer from '@/components/TrackAudioPlayer.vue';
 import { MediaFile } from '@/store/state-types';
-import { GlobalEvents } from 'vue-global-events';
+import TrackKeyboardHandler from '@/components/TrackKeyboardHandler.vue';
 
 export default defineComponent({
     name: 'TrackTile',
-    components: { CueButton, TrackAudioPlayer, GlobalEvents },
+    components: { CueButton, TrackAudioPlayer, TrackKeyboardHandler },
     props: {
         track: Track,
     },
@@ -126,32 +124,6 @@ export default defineComponent({
             this.showCues = !this.showCues;
             return this.showCues;
         },
-        togglePlayback() {
-            console.debug('TrackTile::togglePlayback');
-
-            var trackPlayer = this.$refs.player as InstanceType<
-                typeof TrackAudioPlayer
-            >;
-            trackPlayer.togglePlayback();
-        },
-        volumeDown() {
-            //TODO use central player computed value
-            console.debug('TrackTile::volumeDown');
-
-            var trackPlayer = this.$refs.player as InstanceType<
-                typeof TrackAudioPlayer
-            >;
-            trackPlayer.volumeDown();
-        },
-        volumeUp() {
-            //TODO use central player computed value
-            console.debug('TrackTile::volumeUp');
-
-            var trackPlayer = this.$refs.player as InstanceType<
-                typeof TrackAudioPlayer
-            >;
-            trackPlayer.volumeUp();
-        },
         /** Handles the click of a cue button, by toggling playback and seeking to it
          * @remarks Click invocations by the ENTER key are explicitly not handeled here, because these should get handeled by the keyboard shortcut engine.
          */
@@ -166,7 +138,7 @@ export default defineComponent({
             }
 
             if (time != null) {
-                var trackPlayer = this.$refs.player as InstanceType<
+                const trackPlayer = this.$refs.player as InstanceType<
                     typeof TrackAudioPlayer
                 >;
 
@@ -271,6 +243,9 @@ export default defineComponent({
         },
     },
     computed: {
+        // trackPlayerInstance(): InstanceType<typeof TrackAudioPlayer> {
+        //     return this.$refs.player as InstanceType<typeof TrackAudioPlayer>;
+        // },
         cues(): Array<ICue> | undefined {
             return this.track?.Cues;
         },
@@ -293,6 +268,18 @@ export default defineComponent({
         /** Determines whether this is the active track (i.e. the globally selected cue is from this track ) */
         isActiveTrack(): boolean {
             const selectedCue = this.$store.getters.selectedCue as ICue;
+            const selectedCueId = selectedCue?.Id;
+            console.debug(
+                'TrackTile::isActiveTrack:selectedCueId',
+                selectedCueId,
+            );
+
+            if (!selectedCueId) {
+                //if none selected, this track is not active anyway
+                return false;
+            }
+
+            //Check for matching Ids
             return (
                 (this.cues?.filter((c) => c.Id === selectedCue.Id).length ??
                     0) > 0
