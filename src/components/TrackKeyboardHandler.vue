@@ -3,17 +3,17 @@
     <GlobalEvents
         @keyup.prevent.enter="togglePlayback"
         @keyup.prevent.space="togglePlayback"
-        @keyup.prevent.left="backToCue"
         @keyup.prevent.-="volumeDown"
         @keyup.prevent.+="volumeUp"
-        @keyup.prevent.0="backToCue"
+        @keyup.prevent="handleKeyUp"
     />
-    <!-- page-down / page-up to navigate between tracks? -->
+    <KeyResponseOverlay :keyText="key" ref="keyResponseOverlay" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import TrackAudioPlayer from '@/components/TrackAudioPlayer.vue';
+import KeyResponseOverlay from '@/components/KeyResponseOverlay.vue';
 import { ICue, Track } from '@/store/compilation-types';
 import { GlobalEvents } from 'vue-global-events';
 
@@ -23,14 +23,20 @@ import { GlobalEvents } from 'vue-global-events';
  */
 export default defineComponent({
     name: 'TrackKeyboardHandler',
-    components: { GlobalEvents },
+    components: { GlobalEvents, KeyResponseOverlay },
     props: {
         /** The player instance (of type TrackAudioPlayer) which is to be manipulated. */
-        playerInstance: Object,
+        playerInstance: null,
         track: {
             type: Track,
             default: null,
         },
+    },
+    data() {
+        return {
+            /** The character representation of the currently pressed key (or keys, when handling  a shortcut) */
+            key: '',
+        };
     },
     computed: {
         /** For typing convenience, provides the player instance as instance of type TrackAudioPlayer */
@@ -45,23 +51,56 @@ export default defineComponent({
     watch: {},
     methods: {
         /** Toggles playback */
-        togglePlayback() {
+        togglePlayback(event: KeyboardEvent) {
+            this.displayEventKey(event);
             this.trackPlayerInstance.togglePlayback();
         },
         /** Decreases the volume */
-        volumeDown() {
+        volumeDown(event: KeyboardEvent) {
+            this.displayEventKey(event);
             this.trackPlayerInstance.volumeDown();
         },
         /** Increases the volume */
-        volumeUp() {
+        volumeUp(event: KeyboardEvent) {
+            this.displayEventKey(event);
             this.trackPlayerInstance.volumeUp();
         },
-        /** Seeks back to the temporal position of the currently selected cue */
+        /** Generally handle all keyUp events, by checking for recognisable events
+         * @remarks Handles "back to cue" and "keyboard shortcut scan" events
+         */
+        handleKeyUp(event: KeyboardEvent) {
+            //Back to cue (dot)?
+            if (event.code === 'NumpadDecimal' || event.code === 'Period') {
+                this.displayEventKey(event);
+                this.backToCue();
+            }
+        },
+        /** Seeks back to the temporal position of the currently selected cue
+         * @remarks This filters to the dot key
+         */
         backToCue() {
-            if (this.selectedCue?.Time) {
+            console.debug(
+                'TrackKeyboardHandler::backToCue:this.selectedCue',
+                this.selectedCue,
+            );
+            if (this.selectedCue?.Time != null) {
                 this.trackPlayerInstance.pause();
                 this.trackPlayerInstance.seekTo(this.selectedCue.Time);
             }
+        },
+
+        /** Displays the key from the keyboard event as textual representation*/
+        displayEventKey(event: KeyboardEvent) {
+            let eventKey = event.key;
+            if (eventKey == ' ') {
+                eventKey = 'Space';
+            }
+
+            (
+                this.$refs.keyResponseOverlay as InstanceType<
+                    typeof KeyResponseOverlay
+                >
+            ).DisplayKey(eventKey);
         },
     },
 });

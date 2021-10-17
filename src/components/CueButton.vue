@@ -7,7 +7,6 @@
             'is-warning': !isCueSelected,
             'is-success': isCueSelected,
         }"
-        @click="invokeCue"
         :title="'Play from ' + cue?.Description"
     >
         <span class="player-timeline">
@@ -59,7 +58,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Cue } from '@/store/compilation-types';
-import { MutationTypes } from '@/store/mutation-types';
+//import { MutationTypes } from '@/store/mutation-types';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
@@ -74,17 +73,17 @@ export default defineComponent({
          */
         currentSeconds: Number,
     },
-    methods: {
-        /** Invokes this cue by setting it as the current cue in the store */
-        invokeCue(event: Event) {
-            console.debug('CueButton::invokeCue:event', event);
-            // `this` inside methods points to the current active instance
-            // `event` is the native DOM event
-            if (event) {
-                this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, this.cue);
-            }
-        },
-    },
+    // methods: {
+    //     /** Invokes this cue by setting it as the current cue in the store */
+    //     invokeCue(event: Event) {
+    //         console.debug('CueButton::invokeCue:event', event);
+    //         // `this` inside methods points to the current active instance
+    //         // `event` is the native DOM event
+    //         if (event) {
+    //             this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, this.cue);
+    //         }
+    //     },
+    // },
     computed: {
         /** The playback progress within this cue, in [percent], or null if not appliccable */
         percentComplete(): number | null {

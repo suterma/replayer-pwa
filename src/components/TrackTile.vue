@@ -78,7 +78,7 @@
                                     :disabled="!trackFileUrl?.objectUrl"
                                     :cue="cue"
                                     :currentSeconds="currentSeconds"
-                                    @click="cueClick($event, cue.Time)"
+                                    @click="cueClick($event, cue)"
                                 />
                             </template>
                         </div>
@@ -102,6 +102,7 @@ import CueButton from '@/components/CueButton.vue';
 import TrackAudioPlayer from '@/components/TrackAudioPlayer.vue';
 import { MediaFile } from '@/store/state-types';
 import TrackKeyboardHandler from '@/components/TrackKeyboardHandler.vue';
+import { MutationTypes } from '@/store/mutation-types';
 
 export default defineComponent({
     name: 'TrackTile',
@@ -125,28 +126,33 @@ export default defineComponent({
             return this.showCues;
         },
         /** Handles the click of a cue button, by toggling playback and seeking to it
-         * @remarks Click invocations by the ENTER key are explicitly not handeled here, because these should get handeled by the keyboard shortcut engine.
+         * @remarks Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
          */
-        cueClick(event: PointerEvent, time: number | null) {
+        cueClick(event: PointerEvent, cue: ICue) {
             console.debug('TrackTile::cueClick:event', event);
-            console.debug('TrackTile::cueClick:time', time);
+            console.debug('TrackTile::cueClick:time', cue);
 
             //Not a touch or mouse device? Must be the ENTER key
             if (event.pointerId < 0) {
                 console.debug('TrackTile::cueClick:Must be the ENTER key');
+                event.preventDefault();
                 return;
             }
 
-            if (time != null) {
+            if (cue.Time != null) {
+                //Update the selected cue to this cue
+                this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, cue);
+
+                //Set the position to this cue and handle playback
                 const trackPlayer = this.$refs.player as InstanceType<
                     typeof TrackAudioPlayer
                 >;
 
                 if (trackPlayer.playing === true) {
                     trackPlayer.pause();
-                    trackPlayer.seekTo(time);
+                    trackPlayer.seekTo(cue.Time);
                 } else {
-                    trackPlayer.playFrom(time);
+                    trackPlayer.playFrom(cue.Time);
                 }
             }
         },

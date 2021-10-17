@@ -14,7 +14,7 @@
 import { defineComponent } from 'vue';
 /** A simple overlay display of the latest application progress message, if any */
 export default defineComponent({
-    name: 'App',
+    name: 'ProgressOverlay',
     components: {},
     computed: {
         progressMessage(): string {
