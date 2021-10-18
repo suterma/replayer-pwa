@@ -135,10 +135,8 @@ export default defineComponent({
             //Not a touch or mouse device? Must be the ENTER key
             if (event.pointerId < 0) {
                 console.debug('TrackTile::cueClick:Must be the ENTER key');
-                event.preventDefault();
                 return;
             }
-
             if (cue.Time != null) {
                 //Update the selected cue to this cue
                 this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, cue);

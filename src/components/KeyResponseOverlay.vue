@@ -1,18 +1,22 @@
 <template>
-    <div :class="{ modal: true, 'is-active': hasDisplayText }">
-        <div class="modal-background"></div>
+    <div
+        :class="{ modal: true, 'is-active': hasDisplayKey || hasDisplayAction }"
+    >
+        <!-- <div class="modal-background"></div> -->
         <div class="modal-content has-text-centered">
             <!-- <h1 class="has-text-centered">Key</h1> -->
 
             <!-- <div class="has-text-centered">
                 <span class="tag is-dark is-large"> {{ displayText }}</span>
             </div> -->
-            <!-- <div class="tags has-addons">
-                <span class="tag is-large is-white is-size-mega">Key</span> -->
-            <span class="tag is-dark is-large is-size-mega">{{
-                displayText
-            }}</span>
-            <!-- </div> -->
+            <div class="tags has-addons has-opacity-half is-size-mega">
+                <span class="tag is-large is-white is-size-mega">{{
+                    displayKey
+                }}</span>
+                <span class="tag is-dark is-large is-size-mega">{{
+                    displayAction
+                }}</span>
+            </div>
         </div>
     </div>
 </template>
@@ -28,31 +32,38 @@ export default defineComponent({
     },
     data() {
         return {
-            /** The text to display, which is single key or a short key sequence */
-            displayText: '',
+            /** The text to display for the pressed key, which is single key or a short key sequence */
+            displayKey: '',
+            /** The text to display for the action */
+            displayAction: '',
             /** A timeout id, to handle timeout extensions for prolonged display of text in handling a quick sequence of keys*/
             keyTimeoutId: new Object() as ReturnType<typeof setTimeout>,
         };
     },
     computed: {
-        hasDisplayText(): boolean {
-            return this.displayText != null && this.displayText.length > 0;
+        hasDisplayKey(): boolean {
+            return this.displayKey != null && this.displayKey.length > 0;
+        },
+        hasDisplayAction(): boolean {
+            return this.displayAction != null && this.displayAction.length > 0;
         },
     },
     watch: {},
     methods: {
-        /** Displays the given key for a short duration */
-        DisplayKey(key: string) {
+        /** Displays the given key and the associated action for a short duration */
+        DisplayKeyAndAction(key: string, action: string) {
             //Clear the probably existing timeout
             clearTimeout(this.keyTimeoutId);
-            if (key) {
-                this.displayText = key;
-                this.keyTimeoutId = setTimeout(
-                    () => (this.displayText = ''),
-                    500,
-                );
+            if (key || action) {
+                this.displayKey = key;
+                this.displayAction = action;
+                this.keyTimeoutId = setTimeout(() => {
+                    this.displayKey = '';
+                    this.displayAction = '';
+                }, 500);
             } else {
-                this.displayText = '';
+                this.displayKey = '';
+                this.displayAction = '';
             }
         },
     },
@@ -60,8 +71,13 @@ export default defineComponent({
 </script>
 <style scoped>
 .is-size-mega {
-    /* font-size: 6rem !important; */
+    font-size: 3rem !important;
     /** very large */
-    font-size: 10vw !important;
+    /* font-size: 10vw !important; */
+}
+
+.tags:last-child {
+    /* Avoid scrollbar */
+    margin-bottom: 0;
 }
 </style>

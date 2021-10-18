@@ -52,17 +52,17 @@ export default defineComponent({
     methods: {
         /** Toggles playback */
         togglePlayback(event: KeyboardEvent) {
-            this.displayEventKey(event);
+            this.DisplayKeyAndAction(event, 'play/pause');
             this.trackPlayerInstance.togglePlayback();
         },
         /** Decreases the volume */
         volumeDown(event: KeyboardEvent) {
-            this.displayEventKey(event);
+            this.DisplayKeyAndAction(event, 'volume down');
             this.trackPlayerInstance.volumeDown();
         },
         /** Increases the volume */
         volumeUp(event: KeyboardEvent) {
-            this.displayEventKey(event);
+            this.DisplayKeyAndAction(event, 'volume up');
             this.trackPlayerInstance.volumeUp();
         },
         /** Generally handle all keyUp events, by checking for recognisable events
@@ -71,7 +71,17 @@ export default defineComponent({
         handleKeyUp(event: KeyboardEvent) {
             //Back to cue (dot)?
             if (event.code === 'NumpadDecimal' || event.code === 'Period') {
-                this.displayEventKey(event);
+                this.DisplayKeyAndAction(event, 'back to cue');
+                this.backToCue();
+            }
+            //Next/previous cue?
+            //Hint: calculation and handling of the cue is done at the compilation level,
+            //but playback should pause on cue change, which is best handeled here
+            //By luck(?), the selected cue is already correct and can simply get handeled with a "back to cue" here
+            if (
+                event.code === 'NumpadMultiply' ||
+                event.code === 'NumpadDivide'
+            ) {
                 this.backToCue();
             }
         },
@@ -89,8 +99,8 @@ export default defineComponent({
             }
         },
 
-        /** Displays the key from the keyboard event as textual representation*/
-        displayEventKey(event: KeyboardEvent) {
+        /** Displays the given key and the associated action for a short duration */
+        DisplayKeyAndAction(event: KeyboardEvent, action: string) {
             let eventKey = event.key;
             if (eventKey == ' ') {
                 eventKey = 'Space';
@@ -100,7 +110,7 @@ export default defineComponent({
                 this.$refs.keyResponseOverlay as InstanceType<
                     typeof KeyResponseOverlay
                 >
-            ).DisplayKey(eventKey);
+            ).DisplayKeyAndAction(eventKey, action);
         },
     },
 });

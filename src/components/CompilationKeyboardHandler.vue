@@ -1,6 +1,6 @@
 <template>
     <!-- eslint-disable-line -->
-    <GlobalEvents @keyup.prevent="handleKeyUp" />
+    <GlobalEvents v-if="hasCompilation" @keyup.prevent="handleKeyUp" />
     <KeyResponseOverlay :keyText="key" ref="keyResponseOverlay" />
 </template>
 
@@ -39,6 +39,9 @@ export default defineComponent({
             );
             return cues;
         },
+        hasCompilation(): boolean {
+            return this.$store.getters.hasCompilation;
+        },
     },
 
     watch: {},
@@ -53,18 +56,18 @@ export default defineComponent({
             );
             //Next cue?
             if (event.code === 'NumpadMultiply') {
-                this.displayEventKey(event);
+                this.DisplayKeyAndAction(event, 'to next cue');
                 this.toNextCue();
             }
             //Previous cue?
             if (event.code === 'NumpadDivide') {
-                this.displayEventKey(event);
+                this.DisplayKeyAndAction(event, 'to previous cue');
                 this.toPreviousCue();
             }
         },
 
-        /** Displays the key from the keyboard event as textual representation*/
-        displayEventKey(event: KeyboardEvent) {
+        /** Displays the given key and the associated action for a short duration */
+        DisplayKeyAndAction(event: KeyboardEvent, action: string) {
             let eventKey = event.key;
             if (eventKey == ' ') {
                 eventKey = 'Space';
@@ -74,7 +77,7 @@ export default defineComponent({
                 this.$refs.keyResponseOverlay as InstanceType<
                     typeof KeyResponseOverlay
                 >
-            ).DisplayKey(eventKey);
+            ).DisplayKeyAndAction(eventKey, action);
         },
 
         toPreviousCue() {
