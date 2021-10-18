@@ -342,6 +342,20 @@ export default defineComponent({
             console.debug('TrackAudioPlayer::togglePlayback', this.playing);
             this.playing = !this.playing;
         },
+        /** Rewinds 1 second */
+        rewindOneSecond() {
+            const time = (this.$refs.audio as InstanceType<typeof Audio>)
+                .currentTime;
+            (this.$refs.audio as InstanceType<typeof Audio>).currentTime =
+                time - 1;
+        },
+        /** Forwards 1 second */
+        forwardOneSecond() {
+            const time = (this.$refs.audio as InstanceType<typeof Audio>)
+                .currentTime;
+            (this.$refs.audio as InstanceType<typeof Audio>).currentTime =
+                time + 1;
+        },
         volumeDown() {
             console.debug('TrackAudioPlayer::volumeDown', this.volume);
             this.volume = this.volume * 0.71;

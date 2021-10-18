@@ -5,6 +5,8 @@
         @keyup.prevent.space="togglePlayback"
         @keyup.prevent.-="volumeDown"
         @keyup.prevent.+="volumeUp"
+        @keyup.prevent.left="rewind"
+        @keyup.prevent.right="forward"
         @keyup.prevent="handleKeyUp"
     />
     <KeyResponseOverlay :keyText="key" ref="keyResponseOverlay" />
@@ -55,7 +57,16 @@ export default defineComponent({
             this.DisplayKeyAndAction(event, 'play/pause');
             this.trackPlayerInstance.togglePlayback();
         },
-        /** Decreases the volume */
+        /** Rewinds 1 second */
+        rewind(event: KeyboardEvent) {
+            this.DisplayKeyAndAction(event, 'rewind 1 sec');
+            this.trackPlayerInstance.rewindOneSecond();
+        },
+        /** Forwards 1 second */
+        forward(event: KeyboardEvent) {
+            this.DisplayKeyAndAction(event, 'forward 1 sec');
+            this.trackPlayerInstance.forwardOneSecond();
+        } /** Decreases the volume */,
         volumeDown(event: KeyboardEvent) {
             this.DisplayKeyAndAction(event, 'volume down');
             this.trackPlayerInstance.volumeDown();
