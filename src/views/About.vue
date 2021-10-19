@@ -51,14 +51,15 @@
                     >JSZip </a
                 >JSZip is a javascript library for creating, reading and editing
                 .zip files, with a lovely and simple API. (Released under the
-                MIT License)
+                MIT License, by Stuart Knightley)
             </li>
             <li>
                 <a
                     href="https://github.com/paanSinghCoder/OutFrontJS"
                     target="_blank"
                     >OutFrontJS </a
-                >Console for mobile browsers. (Released under the MIT License)
+                >Console for mobile browsers. (Released under the MIT License,
+                by Gaurav Singh)
             </li>
             <li>
                 <a
@@ -79,7 +80,7 @@
             <li>
                 <a href="https://bulma.io/" target="_blank">Bulma</a>, the
                 modern CSS framework that just works (Released under the MIT
-                License)
+                License, by Jeremy Thomas)
             </li>
             <li>
                 <a
@@ -87,7 +88,7 @@
                     target="_blank"
                     >bplist-parser</a
                 >, a binary Mac OS X Plist (property list) parser. (Released
-                under the MIT License)
+                under the MIT License, by Joe Ferner)
             </li>
             <li>
                 <a
@@ -95,12 +96,20 @@
                     target="_blank"
                     >FileSaver.js</a
                 >, the solution to saving files on the client-side. (Released
-                under the MIT License)
+                under the MIT License, by Eli Grey)
             </li>
             <li>
                 <a href="https://github.com/uuidjs/uuid" target="_blank">uuid</a
                 >, for the creation of RFC4122 UUIDs. (Released under the MIT
                 License)
+            </li>
+            <li>
+                <a
+                    href="https://github.com/shentao/vue-global-events"
+                    target="_blank"
+                    >vue-global-events</a
+                >, add shortcuts by listening to events on the document,
+                anywhere. (Released under the MIT License, by Damian Dulisz)
             </li>
         </ul>
 
