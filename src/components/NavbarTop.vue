@@ -36,12 +36,6 @@
         >
             <div class="navbar-start">
                 <router-link @click="toggleBurger" class="navbar-item" to="/"
-                    >Home</router-link
-                >
-                <router-link
-                    @click="toggleBurger"
-                    class="navbar-item"
-                    to="/play"
                     >Play</router-link
                 >
                 <router-link

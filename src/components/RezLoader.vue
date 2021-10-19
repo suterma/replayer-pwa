@@ -1,54 +1,95 @@
 <template>
-    <div>
-        <div class="file is-primary">
-            <label class="file-label">
-                <input
-                    class="file-input"
-                    type="file"
-                    id="file-input"
-                    accept=".rex,.rez,.zip,.mp3,PlayList"
-                    multiple
-                    @change="loadFiles"
-                    name="resume"
-                />
-                <span class="file-cta">
-                    <!-- //TODO use an SVG upload icon -->
-                    <!-- <span class="file-icon">
+    <!-- Main container -->
+    <nav class="level">
+        <!-- Left side -->
+        <div class="level-left">
+            <div class="level-item">
+                <div class="file is-primary">
+                    <label class="file-label">
+                        <input
+                            class="file-input"
+                            type="file"
+                            id="file-input"
+                            accept=".rex,.rez,.zip,.mp3,.bplist"
+                            multiple
+                            @change="loadFiles"
+                            name="resume"
+                        />
+                        <span class="file-cta">
+                            <!-- //TODO use an SVG upload icon -->
+                            <!-- <span class="file-icon">
                         <i class="fas fa-upload"></i>
                     </span> -->
-                    <span class="file-label"> Choose a compilation file… </span>
-                </span>
-                <!-- <span class="file-name">
+                            <span class="file-label">
+                                Choose a compilation or media file…
+                            </span>
+                        </span>
+                        <!-- <span class="file-name">
                     {{selectedFile}}}
                 </span> -->
-            </label>
+                    </label>
+                </div>
+            </div>
+            <div class="level-item">&mdash; OR &mdash;</div>
+            <div class="level-item">
+                <button
+                    @click="loadDemoCompilation"
+                    class="button is-secondary"
+                >
+                    Load a demo compilation
+                </button>
+            </div>
         </div>
 
-        <p>The following compilation file types are supported:</p>
+        <!-- Right side -->
+        <div class="level-right">
+            <p class="level-item"></p>
+        </div>
+    </nav>
 
-        <ul>
-            <li>XML (.rex), without media files</li>
-            <li>
-                bplist (.bplist), from the LivePlayback app, without media files
-            </li>
-            <li>
-                ZIP (.rez, .zip), having one of the above, including media files
-            </li>
-        </ul>
-        <p>
-            Note: Media files are matched by name. Only .mp3 are supported
-            currently.
-        </p>
+    <ul>
+        <li>
+            <span class="has-text-weight-bold">XML</span> (<span
+                class="is-family-monospace"
+                >.rex</span
+            >), without media files
+        </li>
+        <li>
+            <span class="has-text-weight-bold">bplist</span> (<span
+                class="is-family-monospace"
+                >.bplist</span
+            >), from the LivePlayback app, without media files
+        </li>
+        <li>
+            <span class="has-text-weight-bold">ZIP</span> (<span
+                class="is-family-monospace"
+                >.rez</span
+            >, <span class="is-family-monospace">.zip</span>), having one of the
+            above, including media files
+        </li>
+        <li>
+            <span class="has-text-weight-bold">Media file</span> (<span
+                class="is-family-monospace"
+                >.mp3</span
+            >), for a track in one of the above. Media files are matched by
+            name. Only MP3 files are supported currently.
+        </li>
+    </ul>
 
-        <p>
-            See the
-            <a
-                href="https://replayer.app/documentation"
-                alt="Link to the Replayer documentation"
-                >documentation</a
-            >.
-        </p>
-    </div>
+    <p>
+        For details about supported file types see the
+        <a
+            href="https://replayer.app/documentation"
+            alt="Link to the Replayer documentation"
+            >documentation</a
+        >
+        or the
+        <a
+            href="https://github.com/suterma/replayer-pwa#glossary"
+            alt="GitHub doc link"
+            >README</a
+        >.
+    </p>
 </template>
 
 <script lang="ts">
@@ -64,6 +105,24 @@ export default defineComponent({
     name: 'RezLoader',
     components: {},
     methods: {
+        /** Handles the request to load a demo compilation */
+        loadDemoCompilation() {
+            fetch('demo/Demo%20Compilation%20Featuring%20Lidija%20Roos.rez')
+                .then((res) => res.blob()) // Gets the response and returns it as a blob
+                .then((blob) => {
+                    // Here's where you get access to the blob
+                    // And you can use it for whatever you want
+                    const file = new File(
+                        [blob],
+                        'Demo%20Compilation%20Featuring%20Lidija%20Roos.rez.rez',
+                        {
+                            type: 'application/zip',
+                        },
+                    );
+                    this.loadFile(file);
+                });
+        },
+
         /** Executes a function with a progress message.
          * @param message - The message to use for the progress indication
          * @param work - The fuction to call

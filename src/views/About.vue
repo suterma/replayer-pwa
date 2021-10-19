@@ -12,7 +12,7 @@
             >, as a Progressive Web App. Created by
             <a href="https://marcelsuter.ch" target="_blank">Marcel Suter</a>
         </p>
-        <div class="notification is-warning has-text-centered">
+        <div class="notification is-danger has-text-centered">
             This project is in beta stage.
         </div>
 
@@ -31,7 +31,14 @@
             >. Source code is availabe at
             <a href="https://github.com/suterma/replayer-pwa" target="_blank"
                 >GitHub</a
-            >
+            >.
+        </p>
+
+        <p>
+            To report an issue or submit a feature request, see the
+            <a href="https://github.com/suterma/replayer-pwa/issues"
+                >issues page on the GitHub repository</a
+            >.
         </p>
         <h1>Credits</h1>
         <p>This project uses</p>
