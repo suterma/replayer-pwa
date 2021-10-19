@@ -1,6 +1,26 @@
 <template>
     <RezLoader />
     <CompilationDisplay :compilation="compilation" />
+    <hr />
+
+    <!-- <div class="has-text-centered"> -->
+    <p>
+        <a href="https://replayer.app/" alt="Link to the Replayer website"
+            >Replayer</a
+        >
+        is a free, cue-based media player for rehearsals with playback music. By
+        the click of a button, you can start to play at predefined times in the
+        audio file.
+    </p>
+
+    <p>
+        Go to
+
+        <router-link to="/development">Development</router-link>
+
+        to try upcoming features.
+    </p>
+    <!-- </div> -->
 </template>
 
 <script lang="ts">

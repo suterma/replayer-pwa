@@ -24,7 +24,30 @@
             </label>
         </div>
 
-        <p>This component loads Compilations from a local file.</p>
+        <p>The following compilation file types are supported:</p>
+
+        <ul>
+            <li>XML (.rex), without media files</li>
+            <li>
+                bplist (.bplist), from the LivePlayback app, without media files
+            </li>
+            <li>
+                ZIP (.rez, .zip), having one of the above, including media files
+            </li>
+        </ul>
+        <p>
+            Note: Media files are matched by name. Only .mp3 are supported
+            currently.
+        </p>
+
+        <p>
+            See the
+            <a
+                href="https://replayer.app/documentation"
+                alt="Link to the Replayer documentation"
+                >documentation</a
+            >.
+        </p>
     </div>
 </template>
 
