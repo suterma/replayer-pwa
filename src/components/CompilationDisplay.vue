@@ -1,10 +1,7 @@
 <template>
-    <h1 class="title">{{ compilation?.Title }}</h1>
-    <!--
-        In Edit mode, later show this
-         <h2 class="subtitle">
-            {{ compilation?.MediaPath }}
-        </h2> -->
+    <h1 class="title">
+        {{ compilation?.Title }}
+    </h1>
 
     <template v-for="track in tracks" :key="track.Id">
         <TrackTile :track="track" />

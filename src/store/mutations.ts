@@ -21,6 +21,7 @@ export type Mutations<S = State> = {
     [MutationTypes.UPDATE_COMPILATION_FROM_XML](state: S, payload: any): void;
     [MutationTypes.UPDATE_COMPILATION_FROM_PLIST](state: S, payload: any): void;
     [MutationTypes.UPDATE_CURRENT_CUE](state: S, payload: Cue): void;
+    [MutationTypes.CLOSE_COMPILATION](state: S): void;
 };
 
 /** @devdoc The XML type contains all properties as arrays, even the singe item ones. This is a limitation of the used XML-To-JS converter */
@@ -196,5 +197,9 @@ export const mutations: MutationTree<State> & Mutations = {
     },
     [MutationTypes.UPDATE_CURRENT_CUE](state: State, payload: Cue) {
         state.selectedCue = payload;
+    },
+
+    [MutationTypes.CLOSE_COMPILATION](state: State) {
+        state.compilation = new Compilation();
     },
 };

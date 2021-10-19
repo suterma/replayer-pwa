@@ -12,4 +12,6 @@ export enum MutationTypes {
      * @remarks This does not control the playback itself. It is intended for display purposes.
      */
     UPDATE_CURRENT_CUE = 'UPDATE_CURRENT_CUE',
+    /** Closes an existing compilation */
+    CLOSE_COMPILATION = 'CLOSE_COMPILATION',
 }
