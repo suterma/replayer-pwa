@@ -50,8 +50,8 @@ export default defineComponent({
     },
     watch: {},
     methods: {
-        /** Displays the given key and the associated action for a short duration */
-        DisplayKeyAndAction(key: string, action: string) {
+        /** Displays the given data and the associated action for a short duration */
+        DisplayDataAndAction(key: string, action: string) {
             //Clear the probably existing timeout
             clearTimeout(this.keyTimeoutId);
             if (key || action) {

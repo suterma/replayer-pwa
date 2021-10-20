@@ -1,6 +1,6 @@
 <template>
     <!-- eslint-disable-line -->
-    <GlobalEvents v-if="hasCompilation" @keyup.prevent="handleKeyUp" />
+    <GlobalEvents v-if="hasCompilation" @keydown.prevent="handleKey" />
     <KeyResponseOverlay :keyText="key" ref="keyResponseOverlay" />
 </template>
 
@@ -10,6 +10,10 @@ import KeyResponseOverlay from '@/components/KeyResponseOverlay.vue';
 import { ICue, Compilation } from '@/store/compilation-types';
 import { GlobalEvents } from 'vue-global-events';
 import { MutationTypes } from '@/store/mutation-types';
+
+
+    -//..Idee Globaler Keyboard handler, welcher die Keyboard Events in ActionRequests umwandelt, welche dann
+    //von der jeweils zuständigen Komponente behandelt werden können
 
 /** A keyboard handler, which translates keyboard shortcuts into cue actions, for all cues in a compilation
  */
@@ -26,6 +30,12 @@ export default defineComponent({
         return {
             /** The character representation of the currently pressed key (or keys, when handling a shortcut) */
             key: '',
+            /** The mnemonic store.
+             * @remarks Used to build up the mnemonic by adding characters to it, for a short amount of time.
+             */
+            mnemonic: '',
+            /** A timeout id, to handle timeout extensions for building up the mnemonic*/
+            keyTimeoutId: new Object() as ReturnType<typeof setTimeout>,
         };
     },
     computed: {
@@ -46,23 +56,46 @@ export default defineComponent({
 
     watch: {},
     methods: {
-        /** Generally handle all keyUp events, by checking for recognisable events
-         * @remarks Handles "back to cue" and "keyboard shortcut scan" events
+        /** Generally handle all key events, by checking for recognisable events
+         * @remarks Handles "back to cue" and "keyboard mnemonic scan" events
          */
-        handleKeyUp(event: KeyboardEvent) {
-            console.debug(
-                'CompilationKeyboardHandler::handleKeyUp:event',
-                event,
-            );
+        handleKey(event: KeyboardEvent) {
+            console.debug('CompilationKeyboardHandler::handleKey:event', event);
             //Next cue?
             if (event.code === 'NumpadMultiply') {
                 this.DisplayKeyAndAction(event, 'to next cue');
                 this.toNextCue();
             }
             //Previous cue?
-            if (event.code === 'NumpadDivide') {
+            else if (event.code === 'NumpadDivide') {
                 this.DisplayKeyAndAction(event, 'to previous cue');
                 this.toPreviousCue();
+            }
+            //Mnemonic termination?
+            else if (event.code === 'Enter') {
+                if (this.mnemonic) {
+                    // event.stopPropagation();
+                    // event.stopImmediatePropagation();
+                    // event.preventDefault();
+
+                    this.DisplayDataAndAction(
+                        this.mnemonic,
+                        'mnemonic invoking',
+                    );
+                    this.toMatchingCue(this.mnemonic);
+                }
+            }
+            //any one alphanumeric character from the basic Latin alphabet, including the underscore (shortcut mnemonic)?
+            else if (event.key.match(/^\w{1}$/g)) {
+                this.mnemonic = this.mnemonic + event.key;
+                this.DisplayDataAndAction(this.mnemonic, 'mnemonic');
+
+                //(Re-)schedule the timeout
+                clearTimeout(this.keyTimeoutId);
+
+                this.keyTimeoutId = setTimeout(() => {
+                    this.mnemonic = '';
+                }, 500);
             }
         },
 
@@ -72,12 +105,16 @@ export default defineComponent({
             if (eventKey == ' ') {
                 eventKey = 'Space';
             }
+            this.DisplayDataAndAction(eventKey, action);
+        },
 
+        /** Displays the given data and the associated action for a short duration */
+        DisplayDataAndAction(data: string, action: string) {
             (
                 this.$refs.keyResponseOverlay as InstanceType<
                     typeof KeyResponseOverlay
                 >
-            ).DisplayKeyAndAction(eventKey, action);
+            ).DisplayDataAndAction(data, action);
         },
 
         toPreviousCue() {
@@ -124,11 +161,27 @@ export default defineComponent({
             );
             this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, nextCue);
         },
+        toMatchingCue(mnemonic: string) {
+            console.debug(
+                'CompilationKeyboardHandler::toMatchingCue:mnemonic',
+                mnemonic,
+            );
 
-        /** Scans for a keyboard shortcut that matches one of the cues
-         * @devdoc //TODO move to more global compilation scan. All available cues in the compilation should be considered, regardless of the                active track
-         */
-        //scanForKeyboardShortcut() {},
+            var allCues = this.allCues;
+
+            var matchingCue = allCues.find((cue) => cue.Shortcut == mnemonic);
+            console.debug(
+                'CompilationKeyboardHandler::toMatchingCue:matchingCue',
+                matchingCue,
+            );
+            if (matchingCue) {
+                this.$store.commit(
+                    MutationTypes.UPDATE_CURRENT_CUE,
+                    matchingCue,
+                );
+                //TODO Always pause playback
+            }
+        },
     },
 });
 </script>

@@ -1,13 +1,14 @@
 <template>
     <!-- eslint-disable-line -->
+    <!-- Note: See for keyboard events in javascript: https://www.section.io/engineering-education/keyboard-events-in-javascript/ -->
     <GlobalEvents
-        @keyup.prevent.enter="togglePlayback"
-        @keyup.prevent.space="togglePlayback"
-        @keyup.prevent.-="volumeDown"
-        @keyup.prevent.+="volumeUp"
-        @keyup.prevent.left="rewind"
-        @keyup.prevent.right="forward"
-        @keyup.prevent="handleKeyUp"
+        @keydown.prevent.enter="togglePlayback"
+        @keydown.prevent.space="togglePlayback"
+        @keydown.prevent.-="volumeDown"
+        @keydown.prevent.+="volumeUp"
+        @keydown.prevent.left="rewind"
+        @keydown.prevent.right="forward"
+        @keydown.prevent="handleKey"
     />
     <KeyResponseOverlay :keyText="key" ref="keyResponseOverlay" />
 </template>
@@ -76,10 +77,10 @@ export default defineComponent({
             this.DisplayKeyAndAction(event, 'volume up');
             this.trackPlayerInstance.volumeUp();
         },
-        /** Generally handle all keyUp events, by checking for recognisable events
+        /** Generally handle all key events, by checking for recognisable events
          * @remarks Handles "back to cue" and "keyboard shortcut scan" events
          */
-        handleKeyUp(event: KeyboardEvent) {
+        handleKey(event: KeyboardEvent) {
             //Back to cue (dot)?
             if (event.code === 'NumpadDecimal' || event.code === 'Period') {
                 this.DisplayKeyAndAction(event, 'back to cue');
@@ -121,7 +122,7 @@ export default defineComponent({
                 this.$refs.keyResponseOverlay as InstanceType<
                     typeof KeyResponseOverlay
                 >
-            ).DisplayKeyAndAction(eventKey, action);
+            ).DisplayDataAndAction(eventKey, action);
         },
     },
 });
