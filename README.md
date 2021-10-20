@@ -28,3 +28,16 @@ It's aim is to replace the classic, Microsoft Windows based, [Replayer](https://
 -   Opening a new package removes all previously open files and compilations.
 -   Opening a new / multiple compilations merges the contained tracks with the already open compilation.
 -   Opening a new / multiple media files adds them to the set of currently available media files.
+
+# Roadmap
+
+* [x] Keyboard Shortcut support
+* [x] Fade-in / Fade-out
+* [x] Multitrack playback
+* Persistence
+  * [x] Keep last open complilation loaded
+  * [x] Edit mode, along with ZIP-Package export
+* Sharing
+  * [x] Sharing by link
+  * [x] Sharing by QR code
+  * [x] Sharing by link mail
