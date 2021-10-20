@@ -1,22 +1,22 @@
 <template>
-    <h1>1) Select a REZ or ZIP file</h1>
-    <RezLoader />
+    <h1 class="title">New components for evaluation</h1>
 
     <template v-if="hasCompilation">
-        <h1>2) See the compilation as XML</h1>
+        <h2 class="subtitle">See the compilation as XML</h2>
         <CompilationXmlDisplay :compilation="compilation" />
+    </template>
+    <template v-else>
+        <p>Please load a compilation first</p>
     </template>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import RezLoader from '@/components/RezLoader.vue'; // @ is an alias to /src
 import { ICompilation } from '@/store/compilation-types';
 import CompilationXmlDisplay from '@/components/CompilationXmlDisplay.vue';
 
 export default defineComponent({
     components: {
-        RezLoader,
         CompilationXmlDisplay,
     },
     computed: {
