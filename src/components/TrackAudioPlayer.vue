@@ -339,7 +339,6 @@ export default defineComponent({
             this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, undefined);
         },
         togglePlayback() {
-            console.debug('TrackAudioPlayer::togglePlayback', this.playing);
             this.playing = !this.playing;
         },
         /** Rewinds 1 second */
