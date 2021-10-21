@@ -53,7 +53,6 @@ export default defineComponent({
          * @remarks Handles "Enter for play/pause", "back to cue" and "keyboard mnemonic" events
          */
         handleKey(event: KeyboardEvent) {
-            console.debug('CompilationKeyboardHandler::handleKey:event', event);
             //Back to cue (dot)?
             if (event.code === 'NumpadDecimal' || event.code === 'Period') {
                 this.DisplayKeyAndAction(event, 'back to cue');
