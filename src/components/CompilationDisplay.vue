@@ -27,7 +27,34 @@ export default defineComponent({
     props: {
         compilation: Compilation,
     },
-    methods: {},
+    methods: {
+        toPreviousCue() {
+            const allCues = this.allCues;
+            const indexOfSelected = allCues.indexOf(this.selectedCue);
+            const nextCue = allCues[indexOfSelected - 1];
+            this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, nextCue);
+        },
+
+        toNextCue() {
+            const allCues = this.allCues;
+            const indexOfSelected = allCues.indexOf(this.selectedCue);
+            const nextCue = allCues[indexOfSelected + 1];
+            this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, nextCue);
+        },
+
+        toMnemonicCue(event: Event) {
+            const allCues = this.allCues;
+            const matchingCue = allCues.find(
+                (cue) => cue.Shortcut == (event as CustomEvent).detail,
+            );
+            if (matchingCue) {
+                this.$store.commit(
+                    MutationTypes.UPDATE_CURRENT_CUE,
+                    matchingCue,
+                );
+            }
+        },
+    },
     computed: {
         /** Gets the list of tracks within this compilation */
         tracks(): Array<ITrack> | undefined {
@@ -45,49 +72,25 @@ export default defineComponent({
             return this.$store.getters.hasCompilation;
         },
     },
-    created: function () {
-        //TODO
-        //later may be use actually listen to an $emit from a child with v-on. This allows you to keep the convenience of events with added explicitness.
-        // `this` points to the vm instance
-        // Listen for the event.
-        document.addEventListener(
+    beforeMount: function () {
+        //TODO maybe put these listeners in a child component, and handle vue events from there, for soc reasons?
+
+        //register the events that change the selected cue before mount (instead of at mount) here,
+        //to have them get executed prior to the equivalent events at the track level, where they are
+        //registered at mount. This ensures, that the playing position gets adjusted to the herein changed cue.
+        document.addEventListener('replayer:topreviouscue', this.toPreviousCue);
+        document.addEventListener('replayer:tonextcue', this.toNextCue);
+        document.addEventListener('replayer:tomnemoniccue', this.toMnemonicCue);
+    },
+    unmounted: function () {
+        document.removeEventListener(
             'replayer:topreviouscue',
-            () => {
-                const allCues = this.allCues;
-                const indexOfSelected = allCues.indexOf(this.selectedCue);
-                const nextCue = allCues[indexOfSelected - 1];
-                this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, nextCue);
-            },
-            false,
+            this.toPreviousCue,
         );
-
-        document.addEventListener(
-            'replayer:tonextcue',
-            () => {
-                const allCues = this.allCues;
-                const indexOfSelected = allCues.indexOf(this.selectedCue);
-                const nextCue = allCues[indexOfSelected + 1];
-                this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, nextCue);
-            },
-            false,
-        );
-
-        document.addEventListener(
+        document.removeEventListener('replayer:tonextcue', this.toNextCue);
+        document.removeEventListener(
             'replayer:tomnemoniccue',
-            (event: Event) => {
-                var allCues = this.allCues;
-                var matchingCue = allCues.find(
-                    (cue) => cue.Shortcut == (event as CustomEvent).detail,
-                );
-                if (matchingCue) {
-                    this.$store.commit(
-                        MutationTypes.UPDATE_CURRENT_CUE,
-                        matchingCue,
-                    );
-                    //TODO Always pause playback
-                }
-            },
-            false,
+            this.toMnemonicCue,
         );
     },
 });

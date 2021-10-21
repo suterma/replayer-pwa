@@ -97,6 +97,9 @@ import TrackAudioPlayer from '@/components/TrackAudioPlayer.vue';
 import { MediaFile } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
 
+/** Displays a track tile
+ * @remarks Also handles the common replayer events for tracks
+ */
 export default defineComponent({
     name: 'TrackTile',
     components: { CueButton, TrackAudioPlayer },
@@ -112,83 +115,67 @@ export default defineComponent({
             currentSeconds: 0,
         };
     },
-    created: function () {
-        //TODO
-        //later may be use an event hub
-        // Listen for the event.
-        document.addEventListener(
-            'replayer:backtocue',
-            () => {
-                this.goToSelectedCue();
-            },
-            false,
-        );
-        document.addEventListener(
-            'replayer:tonextcue',
-            () => {
-                this.goToSelectedCue();
-            },
-            false,
-        );
+    mounted: function () {
+        //TODO maybe put these listeners in a child component, and handle vue events from there, for soc reasons?
+        document.addEventListener('replayer:backtocue', this.goToSelectedCue);
+        /** Handles the switch to the next cue
+         * @remarks Simply use the selected cue, because the next cue was already selected at the compilation level
+         */
+        document.addEventListener('replayer:tonextcue', this.goToSelectedCue);
+        /** Handles the switch to the previous cue
+         * @remarks Simply use the selected cue, because the previous cue was already selected at the compilation level
+         */
         document.addEventListener(
             'replayer:topreviouscue',
-            () => {
-                this.goToSelectedCue();
-            },
-            false,
+            this.goToSelectedCue,
         );
         document.addEventListener(
             'replayer:tomnemoniccue',
-            () => {
-                this.goToSelectedCue();
-            },
-            false,
+            this.goToSelectedCue,
         );
         document.addEventListener(
             'replayer:toggleplaypause',
-            () => {
-                if (this.isActiveTrack) {
-                    this.trackPlayerInstance.togglePlayback();
-                }
-            },
-            false,
+            this.togglePlayback,
         );
-        document.addEventListener(
-            'replayer:rewind1sec',
-            () => {
-                if (this.isActiveTrack) {
-                    this.trackPlayerInstance.rewindOneSecond();
-                }
-            },
-            false,
-        );
+        document.addEventListener('replayer:rewind1sec', this.rewindOneSecond);
         document.addEventListener(
             'replayer:forward1sec',
-            () => {
-                if (this.isActiveTrack) {
-                    this.trackPlayerInstance.forwardOneSecond();
-                }
-            },
-            false,
+            this.forwardOneSecond,
         );
-        document.addEventListener(
-            'replayer:volumedown',
-            () => {
-                if (this.isActiveTrack) {
-                    this.trackPlayerInstance.volumeDown();
-                }
-            },
-            false,
+        document.addEventListener('replayer:volumedown', this.volumeDown);
+        document.addEventListener('replayer:volumeup', this.volumeUp, false);
+    },
+    unmounted: function () {
+        document.removeEventListener(
+            'replayer:backtocue',
+            this.goToSelectedCue,
         );
-        document.addEventListener(
-            'replayer:volumeup',
-            () => {
-                if (this.isActiveTrack) {
-                    this.trackPlayerInstance.volumeUp();
-                }
-            },
-            false,
+        document.removeEventListener(
+            'replayer:tonextcue',
+            this.goToSelectedCue,
         );
+        document.removeEventListener(
+            'replayer:topreviouscue',
+            this.goToSelectedCue,
+        );
+        document.removeEventListener(
+            'replayer:tomnemoniccue',
+            this.goToSelectedCue,
+        );
+        document.removeEventListener(
+            'replayer:toggleplaypause',
+            this.togglePlayback,
+        );
+        document.removeEventListener(
+            'replayer:rewind1sec',
+            this.rewindOneSecond,
+        );
+        document.removeEventListener(
+            'replayer:forward1sec',
+            this.forwardOneSecond,
+        );
+        document.removeEventListener('replayer:volumedown', this.volumeDown);
+        document.removeEventListener('replayer:volumeup', this.volumeUp, false);
     },
     methods: {
         /** Toggles the display of the cue buttons */
@@ -196,6 +183,32 @@ export default defineComponent({
             this.showCues = !this.showCues;
             return this.showCues;
         },
+        togglePlayback() {
+            if (this.isActiveTrack) {
+                this.trackPlayerInstance.togglePlayback();
+            }
+        },
+        rewindOneSecond() {
+            if (this.isActiveTrack) {
+                this.trackPlayerInstance.rewindOneSecond();
+            }
+        },
+        forwardOneSecond() {
+            if (this.isActiveTrack) {
+                this.trackPlayerInstance.forwardOneSecond();
+            }
+        },
+        volumeDown() {
+            if (this.isActiveTrack) {
+                this.trackPlayerInstance.volumeDown();
+            }
+        },
+        volumeUp() {
+            if (this.isActiveTrack) {
+                this.trackPlayerInstance.volumeUp();
+            }
+        },
+
         /** Pauses playback and seeks to the currently selected cue's position, but only
          * if this track is the active track (i.e. the selected cue is within this track)
          */

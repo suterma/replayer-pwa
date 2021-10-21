@@ -9,7 +9,6 @@
         @keydown.prevent.+="volumeUp"
         @keydown.prevent.left="rewind"
         @keydown.prevent.right="forward"
-        @keyup.prevent="handleKeyUp"
     />
     <KeyResponseOverlay :keyText="key" ref="keyResponseOverlay" />
 </template>
