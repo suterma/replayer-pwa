@@ -78,7 +78,7 @@
                                     :disabled="!trackFileUrl?.objectUrl"
                                     :cue="cue"
                                     :currentSeconds="currentSeconds"
-                                    @click="cueClick($event, cue)"
+                                    @click="cueClick(cue)"
                                 />
                             </template>
                         </div>
@@ -211,7 +211,7 @@ export default defineComponent({
         /** Handles the click of a cue button, by toggling playback and seeking to it
          * @remarks Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
          */
-        cueClick(event: PointerEvent, cue: ICue) {
+        cueClick(cue: ICue) {
             if (cue.Time != null) {
                 //Update the selected cue to this cue
                 this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, cue);
