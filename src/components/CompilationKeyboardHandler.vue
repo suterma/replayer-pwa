@@ -9,6 +9,7 @@
         @keydown.prevent.+="volumeUp"
         @keydown.prevent.left="rewind"
         @keydown.prevent.right="forward"
+        @keyup.prevent="handleKeyUp"
     />
     <KeyResponseOverlay :keyText="key" ref="keyResponseOverlay" />
 </template>
@@ -49,10 +50,17 @@ export default defineComponent({
         },
     },
     methods: {
-        /** Generally handle all key events, by checking for recognisable events
+        /** Generally handle all keydown events, by checking for recognisable events
          * @remarks Handles "Enter for play/pause", "back to cue" and "keyboard mnemonic" events
+         * @remarks Skips repeated events
+         * @devdoc Keydown events are used as trigger instead of the non-repetitive keyup events
+         * to have a better responsiveness for the user.
          */
         handleKey(event: KeyboardEvent) {
+            if (event.repeat) {
+                return;
+            }
+
             //Back to cue (dot)?
             if (event.code === 'NumpadDecimal' || event.code === 'Period') {
                 this.DisplayKeyAndAction(event, 'back to cue');
@@ -99,27 +107,43 @@ export default defineComponent({
             //TODO if later necessary, specifically allow some keys to have the default function, like F12
         },
 
-        /** Toggles playback */
+        /** Toggles playback
+         * @remarks Skips repeated events
+         * @devdoc Keydown events are used as trigger instead of the non-repetitive keyup events
+         * to have a better responsiveness for the user.
+         */
+
         togglePlayback(event: KeyboardEvent) {
+            if (event.repeat) {
+                return;
+            }
             this.DisplayKeyAndAction(event, 'play/pause');
             document.dispatchEvent(new Event('replayer:toggleplaypause'));
         },
-        /** Rewinds 1 second */
+        /** Rewinds 1 second
+         * @remarks This handler does accept repetitive events
+         */
         rewind(event: KeyboardEvent) {
             this.DisplayKeyAndAction(event, 'rewind 1 sec');
             document.dispatchEvent(new Event('replayer:rewind1sec'));
         },
-        /** Forwards 1 second */
+        /** Forwards 1 second
+         * @remarks This handler does accept repetitive events
+         */
         forward(event: KeyboardEvent) {
             this.DisplayKeyAndAction(event, 'forward 1 sec');
             document.dispatchEvent(new Event('replayer:forward1sec'));
         },
-        /** Decreases the playback volume */
+        /** Decreases the playback volume
+         * @remarks This handler does accept repetitive events
+         */
         volumeDown(event: KeyboardEvent) {
             this.DisplayKeyAndAction(event, 'volume down');
             document.dispatchEvent(new Event('replayer:volumedown'));
         },
-        /** Increases the playback volume */
+        /** Increases the playback volume
+         * @remarks This handler does accept repetitive events
+         */
         volumeUp(event: KeyboardEvent) {
             this.DisplayKeyAndAction(event, 'volume up');
             document.dispatchEvent(new Event('replayer:volumeup'));
