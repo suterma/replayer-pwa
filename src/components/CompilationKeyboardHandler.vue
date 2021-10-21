@@ -9,13 +9,15 @@ import { defineComponent } from 'vue';
 import KeyResponseOverlay from '@/components/KeyResponseOverlay.vue';
 import { ICue, Compilation } from '@/store/compilation-types';
 import { GlobalEvents } from 'vue-global-events';
-import { MutationTypes } from '@/store/mutation-types';
 
-
-    -//..Idee Globaler Keyboard handler, welcher die Keyboard Events in ActionRequests umwandelt, welche dann
-    //von der jeweils zuständigen Komponente behandelt werden können
-
-/** A keyboard handler, which translates keyboard shortcuts into cue actions, for all cues in a compilation
+/** A keyboard handler, which translates keyboard events into
+ * - cue actions, for all cues in a compilation
+ * - player actions, which get handeled by the currently active player (if any)
+ * @devdoc The idea is, to register for keypresses at the document level, then translate these keypresses
+ * into Replayer events, and emit them back at the document level.
+ * This should only be done (or handeled) if a compilation is loaded.
+ * Using an event handler at the appropriate level, these issued events can then be handeled properly.
+ * See also https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events
  */
 export default defineComponent({
     name: 'CompilationKeyboardHandler',
@@ -57,27 +59,23 @@ export default defineComponent({
     watch: {},
     methods: {
         /** Generally handle all key events, by checking for recognisable events
-         * @remarks Handles "back to cue" and "keyboard mnemonic scan" events
+         * @remarks Handles "back to cue" and "keyboard mnemonic" events
          */
         handleKey(event: KeyboardEvent) {
             console.debug('CompilationKeyboardHandler::handleKey:event', event);
             //Next cue?
-            if (event.code === 'NumpadMultiply') {
+            if (event.key === '*') {
                 this.DisplayKeyAndAction(event, 'to next cue');
                 this.toNextCue();
             }
             //Previous cue?
-            else if (event.code === 'NumpadDivide') {
+            else if (event.key === '/') {
                 this.DisplayKeyAndAction(event, 'to previous cue');
                 this.toPreviousCue();
             }
             //Mnemonic termination?
-            else if (event.code === 'Enter') {
+            else if (event.key === 'Enter') {
                 if (this.mnemonic) {
-                    // event.stopPropagation();
-                    // event.stopImmediatePropagation();
-                    // event.preventDefault();
-
                     this.DisplayDataAndAction(
                         this.mnemonic,
                         'mnemonic invoking',
@@ -85,7 +83,7 @@ export default defineComponent({
                     this.toMatchingCue(this.mnemonic);
                 }
             }
-            //any one alphanumeric character from the basic Latin alphabet, including the underscore (shortcut mnemonic)?
+            //any one alphanumeric character from the basic Latin alphabet, including the underscore (shortcut mnemonic key)?
             else if (event.key.match(/^\w{1}$/g)) {
                 this.mnemonic = this.mnemonic + event.key;
                 this.DisplayDataAndAction(this.mnemonic, 'mnemonic');
@@ -118,69 +116,18 @@ export default defineComponent({
         },
 
         toPreviousCue() {
-            console.debug('CompilationKeyboardHandler::toPreviousCue');
-            console.log(this.selectedCue);
-            var allCues = this.allCues;
-
-            console.debug(
-                'CompilationKeyboardHandler::toPreviousCue:',
-                allCues,
-            );
-
-            var indexOfSelected = allCues.indexOf(this.selectedCue);
-            console.debug(
-                'CompilationKeyboardHandler::indexOfSelected:',
-                indexOfSelected,
-            );
-
-            var nextCue = allCues[indexOfSelected - 1];
-            console.debug(
-                'CompilationKeyboardHandler::indexOfSelected:',
-                nextCue,
-            );
-            this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, nextCue);
+            document.dispatchEvent(new Event('replayer-topreviouscue'));
         },
 
         toNextCue() {
-            console.debug('CompilationKeyboardHandler::toNextCue');
-            console.log(this.selectedCue);
-            var allCues = this.allCues;
-
-            console.debug('CompilationKeyboardHandler::toNextCue:', allCues);
-
-            var indexOfSelected = allCues.indexOf(this.selectedCue);
-            console.debug(
-                'CompilationKeyboardHandler::indexOfSelected:',
-                indexOfSelected,
-            );
-
-            var nextCue = allCues[indexOfSelected + 1];
-            console.debug(
-                'CompilationKeyboardHandler::indexOfSelected:',
-                nextCue,
-            );
-            this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, nextCue);
+            document.dispatchEvent(new Event('replayer-tonextcue'));
         },
         toMatchingCue(mnemonic: string) {
-            console.debug(
-                'CompilationKeyboardHandler::toMatchingCue:mnemonic',
-                mnemonic,
+            document.dispatchEvent(
+                new CustomEvent('replayer-tomnemoniccue', {
+                    detail: mnemonic,
+                }),
             );
-
-            var allCues = this.allCues;
-
-            var matchingCue = allCues.find((cue) => cue.Shortcut == mnemonic);
-            console.debug(
-                'CompilationKeyboardHandler::toMatchingCue:matchingCue',
-                matchingCue,
-            );
-            if (matchingCue) {
-                this.$store.commit(
-                    MutationTypes.UPDATE_CURRENT_CUE,
-                    matchingCue,
-                );
-                //TODO Always pause playback
-            }
         },
     },
 });

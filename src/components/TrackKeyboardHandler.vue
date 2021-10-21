@@ -1,8 +1,21 @@
 <template>
     <!-- eslint-disable-line -->
     <!-- Note: See for keyboard events in javascript: https://www.section.io/engineering-education/keyboard-events-in-javascript/ -->
-    <GlobalEvents
+    <!-- <GlobalEvents
         @keydown.prevent.enter="togglePlayback"
+        @keydown.prevent.space="togglePlayback"
+        @keydown.prevent.-="volumeDown"
+        @keydown.prevent.+="volumeUp"
+        @keydown.prevent.left="rewind"
+        @keydown.prevent.right="forward"
+        @keydown.prevent="handleKey"
+    /> -->
+
+    <//TODO expand the compilation keyboard handle to all these events, then
+    handle these here, including the play/pause and the "back to cue" after a
+    mnemonic based cue change
+
+    <GlobalEvents
         @keydown.prevent.space="togglePlayback"
         @keydown.prevent.-="volumeDown"
         @keydown.prevent.+="volumeUp"
