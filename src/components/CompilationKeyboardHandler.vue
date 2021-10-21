@@ -1,13 +1,21 @@
 <template>
-    <!-- eslint-disable-line -->
-    <GlobalEvents v-if="hasCompilation" @keydown.prevent="handleKey" />
+    <!-- Note: Enter (when not terminating a mnemonic, also toggles playback, via "handleKey") -->
+    <!-- Note: "/"" and "*"" (are also handeled via "handleKey" ) -->
+    <GlobalEvents
+        v-if="hasCompilation"
+        @keydown.prevent="handleKey"
+        @keydown.prevent.space="togglePlayback"
+        @keydown.prevent.-="volumeDown"
+        @keydown.prevent.+="volumeUp"
+        @keydown.prevent.left="rewind"
+        @keydown.prevent.right="forward"
+    />
     <KeyResponseOverlay :keyText="key" ref="keyResponseOverlay" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import KeyResponseOverlay from '@/components/KeyResponseOverlay.vue';
-import { ICue, Compilation } from '@/store/compilation-types';
 import { GlobalEvents } from 'vue-global-events';
 
 /** A keyboard handler, which translates keyboard events into
@@ -22,12 +30,7 @@ import { GlobalEvents } from 'vue-global-events';
 export default defineComponent({
     name: 'CompilationKeyboardHandler',
     components: { GlobalEvents, KeyResponseOverlay },
-    props: {
-        compilation: {
-            type: Compilation,
-            default: null,
-        },
-    },
+    props: {},
     data() {
         return {
             /** The character representation of the currently pressed key (or keys, when handling a shortcut) */
@@ -41,16 +44,6 @@ export default defineComponent({
         };
     },
     computed: {
-        selectedCue(): ICue {
-            return this.$store.getters.selectedCue as ICue;
-        },
-        allCues(): Array<ICue> {
-            const cues = new Array<ICue>();
-            this.compilation.Tracks.forEach((track) =>
-                cues.push(...track.Cues),
-            );
-            return cues;
-        },
         hasCompilation(): boolean {
             return this.$store.getters.hasCompilation;
         },
@@ -59,28 +52,40 @@ export default defineComponent({
     watch: {},
     methods: {
         /** Generally handle all key events, by checking for recognisable events
-         * @remarks Handles "back to cue" and "keyboard mnemonic" events
+         * @remarks Handles "Enter for play/pause", "back to cue" and "keyboard mnemonic" events
          */
         handleKey(event: KeyboardEvent) {
             console.debug('CompilationKeyboardHandler::handleKey:event', event);
+            //Back to cue (dot)?
+            if (event.code === 'NumpadDecimal' || event.code === 'Period') {
+                this.DisplayKeyAndAction(event, 'back to cue');
+                document.dispatchEvent(new Event('replayer:backtocue'));
+            }
             //Next cue?
-            if (event.key === '*') {
+            else if (event.key === '*') {
                 this.DisplayKeyAndAction(event, 'to next cue');
-                this.toNextCue();
+                document.dispatchEvent(new Event('replayer:tonextcue'));
             }
             //Previous cue?
             else if (event.key === '/') {
                 this.DisplayKeyAndAction(event, 'to previous cue');
-                this.toPreviousCue();
+                document.dispatchEvent(new Event('replayer:topreviouscue'));
             }
-            //Mnemonic termination?
+            //Mnemonic termination / play/pause-toggeling?
             else if (event.key === 'Enter') {
                 if (this.mnemonic) {
                     this.DisplayDataAndAction(
                         this.mnemonic,
                         'mnemonic invoking',
                     );
-                    this.toMatchingCue(this.mnemonic);
+                    document.dispatchEvent(
+                        new CustomEvent('replayer:tomnemoniccue', {
+                            detail: this.mnemonic,
+                        }),
+                    );
+                } else {
+                    //just pass for appropriate handling
+                    this.togglePlayback(event);
                 }
             }
             //any one alphanumeric character from the basic Latin alphabet, including the underscore (shortcut mnemonic key)?
@@ -90,11 +95,37 @@ export default defineComponent({
 
                 //(Re-)schedule the timeout
                 clearTimeout(this.keyTimeoutId);
-
                 this.keyTimeoutId = setTimeout(() => {
                     this.mnemonic = '';
                 }, 500);
             }
+            //TODO if later necessary, specifically allow some keys to have the default function, like F12
+        },
+
+        /** Toggles playback */
+        togglePlayback(event: KeyboardEvent) {
+            this.DisplayKeyAndAction(event, 'play/pause');
+            document.dispatchEvent(new Event('replayer:toggleplaypause'));
+        },
+        /** Rewinds 1 second */
+        rewind(event: KeyboardEvent) {
+            this.DisplayKeyAndAction(event, 'rewind 1 sec');
+            document.dispatchEvent(new Event('replayer:rewind1sec'));
+        },
+        /** Forwards 1 second */
+        forward(event: KeyboardEvent) {
+            this.DisplayKeyAndAction(event, 'forward 1 sec');
+            document.dispatchEvent(new Event('replayer:forward1sec'));
+        },
+        /** Decreases the playback volume */
+        volumeDown(event: KeyboardEvent) {
+            this.DisplayKeyAndAction(event, 'volume down');
+            document.dispatchEvent(new Event('replayer:volumedown'));
+        },
+        /** Increases the playback volume */
+        volumeUp(event: KeyboardEvent) {
+            this.DisplayKeyAndAction(event, 'volume up');
+            document.dispatchEvent(new Event('replayer:volumeup'));
         },
 
         /** Displays the given key and the associated action for a short duration */
@@ -113,21 +144,6 @@ export default defineComponent({
                     typeof KeyResponseOverlay
                 >
             ).DisplayDataAndAction(data, action);
-        },
-
-        toPreviousCue() {
-            document.dispatchEvent(new Event('replayer-topreviouscue'));
-        },
-
-        toNextCue() {
-            document.dispatchEvent(new Event('replayer-tonextcue'));
-        },
-        toMatchingCue(mnemonic: string) {
-            document.dispatchEvent(
-                new CustomEvent('replayer-tomnemoniccue', {
-                    detail: mnemonic,
-                }),
-            );
         },
     },
 });

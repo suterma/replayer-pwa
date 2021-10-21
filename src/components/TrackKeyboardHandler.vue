@@ -11,18 +11,18 @@
         @keydown.prevent="handleKey"
     /> -->
 
-    <//TODO expand the compilation keyboard handle to all these events, then
+    //TODO expand the compilation keyboard handle to all these events, then
     handle these here, including the play/pause and the "back to cue" after a
     mnemonic based cue change
 
-    <GlobalEvents
+    <!-- <GlobalEvents
         @keydown.prevent.space="togglePlayback"
         @keydown.prevent.-="volumeDown"
         @keydown.prevent.+="volumeUp"
         @keydown.prevent.left="rewind"
         @keydown.prevent.right="forward"
         @keydown.prevent="handleKey"
-    />
+    /> -->
     <KeyResponseOverlay :keyText="key" ref="keyResponseOverlay" />
 </template>
 
@@ -31,7 +31,7 @@ import { defineComponent } from 'vue';
 import TrackAudioPlayer from '@/components/TrackAudioPlayer.vue';
 import KeyResponseOverlay from '@/components/KeyResponseOverlay.vue';
 import { ICue, Track } from '@/store/compilation-types';
-import { GlobalEvents } from 'vue-global-events';
+//import { GlobalEvents } from 'vue-global-events';
 
 /** A keyboard handler, which translates keyboard shortcuts into track audio player actions, for a single track
  * @remarks This handler does not check whether the track is the active one,
@@ -39,7 +39,7 @@ import { GlobalEvents } from 'vue-global-events';
  */
 export default defineComponent({
     name: 'TrackKeyboardHandler',
-    components: { GlobalEvents, KeyResponseOverlay },
+    components: { KeyResponseOverlay },
     props: {
         /** The player instance (of type TrackAudioPlayer) which is to be manipulated. */
         playerInstance: null,

@@ -71,7 +71,7 @@
                                 {{ track?.Url }}
                             </span>
                         </p>
-
+                        <!-- The cue buttons -->
                         <div class="buttons">
                             <template v-for="cue in cues" :key="cue.Id">
                                 <CueButton
@@ -119,11 +119,101 @@ export default defineComponent({
             currentSeconds: 0,
         };
     },
+    created: function () {
+        //TODO
+        //later may be use an event hub
+        // Listen for the event.
+        document.addEventListener(
+            'replayer:backtocue',
+            () => {
+                this.goToSelectedCue();
+            },
+            false,
+        );
+        document.addEventListener(
+            'replayer:tonextcue',
+            () => {
+                this.goToSelectedCue();
+            },
+            false,
+        );
+        document.addEventListener(
+            'replayer:topreviouscue',
+            () => {
+                this.goToSelectedCue();
+            },
+            false,
+        );
+        document.addEventListener(
+            'replayer:tomnemoniccue',
+            () => {
+                this.goToSelectedCue();
+            },
+            false,
+        );
+        document.addEventListener(
+            'replayer:toggleplaypause',
+            () => {
+                if (this.isActiveTrack) {
+                    this.trackPlayerInstance.togglePlayback();
+                }
+            },
+            false,
+        );
+        document.addEventListener(
+            'replayer:rewind1sec',
+            () => {
+                if (this.isActiveTrack) {
+                    this.trackPlayerInstance.rewindOneSecond();
+                }
+            },
+            false,
+        );
+        document.addEventListener(
+            'replayer:forward1sec',
+            () => {
+                if (this.isActiveTrack) {
+                    this.trackPlayerInstance.forwardOneSecond();
+                }
+            },
+            false,
+        );
+        document.addEventListener(
+            'replayer:volumedown',
+            () => {
+                if (this.isActiveTrack) {
+                    this.trackPlayerInstance.volumeDown();
+                }
+            },
+            false,
+        );
+        document.addEventListener(
+            'replayer:volumeup',
+            () => {
+                if (this.isActiveTrack) {
+                    this.trackPlayerInstance.volumeUp();
+                }
+            },
+            false,
+        );
+    },
     methods: {
         /** Toggles the display of the cue buttons */
         toggleCueDisplay() {
             this.showCues = !this.showCues;
             return this.showCues;
+        },
+        /** Pauses playback and seeks to the currently selected cue's position, but only
+         * if this track is the active track (i.e. the selected cue is within this track)
+         */
+        goToSelectedCue() {
+            if (this.isActiveTrack) {
+                const selectedCue = this.$store.getters.selectedCue as ICue;
+                if (selectedCue && selectedCue.Time != null) {
+                    this.trackPlayerInstance.pause();
+                    this.trackPlayerInstance.seekTo(selectedCue.Time);
+                }
+            }
         },
         /** Handles the click of a cue button, by toggling playback and seeking to it
          * @remarks Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
@@ -133,24 +223,20 @@ export default defineComponent({
             console.debug('TrackTile::cueClick:time', cue);
 
             //Not a touch or mouse device? Must be the ENTER key
-            if (event.pointerId < 0) {
-                console.debug('TrackTile::cueClick:Must be the ENTER key');
-                return;
-            }
+            // if (event.pointerId < 0) {
+            //     console.debug('TrackTile::cueClick:Must be the ENTER key');
+            //     return;
+            // }
             if (cue.Time != null) {
                 //Update the selected cue to this cue
                 this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, cue);
 
                 //Set the position to this cue and handle playback
-                const trackPlayer = this.$refs.player as InstanceType<
-                    typeof TrackAudioPlayer
-                >;
-
-                if (trackPlayer.playing === true) {
-                    trackPlayer.pause();
-                    trackPlayer.seekTo(cue.Time);
+                if (this.trackPlayerInstance.playing === true) {
+                    this.trackPlayerInstance.pause();
+                    this.trackPlayerInstance.seekTo(cue.Time);
                 } else {
-                    trackPlayer.playFrom(cue.Time);
+                    this.trackPlayerInstance.playFrom(cue.Time);
                 }
             }
         },
@@ -246,10 +332,20 @@ export default defineComponent({
             }
         },
     },
+    watch: {
+        /** When this ceases to be the active track, pause playback.
+         * @remarks This avoids having multiple tracks playing at the same time.
+         */
+        isActiveTrack(val, oldVal) {
+            if (oldVal === true && val === false) {
+                this.trackPlayerInstance.pause();
+            }
+        },
+    },
     computed: {
-        // trackPlayerInstance(): InstanceType<typeof TrackAudioPlayer> {
-        //     return this.$refs.player as InstanceType<typeof TrackAudioPlayer>;
-        // },
+        trackPlayerInstance(): InstanceType<typeof TrackAudioPlayer> {
+            return this.$refs.player as InstanceType<typeof TrackAudioPlayer>;
+        },
         cues(): Array<ICue> | undefined {
             return this.track?.Cues;
         },

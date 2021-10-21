@@ -7,8 +7,8 @@
         <TrackTile :track="track" />
     </template>
 
-    <!-- Handle the keyboard shortcuts for the compilation -->
-    <CompilationKeyboardHandler :compilation="compilation" />
+    <!-- Handle the keyboard shortcuts on the compilation level -->
+    <CompilationKeyboardHandler />
 </template>
 
 <script lang="ts">
@@ -51,57 +51,29 @@ export default defineComponent({
         // `this` points to the vm instance
         // Listen for the event.
         document.addEventListener(
-            'replayer-topreviouscue',
+            'replayer:topreviouscue',
             () => {
-                // console.debug('CompilationKeyboardHandler::toPreviousCue');
-                // console.log(this.selectedCue);
-                var allCues = this.allCues;
-                // console.debug(
-                //     'CompilationKeyboardHandler::toPreviousCue:',
-                //     allCues,
-                // );
-                var indexOfSelected = allCues.indexOf(this.selectedCue);
-                // console.debug(
-                //     'CompilationKeyboardHandler::indexOfSelected:',
-                //     indexOfSelected,
-                // );
-                var nextCue = allCues[indexOfSelected - 1];
-                // console.debug(
-                //     'CompilationKeyboardHandler::indexOfSelected:',
-                //     nextCue,
-                // );
+                const allCues = this.allCues;
+                const indexOfSelected = allCues.indexOf(this.selectedCue);
+                const nextCue = allCues[indexOfSelected - 1];
                 this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, nextCue);
             },
             false,
         );
 
         document.addEventListener(
-            'replayer-tonextcue',
+            'replayer:tonextcue',
             () => {
-                // console.debug('CompilationKeyboardHandler::toPreviousCue');
-                // console.log(this.selectedCue);
-                var allCues = this.allCues;
-                // console.debug(
-                //     'CompilationKeyboardHandler::toPreviousCue:',
-                //     allCues,
-                // );
-                var indexOfSelected = allCues.indexOf(this.selectedCue);
-                // console.debug(
-                //     'CompilationKeyboardHandler::indexOfSelected:',
-                //     indexOfSelected,
-                // );
-                var nextCue = allCues[indexOfSelected + 1];
-                // console.debug(
-                //     'CompilationKeyboardHandler::indexOfSelected:',
-                //     nextCue,
-                // );
+                const allCues = this.allCues;
+                const indexOfSelected = allCues.indexOf(this.selectedCue);
+                const nextCue = allCues[indexOfSelected + 1];
                 this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, nextCue);
             },
             false,
         );
 
         document.addEventListener(
-            'replayer-tomnemoniccue',
+            'replayer:tomnemoniccue',
             (event: Event) => {
                 //TODO test just issue the command
                 // console.debug(

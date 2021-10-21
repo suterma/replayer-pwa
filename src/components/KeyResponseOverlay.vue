@@ -10,9 +10,13 @@
                 <span class="tag is-dark is-large"> {{ displayText }}</span>
             </div> -->
             <div class="tags has-addons has-opacity-half is-size-mega">
-                <span class="tag is-large is-white is-size-mega">{{
-                    displayKey
-                }}</span>
+                <span
+                    class="
+                        tag
+                        is-large is-white is-size-mega is-family-monospace
+                    "
+                    >{{ displayKey }}</span
+                >
                 <span class="tag is-dark is-large is-size-mega">{{
                     displayAction
                 }}</span>
