@@ -75,19 +75,10 @@ export default defineComponent({
         document.addEventListener(
             'replayer:tomnemoniccue',
             (event: Event) => {
-                //TODO test just issue the command
-                // console.debug(
-                //     'CompilationKeyboardHandler::toMatchingCue:mnemonic',
-                //     mnemonic,
-                // );
                 var allCues = this.allCues;
                 var matchingCue = allCues.find(
                     (cue) => cue.Shortcut == (event as CustomEvent).detail,
                 );
-                // console.debug(
-                //     'CompilationKeyboardHandler::toMatchingCue:matchingCue',
-                //     matchingCue,
-                //                );
                 if (matchingCue) {
                     this.$store.commit(
                         MutationTypes.UPDATE_CURRENT_CUE,

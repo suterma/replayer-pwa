@@ -87,12 +87,6 @@
             </div>
         </div>
     </div>
-    <!-- Handle the keyboard shortcuts for this track, if it is the active one -->
-    <TrackKeyboardHandler
-        v-if="isActiveTrack"
-        :track="track"
-        :playerInstance="$refs.player"
-    />
 </template>
 
 <script lang="ts">
@@ -101,12 +95,11 @@ import { Track, ICue } from '@/store/compilation-types';
 import CueButton from '@/components/CueButton.vue';
 import TrackAudioPlayer from '@/components/TrackAudioPlayer.vue';
 import { MediaFile } from '@/store/state-types';
-import TrackKeyboardHandler from '@/components/TrackKeyboardHandler.vue';
 import { MutationTypes } from '@/store/mutation-types';
 
 export default defineComponent({
     name: 'TrackTile',
-    components: { CueButton, TrackAudioPlayer, TrackKeyboardHandler },
+    components: { CueButton, TrackAudioPlayer },
     props: {
         track: Track,
     },
@@ -219,14 +212,6 @@ export default defineComponent({
          * @remarks Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
          */
         cueClick(event: PointerEvent, cue: ICue) {
-            console.debug('TrackTile::cueClick:event', event);
-            console.debug('TrackTile::cueClick:time', cue);
-
-            //Not a touch or mouse device? Must be the ENTER key
-            // if (event.pointerId < 0) {
-            //     console.debug('TrackTile::cueClick:Must be the ENTER key');
-            //     return;
-            // }
             if (cue.Time != null) {
                 //Update the selected cue to this cue
                 this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, cue);

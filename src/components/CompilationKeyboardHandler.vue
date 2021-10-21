@@ -1,6 +1,6 @@
 <template>
     <!-- Note: Enter (when not terminating a mnemonic, also toggles playback, via "handleKey") -->
-    <!-- Note: "/"" and "*"" (are also handeled via "handleKey" ) -->
+    <!-- Note: "/"" and "*"" are also handeled via "handleKey" -->
     <GlobalEvents
         v-if="hasCompilation"
         @keydown.prevent="handleKey"
@@ -21,10 +21,10 @@ import { GlobalEvents } from 'vue-global-events';
 /** A keyboard handler, which translates keyboard events into
  * - cue actions, for all cues in a compilation
  * - player actions, which get handeled by the currently active player (if any)
- * @devdoc The idea is, to register for keypresses at the document level, then translate these keypresses
- * into Replayer events, and emit them back at the document level.
+ * @devdoc The idea is to register for keypresses at the document level, then translate these keypresses
+ * into custom replayer events, and emit them back at the document level.
  * This should only be done (or handeled) if a compilation is loaded.
- * Using an event handler at the appropriate level, these issued events can then be handeled properly.
+ * Using an event handler at the appropriate level, these issued replayer action events can then be handeled properly.
  * See also https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events
  */
 export default defineComponent({
@@ -48,8 +48,6 @@ export default defineComponent({
             return this.$store.getters.hasCompilation;
         },
     },
-
-    watch: {},
     methods: {
         /** Generally handle all key events, by checking for recognisable events
          * @remarks Handles "Enter for play/pause", "back to cue" and "keyboard mnemonic" events
