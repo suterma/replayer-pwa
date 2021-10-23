@@ -1,44 +1,23 @@
 <template>
     <div class="container">
-        <figure>
-            <img alt="Vue logo" src="../assets/logo.png" />
-        </figure>
-
         <h1>About</h1>
         <p>
-            The classic
-            <a href="https://github.com/suterma/replayer" target="_blank"
-                >Replayer</a
-            >, as a Progressive Web App. Created by
-            <a href="https://marcelsuter.ch" target="_blank">Marcel Suter</a>
-        </p>
-        <div class="notification is-danger has-text-centered">
-            This project is in beta stage.
-        </div>
-
-        <p>
-            It's aim is to replace the classic, Microsoft Windows based,
-            <a href="https://github.com/suterma/replayer" target="_blank"
-                >Replayer</a
+            The
+            <a href="https://replayer.app" target="_blank"> classic Replayer</a
+            >, as a Progressive Web App (<a
+                href="https://en.wikipedia.org/wiki/Progressive_web_application"
+                target="_blank"
             >
-            desktop application with a progressive web app, that is locally
-            installable on devices.
-        </p>
-        <p>
-            The latest test version is available at
+                PWA</a
+            >). The latest test version is available at
             <a href="https://web-test.replayer.app" target="_blank"
-                >https://replayer.app</a
-            >. Source code is availabe at
+                >https://web-test.replayer.app</a
+            >. Source code is availabe on
             <a href="https://github.com/suterma/replayer-pwa" target="_blank"
                 >GitHub</a
-            >.
-        </p>
-
-        <p>
-            To report an issue or submit a feature request, see the
-            <a href="https://github.com/suterma/replayer-pwa/issues"
-                >issues page on the GitHub repository</a
-            >.
+            >. To report an issue or submit a feature request, use the
+            <a href="https://github.com/suterma/replayer-pwa/issues">issues</a>
+            page on the GitHub repository.
         </p>
         <h1>Credits</h1>
         <p>This project uses</p>
@@ -129,6 +108,10 @@
                 >GNU General Public License v3.0</a
             >
             or any later version.
+        </p>
+        <p>
+            Created by
+            <a href="https://marcelsuter.ch" target="_blank">Marcel Suter</a>
         </p>
     </div>
 </template>
