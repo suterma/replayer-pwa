@@ -17,6 +17,7 @@ import { Compilation, ITrack, ICue } from '@/store/compilation-types';
 import TrackTile from '@/components/TrackTile.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
 import { MutationTypes } from '@/store/mutation-types';
+import { Replayer } from '@/components/CompilationKeyboardHandler.vue';
 
 /** Displays the contained list of tracks as tiles
  * @remarks Also handles the common replayer events for compilations
@@ -78,18 +79,15 @@ export default defineComponent({
         //register the events that change the selected cue before mount (instead of at mount) here,
         //to have them get executed prior to the equivalent events at the track level, where they are
         //registered at mount. This ensures, that the playing position gets adjusted to the herein changed cue.
-        document.addEventListener('replayer:topreviouscue', this.toPreviousCue);
-        document.addEventListener('replayer:tonextcue', this.toNextCue);
-        document.addEventListener('replayer:tomnemoniccue', this.toMnemonicCue);
+        document.addEventListener(Replayer.TO_PREV_CUE, this.toPreviousCue);
+        document.addEventListener(Replayer.TO_NEXT_CUE, this.toNextCue);
+        document.addEventListener(Replayer.TO_MNEMONIC_CUE, this.toMnemonicCue);
     },
     unmounted: function () {
+        document.removeEventListener(Replayer.TO_PREV_CUE, this.toPreviousCue);
+        document.removeEventListener(Replayer.TO_NEXT_CUE, this.toNextCue);
         document.removeEventListener(
-            'replayer:topreviouscue',
-            this.toPreviousCue,
-        );
-        document.removeEventListener('replayer:tonextcue', this.toNextCue);
-        document.removeEventListener(
-            'replayer:tomnemoniccue',
+            Replayer.TO_MNEMONIC_CUE,
             this.toMnemonicCue,
         );
     },

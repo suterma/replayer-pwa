@@ -18,6 +18,19 @@ import { defineComponent } from 'vue';
 import KeyResponseOverlay from '@/components/KeyResponseOverlay.vue';
 import { GlobalEvents } from 'vue-global-events';
 
+/** A set of events that are emitted by this Keyboard handler */
+export enum Replayer {
+    BACK_TO_CUE = 'replayer:backtocue',
+    TO_NEXT_CUE = 'replayer:tonextcue',
+    TO_PREV_CUE = 'replayer:topreviouscue',
+    TO_MNEMONIC_CUE = 'replayer:tomnemoniccue',
+    TOGGLE_PLAYBACK = 'replayer:toggleplayback',
+    RWD_1SEC = 'replayer:rewind1sec',
+    FWD_1SEC = 'replayer:forward1sec',
+    VOLUME_DOWN = 'replayer:volumedown',
+    VOLUME_UP = 'replayer:volumeup',
+}
+
 /** A keyboard handler, which translates keyboard events into
  * - cue actions, for all cues in a compilation
  * - player actions, which get handeled by the currently active player (if any)
@@ -63,17 +76,17 @@ export default defineComponent({
             //Back to cue (dot)?
             if (event.code === 'NumpadDecimal' || event.code === 'Period') {
                 this.DisplayKeyAndAction(event, 'back to cue');
-                document.dispatchEvent(new Event('replayer:backtocue'));
+                document.dispatchEvent(new Event(Replayer.BACK_TO_CUE));
             }
             //Next cue?
             else if (event.key === '*') {
                 this.DisplayKeyAndAction(event, 'to next cue');
-                document.dispatchEvent(new Event('replayer:tonextcue'));
+                document.dispatchEvent(new Event(Replayer.TO_NEXT_CUE));
             }
             //Previous cue?
             else if (event.key === '/') {
                 this.DisplayKeyAndAction(event, 'to previous cue');
-                document.dispatchEvent(new Event('replayer:topreviouscue'));
+                document.dispatchEvent(new Event(Replayer.TO_PREV_CUE));
             }
             //Mnemonic termination / play/pause-toggeling?
             else if (event.key === 'Enter') {
@@ -83,7 +96,7 @@ export default defineComponent({
                         'mnemonic invoking',
                     );
                     document.dispatchEvent(
-                        new CustomEvent('replayer:tomnemoniccue', {
+                        new CustomEvent(Replayer.TO_MNEMONIC_CUE, {
                             detail: this.mnemonic,
                         }),
                     );
@@ -117,35 +130,35 @@ export default defineComponent({
                 return;
             }
             this.DisplayKeyAndAction(event, 'play/pause');
-            document.dispatchEvent(new Event('replayer:toggleplaypause'));
+            document.dispatchEvent(new Event(Replayer.TOGGLE_PLAYBACK));
         },
         /** Rewinds 1 second
          * @remarks This handler does accept repetitive events
          */
         rewind(event: KeyboardEvent) {
             this.DisplayKeyAndAction(event, 'rewind 1 sec');
-            document.dispatchEvent(new Event('replayer:rewind1sec'));
+            document.dispatchEvent(new Event(Replayer.RWD_1SEC));
         },
         /** Forwards 1 second
          * @remarks This handler does accept repetitive events
          */
         forward(event: KeyboardEvent) {
             this.DisplayKeyAndAction(event, 'forward 1 sec');
-            document.dispatchEvent(new Event('replayer:forward1sec'));
+            document.dispatchEvent(new Event(Replayer.FWD_1SEC));
         },
         /** Decreases the playback volume
          * @remarks This handler does accept repetitive events
          */
         volumeDown(event: KeyboardEvent) {
             this.DisplayKeyAndAction(event, 'volume down');
-            document.dispatchEvent(new Event('replayer:volumedown'));
+            document.dispatchEvent(new Event(Replayer.VOLUME_DOWN));
         },
         /** Increases the playback volume
          * @remarks This handler does accept repetitive events
          */
         volumeUp(event: KeyboardEvent) {
             this.DisplayKeyAndAction(event, 'volume up');
-            document.dispatchEvent(new Event('replayer:volumeup'));
+            document.dispatchEvent(new Event(Replayer.VOLUME_UP));
         },
 
         /** Displays the given key and the associated action for a short duration */

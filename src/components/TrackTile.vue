@@ -96,6 +96,7 @@ import CueButton from '@/components/CueButton.vue';
 import TrackAudioPlayer from '@/components/TrackAudioPlayer.vue';
 import { MediaFile } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
+import { Replayer } from '@/components/CompilationKeyboardHandler.vue';
 
 /** Displays a track tile
  * @remarks Also handles the common replayer events for tracks
@@ -117,65 +118,53 @@ export default defineComponent({
     },
     mounted: function () {
         //TODO maybe put these listeners in a child component, and handle vue events from there, for soc reasons?
-        document.addEventListener('replayer:backtocue', this.goToSelectedCue);
+        document.addEventListener(Replayer.BACK_TO_CUE, this.goToSelectedCue);
         /** Handles the switch to the next cue
          * @remarks Simply use the selected cue, because the next cue was already selected at the compilation level
          */
-        document.addEventListener('replayer:tonextcue', this.goToSelectedCue);
+        document.addEventListener(Replayer.TO_NEXT_CUE, this.goToSelectedCue);
         /** Handles the switch to the previous cue
          * @remarks Simply use the selected cue, because the previous cue was already selected at the compilation level
          */
+        document.addEventListener(Replayer.TO_PREV_CUE, this.goToSelectedCue);
         document.addEventListener(
-            'replayer:topreviouscue',
+            Replayer.TO_MNEMONIC_CUE,
             this.goToSelectedCue,
         );
         document.addEventListener(
-            'replayer:tomnemoniccue',
-            this.goToSelectedCue,
-        );
-        document.addEventListener(
-            'replayer:toggleplaypause',
+            Replayer.TOGGLE_PLAYBACK,
             this.togglePlayback,
         );
-        document.addEventListener('replayer:rewind1sec', this.rewindOneSecond);
-        document.addEventListener(
-            'replayer:forward1sec',
-            this.forwardOneSecond,
-        );
-        document.addEventListener('replayer:volumedown', this.volumeDown);
-        document.addEventListener('replayer:volumeup', this.volumeUp, false);
+        document.addEventListener(Replayer.RWD_1SEC, this.rewindOneSecond);
+        document.addEventListener(Replayer.FWD_1SEC, this.forwardOneSecond);
+        document.addEventListener(Replayer.VOLUME_DOWN, this.volumeDown);
+        document.addEventListener(Replayer.VOLUME_UP, this.volumeUp);
     },
     unmounted: function () {
         document.removeEventListener(
-            'replayer:backtocue',
+            Replayer.BACK_TO_CUE,
             this.goToSelectedCue,
         );
         document.removeEventListener(
-            'replayer:tonextcue',
+            Replayer.TO_NEXT_CUE,
             this.goToSelectedCue,
         );
         document.removeEventListener(
-            'replayer:topreviouscue',
+            Replayer.TO_PREV_CUE,
             this.goToSelectedCue,
         );
         document.removeEventListener(
-            'replayer:tomnemoniccue',
+            Replayer.TO_MNEMONIC_CUE,
             this.goToSelectedCue,
         );
         document.removeEventListener(
-            'replayer:toggleplaypause',
+            Replayer.TOGGLE_PLAYBACK,
             this.togglePlayback,
         );
-        document.removeEventListener(
-            'replayer:rewind1sec',
-            this.rewindOneSecond,
-        );
-        document.removeEventListener(
-            'replayer:forward1sec',
-            this.forwardOneSecond,
-        );
-        document.removeEventListener('replayer:volumedown', this.volumeDown);
-        document.removeEventListener('replayer:volumeup', this.volumeUp, false);
+        document.removeEventListener(Replayer.RWD_1SEC, this.rewindOneSecond);
+        document.removeEventListener(Replayer.FWD_1SEC, this.forwardOneSecond);
+        document.removeEventListener(Replayer.VOLUME_DOWN, this.volumeDown);
+        document.removeEventListener(Replayer.VOLUME_UP, this.volumeUp);
     },
     methods: {
         /** Toggles the display of the cue buttons */
