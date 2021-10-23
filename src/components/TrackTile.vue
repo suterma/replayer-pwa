@@ -1,4 +1,18 @@
 <template>
+    <!-- Handle all relevant events here, but only if this is the active track -->
+    <ReplayerEventHandler
+        v-if="isActiveTrack"
+        @backtocue="goToSelectedCue"
+        @tonextcue="goToSelectedCue"
+        @topreviouscue="goToSelectedCue"
+        @tomnemoniccue="goToSelectedCue"
+        @toggleplayback="togglePlayback"
+        @rewind1sec="rewindOneSecond"
+        @forward1sec="forwardOneSecond"
+        @volumedown="volumeDown"
+        @volumeup="volumeUp"
+    />
+
     <!-- Each track is a tile (vertically distributed), and contains all the cues -->
     <div class="tile is-ancestor">
         <div class="tile is-vertical is-parent">
@@ -96,14 +110,14 @@ import CueButton from '@/components/CueButton.vue';
 import TrackAudioPlayer from '@/components/TrackAudioPlayer.vue';
 import { MediaFile } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
-import { Replayer } from '@/components/CompilationKeyboardHandler.vue';
+import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 
 /** Displays a track tile
  * @remarks Also handles the common replayer events for tracks
  */
 export default defineComponent({
     name: 'TrackTile',
-    components: { CueButton, TrackAudioPlayer },
+    components: { CueButton, TrackAudioPlayer, ReplayerEventHandler },
     props: {
         track: Track,
     },
@@ -116,96 +130,39 @@ export default defineComponent({
             currentSeconds: 0,
         };
     },
-    mounted: function () {
-        //TODO maybe put these listeners in a child component, and handle vue events from there, for soc reasons?
-        document.addEventListener(Replayer.BACK_TO_CUE, this.goToSelectedCue);
-        /** Handles the switch to the next cue
-         * @remarks Simply use the selected cue, because the next cue was already selected at the compilation level
-         */
-        document.addEventListener(Replayer.TO_NEXT_CUE, this.goToSelectedCue);
-        /** Handles the switch to the previous cue
-         * @remarks Simply use the selected cue, because the previous cue was already selected at the compilation level
-         */
-        document.addEventListener(Replayer.TO_PREV_CUE, this.goToSelectedCue);
-        document.addEventListener(
-            Replayer.TO_MNEMONIC_CUE,
-            this.goToSelectedCue,
-        );
-        document.addEventListener(
-            Replayer.TOGGLE_PLAYBACK,
-            this.togglePlayback,
-        );
-        document.addEventListener(Replayer.RWD_1SEC, this.rewindOneSecond);
-        document.addEventListener(Replayer.FWD_1SEC, this.forwardOneSecond);
-        document.addEventListener(Replayer.VOLUME_DOWN, this.volumeDown);
-        document.addEventListener(Replayer.VOLUME_UP, this.volumeUp);
-    },
-    unmounted: function () {
-        document.removeEventListener(
-            Replayer.BACK_TO_CUE,
-            this.goToSelectedCue,
-        );
-        document.removeEventListener(
-            Replayer.TO_NEXT_CUE,
-            this.goToSelectedCue,
-        );
-        document.removeEventListener(
-            Replayer.TO_PREV_CUE,
-            this.goToSelectedCue,
-        );
-        document.removeEventListener(
-            Replayer.TO_MNEMONIC_CUE,
-            this.goToSelectedCue,
-        );
-        document.removeEventListener(
-            Replayer.TOGGLE_PLAYBACK,
-            this.togglePlayback,
-        );
-        document.removeEventListener(Replayer.RWD_1SEC, this.rewindOneSecond);
-        document.removeEventListener(Replayer.FWD_1SEC, this.forwardOneSecond);
-        document.removeEventListener(Replayer.VOLUME_DOWN, this.volumeDown);
-        document.removeEventListener(Replayer.VOLUME_UP, this.volumeUp);
-    },
     methods: {
         /** Toggles the display of the cue buttons */
         toggleCueDisplay() {
             this.showCues = !this.showCues;
-            return this.showCues;
         },
         togglePlayback() {
-            if (this.isActiveTrack) {
-                this.trackPlayerInstance.togglePlayback();
-            }
+            this.trackPlayerInstance.togglePlayback();
         },
         rewindOneSecond() {
-            if (this.isActiveTrack) {
-                this.trackPlayerInstance.rewindOneSecond();
-            }
+            this.trackPlayerInstance.rewindOneSecond();
         },
         forwardOneSecond() {
-            if (this.isActiveTrack) {
-                this.trackPlayerInstance.forwardOneSecond();
-            }
+            this.trackPlayerInstance.forwardOneSecond();
         },
         volumeDown() {
-            if (this.isActiveTrack) {
-                this.trackPlayerInstance.volumeDown();
-            }
+            this.trackPlayerInstance.volumeDown();
         },
         volumeUp() {
-            if (this.isActiveTrack) {
-                this.trackPlayerInstance.volumeUp();
-            }
+            this.trackPlayerInstance.volumeUp();
         },
 
         /** Pauses playback and seeks to the currently selected cue's position, but only
          * if this track is the active track (i.e. the selected cue is within this track)
          */
         goToSelectedCue() {
+            /*Check for the active track here (again), because otherwise some event handling
+            sequences might cause actions on non-active tracks too.*/
             if (this.isActiveTrack) {
                 const selectedCue = this.$store.getters.selectedCue as ICue;
                 if (selectedCue && selectedCue.Time != null) {
-                    this.trackPlayerInstance.pause();
+                    if (this.trackPlayerInstance.playing === true) {
+                        this.trackPlayerInstance.pause();
+                    }
                     this.trackPlayerInstance.seekTo(selectedCue.Time);
                 }
             }
@@ -290,10 +247,10 @@ export default defineComponent({
          * @remarks Using the existing cues, and the now available track duration, calculates the durations of all cues, including the last one
          * @devdoc The calculated durations are only valid as long as the cues, their times, and the track does not change */
         calculateCueDurations(trackDurationSeconds: number) {
-            console.debug(
-                'TrackTile::calculateCueDurations:trackDurationSeconds',
-                trackDurationSeconds,
-            );
+            // console.debug(
+            //     'TrackTile::calculateCueDurations:trackDurationSeconds',
+            //     trackDurationSeconds,
+            // );
 
             const originalCues = this.cues?.filter(function (el) {
                 return el.Time !== null;
@@ -312,20 +269,28 @@ export default defineComponent({
                     }
                     lastTime = element.Time;
                 });
-                console.debug(
-                    'TrackTile::calculateCueDurations:originalCues',
-                    originalCues,
-                );
+                // console.debug(
+                //     'TrackTile::calculateCueDurations:originalCues',
+                //     originalCues,
+                // );
             }
         },
     },
     watch: {
-        /** When this ceases to be the active track, pause playback.
-         * @remarks This avoids having multiple tracks playing at the same time.
+        /** Handle playback when the active track changes.
+         * a) When this ceases to be the active track, stop playback.
+         * b) When this becomes the active track, go to the selected cue.
+         * @remarks a) This avoids having multiple tracks playing at the same time.
+         * b) This ensures that the playback position follows the selected cue right from when this becomes the active track
          */
         isActiveTrack(val, oldVal) {
+            //a) is no more active?
             if (oldVal === true && val === false) {
                 this.trackPlayerInstance.pause();
+            }
+            //b) is now active?
+            if (oldVal === false && val === true) {
+                this.goToSelectedCue();
             }
         },
     },
@@ -357,7 +322,7 @@ export default defineComponent({
             const selectedCue = this.$store.getters.selectedCue as ICue;
             const selectedCueId = selectedCue?.Id;
             console.debug(
-                'TrackTile::isActiveTrack:selectedCueId',
+                `TrackTile(${this.track?.Name})::isActiveTrack:selectedCueId`,
                 selectedCueId,
             );
 

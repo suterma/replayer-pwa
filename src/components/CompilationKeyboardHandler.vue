@@ -18,26 +18,29 @@ import { defineComponent } from 'vue';
 import KeyResponseOverlay from '@/components/KeyResponseOverlay.vue';
 import { GlobalEvents } from 'vue-global-events';
 
-/** A set of events that are emitted by this Keyboard handler */
+/** A set of Replayer events that are emitted by this Keyboard handler */
 export enum Replayer {
-    BACK_TO_CUE = 'replayer:backtocue',
-    TO_NEXT_CUE = 'replayer:tonextcue',
-    TO_PREV_CUE = 'replayer:topreviouscue',
-    TO_MNEMONIC_CUE = 'replayer:tomnemoniccue',
-    TOGGLE_PLAYBACK = 'replayer:toggleplayback',
-    RWD_1SEC = 'replayer:rewind1sec',
-    FWD_1SEC = 'replayer:forward1sec',
-    VOLUME_DOWN = 'replayer:volumedown',
-    VOLUME_UP = 'replayer:volumeup',
+    BACK_TO_CUE = 'backtocue',
+    TO_NEXT_CUE = 'tonextcue',
+    TO_PREV_CUE = 'topreviouscue',
+    TO_MNEMONIC_CUE = 'tomnemoniccue',
+    TOGGLE_PLAYBACK = 'toggleplayback',
+    RWD_1SEC = 'rewind1sec',
+    FWD_1SEC = 'forward1sec',
+    VOLUME_DOWN = 'volumedown',
+    VOLUME_UP = 'volumeup',
 }
 
-/** A keyboard handler, which translates keyboard events into
+/** A keyboard handler, which translates keyboard events into global Replayer events
+ * (at the DOM document level) to handle as
  * - cue actions, for all cues in a compilation
  * - player actions, which get handeled by the currently active player (if any)
- * @devdoc The idea is to register for keypresses at the document level, then translate these keypresses
- * into custom replayer events, and emit them back at the document level.
+ * @devdoc The idea is to register for keypresses at the document level,
+ * then translate these keypresses
+ * into custom Replayer events, and emit them back at the document level.
  * This should only be done (or handeled) if a compilation is loaded.
- * Using an event handler at the appropriate level, these issued replayer action events can then be handeled properly.
+ * Using a specific Replayer event handler at the appropriate level, these issued Replayer action events
+ * can then be handeled properly in the suitable Vue component.
  * See also https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events
  */
 export default defineComponent({
@@ -100,8 +103,12 @@ export default defineComponent({
                             detail: this.mnemonic,
                         }),
                     );
+
+                    //clear mnemonic buildup
+                    this.mnemonic = '';
+                    clearTimeout(this.keyTimeoutId);
                 } else {
-                    //just pass for appropriate handling
+                    //just pass on to the matching handler for this action
                     this.togglePlayback(event);
                 }
             }
@@ -124,7 +131,6 @@ export default defineComponent({
          * @devdoc Keydown events are used as trigger instead of the non-repetitive keyup events
          * to have a better responsiveness for the user.
          */
-
         togglePlayback(event: KeyboardEvent) {
             if (event.repeat) {
                 return;

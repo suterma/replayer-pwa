@@ -269,14 +269,13 @@ export default defineComponent({
         /** Watch whether the player state changed, and then update the audio element accordingly  */
         playing(value): Promise<void> | undefined {
             if (value) {
-                return (this.$refs.audio as InstanceType<typeof Audio>).play();
+                return this.audioElement.play();
             }
-            (this.$refs.audio as InstanceType<typeof Audio>).pause();
+            this.audioElement.pause();
         },
         /** Watch whether the volume changed, and then update the audio element accordingly  */
         volume(): void {
-            (this.$refs.audio as InstanceType<typeof Audio>).volume =
-                this.volume / 100;
+            this.audioElement.volume = this.volume / 100;
         },
     },
     methods: {
@@ -292,17 +291,15 @@ export default defineComponent({
             return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss;
         },
         download() {
+            console.debug(`TrackAudioPlayer(${this.title})::download`);
             this.stop();
             window.open(this.src, 'download');
         },
         load() {
-            if (
-                (this.$refs.audio as InstanceType<typeof Audio>).readyState >= 2
-            ) {
+            console.debug(`TrackAudioPlayer(${this.title})::load`);
+            if (this.audioElement.readyState >= 2) {
                 this.loaded = true;
-                this.durationSeconds = (
-                    this.$refs.audio as InstanceType<typeof Audio>
-                ).duration;
+                this.durationSeconds = this.audioElement.duration;
 
                 this.$emit('trackLoaded', this.durationSeconds);
 
@@ -315,6 +312,7 @@ export default defineComponent({
             throw new Error('Failed to load sound file.');
         },
         mute() {
+            console.debug(`TrackAudioPlayer(${this.title})::mute`);
             if (this.muted) {
                 return (this.volume = this.previousVolume);
             }
@@ -323,69 +321,80 @@ export default defineComponent({
             this.volume = 0;
         },
         seekByClick(e: MouseEvent) {
-            console.debug('TrackAudioPlayer::seekByClick', e);
+            console.debug(`TrackAudioPlayer(${this.title})::seekByClick`, e);
             if (!this.loaded) return;
 
             const bounds = (e.target as HTMLDivElement).getBoundingClientRect();
             const seekPos = (e.clientX - bounds.left) / bounds.width;
 
-            (this.$refs.audio as InstanceType<typeof Audio>).currentTime =
-                (this.$refs.audio as InstanceType<typeof Audio>).duration *
-                seekPos;
+            this.audioElement.currentTime =
+                this.audioElement.duration * seekPos;
         },
         stop() {
+            console.debug(`TrackAudioPlayer(${this.title})::stop`);
             this.playing = false;
-            (this.$refs.audio as InstanceType<typeof Audio>).currentTime = 0;
+            this.audioElement.currentTime = 0;
             this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, undefined);
         },
         togglePlayback() {
+            console.debug(`TrackAudioPlayer(${this.title})::togglePlayback`);
             this.playing = !this.playing;
         },
         /** Rewinds 1 second */
         rewindOneSecond() {
-            const time = (this.$refs.audio as InstanceType<typeof Audio>)
-                .currentTime;
-            (this.$refs.audio as InstanceType<typeof Audio>).currentTime =
-                time - 1;
+            console.debug(`TrackAudioPlayer(${this.title})::rewindOneSecond`);
+            const time = this.audioElement.currentTime;
+            this.audioElement.currentTime = time - 1;
         },
         /** Forwards 1 second */
         forwardOneSecond() {
-            const time = (this.$refs.audio as InstanceType<typeof Audio>)
-                .currentTime;
-            (this.$refs.audio as InstanceType<typeof Audio>).currentTime =
-                time + 1;
+            console.debug(`TrackAudioPlayer(${this.title})::forwardOneSecond`);
+            const time = this.audioElement.currentTime;
+            this.audioElement.currentTime = time + 1;
         },
         volumeDown() {
-            console.debug('TrackAudioPlayer::volumeDown', this.volume);
             this.volume = this.volume * 0.71;
+            console.debug(
+                `TrackAudioPlayer(${this.title})::volumeDown`,
+                this.volume,
+            );
         },
         volumeUp() {
-            console.debug('TrackAudioPlayer::volumeUp', this.volume);
             this.volume = Math.min(this.volume * 1.41, 100);
+            console.debug(
+                `TrackAudioPlayer(${this.title})::volumeUp`,
+                this.volume,
+            );
         },
         /** Pauses playback, keeping the position at the current position */
         pause() {
+            console.debug(`TrackAudioPlayer(${this.title})::pause`);
             this.playing = false;
         },
         /** Updates the current seconds display and emits an event with the temporal position of the player
          * @devdoc This must get only privately called from the audio player
          */
-        updateTime(e: Event) {
-            this.currentSeconds = (
-                e.target as InstanceType<typeof Audio>
-            ).currentTime;
-
+        updateTime(/*event: Event*/) {
+            //console.debug(`TrackAudioPlayer(${this.title})::updateTime:e`, e);
+            this.currentSeconds = this.audioElement.currentTime;
             this.$emit('timeupdate', this.currentSeconds);
         },
         /** Starts playback from the given temporal position */
         playFrom(position: number): void {
+            console.debug(
+                `TrackAudioPlayer(${this.title}):playFrom:position`,
+                position,
+            );
             this.seekTo(position);
             this.playing = true;
         },
         /** Transports (seeks) the playback to the given temporal position */
         seekTo(position: number): void {
-            (this.$refs.audio as InstanceType<typeof Audio>).currentTime =
-                position;
+            console.debug(
+                `TrackAudioPlayer(${this.title})::seekTo:position`,
+                position,
+            );
+            this.audioElement.currentTime = position;
         },
     },
     created() {

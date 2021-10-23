@@ -1,4 +1,14 @@
 <template>
+    <!-- Handle and translate the keyboard shortcuts into Replayer events -->
+    <CompilationKeyboardHandler />
+
+    <!-- Handle all relevant Replayer events for the compilation level -->
+    <ReplayerEventHandler
+        @tonextcue="toNextCue"
+        @topreviouscue="toPreviousCue"
+        @tomnemoniccue="toMnemonicCue($event)"
+    />
+
     <h1 class="title">
         {{ compilation?.Title }}
     </h1>
@@ -6,9 +16,6 @@
     <template v-for="track in tracks" :key="track.Id">
         <TrackTile :track="track" />
     </template>
-
-    <!-- Handle the keyboard shortcuts on the compilation level -->
-    <CompilationKeyboardHandler />
 </template>
 
 <script lang="ts">
@@ -17,14 +24,14 @@ import { Compilation, ITrack, ICue } from '@/store/compilation-types';
 import TrackTile from '@/components/TrackTile.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
 import { MutationTypes } from '@/store/mutation-types';
-import { Replayer } from '@/components/CompilationKeyboardHandler.vue';
+import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 
 /** Displays the contained list of tracks as tiles
  * @remarks Also handles the common replayer events for compilations
  */
 export default defineComponent({
     name: 'CompilationDisplay',
-    components: { TrackTile, CompilationKeyboardHandler },
+    components: { TrackTile, CompilationKeyboardHandler, ReplayerEventHandler },
     props: {
         compilation: Compilation,
     },
@@ -72,24 +79,6 @@ export default defineComponent({
         hasCompilation(): boolean {
             return this.$store.getters.hasCompilation;
         },
-    },
-    beforeMount: function () {
-        //TODO maybe put these listeners in a child component, and handle vue events from there, for soc reasons?
-
-        //register the events that change the selected cue before mount (instead of at mount) here,
-        //to have them get executed prior to the equivalent events at the track level, where they are
-        //registered at mount. This ensures, that the playing position gets adjusted to the herein changed cue.
-        document.addEventListener(Replayer.TO_PREV_CUE, this.toPreviousCue);
-        document.addEventListener(Replayer.TO_NEXT_CUE, this.toNextCue);
-        document.addEventListener(Replayer.TO_MNEMONIC_CUE, this.toMnemonicCue);
-    },
-    unmounted: function () {
-        document.removeEventListener(Replayer.TO_PREV_CUE, this.toPreviousCue);
-        document.removeEventListener(Replayer.TO_NEXT_CUE, this.toNextCue);
-        document.removeEventListener(
-            Replayer.TO_MNEMONIC_CUE,
-            this.toMnemonicCue,
-        );
     },
 });
 </script>
