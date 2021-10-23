@@ -1,7 +1,8 @@
 <template>
-    <!-- Handle all relevant events here, but only if this is the active track -->
+    <!-- Handle all relevant events here
+    Note: A check for the active track is done in the handler methods. 
+    A v-if here would work, but would register the events not in a useful order. -->
     <ReplayerEventHandler
-        v-if="isActiveTrack"
         @backtocue="goToSelectedCue"
         @tonextcue="goToSelectedCue"
         @topreviouscue="goToSelectedCue"
@@ -136,19 +137,29 @@ export default defineComponent({
             this.showCues = !this.showCues;
         },
         togglePlayback() {
-            this.trackPlayerInstance.togglePlayback();
+            if (this.isActiveTrack) {
+                this.trackPlayerInstance.togglePlayback();
+            }
         },
         rewindOneSecond() {
-            this.trackPlayerInstance.rewindOneSecond();
+            if (this.isActiveTrack) {
+                this.trackPlayerInstance.rewindOneSecond();
+            }
         },
         forwardOneSecond() {
-            this.trackPlayerInstance.forwardOneSecond();
+            if (this.isActiveTrack) {
+                this.trackPlayerInstance.forwardOneSecond();
+            }
         },
         volumeDown() {
-            this.trackPlayerInstance.volumeDown();
+            if (this.isActiveTrack) {
+                this.trackPlayerInstance.volumeDown();
+            }
         },
         volumeUp() {
-            this.trackPlayerInstance.volumeUp();
+            if (this.isActiveTrack) {
+                this.trackPlayerInstance.volumeUp();
+            }
         },
 
         /** Pauses playback and seeks to the currently selected cue's position, but only
@@ -290,7 +301,11 @@ export default defineComponent({
             }
             //b) is now active?
             if (oldVal === false && val === true) {
-                this.goToSelectedCue();
+                //this.goToSelectedCue();
+                // const selectedCue = this.$store.getters.selectedCue as ICue;
+                // this.trackPlayerInstance.seekTo(selectedCue?.Time?);
+                //TODO if this is invoked by mouse do not pause(use only seek to), to immediately start playing in this case.
+                //Direct play, even after track change, seems more natural for a mouse/pointer event.
             }
         },
     },
