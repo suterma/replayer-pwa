@@ -127,6 +127,11 @@ export default defineComponent({
          * @param url - The URL to load the file from
          */
         loadUrl(url: string): void {
+            this.$store.commit(
+                //Set the progress message, before using any of the async functions
+                MutationTypes.SET_PROGRESS_MESSAGE,
+                `Loading URL '${url}'...`,
+            );
             //TODO make URL to allow any charcter, including slashes etc...
             console.debug('RezLoader::loadUrl:url', url);
             fetch(url)
@@ -143,6 +148,9 @@ export default defineComponent({
                         // }
                     );
                     this.loadFile(file);
+                })
+                .finally(() => {
+                    this.$store.commit(MutationTypes.END_PROGRESS);
                 });
         },
 
@@ -241,11 +249,7 @@ export default defineComponent({
                                         var mediaFileName =
                                             zipEntry.name.normalize();
 
-                                        if (
-                                            mediaFileName.endsWith(
-                                                'ZIP-Compilation.rex',
-                                            )
-                                        ) {
+                                        if (mediaFileName.endsWith('.rex')) {
                                             this.handleAsCompilation(
                                                 content,
                                                 RezMimeTypes.TEXT_XML,
@@ -284,10 +288,7 @@ export default defineComponent({
                     },
                     function (e) {
                         console.error(
-                            'un-ZIP: Error reading ' +
-                                selectedFile.name +
-                                ': ' +
-                                e.message,
+                            `un-ZIP: Error reading ${selectedFile.name}: ${e.message}`,
                         );
                     },
                 )
