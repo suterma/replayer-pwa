@@ -16,6 +16,8 @@ export class XmlCompilation {
             this.Tracks = new XmlTracks(compilation.Tracks);
         }
     }
+    // for the $: any, because this is per the docs of the XML library
+    // eslint-disable-next-line
     $: any = {
         'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
         'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema',
