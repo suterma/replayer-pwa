@@ -10,7 +10,7 @@
                             class="file-input"
                             type="file"
                             id="file-input"
-                            accept=".rex,.rez,.zip,.mp3,.bplist"
+                            accept=".rex,.xml,.rez,.zip,.mp3,.bplist"
                             multiple
                             @change="loadFiles"
                             name="resume"
@@ -52,7 +52,8 @@
             <span class="has-text-weight-bold">XML</span> (<span
                 class="is-family-monospace"
                 >.rex</span
-            >), without media files
+            >, <span class="is-family-monospace">.xml</span>), without media
+            files
         </li>
         <li>
             <span class="has-text-weight-bold">bplist</span> (<span
@@ -169,7 +170,10 @@ export default defineComponent({
                     ) {
                         this.loadFileAsRez(file);
                     }
-                    if (file.name.toLowerCase().endsWith('.rex')) {
+                    if (
+                        file.name.toLowerCase().endsWith('.rex') ||
+                        file.name.toLowerCase().endsWith('.xml')
+                    ) {
                         this.loadFileAsRex(file);
                     }
                     if (file.name.toLowerCase().endsWith('.mp3')) {
