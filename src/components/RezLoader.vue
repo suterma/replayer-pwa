@@ -289,7 +289,7 @@ export default defineComponent({
                             RezMimeTypes.TEXT_XML,
                         );
                     };
-                    reader.onerror = (_event): void => {
+                    reader.onerror = (): void => {
                         console.error(
                             'Failed to read file ' +
                                 selectedFile.name +
@@ -319,8 +319,7 @@ export default defineComponent({
                             RezMimeTypes.APPLICATION_XBPLIST,
                         );
                     };
-                    reader.onerror = (_event): void => {
-                        // Failed
+                    reader.onerror = (): void => {
                         console.error(
                             'Failed to read file ' +
                                 selectedFile.name +

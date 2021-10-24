@@ -23,5 +23,5 @@ export class MediaFile implements IMediaFile {
 export enum RezMimeTypes {
     AUDIO_MP3 = 'audio/mp3',
     TEXT_XML = 'text/xml',
-    APPLICATION_XBPLIST = 'application/x-bplist'
+    APPLICATION_XBPLIST = 'application/x-bplist',
 }

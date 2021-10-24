@@ -238,9 +238,8 @@ export default defineComponent({
             }
         },
         /** Finds the matching the media file (playable file content) for a track's file name, from the local file system */
-        getMatchingLocalFileUrl(
-            _fileName: string | undefined,
-        ): MediaFile | null {
+        getMatchingLocalFileUrl(): /*_fileName: string | undefined,*/
+        MediaFile | null {
             // if (fileName) {
             //     var objectUrl = URL.createObjectURL(blob);
 
@@ -251,7 +250,7 @@ export default defineComponent({
         /** Updates the current seconds property with the temporal position of the track audio player
          * @remarks This is used to control the cue display for this track's cues
          */
-        updateTime(currentTime: any) {
+        updateTime(currentTime: number) {
             this.currentSeconds = currentTime;
         },
         /** Calculates the cue durations
@@ -328,7 +327,7 @@ export default defineComponent({
                 fileUrls,
             );
             if (fileUrl === null) {
-                fileUrl = this.getMatchingLocalFileUrl(this.track?.Url);
+                fileUrl = this.getMatchingLocalFileUrl(/*this.track?.Url*/);
             }
             return fileUrl;
         },
