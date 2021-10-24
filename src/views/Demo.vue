@@ -1,97 +1,27 @@
 <template>
-    <!-- Main container -->
-    <nav class="level">
-        <!-- Left side -->
-        <div class="level-left">
-            <div class="level-item">
-                <div class="file is-primary">
-                    <label class="file-label">
-                        <input
-                            class="file-input"
-                            type="file"
-                            id="file-input"
-                            accept=".rex,.xml,.rez,.zip,.mp3,.bplist"
-                            multiple
-                            @change="loadFiles"
-                            name="resume"
-                        />
-                        <span class="file-cta">
-                            <!-- //TODO use an SVG upload icon -->
-                            <!-- <span class="file-icon">
-                        <i class="fas fa-upload"></i>
-                    </span> -->
-                            <span class="file-label">
-                                Choose a compilation or media file…
-                            </span>
-                        </span>
-                        <!-- <span class="file-name">
-                    {{selectedFile}}}
-                </span> -->
-                    </label>
-                </div>
-            </div>
-            <div class="level-item">&mdash; OR &mdash;</div>
-            <div class="level-item">
-                <!-- <button
-                    @click="loadDemoCompilation"
-                    class="button is-secondary"
-                >
-                    Load a demo compilation
-                </button> -->
-                //TODO load from URL
-            </div>
-        </div>
-
-        <!-- Right side -->
-        <div class="level-right">
-            <p class="level-item"></p>
-        </div>
-    </nav>
-
-    <ul>
-        <li>
-            <span class="has-text-weight-bold">XML</span> (<span
-                class="is-family-monospace"
-                >.rex</span
-            >, <span class="is-family-monospace">.xml</span>), without media
-            files
-        </li>
-        <li>
-            <span class="has-text-weight-bold">bplist</span> (<span
-                class="is-family-monospace"
-                >.bplist</span
-            >), from the LivePlayback app, without media files
-        </li>
-        <li>
-            <span class="has-text-weight-bold">ZIP</span> (<span
-                class="is-family-monospace"
-                >.rez</span
-            >, <span class="is-family-monospace">.zip</span>), having one of the
-            above, including media files
-        </li>
-        <li>
-            <span class="has-text-weight-bold">Media file</span> (<span
-                class="is-family-monospace"
-                >.mp3</span
-            >), for a track in one of the above. Media files are matched by
-            name. Only MP3 files are supported currently.
-        </li>
-    </ul>
-
-    <p>
-        For details about supported file types see the
-        <a
-            href="https://replayer.app/documentation"
-            alt="Link to the Replayer documentation"
-            >documentation</a
-        >
-        or the
-        <a
-            href="https://github.com/suterma/replayer-pwa#glossary"
-            alt="GitHub doc link"
-            >README</a
-        >.
-    </p>
+    <div class="container">
+        <h1 class="title">Demo</h1>
+        <p>
+            Try one of the various compilations to check out the various
+            features:
+        </p>
+        <ul>
+            <li>
+                <a href="/#/play/demo-compilation-featuring-lidija-roos.rez"
+                    >Demo package with a compilation featuring Lidija Roos</a
+                ><br />
+                A REZ Package containing an REX compilation with 2 tracks and
+                matching mp3 files.
+            </li>
+            <li>
+                <a href="/#/play/Demo%20Adonia%20Junior%2021.bplist"
+                    >Demo Binary Property List compilation (as from the
+                    LivePlayback app)</a
+                ><br />
+                A bplist file with 21 tracks (no media files).
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script lang="ts">
@@ -103,45 +33,26 @@ import { MutationTypes } from '../store/mutation-types';
 import { MediaFile, RezMimeTypes } from '@/store/state-types';
 import NSKeyedUnarchiver from '@suterma/nskeyedunarchiver-liveplayback';
 
-/** A Loader for importable files
- * @remarks Provides a button for loading local files and also listens to url params
- */
 export default defineComponent({
     name: 'RezLoader',
     components: {},
-    mounted: function (): void {
-        //Check whether a given file is to be loaded
-        if (this.paramsUrl) {
-            if (typeof this.paramsUrl === 'string') {
-                //Handle the single item
-                this.loadUrl(this.paramsUrl);
-            } else {
-                //Handle the array
-                this.paramsUrl.forEach((url) => this.loadUrl(url));
-            }
-        }
-    },
+
     methods: {
-        /** Handles the request to load a file from an online resource, using a URL
-         * @remarks This method can be called multiple times, each resource gets appropriately added to the current compilation
-         * @param url - The URL to load the file from
-         */
-        loadUrl(url: string): void {
-            //TODO make URL to allow any charcter, including slashes etc...
-            console.debug('RezLoader::loadUrl:url', url);
-            fetch(url)
+        /** Handles the request to load a demo compilation */
+        loadDemoCompilation() {
+            fetch('demo/Demo%20Compilation%20Featuring%20Lidija%20Roos.rez')
                 .then((res) => res.blob()) // Gets the response and returns it as a blob
                 .then((blob) => {
                     // Here's where you get access to the blob
                     // And you can use it for whatever you want
                     const file = new File(
                         [blob],
-                        url,
-                        //TODO use the mime type from the response to determine the handling
-                        // {
-                        //     type: 'application/zip',
-                        // }
+                        'Demo%20Compilation%20Featuring%20Lidija%20Roos.rez.rez',
+                        {
+                            type: 'application/zip',
+                        },
                     );
+                    //TODO put file loading code in it's own file, and use from there
                     this.loadFile(file);
                 });
         },
@@ -153,7 +64,7 @@ export default defineComponent({
          * Possibly use the hack https://www.npmjs.com/package/vue-force-next-tick if non-rendering of the overlay is
          * actually a relevant problem in the future.
          */
-        withProgress(message: string, work: () => void): void {
+        withProgress(message: string, work: () => void) {
             (async () => {
                 nextTick()
                     .then(() =>
@@ -171,7 +82,7 @@ export default defineComponent({
 
         /** Handles the selection of one or more files by loading their content
          */
-        async loadFiles(event: any): Promise<void> {
+        async loadFiles(event: any) {
             this.withProgress(`Loading files...`, () => {
                 Array.from(event.target.files as File[]).forEach((file) => {
                     this.loadFile(file);
@@ -181,7 +92,7 @@ export default defineComponent({
 
         /** Loads a single file (from a selection of one or more files) by loading their content
          */
-        async loadFile(file: File): Promise<void> {
+        async loadFile(file: File) {
             this.withProgress(
                 `Loading file ${file.name} (${file.size / 1000000}MB)`,
                 () => {
@@ -214,7 +125,7 @@ export default defineComponent({
 
         /** Loads the given file as a REZ package (Package of a Compilation and included media files)
          */
-        loadFileAsRez(selectedFile: File): void {
+        loadFileAsRez(selectedFile: File) {
             this.$store.commit(
                 //Set the progress message, before using any of the async functions
                 MutationTypes.SET_PROGRESS_MESSAGE,
@@ -299,7 +210,7 @@ export default defineComponent({
         /** Loads the given file as a REX compilation (XML metadata only)
          * @remarks Media files could later be retrieved by trying to download with the metadata info or by explicit file selection by the user
          */
-        loadFileAsRex(selectedFile: File): void {
+        loadFileAsRex(selectedFile: File) {
             this.withProgress(
                 `Loading .rex file '${selectedFile.name}'`,
                 () => {
@@ -328,7 +239,7 @@ export default defineComponent({
         /** Loads the given file as a Livelayback playlist (iOS binary property list)
          * @remarks Media files could later be retrieved by trying to download with the metadata info or by explicit file selection by the user
          */
-        loadFileAsLivePlaybackPlaylist(selectedFile: File): void {
+        loadFileAsLivePlaybackPlaylist(selectedFile: File) {
             this.withProgress(
                 `Loading LivePlayback file '${selectedFile.name}'`,
                 () => {
@@ -358,13 +269,13 @@ export default defineComponent({
         /** Loads the given file as a mp3 media file
          * @remarks
          */
-        loadFileAsMp3(selectedFile: File): void {
+        loadFileAsMp3(selectedFile: File) {
             this.handleAsMediaFromBlob(selectedFile.name, selectedFile);
         },
 
         /** Handles the given content as the compilation meta data
          */
-        handleAsCompilation(content: Buffer, mimeType: RezMimeTypes): void {
+        handleAsCompilation(content: Buffer, mimeType: RezMimeTypes) {
             this.withProgress(
                 'Parsing compilation (of type ' + mimeType + ')...',
                 () => {
@@ -393,10 +304,7 @@ export default defineComponent({
         },
         /** Handles the given content as the compilation meta data
          */
-        handleAsLivePlaybackPlaylist(
-            content: Buffer,
-            mimeType: RezMimeTypes,
-        ): void {
+        handleAsLivePlaybackPlaylist(content: Buffer, mimeType: RezMimeTypes) {
             this.withProgress(
                 'Parsing compilation (of type ' + mimeType + ')...',
                 () => {
@@ -425,7 +333,7 @@ export default defineComponent({
             mediaFileName: string,
             content: Buffer,
             mimeType: RezMimeTypes,
-        ): void {
+        ) {
             //TODO https://stackoverflow.com/questions/21737224/using-local-file-as-audio-src
             const blob = new Blob([content], {
                 type: mimeType,
@@ -436,7 +344,7 @@ export default defineComponent({
         /** Handles the given blob as media file of the given type
          * @devdoc This is used when a file is already available as blob
          */
-        handleAsMediaFromBlob(mediaFileName: string, blob: Blob): void {
+        handleAsMediaFromBlob(mediaFileName: string, blob: Blob) {
             var objectUrl = URL.createObjectURL(blob);
             this.$store.commit(
                 MutationTypes.ADD_FILE_URL,
@@ -444,10 +352,6 @@ export default defineComponent({
             );
         },
     },
-    computed: {
-        paramsUrl(): string | string[] {
-            return this.$route.params.url;
-        },
-    },
+    computed: {},
 });
 </script>

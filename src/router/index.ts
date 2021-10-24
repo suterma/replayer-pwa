@@ -2,15 +2,30 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Play from '../views/Play.vue';
 
 const routes: Array<RouteRecordRaw> = [
+    //Always use the explicit play route instead of the default "Home" root.
+    //This allows later reutilisation of the "Home" root route for another purpose than playing from url files
     // {
     //   path: "/",
     //   name: "Home",
     //   component: Home,
     // },
+    { path: '/', redirect: { name: 'Play' } },
     {
-        path: '/',
+        path: '/play',
         name: 'Play',
         component: Play,
+    },
+
+    // Allow loading of arbitrary files
+    { path: '/play/:url*', component: Play },
+    {
+        path: '/demo',
+        name: 'Demo',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+            import(/* webpackChunkName: "demo" */ '../views/Demo.vue'),
     },
     {
         path: '/about',
@@ -28,7 +43,9 @@ const routes: Array<RouteRecordRaw> = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-            import(/* webpackChunkName: "about" */ '../views/Development.vue'),
+            import(
+                /* webpackChunkName: "development" */ '../views/Development.vue'
+            ),
     },
 ];
 

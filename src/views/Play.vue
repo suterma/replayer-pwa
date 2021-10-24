@@ -9,7 +9,10 @@
                 >Replayer Classic</a
             >.
         </p>
+
+        <!-- Loader for importable files, also listens to url params -->
         <RezLoader />
+
         <hr />
 
         <p>
