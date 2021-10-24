@@ -179,9 +179,12 @@ export default defineComponent({
 
         /** Handles the selection of one or more files by loading their content
          */
-        async loadFiles(event: any): Promise<void> {
+        async loadFiles(event: Event): Promise<void> {
             this.withProgress(`Loading files...`, () => {
-                Array.from(event.target.files as File[]).forEach((file) => {
+                Array.from(
+                    (event.target as HTMLInputElement)
+                        .files as unknown as File[],
+                ).forEach((file) => {
                     this.loadFile(file);
                 });
             });
@@ -371,7 +374,7 @@ export default defineComponent({
                 () => {
                     xml2js
                         .parseStringPromise(content /*, options */)
-                        .then((result: any) => {
+                        .then((result: string) => {
                             console.debug('Parsed compilation: ', result);
 
                             //Apply the compilation content to the store
@@ -382,8 +385,7 @@ export default defineComponent({
 
                             console.log(mimeType + ' compilation parsing done');
                         })
-                        .catch(function (err: any) {
-                            // Failed
+                        .catch(function (err: Error) {
                             console.error(
                                 mimeType + ' compilation parsing error: ',
                                 err,
