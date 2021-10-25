@@ -63,9 +63,16 @@ export default defineComponent({
         CompilationDisplay,
     },
     methods: {
-        /** Closes the compilation */
+        /** Closes the compilation and starts with a fresh play page
+         * @devdoc Only after route replacemnt actually is finished do close,
+         * because otherwise the parameters might trigger an immediate reload.
+         */
         close(): void {
-            this.$store.commit(MutationTypes.CLOSE_COMPILATION);
+            this.$router
+                .replace({ name: 'Play' })
+                .then(() =>
+                    this.$store.commit(MutationTypes.CLOSE_COMPILATION),
+                );
         },
     },
     computed: {
