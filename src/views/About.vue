@@ -1,25 +1,44 @@
 <template>
     <div class="container">
-        <h1>About</h1>
+        <h1 class="title">About</h1>
         <p>
-            The
-            <a href="https://replayer.app" target="_blank"> classic Replayer</a
-            >, as a Progressive Web App (<a
+            <a href="https://replayer.app" target="_blank">Replayer</a> is a
+            free, cue-based media player for rehearsals with playback music. By
+            the click of a button, Replayer starts to play at predefined times
+            in the audio file.
+        </p>
+        <p>
+            This Replayer "Web App", implemented as a Progressive Web App (<a
                 href="https://en.wikipedia.org/wiki/Progressive_web_application"
                 target="_blank"
             >
                 PWA</a
-            >). The latest test version is available at
-            <a href="https://web-test.replayer.app" target="_blank"
-                >https://web-test.replayer.app</a
-            >. Source code is availabe on
+            >) can play REZ packages from the Replayer "Classic" Windows
+            application. Source code is availabe on
             <a href="https://github.com/suterma/replayer-pwa" target="_blank"
                 >GitHub</a
             >. To report an issue or submit a feature request, use the
             <a href="https://github.com/suterma/replayer-pwa/issues">issues</a>
             page on the GitHub repository.
         </p>
-        <h1>Credits</h1>
+        <h1 class="title">Demo</h1>
+        <ul>
+            <li>
+                <a href="/#/play/demo-compilation-featuring-lidija-roos.rez"
+                    >Demo package with a compilation featuring Lidija Roos</a
+                ><br />
+                A REZ Package containing an REX compilation with 2 tracks and
+                matching mp3 files.
+            </li>
+            <li>
+                <a href="/#/play/Demo%20Adonia%20Junior%2021.bplist"
+                    >Demo Binary Property List compilation (as from the
+                    LivePlayback app)</a
+                ><br />
+                A bplist file with 21 tracks (no media files).
+            </li>
+        </ul>
+        <h1 class="title">Credits</h1>
         <p>This project uses</p>
         <ul>
             <li>
@@ -99,7 +118,7 @@
             </li>
         </ul>
 
-        <h1>License</h1>
+        <h1 class="title">License</h1>
         <p>
             Replayer is licensed to you under the
             <a

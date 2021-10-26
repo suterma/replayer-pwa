@@ -41,12 +41,6 @@
                 <router-link
                     @click="toggleBurger"
                     class="navbar-item"
-                    to="/demo"
-                    >Demo</router-link
-                >
-                <router-link
-                    @click="toggleBurger"
-                    class="navbar-item"
                     to="/about"
                     >About</router-link
                 >

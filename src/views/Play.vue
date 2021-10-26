@@ -69,7 +69,11 @@ export default defineComponent({
          */
         close(): void {
             this.$router
-                .replace({ name: 'Play' })
+                .replace({
+                    params: {
+                        url: '',
+                    },
+                })
                 .then(() =>
                     this.$store.commit(MutationTypes.CLOSE_COMPILATION),
                 );
