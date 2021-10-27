@@ -4,7 +4,8 @@
  * Application-specific presets to the Bulma CSS 
 **************************************************************
 */
-/* Keep the menu visible on most but the smallest devices */
+/* Keep the menu visible on most but the smallest devices
+* @devdoc Must be applied before the bulma.sass is used, because this is used there */
 $navbar-breakpoint: 320px;
 
 /** Using Bulma CSS with a theme for Bulma */
@@ -28,6 +29,7 @@ html,
 body {
     overscroll-behavior-x: none;
 }
+
 /* Only show the vertical scrollbar if necessary */
 html {
     overflow-y: auto;
@@ -67,12 +69,6 @@ html {
     }
 }
 
-/* Disable touch callout on menu items */
-a.navbar-item {
-    /*Nonstandard, only expected to work on Safari on iOS*/
-    -webkit-touch-callout: none;
-}
-
 /* Multiline buttons (use <br/> in a button text to force multiline) */
 .button.is-multiline {
     min-height: 2.25em;
@@ -89,3 +85,5 @@ a.navbar-item {
 
 /* Player styles (to be used for the audio player) */
 @import 'replayer-player-styles.scss';
+/* Menu styles */
+@import 'replayer-navbar-styles.scss';
