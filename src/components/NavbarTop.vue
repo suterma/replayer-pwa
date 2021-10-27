@@ -35,7 +35,10 @@
             v-bind:class="{ 'is-active': activator }"
         >
             <div class="navbar-start">
-                <router-link @click="toggleBurger" class="navbar-item" to="/"
+                <router-link
+                    @click="toggleBurger"
+                    class="navbar-item"
+                    to="/play"
                     >Play</router-link
                 >
                 <router-link

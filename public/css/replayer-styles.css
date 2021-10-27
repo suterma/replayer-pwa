@@ -3,7 +3,8 @@
  * Application-specific presets to the Bulma CSS 
 **************************************************************
 */
-/* Keep the menu visible on most but the smallest devices */
+/* Keep the menu visible on most but the smallest devices
+* @devdoc Must be applied before the bulma.sass is used, because this is used there */
 /** Using Bulma CSS with a theme for Bulma */
 /*! bulma.io v0.9.3 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */
@@ -10691,12 +10692,6 @@ html {
   vertical-align: middle;
 }
 
-/* Disable touch callout on menu items */
-a.navbar-item {
-  /*Nonstandard, only expected to work on Safari on iOS*/
-  -webkit-touch-callout: none;
-}
-
 /* Multiline buttons (use <br/> in a button text to force multiline) */
 .button.is-multiline {
   min-height: 2.25em;
@@ -10791,4 +10786,35 @@ a.navbar-item {
 /* When playing, overrides the non-playing default background */
 .player-playing-indication {
   background-color: #205420;
+}
+
+/* Menu styles */
+/* Navbar styles
+ * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
+ */
+/* Disable touch callout on menu items */
+a.navbar-item {
+  /*Nonstandard, only expected to work on Safari on iOS*/
+  -webkit-touch-callout: none;
+}
+
+/* No border around the whole navbar, to keep it more visually docked at the viewport */
+.navbar.is-fixed-top {
+  border: none;
+}
+
+/* Instead of the whole navbar, just use bottom border on the relevant items */
+.navbar-item {
+  border-bottom: 1px solid #202328;
+}
+
+/* Show the active item connected to the view background
+* @remarks Intended to work with the bulmaswatch slate theme */
+.navbar-item.router-link-active,
+.navbar-item.router-link-hover,
+.navbar-item.router-link-active:focus,
+.navbar-item.router-link-active:focus-within {
+  background-color: #272b30;
+  border-bottom: none;
+  border-left: 1px solid #202328;
 }
