@@ -19,8 +19,8 @@
         <div class="tile is-vertical is-parent">
             <div class="tile is-child card">
                 <div class="card-content">
-                    <h2 class="subtitle">
-                        <span class="">{{ track?.Name }}</span>
+                    <h2 class="subtitle" v-bind:id="'track-' + track.Id">
+                        <span class="">{{ track.Name }}</span>
 
                         <!-- Text colors similar to cues -->
                         <span
@@ -33,7 +33,7 @@
                                     v-if="!showCues"
                                 >
                                     Show
-                                    {{ track?.Cues?.length }} cues</span
+                                    {{ track.Cues?.length }} cues</span
                                 >
                             </a></span
                         >
@@ -52,18 +52,18 @@
 
                         <!-- Artist info -->
                         <span class="is-pulled-right is-size-7 has-text-right">
-                            <span v-if="track?.Artist" class="has-opacity-half">
+                            <span v-if="track.Artist" class="has-opacity-half">
                                 by
                             </span>
                             <span class="is-italic">
-                                {{ track?.Artist }}
+                                {{ track.Artist }}
                             </span>
                             <br />
-                            <span v-if="track?.Album" class="has-opacity-half">
+                            <span v-if="track.Album" class="has-opacity-half">
                                 on
                             </span>
                             <span class="is-italic">
-                                {{ track?.Album }}
+                                {{ track.Album }}
                             </span>
                         </span>
                     </h2>
@@ -335,10 +335,10 @@ export default defineComponent({
         isActiveTrack(): boolean {
             const selectedCue = this.$store.getters.selectedCue as ICue;
             const selectedCueId = selectedCue?.Id;
-            console.debug(
-                `TrackTile(${this.track?.Name})::isActiveTrack:selectedCueId`,
-                selectedCueId,
-            );
+            // console.debug(
+            //     `TrackTile(${this.track?.Name})::isActiveTrack:selectedCueId`,
+            //     selectedCueId,
+            // );
 
             if (!selectedCueId) {
                 //if none selected, this track is not active anyway
