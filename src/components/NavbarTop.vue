@@ -48,7 +48,7 @@
                     @click="toggleBurger"
                     class="navbar-item"
                     to="/development"
-                    >Development</router-link
+                    >Dev</router-link
                 >
             </div>
         </div>

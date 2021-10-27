@@ -1,11 +1,21 @@
 @charset "utf-8";
 
+/** **********************************************************
+ * Application-specific presets to the Bulma CSS 
+**************************************************************
+*/
+/* Keep the menu visible on most but the smallest devices */
+$navbar-breakpoint: 320px;
+
 /** Using Bulma CSS with a theme for Bulma */
 @import '../node_modules/bulmaswatch/slate/_variables.scss';
 @import '../node_modules/bulma/bulma.sass';
 @import '../node_modules/bulmaswatch/slate/_overrides.scss';
 
-/** Application-specific add-ons/modifications to the Bulma CSS */
+/** **********************************************************
+ * Application-specific add-ons/modifications to the Bulma CSS 
+**************************************************************
+*/
 
 /* Disable overscroll page refresh */
 html,

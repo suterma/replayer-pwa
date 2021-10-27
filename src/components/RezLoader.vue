@@ -111,6 +111,7 @@ export default defineComponent({
     components: {},
     mounted: function (): void {
         //Check whether a given file is to be loaded
+        //TODO maybe later put all this params handling in one place; However, yet to decide where is the best place.
         if (this.paramsUrl) {
             if (typeof this.paramsUrl === 'string') {
                 //Handle the single item
