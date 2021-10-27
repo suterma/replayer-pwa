@@ -116,6 +116,14 @@
                 >, add shortcuts by listening to events on the document,
                 anywhere. (Released under the MIT License, by Damian Dulisz)
             </li>
+            <li>
+                <a
+                    href="https://github.com/rigor789/vue-scrollto#readme"
+                    target="_blank"
+                    >vue-scrollto</a
+                >, scrolling to elements was never this easy. (Released under
+                the MIT License, by Igor Randjelovic)
+            </li>
         </ul>
 
         <h1 class="title">License</h1>
