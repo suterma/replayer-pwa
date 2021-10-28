@@ -1,37 +1,13 @@
 <template>
-    <WelcomeOverlay />
-
     <template v-if="!hasCompilation">
-        <p>
-            Welcome to the
-            <a href="https://replayer.app/" alt="Link to the Replayer website"
-                >Replayer Web App</a
-            >, a player for existing compilations from
-            <a href="https://replayer.app/" alt="Link to the Replayer website"
-                >Replayer Classic</a
-            >.
-        </p>
-
         <!-- Loader for importable files, also listens to url params -->
         <RezLoader />
 
         <hr />
 
         <p>
-            <a href="https://replayer.app/" alt="Link to the Replayer website"
-                >Replayer</a
-            >
-            is a free, cue-based media player for rehearsals with playback
-            music. By the click of a button, you can start to play at predefined
-            times in the audio file.
-        </p>
-
-        <p>
-            Go to
-
-            <router-link to="/development">Development</router-link>
-
-            to try upcoming features.
+            Go to <router-link to="/development">Development</router-link> to
+            try upcoming features.
         </p>
     </template>
 
@@ -51,7 +27,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import WelcomeOverlay from '@/components/WelcomeOverlay.vue'; // @ is an alias to /src
 import RezLoader from '@/components/RezLoader.vue'; // @ is an alias to /src
 import CompilationDisplay from '@/components/CompilationDisplay.vue'; // @ is an alias to /src
 import { ICompilation, ITrack } from '@/store/compilation-types';
@@ -64,7 +39,6 @@ export default defineComponent({
     components: {
         RezLoader,
         CompilationDisplay,
-        WelcomeOverlay,
     },
     methods: {
         /** Closes the compilation and starts with a fresh play page

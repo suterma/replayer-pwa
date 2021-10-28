@@ -5,20 +5,20 @@
     <section class="section">
         <div id="content" class="content">
             <router-view />
+            <ProgressOverlay />
+            <WelcomeOverlay />
         </div>
     </section>
-
-    <!-- The progress overlay -->
-    <ProgressOverlay />
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
 import NavbarTop from '@/components/NavbarTop.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
+import WelcomeOverlay from '@/components/WelcomeOverlay.vue';
 
 export default defineComponent({
     name: 'App',
-    components: { NavbarTop, ProgressOverlay },
+    components: { NavbarTop, ProgressOverlay, WelcomeOverlay },
     computed: {
         progressMessage(): string {
             return this.$store.getters.progressMessage;
