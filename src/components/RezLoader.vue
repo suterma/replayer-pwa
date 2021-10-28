@@ -30,16 +30,11 @@
                     </label>
                 </div>
             </div>
-            <div class="level-item">&mdash; OR &mdash;</div>
+            <!-- //TODO later implement loading from URL too. Or, maybe, only via query API? -->
+            <!-- <div class="level-item">&mdash; OR &mdash;</div>
             <div class="level-item">
-                <!-- <button
-                    @click="loadDemoCompilation"
-                    class="button is-secondary"
-                >
-                    Load a demo compilation
-                </button> -->
                 //TODO load from URL
-            </div>
+            </div> -->
         </div>
 
         <!-- Right side -->
