@@ -2,13 +2,6 @@
     <template v-if="!hasCompilation">
         <!-- Loader for importable files, also listens to url params -->
         <RezLoader />
-
-        <hr />
-
-        <p>
-            Go to <router-link to="/development">Development</router-link> to
-            try upcoming features.
-        </p>
     </template>
 
     <button

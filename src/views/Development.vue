@@ -1,5 +1,5 @@
 <template>
-    <h1 class="title">Upcoming features for evaluation</h1>
+    <h1 class="title has-text-danger">Upcoming features for evaluation</h1>
     <h2 class="subtitle">XML export</h2>
 
     <template v-if="hasCompilation">

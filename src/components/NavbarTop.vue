@@ -10,7 +10,6 @@
             <a class="navbar-item" href="#">
                 <!-- HINT: Provide explicit height and widht as an optimization measure -->
                 <img src="../assets/logo.png" width="28" height="28" />
-                <span class="tag is-danger">beta</span>
             </a>
 
             <!-- The Navbar burger -->
@@ -51,8 +50,8 @@
                     @click="toggleBurger"
                     class="navbar-item"
                     to="/development"
-                    >Dev</router-link
-                >
+                    >Dev&nbsp; <span class="tag is-danger">beta</span>
+                </router-link>
             </div>
         </div>
     </nav>

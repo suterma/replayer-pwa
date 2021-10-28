@@ -1,5 +1,5 @@
 <template>
-    <div :class="{ modal: true, 'is-active': true }">
+    <div :class="{ modal: true, 'is-active': showDialog }">
         <div class="modal-background"></div>
 
         <div class="modal-card">
@@ -84,7 +84,12 @@
                     </div>
                     <div class="field">
                         <div class="control">
-                            <button class="button is-success">Ok</button>
+                            <button
+                                class="button is-success"
+                                @click="showDialog = false"
+                            >
+                                Ok
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -98,15 +103,12 @@ import { defineComponent } from 'vue';
 export default defineComponent({
     name: 'ProgressOverlay',
     components: {},
-    computed: {
-        progressMessage(): string {
-            return this.$store.getters.progressMessage;
-        },
-        hasProgressMessage(): boolean {
-            return (
-                this.progressMessage != null && this.progressMessage.length > 0
-            );
-        },
+    data() {
+        return {
+            showDialog: true,
+            //TODO get /set from store, see sunscreen
+        };
     },
+    computed: {},
 });
 </script>
