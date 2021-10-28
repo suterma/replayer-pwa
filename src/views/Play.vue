@@ -1,4 +1,6 @@
 <template>
+    <WelcomeOverlay />
+
     <template v-if="!hasCompilation">
         <p>
             Welcome to the
@@ -49,6 +51,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import WelcomeOverlay from '@/components/WelcomeOverlay.vue'; // @ is an alias to /src
 import RezLoader from '@/components/RezLoader.vue'; // @ is an alias to /src
 import CompilationDisplay from '@/components/CompilationDisplay.vue'; // @ is an alias to /src
 import { ICompilation, ITrack } from '@/store/compilation-types';
@@ -61,6 +64,7 @@ export default defineComponent({
     components: {
         RezLoader,
         CompilationDisplay,
+        WelcomeOverlay,
     },
     methods: {
         /** Closes the compilation and starts with a fresh play page
