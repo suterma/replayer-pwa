@@ -55,30 +55,23 @@ export default defineComponent({
         compilation: Compilation,
     },
     methods: {
-        /** Visually scrolls to the track of the, making it visually at the top of
+        /** Visually scrolls to the given track, making it visually at the top of
          * the view.
          */
-        scrollToTrackOfCue(cue: ICue) {
-            //console.debug('Scroll to cue ', cue);
-            if (cue) {
-                const track = this.getTrackOf(cue);
-                //console.debug('Scroll to track ', track);
-
-                if (track) {
-                    const trackElement = document.getElementById(
-                        'track-' + track.Id,
-                    );
-                    //console.debug('Scroll to trackElement ', trackElement);
-                    VueScrollTo.scrollTo(trackElement, {
-                        /** Always scroll, make it on top of the view */
-                        force: true,
-                        /* Try to target the scroll somewhat above the element in question
+        scrollToTrack(track: ITrack) {
+            if (track) {
+                const trackElement = document.getElementById(
+                    'track-' + track.Id,
+                );
+                VueScrollTo.scrollTo(trackElement, {
+                    /** Always scroll, make it on top of the view */
+                    force: true,
+                    /* Try to target the scroll somewhat above the element in question
                         to make it fully visible */
-                        offset: -100,
-                        /** Avoid interference with the key press overlay */
-                        cancelable: false,
-                    });
-                }
+                    offset: -100,
+                    /** Avoid interference with the key press overlay */
+                    cancelable: false,
+                });
             }
         },
 
@@ -87,7 +80,6 @@ export default defineComponent({
             const indexOfSelected = allCues.indexOf(this.selectedCue);
             const previousCue = allCues[indexOfSelected - 1];
             this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, previousCue);
-            this.scrollToTrackOfCue(previousCue);
         },
 
         toNextCue() {
@@ -95,7 +87,6 @@ export default defineComponent({
             const indexOfSelected = allCues.indexOf(this.selectedCue);
             const nextCue = allCues[indexOfSelected + 1];
             this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, nextCue);
-            this.scrollToTrackOfCue(nextCue);
         },
 
         toMnemonicCue(event: Event) {
@@ -108,37 +99,17 @@ export default defineComponent({
                     MutationTypes.UPDATE_CURRENT_CUE,
                     matchingCue,
                 );
-                this.scrollToTrackOfCue(matchingCue);
             }
         },
-
-        /** Determines the active track (i.e. given cue is from this track ) */
-        getTrackOf(cue: ICue): ITrack | null {
-            const selectedCueId = cue.Id;
-            // console.debug(
-            //     `TrackTile(${this.track?.Name})::isActiveTrack:selectedCueId`,
-            //     selectedCueId,
-            // );
-
-            // if (!selectedCueId) {
-            //     //if none selected, this track is not active anyway
-            //     return null;
-            // }
-
-            //Check for matching Ids
-            const track = this.tracks?.find((t) =>
-                t.Cues.find((c) => c.Id === selectedCueId),
-            );
-
-            if (track) {
-                return track as ITrack;
-            }
-            return null;
-
-            // return (
-            //     (this.cues?.filter((c) => c.Id === selectedCue.Id).length ??
-            //         0) > 0
-            // );
+    },
+    watch: {
+        /** Handle scrolling to the active track.
+         * @remarks This is intentionally only invoked on when the active track changes. If a user scrolls to a certain
+         * certain cue within the same track, no scrolling should occurr, to keep the UI calm.
+         */
+        activeTrack(track) {
+            console.debug('scrolling to track ', track);
+            this.scrollToTrack(track);
         },
     },
     computed: {
@@ -156,6 +127,24 @@ export default defineComponent({
         },
         hasCompilation(): boolean {
             return this.$store.getters.hasCompilation;
+        },
+        /** Determines the active track (the one that contains the selected cue ) */
+        activeTrack(): ITrack | null {
+            const selectedCueId = this.selectedCue?.Id;
+            if (!selectedCueId) {
+                //if none selected, this track is not active anyway
+                return null;
+            }
+
+            //Check for matching Ids
+            const track = this.tracks?.find((t) =>
+                t.Cues.find((c) => c.Id === selectedCueId),
+            );
+
+            if (track) {
+                return track as ITrack;
+            }
+            return null;
         },
     },
 });
