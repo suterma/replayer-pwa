@@ -44,7 +44,7 @@
                     is-warning is-light is-outlined
                     foreground
                     has-opacity-third
-                    is-pulled-right
+                    is-pulled-right is-family-monospace
                 "
                 >{{ cue?.Shortcut }}</span
             >
