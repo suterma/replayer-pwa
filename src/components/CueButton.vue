@@ -35,9 +35,10 @@
             <span class="has-opacity-half foreground">
                 {{ convertToDisplayTime }}
             </span>
-
+            <!-- spacer -->
+            &nbsp; &nbsp;
             <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibilty as possible -->
-            <!-- <span
+            <span
                 class="
                     tag
                     is-warning is-light is-outlined
@@ -46,12 +47,11 @@
                     is-pulled-right
                 "
                 >{{ cue?.Shortcut }}</span
-            > -->
-            <!-- spacer -->
-            &nbsp; &nbsp;
-            <span class="has-opacity-half foreground is-pulled-right"
-                >[{{ cue?.Shortcut }}]</span
             >
+
+            <!-- <span class="has-opacity-half foreground is-pulled-right"
+                >[{{ cue?.Shortcut }}]</span
+            > -->
         </span>
     </button>
 </template>
