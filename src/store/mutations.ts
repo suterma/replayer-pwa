@@ -22,6 +22,11 @@ export type Mutations<S = State> = {
     [MutationTypes.UPDATE_COMPILATION_FROM_PLIST](state: S, payload: any): void;
     [MutationTypes.UPDATE_CURRENT_CUE](state: S, payload: Cue): void;
     [MutationTypes.CLOSE_COMPILATION](state: S): void;
+    [MutationTypes.UPDATE_NEVER_SHOW_SPLASH_AGAIN](
+        state: S,
+        neverShowWelcomeOverlayAgain: boolean,
+    ): void;
+    [MutationTypes.INIT_STORE](state: S): void;
 };
 
 /** @devdoc The XML type contains all properties as arrays, even the singe item ones. This is a limitation of the used XML-To-JS converter */
@@ -201,5 +206,40 @@ export const mutations: MutationTree<State> & Mutations = {
 
     [MutationTypes.CLOSE_COMPILATION](state: State) {
         state.compilation = new Compilation();
+    },
+    /** Sets whether to never show the splash screen ever again
+     * @param state - The vuex state
+     * @param neverShowWelcomeOverlayAgain - The value for neverShowWelcomeOverlayAgain
+     */
+    [MutationTypes.UPDATE_NEVER_SHOW_SPLASH_AGAIN](
+        state: State,
+        neverShowWelcomeOverlayAgain: boolean,
+    ) {
+        console.debug(
+            'mutations::UPDATE_NEVER_SHOW_SPLASH_AGAIN:neverShowWelcomeOverlayAgain',
+            neverShowWelcomeOverlayAgain,
+        );
+        //TODO maybe replace this very simplictic local storage approach with in a more generic way
+        localStorage.setItem(
+            'neverShowWelcomeOverlayAgain',
+            neverShowWelcomeOverlayAgain?.toString(),
+        );
+        state.neverShowWelcomeOverlayAgain = neverShowWelcomeOverlayAgain;
+    },
+    [MutationTypes.INIT_STORE](state: State) {
+        console.debug('mutations::INIT_STORE:state', state);
+        //TODO maybe replace this very simplictic local storage approach with in a more generic way
+        const storedNeverShowWelcomeOverlayAgain = localStorage.getItem(
+            'neverShowWelcomeOverlayAgain',
+        );
+        console.debug(
+            'mutations::INIT_STORE:storedNeverShowWelcomeOverlayAgain',
+            storedNeverShowWelcomeOverlayAgain,
+        );
+
+        if (storedNeverShowWelcomeOverlayAgain) {
+            state.neverShowWelcomeOverlayAgain =
+                storedNeverShowWelcomeOverlayAgain == 'true';
+        }
     },
 };

@@ -14,4 +14,10 @@ export enum MutationTypes {
     UPDATE_CURRENT_CUE = 'UPDATE_CURRENT_CUE',
     /** Closes an existing compilation */
     CLOSE_COMPILATION = 'CLOSE_COMPILATION',
+    /** Updates the value whether to never show the splash again */
+    UPDATE_NEVER_SHOW_SPLASH_AGAIN = 'UPDATE_NEVER_SHOW_SPLASH_AGAIN',
+    /** Initializes the store with the persisted state
+     * @remarks This provides continuous state over app restarts and should be called when the app is created
+     */
+    INIT_STORE = 'INIT_STORE',
 }

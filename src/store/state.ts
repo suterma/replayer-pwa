@@ -19,6 +19,10 @@ interface IState {
      * @remarks during ongoing work, the stack is non-empty
      */
     progressMessageStack: Array<string>;
+
+    /** Whether to never show the welcome overlay at applicaiton start
+     */
+    neverShowWelcomeOverlayAgain: boolean;
 }
 
 export const state: IState = {
@@ -31,6 +35,8 @@ export const state: IState = {
     fileUrls: new Array<MediaFile>(),
 
     progressMessageStack: new Array<string>(),
+
+    neverShowWelcomeOverlayAgain: false,
 };
 
 export type State = typeof state;
