@@ -4,7 +4,7 @@
 
         <div class="modal-card">
             <header class="modal-card-head">
-                <h1 class="modal-card-title title">Replayer Web App</h1>
+                <h1 class="modal-card-title title">Welcome</h1>
                 <!-- <button class="delete" aria-label="close"></button> -->
             </header>
             <section class="modal-card-body">
@@ -98,33 +98,36 @@
 <script lang="ts">
 import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent } from 'vue';
-/** A simple overlay display of the latest application progress message, if any */
+/** A simple overlay display with a welcome message for a new user
+ * @remarks This component can be permanently dismissed
+ */
 export default defineComponent({
-    name: 'WelcomeOverlay',
+    name: 'WelcomeMessage',
     components: {},
     data() {
         return {
-            /** Whether to show the initial overlay screen this time*/
+            /** Whether to show the message this time*/
             showDialog: false,
             /** Whether the checkbox for "never show again" has been checked */
             neverShowAgainChecked: false,
         };
     },
-    mounted() {
+    beforeMount() {
+        //Decide whether to actually show this dialog now, before mounting it, to avoid any flicker
         this.showDialog = !this.isNeverShowAgain === true;
     },
     methods: {
         neverShowAgainChanged() {
             this.$store.commit(
-                MutationTypes.UPDATE_NEVER_SHOW_SPLASH_AGAIN,
+                MutationTypes.UPDATE_NEVER_SHOW_WELCOME_MESSAGE_AGAIN,
                 this.neverShowAgainChecked,
             );
         },
     },
     computed: {
-        /** Whether the welcome overlay screen has been permanently dismissed */
+        /** Whether the welcome message has been permanently dismissed */
         isNeverShowAgain(): boolean {
-            return this.$store.getters.neverShowWelcomeOverlayAgain;
+            return this.$store.getters.neverShowWelcomeMessageAgain;
         },
     },
 });

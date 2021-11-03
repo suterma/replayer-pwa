@@ -22,9 +22,9 @@ export type Mutations<S = State> = {
     [MutationTypes.UPDATE_COMPILATION_FROM_PLIST](state: S, payload: any): void;
     [MutationTypes.UPDATE_CURRENT_CUE](state: S, payload: Cue): void;
     [MutationTypes.CLOSE_COMPILATION](state: S): void;
-    [MutationTypes.UPDATE_NEVER_SHOW_SPLASH_AGAIN](
+    [MutationTypes.UPDATE_NEVER_SHOW_WELCOME_MESSAGE_AGAIN](
         state: S,
-        neverShowWelcomeOverlayAgain: boolean,
+        neverShowWelcomeMessageAgain: boolean,
     ): void;
     [MutationTypes.INIT_STORE](state: S): void;
 };
@@ -207,39 +207,39 @@ export const mutations: MutationTree<State> & Mutations = {
     [MutationTypes.CLOSE_COMPILATION](state: State) {
         state.compilation = new Compilation();
     },
-    /** Sets whether to never show the splash screen ever again
+    /** Sets whether to never show the welcome message ever again
      * @param state - The vuex state
-     * @param neverShowWelcomeOverlayAgain - The value for neverShowWelcomeOverlayAgain
+     * @param neverShowWelcomeMessageAgain - The value for neverShowWelcomeMessageAgain
      */
-    [MutationTypes.UPDATE_NEVER_SHOW_SPLASH_AGAIN](
+    [MutationTypes.UPDATE_NEVER_SHOW_WELCOME_MESSAGE_AGAIN](
         state: State,
-        neverShowWelcomeOverlayAgain: boolean,
+        neverShowWelcomeMessageAgain: boolean,
     ) {
         console.debug(
-            'mutations::UPDATE_NEVER_SHOW_SPLASH_AGAIN:neverShowWelcomeOverlayAgain',
-            neverShowWelcomeOverlayAgain,
+            'mutations::UPDATE_NEVER_SHOW_WELCOME_MESSAGE_AGAIN:neverShowWelcomeMessageAgain',
+            neverShowWelcomeMessageAgain,
         );
         //TODO maybe replace this very simplictic local storage approach with in a more generic way
         localStorage.setItem(
-            'neverShowWelcomeOverlayAgain',
-            neverShowWelcomeOverlayAgain?.toString(),
+            'neverShowWelcomeMessageAgain',
+            neverShowWelcomeMessageAgain?.toString(),
         );
-        state.neverShowWelcomeOverlayAgain = neverShowWelcomeOverlayAgain;
+        state.neverShowWelcomeMessageAgain = neverShowWelcomeMessageAgain;
     },
     [MutationTypes.INIT_STORE](state: State) {
         console.debug('mutations::INIT_STORE:state', state);
         //TODO maybe replace this very simplictic local storage approach with in a more generic way
-        const storedNeverShowWelcomeOverlayAgain = localStorage.getItem(
-            'neverShowWelcomeOverlayAgain',
+        const storedNeverShowWelcomeMessageAgain = localStorage.getItem(
+            'neverShowWelcomeMessageAgain',
         );
         console.debug(
-            'mutations::INIT_STORE:storedNeverShowWelcomeOverlayAgain',
-            storedNeverShowWelcomeOverlayAgain,
+            'mutations::INIT_STORE:storedNeverShowWelcomeMessageAgain',
+            storedNeverShowWelcomeMessageAgain,
         );
 
-        if (storedNeverShowWelcomeOverlayAgain) {
-            state.neverShowWelcomeOverlayAgain =
-                storedNeverShowWelcomeOverlayAgain == 'true';
+        if (storedNeverShowWelcomeMessageAgain) {
+            state.neverShowWelcomeMessageAgain =
+                storedNeverShowWelcomeMessageAgain == 'true';
         }
     },
 };

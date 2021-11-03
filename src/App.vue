@@ -6,7 +6,7 @@
         <div id="content" class="content">
             <router-view />
             <ProgressOverlay />
-            <WelcomeOverlay />
+            <WelcomeMessage />
         </div>
     </section>
 </template>
@@ -14,12 +14,12 @@
 import { defineComponent } from 'vue';
 import NavbarTop from '@/components/NavbarTop.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
-import WelcomeOverlay from '@/components/WelcomeOverlay.vue';
+import WelcomeMessage from '@/components/WelcomeMessage.vue';
 import { MutationTypes } from './store/mutation-types';
 
 export default defineComponent({
     name: 'App',
-    components: { NavbarTop, ProgressOverlay, WelcomeOverlay },
+    components: { NavbarTop, ProgressOverlay, WelcomeMessage },
     computed: {},
     beforeCreate() {
         this.$store.commit(MutationTypes.INIT_STORE);

@@ -22,7 +22,7 @@ interface IState {
 
     /** Whether to never show the welcome overlay at applicaiton start
      */
-    neverShowWelcomeOverlayAgain: boolean;
+    neverShowWelcomeMessageAgain: boolean;
 }
 
 export const state: IState = {
@@ -36,7 +36,7 @@ export const state: IState = {
 
     progressMessageStack: new Array<string>(),
 
-    neverShowWelcomeOverlayAgain: false,
+    neverShowWelcomeMessageAgain: false,
 };
 
 export type State = typeof state;

@@ -21,7 +21,7 @@ export type Getters = {
     selectedCue(state: State): Cue;
     /** Whether to never show the welcome overlay at applicaiton start
      */
-    neverShowWelcomeOverlayAgain(state: State, cue: Cue): boolean;
+    neverShowWelcomeMessageAgain(state: State, cue: Cue): boolean;
 };
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -54,7 +54,7 @@ export const getters: GetterTree<State, State> & Getters = {
     selectedCue: (state) => {
         return state.selectedCue;
     },
-    neverShowWelcomeOverlayAgain: (state) => {
-        return state.neverShowWelcomeOverlayAgain;
+    neverShowWelcomeMessageAgain: (state) => {
+        return state.neverShowWelcomeMessageAgain;
     },
 };
