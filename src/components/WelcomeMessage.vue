@@ -10,29 +10,25 @@
                 <WelcomeText />
             </section>
             <footer class="modal-card-foot is-justify-content-flex-end">
-                <div class="field is-horizontal">
-                    <div class="field">
-                        <div class="control">
-                            <label class="checkbox field-label">
-                                <input
-                                    type="checkbox"
-                                    v-model="neverShowAgainChecked"
-                                    @change="neverShowAgainChanged()"
-                                />
-                                Never show again
-                            </label>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <div class="control">
-                            <button
-                                class="button is-success"
-                                @click="showDialog = false"
-                            >
-                                Ok
-                            </button>
-                        </div>
-                    </div>
+                <div class="field is-grouped">
+                    <p class="control">
+                        <label class="checkbox field-label">
+                            <input
+                                type="checkbox"
+                                v-model="neverShowAgainChecked"
+                                @change="neverShowAgainChanged()"
+                            />
+                            Never show again
+                        </label>
+                    </p>
+                    <p class="control">
+                        <button
+                            class="button is-success pl-6 pr-6"
+                            @click="showDialog = false"
+                        >
+                            Ok
+                        </button>
+                    </p>
                 </div>
             </footer>
         </div>
