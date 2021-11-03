@@ -32,12 +32,12 @@ It's aim is to replace the classic, Microsoft Windows based, [Replayer](https://
 # Roadmap
 
 * [x] Keyboard Shortcut support
-* [x] Fade-in / Fade-out
-* [x] Multitrack playback
+* [ ] Fade-in / Fade-out
+* [ ] Multitrack playback
 * Persistence
-  * [x] Keep last open complilation loaded
-  * [x] Edit mode, along with ZIP-Package export
+  * [ ] Keep last open complilation loaded
+  * [ ] Edit mode, along with ZIP-Package export
 * Sharing
-  * [x] Sharing by link
-  * [x] Sharing by QR code
-  * [x] Sharing by link mail
+  * [ ] Sharing by link
+  * [ ] Sharing by QR code
+  * [ ] Sharing by link mail
