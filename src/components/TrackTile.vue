@@ -14,91 +14,78 @@
         @volumeup="volumeUp"
     />
 
-    <!-- Each track is a tile (vertically distributed), and contains all the cues -->
-    <div class="tile is-ancestor">
-        <div class="tile is-vertical is-parent">
-            <div class="tile is-child card">
-                <div class="card-content">
-                    <h2 class="subtitle" v-bind:id="'track-' + track.Id">
-                        <span class="">{{ track.Name }}</span>
+    <hr class="is-hidden-tablet" />
+    <!-- Each track is a box, styled like a card, and contains all the cues -->
+    <div class="box card track">
+        <h2 class="subtitle" v-bind:id="'track-' + track.Id">
+            <span class="">{{ track.Name }}</span>
 
-                        <!-- Text colors similar to cues -->
-                        <span
-                            v-if="!showCues"
-                            class="is-pulled-right ml-3 tag is-warning"
-                            ><a @click="toggleCueDisplay" role="button">
-                                <!-- Text colors similar to cues -->
-                                <span
-                                    class="icon-text is-size-7 has-text-light"
-                                    v-if="!showCues"
-                                >
-                                    Show
-                                    {{ track.Cues?.length }} cues</span
-                                >
-                            </a></span
-                        >
-                        <span
-                            v-if="showCues"
-                            class="is-pulled-right ml-3 tag is-dark"
-                            ><a @click="toggleCueDisplay" role="button">
-                                <span
-                                    class="icon-text is-size-7 has-text-light"
-                                    v-if="showCues"
-                                >
-                                    Hide cues</span
-                                >
-                            </a></span
-                        >
+            <!-- Text colors similar to cues -->
+            <span v-if="!showCues" class="is-pulled-right ml-3 tag is-warning"
+                ><a @click="toggleCueDisplay" role="button">
+                    <!-- Text colors similar to cues -->
+                    <span
+                        class="icon-text is-size-7 has-text-light"
+                        v-if="!showCues"
+                    >
+                        Show
+                        {{ track.Cues?.length }} cues</span
+                    >
+                </a></span
+            >
+            <span v-if="showCues" class="is-pulled-right ml-3 tag is-dark"
+                ><a @click="toggleCueDisplay" role="button">
+                    <span
+                        class="icon-text is-size-7 has-text-light"
+                        v-if="showCues"
+                    >
+                        Hide cues</span
+                    >
+                </a></span
+            >
 
-                        <!-- Artist info -->
-                        <span class="is-pulled-right is-size-7 has-text-right">
-                            <span v-if="track.Artist" class="has-opacity-half">
-                                by
-                            </span>
-                            <span class="is-italic">
-                                {{ track.Artist }}
-                            </span>
-                            <br />
-                            <span v-if="track.Album" class="has-opacity-half">
-                                on
-                            </span>
-                            <span class="is-italic">
-                                {{ track.Album }}
-                            </span>
-                        </span>
-                    </h2>
+            <!-- Artist info -->
+            <span class="is-pulled-right is-size-7 has-text-right">
+                <span v-if="track.Artist" class="has-opacity-half"> by </span>
+                <span class="is-italic">
+                    {{ track.Artist }}
+                </span>
+                <br />
+                <span v-if="track.Album" class="has-opacity-half"> on </span>
+                <span class="is-italic">
+                    {{ track.Album }}
+                </span>
+            </span>
+        </h2>
 
-                    <div v-show="showCues">
-                        <!-- The audio player, but only shown when the source is available -->
-                        <TrackAudioPlayer
-                            v-if="trackFileUrl?.objectUrl"
-                            ref="player"
-                            :title="trackFileUrl?.fileName"
-                            :src="trackFileUrl?.objectUrl"
-                            v-on:timeupdate="updateTime"
-                            v-on:trackLoaded="calculateCueDurations"
-                        ></TrackAudioPlayer>
+        <div v-show="showCues">
+            <!-- The audio player, but only shown when the source is available -->
+            <TrackAudioPlayer
+                v-if="trackFileUrl?.objectUrl"
+                ref="player"
+                :title="trackFileUrl?.fileName"
+                :src="trackFileUrl?.objectUrl"
+                v-on:timeupdate="updateTime"
+                v-on:trackLoaded="calculateCueDurations"
+            ></TrackAudioPlayer>
 
-                        <!-- Otherwise show a placeholder -->
-                        <p v-else>
-                            <span class="has-opacity-half"> Waiting for </span>
-                            <span class="is-italic">
-                                {{ track?.Url }}
-                            </span>
-                        </p>
-                        <!-- The cue buttons -->
-                        <div class="buttons">
-                            <template v-for="cue in cues" :key="cue.Id">
-                                <CueButton
-                                    :disabled="!trackFileUrl?.objectUrl"
-                                    :cue="cue"
-                                    :currentSeconds="currentSeconds"
-                                    @click="cueClick(cue)"
-                                />
-                            </template>
-                        </div>
-                    </div>
-                </div>
+            <!-- Otherwise show a placeholder -->
+            <p v-else>
+                <span class="has-opacity-half"> Waiting for </span>
+                <span class="is-italic">
+                    {{ track?.Url }}
+                </span>
+            </p>
+            <!-- The cue buttons -->
+            <div class="buttons">
+                <template v-for="cue in cues" :key="cue.Id">
+                    <CueButton
+                        :disabled="!trackFileUrl?.objectUrl"
+                        :cue="cue"
+                        :currentSeconds="currentSeconds"
+                        @click="cueClick(cue)"
+                    />
+                </template>
             </div>
         </div>
     </div>
@@ -354,3 +341,12 @@ export default defineComponent({
     },
 });
 </script>
+<style lang="css">
+/** For mobiles, use a slimmer layout */
+@media screen and (max-width: 768px /*only mobile*/) {
+    .box.track {
+        border: none;
+        padding: 0;
+    }
+}
+</style>

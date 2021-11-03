@@ -29,7 +29,6 @@
             >
         </template>
     </div>
-    <hr />
     <!-- Tracks to work with -->
     <template v-for="track in tracks" :key="track.Id">
         <TrackTile :track="track" />
