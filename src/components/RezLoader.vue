@@ -35,6 +35,17 @@
             <div class="level-item">
                 //TODO load from URL
             </div> -->
+            <div class="level-item">&mdash; OR &mdash;</div>
+            <div class="level-item">
+                <button
+                    class="button"
+                    @click="
+                        loadUrl('demo-compilation-featuring-lidija-roos.rez')
+                    "
+                >
+                    Try the demo
+                </button>
+            </div>
         </div>
 
         <!-- Right side -->
