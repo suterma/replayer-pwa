@@ -7,20 +7,10 @@
             the click of a button, Replayer starts to play at predefined times
             in the audio file.
         </p>
-        <p>
-            This Replayer "Web App", implemented as a Progressive Web App (<a
-                href="https://en.wikipedia.org/wiki/Progressive_web_application"
-                target="_blank"
-            >
-                PWA</a
-            >) can play REZ packages from the Replayer "Classic" Windows
-            application. Source code is availabe on
-            <a href="https://github.com/suterma/replayer-pwa" target="_blank"
-                >GitHub</a
-            >. To report an issue or submit a feature request, use the
-            <a href="https://github.com/suterma/replayer-pwa/issues">issues</a>
-            page on the GitHub repository.
-        </p>
+
+        <hr />
+
+        <WelcomeText />
         <h1 class="title">Demo</h1>
         <ul>
             <li>
@@ -137,8 +127,28 @@
             or any later version.
         </p>
         <p>
+            The source code is availabe on
+            <a href="https://github.com/suterma/replayer-pwa" target="_blank"
+                >GitHub</a
+            >. To report an issue or submit a feature request, use the
+            <a href="https://github.com/suterma/replayer-pwa/issues">issues</a>
+            page on the GitHub repository.
+        </p>
+        <p>
             Created by
             <a href="https://marcelsuter.ch" target="_blank">Marcel Suter</a>
         </p>
     </div>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import WelcomeText from '@/components/WelcomeText.vue';
+
+/** An About view
+ */
+export default defineComponent({
+    name: 'About',
+    components: { WelcomeText },
+});
+</script>
