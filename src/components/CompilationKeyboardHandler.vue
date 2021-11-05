@@ -4,7 +4,6 @@
     <GlobalEvents
         v-if="hasCompilation"
         @keydown.prevent="handleKey"
-        @keydown.prevent.space="togglePlayback"
         @keydown.prevent.-="volumeDown"
         @keydown.prevent.+="volumeUp"
         @keydown.prevent.left="rewind"
