@@ -179,7 +179,6 @@ export const mutations: MutationTree<State> & Mutations = {
     },
     /** @devdoc //TODO the playload should be of a to be defined compilation type */
     [MutationTypes.UPDATE_COMPILATION_FROM_XML](state: State, payload: any) {
-        //TODO add compilation properties
         console.debug(
             'mutations::UPDATE_COMPILATION_FROM_XML:payload',
             payload,
@@ -191,7 +190,6 @@ export const mutations: MutationTree<State> & Mutations = {
     },
     /** @devdoc //TODO the playload should be of a to be defined compilation type */
     [MutationTypes.UPDATE_COMPILATION_FROM_PLIST](state: State, payload: any) {
-        //TODO add compilation properties
         console.debug(
             'mutations::UPDATE_COMPILATION_FROM_PLIST:payload',
             payload,

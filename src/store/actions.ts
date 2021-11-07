@@ -12,6 +12,8 @@ type AugmentedActionContext = {
 } & Omit<ActionContext<State, State>, 'commit'>;
 
 export interface Actions {
+    //TODO later actions instead of mutations directly, when appropriate
+    //These are currently not used
     [ActionTypes.PLAY_TRACK](
         { commit }: AugmentedActionContext,
         payload: string,
@@ -21,7 +23,7 @@ export const actions: ActionTree<State, State> & Actions = {
     [ActionTypes.PLAY_TRACK]({ commit }) {
         return new Promise((resolve) => {
             setTimeout(() => {
-                const data = 'action return value'; //TODO currently unused
+                const data = 'action return value';
                 commit(MutationTypes.SET_PROGRESS_MESSAGE, 'Playing track...');
                 resolve(data);
             }, 500);

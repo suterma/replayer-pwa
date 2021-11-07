@@ -276,22 +276,12 @@ export default defineComponent({
     watch: {
         /** Handle playback when the active track changes.
          * a) When this ceases to be the active track, stop playback.
-         * b) When this becomes the active track, go to the selected cue.
-         * @remarks a) This avoids having multiple tracks playing at the same time.
-         * b) This ensures that the playback position follows the selected cue right from when this becomes the active track
+         * @remarks This avoids having multiple tracks playing at the same time.
          */
         isActiveTrack(val, oldVal) {
-            //a) is no more active?
+            //is no more active?
             if (oldVal === true && val === false) {
                 this.trackPlayerInstance.pause();
-            }
-            //b) is now active?
-            if (oldVal === false && val === true) {
-                //this.goToSelectedCue();
-                // const selectedCue = this.$store.getters.selectedCue as ICue;
-                // this.trackPlayerInstance.seekTo(selectedCue?.Time?);
-                //TODO if this is invoked by mouse do not pause(use only seek to), to immediately start playing in this case.
-                //Direct play, even after track change, seems more natural for a mouse/pointer event.
             }
         },
     },
