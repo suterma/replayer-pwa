@@ -19,7 +19,7 @@
         "resolveJsonModule": true,
         "esModuleInterop": true,
         "baseUrl": ".",
-        "types": ["webpack-env"],
+        "types": ["webpack-env", "node", "jest"],
         "paths": {
             "@/*": ["src/*"]
         },

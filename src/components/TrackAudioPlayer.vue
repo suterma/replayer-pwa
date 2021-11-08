@@ -208,7 +208,6 @@ export default defineComponent({
     name: 'TrackAudioPlayer',
     emits: ['timeupdate', 'trackLoaded'],
     props: {
-        //TODO use the title at a useful place
         title: String,
         autoPlay: {
             type: Boolean,

@@ -122,7 +122,7 @@ export default defineComponent({
                     this.mnemonic = '';
                 }, 500);
             }
-            //TODO if later necessary, specifically allow some keys to have the default function, like F12
+            //HINT if later necessary, specifically allow some keys to have the default function, like F12
         },
 
         /** Toggles playback
