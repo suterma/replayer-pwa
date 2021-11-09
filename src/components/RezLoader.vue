@@ -172,7 +172,7 @@ export default defineComponent({
                         this.loadFileAsRex(file);
                     }
                     if (file.name.toLowerCase().endsWith('.mp3')) {
-                        this.loadFileAsMp3(file);
+                        this.handleAsMediaFromBlob(file.name, file);
                     }
                     //Is a LivePlayback playlist?
                     if (
@@ -319,13 +319,6 @@ export default defineComponent({
                     reader.readAsArrayBuffer(selectedFile);
                 },
             );
-        },
-
-        /** Loads the given file as a mp3 media file
-         * @remarks
-         */
-        loadFileAsMp3(selectedFile: File): void {
-            this.handleAsMediaFromBlob(selectedFile.name, selectedFile);
         },
 
         /** Handles the given content as the compilation meta data
