@@ -19,7 +19,8 @@
         "resolveJsonModule": true,
         "esModuleInterop": true,
         "baseUrl": ".",
-        "types": ["webpack-env", "node", "jest"],
+        //Note: the "node" types are not included because this project only targets the browser.
+        "types": ["webpack-env", "jest"],
         "paths": {
             "@/*": ["src/*"]
         },

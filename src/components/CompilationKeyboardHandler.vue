@@ -54,8 +54,12 @@ export default defineComponent({
              * @remarks Used to build up the mnemonic by adding characters to it, for a short amount of time.
              */
             mnemonic: '',
-            /** A timeout id, to handle timeout extensions for building up the mnemonic*/
-            keyTimeoutId: new Object() as ReturnType<typeof setTimeout>,
+
+            /** A timeout id, to handle timeout extensions for building up the mnemonic
+             * @devdoc This implementation only suppors the browser.
+             * See https://stackoverflow.com/questions/45802988/typescript-use-correct-version-of-settimeout-node-vs-window
+             */
+            keyTimeoutId: 0,
         };
     },
     computed: {
@@ -105,7 +109,7 @@ export default defineComponent({
 
                     //clear mnemonic buildup
                     this.mnemonic = '';
-                    clearTimeout(this.keyTimeoutId);
+                    window.clearTimeout(this.keyTimeoutId);
                 } else {
                     //just pass on to the matching handler for this action
                     this.togglePlayback(event);
@@ -117,8 +121,8 @@ export default defineComponent({
                 this.DisplayDataAndAction(this.mnemonic, 'mnemonic');
 
                 //(Re-)schedule the timeout
-                clearTimeout(this.keyTimeoutId);
-                this.keyTimeoutId = setTimeout(() => {
+                window.clearTimeout(this.keyTimeoutId);
+                this.keyTimeoutId = window.setTimeout(() => {
                     this.mnemonic = '';
                 }, 500);
             }

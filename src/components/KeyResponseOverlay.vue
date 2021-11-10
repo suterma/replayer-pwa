@@ -40,8 +40,11 @@ export default defineComponent({
             displayKey: '',
             /** The text to display for the action */
             displayAction: '',
-            /** A timeout id, to handle timeout extensions for prolonged display of text in handling a quick sequence of keys*/
-            keyTimeoutId: new Object() as ReturnType<typeof setTimeout>,
+            /** A timeout id, to handle timeout extensions for prolonged display of text in handling a quick sequence of keys
+             * @devdoc This implementation only suppors the browser.
+             * See https://stackoverflow.com/questions/45802988/typescript-use-correct-version-of-settimeout-node-vs-window
+             */
+            keyTimeoutId: 0,
         };
     },
     computed: {
@@ -57,11 +60,11 @@ export default defineComponent({
         /** Displays the given data and the associated action for a short duration */
         DisplayDataAndAction(key: string, action: string) {
             //Clear the probably existing timeout
-            clearTimeout(this.keyTimeoutId);
+            window.clearTimeout(this.keyTimeoutId);
             if (key || action) {
                 this.displayKey = key;
                 this.displayAction = action;
-                this.keyTimeoutId = setTimeout(() => {
+                this.keyTimeoutId = window.setTimeout(() => {
                     this.displayKey = '';
                     this.displayAction = '';
                 }, 500);
