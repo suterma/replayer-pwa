@@ -4,7 +4,7 @@ import { XmlCompilation } from './XmlCompilation';
 describe('the XML mapping', function () {
     it('should return an initialised XmlCompilation object', function () {
         // Arrange
-        var compilation = new Compilation();
+        const compilation = new Compilation();
         compilation.Id = 'compilationId';
         compilation.MediaPath = 'c:\\temp';
         compilation.Title = 'testTitle';
@@ -13,7 +13,7 @@ describe('the XML mapping', function () {
         compilation.Url = 'https://test.example.com/music';
 
         //Act
-        let target = new XmlCompilation(compilation);
+        const target = new XmlCompilation(compilation);
 
         //Assert
         expect(target.Id).toBe(compilation.Id);

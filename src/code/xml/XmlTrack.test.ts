@@ -4,7 +4,7 @@ import { XmlTrack } from './XmlTrack';
 describe('the XML mapping', function () {
     it('should return an initialised XmlTrack object', function () {
         // Arrange
-        var track = new Track();
+        const track = new Track();
         track.Album = 'testAlbum';
         track.Artist = 'testArtist';
         track.Cues = new Array<Cue>();
@@ -14,7 +14,7 @@ describe('the XML mapping', function () {
         track.Url = 'https://test.example.com?myfile.mp3';
 
         //Act
-        let target = new XmlTrack(track);
+        const target = new XmlTrack(track);
 
         //Assert
         expect(target.Album).toBe(track.Album);

@@ -4,7 +4,7 @@ import { XmlCue } from './XmlCue';
 describe('the XML mapping', function () {
     it('should return an initialised XmlCue object', function () {
         // Arrange
-        var cue = new Cue();
+        const cue = new Cue();
         cue.Description = 'testDescription';
         cue.Duration = 99.9;
         cue.Id = 'myId';
@@ -12,7 +12,7 @@ describe('the XML mapping', function () {
         cue.Time = 88.8;
 
         //Act
-        let target = new XmlCue(cue);
+        const target = new XmlCue(cue);
 
         //Assert
         expect(target.Description).toBe(cue.Description);
