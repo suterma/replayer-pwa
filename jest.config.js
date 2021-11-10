@@ -1,9 +1,17 @@
 module.exports = {
-    moduleFileExtensions: ['js', 'ts', 'vue'],
+    moduleFileExtensions: [
+        'js',
+        'json',
+        'ts',
+        // tell Jest to handle `*.vue` files
+        'vue',
+    ],
     transformIgnorePatterns: ['<rootDir>/node_modules/'],
-    /** Use the Typescript runner for testing ts code */
     transform: {
+        /** Use the Typescript runner for testing ts code */
         '^.+\\.ts?$': 'ts-jest',
+        /** Use the vue-jest transformer for mapping .vue single-file components */
+        '^.+\\.(vue)$': '@vue/vue3-jest',
     },
     moduleDirectories: ['node_modules', 'src'],
     /** Allow the use of the @ symbol for absolute paths within the app */

@@ -59,6 +59,7 @@
         "@vue/eslint-config-prettier": "^6.0.0",
         "@vue/eslint-config-typescript": "^7.0.0",
         "@vue/test-utils": "^2.0.0-rc.16",
+        "@vue/vue3-jest": "^27.0.0-alpha.3",
         "bulma": "^0.9.3",
         "eslint": "^6.8.0",
         "eslint-plugin-jest": "^25.2.4",
