@@ -1,25 +1,66 @@
 /**
  * @jest-environment jsdom
- * @devdoc See https://github.com/vuejs/vue-test-utils-next/issues/194#issue-689186727 about the setup with "as any"
  */
 
 // see https://stackoverflow.com/questions/69939335/how-to-mock-a-computed-property-when-testing-a-vue3-app-with-jest
 
 import { mount } from '@vue/test-utils';
 import WelcomeMessage from '@/components/WelcomeMessage.vue';
+import { createStore } from 'vuex';
 
+/** Testing the visibility of the welcome message with jest
+ * @devdoc Using a mocked store, as per https://next.vue-test-utils.vuejs.org/guide/advanced/vuex.html#testing-with-a-real-vuex-store
+ * does not work, due to unknown reasons. It seems that the mounting process can not effectively read from the mocked store
+ */
 describe('WelcomeMessage.vue', () => {
-    it('should display the message', () => {
-        const wrapper = mount(WelcomeMessage, {
-            computed: {
-                isNeverShowAgain() {
+    it('should display the message when not dismissed', () => {
+        const store = createStore({
+            getters: {
+                neverShowWelcomeMessageAgain() {
                     return false;
                 },
             },
-        } as any);
-        // wrapper.vm.setComputed({ isNeverShowAgain: false }); //Deprecated and does not work
-
-        // Assert the rendered text of the component
+        });
+        const wrapper = mount(WelcomeMessage, {
+            global: {
+                plugins: [store],
+            },
+        });
+        expect(wrapper.isVisible()).toBe(true);
         expect(wrapper.text()).toContain('Welcome');
+    });
+
+    it('should display the message when dismissal not available', () => {
+        const store = createStore({
+            getters: {
+                neverShowWelcomeMessageAgain() {
+                    return null;
+                },
+            },
+        });
+        const wrapper = mount(WelcomeMessage, {
+            global: {
+                plugins: [store],
+            },
+        });
+        expect(wrapper.isVisible()).toBe(true);
+        expect(wrapper.text()).toContain('Welcome');
+    });
+
+    it('should not display the message when dismissed', () => {
+        const store = createStore({
+            getters: {
+                neverShowWelcomeMessageAgain() {
+                    return true;
+                },
+            },
+        });
+        const wrapper = mount(WelcomeMessage, {
+            global: {
+                plugins: [store],
+            },
+        });
+        expect(wrapper.isVisible()).toBe(false);
+        expect(wrapper.text()).not.toContain('Welcome');
     });
 });
