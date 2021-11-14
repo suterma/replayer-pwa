@@ -1,5 +1,5 @@
 <template>
-    <div :class="{ modal: true, 'is-active': showDialog }">
+    <div :class="{ modal: true, 'is-active': showDialog }" v-if="showDialog">
         <div class="modal-background"></div>
 
         <div class="modal-card">

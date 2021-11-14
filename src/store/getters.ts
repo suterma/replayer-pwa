@@ -19,9 +19,9 @@ export type Getters = {
      * @remarks Only one cue may be selected at any time, within one compilation / application instance.
      */
     selectedCue(state: State): Cue;
-    /** Whether to never show the welcome overlay at applicaiton start
+    /** Whether to never show the welcome overlay at application start
      */
-    neverShowWelcomeMessageAgain(state: State, cue: Cue): boolean;
+    neverShowWelcomeMessageAgain(state: State): boolean;
 };
 
 export const getters: GetterTree<State, State> & Getters = {
