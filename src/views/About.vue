@@ -78,6 +78,12 @@
                 License, by Jeremy Thomas)
             </li>
             <li>
+                <a href="https://jenil.github.io/bulmaswatch/" target="_blank"
+                    >Bulmaswatch</a
+                >, free themes for Bulma (Released under the MIT License, by
+                Jenil Gogari)
+            </li>
+            <li>
                 <a
                     href="https://github.com/joeferner/node-bplist-parser"
                     target="_blank"

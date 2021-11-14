@@ -3,7 +3,7 @@
     "short_name": "Replayer",
     "lang": "en",
     "description": "Replayer is a free, cue-based media player for rehearsals with playback music. By the click of a button, Replayer starts to play at predefined times in the audio file.",
-    "theme_color": "#000000",
+    "theme_color": "#f89406",
     "background_color": "#000000",
     "icons": [
         {
