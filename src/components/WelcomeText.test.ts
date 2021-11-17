@@ -1,6 +1,5 @@
 /**
  * @jest-environment jsdom
- * @devdoc See https://github.com/vuejs/vue-test-utils-next/issues/194#issue-689186727 about the setup with "as any"
  */
 
 import { mount } from '@vue/test-utils';

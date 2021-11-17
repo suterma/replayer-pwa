@@ -2,8 +2,6 @@
  * @jest-environment jsdom
  */
 
-// see https://stackoverflow.com/questions/69939335/how-to-mock-a-computed-property-when-testing-a-vue3-app-with-jest
-
 import { mount } from '@vue/test-utils';
 import WelcomeMessage from '@/components/WelcomeMessage.vue';
 import { createStore } from 'vuex';

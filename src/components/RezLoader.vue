@@ -164,22 +164,24 @@ export default defineComponent({
                         file.name.toLowerCase().endsWith('.zip')
                     ) {
                         this.loadFileAsRez(file);
-                    }
-                    if (
+                    } else if (
                         file.name.toLowerCase().endsWith('.rex') ||
                         file.name.toLowerCase().endsWith('.xml')
                     ) {
                         this.loadFileAsRex(file);
-                    }
-                    if (file.name.toLowerCase().endsWith('.mp3')) {
+                    } else if (file.name.toLowerCase().endsWith('.mp3')) {
                         this.handleAsMediaFromBlob(file.name, file);
                     }
                     //Is a LivePlayback playlist?
-                    if (
+                    else if (
                         file.name.toLowerCase().endsWith('.bplist') ||
                         file.name.toLowerCase().endsWith('playlist')
                     ) {
                         this.loadFileAsLivePlaybackPlaylist(file);
+                    } else {
+                        console.warn(
+                            "Unsupported file, not loaded: '" + file.name + "'",
+                        );
                     }
                 },
             );
