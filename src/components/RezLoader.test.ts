@@ -6,8 +6,14 @@ import { shallowMount } from '@vue/test-utils';
 import RezLoader from '@/components/RezLoader.vue';
 
 describe('RezLoader.vue', () => {
+    //https://stackoverflow.com/a/56643520
+    URL.createObjectURL = jest.fn();
+    afterEach(() => {
+        //URL.createObjectURL.mockReset();
+    });
     it('should load an mp3 file as media file', async () => {
         //Arrange
+
         //Get the file content
 
         // let blob = new Blob([''], { type: 'text/html' });
@@ -40,6 +46,8 @@ describe('RezLoader.vue', () => {
         //Act
         const wrapper = shallowMount(RezLoader, {});
         wrapper.vm.handleAsMediaFromBlob(file);
+
+        expect(URL.createObjectURL).toHaveBeenCalledTimes(1);
 
         //Assert the free memory?
     });

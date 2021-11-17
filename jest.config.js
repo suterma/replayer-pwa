@@ -6,7 +6,10 @@ module.exports = {
         // tell Jest to handle `*.vue` files
         'vue',
     ],
-    transformIgnorePatterns: ['<rootDir>/node_modules/'],
+    /*transformIgnorePatterns: ['<rootDir>/node_modules/'],*/
+    transformIgnorePatterns: [
+        '/node_modules/(?!@suterma/nskeyedunarchiver-liveplayback)',
+    ],
     transform: {
         /** Use the Typescript runner for testing ts code */
         '^.+\\.ts?$': 'ts-jest',

@@ -405,8 +405,9 @@ export default defineComponent({
         },
     },
     computed: {
+        /** Provide the URL parameter from the route, if available */
         paramsUrl(): string | string[] {
-            return this.$route.params.url;
+            return this.$route?.params.url;
         },
     },
 });
