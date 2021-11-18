@@ -4,15 +4,55 @@
 
 import { shallowMount } from '@vue/test-utils';
 import RezLoader from '@/components/RezLoader.vue';
+import { createStore } from 'vuex';
+import { MutationTypes } from '@/store/mutation-types';
+import { State } from '@/store/state';
+import { MediaFile } from '@/store/state-types';
+import { Compilation, Cue } from '@/store/compilation-types';
 
+//TODO cleanup this test
+//TODO do a memory performance test for the object urls either by hand or with another specific test
 describe('RezLoader.vue', () => {
     //https://stackoverflow.com/a/56643520
-    URL.createObjectURL = jest.fn();
+    beforeEach(() => {
+        URL.createObjectURL = jest.fn();
+    });
+
     afterEach(() => {
-        //URL.createObjectURL.mockReset();
+        //https://stackoverflow.com/a/60300568
+        (URL.createObjectURL as unknown as jest.Mock).mockReset();
     });
     it('should load an mp3 file as media file', async () => {
         //Arrange
+
+        const store = createStore({
+            state() {
+                //TODO can I use a constructor here, instead of manually construct the store here?
+                return {
+                    /** @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
+                    compilation: new Compilation(),
+
+                    /** @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
+                    selectedCue: new Cue(),
+
+                    fileUrls: new Array<MediaFile>(),
+
+                    progressMessageStack: new Array<string>(),
+
+                    neverShowWelcomeMessageAgain: false,
+                };
+            },
+            mutations: {
+                [MutationTypes.ADD_FILE_URL](state: State, payload: MediaFile) {
+                    state.fileUrls.push(payload);
+                },
+            },
+        });
+        const wrapper = shallowMount(RezLoader, {
+            global: {
+                plugins: [store],
+            },
+        });
 
         //Get the file content
 
@@ -44,7 +84,7 @@ describe('RezLoader.vue', () => {
         // loadFile(file);
 
         //Act
-        const wrapper = shallowMount(RezLoader, {});
+
         wrapper.vm.handleAsMediaFromBlob(file);
 
         expect(URL.createObjectURL).toHaveBeenCalledTimes(1);
