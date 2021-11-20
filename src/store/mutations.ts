@@ -44,6 +44,9 @@ function UpdateFromXmlCompilation(
     stateCompilation.Id = FirstStringOf(xmlCompilation.Id);
     const xmlTracks = xmlCompilation.Tracks[0].Track;
     UpdateFromXmlTracks(stateCompilation.Tracks, xmlTracks);
+
+    //TODO maybe replace this very simplictic local storage approach with in a more generic way
+    localStorage.setItem('compilation', JSON.stringify(stateCompilation));
 }
 
 /** @devdoc The PList contains an array of all tracks */
@@ -62,6 +65,9 @@ function UpdateFromPListCompilation(
     stateCompilation.Url = ''.normalize(); //TODO from ZIP filename
     stateCompilation.Id = uuidv4();
     UpdateFromPlistTracks(stateCompilation.Tracks, plistCompilation);
+
+    //TODO maybe replace this very simplictic local storage approach with in a more generic way
+    localStorage.setItem('compilation', JSON.stringify(stateCompilation));
 }
 
 /** Return the first item in the array, if defined. Otherwise, the empty string is returned as a default. */
@@ -192,6 +198,13 @@ export const mutations: MutationTree<State> & Mutations = {
             payload.fileName,
         );
         state.fileUrls.set(payload.fileName, payload);
+
+        //TODO maybe replace this very simplictic local storage approach with in a more generic way
+        //Use file storage api as described here https://stackoverflow.com/a/13983150
+        localStorage.setItem(
+            'mediafile-' + payload.fileName,
+            JSON.stringify(payload),
+        );
     },
     /** @devdoc //TODO the playload should be of a to be defined compilation type */
     [MutationTypes.UPDATE_COMPILATION_FROM_XML](state: State, payload: any) {
@@ -219,6 +232,18 @@ export const mutations: MutationTree<State> & Mutations = {
     },
 
     [MutationTypes.CLOSE_COMPILATION](state: State) {
+        //TODO maybe replace this very simplictic local storage approach with in a more generic way
+        localStorage.removeItem('compilation');
+
+        //File blobs
+        //TODO maybe replace this very simplictic local storage approach with in a more generic way
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('mediafile-')) {
+                localStorage.removeItem(key);
+            }
+        }
+
         state.selectedCue = new Cue();
         state.compilation = new Compilation();
 
@@ -260,6 +285,30 @@ export const mutations: MutationTree<State> & Mutations = {
         if (storedNeverShowWelcomeMessageAgain) {
             state.neverShowWelcomeMessageAgain =
                 storedNeverShowWelcomeMessageAgain == 'true';
+        }
+
+        //TODO maybe replace this very simplictic local storage approach with in a more generic way
+        const compilationItem = localStorage.getItem('compilation');
+        if (compilationItem) {
+            const compilation = JSON.parse(compilationItem);
+            console.debug('mutations::INIT_STORE:compilation', compilation);
+
+            if (compilation) {
+                state.compilation = compilation;
+            }
+        }
+
+        //File blobs
+        //TODO maybe replace this very simplictic local storage approach with in a more generic way
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('mediafile-')) {
+                const itemx = localStorage.getItem(key);
+                if (itemx) {
+                    const mediafile = JSON.parse(itemx) as MediaFile;
+                    state.fileUrls.set(mediafile.fileName, mediafile);
+                }
+            }
         }
     },
 };
