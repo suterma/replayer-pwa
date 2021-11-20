@@ -187,19 +187,23 @@ export default defineComponent({
             return first.endsWith(second) || second.endsWith(first);
         },
         /** Finds the matching the media file (playable file content) for a track's file name, from an already loaded package
+         * @param fileName - The file name to search for.
+         * @param mediaFileMap - A set of media files to search through.
          * @remarks If strict file names do not match, a more lazy approach without case and without non-ascii characters is attempted
          */
-        getMatchingPackageFileUrl(
+        getMatchingPackageMediaFile(
             fileName: string | undefined,
-            fileUrls: Array<MediaFile>,
+            mediaFileMap: Map<string, MediaFile>,
         ): MediaFile | null {
-            if (fileUrls && fileName) {
-                let url = fileUrls.filter((fileUrl: MediaFile) => {
-                    return this.isEndingWithOneAnother(
-                        fileName,
-                        fileUrl.fileName,
-                    );
-                })[0];
+            if (mediaFileMap && fileName) {
+                //Default: Find by literal partial match of the file name
+                let url = null;
+                for (let [mediaFileName, mediaFile] of mediaFileMap) {
+                    if (this.isEndingWithOneAnother(fileName, mediaFileName)) {
+                        url = mediaFile;
+                    }
+                }
+
                 if (!url) {
                     //In case of possible weird characters, or case mismatch, try a more lazy match.
                     //See https://stackoverflow.com/a/9364527/79485 and
@@ -208,16 +212,22 @@ export default defineComponent({
                         .toLowerCase()
                         // eslint-disable-next-line
                         .replace(/[^\x00-\x7F]/g, '');
-                    url = fileUrls.filter((fileUrl: MediaFile) => {
-                        var lazyUrlFileName = fileUrl.fileName
+
+                    for (let [mediaFileName, mediaFile] of mediaFileMap) {
+                        var lazyMediaFileName = mediaFileName
                             .toLowerCase()
                             // eslint-disable-next-line
                             .replace(/[^\x00-\x7F]/g, '');
-                        return this.isEndingWithOneAnother(
-                            lazyFileName,
-                            lazyUrlFileName,
-                        );
-                    })[0];
+
+                        if (
+                            this.isEndingWithOneAnother(
+                                lazyFileName,
+                                lazyMediaFileName,
+                            )
+                        ) {
+                            url = mediaFile;
+                        }
+                    }
                 }
                 return url;
             } else {
@@ -298,8 +308,11 @@ export default defineComponent({
          */
 
         trackFileUrl(): MediaFile | null {
-            const fileUrls = this.$store.getters.fileUrls as Array<MediaFile>;
-            let fileUrl = this.getMatchingPackageFileUrl(
+            const fileUrls = this.$store.getters.fileUrls as Map<
+                string,
+                MediaFile
+            >;
+            let fileUrl = this.getMatchingPackageMediaFile(
                 this.track?.Url,
                 fileUrls,
             );

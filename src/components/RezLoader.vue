@@ -331,7 +331,7 @@ export default defineComponent({
                 () => {
                     xml2js
                         .parseStringPromise(content /*, options */)
-                        .then((result: string) => {
+                        .then((result: any) => {
                             console.debug('Parsed compilation: ', result);
 
                             //Apply the compilation content to the store

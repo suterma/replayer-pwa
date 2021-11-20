@@ -23,7 +23,6 @@ import { defineComponent } from 'vue';
 import RezLoader from '@/components/RezLoader.vue'; // @ is an alias to /src
 import CompilationDisplay from '@/components/CompilationDisplay.vue'; // @ is an alias to /src
 import { ICompilation, ITrack } from '@/store/compilation-types';
-import { MediaFile } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
 
 /** A view for playing an existing compilation */
@@ -65,9 +64,6 @@ export default defineComponent({
                     return item.Name;
                 },
             );
-        },
-        fileUrls(): Array<MediaFile> {
-            return this.$store.getters.fileUrls;
         },
     },
 });

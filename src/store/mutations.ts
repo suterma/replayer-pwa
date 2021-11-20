@@ -175,7 +175,23 @@ export const mutations: MutationTree<State> & Mutations = {
         console.debug('END_PROGRESS: ' + message);
     },
     [MutationTypes.ADD_FILE_URL](state: State, payload: MediaFile) {
-        state.fileUrls.push(payload);
+        //Remove any previously matching
+        const matchingFile = state.fileUrls.get(payload.fileName);
+        if (matchingFile) {
+            console.debug(
+                'mutations::ADD_FILE_URL:removing item for key:',
+                payload.fileName,
+            );
+            URL.revokeObjectURL(matchingFile.objectUrl);
+            state.fileUrls.delete(payload.fileName);
+        }
+
+        //Keep the others and add the new one
+        console.debug(
+            'mutations::ADD_FILE_URL:adding item for key:',
+            payload.fileName,
+        );
+        state.fileUrls.set(payload.fileName, payload);
     },
     /** @devdoc //TODO the playload should be of a to be defined compilation type */
     [MutationTypes.UPDATE_COMPILATION_FROM_XML](state: State, payload: any) {
@@ -188,7 +204,7 @@ export const mutations: MutationTree<State> & Mutations = {
         const xmlCompilation = payload.XmlCompilation;
         UpdateFromXmlCompilation(state.compilation, xmlCompilation);
     },
-    /** @devdoc //TODO the playload should be of a to be defined compilation type */
+    /** @devdoc //TODO the payload should be of a to be defined compilation type */
     [MutationTypes.UPDATE_COMPILATION_FROM_PLIST](state: State, payload: any) {
         console.debug(
             'mutations::UPDATE_COMPILATION_FROM_PLIST:payload',
@@ -203,7 +219,13 @@ export const mutations: MutationTree<State> & Mutations = {
     },
 
     [MutationTypes.CLOSE_COMPILATION](state: State) {
+        state.selectedCue = new Cue();
         state.compilation = new Compilation();
+
+        state.fileUrls.forEach((file) => {
+            URL.revokeObjectURL(file.objectUrl);
+        });
+        state.fileUrls.clear();
     },
     /** Sets whether to never show the welcome message ever again
      * @param state - The vuex state

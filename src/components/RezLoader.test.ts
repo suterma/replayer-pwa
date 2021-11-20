@@ -35,7 +35,7 @@ describe('RezLoader.vue', () => {
                     /** @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
                     selectedCue: new Cue(),
 
-                    fileUrls: new Array<MediaFile>(),
+                    fileUrls: new Map<string, MediaFile>(),
 
                     progressMessageStack: new Array<string>(),
 

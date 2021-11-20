@@ -5,7 +5,9 @@ export interface IMediaFile {
     /** The object URL representing the playable file content  */
     objectUrl: string;
 }
-/** @class Implements a playable media file */
+/** @class Implements a playable media file
+ * @remarks A media file is an annotated object URL for a blob
+ */
 export class MediaFile implements IMediaFile {
     /** @constructor
      * @param {string} fileName - The name of the original media file (from the disk or from within a REZ/ZIP-file)
@@ -13,6 +15,7 @@ export class MediaFile implements IMediaFile {
      */
     constructor(fileName: string, objectUrl: string) {
         this.fileName = fileName;
+        //TODO make sure object urls for directly loaded files are directly used for the object url, see https://stackoverflow.com/a/49346614
         this.objectUrl = objectUrl;
     }
     fileName: string;

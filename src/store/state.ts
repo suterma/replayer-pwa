@@ -7,8 +7,10 @@ interface IState {
      */
     compilation: ICompilation;
 
-    /** A set of media files from a REZ compilation, representing playable buffers */
-    fileUrls: Array<MediaFile>;
+    /** A dictionary of media files from a REZ compilation, representing playable buffers
+     * @remarks the media file path is used as key, preventing duplicate files for the same content.
+     */
+    fileUrls: Map<string, MediaFile>;
 
     /** The currently selected cue.
      * @remarks This does not control the playback itself. It is intended for display purposes.
@@ -32,7 +34,7 @@ export const state: IState = {
     /** @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
     selectedCue: new Cue(),
 
-    fileUrls: new Array<MediaFile>(),
+    fileUrls: new Map<string, MediaFile>(),
 
     progressMessageStack: new Array<string>(),
 
