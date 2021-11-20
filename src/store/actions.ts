@@ -35,13 +35,23 @@ export const actions: ActionTree<State, State> & Actions = {
     },
     [ActionTypes.RETRIEVE_COMPILATION]({ commit }) {
         console.debug('RETRIEVE_COMPILATION');
-        PersistentStorage.retrieveCompilationAsync().then((compilation) => {
-            console.debug('committing compilation: ', compilation);
-            commit(MutationTypes.REPLACE_COMPILATION, compilation);
-        });
-        PersistentStorage.retrieveSelectedCue().then((cue) => {
-            console.debug('committing cue: ', cue);
-            commit(MutationTypes.UPDATE_CURRENT_CUE, cue);
-        });
+        commit(
+            MutationTypes.SET_PROGRESS_MESSAGE,
+            'Retrieving last compilation...',
+        );
+        PersistentStorage.retrieveCompilationAsync()
+            .then((compilation) => {
+                console.debug('committing compilation: ', compilation);
+                commit(MutationTypes.REPLACE_COMPILATION, compilation);
+            })
+            .then(() => {
+                PersistentStorage.retrieveSelectedCue().then((cue) => {
+                    console.debug('committing cue: ', cue);
+                    commit(MutationTypes.UPDATE_CURRENT_CUE, cue);
+                });
+            })
+            .finally(() => {
+                commit(MutationTypes.END_PROGRESS, undefined);
+            });
     },
 };

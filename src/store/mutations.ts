@@ -202,12 +202,7 @@ export const mutations: MutationTree<State> & Mutations = {
         );
         state.fileUrls.set(payload.fileName, payload);
 
-        //TODO maybe replace this very simplictic local storage approach with in a more generic way
-        //Use file storage api as described here https://stackoverflow.com/a/13983150
-        localStorage.setItem(
-            'mediafile-' + payload.fileName,
-            JSON.stringify(payload),
-        );
+        //TODO store the blob in indexed db first, then call this mutation on the store afterwards
     },
     [MutationTypes.REPLACE_COMPILATION](
         state: State,
@@ -247,16 +242,8 @@ export const mutations: MutationTree<State> & Mutations = {
     },
 
     [MutationTypes.CLOSE_COMPILATION](state: State) {
+        //TODO handle the indexed db persistence in an action first.
         PersistentStorage.clearCompilation();
-
-        //File blobs
-        //TODO maybe replace this very simplictic local storage approach with in a more generic way
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key && key.startsWith('mediafile-')) {
-                localStorage.removeItem(key);
-            }
-        }
 
         state.selectedCue = new Cue();
         state.compilation = new Compilation();
@@ -292,19 +279,6 @@ export const mutations: MutationTree<State> & Mutations = {
         if (storedNeverShowWelcomeMessageAgain) {
             state.neverShowWelcomeMessageAgain =
                 storedNeverShowWelcomeMessageAgain == 'true';
-        }
-
-        //File blobs
-        //TODO move to indexed db
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key && key.startsWith('mediafile-')) {
-                const itemx = localStorage.getItem(key);
-                if (itemx) {
-                    const mediafile = JSON.parse(itemx) as MediaFile;
-                    state.fileUrls.set(mediafile.fileName, mediafile);
-                }
-            }
         }
     },
 };
