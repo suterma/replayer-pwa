@@ -5,7 +5,7 @@
 ![Release](https://img.shields.io/github/release/suterma/replayer-pwa.svg)
 ![Language](https://img.shields.io/github/languages/top/suterma/replayer-pwa.svg)
 
-A player, as a [Web App](https://replayer.app), for compilations from the classic [Replayer](https://github.com/suterma/replayer).
+The [Replayer, as a Web App](https://replayer.app), for compilations from the classic [Windows Desktop Replayer](https://github.com/suterma/replayer) application.
 
 # Goal
 
