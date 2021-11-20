@@ -15,6 +15,7 @@ import { defineComponent } from 'vue';
 import NavbarTop from '@/components/NavbarTop.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import WelcomeMessage from '@/components/WelcomeMessage.vue';
+import { ActionTypes } from './store/action-types';
 import { MutationTypes } from './store/mutation-types';
 
 export default defineComponent({
@@ -22,7 +23,8 @@ export default defineComponent({
     components: { NavbarTop, ProgressOverlay, WelcomeMessage },
     computed: {},
     beforeCreate() {
-        this.$store.commit(MutationTypes.INIT_STORE);
+        this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
+        this.$store.commit(MutationTypes.INIT_APPLICATION_STATE);
     },
 });
 </script>

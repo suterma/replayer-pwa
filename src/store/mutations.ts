@@ -18,6 +18,10 @@ export type Mutations<S = State> = {
     [MutationTypes.SET_PROGRESS_MESSAGE](state: S, payload: string): void;
     [MutationTypes.END_PROGRESS](state: S): void;
     [MutationTypes.ADD_FILE_URL](state: S, payload: MediaFile): void;
+    [MutationTypes.REPLACE_COMPILATION](
+        state: S,
+        compilation: ICompilation,
+    ): void;
     /** @devdoc //TODO the playload should be of a to be defined compilation type */
     [MutationTypes.UPDATE_COMPILATION_FROM_XML](state: S, payload: any): void;
     [MutationTypes.UPDATE_COMPILATION_FROM_PLIST](state: S, payload: any): void;
@@ -27,7 +31,7 @@ export type Mutations<S = State> = {
         state: S,
         neverShowWelcomeMessageAgain: boolean,
     ): void;
-    [MutationTypes.INIT_STORE](state: S): void;
+    [MutationTypes.INIT_APPLICATION_STATE](state: S): void;
 };
 
 /** @devdoc The XML type contains all properties as arrays, even the singe item ones. This is a limitation of the used XML-To-JS converter */
@@ -205,6 +209,17 @@ export const mutations: MutationTree<State> & Mutations = {
             JSON.stringify(payload),
         );
     },
+    [MutationTypes.REPLACE_COMPILATION](
+        state: State,
+        compilation: ICompilation,
+    ) {
+        console.debug(
+            'mutations::REPLACE_COMPILATION:compilation',
+            compilation,
+        );
+
+        state.compilation = compilation;
+    },
     /** @devdoc //TODO the playload should be of a to be defined compilation type */
     [MutationTypes.UPDATE_COMPILATION_FROM_XML](state: State, payload: any) {
         console.debug(
@@ -270,27 +285,17 @@ export const mutations: MutationTree<State> & Mutations = {
         );
         state.neverShowWelcomeMessageAgain = neverShowWelcomeMessageAgain;
     },
-    [MutationTypes.INIT_STORE](state: State) {
-        console.debug('mutations::INIT_STORE:state', state);
-        //TODO maybe replace this very simplictic local storage approach with in a more generic way
+    [MutationTypes.INIT_APPLICATION_STATE](state: State) {
         const storedNeverShowWelcomeMessageAgain = localStorage.getItem(
             'neverShowWelcomeMessageAgain',
         );
-        console.debug(
-            'mutations::INIT_STORE:storedNeverShowWelcomeMessageAgain',
-            storedNeverShowWelcomeMessageAgain,
-        );
-
         if (storedNeverShowWelcomeMessageAgain) {
             state.neverShowWelcomeMessageAgain =
                 storedNeverShowWelcomeMessageAgain == 'true';
         }
 
-        state.compilation = PersistentStorage.retrieveCompilation();
-        state.selectedCue = PersistentStorage.retrieveSelectedCue();
-
         //File blobs
-        //TODO maybe replace this very simplictic local storage approach with in a more generic way
+        //TODO move to indexed db
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (key && key.startsWith('mediafile-')) {

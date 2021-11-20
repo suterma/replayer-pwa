@@ -3,6 +3,7 @@ import { State } from './state';
 import { Mutations } from './mutations';
 import { ActionTypes } from './action-types';
 import { MutationTypes } from './mutation-types';
+import { PersistentStorage } from './persistent-storage';
 
 type AugmentedActionContext = {
     commit<K extends keyof Mutations>(
@@ -18,6 +19,9 @@ export interface Actions {
         { commit }: AugmentedActionContext,
         payload: string,
     ): Promise<string>;
+    [ActionTypes.RETRIEVE_COMPILATION]({
+        commit,
+    }: AugmentedActionContext): void;
 }
 export const actions: ActionTree<State, State> & Actions = {
     [ActionTypes.PLAY_TRACK]({ commit }) {
@@ -27,6 +31,17 @@ export const actions: ActionTree<State, State> & Actions = {
                 commit(MutationTypes.SET_PROGRESS_MESSAGE, 'Playing track...');
                 resolve(data);
             }, 500);
+        });
+    },
+    [ActionTypes.RETRIEVE_COMPILATION]({ commit }) {
+        console.debug('RETRIEVE_COMPILATION');
+        PersistentStorage.retrieveCompilationAsync().then((compilation) => {
+            console.debug('committing compilation: ', compilation);
+            commit(MutationTypes.REPLACE_COMPILATION, compilation);
+        });
+        PersistentStorage.retrieveSelectedCue().then((cue) => {
+            console.debug('committing cue: ', cue);
+            commit(MutationTypes.UPDATE_CURRENT_CUE, cue);
         });
     },
 };

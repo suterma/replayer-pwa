@@ -159,7 +159,7 @@ export default defineComponent({
                 const selectedCue = this.$store.getters.selectedCue as ICue;
                 if (selectedCue && selectedCue.Time != null) {
                     if (this.trackPlayerInstance.playing === true) {
-                        this.trackPlayerInstance.pause();
+                        this.trackPlayerInstance?.pause();
                     }
                     this.trackPlayerInstance.seekTo(selectedCue.Time);
                 }
@@ -175,7 +175,7 @@ export default defineComponent({
 
                 //Set the position to this cue and handle playback
                 if (this.trackPlayerInstance.playing === true) {
-                    this.trackPlayerInstance.pause();
+                    this.trackPlayerInstance?.pause();
                     this.trackPlayerInstance.seekTo(cue.Time);
                 } else {
                     this.trackPlayerInstance.playFrom(cue.Time);
@@ -291,7 +291,7 @@ export default defineComponent({
         isActiveTrack(val, oldVal) {
             //is no more active?
             if (oldVal === true && val === false) {
-                this.trackPlayerInstance.pause();
+                this.trackPlayerInstance?.pause();
             }
         },
     },

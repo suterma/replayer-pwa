@@ -120,6 +120,15 @@
                 >, scrolling to elements was never this easy. (Released under
                 the MIT License, by Igor Randjelovic)
             </li>
+            <li>
+                <a
+                    href="https://github.com/jakearchibald/idb-keyval"
+                    target="_blank"
+                    >IDB-Keyval</a
+                >, a super-simple-small promise-based keyval store implemented
+                with IndexedDB. (Released under the MIT License, by Jake
+                Archibald)
+            </li>
         </ul>
 
         <h1 class="title">License</h1>
