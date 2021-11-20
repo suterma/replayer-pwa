@@ -7,6 +7,8 @@
 
 The [Replayer, as a Web App](https://replayer.app), for compilations from the classic [Windows Desktop Replayer](https://github.com/suterma/replayer) application.
 
+![Visual Functioning Overview](/doc/images/WebAppOnPhoneStand.webp)
+
 # Goal
 
 It's aim is to replace the classic, Microsoft Windows based, [Replayer](https://github.com/suterma/replayer) desktop application with a progressive web app, that is locally installable on devices.
