@@ -1,11 +1,11 @@
-# replayer-pwa (beta)
+# replayer-pwa
 
 ![License](https://img.shields.io/github/license/suterma/replayer-pwa.svg)
 ![GitHub All Releases](https://img.shields.io/github/downloads/suterma/replayer-pwa/total.svg)
 ![Release](https://img.shields.io/github/release/suterma/replayer-pwa.svg)
 ![Language](https://img.shields.io/github/languages/top/suterma/replayer-pwa.svg)
 
-The classic [Replayer](https://github.com/suterma/replayer), as a Progressive Web App.
+A player, as a [Web App](https://replayer.app), for compilations from the classic [Replayer](https://github.com/suterma/replayer).
 
 # Goal
 
