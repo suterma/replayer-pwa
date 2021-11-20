@@ -12,6 +12,7 @@ import { MutationTypes } from './mutation-types';
 import { State } from './state';
 import { MediaFile } from './state-types';
 import { v4 as uuidv4 } from 'uuid';
+import { PersistentStorage } from './persistent-storage';
 
 export type Mutations<S = State> = {
     [MutationTypes.SET_PROGRESS_MESSAGE](state: S, payload: string): void;
@@ -45,8 +46,7 @@ function UpdateFromXmlCompilation(
     const xmlTracks = xmlCompilation.Tracks[0].Track;
     UpdateFromXmlTracks(stateCompilation.Tracks, xmlTracks);
 
-    //TODO maybe replace this very simplictic local storage approach with in a more generic way
-    localStorage.setItem('compilation', JSON.stringify(stateCompilation));
+    PersistentStorage.storeCompilation(stateCompilation);
 }
 
 /** @devdoc The PList contains an array of all tracks */
@@ -66,8 +66,7 @@ function UpdateFromPListCompilation(
     stateCompilation.Id = uuidv4();
     UpdateFromPlistTracks(stateCompilation.Tracks, plistCompilation);
 
-    //TODO maybe replace this very simplictic local storage approach with in a more generic way
-    localStorage.setItem('compilation', JSON.stringify(stateCompilation));
+    PersistentStorage.storeCompilation(stateCompilation);
 }
 
 /** Return the first item in the array, if defined. Otherwise, the empty string is returned as a default. */
@@ -229,11 +228,11 @@ export const mutations: MutationTree<State> & Mutations = {
     },
     [MutationTypes.UPDATE_CURRENT_CUE](state: State, payload: Cue) {
         state.selectedCue = payload;
+        PersistentStorage.storeSelectedCue(payload);
     },
 
     [MutationTypes.CLOSE_COMPILATION](state: State) {
-        //TODO maybe replace this very simplictic local storage approach with in a more generic way
-        localStorage.removeItem('compilation');
+        PersistentStorage.clearCompilation();
 
         //File blobs
         //TODO maybe replace this very simplictic local storage approach with in a more generic way
@@ -287,16 +286,8 @@ export const mutations: MutationTree<State> & Mutations = {
                 storedNeverShowWelcomeMessageAgain == 'true';
         }
 
-        //TODO maybe replace this very simplictic local storage approach with in a more generic way
-        const compilationItem = localStorage.getItem('compilation');
-        if (compilationItem) {
-            const compilation = JSON.parse(compilationItem);
-            console.debug('mutations::INIT_STORE:compilation', compilation);
-
-            if (compilation) {
-                state.compilation = compilation;
-            }
-        }
+        state.compilation = PersistentStorage.retrieveCompilation();
+        state.selectedCue = PersistentStorage.retrieveSelectedCue();
 
         //File blobs
         //TODO maybe replace this very simplictic local storage approach with in a more generic way
