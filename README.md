@@ -11,7 +11,7 @@ The classic [Replayer](https://github.com/suterma/replayer), as a Progressive We
 
 It's aim is to replace the classic, Microsoft Windows based, [Replayer](https://github.com/suterma/replayer) desktop application with a progressive web app, that is locally installable on devices.
 
--   The latest test version is available at https://web-test.replayer.app
+-   The latest version is available at https://web.replayer.app
 -   Source code is availabe at [GitHub](https://github.com/suterma/replayer-pwa)
 
 # Glossary
