@@ -6,8 +6,9 @@ import { MediaUrl } from './state-types';
 import PersistentStorage from './persistent-storage';
 
 export type Mutations<S = State> = {
-    [MutationTypes.SET_PROGRESS_MESSAGE](state: S, payload: string): void;
-    [MutationTypes.END_PROGRESS](state: S): void;
+    [MutationTypes.PUSH_PROGRESS_MESSAGE](state: S, payload: string): void;
+    [MutationTypes.POP_PROGRESS_MESSAGE](state: S): void;
+    [MutationTypes.FINISH_PROGRESS](state: State): void;
     [MutationTypes.ADD_FILE_URL](state: S, payload: MediaUrl): void;
     [MutationTypes.REPLACE_COMPILATION](
         state: S,
@@ -23,14 +24,19 @@ export type Mutations<S = State> = {
 };
 
 export const mutations: MutationTree<State> & Mutations = {
-    [MutationTypes.SET_PROGRESS_MESSAGE](state: State, message: string) {
+    [MutationTypes.PUSH_PROGRESS_MESSAGE](state: State, message: string) {
         state.progressMessageStack.push(message);
         console.log('PROGRESS: ' + message);
     },
-    [MutationTypes.END_PROGRESS](state: State) {
+    [MutationTypes.POP_PROGRESS_MESSAGE](state: State) {
         const message = state.progressMessageStack.pop();
-        console.debug('END_PROGRESS: ' + message);
+        console.debug('POP_PROGRESS_MESSAGE: ' + message);
     },
+    [MutationTypes.FINISH_PROGRESS](state: State) {
+        state.progressMessageStack.length = 0;
+        console.debug('FINISH_PROGRESS');
+    },
+
     [MutationTypes.ADD_FILE_URL](state: State, payload: MediaUrl) {
         //Remove any previously matching
         const matchingFile = state.fileUrls.get(payload.fileName);

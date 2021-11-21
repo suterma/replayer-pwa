@@ -41,7 +41,7 @@ export const actions: ActionTree<State, State> & Actions = {
     //     return new Promise((resolve) => {
     //         setTimeout(() => {
     //             const data = 'action return value';
-    //             commit(MutationTypes.SET_PROGRESS_MESSAGE, 'Playing track...');
+    //             commit(MutationTypes.PUSH_PROGRESS_MESSAGE, 'Playing track...');
     //             resolve(data);
     //         }, 500);
     //     });
@@ -49,7 +49,7 @@ export const actions: ActionTree<State, State> & Actions = {
     [ActionTypes.RETRIEVE_COMPILATION]({ commit }) {
         console.debug('RETRIEVE_COMPILATION');
         commit(
-            MutationTypes.SET_PROGRESS_MESSAGE,
+            MutationTypes.PUSH_PROGRESS_MESSAGE,
             'Retrieving last compilation...',
         );
         PersistentStorage.retrieveCompilation()
@@ -60,24 +60,47 @@ export const actions: ActionTree<State, State> & Actions = {
             })
             .then(() => {
                 //retrieve all blobs (which should also include the ones for the afore-loaded compilation)
-                PersistentStorage.retrieveAllMediaBlobs().then((mediaBlobs) => {
-                    mediaBlobs.forEach((mediaBlob) => {
-                        const objectUrl = URL.createObjectURL(mediaBlob.blob);
-                        commit(
-                            MutationTypes.ADD_FILE_URL,
-                            new MediaUrl(mediaBlob.fileName, objectUrl),
-                        );
+                PersistentStorage.retrieveAllMediaBlobs()
+                    .then((mediaBlobs) => {
+                        mediaBlobs.forEach((mediaBlob) => {
+                            // commit(
+                            //     MutationTypes.POP_PROGRESS_MESSAGE,
+                            //     undefined,
+                            // );
+                            // commit(
+                            //     MutationTypes.PUSH_PROGRESS_MESSAGE,
+                            //     `Retrieving last compilation (${mediaBlob.fileName})...`,
+                            // );
+                            const objectUrl = URL.createObjectURL(
+                                mediaBlob.blob,
+                            );
+                            commit(
+                                MutationTypes.ADD_FILE_URL,
+                                new MediaUrl(mediaBlob.fileName, objectUrl),
+                            );
+                            // commit(
+                            //     MutationTypes.POP_PROGRESS_MESSAGE,
+                            //     undefined,
+                            // ); //for the file
+                        });
+                    })
+                    .then(() => {
+                        // commit(
+                        //     MutationTypes.PUSH_PROGRESS_MESSAGE,
+                        //     'Retrieving last compilation (selected cue)...',
+                        // );
+                        //Update the selected cue
+                        PersistentStorage.retrieveSelectedCue()
+                            .then((cue) => {
+                                commit(MutationTypes.UPDATE_SELECTED_CUE, cue);
+                            })
+                            .finally(() => {
+                                commit(
+                                    MutationTypes.POP_PROGRESS_MESSAGE,
+                                    undefined,
+                                );
+                            });
                     });
-                });
-            })
-            .then(() => {
-                //Update the selected cue
-                PersistentStorage.retrieveSelectedCue().then((cue) => {
-                    commit(MutationTypes.UPDATE_SELECTED_CUE, cue);
-                });
-            })
-            .finally(() => {
-                commit(MutationTypes.END_PROGRESS, undefined);
             });
     },
     [ActionTypes.SET_COMPILATION_FROM_XML]({ commit }, payload: any) {

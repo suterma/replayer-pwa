@@ -1,8 +1,10 @@
 export enum MutationTypes {
-    /** Initiates the display of a progress message by setting a text */
-    SET_PROGRESS_MESSAGE = 'SET_PROGRESS_MESSAGE',
-    /** Ends the display of a previous progress message, by setting the message to null */
-    END_PROGRESS = 'END_PROGRESS',
+    /** Initiates the display of a progress message by pushing the message onto the stack of progress messages */
+    PUSH_PROGRESS_MESSAGE = 'PUSH_PROGRESS_MESSAGE',
+    /** Ends the display of a previous progress message, by popping the message from the stack of progress messages */
+    POP_PROGRESS_MESSAGE = 'POP_PROGRESS_MESSAGE',
+    /** Ends the display any previous progress message, by clearing all messages from the stack of progress messages */
+    FINISH_PROGRESS = 'FINISH_PROGRESS',
     /** Adds a media file to the store
      * @remarks A new file replaces any existing file with an exact same path.
      */

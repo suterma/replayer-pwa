@@ -92,7 +92,7 @@ export default defineComponent({
         loadUrl(url: string): void {
             this.$store.commit(
                 //Set the progress message, before using any of the async functions
-                MutationTypes.SET_PROGRESS_MESSAGE,
+                MutationTypes.PUSH_PROGRESS_MESSAGE,
                 `Loading URL '${url}'...`,
             );
             //TODO make URL to allow any charcter, including slashes etc...
@@ -113,7 +113,7 @@ export default defineComponent({
                     this.loadFile(file);
                 })
                 .finally(() => {
-                    this.$store.commit(MutationTypes.END_PROGRESS);
+                    this.$store.commit(MutationTypes.POP_PROGRESS_MESSAGE);
                 });
         },
 
@@ -129,13 +129,13 @@ export default defineComponent({
                 nextTick()
                     .then(() =>
                         this.$store.commit(
-                            MutationTypes.SET_PROGRESS_MESSAGE,
+                            MutationTypes.PUSH_PROGRESS_MESSAGE,
                             message,
                         ),
                     )
                     .then(() => work())
                     .finally(() => {
-                        this.$store.commit(MutationTypes.END_PROGRESS);
+                        this.$store.commit(MutationTypes.POP_PROGRESS_MESSAGE);
                     });
             })();
         },
@@ -196,7 +196,7 @@ export default defineComponent({
         loadFileAsRez(selectedFile: File): void {
             this.$store.commit(
                 //Set the progress message, before using any of the async functions
-                MutationTypes.SET_PROGRESS_MESSAGE,
+                MutationTypes.PUSH_PROGRESS_MESSAGE,
                 `Processing file: ${selectedFile.name}`,
             );
             // 1) read the Blob
@@ -210,7 +210,7 @@ export default defineComponent({
                             ): void => {
                                 this.$store.commit(
                                     //Set the progress message, before using any of the async functions
-                                    MutationTypes.SET_PROGRESS_MESSAGE,
+                                    MutationTypes.PUSH_PROGRESS_MESSAGE,
                                     `Processing content: ${zipEntry.name}`,
                                 );
                                 zipEntry
@@ -251,7 +251,7 @@ export default defineComponent({
                                     })
                                     .finally(() => {
                                         this.$store.commit(
-                                            MutationTypes.END_PROGRESS,
+                                            MutationTypes.POP_PROGRESS_MESSAGE,
                                         );
                                     });
                             },
@@ -264,7 +264,7 @@ export default defineComponent({
                     },
                 )
                 .finally(() => {
-                    this.$store.commit(MutationTypes.END_PROGRESS);
+                    this.$store.commit(MutationTypes.POP_PROGRESS_MESSAGE);
                 });
         },
 
