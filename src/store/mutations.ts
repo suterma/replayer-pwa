@@ -3,7 +3,7 @@ import { Compilation, ICompilation, Cue } from './compilation-types';
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
 import { MediaFile } from './state-types';
-import { PersistentStorage } from './persistent-storage';
+import PersistentStorage from './persistent-storage';
 
 export type Mutations<S = State> = {
     [MutationTypes.SET_PROGRESS_MESSAGE](state: S, payload: string): void;

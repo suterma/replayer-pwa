@@ -35,7 +35,7 @@ const createPromise = (getValue: any, callback: any): Promise<any> => {
  * web app restarts.
  * @devdoc Internally decides on optimal storage type use for each entity, thus hiding this complexity from the using code.
  * @devdoc Implements a module as described in https://www.typescriptlang.org/docs/handbook/modules.html */
-export class PersistentStorage /*implements IPersistentStorage*/ {
+export default class PersistentStorage /*implements IPersistentStorage*/ {
     /** Persistently stores the compilation for later retrieval
      * @devdoc The local storage is used for compilation for performance reasons here. No need to use the Indexed Db for small data
      */

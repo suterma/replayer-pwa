@@ -3,8 +3,8 @@ import { State } from './state';
 import { Mutations } from './mutations';
 import { ActionTypes } from './action-types';
 import { MutationTypes } from './mutation-types';
-import { PersistentStorage } from './persistent-storage';
-import { CompilationParser } from './compilation-parser';
+import PersistentStorage from './persistent-storage';
+import CompilationParser from './compilation-parser';
 
 type AugmentedActionContext = {
     commit<K extends keyof Mutations>(

@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 /**
  * Provides helper methods for parsing compilations from external storage formats.
  */
-export class CompilationParser {
+export default class CompilationParser {
     /** Parses an XML object into an ICompilation.
      * @param xmlCompilation - An object representing the stored Compilation from an XML import.
      * @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
