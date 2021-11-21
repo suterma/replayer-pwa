@@ -5,10 +5,10 @@ export enum MutationTypes {
     POP_PROGRESS_MESSAGE = 'POP_PROGRESS_MESSAGE',
     /** Ends the display any previous progress message, by clearing all messages from the stack of progress messages */
     FINISH_PROGRESS = 'FINISH_PROGRESS',
-    /** Adds a media file to the store
-     * @remarks A new file replaces any existing file with an exact same path.
+    /** Adds a media blob URL to the store
+     * @remarks A new blob URL replaces any existing with an exact same path.
      */
-    ADD_FILE_URL = 'ADD_FILE_URL',
+    ADD_MEDIA_URL = 'ADD_MEDIA_URL',
     /** Replaces the current compilation with a new one */
     REPLACE_COMPILATION = 'REPLACE_COMPILATION',
     /** Updates the currently selected cue, for application-wide handling

@@ -43,7 +43,7 @@ describe('RezLoader.vue', () => {
                 };
             },
             mutations: {
-                [MutationTypes.ADD_FILE_URL](state: State, payload: MediaUrl) {
+                [MutationTypes.ADD_MEDIA_URL](state: State, payload: MediaUrl) {
                     state.fileUrls.push(payload);
                 },
             },

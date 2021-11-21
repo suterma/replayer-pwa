@@ -9,7 +9,7 @@ export type Mutations<S = State> = {
     [MutationTypes.PUSH_PROGRESS_MESSAGE](state: S, payload: string): void;
     [MutationTypes.POP_PROGRESS_MESSAGE](state: S): void;
     [MutationTypes.FINISH_PROGRESS](state: State): void;
-    [MutationTypes.ADD_FILE_URL](state: S, payload: MediaUrl): void;
+    [MutationTypes.ADD_MEDIA_URL](state: S, payload: MediaUrl): void;
     [MutationTypes.REPLACE_COMPILATION](
         state: S,
         compilation: ICompilation,
@@ -37,12 +37,12 @@ export const mutations: MutationTree<State> & Mutations = {
         console.debug('FINISH_PROGRESS');
     },
 
-    [MutationTypes.ADD_FILE_URL](state: State, payload: MediaUrl) {
+    [MutationTypes.ADD_MEDIA_URL](state: State, payload: MediaUrl) {
         //Remove any previously matching
         const matchingFile = state.fileUrls.get(payload.fileName);
         if (matchingFile) {
             console.debug(
-                'mutations::ADD_FILE_URL:removing item for key:',
+                'mutations::ADD_MEDIA_URL:removing item for key:',
                 payload.fileName,
             );
             URL.revokeObjectURL(matchingFile.objectUrl);
@@ -51,12 +51,10 @@ export const mutations: MutationTree<State> & Mutations = {
 
         //Keep the others and add the new one
         console.debug(
-            'mutations::ADD_FILE_URL:adding item for key:',
+            'mutations::ADD_MEDIA_URL:adding item for key:',
             payload.fileName,
         );
         state.fileUrls.set(payload.fileName, payload);
-
-        //TODO store the blob in indexed db first, then call this mutation on the store afterwards
     },
     [MutationTypes.REPLACE_COMPILATION](
         state: State,

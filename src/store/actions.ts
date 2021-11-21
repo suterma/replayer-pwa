@@ -75,7 +75,7 @@ export const actions: ActionTree<State, State> & Actions = {
                                 mediaBlob.blob,
                             );
                             commit(
-                                MutationTypes.ADD_FILE_URL,
+                                MutationTypes.ADD_MEDIA_URL,
                                 new MediaUrl(mediaBlob.fileName, objectUrl),
                             );
                             // commit(
@@ -132,7 +132,7 @@ export const actions: ActionTree<State, State> & Actions = {
 
         const objectUrl = URL.createObjectURL(payload.blob);
         commit(
-            MutationTypes.ADD_FILE_URL,
+            MutationTypes.ADD_MEDIA_URL,
             new MediaUrl(payload.fileName, objectUrl),
         );
         //Store persistently, but after committing, to keep the process faster
