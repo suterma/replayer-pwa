@@ -63,6 +63,7 @@ import bplist from 'bplist-parser';
 import { MutationTypes } from '../store/mutation-types';
 import { MediaFile, RezMimeTypes } from '@/store/state-types';
 import NSKeyedUnarchiver from '@suterma/nskeyedunarchiver-liveplayback';
+import { ActionTypes } from '@/store/action-types';
 
 /** A Loader for importable files
  * @remarks Provides a button for loading local files and also listens to url params
@@ -217,7 +218,7 @@ export default defineComponent({
                                             zipEntry.name.normalize();
 
                                         if (mediaFileName.endsWith('.rex')) {
-                                            this.handleAsCompilation(
+                                            this.handleAsXmlCompilation(
                                                 content,
                                                 RezMimeTypes.TEXT_XML,
                                             );
@@ -274,7 +275,7 @@ export default defineComponent({
                     const reader = new FileReader();
                     reader.onload = () => {
                         const content = Buffer.from(reader.result as string);
-                        this.handleAsCompilation(
+                        this.handleAsXmlCompilation(
                             content,
                             RezMimeTypes.TEXT_XML,
                         );
@@ -325,7 +326,7 @@ export default defineComponent({
 
         /** Handles the given content as the compilation meta data
          */
-        handleAsCompilation(content: Buffer, mimeType: RezMimeTypes): void {
+        handleAsXmlCompilation(content: Buffer, mimeType: RezMimeTypes): void {
             this.withProgress(
                 'Parsing compilation (of type ' + mimeType + ')...',
                 () => {
@@ -335,8 +336,8 @@ export default defineComponent({
                             console.debug('Parsed compilation: ', result);
 
                             //Apply the compilation content to the store
-                            this.$store.commit(
-                                MutationTypes.UPDATE_COMPILATION_FROM_XML,
+                            this.$store.dispatch(
+                                ActionTypes.SET_COMPILATION_FROM_XML,
                                 result,
                             );
 
@@ -369,8 +370,8 @@ export default defineComponent({
                                 inputPropertyList,
                             );
                         //Apply the compilation content to the store
-                        this.$store.commit(
-                            MutationTypes.UPDATE_COMPILATION_FROM_PLIST,
+                        this.$store.dispatch(
+                            ActionTypes.SET_COMPILATION_FROM_PLIST,
                             unarchivedObject,
                         );
                     })();

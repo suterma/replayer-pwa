@@ -7,14 +7,10 @@ export enum MutationTypes {
      * @remarks A new file replaces any existing file with an exact same path.
      */
     ADD_FILE_URL = 'ADD_FILE_URL',
-    /** Replaces the existing compilation with a new one */
+    /** Replaces the current compilation with a new one */
     REPLACE_COMPILATION = 'REPLACE_COMPILATION',
-    /** Updates the intefnal with newly available data */
-    UPDATE_COMPILATION_FROM_XML = 'UPDATE_COMPILATION_FROM_XML',
-    /** Updates the intefnal with newly available data */
-    UPDATE_COMPILATION_FROM_PLIST = 'UPDATE_COMPILATION_FROM_PLIST',
-    /** Updates the currently set cue, for application-wide handling
-     * @remarks This does not control the playback itself. It is intended for display purposes.
+    /** Updates the currently selected cue, for application-wide handling
+     * @remarks This does not control the playback itself. It is intended for display and handling purposes.
      */
     UPDATE_CURRENT_CUE = 'UPDATE_CURRENT_CUE',
     /** Closes an existing compilation
