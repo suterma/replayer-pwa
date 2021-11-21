@@ -5,7 +5,7 @@ import { ActionTypes } from './action-types';
 import { MutationTypes } from './mutation-types';
 import PersistentStorage from './persistent-storage';
 import CompilationParser from './compilation-parser';
-import { MediaBlob, MediaFile } from './state-types';
+import { MediaBlob, MediaUrl } from './state-types';
 
 type AugmentedActionContext = {
     commit<K extends keyof Mutations>(
@@ -65,7 +65,7 @@ export const actions: ActionTree<State, State> & Actions = {
                         const objectUrl = URL.createObjectURL(mediaBlob.blob);
                         commit(
                             MutationTypes.ADD_FILE_URL,
-                            new MediaFile(mediaBlob.fileName, objectUrl),
+                            new MediaUrl(mediaBlob.fileName, objectUrl),
                         );
                     });
                 });
@@ -111,7 +111,7 @@ export const actions: ActionTree<State, State> & Actions = {
         const objectUrl = URL.createObjectURL(payload.blob);
         commit(
             MutationTypes.ADD_FILE_URL,
-            new MediaFile(payload.fileName, objectUrl),
+            new MediaUrl(payload.fileName, objectUrl),
         );
         //Store persistently, but after committing, to keep the process faster
         PersistentStorage.storeMediaBlob(payload);

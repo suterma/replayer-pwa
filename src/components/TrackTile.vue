@@ -96,7 +96,7 @@ import { defineComponent } from 'vue';
 import { Track, ICue } from '@/store/compilation-types';
 import CueButton from '@/components/CueButton.vue';
 import TrackAudioPlayer from '@/components/TrackAudioPlayer.vue';
-import { MediaFile } from '@/store/state-types';
+import { MediaUrl } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 
@@ -186,21 +186,21 @@ export default defineComponent({
         isEndingWithOneAnother(first: string, second: string): boolean {
             return first.endsWith(second) || second.endsWith(first);
         },
-        /** Finds the matching the media file (playable file content) for a track's file name, from an already loaded package
+        /** Finds the matching the media URL (playable data) for a track's file name, from an already loaded package
          * @param fileName - The file name to search for.
-         * @param mediaFileMap - A set of media files to search through.
+         * @param mediaUrlMap - A set of media files to search through.
          * @remarks If strict file names do not match, a more lazy approach without case and without non-ascii characters is attempted
          */
-        getMatchingPackageMediaFile(
+        getMatchingPackageMediaUrl(
             fileName: string | undefined,
-            mediaFileMap: Map<string, MediaFile>,
-        ): MediaFile | null {
-            if (mediaFileMap && fileName) {
+            mediaUrlMap: Map<string, MediaUrl>,
+        ): MediaUrl | null {
+            if (mediaUrlMap && fileName) {
                 //Default: Find by literal partial match of the file name
                 let url = null;
-                for (let [mediaFileName, mediaFile] of mediaFileMap) {
+                for (let [mediaFileName, mediaUrl] of mediaUrlMap) {
                     if (this.isEndingWithOneAnother(fileName, mediaFileName)) {
-                        url = mediaFile;
+                        url = mediaUrl;
                     }
                 }
 
@@ -213,7 +213,7 @@ export default defineComponent({
                         // eslint-disable-next-line
                         .replace(/[^\x00-\x7F]/g, '');
 
-                    for (let [mediaFileName, mediaFile] of mediaFileMap) {
+                    for (let [mediaFileName, mediaUrl] of mediaUrlMap) {
                         var lazyMediaFileName = mediaFileName
                             .toLowerCase()
                             // eslint-disable-next-line
@@ -225,7 +225,7 @@ export default defineComponent({
                                 lazyMediaFileName,
                             )
                         ) {
-                            url = mediaFile;
+                            url = mediaUrl;
                         }
                     }
                 }
@@ -236,7 +236,7 @@ export default defineComponent({
         },
         /** Finds the matching the media file (playable file content) for a track's file name, from the local file system */
         getMatchingLocalFileUrl(): /*_fileName: string | undefined,*/
-        MediaFile | null {
+        MediaUrl | null {
             // if (fileName) {
             //     var objectUrl = URL.createObjectURL(blob);
 
@@ -307,12 +307,12 @@ export default defineComponent({
          * files are to be loaded from the file system or from the internet
          */
 
-        trackFileUrl(): MediaFile | null {
+        trackFileUrl(): MediaUrl | null {
             const fileUrls = this.$store.getters.fileUrls as Map<
                 string,
-                MediaFile
+                MediaUrl
             >;
-            let fileUrl = this.getMatchingPackageMediaFile(
+            let fileUrl = this.getMatchingPackageMediaUrl(
                 this.track?.Url,
                 fileUrls,
             );

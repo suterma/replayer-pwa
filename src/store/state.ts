@@ -1,4 +1,4 @@
-import { MediaFile } from './state-types';
+import { MediaUrl } from './state-types';
 import { Compilation, Cue, ICompilation } from './compilation-types';
 
 /** Defines the state of this application */
@@ -10,7 +10,7 @@ interface IState {
     /** A dictionary of media files from a REZ compilation, representing playable buffers
      * @remarks the media file path is used as key, preventing duplicate files for the same content.
      */
-    fileUrls: Map<string, MediaFile>;
+    fileUrls: Map<string, MediaUrl>;
 
     /** The currently selected cue.
      * @remarks This does not control the playback itself. It is intended for display purposes.
@@ -34,7 +34,7 @@ export const state: IState = {
     /** @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
     selectedCue: new Cue(),
 
-    fileUrls: new Map<string, MediaFile>(),
+    fileUrls: new Map<string, MediaUrl>(),
 
     progressMessageStack: new Array<string>(),
 

@@ -7,7 +7,7 @@ import RezLoader from '@/components/RezLoader.vue';
 import { createStore } from 'vuex';
 import { MutationTypes } from '@/store/mutation-types';
 import { State } from '@/store/state';
-import { MediaFile } from '@/store/state-types';
+import { MediaUrl } from '@/store/state-types';
 import { Compilation, Cue } from '@/store/compilation-types';
 
 //TODO cleanup this test
@@ -35,7 +35,7 @@ describe('RezLoader.vue', () => {
                     /** @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
                     selectedCue: new Cue(),
 
-                    fileUrls: new Map<string, MediaFile>(),
+                    fileUrls: new Map<string, MediaUrl>(),
 
                     progressMessageStack: new Array<string>(),
 
@@ -43,7 +43,7 @@ describe('RezLoader.vue', () => {
                 };
             },
             mutations: {
-                [MutationTypes.ADD_FILE_URL](state: State, payload: MediaFile) {
+                [MutationTypes.ADD_FILE_URL](state: State, payload: MediaUrl) {
                     state.fileUrls.push(payload);
                 },
             },

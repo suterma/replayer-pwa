@@ -399,17 +399,6 @@ export default defineComponent({
                 new MediaBlob(mediaFileName, blob),
             );
         },
-
-        /** Handles the given blob as media file of the given type
-         * @devdoc This is used when a file is already available as blob
-         */
-        // handleAsMediaFromBlob(mediaFileName: string, blob: Blob): void {
-        //     var objectUrl = URL.createObjectURL(blob);
-        //     this.$store.commit(
-        //         MutationTypes.ADD_FILE_URL,
-        //         new MediaFile(mediaFileName, objectUrl),
-        //     );
-        // },
     },
     computed: {
         /** Provide the URL parameter from the route, if available */

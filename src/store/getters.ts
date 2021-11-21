@@ -1,14 +1,14 @@
 import { GetterTree } from 'vuex';
 import { Cue, ICompilation } from './compilation-types';
 import { State } from './state';
-import { MediaFile } from './state-types';
+import { MediaUrl } from './state-types';
 
 export type Getters = {
     /** Determines whether a compilation is availabe (created or loaded) */
     compilation(state: State): ICompilation;
     /** Defines the function to determine whether a compilation is availabe (created or loaded) */
     hasCompilation(state: State): boolean;
-    fileUrls(state: State): Map<string, MediaFile>;
+    fileUrls(state: State): Map<string, MediaUrl>;
     /** Gets the latest (newest) progress message from the stack */
     progressMessage(state: State): string | null;
     /** Determines whether the given cue is the currently selected one
@@ -38,7 +38,7 @@ export const getters: GetterTree<State, State> & Getters = {
     },
     /** @inheritdoc */
     fileUrls: (state) => {
-        return state.fileUrls as Map<string, MediaFile>;
+        return state.fileUrls as Map<string, MediaUrl>;
     },
     /** @inheritdoc */
     progressMessage: (state) => {
