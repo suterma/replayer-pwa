@@ -45,15 +45,13 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
         set(StorageKeys.MEDIA_BLOB + data.fileName, data.blob);
     }
     /** Persistently stores the compilation for later retrieval
-     * @devdoc The local storage is used for compilation for performance reasons here. No need to use the Indexed Db for small data
+     * @devdoc The local storage is used for performance reasons here. No need to use the Indexed Db for small data
      */
     static storeCompilation(compilation: ICompilation): void {
         localStorage.setItem(
             StorageKeys.COMPILATION,
             JSON.stringify(compilation),
         );
-        //TODO later remove
-        //set(StorageKeys.COMPILATION, JSON.stringify(compilation));
     }
     /** Retrieves media blob data from the persistent store
      * @devdoc The indexed db is used for blob data, as recommended.
@@ -100,39 +98,32 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
             }
             return new Compilation();
         }, null);
-
-        //TODO later remove
-        // return (get(StorageKeys.COMPILATION) as Promise<string>).then(
-        //     (compilation) => {
-        //         if (compilation) {
-        //             const compilationObject = JSON.parse(
-        //                 compilation,
-        //             ) as ICompilation;
-        //             //console.debug('retrievedCompilation', compilationObject);
-        //             return compilationObject;
-        //         } else return new Compilation();
-        //     },
-        // );
     }
     static clearCompilation(): void {
-        //TODO later remove
-        //del(StorageKeys.COMPILATION);
         localStorage.removeItem(StorageKeys.COMPILATION);
-        clear();
-        //No need to delete individual items
-        //del(StorageKeys.SELECTED_CUE);
+        localStorage.removeItem(StorageKeys.SELECTED_CUE);
+        clear(); // the media blobs
     }
+    /** Persistently stores the selected cue for later retrieval
+     * @devdoc The local storage is used for performance reasons here. No need to use the Indexed Db for small data
+     */
     static storeSelectedCue(cue: ICue): void {
-        set(StorageKeys.SELECTED_CUE, JSON.stringify(cue));
+        localStorage.setItem(StorageKeys.SELECTED_CUE, JSON.stringify(cue));
     }
+    /** Retrieves the selected cue from the persistent store
+     * @devdoc This returns a Cue-like object, which does not actually have a Cue prototype.
+     * This leads to warnings in Vue's property type check for non-production builds.
+     * Assignment via Object.assign might overcome this issue, but I refrain from that since it is actually unnecessary.
+     * See  https://stackoverflow.com/a/43977474/79485
+     * Also, using https://www.npmjs.com/package/ts-serializable might be a solution, but requires annotation.
+     * */
     static async retrieveSelectedCue(): Promise<ICue> {
-        return (get(StorageKeys.SELECTED_CUE) as Promise<string>).then(
-            (cue) => {
-                //console.debug('get cue item', cueItem);
-                if (cue) {
-                    return JSON.parse(cue);
-                } else return new Cue();
-            },
-        );
+        return createPromise(() => {
+            const cue = localStorage.getItem(StorageKeys.SELECTED_CUE);
+            if (cue) {
+                return JSON.parse(cue);
+            }
+            return new Cue();
+        }, null);
     }
 }
