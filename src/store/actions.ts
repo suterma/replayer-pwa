@@ -5,6 +5,7 @@ import { ActionTypes } from './action-types';
 import { MutationTypes } from './mutation-types';
 import PersistentStorage from './persistent-storage';
 import CompilationParser from './compilation-parser';
+import { MediaBlob, MediaFile } from './state-types';
 
 type AugmentedActionContext = {
     commit<K extends keyof Mutations>(
@@ -13,13 +14,12 @@ type AugmentedActionContext = {
     ): ReturnType<Mutations[K]>;
 } & Omit<ActionContext<State, State>, 'commit'>;
 
+/** Implements the actions for the store */
 export interface Actions {
-    //TODO later actions instead of mutations directly, when appropriate
-    //These are currently not used
-    [ActionTypes.PLAY_TRACK](
-        { commit }: AugmentedActionContext,
-        payload: string,
-    ): Promise<string>;
+    // [ActionTypes.PLAY_TRACK](
+    //     { commit }: AugmentedActionContext,
+    //     payload: string,
+    // ): Promise<string>;
     [ActionTypes.SET_COMPILATION_FROM_XML](
         { commit }: AugmentedActionContext,
         payload: string,
@@ -31,18 +31,21 @@ export interface Actions {
     [ActionTypes.RETRIEVE_COMPILATION]({
         commit,
     }: AugmentedActionContext): void;
+    [ActionTypes.ADD_MEDIA_BLOB](
+        { commit }: AugmentedActionContext,
+        payload: { fileName: string; blob: Blob },
+    ): void;
 }
 export const actions: ActionTree<State, State> & Actions = {
-    [ActionTypes.PLAY_TRACK]({ commit }) {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const data = 'action return value';
-                commit(MutationTypes.SET_PROGRESS_MESSAGE, 'Playing track...');
-                resolve(data);
-            }, 500);
-        });
-    },
-    //    [ActionTypes.SET_COMPILATION]({ commit }, payload: ICompilation) {},
+    // [ActionTypes.PLAY_TRACK]({ commit }) {
+    //     return new Promise((resolve) => {
+    //         setTimeout(() => {
+    //             const data = 'action return value';
+    //             commit(MutationTypes.SET_PROGRESS_MESSAGE, 'Playing track...');
+    //             resolve(data);
+    //         }, 500);
+    //     });
+    // },
     [ActionTypes.RETRIEVE_COMPILATION]({ commit }) {
         console.debug('RETRIEVE_COMPILATION');
         commit(
@@ -51,10 +54,24 @@ export const actions: ActionTree<State, State> & Actions = {
         );
         PersistentStorage.retrieveCompilation()
             .then((compilation) => {
+                //Replace the compilation
                 console.debug('committing compilation: ', compilation);
                 commit(MutationTypes.REPLACE_COMPILATION, compilation);
             })
             .then(() => {
+                //retrieve all blobs (which should also include the ones for the afore-loaded compilation)
+                PersistentStorage.retrieveAllMediaBlobs().then((mediaBlobs) => {
+                    mediaBlobs.forEach((mediaBlob) => {
+                        const objectUrl = URL.createObjectURL(mediaBlob.blob);
+                        commit(
+                            MutationTypes.ADD_FILE_URL,
+                            new MediaFile(mediaBlob.fileName, objectUrl),
+                        );
+                    });
+                });
+            })
+            .then(() => {
+                //Update the selected cue
                 PersistentStorage.retrieveSelectedCue().then((cue) => {
                     console.debug('committing cue: ', cue);
                     commit(MutationTypes.UPDATE_SELECTED_CUE, cue);
@@ -83,5 +100,20 @@ export const actions: ActionTree<State, State> & Actions = {
         commit(MutationTypes.REPLACE_COMPILATION, compilation);
         //Store persistently, but after committing, to keep the process faster
         PersistentStorage.storeCompilation(compilation);
+    },
+
+    [ActionTypes.ADD_MEDIA_BLOB]({ commit }, payload: MediaBlob) {
+        console.debug(
+            'actions::ADD_MEDIA_BLOB:payload-filename',
+            payload.fileName,
+        );
+
+        const objectUrl = URL.createObjectURL(payload.blob);
+        commit(
+            MutationTypes.ADD_FILE_URL,
+            new MediaFile(payload.fileName, objectUrl),
+        );
+        //Store persistently, but after committing, to keep the process faster
+        PersistentStorage.storeMediaBlob(payload);
     },
 };

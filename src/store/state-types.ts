@@ -22,6 +22,22 @@ export class MediaFile implements IMediaFile {
     objectUrl: string;
 }
 
+/** @class Implements a named media blob
+ * @remarks A media blob contains playable content with a name
+ */
+export class MediaBlob {
+    /** @constructor
+     * @param {string} fileName - The name of the original media file (from the disk or from within a REZ/ZIP-file)
+     * @param {Blob} blob - The blob with playable content
+     */
+    constructor(fileName: string, blob: Blob) {
+        this.fileName = fileName;
+        this.blob = blob;
+    }
+    fileName: string;
+    blob: Blob;
+}
+
 /** The set of supported mime type in a REZ container */
 export enum RezMimeTypes {
     AUDIO_MP3 = 'audio/mp3',

@@ -2,10 +2,12 @@
 enum StorageKeys {
     COMPILATION = 'COMPILATION',
     SELECTED_CUE = 'SELECTED_CUE',
+    MEDIA_BLOB = 'MEDIA_BLOB',
 }
 
 import { Compilation, Cue, ICompilation, ICue } from './compilation-types';
-import { get, set, del } from 'idb-keyval';
+import { get, set, clear, entries } from 'idb-keyval';
+import { MediaBlob } from './state-types';
 
 /** @devdoc Taken from
  * async-local-storage
@@ -36,6 +38,12 @@ const createPromise = (getValue: any, callback: any): Promise<any> => {
  * @devdoc Internally decides on optimal storage type use for each entity, thus hiding this complexity from the using code.
  * @devdoc Implements a module as described in https://www.typescriptlang.org/docs/handbook/modules.html */
 export default class PersistentStorage /*implements IPersistentStorage*/ {
+    /** Persistently stores media blob data for later retrieval
+     * @devdoc The indexed db is used for blob data, as recommended for large data.
+     */
+    static storeMediaBlob(data: { fileName: string; blob: Blob }) {
+        set(StorageKeys.MEDIA_BLOB + data.fileName, data.blob);
+    }
     /** Persistently stores the compilation for later retrieval
      * @devdoc The local storage is used for compilation for performance reasons here. No need to use the Indexed Db for small data
      */
@@ -46,6 +54,36 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
         );
         //TODO later remove
         //set(StorageKeys.COMPILATION, JSON.stringify(compilation));
+    }
+    /** Retrieves media blob data from the persistent store
+     * @devdoc The indexed db is used for blob data, as recommended.
+     */
+    static retrieveAllMediaBlobs(): Promise<MediaBlob[]> {
+        return (entries() as Promise<[IDBValidKey, Blob][]>).then((entries) => {
+            const mediaBlobs = new Array<MediaBlob>();
+
+            entries.forEach((item) => {
+                const key = item[0].toString();
+                const blob = item[1];
+                if (key.startsWith(StorageKeys.MEDIA_BLOB)) {
+                    const fileName = key.slice(StorageKeys.MEDIA_BLOB.length);
+                    mediaBlobs.push(new MediaBlob(fileName, blob));
+                }
+            });
+
+            return mediaBlobs;
+        });
+    }
+
+    /** Retrieves the given media blob data from the persistent store
+     * @devdoc The indexed db is used for blob data, as recommended.
+     */
+    static retrieveMediaBlob(fileName: string): Promise<MediaBlob> {
+        return (get(StorageKeys.MEDIA_BLOB + fileName) as Promise<Blob>).then(
+            (blob) => {
+                return new MediaBlob(fileName, blob);
+            },
+        );
     }
     /** Retrieves the compilation from the persistent store
      * @devdoc This returns a Compilation-like object, which does not acutally have Compilation and related prototypes.
@@ -80,7 +118,9 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
         //TODO later remove
         //del(StorageKeys.COMPILATION);
         localStorage.removeItem(StorageKeys.COMPILATION);
-        del(StorageKeys.SELECTED_CUE);
+        clear();
+        //No need to delete individual items
+        //del(StorageKeys.SELECTED_CUE);
     }
     static storeSelectedCue(cue: ICue): void {
         set(StorageKeys.SELECTED_CUE, JSON.stringify(cue));

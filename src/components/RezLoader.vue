@@ -61,7 +61,7 @@ import JSZip from 'jszip';
 import xml2js from 'xml2js';
 import bplist from 'bplist-parser';
 import { MutationTypes } from '../store/mutation-types';
-import { MediaFile, RezMimeTypes } from '@/store/state-types';
+import { MediaBlob, RezMimeTypes } from '@/store/state-types';
 import NSKeyedUnarchiver from '@suterma/nskeyedunarchiver-liveplayback';
 import { ActionTypes } from '@/store/action-types';
 
@@ -171,7 +171,10 @@ export default defineComponent({
                     ) {
                         this.loadFileAsRex(file);
                     } else if (file.name.toLowerCase().endsWith('.mp3')) {
-                        this.handleAsMediaFromBlob(file.name, file);
+                        this.$store.dispatch(
+                            ActionTypes.ADD_MEDIA_BLOB,
+                            new MediaBlob(file.name, file),
+                        );
                     }
                     //Is a LivePlayback playlist?
                     else if (
@@ -391,19 +394,22 @@ export default defineComponent({
             const blob = new Blob([content], {
                 type: mimeType,
             });
-            this.handleAsMediaFromBlob(mediaFileName, blob);
+            this.$store.dispatch(
+                ActionTypes.ADD_MEDIA_BLOB,
+                new MediaBlob(mediaFileName, blob),
+            );
         },
 
         /** Handles the given blob as media file of the given type
          * @devdoc This is used when a file is already available as blob
          */
-        handleAsMediaFromBlob(mediaFileName: string, blob: Blob): void {
-            var objectUrl = URL.createObjectURL(blob);
-            this.$store.commit(
-                MutationTypes.ADD_FILE_URL,
-                new MediaFile(mediaFileName, objectUrl),
-            );
-        },
+        // handleAsMediaFromBlob(mediaFileName: string, blob: Blob): void {
+        //     var objectUrl = URL.createObjectURL(blob);
+        //     this.$store.commit(
+        //         MutationTypes.ADD_FILE_URL,
+        //         new MediaFile(mediaFileName, objectUrl),
+        //     );
+        // },
     },
     computed: {
         /** Provide the URL parameter from the route, if available */
