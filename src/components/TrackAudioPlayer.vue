@@ -333,7 +333,7 @@ export default defineComponent({
             console.debug(`TrackAudioPlayer(${this.title})::stop`);
             this.playing = false;
             this.audioElement.currentTime = 0;
-            this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, undefined);
+            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE, undefined);
         },
         togglePlayback() {
             console.debug(`TrackAudioPlayer(${this.title})::togglePlayback`);

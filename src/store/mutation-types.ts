@@ -12,7 +12,7 @@ export enum MutationTypes {
     /** Updates the currently selected cue, for application-wide handling
      * @remarks This does not control the playback itself. It is intended for display and handling purposes.
      */
-    UPDATE_CURRENT_CUE = 'UPDATE_CURRENT_CUE',
+    UPDATE_SELECTED_CUE = 'UPDATE_SELECTED_CUE',
     /** Closes an existing compilation
      * @remarks Removes the compilation with all data, including the media files
      */

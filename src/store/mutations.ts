@@ -13,7 +13,7 @@ export type Mutations<S = State> = {
         state: S,
         compilation: ICompilation,
     ): void;
-    [MutationTypes.UPDATE_CURRENT_CUE](state: S, payload: Cue): void;
+    [MutationTypes.UPDATE_SELECTED_CUE](state: S, payload: Cue): void;
     [MutationTypes.CLOSE_COMPILATION](state: S): void;
     [MutationTypes.UPDATE_NEVER_SHOW_WELCOME_MESSAGE_AGAIN](
         state: S,
@@ -64,7 +64,7 @@ export const mutations: MutationTree<State> & Mutations = {
         state.compilation = compilation;
     },
 
-    [MutationTypes.UPDATE_CURRENT_CUE](state: State, payload: Cue) {
+    [MutationTypes.UPDATE_SELECTED_CUE](state: State, payload: Cue) {
         state.selectedCue = payload;
         PersistentStorage.storeSelectedCue(payload);
     },

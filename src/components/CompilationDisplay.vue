@@ -78,14 +78,14 @@ export default defineComponent({
             const allCues = this.allCues;
             const indexOfSelected = allCues.indexOf(this.selectedCue);
             const previousCue = allCues[indexOfSelected - 1];
-            this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, previousCue);
+            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE, previousCue);
         },
 
         toNextCue() {
             const allCues = this.allCues;
             const indexOfSelected = allCues.indexOf(this.selectedCue);
             const nextCue = allCues[indexOfSelected + 1];
-            this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, nextCue);
+            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE, nextCue);
         },
 
         toMnemonicCue(event: Event) {
@@ -95,7 +95,7 @@ export default defineComponent({
             );
             if (matchingCue) {
                 this.$store.commit(
-                    MutationTypes.UPDATE_CURRENT_CUE,
+                    MutationTypes.UPDATE_SELECTED_CUE,
                     matchingCue,
                 );
             }

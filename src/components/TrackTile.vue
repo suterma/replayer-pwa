@@ -171,7 +171,7 @@ export default defineComponent({
         cueClick(cue: ICue) {
             if (cue.Time != null) {
                 //Update the selected cue to this cue
-                this.$store.commit(MutationTypes.UPDATE_CURRENT_CUE, cue);
+                this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE, cue);
 
                 //Set the position to this cue and handle playback
                 if (this.trackPlayerInstance.playing === true) {

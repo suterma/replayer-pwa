@@ -57,7 +57,7 @@ export const actions: ActionTree<State, State> & Actions = {
             .then(() => {
                 PersistentStorage.retrieveSelectedCue().then((cue) => {
                     console.debug('committing cue: ', cue);
-                    commit(MutationTypes.UPDATE_CURRENT_CUE, cue);
+                    commit(MutationTypes.UPDATE_SELECTED_CUE, cue);
                 });
             })
             .finally(() => {
