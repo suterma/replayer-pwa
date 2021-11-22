@@ -39,14 +39,14 @@ export const mutations: MutationTree<State> & Mutations = {
 
     [MutationTypes.ADD_MEDIA_URL](state: State, payload: MediaUrl) {
         //Remove any previously matching
-        const matchingFile = state.fileUrls.get(payload.fileName);
+        const matchingFile = state.mediaUrls.get(payload.fileName);
         if (matchingFile) {
             console.debug(
                 'mutations::ADD_MEDIA_URL:removing item for key:',
                 payload.fileName,
             );
             URL.revokeObjectURL(matchingFile.objectUrl);
-            state.fileUrls.delete(payload.fileName);
+            state.mediaUrls.delete(payload.fileName);
         }
 
         //Keep the others and add the new one
@@ -54,7 +54,7 @@ export const mutations: MutationTree<State> & Mutations = {
             'mutations::ADD_MEDIA_URL:adding item for key:',
             payload.fileName,
         );
-        state.fileUrls.set(payload.fileName, payload);
+        state.mediaUrls.set(payload.fileName, payload);
     },
     [MutationTypes.REPLACE_COMPILATION](
         state: State,
@@ -80,10 +80,10 @@ export const mutations: MutationTree<State> & Mutations = {
         state.selectedCue = new Cue();
         state.compilation = new Compilation();
 
-        state.fileUrls.forEach((file) => {
+        state.mediaUrls.forEach((file) => {
             URL.revokeObjectURL(file.objectUrl);
         });
-        state.fileUrls.clear();
+        state.mediaUrls.clear();
     },
     /** Sets whether to never show the welcome message ever again
      * @param state - The vuex state

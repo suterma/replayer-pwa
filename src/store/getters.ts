@@ -8,7 +8,7 @@ export type Getters = {
     compilation(state: State): ICompilation;
     /** Defines the function to determine whether a compilation is availabe (created or loaded) */
     hasCompilation(state: State): boolean;
-    fileUrls(state: State): Map<string, MediaUrl>;
+    mediaUrls(state: State): Map<string, MediaUrl>;
     /** Gets the latest (newest) progress message from the stack */
     progressMessage(state: State): string | null;
     /** Determines whether the given cue is the currently selected one
@@ -37,8 +37,8 @@ export const getters: GetterTree<State, State> & Getters = {
         return false;
     },
     /** @inheritdoc */
-    fileUrls: (state) => {
-        return state.fileUrls as Map<string, MediaUrl>;
+    mediaUrls: (state) => {
+        return state.mediaUrls as Map<string, MediaUrl>;
     },
     /** @inheritdoc */
     progressMessage: (state) => {

@@ -35,7 +35,7 @@ describe('RezLoader.vue', () => {
                     /** @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
                     selectedCue: new Cue(),
 
-                    fileUrls: new Map<string, MediaUrl>(),
+                    mediaUrls: new Map<string, MediaUrl>(),
 
                     progressMessageStack: new Array<string>(),
 
@@ -44,7 +44,7 @@ describe('RezLoader.vue', () => {
             },
             mutations: {
                 [MutationTypes.ADD_MEDIA_URL](state: State, payload: MediaUrl) {
-                    state.fileUrls.push(payload);
+                    state.mediaUrls.push(payload);
                 },
             },
         });

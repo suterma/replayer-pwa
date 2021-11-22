@@ -234,16 +234,6 @@ export default defineComponent({
                 return null;
             }
         },
-        /** Finds the matching the media file (playable file content) for a track's file name, from the local file system */
-        getMatchingLocalFileUrl(): /*_fileName: string | undefined,*/
-        MediaUrl | null {
-            // if (fileName) {
-            //     var objectUrl = URL.createObjectURL(blob);
-
-            //     const objectURL = window.URL.createObjectURL(file);
-            // }
-            return null; //TODO load the file
-        },
         /** Updates the current seconds property with the temporal position of the track audio player
          * @remarks This is used to control the cue display for this track's cues
          */
@@ -254,11 +244,6 @@ export default defineComponent({
          * @remarks Using the existing cues, and the now available track duration, calculates the durations of all cues, including the last one
          * @devdoc The calculated durations are only valid as long as the cues, their times, and the track does not change */
         calculateCueDurations(trackDurationSeconds: number) {
-            // console.debug(
-            //     'TrackTile::calculateCueDurations:trackDurationSeconds',
-            //     trackDurationSeconds,
-            // );
-
             const originalCues = this.cues?.filter(function (el) {
                 return el.Time !== null;
             });
@@ -276,10 +261,6 @@ export default defineComponent({
                     }
                     lastTime = element.Time;
                 });
-                // console.debug(
-                //     'TrackTile::calculateCueDurations:originalCues',
-                //     originalCues,
-                // );
             }
         },
     },
@@ -308,28 +289,20 @@ export default defineComponent({
          */
 
         trackFileUrl(): MediaUrl | null {
-            const fileUrls = this.$store.getters.fileUrls as Map<
+            const mediaUrls = this.$store.getters.mediaUrls as Map<
                 string,
                 MediaUrl
             >;
-            let fileUrl = this.getMatchingPackageMediaUrl(
+            let mediaUrl = this.getMatchingPackageMediaUrl(
                 this.track?.Url,
-                fileUrls,
+                mediaUrls,
             );
-            if (fileUrl === null) {
-                fileUrl = this.getMatchingLocalFileUrl(/*this.track?.Url*/);
-            }
-            return fileUrl;
+            return mediaUrl;
         },
         /** Determines whether this is the active track (i.e. the globally selected cue is from this track ) */
         isActiveTrack(): boolean {
             const selectedCue = this.$store.getters.selectedCue as ICue;
             const selectedCueId = selectedCue?.Id;
-            // console.debug(
-            //     `TrackTile(${this.track?.Name})::isActiveTrack:selectedCueId`,
-            //     selectedCueId,
-            // );
-
             if (!selectedCueId) {
                 //if none selected, this track is not active anyway
                 return false;
