@@ -7,11 +7,10 @@ import RezLoader from '@/components/RezLoader.vue';
 import { createStore } from 'vuex';
 import { MutationTypes } from '@/store/mutation-types';
 import { State } from '@/store/state';
-import { MediaUrl } from '@/store/state-types';
+import { MediaBlob, MediaUrl } from '@/store/state-types';
 import { Compilation, Cue } from '@/store/compilation-types';
+import { ActionTypes } from '@/store/action-types';
 
-//TODO cleanup this test
-//TODO do a memory performance test for the object urls either by hand or with another specific test
 describe('RezLoader.vue', () => {
     //https://stackoverflow.com/a/56643520
     beforeEach(() => {
@@ -27,7 +26,7 @@ describe('RezLoader.vue', () => {
 
         const store = createStore({
             state() {
-                //TODO can I use a constructor here, instead of manually construct the store here?
+                //WORK: can I use a constructor here, instead of manually construct the store here?
                 return {
                     /** @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
                     compilation: new Compilation(),
@@ -44,7 +43,12 @@ describe('RezLoader.vue', () => {
             },
             mutations: {
                 [MutationTypes.ADD_MEDIA_URL](state: State, payload: MediaUrl) {
-                    state.mediaUrls.push(payload);
+                    state.mediaUrls.set(payload.fileName, payload);
+                },
+            },
+            actions: {
+                [ActionTypes.ADD_MEDIA_BLOB]({}, payload: MediaBlob) {
+                    URL.createObjectURL(payload.blob);
                 },
             },
         });
@@ -54,13 +58,6 @@ describe('RezLoader.vue', () => {
             },
         });
 
-        //Get the file content
-
-        // let blob = new Blob([''], { type: 'text/html' });
-        // blob['lastModifiedDate'] = '';
-        // blob['name'] = 'filename';
-        //let fakeF = <File>blob;
-
         const dataBase64 = 'VEhJUyBJUyBUSEUgQU5TV0VSCg==';
         const arrayBuffer = Uint8Array.from(window.atob(dataBase64), (c) =>
             c.charCodeAt(0),
@@ -69,23 +66,11 @@ describe('RezLoader.vue', () => {
             type: 'application/pdf',
         });
 
-        // var url =
-        //     'https://web.replayer.app/demo-compilation-featuring-lidija-roos.rez';
-        // var response = await fetch(url);
-        // var blob = await response.blob;
-        // const file = new File(
-        //     [blob],
-        //     url,
-        //     //TODO use the mime type from the response to determine the handling
-        //     // {
-        //     //     type: 'application/zip',
-        //     // }
-        // );
-        // loadFile(file);
-
         //Act
-
-        wrapper.vm.handleAsMediaFromBlob(file);
+        wrapper.vm.$store.dispatch(
+            ActionTypes.ADD_MEDIA_BLOB,
+            new MediaBlob(file.name, file),
+        );
 
         expect(URL.createObjectURL).toHaveBeenCalledTimes(1);
 
