@@ -4,7 +4,14 @@
     <!-- The page content -->
     <section class="section">
         <div id="content" class="content">
-            <router-view />
+            <!-- To keep the audio within the media player component running, 
+            simply keep all components alive over route changes -->
+            <router-view v-slot="{ Component }">
+                <keep-alive include="Play">
+                    <component :is="Component" />
+                </keep-alive>
+            </router-view>
+
             <ProgressOverlay />
             <WelcomeMessage />
         </div>

@@ -39,6 +39,7 @@ import { ICompilation } from '@/store/compilation-types';
 import CompilationXmlDisplay from '@/components/CompilationXmlDisplay.vue';
 
 export default defineComponent({
+    name: 'Development',
     components: {
         CompilationXmlDisplay,
     },
