@@ -237,7 +237,7 @@ export default defineComponent({
      * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
      */
     created() {
-        console.debug(`TrackAudioApiPlayer::beforeCreate`);
+        console.debug(`TrackAudioApiPlayer::created`);
 
         this.looping = this.loop;
         this.audioElement.loop = this.looping;
@@ -258,8 +258,11 @@ export default defineComponent({
     unmounted() {
         console.debug(`TrackAudioApiPlayer::unmounted`);
 
-        this.audioElement.src = '';
-        document.removeChild(this.audioElement);
+        //properly desctroy the audio element and the audio context
+        this.audioElement.pause();
+        this.audioElement.remove();
+
+        this.audioContext.close();
     },
 
     computed: {
