@@ -47,6 +47,7 @@ describe('RezLoader.vue', () => {
                 },
             },
             actions: {
+                // eslint-disable-next-line no-empty-pattern
                 [ActionTypes.ADD_MEDIA_BLOB]({}, payload: MediaBlob) {
                     URL.createObjectURL(payload.blob);
                 },
