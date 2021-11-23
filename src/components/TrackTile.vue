@@ -60,14 +60,14 @@
 
         <div v-show="showCues">
             <!-- The audio player, but only shown when the source is available -->
-            <TrackAudioPlayer
+            <TrackAudioApiPlayer
                 v-if="trackFileUrl?.objectUrl"
                 ref="player"
                 :title="trackFileUrl?.fileName"
                 :src="trackFileUrl?.objectUrl"
                 v-on:timeupdate="updateTime"
                 v-on:trackLoaded="calculateCueDurations"
-            ></TrackAudioPlayer>
+            ></TrackAudioApiPlayer>
 
             <!-- Otherwise show a placeholder -->
             <p v-else>
@@ -95,7 +95,7 @@
 import { defineComponent } from 'vue';
 import { Track, ICue } from '@/store/compilation-types';
 import CueButton from '@/components/CueButton.vue';
-import TrackAudioPlayer from '@/components/TrackAudioPlayer.vue';
+import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
 import { MediaUrl } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
@@ -105,7 +105,7 @@ import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
  */
 export default defineComponent({
     name: 'TrackTile',
-    components: { CueButton, TrackAudioPlayer, ReplayerEventHandler },
+    components: { CueButton, TrackAudioApiPlayer, ReplayerEventHandler },
     props: {
         track: Track,
     },
@@ -277,8 +277,10 @@ export default defineComponent({
         },
     },
     computed: {
-        trackPlayerInstance(): InstanceType<typeof TrackAudioPlayer> {
-            return this.$refs.player as InstanceType<typeof TrackAudioPlayer>;
+        trackPlayerInstance(): InstanceType<typeof TrackAudioApiPlayer> {
+            return this.$refs.player as InstanceType<
+                typeof TrackAudioApiPlayer
+            >;
         },
         cues(): Array<ICue> | undefined {
             return this.track?.Cues;

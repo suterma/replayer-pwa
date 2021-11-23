@@ -182,17 +182,6 @@
             </span>
         </p>
     </div>
-    <audio
-        :loop="looping"
-        ref="audio"
-        :src="src"
-        v-on:timeupdate="updateTime"
-        v-on:loadeddata="load"
-        v-on:pause="playing = false"
-        v-on:play="playing = true"
-        preload="auto"
-        style="display: none"
-    ></audio>
 </template>
 
 <script lang="ts">
@@ -235,7 +224,44 @@ export default defineComponent({
         showVolume: false,
         /** Default value, user may change later */
         volume: 25,
+        /** The audio context to use
+         * @devdoc //TODO later allow to use the "playback" option via a settings panel: https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext#options
+         * @devdoc //TODO what about: window.AudioContext = window.AudioContext || window.webkitAudioContext; Is this required?
+         */
+        audioContext: new AudioContext({
+            latencyHint: 'interactive',
+        }),
+        audioElement: document.createElement('audio'),
     }),
+    /** Handles the setup of the audio graph outside the mounted lifespan.
+     * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
+     */
+    created() {
+        console.debug(`TrackAudioApiPlayer::beforeCreate`);
+
+        this.looping = this.loop;
+        this.audioElement.loop = this.looping;
+        this.audioElement.src = this.src;
+        this.audioElement.ontimeupdate = this.updateTime;
+        this.audioElement.onloadeddata = this.load;
+        this.audioElement.onpause = () => {
+            this.playing = false;
+        };
+        this.audioElement.onplay = () => {
+            this.playing = true;
+        };
+        this.audioElement.preload = 'auto';
+    },
+    /** Handles the teardown of the audio graph outside the mounted lifespan.
+     * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
+     */
+    unmounted() {
+        console.debug(`TrackAudioApiPlayer::unmounted`);
+
+        this.audioElement.src = '';
+        document.removeChild(this.audioElement);
+    },
+
     computed: {
         muted(): boolean {
             return this.volume / 100 === 0;
@@ -257,9 +283,6 @@ export default defineComponent({
         },
         volumeTitle(): string {
             return `Volume (${this.volume}%)`;
-        },
-        audioElement(): InstanceType<typeof Audio> {
-            return this.$refs.audio as InstanceType<typeof Audio>;
         },
     },
 
@@ -394,9 +417,6 @@ export default defineComponent({
             );
             this.audioElement.currentTime = position;
         },
-    },
-    created() {
-        this.looping = this.loop;
     },
 });
 </script>
