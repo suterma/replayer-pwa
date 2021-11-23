@@ -69,6 +69,11 @@ html {
     }
 }
 
+/* A success variant of a border */
+.has-border-success {
+    border: 1px solid $success;
+}
+
 /* Multiline buttons (use <br/> in a button text to force multiline) */
 .button.is-multiline {
     min-height: 2.25em;

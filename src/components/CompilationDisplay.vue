@@ -17,6 +17,11 @@
     <div class="buttons">
         <template v-for="track in tracks" :key="track.Id">
             <a
+                :class="{
+                    button: true,
+                    'is-primary': true,
+                    'is-success': activeTrack?.Id == track.Id,
+                }"
                 class="button is-primary"
                 href="#"
                 v-scroll-to="{

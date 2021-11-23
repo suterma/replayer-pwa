@@ -16,9 +16,21 @@
 
     <hr class="is-hidden-tablet" />
     <!-- Each track is a box, styled like a card, and contains all the cues -->
-    <div class="box card track">
+    <div
+        :class="{
+            box: true,
+            card: true,
+            track: true,
+            'has-border-success': isActiveTrack,
+        }"
+    >
         <h2 class="subtitle" v-bind:id="'track-' + track.Id">
-            <span class="">{{ track.Name }}</span>
+            <span
+                :class="{
+                    'has-text-success': isActiveTrack,
+                }"
+                >{{ track.Name }}</span
+            >
 
             <!-- Text colors similar to cues -->
             <span v-if="!showCues" class="is-pulled-right ml-3 tag is-warning"
