@@ -48,9 +48,9 @@
                 >
                 <router-link
                     @click="toggleBurger"
-                    class="navbar-item"
+                    class="navbar-item has-text-danger"
                     to="/development"
-                    >Dev&nbsp; <span class="tag is-danger">beta</span>
+                    >BETA
                 </router-link>
             </div>
         </div>
