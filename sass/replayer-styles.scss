@@ -13,6 +13,11 @@ $navbar-breakpoint: 320px;
 @import '../node_modules/bulma/bulma.sass';
 @import '../node_modules/bulmaswatch/slate/_overrides.scss';
 
+/* Player styles (to be used for the audio player) */
+@import 'replayer-player-styles.scss';
+/* Menu styles */
+@import 'replayer-navbar-styles.scss';
+
 /** **********************************************************
  * Application-specific add-ons/modifications to the Bulma CSS 
 **************************************************************
@@ -98,8 +103,3 @@ html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-
-/* Player styles (to be used for the audio player) */
-@import 'replayer-player-styles.scss';
-/* Menu styles */
-@import 'replayer-navbar-styles.scss';

@@ -21,7 +21,6 @@
             box: true,
             card: true,
             track: true,
-            'has-border-success': isActiveTrack,
         }"
     >
         <h2 class="subtitle" v-bind:id="'track-' + track.Id">
