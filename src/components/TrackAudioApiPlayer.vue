@@ -301,6 +301,13 @@ export default defineComponent({
         volume(): void {
             this.audioElement.volume = this.volume / 100;
         },
+        /** Watch whether the looping changed, and then update the audio element accordingly  */
+        looping(): void {
+            console.debug(
+                `TrackAudioPlayer(${this.title})::looping:${this.looping}`,
+            );
+            this.audioElement.loop = this.looping;
+        },
     },
     methods: {
         /** Converts the total seconds into a conveniently displayable hh:mm:ss.s format.
