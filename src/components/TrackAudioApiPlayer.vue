@@ -2,7 +2,13 @@
     <div class="field has-addons player-panel">
         <!-- Stop (do not show on small devices, user still can use play/pause) -->
         <p class="control is-hidden-mobile">
-            <span class="button" v-on:click.prevent="stop" title="Stop">
+            <button
+                :class="{
+                    button: true,
+                }"
+                v-on:click.prevent="stop"
+                title="Stop"
+            >
                 <span class="icon">
                     <i>
                         <svg
@@ -15,11 +21,14 @@
                             /></svg
                     ></i>
                 </span>
-            </span>
+            </button>
         </p>
         <p class="control">
-            <span
-                class="button"
+            <button
+                :class="{
+                    button: true,
+                    'is-success': playing,
+                }"
                 v-on:click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
             >
@@ -42,7 +51,7 @@
                         </svg>
                     </i>
                 </span>
-            </span>
+            </button>
         </p>
         <!-- The seek bar -->
         <div
@@ -70,9 +79,11 @@
         </div>
         <!-- Download (do not show on small devices) -->
         <p class="control is-hidden-mobile">
-            <span
+            <button
                 v-show="!showVolume"
-                class="button"
+                :class="{
+                    button: true,
+                }"
                 v-on:click.prevent="download"
                 title="Download"
             >
@@ -89,12 +100,14 @@
                         </svg>
                     </i>
                 </span>
-            </span>
+            </button>
         </p>
         <!-- Loop -->
         <p class="control">
-            <span
-                class="button"
+            <button
+                :class="{
+                    button: true,
+                }"
                 v-show="!showVolume"
                 v-on:click.prevent="looping = !looping"
                 title="Loop"
@@ -118,12 +131,14 @@
                         </svg>
                     </i>
                 </span>
-            </span>
+            </button>
         </p>
         <!-- Mute (do not show on small devices, user still can use the volume) -->
         <p class="control is-hidden-mobile">
-            <span
-                class="button"
+            <button
+                :class="{
+                    button: true,
+                }"
                 v-show="!showVolume"
                 v-on:click.prevent="mute"
                 title="Mute"
@@ -147,12 +162,14 @@
                         </svg>
                     </i>
                 </span>
-            </span>
+            </button>
         </p>
         <!-- Volume (do not show on small devices, user still can use the device volume) -->
         <p class="control is-hidden-mobile">
-            <span
-                class="button"
+            <button
+                :class="{
+                    button: true,
+                }"
                 v-on:click.prevent=""
                 v-on:mouseenter="showVolume = true"
                 v-on:mouseleave="showVolume = false"
@@ -179,7 +196,7 @@
                     min="0"
                     max="100"
                 />
-            </span>
+            </button>
         </p>
     </div>
 </template>
@@ -300,6 +317,13 @@ export default defineComponent({
         /** Watch whether the volume changed, and then update the audio element accordingly  */
         volume(): void {
             this.audioElement.volume = this.volume / 100;
+        },
+        /** Watch whether the looping changed, and then update the audio element accordingly  */
+        looping(): void {
+            console.debug(
+                `TrackAudioPlayer(${this.title})::looping:${this.looping}`,
+            );
+            this.audioElement.loop = this.looping;
         },
     },
     methods: {
