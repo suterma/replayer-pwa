@@ -5,7 +5,6 @@
             <button
                 :class="{
                     button: true,
-                    'has-border-success': playing,
                 }"
                 v-on:click.prevent="stop"
                 title="Stop"
@@ -59,7 +58,6 @@
             :class="{
                 'player-seekbar': true,
                 'player-playing-indication': playing,
-                'has-border-success': playing,
             }"
         >
             <div class="player-timeline">
@@ -85,7 +83,6 @@
                 v-show="!showVolume"
                 :class="{
                     button: true,
-                    'has-border-success': playing,
                 }"
                 v-on:click.prevent="download"
                 title="Download"
@@ -110,7 +107,6 @@
             <button
                 :class="{
                     button: true,
-                    'has-border-success': playing,
                 }"
                 v-show="!showVolume"
                 v-on:click.prevent="looping = !looping"
@@ -142,7 +138,6 @@
             <button
                 :class="{
                     button: true,
-                    'has-border-success': playing,
                 }"
                 v-show="!showVolume"
                 v-on:click.prevent="mute"
@@ -174,7 +169,6 @@
             <button
                 :class="{
                     button: true,
-                    'has-border-success': playing,
                 }"
                 v-on:click.prevent=""
                 v-on:mouseenter="showVolume = true"
