@@ -213,21 +213,18 @@
             v-on:play="playing = true"
             preload="auto"
         ></audio>
-
-        <!-- <audio controls ref="foo" src="lidija_roos-sweet_taste.mp3"></audio> -->
-        bars
-        <av-bars
-            v-if="loaded"
-            caps-color="#FFF"
-            :bar-color="['#f00', '#ff0', '#0f0']"
-            canv-fill-color="#000"
-            :caps-height="2"
-            :ref-link="'audio'"
-        ></av-bars>
-        waveform
+    </p>
+    <p>
+        Waveform
+        <input
+            type="checkbox"
+            v-model="showAvWaveform"
+            title="Show Waveform"
+            v-text="Waveform"
+        />
         <!-- Colors are similar to the sucess colors -->
         <av-waveform
-            v-if="loaded"
+            v-if="loaded && showAvWaveform"
             :ref-link="'audio'"
             canv-width="600"
             played-line-color="rgba(98, 196, 98, 0.66)"
@@ -238,25 +235,35 @@
             playtime-slider-color="#ffffff"
             playtime-font-color="#ffffff"
         ></av-waveform>
-
-        <!-- media
-            <av-media ref-link="foo"></av-media> -->
     </p>
-    AV:
-    <!-- 
-        <av-line
-            :line-width="2"
-            line-color="lime"
-            :audio-src="this.src"
-        ></av-line> -->
-    <!-- <p>
-            <av-waveform :audio-src="this.src"></av-waveform>
-        </p> -->
+
     <p>
-        <!-- <av-media :media="this.src"></av-media> -->
-        <!-- <av-media :audio-src="this.src"></av-media> -->
-        <!-- <av-line ref-link="foo" /> -->
-        <!-- <av-media ref-link="audio"></av-media> -->
+        Bars
+        <input type="checkbox" v-model="showAvBars" title="Show Waveform" />
+        <av-bars
+            v-if="loaded && showAvBars"
+            caps-color="#FFF"
+            :bar-color="['#f00', '#ff0', '#0f0']"
+            canv-fill-color="#000"
+            :caps-height="2"
+            :ref-link="'audio'"
+            canv-width="600"
+        ></av-bars>
+        <!-- Smallbars
+        <av-bars
+            v-if="loaded && showAvBars"
+            caps-color="#FFF"
+            :bar-color="['#f00', '#ff0', '#0f0']"
+            canv-fill-color="#000"
+            :ref-link="'audio'"
+            canv-width="600"
+            :canv-height="120"
+            :bar-width="12"
+            :bar-space="1.6"
+            :brick-height="9"
+            brick-space="1"
+            fft-size="1024"
+        ></av-bars> -->
     </p>
 </template>
 
@@ -315,6 +322,8 @@ export default defineComponent({
             latencyHint: 'interactive',
         }),
         //audioElement: document.createElement('audio'),
+        showAvWaveform: true,
+        showAvBars: true,
     }),
     /** Handles the setup of the audio graph outside the mounted lifespan.
      * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
