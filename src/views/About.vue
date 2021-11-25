@@ -33,8 +33,33 @@
         <ul>
             <li>
                 <a href="https://vuejs.org/" target="_blank">Vue.js</a>, the
-                progressive JavaScript framework (Released under the MIT
+                progressive JavaScript framework. (Released under the MIT
                 License, Copyright © 2014-2021 Evan You)
+            </li>
+            <li>
+                <a href="https://vuex.vuejs.org/" target="_blank">Vuex</a>, a
+                state management pattern + library for Vue.js applications.
+                (Released under the MIT License, by the vuejs team)
+            </li>
+            <li>
+                <a href="https://router.vuejs.org/" target="_blank"
+                    >Vue Router</a
+                >, a the official router for Vue.js. (Released under the MIT
+                License, by the vuejs team)
+            </li>
+            <li>
+                <a
+                    href="https://github.com/yyx990803/register-service-worker"
+                    target="_blank"
+                    >register-service-worker</a
+                >, a script to simplify service worker registration with hooks
+                for common events. (Released under the MIT License, by Evan You)
+            </li>
+            <li>
+                <a href="https://github.com/zloirock/core-js" target="_blank"
+                    >core-js</a
+                >, a modular standard library for JavaScript. (Released under
+                the MIT License, by Denis Pushkarev)
             </li>
             <li>
                 <a href="https://realfavicongenerator.net" target="_blank"
@@ -74,13 +99,13 @@
             </li>
             <li>
                 <a href="https://bulma.io/" target="_blank">Bulma</a>, the
-                modern CSS framework that just works (Released under the MIT
+                modern CSS framework that just works. (Released under the MIT
                 License, by Jeremy Thomas)
             </li>
             <li>
                 <a href="https://jenil.github.io/bulmaswatch/" target="_blank"
                     >Bulmaswatch</a
-                >, free themes for Bulma (Released under the MIT License, by
+                >, free themes for Bulma. (Released under the MIT License, by
                 Jenil Gogari)
             </li>
             <li>
@@ -151,7 +176,7 @@
         </p>
         <p>
             Created by
-            <a href="https://marcelsuter.ch" target="_blank">Marcel Suter</a>
+            <a href="https://marcelsuter.ch" target="_blank">Marcel Suter</a>.
         </p>
     </div>
 </template>
