@@ -24,8 +24,7 @@
                 }"
                 :style="progressStyle"
             ></span>
-
-            <span class="icon is-hidden-mobile foreground"> ▶ </span>
+            <span class="icon is-hidden-mobile foreground">▶ </span>
             <span class="has-text-weight-semibold foreground">{{
                 cue?.Description
             }}</span>

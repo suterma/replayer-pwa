@@ -30,6 +30,7 @@
                         to make it fully visible */
                     offset: -100,
                 }"
+                @click="this.selectFirstCueOfTrack(track.Id)"
                 >{{ track.Name }}</a
             >
         </template>
@@ -76,6 +77,24 @@ export default defineComponent({
                     /** Avoid interference with the key press overlay */
                     cancelable: false,
                 });
+            }
+        },
+
+        /** Selects the first cue of the given track, if any exists */
+        selectFirstCueOfTrack(trackId: string) {
+            if (trackId) {
+                const matchingTrack = this.tracks?.filter(
+                    (t) => t.Id == trackId,
+                );
+                if (matchingTrack && matchingTrack[0]) {
+                    const firstMatchingCue = matchingTrack[0].Cues[0];
+                    if (firstMatchingCue) {
+                        this.$store.commit(
+                            MutationTypes.UPDATE_SELECTED_CUE,
+                            firstMatchingCue,
+                        );
+                    }
+                }
             }
         },
 

@@ -9,6 +9,7 @@
                 v-on:click.prevent="stop"
                 title="Stop"
             >
+                <!-- STOP -->
                 <span class="icon">
                     <i>
                         <svg

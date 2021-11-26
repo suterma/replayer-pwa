@@ -27,7 +27,6 @@
             <button
                 :class="{
                     button: true,
-                    'is-success': playing,
                 }"
                 v-on:click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
