@@ -16,13 +16,11 @@
     <!-- Buttons as index to the tracks-->
     <div class="buttons">
         <template v-for="track in tracks" :key="track.Id">
+            <!-- The track with the currently selected cue is highlighted -->
             <a
-                :class="{
-                    button: true,
-                    'is-primary': true,
-                    'is-success': activeTrack?.Id == track.Id,
-                }"
-                class="button is-primary"
+                title="Scroll to track"
+                v-if="activeTrack?.Id == track.Id"
+                class="button is-success"
                 href="#"
                 v-scroll-to="{
                     el: '#track-' + track.Id,
@@ -30,8 +28,17 @@
                         to make it fully visible */
                     offset: -100,
                 }"
-                @click="this.selectFirstCueOfTrack(track.Id)"
                 >{{ track.Name }}</a
+            >
+            <!-- A track without the currently selected cue is not highlighted, but can be selected (will also trigger scrolling) -->
+            <a
+                title="Select first cue and scroll to track"
+                v-else
+                class="button is-primary"
+                href="#"
+                @click="this.selectFirstCueOfTrack(track.Id)"
+            >
+                {{ track.Name }}</a
             >
         </template>
     </div>
@@ -80,19 +87,21 @@ export default defineComponent({
             }
         },
 
-        /** Selects the first cue of the given track, if any exists */
+        /** Selects the first cue of the given track, if any exists and the track is different than the currently active track. */
         selectFirstCueOfTrack(trackId: string) {
             if (trackId) {
-                const matchingTrack = this.tracks?.filter(
-                    (t) => t.Id == trackId,
-                );
-                if (matchingTrack && matchingTrack[0]) {
-                    const firstMatchingCue = matchingTrack[0].Cues[0];
-                    if (firstMatchingCue) {
-                        this.$store.commit(
-                            MutationTypes.UPDATE_SELECTED_CUE,
-                            firstMatchingCue,
-                        );
+                if (this.activeTrack?.Id != trackId) {
+                    const matchingTrack = this.tracks?.filter(
+                        (t) => t.Id == trackId,
+                    );
+                    if (matchingTrack && matchingTrack[0]) {
+                        const firstMatchingCue = matchingTrack[0].Cues[0];
+                        if (firstMatchingCue) {
+                            this.$store.commit(
+                                MutationTypes.UPDATE_SELECTED_CUE,
+                                firstMatchingCue,
+                            );
+                        }
                     }
                 }
             }

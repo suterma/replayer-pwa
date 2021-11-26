@@ -48,6 +48,7 @@
             <span v-if="showCues" class="is-pulled-right ml-3"
                 ><a
                     @click="toggleCueDisplay"
+                    title="Hides the player and cue buttons"
                     role="button"
                     class="button is-small"
                 >

@@ -29,15 +29,8 @@
                 <i class="mdi mdi-24px">
                     <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
                         <path
-                            v-if="!playing"
                             fill="currentColor"
                             d="M8,5.14V19.14L19,12.14L8,5.14Z"
-                        />
-
-                        <path
-                            v-else
-                            fill="currentColor"
-                            d="M14,19H18V5H14M6,19H10V5H6V19Z"
                         />
                     </svg>
                 </i> </span
