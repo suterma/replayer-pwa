@@ -32,8 +32,12 @@
             >
 
             <!-- Text colors similar to cues -->
-            <span v-if="!showCues" class="is-pulled-right ml-3 tag is-warning"
-                ><a @click="toggleCueDisplay" role="button">
+            <span v-if="!showCues" class="is-pulled-right ml-3"
+                ><a
+                    @click="toggleCueDisplay"
+                    role="button"
+                    class="button is-warning is-small"
+                >
                     <!-- Text colors similar to cues -->
                     <span
                         class="icon-text is-size-7 has-text-light"
@@ -44,13 +48,17 @@
                     >
                 </a></span
             >
-            <span v-if="showCues" class="is-pulled-right ml-3 tag is-dark"
-                ><a @click="toggleCueDisplay" role="button">
+            <span v-if="showCues" class="is-pulled-right ml-3"
+                ><a
+                    @click="toggleCueDisplay"
+                    role="button"
+                    class="button is-small"
+                >
                     <span
                         class="icon-text is-size-7 has-text-light"
                         v-if="showCues"
                     >
-                        Hide cues</span
+                        Collapse</span
                     >
                 </a></span
             >
