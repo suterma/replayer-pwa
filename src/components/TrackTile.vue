@@ -26,7 +26,7 @@
         <h2 class="subtitle" v-bind:id="'track-' + track.Id">
             <span
                 :class="{
-                    'has-text-success': isActiveTrack,
+                    'has-text-success': false,
                 }"
                 >{{ track.Name }}</span
             >
