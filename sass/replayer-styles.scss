@@ -55,23 +55,20 @@ html {
     opacity: 33%;
 }
 
-/* Currently only apply to the player, as we only there use SVG icons.
-//TODO Later, apply to all icons, as soon as only svg icons are used everywhere.*/
-.player-panel {
-    /* Style to properly show SVG icons, with appropriate sizing */
-    [class*=' icon'],
-    [class^='icon'] {
-        display: inline-block;
-        width: 1em;
-        height: 1em;
-        stroke-width: 0;
-        stroke: currentColor;
-        fill: currentColor;
-        line-height: 1;
-        position: relative;
-        top: -0.05em;
-        vertical-align: middle;
-    }
+/* Specific styles for Bulma to work neatly with pure SVG icons, with appropriate sizing
+* @devdoc See https://github.com/jgthms/bulma/issues/1867 */
+[class*=' icon'],
+[class^='icon'] {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
+    line-height: 1;
+    position: relative;
+    top: -0.05em;
+    vertical-align: middle;
 }
 
 /* A success variant of a border */

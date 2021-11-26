@@ -44,6 +44,97 @@
             v-on:trackLoaded="calculateCueDurations"
         ></TrackAudioMeterPlayer>
     </p>
+    <h2 class="subtitle has-text-danger">Icons test</h2>
+    <p>Buttons with icons</p>
+    <p class="buttons">
+        <button class="button">
+            <span class="icon">
+                <i class="mdi mdi-24px">
+                    <svg style="width: 24px; height: 24px">
+                        <path
+                            fill="currentColor"
+                            d="M14,19H18V5H14M6,19H10V5H6V19Z"
+                        />
+                    </svg>
+                </i>
+            </span>
+            <span>GitHub</span>
+        </button>
+        <button class="button" v-on:click.prevent="stop" title="Stop">
+            <span class="icon">
+                <i>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path
+                            fill="currentColor"
+                            d="M16,4.995v9.808C16,15.464,15.464,16,14.804,16H4.997C4.446,16,4,15.554,4,15.003V5.196C4,4.536,4.536,4,5.196,4h9.808C15.554,4,16,4.446,16,4.995z"
+                        /></svg
+                ></i>
+            </span>
+            <span>Stop</span>
+        </button>
+        <button class="button">
+            <span class="icon is-small">
+                <i class="fas fa-italic"></i>
+            </span>
+        </button>
+        <button class="button">
+            <span class="icon is-small">
+                <i class="fas fa-underline"></i>
+            </span>
+        </button>
+    </p>
+    <p class="buttons">
+        <button class="button">
+            <span class="icon">
+                <i class="fab fa-github"></i>
+            </span>
+            <span>GitHub</span>
+        </button>
+        <button class="button is-primary">
+            <span class="icon">
+                <i class="fab fa-twitter"></i>
+            </span>
+            <span>@jgthms</span>
+        </button>
+        <button class="button is-success">
+            <span class="icon is-small">
+                <i class="fas fa-check"></i>
+            </span>
+            <span>Save</span>
+        </button>
+        <button class="button is-danger is-outlined">
+            <span>Delete</span>
+            <span class="icon is-small">
+                <i class="fas fa-times"></i>
+            </span>
+        </button>
+    </p>
+    <p class="buttons">
+        <button class="button is-small">
+            <span class="icon is-small">
+                <i class="fab fa-github"></i>
+            </span>
+            <span>GitHub</span>
+        </button>
+        <button class="button">
+            <span class="icon">
+                <i class="fab fa-github"></i>
+            </span>
+            <span>GitHub</span>
+        </button>
+        <button class="button is-medium">
+            <span class="icon">
+                <i class="fab fa-github"></i>
+            </span>
+            <span>GitHub</span>
+        </button>
+        <button class="button is-large">
+            <span class="icon is-medium">
+                <i class="fab fa-github"></i>
+            </span>
+            <span>GitHub</span>
+        </button>
+    </p>
 </template>
 
 <script lang="ts">
