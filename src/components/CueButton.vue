@@ -24,7 +24,24 @@
                 }"
                 :style="progressStyle"
             ></span>
-            <span class="icon is-hidden-mobile foreground">▶ </span>
+            <!-- PLAY -->
+            <span class="icon foreground">
+                <i class="mdi mdi-24px">
+                    <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+                        <path
+                            v-if="!playing"
+                            fill="currentColor"
+                            d="M8,5.14V19.14L19,12.14L8,5.14Z"
+                        />
+
+                        <path
+                            v-else
+                            fill="currentColor"
+                            d="M14,19H18V5H14M6,19H10V5H6V19Z"
+                        />
+                    </svg>
+                </i> </span
+            >&nbsp;
             <span class="has-text-weight-semibold foreground">{{
                 cue?.Description
             }}</span>
@@ -157,6 +174,12 @@ export default defineComponent({
 });
 </script>
 <style scoped>
+/** Specific icon alignment for this button  */
+.icon {
+    margin-left: -6px;
+    margin-top: -1px;
+}
+
 /* //TODO later put these into a scss file for player and progress */
 .player-timeline .player-progress {
     /* Smooth progress shade, with no visible border or slider line */

@@ -46,6 +46,7 @@
     </p>
     <h2 class="subtitle has-text-danger">Icons test</h2>
     <p>Buttons with icons</p>
+    <p>Icons are "Inline SVG's from from https://materialdesignicons.com/</p>
     <p class="buttons">
         <button class="button">
             <span class="icon">
@@ -73,9 +74,17 @@
             <span>Stop</span>
         </button>
         <button class="button">
-            <span class="icon is-small">
-                <i class="fas fa-italic"></i>
+            <span class="icon">
+                <i class="mdi mdi-24px">
+                    <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+                        <path
+                            fill="currentColor"
+                            d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"
+                        />
+                    </svg>
+                </i>
             </span>
+            <span>Download</span>
         </button>
         <button class="button">
             <span class="icon is-small">

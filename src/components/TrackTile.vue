@@ -39,10 +39,7 @@
                     class="button is-warning is-small"
                 >
                     <!-- Text colors similar to cues -->
-                    <span
-                        class="icon-text is-size-7 has-text-light"
-                        v-if="!showCues"
-                    >
+                    <span class="is-size-7 has-text-light" v-if="!showCues">
                         Show
                         {{ track.Cues?.length }} cues</span
                     >
@@ -54,10 +51,7 @@
                     role="button"
                     class="button is-small"
                 >
-                    <span
-                        class="icon-text is-size-7 has-text-light"
-                        v-if="showCues"
-                    >
+                    <span class="is-size-7 has-text-light" v-if="showCues">
                         Collapse</span
                     >
                 </a></span
