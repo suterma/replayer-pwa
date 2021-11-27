@@ -8,4 +8,9 @@ import VueScrollTo from 'vue-scrollto';
 import outfront from 'outfront'; // import outfront JS
 outfront(); // Call it on top of project.
 
+console.log('App version: ' + process.env.VUE_APP_VERSION);
+console.log('Environment: ' + process.env.NODE_ENV);
+console.log('GIT_VERSION: ' + process.env.VUE_APP_GIT_VERSION);
+console.log('GIT_AUTHOR_DATE: ' + process.env.VUE_APP_GIT_AUTHOR_DATE);
+
 createApp(App).use(store).use(router).use(VueScrollTo).mount('#app');

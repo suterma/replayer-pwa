@@ -178,6 +178,7 @@
             Created by
             <a href="https://marcelsuter.ch" target="_blank">Marcel Suter</a>.
         </p>
+        <p>App version: {{ version }} ({{ environment }})</p>
     </div>
 </template>
 
@@ -190,5 +191,14 @@ import WelcomeText from '@/components/WelcomeText.vue';
 export default defineComponent({
     name: 'About',
     components: { WelcomeText },
+    computed: {
+        version(): string {
+            return process.env.VUE_APP_VERSION, toString();
+        },
+
+        environment(): string {
+            return process.env.NODE_ENV, toString();
+        },
+    },
 });
 </script>
