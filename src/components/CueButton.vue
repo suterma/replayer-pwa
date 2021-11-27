@@ -48,19 +48,9 @@
             &nbsp; &nbsp;
             <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibilty as possible -->
             <span
-                class="
-                    tag
-                    is-warning is-light is-outlined
-                    foreground
-                    has-opacity-third
-                    is-pulled-right is-family-monospace
-                "
+                class="tag is-warning is-light is-outlined foreground has-opacity-third is-pulled-right is-family-monospace"
                 >{{ cue?.Shortcut }}</span
             >
-
-            <!-- <span class="has-opacity-half foreground is-pulled-right"
-                >[{{ cue?.Shortcut }}]</span
-            > -->
         </span>
     </button>
 </template>
@@ -133,7 +123,7 @@ export default defineComponent({
         /** Determines whether this cue is currently selected
          * @remarks Note: only one cue in a compilation may be selected */
         isCueSelected(): boolean {
-            return this.$store.getters.selectedCue?.Id == this.cue?.Id;
+            return this.$store.getters.selectedCueId == this.cue?.Id;
         },
         /* Determines whether playback of this cue has already passed */
         hasCuePassed(): boolean {
