@@ -33,7 +33,8 @@
             A bplist file with 21 tracks (no media files).
         </li>
     </ul>
-    <h2 class="subtitle has-text-danger">Track with Visualization</h2>
+    <!-- NOTE: This might have been introducing latency and memory issues. With large compilations, playback was sometimes not possible on a Fairphone 3+. -->
+    <!-- <h2 class="subtitle has-text-danger">Track with Visualization</h2>
     <p>This SHOULD work with 2 visualizations</p>
     <p>
         <TrackAudioMeterPlayer
@@ -43,7 +44,7 @@
             v-on:timeupdate="updateTime"
             v-on:trackLoaded="calculateCueDurations"
         ></TrackAudioMeterPlayer>
-    </p>
+    </p> -->
     <h2 class="subtitle has-text-danger">Icons test</h2>
     <p>Buttons with icons</p>
     <p>Icons are "Inline SVG's from from https://materialdesignicons.com/</p>
@@ -150,13 +151,11 @@
 import { defineComponent } from 'vue';
 import { ICompilation } from '@/store/compilation-types';
 import CompilationXmlDisplay from '@/components/CompilationXmlDisplay.vue';
-import TrackAudioMeterPlayer from '@/components/TrackAudioMeterPlayer.vue';
 
 export default defineComponent({
     name: 'Development',
     components: {
         CompilationXmlDisplay,
-        TrackAudioMeterPlayer,
     },
     computed: {
         compilation(): ICompilation {

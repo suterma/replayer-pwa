@@ -76,7 +76,7 @@
             <!-- The audio player, but only shown when the source is available -->
             <TrackAudioApiPlayer
                 v-if="trackFileUrl?.objectUrl"
-                ref="player"
+                ref="TrackAudioApiPlayer"
                 :title="trackFileUrl?.fileName"
                 :src="trackFileUrl?.objectUrl"
                 v-on:timeupdate="updateTime"
@@ -292,7 +292,7 @@ export default defineComponent({
     },
     computed: {
         trackPlayerInstance(): InstanceType<typeof TrackAudioApiPlayer> {
-            return this.$refs.player as InstanceType<
+            return this.$refs.TrackAudioApiPlayer as InstanceType<
                 typeof TrackAudioApiPlayer
             >;
         },

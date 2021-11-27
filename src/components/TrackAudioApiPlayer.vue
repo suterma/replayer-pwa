@@ -71,7 +71,7 @@
                     <div class="player-time-current">
                         {{ convertToDisplayTime(currentSeconds) }}
                     </div>
-                    <div class="player-time-total is-hidden-mobile">
+                    <div class="player-time-total">
                         {{ convertToDisplayTime(durationSeconds) }}
                     </div>
                 </div>
@@ -298,6 +298,7 @@ export default defineComponent({
          * @remarks Calculates the witdh with respect to the progress bar width from the player styles (which is a border)
          * max-width makes sure, the progress bar never overflows the given space.
          */
+        // eslint-disable-next-line
         progressStyle(): any {
             return {
                 width: `calc(${this.percentComplete}% + 0.4em)`,

@@ -5,7 +5,7 @@
     <section class="section">
         <div id="content" class="content">
             <!-- To keep the audio within the media player component running, 
-            simply keep all components alive over route changes -->
+            simply keep this component alive over route changes -->
             <router-view v-slot="{ Component }">
                 <keep-alive include="Play">
                     <component :is="Component" />
