@@ -7,6 +7,9 @@
             the click of a button, Replayer starts to play at predefined times
             in the audio file.
         </p>
+        <p title="App info" class="has-text-right is-italic">
+            <small>App version: {{ version }} ({{ environment }})</small>
+        </p>
 
         <hr />
 
@@ -178,7 +181,6 @@
             Created by
             <a href="https://marcelsuter.ch" target="_blank">Marcel Suter</a>.
         </p>
-        <p>App version: {{ version }} ({{ environment }})</p>
     </div>
 </template>
 
@@ -191,13 +193,21 @@ import WelcomeText from '@/components/WelcomeText.vue';
 export default defineComponent({
     name: 'About',
     components: { WelcomeText },
+    // mounted: function (): void {
+    //     console.log('AboutApp version: ' + process.env.VUE_APP_VERSION);
+    //     console.log('AboutEnvironment: ' + process.env.NODE_ENV);
+    //     console.log('AboutGIT_VERSION: ' + process.env.VUE_APP_GIT_VERSION);
+    //     console.log(
+    //         'AboutGIT_AUTHOR_DATE: ' + process.env.VUE_APP_GIT_AUTHOR_DATE,
+    //     );
+    // },
     computed: {
         version(): string {
-            return process.env.VUE_APP_VERSION, toString();
+            return '' + process.env.VUE_APP_VERSION;
         },
 
         environment(): string {
-            return process.env.NODE_ENV, toString();
+            return '' + process?.env?.NODE_ENV;
         },
     },
 });
