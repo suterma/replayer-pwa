@@ -90,9 +90,12 @@ export const actions: ActionTree<State, State> & Actions = {
                         //     'Retrieving last compilation (selected cue)...',
                         // );
                         //Update the selected cue
-                        PersistentStorage.retrieveSelectedCue()
-                            .then((cue) => {
-                                commit(MutationTypes.UPDATE_SELECTED_CUE, cue);
+                        PersistentStorage.retrieveSelectedCueId()
+                            .then((cueId) => {
+                                commit(
+                                    MutationTypes.UPDATE_SELECTED_CUE_ID,
+                                    cueId,
+                                );
                             })
                             .finally(() => {
                                 commit(

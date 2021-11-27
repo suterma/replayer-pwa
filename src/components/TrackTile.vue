@@ -170,12 +170,20 @@ export default defineComponent({
             /*Check for the active track here (again), because otherwise some event handling
             sequences might cause actions on non-active tracks too.*/
             if (this.isActiveTrack) {
-                const selectedCue = this.$store.getters.selectedCue as ICue;
-                if (selectedCue && selectedCue.Time != null) {
+                const selectedCueId = this.$store.getters
+                    .selectedCueId as string;
+                if (selectedCueId) {
                     if (this.trackPlayerInstance.playing === true) {
                         this.trackPlayerInstance?.pause();
                     }
-                    this.trackPlayerInstance.seekTo(selectedCue.Time);
+
+                    const cueTime = this.cues?.filter(
+                        (c) => c.Id === selectedCueId,
+                    )[0]?.Time;
+                    //Handle all non-null values (Zero is valid)
+                    if (cueTime != null) {
+                        this.trackPlayerInstance.seekTo(cueTime);
+                    }
                 }
             }
         },
@@ -185,9 +193,13 @@ export default defineComponent({
         cueClick(cue: ICue) {
             if (cue.Time != null) {
                 //Update the selected cue to this cue
-                this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE, cue);
+                this.$store.commit(
+                    MutationTypes.UPDATE_SELECTED_CUE_ID,
+                    cue.Id,
+                );
 
                 //Set the position to this cue and handle playback
+                //TODO maybe check handling to avoid double play/pause?
                 if (this.trackPlayerInstance.playing === true) {
                     this.trackPlayerInstance?.pause();
                     this.trackPlayerInstance.seekTo(cue.Time);
@@ -258,6 +270,10 @@ export default defineComponent({
          * @remarks Using the existing cues, and the now available track duration, calculates the durations of all cues, including the last one
          * @devdoc The calculated durations are only valid as long as the cues, their times, and the track does not change */
         calculateCueDurations(trackDurationSeconds: number) {
+            console.debug(
+                'TrackTile::calculateCueDurations:trackDurationSeconds:' +
+                    trackDurationSeconds,
+            );
             const originalCues = this.cues?.filter(function (el) {
                 return el.Time !== null;
             });
@@ -317,8 +333,7 @@ export default defineComponent({
         },
         /** Determines whether this is the active track (i.e. the globally selected cue is from this track ) */
         isActiveTrack(): boolean {
-            const selectedCue = this.$store.getters.selectedCue as ICue;
-            const selectedCueId = selectedCue?.Id;
+            const selectedCueId = this.$store.getters.selectedCueId as string;
             if (!selectedCueId) {
                 //if none selected, this track is not active anyway
                 return false;
@@ -326,8 +341,8 @@ export default defineComponent({
 
             //Check for matching Ids
             return (
-                (this.cues?.filter((c) => c.Id === selectedCue.Id).length ??
-                    0) > 0
+                (this.cues?.filter((c) => c.Id === selectedCueId).length ?? 0) >
+                0
             );
         },
     },

@@ -98,8 +98,8 @@ export default defineComponent({
                         const firstMatchingCue = matchingTrack[0].Cues[0];
                         if (firstMatchingCue) {
                             this.$store.commit(
-                                MutationTypes.UPDATE_SELECTED_CUE,
-                                firstMatchingCue,
+                                MutationTypes.UPDATE_SELECTED_CUE_ID,
+                                firstMatchingCue.Id,
                             );
                         }
                     }
@@ -108,17 +108,17 @@ export default defineComponent({
         },
 
         toPreviousCue() {
-            const allCues = this.allCues;
-            const indexOfSelected = allCues.indexOf(this.selectedCue);
-            const previousCue = allCues[indexOfSelected - 1];
-            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE, previousCue);
+            const allCueIds = this.allCues.map((cue) => cue.Id);
+            const indexOfSelected = allCueIds.indexOf(this.selectedCueId);
+            const prevCueId = allCueIds[indexOfSelected - 1];
+            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, prevCueId);
         },
 
         toNextCue() {
-            const allCues = this.allCues;
-            const indexOfSelected = allCues.indexOf(this.selectedCue);
-            const nextCue = allCues[indexOfSelected + 1];
-            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE, nextCue);
+            const allCueIds = this.allCues.map((cue) => cue.Id);
+            const indexOfSelected = allCueIds.indexOf(this.selectedCueId);
+            const nextCueId = allCueIds[indexOfSelected + 1];
+            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, nextCueId);
         },
 
         toMnemonicCue(event: Event) {
@@ -128,8 +128,8 @@ export default defineComponent({
             );
             if (matchingCue) {
                 this.$store.commit(
-                    MutationTypes.UPDATE_SELECTED_CUE,
-                    matchingCue,
+                    MutationTypes.UPDATE_SELECTED_CUE_ID,
+                    matchingCue.Id,
                 );
             }
         },
@@ -149,8 +149,8 @@ export default defineComponent({
         tracks(): Array<ITrack> | undefined {
             return this.compilation?.Tracks;
         },
-        selectedCue(): ICue {
-            return this.$store.getters.selectedCue as ICue;
+        selectedCueId(): string {
+            return this.$store.getters.selectedCueId as string;
         },
         allCues(): Array<ICue> {
             const cues = new Array<ICue>();
@@ -162,7 +162,7 @@ export default defineComponent({
         },
         /** Determines the active track (the one that contains the selected cue ) */
         activeTrack(): ITrack | null {
-            const selectedCueId = this.selectedCue?.Id;
+            const selectedCueId = this.selectedCueId;
             if (!selectedCueId) {
                 //if none selected, this track is not active anyway
                 return null;

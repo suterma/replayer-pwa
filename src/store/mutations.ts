@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex';
-import { Compilation, ICompilation, Cue } from './compilation-types';
+import { Compilation, ICompilation } from './compilation-types';
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
 import { MediaUrl } from './state-types';
@@ -14,7 +14,7 @@ export type Mutations<S = State> = {
         state: S,
         compilation: ICompilation,
     ): void;
-    [MutationTypes.UPDATE_SELECTED_CUE](state: S, payload: Cue): void;
+    [MutationTypes.UPDATE_SELECTED_CUE_ID](state: S, cueId: string): void;
     [MutationTypes.CLOSE_COMPILATION](state: S): void;
     [MutationTypes.UPDATE_NEVER_SHOW_WELCOME_MESSAGE_AGAIN](
         state: S,
@@ -67,17 +67,20 @@ export const mutations: MutationTree<State> & Mutations = {
 
         state.compilation = compilation;
     },
-
-    [MutationTypes.UPDATE_SELECTED_CUE](state: State, payload: Cue) {
-        state.selectedCue = payload;
-        PersistentStorage.storeSelectedCue(payload);
+    [MutationTypes.UPDATE_SELECTED_CUE_ID](state: State, cueId: string) {
+        //Do not update the store, when it's the same value
+        if (state.selectedCueId == cueId) {
+            return;
+        }
+        state.selectedCueId = cueId;
+        PersistentStorage.storeSelectedCueId(cueId);
     },
 
     [MutationTypes.CLOSE_COMPILATION](state: State) {
         //TODO handle the indexed db persistence in an action first.
         PersistentStorage.clearCompilation();
 
-        state.selectedCue = new Cue();
+        state.selectedCueId = '';
         state.compilation = new Compilation();
 
         state.mediaUrls.forEach((file) => {

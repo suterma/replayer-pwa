@@ -11,10 +11,10 @@ export enum MutationTypes {
     ADD_MEDIA_URL = 'ADD_MEDIA_URL',
     /** Replaces the current compilation with a new one */
     REPLACE_COMPILATION = 'REPLACE_COMPILATION',
-    /** Updates the currently selected cue, for application-wide handling
+    /** Updates the currently selected cue Id, for application-wide handling
      * @remarks This does not control the playback itself. It is intended for display and handling purposes.
      */
-    UPDATE_SELECTED_CUE = 'UPDATE_SELECTED_CUE',
+    UPDATE_SELECTED_CUE_ID = 'UPDATE_SELECTED_CUE_ID',
     /** Closes an existing compilation
      * @remarks Removes the compilation with all data, including the media files
      */

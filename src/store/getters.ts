@@ -1,5 +1,5 @@
 import { GetterTree } from 'vuex';
-import { Cue, ICompilation } from './compilation-types';
+import { ICompilation } from './compilation-types';
 import { State } from './state';
 import { MediaUrl } from './state-types';
 
@@ -14,11 +14,11 @@ export type Getters = {
     /** Determines whether the given cue is the currently selected one
      * @devdoc //TODO parametrized call currently do not work, reason is unknown
      */
-    isSelected(state: State, cue: Cue): boolean;
-    /** Gets the currently selected cue
+    isSelected(state: State, cueId: string): boolean;
+    /** Gets the currently selected cue id
      * @remarks Only one cue may be selected at any time, within one compilation / application instance.
      */
-    selectedCue(state: State): Cue;
+    selectedCueId(state: State): string;
     /** Whether to never show the welcome overlay at application start
      */
     neverShowWelcomeMessageAgain(state: State): boolean;
@@ -47,12 +47,12 @@ export const getters: GetterTree<State, State> & Getters = {
         return progressMessage;
     },
     /** @inheritdoc */
-    isSelected: (state, cue: Cue) => {
-        return cue.Id == state.selectedCue.Id;
+    isSelected: (state, cueId: string) => {
+        return cueId == state.selectedCueId;
     },
     /** @inheritdoc */
-    selectedCue: (state) => {
-        return state.selectedCue;
+    selectedCueId: (state) => {
+        return state.selectedCueId;
     },
     neverShowWelcomeMessageAgain: (state) => {
         return state.neverShowWelcomeMessageAgain;

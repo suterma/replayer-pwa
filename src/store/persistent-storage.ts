@@ -1,11 +1,11 @@
 /** The keys to access the used storage */
 enum StorageKeys {
     COMPILATION = 'COMPILATION',
-    SELECTED_CUE = 'SELECTED_CUE',
+    SELECTED_CUE_ID = 'SELECTED_CUE_ID',
     MEDIA_BLOB = 'MEDIA_BLOB',
 }
 
-import { Compilation, Cue, ICompilation, ICue } from './compilation-types';
+import { Compilation, ICompilation } from './compilation-types';
 import { get, set, clear, entries } from 'idb-keyval';
 import { MediaBlob } from './state-types';
 
@@ -41,7 +41,7 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
     /** Persistently stores media blob data for later retrieval
      * @devdoc The indexed db is used for blob data, as recommended for large data.
      */
-    static storeMediaBlob(data: { fileName: string; blob: Blob }) {
+    static storeMediaBlob(data: { fileName: string; blob: Blob }): void {
         set(StorageKeys.MEDIA_BLOB + data.fileName, data.blob);
     }
     /** Persistently stores the compilation for later retrieval
@@ -72,7 +72,6 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
             return mediaBlobs;
         });
     }
-
     /** Retrieves the given media blob data from the persistent store
      * @devdoc The indexed db is used for blob data, as recommended.
      */
@@ -101,29 +100,24 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
     }
     static clearCompilation(): void {
         localStorage.removeItem(StorageKeys.COMPILATION);
-        localStorage.removeItem(StorageKeys.SELECTED_CUE);
+        localStorage.removeItem(StorageKeys.SELECTED_CUE_ID);
         clear(); // the media blobs
     }
-    /** Persistently stores the selected cue for later retrieval
+    /** Persistently stores the selected cue Id for later retrieval
      * @devdoc The local storage is used for performance reasons here. No need to use the Indexed Db for small data
      */
-    static storeSelectedCue(cue: ICue): void {
-        localStorage.setItem(StorageKeys.SELECTED_CUE, JSON.stringify(cue));
+    static storeSelectedCueId(cueId: string): void {
+        localStorage.setItem(StorageKeys.SELECTED_CUE_ID, cueId);
     }
-    /** Retrieves the selected cue from the persistent store
-     * @devdoc This returns a Cue-like object, which does not actually have a Cue prototype.
-     * This leads to warnings in Vue's property type check for non-production builds.
-     * Assignment via Object.assign might overcome this issue, but I refrain from that since it is actually unnecessary.
-     * See  https://stackoverflow.com/a/43977474/79485
-     * Also, using https://www.npmjs.com/package/ts-serializable might be a solution, but requires annotation.
+    /** Retrieves the selected cue Id from the persistent store
      * */
-    static async retrieveSelectedCue(): Promise<ICue> {
+    static async retrieveSelectedCueId(): Promise<string> {
         return createPromise(() => {
-            const cue = localStorage.getItem(StorageKeys.SELECTED_CUE);
-            if (cue) {
-                return JSON.parse(cue);
+            const cueId = localStorage.getItem(StorageKeys.SELECTED_CUE_ID);
+            if (cueId) {
+                return cueId;
             }
-            return new Cue();
+            return null;
         }, null);
     }
 }

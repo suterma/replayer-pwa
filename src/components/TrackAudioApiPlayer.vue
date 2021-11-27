@@ -325,7 +325,7 @@ export default defineComponent({
         /** Watch whether the looping changed, and then update the audio element accordingly  */
         looping(): void {
             console.debug(
-                `TrackAudioPlayer(${this.title})::looping:${this.looping}`,
+                `TrackAudioApiPlayer(${this.title})::looping:${this.looping}`,
             );
             this.audioElement.loop = this.looping;
         },
@@ -343,12 +343,12 @@ export default defineComponent({
             return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss;
         },
         download() {
-            console.debug(`TrackAudioPlayer(${this.title})::download`);
+            console.debug(`TrackAudioApiPlayer(${this.title})::download`);
             this.stop();
             window.open(this.src, 'download');
         },
         load() {
-            console.debug(`TrackAudioPlayer(${this.title})::load`);
+            console.debug(`TrackAudioApiPlayer(${this.title})::load`);
             if (this.audioElement.readyState >= 2) {
                 this.loaded = true;
                 this.durationSeconds = this.audioElement.duration;
@@ -364,7 +364,7 @@ export default defineComponent({
             throw new Error('Failed to load sound file.');
         },
         mute() {
-            console.debug(`TrackAudioPlayer(${this.title})::mute`);
+            console.debug(`TrackAudioApiPlayer(${this.title})::mute`);
             if (this.muted) {
                 return (this.volume = this.previousVolume);
             }
@@ -373,7 +373,7 @@ export default defineComponent({
             this.volume = 0;
         },
         seekByClick(e: MouseEvent) {
-            console.debug(`TrackAudioPlayer(${this.title})::seekByClick`, e);
+            console.debug(`TrackAudioApiPlayer(${this.title})::seekByClick`, e);
             if (!this.loaded) return;
 
             const bounds = (e.target as HTMLDivElement).getBoundingClientRect();
@@ -383,58 +383,62 @@ export default defineComponent({
                 this.audioElement.duration * seekPos;
         },
         stop() {
-            console.debug(`TrackAudioPlayer(${this.title})::stop`);
+            console.debug(`TrackAudioApiPlayer(${this.title})::stop`);
             this.playing = false;
             this.audioElement.currentTime = 0;
-            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE, undefined);
+            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, undefined);
         },
         togglePlayback() {
-            console.debug(`TrackAudioPlayer(${this.title})::togglePlayback`);
+            console.debug(`TrackAudioApiPlayer(${this.title})::togglePlayback`);
             this.playing = !this.playing;
         },
         /** Rewinds 1 second */
         rewindOneSecond() {
-            console.debug(`TrackAudioPlayer(${this.title})::rewindOneSecond`);
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::rewindOneSecond`,
+            );
             const time = this.audioElement.currentTime;
             this.audioElement.currentTime = time - 1;
         },
         /** Forwards 1 second */
         forwardOneSecond() {
-            console.debug(`TrackAudioPlayer(${this.title})::forwardOneSecond`);
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::forwardOneSecond`,
+            );
             const time = this.audioElement.currentTime;
             this.audioElement.currentTime = time + 1;
         },
         volumeDown() {
             this.volume = this.volume * 0.71;
             console.debug(
-                `TrackAudioPlayer(${this.title})::volumeDown`,
+                `TrackAudioApiPlayer(${this.title})::volumeDown`,
                 this.volume,
             );
         },
         volumeUp() {
             this.volume = Math.min(this.volume * 1.41, 100);
             console.debug(
-                `TrackAudioPlayer(${this.title})::volumeUp`,
+                `TrackAudioApiPlayer(${this.title})::volumeUp`,
                 this.volume,
             );
         },
         /** Pauses playback, keeping the position at the current position */
         pause() {
-            console.debug(`TrackAudioPlayer(${this.title})::pause`);
+            console.debug(`TrackAudioApiPlayer(${this.title})::pause`);
             this.playing = false;
         },
         /** Updates the current seconds display and emits an event with the temporal position of the player
          * @devdoc This must get only privately called from the audio player
          */
         updateTime(/*event: Event*/) {
-            //console.debug(`TrackAudioPlayer(${this.title})::updateTime:e`, e);
+            //console.debug(`TrackAudioApiPlayer(${this.title})::updateTime:e`, e);
             this.currentSeconds = this.audioElement.currentTime;
             this.$emit('timeupdate', this.currentSeconds);
         },
         /** Starts playback from the given temporal position */
         playFrom(position: number): void {
             console.debug(
-                `TrackAudioPlayer(${this.title}):playFrom:position`,
+                `TrackAudioApiPlayer(${this.title}):playFrom:position`,
                 position,
             );
             this.seekTo(position);
@@ -443,7 +447,7 @@ export default defineComponent({
         /** Transports (seeks) the playback to the given temporal position */
         seekTo(position: number): void {
             console.debug(
-                `TrackAudioPlayer(${this.title})::seekTo:position`,
+                `TrackAudioApiPlayer(${this.title})::seekTo:position`,
                 position,
             );
             this.audioElement.currentTime = position;

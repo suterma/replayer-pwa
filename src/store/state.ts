@@ -1,5 +1,5 @@
 import { MediaUrl } from './state-types';
-import { Compilation, Cue, ICompilation } from './compilation-types';
+import { Compilation, ICompilation } from './compilation-types';
 
 /** Defines the state of this application */
 interface IState {
@@ -12,10 +12,10 @@ interface IState {
      */
     mediaUrls: Map<string, MediaUrl>;
 
-    /** The currently selected cue.
+    /** The currently selected cue Id.
      * @remarks This does not control the playback itself. It is intended for display purposes.
      */
-    selectedCue: Cue;
+    selectedCueId: string;
 
     /** An application work message stack, used for progress indication
      * @remarks during ongoing work, the stack is non-empty
@@ -32,7 +32,7 @@ export const state: IState = {
     compilation: new Compilation(),
 
     /** @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
-    selectedCue: new Cue(),
+    selectedCueId: '',
 
     mediaUrls: new Map<string, MediaUrl>(),
 
