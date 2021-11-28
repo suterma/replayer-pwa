@@ -437,13 +437,15 @@ export default defineComponent({
             this.currentSeconds = this.audioElement.currentTime;
             this.$emit('timeupdate', this.currentSeconds);
         },
-        /** Starts playback from the given temporal position */
+        /** Starts playback from the given temporal position
+         * @remarks This first seeks to the position, then starts playing
+         */
         playFrom(position: number): void {
+            this.seekTo(position);
             console.debug(
                 `TrackAudioApiPlayer(${this.title}):playFrom:position`,
                 position,
             );
-            this.seekTo(position);
             this.playing = true;
         },
         /** Transports (seeks) the playback to the given temporal position */
