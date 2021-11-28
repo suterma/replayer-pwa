@@ -73,7 +73,7 @@ export interface ICue {
     Duration: number | null;
 }
 
-/** Implements a Replayer Compilation, consisting of a set of tracks with their cuepoints.
+/** Implements a Replayer Compilation, consisting of a set of tracks with their cues.
  *  @inheritdoc */
 export class Compilation implements ICompilation {
     Type: CompilationType = CompilationType.XML;
@@ -82,18 +82,113 @@ export class Compilation implements ICompilation {
     Url = '';
     Id = '';
     Tracks: Array<ITrack> = new Array<ITrack>();
+
+    constructor(
+        mediaPath: string,
+        title: string,
+        url: string,
+        id: string,
+        tracks: Array<ITrack>,
+    ) {
+        this.MediaPath = mediaPath;
+        this.Title = title;
+        this.Url = url;
+        this.Id = id;
+        this.Tracks = tracks;
+    }
+
+    /** Parses the JSON and returns new instance of this class.
+     * @remparks Instead of creating an unprototyped object with JSON.parse, this creates a new object of this type
+     * @param jsonCompilation - a JSON representation of a Compilation
+     * @devdoc See https://stackoverflow.com/a/5874189/79485
+     */
+    static fromJson(jsonCompilation: string): Compilation {
+        const obj = JSON.parse(jsonCompilation) as Compilation;
+        const compilation = new Compilation(
+            obj.MediaPath,
+            obj.Title,
+            obj.Url,
+            obj.Id,
+            obj.Tracks.map((track) => {
+                return new Track(
+                    track.Name,
+                    track.Album,
+                    track.Artist,
+                    track.Measure,
+                    track.Url,
+                    track.Id,
+                    track.Cues.map((cue) => {
+                        return new Cue(
+                            cue.Description,
+                            cue.Shortcut,
+                            cue.Time,
+                            cue.Duration,
+                            cue.Id,
+                        );
+                    }),
+                );
+            }),
+        );
+
+        console.debug('Compilation::fromJson:'), compilation;
+        return compilation;
+    }
+
+    /** Returns a new, empty compilation
+     */
+    static empty(): Compilation {
+        return new Compilation('', '', '', '', new Array<ITrack>());
+    }
 }
 
 /** Implements a Replayer track
  *  @inheritdoc */
 export class Track implements ITrack {
-    Cues: Array<ICue> = new Array<ICue>();
-    Artist = '';
     Name = '';
     Album = '';
+    Artist = '';
     Measure = 0;
     Url = '';
     Id = '';
+    Cues: Array<ICue> = new Array<ICue>();
+
+    constructor(
+        name: string,
+        album: string,
+        artist: string,
+        measure: number,
+        url: string,
+        id: string,
+        cues: Array<ICue>,
+    ) {
+        this.Name = name;
+        this.Album = album;
+        this.Artist = artist;
+        this.Measure = measure;
+        this.Url = url;
+        this.Id = id;
+        this.Cues = cues;
+    }
+
+    /** Parses the JSON and returns new instance of this class.
+     * @remparks Instead of creating an unprototyped object with JSON.parse, this creates a new object of this type
+     * @param jsonTrack - a JSON representation of a Track
+     * @devdoc See https://stackoverflow.com/a/5874189/79485
+     */
+    static fromJson(jsonTrack: string): Track {
+        const obj = JSON.parse(jsonTrack) as Track;
+        const track = new Track(
+            obj.Name,
+            obj.Album,
+            obj.Artist,
+            obj.Measure,
+            obj.Url,
+            obj.Id,
+            obj.Cues,
+        );
+        console.debug('Track::fromJson:'), track;
+        return track;
+    }
 }
 
 /** Implements a Replayer cue
@@ -109,4 +204,24 @@ export class Cue implements ICue {
     Time: number | null = null;
     /**   @inheritdoc */
     Duration: number | null = null;
+
+    constructor(
+        description: string,
+        shortcut: string,
+        time: number | null,
+        duration: number | null,
+        id: string,
+    ) {
+        this.Description = description;
+        this.Shortcut = shortcut;
+        this.Time = time;
+        this.Duration = duration;
+        this.Id = id;
+    }
+
+    /** Returns a new, empty cue
+     */
+    static empty(): Cue {
+        return new Cue('', '', 0, 0, '');
+    }
 }

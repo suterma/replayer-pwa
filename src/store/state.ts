@@ -29,7 +29,7 @@ interface IState {
 
 export const state: IState = {
     /** @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
-    compilation: new Compilation(),
+    compilation: Compilation.empty(),
 
     /** @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
     selectedCueId: '',

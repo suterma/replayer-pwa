@@ -1,6 +1,5 @@
 import {
     Compilation,
-    CompilationType,
     Cue,
     ICompilation,
     ICue,
@@ -17,17 +16,15 @@ export default class CompilationParser {
      * @param xmlCompilation - An object representing the stored Compilation from an XML import.
      * @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
     static parseFromXmlCompilation(xmlCompilation: any): ICompilation {
-        const compilation = new Compilation();
-        compilation.Type = CompilationType.XML;
-        compilation.MediaPath = xmlCompilation.MediaPath;
-        compilation.Title = CompilationParser.FirstStringOf(
-            xmlCompilation.Title,
+        return new Compilation(
+            xmlCompilation.MediaPath,
+            CompilationParser.FirstStringOf(xmlCompilation.Title),
+            '', //TODO Use URL from ZIP filename
+            CompilationParser.FirstStringOf(xmlCompilation.Id),
+            CompilationParser.parseFromXmlTracks(
+                xmlCompilation.Tracks[0].Track,
+            ),
         );
-        compilation.Url = ''; //TODO from ZIP filename
-        compilation.Id = CompilationParser.FirstStringOf(xmlCompilation.Id);
-        const xmlTracks = xmlCompilation.Tracks[0].Track;
-        compilation.Tracks = CompilationParser.parseFromXmlTracks(xmlTracks);
-        return compilation;
     }
 
     /** Parses a PLIST object into an ICompilation.
@@ -36,18 +33,14 @@ export default class CompilationParser {
      * NOTE: the plist compilation type does not have all data corresponding to a Replayer compilation. Thus some of the information like the GUID, is just made up    .
      */
     static parseFromPListCompilation(plistCompilation: any): ICompilation {
-        const compilation = new Compilation();
-        //NOTE: the plist compilation type does not have all data corresponding to a Replayer compilation. Thus some of the information like the GUID, is just made up    .
-        //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
-        compilation.Type = CompilationType.XML; //TODO do we need a type here at all?
-        compilation.MediaPath = ''.normalize(); //TODO from ZIP filename
-        compilation.Title = 'Imported from LivePlayback'.normalize(); //TODO from ZIP filename
-        compilation.Url = ''.normalize(); //TODO from ZIP filename
-        compilation.Id = uuidv4();
-        compilation.Tracks =
-            CompilationParser.parseFromPlistTracks(plistCompilation);
-
-        return compilation;
+        //TODO Use URL from ZIP filename
+        return new Compilation(
+            ''.normalize(), //TODO from ZIP filename
+            'Imported from LivePlayback'.normalize(), //TODO from ZIP filename
+            ''.normalize(), //TODO from ZIP filename
+            uuidv4(),
+            CompilationParser.parseFromPlistTracks(plistCompilation),
+        );
     }
 
     /** Returns the first item in the array, if defined. Otherwise, the empty string is returned as a default. */
@@ -70,17 +63,16 @@ export default class CompilationParser {
         const tracks = new Array<ITrack>();
 
         xmlTracks.forEach((xmlTrack: any) => {
-            const track = new Track();
-            track.Album = CompilationParser.FirstStringOf(xmlTrack.Album);
-            track.Artist = CompilationParser.FirstStringOf(xmlTrack.Artist);
-            track.Id = CompilationParser.FirstStringOf(xmlTrack.Id);
-            track.Measure = CompilationParser.FirstNumberOf(xmlTrack.Measure);
-            track.Name = CompilationParser.FirstStringOf(xmlTrack.Name);
-            track.Url = CompilationParser.FirstStringOf(xmlTrack.Url);
+            const track = new Track(
+                CompilationParser.FirstStringOf(xmlTrack.Name),
+                CompilationParser.FirstStringOf(xmlTrack.Album),
+                CompilationParser.FirstStringOf(xmlTrack.Artist),
+                CompilationParser.FirstNumberOf(xmlTrack.Measure),
+                CompilationParser.FirstStringOf(xmlTrack.Url),
+                CompilationParser.FirstStringOf(xmlTrack.Id),
+                CompilationParser.parseFromXmlCues(xmlTrack.Cues[0].Cue),
+            );
             tracks.push(track);
-
-            const xmlCues = xmlTrack.Cues[0].Cue;
-            track.Cues = CompilationParser.parseFromXmlCues(xmlCues);
         });
 
         return tracks;
@@ -92,41 +84,37 @@ export default class CompilationParser {
         plistTracks.forEach((plistTrack: any) => {
             //Only for tracks with real data (LivePlayback may have empty slots in the tracks list)
             if (plistTrack.Duration && plistTrack.Name && plistTrack.Path) {
-                //NOTE: the plist compilation type does not have all data corresponding to a Replayer compilation. Thus some of the information like the GUID, is just made up    .
+                //NOTE: the plist compilation type does not have all data corresponding to a Replayer compilation.
+                //Thus some of the information like the GUID, is just made up.
                 //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
-                //TODO Update instead of push, if exists
-                const track = new Track();
-                track.Album = ''.normalize();
-                track.Artist = ''.normalize();
-                track.Id = uuidv4();
-                track.Measure = 0;
-                track.Name = plistTrack.Name.normalize();
-                //URL-Decode because LivePlayback stores file names as URIs
-                track.Url = decodeURI(plistTrack.Path).normalize();
+                const track = new Track(
+                    plistTrack.Name.normalize(),
+                    ''.normalize(),
+                    ''.normalize(),
+                    0,
+                    decodeURI(plistTrack.Path).normalize(),
+                    uuidv4(),
+                    CompilationParser.parseFromPlistCues(plistTrack.Markers),
+                );
                 tracks.push(track);
-
-                const plistCues = plistTrack.Markers;
-                track.Cues = CompilationParser.parseFromPlistCues(plistCues);
             }
         });
         return tracks;
     }
 
-    /** @devdoc The XML type contains all properties as arrays, even the singe item ones. This is a limitation of the used XML-To-JS converter */
+    /** @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
     private static parseFromXmlCues(xmlCues: any): ICue[] {
         const cues = new Array<ICue>();
 
         xmlCues.forEach((xmlCue: any) => {
             //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
-            const cue = new Cue();
-            cue.Description = CompilationParser.FirstStringOf(
-                xmlCue.Description,
-            ).normalize();
-            cue.Time = CompilationParser.FirstNumberOf(xmlCue.Time);
-            cue.Id = CompilationParser.FirstStringOf(xmlCue.Id);
-            cue.Shortcut = CompilationParser.FirstStringOf(
-                xmlCue.Shortcut,
-            ).normalize();
+            const cue = new Cue(
+                CompilationParser.FirstStringOf(xmlCue.Description).normalize(),
+                CompilationParser.FirstStringOf(xmlCue.Shortcut).normalize(),
+                CompilationParser.FirstNumberOf(xmlCue.Time),
+                null,
+                CompilationParser.FirstStringOf(xmlCue.Id),
+            );
             cues.push(cue);
         });
         return cues;
@@ -138,11 +126,13 @@ export default class CompilationParser {
         plistCues.forEach((plistCue: any) => {
             //NOTE: the plist compilation type does not have all data corresponding to a Replayer compilation. Thus some of the information like the GUID, is just made up    .
             //TODO Update instead of push, if exists
-            const cue = new Cue();
-            cue.Description = plistCue.Name;
-            cue.Time = plistCue.Position;
-            cue.Id = uuidv4();
-            cue.Shortcut = plistCue.ShortCut;
+            const cue = new Cue(
+                plistCue.Name,
+                plistCue.ShortCut,
+                plistCue.Position,
+                null,
+                uuidv4(),
+            );
             cues.push(cue);
         });
         return cues;

@@ -83,19 +83,15 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
         );
     }
     /** Retrieves the compilation from the persistent store
-     * @devdoc This returns a Compilation-like object, which does not acutally have Compilation and related prototypes.
-     * This leads to warnings in Vue's property type check for non-production builds.
-     * Assignment via Object.assign might overcome this issue, but I refrain from that since it is actually unnecessary.
-     * See  https://stackoverflow.com/a/43977474/79485
-     * Also, using https://www.npmjs.com/package/ts-serializable might be a solution, but requires annotation.
+     * @returns a properly typed Compilation object
      * */
     static async retrieveCompilation(): Promise<ICompilation> {
         return createPromise(() => {
             const compilation = localStorage.getItem(StorageKeys.COMPILATION);
             if (compilation) {
-                return JSON.parse(compilation);
+                return Compilation.fromJson(compilation);
             }
-            return new Compilation();
+            return Compilation.empty();
         }, null);
     }
     static clearCompilation(): void {

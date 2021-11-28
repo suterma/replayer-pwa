@@ -81,7 +81,7 @@ export const mutations: MutationTree<State> & Mutations = {
         PersistentStorage.clearCompilation();
 
         state.selectedCueId = '';
-        state.compilation = new Compilation();
+        state.compilation = Compilation.empty();
 
         state.mediaUrls.forEach((file) => {
             URL.revokeObjectURL(file.objectUrl);
