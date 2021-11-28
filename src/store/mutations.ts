@@ -42,7 +42,7 @@ export const mutations: MutationTree<State> & Mutations = {
         const matchingFile = state.mediaUrls.get(payload.fileName);
         if (matchingFile) {
             console.debug(
-                'mutations::ADD_MEDIA_URL:removing item for key:',
+                'mutations::ADD_MEDIA_URL:removing matching item for key:',
                 payload.fileName,
             );
             URL.revokeObjectURL(matchingFile.objectUrl);
@@ -50,10 +50,7 @@ export const mutations: MutationTree<State> & Mutations = {
         }
 
         //Keep the others and add the new one
-        console.debug(
-            'mutations::ADD_MEDIA_URL:adding item for key:',
-            payload.fileName,
-        );
+        console.debug('mutations::ADD_MEDIA_URL:', payload.fileName);
         state.mediaUrls.set(payload.fileName, payload);
     },
     [MutationTypes.REPLACE_COMPILATION](

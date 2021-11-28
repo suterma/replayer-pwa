@@ -54,8 +54,6 @@ export const actions: ActionTree<State, State> & Actions = {
         );
         PersistentStorage.retrieveCompilation()
             .then((compilation) => {
-                //Replace the compilation
-                console.debug('committing compilation: ', compilation);
                 commit(MutationTypes.REPLACE_COMPILATION, compilation);
             })
             .then(() => {
@@ -63,14 +61,6 @@ export const actions: ActionTree<State, State> & Actions = {
                 PersistentStorage.retrieveAllMediaBlobs()
                     .then((mediaBlobs) => {
                         mediaBlobs.forEach((mediaBlob) => {
-                            // commit(
-                            //     MutationTypes.POP_PROGRESS_MESSAGE,
-                            //     undefined,
-                            // );
-                            // commit(
-                            //     MutationTypes.PUSH_PROGRESS_MESSAGE,
-                            //     `Retrieving last compilation (${mediaBlob.fileName})...`,
-                            // );
                             const objectUrl = URL.createObjectURL(
                                 mediaBlob.blob,
                             );
@@ -78,17 +68,9 @@ export const actions: ActionTree<State, State> & Actions = {
                                 MutationTypes.ADD_MEDIA_URL,
                                 new MediaUrl(mediaBlob.fileName, objectUrl),
                             );
-                            // commit(
-                            //     MutationTypes.POP_PROGRESS_MESSAGE,
-                            //     undefined,
-                            // ); //for the file
                         });
                     })
                     .then(() => {
-                        // commit(
-                        //     MutationTypes.PUSH_PROGRESS_MESSAGE,
-                        //     'Retrieving last compilation (selected cue)...',
-                        // );
                         //Update the selected cue
                         PersistentStorage.retrieveSelectedCueId()
                             .then((cueId) => {

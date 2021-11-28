@@ -129,8 +129,6 @@ export class Compilation implements ICompilation {
                 );
             }),
         );
-
-        console.debug('Compilation::fromJson:'), compilation;
         return compilation;
     }
 
