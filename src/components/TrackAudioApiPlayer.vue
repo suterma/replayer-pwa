@@ -26,6 +26,8 @@
             <button
                 :class="{
                     button: true,
+                    disabled: this.isPlayingRequestOutstanding,
+                    'is-loading': this.isPlayingRequestOutstanding,
                 }"
                 v-on:click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
@@ -252,6 +254,11 @@ export default defineComponent({
             latencyHint: 'interactive',
         }),
         audioElement: document.createElement('audio'),
+        /** Flags, whether a playing request is currently outstanding. This is true after a play request was received, for as long
+         * as playback has not yet started.
+         * @devdoc See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted for more information
+         */
+        isPlayingRequestOutstanding: false,
     }),
     /** Handles the setup of the audio graph outside the mounted lifespan.
      * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
@@ -313,12 +320,32 @@ export default defineComponent({
     },
 
     watch: {
-        /** Watch whether the player state changed, and then update the audio element accordingly  */
-        playing(value): Promise<void> | undefined {
+        /** Watch whether the player state changed, and then update the audio element accordingly
+         * @remarks Tracks outstanding play requests and starts a new one only when none is outstanding already.
+         */
+        playing(value: boolean): Promise<void> | undefined {
             if (value) {
-                return this.audioElement.play();
+                if (!this.isPlayingRequestOutstanding) {
+                    this.isPlayingRequestOutstanding = true;
+                    return this.audioElement
+                        .play()
+                        .then((_) => {
+                            console.debug('Playback started');
+                        })
+                        .catch((e) => {
+                            console.error('Playback failed with message: ' + e);
+                        })
+                        .finally(() => {
+                            this.isPlayingRequestOutstanding = false;
+                        });
+                } else {
+                    console.warn(
+                        'A play request is already outstanding. This request is discarded.',
+                    );
+                }
+            } else {
+                this.audioElement.pause();
             }
-            this.audioElement.pause();
         },
         /** Watch whether the volume changed, and then update the audio element accordingly  */
         volume(): void {
