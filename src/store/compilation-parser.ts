@@ -7,6 +7,10 @@ import {
     Track,
 } from './compilation-types';
 import { v4 as uuidv4 } from 'uuid';
+import { MediaBlob, RezMimeTypes } from './state-types';
+import xml2js from 'xml2js';
+import NSKeyedUnarchiver from '@suterma/nskeyedunarchiver-liveplayback/source';
+import bplist from 'bplist-parser';
 
 /**
  * Provides helper methods for parsing compilations from external storage formats.
@@ -136,5 +140,43 @@ export default class CompilationParser {
             cues.push(cue);
         });
         return cues;
+    }
+
+    /** Handles the given content as the compilation meta data
+     */
+    public static handleAsXmlCompilation(
+        content: Buffer,
+    ): Promise<ICompilation> {
+        return xml2js
+            .parseStringPromise(content /*, options */)
+            .then((result: any) => {
+                console.debug('Parsed XNL compilation: ', result);
+                return CompilationParser.parseFromXmlCompilation(result);
+            });
+    }
+
+    /** Handles the given content as the compilation meta data
+     */
+    public static handleAsLivePlaybackPlaylist(content: Buffer): any {
+        const inputPropertyList = bplist.parseFile(content);
+        const unarchivedObject = new NSKeyedUnarchiver().unarchive(
+            inputPropertyList,
+        );
+        return unarchivedObject;
+    }
+
+    /** Handles the given content as media file of the given type
+     * @devdoc This is used when a file is read from the ZIP package and not yet available as blob
+     */
+    public static handleAsMediaFromContent(
+        mediaFileName: string,
+        content: Buffer,
+        mimeType: RezMimeTypes,
+    ): MediaBlob {
+        //TODO https://stackoverflow.com/questions/21737224/using-local-file-as-audio-src
+        const blob = new Blob([content], {
+            type: mimeType,
+        });
+        return new MediaBlob(mediaFileName, blob);
     }
 }

@@ -12,4 +12,17 @@ export enum ActionTypes {
     SET_COMPILATION_FROM_PLIST = 'SET_COMPILATION_FROM_PLIST',
     /** Adds a blob as a media source, using a name and a blob  */
     ADD_MEDIA_BLOB = 'ADD_MEDIA_BLOB',
+
+    /** Loads a single file or package from an URL
+     * @remarks The content might be a package or single file of any supported content.
+     * @remarks This method can be called multiple times, each resource gets appropriately added to the current compilation
+     * @param url - The URL to load the file from
+     */
+    LOAD_FROM_URL = 'LOAD_FROM_URL',
+    /** Loads a single file or package from the local file system
+     * @remarks The item might be a package or single file of any supported content.
+     * @remarks This method can be called multiple times, each resource gets appropriately added to the current compilation
+     * @param filename - The URL to load the file from
+     */
+    LOAD_FROM_FILE = 'LOAD_FROM_FILE',
 }
