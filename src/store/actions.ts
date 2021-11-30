@@ -174,6 +174,10 @@ export const actions: ActionTree<State, State> & Actions = {
             `Loading file '${file.name}' (${file.size / 1000000}MB)`,
         );
 
+        .//TODO handle the file types from buffer, and use the same methods for both from ZIP and from standalone content
+        //THis simplifies the code and reduces redundancy
+        //TODO then handle the progress messages properly, so that they stay until the very end when all files have properly loaded
+
         //Determine the file type
         if (
             file.name.toLowerCase().endsWith('.rez') ||
