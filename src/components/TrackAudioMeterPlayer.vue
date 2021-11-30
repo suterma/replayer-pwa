@@ -362,6 +362,7 @@ export default defineComponent({
          * @remarks Calculates the witdh with respect to the progress bar width from the player styles (which is a border)
          * max-width makes sure, the progress bar never overflows the given space.
          */
+        // eslint-disable-next-line
         progressStyle(): any {
             return {
                 width: `calc(${this.percentComplete}% + 0.4em)`,
@@ -452,7 +453,7 @@ export default defineComponent({
             console.debug(`TrackAudioPlayer(${this.title})::stop`);
             this.playing = false;
             this.audioElement.currentTime = 0;
-            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE, undefined);
+            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, undefined);
         },
         togglePlayback() {
             console.debug(`TrackAudioPlayer(${this.title})::togglePlayback`);

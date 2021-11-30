@@ -19,9 +19,10 @@ export default class CompilationParser {
     /** Parses an XML object into an ICompilation.
      * @param xmlCompilation - An object representing the stored Compilation from an XML import.
      * @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
-    static parseFromXmlCompilation(xmlCompilation: any): ICompilation {
+    private static parseFromXmlCompilation(xmlCompilation: any): ICompilation {
+        console.debug('Raw xmlCompilation:', xmlCompilation);
         return new Compilation(
-            xmlCompilation.MediaPath,
+            CompilationParser.FirstStringOf(xmlCompilation.MediaPath),
             CompilationParser.FirstStringOf(xmlCompilation.Title),
             '', //TODO Use URL from ZIP filename
             CompilationParser.FirstStringOf(xmlCompilation.Id),
@@ -36,7 +37,9 @@ export default class CompilationParser {
      *  @devdoc The PList contains an array of all tracks.
      * NOTE: the plist compilation type does not have all data corresponding to a Replayer compilation. Thus some of the information like the GUID, is just made up    .
      */
-    static parseFromPListCompilation(plistCompilation: any): ICompilation {
+    private static parseFromPListCompilation(
+        plistCompilation: any,
+    ): ICompilation {
         //TODO Use URL from ZIP filename
         return new Compilation(
             ''.normalize(), //TODO from ZIP filename
@@ -142,7 +145,7 @@ export default class CompilationParser {
         return cues;
     }
 
-    /** Handles the given content as the compilation meta data
+    /** Handles the given Buffer as having XML content and parses it into the compilation meta data
      */
     public static handleAsXmlCompilation(
         content: Buffer,
@@ -150,22 +153,31 @@ export default class CompilationParser {
         return xml2js
             .parseStringPromise(content /*, options */)
             .then((result: any) => {
-                console.debug('Parsed XNL compilation: ', result);
-                return CompilationParser.parseFromXmlCompilation(result);
+                console.debug('Parsed XML compilation: ', result);
+                return CompilationParser.parseFromXmlCompilation(
+                    result.XmlCompilation,
+                );
             });
     }
 
-    /** Handles the given content as the compilation meta data
+    /** Handles the given Buffer as having plist content and parses it into the compilation meta data
      */
-    public static handleAsLivePlaybackPlaylist(content: Buffer): any {
-        const inputPropertyList = bplist.parseFile(content);
-        const unarchivedObject = new NSKeyedUnarchiver().unarchive(
-            inputPropertyList,
-        );
-        return unarchivedObject;
+    public static handleAsLivePlaybackPlaylist(
+        content: Buffer,
+    ): Promise<ICompilation> {
+        return bplist
+            .parseFile(content)
+            .then((inputPropertyList: unknown[]) => {
+                const unarchivedObject = new NSKeyedUnarchiver().unarchive(
+                    inputPropertyList,
+                );
+                return CompilationParser.parseFromPListCompilation(
+                    unarchivedObject,
+                );
+            });
     }
 
-    /** Handles the given content as media file of the given type
+    /** Handles the given Buffer as having media content and converts it into a MediaBlob
      * @devdoc This is used when a file is read from the ZIP package and not yet available as blob
      */
     public static handleAsMediaFromContent(

@@ -21,14 +21,14 @@ export interface Actions {
     //     { commit }: AugmentedActionContext,
     //     payload: string,
     // ): Promise<string>;
-    [ActionTypes.SET_COMPILATION_FROM_XML](
-        { commit }: AugmentedActionContext,
-        payload: string,
-    ): void;
-    [ActionTypes.SET_COMPILATION_FROM_PLIST](
-        { commit }: AugmentedActionContext,
-        payload: string,
-    ): void;
+    // [ActionTypes.SET_COMPILATION_FROM_XML](
+    //     { commit }: AugmentedActionContext,
+    //     payload: string,
+    // ): void;
+    // [ActionTypes.SET_COMPILATION_FROM_PLIST](
+    //     { commit }: AugmentedActionContext,
+    //     payload: string,
+    // ): void;
     [ActionTypes.RETRIEVE_COMPILATION]({
         commit,
     }: AugmentedActionContext): void;
@@ -97,26 +97,28 @@ export const actions: ActionTree<State, State> & Actions = {
                     });
             });
     },
-    [ActionTypes.SET_COMPILATION_FROM_XML]({ commit }, payload: any) {
-        console.debug('actions::SET_COMPILATION_FROM_XML:payload', payload);
+    // [ActionTypes.SET_COMPILATION_FROM_XML]({ commit }, xmlContent: any) {
+    //     console.debug('actions::SET_COMPILATION_FROM_XML:payload', xmlContent);
 
-        const compilation = CompilationParser.parseFromXmlCompilation(
-            payload.XmlCompilation,
-        );
-        commit(MutationTypes.REPLACE_COMPILATION, compilation);
-        //Store persistently, but after committing, to keep the process faster
-        PersistentStorage.storeCompilation(compilation);
-    },
+    //     const compilation =
+    //         CompilationParser.parseFromXmlCompilation(xmlContent);
+    //     commit(MutationTypes.REPLACE_COMPILATION, compilation);
+    //     //Store persistently, but after committing, to keep the process faster
+    //     PersistentStorage.storeCompilation(compilation);
+    // },
 
-    [ActionTypes.SET_COMPILATION_FROM_PLIST]({ commit }, payload: any) {
-        console.debug('actions::SET_COMPILATION_FROM_PLIST:payload', payload);
+    // [ActionTypes.SET_COMPILATION_FROM_PLIST]({ commit }, plistContent: any) {
+    //     console.debug(
+    //         'actions::SET_COMPILATION_FROM_PLIST:payload',
+    //         plistContent,
+    //     );
 
-        const compilation =
-            CompilationParser.parseFromPListCompilation(payload);
-        commit(MutationTypes.REPLACE_COMPILATION, compilation);
-        //Store persistently, but after committing, to keep the process faster
-        PersistentStorage.storeCompilation(compilation);
-    },
+    //     const compilation =
+    //         CompilationParser.parseFromPListCompilation(plistContent);
+    //     commit(MutationTypes.REPLACE_COMPILATION, compilation);
+    //     //Store persistently, but after committing, to keep the process faster
+    //     PersistentStorage.storeCompilation(compilation);
+    // },
 
     [ActionTypes.ADD_MEDIA_BLOB]({ commit }, payload: MediaBlob) {
         console.debug(
@@ -133,7 +135,7 @@ export const actions: ActionTree<State, State> & Actions = {
         PersistentStorage.storeMediaBlob(payload);
     },
 
-    .//TODO WIP check whether all these loading function actually work:
+    //TODO WIP check whether all these loading function actually work:
     //With xml, rex, bplist, ZIP
     //Then simplify by handling ZIP files separately, unzipping all files and recursively call this method
 
@@ -169,7 +171,7 @@ export const actions: ActionTree<State, State> & Actions = {
     ): void {
         commit(
             MutationTypes.PUSH_PROGRESS_MESSAGE,
-            `Loading file ${file.name} (${file.size / 1000000}MB)`,
+            `Loading file '${file.name}' (${file.size / 1000000}MB)`,
         );
 
         //Determine the file type
@@ -205,22 +207,33 @@ export const actions: ActionTree<State, State> & Actions = {
                                         const mediaFileName =
                                             zipEntry.name.normalize();
 
-                                        if (mediaFileName.endsWith('.rex')) {
+                                        if (
+                                            mediaFileName
+                                                .toLowerCase()
+                                                .endsWith('.rex') ||
+                                            mediaFileName
+                                                .toLowerCase()
+                                                .endsWith('.xml')
+                                        ) {
                                             CompilationParser.handleAsXmlCompilation(
                                                 content,
-                                            ).then((compilation) => {
-                                                dispatch(
-                                                    ActionTypes.SET_COMPILATION_FROM_XML,
-                                                    compilation,
-                                                ).finally(() => {
+                                            )
+                                                .then((compilation) => {
+                                                    commit(
+                                                        MutationTypes.REPLACE_COMPILATION,
+                                                        compilation,
+                                                    );
+                                                })
+                                                .finally(() => {
                                                     commit(
                                                         MutationTypes.POP_PROGRESS_MESSAGE,
                                                         undefined,
                                                     );
                                                 });
-                                            });
                                         } else if (
-                                            mediaFileName.endsWith('.mp3')
+                                            mediaFileName
+                                                .toLowerCase()
+                                                .endsWith('.mp3')
                                         ) {
                                             const mediaBlob =
                                                 CompilationParser.handleAsMediaFromContent(
@@ -239,7 +252,7 @@ export const actions: ActionTree<State, State> & Actions = {
                                             });
                                         }
                                         //Is a LivePlayback playlist?
-                                        if (
+                                        else if (
                                             mediaFileName
                                                 .toLowerCase()
                                                 .endsWith('.bplist') ||
@@ -247,20 +260,25 @@ export const actions: ActionTree<State, State> & Actions = {
                                                 .toLowerCase()
                                                 .endsWith('playlist')
                                         ) {
-                                            const unarchivedObject =
-                                                CompilationParser.handleAsLivePlaybackPlaylist(
-                                                    content,
-                                                );
-
-                                            dispatch(
-                                                ActionTypes.SET_COMPILATION_FROM_PLIST,
-                                                unarchivedObject,
-                                            ).finally(() => {
-                                                commit(
-                                                    MutationTypes.POP_PROGRESS_MESSAGE,
-                                                    undefined,
-                                                );
-                                            });
+                                            CompilationParser.handleAsLivePlaybackPlaylist(
+                                                content,
+                                            )
+                                                .then((compilation) => {
+                                                    commit(
+                                                        MutationTypes.REPLACE_COMPILATION,
+                                                        compilation,
+                                                    );
+                                                })
+                                                .finally(() => {
+                                                    commit(
+                                                        MutationTypes.POP_PROGRESS_MESSAGE,
+                                                        undefined,
+                                                    );
+                                                });
+                                        } else {
+                                            console.warn(
+                                                `un-ZIP: Unknown content type for filename: ${file.name}`,
+                                            );
                                         }
                                     })
                                     .finally(() => {
@@ -285,30 +303,16 @@ export const actions: ActionTree<State, State> & Actions = {
             file.name.toLowerCase().endsWith('.rex') ||
             file.name.toLowerCase().endsWith('.xml')
         ) {
-            /** Loads the given file as a REX compilation (XML metadata only)
-             * @remarks Media files could later be retrieved by trying to download with the metadata info or by explicit file selection by the user
-             */
-            commit(
-                MutationTypes.PUSH_PROGRESS_MESSAGE,
-                `Loading .rex file '${file.name}'`,
-            );
-
             const reader = new FileReader();
             reader.onload = () => {
                 const content = Buffer.from(reader.result as string);
-                CompilationParser.handleAsXmlCompilation(content).then(
-                    (compilation) => {
-                        dispatch(
-                            ActionTypes.SET_COMPILATION_FROM_XML,
-                            compilation,
-                        ).finally(() => {
-                            commit(
-                                MutationTypes.POP_PROGRESS_MESSAGE,
-                                undefined,
-                            );
-                        });
-                    },
-                );
+                CompilationParser.handleAsXmlCompilation(content)
+                    .then((compilation) => {
+                        commit(MutationTypes.REPLACE_COMPILATION, compilation);
+                    })
+                    .finally(() => {
+                        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                    });
             };
             reader.onerror = (): void => {
                 console.error(
@@ -322,32 +326,24 @@ export const actions: ActionTree<State, State> & Actions = {
                 ActionTypes.ADD_MEDIA_BLOB,
                 new MediaBlob(file.name, file),
             );
+            commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
         }
         //Is a LivePlayback playlist?
         else if (
             file.name.toLowerCase().endsWith('.bplist') ||
             file.name.toLowerCase().endsWith('playlist')
         ) {
-            /** Loads the given file as a Livelayback playlist (iOS binary property list)
-             * @remarks Media files could later be retrieved by trying to download with the metadata info or by explicit file selection by the user
-             */
-            commit(
-                MutationTypes.PUSH_PROGRESS_MESSAGE,
-                `Loading LivePlayback file '${file.name}'`,
-            );
             const reader = new FileReader();
 
             reader.onload = () => {
                 const content = Buffer.from(reader.result as ArrayBuffer);
-                const unarchivedObject =
-                    CompilationParser.handleAsLivePlaybackPlaylist(content);
-
-                dispatch(
-                    ActionTypes.SET_COMPILATION_FROM_PLIST,
-                    unarchivedObject,
-                ).finally(() => {
-                    commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
-                });
+                CompilationParser.handleAsLivePlaybackPlaylist(content)
+                    .then((compilation) => {
+                        commit(MutationTypes.REPLACE_COMPILATION, compilation);
+                    })
+                    .finally(() => {
+                        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                    });
             };
             reader.onerror = (): void => {
                 console.error(

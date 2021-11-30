@@ -63,6 +63,7 @@ export const mutations: MutationTree<State> & Mutations = {
         );
 
         state.compilation = compilation;
+        PersistentStorage.storeCompilation(compilation);
     },
     [MutationTypes.UPDATE_SELECTED_CUE_ID](state: State, cueId: string) {
         //Do not update the store, when it's the same value
