@@ -9,7 +9,7 @@ export type Mutations<S = State> = {
     [MutationTypes.PUSH_PROGRESS_MESSAGE](state: S, payload: string): void;
     [MutationTypes.POP_PROGRESS_MESSAGE](state: S): void;
     [MutationTypes.FINISH_PROGRESS](state: State): void;
-    [MutationTypes.ADD_MEDIA_URL](state: S, payload: MediaUrl): void;
+    [MutationTypes.ADD_MEDIA_URL](state: S, mediaUrl: MediaUrl): void;
     [MutationTypes.REPLACE_COMPILATION](
         state: S,
         compilation: ICompilation,
@@ -37,21 +37,23 @@ export const mutations: MutationTree<State> & Mutations = {
         console.debug('FINISH_PROGRESS');
     },
 
-    [MutationTypes.ADD_MEDIA_URL](state: State, payload: MediaUrl) {
-        //Remove any previously matching
-        const matchingFile = state.mediaUrls.get(payload.fileName);
+    [MutationTypes.ADD_MEDIA_URL](state: State, mediaUrl: MediaUrl) {
+        //Remove any previously matching, even it was the same object, because
+        //the caller has already create a new one for this mediaUrl's blob.
+        const matchingFile = state.mediaUrls.get(mediaUrl.fileName);
         if (matchingFile) {
             console.debug(
                 'mutations::ADD_MEDIA_URL:removing matching item for key:',
-                payload.fileName,
+                mediaUrl.fileName,
             );
+            console.debug('revokeObjectURL' + matchingFile.objectUrl);
             URL.revokeObjectURL(matchingFile.objectUrl);
-            state.mediaUrls.delete(payload.fileName);
+            state.mediaUrls.delete(mediaUrl.fileName);
         }
 
         //Keep the others and add the new one
-        console.debug('mutations::ADD_MEDIA_URL:', payload.fileName);
-        state.mediaUrls.set(payload.fileName, payload);
+        console.debug('mutations::ADD_MEDIA_URL:', mediaUrl.fileName);
+        state.mediaUrls.set(mediaUrl.fileName, mediaUrl);
     },
     [MutationTypes.REPLACE_COMPILATION](
         state: State,
@@ -82,6 +84,7 @@ export const mutations: MutationTree<State> & Mutations = {
         state.compilation = Compilation.empty();
 
         state.mediaUrls.forEach((file) => {
+            console.debug('revokeObjectURL' + file.objectUrl);
             URL.revokeObjectURL(file.objectUrl);
         });
         state.mediaUrls.clear();
