@@ -21,14 +21,6 @@ export interface Actions {
     //     { commit }: AugmentedActionContext,
     //     payload: string,
     // ): Promise<string>;
-    // [ActionTypes.SET_COMPILATION_FROM_XML](
-    //     { commit }: AugmentedActionContext,
-    //     payload: string,
-    // ): void;
-    // [ActionTypes.SET_COMPILATION_FROM_PLIST](
-    //     { commit }: AugmentedActionContext,
-    //     payload: string,
-    // ): void;
     [ActionTypes.RETRIEVE_COMPILATION]({
         commit,
     }: AugmentedActionContext): void;
@@ -70,6 +62,10 @@ export const actions: ActionTree<State, State> & Actions = {
                 PersistentStorage.retrieveAllMediaBlobs()
                     .then((mediaBlobs) => {
                         mediaBlobs.forEach((mediaBlob) => {
+                            console.debug(
+                                'actions::RETRIEVE_COMPILATION:mediaBlob.fileName',
+                                mediaBlob.fileName,
+                            );
                             const objectUrl = URL.createObjectURL(
                                 mediaBlob.blob,
                             );
@@ -97,42 +93,20 @@ export const actions: ActionTree<State, State> & Actions = {
                     });
             });
     },
-    // [ActionTypes.SET_COMPILATION_FROM_XML]({ commit }, xmlContent: any) {
-    //     console.debug('actions::SET_COMPILATION_FROM_XML:payload', xmlContent);
 
-    //     const compilation =
-    //         CompilationParser.parseFromXmlCompilation(xmlContent);
-    //     commit(MutationTypes.REPLACE_COMPILATION, compilation);
-    //     //Store persistently, but after committing, to keep the process faster
-    //     PersistentStorage.storeCompilation(compilation);
-    // },
-
-    // [ActionTypes.SET_COMPILATION_FROM_PLIST]({ commit }, plistContent: any) {
-    //     console.debug(
-    //         'actions::SET_COMPILATION_FROM_PLIST:payload',
-    //         plistContent,
-    //     );
-
-    //     const compilation =
-    //         CompilationParser.parseFromPListCompilation(plistContent);
-    //     commit(MutationTypes.REPLACE_COMPILATION, compilation);
-    //     //Store persistently, but after committing, to keep the process faster
-    //     PersistentStorage.storeCompilation(compilation);
-    // },
-
-    [ActionTypes.ADD_MEDIA_BLOB]({ commit }, payload: MediaBlob) {
+    [ActionTypes.ADD_MEDIA_BLOB]({ commit }, mediaBlob: MediaBlob) {
         console.debug(
-            'actions::ADD_MEDIA_BLOB:payload-filename',
-            payload.fileName,
+            'actions::ADD_MEDIA_BLOB:mediaBlob-filename',
+            mediaBlob.fileName,
         );
 
-        const objectUrl = URL.createObjectURL(payload.blob);
+        const objectUrl = URL.createObjectURL(mediaBlob.blob);
         commit(
             MutationTypes.ADD_MEDIA_URL,
-            new MediaUrl(payload.fileName, objectUrl),
+            new MediaUrl(mediaBlob.fileName, objectUrl),
         );
         //Store persistently, but after committing, to keep the process faster
-        PersistentStorage.storeMediaBlob(payload);
+        PersistentStorage.storeMediaBlob(mediaBlob);
     },
 
     //TODO WIP check whether all these loading function actually work:
