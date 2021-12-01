@@ -326,7 +326,7 @@ export default defineComponent({
     unmounted() {
         console.debug(`TrackAudioApiPlayer::unmounted`);
 
-        //properly desctroy the audio element and the audio context
+        //properly destroy the audio element and the audio context
         this.audioElement.pause();
         this.audioElement.remove();
 
@@ -368,7 +368,7 @@ export default defineComponent({
                     this.isPlayingRequestOutstanding = true;
                     return this.audioElement
                         .play()
-                        .then((_) => {
+                        .then(() => {
                             console.debug('Playback started');
                         })
                         .catch((e) => {
