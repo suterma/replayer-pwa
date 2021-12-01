@@ -94,7 +94,7 @@
             <div class="buttons">
                 <template v-for="cue in cues" :key="cue.Id">
                     <CueButton
-                        :disabled="!trackFileUrl?.objectUrl"
+                        :disabled="!trackFileUrl?.objectUrl || !isTrackLoaded"
                         :cue="cue"
                         :currentSeconds="currentSeconds"
                         @click="cueClick(cue)"
@@ -130,6 +130,10 @@ export default defineComponent({
              * @remarks This is used for track progress display within the set of cues
              */
             currentSeconds: 0,
+            /** Flag to indicate whether the player has it's track loaded.
+             * @remarks This is used to toggle playback button states
+             */
+            isTrackLoaded: false,
         };
     },
     methods: {
@@ -274,6 +278,8 @@ export default defineComponent({
                 'TrackTile::calculateCueDurations:trackDurationSeconds:' +
                     trackDurationSeconds,
             );
+            this.isTrackLoaded = true;
+
             const originalCues = this.cues?.filter(function (el) {
                 return el.Time !== null;
             });

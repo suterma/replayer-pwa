@@ -88,28 +88,22 @@ export default defineComponent({
             this.$store.dispatch(ActionTypes.LOAD_FROM_URL, url);
         },
 
-     
-
         /** Handles the selection of one or more files by loading their content
          */
         async loadFiles(event: Event): Promise<void> {
-  
-                Array.from(
-                    (event.target as HTMLInputElement)
-                        .files as unknown as File[],
-                ).forEach((file) => {
-                    this.loadFile(file);
-                });
-          
+            Array.from(
+                (event.target as HTMLInputElement).files as unknown as File[],
+            ).forEach((file) => {
+                this.loadFile(file);
+            });
         },
 
         /** Loads a single file (from a selection of one or more files) by loading their content
          */
         async loadFile(file: File): Promise<void> {
-                 //TODO TEST does this work?
-                     this.$store.dispatch(ActionTypes.LOAD_FROM_FILE, file);
+            //TODO TEST does this work?
+            this.$store.dispatch(ActionTypes.LOAD_FROM_FILE, file);
         },
-
     },
     computed: {
         /** Provide the URL parameter from the route, if available */

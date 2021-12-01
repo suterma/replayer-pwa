@@ -1,8 +1,8 @@
 <template>
-    <template v-if="!hasCompilation">
-        <!-- Loader for importable files, also listens to url params -->
-        <RezLoader />
-    </template>
+    <!-- <template v-if="!hasCompilation"> -->
+    <!-- Loader for importable files, also listens to url params -->
+    <RezLoader />
+    <!-- </template> -->
 
     <button
         title="Close"

@@ -1,10 +1,47 @@
 <template>
-    <div class="field has-addons player-panel">
+    <div class="field has-addons player-panel" v-if="!this.loaded">
+        <p class="control">
+            <button class="button">
+                <!-- empty -->
+                <span class="icon">
+                    <i class="mdi mdi-24px">
+                        <svg
+                            style="width: 24px; height: 24px"
+                            viewBox="0 0 24 24"
+                        ></svg>
+                    </i>
+                </span>
+            </button>
+        </p>
+        <p class="control">
+            <button class="button is-loading">
+                <!-- loading -->
+                <span class="icon">
+                    <i class="mdi mdi-24px">
+                        <svg
+                            style="width: 24px; height: 24px"
+                            viewBox="0 0 24 24"
+                        ></svg>
+                    </i>
+                </span>
+            </button>
+        </p>
+        <!-- An empty player with a seekbar/timeline as placeholder -->
+        <div class="player-seekbar">
+            <div class="player-timeline">
+                <div class="player-time">
+                    <div class="player-time-current">Loading media...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field has-addons player-panel" v-else>
         <!-- Stop (do not show on small devices, user still can use play/pause) -->
         <p class="control is-hidden-mobile">
             <button
                 :class="{
                     button: true,
+                    'is-loading': !this.loaded,
                 }"
                 v-on:click.prevent="stop"
                 title="Stop"
@@ -22,12 +59,14 @@
                 </span>
             </button>
         </p>
+        <!-- Play/Pause (Only available when the track is loaded, and no playback request is outstanding) -->
         <p class="control">
             <button
                 :class="{
                     button: true,
-                    disabled: this.isPlayingRequestOutstanding,
-                    'is-loading': this.isPlayingRequestOutstanding,
+                    disabled: this.isPlayingRequestOutstanding || !this.loaded,
+                    'is-loading':
+                        this.isPlayingRequestOutstanding || !this.loaded,
                 }"
                 v-on:click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"

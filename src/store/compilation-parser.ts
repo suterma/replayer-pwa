@@ -32,6 +32,39 @@ export default class CompilationParser {
         );
     }
 
+    /** Asserts whether the file name represents an XML compilation file */
+    public static isXmlFile(fileName: string): boolean {
+        return (
+            fileName.toLowerCase().endsWith('.rex') ||
+            fileName.toLowerCase().endsWith('.xml')
+        );
+    }
+
+    /** Asserts whether the file name represents a bplist (Binary Propertylist) compilation file */
+    public static isBplistFile(fileName: string): boolean {
+        return (
+            fileName.toLowerCase().endsWith('.bplist') ||
+            fileName.toLowerCase().endsWith('playlist')
+        );
+    }
+
+    /** Asserts whether the file name represents a media file
+     * @remarks Currently, only mp3 is supported
+     */
+    public static isMediaFile(fileName: string): boolean {
+        return fileName.toLowerCase().endsWith('.mp3');
+    }
+
+    /** Asserts whether the file name represents a package file
+     * @remarks Currently, only mp3 is supported
+     */
+    public static isPackageFile(fileName: string): boolean {
+        return (
+            fileName.toLowerCase().endsWith('.rez') ||
+            fileName.toLowerCase().endsWith('.zip')
+        );
+    }
+
     /** Parses a PLIST object into an ICompilation.
      * @param plistCompilation - An object representing the stored Compilation from a PLIST import.
      *  @devdoc The PList contains an array of all tracks.
@@ -150,6 +183,7 @@ export default class CompilationParser {
     public static handleAsXmlCompilation(
         content: Buffer,
     ): Promise<ICompilation> {
+        console.debug('CompilationParser::handleAsXmlCompilation');
         return xml2js
             .parseStringPromise(content /*, options */)
             .then((result: any) => {
@@ -165,6 +199,7 @@ export default class CompilationParser {
     public static handleAsLivePlaybackPlaylist(
         content: Buffer,
     ): Promise<ICompilation> {
+        console.debug('CompilationParser::handleAsLivePlaybackPlaylist');
         return bplist
             .parseFile(content)
             .then((inputPropertyList: unknown[]) => {
@@ -180,11 +215,12 @@ export default class CompilationParser {
     /** Handles the given Buffer as having media content and converts it into a MediaBlob
      * @devdoc This is used when a file is read from the ZIP package and not yet available as blob
      */
-    public static handleAsMediaFromContent(
+    public static handleAsMediaContent(
         mediaFileName: string,
         content: Buffer,
         mimeType: RezMimeTypes,
     ): MediaBlob {
+        console.debug('CompilationParser::handleAsMediaContent');
         //TODO https://stackoverflow.com/questions/21737224/using-local-file-as-audio-src
         const blob = new Blob([content], {
             type: mimeType,

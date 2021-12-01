@@ -174,22 +174,11 @@ export const actions: ActionTree<State, State> & Actions = {
             `Loading file '${file.name}' (${file.size / 1000000}MB)`,
         );
 
-        .//TODO handle the file types from buffer, and use the same methods for both from ZIP and from standalone content
+        //TODO handle the file types from buffer, and use the same methods for both from ZIP and from standalone content
         //THis simplifies the code and reduces redundancy
         //TODO then handle the progress messages properly, so that they stay until the very end when all files have properly loaded
 
-        //Determine the file type
-        if (
-            file.name.toLowerCase().endsWith('.rez') ||
-            file.name.toLowerCase().endsWith('.zip')
-        ) {
-            /** Loads the given file as a REZ package (Package of a Compilation and included media files)
-             */
-
-            commit(
-                MutationTypes.PUSH_PROGRESS_MESSAGE,
-                `Processing file: ${file.name}`,
-            );
+        if (CompilationParser.isPackageFile(file.name)) {
             // 1) read the Blob
             JSZip.loadAsync(file)
                 .then(
@@ -202,7 +191,7 @@ export const actions: ActionTree<State, State> & Actions = {
                                 commit(
                                     //Set the progress message, before using any of the async functions
                                     MutationTypes.PUSH_PROGRESS_MESSAGE,
-                                    `Processing content: ${zipEntry.name}`,
+                                    `Processing ZIP content: ${zipEntry.name}`,
                                 );
                                 zipEntry
                                     .async('nodebuffer')
@@ -212,12 +201,9 @@ export const actions: ActionTree<State, State> & Actions = {
                                             zipEntry.name.normalize();
 
                                         if (
-                                            mediaFileName
-                                                .toLowerCase()
-                                                .endsWith('.rex') ||
-                                            mediaFileName
-                                                .toLowerCase()
-                                                .endsWith('.xml')
+                                            CompilationParser.isXmlFile(
+                                                mediaFileName,
+                                            )
                                         ) {
                                             CompilationParser.handleAsXmlCompilation(
                                                 content,
@@ -235,12 +221,12 @@ export const actions: ActionTree<State, State> & Actions = {
                                                     );
                                                 });
                                         } else if (
-                                            mediaFileName
-                                                .toLowerCase()
-                                                .endsWith('.mp3')
+                                            CompilationParser.isMediaFile(
+                                                mediaFileName,
+                                            )
                                         ) {
                                             const mediaBlob =
-                                                CompilationParser.handleAsMediaFromContent(
+                                                CompilationParser.handleAsMediaContent(
                                                     mediaFileName,
                                                     content,
                                                     RezMimeTypes.AUDIO_MP3,
@@ -254,15 +240,10 @@ export const actions: ActionTree<State, State> & Actions = {
                                                     undefined,
                                                 );
                                             });
-                                        }
-                                        //Is a LivePlayback playlist?
-                                        else if (
-                                            mediaFileName
-                                                .toLowerCase()
-                                                .endsWith('.bplist') ||
-                                            mediaFileName
-                                                .toLowerCase()
-                                                .endsWith('playlist')
+                                        } else if (
+                                            CompilationParser.isBplistFile(
+                                                mediaFileName,
+                                            )
                                         ) {
                                             CompilationParser.handleAsLivePlaybackPlaylist(
                                                 content,
@@ -303,10 +284,7 @@ export const actions: ActionTree<State, State> & Actions = {
                 .finally(() => {
                     commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                 });
-        } else if (
-            file.name.toLowerCase().endsWith('.rex') ||
-            file.name.toLowerCase().endsWith('.xml')
-        ) {
+        } else if (CompilationParser.isXmlFile(file.name)) {
             const reader = new FileReader();
             reader.onload = () => {
                 const content = Buffer.from(reader.result as string);
@@ -325,18 +303,13 @@ export const actions: ActionTree<State, State> & Actions = {
                 reader.abort(); // (...does this do anything useful in an onerror handler?)
             };
             reader.readAsText(file);
-        } else if (file.name.toLowerCase().endsWith('.mp3')) {
+        } else if (CompilationParser.isMediaFile(file.name)) {
             dispatch(
                 ActionTypes.ADD_MEDIA_BLOB,
                 new MediaBlob(file.name, file),
             );
             commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
-        }
-        //Is a LivePlayback playlist?
-        else if (
-            file.name.toLowerCase().endsWith('.bplist') ||
-            file.name.toLowerCase().endsWith('playlist')
-        ) {
+        } else if (CompilationParser.isBplistFile(file.name)) {
             const reader = new FileReader();
 
             reader.onload = () => {
