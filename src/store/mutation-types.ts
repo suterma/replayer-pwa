@@ -16,9 +16,15 @@ export enum MutationTypes {
      */
     UPDATE_SELECTED_CUE_ID = 'UPDATE_SELECTED_CUE_ID',
     /** Closes an existing compilation
-     * @remarks Removes the compilation with all data, including the media files
+     * @remarks Removes the compilation with all data, including the media files and the object URL references to it
      */
     CLOSE_COMPILATION = 'CLOSE_COMPILATION',
+
+    /** Revokes all currently known media blob URLs
+     * @remarks Use this to avoid memory leaks when abandoning (but not closing) a compilation
+     * This is usually the case when the user closes the tab or browser window, without actually closing the compilation.
+     */
+    REVOKE_ALL_MEDIA_URLS = 'REVOKE_ALL_MEDIA_URLS',
     /** Updates the value whether to never show the welcome message again */
     UPDATE_NEVER_SHOW_WELCOME_MESSAGE_AGAIN = 'UPDATE_NEVER_SHOW_WELCOME_MESSAGE_AGAIN',
     /** Initializes the application state from the persisted state during startup.

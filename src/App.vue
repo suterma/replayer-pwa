@@ -30,8 +30,22 @@ export default defineComponent({
     components: { NavbarTop, ProgressOverlay, WelcomeMessage },
     computed: {},
     beforeCreate() {
-        this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
         this.$store.commit(MutationTypes.INIT_APPLICATION_STATE);
+    },
+    beforeMount() {
+        this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
+        //Handle reloads and tab/browser exits
+        //Using the "unmounted" lifecycle event proved to be unreliable: Page reload in the Browser did not trigger "unmounted"
+        //Using the onbeforeunload causes the cleanup to get reliably triggered at page reload
+        window.onbeforeunload = this.cleanUp;
+    },
+    methods: {
+        cleanUp() {
+            console.log('App.vue::cleanUp...');
+            //Make sure, no object URLs are remaining
+            this.$store.commit(MutationTypes.REVOKE_ALL_MEDIA_URLS);
+            console.log('App.vue::cleanUp done.');
+        },
     },
 });
 </script>

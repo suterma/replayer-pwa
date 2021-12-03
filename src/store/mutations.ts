@@ -4,6 +4,7 @@ import { MutationTypes } from './mutation-types';
 import { State } from './state';
 import { MediaUrl } from './state-types';
 import PersistentStorage from './persistent-storage';
+import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 
 export type Mutations<S = State> = {
     [MutationTypes.PUSH_PROGRESS_MESSAGE](state: S, payload: string): void;
@@ -16,6 +17,7 @@ export type Mutations<S = State> = {
     ): void;
     [MutationTypes.UPDATE_SELECTED_CUE_ID](state: S, cueId: string): void;
     [MutationTypes.CLOSE_COMPILATION](state: S): void;
+    [MutationTypes.REVOKE_ALL_MEDIA_URLS](state: State): void;
     [MutationTypes.UPDATE_NEVER_SHOW_WELCOME_MESSAGE_AGAIN](
         state: S,
         neverShowWelcomeMessageAgain: boolean,
@@ -46,8 +48,7 @@ export const mutations: MutationTree<State> & Mutations = {
                 'mutations::ADD_MEDIA_URL:removing matching item for key:',
                 mediaUrl.fileName,
             );
-            console.debug('revokeObjectURL' + matchingFile.objectUrl);
-            URL.revokeObjectURL(matchingFile.objectUrl);
+            ObjectUrlHandler.revokeObjectURL(matchingFile.objectUrl);
             state.mediaUrls.delete(mediaUrl.fileName);
         }
 
@@ -77,15 +78,19 @@ export const mutations: MutationTree<State> & Mutations = {
     },
 
     [MutationTypes.CLOSE_COMPILATION](state: State) {
-        //TODO handle the indexed db persistence in an action first.
         PersistentStorage.clearCompilation();
 
         state.selectedCueId = '';
         state.compilation = Compilation.empty();
 
         state.mediaUrls.forEach((file) => {
-            console.debug('revokeObjectURL' + file.objectUrl);
-            URL.revokeObjectURL(file.objectUrl);
+            ObjectUrlHandler.revokeObjectURL(file.objectUrl);
+        });
+        state.mediaUrls.clear();
+    },
+    [MutationTypes.REVOKE_ALL_MEDIA_URLS](state: State) {
+        state.mediaUrls.forEach((file) => {
+            ObjectUrlHandler.revokeObjectURL(file.objectUrl);
         });
         state.mediaUrls.clear();
     },

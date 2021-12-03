@@ -49,7 +49,7 @@ export const actions: ActionTree<State, State> & Actions = {
     //     });
     // },
     [ActionTypes.RETRIEVE_COMPILATION]({ commit }) {
-        console.debug('RETRIEVE_COMPILATION');
+        console.debug('actions::RETRIEVE_COMPILATION');
         commit(
             MutationTypes.PUSH_PROGRESS_MESSAGE,
             'Retrieving last compilation...',
@@ -59,14 +59,11 @@ export const actions: ActionTree<State, State> & Actions = {
                 commit(MutationTypes.REPLACE_COMPILATION, compilation);
             })
             .then(() => {
-                //retrieve all blobs (which should also include the ones for the afore-loaded compilation)
+                //retrieve all blobs into object urls
+                //(which should actually be the media blobs for the afore-loaded compilation)
                 PersistentStorage.retrieveAllMediaBlobs()
                     .then((mediaBlobs) => {
                         mediaBlobs.forEach((mediaBlob) => {
-                            console.debug(
-                                'actions::RETRIEVE_COMPILATION:mediaBlob.fileName',
-                                mediaBlob.fileName,
-                            );
                             const objectUrl = ObjectUrlHandler.createObjectURL(
                                 mediaBlob.blob,
                                 mediaBlob.fileName,
