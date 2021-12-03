@@ -1,16 +1,16 @@
-import { Compilation, CompilationType, Track } from '@/store/compilation-types';
+import { Compilation, ITrack } from '@/store/compilation-types';
 import { XmlCompilation } from './XmlCompilation';
 
 describe('the XML mapping', function () {
     it('should return an initialised XmlCompilation object', function () {
         // Arrange
-        const compilation = new Compilation();
-        compilation.Id = 'compilationId';
-        compilation.MediaPath = 'c:\\temp';
-        compilation.Title = 'testTitle';
-        compilation.Tracks = new Array<Track>();
-        compilation.Type = CompilationType.XML;
-        compilation.Url = 'https://test.example.com/music';
+        const compilation = new Compilation(
+            'c:\\temp',
+            'testTitle',
+            'https://test.example.com/music',
+            'compilationId',
+            new Array<ITrack>(),
+        );
 
         //Act
         const target = new XmlCompilation(compilation);

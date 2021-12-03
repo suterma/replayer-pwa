@@ -22,8 +22,9 @@ export interface ICompilation {
     /** the URL, where this Compilation is stored. This is used for storage and retrieval of the compilation. */
     Url: string;
 
-    /** The globally unique Id
-     * @remarks This globally unique identifiers allows to recognise this item over multiple edits
+    /** A unique identifier for this compilation.
+     * @remarks To work correctly, this identifier must be unique among all currenlty loaded compilations. Best, to make it universally unique by using a UUID.
+     * @devdoc This identifier allows to recognise this item over multiple edits
      */
     Id: string;
 
@@ -54,8 +55,9 @@ export interface ITrack {
      */
     Url: string;
 
-    /** The globally unique Id
-     * @remarks This globally unique identifiers allows to recognise this item over multiple edits
+    /** A unique identifier for this track.
+     * @remarks To work correctly, this identifier must be unique among all currenlty loaded compilations. Best, to make it universally unique by using a UUID.
+     * @devdoc This identifier allows to recognise this item over multiple edits
      */
     Id: string;
 }
@@ -63,6 +65,10 @@ export interface ITrack {
 /** @interface Defines a Replayer cue */
 export interface ICue {
     Description: string;
+    /** A unique identifier for this cue.
+     * @remarks To work correctly, this identifier must be unique among all currenlty loaded compilations. Best, to make it universally unique by using a UUID.
+     * @devdoc This identifier allows to recognise this item over multiple edits
+     */
     Id: string;
     Shortcut: string;
     Time: number | null;
@@ -83,6 +89,8 @@ export class Compilation implements ICompilation {
     Id = '';
     Tracks: Array<ITrack> = new Array<ITrack>();
 
+    /** Creates a new compilation
+     */
     constructor(
         mediaPath: string,
         title: string,
@@ -150,6 +158,8 @@ export class Track implements ITrack {
     Id = '';
     Cues: Array<ICue> = new Array<ICue>();
 
+    /** Creates a new track
+     */
     constructor(
         name: string,
         album: string,
@@ -203,6 +213,8 @@ export class Cue implements ICue {
     /**   @inheritdoc */
     Duration: number | null = null;
 
+    /** Creates a new cue
+     */
     constructor(
         description: string,
         shortcut: string,

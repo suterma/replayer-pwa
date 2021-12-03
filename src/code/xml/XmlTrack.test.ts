@@ -1,17 +1,18 @@
-import { Cue, Track } from '@/store/compilation-types';
+import { ICue, Track } from '@/store/compilation-types';
 import { XmlTrack } from './XmlTrack';
 
 describe('the XML mapping', function () {
     it('should return an initialised XmlTrack object', function () {
         // Arrange
-        const track = new Track();
-        track.Album = 'testAlbum';
-        track.Artist = 'testArtist';
-        track.Cues = new Array<Cue>();
-        track.Id = 'testId';
-        track.Measure = 88.8;
-        track.Name = 'testName';
-        track.Url = 'https://test.example.com?myfile.mp3';
+        const track = new Track(
+            'testName',
+            'testAlbum',
+            'testArtist',
+            88.8,
+            'https://test.example.com?myfile.mp3',
+            'testId',
+            new Array<ICue>(),
+        );
 
         //Act
         const target = new XmlTrack(track);

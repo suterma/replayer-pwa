@@ -8,8 +8,10 @@ import { createStore } from 'vuex';
 import { MutationTypes } from '@/store/mutation-types';
 import { State } from '@/store/state';
 import { MediaBlob, MediaUrl } from '@/store/state-types';
-import { Compilation, Cue } from '@/store/compilation-types';
+import { Compilation } from '@/store/compilation-types';
 import { ActionTypes } from '@/store/action-types';
+import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
+import PersistentStorage from '@/store/persistent-storage';
 
 describe('RezLoader.vue', () => {
     //https://stackoverflow.com/a/56643520
@@ -21,7 +23,7 @@ describe('RezLoader.vue', () => {
         //https://stackoverflow.com/a/60300568
         (URL.createObjectURL as unknown as jest.Mock).mockReset();
     });
-    it('should load an mp3 file as media file', async () => {
+    it('should store an mp3 file as media file, and return an object url', async () => {
         //Arrange
 
         const store = createStore({
@@ -29,10 +31,10 @@ describe('RezLoader.vue', () => {
                 //WORK: can I use a constructor here, instead of manually construct the store here?
                 return {
                     /** @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
-                    compilation: new Compilation(),
+                    compilation: Compilation.empty(),
 
                     /** @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
-                    selectedCue: new Cue(),
+                    selectedCueId: '',
 
                     mediaUrls: new Map<string, MediaUrl>(),
 
@@ -47,9 +49,22 @@ describe('RezLoader.vue', () => {
                 },
             },
             actions: {
-                // eslint-disable-next-line no-empty-pattern
-                [ActionTypes.ADD_MEDIA_BLOB]({}, payload: MediaBlob) {
-                    URL.createObjectURL(payload.blob);
+                [ActionTypes.ADD_MEDIA_BLOB]({ commit }, mediaBlob: MediaBlob) {
+                    console.debug(
+                        'actions::ADD_MEDIA_BLOB:mediaBlob-filename',
+                        mediaBlob.fileName,
+                    );
+
+                    const objectUrl = ObjectUrlHandler.createObjectURL(
+                        mediaBlob.blob,
+                        mediaBlob.fileName,
+                    );
+                    commit(
+                        MutationTypes.ADD_MEDIA_URL,
+                        new MediaUrl(mediaBlob.fileName, objectUrl),
+                    );
+                    //Store persistently, but after committing, to keep the process faster
+                    PersistentStorage.storeMediaBlob(mediaBlob);
                 },
             },
         });

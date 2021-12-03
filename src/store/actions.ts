@@ -7,6 +7,7 @@ import PersistentStorage from './persistent-storage';
 import CompilationParser from './compilation-parser';
 import { MediaBlob, MediaUrl, RezMimeTypes } from './state-types';
 import JSZip from 'jszip';
+import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 
 type AugmentedActionContext = {
     commit<K extends keyof Mutations>(
@@ -66,8 +67,9 @@ export const actions: ActionTree<State, State> & Actions = {
                                 'actions::RETRIEVE_COMPILATION:mediaBlob.fileName',
                                 mediaBlob.fileName,
                             );
-                            const objectUrl = URL.createObjectURL(
+                            const objectUrl = ObjectUrlHandler.createObjectURL(
                                 mediaBlob.blob,
+                                mediaBlob.fileName,
                             );
                             commit(
                                 MutationTypes.ADD_MEDIA_URL,
@@ -100,7 +102,10 @@ export const actions: ActionTree<State, State> & Actions = {
             mediaBlob.fileName,
         );
 
-        const objectUrl = URL.createObjectURL(mediaBlob.blob);
+        const objectUrl = ObjectUrlHandler.createObjectURL(
+            mediaBlob.blob,
+            mediaBlob.fileName,
+        );
         commit(
             MutationTypes.ADD_MEDIA_URL,
             new MediaUrl(mediaBlob.fileName, objectUrl),

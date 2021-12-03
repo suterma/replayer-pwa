@@ -4,12 +4,7 @@ import { XmlCue } from './XmlCue';
 describe('the XML mapping', function () {
     it('should return an initialised XmlCue object', function () {
         // Arrange
-        const cue = new Cue();
-        cue.Description = 'testDescription';
-        cue.Duration = 99.9;
-        cue.Id = 'myId';
-        cue.Shortcut = '123';
-        cue.Time = 88.8;
+        const cue = new Cue('testDescription', '123', 88.8, 99.9, 'myId');
 
         //Act
         const target = new XmlCue(cue);
