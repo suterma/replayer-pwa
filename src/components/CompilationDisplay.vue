@@ -14,9 +14,9 @@
     </h1>
 
     <!-- Buttons as index to the tracks-->
-    <div class="buttons">
+    <!-- <div class="buttons">
         <template v-for="track in tracks" :key="track.Id">
-            <!-- The track with the currently selected cue is highlighted -->
+            The track with the currently selected cue is highlighted
             <a
                 title="Scroll to track"
                 v-if="activeTrack?.Id == track.Id"
@@ -30,7 +30,7 @@
                 }"
                 >{{ track.Name }}</a
             >
-            <!-- A track without the currently selected cue is not highlighted, but can be selected (will also trigger scrolling) -->
+            A track without the currently selected cue is not highlighted, but can be selected (will also trigger scrolling)
             <a
                 title="Select first cue and scroll to track"
                 v-else
@@ -41,10 +41,16 @@
                 {{ track.Name }}</a
             >
         </template>
-    </div>
+    </div> -->
     <!-- Tracks to work with -->
-    <template v-for="track in tracks" :key="track.Id">
-        <CollapsibleTrackTile :track="track" />
+    <template v-for="(track, index) in tracks" :key="track.Id">
+        <!-- //TODO showing the active track as expanded at start does not work, since the active track is not immediately available afters startup
+        There should be a "starting" property or event that is true until/when the compilation is loaded. At this point, the 
+        expanded state should get calculated once.  -->
+        <CollapsibleTrackTile
+            :track="track"
+            :startExpanded="index === 0 || track.Id == activeTrack?.Id"
+        />
     </template>
 </template>
 

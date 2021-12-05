@@ -23,7 +23,16 @@
             track: true,
         }"
     >
-        <h2 class="subtitle" v-bind:id="'track-' + track.Id">
+        <!-- Track header, including artist info, expansion-toggler and adaptive spacing -->
+        <h2
+            :class="{
+                subtitle: isActiveTrack,
+                'mb-0': !expanded,
+            }"
+            class="subtitle is-clickable"
+            v-bind:id="'track-' + track.Id"
+            @click="toggleExpanded()"
+        >
             <span
                 :class="{
                     'has-text-success': isActiveTrack,
@@ -31,35 +40,55 @@
                 >{{ track.Name }}</span
             >
 
-            <!-- Text colors similar to cues -->
-            <span v-if="!showPlayer" class="is-pulled-right ml-3"
-                ><a
-                    @click="toggleCueDisplay"
-                    role="button"
-                    class="button is-warning is-small"
+            <!-- Playback indicator -->
+            <span class="ml-3">
+                <span
+                    :class="{
+                        icon: true,
+                        'has-text-success': this.isPlaying,
+                        'is-invisible	': !this.isPlaying,
+                    }"
                 >
+                    <i class="mdi mdi-24px">
+                        <svg
+                            style="width: 24px; height: 24px"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                fill="currentColor"
+                                d="M19,12C19,15.86 15.86,19 12,19C8.14,19 5,15.86 5,12C5,8.14 8.14,5 12,5C15.86,5 19,8.14 19,12Z"
+                            />
+                        </svg>
+                    </i>
+                </span>
+            </span>
+
+            <!-- Text colors similar to cues -->
+            <!-- Note: The click handler is registered on the complete title -->
+            <span v-if="expanded" class="is-pulled-right ml-3"
+                ><a
+                    title="Hides the player and cue buttons"
+                    role="button"
+                    class="button is-small"
+                >
+                    <span class="is-size-7 has-text-light" v-if="expanded">
+                        Collapse</span
+                    >
+                </a></span
+            >
+            <span v-else class="is-pulled-right ml-3"
+                ><a role="button" class="button is-warning is-small">
                     <!-- Text colors similar to cues -->
-                    <span class="is-size-7 has-text-light" v-if="!showPlayer">
+                    <span class="is-size-7 has-text-light" v-if="!expanded">
                         Show
                         {{ track.Cues?.length }} cues</span
                     >
                 </a></span
             >
-            <span v-if="showPlayer" class="is-pulled-right ml-3"
-                ><a
-                    @click="toggleCueDisplay"
-                    title="Hides the player and cue buttons"
-                    role="button"
-                    class="button is-small"
-                >
-                    <span class="is-size-7 has-text-light" v-if="showPlayer">
-                        Collapse</span
-                    >
-                </a></span
-            >
-
             <!-- Artist info -->
-            <span class="is-pulled-right is-size-7 has-text-right">
+            <span
+                class="is-pulled-right is-hidden-mobile is-size-7 has-text-right"
+            >
                 <span v-if="track.Artist" class="has-opacity-half"> by </span>
                 <span class="is-italic">
                     {{ track.Artist }}
@@ -72,7 +101,7 @@
             </span>
         </h2>
 
-        <div v-show="showPlayer">
+        <div v-show="expanded">
             <!-- The audio player, but only once the source is available 
             Note: The actual src property/attribute is also depending 
             on the show state as a performance optimizations
@@ -84,6 +113,7 @@
                 :src="optimizedMediaObjectUrl"
                 v-on:timeupdate="updateTime"
                 v-on:trackLoaded="calculateCueDurations"
+                v-on:trackPlaying="updatePlaying"
             ></TrackAudioApiPlayer>
 
             <!-- Otherwise show a placeholder -->
@@ -129,10 +159,18 @@ export default defineComponent({
     components: { CueButton, TrackAudioApiPlayer, ReplayerEventHandler },
     props: {
         track: Track,
+        /** Whether this track tile is initially shown as expanded, with the player and the cue buttons.
+         */
+        startExpanded: {
+            type: Boolean,
+        },
     },
+    emits: ['update:expanded'],
     data() {
         return {
-            showPlayer: false,
+            /** Whether this track tile is shown as expanded, with the player and the cue buttons.
+             */
+            expanded: false,
             /** The playback progress in the current track, in [seconds]
              * @remarks This is used for track progress display within the set of cues
              */
@@ -141,13 +179,21 @@ export default defineComponent({
              * @remarks This is used to toggle playback button states
              */
             isTrackLoaded: false,
+
+            /** Flag to indicate whether the player is currently playing
+             */
+            isPlaying: false,
         };
     },
+    created() {
+        this.expanded = this.startExpanded;
+    },
     methods: {
-        /** Toggles the display of the cue buttons */
-        toggleCueDisplay() {
-            this.showPlayer = !this.showPlayer;
-        },
+        /** Toggles expanded state */
+        // toggleExpanded() {
+        //     $emit('update:firstName', $event.target.value)
+        //     this.expanded = !this.expanded;
+        // },
         togglePlayback() {
             if (this.isActiveTrack) {
                 this.trackPlayerInstance?.togglePlayback();
@@ -197,6 +243,16 @@ export default defineComponent({
                     }
                 }
             }
+        },
+
+        updateExpanded(value: boolean) {
+            this.expanded = value;
+            this.$emit('update:expanded', value);
+        },
+
+        toggleExpanded() {
+            this.expanded = !this.expanded;
+            this.$emit('update:expanded', this.expanded);
         },
         /** Handles the click of a cue button, by toggling playback and seeking to it
          * @remarks Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
@@ -306,6 +362,11 @@ export default defineComponent({
                 });
             }
         },
+        /** Updates the playing flag from the associated player event */
+        updatePlaying(value: boolean) {
+            console.debug('TrackTile::updatePlaying:value:' + value);
+            this.isPlaying = value;
+        },
     },
     watch: {
         /** Handle playback when the active track changes.
@@ -337,12 +398,12 @@ export default defineComponent({
         },
 
         /** Gets the media object URL, if available,
-         * and optimized by the collapsed and the active track state
+         * and optimized for the expanded and the active track state
          * @remarks To save memory in the audio elements, an URL is only provided when
          * the player is actually in the expanded state and the track is the currently active track
          */
         optimizedMediaObjectUrl(): string | undefined {
-            if (this.showPlayer || this.isActiveTrack) {
+            if (this.expanded || this.isActiveTrack) {
                 return this.trackFileUrl?.objectUrl;
             } else {
                 return undefined;
@@ -352,6 +413,7 @@ export default defineComponent({
         cues(): Array<ICue> | undefined {
             return this.track?.Cues;
         },
+
         /** Returns the media file (playable file content) for a track's file name
          * @remarks if available, the tracks from a compilation package are used, otherwise the
          * files are to be loaded from the file system or from the internet
@@ -385,7 +447,7 @@ export default defineComponent({
     },
 });
 </script>
-<style lang="css">
+<style lang="css" scoped>
 /** For mobiles, use a slimmer layout */
 @media screen and (max-width: 768px /*only mobile*/) {
     .box.track {

@@ -252,10 +252,11 @@ import { defineComponent } from 'vue';
 /** A simple vue audio player, for a single track, using the Web Audio API
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playing
  * @remarks Emits 'trackLoaded' with the track duration in seconds, once after successful load of the track's media file
+ * @remarks Emits 'trackPlaying' when the track is playing
  */
 export default defineComponent({
     name: 'TrackAudioApiPlayer',
-    emits: ['timeupdate', 'trackLoaded'],
+    emits: ['timeupdate', 'trackLoaded', 'trackPlaying'],
     props: {
         title: String,
         autoPlay: {
@@ -374,9 +375,11 @@ export default defineComponent({
                         .play()
                         .then(() => {
                             console.debug('Playback started');
+                            this.$emit('trackPlaying', true);
                         })
                         .catch((e) => {
                             console.error('Playback failed with message: ' + e);
+                            this.$emit('trackPlaying', false);
                         })
                         .finally(() => {
                             this.isPlayingRequestOutstanding = false;
@@ -388,6 +391,7 @@ export default defineComponent({
                 }
             } else {
                 this.audioElement.pause();
+                this.$emit('trackPlaying', false);
             }
         },
         /** Watch whether the volume changed, and then update the audio element accordingly  */
