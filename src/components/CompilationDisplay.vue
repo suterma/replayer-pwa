@@ -44,7 +44,7 @@
     </div>
     <!-- Tracks to work with -->
     <template v-for="track in tracks" :key="track.Id">
-        <TrackTile :track="track" />
+        <CollapsibleTrackTile :track="track" />
     </template>
 </template>
 
@@ -52,7 +52,7 @@
 import { defineComponent } from 'vue';
 import VueScrollTo from 'vue-scrollto';
 import { Compilation, ITrack, ICue } from '@/store/compilation-types';
-import TrackTile from '@/components/TrackTile.vue';
+import CollapsibleTrackTile from '@/components/CollapsibleTrackTile.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
@@ -62,7 +62,11 @@ import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
  */
 export default defineComponent({
     name: 'CompilationDisplay',
-    components: { TrackTile, CompilationKeyboardHandler, ReplayerEventHandler },
+    components: {
+        CollapsibleTrackTile,
+        CompilationKeyboardHandler,
+        ReplayerEventHandler,
+    },
     props: {
         compilation: Compilation,
     },

@@ -327,6 +327,7 @@ export default defineComponent({
         console.debug('TrackAudioApiPlayer::unmounted:', this.title);
 
         //properly destroy the audio element and the audio context
+        this.playing = false;
         this.audioElement.pause();
         this.audioElement.remove();
 
@@ -363,6 +364,9 @@ export default defineComponent({
          * @remarks Tracks outstanding play requests and starts a new one only when none is outstanding already.
          */
         playing(value: boolean): Promise<void> | undefined {
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::watch:playing:value${value}`,
+            );
             if (value) {
                 if (!this.isPlayingRequestOutstanding) {
                     this.isPlayingRequestOutstanding = true;
@@ -397,6 +401,13 @@ export default defineComponent({
             );
             this.audioElement.loop = this.looping;
         },
+        /** Watch whether the source changed, and then update the audio element accordingly  */
+        src(): void {
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::src:${this.src}`,
+            );
+            this.audioElement.src = this.src;
+        },
     },
     methods: {
         /** Converts the total seconds into a conveniently displayable hh:mm:ss.s format.
@@ -425,6 +436,9 @@ export default defineComponent({
 
                 //Apply the initial volume. This is a hack to trigger the volumes watcher here, to apply some form of default other than 100
                 this.volume = this.previousVolume;
+
+                //Apply the currently known position to the player. It could be non-zero already.
+                this.seekTo(this.currentSeconds);
 
                 return (this.playing = this.autoPlay);
             }

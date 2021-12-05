@@ -26,33 +26,33 @@
         <h2 class="subtitle" v-bind:id="'track-' + track.Id">
             <span
                 :class="{
-                    'has-text-success': false,
+                    'has-text-success': isActiveTrack,
                 }"
                 >{{ track.Name }}</span
             >
 
             <!-- Text colors similar to cues -->
-            <span v-if="!showCues" class="is-pulled-right ml-3"
+            <span v-if="!showPlayer" class="is-pulled-right ml-3"
                 ><a
                     @click="toggleCueDisplay"
                     role="button"
                     class="button is-warning is-small"
                 >
                     <!-- Text colors similar to cues -->
-                    <span class="is-size-7 has-text-light" v-if="!showCues">
+                    <span class="is-size-7 has-text-light" v-if="!showPlayer">
                         Show
                         {{ track.Cues?.length }} cues</span
                     >
                 </a></span
             >
-            <span v-if="showCues" class="is-pulled-right ml-3"
+            <span v-if="showPlayer" class="is-pulled-right ml-3"
                 ><a
                     @click="toggleCueDisplay"
                     title="Hides the player and cue buttons"
                     role="button"
                     class="button is-small"
                 >
-                    <span class="is-size-7 has-text-light" v-if="showCues">
+                    <span class="is-size-7 has-text-light" v-if="showPlayer">
                         Collapse</span
                     >
                 </a></span
@@ -72,13 +72,16 @@
             </span>
         </h2>
 
-        <div v-show="showCues">
-            <!-- The audio player, but only shown when the source is available -->
+        <div v-show="showPlayer">
+            <!-- The audio player, but only once the source is available 
+            Note: The actual src property/attribute is also depending 
+            on the show state as a performance optimizations
+            -->
             <TrackAudioApiPlayer
-                v-if="trackFileUrl?.objectUrl"
-                ref="TrackAudioApiPlayer"
+                v-if="mediaObjectUrl"
+                ref="playerReference"
                 :title="trackFileUrl?.fileName"
-                :src="trackFileUrl?.objectUrl"
+                :src="optimizedMediaObjectUrl"
                 v-on:timeupdate="updateTime"
                 v-on:trackLoaded="calculateCueDurations"
             ></TrackAudioApiPlayer>
@@ -114,18 +117,22 @@ import { MediaUrl } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 
-/** Displays a track tile
+/** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
+ * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
+ * Details:
+ * - The collapsed panel is not removed from the DOM because of issues with the $ref handling in conjunction with v-if
+ * - However, the player's src property is only set when actually used to keep the memory footprint low.
  * @remarks Also handles the common replayer events for tracks
  */
 export default defineComponent({
-    name: 'TrackTile',
+    name: 'CollapsibleTrackTile',
     components: { CueButton, TrackAudioApiPlayer, ReplayerEventHandler },
     props: {
         track: Track,
     },
     data() {
         return {
-            showCues: true,
+            showPlayer: false,
             /** The playback progress in the current track, in [seconds]
              * @remarks This is used for track progress display within the set of cues
              */
@@ -139,31 +146,31 @@ export default defineComponent({
     methods: {
         /** Toggles the display of the cue buttons */
         toggleCueDisplay() {
-            this.showCues = !this.showCues;
+            this.showPlayer = !this.showPlayer;
         },
         togglePlayback() {
             if (this.isActiveTrack) {
-                this.trackPlayerInstance.togglePlayback();
+                this.trackPlayerInstance?.togglePlayback();
             }
         },
         rewindOneSecond() {
             if (this.isActiveTrack) {
-                this.trackPlayerInstance.rewindOneSecond();
+                this.trackPlayerInstance?.rewindOneSecond();
             }
         },
         forwardOneSecond() {
             if (this.isActiveTrack) {
-                this.trackPlayerInstance.forwardOneSecond();
+                this.trackPlayerInstance?.forwardOneSecond();
             }
         },
         volumeDown() {
             if (this.isActiveTrack) {
-                this.trackPlayerInstance.volumeDown();
+                this.trackPlayerInstance?.volumeDown();
             }
         },
         volumeUp() {
             if (this.isActiveTrack) {
-                this.trackPlayerInstance.volumeUp();
+                this.trackPlayerInstance?.volumeUp();
             }
         },
 
@@ -177,7 +184,7 @@ export default defineComponent({
                 const selectedCueId = this.$store.getters
                     .selectedCueId as string;
                 if (selectedCueId) {
-                    if (this.trackPlayerInstance.playing === true) {
+                    if (this.trackPlayerInstance?.playing === true) {
                         this.trackPlayerInstance?.pause();
                     }
 
@@ -186,7 +193,7 @@ export default defineComponent({
                     )[0]?.Time;
                     //Handle all non-null values (Zero is valid)
                     if (cueTime != null) {
-                        this.trackPlayerInstance.seekTo(cueTime);
+                        this.trackPlayerInstance?.seekTo(cueTime);
                     }
                 }
             }
@@ -195,6 +202,7 @@ export default defineComponent({
          * @remarks Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
          */
         cueClick(cue: ICue) {
+            console.debug('CollapsibleTrackTile::cueClick:cue:', cue);
             if (cue.Time != null) {
                 //Update the selected cue to this cue
                 this.$store.commit(
@@ -203,12 +211,11 @@ export default defineComponent({
                 );
 
                 //Set the position to this cue and handle playback
-                //TODO maybe check handling to avoid double play/pause?
-                if (this.trackPlayerInstance.playing === true) {
+                if (this.trackPlayerInstance?.playing === true) {
                     this.trackPlayerInstance?.pause();
-                    this.trackPlayerInstance.seekTo(cue.Time);
+                    this.trackPlayerInstance?.seekTo(cue.Time);
                 } else {
-                    this.trackPlayerInstance.playFrom(cue.Time);
+                    this.trackPlayerInstance?.playFrom(cue.Time);
                 }
             }
         },
@@ -302,7 +309,7 @@ export default defineComponent({
     },
     watch: {
         /** Handle playback when the active track changes.
-         * a) When this ceases to be the active track, stop playback.
+         * When this ceases to be the active track, stop playback.
          * @remarks This avoids having multiple tracks playing at the same time.
          */
         isActiveTrack(val, oldVal) {
@@ -313,11 +320,35 @@ export default defineComponent({
         },
     },
     computed: {
+        /** Gets a reference to the player instance.
+         * @devdoc $ref's are non-reactive, see https://v3.vuejs.org/api/special-attributes.html#ref
+         * Thus, referencing an instance after it has been removed from the DOM (e.g. by v-if)
+         * does not work, even after it's rendered again later.
+         */
         trackPlayerInstance(): InstanceType<typeof TrackAudioApiPlayer> {
-            return this.$refs.TrackAudioApiPlayer as InstanceType<
+            return this.$refs.playerReference as InstanceType<
                 typeof TrackAudioApiPlayer
             >;
         },
+        /** Gets the media object URL, if available
+         */
+        mediaObjectUrl(): string | undefined {
+            return this.trackFileUrl?.objectUrl;
+        },
+
+        /** Gets the media object URL, if available,
+         * and optimized by the collapsed and the active track state
+         * @remarks To save memory in the audio elements, an URL is only provided when
+         * the player is actually in the expanded state and the track is the currently active track
+         */
+        optimizedMediaObjectUrl(): string | undefined {
+            if (this.showPlayer || this.isActiveTrack) {
+                return this.trackFileUrl?.objectUrl;
+            } else {
+                return undefined;
+            }
+        },
+
         cues(): Array<ICue> | undefined {
             return this.track?.Cues;
         },
