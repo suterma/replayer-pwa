@@ -160,6 +160,13 @@
                 with IndexedDB. (Released under the MIT License, by Jake
                 Archibald)
             </li>
+            <li>
+                <a href="https://materialdesignicons.com/" target="_blank"
+                    >Material Design Icons</a
+                >, the original. Following Google's Material Design guidelines
+                for system icons. (Icons released under the Apache 2.0 License,
+                by pictogrammers.com)
+            </li>
         </ul>
 
         <h1 class="title">License</h1>
