@@ -54,43 +54,45 @@ export const actions: ActionTree<State, State> & Actions = {
             MutationTypes.PUSH_PROGRESS_MESSAGE,
             'Retrieving last compilation...',
         );
-        PersistentStorage.retrieveCompilation()
-            .then((compilation) => {
-                commit(MutationTypes.REPLACE_COMPILATION, compilation);
-            })
-            .then(() => {
-                //retrieve all blobs into object urls
-                //(which should actually be the media blobs for the afore-loaded compilation)
-                PersistentStorage.retrieveAllMediaBlobs()
-                    .then((mediaBlobs) => {
-                        mediaBlobs.forEach((mediaBlob) => {
-                            const objectUrl = ObjectUrlHandler.createObjectURL(
-                                mediaBlob.blob,
-                                mediaBlob.fileName,
-                            );
-                            commit(
-                                MutationTypes.ADD_MEDIA_URL,
-                                new MediaUrl(mediaBlob.fileName, objectUrl),
-                            );
-                        });
+
+        //retrieving the compilation first, to display it to the user ASAP
+        PersistentStorage.retrieveCompilation().then((compilation) => {
+            commit(MutationTypes.REPLACE_COMPILATION, compilation);
+            //retrieve all available blobs into object urls
+            //(which should actually be the matching media blobs for the afore-loaded compilation)
+            PersistentStorage.retrieveAllMediaBlobs().then((mediaBlobs) => {
+                mediaBlobs.forEach((mediaBlob, index) => {
+                    //NOTE: Setting a timeout here makes the loading work properly for more than a few
+                    //media blobs on an Android Fairphone 3+. Otherwise most (not all) the blobs are corrupted and
+                    //not playable by the audio element.
+                    //The exact reasion is unknown, but might be excessive
+                    //memory consumption when the object URL's are created
+                    //synchronously or too fast in a row
+                    //This problem does only occurr on larger compilation.
+                    //The current timeout of 150ms has been empirically found to work reliably
+                    //on a Fairphone 3+ with the "Family21" test compilation.
+                    setTimeout(() => {
+                        const objectUrl = ObjectUrlHandler.createObjectURL(
+                            mediaBlob.blob,
+                            mediaBlob.fileName,
+                        );
+                        commit(
+                            MutationTypes.ADD_MEDIA_URL,
+                            new MediaUrl(mediaBlob.fileName, objectUrl),
+                        );
+                    }, (index + 1) * 150);
+                });
+
+                //Update the selected cue
+                PersistentStorage.retrieveSelectedCueId()
+                    .then((cueId) => {
+                        commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);
                     })
-                    .then(() => {
-                        //Update the selected cue
-                        PersistentStorage.retrieveSelectedCueId()
-                            .then((cueId) => {
-                                commit(
-                                    MutationTypes.UPDATE_SELECTED_CUE_ID,
-                                    cueId,
-                                );
-                            })
-                            .finally(() => {
-                                commit(
-                                    MutationTypes.POP_PROGRESS_MESSAGE,
-                                    undefined,
-                                );
-                            });
+                    .finally(() => {
+                        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                     });
             });
+        });
     },
 
     [ActionTypes.ADD_MEDIA_BLOB]({ commit }, mediaBlob: MediaBlob) {
