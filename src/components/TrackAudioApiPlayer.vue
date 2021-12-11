@@ -30,7 +30,9 @@
         <div class="player-seekbar">
             <div class="player-timeline">
                 <div class="player-time">
-                    <div class="player-time-current">Loading media...</div>
+                    <div class="player-time-current is-unselectable">
+                        Loading media...
+                    </div>
                 </div>
             </div>
         </div>
@@ -109,10 +111,10 @@
                     title="Seek"
                 ></div>
                 <div class="player-time">
-                    <div class="player-time-current">
+                    <div class="player-time-current is-unselectable">
                         {{ convertToDisplayTime(currentSeconds) }}
                     </div>
-                    <div class="player-time-total">
+                    <div class="player-time-total is-unselectable">
                         {{ convertToDisplayTime(durationSeconds) }}
                     </div>
                 </div>
