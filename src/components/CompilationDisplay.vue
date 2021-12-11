@@ -9,10 +9,7 @@
         @tomnemoniccue="toMnemonicCue($event)"
     />
 
-    <h1 class="title">
-        {{ compilation?.Title }}
-    </h1>
-
+    <CompilationDropdownHeader :compilation="compilation" />
     <!-- Buttons as index to the tracks-->
     <!-- <div class="buttons">
         <template v-for="track in tracks" :key="track.Id">
@@ -66,6 +63,7 @@ import CollapsibleTrackTile from '@/components/CollapsibleTrackTile.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
+import CompilationDropdownHeader from '@/components/CompilationDropdownHeader.vue';
 
 /** Displays the contained list of tracks as tiles
  * @remarks Also handles the common replayer events for compilations
@@ -76,6 +74,7 @@ export default defineComponent({
         CollapsibleTrackTile,
         CompilationKeyboardHandler,
         ReplayerEventHandler,
+        CompilationDropdownHeader,
     },
     props: {
         compilation: Compilation,

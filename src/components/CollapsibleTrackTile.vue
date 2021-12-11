@@ -189,11 +189,6 @@ export default defineComponent({
         this.expanded = this.startExpanded;
     },
     methods: {
-        /** Toggles expanded state */
-        // toggleExpanded() {
-        //     $emit('update:firstName', $event.target.value)
-        //     this.expanded = !this.expanded;
-        // },
         togglePlayback() {
             if (this.isActiveTrack) {
                 this.trackPlayerInstance?.togglePlayback();
