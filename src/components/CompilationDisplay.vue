@@ -43,14 +43,18 @@
         </template>
     </div> -->
     <!-- Tracks to work with -->
-    <template v-for="(track, index) in tracks" :key="track.Id">
-        <!-- //TODO showing the active track as expanded at start does not work, since the active track is not immediately available afters startup
+    <!-- //TODO showing the active track as expanded at start does not work, since the active track is not immediately available afters startup
         There should be a "starting" property or event that is true until/when the compilation is loaded. At this point, the 
         expanded state should get calculated once.  -->
-        <CollapsibleTrackTile
+    <!-- 
+            <template v-for="track in tracks" :key="track.Id">
+                <CollapsibleTrackTile
             :track="track"
             :startExpanded="index === 0 || track.Id == activeTrack?.Id"
-        />
+        /> 
+    </template>-->
+    <template v-for="track in tracks" :key="track.Id">
+        <CollapsibleTrackTile :track="track" :startExpanded="true" />
     </template>
 </template>
 
