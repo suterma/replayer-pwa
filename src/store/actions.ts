@@ -62,13 +62,15 @@ export const actions: ActionTree<State, State> & Actions = {
             //(which should actually be the matching media blobs for the afore-loaded compilation)
             PersistentStorage.retrieveAllMediaBlobs().then((mediaBlobs) => {
                 mediaBlobs.forEach((mediaBlob, index) => {
-                    //NOTE: Setting a timeout here makes the loading work properly for more than a few
-                    //media blobs on an Android Fairphone 3+. Otherwise most (not all) the blobs are corrupted and
+                    //NOTE: Setting an increasing timeout for each blob retrieval
+                    //here makes the loading work properly for more than a few
+                    //media blobs on an Android Fairphone 3+. Otherwise most
+                    //(not all) the blobs are corrupted and
                     //not playable by the audio element.
                     //The exact reasion is unknown, but might be excessive
                     //memory consumption when the object URL's are created
-                    //synchronously or too fast in a row
-                    //This problem does only occurr on larger compilation.
+                    //synchronously or too fast in a row.
+                    //This problem does only occur on larger compilations.
                     //The current timeout of 150ms has been empirically found to work reliably
                     //on a Fairphone 3+ with the "Family21" test compilation.
                     setTimeout(() => {
