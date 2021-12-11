@@ -37,6 +37,12 @@
             </div> -->
             <div class="level-item">&mdash; OR &mdash;</div>
             <div class="level-item">
+                <button class="button" @click="retrieveLastCompilation()">
+                    Retrieve last compilation
+                </button>
+            </div>
+            <div class="level-item">&mdash; OR &mdash;</div>
+            <div class="level-item">
                 <button
                     class="button"
                     @click="
@@ -86,6 +92,9 @@ export default defineComponent({
         loadUrl(url: string): void {
             //TODO TEST does this work?
             this.$store.dispatch(ActionTypes.LOAD_FROM_URL, url);
+        },
+        retrieveLastCompilation(): void {
+            this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
         },
 
         /** Handles the selection of one or more files by loading their content

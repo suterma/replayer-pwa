@@ -168,7 +168,7 @@ export default defineComponent({
     emits: ['update:expanded'],
     data() {
         return {
-            /** Whether this track tile is shown as expanded, with the player and the cue buttons.
+            /** Whether this track tile is shown as expanded, with the player and the cue buttons displayed.
              */
             expanded: false,
             /** The playback progress in the current track, in [seconds]
@@ -185,7 +185,7 @@ export default defineComponent({
             isPlaying: false,
         };
     },
-    created() {
+    mounted() {
         this.expanded = this.startExpanded;
     },
     methods: {

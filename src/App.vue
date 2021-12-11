@@ -22,7 +22,7 @@ import { defineComponent } from 'vue';
 import NavbarTop from '@/components/NavbarTop.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import WelcomeMessage from '@/components/WelcomeMessage.vue';
-import { ActionTypes } from './store/action-types';
+//import { ActionTypes } from './store/action-types';
 import { MutationTypes } from './store/mutation-types';
 
 export default defineComponent({
@@ -33,11 +33,13 @@ export default defineComponent({
         this.$store.commit(MutationTypes.INIT_APPLICATION_STATE);
     },
     beforeMount() {
-        this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
         //Handle reloads and tab/browser exits
         //Using the "unmounted" lifecycle event proved to be unreliable: Page reload in the Browser did not trigger "unmounted"
         //Using the onbeforeunload causes the cleanup to get reliably triggered at page reload
         window.onbeforeunload = this.cleanUp;
+    },
+    mounted() {
+        //this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
     },
     methods: {
         cleanUp() {
