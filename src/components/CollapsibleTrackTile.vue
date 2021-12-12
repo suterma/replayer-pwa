@@ -101,7 +101,11 @@
             </span>
         </h2>
 
-        <div v-show="expanded">
+        <slide-up-down
+            v-model="expanded"
+            :duration="250"
+            timingFunction="ease-out"
+        >
             <!-- The audio player, but only once the source is available 
             Note: The actual src property/attribute is also depending 
             on the show state as a performance optimizations
@@ -134,7 +138,7 @@
                     />
                 </template>
             </div>
-        </div>
+        </slide-up-down>
     </div>
 </template>
 
@@ -446,6 +450,13 @@ export default defineComponent({
     .box.track {
         border: none;
         padding: 0;
+    }
+
+    /** Never show scrollbars on the track tiles (this important style is necessary
+     *  as remedy while using the slide-up-down control) */
+    .slide-up-down__container {
+        overflow-x: hidden !important;
+        overflow-y: hidden !important;
     }
 }
 </style>

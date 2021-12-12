@@ -167,6 +167,14 @@
                 for system icons. (Icons released under the Apache 2.0 License,
                 by pictogrammers.com)
             </li>
+            <li>
+                <a
+                    href="https://github.com/craigrileyuk/vue3-slide-up-down"
+                    target="_blank"
+                    >vue3-slide-up-down </a
+                >, like jQuery's slideUp / slideDown, but for Vue 3! (Released
+                under the MIT License, by Craig Riley)
+            </li>
         </ul>
 
         <h1 class="title">License</h1>
