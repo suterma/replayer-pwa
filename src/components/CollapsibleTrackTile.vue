@@ -159,11 +159,6 @@ export default defineComponent({
     components: { CueButton, TrackAudioApiPlayer, ReplayerEventHandler },
     props: {
         track: Track,
-        /** Whether this track tile is initially shown as expanded, with the player and the cue buttons.
-         */
-        startExpanded: {
-            type: Boolean,
-        },
     },
     emits: ['update:expanded'],
     data() {
@@ -184,9 +179,6 @@ export default defineComponent({
              */
             isPlaying: false,
         };
-    },
-    mounted() {
-        this.expanded = this.startExpanded;
     },
     methods: {
         togglePlayback() {
@@ -364,14 +356,20 @@ export default defineComponent({
         },
     },
     watch: {
-        /** Handle playback when the active track changes.
-         * When this ceases to be the active track, stop playback.
-         * @remarks This avoids having multiple tracks playing at the same time.
+        /** Handles changes in whether this is the active track.
+         * @remarks When this ceases to be the active track, stop playback.
+           This avoids having multiple tracks playing at the same time.
+           @remarks Always show newly active tracks as expanded
          */
         isActiveTrack(val, oldVal) {
-            //is no more active?
+            //Pause no more active track
             if (oldVal === true && val === false) {
                 this.trackPlayerInstance?.pause();
+            }
+
+            //show freshly active always expanded
+            if (oldVal === false && val === true) {
+                this.expanded = true;
             }
         },
     },
