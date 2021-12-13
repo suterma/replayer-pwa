@@ -1,21 +1,4 @@
 <template>
-    Player Chrome
-    <PlayerChrome
-        :title="title"
-        :loaded="this.loaded"
-        @stop="stop"
-        v-model:playing="this.playing"
-        :isPlayingRequestOutstanding="this.isPlayingRequestOutstanding"
-        v-model:currentSeconds="this.currentSeconds"
-        v-model:volume="this.volume"
-        v-model:looping="this.looping"
-        :muted="this.muted"
-        @mute="mute"
-        @seek="seekToSeconds"
-        :durationSeconds="this.durationSeconds"
-        @download="this.download"
-    />
-
     <div class="field has-addons player-panel" v-if="!this.loaded">
         <p class="control">
             <button class="button">
@@ -168,7 +151,7 @@
                     button: true,
                 }"
                 v-show="!showVolume"
-                v-on:click.prevent="looping = !looping"
+                v-on:click.prevent="toggleLooping"
                 title="Loop"
             >
                 <!-- LOOP -->
@@ -201,7 +184,7 @@
                     button: true,
                 }"
                 v-show="!showVolume"
-                v-on:click.prevent="mute"
+                v-on:click.prevent="toggleMuted"
                 title="Mute"
             >
                 <!-- MUTE -->
@@ -252,12 +235,15 @@
                     </i>
                 </span>
                 <input
-                    v-model.lazy.number="volume"
+                    :value="this.volume"
                     v-show="showVolume"
                     class="player-volume"
                     type="range"
                     min="0"
                     max="100"
+                    @change="
+                        $emit('update:volume', parseInt($event.target.value))
+                    "
                 />
             </button>
         </p>
@@ -265,101 +251,85 @@
 </template>
 
 <script lang="ts">
-import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent } from 'vue';
-import PlayerChrome from '@/components/PlayerChrome.vue';
 
-/** A simple vue audio player, for a single track, using the Web Audio API
- * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playing
- * @remarks Emits 'trackLoaded' with the track duration in seconds, once after successful load of the track's media file
- * @remarks Emits 'trackPlaying' when the track is playing
+/** A UI representation for a media player
  */
 export default defineComponent({
-    name: 'TrackAudioApiPlayer',
-    components: { PlayerChrome },
-    emits: ['timeupdate', 'trackLoaded', 'trackPlaying'],
+    name: 'PlayerChrome',
+    components: {},
+    emits: [
+        'stop',
+        'update:playing',
+        'update:looping',
+        'update:currentSeconds',
+        'update:volume',
+        'update:muted',
+        'seek',
+        'download',
+        'mute',
+    ],
     props: {
         title: String,
-        autoPlay: {
+        /** Whether the media file is loaded
+         * @remarks Controls the display of the player, to hint the track availability
+         */
+        loaded: {
             type: Boolean,
             default: false,
         },
-        src: {
-            type: String,
+        /** The playback progress in the current track, in [seconds]
+         * @remarks Implements a two-way binding. Alternatively you can use the seek event
+         * to handle a seek */
+        currentSeconds: {
+            type: Number,
             default: null,
         },
-        loop: {
+        /** The duration of the current track, in [seconds]
+         * @remarks This is only available after successful load of the media file
+         */
+        durationSeconds: {
+            type: Number,
+            default: null,
+        },
+        /** The volume in [percent]
+         * @remarks Implements a two-way binding */
+        volume: {
+            type: Number,
+            default: 50,
+        },
+        /** Whether the player is currently playing
+         * @remarks Implements a two-way binding */
+        playing: {
+            type: Boolean,
+            default: false,
+        },
+        /** Whether the player is currently playing
+         * @remarks Implements a two-way binding */
+        looping: {
+            type: Boolean,
+            default: false,
+        },
+        /** Whether the player is currently muted
+         * @remarks Implements a two-way binding */
+        muted: {
+            type: Boolean,
+            default: false,
+        },
+        /** Flags, whether a playing request is currently outstanding. This is true after a play request was received, for as long
+         * as playback has not yet started.
+         * @devdoc See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted for more information
+         */
+        isPlayingRequestOutstanding: {
             type: Boolean,
             default: false,
         },
     },
     data: () => ({
-        /** The playback progress in the current track, in [seconds] */
-        currentSeconds: 0,
-        /** Gets the duration of the current track, in [seconds]
-         * @remarks This is only available after successful load of the media file
-         */
-        durationSeconds: 0,
-        loaded: false,
-        looping: false,
-        playing: false,
-        previousVolume: 50,
         showVolume: false,
-        /** Default value, user may change later */
-        volume: 25,
-        /** The audio context to use
-         * @devdoc //TODO later allow to use the "playback" option via a settings panel: https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext#options
-         * @devdoc //TODO what about: window.AudioContext = window.AudioContext || window.webkitAudioContext; Is this required?
-         */
-        audioContext: new AudioContext({
-            latencyHint: 'interactive',
-        }),
-        audioElement: document.createElement('audio'),
-        /** Flags, whether a playing request is currently outstanding. This is true after a play request was received, for as long
-         * as playback has not yet started.
-         * @devdoc See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted for more information
-         */
-        isPlayingRequestOutstanding: false,
     }),
-    /** Handles the setup of the audio graph outside the mounted lifespan.
-     * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
-     */
-    created() {
-        console.debug(
-            `TrackAudioApiPlayer::created:src:${this.src} for title ${this.title}`,
-        );
-
-        this.looping = this.loop;
-        this.audioElement.loop = this.looping;
-        this.audioElement.src = this.src;
-        this.audioElement.ontimeupdate = this.updateTime;
-        this.audioElement.onloadeddata = this.load;
-        this.audioElement.onpause = () => {
-            this.playing = false;
-        };
-        this.audioElement.onplay = () => {
-            this.playing = true;
-        };
-        this.audioElement.preload = 'auto';
-    },
-    /** Handles the teardown of the audio graph outside the mounted lifespan.
-     * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
-     */
-    unmounted() {
-        console.debug('TrackAudioApiPlayer::unmounted:', this.title);
-
-        //properly destroy the audio element and the audio context
-        this.playing = false;
-        this.audioElement.pause();
-        this.audioElement.remove();
-
-        this.audioContext.close();
-    },
 
     computed: {
-        muted(): boolean {
-            return this.volume / 100 === 0;
-        },
         /** The playback progress in the current track, in [percent] */
         percentComplete(): number {
             return (this.currentSeconds / this.durationSeconds) * 100;
@@ -380,63 +350,6 @@ export default defineComponent({
             return `Volume (${this.volume}%)`;
         },
     },
-
-    watch: {
-        /** Watch whether the player state changed, and then update the audio element accordingly
-         * @remarks Tracks outstanding play requests and starts a new one only when none is outstanding already.
-         */
-        playing(value: boolean): Promise<void> | undefined {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::watch:playing:value${value}`,
-            );
-            if (value) {
-                if (!this.isPlayingRequestOutstanding) {
-                    this.isPlayingRequestOutstanding = true;
-                    return this.audioElement
-                        .play()
-                        .then(() => {
-                            console.debug('Playback started');
-                            this.$emit('trackPlaying', true);
-                        })
-                        .catch((e) => {
-                            console.error('Playback failed with message: ' + e);
-                            this.$emit('trackPlaying', false);
-                        })
-                        .finally(() => {
-                            this.isPlayingRequestOutstanding = false;
-                        });
-                } else {
-                    console.warn(
-                        'A play request is already outstanding. This request is discarded.',
-                    );
-                }
-            } else {
-                this.audioElement.pause();
-                this.$emit('trackPlaying', false);
-            }
-        },
-        /** Watch whether the volume changed, and then update the audio element accordingly  */
-        volume(): void {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::volume:${this.volume}`,
-            );
-            this.audioElement.volume = this.volume / 100;
-        },
-        /** Watch whether the looping changed, and then update the audio element accordingly  */
-        looping(): void {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::looping:${this.looping}`,
-            );
-            this.audioElement.loop = this.looping;
-        },
-        /** Watch whether the source changed, and then update the audio element accordingly  */
-        src(): void {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::src:${this.src}`,
-            );
-            this.audioElement.src = this.src;
-        },
-    },
     methods: {
         /** Converts the total seconds into a conveniently displayable hh:mm:ss.s format.
          * @remarks Omits the hour part, if not appliccable
@@ -450,128 +363,43 @@ export default defineComponent({
             return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss;
         },
         download() {
-            console.debug(`TrackAudioApiPlayer(${this.title})::download`);
-            this.stop();
-            window.open(this.src, 'download');
-        },
-        load() {
-            console.debug(`TrackAudioApiPlayer(${this.title})::load`);
-            if (this.audioElement.readyState >= 2) {
-                this.loaded = true;
-                this.durationSeconds = this.audioElement.duration;
-
-                this.$emit('trackLoaded', this.durationSeconds);
-
-                //Apply the initial volume. This is a hack to trigger the volumes watcher here, to apply some form of default other than 100
-                this.volume = this.previousVolume;
-
-                //Apply the currently known position to the player. It could be non-zero already.
-                this.seekTo(this.currentSeconds);
-
-                return (this.playing = this.autoPlay);
-            }
-
-            throw new Error('Failed to load sound file.');
-        },
-        mute() {
-            console.debug(`TrackAudioApiPlayer(${this.title})::mute`);
-            if (this.muted) {
-                return (this.volume = this.previousVolume);
-            }
-
-            this.previousVolume = this.volume;
-            this.volume = 0;
+            this.$emit('download');
         },
         seekByClick(e: MouseEvent) {
-            console.debug(`TrackAudioApiPlayer(${this.title})::seekByClick`, e);
+            console.debug(`PlayerChrome(${this.title})::seekByClick`, e);
             if (!this.loaded) return;
 
             const bounds = (e.target as HTMLDivElement).getBoundingClientRect();
             const seekPos = (e.clientX - bounds.left) / bounds.width;
 
-            this.audioElement.currentTime =
-                this.audioElement.duration * seekPos;
-        },
-        seekToSeconds(seconds: number) {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::seekToSeconds`,
-                seconds,
-            );
-            if (!this.loaded) return;
-
-            this.audioElement.currentTime = seconds;
+            const seekTime = this.durationSeconds * seekPos;
+            this.$emit('update:currentSeconds', seekTime);
+            this.$emit('seek', seekTime);
         },
         stop() {
-            console.debug(`TrackAudioApiPlayer(${this.title})::stop`);
-            this.playing = false;
-            this.audioElement.currentTime = 0;
-            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, undefined);
+            this.$emit('stop');
         },
         togglePlayback() {
-            console.debug(`TrackAudioApiPlayer(${this.title})::togglePlayback`);
-            this.playing = !this.playing;
-        },
-        /** Rewinds 1 second */
-        rewindOneSecond() {
+            const playback = !this.playing;
             console.debug(
-                `TrackAudioApiPlayer(${this.title})::rewindOneSecond`,
+                `PlayerChrome(${this.title})::togglePlayback:playback:${playback}`,
             );
-            const time = this.audioElement.currentTime;
-            this.audioElement.currentTime = time - 1;
+            this.$emit('update:playing', playback);
         },
-        /** Forwards 1 second */
-        forwardOneSecond() {
+        toggleLooping() {
+            const looping = !this.looping;
             console.debug(
-                `TrackAudioApiPlayer(${this.title})::forwardOneSecond`,
+                `PlayerChrome(${this.title})::toggleLooping:looping:${looping}`,
             );
-            const time = this.audioElement.currentTime;
-            this.audioElement.currentTime = time + 1;
+            this.$emit('update:looping', looping);
         },
-        volumeDown() {
-            this.volume = this.volume * 0.71;
+        toggleMuted() {
+            const muted = !this.muted;
             console.debug(
-                `TrackAudioApiPlayer(${this.title})::volumeDown`,
-                this.volume,
+                `PlayerChrome(${this.title})::toggleMuted:muted:${muted}`,
             );
-        },
-        volumeUp() {
-            this.volume = Math.min(this.volume * 1.41, 100);
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::volumeUp`,
-                this.volume,
-            );
-        },
-        /** Pauses playback, keeping the position at the current position */
-        pause() {
-            console.debug(`TrackAudioApiPlayer(${this.title})::pause`);
-            this.playing = false;
-        },
-        /** Updates the current seconds display and emits an event with the temporal position of the player
-         * @devdoc This must get only privately called from the audio player
-         */
-        updateTime(/*event: Event*/) {
-            //console.debug(`TrackAudioApiPlayer(${this.title})::updateTime:e`, e);
-            this.currentSeconds = this.audioElement.currentTime;
-            this.$emit('timeupdate', this.currentSeconds);
-        },
-        /** Starts playback from the given temporal position
-         * @remarks This first seeks to the position, then starts playing
-         */
-        playFrom(position: number): void {
-            this.seekTo(position);
-            console.debug(
-                `TrackAudioApiPlayer(${this.title}):playFrom:position`,
-                position,
-            );
-            this.playing = true;
-        },
-        /** Transports (seeks) the playback to the given temporal position */
-        seekTo(position: number): void {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::seekTo:position`,
-                position,
-            );
-            this.audioElement.currentTime = position;
+            this.$emit('update:muted', muted);
+            this.$emit('mute', muted);
         },
     },
 });
