@@ -65,29 +65,17 @@
 
             <!-- Text colors similar to cues -->
             <!-- Note: The click handler is registered on the complete title -->
-            <span v-if="expanded" class="is-pulled-right ml-3"
-                ><a
-                    title="Hides the player and cue buttons"
-                    role="button"
-                    class="button is-small"
-                >
-                    <span class="is-size-7 has-text-light" v-if="expanded">
-                        Collapse</span
-                    >
-                </a></span
-            >
-            <span v-else class="is-pulled-right ml-3"
-                ><a role="button" class="button is-warning is-small">
-                    <!-- Text colors similar to cues -->
-                    <span class="is-size-7 has-text-light" v-if="!expanded">
-                        Show
-                        {{ track.Cues?.length }} cues</span
-                    >
-                </a></span
-            >
+
+            <CollapsibleButton
+                class="is-pulled-right is-size-7 has-text-right ml-3"
+                v-model="expanded"
+                :collapsedText="`Show ${track.Cues?.length} cues`"
+                :expandedText="`Hide cues`"
+                @click="toggleExpanded()"
+            />
             <!-- Artist info -->
             <span
-                class="is-pulled-right is-hidden-mobile is-size-7 has-text-right"
+                class="is-pulled-right is-hidden-mobile is-size-7 has-text-right ml-3"
             >
                 <span v-if="track.Artist" class="has-opacity-half"> by </span>
                 <span class="is-italic">
@@ -150,6 +138,7 @@ import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
 import { MediaUrl } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
+import CollapsibleButton from '@/components/CollapsibleButton.vue';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -160,7 +149,12 @@ import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
  */
 export default defineComponent({
     name: 'CollapsibleTrackTile',
-    components: { CueButton, TrackAudioApiPlayer, ReplayerEventHandler },
+    components: {
+        CueButton,
+        TrackAudioApiPlayer,
+        ReplayerEventHandler,
+        CollapsibleButton,
+    },
     props: {
         track: Track,
     },

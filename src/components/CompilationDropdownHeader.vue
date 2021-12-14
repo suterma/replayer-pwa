@@ -45,7 +45,7 @@
                     </div>
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                         <div class="dropdown-content">
-                            <a
+                            <!-- <a
                                 href="#"
                                 class="dropdown-item"
                                 @click="downloadXml"
@@ -56,7 +56,7 @@
                                     >.rex</span
                                 >), without media files
                             </a>
-                            <hr class="dropdown-divider" />
+                            <hr class="dropdown-divider" /> -->
                             <a href="#" @click="close" class="dropdown-item">
                                 Close</a
                             >

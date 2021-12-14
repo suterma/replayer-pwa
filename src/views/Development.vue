@@ -46,8 +46,14 @@
         ></TrackAudioMeterPlayer>
     </p> -->
     <h2 class="subtitle has-text-danger">Icons test</h2>
+    <CollapsibleButton
+        v-model="isExpanded"
+        collapsedText="Show 11 somethings"
+        expandedText="Hide all this stuff"
+    />
     <p>Buttons with icons</p>
     <p>Icons are "Inline SVG's from from https://materialdesignicons.com/</p>
+
     <p class="buttons">
         <button class="button">
             <span class="icon">
@@ -151,12 +157,17 @@
 import { defineComponent } from 'vue';
 import { ICompilation } from '@/store/compilation-types';
 import CompilationXmlDisplay from '@/components/CompilationXmlDisplay.vue';
+import CollapsibleButton from '@/components/CollapsibleButton.vue';
 
 export default defineComponent({
     name: 'Development',
     components: {
         CompilationXmlDisplay,
+        CollapsibleButton,
     },
+    data: () => ({
+        isExpanded: false,
+    }),
     computed: {
         compilation(): ICompilation {
             return this.$store.getters.compilation;
