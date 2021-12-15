@@ -4,7 +4,7 @@
             button: true,
             'is-ghost': true,
         }"
-        @click="toggleExpanded"
+        @click="toggleExpanded()"
         :title="titleText"
     >
         <!-- Collapsed/Expanded -->

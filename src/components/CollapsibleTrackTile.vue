@@ -15,6 +15,7 @@
     />
 
     <hr class="is-hidden-tablet" />
+
     <!-- Each track is a box, styled like a card, and contains all the cues -->
     <div
         :class="{
@@ -24,6 +25,8 @@
         }"
     >
         <!-- Track header, including artist info, expansion-toggler and adaptive spacing -->
+        <TrackHeader :track="this.track" v-model="this.expanded" />
+
         <h2
             :class="{
                 subtitle: isActiveTrack,
@@ -69,7 +72,6 @@
             <CollapsibleButton
                 class="is-pulled-right is-size-7 has-text-right ml-3"
                 v-model="expanded"
-                @click="toggleExpanded()"
             />
             <!-- Artist info -->
             <span
@@ -79,7 +81,7 @@
                 <span class="is-italic">
                     {{ track.Artist }}
                 </span>
-                <br />
+
                 <span v-if="track.Album" class="has-opacity-half"> on </span>
                 <span class="is-italic">
                     {{ track.Album }}
@@ -137,6 +139,7 @@ import { MediaUrl } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
+import TrackHeader from '@/components/TrackHeader.vue';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -152,6 +155,7 @@ export default defineComponent({
         TrackAudioApiPlayer,
         ReplayerEventHandler,
         CollapsibleButton,
+        TrackHeader,
     },
     props: {
         track: Track,
