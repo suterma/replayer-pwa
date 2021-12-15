@@ -69,8 +69,6 @@
             <CollapsibleButton
                 class="is-pulled-right is-size-7 has-text-right ml-3"
                 v-model="expanded"
-                :collapsedText="`Show ${track.Cues?.length} cues`"
-                :expandedText="`Hide cues`"
                 @click="toggleExpanded()"
             />
             <!-- Artist info -->
