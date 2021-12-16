@@ -9,7 +9,7 @@
         @tomnemoniccue="toMnemonicCue($event)"
     />
 
-    <CompilationDropdownHeader :compilation="compilation" />
+    <CompilationHeader :compilation="compilation" />
     <!-- Buttons as index to the tracks-->
     <!-- <div class="buttons">
         <template v-for="track in tracks" :key="track.Id">
@@ -41,7 +41,7 @@
     </div> -->
     <!-- Tracks to work with -->
     <template v-for="track in tracks" :key="track.Id">
-        <CollapsibleTrackTile :track="track" />
+        <Track :track="track" />
     </template>
 </template>
 
@@ -49,22 +49,22 @@
 import { defineComponent } from 'vue';
 import VueScrollTo from 'vue-scrollto';
 import { Compilation, ITrack, ICue } from '@/store/compilation-types';
-import CollapsibleTrackTile from '@/components/CollapsibleTrackTile.vue';
+import Track from '@/components/Track.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
-import CompilationDropdownHeader from '@/components/CompilationDropdownHeader.vue';
+import CompilationHeader from '@/components/CompilationHeader.vue';
 
 /** Displays the contained list of tracks as tiles
  * @remarks Also handles the common replayer events for compilations
  */
 export default defineComponent({
-    name: 'CompilationDisplay',
+    name: 'Compilation',
     components: {
-        CollapsibleTrackTile,
+        Track,
         CompilationKeyboardHandler,
         ReplayerEventHandler,
-        CompilationDropdownHeader,
+        CompilationHeader,
     },
     props: {
         compilation: Compilation,

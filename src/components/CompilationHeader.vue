@@ -79,7 +79,7 @@ import xml2js from 'xml2js';
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
-    name: 'CompilationDropdownHeader',
+    name: 'CompilationHeader',
     components: {},
     props: {
         compilation: Compilation,

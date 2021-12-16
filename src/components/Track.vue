@@ -149,7 +149,7 @@ import TrackHeader from '@/components/TrackHeader.vue';
  * @remarks Also handles the common replayer events for tracks
  */
 export default defineComponent({
-    name: 'CollapsibleTrackTile',
+    name: 'Track',
     components: {
         CueButton,
         TrackAudioApiPlayer,
@@ -245,7 +245,7 @@ export default defineComponent({
          * @remarks Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
          */
         cueClick(cue: ICue) {
-            console.debug('CollapsibleTrackTile::cueClick:cue:', cue);
+            console.debug('Track::cueClick:cue:', cue);
             if (cue.Time != null) {
                 //Update the selected cue to this cue
                 this.$store.commit(

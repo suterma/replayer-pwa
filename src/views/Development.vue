@@ -51,7 +51,8 @@
         collapsedText="Show 11 somethings"
         expandedText="Hide all this stuff"
     />
-    <p>Buttons with icons</p>
+    (Is expanded: {{ isExpanded }})
+    <h3>Buttons with icons</h3>
     <p>Icons are "Inline SVG's from from https://materialdesignicons.com/</p>
 
     <p class="buttons">
