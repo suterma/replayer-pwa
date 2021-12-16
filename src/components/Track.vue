@@ -27,68 +27,6 @@
         <!-- Track header, including artist info, expansion-toggler and adaptive spacing -->
         <TrackHeader :track="this.track" v-model="this.expanded" />
 
-        <h2
-            :class="{
-                subtitle: isActiveTrack,
-                'mb-0': !expanded,
-            }"
-            class="subtitle is-clickable"
-            v-bind:id="'track-' + track.Id"
-            @click="toggleExpanded()"
-        >
-            <span
-                :class="{
-                    'has-text-success': isActiveTrack,
-                }"
-                >{{ track.Name }}</span
-            >
-
-            <!-- Playback indicator -->
-            <span class="ml-3">
-                <span
-                    :class="{
-                        icon: true,
-                        'has-text-success': this.isPlaying,
-                        'is-invisible	': !this.isPlaying,
-                    }"
-                >
-                    <i class="mdi mdi-24px">
-                        <svg
-                            style="width: 24px; height: 24px"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                fill="currentColor"
-                                d="M19,12C19,15.86 15.86,19 12,19C8.14,19 5,15.86 5,12C5,8.14 8.14,5 12,5C15.86,5 19,8.14 19,12Z"
-                            />
-                        </svg>
-                    </i>
-                </span>
-            </span>
-
-            <!-- Text colors similar to cues -->
-            <!-- Note: The click handler is registered on the complete title -->
-
-            <CollapsibleButton
-                class="is-pulled-right is-size-7 has-text-right ml-3"
-                v-model="expanded"
-            />
-            <!-- Artist info -->
-            <span
-                class="is-pulled-right is-hidden-mobile is-size-7 has-text-right ml-3"
-            >
-                <span v-if="track.Artist" class="has-opacity-half"> by </span>
-                <span class="is-italic">
-                    {{ track.Artist }}
-                </span>
-
-                <span v-if="track.Album" class="has-opacity-half"> on </span>
-                <span class="is-italic">
-                    {{ track.Album }}
-                </span>
-            </span>
-        </h2>
-
         <slide-up-down
             v-model="expanded"
             :duration="250"
@@ -138,7 +76,6 @@ import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
 import { MediaUrl } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
-import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
@@ -154,7 +91,6 @@ export default defineComponent({
         CueButton,
         TrackAudioApiPlayer,
         ReplayerEventHandler,
-        CollapsibleButton,
         TrackHeader,
     },
     props: {
