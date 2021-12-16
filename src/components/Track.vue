@@ -14,58 +14,46 @@
         @volumeup="volumeUp"
     />
 
-    <hr class="is-hidden-tablet" />
+    <hr />
 
-    <!-- Each track is a box, styled like a card, and contains all the cues -->
-    <div
-        :class="{
-            box: true,
-            card: true,
-            track: true,
-        }"
-    >
-        <!-- Track header, including artist info, expansion-toggler and adaptive spacing -->
-        <TrackHeader :track="this.track" v-model="this.expanded" />
+    <!-- Each track is an item in a list and contains all the cues -->
+    <!-- Track header, including artist info, expansion-toggler and adaptive spacing -->
+    <TrackHeader :track="this.track" v-model="this.expanded" />
 
-        <slide-up-down
-            v-model="expanded"
-            :duration="250"
-            timingFunction="ease-out"
-        >
-            <!-- The audio player, but only once the source is available 
+    <slide-up-down v-model="expanded" :duration="250" timingFunction="ease-out">
+        <!-- The audio player, but only once the source is available 
             Note: The actual src property/attribute is also depending 
             on the show state as a performance optimizations
             -->
-            <TrackAudioApiPlayer
-                v-if="mediaObjectUrl"
-                ref="playerReference"
-                :title="trackFileUrl?.fileName"
-                :src="optimizedMediaObjectUrl"
-                v-on:timeupdate="updateTime"
-                v-on:trackLoaded="calculateCueDurations"
-                v-on:trackPlaying="updatePlaying"
-            ></TrackAudioApiPlayer>
+        <TrackAudioApiPlayer
+            v-if="mediaObjectUrl"
+            ref="playerReference"
+            :title="trackFileUrl?.fileName"
+            :src="optimizedMediaObjectUrl"
+            v-on:timeupdate="updateTime"
+            v-on:trackLoaded="calculateCueDurations"
+            v-on:trackPlaying="updatePlaying"
+        ></TrackAudioApiPlayer>
 
-            <!-- Otherwise show a placeholder -->
-            <p v-else>
-                <span class="has-opacity-half"> Waiting for </span>
-                <span class="is-italic">
-                    {{ track?.Url }}
-                </span>
-            </p>
-            <!-- The cue buttons -->
-            <div class="buttons">
-                <template v-for="cue in cues" :key="cue.Id">
-                    <CueButton
-                        :disabled="!trackFileUrl?.objectUrl || !isTrackLoaded"
-                        :cue="cue"
-                        :currentSeconds="currentSeconds"
-                        @click="cueClick(cue)"
-                    />
-                </template>
-            </div>
-        </slide-up-down>
-    </div>
+        <!-- Otherwise show a placeholder -->
+        <p v-else>
+            <span class="has-opacity-half"> Waiting for </span>
+            <span class="is-italic">
+                {{ track?.Url }}
+            </span>
+        </p>
+        <!-- The cue buttons -->
+        <div class="buttons">
+            <template v-for="cue in cues" :key="cue.Id">
+                <CueButton
+                    :disabled="!trackFileUrl?.objectUrl || !isTrackLoaded"
+                    :cue="cue"
+                    :currentSeconds="currentSeconds"
+                    @click="cueClick(cue)"
+                />
+            </template>
+        </div>
+    </slide-up-down>
 </template>
 
 <script lang="ts">
@@ -376,19 +364,4 @@ export default defineComponent({
     },
 });
 </script>
-<style lang="css" scoped>
-/** For mobiles, use a slimmer layout */
-@media screen and (max-width: 768px /*only mobile*/) {
-    .box.track {
-        border: none;
-        padding: 0;
-    }
-
-    /** Never show scrollbars on the track tiles (this important style is necessary
-     *  as remedy while using the slide-up-down control) */
-    .slide-up-down__container {
-        overflow-x: hidden !important;
-        overflow-y: hidden !important;
-    }
-}
-</style>
+<style lang="css" scoped></style>

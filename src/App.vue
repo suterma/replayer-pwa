@@ -1,20 +1,18 @@
 <template>
     <NavbarTop />
 
-    <!-- The page content -->
+    <!-- The pages section -->
     <section class="section">
-        <div id="content" class="content">
-            <!-- To keep the audio within the media player component running, 
+        <!-- To keep the audio within the media player component running, 
             simply keep this component alive over route changes -->
-            <router-view v-slot="{ Component }">
-                <keep-alive include="Play">
-                    <component :is="Component" />
-                </keep-alive>
-            </router-view>
+        <router-view v-slot="{ Component }">
+            <keep-alive include="Play">
+                <component :is="Component" />
+            </keep-alive>
+        </router-view>
 
-            <ProgressOverlay />
-            <WelcomeMessage />
-        </div>
+        <ProgressOverlay />
+        <WelcomeMessage />
     </section>
 </template>
 <script lang="ts">
