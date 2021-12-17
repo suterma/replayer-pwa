@@ -6,7 +6,29 @@
             <div class="level-item">
                 <p class="title is-4">{{ track.Name }}</p>
             </div>
+            <!-- Artist info -->
+            <div class="level-item">
+                <span
+                    class="is-pulled-right is-hidden-mobile is-size-7 has-text-right ml-3"
+                >
+                    <span v-if="track.Artist" class="has-opacity-half">
+                        by
+                    </span>
+                    <span class="is-italic">
+                        {{ track.Artist }}
+                    </span>
 
+                    <span v-if="track.Album" class="has-opacity-half">
+                        on
+                    </span>
+                    <span class="is-italic">
+                        {{ track.Album }}
+                    </span>
+                </span>
+            </div>
+        </div>
+        <!-- Right side -->
+        <div class="level-right">
             <div class="level-item">
                 <!-- Playback indicator (using a small ghost button aligns the icon properly)-->
                 <button class="button is-small is-ghost ml-3">
@@ -33,30 +55,6 @@
                     </span>
                 </button>
             </div>
-        </div>
-        <!-- Right side -->
-        <div class="level-right">
-            <!-- Artist info -->
-            <div class="level-item">
-                <span
-                    class="is-pulled-right is-hidden-mobile is-size-7 has-text-right ml-3"
-                >
-                    <span v-if="track.Artist" class="has-opacity-half">
-                        by
-                    </span>
-                    <span class="is-italic">
-                        {{ track.Artist }}
-                    </span>
-
-                    <span v-if="track.Album" class="has-opacity-half">
-                        on
-                    </span>
-                    <span class="is-italic">
-                        {{ track.Album }}
-                    </span>
-                </span>
-            </div>
-
             <div class="level-item">
                 <CollapsibleButton :modelValue="this.modelValue" />
             </div>

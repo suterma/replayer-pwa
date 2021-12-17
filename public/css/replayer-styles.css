@@ -10802,9 +10802,19 @@ html {
   vertical-align: middle;
 }
 
-/* A success variant of a border */
+/* A success variant of a border //TODO remove if never used */
 .has-border-success {
   border: 1px solid #62c462;
+}
+
+/** Navigational buttons never have borders or shadows (a la ghost), even when focused or hovered, keep them undisctracting */
+nav .button {
+  border: none;
+}
+
+nav .button:focus:not(:active),
+nav .button.is-focused:not(:active) {
+  box-shadow: none;
 }
 
 /* Multiline buttons (use <br/> in a button text to force multiline) */
