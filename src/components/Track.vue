@@ -18,7 +18,13 @@
 
     <!-- Each track is an item in a list and contains all the cues -->
     <!-- Track header, including artist info, expansion-toggler and adaptive spacing -->
-    <TrackHeader :track="this.track" v-model="this.expanded" />
+    <TrackHeader
+        :track="this.track"
+        v-model="this.expanded"
+        :isPlaying="this.isPlaying"
+        :isTrackLoaded="this.isTrackLoaded"
+        :isActiveTrack="this.isActiveTrack"
+    />
 
     <slide-up-down v-model="expanded" :duration="250" timingFunction="ease-out">
         <!-- The audio player, but only once the source is available 
@@ -364,4 +370,11 @@ export default defineComponent({
     },
 });
 </script>
-<style lang="css" scoped></style>
+<style lang="css" scoped>
+/** Never show scrollbars on the track tiles (this important style is necessary
+     *  as remedy while using the slide-up-down control) */
+.slide-up-down__container {
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+}
+</style>

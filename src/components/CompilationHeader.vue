@@ -1,10 +1,17 @@
 <template>
-    <h1 class="title">
-        <span class="">
-            {{ compilation?.Title }}
-
-            <span class="is-pulled-right ml-3">
-                <!-- <div
+    <!-- Level, also on mobile -->
+    <nav class="level is-mobile">
+        <!-- Left side -->
+        <div class="level-left">
+            <div class="level-item">
+                <p class="title is-3">{{ compilation?.Title }}</p>
+            </div>
+        </div>
+        <!-- Right side -->
+        <div class="level-right">
+            <div class="level-item">
+                <span class="is-pulled-right ml-3">
+                    <!-- <div
                     :class="{
                         dropdown: true,
                         'is-right': true,
@@ -14,38 +21,42 @@
                     @click="toggleDropdownExpanded()"
                     @blur="collapseDropdown()"
                 > -->
-                <div
-                    :class="{
-                        dropdown: true,
-                        'is-right': true,
-                        'is-hoverable': true,
-                    }"
-                >
-                    <div class="dropdown-trigger">
-                        <button
-                            class="button is-ghost"
-                            aria-haspopup="true"
-                            aria-controls="dropdown-menu"
-                            title="Compilation context menu"
+                    <div
+                        :class="{
+                            dropdown: true,
+                            'is-right': true,
+                            'is-hoverable': true,
+                        }"
+                    >
+                        <div class="dropdown-trigger">
+                            <button
+                                class="button is-ghost"
+                                aria-haspopup="true"
+                                aria-controls="dropdown-menu"
+                                title="Compilation context menu"
+                            >
+                                <span class="icon">
+                                    <i class="mdi mdi-24px">
+                                        <svg
+                                            style="width: 24px; height: 24px"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                fill="currentColor"
+                                                d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z"
+                                            />
+                                        </svg>
+                                    </i>
+                                </span>
+                            </button>
+                        </div>
+                        <div
+                            class="dropdown-menu"
+                            id="dropdown-menu"
+                            role="menu"
                         >
-                            <span class="icon">
-                                <i class="mdi mdi-24px">
-                                    <svg
-                                        style="width: 24px; height: 24px"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            fill="currentColor"
-                                            d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z"
-                                        />
-                                    </svg>
-                                </i>
-                            </span>
-                        </button>
-                    </div>
-                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                        <div class="dropdown-content">
-                            <!-- <a
+                            <div class="dropdown-content">
+                                <!-- <a
                                 href="#"
                                 class="dropdown-item"
                                 @click="downloadXml"
@@ -57,15 +68,20 @@
                                 >), without media files
                             </a>
                             <hr class="dropdown-divider" /> -->
-                            <a href="#" @click="close" class="dropdown-item">
-                                Close</a
-                            >
+                                <a
+                                    href="#"
+                                    @click="close"
+                                    class="dropdown-item"
+                                >
+                                    Close</a
+                                >
+                            </div>
                         </div>
                     </div>
-                </div>
-            </span>
-        </span>
-    </h1>
+                </span>
+            </div>
+        </div>
+    </nav>
 </template>
 
 <script lang="ts">
