@@ -1,6 +1,6 @@
 <template>
-    <!-- Main container -->
-    <nav class="level">
+    <!-- Main container (This level is not a nav, since the containted buttons dispatch actions, not navigations) -->
+    <div class="level">
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
@@ -58,7 +58,7 @@
         <div class="level-right">
             <p class="level-item"></p>
         </div>
-    </nav>
+    </div>
 </template>
 
 <script lang="ts">

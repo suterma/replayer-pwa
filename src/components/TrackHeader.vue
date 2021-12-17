@@ -1,15 +1,15 @@
 <template>
     <!-- Level, also on mobile -->
-    <nav class="level is-mobile" @click="toggleExpanded()">
+    <nav class="level is-mobile is-clickable" @click="toggleExpanded()">
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <p class="subtitle is-4">{{ track.Name }}</p>
+                <p class="title is-4">{{ track.Name }}</p>
             </div>
 
             <div class="level-item">
-                <!-- Playback indicator -->
-                <span class="ml-3">
+                <!-- Playback indicator (using a small ghost button aligns the icon properly)-->
+                <button class="button is-small is-ghost ml-3">
                     <span
                         :class="{
                             icon: true,
@@ -31,7 +31,7 @@
                             </svg>
                         </i>
                     </span>
-                </span>
+                </button>
             </div>
         </div>
         <!-- Right side -->

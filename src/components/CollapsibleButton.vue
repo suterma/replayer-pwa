@@ -2,6 +2,7 @@
     <button
         :class="{
             button: true,
+            'is-small': true,
             'is-ghost': true,
         }"
         @click="toggleExpanded()"

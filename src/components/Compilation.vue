@@ -184,3 +184,14 @@ export default defineComponent({
     },
 });
 </script>
+<style>
+/** Navigational buttons never have borders or shadows (a la ghost), even when focused or hovered, keep them undisctracting */
+nav .button {
+    border: none;
+}
+
+nav .button:focus:not(:active),
+nav .button.is-focused:not(:active) {
+    box-shadow: none;
+}
+</style>
