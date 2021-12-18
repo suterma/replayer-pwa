@@ -15,6 +15,10 @@ export type Mutations<S = State> = {
         state: S,
         compilation: ICompilation,
     ): void;
+    [MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE](
+        state: S,
+        compilation: ICompilation,
+    ): void;
     [MutationTypes.UPDATE_SELECTED_CUE_ID](state: S, cueId: string): void;
     [MutationTypes.CLOSE_COMPILATION](state: S): void;
     [MutationTypes.REVOKE_ALL_MEDIA_URLS](state: State): void;
@@ -64,6 +68,28 @@ export const mutations: MutationTree<State> & Mutations = {
             'mutations::REPLACE_COMPILATION:compilation',
             compilation,
         );
+
+        state.compilation = compilation;
+        PersistentStorage.storeCompilation(compilation);
+    },
+    [MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE](
+        state: State,
+        compilation: ICompilation,
+    ) {
+        console.debug(
+            'mutations::REPLACE_COMPILATION_AND_SELECT_FIRST_CUE:compilation',
+            compilation,
+        );
+
+        //find and commit the first cue
+        if (compilation) {
+            const tracks = compilation.Tracks;
+            const cues = tracks.flatMap((track) => track.Cues);
+            const firstCueId = cues[0]?.Id;
+
+            state.selectedCueId = firstCueId;
+            PersistentStorage.storeSelectedCueId(firstCueId);
+        }
 
         state.compilation = compilation;
         PersistentStorage.storeCompilation(compilation);

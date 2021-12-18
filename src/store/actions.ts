@@ -190,7 +190,7 @@ export const actions: ActionTree<State, State> & Actions = {
                                             )
                                                 .then((compilation) => {
                                                     commit(
-                                                        MutationTypes.REPLACE_COMPILATION,
+                                                        MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
                                                         compilation,
                                                     );
                                                 })
@@ -230,7 +230,7 @@ export const actions: ActionTree<State, State> & Actions = {
                                             )
                                                 .then((compilation) => {
                                                     commit(
-                                                        MutationTypes.REPLACE_COMPILATION,
+                                                        MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
                                                         compilation,
                                                     );
                                                 })
@@ -270,7 +270,10 @@ export const actions: ActionTree<State, State> & Actions = {
                 const content = Buffer.from(reader.result as string);
                 CompilationParser.handleAsXmlCompilation(content)
                     .then((compilation) => {
-                        commit(MutationTypes.REPLACE_COMPILATION, compilation);
+                        commit(
+                            MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
+                            compilation,
+                        );
                     })
                     .finally(() => {
                         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
@@ -296,7 +299,10 @@ export const actions: ActionTree<State, State> & Actions = {
                 const content = Buffer.from(reader.result as ArrayBuffer);
                 CompilationParser.handleAsLivePlaybackPlaylist(content)
                     .then((compilation) => {
-                        commit(MutationTypes.REPLACE_COMPILATION, compilation);
+                        commit(
+                            MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
+                            compilation,
+                        );
                     })
                     .finally(() => {
                         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);

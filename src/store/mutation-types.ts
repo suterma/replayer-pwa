@@ -9,8 +9,16 @@ export enum MutationTypes {
      * @remarks A new blob URL replaces any existing with an exact same path.
      */
     ADD_MEDIA_URL = 'ADD_MEDIA_URL',
-    /** Replaces the current compilation with a new one */
+    /** Replaces the current compilation with a new one
+     * @remarks Does not set the selected cue
+     */
     REPLACE_COMPILATION = 'REPLACE_COMPILATION',
+    /** Replaces the current compilation with a new one, and selects the first cue
+     * @remarks This can be used to make sure that any a cue is selected for the new compilation,
+     * in order to present the user with an immediately dispatchable play action
+     */
+    REPLACE_COMPILATION_AND_SELECT_FIRST_CUE = 'REPLACE_COMPILATION_AND_SELECT_FIRST_CUE',
+
     /** Updates the currently selected cue Id, for application-wide handling
      * @remarks This does not control the playback itself. It is intended for display and handling purposes.
      */

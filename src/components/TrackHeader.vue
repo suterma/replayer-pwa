@@ -117,9 +117,7 @@ export default defineComponent({
     methods: {
         toggleExpanded() {
             const expanded = !this.modelValue;
-            console.debug(
-                `CollapsibleButton::toggleExpanded:expanded:${expanded}`,
-            );
+            console.debug(`TrackHeader::toggleExpanded:expanded:${expanded}`);
             this.$emit('update:modelValue', expanded);
         },
     },

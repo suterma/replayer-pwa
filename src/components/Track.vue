@@ -107,6 +107,15 @@ export default defineComponent({
         track: Track,
     },
     emits: ['update:expanded'],
+    mounted() {
+        //If it's mounted as already the active track, show expanded already
+        //(unfortunately the watcher only handles changes after mounted)
+        if (this.isActiveTrack) {
+            console.debug('Track::mounted:isActiveTrack:' + this.track?.Name);
+
+            this.updateExpanded(true);
+        }
+    },
     data() {
         return {
             /** Whether this track tile is shown as expanded, with the player and the cue buttons displayed.
@@ -271,7 +280,7 @@ export default defineComponent({
          * @devdoc The calculated durations are only valid as long as the cues, their times, and the track does not change */
         calculateCueDurations(trackDurationSeconds: number) {
             console.debug(
-                'TrackTile::calculateCueDurations:trackDurationSeconds:' +
+                'Track::calculateCueDurations:trackDurationSeconds:' +
                     trackDurationSeconds,
             );
             this.isTrackLoaded = true;
@@ -297,7 +306,7 @@ export default defineComponent({
         },
         /** Updates the playing flag from the associated player event */
         updatePlaying(value: boolean) {
-            console.debug('TrackTile::updatePlaying:value:' + value);
+            console.debug('Track::updatePlaying:value:' + value);
             this.isPlaying = value;
         },
     },
@@ -308,14 +317,15 @@ export default defineComponent({
            @remarks Always show newly active tracks as expanded
          */
         isActiveTrack(val, oldVal) {
+            console.debug('Track::isActiveTrack:val:', val);
             //Pause no more active track
             if (oldVal === true && val === false) {
                 this.trackPlayerInstance?.pause();
             }
 
-            //show freshly active always expanded
-            if (oldVal === false && val === true) {
-                this.expanded = true;
+            //show active always expanded
+            if (val === true) {
+                this.updateExpanded(true);
             }
         },
     },

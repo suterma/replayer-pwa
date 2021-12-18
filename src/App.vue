@@ -37,6 +37,7 @@ export default defineComponent({
         window.onbeforeunload = this.cleanUp;
     },
     mounted() {
+        //TODO later automaticall retrieve teh compilation,
         //this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
     },
     methods: {

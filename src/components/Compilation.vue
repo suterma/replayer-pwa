@@ -41,7 +41,7 @@
     </div> -->
     <!-- Tracks to work with -->
     <template v-for="track in tracks" :key="track.Id">
-        <Track :track="track" />
+        <Track :track="track" :ref="'track-' + track.Id" />
     </template>
 </template>
 
@@ -139,12 +139,14 @@ export default defineComponent({
     },
     watch: {
         /** Handle scrolling to the active track.
-         * @remarks This is intentionally only invoked on when the active track changes. If a user scrolls to a certain
+         * @remarks This is intentionally only invoked on when the active track changes. If a user scrolls to a
          * certain cue within the same track, no scrolling should occurr, to keep the UI calm.
          */
-        activeTrack(track) {
+        activeTrack(track: ITrack | null) {
             console.debug('scrolling to track ', track);
-            this.scrollToTrack(track);
+            if (track) {
+                this.scrollToTrack(track);
+            }
         },
     },
     computed: {

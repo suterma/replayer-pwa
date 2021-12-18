@@ -1,7 +1,8 @@
 export enum ActionTypes {
     /** //TODO just an example */
     //PLAY_TRACK = 'PLAY_TRACK',
-    /** Retrieves the last stored compilation from the persistent storage, including all blobs and the selected track,
+
+    /** Retrieves the last stored compilation from the persistent storage, including all blobs and the selected cue,
      * and commits it all into the store as the current compilation*/
     RETRIEVE_COMPILATION = 'RETRIEVE_COMPILATION',
 
