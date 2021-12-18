@@ -8,34 +8,29 @@
     >
         <!-- Left side -->
         <div class="level-left">
+            <!-- Title -->
             <div class="level-item">
                 <p class="subtitle is-4">{{ track.Name }}</p>
             </div>
-            <!-- Artist info -->
-            <div class="level-item">
-                <span
-                    class="is-pulled-right is-hidden-mobile is-size-7 has-text-right ml-3"
-                >
-                    <span v-if="track.Artist" class="has-opacity-half">
-                        by
+            <!-- Artist info (don't show on small devices)-->
+            <div class="level-item is-hidden-mobile">
+                <p class="is-size-7">
+                    <span v-if="track.Artist" class="has-text-nowrap">
+                        <span class="has-opacity-half">by&nbsp;</span>
+                        <span class="is-italic">{{ track.Artist }}&nbsp;</span>
                     </span>
-                    <span class="is-italic">
-                        {{ track.Artist }}
+                    <span v-if="track.Album" class="has-text-nowrap">
+                        <span class="has-opacity-half">on&nbsp;</span>
+                        <span class="is-italic">{{ track.Album }}</span>
                     </span>
-
-                    <span v-if="track.Album" class="has-opacity-half">
-                        on
-                    </span>
-                    <span class="is-italic">
-                        {{ track.Album }}
-                    </span>
-                </span>
+                </p>
             </div>
         </div>
         <!-- Right side -->
         <div class="level-right">
+            <!-- Playback indicator (using a small ghost button aligns the icon properly)-->
+
             <div class="level-item">
-                <!-- Playback indicator (using a small ghost button aligns the icon properly)-->
                 <button class="button is-small is-ghost ml-3">
                     <span
                         :class="{
@@ -60,6 +55,7 @@
                     </span>
                 </button>
             </div>
+            <!-- Expander -->
             <div class="level-item">
                 <CollapsibleButton :modelValue="this.modelValue" />
             </div>
@@ -132,22 +128,41 @@ export default defineComponent({
         cues(): Array<ICue> | undefined {
             return this.track?.Cues;
         },
-
-        /** Determines whether this is the active track (i.e. the globally selected cue is from this track ) */
-        // isActiveTrack(): boolean {
-        //     const selectedCueId = this.$store.getters.selectedCueId as string;
-        //     if (!selectedCueId) {
-        //         //if none selected, this track is not active anyway
-        //         return false;
-        //     }
-
-        //     //Check for matching Ids
-        //     return (
-        //         (this.cues?.filter((c) => c.Id === selectedCueId).length ?? 0) >
-        //         0
-        //     );
-        // },
     },
 });
 </script>
-<style lang="css" scoped></style>
+<style lang="scss" scoped>
+/** Custom modification for the level in the context of a track.
+* @remarks Allow the title text (on the left) to break between words, 
+* and keep the context items (on the right) as close as reasonably possible */
+.level {
+    .level-left {
+        word-break: break-word;
+        /* This basis is set empirically to fit for two elements on the right */
+        flex-basis: calc(100% - 80px);
+
+        /* These items should grow, and shrink */
+        .level-item {
+            flex-shrink: 1;
+            flex-grow: 1;
+            text-align: left;
+            /* Title, always justify left */
+            justify-content: left;
+        }
+    }
+
+    .level-right {
+        min-width: 0;
+
+        /* Keep the right hand items (play indicator, expander) as small as possible */
+        flex-basis: 0;
+
+        /* These items should keep their size */
+        .level-item {
+            flex-shrink: 0;
+            flex-grow: 0;
+            text-align: right;
+        }
+    }
+}
+</style>

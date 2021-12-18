@@ -139,3 +139,38 @@ export default defineComponent({
     },
 });
 </script>
+<style lang="scss" scoped>
+/** Custom modification for the level in the context of a compilation.
+* @remarks Allow the title text (on the left) to break between words, 
+* and keep the context items (on the right) as close as reasonably possible */
+.level {
+    .level-left {
+        word-break: break-word;
+        /* This basis is set empirically to fit for two elements on the right */
+        flex-basis: calc(100% - 80px);
+
+        /* These items should grow, and shrink */
+        .level-item {
+            flex-shrink: 1;
+            flex-grow: 1;
+            text-align: left;
+            /* Title, always justify left */
+            justify-content: left;
+        }
+    }
+
+    .level-right {
+        min-width: 0;
+
+        /* Keep the right hand items (menu) as small as possible */
+        flex-basis: 0;
+
+        /* These items should keep their size */
+        .level-item {
+            flex-shrink: 0;
+            flex-grow: 0;
+            text-align: right;
+        }
+    }
+}
+</style>

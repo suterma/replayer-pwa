@@ -94,6 +94,11 @@ nav .button.is-focused:not(:active) {
     flex-direction: column;
 }
 
+/* Some text that does not wrap */
+.has-text-nowrap {
+    white-space: nowrap;
+}
+
 /* outfront on the left lower corner */
 #outfront-float {
     left: 15px !important;
