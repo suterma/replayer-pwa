@@ -1,10 +1,15 @@
 <template>
-    <!-- Level, also on mobile -->
-    <nav class="level is-mobile is-clickable" @click="toggleExpanded()">
+    <!-- Level, also on mobile 
+    @remarks The id is used to scroll to this item when it's becoming the active track-->
+    <nav
+        class="level is-mobile is-clickable"
+        v-bind:id="'track-' + track.Id"
+        @click="toggleExpanded()"
+    >
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <p class="title is-4">{{ track.Name }}</p>
+                <p class="subtitle is-4">{{ track.Name }}</p>
             </div>
             <!-- Artist info -->
             <div class="level-item">
