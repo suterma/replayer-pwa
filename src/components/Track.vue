@@ -41,13 +41,29 @@
             v-on:trackPlaying="updatePlaying"
         ></TrackAudioApiPlayer>
 
-        <!-- Otherwise show a placeholder -->
-        <p v-else>
-            <span class="has-opacity-half"> Waiting for </span>
-            <span class="is-italic">
-                {{ track?.Url }}
-            </span>
-        </p>
+        <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
+        <div v-else class="field has-addons player-panel">
+            <p class="control">
+                <button class="button">
+                    <!-- empty, as a placeholder to have rounded edges -->
+                </button>
+            </p>
+            <p class="control player-seekbar player-timeline player-time">
+                <span class="player-time-current">
+                    <span class="has-opacity-half"> Waiting for </span>
+                    <span class="is-italic">
+                        {{ track?.Url }}
+                    </span>
+                </span>
+            </p>
+            <p class="control">
+                <button class="button">
+                    <!-- empty, as a placeholder to have rounded edges -->
+                    <!-- //TODO later, here we could  have a file load or URL input element to fix the missing URL -->
+                </button>
+            </p>
+        </div>
+
         <!-- The cue buttons -->
         <div class="buttons">
             <template v-for="cue in cues" :key="cue.Id">
