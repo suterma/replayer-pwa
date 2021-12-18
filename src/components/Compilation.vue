@@ -1,17 +1,18 @@
 <template>
-    <!-- Handle and translate the keyboard shortcuts into Replayer events -->
-    <CompilationKeyboardHandler />
+    <div class="compilation">
+        <!-- Handle and translate the keyboard shortcuts into Replayer events -->
+        <CompilationKeyboardHandler />
 
-    <!-- Handle all relevant Replayer events for the compilation level -->
-    <ReplayerEventHandler
-        @tonextcue="toNextCue"
-        @topreviouscue="toPreviousCue"
-        @tomnemoniccue="toMnemonicCue($event)"
-    />
+        <!-- Handle all relevant Replayer events for the compilation level -->
+        <ReplayerEventHandler
+            @tonextcue="toNextCue"
+            @topreviouscue="toPreviousCue"
+            @tomnemoniccue="toMnemonicCue($event)"
+        />
 
-    <CompilationHeader :compilation="compilation" />
-    <!-- Buttons as index to the tracks-->
-    <!-- <div class="buttons">
+        <CompilationHeader :compilation="compilation" />
+        <!-- Buttons as index to the tracks-->
+        <!-- <div class="buttons">
         <template v-for="track in tracks" :key="track.Id">
             The track with the currently selected cue is highlighted
             <a
@@ -39,10 +40,11 @@
             >
         </template>
     </div> -->
-    <!-- Tracks to work with -->
-    <template v-for="track in tracks" :key="track.Id">
-        <Track :track="track" :ref="'track-' + track.Id" />
-    </template>
+        <!-- Tracks to work with -->
+        <template v-for="track in tracks" :key="track.Id">
+            <Track :track="track" :ref="'track-' + track.Id" />
+        </template>
+    </div>
 </template>
 
 <script lang="ts">

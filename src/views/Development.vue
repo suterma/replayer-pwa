@@ -1,10 +1,12 @@
 <template>
-    <section class="hero is-danger is-small">
-        <div class="hero-body">
-            <p class="title">Upcoming features for evaluation</p>
-            <p class="subtitle">Use with caution</p>
-        </div>
-    </section>
+    <div class="block">
+        <section class="hero is-danger is-small">
+            <div class="hero-body">
+                <p class="title">Upcoming features for evaluation</p>
+                <p class="subtitle">Use with caution</p>
+            </div>
+        </section>
+    </div>
     <h1 class="title has-text-danger">XML export</h1>
     <div class="content">
         <template v-if="hasCompilation">

@@ -10749,8 +10749,12 @@ a.navbar-item {
   border-left: 1px solid #202328;
 }
 
-/** **********************************************************
+/*************************************************************
  * Application-specific add-ons/modifications to the Bulma CSS 
+**************************************************************
+*/
+/*************************************************************
+ * Overscroll / scrollbar handling
 **************************************************************
 */
 /* Disable overscroll page refresh */
@@ -10770,6 +10774,10 @@ html {
   overflow-y: auto;
 }
 
+/*************************************************************
+ * Additional typography stylings
+**************************************************************
+*/
 /* A variant for a dimmed item (e.g. supporitve/informational text parts)*/
 .has-opacity-half {
   opacity: 50%;
@@ -10785,6 +10793,10 @@ html {
   opacity: 33%;
 }
 
+/*************************************************************
+ * Icons stylings
+**************************************************************
+*/
 /* Specific styles for Bulma to work neatly with pure SVG icons, with appropriate sizing
 * @devdoc See https://github.com/jgthms/bulma/issues/1867 */
 [class*=" icon"],
@@ -10806,6 +10818,10 @@ html {
   border: 1px solid #62c462;
 }
 
+/*************************************************************
+ * Navigational stylings
+**************************************************************
+*/
 /** Navigational buttons never have borders or shadows (a la ghost), even when focused or hovered, keep them undisctracting */
 nav .button {
   border: none;
@@ -10824,11 +10840,31 @@ nav .button.is-focused:not(:active) {
   flex-direction: column;
 }
 
+/*************************************************************
+ * Layout helpers
+**************************************************************
+*/
 /* Some text that does not wrap */
 .has-text-nowrap {
   white-space: nowrap;
 }
 
+/* Default padding on section (for non-specified, smaller screens) equally small on all sides*/
+@media screen and (max-width: 1023px) {
+  .section {
+    padding: 1.5rem 1.5rem;
+  }
+}
+/* Improve text legibility */
+#app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/*************************************************************
+ * Outfront
+**************************************************************
+*/
 /* outfront on the left lower corner */
 #outfront-float {
   left: 15px !important;
@@ -10840,10 +10876,4 @@ nav .button.is-focused:not(:active) {
 #outfront-container {
   left: 20px !important;
   right: 0 !important;
-}
-
-/* Improve text legibility */
-#app {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }

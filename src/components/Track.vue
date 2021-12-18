@@ -1,81 +1,85 @@
 <template>
-    <!-- Handle all relevant events here
+    <div class="track">
+        <!-- Handle all relevant events here
     Note: A check for the active track is done in the handler methods. 
     A v-if here would work, but would register the events not in a useful order. -->
-    <ReplayerEventHandler
-        @backtocue="goToSelectedCue"
-        @tonextcue="goToSelectedCue"
-        @topreviouscue="goToSelectedCue"
-        @tomnemoniccue="goToSelectedCue"
-        @toggleplayback="togglePlayback"
-        @rewind1sec="rewindOneSecond"
-        @forward1sec="forwardOneSecond"
-        @volumedown="volumeDown"
-        @volumeup="volumeUp"
-    />
+        <ReplayerEventHandler
+            @backtocue="goToSelectedCue"
+            @tonextcue="goToSelectedCue"
+            @topreviouscue="goToSelectedCue"
+            @tomnemoniccue="goToSelectedCue"
+            @toggleplayback="togglePlayback"
+            @rewind1sec="rewindOneSecond"
+            @forward1sec="forwardOneSecond"
+            @volumedown="volumeDown"
+            @volumeup="volumeUp"
+        />
 
-    <hr />
+        <!-- Each track is an item in a list and contains all the cues -->
+        <!-- Track header, including artist info, expansion-toggler and adaptive spacing -->
+        <TrackHeader
+            :track="this.track"
+            v-model="this.expanded"
+            :isPlaying="this.isPlaying"
+            :isTrackLoaded="this.isTrackLoaded"
+            :isActiveTrack="this.isActiveTrack"
+        />
 
-    <!-- Each track is an item in a list and contains all the cues -->
-    <!-- Track header, including artist info, expansion-toggler and adaptive spacing -->
-    <TrackHeader
-        :track="this.track"
-        v-model="this.expanded"
-        :isPlaying="this.isPlaying"
-        :isTrackLoaded="this.isTrackLoaded"
-        :isActiveTrack="this.isActiveTrack"
-    />
-
-    <slide-up-down v-model="expanded" :duration="250" timingFunction="ease-out">
-        <!-- The audio player, but only once the source is available 
+        <slide-up-down
+            v-model="expanded"
+            :duration="250"
+            timingFunction="ease-out"
+        >
+            <!-- The audio player, but only once the source is available 
             Note: The actual src property/attribute is also depending 
             on the show state as a performance optimizations
             -->
-        <TrackAudioApiPlayer
-            v-if="mediaObjectUrl"
-            ref="playerReference"
-            :title="trackFileUrl?.fileName"
-            :src="optimizedMediaObjectUrl"
-            v-on:timeupdate="updateTime"
-            v-on:trackLoaded="calculateCueDurations"
-            v-on:trackPlaying="updatePlaying"
-        ></TrackAudioApiPlayer>
+            <TrackAudioApiPlayer
+                v-if="mediaObjectUrl"
+                ref="playerReference"
+                :title="trackFileUrl?.fileName"
+                :src="optimizedMediaObjectUrl"
+                v-on:timeupdate="updateTime"
+                v-on:trackLoaded="calculateCueDurations"
+                v-on:trackPlaying="updatePlaying"
+            ></TrackAudioApiPlayer>
 
-        <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
-        <div v-else class="field has-addons player-panel">
-            <p class="control">
-                <button class="button">
-                    <!-- empty, as a placeholder to have rounded edges -->
-                </button>
-            </p>
-            <p class="control player-seekbar player-timeline player-time">
-                <span class="player-time-current">
-                    <span class="has-opacity-half"> Waiting for </span>
-                    <span class="is-italic">
-                        {{ track?.Url }}
+            <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
+            <div v-else class="field has-addons player-panel">
+                <p class="control">
+                    <button class="button">
+                        <!-- empty, as a placeholder to have rounded edges -->
+                    </button>
+                </p>
+                <p class="control player-seekbar player-timeline player-time">
+                    <span class="player-time-current">
+                        <span class="has-opacity-half"> Waiting for </span>
+                        <span class="is-italic">
+                            {{ track?.Url }}
+                        </span>
                     </span>
-                </span>
-            </p>
-            <p class="control">
-                <button class="button">
-                    <!-- empty, as a placeholder to have rounded edges -->
-                    <!-- //TODO later, here we could  have a file load or URL input element to fix the missing URL -->
-                </button>
-            </p>
-        </div>
+                </p>
+                <p class="control">
+                    <button class="button">
+                        <!-- empty, as a placeholder to have rounded edges -->
+                        <!-- //TODO later, here we could  have a file load or URL input element to fix the missing URL -->
+                    </button>
+                </p>
+            </div>
 
-        <!-- The cue buttons -->
-        <div class="buttons">
-            <template v-for="cue in cues" :key="cue.Id">
-                <CueButton
-                    :disabled="!trackFileUrl?.objectUrl || !isTrackLoaded"
-                    :cue="cue"
-                    :currentSeconds="currentSeconds"
-                    @click="cueClick(cue)"
-                />
-            </template>
-        </div>
-    </slide-up-down>
+            <!-- The cue buttons -->
+            <div class="buttons">
+                <template v-for="cue in cues" :key="cue.Id">
+                    <CueButton
+                        :disabled="!trackFileUrl?.objectUrl || !isTrackLoaded"
+                        :cue="cue"
+                        :currentSeconds="currentSeconds"
+                        @click="cueClick(cue)"
+                    />
+                </template>
+            </div>
+        </slide-up-down>
+    </div>
 </template>
 
 <script lang="ts">
@@ -402,5 +406,23 @@ export default defineComponent({
 .slide-up-down__container {
     overflow-x: hidden !important;
     overflow-y: hidden !important;
+}
+
+div.track {
+    /** a border as separator between the tracks */
+    border-color: #52575c;
+    border-style: solid;
+    border-width: 1px 0 0 0;
+}
+
+div.compilation div.track:last-child {
+    border-width: 1px 0 1px 0;
+}
+
+.track .buttons {
+    /** The cue button have also an additional small margin at their end.
+    This results in a similar space between level, player, cue buttons and the
+    end of the track */
+    margin-bottom: 4px;
 }
 </style>

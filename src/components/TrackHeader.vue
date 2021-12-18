@@ -130,6 +130,14 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+/* Use smaller margins within a track, to keep the UI condensed */
+.level {
+    /** similar margin to player with respect to cue buttons */
+    margin-bottom: 12px;
+
+    margin-top: 12px;
+}
+
 /** Custom modification for the level in the context of a track.
 * @remarks Allow the title text (on the left) to break between words, 
 * and keep the context items (on the right) as close as reasonably possible */
