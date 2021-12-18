@@ -1,5 +1,6 @@
 import { GetterTree } from 'vuex';
 import { ICompilation } from './compilation-types';
+import PersistentStorage from './persistent-storage';
 import { State } from './state';
 import { MediaUrl } from './state-types';
 
@@ -8,6 +9,8 @@ export type Getters = {
     compilation(state: State): ICompilation;
     /** Defines the function to determine whether a compilation is availabe (created or loaded) */
     hasCompilation(state: State): boolean;
+    /** Defines the function to determine whether a compilation is availabe to retrieve from the persistent storage */
+    hasRetrievableCompilation(): boolean;
     mediaUrls(state: State): Map<string, MediaUrl>;
     /** Gets the latest (newest) progress message from the stack */
     progressMessage(state: State): string | null;
@@ -35,6 +38,10 @@ export const getters: GetterTree<State, State> & Getters = {
             return true;
         }
         return false;
+    },
+    /** @inheritdoc */
+    hasRetrievableCompilation: () => {
+        return PersistentStorage.hasRetrievableCompilation();
     },
     /** @inheritdoc */
     mediaUrls: (state) => {

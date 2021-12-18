@@ -94,6 +94,17 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
             return Compilation.empty();
         }, null);
     }
+    /** Determines whether there is a compilation to retrieve from the persistent store
+     * @returns true, when a complilation is availabe to retrieve
+     * */
+    static hasRetrievableCompilation(): boolean {
+        const compilation = localStorage.getItem(StorageKeys.COMPILATION);
+        if (compilation) {
+            return true;
+        }
+
+        return false;
+    }
     static clearCompilation(): void {
         localStorage.removeItem(StorageKeys.COMPILATION);
         localStorage.removeItem(StorageKeys.SELECTED_CUE_ID);

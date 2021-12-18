@@ -35,12 +35,14 @@
             <div class="level-item">
                 //TODO load from URL
             </div> -->
-            <div class="level-item">&mdash; OR &mdash;</div>
-            <div class="level-item">
-                <button class="button" @click="retrieveLastCompilation()">
-                    Retrieve last compilation
-                </button>
-            </div>
+            <template v-if="hasRetrievableCompilation">
+                <div class="level-item">&mdash; OR &mdash;</div>
+                <div class="level-item">
+                    <button class="button" @click="retrieveLastCompilation()">
+                        Retrieve last compilation
+                    </button>
+                </div>
+            </template>
             <div class="level-item">&mdash; OR &mdash;</div>
             <div class="level-item">
                 <button
@@ -117,6 +119,10 @@ export default defineComponent({
         /** Provide the URL parameter from the route, if available */
         paramsUrl(): string | string[] {
             return this.$route?.params.url;
+        },
+
+        hasRetrievableCompilation(): boolean {
+            return this.$store.getters.hasRetrievableCompilation;
         },
     },
 });

@@ -1,8 +1,6 @@
 <template>
-    <!-- <template v-if="!hasCompilation"> -->
     <!-- Loader for importable files, also listens to url params -->
-    <RezLoader />
-    <!-- </template> -->
+    <RezLoader v-if="!hasCompilation" />
 
     <Compilation :compilation="compilation" v-if="hasCompilation" />
 </template>
