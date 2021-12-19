@@ -53,6 +53,11 @@
             >
         </span>
     </button>
+    <!-- 
+        //HINT for debugging, show the data
+        currentSeconds:{{ this.currentSeconds }} percentComplete:{{
+        this.percentComplete
+    }} -->
 </template>
 
 <script lang="ts">
@@ -99,10 +104,18 @@ export default defineComponent({
          * @devdoc max-width makes sure, the progress bar never overflows the given space.
          */
         progressStyle(): any {
-            return {
-                width: `calc(${this.percentComplete}%)`,
-                'max-width': '100%',
-            };
+            if (this.percentComplete !== null) {
+                //show the progress according to the percentage available
+                return {
+                    width: `calc(${this.percentComplete}%)`,
+                    'max-width': '100%',
+                };
+            } else {
+                //percentage is undefined, thus hide the progress
+                return {
+                    display: `none`,
+                };
+            }
         },
         /** Converts the cue's total seconds into a conveniently displayable hh:mm:ss.s format.
          * @remarks Omits the hour part, if not appliccable
