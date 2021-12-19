@@ -85,7 +85,7 @@ export default defineComponent({
                     force: true,
                     /* Try to target the scroll somewhat above the element in question
                         to make it fully visible */
-                    offset: -100,
+                    offset: -88,
                     /** Avoid interference with the key press overlay */
                     cancelable: false,
                 });
