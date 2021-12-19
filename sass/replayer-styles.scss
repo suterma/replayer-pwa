@@ -10,18 +10,20 @@ $navbar-breakpoint: 320px;
 
 /** Using Bulma CSS with a theme for Bulma */
 @import '../node_modules/bulmaswatch/slate/_variables.scss';
+
 @import '../node_modules/bulma/bulma.sass';
 @import '../node_modules/bulmaswatch/slate/_overrides.scss';
 
+/* Replayer-specific (smaller) section margins */
+@import 'replayer-section.scss';
+
 /* Player styles (to be used for the audio player) */
 @import 'replayer-player-styles.scss';
+
 /* Menu styles */
 @import 'replayer-navbar-styles.scss';
 
-/*************************************************************
- * Application-specific add-ons/modifications to the Bulma CSS 
-**************************************************************
-*/
+/* Below: Application-specific add-ons/modifications to the Bulma CSS */
 
 /*************************************************************
  * Overscroll / scrollbar handling
@@ -92,17 +94,13 @@ html {
     vertical-align: middle;
 }
 
-/* A success variant of a border //TODO remove if never used */
-.has-border-success {
-    border: 1px solid $success;
-}
-
 /*************************************************************
  * Navigational stylings
 **************************************************************
 */
 
-/** Navigational buttons never have borders or shadows (a la ghost), even when focused or hovered, keep them undisctracting */
+/** Navigational buttons never have borders or shadows (a la ghost), 
+*   even when focused or hovered, to keep them undisctracting */
 nav .button {
     border: none;
 }
@@ -147,13 +145,6 @@ but not at the "end/right" container's border */
 /* Some text that does not wrap */
 .has-text-nowrap {
     white-space: nowrap;
-}
-
-/* Default padding on section (for non-specified, smaller screens) equally small on all sides*/
-@media screen and (max-width: 1023px) {
-    .section {
-        padding: 1.5rem 1.5rem;
-    }
 }
 
 /*************************************************************

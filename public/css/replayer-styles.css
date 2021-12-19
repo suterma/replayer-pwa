@@ -10637,6 +10637,18 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   background-color: #272b30;
 }
 
+/* Replayer-specific (smaller) section margins */
+/* Default padding on section (for smaller screens) smaller, and equally small on all sides*/
+@media screen and (max-width: 1024px) {
+  .section {
+    padding: 1.5rem 1.5rem;
+  }
+}
+@media screen and (max-width: 769px) {
+  .section {
+    padding: 0.5rem 0.5rem;
+  }
+}
 /* Player styles (to be used for the audio player) */
 /* Player styles (to be used for the audio player)
  * These styles are based on a dark bulmaswatch theme and borrow variables from there
@@ -10749,10 +10761,7 @@ a.navbar-item {
   border-left: 1px solid #202328;
 }
 
-/*************************************************************
- * Application-specific add-ons/modifications to the Bulma CSS 
-**************************************************************
-*/
+/* Below: Application-specific add-ons/modifications to the Bulma CSS */
 /*************************************************************
  * Overscroll / scrollbar handling
 **************************************************************
@@ -10819,16 +10828,12 @@ html {
   vertical-align: middle;
 }
 
-/* A success variant of a border //TODO remove if never used */
-.has-border-success {
-  border: 1px solid #62c462;
-}
-
 /*************************************************************
  * Navigational stylings
 **************************************************************
 */
-/** Navigational buttons never have borders or shadows (a la ghost), even when focused or hovered, keep them undisctracting */
+/** Navigational buttons never have borders or shadows (a la ghost), 
+*   even when focused or hovered, to keep them undisctracting */
 nav .button {
   border: none;
 }
@@ -10874,12 +10879,6 @@ but not at the "end/right" container's border */
   white-space: nowrap;
 }
 
-/* Default padding on section (for non-specified, smaller screens) equally small on all sides*/
-@media screen and (max-width: 1023px) {
-  .section {
-    padding: 1.5rem 1.5rem;
-  }
-}
 /*************************************************************
  * Outfront
 **************************************************************

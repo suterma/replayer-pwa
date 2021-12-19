@@ -1,0 +1,12 @@
+/* Default padding on section (for smaller screens) smaller, and equally small on all sides*/
+@media screen and (max-width: $desktop) {
+    .section {
+        padding: 1.5rem 1.5rem;
+    }
+}
+
+@media screen and (max-width: $tablet) {
+    .section {
+        padding: 0.5rem 0.5rem;
+    }
+}
