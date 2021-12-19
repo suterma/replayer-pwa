@@ -3,15 +3,15 @@
         :class="{
             button: true,
             cue: true,
-            'is-multiline': true,
-            'has-text-left': true,
+            'is-multiline': 'true',
+            'has-text-left': 'true',
             'is-warning': !isCueSelected,
             'is-success': isCueSelected,
         }"
         :id="'cue-' + cue.Id"
         :title="'Play from ' + cue.Description"
     >
-        <span class="player-timeline">
+        <span class="player-timeline is-fullwidth">
             <!-- first line -->
             <span
                 :class="{
@@ -219,5 +219,10 @@ export default defineComponent({
 .button {
     padding-left: 8px;
     padding-right: 8px;
+}
+
+/* The content of a cue button should be full width */
+.cue.button .is-fullwidth {
+    width: 100%;
 }
 </style>
