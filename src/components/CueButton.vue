@@ -2,6 +2,7 @@
     <button
         :class="{
             button: true,
+            cue: true,
             'is-multiline': true,
             'has-text-left': true,
             'is-warning': !isCueSelected,

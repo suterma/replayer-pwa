@@ -65,6 +65,12 @@ html {
     opacity: 33%;
 }
 
+/* Improve text legibility */
+#app {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 /*************************************************************
  * Icons stylings
 **************************************************************
@@ -106,12 +112,31 @@ nav .button.is-focused:not(:active) {
     box-shadow: none;
 }
 
+/*************************************************************
+ * (Track) Button layout
+**************************************************************
+*/
+
 /* Multiline buttons (use <br/> in a button text to force multiline) */
 .button.is-multiline {
     min-height: 2.25em;
     white-space: unset;
     height: auto;
     flex-direction: column;
+}
+
+/* Create a "block text" like layout for the cue buttons in a track */
+.track .buttons .cue.button {
+    flex-grow: 1;
+}
+
+/* Hack-fix the margin for the cue buttons (have equal space around all,
+but not at the "end/right" container's border */
+.track .buttons {
+    margin-right: -0.5rem;
+}
+.track .buttons .cue.button {
+    margin-right: 0.5rem;
 }
 
 /*************************************************************
@@ -129,12 +154,6 @@ nav .button.is-focused:not(:active) {
     .section {
         padding: 1.5rem 1.5rem;
     }
-}
-
-/* Improve text legibility */
-#app {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
 /*************************************************************
