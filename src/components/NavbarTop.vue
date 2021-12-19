@@ -43,6 +43,12 @@
                 <router-link
                     @click="toggleBurger"
                     class="navbar-item"
+                    to="/options"
+                    >Options</router-link
+                >
+                <router-link
+                    @click="toggleBurger"
+                    class="navbar-item"
                     to="/about"
                     >About</router-link
                 >

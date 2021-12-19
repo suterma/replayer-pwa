@@ -2,7 +2,7 @@ import { GetterTree } from 'vuex';
 import { ICompilation } from './compilation-types';
 import PersistentStorage from './persistent-storage';
 import { State } from './state';
-import { MediaUrl } from './state-types';
+import { MediaUrl, Options } from './state-types';
 
 export type Getters = {
     /** Determines whether a compilation is availabe (created or loaded) */
@@ -22,9 +22,9 @@ export type Getters = {
      * @remarks Only one cue may be selected at any time, within one compilation / application instance.
      */
     selectedCueId(state: State): string;
-    /** Whether to never show the welcome overlay at application start
+    /** Gets the application options
      */
-    neverShowWelcomeMessageAgain(state: State): boolean;
+    options(state: State): Options;
 };
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -61,7 +61,7 @@ export const getters: GetterTree<State, State> & Getters = {
     selectedCueId: (state) => {
         return state.selectedCueId;
     },
-    neverShowWelcomeMessageAgain: (state) => {
-        return state.neverShowWelcomeMessageAgain;
+    options: (state) => {
+        return state.options;
     },
 };

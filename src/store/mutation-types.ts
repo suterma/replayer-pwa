@@ -33,12 +33,13 @@ export enum MutationTypes {
      * This is usually the case when the user closes the tab or browser window, without actually closing the compilation.
      */
     REVOKE_ALL_MEDIA_URLS = 'REVOKE_ALL_MEDIA_URLS',
-    /** Updates the value whether to never show the welcome message again */
-    UPDATE_NEVER_SHOW_WELCOME_MESSAGE_AGAIN = 'UPDATE_NEVER_SHOW_WELCOME_MESSAGE_AGAIN',
-    /** Initializes the application state from the persisted state during startup.
-     * @remarks This provides continuous state over app restarts and should be called when the app is created
-     * @remarks This is distinct from the more heavy-weight retrieval of the previously used compilation.
-     * @devdoc This is a synchronous operation, to make sure, the state is immediately available. It uses the Local Storage as persistence layer.
+    /** Updates the application options */
+    UPDATE_OPTIONS = 'UPDATE_OPTIONS',
+    /** Retrieves the application options from the persisted store during startup.
+     * @remarks This provides continuous options over app restarts and should be called when the app is created
+     * @remarks These options can also be used for (light-weight) application state, not only option-type settings.
+     * However, these options here are  distinct from the more heavy-weight store and retrieval of the previously used compilation.
+     * @devdoc This is a synchronous operation, to make sure, the options are immediately available. It uses the Local Storage as persistence layer.
      */
-    INIT_APPLICATION_STATE = 'INIT_APPLICATION_STATE',
+    RETRIEVE_OPTIONS = 'RETRIEVE_OPTIONS',
 }

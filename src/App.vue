@@ -20,15 +20,15 @@ import { defineComponent } from 'vue';
 import NavbarTop from '@/components/NavbarTop.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import WelcomeMessage from '@/components/WelcomeMessage.vue';
-//import { ActionTypes } from './store/action-types';
+import { ActionTypes } from './store/action-types';
 import { MutationTypes } from './store/mutation-types';
+import { Options } from './store/state-types';
 
 export default defineComponent({
     name: 'App',
     components: { NavbarTop, ProgressOverlay, WelcomeMessage },
-    computed: {},
     beforeCreate() {
-        this.$store.commit(MutationTypes.INIT_APPLICATION_STATE);
+        this.$store.commit(MutationTypes.RETRIEVE_OPTIONS);
     },
     beforeMount() {
         //Handle reloads and tab/browser exits
@@ -37,8 +37,9 @@ export default defineComponent({
         window.onbeforeunload = this.cleanUp;
     },
     mounted() {
-        //TODO later automaticall retrieve teh compilation,
-        //this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
+        if (this.options.autoRetrieveLastCompilation) {
+            this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
+        }
     },
     methods: {
         cleanUp() {
@@ -46,6 +47,12 @@ export default defineComponent({
             //Make sure, no object URLs are remaining
             this.$store.commit(MutationTypes.REVOKE_ALL_MEDIA_URLS);
             console.log('App.vue::cleanUp done.');
+        },
+    },
+    computed: {
+        /** Get the application options */
+        options(): Options {
+            return this.$store.getters.options;
         },
     },
 });

@@ -7,7 +7,9 @@
                 <h1 class="modal-card-title title">Welcome</h1>
             </header>
             <section class="modal-card-body">
-                <WelcomeText />
+                <div class="content">
+                    <WelcomeText />
+                </div>
             </section>
             <footer class="modal-card-foot is-justify-content-flex-end">
                 <div class="field is-grouped">
@@ -15,8 +17,8 @@
                         <label class="checkbox field-label">
                             <input
                                 type="checkbox"
-                                v-model="neverShowAgainChecked"
-                                @change="neverShowAgainChanged()"
+                                :checked="isNeverShowAgain"
+                                @change="neverShowAgainChanged"
                             />
                             Never show again
                         </label>
@@ -38,6 +40,7 @@
 import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent } from 'vue';
 import WelcomeText from '@/components/WelcomeText.vue';
+import { Options } from '@/store/state-types';
 
 /** A simple overlay display with a welcome message for a new user
  * @remarks This component can be permanently dismissed
@@ -58,17 +61,24 @@ export default defineComponent({
         this.showDialog = !this.isNeverShowAgain === true;
     },
     methods: {
-        neverShowAgainChanged() {
-            this.$store.commit(
-                MutationTypes.UPDATE_NEVER_SHOW_WELCOME_MESSAGE_AGAIN,
-                this.neverShowAgainChecked,
-            );
+        neverShowAgainChanged(event: Event) {
+            const checked = (event.target as HTMLInputElement)?.checked;
+            const options = this.options;
+
+            options.neverShowWelcomeMessageAgain = checked;
+
+            this.$store.commit(MutationTypes.UPDATE_OPTIONS, options);
         },
     },
     computed: {
         /** Whether the welcome message has been permanently dismissed */
         isNeverShowAgain(): boolean {
-            return this.$store.getters.neverShowWelcomeMessageAgain;
+            return this.options.neverShowWelcomeMessageAgain;
+        },
+
+        /** Get the application options */
+        options(): Options {
+            return this.$store.getters.options;
         },
     },
 });

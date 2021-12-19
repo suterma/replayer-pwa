@@ -1,3 +1,17 @@
+/** @class Implements the application options
+ */
+export class Options {
+    /** Whether to never show the welcome message at application start
+     * @remarks Default is false (show the message)
+     */
+    neverShowWelcomeMessageAgain = false;
+
+    /** Whether to automatically retrieve the last compilation on startup, if available
+     * @remarks Default is true (auto retrieve)
+     */
+    autoRetrieveLastCompilation = true;
+}
+
 /** @class Implements a playable media URL
  * @remarks A media URL is an annotated object URL for a blob, representing a media file
  */

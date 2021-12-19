@@ -3,11 +3,12 @@ enum StorageKeys {
     COMPILATION = 'COMPILATION',
     SELECTED_CUE_ID = 'SELECTED_CUE_ID',
     MEDIA_BLOB = 'MEDIA_BLOB',
+    OPTIONS = 'OPTIONS',
 }
 
 import { Compilation, ICompilation } from './compilation-types';
 import { get, set, clear, entries } from 'idb-keyval';
-import { MediaBlob } from './state-types';
+import { MediaBlob, Options } from './state-types';
 
 /** @devdoc Taken from
  * async-local-storage
@@ -53,6 +54,12 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
             JSON.stringify(compilation),
         );
     }
+    /** Persistently stores the application options for later retrieval
+     * @devdoc The local storage is used for performance reasons here. No need to use the Indexed Db for small data
+     */
+    static storeOptions(options: Options): void {
+        localStorage.setItem(StorageKeys.OPTIONS, JSON.stringify(options));
+    }
     /** Retrieves media blob data from the persistent store
      * @devdoc The indexed db is used for blob data, as recommended.
      */
@@ -94,13 +101,27 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
             return Compilation.empty();
         }, null);
     }
-    /** Determines whether there is a compilation to retrieve from the persistent store
+
+    /** Retrieves the application options from the persistent store
+     * @returns a duck typed options object
+     * */
+    static retrieveOptions(): Options {
+        const options = localStorage.getItem(StorageKeys.OPTIONS);
+        if (options) {
+            return JSON.parse(options);
+        }
+        return new Options();
+    }
+    /** Determines whether there is a (non-empty) compilation to retrieve from the persistent store
      * @returns true, when a complilation is availabe to retrieve
      * */
     static hasRetrievableCompilation(): boolean {
         const compilation = localStorage.getItem(StorageKeys.COMPILATION);
         if (compilation) {
-            return true;
+            if (Compilation.fromJson(compilation).Id) {
+                //An id is available, making the compilation to be considered as non-empty
+                return true;
+            }
         }
 
         return false;

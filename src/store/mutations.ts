@@ -2,7 +2,7 @@ import { MutationTree } from 'vuex';
 import { Compilation, ICompilation } from './compilation-types';
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
-import { MediaUrl } from './state-types';
+import { MediaUrl, Options } from './state-types';
 import PersistentStorage from './persistent-storage';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 
@@ -22,11 +22,8 @@ export type Mutations<S = State> = {
     [MutationTypes.UPDATE_SELECTED_CUE_ID](state: S, cueId: string): void;
     [MutationTypes.CLOSE_COMPILATION](state: S): void;
     [MutationTypes.REVOKE_ALL_MEDIA_URLS](state: State): void;
-    [MutationTypes.UPDATE_NEVER_SHOW_WELCOME_MESSAGE_AGAIN](
-        state: S,
-        neverShowWelcomeMessageAgain: boolean,
-    ): void;
-    [MutationTypes.INIT_APPLICATION_STATE](state: S): void;
+    [MutationTypes.UPDATE_OPTIONS](state: S, options: Options): void;
+    [MutationTypes.RETRIEVE_OPTIONS](state: S): void;
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -120,32 +117,15 @@ export const mutations: MutationTree<State> & Mutations = {
         });
         state.mediaUrls.clear();
     },
-    /** Sets whether to never show the welcome message ever again
+    /** Updates the application options
      * @param state - The vuex state
-     * @param neverShowWelcomeMessageAgain - The value for neverShowWelcomeMessageAgain
+     * @param options - The application options
      */
-    [MutationTypes.UPDATE_NEVER_SHOW_WELCOME_MESSAGE_AGAIN](
-        state: State,
-        neverShowWelcomeMessageAgain: boolean,
-    ) {
-        console.debug(
-            'mutations::UPDATE_NEVER_SHOW_WELCOME_MESSAGE_AGAIN:neverShowWelcomeMessageAgain',
-            neverShowWelcomeMessageAgain,
-        );
-        //TODO maybe replace this very simplictic local storage approach with in a more generic way
-        localStorage.setItem(
-            'neverShowWelcomeMessageAgain',
-            neverShowWelcomeMessageAgain?.toString(),
-        );
-        state.neverShowWelcomeMessageAgain = neverShowWelcomeMessageAgain;
+    [MutationTypes.UPDATE_OPTIONS](state: State, options: Options) {
+        PersistentStorage.storeOptions(options);
+        state.options = options;
     },
-    [MutationTypes.INIT_APPLICATION_STATE](state: State) {
-        const storedNeverShowWelcomeMessageAgain = localStorage.getItem(
-            'neverShowWelcomeMessageAgain',
-        );
-        if (storedNeverShowWelcomeMessageAgain) {
-            state.neverShowWelcomeMessageAgain =
-                storedNeverShowWelcomeMessageAgain == 'true';
-        }
+    [MutationTypes.RETRIEVE_OPTIONS](state: State) {
+        state.options = PersistentStorage.retrieveOptions();
     },
 };

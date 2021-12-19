@@ -1,4 +1,4 @@
-import { MediaUrl } from './state-types';
+import { MediaUrl, Options } from './state-types';
 import { Compilation, ICompilation } from './compilation-types';
 
 /** Defines the state of this application */
@@ -22,9 +22,7 @@ interface IState {
      */
     progressMessageStack: Array<string>;
 
-    /** Whether to never show the welcome overlay at applicaiton start
-     */
-    neverShowWelcomeMessageAgain: boolean;
+    options: Options;
 }
 
 export const state: IState = {
@@ -38,7 +36,7 @@ export const state: IState = {
 
     progressMessageStack: new Array<string>(),
 
-    neverShowWelcomeMessageAgain: false,
+    options: new Options(),
 };
 
 export type State = typeof state;

@@ -39,8 +39,6 @@ describe('RezLoader.vue', () => {
                     mediaUrls: new Map<string, MediaUrl>(),
 
                     progressMessageStack: new Array<string>(),
-
-                    neverShowWelcomeMessageAgain: false,
                 };
             },
             mutations: {

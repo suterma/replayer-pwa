@@ -13,11 +13,7 @@ import { createStore } from 'vuex';
 describe('WelcomeMessage.vue', () => {
     it('should display the message when not dismissed', () => {
         const store = createStore({
-            getters: {
-                neverShowWelcomeMessageAgain() {
-                    return false;
-                },
-            },
+            getters: {},
         });
         const wrapper = mount(WelcomeMessage, {
             global: {
