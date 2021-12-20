@@ -91,6 +91,7 @@ import { MediaUrl } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
+import CompilationHandler from '@/store/compilation-handler';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -221,13 +222,10 @@ export default defineComponent({
                 }
             }
         },
-        /** Determines, whether one of the given string ends with the other */
-        isEndingWithOneAnother(first: string, second: string): boolean {
-            return first.endsWith(second) || second.endsWith(first);
-        },
+
         /** Finds the matching the media URL (playable data) for a track's file name, from an already loaded package
          * @param fileName - The file name to search for.
-         * @param mediaUrlMap - A set of media files to search through.
+         * @param mediaUrlMap - A set of media URL's to search through.
          * @remarks If strict file names do not match, a more lazy approach without case and without non-ascii characters is attempted
          */
         getMatchingPackageMediaUrl(
@@ -238,28 +236,27 @@ export default defineComponent({
                 //Default: Find by literal partial match of the file name
                 let url = null;
                 for (let [mediaFileName, mediaUrl] of mediaUrlMap) {
-                    if (this.isEndingWithOneAnother(fileName, mediaFileName)) {
+                    if (
+                        CompilationHandler.isEndingWithOneAnother(
+                            fileName,
+                            mediaFileName,
+                        )
+                    ) {
                         url = mediaUrl;
                     }
                 }
 
                 if (!url) {
                     //In case of possible weird characters, or case mismatch, try a more lazy match.
-                    //See https://stackoverflow.com/a/9364527/79485 and
-                    //https://stackoverflow.com/questions/20856197/remove-non-ascii-character-in-string
-                    const lazyFileName = fileName
-                        .toLowerCase()
-                        // eslint-disable-next-line
-                        .replace(/[^\x00-\x7F]/g, '');
+                    const lazyFileName =
+                        CompilationHandler.getLazyFileName(fileName);
 
                     for (let [mediaFileName, mediaUrl] of mediaUrlMap) {
-                        var lazyMediaFileName = mediaFileName
-                            .toLowerCase()
-                            // eslint-disable-next-line
-                            .replace(/[^\x00-\x7F]/g, '');
+                        var lazyMediaFileName =
+                            CompilationHandler.getLazyFileName(mediaFileName);
 
                         if (
-                            this.isEndingWithOneAnother(
+                            CompilationHandler.isEndingWithOneAnother(
                                 lazyFileName,
                                 lazyMediaFileName,
                             )

@@ -73,13 +73,14 @@ export const actions: ActionTree<State, State> & Actions = {
                             compilation,
                             cueId,
                         );
-                        CompilationHandler.sortByFirstFileName(
-                            mediaBlobs,
-                            activeTrack?.Url,
-                        );
+                        const sortedBlobs =
+                            CompilationHandler.sortByFirstFileName(
+                                mediaBlobs,
+                                activeTrack?.Url,
+                            );
 
                         //Create object URL's for the blobs (for the active track first)
-                        mediaBlobs.forEach((mediaBlob, index) => {
+                        sortedBlobs.forEach((mediaBlob, index) => {
                             //NOTE: Setting an increasing timeout for each blob retrieval
                             //here makes the loading work properly for more than a few
                             //media blobs on an Android Fairphone 3+. Otherwise most
