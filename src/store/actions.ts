@@ -8,6 +8,7 @@ import CompilationParser from './compilation-parser';
 import { MediaBlob, MediaUrl, RezMimeTypes } from './state-types';
 import JSZip from 'jszip';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
+import CompilationHandler from './compilation-handler';
 
 type AugmentedActionContext = {
     commit<K extends keyof Mutations>(
@@ -58,37 +59,50 @@ export const actions: ActionTree<State, State> & Actions = {
         //retrieving the compilation first, to display it to the user ASAP
         PersistentStorage.retrieveCompilation().then((compilation) => {
             commit(MutationTypes.REPLACE_COMPILATION, compilation);
-            //retrieve all available blobs into object urls
-            //(which should actually be the matching media blobs for the afore-loaded compilation)
-            PersistentStorage.retrieveAllMediaBlobs().then((mediaBlobs) => {
-                mediaBlobs.forEach((mediaBlob, index) => {
-                    //NOTE: Setting an increasing timeout for each blob retrieval
-                    //here makes the loading work properly for more than a few
-                    //media blobs on an Android Fairphone 3+. Otherwise most
-                    //(not all) the blobs are corrupted and
-                    //not playable by the audio element.
-                    //The exact reasion is unknown, but might be excessive
-                    //memory consumption when the object URL's are created
-                    //synchronously or too fast in a row.
-                    //This problem does only occur on larger compilations.
-                    //The current timeout of 150ms has been empirically found to work reliably
-                    //on a Fairphone 3+ with the "Family21" test compilation.
-                    setTimeout(() => {
-                        const objectUrl = ObjectUrlHandler.createObjectURL(
-                            mediaBlob.blob,
-                            mediaBlob.fileName,
-                        );
-                        commit(
-                            MutationTypes.ADD_MEDIA_URL,
-                            new MediaUrl(mediaBlob.fileName, objectUrl),
-                        );
-                    }, (index + 1) * 150);
-                });
 
-                //Update the selected cue
-                PersistentStorage.retrieveSelectedCueId()
-                    .then((cueId) => {
-                        commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);
+            //Update the selected cue
+            PersistentStorage.retrieveSelectedCueId().then((cueId) => {
+                commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);
+
+                //retrieve all available blobs into object urls
+                //(which should actually be the matching media blobs for the afore-loaded compilation)
+                PersistentStorage.retrieveAllMediaBlobs()
+                    .then((mediaBlobs) => {
+                        //Sort to the active track first (the one, what contains the selected cue)
+                        const activeTrack = CompilationHandler.getActiveTrack(
+                            compilation,
+                            cueId,
+                        );
+                        CompilationHandler.sortByFirstFileName(
+                            mediaBlobs,
+                            activeTrack?.Url,
+                        );
+
+                        //Create object URL's for the blobs (for the active track first)
+                        mediaBlobs.forEach((mediaBlob, index) => {
+                            //NOTE: Setting an increasing timeout for each blob retrieval
+                            //here makes the loading work properly for more than a few
+                            //media blobs on an Android Fairphone 3+. Otherwise most
+                            //(not all) the blobs are corrupted and
+                            //not playable by the audio element.
+                            //The exact reasion is unknown, but might be excessive
+                            //memory consumption when the object URL's are created
+                            //synchronously or too fast in a row.
+                            //This problem does only occur on larger compilations.
+                            //The current timeout of 150ms has been empirically found to work reliably
+                            //on a Fairphone 3+ with the "Family21" test compilation.
+                            setTimeout(() => {
+                                const objectUrl =
+                                    ObjectUrlHandler.createObjectURL(
+                                        mediaBlob.blob,
+                                        mediaBlob.fileName,
+                                    );
+                                commit(
+                                    MutationTypes.ADD_MEDIA_URL,
+                                    new MediaUrl(mediaBlob.fileName, objectUrl),
+                                );
+                            }, (index + 1) * 150);
+                        });
                     })
                     .finally(() => {
                         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
