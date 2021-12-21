@@ -2,7 +2,7 @@
     <!-- The Navbar -->
     <!-- using a fixed top navbar, see https://bulma.io/documentation/components/navbar/#fixed-navbar -->
     <nav
-        class="navbar is-fixed-top"
+        class="navbar is-fixed-top is-unselectable"
         role="navigation"
         aria-label="main navigation"
     >
