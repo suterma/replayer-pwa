@@ -20,9 +20,7 @@ import { defineComponent } from 'vue';
 import NavbarTop from '@/components/NavbarTop.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import WelcomeMessage from '@/components/WelcomeMessage.vue';
-import { ActionTypes } from './store/action-types';
 import { MutationTypes } from './store/mutation-types';
-import { Options } from './store/state-types';
 
 export default defineComponent({
     name: 'App',
@@ -36,23 +34,13 @@ export default defineComponent({
         //Using the onbeforeunload causes the cleanup to get reliably triggered at page reload
         window.onbeforeunload = this.cleanUp;
     },
-    mounted() {
-        if (this.options.autoRetrieveLastCompilation) {
-            this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
-        }
-    },
+
     methods: {
         cleanUp() {
             console.log('App.vue::cleanUp...');
             //Make sure, no object URLs are remaining
             this.$store.commit(MutationTypes.REVOKE_ALL_MEDIA_URLS);
             console.log('App.vue::cleanUp done.');
-        },
-    },
-    computed: {
-        /** Get the application options */
-        options(): Options {
-            return this.$store.getters.options;
         },
     },
 });

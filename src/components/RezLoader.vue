@@ -66,6 +66,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
+import { Options } from '@/store/state-types';
 
 /** A Loader for importable files
  * @remarks Provides a button for loading local files and also listens to url params
@@ -74,8 +75,7 @@ export default defineComponent({
     name: 'RezLoader',
     components: {},
     mounted: function (): void {
-        //Check whether a given file is to be loaded
-        //TODO maybe later put all this params handling in one place; However, yet to decide where is the best place.
+        //Check whether a given compilation is to be loaded (by URL or by Auto-Retrieve, if enabled)
         if (this.paramsUrl) {
             if (typeof this.paramsUrl === 'string') {
                 //Handle the single item
@@ -84,6 +84,8 @@ export default defineComponent({
                 //Handle the array
                 this.paramsUrl.forEach((url) => this.loadUrl(url));
             }
+        } else if (this.options.autoRetrieveLastCompilation) {
+            this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
         }
     },
     methods: {
@@ -92,7 +94,6 @@ export default defineComponent({
          * @param url - The URL to load the file from
          */
         loadUrl(url: string): void {
-            //TODO TEST does this work?
             this.$store.dispatch(ActionTypes.LOAD_FROM_URL, url);
         },
         retrieveLastCompilation(): void {
@@ -123,6 +124,11 @@ export default defineComponent({
 
         hasRetrievableCompilation(): boolean {
             return this.$store.getters.hasRetrievableCompilation;
+        },
+
+        /** Get the application options */
+        options(): Options {
+            return this.$store.getters.options;
         },
     },
 });

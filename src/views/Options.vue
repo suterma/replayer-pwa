@@ -26,8 +26,11 @@
                         "
                         @change="autoRetrieveLastCompilationChanged"
                     />
-                    If available, automatically retrieve the last compilation at
-                    startup
+                    Automatically retrieve the last compilation at startup
+                    <span class="has-opacity-half is-size-7">
+                        (if available, and not overridden by a URL
+                        parameter)</span
+                    >
                 </label>
             </div>
         </div>

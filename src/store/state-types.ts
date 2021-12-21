@@ -6,7 +6,7 @@ export class Options {
      */
     neverShowWelcomeMessageAgain = false;
 
-    /** Whether to automatically retrieve the last compilation on startup, if available
+    /** Whether to automatically retrieve the last compilation on startup, if available and not overridden by a URL parameter
      * @remarks Default is true (auto retrieve)
      */
     autoRetrieveLastCompilation = true;
