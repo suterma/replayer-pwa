@@ -13,7 +13,6 @@ import { MediaBlob, Options } from './state-types';
 /** @devdoc Taken from
  * async-local-storage
  * https://github.com/createnextapp/async-local-storage/blob/master/src/index.ts
- * //TODO maybe include this lib?
  */
 const createPromise = (getValue: any, callback: any): Promise<any> => {
     return new Promise((resolve, reject) => {
