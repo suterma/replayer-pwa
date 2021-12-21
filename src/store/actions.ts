@@ -60,10 +60,7 @@ export const actions: ActionTree<State, State> & Actions = {
         PersistentStorage.retrieveCompilation().then((compilation) => {
             commit(MutationTypes.REPLACE_COMPILATION, compilation);
 
-            //Update the selected cue
             PersistentStorage.retrieveSelectedCueId().then((cueId) => {
-                commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);
-
                 //retrieve all available blobs into object urls
                 //(which should actually be the matching media blobs for the afore-loaded compilation)
                 PersistentStorage.retrieveAllMediaBlobs()
@@ -79,7 +76,6 @@ export const actions: ActionTree<State, State> & Actions = {
                                 activeTrack?.Url,
                             );
 
-                        //Create object URL's for the blobs (for the active track first)
                         sortedBlobs.forEach((mediaBlob, index) => {
                             //NOTE: Setting an increasing timeout for each blob retrieval
                             //here makes the loading work properly for more than a few
@@ -104,6 +100,13 @@ export const actions: ActionTree<State, State> & Actions = {
                                 );
                             }, (index + 1) * 150);
                         });
+
+                        //Update the selected cue now
+                        //HINT: This must be done last, otherwise the scrolling feature to the
+                        //the active track does not work properly, because the track that would be
+                        //scrolled to, would still be in the collapsed state. This would
+                        //lead to an undesired offset, when the track is at the end of the visible area.
+                        commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);
                     })
                     .finally(() => {
                         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
