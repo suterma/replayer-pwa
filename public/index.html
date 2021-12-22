@@ -32,7 +32,8 @@
         <title><%= htmlWebpackPlugin.options.title %></title>
         <link rel="stylesheet" href="css/replayer-styles.css">
     </head>
-    <body class="has-navbar-fixed-top" >
+        <!-- Compensate for the fixed navbar, but only when used (from desktop and larger) -->
+        <body class="has-navbar-fixed-top-desktop" >
         <noscript>
             <strong
                 >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't

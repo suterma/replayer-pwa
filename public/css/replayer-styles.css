@@ -10879,6 +10879,18 @@ but not at the "end/right" container's border */
   white-space: nowrap;
 }
 
+/** The fixed navbar helper for desktop must be redefined, because it is broken */
+html.has-navbar-fixed-top-desktop,
+body.has-navbar-fixed-top-desktop {
+  padding-top: 0;
+}
+
+@media screen and (min-width: 1024px) {
+  html.has-navbar-fixed-top-desktop,
+body.has-navbar-fixed-top-desktop {
+    padding-top: 4rem;
+  }
+}
 /*************************************************************
  * Outfront
 **************************************************************

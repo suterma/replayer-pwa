@@ -1,9 +1,9 @@
 <template>
     <!-- The Navbar -->
 
-    <!-- For Mobiles, using a non-fixed top navbar, see https://bulma.io/documentation/components/navbar/#fixed-navbar -->
+    <!-- For Touch devices and below, using a non-fixed top navbar-->
     <nav
-        class="navbar is-unselectable"
+        class="navbar is-unselectable is-hidden-desktop"
         role="navigation"
         aria-label="main navigation"
     >
@@ -65,9 +65,9 @@
         </div>
     </nav>
 
-    <!-- For Desktop, using a fixed top navbar, see https://bulma.io/documentation/components/navbar/#fixed-navbar -->
+    <!-- For Desktop and larger, using a fixed top navbar, see https://bulma.io/documentation/components/navbar/#fixed-navbar -->
     <nav
-        class="navbar is-fixed-top is-unselectable"
+        class="navbar is-fixed-top is-unselectable is-hidden-touch"
         role="navigation"
         aria-label="main navigation"
     >
