@@ -40,7 +40,7 @@
 import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent } from 'vue';
 import WelcomeText from '@/components/WelcomeText.vue';
-import { Options } from '@/store/state-types';
+import { Settings } from '@/store/state-types';
 
 /** A simple overlay display with a welcome message for a new user
  * @remarks This component can be permanently dismissed
@@ -63,22 +63,22 @@ export default defineComponent({
     methods: {
         neverShowAgainChanged(event: Event) {
             const checked = (event.target as HTMLInputElement)?.checked;
-            const options = this.options;
+            const settings = this.settings;
 
-            options.neverShowWelcomeMessageAgain = checked;
+            settings.neverShowWelcomeMessageAgain = checked;
 
-            this.$store.commit(MutationTypes.UPDATE_OPTIONS, options);
+            this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
         },
     },
     computed: {
         /** Whether the welcome message has been permanently dismissed */
         isNeverShowAgain(): boolean {
-            return this.options.neverShowWelcomeMessageAgain;
+            return this.settings.neverShowWelcomeMessageAgain;
         },
 
-        /** Get the application options */
-        options(): Options {
-            return this.$store.getters.options;
+        /** Get the application settings */
+        settings(): Settings {
+            return this.$store.getters.settings;
         },
     },
 });

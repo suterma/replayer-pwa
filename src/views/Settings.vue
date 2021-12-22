@@ -1,13 +1,13 @@
 <template>
     <div class="container">
-        <h1 class="title">Options</h1>
+        <h1 class="title">Settings</h1>
 
         <div class="field">
             <div class="control">
                 <label class="checkbox">
                     <input
                         type="checkbox"
-                        :checked="this.options.neverShowWelcomeMessageAgain"
+                        :checked="this.settings.neverShowWelcomeMessageAgain"
                         @change="neverShowAgainChanged"
                     />
                     Never show the welcome message again
@@ -21,7 +21,7 @@
                     <input
                         type="checkbox"
                         :checked="
-                            this.$store.getters.options
+                            this.$store.getters.settings
                                 .autoRetrieveLastCompilation
                         "
                         @change="autoRetrieveLastCompilationChanged"
@@ -40,35 +40,35 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { MutationTypes } from '@/store/mutation-types';
-import { Options } from '@/store/state-types';
+import { Settings } from '@/store/state-types';
 
-/** An Options view
+/** A Settings view
  */
 export default defineComponent({
-    name: 'Options',
+    name: 'Settings',
 
     methods: {
         neverShowAgainChanged(event: Event) {
             const checked = (event.target as HTMLInputElement)?.checked;
-            const options = this.options;
+            const settings = this.settings;
 
-            options.neverShowWelcomeMessageAgain = checked;
+            settings.neverShowWelcomeMessageAgain = checked;
 
-            this.$store.commit(MutationTypes.UPDATE_OPTIONS, options);
+            this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
         },
         autoRetrieveLastCompilationChanged(event: Event) {
             const checked = (event.target as HTMLInputElement)?.checked;
-            const options = this.options;
+            const settings = this.settings;
 
-            options.autoRetrieveLastCompilation = checked;
+            settings.autoRetrieveLastCompilation = checked;
 
-            this.$store.commit(MutationTypes.UPDATE_OPTIONS, options);
+            this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
         },
     },
     computed: {
-        /** Get the application options */
-        options(): Options {
-            return this.$store.getters.options;
+        /** Get the application settings */
+        settings(): Settings {
+            return this.$store.getters.settings;
         },
     },
 });

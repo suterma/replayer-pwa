@@ -5,7 +5,7 @@
 import { mount } from '@vue/test-utils';
 import WelcomeMessage from '@/components/WelcomeMessage.vue';
 import { createStore } from 'vuex';
-import { Options } from '@/store/state-types';
+import { Settings } from '@/store/state-types';
 
 /** Testing the visibility of the welcome message with jest
  * @devdoc Using a mocked store, as per https://next.vue-test-utils.vuejs.org/guide/advanced/vuex.html#testing-with-a-real-vuex-store
@@ -15,11 +15,11 @@ describe('WelcomeMessage.vue', () => {
     it('should display the message when dismissal not set', () => {
         const store = createStore({
             getters: {
-                options() {
-                    const options = new Options();
-                    options.neverShowWelcomeMessageAgain = false;
+                settings() {
+                    const settings = new Settings();
+                    settings.neverShowWelcomeMessageAgain = false;
 
-                    return options;
+                    return settings;
                 },
             },
         });
@@ -35,11 +35,11 @@ describe('WelcomeMessage.vue', () => {
     it('should not display the message when dismissed', () => {
         const store = createStore({
             getters: {
-                options() {
-                    const options = new Options();
-                    options.neverShowWelcomeMessageAgain = true;
+                settings() {
+                    const settings = new Settings();
+                    settings.neverShowWelcomeMessageAgain = true;
 
-                    return options;
+                    return settings;
                 },
             },
         });

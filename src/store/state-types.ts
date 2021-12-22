@@ -1,6 +1,6 @@
-/** @class Implements the application options
+/** @class Implements the application settings
  */
-export class Options {
+export class Settings {
     /** Whether to never show the welcome message at application start
      * @remarks Default is false (show the message)
      */

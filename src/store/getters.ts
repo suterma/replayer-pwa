@@ -2,7 +2,7 @@ import { GetterTree } from 'vuex';
 import { ICompilation } from './compilation-types';
 import PersistentStorage from './persistent-storage';
 import { State } from './state';
-import { MediaUrl, Options } from './state-types';
+import { MediaUrl, Settings } from './state-types';
 
 export type Getters = {
     /** Determines whether a compilation is availabe (created or loaded) */
@@ -22,9 +22,9 @@ export type Getters = {
      * @remarks Only one cue may be selected at any time, within one compilation / application instance.
      */
     selectedCueId(state: State): string;
-    /** Gets the application options
+    /** Gets the application settings
      */
-    options(state: State): Options;
+    settings(state: State): Settings;
 };
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -61,7 +61,7 @@ export const getters: GetterTree<State, State> & Getters = {
     selectedCueId: (state) => {
         return state.selectedCueId;
     },
-    options: (state) => {
-        return state.options;
+    settings: (state) => {
+        return state.settings;
     },
 };

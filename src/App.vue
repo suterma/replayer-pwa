@@ -26,7 +26,7 @@ export default defineComponent({
     name: 'App',
     components: { NavbarTop, ProgressOverlay, WelcomeMessage },
     beforeCreate() {
-        this.$store.commit(MutationTypes.RETRIEVE_OPTIONS);
+        this.$store.commit(MutationTypes.RETRIEVE_SETTINGS);
     },
     beforeMount() {
         //Handle reloads and tab/browser exits

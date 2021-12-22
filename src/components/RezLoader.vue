@@ -66,7 +66,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
-import { Options } from '@/store/state-types';
+import { Settings } from '@/store/state-types';
 
 /** A Loader for importable files
  * @remarks Provides a button for loading local files and also listens to url params
@@ -84,7 +84,7 @@ export default defineComponent({
                 //Handle the array
                 this.paramsUrl.forEach((url) => this.loadUrl(url));
             }
-        } else if (this.options.autoRetrieveLastCompilation) {
+        } else if (this.settings.autoRetrieveLastCompilation) {
             this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
         }
     },
@@ -126,9 +126,9 @@ export default defineComponent({
             return this.$store.getters.hasRetrievableCompilation;
         },
 
-        /** Get the application options */
-        options(): Options {
-            return this.$store.getters.options;
+        /** Get the application settings */
+        settings(): Settings {
+            return this.$store.getters.settings;
         },
     },
 });

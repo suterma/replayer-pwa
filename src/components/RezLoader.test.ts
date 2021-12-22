@@ -7,7 +7,7 @@ import RezLoader from '@/components/RezLoader.vue';
 import { createStore } from 'vuex';
 import { MutationTypes } from '@/store/mutation-types';
 import { State } from '@/store/state';
-import { MediaBlob, MediaUrl, Options } from '@/store/state-types';
+import { MediaBlob, MediaUrl, Settings } from '@/store/state-types';
 import { Compilation } from '@/store/compilation-types';
 import { ActionTypes } from '@/store/action-types';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
@@ -40,7 +40,7 @@ describe('RezLoader.vue', () => {
 
                     progressMessageStack: new Array<string>(),
 
-                    options: new Options(),
+                    settings: new Settings(),
                 };
             },
             mutations: {

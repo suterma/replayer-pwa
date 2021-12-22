@@ -2,7 +2,7 @@ import { MutationTree } from 'vuex';
 import { Compilation, ICompilation } from './compilation-types';
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
-import { MediaUrl, Options } from './state-types';
+import { MediaUrl, Settings } from './state-types';
 import PersistentStorage from './persistent-storage';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 
@@ -22,8 +22,8 @@ export type Mutations<S = State> = {
     [MutationTypes.UPDATE_SELECTED_CUE_ID](state: S, cueId: string): void;
     [MutationTypes.CLOSE_COMPILATION](state: S): void;
     [MutationTypes.REVOKE_ALL_MEDIA_URLS](state: State): void;
-    [MutationTypes.UPDATE_OPTIONS](state: S, options: Options): void;
-    [MutationTypes.RETRIEVE_OPTIONS](state: S): void;
+    [MutationTypes.UPDATE_SETTINGS](state: S, settings: Settings): void;
+    [MutationTypes.RETRIEVE_SETTINGS](state: S): void;
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -117,15 +117,15 @@ export const mutations: MutationTree<State> & Mutations = {
         });
         state.mediaUrls.clear();
     },
-    /** Updates the application options
+    /** Updates the application settings
      * @param state - The vuex state
-     * @param options - The application options
+     * @param settings - The application settings
      */
-    [MutationTypes.UPDATE_OPTIONS](state: State, options: Options) {
-        PersistentStorage.storeOptions(options);
-        state.options = options;
+    [MutationTypes.UPDATE_SETTINGS](state: State, settings: Settings) {
+        PersistentStorage.storeSettings(settings);
+        state.settings = settings;
     },
-    [MutationTypes.RETRIEVE_OPTIONS](state: State) {
-        state.options = PersistentStorage.retrieveOptions();
+    [MutationTypes.RETRIEVE_SETTINGS](state: State) {
+        state.settings = PersistentStorage.retrieveSettings();
     },
 };

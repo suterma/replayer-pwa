@@ -1,4 +1,4 @@
-import { MediaUrl, Options } from './state-types';
+import { MediaUrl, Settings } from './state-types';
 import { Compilation, ICompilation } from './compilation-types';
 
 /** Defines the state of this application */
@@ -22,7 +22,7 @@ interface IState {
      */
     progressMessageStack: Array<string>;
 
-    options: Options;
+    settings: Settings;
 }
 
 export const state: IState = {
@@ -36,7 +36,7 @@ export const state: IState = {
 
     progressMessageStack: new Array<string>(),
 
-    options: new Options(),
+    settings: new Settings(),
 };
 
 export type State = typeof state;
