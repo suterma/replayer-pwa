@@ -66,6 +66,14 @@ describe('RezLoader.vue', () => {
                     //Store persistently, but after committing, to keep the process faster
                     PersistentStorage.storeMediaBlob(mediaBlob);
                 },
+                [ActionTypes.RETRIEVE_COMPILATION]({}) {
+                    //empty mock
+                },
+            },
+            getters: {
+                settings: (state) => {
+                    return state.settings;
+                },
             },
         });
         const wrapper = shallowMount(RezLoader, {
