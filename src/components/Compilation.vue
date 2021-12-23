@@ -11,35 +11,6 @@
         />
 
         <CompilationHeader :compilation="compilation" />
-        <!-- Buttons as index to the tracks-->
-        <!-- <div class="buttons">
-        <template v-for="track in tracks" :key="track.Id">
-            The track with the currently selected cue is highlighted
-            <a
-                title="Scroll to track"
-                v-if="activeTrack?.Id == track.Id"
-                class="button is-success"
-                href="#"
-                v-scroll-to="{
-                    el: '#track-' + track.Id,
-                    /* Try to target the scroll somewhat above the element in question
-                        to make it fully visible */
-                    offset: -100,
-                }"
-                >{{ track.Name }}</a
-            >
-            A track without the currently selected cue is not highlighted, but can be selected (will also trigger scrolling)
-            <a
-                title="Select first cue and scroll to track"
-                v-else
-                class="button is-primary"
-                href="#"
-                @click="this.selectFirstCueOfTrack(track.Id)"
-            >
-                {{ track.Name }}</a
-            >
-        </template>
-    </div> -->
         <!-- Tracks to work with -->
         <template v-for="track in tracks" :key="track.Id">
             <Track :track="track" :ref="'track-' + track.Id" />
@@ -74,18 +45,31 @@ export default defineComponent({
     methods: {
         /** Visually scrolls to the given track, making it visually at the top of
          * the view.
+         * @remarks This takes into account whether there is a fixed top navbar
          */
         scrollToTrack(track: ITrack) {
             if (track) {
                 const trackElement = document.getElementById(
                     'track-' + track.Id,
                 );
+
+                /* Try to target the scroll somewhat above the element in question to make it fully visible */
+                let scrollOffset = -88; //empirical value for taking into account the fixed top navbar
+
+                //Check whether there is a fixed top navbar at all
+                const bodyPaddingTop = window
+                    .getComputedStyle(document.body, null)
+                    .getPropertyValue('padding-top');
+                //When no padding, there is no fixed top navbar (which equals to 0px or the empty string)?
+                if (!bodyPaddingTop || bodyPaddingTop.startsWith('0')) {
+                    scrollOffset = -22; //empirical value for taking into account the missing fixed top navbar
+                }
+
                 VueScrollTo.scrollTo(trackElement, {
                     /** Always scroll, make it on top of the view */
                     force: true,
-                    /* Try to target the scroll somewhat above the element in question
-                        to make it fully visible */
-                    offset: -88,
+                    /** Use the calcualted offset */
+                    offset: scrollOffset,
                     /** Avoid interference with the key press overlay */
                     cancelable: false,
                 });

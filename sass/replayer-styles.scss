@@ -5,7 +5,7 @@
 **************************************************************
 */
 /* Keep the menu visible on most but the smallest devices
-* @devdoc Must be applied before the bulma.sass is used, because this is used there */
+    * @devdoc Must be applied before the bulma.sass is used, because this is used there */
 $navbar-breakpoint: 320px;
 
 /** Using Bulma CSS with a theme for Bulma */
@@ -145,19 +145,6 @@ but not at the "end/right" container's border */
 /* Some text that does not wrap */
 .has-text-nowrap {
     white-space: nowrap;
-}
-
-/** The fixed navbar helper for desktop must be redefined, because it is broken */
-//TODO use variable
-html.has-navbar-fixed-top-desktop,
-body.has-navbar-fixed-top-desktop {
-    padding-top: 0;
-}
-@media screen and (min-width: 1024px) {
-    html.has-navbar-fixed-top-desktop,
-    body.has-navbar-fixed-top-desktop {
-        padding-top: 4rem;
-    }
 }
 
 /*************************************************************

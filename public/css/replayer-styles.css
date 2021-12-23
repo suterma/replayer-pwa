@@ -4,7 +4,7 @@
 **************************************************************
 */
 /* Keep the menu visible on most but the smallest devices
-* @devdoc Must be applied before the bulma.sass is used, because this is used there */
+    * @devdoc Must be applied before the bulma.sass is used, because this is used there */
 /** Using Bulma CSS with a theme for Bulma */
 /*! bulma.io v0.9.3 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */
@@ -10731,9 +10731,11 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 
 /* Menu styles */
-/* Navbar styles
+/*************************************************************
+ * General navbar stylings
  * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
- */
+**************************************************************
+*/
 /* Disable touch callout on menu items */
 a.navbar-item {
   /*Nonstandard, only expected to work on Safari on iOS*/
@@ -10741,7 +10743,7 @@ a.navbar-item {
 }
 
 /* No border around the whole navbar, to keep it more visually docked at the viewport */
-.navbar.is-fixed-top {
+.navbar {
   border: none;
 }
 
@@ -10761,6 +10763,45 @@ a.navbar-item {
   border-left: 1px solid #202328;
 }
 
+/*************************************************************
+ * Fixes for the fixed navbar, to have it enabled only for the larger screen widhts
+**************************************************************/
+/** The fixed navbar helper for desktop must be redefined, because it is broken
+    The designator "laptop" is defined here for this purpose
+    NOTE: This solution here only provides a top fixed menu, not a bottom fixed menu */
+/** Use no padding by default, for the non-fixed menu */
+html.has-navbar-fixed-top-laptop {
+  padding-top: 0;
+}
+
+/** Define the fixed navbar from the laptop breakpoint and larger
+* HINT: "latop" is defined same as "desktop"
+*/
+@media screen and (min-width: 1024px) {
+  /** Use appropriate padding for the fixed menu */
+  html.has-navbar-fixed-top-laptop,
+body.has-navbar-fixed-top-laptop {
+    padding-top: 4rem;
+  }
+
+  /** fix the menu menu */
+  .navbar.is-fixed-top-laptop {
+    top: 0;
+  }
+
+  .navbar.is-fixed-top-laptop {
+    left: 0;
+    position: fixed;
+    right: 0;
+    z-index: 30;
+  }
+
+  .navbar.is-fixed-top-laptop .navbar-menu {
+    -webkit-overflow-scrolling: touch;
+    max-height: calc(100vh - 4rem);
+    overflow: auto;
+  }
+}
 /* Below: Application-specific add-ons/modifications to the Bulma CSS */
 /*************************************************************
  * Overscroll / scrollbar handling
@@ -10879,18 +10920,6 @@ but not at the "end/right" container's border */
   white-space: nowrap;
 }
 
-/** The fixed navbar helper for desktop must be redefined, because it is broken */
-html.has-navbar-fixed-top-desktop,
-body.has-navbar-fixed-top-desktop {
-  padding-top: 0;
-}
-
-@media screen and (min-width: 1024px) {
-  html.has-navbar-fixed-top-desktop,
-body.has-navbar-fixed-top-desktop {
-    padding-top: 4rem;
-  }
-}
 /*************************************************************
  * Outfront
 **************************************************************
