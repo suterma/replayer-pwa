@@ -3,40 +3,42 @@
     //https://medium.com/@devdude/handling-screen-media-queries-for-js-on-a-vue-js-project-357e40fb1c77
     //To actually remove the unused player from the DOM with
     //v-if="is-hidden-tablet" or something the like -->
-    <div class="has-background-danger"></div>
-    Howler:
-    <PlayerChromeMini
-        class="is-hidden-tablet"
-        :title="title"
-        :loaded="this.loaded"
-        @stop="stop"
-        v-model:playing="this.playing"
-        :isPlayingRequestOutstanding="this.isPlayingRequestOutstanding"
-        v-model:currentSeconds="this.currentSeconds"
-        v-model:volume="this.volume"
-        v-model:looping="this.looping"
-        :muted="this.muted"
-        @mute="mute"
-        @seek="seekToSeconds"
-        :durationSeconds="this.durationSeconds"
-        @download="this.download"
-    />
-    <PlayerChrome
-        class="is-hidden-mobile"
-        :title="title"
-        :loaded="this.loaded"
-        @stop="stop"
-        v-model:playing="this.playing"
-        :isPlayingRequestOutstanding="this.isPlayingRequestOutstanding"
-        v-model:currentSeconds="this.currentSeconds"
-        v-model:volume="this.volume"
-        v-model:looping="this.looping"
-        :muted="this.muted"
-        @mute="mute"
-        @seek="seekToSeconds"
-        :durationSeconds="this.durationSeconds"
-        @download="this.download"
-    />
+    <div class="has-background-danger">
+        Howler:
+        <PlayerChromeMini
+            class="is-hidden-tablet"
+            :title="title"
+            :loaded="this.loaded"
+            @stop="stop"
+            v-model:playing="this.playing"
+            :isPlayingRequestOutstanding="this.isPlayingRequestOutstanding"
+            v-model:currentSeconds="this.currentSeconds"
+            v-model:volume="this.volume"
+            v-model:looping="this.looping"
+            :muted="this.muted"
+            @mute="mute"
+            @seek="seekToSeconds"
+            :durationSeconds="this.durationSeconds"
+            @download="this.download"
+        />
+        <PlayerChrome
+            class="is-hidden-mobile"
+            :title="title"
+            :loaded="this.loaded"
+            @stop="stop"
+            v-model:playing="this.playing"
+            :isPlayingRequestOutstanding="this.isPlayingRequestOutstanding"
+            v-model:currentSeconds="this.currentSeconds"
+            v-model:volume="this.volume"
+            v-model:looping="this.looping"
+            :muted="this.muted"
+            @mute="mute"
+            @seek="seekToSeconds"
+            :durationSeconds="this.durationSeconds"
+            @download="this.download"
+        />
+        &nbsp;
+    </div>
 </template>
 
 <script lang="ts">
