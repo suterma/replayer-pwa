@@ -34,16 +34,30 @@
             Note: The actual src property/attribute is also depending 
             on the show state as a performance optimizations
             -->
-            <TrackAudioApiPlayer
-                v-if="mediaObjectUrl"
-                ref="playerReference"
-                :title="trackFileUrl?.fileName"
-                :src="optimizedMediaObjectUrl"
-                v-on:timeupdate="updateTime"
-                v-on:trackLoaded="calculateCueDurations"
-                v-on:trackPlaying="updatePlaying"
-            ></TrackAudioApiPlayer>
-
+            <div v-if="mediaObjectUrl">
+                <template v-if="this.settings.useHowlerJsAudioEngine">
+                    <TrackHowlerPlayer
+                        v-if="mediaObjectUrl"
+                        ref="playerReference"
+                        :title="trackFileUrl?.fileName"
+                        :src="optimizedMediaObjectUrl"
+                        v-on:timeupdate="updateTime"
+                        v-on:trackLoaded="calculateCueDurations"
+                        v-on:trackPlaying="updatePlaying"
+                    ></TrackHowlerPlayer>
+                </template>
+                <template v-else>
+                    <TrackAudioApiPlayer
+                        v-if="mediaObjectUrl"
+                        ref="playerReference"
+                        :title="trackFileUrl?.fileName"
+                        :src="optimizedMediaObjectUrl"
+                        v-on:timeupdate="updateTime"
+                        v-on:trackLoaded="calculateCueDurations"
+                        v-on:trackPlaying="updatePlaying"
+                    ></TrackAudioApiPlayer>
+                </template>
+            </div>
             <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
             <div v-else class="field has-addons player-panel">
                 <p class="control">
@@ -87,11 +101,13 @@ import { defineComponent } from 'vue';
 import { Track, ICue } from '@/store/compilation-types';
 import CueButton from '@/components/CueButton.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
+import TrackHowlerPlayer from '@/components/TrackHowlerPlayer.vue';
 import { MediaUrl } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
+import { settingsMixin } from '@/mixins/settingsMixin';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -105,9 +121,11 @@ export default defineComponent({
     components: {
         CueButton,
         TrackAudioApiPlayer,
+        TrackHowlerPlayer,
         ReplayerEventHandler,
         TrackHeader,
     },
+    mixins: [settingsMixin],
     props: {
         track: Track,
     },

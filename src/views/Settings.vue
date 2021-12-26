@@ -31,6 +31,31 @@
                 </label>
             </div>
         </div>
+
+        <hr />
+
+        <div class="has-text-danger">
+            <h1 class="title has-text-danger">XML export</h1>
+            <h3 class="subtitle has-text-danger">
+                Here be dragons (use at your own risk)
+            </h3>
+
+            <div class="field">
+                <div class="control">
+                    <label class="checkbox">
+                        <input
+                            type="checkbox"
+                            :checked="this.getSettings.useHowlerJsAudioEngine"
+                            @change="useHowlerJsAudioEngineChanged"
+                        />
+                        Use howler.js as audio engine
+                        <span class="has-opacity-half is-size-7">
+                            (may behave differently on playback)</span
+                        >
+                    </label>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -61,7 +86,15 @@ export default defineComponent({
 
             this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
         },
+
+        useHowlerJsAudioEngineChanged(event: Event) {
+            const checked = (event.target as HTMLInputElement)?.checked;
+            const settings = this.getSettings;
+
+            settings.useHowlerJsAudioEngine = checked;
+
+            this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
+        },
     },
-    computed: {},
 });
 </script>

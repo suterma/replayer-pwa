@@ -10,6 +10,11 @@ export class Settings {
      * @remarks Default is true (auto retrieve)
      */
     autoRetrieveLastCompilation = true;
+
+    /** Whether to use the alternative HowlerJs audio engine
+     * @remarks Default is false
+     */
+    useHowlerJsAudioEngine = false;
 }
 
 /** @class Implements a playable media URL
