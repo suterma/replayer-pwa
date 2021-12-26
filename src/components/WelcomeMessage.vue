@@ -40,7 +40,7 @@
 import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent } from 'vue';
 import WelcomeText from '@/components/WelcomeText.vue';
-import { Settings } from '@/store/state-types';
+import { settingsMixin } from '@/mixins/settingsMixin';
 
 /** A simple overlay display with a welcome message for a new user
  * @remarks This component can be permanently dismissed
@@ -48,6 +48,7 @@ import { Settings } from '@/store/state-types';
 export default defineComponent({
     name: 'WelcomeMessage',
     components: { WelcomeText },
+    mixins: [settingsMixin],
     data() {
         return {
             /** Whether to show the message this time*/
@@ -63,7 +64,7 @@ export default defineComponent({
     methods: {
         neverShowAgainChanged(event: Event) {
             const checked = (event.target as HTMLInputElement)?.checked;
-            const settings = this.settings;
+            const settings = this.getSettings;
 
             settings.neverShowWelcomeMessageAgain = checked;
 
@@ -73,12 +74,7 @@ export default defineComponent({
     computed: {
         /** Whether the welcome message has been permanently dismissed */
         isNeverShowAgain(): boolean {
-            return this.settings.neverShowWelcomeMessageAgain;
-        },
-
-        /** Get the application settings */
-        settings(): Settings {
-            return this.$store.getters.settings;
+            return this.getSettings.neverShowWelcomeMessageAgain;
         },
     },
 });

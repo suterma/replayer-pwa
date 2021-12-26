@@ -7,7 +7,7 @@
                 <label class="checkbox">
                     <input
                         type="checkbox"
-                        :checked="this.settings.neverShowWelcomeMessageAgain"
+                        :checked="this.getSettings.neverShowWelcomeMessageAgain"
                         @change="neverShowAgainChanged"
                     />
                     Never show the welcome message again
@@ -20,10 +20,7 @@
                 <label class="checkbox">
                     <input
                         type="checkbox"
-                        :checked="
-                            this.$store.getters.settings
-                                .autoRetrieveLastCompilation
-                        "
+                        :checked="this.getSettings.autoRetrieveLastCompilation"
                         @change="autoRetrieveLastCompilationChanged"
                     />
                     Automatically retrieve the last compilation at startup
@@ -40,17 +37,17 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { MutationTypes } from '@/store/mutation-types';
-import { Settings } from '@/store/state-types';
+import { settingsMixin } from '@/mixins/settingsMixin';
 
 /** A Settings view
  */
 export default defineComponent({
     name: 'Settings',
-
+    mixins: [settingsMixin],
     methods: {
         neverShowAgainChanged(event: Event) {
             const checked = (event.target as HTMLInputElement)?.checked;
-            const settings = this.settings;
+            const settings = this.getSettings;
 
             settings.neverShowWelcomeMessageAgain = checked;
 
@@ -58,18 +55,13 @@ export default defineComponent({
         },
         autoRetrieveLastCompilationChanged(event: Event) {
             const checked = (event.target as HTMLInputElement)?.checked;
-            const settings = this.settings;
+            const settings = this.getSettings;
 
             settings.autoRetrieveLastCompilation = checked;
 
             this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
         },
     },
-    computed: {
-        /** Get the application settings */
-        settings(): Settings {
-            return this.$store.getters.settings;
-        },
-    },
+    computed: {},
 });
 </script>
