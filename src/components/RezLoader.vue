@@ -66,7 +66,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
-import { Settings } from '@/store/state-types';
+import { settingsMixin } from '@/mixins/settingsMixin';
 
 /** A Loader for importable files
  * @remarks Provides a button for loading local files and also listens to url params
@@ -74,6 +74,7 @@ import { Settings } from '@/store/state-types';
 export default defineComponent({
     name: 'RezLoader',
     components: {},
+    mixins: [settingsMixin],
     mounted: function (): void {
         //Check whether a given compilation is to be loaded (by URL or by Auto-Retrieve, if enabled)
         if (this.paramsUrl) {
@@ -84,7 +85,7 @@ export default defineComponent({
                 //Handle the array
                 this.paramsUrl.forEach((url) => this.loadUrl(url));
             }
-        } else if (this.settings.autoRetrieveLastCompilation) {
+        } else if (this.getSettings.autoRetrieveLastCompilation) {
             this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
         }
     },
@@ -124,11 +125,6 @@ export default defineComponent({
 
         hasRetrievableCompilation(): boolean {
             return this.$store.getters.hasRetrievableCompilation;
-        },
-
-        /** Get the application settings */
-        settings(): Settings {
-            return this.$store.getters.settings;
         },
     },
 });
