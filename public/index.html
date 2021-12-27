@@ -30,16 +30,40 @@
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#000000" />
         <title><%= htmlWebpackPlugin.options.title %></title>
-        <link rel="stylesheet" href="css/replayer-styles.css">
+        <link rel="stylesheet" href="css/replayer-styles.css" />
     </head>
-        <!-- Compensate for the fixed navbar, but only when used (from laptop and larger) -->
-        <body class="has-navbar-fixed-top-laptop" >
+    <!-- Compensate for the fixed navbar, but only when used (from laptop and larger) -->
+    <body class="has-navbar-fixed-top-laptop">
         <noscript>
-            <strong
-                >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't
-                work properly without JavaScript enabled. Please enable it to
-                continue.</strong
-            >
+            <section class="hero is-danger has-text-centered">
+                <div class="hero-body">
+                    <p class="text-align">
+                        <strong
+                            >We're sorry but <%= htmlWebpackPlugin.options.title
+                            %> doesn't work properly without JavaScript enabled.
+                            Please enable it to continue.</strong
+                        >
+                    </p>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="container">
+                    <h1 class="title">Replayer</h1>
+
+                    <h3 class="subtitle">
+                        Your rehearsal / audition / performance on cue
+                    </h3>
+                    <div class="content">
+                        <p>
+                            Replayer is a free, cue-based media player for
+                            rehearsals with playback music. By the click of a
+                            button, Replayer starts to play at predefined times
+                            in the audio file.
+                        </p>
+                    </div>
+                </div>
+            </section>
         </noscript>
         <div id="app"></div>
         <!-- built files will be auto injected -->
