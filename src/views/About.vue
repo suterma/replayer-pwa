@@ -191,6 +191,14 @@
                     >, like jQuery's slideUp / slideDown, but for Vue 3!
                     (Released under the MIT License, by Craig Riley)
                 </li>
+                <li>
+                    <a
+                        href="https://github.com/goldfire/howler.js"
+                        target="_blank"
+                        >howler.js </a
+                    >, an audio library for the modern web. (Released under the
+                    MIT License, by James Simpson)
+                </li>
             </ul>
         </div>
         <h1 class="title">License</h1>

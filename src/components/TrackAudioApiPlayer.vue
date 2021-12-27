@@ -134,22 +134,6 @@ export default defineComponent({
         muted(): boolean {
             return this.volume / 100 === 0;
         },
-        /** The playback progress in the current track, in [percent] */
-        percentComplete(): number {
-            return (this.currentSeconds / this.durationSeconds) * 100;
-        },
-
-        /** Returns the progress style, dynamically depending on the actual progress in the track
-         * @remarks Calculates the witdh with respect to the progress bar width from the player styles (which is a border)
-         * max-width makes sure, the progress bar never overflows the given space.
-         */
-        // eslint-disable-next-line
-        progressStyle(): any {
-            return {
-                width: `calc(${this.percentComplete}% + 0.4em)`,
-                'max-width': '100%',
-            };
-        },
         volumeTitle(): string {
             return `Volume (${this.volume}%)`;
         },
@@ -212,17 +196,6 @@ export default defineComponent({
         },
     },
     methods: {
-        /** Converts the total seconds into a conveniently displayable hh:mm:ss.s format.
-         * @remarks Omits the hour part, if not appliccable
-         */
-        convertToDisplayTime(seconds: number): string {
-            //Uses the hour, minute, seconds, and 1 digit of the milliseconds part
-            const hhmmss = new Date(seconds * 1000)
-                .toISOString()
-                .substr(11, 10);
-            //skip the hour part, if not used
-            return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss;
-        },
         download() {
             console.debug(`TrackAudioApiPlayer(${this.title})::download`);
             this.stop();

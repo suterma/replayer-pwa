@@ -351,14 +351,14 @@ export default defineComponent({
         },
     },
     methods: {
-        /** Converts the total seconds into a conveniently displayable hh:mm:ss.s format.
+        /** Converts the total seconds into a conveniently displayable hh:mm:ss.zz format.
          * @remarks Omits the hour part, if not appliccable
          */
         convertToDisplayTime(seconds: number): string {
-            //Uses the hour, minute, seconds, and 1 digit of the milliseconds part
+            //Uses the hour, minute, seconds, and 3 digits of the milliseconds part
             const hhmmss = new Date(seconds * 1000)
                 .toISOString()
-                .substr(11, 10);
+                .substr(11, 12);
             //skip the hour part, if not used
             return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss;
         },
