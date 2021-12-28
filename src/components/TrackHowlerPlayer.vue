@@ -1,31 +1,12 @@
 <template>
-    <!-- //TODO later maybe use something like
-    //https://medium.com/@devdude/handling-screen-media-queries-for-js-on-a-vue-js-project-357e40fb1c77
-    //To actually remove the unused player from the DOM with
-    //v-if="is-hidden-tablet" or something the like -->
-
-    <!-- <PlayerChromeMini
-            class="is-hidden-tablet"
-            :title="title"
-            :loaded="this.loaded"
-            @stop="stop"
-            v-model:playing="this.playing"
-            :isPlayingRequestOutstanding="false"
-            v-model:currentSeconds="this.currentSeconds"
-            v-model:volume="this.volume"
-            v-model:looping="this.looping"
-            :muted="this.muted"
-            @mute="mute"
-            @seek="seekToSeconds"
-            :durationSeconds="this.durationSeconds"
-            @download="this.download"
-        /> -->
     <!-- is-hidden-mobile -->
     <PlayerChrome
         :title="title"
         :loaded="this.loaded"
         @stop="stop"
-        v-model:playing="this.playing"
+        :playing="this.playing"
+        @play="this.play"
+        @pause="this.pause"
         :isPlayingRequestOutstanding="false"
         v-model:currentSeconds="this.currentSeconds"
         v-model:volume="this.volume"
@@ -41,9 +22,10 @@
 <script lang="ts">
 import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent } from 'vue';
-// import PlayerChromeMini from '@/components/PlayerChromeMini.vue';
 import PlayerChrome from '@/components/PlayerChrome.vue';
+import { HowlerFader } from '@/code/audio/HowlerFader';
 import { Howl } from 'howler';
+import { settingsMixin } from '@/mixins/settingsMixin';
 
 /** A simple vue audio player, for a single track, using the Web Audio API
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playing.
@@ -56,8 +38,8 @@ export default defineComponent({
     name: 'TrackHowlerPlayer',
     components: {
         PlayerChrome,
-        // PlayerChromeMini
     },
+    mixins: [settingsMixin],
     emits: ['timeupdate', 'trackLoaded', 'trackPlaying'],
     props: {
         title: String,
@@ -105,6 +87,7 @@ export default defineComponent({
          * @remarks This is used to avoid consecutive emission of the same value
          */
         lastSecondsEmitted: undefined as unknown as undefined | number,
+        fader: undefined as unknown as HowlerFader,
     }),
     /** Handles the setup of the audio outside the mounted lifespan.
      */
@@ -140,17 +123,21 @@ export default defineComponent({
          * @remarks This is used to follow external play requests. Internally, the sound object should be used to
          * issue play/pause requests.
          */
-        playing(value: boolean): void {
-            console.debug(
-                `TrackHowlerPlayer(${this.title})::watch:playing:value${value}`,
-            );
-            //Only actually update the sound when necessary, to avoid call loops
-            if (value === true) {
-                if (!this.sound.playing()) this.sound.play();
-            } else if (value === false) {
-                if (this.sound.playing()) this.sound.pause();
-            }
-        },
+        // playing(value: boolean): void {
+        //     console.debug(
+        //         `TrackHowlerPlayer(${this.title})::watch:playing:value${value}`,
+        //     );
+        //     //Only actually update the sound when necessary, to avoid call loops
+        //     if (value === true) {
+        //         if (!this.sound.playing()) {
+        //             this.sound.play();
+        //         }
+        //     } else if (value === false) {
+        //         if (this.sound.playing()) {
+        //             this.sound.pause();
+        //         }
+        //     }
+        // },
         /** Watch whether the volume changed, and then update the sound object accordingly  */
         volume(): void {
             console.debug(
@@ -194,6 +181,7 @@ export default defineComponent({
                     preload: true /* to force immediate loading */,
                     onload: this.load,
                     onplay: () => {
+                        this.fader.fadeIn();
                         this.playing = true;
                         this.$emit('trackPlaying', true);
                         this.startUpdateAnimation();
@@ -227,8 +215,15 @@ export default defineComponent({
                         }
                     },
                 });
+                //TODO use druation from parameer
+                this.fader = new HowlerFader(
+                    this.sound,
+                    this.getSettings.fadingDuration,
+                    this.getSettings.applyFadeInOffset,
+                );
             }
         },
+
         /** Stops the recurring update of the playback progress of the track */
         stopUpdateAnimation() {
             if (this.animationFrameId) {
@@ -293,12 +288,15 @@ export default defineComponent({
         stop() {
             console.debug(`TrackHowlerPlayer(${this.title})::stop`);
             this.sound.stop();
+            this.fader.cancel();
             this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, undefined);
         },
         togglePlayback() {
             console.debug(`TrackHowlerPlayer(${this.title})::togglePlayback`);
             if (this.sound.playing()) {
-                this.sound.pause();
+                this.fader.fadeOut().then(() => {
+                    this.sound.pause();
+                });
             } else {
                 this.sound.play();
             }
@@ -329,10 +327,41 @@ export default defineComponent({
                 this.volume,
             );
         },
-        /** Pauses playback, keeping the position at the current position */
+        /** Pauses playback (without a seek operation) */
         pause() {
-            console.debug(`TrackHowlerPlayer(${this.title})::pause`);
-            this.sound.pause();
+            if (this.sound.playing()) {
+                console.debug(`TrackHowlerPlayer(${this.title})::pause`);
+                this.fader.fadeOut().then(() => {
+                    this.sound.pause();
+                });
+            } else {
+                console.warn(
+                    `TrackHowlerPlayer(${this.title})::pause aborted, nothing to pause`,
+                );
+            }
+        },
+
+        /** Starts playback (without a seek operation) */
+        play() {
+            console.debug(`TrackHowlerPlayer(${this.title})::play`);
+            this.sound.play();
+        },
+
+        /** Pauses playback (with a subsequent seek operation) */
+        pauseAndSeekTo(position: number): void {
+            if (this.sound.playing()) {
+                console.debug(
+                    `TrackHowlerPlayer(${this.title})::pauseAndSeekTo`,
+                );
+                this.fader.fadeOut().then(() => {
+                    this.sound.pause();
+                    this.seekTo(position);
+                });
+            } else {
+                console.warn(
+                    `TrackHowlerPlayer(${this.title})::pauseAndSeekTo aborted, nothing to pause`,
+                );
+            }
         },
         /** Immediately updates playback progress and emits an event with the temporal position of the player.
          * Additionally, schedules further regular updates via requestAnimationFrame.

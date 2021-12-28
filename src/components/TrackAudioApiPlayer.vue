@@ -288,10 +288,16 @@ export default defineComponent({
                 this.volume,
             );
         },
-        /** Pauses playback, keeping the position at the current position */
-        pause() {
+        /** Pauses playback */
+        pause(): void {
             console.debug(`TrackAudioApiPlayer(${this.title})::pause`);
             this.playing = false;
+        },
+        /** Pauses playback (with a subsequent seek operation) */
+        pauseAndSeekTo(position: number): void {
+            console.debug(`TrackAudioApiPlayer(${this.title})::pauseAndSeekTo`);
+            this.playing = false;
+            this.seekTo(position);
         },
         /** Updates the current seconds display and emits an event with the temporal position of the player
          * @devdoc This must get only privately called from the audio player

@@ -254,12 +254,15 @@
 import { defineComponent } from 'vue';
 
 /** A UI representation for a media player
+ * @remarks Handles and emits various states and event for playback control.
  */
 export default defineComponent({
     name: 'PlayerChrome',
     components: {},
     emits: [
         'stop',
+        /** Flags, whether the UI represents the playing (true) or the paused (false) state
+         */
         'update:playing',
         'update:looping',
         'update:currentSeconds',
@@ -268,6 +271,14 @@ export default defineComponent({
         'seek',
         'download',
         'mute',
+        /** Emitted, when the represents the playing state
+         * @remarks This is emitted in conjunction with the 'update:playing' event
+         */
+        'play',
+        /** Emitted, when the represents the paused state
+         * @remarks This is emitted in conjunction with the 'update:playing' event
+         */
+        'pause',
     ],
     props: {
         title: String,
@@ -385,6 +396,11 @@ export default defineComponent({
                 `PlayerChrome(${this.title})::togglePlayback:playback:${playback}`,
             );
             this.$emit('update:playing', playback);
+            if (playback) {
+                this.$emit('play');
+            } else {
+                this.$emit('pause');
+            }
         },
         toggleLooping() {
             const looping = !this.looping;

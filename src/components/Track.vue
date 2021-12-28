@@ -199,16 +199,23 @@ export default defineComponent({
                 const selectedCueId = this.$store.getters
                     .selectedCueId as string;
                 if (selectedCueId) {
-                    if (this.trackPlayerInstance?.playing === true) {
-                        this.trackPlayerInstance?.pause();
-                    }
-
                     const cueTime = this.cues?.filter(
                         (c) => c.Id === selectedCueId,
                     )[0]?.Time;
-                    //Handle all non-null values (Zero is valid)
-                    if (cueTime != null) {
-                        this.trackPlayerInstance?.seekTo(cueTime);
+
+                    //Control playback according to the play state, using a single operation.
+                    //This supports a possible fade operation.
+                    //For the cue time, handle all non-null values (Zero is valid)
+                    if (this.trackPlayerInstance?.playing === true) {
+                        if (cueTime != null) {
+                            this.trackPlayerInstance?.pauseAndSeekTo(cueTime);
+                        } else {
+                            this.trackPlayerInstance?.pause();
+                        }
+                    } else {
+                        if (cueTime != null) {
+                            this.trackPlayerInstance?.seekTo(cueTime);
+                        }
                     }
                 }
             }
@@ -237,8 +244,7 @@ export default defineComponent({
 
                 //Set the position to this cue and handle playback
                 if (this.trackPlayerInstance?.playing === true) {
-                    this.trackPlayerInstance?.pause();
-                    this.trackPlayerInstance?.seekTo(cue.Time);
+                    this.trackPlayerInstance?.pauseAndSeekTo(cue.Time);
                 } else {
                     this.trackPlayerInstance?.playFrom(cue.Time);
                 }
