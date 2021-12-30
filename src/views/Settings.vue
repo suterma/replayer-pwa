@@ -65,24 +65,20 @@
                 </label>
                 <div class="control">
                     <div class="select">
-                        //TODO fix this binding
-                        <!-- <select
-                            v-model.number="this.getSettings.fadingDuration"
+                        <select
+                            v-model.number="this.localSettings.fadingDuration"
                             @change="fadingDurationChanged"
                         >
-                            <option v-bind:value="{ number: 0 }">
-                                no fading
-                            </option>
-                            <option v-bind:value="{ number: 16 }">
-                                Fast (16 milliseconds, barely audible)
-                            </option>
-                            <option v-bind:value="{ number: 300 }">
-                                Medium (300 milliseconds)
-                            </option>
-                            <option v-bind:value="{ number: 4000 }">
-                                Slow (4 seconds)
-                            </option>
-                        </select> -->
+                            <option v-bind:value="0">no fading</option>
+                            <option v-bind:value="20">20 milliseconds</option>
+                            <option v-bind:value="50">50 milliseconds</option>
+                            <option v-bind:value="100">100 milliseconds</option>
+                            <option v-bind:value="200">200 milliseconds</option>
+                            <option v-bind:value="500">500 milliseconds</option>
+                            <option v-bind:value="1000">1 seconds</option>
+                            <option v-bind:value="2000">2 seconds</option>
+                            <option v-bind:value="5000">5 seconds</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -111,12 +107,19 @@
 import { defineComponent } from 'vue';
 import { MutationTypes } from '@/store/mutation-types';
 import { settingsMixin } from '@/mixins/settingsMixin';
+import { Settings } from '@/store/state-types';
 
 /** A Settings view
  */
 export default defineComponent({
     name: 'Settings',
     mixins: [settingsMixin],
+    data: () => ({
+        localSettings: undefined as unknown as Settings,
+    }),
+    created() {
+        this.localSettings = this.getSettings;
+    },
     methods: {
         neverShowAgainChanged(event: Event) {
             const checked = (event.target as HTMLInputElement)?.checked;
@@ -151,6 +154,10 @@ export default defineComponent({
             settings.applyFadeInOffset = checked;
 
             this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
+        },
+        fadingDurationChanged(event: Event) {
+            console.debug('event', event);
+            this.$store.commit(MutationTypes.UPDATE_SETTINGS, this.settings);
         },
     },
 });

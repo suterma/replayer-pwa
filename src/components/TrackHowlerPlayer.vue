@@ -23,7 +23,7 @@
 import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent } from 'vue';
 import PlayerChrome from '@/components/PlayerChrome.vue';
-import { HowlerFader } from '@/code/audio/HowlerFader';
+import HowlerFader, { Curve } from '@/code/audio/HowlerFader';
 import { Howl } from 'howler';
 import { settingsMixin } from '@/mixins/settingsMixin';
 
@@ -56,8 +56,6 @@ export default defineComponent({
             default: false,
         },
     },
-    //see https://github.com/amilajack/drum-machine/blob/master/src/components/Machine.vue
-    //..Audio contxt there is direclty on root level. Will this work for me, too?
     data: () => ({
         /** The playback progress in the current track, in [seconds] */
         currentSeconds: 0,
@@ -119,25 +117,6 @@ export default defineComponent({
     },
 
     watch: {
-        /** Watch whether the playing state changed, and then update sound accordingly
-         * @remarks This is used to follow external play requests. Internally, the sound object should be used to
-         * issue play/pause requests.
-         */
-        // playing(value: boolean): void {
-        //     console.debug(
-        //         `TrackHowlerPlayer(${this.title})::watch:playing:value${value}`,
-        //     );
-        //     //Only actually update the sound when necessary, to avoid call loops
-        //     if (value === true) {
-        //         if (!this.sound.playing()) {
-        //             this.sound.play();
-        //         }
-        //     } else if (value === false) {
-        //         if (this.sound.playing()) {
-        //             this.sound.pause();
-        //         }
-        //     }
-        // },
         /** Watch whether the volume changed, and then update the sound object accordingly  */
         volume(): void {
             console.debug(
@@ -215,11 +194,12 @@ export default defineComponent({
                         }
                     },
                 });
-                //TODO use druation from parameer
                 this.fader = new HowlerFader(
                     this.sound,
                     this.getSettings.fadingDuration,
                     this.getSettings.applyFadeInOffset,
+                    //TODO test both
+                    Curve.linear,
                 );
             }
         },
