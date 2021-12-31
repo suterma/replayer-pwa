@@ -19,7 +19,7 @@ export class Settings {
     /** The fading duration in [milliseconds]. Use zero for no fading.
      * @remarks Default is //TODO.
      */
-    fadingDuration = 4000; //TODO set useful default
+    fadingDuration = 0; //TODO set useful default
 
     /** Whether to apply an offset for fade-in operations, to compensate for the fading duration
      * @remarks Default is true

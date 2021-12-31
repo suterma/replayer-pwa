@@ -23,7 +23,7 @@
 import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent } from 'vue';
 import PlayerChrome from '@/components/PlayerChrome.vue';
-import HowlerFader, { Curve } from '@/code/audio/HowlerFader';
+import HowlerFader from '@/code/audio/HowlerFader';
 import { Howl } from 'howler';
 import { settingsMixin } from '@/mixins/settingsMixin';
 
@@ -114,9 +114,36 @@ export default defineComponent({
         volumeTitle(): string {
             return `Volume (${this.volume}%)`;
         },
+        /** A simple token for the settings
+         * @remarks This is only used to detect changes, to recreate the howler fader.
+         */
+        howlerFaderSettingsToken(): string {
+            return (
+                this.settings.fadingDuration?.toString() +
+                this.settings.applyFadeInOffset?.toString()
+            );
+        },
     },
 
     watch: {
+        /** Watch for changes in the howler fader settings, to immediately apply them */
+        howlerFaderSettingsToken(): void {
+            console.debug(
+                `TrackHowlerPlayer(${this.title})::howlerFaderSettingsToken:${this.howlerFaderSettingsToken}`,
+            );
+
+            //Clear any previous fade by simply fading to full scale
+            //this.sound.fade(0.01, 1, 0.1);
+            //this.fader.cancel();
+
+            //update the settings
+
+            //TODO this gives an error on change, why?
+
+            // const settings = this.getSettings;
+            // this.fader.applyFadeInOffset = settings.applyFadeInOffset;
+            // this.fader.duration = settings.fadingDuration;
+        },
         /** Watch whether the volume changed, and then update the sound object accordingly  */
         volume(): void {
             console.debug(
@@ -198,8 +225,6 @@ export default defineComponent({
                     this.sound,
                     this.getSettings.fadingDuration,
                     this.getSettings.applyFadeInOffset,
-                    //TODO test both
-                    Curve.linear,
                 );
             }
         },

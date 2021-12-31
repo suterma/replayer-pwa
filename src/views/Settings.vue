@@ -42,6 +42,20 @@
 
             <div class="field">
                 <div class="control">
+                    <label class="label has-text-danger">
+                        Note: The audio settings are applied only at next app
+                        start
+                        <span class="has-opacity-half is-size-7">
+                            (If available, in the browser, you can use use the
+                            "Reload" button. Otherwise terminate and re-open the
+                            app.)</span
+                        >
+                    </label>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
                     <label class="checkbox">
                         <input
                             type="checkbox"
@@ -57,17 +71,18 @@
             </div>
 
             <div class="field">
-                <label class="label"
+                <label class="label has-text-danger"
                     >Fading duration
                     <span class="has-opacity-half is-size-7">
                         (For play and pause operations)</span
                     >
                 </label>
                 <div class="control">
-                    <div class="select">
+                    <div class="select has-text-danger">
                         <select
                             v-model.number="this.localSettings.fadingDuration"
                             @change="fadingDurationChanged"
+                            class="has-text-danger"
                         >
                             <option v-bind:value="0">no fading</option>
                             <option v-bind:value="20">20 milliseconds</option>
