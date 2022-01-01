@@ -34,7 +34,7 @@ It's aim is to replace the classic, Microsoft Windows based, [Replayer](https://
 # Roadmap
 
 * [x] Keyboard Shortcut support
-* [ ] Fade-in / Fade-out
+* [x] Fade-in / Fade-out
 * [ ] Multitrack playback
 * Persistence
   * [ ] Keep last open complilation loaded
