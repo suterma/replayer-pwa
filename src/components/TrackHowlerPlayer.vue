@@ -126,23 +126,37 @@ export default defineComponent({
     },
 
     watch: {
-        /** Watch for changes in the howler fader settings, to immediately apply them */
+        /** Watch for changes in the howler fader settings, to immediately apply them
+         * @remarks Settings are not applied when currently no fader does exist
+         * (e.g. because the track is not yet loaded anyway)
+         */
         howlerFaderSettingsToken(): void {
-            console.debug(
-                `TrackHowlerPlayer(${this.title})::howlerFaderSettingsToken:${this.howlerFaderSettingsToken}`,
-            );
+            if (this.fader) {
+                console.debug(
+                    `TrackHowlerPlayer(${this.title})::howlerFaderSettingsToken:${this.howlerFaderSettingsToken}`,
+                );
 
-            //Clear any previous fade by simply fading to full scale
-            //this.sound.fade(0.01, 1, 0.1);
-            //this.fader.cancel();
+                //Clear any previous fade by simply fading to full scale
+                //this.sound.fade(0.01, 1, 0.1);
+                //this.fader.cancel();
 
-            //update the settings
+                //update the settings
 
-            //TODO this gives an error on change, why?
+                //TODO this gives an error on change, why?
+                console.debug(
+                    `TrackHowlerPlayer(${this.title})::fader:${this.fader}`,
+                );
 
-            // const settings = this.getSettings;
-            // this.fader.applyFadeInOffset = settings.applyFadeInOffset;
-            // this.fader.duration = settings.fadingDuration;
+                const currentSettings = this.getSettings;
+                this.fader.updateSettings();
+                this.fader.applyFadeInOffset =
+                    currentSettings.applyFadeInOffset;
+                this.fader.duration = currentSettings.fadingDuration;
+
+                if (currentSettings.fadingDuration == 0) {
+                    this.fader.cancel();
+                }
+            }
         },
         /** Watch whether the volume changed, and then update the sound object accordingly  */
         volume(): void {
