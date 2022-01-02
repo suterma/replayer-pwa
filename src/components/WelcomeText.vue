@@ -50,10 +50,10 @@
     <p>
         Find more details in the online
         <a
-            href="https://replayer.app/documentation"
-            alt="Link to the Replayer documentation"
+            href="https://replayer.app/documentation-app"
+            alt="Link to the Replayer app documentation"
             target="_blank"
-            >documentation</a
+            >app documentation</a
         >
         .
     </p>
