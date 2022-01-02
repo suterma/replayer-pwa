@@ -364,9 +364,9 @@ export default defineComponent({
          * Thus, referencing an instance after it has been removed from the DOM (e.g. by v-if)
          * does not work, even after it's rendered again later.
          */
-        trackPlayerInstance(): InstanceType<typeof TrackAudioApiPlayer> {
+        trackPlayerInstance(): InstanceType<typeof TrackHowlerPlayer> {
             return this.$refs.playerReference as InstanceType<
-                typeof TrackAudioApiPlayer
+                typeof TrackHowlerPlayer
             >;
         },
         /** Gets the media object URL, if available

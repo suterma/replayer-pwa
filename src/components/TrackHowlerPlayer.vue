@@ -13,7 +13,7 @@
         v-model:looping="this.looping"
         :muted="this.muted"
         @mute="mute"
-        @seek="seekToSeconds"
+        @seek="seekTo"
         :durationSeconds="this.durationSeconds"
         @download="this.download"
     />
@@ -86,6 +86,12 @@ export default defineComponent({
          */
         lastSecondsEmitted: undefined as unknown as undefined | number,
         fader: undefined as unknown as HowlerFader,
+        /** Flags whether the user has requested to play, which will be handeled with a subsequent fade-in
+         * @remarks This flag allows to generally handle play requests,
+         * with a distinction whether the play request was caused by a loop or by an explicit user
+         * action. This flag is reset after each issued fade-in.
+         */
+        hasUserPlayRequestOutstanding: false,
     }),
     /** Handles the setup of the audio outside the mounted lifespan.
      */
@@ -136,26 +142,11 @@ export default defineComponent({
                     `TrackHowlerPlayer(${this.title})::howlerFaderSettingsToken:${this.howlerFaderSettingsToken}`,
                 );
 
-                //Clear any previous fade by simply fading to full scale
-                //this.sound.fade(0.01, 1, 0.1);
-                //this.fader.cancel();
-
-                //update the settings
-
-                //TODO this gives an error on change, why?
-                console.debug(
-                    `TrackHowlerPlayer(${this.title})::fader:${this.fader}`,
+                const newSettings = this.getSettings;
+                this.fader.updateSettings(
+                    newSettings.fadingDuration,
+                    newSettings.applyFadeInOffset,
                 );
-
-                const currentSettings = this.getSettings;
-                this.fader.updateSettings();
-                this.fader.applyFadeInOffset =
-                    currentSettings.applyFadeInOffset;
-                this.fader.duration = currentSettings.fadingDuration;
-
-                if (currentSettings.fadingDuration == 0) {
-                    this.fader.cancel();
-                }
             }
         },
         /** Watch whether the volume changed, and then update the sound object accordingly  */
@@ -201,7 +192,15 @@ export default defineComponent({
                     preload: true /* to force immediate loading */,
                     onload: this.load,
                     onplay: () => {
-                        this.fader.fadeIn();
+                        //Log this call, it's possible that this is triggered at looping, causing an unwanted fade. Try to remedy that...
+                        console.debug(
+                            `TrackHowlerPlayer(${this.title})::onplay`,
+                        );
+                        if (this.hasUserPlayRequestOutstanding) {
+                            this.hasUserPlayRequestOutstanding = false;
+                            this.fader.fadeIn();
+                        }
+                        //this.fader.fadeIn();
                         this.playing = true;
                         this.$emit('trackPlaying', true);
                         this.startUpdateAnimation();
@@ -213,6 +212,9 @@ export default defineComponent({
                         throw new Error('Failed to play sound file.');
                     },
                     onpause: () => {
+                        console.debug(
+                            `TrackHowlerPlayer(${this.title})::onpause`,
+                        );
                         this.playing = false;
                         this.$emit('trackPlaying', false);
                         this.stopUpdateAnimation();
@@ -295,15 +297,6 @@ export default defineComponent({
 
             this.sound.seek(this.sound.duration() * seekPos);
         },
-        seekToSeconds(seconds: number) {
-            console.debug(
-                `TrackHowlerPlayer(${this.title})::seekToSeconds`,
-                seconds,
-            );
-            if (!this.loaded) return;
-
-            this.sound.seek(seconds);
-        },
         stop() {
             console.debug(`TrackHowlerPlayer(${this.title})::stop`);
             this.sound.stop();
@@ -313,11 +306,9 @@ export default defineComponent({
         togglePlayback() {
             console.debug(`TrackHowlerPlayer(${this.title})::togglePlayback`);
             if (this.sound.playing()) {
-                this.fader.fadeOut().then(() => {
-                    this.sound.pause();
-                });
+                this.pause();
             } else {
-                this.sound.play();
+                this.play();
             }
         },
         /** Rewinds 1 second */
@@ -363,6 +354,9 @@ export default defineComponent({
         /** Starts playback (without a seek operation) */
         play() {
             console.debug(`TrackHowlerPlayer(${this.title})::play`);
+            //The order is important: first start the fade in (with pre-fade offset), then play
+            //TODO test
+            this.hasUserPlayRequestOutstanding = true;
             this.sound.play();
         },
 
@@ -419,7 +413,7 @@ export default defineComponent({
                 `TrackHowlerPlayer(${this.title}):playFrom:position`,
                 position,
             );
-            this.sound.play();
+            this.play();
         },
         /** Transports (seeks) the playback to the given temporal position */
         seekTo(position: number): void {

@@ -102,18 +102,22 @@ export default class HowlerFader {
     }
 
     applyPreFadeOffset(): void {
-        console.debug(`HowlerFader::applyPreFadeOffset:${this.duration}`);
-
         const time = this.sound.seek();
         const offset = this.duration / 1000;
-        this.sound.seek(time - offset);
+        const target = time - offset;
+        console.debug(
+            `HowlerFader::applyPreFadeOffset:by:${this.duration};from time:${time}; to target:${target}`,
+        );
+        this.sound.seek(target);
     }
 
     /** Returns a linear fade-in promise for the currently playing track
      * @remarks The sound is faded to the maximum audio level.
+     * A pre-fade offset is applied, when configured
      * An actual fade operation is only started when
      * - the duration is non-zero and
      * - the current volume is also non-maximum
+     *
      * otherwise
      * - the promise is immediately resolved.
      * @devdoc Howler only supports linear fade operations
@@ -122,13 +126,11 @@ export default class HowlerFader {
         if (this.duration) {
             return new Promise((resolve, reject) => {
                 try {
-                    const currentVolume = this.minAudioLevel; //always start fade-in from minimum
-                    console.debug(
-                        `HowlerFader::fadeIn:volume:${currentVolume}`,
-                    );
                     if (this.applyFadeInOffset) {
                         this.applyPreFadeOffset();
                     }
+
+                    const currentVolume = this.minAudioLevel; //always start fade-in from minimum
                     if (currentVolume < this.maxAudioLevel) {
                         //Determine the required fade, based on the current volume
                         //(an existing fade-out could be currently running, requiring a partial fade only)
@@ -141,7 +143,6 @@ export default class HowlerFader {
                             this.maxAudioLevel,
                             requiredDuration,
                         ).then(() => {
-                            //TODO remove this logging for production
                             console.debug(`HowlerFader::fadeIn:linear:ended`);
                             resolve();
                         });
@@ -190,6 +191,7 @@ export default class HowlerFader {
      * An actual fade operation is only started when
      * - the duration is non-zero and
      * - the current volume is also non-minimum
+     *
      * otherwise
      * - a fade with duration zero is started and the promise is immediately resolved.
      * @devdoc Howler only supports linear fade operations
@@ -212,7 +214,6 @@ export default class HowlerFader {
                             this.minAudioLevel,
                             requiredDuration,
                         ).then(() => {
-                            //TODO remove this logging for production
                             console.debug(`HowlerFader::fadeOut:linear:ended`);
                             resolve();
                         });
