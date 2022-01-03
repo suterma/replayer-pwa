@@ -37,7 +37,7 @@ It's aim is to replace the classic, Microsoft Windows based, [Replayer](https://
 * [x] Fade-in / Fade-out
 * [ ] Multitrack playback
 * Persistence
-  * [ ] Keep last open complilation loaded
+  * [x] Keep last open complilation loaded
   * [ ] Edit mode, along with ZIP-Package export
 * Sharing
   * [ ] Sharing by link
