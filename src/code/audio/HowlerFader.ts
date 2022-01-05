@@ -11,18 +11,22 @@ import { Howl } from 'howler';
 export default class HowlerFader {
     /** @constructor
      * @param {Howl} howl - The howl sound (from howler.js) to act upon
-     * @param {number} duration - The fading duration. Default is zero (no fade operation called)
+     * @param {number} fadeInDuration - The fade-in duration. Default is zero (no fade operation called)
+     * @param {number} fadeOutDuration - The fade-out duration. Default is zero (no fade operation called)
      * @param {boolean} applyFadeInOffset - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
      */
     constructor(
         howl: Howl,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        duration: number = 0,
+        fadeInDuration: number = 0,
+        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+        fadeOutDuration: number = 0,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         applyFadeInOffset: boolean = true,
     ) {
         this.sound = howl;
-        this.duration = duration;
+        this.fadeInDuration = fadeInDuration;
+        this.fadeOutDuration = fadeOutDuration;
         this.applyFadeInOffset = applyFadeInOffset;
 
         //Initialize by setting the fader level to the initial value
@@ -32,17 +36,25 @@ export default class HowlerFader {
      * @remarks The settings will be used for the next fade.
      * However, when the new duration is zero (no fade),
      * the cancel operation is immediately called, resetting the volume to the initial value for this case.
-     * @param {number} duration - The fading duration. Default is zero (no fade operation called)
+     * @param {number} fadeInDuration - The fade-in duration. Default is zero (no fade operation called)
+     * @param {number} fadeOutDuration - The fade-out duration. Default is zero (no fade operation called)
      * @param {boolean} applyFadeInOffset - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
      */
     updateSettings(
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        duration: number = 0,
+        fadeInDuration: number = 0,
+        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+        fadeOutDuration: number = 0,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         applyFadeInOffset: boolean = true,
     ) {
-        const noMoreFading = this.duration != 0 && duration === 0;
-        this.duration = duration;
+        const noMoreFading =
+            this.fadeInDuration != 0 &&
+            fadeInDuration === 0 &&
+            this.fadeOutDuration != 0 &&
+            fadeOutDuration === 0;
+        this.fadeInDuration = fadeInDuration;
+        this.fadeOutDuration = fadeOutDuration;
         this.applyFadeInOffset = applyFadeInOffset;
 
         if (noMoreFading) {
@@ -52,8 +64,10 @@ export default class HowlerFader {
     }
     /** The howler.js howl to act upon */
     sound: Howl;
-    /** The fading duration in [milliseconds] (zero means no fading)*/
-    duration = 0;
+    /** The fade-in duration in [milliseconds] (zero means no fading)*/
+    fadeInDuration;
+    /** The fade-out duration in [milliseconds] (zero means no fading)*/
+    fadeOutDuration;
     /** Whether to apply a seek offset before fade-in operations, to compensate the fading duration.*/
     applyFadeInOffset = true;
     /** The minimum audio level */
@@ -67,7 +81,7 @@ export default class HowlerFader {
      * When a zero fading duration is set, this is the maximum value (effectively remove any fade)
      */
     cancel(): void {
-        if (this.duration) {
+        if (this.fadeInDuration || this.fadeOutDuration) {
             console.debug(`HowlerFader::cancel:toMinimum`);
             const currentVolume = this.getCurrentVolume();
             if (currentVolume != this.minAudioLevel) {
@@ -101,12 +115,13 @@ export default class HowlerFader {
         return currentVolume;
     }
 
-    applyPreFadeOffset(): void {
+    /** Applies an offset to compensate fade-in durations */
+    applyPreFadeInOffset(): void {
         const time = this.sound.seek();
-        const offset = this.duration / 1000;
+        const offset = this.fadeInDuration / 1000;
         const target = time - offset;
         console.debug(
-            `HowlerFader::applyPreFadeOffset:by:${this.duration};from time:${time}; to target:${target}`,
+            `HowlerFader::applyPreFadeInOffset:by:${this.fadeInDuration};from time:${time}; to target:${target}`,
         );
         this.sound.seek(target);
     }
@@ -123,11 +138,11 @@ export default class HowlerFader {
      * @devdoc Howler only supports linear fade operations
      */
     fadeIn(): Promise<void> {
-        if (this.duration) {
+        if (this.fadeInDuration) {
             return new Promise((resolve, reject) => {
                 try {
                     if (this.applyFadeInOffset) {
-                        this.applyPreFadeOffset();
+                        this.applyPreFadeInOffset();
                     }
 
                     const currentVolume = this.minAudioLevel; //always start fade-in from minimum
@@ -135,7 +150,7 @@ export default class HowlerFader {
                         //Determine the required fade, based on the current volume
                         //(an existing fade-out could be currently running, requiring a partial fade only)
                         const requiredDuration =
-                            this.duration *
+                            this.fadeInDuration *
                             (this.maxAudioLevel - currentVolume);
 
                         return this.fade(
@@ -169,7 +184,7 @@ export default class HowlerFader {
         duration: number,
         id?: number,
     ): Promise<void> {
-        if (this.duration) {
+        if (duration) {
             return new Promise((resolve, reject) => {
                 try {
                     this.sound.fade(from, to, duration, id);
@@ -197,7 +212,7 @@ export default class HowlerFader {
      * @devdoc Howler only supports linear fade operations
      */
     fadeOut(): Promise<void> {
-        if (this.duration) {
+        if (this.fadeOutDuration) {
             return new Promise((resolve, reject) => {
                 try {
                     const currentVolume = this.getCurrentVolume();
@@ -207,7 +222,8 @@ export default class HowlerFader {
                     if (currentVolume > this.minAudioLevel) {
                         //Determine the required fade, based on the current volume
                         //(an existing fade-in could be currently running, requiring a partial fade only)
-                        const requiredDuration = this.duration * currentVolume;
+                        const requiredDuration =
+                            this.fadeOutDuration * currentVolume;
 
                         return this.fade(
                             currentVolume,

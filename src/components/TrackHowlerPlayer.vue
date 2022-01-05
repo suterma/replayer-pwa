@@ -125,7 +125,8 @@ export default defineComponent({
          */
         howlerFaderSettingsToken(): string {
             return (
-                this.settings.fadingDuration?.toString() +
+                this.settings.fadeInDuration?.toString() +
+                this.settings.fadeOutDuration?.toString() +
                 this.settings.applyFadeInOffset?.toString()
             );
         },
@@ -144,7 +145,8 @@ export default defineComponent({
 
                 const newSettings = this.getSettings;
                 this.fader.updateSettings(
-                    newSettings.fadingDuration,
+                    newSettings.fadeInDuration,
+                    newSettings.fadeOutDuration,
                     newSettings.applyFadeInOffset,
                 );
             }
@@ -239,7 +241,8 @@ export default defineComponent({
                 });
                 this.fader = new HowlerFader(
                     this.sound,
-                    this.getSettings.fadingDuration,
+                    this.getSettings.fadeInDuration,
+                    this.getSettings.fadeOutDuration,
                     this.getSettings.applyFadeInOffset,
                 );
             }

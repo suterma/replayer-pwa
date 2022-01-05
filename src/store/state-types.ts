@@ -16,10 +16,15 @@ export class Settings {
      */
     useHowlerJsAudioEngine = false;
 
-    /** The fading duration in [milliseconds]. Use zero for no fading.
-     * @remarks Default is //TODO.
+    /** The fade-in duration in [milliseconds]. Use zero for no fading.
+     * @remarks Default is 1000
      */
-    fadingDuration = 0; //TODO set useful default
+    fadeInDuration = 1000;
+
+    /** The fading duration in [milliseconds]. Use zero for no fading.
+     * @remarks Default is 500.
+     */
+    fadeOutDuration = 500;
 
     /** Whether to apply an offset for fade-in operations, to compensate for the fading duration
      * @remarks Default is true
