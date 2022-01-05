@@ -72,16 +72,44 @@
 
             <div class="field">
                 <label class="label has-text-danger"
-                    >Fading duration
+                    >Fade-in duration
                     <span class="has-opacity-half is-size-7">
-                        (For play and pause operations)</span
+                        (For play operations)</span
                     >
                 </label>
                 <div class="control">
                     <div class="select has-text-danger">
                         <select
-                            v-model.number="this.localSettings.fadingDuration"
-                            @change="fadingDurationChanged"
+                            v-model.number="this.localSettings.fadeInDuration"
+                            @change="fadeInDurationChanged"
+                            class="has-text-danger"
+                        >
+                            <option v-bind:value="0">no fading</option>
+                            <option v-bind:value="20">20 milliseconds</option>
+                            <option v-bind:value="50">50 milliseconds</option>
+                            <option v-bind:value="100">100 milliseconds</option>
+                            <option v-bind:value="200">200 milliseconds</option>
+                            <option v-bind:value="500">500 milliseconds</option>
+                            <option v-bind:value="1000">1 seconds</option>
+                            <option v-bind:value="2000">2 seconds</option>
+                            <option v-bind:value="5000">5 seconds</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label has-text-danger"
+                    >Fade-out duration
+                    <span class="has-opacity-half is-size-7">
+                        (For pause operations)</span
+                    >
+                </label>
+                <div class="control">
+                    <div class="select has-text-danger">
+                        <select
+                            v-model.number="this.localSettings.fadeOutDuration"
+                            @change="fadeOutDurationChanged"
                             class="has-text-danger"
                         >
                             <option v-bind:value="0">no fading</option>
@@ -170,7 +198,11 @@ export default defineComponent({
 
             this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
         },
-        fadingDurationChanged(event: Event) {
+        fadeInDurationChanged(event: Event) {
+            console.debug('event', event);
+            this.$store.commit(MutationTypes.UPDATE_SETTINGS, this.settings);
+        },
+        fadeOutDurationChanged(event: Event) {
             console.debug('event', event);
             this.$store.commit(MutationTypes.UPDATE_SETTINGS, this.settings);
         },
