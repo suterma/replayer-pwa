@@ -11,16 +11,16 @@ import { Howl } from 'howler';
 export default class HowlerFader {
     /** @constructor
      * @param {Howl} howl - The howl sound (from howler.js) to act upon
-     * @param {number} fadeInDuration - The fade-in duration. Default is zero (no fade operation called)
-     * @param {number} fadeOutDuration - The fade-out duration. Default is zero (no fade operation called)
+     * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
+     * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
      * @param {boolean} applyFadeInOffset - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
      */
     constructor(
         howl: Howl,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        fadeInDuration: number = 0,
+        fadeInDuration: number = 1000,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        fadeOutDuration: number = 0,
+        fadeOutDuration: number = 500,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         applyFadeInOffset: boolean = true,
     ) {
@@ -36,15 +36,15 @@ export default class HowlerFader {
      * @remarks The settings will be used for the next fade.
      * However, when the new duration is zero (no fade),
      * the cancel operation is immediately called, resetting the volume to the initial value for this case.
-     * @param {number} fadeInDuration - The fade-in duration. Default is zero (no fade operation called)
-     * @param {number} fadeOutDuration - The fade-out duration. Default is zero (no fade operation called)
+     * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
+     * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
      * @param {boolean} applyFadeInOffset - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
      */
     updateSettings(
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        fadeInDuration: number = 0,
+        fadeInDuration: number = 1000,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        fadeOutDuration: number = 0,
+        fadeOutDuration: number = 500,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         applyFadeInOffset: boolean = true,
     ) {

@@ -1,6 +1,16 @@
 /** @class Implements the application settings
  */
 export class Settings {
+    static default(): Settings {
+        return new Settings(
+            /*neverShowWelcomeMessageAgain*/ false,
+            /*autoRetrieveLastCompilation*/ true,
+            /*useHowlerJsAudioEngine*/ true,
+            /*fadeInDuration*/ 1000,
+            /*fadeOutDuration*/ 500,
+            /*applyFadeInOffset*/ true,
+        );
+    }
     /** Whether to never show the welcome message at application start
      * @remarks Default is false (show the message)
      */
@@ -14,7 +24,7 @@ export class Settings {
     /** Whether to use the alternative HowlerJs audio engine
      * @remarks Default is false
      */
-    useHowlerJsAudioEngine = false;
+    useHowlerJsAudioEngine = true;
 
     /** The fade-in duration in [milliseconds]. Use zero for no fading.
      * @remarks Default is 1000
@@ -30,6 +40,41 @@ export class Settings {
      * @remarks Default is true
      */
     applyFadeInOffset = true;
+
+    /** Parses the JSON and returns new instance of this class.
+     * @remparks Instead of creating an unprototyped object with JSON.parse, this creates a new object of this type
+     * @param jsonSettings - a JSON representation of Settings
+     */
+    static fromJson(jsonSettings: string): Settings {
+        const obj = JSON.parse(jsonSettings) as Settings;
+        const compilation = new Settings(
+            obj.neverShowWelcomeMessageAgain,
+            obj.autoRetrieveLastCompilation,
+            obj.useHowlerJsAudioEngine,
+            obj.fadeInDuration,
+            obj.fadeOutDuration,
+            obj.applyFadeInOffset,
+        );
+        return compilation;
+    }
+
+    /** Creates new settings
+     */
+    constructor(
+        neverShowWelcomeMessageAgain: boolean,
+        autoRetrieveLastCompilation: boolean,
+        useHowlerJsAudioEngine: boolean,
+        fadeInDuration: number,
+        fadeOutDuration: number,
+        applyFadeInOffset: boolean,
+    ) {
+        this.neverShowWelcomeMessageAgain = neverShowWelcomeMessageAgain;
+        this.autoRetrieveLastCompilation = autoRetrieveLastCompilation;
+        this.useHowlerJsAudioEngine = useHowlerJsAudioEngine;
+        this.fadeInDuration = fadeInDuration;
+        this.fadeOutDuration = fadeOutDuration;
+        this.applyFadeInOffset = applyFadeInOffset;
+    }
 }
 
 /** @class Implements a playable media URL

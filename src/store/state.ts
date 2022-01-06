@@ -36,7 +36,7 @@ export const state: IState = {
 
     progressMessageStack: new Array<string>(),
 
-    settings: new Settings(),
+    settings: Settings.default(),
 };
 
 export type State = typeof state;

@@ -102,14 +102,14 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
     }
 
     /** Retrieves the application settings from the persistent store
-     * @returns a duck typed settings object
+     * @returns a properly typed settings object
      * */
     static retrieveSettings(): Settings {
         const settings = localStorage.getItem(StorageKeys.SETTINGS);
         if (settings) {
-            return JSON.parse(settings);
+            return Settings.fromJson(settings);
         }
-        return new Settings();
+        return Settings.default();
     }
     /** Determines whether there is a (non-empty) compilation to retrieve from the persistent store
      * @returns true, when a complilation is availabe to retrieve
