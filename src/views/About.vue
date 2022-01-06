@@ -199,6 +199,14 @@
                     >, an audio library for the modern web. (Released under the
                     MIT License, by James Simpson)
                 </li>
+                <li>
+                    The app icon is a derivative work from the
+                    <a
+                        href="https://commons.wikimedia.org/wiki/Category:Crystal_icons"
+                        target="_blank"
+                        >Crystal icon set</a
+                    >. (Released under the LGPL License, by Everaldo Coelho)
+                </li>
             </ul>
         </div>
         <h1 class="title">License</h1>
