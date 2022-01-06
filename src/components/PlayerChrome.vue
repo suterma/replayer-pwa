@@ -113,6 +113,10 @@
                 <div class="player-time">
                     <div class="player-time-current is-unselectable">
                         {{ convertToDisplayTime(currentSeconds) }}
+                        &nbsp;
+                        <span :class="{ 'is-invisible': !this.isFading }">
+                            (fading...)</span
+                        >
                     </div>
                     <div class="player-time-total is-unselectable">
                         {{ convertToDisplayTime(durationSeconds) }}
@@ -286,6 +290,13 @@ export default defineComponent({
          * @remarks Controls the display of the player, to hint the track availability
          */
         loaded: {
+            type: Boolean,
+            default: false,
+        },
+        /** Whether the sound is currently fading
+         * @remarks Controls the display of the player, to hint the fading action
+         */
+        isFading: {
             type: Boolean,
             default: false,
         },

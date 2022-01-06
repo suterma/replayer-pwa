@@ -3,6 +3,7 @@
     <PlayerChrome
         :title="title"
         :loaded="this.loaded"
+        :isFading="this.isFading"
         @stop="stop"
         :playing="this.playing"
         @play="this.play"
@@ -65,6 +66,9 @@ export default defineComponent({
         durationSeconds: 0,
         /** Whether the track media is loaded */
         loaded: false,
+
+        /** Whether the audio is currently fading */
+        isFading: false,
 
         /** Whether the audio is muted */
         muted: false,
@@ -200,9 +204,11 @@ export default defineComponent({
                         );
                         if (this.hasUserPlayRequestOutstanding) {
                             this.hasUserPlayRequestOutstanding = false;
-                            this.fader.fadeIn();
+                            this.isFading = true;
+                            this.fader.fadeIn().then(() => {
+                                this.isFading = false;
+                            });
                         }
-                        //this.fader.fadeIn();
                         this.playing = true;
                         this.$emit('trackPlaying', true);
                         this.startUpdateAnimation();
@@ -344,8 +350,10 @@ export default defineComponent({
         pause() {
             if (this.sound.playing()) {
                 console.debug(`TrackHowlerPlayer(${this.title})::pause`);
+                this.isFading = true;
                 this.fader.fadeOut().then(() => {
                     this.sound.pause();
+                    this.isFading = false;
                 });
             } else {
                 console.warn(
@@ -357,8 +365,6 @@ export default defineComponent({
         /** Starts playback (without a seek operation) */
         play() {
             console.debug(`TrackHowlerPlayer(${this.title})::play`);
-            //The order is important: first start the fade in (with pre-fade offset), then play
-            //TODO test
             this.hasUserPlayRequestOutstanding = true;
             this.sound.play();
         },
@@ -369,8 +375,10 @@ export default defineComponent({
                 console.debug(
                     `TrackHowlerPlayer(${this.title})::pauseAndSeekTo`,
                 );
+                this.isFading = true;
                 this.fader.fadeOut().then(() => {
                     this.sound.pause();
+                    this.isFading = false;
                     this.seekTo(position);
                 });
             } else {
