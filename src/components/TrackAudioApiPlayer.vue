@@ -1,26 +1,5 @@
 <template>
-    <!-- //TODO later maybe use something like
-    //https://medium.com/@devdude/handling-screen-media-queries-for-js-on-a-vue-js-project-357e40fb1c77
-    //To actually remove the unused player from the DOM with
-    //v-if="is-hidden-tablet" or something the like -->
-    <PlayerChromeMini
-        class="is-hidden-tablet"
-        :title="title"
-        :loaded="this.loaded"
-        @stop="stop"
-        v-model:playing="this.playing"
-        :isPlayingRequestOutstanding="this.isPlayingRequestOutstanding"
-        v-model:currentSeconds="this.currentSeconds"
-        v-model:volume="this.volume"
-        v-model:looping="this.looping"
-        :muted="this.muted"
-        @mute="mute"
-        @seek="seekToSeconds"
-        :durationSeconds="this.durationSeconds"
-        @download="this.download"
-    />
     <PlayerChrome
-        class="is-hidden-mobile"
         :title="title"
         :loaded="this.loaded"
         @stop="stop"
@@ -40,7 +19,6 @@
 <script lang="ts">
 import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent } from 'vue';
-import PlayerChromeMini from '@/components/PlayerChromeMini.vue';
 import PlayerChrome from '@/components/PlayerChrome.vue';
 
 /** A simple vue audio player, for a single track, using the Web Audio API
@@ -50,7 +28,7 @@ import PlayerChrome from '@/components/PlayerChrome.vue';
  */
 export default defineComponent({
     name: 'TrackAudioApiPlayer',
-    components: { PlayerChrome, PlayerChromeMini },
+    components: { PlayerChrome },
     emits: ['timeupdate', 'trackLoaded', 'trackPlaying'],
     props: {
         title: String,

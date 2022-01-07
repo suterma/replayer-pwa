@@ -12,7 +12,7 @@
         :title="'Play from ' + cue.Description"
     >
         <span class="player-timeline is-fullwidth">
-            <!-- first line -->
+            <!-- Progress -->
             <span
                 :class="{
                     'player-progress': true,
@@ -25,6 +25,7 @@
                 }"
                 :style="progressStyle"
             ></span>
+            <!-- first line (Do not use a level here, this has only complicated things for smaller widths so far)-->
             <!-- PLAY -->
             <span class="icon foreground">
                 <i class="mdi mdi-24px">
@@ -41,24 +42,36 @@
             }}</span>
 
             <br />
-            <!-- second line -->
-            <span class="has-opacity-half foreground">
-                {{ convertToDisplayTime }}
+            <!-- second line (use a horizontal level also on mobile. This keeps text evert)-->
+            <span class="level is-mobile">
+                <!-- Left side -->
+                <div class="level-left">
+                    <div class="level-item mr-3">
+                        <span class="has-opacity-half foreground">
+                            {{ convertSecondsToDisplayTime }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Right side -->
+                <div class="level-right">
+                    <p class="level-item is-hidden-touch mr-3">
+                        <!-- Use a right position for Durations, to keep them as much out of visibilty as possible -->
+                        <span class="has-opacity-half foregrounds">{{
+                            convertDurationToDisplayTime
+                        }}</span>
+                    </p>
+                    <p class="level-item">
+                        <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibilty as possible -->
+                        <span
+                            class="tag is-warning is-light is-outlined foreground has-opacity-third is-family-monospace"
+                            >{{ cue?.Shortcut }}</span
+                        >
+                    </p>
+                </div>
             </span>
-            <!-- spacer -->
-            &nbsp; &nbsp;
-            <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibilty as possible -->
-            <span
-                class="tag is-warning is-light is-outlined foreground has-opacity-third is-pulled-right is-family-monospace"
-                >{{ cue?.Shortcut }}</span
-            >
         </span>
     </button>
-    <!-- 
-        //HINT for debugging, show the data
-        currentSeconds:{{ this.currentSeconds }} percentComplete:{{
-        this.percentComplete
-    }} -->
 </template>
 
 <script lang="ts">
@@ -121,11 +134,27 @@ export default defineComponent({
         /** Converts the cue's total seconds into a conveniently displayable hh:mm:ss.s format.
          * @remarks Omits the hour part, if not appliccable
          */
-        convertToDisplayTime(): string | null {
+        convertSecondsToDisplayTime(): string | null {
             const seconds = this.cue?.Time;
             if (seconds != null) {
                 //Uses the hour, minute, seconds, and 1 digit of the milliseconds part
                 const hhmmss = new Date(seconds * 1000)
+                    .toISOString()
+                    .substr(11, 10);
+                //skip the hour part, if not used
+                return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss;
+            } else {
+                return null;
+            }
+        },
+        /** Converts the cue's duration into a conveniently displayable hh:mm:ss.s format.
+         * @remarks Omits the hour part, if not appliccable
+         */
+        convertDurationToDisplayTime(): string | null {
+            const duration = this.cue?.Duration;
+            if (duration != null) {
+                //Uses the hour, minute, seconds, and 1 digit of the milliseconds part
+                const hhmmss = new Date(duration * 1000)
                     .toISOString()
                     .substr(11, 10);
                 //skip the hour part, if not used
@@ -224,5 +253,12 @@ export default defineComponent({
 /* The content of a cue button should be full width */
 .cue.button .is-fullwidth {
     width: 100%;
+}
+
+/** Align the items in a line of the button vertically centered
+(similar to the level class, but without content justification) */
+.level-line {
+    align-items: center;
+    /* justify-content: stretch; */
 }
 </style>
