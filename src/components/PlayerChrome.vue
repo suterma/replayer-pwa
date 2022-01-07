@@ -61,14 +61,50 @@
                 </span>
             </button>
         </p>
-        <!-- Play/Pause (Only available when the track is loaded, and no playback request is outstanding) -->
-        <p class="control">
+        <!-- Play/Pause, when STOP is shown (Only available when the track is loaded, and no playback request is outstanding) -->
+        <p class="control is-hidden-mobile">
             <button
                 :class="{
                     button: true,
                     disabled: this.isPlayingRequestOutstanding || !this.loaded,
                     'is-loading':
                         this.isPlayingRequestOutstanding || !this.loaded,
+                }"
+                v-on:click.prevent="togglePlayback"
+                :title="playing ? 'Pause' : 'Play'"
+            >
+                <!-- PLAY/PAUSE -->
+                <span class="icon">
+                    <i class="mdi mdi-24px">
+                        <svg
+                            style="width: 24px; height: 24px"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                v-if="!playing"
+                                fill="currentColor"
+                                d="M8,5.14V19.14L19,12.14L8,5.14Z"
+                            />
+
+                            <path
+                                v-else
+                                fill="currentColor"
+                                d="M14,19H18V5H14M6,19H10V5H6V19Z"
+                            />
+                        </svg>
+                    </i>
+                </span>
+            </button>
+        </p>
+        <!-- Play/Pause, as the outermost element, when STOP is hidden (Only available when the track is loaded, and no playback request is outstanding) -->
+        <p class="control is-hidden-tablet">
+            <button
+                :class="{
+                    button: true,
+                    disabled: this.isPlayingRequestOutstanding || !this.loaded,
+                    'is-loading':
+                        this.isPlayingRequestOutstanding || !this.loaded,
+                    'has-left-radius': true,
                 }"
                 v-on:click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
@@ -148,39 +184,6 @@
                 </span>
             </button>
         </p>
-        <!-- Loop -->
-        <p class="control">
-            <button
-                :class="{
-                    button: true,
-                }"
-                v-show="!showVolume"
-                v-on:click.prevent="toggleLooping"
-                title="Loop"
-            >
-                <!-- LOOP -->
-                <!-- //TODO See also "looping once" icon -->
-                <span class="icon">
-                    <i class="mdi mdi-24px">
-                        <svg
-                            style="width: 24px; height: 24px"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                v-if="!looping"
-                                fill="currentColor"
-                                d="m 7,17 h 10 v -3 l 4,4 -4,4 V 19 H 5 v -6 h 2"
-                            />
-                            <path
-                                v-else
-                                fill="currentColor"
-                                d="M17,17H7V14L3,18L7,22V19H19V13H17M7,7H17V10L21,6L17,2V5H5V11H7V7Z"
-                            />
-                        </svg>
-                    </i>
-                </span>
-            </button>
-        </p>
         <!-- Mute (do not show on small devices, user still can use the volume) -->
         <p class="control is-hidden-mobile">
             <button
@@ -214,10 +217,19 @@
             </button>
         </p>
         <!-- Volume (do not show on small devices, user still can use the device volume) -->
-        <p class="control is-hidden-mobile">
+        <p
+            class="control is-hidden-mobile"
+            :class="{
+                control: true,
+                'is-hidden-mobile': true,
+                'mr-0': showVolume /* Use no margin right to remove the otherwise used compensation for the rounded corners */,
+            }"
+        >
             <button
                 :class="{
                     button: true,
+                    'volume-button-expanded': showVolume,
+                    'has-right-radius': showVolume,
                 }"
                 v-on:click.prevent=""
                 v-on:mouseenter="showVolume = true"
@@ -240,7 +252,7 @@
                 </span>
                 <input
                     :value="this.volume"
-                    v-show="showVolume"
+                    v-if="showVolume"
                     class="player-volume"
                     type="range"
                     min="0"
@@ -249,6 +261,39 @@
                         $emit('update:volume', parseInt($event.target.value))
                     "
                 />
+            </button>
+        </p>
+        <!-- Loop -->
+        <p class="control">
+            <button
+                :class="{
+                    button: true,
+                }"
+                v-show="!showVolume"
+                v-on:click.prevent="toggleLooping"
+                title="Loop"
+            >
+                <!-- LOOP -->
+                <!-- //TODO See also "looping once" icon -->
+                <span class="icon">
+                    <i class="mdi mdi-24px">
+                        <svg
+                            style="width: 24px; height: 24px"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                v-if="!looping"
+                                fill="currentColor"
+                                d="m 7,17 h 10 v -3 l 4,4 -4,4 V 19 H 5 v -6 h 2"
+                            />
+                            <path
+                                v-else
+                                fill="currentColor"
+                                d="M17,17H7V14L3,18L7,22V19H19V13H17M7,7H17V10L21,6L17,2V5H5V11H7V7Z"
+                            />
+                        </svg>
+                    </i>
+                </span>
             </button>
         </p>
     </div>
@@ -431,4 +476,9 @@ export default defineComponent({
     },
 });
 </script>
-<style scoped></style>
+<style scoped>
+/** Shows the button expanded over 4 slots */
+.volume-button-expanded {
+    width: 158px;
+}
+</style>

@@ -5,7 +5,7 @@
  */
 
 $player-progress-color: $green; //from BULMA-Swatch theme
-$player-timeline-color: $grey-darker;
+$player-timeline-color: $button-background-color; //from BULMA-Swatch theme: same as other button's background, to get a consistent "player bar"
 /* The playing color should be non-distracting, but be strong enough to visually indicate the playing state*/
 $player-playing-color: darken($green, 35%);
 // $player-playing-color: lighten($green, 35%);
@@ -50,6 +50,7 @@ $player-playing-color: darken($green, 35%);
 .player-time {
     display: flex;
     justify-content: space-between;
+    color: $text;
 
     /* Keep some distance from the edge, to better show the times, for height according to standard buttons */
     padding: 0.5em;
@@ -84,6 +85,7 @@ $player-playing-color: darken($green, 35%);
     height: 40px;
 
     background-color: $player-timeline-color;
+
     /* outline more like a button, with border (However, no rounded corners, and with other text alignment) */
     border: $button-border-width solid $button-border-color;
     margin-right: -1px;
