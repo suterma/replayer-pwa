@@ -1,6 +1,7 @@
 /** @class Implements the application settings
  */
 export class Settings {
+    /** Returns the settings with their default value */
     static default(): Settings {
         return new Settings(
             /*neverShowWelcomeMessageAgain*/ false,
@@ -14,48 +15,62 @@ export class Settings {
     /** Whether to never show the welcome message at application start
      * @remarks Default is false (show the message)
      */
-    neverShowWelcomeMessageAgain = false;
+    neverShowWelcomeMessageAgain;
 
     /** Whether to automatically retrieve the last compilation on startup, if available and not overridden by a URL parameter
      * @remarks Default is true (auto retrieve)
      */
-    autoRetrieveLastCompilation = true;
+    autoRetrieveLastCompilation;
 
     /** Whether to use the alternative HowlerJs audio engine
      * @remarks Default is false
      */
-    useHowlerJsAudioEngine = true;
+    useHowlerJsAudioEngine;
 
     /** The fade-in duration in [milliseconds]. Use zero for no fading.
      * @remarks Default is 1000
      */
-    fadeInDuration = 1000;
+    fadeInDuration;
 
     /** The fading duration in [milliseconds]. Use zero for no fading.
      * @remarks Default is 500.
      */
-    fadeOutDuration = 500;
+    fadeOutDuration;
 
     /** Whether to apply an offset for fade-in operations, to compensate for the fading duration
      * @remarks Default is true
      */
-    applyFadeInOffset = true;
+    applyFadeInOffset;
 
-    /** Parses the JSON and returns new instance of this class.
-     * @remparks Instead of creating an unprototyped object with JSON.parse, this creates a new object of this type
+    /** Parses the JSON and returns new instance of this class, with the defined values applied.
+     * @remarks For udefined values, the application default is used.
+     * @remarks Instead of creating an unprototyped object with JSON.parse, this creates a new object of this type
      * @param jsonSettings - a JSON representation of Settings
      */
     static fromJson(jsonSettings: string): Settings {
         const obj = JSON.parse(jsonSettings) as Settings;
-        const compilation = new Settings(
-            obj.neverShowWelcomeMessageAgain,
-            obj.autoRetrieveLastCompilation,
-            obj.useHowlerJsAudioEngine,
-            obj.fadeInDuration,
-            obj.fadeOutDuration,
-            obj.applyFadeInOffset,
-        );
-        return compilation;
+        const settings = Settings.default();
+        if (obj.neverShowWelcomeMessageAgain != undefined) {
+            settings.neverShowWelcomeMessageAgain =
+                obj.neverShowWelcomeMessageAgain;
+        }
+        if (obj.autoRetrieveLastCompilation != undefined) {
+            settings.autoRetrieveLastCompilation =
+                obj.autoRetrieveLastCompilation;
+        }
+        if (obj.useHowlerJsAudioEngine != undefined) {
+            settings.useHowlerJsAudioEngine = obj.useHowlerJsAudioEngine;
+        }
+        if (obj.fadeInDuration != undefined) {
+            settings.fadeInDuration = obj.fadeInDuration;
+        }
+        if (obj.fadeOutDuration != undefined) {
+            settings.fadeOutDuration = obj.fadeOutDuration;
+        }
+        if (obj.applyFadeInOffset != undefined) {
+            settings.applyFadeInOffset = obj.applyFadeInOffset;
+        }
+        return settings;
     }
 
     /** Creates new settings
