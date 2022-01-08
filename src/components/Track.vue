@@ -112,6 +112,7 @@ import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
+import NoSleep from 'nosleep.js';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -160,32 +161,63 @@ export default defineComponent({
             /** Flag to indicate whether the player is currently playing
              */
             isPlaying: false,
+
+            /** The wake lock fill-in that can prevent screen timeout, while a track is in use */
+            noSleep: new NoSleep(),
         };
     },
     methods: {
+        /** Activates the wake lock
+         * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
+         */
+        activateWakeLock(): void {
+            if (this.settings.preventScreenTimeout) {
+                if (!this.noSleep.isEnabled) {
+                    this.noSleep.enable();
+                    console.debug('noSleep:enabled');
+                }
+            }
+        },
+        /** Deactivates the wake lock
+         * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
+         */
+        deactivateWakeLock(): void {
+            if (this.settings.preventScreenTimeout) {
+                if (this.noSleep.isEnabled) {
+                    this.noSleep.disable();
+                    console.debug('noSleep:disabled');
+                }
+            }
+        },
+
         togglePlayback() {
             if (this.isActiveTrack) {
                 this.trackPlayerInstance?.togglePlayback();
+                this.activateWakeLock();
             }
         },
         rewindOneSecond() {
             if (this.isActiveTrack) {
                 this.trackPlayerInstance?.rewindOneSecond();
+                this.activateWakeLock();
             }
         },
         forwardOneSecond() {
             if (this.isActiveTrack) {
                 this.trackPlayerInstance?.forwardOneSecond();
+                this.activateWakeLock();
             }
         },
         volumeDown() {
             if (this.isActiveTrack) {
                 this.trackPlayerInstance?.volumeDown();
+                this.activateWakeLock();
             }
         },
         volumeUp() {
             if (this.isActiveTrack) {
                 this.trackPlayerInstance?.volumeUp();
+                this.activateWakeLock();
             }
         },
 
@@ -217,18 +249,16 @@ export default defineComponent({
                             this.trackPlayerInstance?.seekTo(cueTime);
                         }
                     }
+                    this.activateWakeLock();
                 }
             }
         },
 
+        /** Updates the expanded state with the given value*/
         updateExpanded(value: boolean) {
+            console.debug('Track::updateExpanded:value:', value);
             this.expanded = value;
             this.$emit('update:expanded', value);
-        },
-
-        toggleExpanded() {
-            this.expanded = !this.expanded;
-            this.$emit('update:expanded', this.expanded);
         },
         /** Handles the click of a cue button, by toggling playback and seeking to it
          * @remarks Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
@@ -248,6 +278,7 @@ export default defineComponent({
                 } else {
                     this.trackPlayerInstance?.playFrom(cue.Time);
                 }
+                this.activateWakeLock();
             }
         },
 
@@ -355,6 +386,27 @@ export default defineComponent({
             //show active always expanded
             if (val === true) {
                 this.updateExpanded(true);
+            }
+        },
+        /** Handles changes in whether this track is playing.
+         * @remarks This activates the wake lock, when playing starts.
+         */
+        isPlaying(val) {
+            console.debug('Track::isPlaying:val:', val);
+            if (val) {
+                this.activateWakeLock();
+            }
+        },
+        /** Handles changes in whether this track is expanded.
+         * @remarks This deactivates the wake lock, when collapsed. It activates it back, when expanded while already playing.
+         */
+        expanded(expanded) {
+            console.debug('Track::expanded:expanded:', expanded);
+            if (!expanded) {
+                this.deactivateWakeLock();
+            }
+            if (expanded && this.isPlaying) {
+                this.activateWakeLock();
             }
         },
     },

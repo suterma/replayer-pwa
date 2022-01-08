@@ -34,6 +34,23 @@
             </div>
         </div>
 
+        <div class="field">
+            <div class="control">
+                <label class="checkbox">
+                    <input
+                        type="checkbox"
+                        :checked="this.getSettings.preventScreenTimeout"
+                        @change="preventScreenTimeoutChanged"
+                    />
+                    Prevent screen timeout while in use (Any track is expanded
+                    and was played)
+                    <span class="has-opacity-half is-size-7">
+                        (Uses more energy)</span
+                    >
+                </label>
+            </div>
+        </div>
+
         <h3 class="subtitle">Audio</h3>
 
         <div class="field">
@@ -209,6 +226,14 @@ export default defineComponent({
             const settings = this.getSettings;
 
             settings.autoRetrieveLastCompilation = checked;
+
+            this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
+        },
+        preventScreenTimeoutChanged(event: Event) {
+            const checked = (event.target as HTMLInputElement)?.checked;
+            const settings = this.getSettings;
+
+            settings.preventScreenTimeout = checked;
 
             this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
         },

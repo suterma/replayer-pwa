@@ -33,6 +33,7 @@
         "howler": "^2.2.3",
         "idb-keyval": "^6.0.3",
         "jszip": "^3.7.1",
+        "nosleep.js": "^0.12.0",
         "outfront": "^1.1.1",
         "register-service-worker": "^1.7.1",
         "uuid": "^8.3.2",
