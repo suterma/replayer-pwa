@@ -7,15 +7,15 @@
             target="_blank"
             >Replayer Web App</a
         >
-        is a player for existing compilations from the
+        is a companion to the
         <a
             href="https://replayer.app/"
             alt="Link to the Replayer website"
             target="_blank"
             >Replayer Classic</a
         >
-        Windows desktop application. It supports playback of locally downloaded
-        files of these types:
+        Windows desktop application. It features the playback of locally
+        downloaded files of these types:
     </p>
 
     <ul>
