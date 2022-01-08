@@ -6,6 +6,7 @@ export class Settings {
         return new Settings(
             /*neverShowWelcomeMessageAgain*/ false,
             /*autoRetrieveLastCompilation*/ true,
+            /*preventScreenTimeout*/ true,
             /*useHowlerJsAudioEngine*/ true,
             /*fadeInDuration*/ 1000,
             /*fadeOutDuration*/ 500,
@@ -21,6 +22,11 @@ export class Settings {
      * @remarks Default is true (auto retrieve)
      */
     autoRetrieveLastCompilation;
+
+    /** Whether to keep the screen lit while in use
+     * @remarks Default is true
+     */
+    preventScreenTimeout;
 
     /** Whether to use the alternative HowlerJs audio engine
      * @remarks Default is false
@@ -58,6 +64,9 @@ export class Settings {
             settings.autoRetrieveLastCompilation =
                 obj.autoRetrieveLastCompilation;
         }
+        if (obj.preventScreenTimeout != undefined) {
+            settings.preventScreenTimeout = obj.preventScreenTimeout;
+        }
         if (obj.useHowlerJsAudioEngine != undefined) {
             settings.useHowlerJsAudioEngine = obj.useHowlerJsAudioEngine;
         }
@@ -78,6 +87,7 @@ export class Settings {
     constructor(
         neverShowWelcomeMessageAgain: boolean,
         autoRetrieveLastCompilation: boolean,
+        preventScreenTimeout: boolean,
         useHowlerJsAudioEngine: boolean,
         fadeInDuration: number,
         fadeOutDuration: number,
@@ -85,6 +95,7 @@ export class Settings {
     ) {
         this.neverShowWelcomeMessageAgain = neverShowWelcomeMessageAgain;
         this.autoRetrieveLastCompilation = autoRetrieveLastCompilation;
+        this.preventScreenTimeout = preventScreenTimeout;
         this.useHowlerJsAudioEngine = useHowlerJsAudioEngine;
         this.fadeInDuration = fadeInDuration;
         this.fadeOutDuration = fadeOutDuration;
