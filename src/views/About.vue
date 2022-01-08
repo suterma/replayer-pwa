@@ -200,6 +200,14 @@
                     MIT License, by James Simpson)
                 </li>
                 <li>
+                    <a
+                        href="https://github.com/richtr/NoSleep.js"
+                        target="_blank"
+                        >NoSleep.js </a
+                    >, wake lock in all Android and iOS web browsers. (Released
+                    under the MIT License, by Rich Tibbett)
+                </li>
+                <li>
                     The app icon is a derivative work from the
                     <a
                         href="https://commons.wikimedia.org/wiki/Category:Crystal_icons"
