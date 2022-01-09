@@ -26,13 +26,21 @@
                 :style="progressStyle"
             ></span>
             <!-- first line (Do not use a level here, this has only complicated things for smaller widths so far)-->
-            <!-- PLAY -->
+            <!-- PLAY/Skip-Next -->
             <span class="icon foreground">
                 <i class="mdi mdi-24px">
                     <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+                        <!-- play -->
                         <path
+                            v-if="!isTrackPlaying"
                             fill="currentColor"
                             d="M8,5.14V19.14L19,12.14L8,5.14Z"
+                        />
+                        <!-- skip-next -->
+                        <path
+                            v-else
+                            fill="currentColor"
+                            d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z"
                         />
                     </svg>
                 </i> </span
@@ -90,6 +98,11 @@ export default defineComponent({
          * @remarks This is used for progress display within the set of cues
          */
         currentSeconds: Number,
+
+        /** Indicates whether the associated Track is currently playing
+         * @remarks This is used to depict the expected acktion on button press. While playing, this is pause, and vice versa.
+         */
+        isTrackPlaying: Boolean,
     },
     computed: {
         /** The playback progress within this cue, in [percent], or null if not appliccable */

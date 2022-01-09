@@ -91,6 +91,7 @@
                     <CueButton
                         :disabled="!trackFileUrl?.objectUrl || !isTrackLoaded"
                         :cue="cue"
+                        :isTrackPlaying="isPlaying"
                         :currentSeconds="currentSeconds"
                         @click="cueClick(cue)"
                     />
