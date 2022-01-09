@@ -44,19 +44,36 @@
                 A bplist file with 21 tracks (no media files).
             </li>
         </ul>
-        <!-- NOTE: This might have been introducing latency and memory issues. With large compilations, playback was sometimes not possible on a Fairphone 3+. -->
-        <!-- <h2 class="subtitle has-text-danger">Track with Visualization</h2>
-    <p>This SHOULD work with 2 visualizations</p>
-    <p>
-        <TrackAudioMeterPlayer
-            ref="player"
-            :title="trackFileUrl?.fileName"
-            src="your-light-by-lidija-roos.mp3"
-            v-on:timeupdate="updateTime"
-            v-on:trackLoaded="calculateCueDurations"
-        ></TrackAudioMeterPlayer>
-    </p> -->
     </div>
+    <h1 class="title has-text-danger">Context Menu</h1>
+
+    <div class="dropdown is-active">
+        <div class="dropdown-trigger">
+            <button
+                class="button"
+                aria-haspopup="true"
+                aria-controls="dropdown-menu"
+            >
+                <span>Dropdown button</span>
+                <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+            </button>
+        </div>
+        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+                <a href="#" class="dropdown-item"> Dropdown item </a>
+                <a class="dropdown-item"> Other dropdown item </a>
+                <a href="#" class="dropdown-item is-active">
+                    Active dropdown item
+                </a>
+                <a href="#" class="dropdown-item"> Other dropdown item </a>
+                <hr class="dropdown-divider" />
+                <a href="#" class="dropdown-item"> With a divider </a>
+            </div>
+        </div>
+    </div>
+
     <h1 class="title has-text-danger">Icons test</h1>
     <CollapsibleButton
         v-model="isExpanded"
@@ -66,104 +83,6 @@
     (Is expanded: {{ isExpanded }})
     <h3>Buttons with icons</h3>
     <p>Icons are "Inline SVG's from from https://materialdesignicons.com/</p>
-
-    <p class="buttons">
-        <button class="button">
-            <span class="icon">
-                <i class="mdi mdi-24px">
-                    <svg style="width: 24px; height: 24px">
-                        <path
-                            fill="currentColor"
-                            d="M14,19H18V5H14M6,19H10V5H6V19Z"
-                        />
-                    </svg>
-                </i>
-            </span>
-            <span>GitHub</span>
-        </button>
-        <button class="button" v-on:click.prevent="stop" title="Stop">
-            <span class="icon">
-                <i>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                        <path
-                            fill="currentColor"
-                            d="M16,4.995v9.808C16,15.464,15.464,16,14.804,16H4.997C4.446,16,4,15.554,4,15.003V5.196C4,4.536,4.536,4,5.196,4h9.808C15.554,4,16,4.446,16,4.995z"
-                        /></svg
-                ></i>
-            </span>
-            <span>Stop</span>
-        </button>
-        <button class="button">
-            <span class="icon">
-                <i class="mdi mdi-24px">
-                    <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-                        <path
-                            fill="currentColor"
-                            d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"
-                        />
-                    </svg>
-                </i>
-            </span>
-            <span>Download</span>
-        </button>
-        <button class="button">
-            <span class="icon is-small">
-                <i class="fas fa-underline"></i>
-            </span>
-        </button>
-    </p>
-    <p class="buttons">
-        <button class="button">
-            <span class="icon">
-                <i class="fab fa-github"></i>
-            </span>
-            <span>GitHub</span>
-        </button>
-        <button class="button is-primary">
-            <span class="icon">
-                <i class="fab fa-twitter"></i>
-            </span>
-            <span>@jgthms</span>
-        </button>
-        <button class="button is-success">
-            <span class="icon is-small">
-                <i class="fas fa-check"></i>
-            </span>
-            <span>Save</span>
-        </button>
-        <button class="button is-danger is-outlined">
-            <span>Delete</span>
-            <span class="icon is-small">
-                <i class="fas fa-times"></i>
-            </span>
-        </button>
-    </p>
-    <p class="buttons">
-        <button class="button is-small">
-            <span class="icon is-small">
-                <i class="fab fa-github"></i>
-            </span>
-            <span>GitHub</span>
-        </button>
-        <button class="button">
-            <span class="icon">
-                <i class="fab fa-github"></i>
-            </span>
-            <span>GitHub</span>
-        </button>
-        <button class="button is-medium">
-            <span class="icon">
-                <i class="fab fa-github"></i>
-            </span>
-            <span>GitHub</span>
-        </button>
-        <button class="button is-large">
-            <span class="icon is-medium">
-                <i class="fab fa-github"></i>
-            </span>
-            <span>GitHub</span>
-        </button>
-    </p>
 </template>
 
 <script lang="ts">

@@ -1,0 +1,33 @@
+@charset "utf-8";
+
+/*************************************************************
+ * Dropdown stylings
+ * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
+**************************************************************
+*/
+
+/* Dropdown item with better suited contrast for a dark theme */
+a.dropdown-item,
+button.dropdown-item {
+    color: $white-bis;
+}
+
+/* Hovered dropdown item with better suited contrast for a dark theme */
+a.dropdown-item:hover,
+button.dropdown-item:hover {
+    background-color: $grey; //$background; //$dark; //$button-background-color; //from BULMA-Swatch theme
+    color: $white-bis;
+}
+
+/* Hovered active dropdown item with better suited contrast for a dark theme */
+a.dropdown-item.is-active,
+button.dropdown-item.is-active {
+    background-color: $light;
+    color: $dark;
+}
+
+.dropdown-content {
+    border-color: $border;
+    border-width: 1px;
+    border-style: solid;
+}

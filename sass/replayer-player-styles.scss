@@ -1,8 +1,10 @@
 @charset "utf-8";
 
-/* Player styles (to be used for the audio player)
- * These styles are based on a dark bulmaswatch theme and borrow variables from there
- */
+/*************************************************************
+ * Player styles (to be used for the audio player)
+ * These styles are based on the slate bulmaswatch theme and borrow variables from there
+**************************************************************
+*/
 
 $player-progress-color: $green; //from BULMA-Swatch theme
 $player-timeline-color: $button-background-color; //from BULMA-Swatch theme: same as other button's background, to get a consistent "player bar"

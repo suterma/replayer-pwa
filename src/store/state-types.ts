@@ -6,7 +6,7 @@ export class Settings {
         return new Settings(
             /*neverShowWelcomeMessageAgain*/ false,
             /*autoRetrieveLastCompilation*/ true,
-            /*preventScreenTimeout*/ true,
+            /*preventScreenTimeout*/ false,
             /*useHowlerJsAudioEngine*/ true,
             /*fadeInDuration*/ 1000,
             /*fadeOutDuration*/ 500,
@@ -23,8 +23,8 @@ export class Settings {
      */
     autoRetrieveLastCompilation;
 
-    /** Whether to keep the screen lit while in use
-     * @remarks Default is true
+    /** Whether to always keep the screen lit while a track is in use
+     * @remarks Default is false
      */
     preventScreenTimeout;
 

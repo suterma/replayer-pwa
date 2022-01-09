@@ -10638,6 +10638,10 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 
 /* Replayer-specific (smaller) section margins */
+/*************************************************************
+ * Section stylings
+**************************************************************
+*/
 /* Default padding on section (for smaller screens) smaller, and equally small on all sides*/
 @media screen and (max-width: 1024px) {
   .section {
@@ -10650,9 +10654,11 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   }
 }
 /* Player styles (to be used for the audio player) */
-/* Player styles (to be used for the audio player)
- * These styles are based on a dark bulmaswatch theme and borrow variables from there
- */
+/*************************************************************
+ * Player styles (to be used for the audio player)
+ * These styles are based on the slate bulmaswatch theme and borrow variables from there
+**************************************************************
+*/
 /* The playing color should be non-distracting, but be strong enough to visually indicate the playing state*/
 .player {
   background-color: #3a3f44;
@@ -10803,6 +10809,38 @@ body.has-navbar-fixed-top-laptop {
     overflow: auto;
   }
 }
+/* Dropdown styles */
+/*************************************************************
+ * Dropdown stylings
+ * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
+**************************************************************
+*/
+/* Dropdown item with better suited contrast for a dark theme */
+a.dropdown-item,
+button.dropdown-item {
+  color: #fafafa;
+}
+
+/* Hovered dropdown item with better suited contrast for a dark theme */
+a.dropdown-item:hover,
+button.dropdown-item:hover {
+  background-color: #52575c;
+  color: #fafafa;
+}
+
+/* Hovered active dropdown item with better suited contrast for a dark theme */
+a.dropdown-item.is-active,
+button.dropdown-item.is-active {
+  background-color: whitesmoke;
+  color: #202328;
+}
+
+.dropdown-content {
+  border-color: #52575c;
+  border-width: 1px;
+  border-style: solid;
+}
+
 /* Below: Application-specific add-ons/modifications to the Bulma CSS */
 /*************************************************************
  * Overscroll / scrollbar handling

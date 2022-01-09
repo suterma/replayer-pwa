@@ -28,6 +28,7 @@
         "@suterma/nskeyedunarchiver-liveplayback": "^0.1.1",
         "bplist-parser": "^0.3.0",
         "bulmaswatch": "^0.8.1",
+        "click-outside-vue3": "^4.0.1",
         "core-js": "^3.6.5",
         "file-saver": "^2.0.5",
         "howler": "^2.2.3",

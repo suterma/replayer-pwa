@@ -1,3 +1,10 @@
+@charset "utf-8";
+
+/*************************************************************
+ * Section stylings
+**************************************************************
+*/
+
 /* Default padding on section (for smaller screens) smaller, and equally small on all sides*/
 @media screen and (max-width: $desktop) {
     .section {

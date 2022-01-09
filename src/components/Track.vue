@@ -145,6 +145,9 @@ export default defineComponent({
             this.updateExpanded(true);
         }
     },
+    unmounted() {
+        this.deactivateWakeLock();
+    },
     data() {
         return {
             /** Whether this track tile is shown as expanded, with the player and the cue buttons displayed.
@@ -175,7 +178,6 @@ export default defineComponent({
             if (this.settings.preventScreenTimeout) {
                 if (!this.noSleep.isEnabled) {
                     this.noSleep.enable();
-                    console.debug('noSleep:enabled');
                 }
             }
         },
@@ -186,7 +188,6 @@ export default defineComponent({
             if (this.settings.preventScreenTimeout) {
                 if (this.noSleep.isEnabled) {
                     this.noSleep.disable();
-                    console.debug('noSleep:disabled');
                 }
             }
         },
@@ -371,6 +372,7 @@ export default defineComponent({
             this.isPlaying = value;
         },
     },
+
     watch: {
         /** Handles changes in whether this is the active track.
          * @remarks When this ceases to be the active track, stop playback.

@@ -11,23 +11,26 @@
         <div class="level-right">
             <div class="level-item">
                 <span class="is-pulled-right ml-3">
-                    <!-- <div
-                    :class="{
-                        dropdown: true,
-                        'is-right': true,
-                        'is-hoverable': false,
-                        'is-active': isDropdownExpanded,
-                    }"
-                    @click="toggleDropdownExpanded()"
-                    @blur="collapseDropdown()"
-                > -->
                     <div
                         :class="{
                             dropdown: true,
                             'is-right': true,
-                            'is-hoverable': true,
+                            'is-hoverable': false,
+                            'is-active': isDropdownExpanded,
                         }"
+                        v-on:mouseenter="expandDropdown()"
+                        @click="toggleDropdownExpanded()"
+                        @blur="collapseDropdown()"
+                        v-click-outside="collapseDropdown"
                     >
+                        <!-- <div
+                        :class="{
+                            dropdown: true,
+                            'is-right': true,
+                             'is-hoverable': true,
+                            'is-active': isDropdownExpanded,
+                        }"
+                    > -->
                         <div class="dropdown-trigger">
                             <button
                                 class="button is-ghost"
@@ -56,18 +59,31 @@
                             role="menu"
                         >
                             <div class="dropdown-content">
+                                <a
+                                    href="#"
+                                    :class="{
+                                        'dropdown-item': true,
+                                        'is-active':
+                                            isPreventingScreenTimeoutNow,
+                                    }"
+                                    @click="togglePreventScreenTimeoutNow"
+                                >
+                                    Prevent screen timeout now<br />
+                                    <span class="has-opacity-half is-size-7">
+                                        (while this compilation is in use)</span
+                                    >
+                                </a>
                                 <!-- <a
-                                href="#"
-                                class="dropdown-item"
-                                @click="downloadXml"
-                            >
-                                Download as
-                                <span class="has-text-weight-bold">XML</span>
-                                compilation (<span class="is-family-monospace"
-                                    >.rex</span
-                                >), without media files
-                            </a>
-                            <hr class="dropdown-divider" /> -->
+                                    href="#"
+                                    class="dropdown-item"
+                                    @click="downloadXml"
+                                >
+                                    Download as
+                                    <span class="has-text-weight-bold"
+                                        >XML</span
+                                    > 
+                                </a>-->
+                                <!-- <hr class="dropdown-divider" /> -->
                                 <a
                                     href="#"
                                     @click="close"
@@ -91,6 +107,7 @@ import { MutationTypes } from '@/store/mutation-types';
 import FileSaver from 'file-saver';
 import { XmlCompilation } from '@/code/xml/XmlCompilation';
 import xml2js from 'xml2js';
+import NoSleep from 'nosleep.js';
 
 /** A nav bar as header with a menu for a compilation
  */
@@ -104,7 +121,9 @@ export default defineComponent({
         return {
             /** Whether the dropdown menu is shown as expanded.
              */
-            // isDropdownExpanded: false,
+            isDropdownExpanded: false,
+            /** The wake lock fill-in that can prevent screen timeout, while a compilation is in use */
+            noSleep: new NoSleep(),
         };
     },
     methods: {
@@ -120,12 +139,25 @@ export default defineComponent({
             });
             FileSaver.saveAs(blob, 'ZIP-Compilation.rex');
         },
-        // toggleDropdownExpanded() {
-        //     this.isDropdownExpanded = !this.isDropdownExpanded;
-        // },
-        // collapseDropdown() {
-        //     this.isDropdownExpanded = false;
-        // },
+        toggleDropdownExpanded() {
+            this.isDropdownExpanded = !this.isDropdownExpanded;
+        },
+        collapseDropdown() {
+            this.isDropdownExpanded = false;
+        },
+        expandDropdown() {
+            this.isDropdownExpanded = true;
+        },
+        togglePreventScreenTimeoutNow() {
+            if (this.isPreventingScreenTimeoutNow) {
+                this.noSleep.disable();
+            } else {
+                this.noSleep.enable();
+            }
+        },
+    },
+    unmounted() {
+        this.noSleep.disable();
     },
     computed: {
         xml(): string {
@@ -135,6 +167,9 @@ export default defineComponent({
             var builder = new xml2js.Builder();
             var xml = builder.buildObject(obj);
             return xml;
+        },
+        isPreventingScreenTimeoutNow(): boolean {
+            return this.noSleep.isEnabled;
         },
     },
 });
