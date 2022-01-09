@@ -222,8 +222,15 @@
                     Editor lets you generate maskable PWA icons. (free to use,
                     by Tiger Oakes)
                 </li>
-
-                https://maskable.app/
+                <li>
+                    <a
+                        href="https://github.com/andymark-by/click-outside-vue3"
+                        target="_blank"
+                    >
+                        click-outside-vue3 </a
+                    >, a vue3 directive to react on clicks outside an element.
+                    (Released under the MIT License, by Andy Mark)
+                </li>
             </ul>
         </div>
         <h1 class="title">License</h1>
