@@ -215,6 +215,17 @@
                         >Crystal icon set</a
                     >. (Released under the LGPL License, by Everaldo Coelho)
                 </li>
+                <li>
+                    <a
+                        href="https://commons.wikimedia.org/wiki/Category:Crystal_icons"
+                        target="_blank"
+                        >Maskable.app</a
+                    >
+                    Editor lets you generate maskable PWA icons. . (free to use,
+                    by Tiger Oakes)
+                </li>
+
+                https://maskable.app/
             </ul>
         </div>
         <h1 class="title">License</h1>

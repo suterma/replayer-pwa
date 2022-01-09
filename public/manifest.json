@@ -1,27 +1,100 @@
 {
     "name": "Replayer: Rehearse with playback music",
     "short_name": "Replayer",
-    "lang": "en",
+    "lang": "en-US",
     "description": "Replayer is a free, cue-based media player for rehearsals with playback music. By the click of a button, Replayer starts to play at predefined times in the audio file.",
     "theme_color": "#f89406",
-    "background_color": "#000000",
+    "background_color": "#272b30",
+    "categories": ["entertainment", "music", "productivity"],
     "icons": [
         {
             "src": "img/icons/android-chrome-192x192.png",
             "sizes": "192x192",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any"
         },
         {
             "src": "img/icons/android-chrome-256x256.png",
             "sizes": "256x256",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any"
         },
         {
             "src": "img/icons/android-chrome-512x512.png",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "img/icons/Replayer_App_Icon_maskable_x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "img/icons/Replayer_App_Icon_maskable_x256.png",
+            "sizes": "256x256",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "img/icons/Replayer_App_Icon_maskable_x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
         }
     ],
     "start_url": ".",
-    "display": "standalone"
+    "display": "standalone",
+    "screenshots": [
+        {
+            "label": "A screenshot of the playback view of Replayer",
+            "src": "/img/screenshot/Replayer-featured-graphic.png",
+            "type": "image/png",
+            "sizes": "1024x500",
+            "platform": "narrow"
+        },
+        {
+            "label": "A device showing the playback view of Replayer",
+            "src": "/img/screenshot/Phone-screenshot1-iphone678plus.png",
+            "type": "image/png",
+            "sizes": "532x958",
+            "platform": "narrow"
+        },
+        {
+            "label": "A device showing the settings view of Replayer",
+            "src": "/img/screenshot/Phone-screenshot2-iphone678plus.png",
+            "type": "image/png",
+            "sizes": "534x958",
+            "platform": "narrow"
+        },
+        {
+            "label": "A device showing the playback view of Replayer",
+            "src": "/img/screenshot/Phone-Screenshot1-iphone5se.png",
+            "type": "image/png",
+            "sizes": "440x788",
+            "platform": "narrow"
+        },
+        {
+            "label": "A device showing the settings view of Replayer",
+            "src": "/img/screenshot/Phone-Screenshot2-iphone5se.png",
+            "type": "image/png",
+            "sizes": "445x794",
+            "platform": "narrow"
+        },
+        {
+            "label": "A device showing the settings view of Replayer",
+            "src": "/img/screenshot/Tablet-screenshot1-ipad.png",
+            "type": "image/png",
+            "sizes": "1372x880",
+            "platform": "wide"
+        },
+        {
+            "label": "A device showing the playback view of Replayer",
+            "src": "/img/screenshot/Tablet-screenshot2-ipad.png",
+            "type": "image/png",
+            "sizes": "1372x880",
+            "platform": "wide"
+        }
+    ]
 }
