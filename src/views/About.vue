@@ -216,12 +216,10 @@
                     >. (Released under the LGPL License, by Everaldo Coelho)
                 </li>
                 <li>
-                    <a
-                        href="https://commons.wikimedia.org/wiki/Category:Crystal_icons"
-                        target="_blank"
+                    <a href="https://maskable.app" target="_blank"
                         >Maskable.app</a
                     >
-                    Editor lets you generate maskable PWA icons. . (free to use,
+                    Editor lets you generate maskable PWA icons. (free to use,
                     by Tiger Oakes)
                 </li>
 
