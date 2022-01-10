@@ -355,10 +355,6 @@ export default defineComponent({
                     this.sound.pause();
                     this.isFading = false;
                 });
-            } else {
-                console.warn(
-                    `TrackHowlerPlayer(${this.title})::pause aborted, nothing to pause`,
-                );
             }
         },
 
