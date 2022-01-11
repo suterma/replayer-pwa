@@ -5,5 +5,3 @@ declare module '@vue/runtime-core' {
         $store: Store;
     }
 }
-
-declare module 'vue-audio-visual';

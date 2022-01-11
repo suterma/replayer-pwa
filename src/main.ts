@@ -7,7 +7,7 @@ import VueScrollTo from 'vue-scrollto';
 import SlideUpDown from 'vue3-slide-up-down';
 import vClickOutside from 'click-outside-vue3';
 
-import outfront from 'outfront'; // import outfront JS
+import outfront from './../../OutFrontJS'; // import outfront JS
 outfront(); // Call it on top of project.
 
 console.log('App version: ' + process.env.VUE_APP_VERSION);
