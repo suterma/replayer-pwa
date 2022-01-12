@@ -45,6 +45,28 @@
             </li>
         </ul>
     </div>
+
+    <h2 class="subtitle has-text-danger">Log test buttons</h2>
+    <div class="buttons">
+        <button class="button is-success" @click="this.writeDebug">
+            A debug log
+        </button>
+
+        <button class="button is-info" @click="this.writeLog">A log</button>
+        <button class="button is-warning" @click="this.writeWarnLog">
+            A warning
+        </button>
+        <button class="button is-danger" @click="this.writeErrorLog">
+            Something dangerous
+        </button>
+        <button
+            class="button is-danger has-text-dark"
+            @click="this.throwException"
+        >
+            Throw an exception
+        </button>
+    </div>
+
     <h1 class="title has-text-danger">Context Menu</h1>
 
     <div class="dropdown is-active">
@@ -100,6 +122,23 @@ export default defineComponent({
     data: () => ({
         isExpanded: false,
     }),
+    methods: {
+        writeDebug() {
+            console.debug('Just a debug log with an object', { some: 'data' });
+        },
+        writeLog() {
+            console.log('Just a log');
+        },
+        writeWarnLog() {
+            console.warn('A warning');
+        },
+        writeErrorLog() {
+            console.error('Something dangerous');
+        },
+        throwException() {
+            throw 'Something bad happened!';
+        },
+    },
     computed: {
         compilation(): ICompilation {
             return this.$store.getters.compilation;
