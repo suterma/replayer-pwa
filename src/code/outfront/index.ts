@@ -238,10 +238,14 @@ const appendToContainer = (msg: any, type: string) => {
 
     //Decide whether to show the float button
     if (getLogLevelOrder(type) >= getLogLevelOrder(outFrontFromLevel)) {
-        const outFrontFloatBtn = document.getElementById('outfront-float');
-        if (outFrontFloatBtn && outFrontFloatBtn.style.display !== 'block') {
-            notificationBadge.style.display = 'block';
-        }
+        showFloatButton();
+    }
+};
+
+const showFloatButton = (): void => {
+    const outFrontFloatBtn = document.getElementById('outfront-float');
+    if (outFrontFloatBtn && outFrontFloatBtn.style.display !== 'block') {
+        outFrontFloatBtn.style.display = 'block';
     }
 };
 
@@ -281,9 +285,20 @@ window.onerror = (message, source, lineno, _colno, _error): void => {
     );
 };
 
-const outfront = (showFromLevel: string): void => {
-    outFrontFromLevel = showFromLevel;
+/** Creates the outfront UI
+ * @param showFromLevel Optional level from which the UI (Bug icon) is shown.
+ * If set, must be one of 'log' | 'warn' | 'error'. If omitted, the UI is always shown.
+ * @devdoc You can use one of the exported string constants: logLevelLog, logLevelWarn, logLevelError
+ */
+const outfront = (showFromLevel?: 'log' | 'warn' | 'error'): void => {
     createButtonAndContainer();
+    if (showFromLevel) {
+        //Remember the loglevel to show from
+        outFrontFromLevel = showFromLevel;
+    } else {
+        //Just show always
+        showFloatButton();
+    }
 };
 
 export const logLevelWarn = 'warn';
