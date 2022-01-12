@@ -18,19 +18,10 @@
                             'is-hoverable': false,
                             'is-active': isDropdownExpanded,
                         }"
-                        v-on:mouseenter="expandDropdown()"
                         @click="toggleDropdownExpanded()"
                         @blur="collapseDropdown()"
                         v-click-outside="collapseDropdown"
                     >
-                        <!-- <div
-                        :class="{
-                            dropdown: true,
-                            'is-right': true,
-                             'is-hoverable': true,
-                            'is-active': isDropdownExpanded,
-                        }"
-                    > -->
                         <div class="dropdown-trigger">
                             <button
                                 class="button is-ghost"
@@ -73,17 +64,21 @@
                                         (while this compilation is in use)</span
                                     >
                                 </a>
-                                <!-- <a
+                                <a
                                     href="#"
                                     class="dropdown-item"
                                     @click="downloadXml"
                                 >
                                     Download as
-                                    <span class="has-text-weight-bold"
-                                        >XML</span
-                                    > 
-                                </a>-->
-                                <!-- <hr class="dropdown-divider" /> -->
+                                    <span class="has-text-weight-bold">XML</span
+                                    ><br />
+                                    <span class="has-opacity-half is-size-7">
+                                        (<span class="is-family-monospace"
+                                            >.rex</span
+                                        >), without media files
+                                    </span>
+                                </a>
+                                <hr class="dropdown-divider" />
                                 <a
                                     href="#"
                                     @click="close"
