@@ -6,8 +6,8 @@ import { store } from './store/store';
 import VueScrollTo from 'vue-scrollto';
 import SlideUpDown from 'vue3-slide-up-down';
 import vClickOutside from 'click-outside-vue3';
-import outfront from './../../OutFrontJS'; // import outfront JS from local script
-//import outfront from './code/outfront'; // import outfront JS
+//import outfront from './../../OutFrontJS'; // import outfront JS from local script
+import outfront from './code/outfront'; // import outfront JS
 //TODO if later available from npm, use from there
 
 outfront('warn'); // Call it on top of project.
