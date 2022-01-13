@@ -11,7 +11,12 @@
         <div class="navbar-brand">
             <a class="navbar-item" href="#">
                 <!-- HINT: Provide explicit height and widht as an optimization measure -->
-                <img src="../assets/logo.png" width="28" height="28" />
+                <img
+                    src="../assets/logo.png"
+                    width="28"
+                    height="28"
+                    alt="application icon"
+                />
             </a>
 
             <!-- The Navbar burger -->
