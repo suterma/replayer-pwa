@@ -10841,6 +10841,26 @@ button.dropdown-item.is-active {
   border-style: solid;
 }
 
+/* Input styles */
+/*************************************************************
+ * Styles for user input
+ * These styles are based on the slate bulmaswatch theme and borrow variables from there
+**************************************************************
+*/
+.select select,
+.textarea,
+.input {
+  background-color: #0a0a0a;
+  border-color: #52575c;
+  border-radius: 4px px;
+  color: white;
+}
+
+.textarea::placeholder,
+.input::placeholder {
+  color: #7a8288;
+}
+
 /* Outfront styles */
 /** **********************************************************
  * Styles for the outfront widget
@@ -10992,4 +11012,18 @@ but not at the "end/right" container's border */
 /* Some text that does not wrap */
 .has-text-nowrap {
   white-space: nowrap;
+}
+
+/** **********************************************************
+ * Additional adornments
+**************************************************************
+*/
+/* A success variant of a border  */
+.has-border-success {
+  border: 1px solid #62c462;
+}
+
+/* A info variant of a border  */
+.has-border-info {
+  border: 1px solid #3e8ed0;
 }

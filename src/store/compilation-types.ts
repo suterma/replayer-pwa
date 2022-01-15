@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export enum CompilationType {
     /** XML Compilation type, currently the only one supported */
     XML = 'XML',
@@ -143,7 +145,13 @@ export class Compilation implements ICompilation {
     /** Returns a new, empty compilation
      */
     static empty(): Compilation {
-        return new Compilation('', '', '', '', new Array<ITrack>());
+        return new Compilation(
+            '',
+            'New Compilation',
+            '',
+            uuidv4(),
+            new Array<ITrack>(),
+        );
     }
 }
 

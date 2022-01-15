@@ -22,6 +22,11 @@ interface IState {
      */
     progressMessageStack: Array<string>;
 
+    /** An application error message stack, used for error indication
+     * @remarks during unacknowledged errors, the stack is non-empty
+     */
+    errorMessageStack: Array<string>;
+
     settings: Settings;
 }
 
@@ -35,6 +40,8 @@ export const state: IState = {
     mediaUrls: new Map<string, MediaUrl>(),
 
     progressMessageStack: new Array<string>(),
+
+    errorMessageStack: new Array<string>(),
 
     settings: Settings.default(),
 };

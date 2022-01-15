@@ -1,0 +1,20 @@
+@charset "utf-8";
+
+/*************************************************************
+ * Styles for user input
+ * These styles are based on the slate bulmaswatch theme and borrow variables from there
+**************************************************************
+*/
+.select select,
+.textarea,
+.input {
+    background-color: $black;
+    border-color: $grey;
+    border-radius: 4px px;
+    color: $white;
+}
+
+.textarea::placeholder,
+.input::placeholder {
+    color: $grey-light;
+}

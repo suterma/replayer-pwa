@@ -15,6 +15,8 @@ export type Getters = {
     mediaUrls(state: State): Map<string, MediaUrl>;
     /** Gets the latest (newest) progress message from the stack */
     progressMessage(state: State): string | null;
+    /** Gets the latest (newest) error message from the stack */
+    errorMessage(state: State): string | null;
     /** Determines whether the given cue is the currently selected one
      * @devdoc //TODO parametrized call currently do not work, reason is unknown
      */
@@ -35,7 +37,8 @@ export const getters: GetterTree<State, State> & Getters = {
     },
     /** @inheritdoc */
     hasCompilation: (state) => {
-        if ((state.compilation as ICompilation).Id) {
+        //A compilation is recognised as existing, when there is at least one track
+        if ((state.compilation as ICompilation).Tracks.length > 0) {
             return true;
         }
         return false;
@@ -53,6 +56,12 @@ export const getters: GetterTree<State, State> & Getters = {
         const progressMessage =
             state.progressMessageStack[state.progressMessageStack.length - 1];
         return progressMessage;
+    },
+    /** @inheritdoc */
+    errorMessage: (state) => {
+        const errorMessage =
+            state.errorMessageStack[state.errorMessageStack.length - 1];
+        return errorMessage;
     },
     /** @inheritdoc */
     isSelected: (state, cueId: string) => {

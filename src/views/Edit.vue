@@ -1,7 +1,7 @@
 <template>
     <MediaDropZone />
     <hr />
-    <MediaList v-if="hasMedia" />
+    <MediaList v-if="hasMediaUrls" />
     <hr />
     <Compilation :compilation="compilation" v-if="hasCompilation" />
 </template>

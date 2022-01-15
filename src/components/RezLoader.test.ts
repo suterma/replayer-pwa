@@ -40,6 +40,8 @@ describe('RezLoader.vue', () => {
 
                     progressMessageStack: new Array<string>(),
 
+                    errorMessageStack: new Array<string>(),
+
                     settings: new Settings(),
                 };
             },

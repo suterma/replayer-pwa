@@ -3,12 +3,19 @@ export enum MutationTypes {
     PUSH_PROGRESS_MESSAGE = 'PUSH_PROGRESS_MESSAGE',
     /** Ends the display of a previous progress message, by popping the message from the stack of progress messages */
     POP_PROGRESS_MESSAGE = 'POP_PROGRESS_MESSAGE',
+    /** Initiates the display of an error message by pushing the message onto the stack of error messages */
+    PUSH_ERROR_MESSAGE = 'PUSH_ERROR_MESSAGE',
+    /** Ends the display of a previous error message, by popping the message from the stack of error messages */
+    POP_ERROR_MESSAGE = 'POP_ERROR_MESSAGE',
     /** Ends the display any previous progress message, by clearing all messages from the stack of progress messages */
     FINISH_PROGRESS = 'FINISH_PROGRESS',
     /** Adds a media blob URL to the store
      * @remarks A new blob URL replaces any existing with an exact same path.
      */
     ADD_MEDIA_URL = 'ADD_MEDIA_URL',
+    /** Adds a new track for the given media URL to the store
+     */
+    ADD_TRACK = 'ADD_TRACK',
     /** Replaces the current compilation with a new one
      * @remarks Does not set the selected cue
      */

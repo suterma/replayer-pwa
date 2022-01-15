@@ -10,6 +10,8 @@ import JSZip from 'jszip';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 import CompilationHandler from './compilation-handler';
 import FileSaver from 'file-saver';
+import { Cue, ICue, Track } from './compilation-types';
+import { v4 as uuidv4 } from 'uuid';
 
 type AugmentedActionContext = {
     commit<K extends keyof Mutations>(
@@ -137,7 +139,6 @@ export const actions: ActionTree<State, State> & Actions = {
         //Store persistently, but after committing, to keep the process faster
         PersistentStorage.storeMediaBlob(mediaBlob);
     },
-
     //TODO WIP check whether all these loading function actually work:
     //With xml, rex, bplist, ZIP
     //Then simplify by handling ZIP files separately, unzipping all files and recursively call this method
@@ -146,26 +147,51 @@ export const actions: ActionTree<State, State> & Actions = {
         { commit, dispatch }: AugmentedActionContext,
         url: string,
     ): void {
+        if (!CompilationParser.isValidHttpUrl(url)) {
+            commit(
+                MutationTypes.PUSH_ERROR_MESSAGE,
+                `Provided input is not a valid URL: '${url}'`,
+            );
+            return;
+        }
+
         commit(MutationTypes.PUSH_PROGRESS_MESSAGE, `Loading URL '${url}'...`);
-        //TODO make URL to allow any charcter, including slashes etc...
         console.debug('RezLoader::loadUrl:url', url);
-        fetch(url)
-            .then((res) => res.blob()) // Gets the response and returns it as a blob
-            .then((blob) => {
-                // Here's where you get access to the blob
-                // And you can use it for whatever you want
-                const file = new File(
-                    [blob],
-                    url,
-                    //TODO use the mime type from the response to determine the handling
-                    // {
-                    //     type: 'application/zip',
-                    // }
+        fetch(url).then((response) => {
+            if (!response.ok) {
+                throw new Error(
+                    `Network response while fetching URL '${url}' was not OK`,
                 );
-                dispatch(ActionTypes.LOAD_FROM_FILE, file).finally(() => {
-                    commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+            }
+            console.debug('RezLoader::loadUrl:response', response);
+            const contentType = response.headers.get('Content-Type');
+            console.debug('RezLoader::loadUrl:contentType', contentType);
+            response.blob().then((blob) => {
+                const file = new File([blob], url /* as name */, {
+                    type: contentType ?? undefined,
                 });
+                dispatch(ActionTypes.LOAD_FROM_FILE, file)
+                    .then(() => {
+                        //If it was a single media file, also create a new default track for it
+                        const newTrack = new Track(
+                            url.normalize(),
+                            '',
+                            '',
+                            0,
+                            url.normalize(),
+                            uuidv4(),
+                            new Array<ICue>(
+                                new Cue('Intro', '', 0, null, uuidv4()),
+                            ),
+                        );
+                        commit(MutationTypes.ADD_TRACK, newTrack);
+                    })
+
+                    .finally(() => {
+                        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                    });
             });
+        });
     },
 
     [ActionTypes.LOAD_FROM_FILE](

@@ -241,4 +241,18 @@ export default class CompilationParser {
         });
         return new MediaBlob(mediaFileName, blob);
     }
+
+    public static isValidHttpUrl(url: string): boolean {
+        let parsedUrl;
+
+        try {
+            parsedUrl = new URL(url);
+        } catch (_) {
+            return false;
+        }
+
+        return (
+            parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:'
+        );
+    }
 }

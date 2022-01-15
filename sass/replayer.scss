@@ -26,6 +26,9 @@ $navbar-breakpoint: 320px;
 /* Dropdown styles */
 @import 'replayer-dropdown.scss';
 
+/* Input styles */
+@import 'replayer-input.scss';
+
 /* Outfront styles */
 @import 'outfront.scss';
 
@@ -182,4 +185,19 @@ but not at the "end/right" container's border */
 /* Some text that does not wrap */
 .has-text-nowrap {
     white-space: nowrap;
+}
+
+/** **********************************************************
+ * Additional adornments
+**************************************************************
+*/
+
+/* A success variant of a border  */
+.has-border-success {
+    border: 1px solid $success;
+}
+
+/* A info variant of a border  */
+.has-border-info {
+    border: 1px solid $info;
 }
