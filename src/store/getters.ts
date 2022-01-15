@@ -11,6 +11,7 @@ export type Getters = {
     hasCompilation(state: State): boolean;
     /** Defines the function to determine whether a compilation is availabe to retrieve from the persistent storage */
     hasRetrievableCompilation(): boolean;
+    /** The set of available Media URL's */
     mediaUrls(state: State): Map<string, MediaUrl>;
     /** Gets the latest (newest) progress message from the stack */
     progressMessage(state: State): string | null;

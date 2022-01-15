@@ -111,7 +111,7 @@ export default defineComponent({
             });
         },
 
-        /** Loads a single file (from a selection of one or more files) by loading their content
+        /** Loads a single file by loading it's content
          */
         async loadFile(file: File): Promise<void> {
             this.$store.dispatch(ActionTypes.LOAD_FROM_FILE, file);

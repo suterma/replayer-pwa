@@ -46,6 +46,12 @@
                 <router-link
                     @click="toggleBurger"
                     class="navbar-item"
+                    to="/edit"
+                    >Edit</router-link
+                >
+                <router-link
+                    @click="toggleBurger"
+                    class="navbar-item"
                     to="/settings"
                     >Settings</router-link
                 >

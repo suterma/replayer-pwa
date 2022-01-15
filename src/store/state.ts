@@ -7,7 +7,7 @@ interface IState {
      */
     compilation: ICompilation;
 
-    /** A dictionary of media files from a REZ compilation, representing playable buffers
+    /** A dictionary of media URLs, representing playable media files
      * @remarks the media file path is used as key, preventing duplicate files for the same content.
      */
     mediaUrls: Map<string, MediaUrl>;

@@ -15,6 +15,15 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Play',
         component: Play,
     },
+    {
+        path: '/edit',
+        name: 'Edit',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+            import(/* webpackChunkName: "about" */ '../views/Edit.vue'),
+    },
 
     // Allow loading of arbitrary files
     { path: '/play/:url*', component: Play },
