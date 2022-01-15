@@ -137,7 +137,7 @@ This is useful to fix situations when the outermost child temporarily is hidden 
 */
 
 /** Navigational buttons never have borders or shadows (a la ghost), 
-*   even when focused or hovered, to keep them undisctracting */
+*   even when focused or hovered, to keep them undistracting */
 nav .button {
     border: none;
 }
