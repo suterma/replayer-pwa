@@ -26,6 +26,9 @@ $navbar-breakpoint: 320px;
 /* Dropdown styles */
 @import 'replayer-dropdown.scss';
 
+/* Outfront styles */
+@import 'outfront.scss';
+
 /* Below: Application-specific add-ons/modifications to the Bulma CSS */
 
 /*************************************************************
@@ -179,20 +182,4 @@ but not at the "end/right" container's border */
 /* Some text that does not wrap */
 .has-text-nowrap {
     white-space: nowrap;
-}
-
-/*************************************************************
- * Outfront
-**************************************************************
-*/
-
-/* outfront on the left lower corner */
-#outfront-float {
-    left: 15px !important;
-    right: 0 !important;
-    width: 35px !important; /*square*/
-}
-#outfront-container {
-    left: 20px !important;
-    right: 0 !important;
 }

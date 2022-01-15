@@ -18,7 +18,7 @@
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",
-        "css-build": "sass --no-source-map sass/replayer-styles.scss public/css/replayer-styles.css",
+        "css-build": "sass --no-source-map sass/replayer.scss public/css/replayer.css",
         "css-watch": "npm run css-build -- --watch",
         "start": "npm run css-watch",
         "test": "jest",
