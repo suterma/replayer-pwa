@@ -1,15 +1,15 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Play from '../views/Play.vue';
+import Home from '../views/Home.vue';
 
 const routes: Array<RouteRecordRaw> = [
-    //Always use the explicit play route instead of the default "Home" root.
-    //This allows later reutilisation of the "Home" root route for another purpose than playing from url files
-    // {
-    //   path: "/",
-    //   name: "Home",
-    //   component: Home,
-    // },
+    //Always use the explicit play route as default instead of the default "Home" root.
     { path: '/', redirect: { name: 'Play' } },
+    {
+        path: '/home',
+        name: 'Home',
+        component: Home,
+    },
     {
         path: '/play',
         name: 'Play',

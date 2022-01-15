@@ -21,4 +21,11 @@ export enum ActionTypes {
      * @param filename - The URL to load the file from
      */
     LOAD_FROM_FILE = 'LOAD_FROM_FILE',
+
+    /** Initiates the download of the current compilation as a single XML (.rex) file
+     */
+    DOWNLOAD_REX_FILE = 'DOWNLOAD_REX_FILE',
+    /** Initiates the download of the current compilation as a ZIP (.rez) package
+     */
+    DOWNLOAD_REZ_PACKAGE = 'DOWNLOAD_REZ_PACKAGE',
 }

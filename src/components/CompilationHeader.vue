@@ -59,15 +59,30 @@
                                     }"
                                     @click="togglePreventScreenTimeoutNow"
                                 >
-                                    Prevent screen timeout now<br />
+                                    Prevent screen timeout<br />
                                     <span class="has-opacity-half is-size-7">
-                                        (while this compilation is in use)</span
+                                        (while this compilation is in
+                                        open)</span
                                     >
                                 </a>
                                 <a
                                     href="#"
                                     class="dropdown-item"
-                                    @click="downloadXml"
+                                    @click="downloadRezPackage"
+                                >
+                                    Download as
+                                    <span class="has-text-weight-bold">ZIP</span
+                                    ><br />
+                                    <span class="has-opacity-half is-size-7">
+                                        (<span class="is-family-monospace"
+                                            >.rez</span
+                                        >), including media files
+                                    </span>
+                                </a>
+                                <a
+                                    href="#"
+                                    class="dropdown-item"
+                                    @click="downloadRexFile"
                                 >
                                     Download as
                                     <span class="has-text-weight-bold">XML</span
@@ -99,10 +114,8 @@
 import { defineComponent } from 'vue';
 import { Compilation } from '@/store/compilation-types';
 import { MutationTypes } from '@/store/mutation-types';
-import FileSaver from 'file-saver';
-import { XmlCompilation } from '@/code/xml/XmlCompilation';
-import xml2js from 'xml2js';
 import NoSleep from 'nosleep.js';
+import { ActionTypes } from '@/store/action-types';
 
 /** A nav bar as header with a menu for a compilation
  */
@@ -128,12 +141,18 @@ export default defineComponent({
             this.$store.commit(MutationTypes.CLOSE_COMPILATION);
         },
 
-        downloadXml() {
-            var blob = new Blob([this.xml], {
-                type: 'text/xml;charset=utf-8',
-            });
-            FileSaver.saveAs(blob, 'ZIP-Compilation.rex');
+        /** Initiates the download of the current compilation as a single XML (.rex) file
+         */
+        async downloadRexFile(): Promise<void> {
+            this.$store.dispatch(ActionTypes.DOWNLOAD_REX_FILE);
         },
+
+        /** Initiates the download of the current compilation as a ZIP (.rez) package
+         */
+        async downloadRezPackage(): Promise<void> {
+            this.$store.dispatch(ActionTypes.DOWNLOAD_REZ_PACKAGE);
+        },
+
         toggleDropdownExpanded() {
             this.isDropdownExpanded = !this.isDropdownExpanded;
         },
@@ -155,14 +174,6 @@ export default defineComponent({
         this.noSleep.disable();
     },
     computed: {
-        xml(): string {
-            let obj = {
-                XmlCompilation: new XmlCompilation(this.compilation),
-            };
-            var builder = new xml2js.Builder();
-            var xml = builder.buildObject(obj);
-            return xml;
-        },
         isPreventingScreenTimeoutNow(): boolean {
             return this.noSleep.isEnabled;
         },

@@ -11,14 +11,16 @@ import { MediaBlob, RezMimeTypes } from './state-types';
 import xml2js from 'xml2js';
 import NSKeyedUnarchiver from '@suterma/nskeyedunarchiver-liveplayback/source';
 import bplist from 'bplist-parser';
+import { XmlCompilation } from '@/code/xml/XmlCompilation';
 
 /**
- * Provides helper methods for parsing compilations from external storage formats.
+ * Provides helper methods for parsing compilations from and to external storage formats.
  */
 export default class CompilationParser {
     /** Parses an XML object into an ICompilation.
      * @param xmlCompilation - An object representing the stored Compilation from an XML import.
      * @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static parseFromXmlCompilation(xmlCompilation: any): ICompilation {
         console.debug('Raw xmlCompilation:', xmlCompilation);
         return new Compilation(
@@ -30,6 +32,16 @@ export default class CompilationParser {
                 xmlCompilation.Tracks[0].Track,
             ),
         );
+    }
+
+    /** Converts a compilation Object into an XML representation */
+    public static convertToXml(compilation: ICompilation): string {
+        const obj = {
+            XmlCompilation: new XmlCompilation(compilation),
+        };
+        const builder = new xml2js.Builder();
+        const xml = builder.buildObject(obj);
+        return xml;
     }
 
     /** Asserts whether the file name represents an XML compilation file */
@@ -143,10 +155,12 @@ export default class CompilationParser {
     }
 
     /** @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static parseFromXmlCues(xmlCues: any): ICue[] {
         const cues = new Array<ICue>();
 
-        xmlCues.forEach((xmlCue: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        xmlCues.forEach((xmlCue: any): void => {
             //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
             const cue = new Cue(
                 CompilationParser.FirstStringOf(xmlCue.Description).normalize(),

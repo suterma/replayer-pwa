@@ -9,6 +9,7 @@ import { MediaBlob, MediaUrl, RezMimeTypes } from './state-types';
 import JSZip from 'jszip';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 import CompilationHandler from './compilation-handler';
+import FileSaver from 'file-saver';
 
 type AugmentedActionContext = {
     commit<K extends keyof Mutations>(
@@ -38,6 +39,10 @@ export interface Actions {
         { commit }: AugmentedActionContext,
         file: File,
     ): void;
+    [ActionTypes.DOWNLOAD_REX_FILE]({ commit }: AugmentedActionContext): void;
+    [ActionTypes.DOWNLOAD_REZ_PACKAGE]({
+        commit,
+    }: AugmentedActionContext): void;
 }
 export const actions: ActionTree<State, State> & Actions = {
     // [ActionTypes.PLAY_TRACK]({ commit }) {
@@ -336,5 +341,54 @@ export const actions: ActionTree<State, State> & Actions = {
         } else {
             console.warn("Unsupported file, not loaded: '" + file.name + "'");
         }
+    },
+    [ActionTypes.DOWNLOAD_REX_FILE]({
+        commit,
+        getters,
+    }: AugmentedActionContext): void {
+        commit(MutationTypes.PUSH_PROGRESS_MESSAGE, `Downloading REX file...`);
+
+        const compilation = getters.compilation;
+        const xml = CompilationParser.convertToXml(compilation);
+        const blob = new Blob([xml], {
+            type: 'text/xml;charset=utf-8',
+        });
+        FileSaver.saveAs(blob, `${compilation?.Title}.rex`);
+
+        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+    },
+    [ActionTypes.DOWNLOAD_REZ_PACKAGE]({
+        commit,
+        getters,
+    }: AugmentedActionContext): void {
+        commit(MutationTypes.PUSH_PROGRESS_MESSAGE, `Downloading REZ file...`);
+
+        //Get the XML first
+        const compilation = getters.compilation;
+        const xml = CompilationParser.convertToXml(compilation);
+        const blob = new Blob([xml], {
+            type: 'text/xml;charset=utf-8',
+        });
+
+        //Then get the blobs from the storage
+        //(which should actually be the matching media blobs for the compilation)
+        PersistentStorage.retrieveAllMediaBlobs().then((mediaBlobs) => {
+            //Pack everything into the ZIP file
+            const zip = new JSZip();
+            zip.file(`${compilation?.Title}.rex`, blob);
+
+            mediaBlobs.forEach((mediaBlob) => {
+                zip.file(mediaBlob.fileName, mediaBlob.blob);
+            });
+
+            //Save as the REZ package
+            zip.generateAsync({ type: 'blob' })
+                .then(function (content) {
+                    FileSaver.saveAs(content, `${compilation?.Title}.rez`);
+                })
+                .finally(() => {
+                    commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                });
+        });
     },
 };
