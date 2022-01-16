@@ -97,5 +97,13 @@
             "platform": "wide"
         }
     ],
-    "related_applications": []
+    "related_applications": [],
+    "shortcuts": [
+        {
+            "name": "Play tracks from a compilation",
+            "short_name": "Play",
+            "url": "/#/play",
+            "description": "Allows to open a compilation and play tracks from it"
+        }
+    ]
 }
