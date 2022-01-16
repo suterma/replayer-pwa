@@ -47,7 +47,7 @@ export default class HowlerFader {
         fadeOutDuration: number = 500,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         applyFadeInOffset: boolean = true,
-    ) {
+    ): void {
         const noMoreFading =
             this.fadeInDuration != 0 &&
             fadeInDuration === 0 &&

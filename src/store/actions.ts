@@ -10,8 +10,6 @@ import JSZip from 'jszip';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 import CompilationHandler from './compilation-handler';
 import FileSaver from 'file-saver';
-import { Cue, ICue, Track } from './compilation-types';
-import { v4 as uuidv4 } from 'uuid';
 
 type AugmentedActionContext = {
     commit<K extends keyof Mutations>(
@@ -36,11 +34,11 @@ export interface Actions {
     [ActionTypes.LOAD_FROM_URL](
         { commit }: AugmentedActionContext,
         url: string,
-    ): void;
+    ): Promise<void>;
     [ActionTypes.LOAD_FROM_FILE](
         { commit }: AugmentedActionContext,
         file: File,
-    ): void;
+    ): Promise<void>;
     [ActionTypes.DOWNLOAD_REX_FILE]({ commit }: AugmentedActionContext): void;
     [ActionTypes.DOWNLOAD_REZ_PACKAGE]({
         commit,
@@ -146,50 +144,53 @@ export const actions: ActionTree<State, State> & Actions = {
     [ActionTypes.LOAD_FROM_URL](
         { commit, dispatch }: AugmentedActionContext,
         url: string,
-    ): void {
-        if (!CompilationParser.isValidHttpUrl(url)) {
-            commit(
-                MutationTypes.PUSH_ERROR_MESSAGE,
-                `Provided input is not a valid URL: '${url}'`,
-            );
-            return;
-        }
-
-        commit(MutationTypes.PUSH_PROGRESS_MESSAGE, `Loading URL '${url}'...`);
-        console.debug('RezLoader::loadUrl:url', url);
-        fetch(url).then((response) => {
-            if (!response.ok) {
-                throw new Error(
-                    `Network response while fetching URL '${url}' was not OK`,
-                );
+    ): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (!CompilationParser.isValidHttpUrl(url)) {
+                commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                reject(`Provided input is not a valid URL: '${url}'`);
+                return;
             }
-            console.debug('RezLoader::loadUrl:response', response);
-            const contentType = response.headers.get('Content-Type');
-            console.debug('RezLoader::loadUrl:contentType', contentType);
-            response.blob().then((blob) => {
-                const file = new File([blob], url /* as name */, {
-                    type: contentType ?? undefined,
-                });
-                dispatch(ActionTypes.LOAD_FROM_FILE, file)
-                    .then(() => {
-                        //If it was a single media file, also create a new default track for it
-                        const newTrack = new Track(
-                            url.normalize(),
-                            '',
-                            '',
-                            0,
-                            url.normalize(),
-                            uuidv4(),
-                            new Array<ICue>(
-                                new Cue('Intro', '', 0, null, uuidv4()),
-                            ),
-                        );
-                        commit(MutationTypes.ADD_TRACK, newTrack);
-                    })
 
-                    .finally(() => {
-                        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+            commit(
+                MutationTypes.PUSH_PROGRESS_MESSAGE,
+                `Loading URL '${url}'...`,
+            );
+            console.debug('RezLoader::loadUrl:url', url);
+            fetch(url).then((response) => {
+                if (!response.ok) {
+                    commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                    reject(
+                        `Network response while fetching URL '${url}' was not OK`,
+                    );
+                    return;
+                }
+                console.debug('RezLoader::loadUrl:response', response);
+                response.blob().then((blob) => {
+                    const contentType = response.headers.get('Content-Type');
+                    console.debug(
+                        'RezLoader::loadUrl:contentType',
+                        contentType,
+                    );
+                    const file = new File([blob], url /* as name */, {
+                        type: contentType ?? undefined,
                     });
+                    dispatch(ActionTypes.LOAD_FROM_FILE, file)
+                        .catch((errorMessage: string) => {
+                            commit(
+                                MutationTypes.PUSH_ERROR_MESSAGE,
+                                errorMessage,
+                            );
+                            reject();
+                        })
+                        .finally(() => {
+                            commit(
+                                MutationTypes.POP_PROGRESS_MESSAGE,
+                                undefined,
+                            );
+                            resolve();
+                        });
+                });
             });
         });
     },
@@ -197,176 +198,196 @@ export const actions: ActionTree<State, State> & Actions = {
     [ActionTypes.LOAD_FROM_FILE](
         { commit, dispatch }: AugmentedActionContext,
         file: File,
-    ): void {
-        commit(
-            MutationTypes.PUSH_PROGRESS_MESSAGE,
-            `Loading file '${file.name}' (${file.size / 1000000}MB)`,
-        );
-
-        //TODO handle the file types from buffer, and use the same methods for both from ZIP and from standalone content
-        //THis simplifies the code and reduces redundancy
-        //TODO then handle the progress messages properly, so that they stay until the very end when all files have properly loaded
-
-        if (CompilationParser.isPackageFile(file.name)) {
-            // 1) read the Blob
-            JSZip.loadAsync(file)
-                .then(
-                    (zip: JSZip) => {
-                        zip.forEach(
-                            (
-                                _relativePath: string,
-                                zipEntry: JSZip.JSZipObject,
-                            ): void => {
-                                commit(
-                                    //Set the progress message, before using any of the async functions
-                                    MutationTypes.PUSH_PROGRESS_MESSAGE,
-                                    `Processing ZIP content: ${zipEntry.name}`,
-                                );
-                                zipEntry
-                                    .async('nodebuffer')
-                                    .then((content: Buffer): void => {
-                                        //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
-                                        const mediaFileName =
-                                            zipEntry.name.normalize();
-
-                                        if (
-                                            CompilationParser.isXmlFile(
-                                                mediaFileName,
-                                            )
-                                        ) {
-                                            CompilationParser.handleAsXmlCompilation(
-                                                content,
-                                            )
-                                                .then((compilation) => {
-                                                    commit(
-                                                        MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
-                                                        compilation,
-                                                    );
-                                                })
-                                                .finally(() => {
-                                                    commit(
-                                                        MutationTypes.POP_PROGRESS_MESSAGE,
-                                                        undefined,
-                                                    );
-                                                });
-                                        } else if (
-                                            CompilationParser.isMediaFile(
-                                                mediaFileName,
-                                            )
-                                        ) {
-                                            const mediaBlob =
-                                                CompilationParser.handleAsMediaContent(
-                                                    mediaFileName,
-                                                    content,
-                                                    RezMimeTypes.AUDIO_MP3,
-                                                );
-                                            dispatch(
-                                                ActionTypes.ADD_MEDIA_BLOB,
-                                                mediaBlob,
-                                            ).finally(() => {
-                                                commit(
-                                                    MutationTypes.POP_PROGRESS_MESSAGE,
-                                                    undefined,
-                                                );
-                                            });
-                                        } else if (
-                                            CompilationParser.isBplistFile(
-                                                mediaFileName,
-                                            )
-                                        ) {
-                                            CompilationParser.handleAsLivePlaybackPlaylist(
-                                                content,
-                                            )
-                                                .then((compilation) => {
-                                                    commit(
-                                                        MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
-                                                        compilation,
-                                                    );
-                                                })
-                                                .finally(() => {
-                                                    commit(
-                                                        MutationTypes.POP_PROGRESS_MESSAGE,
-                                                        undefined,
-                                                    );
-                                                });
-                                        } else {
-                                            console.warn(
-                                                `un-ZIP: Unknown content type for filename: ${file.name}`,
-                                            );
-                                        }
-                                    })
-                                    .finally(() => {
-                                        commit(
-                                            MutationTypes.POP_PROGRESS_MESSAGE,
-                                            undefined,
-                                        );
-                                    });
-                            },
-                        );
-                    },
-                    function (e) {
-                        console.error(
-                            `un-ZIP: Error reading ${file.name}: ${e.message}`,
-                        );
-                    },
-                )
-                .finally(() => {
-                    commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
-                });
-        } else if (CompilationParser.isXmlFile(file.name)) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                const content = Buffer.from(reader.result as string);
-                CompilationParser.handleAsXmlCompilation(content)
-                    .then((compilation) => {
-                        commit(
-                            MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
-                            compilation,
-                        );
-                    })
-                    .finally(() => {
-                        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
-                    });
-            };
-            reader.onerror = (): void => {
-                console.error(
-                    'Failed to read file ' + file.name + ': ' + reader.error,
-                );
-                reader.abort(); // (...does this do anything useful in an onerror handler?)
-            };
-            reader.readAsText(file);
-        } else if (CompilationParser.isMediaFile(file.name)) {
-            dispatch(
-                ActionTypes.ADD_MEDIA_BLOB,
-                new MediaBlob(file.name, file),
+    ): Promise<void> {
+        return new Promise((resolve, reject) => {
+            commit(
+                MutationTypes.PUSH_PROGRESS_MESSAGE,
+                `Loading file '${file.name}' (${file.size / 1000000}MB)`,
             );
-            commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
-        } else if (CompilationParser.isBplistFile(file.name)) {
-            const reader = new FileReader();
 
-            reader.onload = () => {
-                const content = Buffer.from(reader.result as ArrayBuffer);
-                CompilationParser.handleAsLivePlaybackPlaylist(content)
-                    .then((compilation) => {
-                        commit(
-                            MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
-                            compilation,
-                        );
-                    })
+            //TODO handle the file types from buffer, and use the same methods for both from ZIP and from standalone content
+            //THis simplifies the code and reduces redundancy
+            //TODO then handle the progress messages properly, so that they stay until the very end when all files have properly loaded
+
+            if (CompilationParser.isPackageFile(file.name)) {
+                // 1) read the Blob
+                JSZip.loadAsync(file)
+                    .then(
+                        (zip: JSZip) => {
+                            zip.forEach(
+                                (
+                                    _relativePath: string,
+                                    zipEntry: JSZip.JSZipObject,
+                                ): void => {
+                                    commit(
+                                        //Set the progress message, before using any of the async functions
+                                        MutationTypes.PUSH_PROGRESS_MESSAGE,
+                                        `Processing ZIP content: ${zipEntry.name}`,
+                                    );
+                                    zipEntry
+                                        .async('nodebuffer')
+                                        .then((content: Buffer): void => {
+                                            //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
+                                            const mediaFileName =
+                                                zipEntry.name.normalize();
+
+                                            if (
+                                                CompilationParser.isXmlFile(
+                                                    mediaFileName,
+                                                )
+                                            ) {
+                                                CompilationParser.handleAsXmlCompilation(
+                                                    content,
+                                                )
+                                                    .then((compilation) => {
+                                                        commit(
+                                                            MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
+                                                            compilation,
+                                                        );
+                                                    })
+                                                    .finally(() => {
+                                                        commit(
+                                                            MutationTypes.POP_PROGRESS_MESSAGE,
+                                                            undefined,
+                                                        );
+                                                    });
+                                            } else if (
+                                                CompilationParser.isMediaFile(
+                                                    mediaFileName,
+                                                )
+                                            ) {
+                                                const mediaBlob =
+                                                    CompilationParser.handleAsMediaContent(
+                                                        mediaFileName,
+                                                        content,
+                                                        RezMimeTypes.AUDIO_MP3,
+                                                    );
+                                                dispatch(
+                                                    ActionTypes.ADD_MEDIA_BLOB,
+                                                    mediaBlob,
+                                                ).finally(() => {
+                                                    commit(
+                                                        MutationTypes.POP_PROGRESS_MESSAGE,
+                                                        undefined,
+                                                    );
+                                                });
+                                            } else if (
+                                                CompilationParser.isBplistFile(
+                                                    mediaFileName,
+                                                )
+                                            ) {
+                                                CompilationParser.handleAsLivePlaybackPlaylist(
+                                                    content,
+                                                )
+                                                    .then((compilation) => {
+                                                        commit(
+                                                            MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
+                                                            compilation,
+                                                        );
+                                                    })
+                                                    .finally(() => {
+                                                        commit(
+                                                            MutationTypes.POP_PROGRESS_MESSAGE,
+                                                            undefined,
+                                                        );
+                                                    });
+                                            } else {
+                                                console.warn(
+                                                    `un-ZIP: Unknown content type for filename: ${file.name}`,
+                                                );
+                                            }
+                                        })
+                                        .finally(() => {
+                                            commit(
+                                                MutationTypes.POP_PROGRESS_MESSAGE,
+                                                undefined,
+                                            );
+                                        });
+                                },
+                            );
+                        },
+                        function (e) {
+                            console.error(
+                                `un-ZIP: Error reading ${file.name}: ${e.message}`,
+                            );
+                        },
+                    )
                     .finally(() => {
                         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                        resolve();
                     });
-            };
-            reader.onerror = (): void => {
-                console.error(
-                    'Failed to read file ' + file.name + ': ' + reader.error,
-                );
-                reader.abort(); // (...does this do anything useful in an onerror handler?)
-            };
-            reader.readAsArrayBuffer(file);
-        } else {
-            console.warn("Unsupported file, not loaded: '" + file.name + "'");
-        }
+            } else if (CompilationParser.isXmlFile(file.name)) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const content = Buffer.from(reader.result as string);
+                    CompilationParser.handleAsXmlCompilation(content)
+                        .then((compilation) => {
+                            commit(
+                                MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
+                                compilation,
+                            );
+                        })
+                        .finally(() => {
+                            commit(
+                                MutationTypes.POP_PROGRESS_MESSAGE,
+                                undefined,
+                            );
+                            resolve();
+                        });
+                };
+                reader.onerror = (): void => {
+                    console.error(
+                        'Failed to read file ' +
+                            file.name +
+                            ': ' +
+                            reader.error,
+                    );
+                    reader.abort(); // (...does this do anything useful in an onerror handler?)
+                };
+                reader.readAsText(file);
+            } else if (CompilationParser.isMediaFile(file.name)) {
+                dispatch(
+                    ActionTypes.ADD_MEDIA_BLOB,
+                    new MediaBlob(file.name, file),
+                ).finally(() => {
+                    commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                    resolve();
+                });
+            } else if (CompilationParser.isBplistFile(file.name)) {
+                const reader = new FileReader();
+
+                reader.onload = () => {
+                    const content = Buffer.from(reader.result as ArrayBuffer);
+                    CompilationParser.handleAsLivePlaybackPlaylist(content)
+                        .then((compilation) => {
+                            commit(
+                                MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
+                                compilation,
+                            );
+                        })
+                        .finally(() => {
+                            commit(
+                                MutationTypes.POP_PROGRESS_MESSAGE,
+                                undefined,
+                            );
+                            resolve();
+                        });
+                };
+                reader.onerror = (): void => {
+                    console.error(
+                        'Failed to read file ' +
+                            file.name +
+                            ': ' +
+                            reader.error,
+                    );
+                    reader.abort(); // (...does this do anything useful in an onerror handler?)
+                };
+                reader.readAsArrayBuffer(file);
+            } else {
+                commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                reject(`Unsupported file, not loaded: '${file.name}'`);
+            }
+        });
     },
     [ActionTypes.DOWNLOAD_REX_FILE]({
         commit,

@@ -1,15 +1,13 @@
 <template>
-    <MediaDropZone />
-    <hr />
-    <MediaList v-if="hasMediaUrls" />
-    <hr />
+    <!-- <MediaList v-if="hasMediaUrls" /> -->
     <Compilation :compilation="compilation" v-if="hasCompilation" />
+    <MediaDropZone />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Compilation from '@/components/Compilation.vue';
-import MediaList from '@/components/MediaList.vue';
+// import MediaList from '@/components/MediaList.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import { ICompilation, ITrack } from '@/store/compilation-types';
 import { MediaUrl } from '@/store/state-types';
@@ -19,7 +17,7 @@ export default defineComponent({
     name: 'Edit',
     components: {
         Compilation,
-        MediaList,
+        // MediaList,
         MediaDropZone,
     },
     computed: {

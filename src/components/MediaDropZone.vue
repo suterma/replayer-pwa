@@ -1,28 +1,32 @@
 <template>
+    <!-- This level is designed that the two input methods can grow and shink, filling up the available horizontal space.
+The URL input should be wider, because it should be able to easily deal with lenghty input values -->
     <nav class="level">
-        <div class="level-left">
-            <div class="level-item has-text-centered">
-                <div
-                    :class="{
-                        box: true,
-                        'has-background-black': true,
-                        'has-background-info-dark': this.isDraggingOver,
-                        'has-border-info': this.isDraggingOver,
-                    }"
-                    @dragover="dragover"
-                    @dragleave="dragleave"
-                    @drop="drop"
-                >
-                    <input
-                        type="file"
-                        multiple
-                        name="fields[assetsFieldHandle][]"
-                        id="assetsFieldHandle"
-                        class="is-hidden w-px h-px opacity-0 overflow-hidden absolute"
-                        @change="onChange"
-                        ref="file"
-                        accept=".rez,.zip,.xml,.rex,.mp3"
-                    />
+        <div class="level-item has-text-centered">
+            <div
+                :class="{
+                    box: true,
+                    button: true,
+                    'fill-available': true,
+                    'has-background-info-dark': this.isDraggingOver,
+                    'has-border-info': this.isDraggingOver,
+                }"
+                @dragover="dragover"
+                @dragleave="dragleave"
+                @drop="drop"
+            >
+                <input
+                    type="file"
+                    multiple
+                    name="fields[assetsFieldHandle][]"
+                    id="assetsFieldHandle"
+                    class="is-hidden"
+                    @change="onChange"
+                    ref="file"
+                    accept=".rez,.zip,.xml,.rex,.mp3"
+                />
+
+                <label for="assetsFieldHandle" class="is-clickable">
                     <span
                         :class="{
                             icon: true,
@@ -40,54 +44,36 @@
                             </svg>
                         </i>
                     </span>
-
-                    <label for="assetsFieldHandle" class="block cursor-pointer">
-                        Click or drop to add file(s)
-                    </label>
-                    <!-- <ul class="mt-4" v-if="this.filelist.length" v-cloak>
-                        <li
-                            class="text-sm p-1"
-                            v-for="file in filelist"
-                            :key="file"
-                        >
-                            {{ file.name
-                            }}<button
-                                class="ml-2"
-                                type="button"
-                                @click="remove(filelist.indexOf(file))"
-                                title="Remove file"
-                            >
-                                remove
-                            </button>
-                        </li>
-                    </ul> -->
-                </div>
+                    <span> Click or drop to add file(s) </span>
+                </label>
             </div>
         </div>
+
         <div class="level-item has-text-centered">
             <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
         </div>
-        <div class="level-right">
-            <div class="level-item has-text-centered">
-                <div class="field">
-                    <!-- <label class="label">Paste an URL to a file</label> -->
-                    <div class="control">
-                        <input
-                            class="input"
-                            type="url"
-                            placeholder="Paste an URL"
-                            @change="loadUrl"
-                            size="60"
-                        />
-                    </div>
-                    <!-- <p class="help">
-            Must be a location with a resource of one of the above
-        </p> -->
+        <div
+            class="level-item has-text-centered is-flex-grow-5 is-flex-shrink-1"
+        >
+            <div class="field fill-available has-addons">
+                <div class="control fill-available">
+                    <input
+                        class="input"
+                        type="url"
+                        v-model="onlineResourceLocation"
+                        placeholder="Paste an URL"
+                        size="60"
+                    />
+                </div>
+                <div class="control">
+                    <button class="button is-info" @click="fetchUrl">
+                        Fetch
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
-
+    Supported items:
     <div class="content">
         <SupportedFilesText />
     </div>
@@ -97,7 +83,9 @@
 import { defineComponent } from 'vue';
 import SupportedFilesText from '@/components/SupportedFilesText.vue';
 import { ActionTypes } from '@/store/action-types';
-
+import { Cue, ICue, Track } from '@/store/compilation-types';
+import { MutationTypes } from '@/store/mutation-types';
+import { v4 as uuidv4 } from 'uuid';
 //import { MediaUrl } from '@/store/state-types';
 
 /** AcceptsShows the available media URLs as a tag list
@@ -114,6 +102,8 @@ export default defineComponent({
         filelist: new Array<File>(),
         /** Indicates whether there is currently a dragging operation ongoing */
         isDraggingOver: false,
+
+        onlineResourceLocation: '',
     }),
     methods: {
         onChange() {
@@ -179,7 +169,19 @@ export default defineComponent({
         /** Loads a single file by loading it's content
          */
         async loadFile(file: File): Promise<void> {
-            this.$store.dispatch(ActionTypes.LOAD_FROM_FILE, file);
+            this.$store
+                .dispatch(ActionTypes.LOAD_FROM_FILE, file)
+                .catch((errorMessage: string) => {
+                    this.$store.commit(
+                        MutationTypes.PUSH_ERROR_MESSAGE,
+                        errorMessage,
+                    );
+                    //Do not create a new track
+                    throw new Error(errorMessage);
+                })
+                .then(() => {
+                    this.createDefaultTrackFor(file.name);
+                });
         },
 
         remove(i: number) {
@@ -208,21 +210,46 @@ export default defineComponent({
                 }
             }
         },
-        /** Loads a single URL by loading it's content
+        /** Fetches a single URL by loading it's content
          */
-        async loadUrl(event: Event): Promise<void> {
+        async fetchUrl(): Promise<void> {
+            //TODO show legel info about download first
+
             console.debug(
                 'MediaDropZone::loadUrl:event:',
-                (event.target as HTMLInputElement).value,
+                this.onlineResourceLocation,
             );
 
-            const url = (event.target as HTMLInputElement).value;
-            if (url) {
-                this.$store.dispatch(
-                    ActionTypes.LOAD_FROM_URL,
-                    (event.target as HTMLInputElement).value,
-                );
+            if (this.onlineResourceLocation) {
+                this.$store
+                    .dispatch(
+                        ActionTypes.LOAD_FROM_URL,
+                        this.onlineResourceLocation,
+                    )
+                    .catch((errorMessage: string) => {
+                        this.$store.commit(
+                            MutationTypes.PUSH_ERROR_MESSAGE,
+                            errorMessage,
+                        );
+                        throw new Error(errorMessage);
+                    })
+                    .then(() => {
+                        this.createDefaultTrackFor(this.onlineResourceLocation);
+                    });
             }
+        },
+        /** Creates a default track for the given URL (Using the URL as part of the name)*/
+        createDefaultTrackFor(url: string) {
+            const newTrack = new Track(
+                `New Track for ${url.normalize()}`,
+                '',
+                '',
+                0,
+                url,
+                uuidv4(),
+                new Array<ICue>(new Cue('Intro', '', 0, null, uuidv4())),
+            );
+            this.$store.commit(MutationTypes.ADD_TRACK, newTrack);
         },
     },
     computed: {},
@@ -237,6 +264,13 @@ export default defineComponent({
 .box {
     border-width: 1px;
     border-style: dashed;
-    background-color: transparent;
+    /* background-color: transparent; */
+}
+
+.fill-available {
+    width: 100%;
+    width: -moz-available; /* WebKit-based browsers will ignore this. */
+    width: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
+    width: fill-available;
 }
 </style>
