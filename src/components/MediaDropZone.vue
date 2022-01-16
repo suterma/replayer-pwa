@@ -1,7 +1,7 @@
 <template>
     <!-- This level is designed that the two input methods can grow and shink, filling up the available horizontal space.
 The URL input should be wider, because it should be able to easily deal with lenghty input values -->
-    <nav class="level">
+    <nav class="level media-drop-zone">
         <div class="level-item has-text-centered">
             <div
                 :class="{
@@ -66,10 +66,16 @@ The URL input should be wider, because it should be able to easily deal with len
                     />
                 </div>
                 <div class="control">
-                    <button class="button is-info" @click="fetchUrl">
+                    <button class="button is-primary" @click="fetchUrl">
                         Fetch
+                        <!-- Download &amp; use offline -->
                     </button>
                 </div>
+                <!-- <div class="control">
+                    <button class="button is-info" @click="fetchUrl">
+                        Use online
+                    </button>
+                </div> -->
             </div>
         </div>
     </nav>
@@ -86,6 +92,7 @@ import { ActionTypes } from '@/store/action-types';
 import { Cue, ICue, Track } from '@/store/compilation-types';
 import { MutationTypes } from '@/store/mutation-types';
 import { v4 as uuidv4 } from 'uuid';
+import CompilationParser from '@/store/compilation-parser';
 //import { MediaUrl } from '@/store/state-types';
 
 /** AcceptsShows the available media URLs as a tag list
@@ -119,16 +126,8 @@ export default defineComponent({
             console.log('Filename: ' + file.name);
             console.log('Type: ' + file.type);
             console.log('Size: ' + file.size + ' bytes');
-            //Check for supported file types (see https://stackoverflow.com/a/29672957)
-            if (
-                [
-                    'audio/mpeg' /*mp3*/,
-                    'application/zip' /*zip*/,
-                    'application/x-zip-compressed' /*zip*/,
-                    'application/xml' /*xml*/,
-                    'text/xml' /*xml*/,
-                ].includes(file.type)
-            ) {
+
+            if (CompilationParser.isSupportedMimeType(file.type)) {
                 return true;
             }
             //Check for supported file extensions
@@ -180,7 +179,7 @@ export default defineComponent({
                     throw new Error(errorMessage);
                 })
                 .then(() => {
-                    this.createDefaultTrackFor(file.name);
+                    this.createDefaultTrackForFile(file);
                 });
         },
 
@@ -212,11 +211,11 @@ export default defineComponent({
         },
         /** Fetches a single URL by loading it's content
          */
-        async fetchUrl(): Promise<void> {
+        fetchUrl(): void {
             //TODO show legel info about download first
 
             console.debug(
-                'MediaDropZone::loadUrl:event:',
+                'MediaDropZone::fetchUrl:event:',
                 this.onlineResourceLocation,
             );
 
@@ -227,6 +226,10 @@ export default defineComponent({
                         this.onlineResourceLocation,
                     )
                     .catch((errorMessage: string) => {
+                        console.debug(
+                            'MediaDropZone::fetchUrl:catch:errorMessage',
+                            errorMessage,
+                        );
                         this.$store.commit(
                             MutationTypes.PUSH_ERROR_MESSAGE,
                             errorMessage,
@@ -234,14 +237,29 @@ export default defineComponent({
                         throw new Error(errorMessage);
                     })
                     .then(() => {
-                        this.createDefaultTrackFor(this.onlineResourceLocation);
+                        this.createDefaultTrackForUrl(
+                            this.onlineResourceLocation,
+                        );
                     });
             }
         },
+        /** Creates a default track for the given File (Using the File name as the name and the URL)*/
+        createDefaultTrackForFile(file: File) {
+            const name = file.name.normalize();
+            this.commitNewTrackWithName(name, name);
+        },
         /** Creates a default track for the given URL (Using the URL as part of the name)*/
-        createDefaultTrackFor(url: string) {
+        createDefaultTrackForUrl(url: string) {
+            const name = CompilationParser.extractFileNameFromUrl(
+                url.normalize(),
+            );
+            this.commitNewTrackWithName(name, url);
+        },
+
+        /** Commits a new track with the given name */
+        commitNewTrackWithName(name: string, url: string) {
             const newTrack = new Track(
-                `New Track for ${url.normalize()}`,
+                `New Track for ${name}`,
                 '',
                 '',
                 0,
@@ -256,15 +274,10 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-/* [v-cloak] {
-    display: none;
-} */
-
 /** Style the box like a typical drop zone */
 .box {
     border-width: 1px;
     border-style: dashed;
-    /* background-color: transparent; */
 }
 
 .fill-available {
@@ -272,5 +285,11 @@ export default defineComponent({
     width: -moz-available; /* WebKit-based browsers will ignore this. */
     width: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
     width: fill-available;
+}
+
+.media-drop-zone {
+    /** Add a margin at the top, to have a space between this drop zone
+    and the possible tracks above it. */
+    margin-top: 1.5rem;
 }
 </style>

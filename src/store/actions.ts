@@ -167,21 +167,31 @@ export const actions: ActionTree<State, State> & Actions = {
                 }
                 console.debug('RezLoader::loadUrl:response', response);
                 response.blob().then((blob) => {
-                    const contentType = response.headers.get('Content-Type');
-                    console.debug(
-                        'RezLoader::loadUrl:contentType',
-                        contentType,
+                    const contentType = CompilationParser.getContentType(
+                        url,
+                        response,
                     );
+
+                    //TODO Check whether contentType is supported
+                    if (!CompilationParser.isSupportedMimeType(contentType)) {
+                        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                        reject(
+                            `Content MIME type '${contentType}' is not supported`,
+                        );
+                        return;
+                    }
+
                     const file = new File([blob], url /* as name */, {
                         type: contentType ?? undefined,
                     });
+
                     dispatch(ActionTypes.LOAD_FROM_FILE, file)
                         .catch((errorMessage: string) => {
-                            commit(
-                                MutationTypes.PUSH_ERROR_MESSAGE,
-                                errorMessage,
-                            );
-                            reject();
+                            // commit(
+                            //     MutationTypes.PUSH_ERROR_MESSAGE,
+                            //     errorMessage,
+                            // );
+                            reject(errorMessage);
                         })
                         .finally(() => {
                             commit(
@@ -209,7 +219,7 @@ export const actions: ActionTree<State, State> & Actions = {
             //THis simplifies the code and reduces redundancy
             //TODO then handle the progress messages properly, so that they stay until the very end when all files have properly loaded
 
-            if (CompilationParser.isPackageFile(file.name)) {
+            if (CompilationParser.isPackageFile(file)) {
                 // 1) read the Blob
                 JSZip.loadAsync(file)
                     .then(
@@ -228,12 +238,12 @@ export const actions: ActionTree<State, State> & Actions = {
                                         .async('nodebuffer')
                                         .then((content: Buffer): void => {
                                             //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
-                                            const mediaFileName =
+                                            const zipEntryName =
                                                 zipEntry.name.normalize();
 
                                             if (
-                                                CompilationParser.isXmlFile(
-                                                    mediaFileName,
+                                                CompilationParser.isXmlFileName(
+                                                    zipEntryName,
                                                 )
                                             ) {
                                                 CompilationParser.handleAsXmlCompilation(
@@ -252,13 +262,13 @@ export const actions: ActionTree<State, State> & Actions = {
                                                         );
                                                     });
                                             } else if (
-                                                CompilationParser.isMediaFile(
-                                                    mediaFileName,
+                                                CompilationParser.isMediaFileName(
+                                                    zipEntryName,
                                                 )
                                             ) {
                                                 const mediaBlob =
                                                     CompilationParser.handleAsMediaContent(
-                                                        mediaFileName,
+                                                        zipEntryName,
                                                         content,
                                                         RezMimeTypes.AUDIO_MP3,
                                                     );
@@ -272,8 +282,8 @@ export const actions: ActionTree<State, State> & Actions = {
                                                     );
                                                 });
                                             } else if (
-                                                CompilationParser.isBplistFile(
-                                                    mediaFileName,
+                                                CompilationParser.isBplistFileName(
+                                                    zipEntryName,
                                                 )
                                             ) {
                                                 CompilationParser.handleAsLivePlaybackPlaylist(
@@ -316,7 +326,7 @@ export const actions: ActionTree<State, State> & Actions = {
                         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                         resolve();
                     });
-            } else if (CompilationParser.isXmlFile(file.name)) {
+            } else if (CompilationParser.isXmlFile(file)) {
                 const reader = new FileReader();
                 reader.onload = () => {
                     const content = Buffer.from(reader.result as string);
@@ -345,7 +355,7 @@ export const actions: ActionTree<State, State> & Actions = {
                     reader.abort(); // (...does this do anything useful in an onerror handler?)
                 };
                 reader.readAsText(file);
-            } else if (CompilationParser.isMediaFile(file.name)) {
+            } else if (CompilationParser.isMediaFile(file)) {
                 dispatch(
                     ActionTypes.ADD_MEDIA_BLOB,
                     new MediaBlob(file.name, file),
@@ -353,7 +363,7 @@ export const actions: ActionTree<State, State> & Actions = {
                     commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                     resolve();
                 });
-            } else if (CompilationParser.isBplistFile(file.name)) {
+            } else if (CompilationParser.isBplistFileName(file.name)) {
                 const reader = new FileReader();
 
                 reader.onload = () => {
