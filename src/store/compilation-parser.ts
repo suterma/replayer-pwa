@@ -17,7 +17,19 @@ import { XmlCompilation } from '@/code/xml/XmlCompilation';
  * Provides helper methods for parsing compilations from and to external storage formats.
  */
 export default class CompilationParser {
-    /** Tries to extract a file name from the URL, by splitting on the path, if possible. */
+    /** Maps a URL to a locally usable name
+     * @remarks can be used to match a track to a stored media file
+     * @devdoc Just removes the protocol
+     * @devdoc Full URL's are not usable for Replayer here
+     *  as file names because they will be invalid insided a ZIP archive.
+     */
+    static getLocalResourceName(url: string): string {
+        return url.replace(/^(https?:|)\/\//, '');
+    }
+
+    /** Tries to infer a file name from the URL, by splitting on the path, if possible.
+     * @remarks can be used to get a human readable name for a Track, which originates from an URL
+     */
     static extractFileNameFromUrl(url: string): string {
         const parsedUrl = new URL(url);
         const pathName = parsedUrl.pathname;

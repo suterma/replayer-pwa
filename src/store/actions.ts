@@ -34,7 +34,7 @@ export interface Actions {
     [ActionTypes.LOAD_FROM_URL](
         { commit }: AugmentedActionContext,
         url: string,
-    ): Promise<void>;
+    ): Promise<string>;
     [ActionTypes.LOAD_FROM_FILE](
         { commit }: AugmentedActionContext,
         file: File,
@@ -144,7 +144,7 @@ export const actions: ActionTree<State, State> & Actions = {
     [ActionTypes.LOAD_FROM_URL](
         { commit, dispatch }: AugmentedActionContext,
         url: string,
-    ): Promise<void> {
+    ): Promise<string> {
         return new Promise((resolve, reject) => {
             if (!CompilationParser.isValidHttpUrl(url)) {
                 commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
@@ -180,10 +180,15 @@ export const actions: ActionTree<State, State> & Actions = {
                         );
                         return;
                     }
-
-                    const file = new File([blob], url /* as name */, {
-                        type: contentType ?? undefined,
-                    });
+                    const localResourceName =
+                        CompilationParser.getLocalResourceName(url);
+                    const file = new File(
+                        [blob],
+                        localResourceName /* as name */,
+                        {
+                            type: contentType ?? undefined,
+                        },
+                    );
 
                     dispatch(ActionTypes.LOAD_FROM_FILE, file)
                         .catch((errorMessage: string) => {
@@ -198,7 +203,7 @@ export const actions: ActionTree<State, State> & Actions = {
                                 MutationTypes.POP_PROGRESS_MESSAGE,
                                 undefined,
                             );
-                            resolve();
+                            resolve(localResourceName);
                         });
                 });
             });

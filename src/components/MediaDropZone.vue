@@ -78,6 +78,8 @@ The URL input should be wider, because it should be able to easily deal with len
                 </div> -->
             </div>
         </div>
+        <br />
+        https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20sop.mp3
     </nav>
     Supported items:
     <div class="content">
@@ -212,7 +214,7 @@ export default defineComponent({
         /** Fetches a single URL by loading it's content
          */
         fetchUrl(): void {
-            //TODO show legel info about download first
+            //TODO show legal info about download first
 
             console.debug(
                 'MediaDropZone::fetchUrl:event:',
@@ -220,11 +222,9 @@ export default defineComponent({
             );
 
             if (this.onlineResourceLocation) {
+                const url = this.onlineResourceLocation.normalize();
                 this.$store
-                    .dispatch(
-                        ActionTypes.LOAD_FROM_URL,
-                        this.onlineResourceLocation,
-                    )
+                    .dispatch(ActionTypes.LOAD_FROM_URL, url)
                     .catch((errorMessage: string) => {
                         console.debug(
                             'MediaDropZone::fetchUrl:catch:errorMessage',
@@ -237,9 +237,7 @@ export default defineComponent({
                         throw new Error(errorMessage);
                     })
                     .then(() => {
-                        this.createDefaultTrackForUrl(
-                            this.onlineResourceLocation,
-                        );
+                        this.createDefaultTrackForUrl(url);
                     });
             }
         },
@@ -250,9 +248,7 @@ export default defineComponent({
         },
         /** Creates a default track for the given URL (Using the URL as part of the name)*/
         createDefaultTrackForUrl(url: string) {
-            const name = CompilationParser.extractFileNameFromUrl(
-                url.normalize(),
-            );
+            const name = CompilationParser.extractFileNameFromUrl(url);
             this.commitNewTrackWithName(name, url);
         },
 

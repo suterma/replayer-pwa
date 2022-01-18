@@ -13,6 +13,7 @@ export enum ActionTypes {
      * @remarks The content might be a package or single file of any supported content.
      * @remarks This method can be called multiple times, each resource gets appropriately added to the current compilation
      * @param url - The URL to load the file from
+     * @return A locally usable name, derived from the URL, which can be used to match the track to the stored media file
      */
     LOAD_FROM_URL = 'LOAD_FROM_URL',
     /** Loads a single file or package from the local file system
