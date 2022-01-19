@@ -17,108 +17,6 @@ import { XmlCompilation } from '@/code/xml/XmlCompilation';
  * Provides helper methods for parsing compilations from and to external storage formats.
  */
 export default class CompilationParser {
-    /** Maps a URL to a locally usable name
-     * @remarks can be used to match a track URL to a stored media file
-     * @devdoc Just removes the protocol
-     * @devdoc Full URL's are not usable for Replayer here
-     *  as file names because they will be invalid as path insided a ZIP archive.
-     */
-    static getLocalResourceName(url: string): string {
-        return url.replace(/^(https?:|)\/\//, '');
-    }
-
-    /** Tries to infer a file name from the URL, by splitting on the path, if possible.
-     * @remarks can be used to get a human readable name for a Track, which originates from an URL
-     */
-    static extractFileNameFromUrl(url: string): string {
-        const parsedUrl = new URL(url);
-        const pathName = parsedUrl.pathname;
-        const pathParts = pathName.split('/');
-        const fileName = pathParts.pop(); //the latest item is considered a file name
-        if (fileName) {
-            return fileName;
-        }
-        if (pathName) {
-            return pathName;
-        }
-
-        return parsedUrl.hostname;
-    }
-    /** Returns whether the given MIME type is any of the supported types by Replayer */
-    static isSupportedMimeType(type: string | undefined): boolean {
-        if (
-            this.isSupportedPackageMimeType(type) ||
-            this.isSupportedMediaMimeType(type)
-        ) {
-            return true;
-        }
-        return false;
-    }
-
-    /** Returns whether the given MIME type is a supported package MIME type by Replayer */
-    static isSupportedPackageMimeType(type: string | undefined): boolean {
-        if (type) {
-            if (
-                [
-                    'application/zip' /*zip*/,
-                    'application/x-zip-compressed' /*zip*/,
-                    'application/xml' /*xml*/,
-                    'text/xml' /*xml*/,
-                ].includes(type)
-            ) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /** Returns whether the given MIME type is a supported media MIME type by Replayer */
-    static isSupportedMediaMimeType(type: string | undefined): boolean {
-        if (type) {
-            //Check for supported MIME types (see https://stackoverflow.com/a/29672957)
-            if (
-                ['audio/mp3' /*mp3, by chrome*/, 'audio/mpeg' /*mp3*/].includes(
-                    type,
-                )
-            ) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /** Gets the content MIME type from the response
-     * @remarks Applies some educated guess in case the content type is not available from the response headers
-     */
-    static getContentType(url: string, response: Response): string | undefined {
-        const contentType = response.headers.get('Content-Type');
-        if (contentType) {
-            console.debug(
-                'CompilationParser::getContentType:contentType',
-                contentType,
-            );
-            return contentType;
-        } else {
-            //Try to extract the content type from the URL
-            const fileName = this.extractFileNameFromUrl(url);
-            const fileExtension = fileName?.split('.').pop()?.toLowerCase();
-            console.debug(
-                'CompilationParser::getContentType:fileExtension',
-                fileExtension,
-            );
-            if (fileExtension == 'mp3') {
-                return 'audio/mpeg' /*mp3*/;
-            }
-            if (fileExtension == 'zip' || fileExtension == 'rez') {
-                return 'application/zip' /*zip*/;
-            }
-
-            if (fileExtension == 'xml' || fileExtension == 'rex') {
-                return 'application/xml' /*xml*/;
-            }
-            return undefined;
-        }
-    }
     /** Parses an XML object into an ICompilation.
      * @param xmlCompilation - An object representing the stored Compilation from an XML import.
      * @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
@@ -144,55 +42,6 @@ export default class CompilationParser {
         const builder = new xml2js.Builder();
         const xml = builder.buildObject(obj);
         return xml;
-    }
-
-    /** Asserts whether the file represents an XML compilation file */
-    public static isXmlFile(file: File): boolean {
-        return this.isXmlFileName(file.name);
-    }
-
-    /** Asserts whether the file name represents an XML compilation file */
-    public static isXmlFileName(fileName: string): boolean {
-        return (
-            fileName.toLowerCase().endsWith('.rex') ||
-            fileName.toLowerCase().endsWith('.xml')
-        );
-    }
-
-    /** Asserts whether the file name represents a bplist (Binary Propertylist) compilation file */
-    public static isBplistFileName(fileName: string): boolean {
-        return (
-            fileName.toLowerCase().endsWith('.bplist') ||
-            fileName.toLowerCase().endsWith('playlist')
-        );
-    }
-
-    /** Asserts whether the file represents a media file
-     * @remarks Currently, only mp3 is supported
-     */
-    public static isMediaFile(file: File): boolean {
-        return (
-            this.isMediaFileName(file.name) ||
-            this.isSupportedMediaMimeType(file.type)
-        );
-    }
-
-    /** Asserts whether the file name represents a media file
-     * @remarks Currently, only mp3 is supported
-     */
-    public static isMediaFileName(fileName: string): boolean {
-        return fileName.toLowerCase().endsWith('.mp3');
-    }
-
-    /** Asserts whether the file represents a package file
-     * @remarks ZIP and XML packages are supported
-     */
-    public static isPackageFile(file: File): boolean {
-        return (
-            file.name.toLowerCase().endsWith('.rez') ||
-            file.name.toLowerCase().endsWith('.zip') ||
-            this.isSupportedPackageMimeType(file.type)
-        );
     }
 
     /** Parses a PLIST object into an ICompilation.
@@ -358,19 +207,5 @@ export default class CompilationParser {
             type: mimeType,
         });
         return new MediaBlob(mediaFileName, blob);
-    }
-
-    public static isValidHttpUrl(url: string): boolean {
-        let parsedUrl;
-
-        try {
-            parsedUrl = new URL(url);
-        } catch (_) {
-            return false;
-        }
-
-        return (
-            parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:'
-        );
     }
 }

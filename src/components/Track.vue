@@ -284,53 +284,6 @@ export default defineComponent({
             }
         },
 
-        /** Finds the matching the media URL (playable data) for a track's file name, from an already loaded package
-         * @param fileName - The file name to search for.
-         * @param mediaUrlMap - A set of media URL's to search through.
-         * @remarks If strict file names do not match, a more lazy approach without case and without non-ascii characters is attempted
-         */
-        getMatchingPackageMediaUrl(
-            fileName: string | undefined,
-            mediaUrlMap: Map<string, MediaUrl>,
-        ): MediaUrl | null {
-            if (mediaUrlMap && fileName) {
-                //Default: Find by literal partial match of the file name
-                let url = null;
-                for (let [mediaFileName, mediaUrl] of mediaUrlMap) {
-                    if (
-                        CompilationHandler.isEndingWithOneAnother(
-                            fileName,
-                            mediaFileName,
-                        )
-                    ) {
-                        url = mediaUrl;
-                    }
-                }
-
-                if (!url) {
-                    //In case of possible weird characters, or case mismatch, try a more lazy match.
-                    const lazyFileName =
-                        CompilationHandler.getLazyFileName(fileName);
-
-                    for (let [mediaFileName, mediaUrl] of mediaUrlMap) {
-                        var lazyMediaFileName =
-                            CompilationHandler.getLazyFileName(mediaFileName);
-
-                        if (
-                            CompilationHandler.isEndingWithOneAnother(
-                                lazyFileName,
-                                lazyMediaFileName,
-                            )
-                        ) {
-                            url = mediaUrl;
-                        }
-                    }
-                }
-                return url;
-            } else {
-                return null;
-            }
-        },
         /** Updates the current seconds property with the temporal position of the track audio player
          * @remarks This is used to control the cue display for this track's cues
          */
@@ -457,7 +410,7 @@ export default defineComponent({
                 string,
                 MediaUrl
             >;
-            let mediaUrl = this.getMatchingPackageMediaUrl(
+            let mediaUrl = CompilationHandler.getMatchingPackageMediaUrl(
                 this.track?.Url,
                 mediaUrls,
             );

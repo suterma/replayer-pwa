@@ -1,5 +1,5 @@
 import { ICompilation, ITrack } from './compilation-types';
-import { MediaBlob } from './state-types';
+import { MediaBlob, MediaUrl } from './state-types';
 
 /**
  * Provides handling methods for compilation manipulation.
@@ -10,7 +10,7 @@ export default class CompilationHandler {
      * See https://stackoverflow.com/a/9364527/79485 and
      * https://stackoverflow.com/questions/20856197/remove-non-ascii-character-in-string
      */
-    public static getLazyFileName(fileName: string): string {
+    private static getLazyFileName(fileName: string): string {
         return (
             fileName
                 .toLowerCase()
@@ -18,6 +18,55 @@ export default class CompilationHandler {
                 .replace(/[^\x20-\x7F]/g, '')
         );
     }
+
+    /** Finds the matching the media URL (playable data) for a track's file name, from an already loaded package
+     * @param fileName - The file name to search for.
+     * @param mediaUrlMap - A set of media URL's to search through.
+     * @remarks If strict file names do not match, a more lazy approach without case and without non-ascii characters is attempted
+     */
+    public static getMatchingPackageMediaUrl(
+        fileName: string | undefined,
+        mediaUrlMap: Map<string, MediaUrl>,
+    ): MediaUrl | null {
+        if (mediaUrlMap && fileName) {
+            //Default: Find by literal partial match of the file name
+            let url = null;
+            for (const [mediaFileName, mediaUrl] of mediaUrlMap) {
+                if (
+                    CompilationHandler.isEndingWithOneAnother(
+                        fileName,
+                        mediaFileName,
+                    )
+                ) {
+                    url = mediaUrl;
+                }
+            }
+
+            if (!url) {
+                //In case of possible weird characters, or case mismatch, try a more lazy match.
+                const lazyFileName =
+                    CompilationHandler.getLazyFileName(fileName);
+
+                for (const [mediaFileName, mediaUrl] of mediaUrlMap) {
+                    const lazyMediaFileName =
+                        CompilationHandler.getLazyFileName(mediaFileName);
+
+                    if (
+                        CompilationHandler.isEndingWithOneAnother(
+                            lazyFileName,
+                            lazyMediaFileName,
+                        )
+                    ) {
+                        url = mediaUrl;
+                    }
+                }
+            }
+            return url;
+        } else {
+            return null;
+        }
+    }
+
     /** Sorts the blobs by whether their fileName lazily
      * starts or ends with the given fileName, returning the matching one first.
      * @remarks This method is useful to speed up delayed loading, to make sure the initially

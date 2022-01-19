@@ -60,7 +60,7 @@ The URL input should be wider, because it should be able to easily deal with len
                     <input
                         class="input"
                         type="url"
-                        v-model="onlineResourceLocation"
+                        v-model="url"
                         placeholder="Paste an URL"
                         size="60"
                     />
@@ -97,8 +97,7 @@ import { v4 as uuidv4 } from 'uuid';
 import CompilationParser from '@/store/compilation-parser';
 //import { MediaUrl } from '@/store/state-types';
 
-/** AcceptsShows the available media URLs as a tag list
- * @remarks Also allows removal of the media URLs
+/** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
  */
 export default defineComponent({
     name: 'MediaDropZone',
