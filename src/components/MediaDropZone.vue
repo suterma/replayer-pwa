@@ -78,13 +78,24 @@ The URL input should be wider, because it should be able to easily deal with len
                 </div> -->
             </div>
         </div>
-        <br />
-        https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20sop.mp3
     </nav>
     Supported items:
     <div class="content">
         <SupportedFilesText />
     </div>
+
+    Example URLs:
+    <br />
+    https://galiander.ca/corogaliano/2022springrehearsal/01%20Down%20To%20The%20River%20To%20Pray%202016.mp3
+    <br />
+    https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20sop.mp3
+    <br />
+    https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20alt.mp3
+    <br />
+    https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20ten.mp3
+    <br />
+    https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20bas.mp3
+    <br />
 </template>
 
 <script lang="ts">

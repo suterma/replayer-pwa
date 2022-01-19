@@ -69,7 +69,7 @@
                             convertDurationToDisplayTime
                         }}</span>
                     </p>
-                    <p class="level-item">
+                    <p class="level-item" v-if="cue?.Shortcut">
                         <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibilty as possible -->
                         <span
                             class="tag is-warning is-light is-outlined foreground has-opacity-third is-family-monospace"
