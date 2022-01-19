@@ -112,7 +112,8 @@ export default defineComponent({
         /** Indicates whether there is currently a dragging operation ongoing */
         isDraggingOver: false,
 
-        onlineResourceLocation: '',
+        /** The URL from whitch the media can be fetched from */
+        url: '',
     }),
     methods: {
         onChange() {
@@ -216,15 +217,11 @@ export default defineComponent({
         fetchUrl(): void {
             //TODO show legal info about download first
 
-            console.debug(
-                'MediaDropZone::fetchUrl:event:',
-                this.onlineResourceLocation,
-            );
+            console.debug('MediaDropZone::fetchUrl:event:', this.url);
 
-            if (this.onlineResourceLocation) {
-                const url = this.onlineResourceLocation.normalize();
+            if (this.url) {
                 this.$store
-                    .dispatch(ActionTypes.LOAD_FROM_URL, url)
+                    .dispatch(ActionTypes.LOAD_FROM_URL, this.url)
                     .catch((errorMessage: string) => {
                         console.debug(
                             'MediaDropZone::fetchUrl:catch:errorMessage',
@@ -237,17 +234,21 @@ export default defineComponent({
                         throw new Error(errorMessage);
                     })
                     .then(() => {
-                        this.createDefaultTrackForUrl(url);
+                        this.createDefaultTrackForUrl(this.url);
                     });
             }
         },
-        /** Creates a default track for the given File (Using the File name as the name and the URL)*/
+        /** Creates a default track for the given File (Using the File name both as the name and the URL for the track)*/
         createDefaultTrackForFile(file: File) {
             const name = file.name.normalize();
             this.commitNewTrackWithName(name, name);
         },
-        /** Creates a default track for the given URL (Using the URL as part of the name)*/
+        /** Creates a default track for the given URL (Using part of the URL as the name, and the original URL as the URL)
+         * @remarks The effectively used name for the resource in the local Indexed DB storage, if stored, differs from the URL.
+         * It can be derived from the URL by using the CompilationParser.getLocalResourceName() method.
+         */
         createDefaultTrackForUrl(url: string) {
+            //TODO redefine all those URL parameters as actual URL objects...
             const name = CompilationParser.extractFileNameFromUrl(url);
             this.commitNewTrackWithName(name, url);
         },

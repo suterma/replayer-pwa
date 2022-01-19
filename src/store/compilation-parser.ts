@@ -18,10 +18,10 @@ import { XmlCompilation } from '@/code/xml/XmlCompilation';
  */
 export default class CompilationParser {
     /** Maps a URL to a locally usable name
-     * @remarks can be used to match a track to a stored media file
+     * @remarks can be used to match a track URL to a stored media file
      * @devdoc Just removes the protocol
      * @devdoc Full URL's are not usable for Replayer here
-     *  as file names because they will be invalid insided a ZIP archive.
+     *  as file names because they will be invalid as path insided a ZIP archive.
      */
     static getLocalResourceName(url: string): string {
         return url.replace(/^(https?:|)\/\//, '');
