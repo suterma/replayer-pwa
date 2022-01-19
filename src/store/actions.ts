@@ -10,6 +10,7 @@ import JSZip from 'jszip';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 import CompilationHandler from './compilation-handler';
 import FileSaver from 'file-saver';
+import FileHandler from './filehandler';
 
 type AugmentedActionContext = {
     commit<K extends keyof Mutations>(
@@ -146,7 +147,7 @@ export const actions: ActionTree<State, State> & Actions = {
         url: string,
     ): Promise<string> {
         return new Promise((resolve, reject) => {
-            if (!CompilationParser.isValidHttpUrl(url)) {
+            if (!FileHandler.isValidHttpUrl(url)) {
                 commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                 reject(`Provided input is not a valid URL: '${url}'`);
                 return;
@@ -165,15 +166,18 @@ export const actions: ActionTree<State, State> & Actions = {
                     );
                     return;
                 }
+                //Use the final (possibly redirected URL for the next time)
+                //TODO test on real life URL whether this works reliably...
+                var finalUrl = new URL(response.url);
                 console.debug('RezLoader::loadUrl:response', response);
                 response.blob().then((blob) => {
-                    const contentType = CompilationParser.getContentType(
-                        url,
+                    const contentType = FileHandler.getContentType(
+                        finalUrl,
                         response,
                     );
 
                     //TODO Check whether contentType is supported
-                    if (!CompilationParser.isSupportedMimeType(contentType)) {
+                    if (!FileHandler.isSupportedMimeType(contentType)) {
                         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                         reject(
                             `Content MIME type '${contentType}' is not supported`,
@@ -181,7 +185,7 @@ export const actions: ActionTree<State, State> & Actions = {
                         return;
                     }
                     const localResourceName =
-                        CompilationParser.getLocalResourceName(url);
+                        FileHandler.getLocalResourceName(finalUrl);
                     const file = new File(
                         [blob],
                         localResourceName /* as name */,
@@ -224,7 +228,7 @@ export const actions: ActionTree<State, State> & Actions = {
             //THis simplifies the code and reduces redundancy
             //TODO then handle the progress messages properly, so that they stay until the very end when all files have properly loaded
 
-            if (CompilationParser.isPackageFile(file)) {
+            if (FileHandler.isSupportedPackageFile(file)) {
                 // 1) read the Blob
                 JSZip.loadAsync(file)
                     .then(
@@ -247,7 +251,7 @@ export const actions: ActionTree<State, State> & Actions = {
                                                 zipEntry.name.normalize();
 
                                             if (
-                                                CompilationParser.isXmlFileName(
+                                                FileHandler.isXmlFileName(
                                                     zipEntryName,
                                                 )
                                             ) {
@@ -267,7 +271,7 @@ export const actions: ActionTree<State, State> & Actions = {
                                                         );
                                                     });
                                             } else if (
-                                                CompilationParser.isMediaFileName(
+                                                FileHandler.isSupportedMediaFileName(
                                                     zipEntryName,
                                                 )
                                             ) {
@@ -287,7 +291,7 @@ export const actions: ActionTree<State, State> & Actions = {
                                                     );
                                                 });
                                             } else if (
-                                                CompilationParser.isBplistFileName(
+                                                FileHandler.isBplistFileName(
                                                     zipEntryName,
                                                 )
                                             ) {
@@ -331,7 +335,7 @@ export const actions: ActionTree<State, State> & Actions = {
                         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                         resolve();
                     });
-            } else if (CompilationParser.isXmlFile(file)) {
+            } else if (FileHandler.isXmlFile(file)) {
                 const reader = new FileReader();
                 reader.onload = () => {
                     const content = Buffer.from(reader.result as string);
@@ -360,7 +364,7 @@ export const actions: ActionTree<State, State> & Actions = {
                     reader.abort(); // (...does this do anything useful in an onerror handler?)
                 };
                 reader.readAsText(file);
-            } else if (CompilationParser.isMediaFile(file)) {
+            } else if (FileHandler.isSupportedMediaFile(file)) {
                 dispatch(
                     ActionTypes.ADD_MEDIA_BLOB,
                     new MediaBlob(file.name, file),
@@ -368,7 +372,7 @@ export const actions: ActionTree<State, State> & Actions = {
                     commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                     resolve();
                 });
-            } else if (CompilationParser.isBplistFileName(file.name)) {
+            } else if (FileHandler.isBplistFileName(file.name)) {
                 const reader = new FileReader();
 
                 reader.onload = () => {
