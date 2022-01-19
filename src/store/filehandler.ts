@@ -18,9 +18,14 @@ export default class FileHandler {
      */
     static extractNameFromUrl(url: URL): string {
         const fileName = this.extractFileNameFromUrl(url);
-        //TODO URL unencode to get a more readable name
-        //TODO remove extension if possible
-        return fileName;
+        const decodedFileName = decodeURI(fileName);
+        return FileHandler.removeExtension(decodedFileName);
+    }
+
+    static removeExtension(filename: string): string {
+        const lastDotPosition = filename.lastIndexOf('.');
+        if (lastDotPosition === -1) return filename;
+        else return filename.substr(0, lastDotPosition);
     }
 
     /** Tries to infer a correct file name from the URL, by splitting on the path, if possible.
@@ -38,6 +43,37 @@ export default class FileHandler {
         }
 
         return url.hostname;
+    }
+
+    /** Returns whether this file is supported by Replayer, either by MIME type or the file name (by it's extension).
+     */
+    static isSupportedFile(file: File): boolean {
+        if (
+            this.isSupportedMimeType(file.type) ||
+            this.isSupportedFileName(file.name)
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    /** Asserts whether the file represents a media file
+     * @remarks Currently, only mp3 is supported
+     */
+    public static isSupportedMediaFile(file: File): boolean {
+        return (
+            this.isSupportedMediaFileName(file.name) ||
+            this.isSupportedMediaMimeType(file.type)
+        );
+    }
+
+    /** Asserts whether the file represents a package file
+     */
+    public static isSupportedPackageFile(file: File): boolean {
+        return (
+            this.isSupportedPackageFileName(file.name) ||
+            this.isSupportedPackageMimeType(file.type)
+        );
     }
 
     /** Returns whether the given MIME type is any of the supported types by Replayer
@@ -206,26 +242,6 @@ export default class FileHandler {
         return (
             fileName.toLowerCase().endsWith('.bplist') ||
             fileName.toLowerCase().endsWith('playlist')
-        );
-    }
-
-    /** Asserts whether the file represents a media file
-     * @remarks Currently, only mp3 is supported
-     */
-    public static isSupportedMediaFile(file: File): boolean {
-        return (
-            this.isSupportedMediaFileName(file.name) ||
-            this.isSupportedMediaMimeType(file.type)
-        );
-    }
-
-    /** Asserts whether the file represents a package file
-     * @remarks ZIP and XML packages are supported
-     */
-    public static isSupportedPackageFile(file: File): boolean {
-        return (
-            this.isSupportedPackageFileName(file.name) ||
-            this.isSupportedPackageMimeType(file.type)
         );
     }
 

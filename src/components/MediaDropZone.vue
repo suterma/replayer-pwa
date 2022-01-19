@@ -94,8 +94,7 @@ import { ActionTypes } from '@/store/action-types';
 import { Cue, ICue, Track } from '@/store/compilation-types';
 import { MutationTypes } from '@/store/mutation-types';
 import { v4 as uuidv4 } from 'uuid';
-import CompilationParser from '@/store/compilation-parser';
-//import { MediaUrl } from '@/store/state-types';
+import FileHandler from '@/store/filehandler';
 
 /** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
  */
@@ -129,31 +128,7 @@ export default defineComponent({
             console.log('Type: ' + file.type);
             console.log('Size: ' + file.size + ' bytes');
 
-            if (CompilationParser.isSupportedMimeType(file.type)) {
-                return true;
-            }
-            //Check for supported file extensions
-            if (file && file.name) {
-                const fileExtension = file.name.split('.').pop()?.toLowerCase();
-                if (fileExtension) {
-                    if (
-                        [
-                            'mp3',
-                            'zip',
-                            'rez' /*replayer zip*/,
-                            'xml',
-                            'rex' /*replaer xml*/,
-                        ].includes(fileExtension)
-                    ) {
-                        return true;
-                    }
-                }
-            }
-
-            console.warn(
-                'File with mime type ' + file.type + ' is not supported',
-            );
-            return false;
+            return FileHandler.isSupportedFile(file);
         },
 
         /** Immediately loads all available files by loading their content
@@ -216,8 +191,7 @@ export default defineComponent({
         fetchUrl(): void {
             //TODO show legal info about download first
 
-            console.debug('MediaDropZone::fetchUrl:event:', this.url);
-
+            console.debug('MediaDropZone::fetchUrl:url:', this.url);
             if (this.url) {
                 this.$store
                     .dispatch(ActionTypes.LOAD_FROM_URL, this.url)
@@ -233,37 +207,42 @@ export default defineComponent({
                         throw new Error(errorMessage);
                     })
                     .then(() => {
-                        this.createDefaultTrackForUrl(this.url);
+                        this.createDefaultTrackForUrl(new URL(this.url));
                     });
             }
         },
         /** Creates a default track for the given File (Using the File name both as the name and the URL for the track)*/
         createDefaultTrackForFile(file: File) {
-            const name = file.name.normalize();
-            this.commitNewTrackWithName(name, name);
+            const fileName = file.name.normalize();
+            const nameWithoutExtension = FileHandler.removeExtension(fileName);
+            this.commitNewTrackWithName(nameWithoutExtension, fileName);
         },
         /** Creates a default track for the given URL (Using part of the URL as the name, and the original URL as the URL)
          * @remarks The effectively used name for the resource in the local Indexed DB storage, if stored, differs from the URL.
          * It can be derived from the URL by using the CompilationParser.getLocalResourceName() method.
          */
-        createDefaultTrackForUrl(url: string) {
-            //TODO redefine all those URL parameters as actual URL objects...
-            const name = CompilationParser.extractFileNameFromUrl(url);
-            this.commitNewTrackWithName(name, url);
+        createDefaultTrackForUrl(url: URL) {
+            const name = FileHandler.extractNameFromUrl(url);
+            this.commitNewTrackWithName(name, url.toString());
         },
 
-        /** Commits a new track with the given name */
+        /** Commits a new track with the given name
+         *  @param - url {string}  The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
+         */
         commitNewTrackWithName(name: string, url: string) {
+            const trackId = uuidv4();
+            const cueId = uuidv4();
             const newTrack = new Track(
-                `New Track for ${name}`,
+                `${name}`,
                 '',
                 '',
                 0,
                 url,
-                uuidv4(),
-                new Array<ICue>(new Cue('Intro', '', 0, null, uuidv4())),
+                trackId,
+                new Array<ICue>(new Cue('Intro', '', 0, null, cueId)),
             );
             this.$store.commit(MutationTypes.ADD_TRACK, newTrack);
+            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);
         },
     },
     computed: {},

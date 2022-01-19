@@ -51,8 +51,7 @@ export interface ITrack {
     /** The measure in beats per minute (Zero for no value). */
     Measure: number;
 
-    /** The URL for the media file.
-     * @remarks Currently, only local file paths are supported.
+    /** The URL or the local file name (possibly including a path) for the media file.
      * @devdoc If it is relative, it may get made absolute using the compilation's media path.
      */
     Url: string;
@@ -167,6 +166,7 @@ export class Track implements ITrack {
     Cues: Array<ICue> = new Array<ICue>();
 
     /** Creates a new track
+     * @param url {string} - The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
      */
     constructor(
         name: string,

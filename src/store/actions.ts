@@ -168,7 +168,7 @@ export const actions: ActionTree<State, State> & Actions = {
                 }
                 //Use the final (possibly redirected URL for the next time)
                 //TODO test on real life URL whether this works reliably...
-                var finalUrl = new URL(response.url);
+                const finalUrl = new URL(response.url);
                 console.debug('RezLoader::loadUrl:response', response);
                 response.blob().then((blob) => {
                     const contentType = FileHandler.getContentType(
