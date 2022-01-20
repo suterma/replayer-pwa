@@ -9,6 +9,5 @@ export const settingsMixin = {
         },
 
         ...mapGetters(['settings']),
-        //TODO how to get typed settings in the first place?
     },
 };

@@ -10,7 +10,7 @@ export default class CompilationHandler {
      * See https://stackoverflow.com/a/9364527/79485 and
      * https://stackoverflow.com/questions/20856197/remove-non-ascii-character-in-string
      */
-    private static getLazyFileName(fileName: string): string {
+    public static getLazyFileName(fileName: string): string {
         return (
             fileName
                 .toLowerCase()

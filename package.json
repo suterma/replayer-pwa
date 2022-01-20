@@ -29,7 +29,6 @@
         "bplist-parser": "^0.3.0",
         "bulmaswatch": "^0.8.1",
         "click-outside-vue3": "^4.0.1",
-        "core-js": "^3.6.5",
         "file-saver": "^2.0.5",
         "howler": "^2.2.3",
         "idb-keyval": "^6.0.3",
@@ -47,6 +46,7 @@
         "xml2js": "^0.4.23"
     },
     "devDependencies": {
+        "@types/core-js": "^2.5.5",
         "@types/file-saver": "^2.0.3",
         "@types/howler": "^2.2.4",
         "@types/jest": "^27.0.3",
@@ -70,6 +70,7 @@
         "@vue/test-utils": "^2.0.0-rc.16",
         "@vue/vue3-jest": "^27.0.0-alpha.3",
         "bulma": "^0.9.3",
+        "core-js": "^3.20.3",
         "eslint": "^6.8.0",
         "eslint-plugin-jest": "^25.2.4",
         "eslint-plugin-prettier": "^3.3.1",

@@ -35,7 +35,7 @@
             on the show state as a performance optimizations
             -->
             <template v-if="mediaObjectUrl">
-                <template v-if="this.settings.useHowlerJsAudioEngine">
+                <template v-if="this.getSettings.useHowlerJsAudioEngine">
                     <TrackHowlerPlayer
                         v-if="mediaObjectUrl"
                         ref="playerReference"
@@ -175,7 +175,7 @@ export default defineComponent({
          * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
          */
         activateWakeLock(): void {
-            if (this.settings.preventScreenTimeout) {
+            if (this.getSettings.preventScreenTimeout) {
                 if (!this.noSleep.isEnabled) {
                     this.noSleep.enable();
                 }
@@ -185,7 +185,7 @@ export default defineComponent({
          * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
          */
         deactivateWakeLock(): void {
-            if (this.settings.preventScreenTimeout) {
+            if (this.getSettings.preventScreenTimeout) {
                 if (this.noSleep.isEnabled) {
                     this.noSleep.disable();
                 }

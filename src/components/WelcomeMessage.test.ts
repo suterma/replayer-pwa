@@ -13,21 +13,23 @@ import { Settings } from '@/store/state-types';
  */
 describe('WelcomeMessage.vue', () => {
     it('should display the message when dismissal not set', () => {
+        //Arrange
         const store = createStore({
             getters: {
                 settings() {
-                    const settings = new Settings();
+                    let settings = Settings.default();
                     settings.neverShowWelcomeMessageAgain = false;
-
                     return settings;
                 },
             },
         });
+        //Act
         const wrapper = mount(WelcomeMessage, {
             global: {
                 plugins: [store],
             },
         });
+        //Assert
         expect(wrapper.isVisible()).toBe(true);
         expect(wrapper.text()).toContain('Welcome');
     });
@@ -36,9 +38,8 @@ describe('WelcomeMessage.vue', () => {
         const store = createStore({
             getters: {
                 settings() {
-                    const settings = new Settings();
+                    let settings = Settings.default();
                     settings.neverShowWelcomeMessageAgain = true;
-
                     return settings;
                 },
             },

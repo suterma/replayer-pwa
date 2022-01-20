@@ -12,6 +12,7 @@ import { Compilation } from '@/store/compilation-types';
 import { ActionTypes } from '@/store/action-types';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 import PersistentStorage from '@/store/persistent-storage';
+import 'core-js';
 
 describe('RezLoader.vue', () => {
     //https://stackoverflow.com/a/56643520
@@ -42,7 +43,7 @@ describe('RezLoader.vue', () => {
 
                     errorMessageStack: new Array<string>(),
 
-                    settings: new Settings(),
+                    settings: Settings.default(),
                 };
             },
             mutations: {

@@ -61,7 +61,7 @@ export default defineComponent({
         volume: 25,
         /** The audio context to use
          * @devdoc //TODO later allow to use the "playback" option via a settings panel: https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext#options
-         * @devdoc //TODO what about: window.AudioContext = window.AudioContext || window.webkitAudioContext; Is this required?
+         * @devdoc This code does not support the old webkitAudioContext formerly used with webkit. It's expected to run on modern browsers only.
          */
         audioContext: new AudioContext({
             latencyHint: 'interactive',
