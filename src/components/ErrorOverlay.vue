@@ -31,6 +31,7 @@ export default defineComponent({
         },
     },
     methods: {
+        //TODO use ESC key to dismiss
         dismiss() {
             this.$store.commit(MutationTypes.POP_ERROR_MESSAGE, null);
         },

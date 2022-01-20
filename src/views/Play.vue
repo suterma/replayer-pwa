@@ -1,6 +1,9 @@
 <template>
-    <!-- Loader for importable files, also listens to url params -->
-    <RezLoader v-if="!hasCompilation" />
+    <!-- Create some top space to keep the layout more relaxed -->
+    <div class="mt-6">
+        <!-- Loader for importable files, also listens to url params -->
+        <RezLoader v-if="!hasCompilation" />
+    </div>
 
     <Compilation :compilation="compilation" v-if="hasCompilation" />
 </template>

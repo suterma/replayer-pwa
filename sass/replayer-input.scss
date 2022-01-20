@@ -18,3 +18,24 @@
 .input::placeholder {
     color: $grey-light;
 }
+
+/*************************************************************
+ * Unfortunately, the existing style is different for primary buttons
+   However, for Replayer, primary buttons should have the same 
+   focus styles as all the other buttons.
+   Thus, this style is set here for them all the same   
+**************************************************************/
+.button:focus,
+.button.is-primary:focus,
+.button.is-focused,
+.button.is-primary.is-focused {
+    border-color: $grey-lightest;
+    color: $grey-lightest;
+}
+
+.button:focus:not(:active),
+.button.is-primary:focus:not(:active),
+.button.is-focused:not(:active),
+.button.is-primary.is-focused:not(:active) {
+    box-shadow: 0 0 0 0.125em rgb(250 250 250 / 25%);
+}

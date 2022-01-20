@@ -4,48 +4,42 @@
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <div class="file is-primary">
-                    <label class="file-label">
-                        <input
-                            class="file-input"
-                            type="file"
-                            id="file-input"
-                            accept=".rex,.xml,.rez,.zip,.mp3,.bplist"
-                            multiple
-                            @change="loadFiles"
-                            name="resume"
-                        />
-                        <span class="file-cta">
-                            <!-- //TODO use an SVG upload icon -->
-                            <!-- <span class="file-icon">
-                        <i class="fas fa-upload"></i>
-                    </span> -->
-                            <span class="file-label">
-                                Choose a compilation or media file…
-                            </span>
-                        </span>
-                        <!-- <span class="file-name">
-                    {{selectedFile}}}
-                </span> -->
-                    </label>
-                </div>
+                <input
+                    tabindex="10"
+                    class="button is-primary"
+                    type="button"
+                    onclick="document.getElementById('rezfileinput').click()"
+                    value="Choose a compilation or media file…"
+                />
+                <input
+                    tabindex="-1"
+                    class="is-hidden"
+                    type="file"
+                    id="rezfileinput"
+                    accept=".rex,.xml,.rez,.zip,.mp3,.bplist"
+                    multiple
+                    @change="loadFiles"
+                    name="resume"
+                />
             </div>
-            <!-- //TODO later implement loading from URL too. Or, maybe, only via query API? -->
-            <!-- <div class="level-item">&mdash; OR &mdash;</div>
-            <div class="level-item">
-                //TODO load from URL
-            </div> -->
+
             <template v-if="hasRetrievableCompilation">
                 <div class="level-item">&mdash; OR &mdash;</div>
                 <div class="level-item">
-                    <button class="button" @click="retrieveLastCompilation()">
+                    <button
+                        tabindex="20"
+                        class="button"
+                        @click="retrieveLastCompilation()"
+                    >
                         Retrieve last compilation
                     </button>
                 </div>
             </template>
             <div class="level-item">&mdash; OR &mdash;</div>
             <div class="level-item">
-                <button class="button" @click="loadDemo()">Try the demo</button>
+                <button tabindex="30" class="button" @click="loadDemo()">
+                    Try the demo
+                </button>
             </div>
         </div>
 
@@ -133,3 +127,15 @@ export default defineComponent({
     },
 });
 </script>
+<style scoped>
+.button.is-primary:focus,
+.button.is-primary.is-focused {
+    border-color: #ededed;
+    color: #ededed;
+}
+
+.button.is-primary:focus:not(:active),
+.button.is-primary.is-focused:not(:active) {
+    box-shadow: 0 0 0 0.125em rgb(250 250 250 / 25%);
+}
+</style>

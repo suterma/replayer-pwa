@@ -1,7 +1,7 @@
 <template>
     <!-- This level is designed that the two input methods can grow and shink, filling up the available horizontal space.
 The URL input should be wider, because it should be able to easily deal with lenghty input values -->
-    <nav class="level media-drop-zone">
+    <div class="level media-drop-zone">
         <div class="level-item has-text-centered">
             <div
                 :class="{
@@ -16,6 +16,7 @@ The URL input should be wider, because it should be able to easily deal with len
                 @drop="drop"
             >
                 <input
+                    tabindex="10"
                     type="file"
                     multiple
                     name="fields[assetsFieldHandle][]"
@@ -58,6 +59,7 @@ The URL input should be wider, because it should be able to easily deal with len
             <div class="field fill-available has-addons">
                 <div class="control fill-available">
                     <input
+                        tabindex="20"
                         class="input"
                         type="url"
                         v-model="url"
@@ -66,7 +68,12 @@ The URL input should be wider, because it should be able to easily deal with len
                     />
                 </div>
                 <div class="control">
-                    <button class="button is-primary" @click="fetchUrl">
+                    <button
+                        tabindex="30"
+                        class="button is-primary"
+                        type="submit"
+                        @click="fetchUrl"
+                    >
                         Fetch
                         <!-- Download &amp; use offline -->
                     </button>
@@ -78,7 +85,7 @@ The URL input should be wider, because it should be able to easily deal with len
                 </div> -->
             </div>
         </div>
-    </nav>
+    </div>
     Supported items:
     <div class="content">
         <SupportedFilesText />
