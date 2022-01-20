@@ -45,14 +45,7 @@
             </template>
             <div class="level-item">&mdash; OR &mdash;</div>
             <div class="level-item">
-                <button
-                    class="button"
-                    @click="
-                        loadUrl('demo-compilation-featuring-lidija-roos.rez')
-                    "
-                >
-                    Try the demo
-                </button>
+                <button class="button" @click="loadDemo()">Try the demo</button>
             </div>
         </div>
 
@@ -96,6 +89,17 @@ export default defineComponent({
          */
         loadUrl(url: string): void {
             this.$store.dispatch(ActionTypes.LOAD_FROM_URL, url);
+        },
+        /** Loads the demo compilation
+         */
+        loadDemo() {
+            this.loadUrl(
+                location.protocol +
+                    '//' +
+                    location.host +
+                    location.pathname +
+                    'demo-compilation-featuring-lidija-roos.rez',
+            );
         },
         retrieveLastCompilation(): void {
             this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);

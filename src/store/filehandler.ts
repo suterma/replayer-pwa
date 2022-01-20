@@ -194,34 +194,32 @@ export default class FileHandler {
     /** Gets the content MIME type from the response
      * @remarks Applies some educated guess in case the content type is not available from the response headers
      */
-    static getContentType(url: URL, response: Response): string | undefined {
+    static getMimeType(url: URL, response: Response): string | undefined {
         const contentType = response.headers.get('Content-Type');
+        let mimeType = undefined;
+        //Try to get the MIME type from the content type
         if (contentType) {
-            console.debug(
-                'CompilationParser::getContentType:contentType',
-                contentType,
-            );
-            return contentType;
-        } else {
-            //Try to extract the content type from the URL
+            console.debug('FileHandler::getMimeType:contentType', contentType);
+            //However, Replayer does currently only use the bare mime type, omitting any probable charset
+            mimeType = contentType.split(';')[0];
+        }
+        //Otherwise try to guess the MIME type from the URL
+        if (!mimeType) {
             const fileName = this.extractFileNameFromUrl(url);
             const fileExtension = fileName?.split('.').pop()?.toLowerCase();
             console.debug(
-                'CompilationParser::getContentType:fileExtension',
+                'CompilationParser::getMimeType:fileExtension',
                 fileExtension,
             );
             if (fileExtension == 'mp3') {
-                return 'audio/mpeg' /*mp3*/;
+                mimeType = 'audio/mpeg' /*mp3*/;
+            } else if (fileExtension == 'zip' || fileExtension == 'rez') {
+                mimeType = 'application/zip' /*zip*/;
+            } else if (fileExtension == 'xml' || fileExtension == 'rex') {
+                mimeType = 'application/xml' /*xml*/;
             }
-            if (fileExtension == 'zip' || fileExtension == 'rez') {
-                return 'application/zip' /*zip*/;
-            }
-
-            if (fileExtension == 'xml' || fileExtension == 'rex') {
-                return 'application/xml' /*xml*/;
-            }
-            return undefined;
         }
+        return mimeType;
     }
 
     /** Asserts whether the file represents an XML compilation file */

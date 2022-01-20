@@ -171,16 +171,16 @@ export const actions: ActionTree<State, State> & Actions = {
                 const finalUrl = new URL(response.url);
                 console.debug('RezLoader::loadUrl:response', response);
                 response.blob().then((blob) => {
-                    const contentType = FileHandler.getContentType(
+                    const mimeType = FileHandler.getMimeType(
                         finalUrl,
                         response,
                     );
 
-                    //TODO Check whether contentType is supported
-                    if (!FileHandler.isSupportedMimeType(contentType)) {
+                    //Check whether MIME Type is supported
+                    if (!FileHandler.isSupportedMimeType(mimeType)) {
                         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                         reject(
-                            `Content MIME type '${contentType}' is not supported`,
+                            `Content MIME type '${mimeType}' is not supported`,
                         );
                         return;
                     }
@@ -190,7 +190,7 @@ export const actions: ActionTree<State, State> & Actions = {
                         [blob],
                         localResourceName /* as name */,
                         {
-                            type: contentType ?? undefined,
+                            type: mimeType ?? undefined,
                         },
                     );
 
