@@ -1,24 +1,30 @@
 <template>
-    <!-- <MediaList v-if="hasMediaUrls" /> -->
-    <Compilation :compilation="compilation" v-if="hasCompilation" />
+    <Compilation
+        :compilation="compilation"
+        v-if="hasCompilation"
+        :isEditable="true"
+        @update="onCompilationUpdate"
+    />
     <MediaDropZone />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Compilation from '@/components/Compilation.vue';
-// import MediaList from '@/components/MediaList.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
-import { ICompilation, ITrack } from '@/store/compilation-types';
-import { MediaUrl } from '@/store/state-types';
+import { ICompilation } from '@/store/compilation-types';
 
 /** A view for playing an existing compilation */
 export default defineComponent({
     name: 'Edit',
     components: {
         Compilation,
-        // MediaList,
         MediaDropZone,
+    },
+    methods: {
+        onCompilationUpdate() {
+            console.debug('//TODO implement');
+        },
     },
     computed: {
         compilation(): ICompilation {
@@ -27,27 +33,6 @@ export default defineComponent({
 
         hasCompilation(): boolean {
             return this.$store.getters.hasCompilation;
-        },
-
-        tracks(): Array<string> {
-            return (this.$store.getters.compilation as ICompilation).Tracks.map(
-                function (item: ITrack) {
-                    return item.Name;
-                },
-            );
-        },
-
-        /** Indicats whether any media URLs are available
-         */
-        hasMediaUrls(): boolean {
-            return this.mediaUrls.size > 0;
-        },
-
-        /** A dictionary of media URLs, representing playable media files
-         * @remarks the media file path is used as key, preventing duplicate files for the same content.
-         */
-        mediaUrls(): Map<string, MediaUrl> {
-            return this.$store.getters.mediaUrls as Map<string, MediaUrl>;
         },
     },
 });

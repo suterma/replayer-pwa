@@ -1,8 +1,5 @@
 <template>
     <div class="compilation">
-        <!-- Handle and translate the keyboard shortcuts into Replayer events -->
-        <CompilationKeyboardHandler />
-
         <!-- Handle all relevant Replayer events for the compilation level -->
         <ReplayerEventHandler
             @tonextcue="toNextCue"
@@ -10,7 +7,10 @@
             @tomnemoniccue="toMnemonicCue($event)"
         />
 
-        <CompilationHeader :compilation="compilation" />
+        <CompilationHeader
+            :title="this.compilation.Title"
+            :isEditable="this.isEditable"
+        />
         <!-- Tracks to work with -->
         <template v-for="track in tracks" :key="track.Id">
             <Track :track="track" :ref="'track-' + track.Id" />
@@ -23,7 +23,6 @@ import { defineComponent } from 'vue';
 import VueScrollTo from 'vue-scrollto';
 import { Compilation, ITrack, ICue } from '@/store/compilation-types';
 import Track from '@/components/Track.vue';
-import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
@@ -35,14 +34,26 @@ export default defineComponent({
     name: 'Compilation',
     components: {
         Track,
-        CompilationKeyboardHandler,
         ReplayerEventHandler,
         CompilationHeader,
     },
     props: {
         compilation: Compilation,
+        /** Whether this component show editable inputs for the contained data
+         * @devdoc Allows to reuse this component for more than one DisplayMode.
+         */
+
+        isEditable: {
+            type: Boolean,
+            default: false,
+        },
     },
+    emits: ['update:compilation'],
     methods: {
+        // updateTitle(event: InputEvent) {
+        //     this.compilation?.Title = $event.target.value;
+        // },
+
         /** Visually scrolls to the given track, making it visually at the top of
          * the view.
          * @remarks This takes into account whether there is a fixed top navbar

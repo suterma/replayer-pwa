@@ -4,7 +4,15 @@
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <p class="title is-3">{{ compilation?.Title }}</p>
+                <!-- @input="$emit('update:title', $event.target.value)" -->
+                <input
+                    class="input title is-3"
+                    v-if="this.isEditable"
+                    :value="this.title"
+                    type="text"
+                    placeholder="Compilation title"
+                />
+                <p class="title is-3" v-else>{{ this.title }}</p>
             </div>
         </div>
         <!-- Right side -->
@@ -112,7 +120,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Compilation } from '@/store/compilation-types';
 import { MutationTypes } from '@/store/mutation-types';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
@@ -123,8 +130,21 @@ export default defineComponent({
     name: 'CompilationHeader',
     components: {},
     props: {
-        compilation: Compilation,
+        title: {
+            type: String,
+            default: '',
+            required: true,
+        },
+        /** Whether this component show editable inputs for the contained data
+         * @devdoc Allows to reuse this component for more than one DisplayMode.
+         */
+
+        isEditable: {
+            type: Boolean,
+            default: false,
+        },
     },
+    emits: ['update:title'],
     data() {
         return {
             /** Whether the dropdown menu is shown as expanded.
