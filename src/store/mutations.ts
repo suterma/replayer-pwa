@@ -29,7 +29,7 @@ export type Mutations<S = State> = {
     [MutationTypes.UPDATE_SETTINGS](state: S, settings: Settings): void;
     [MutationTypes.RETRIEVE_SETTINGS](state: S): void;
     [MutationTypes.UPDATE_COMPILATION_TITLE](state: State, title: string): void;
-    [MutationTypes.UPDATE_TRACK_NAME](
+    [MutationTypes.UPDATE_TRACK_DATA](
         state: State,
         payload: { trackId: string; name: string },
     ): void;
@@ -159,9 +159,14 @@ export const mutations: MutationTree<State> & Mutations = {
         state.compilation.Title = title;
         PersistentStorage.storeCompilation(state.compilation);
     },
-    [MutationTypes.UPDATE_TRACK_NAME](
+    [MutationTypes.UPDATE_TRACK_DATA](
         state: State,
-        payload: { trackId: string; name: string },
+        payload: {
+            trackId: string;
+            name: string;
+            artist: string;
+            album: string;
+        },
     ): void {
         const track = CompilationHandler.getTrackById(
             state.compilation,
@@ -169,6 +174,8 @@ export const mutations: MutationTree<State> & Mutations = {
         );
         if (track) {
             track.Name = payload.name;
+            track.Artist = payload.artist;
+            track.Album = payload.album;
             PersistentStorage.storeCompilation(state.compilation);
         }
     },

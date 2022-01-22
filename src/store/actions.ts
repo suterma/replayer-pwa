@@ -48,7 +48,7 @@ export interface Actions {
         { commit }: AugmentedActionContext,
         title: string,
     ): void;
-    [ActionTypes.UPDATE_TRACK_NAME](
+    [ActionTypes.UPDATE_TRACK_DATA](
         { commit }: AugmentedActionContext,
         payload: { trackId: string; name: string },
     ): void;
@@ -476,12 +476,17 @@ export const actions: ActionTree<State, State> & Actions = {
         commit(MutationTypes.UPDATE_COMPILATION_TITLE, title);
         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
     },
-    [ActionTypes.UPDATE_TRACK_NAME](
+    [ActionTypes.UPDATE_TRACK_DATA](
         { commit }: AugmentedActionContext,
-        payload: { trackId: string; name: string },
+        payload: {
+            trackId: string;
+            name: string;
+            artist: string;
+            album: string;
+        },
     ): void {
         commit(MutationTypes.PUSH_PROGRESS_MESSAGE, `Updating track name...`);
-        commit(MutationTypes.UPDATE_TRACK_NAME, payload);
+        commit(MutationTypes.UPDATE_TRACK_DATA, payload);
         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
     },
 };

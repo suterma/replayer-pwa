@@ -13,8 +13,9 @@
                 <input
                     v-if="this.isEditable"
                     class="input subtitle is-4"
-                    v-model="name"
+                    v-model="trackData.Name"
                     @change="updateName($event.target.value)"
+                    @click="$event.stopPropagation()"
                     type="text"
                     placeholder="Track name"
                 />
@@ -23,13 +24,39 @@
             <!-- Artist info (don't show on small devices)-->
             <div class="level-item is-hidden-mobile">
                 <p class="is-size-7">
-                    <span v-if="track.Artist" class="has-text-nowrap">
+                    <span
+                        v-if="track.Artist || this.isEditable"
+                        class="has-text-nowrap"
+                    >
                         <span class="has-opacity-half">by&nbsp;</span>
-                        <span class="is-italic">{{ track.Artist }}&nbsp;</span>
+                        <input
+                            v-if="this.isEditable"
+                            class="input is-italic"
+                            v-model="trackData.Artist"
+                            @change="updateArtist($event.target.value)"
+                            @click="$event.stopPropagation()"
+                            type="text"
+                            placeholder="Artist"
+                        />
+                        <span v-else class="is-italic"
+                            >{{ track.Artist }}&nbsp;</span
+                        >
                     </span>
-                    <span v-if="track.Album" class="has-text-nowrap">
+                    <span
+                        v-if="track.Album || this.isEditable"
+                        class="has-text-nowrap"
+                    >
                         <span class="has-opacity-half">on&nbsp;</span>
-                        <span class="is-italic">{{ track.Album }}</span>
+                        <input
+                            v-if="this.isEditable"
+                            class="input is-italic"
+                            v-model="trackData.Album"
+                            @change="updateAlbum($event.target.value)"
+                            @click="$event.stopPropagation()"
+                            type="text"
+                            placeholder="Album"
+                        />
+                        <span v-else class="is-italic">{{ track.Album }}</span>
                     </span>
                 </p>
             </div>
@@ -131,11 +158,13 @@ export default defineComponent({
     data() {
         return {
             currentSeconds: 0,
-            /** The track name */
-            name: this.track.Name,
+            trackData: { ...this.track }, // clone tht object
         };
     },
     methods: {
+        /** Toogles the expansion state
+         * @devdoc To prevent toggling with the input fields, use "$event.stopPropagation()" on the respective input controls
+         */
         toggleExpanded() {
             const expanded = !this.modelValue;
             console.debug(`TrackHeader::toggleExpanded:expanded:${expanded}`);
@@ -144,9 +173,37 @@ export default defineComponent({
         /** Updates the track name */
         updateName(name: string) {
             const trackId = this.track.Id;
-            this.$store.dispatch(ActionTypes.UPDATE_TRACK_NAME, {
+            const artist = this.trackData.Artist;
+            const album = this.trackData.Album;
+            this.$store.dispatch(ActionTypes.UPDATE_TRACK_DATA, {
                 trackId,
                 name,
+                artist,
+                album,
+            });
+        },
+        /** Updates the track artist */
+        updateArtist(artist: string) {
+            const trackId = this.track.Id;
+            const name = this.trackData.Name;
+            const album = this.trackData.Album;
+            this.$store.dispatch(ActionTypes.UPDATE_TRACK_DATA, {
+                trackId,
+                name,
+                artist,
+                album,
+            });
+        },
+        /** Updates the track album */
+        updateAlbum(album: string) {
+            const trackId = this.track.Id;
+            const name = this.trackData.Name;
+            const artist = this.trackData.Artist;
+            this.$store.dispatch(ActionTypes.UPDATE_TRACK_DATA, {
+                trackId,
+                name,
+                artist,
+                album,
             });
         },
     },
