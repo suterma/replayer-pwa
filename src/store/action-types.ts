@@ -36,4 +36,7 @@ export enum ActionTypes {
     /** Updates the track data with a new values
      */
     UPDATE_TRACK_DATA = 'UPDATE_TRACK_DATA',
+    /** Updates the cue data with a new values
+     */
+    UPDATE_CUE_DATA = 'UPDATE_CUE_DATA',
 }

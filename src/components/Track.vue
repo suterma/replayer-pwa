@@ -86,7 +86,7 @@
                 </div>
             </template>
 
-            <!-- The cue buttons -->
+            <!-- The cue buttons (in play mode) -->
             <div class="buttons">
                 <template v-for="cue in cues" :key="cue.Id">
                     <CueButton
@@ -98,6 +98,22 @@
                     />
                 </template>
             </div>
+            <!-- The cue list (in edit mode) -->
+            <ul class="levels">
+                <template v-for="cue in cues" :key="cue.Id">
+                    <li>
+                        <CueLevel
+                            :disabled="
+                                !trackFileUrl?.objectUrl || !isTrackLoaded
+                            "
+                            :cue="cue"
+                            :isTrackPlaying="isPlaying"
+                            :currentSeconds="currentSeconds"
+                            @click="cueClick(cue)"
+                        />
+                    </li>
+                </template>
+            </ul>
         </slide-up-down>
     </div>
 </template>
@@ -106,6 +122,7 @@
 import { defineComponent } from 'vue';
 import { Track, ICue } from '@/store/compilation-types';
 import CueButton from '@/components/CueButton.vue';
+import CueLevel from '@/components/CueLevel.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
 import TrackHowlerPlayer from '@/components/TrackHowlerPlayer.vue';
 import { MediaUrl } from '@/store/state-types';
@@ -127,6 +144,7 @@ export default defineComponent({
     name: 'Track',
     components: {
         CueButton,
+        CueLevel,
         TrackAudioApiPlayer,
         TrackHowlerPlayer,
         ReplayerEventHandler,
@@ -465,5 +483,12 @@ div.compilation div.track:last-child {
     This results in a similar space between level, player, cue buttons and the
     end of the track */
     margin-bottom: 4px;
+}
+
+.track .levels {
+    /** The cue levels have also an additional small margin at their end.
+    This results in a similar space between levels as use within 
+    the environment      */
+    margin-bottom: 12px;
 }
 </style>

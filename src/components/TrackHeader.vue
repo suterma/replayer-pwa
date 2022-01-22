@@ -158,7 +158,7 @@ export default defineComponent({
     data() {
         return {
             currentSeconds: 0,
-            trackData: { ...this.track }, // clone tht object
+            trackData: { ...this.track }, // clone the object
         };
     },
     methods: {

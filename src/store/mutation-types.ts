@@ -59,4 +59,9 @@ export enum MutationTypes {
      * @remarks Also updates the persitent store of the compilation
      */
     UPDATE_TRACK_DATA = 'UPDATE_TRACK_DATA',
+
+    /** Updates the cue data
+     * @remarks Also updates the persitent store of the compilation
+     */
+    UPDATE_CUE_DATA = 'UPDATE_CUE_DATA',
 }

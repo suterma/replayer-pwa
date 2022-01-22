@@ -93,7 +93,10 @@ export default defineComponent({
     name: 'CueButton',
     components: {},
     props: {
-        cue: Cue,
+        cue: {
+            type: Cue,
+            required: true,
+        },
         /** The playback progress in the current track, in [seconds]
          * @remarks This is used for progress display within the set of cues
          */

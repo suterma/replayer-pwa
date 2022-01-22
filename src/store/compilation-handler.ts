@@ -1,4 +1,4 @@
-import { ICompilation, ITrack } from './compilation-types';
+import { ICompilation, ICue, ITrack } from './compilation-types';
 import { MediaBlob, MediaUrl } from './state-types';
 
 /**
@@ -124,6 +124,23 @@ export default class CompilationHandler {
         trackId: string,
     ): ITrack | undefined {
         return compilation?.Tracks?.find((t) => t.Id === trackId);
+    }
+
+    /** Gets the the matching cue, if any, in the compilation, by it's Id.
+     * @param compilation - The compilation, whose (tracks and) cues are searched
+     * @param cueId - The Id of the cue to find
+     * */
+    public static getCueById(
+        compilation: ICompilation,
+        cueId: string,
+    ): ICue | undefined {
+        console.debug('finding cueID', cueId);
+        const cue = compilation.Tracks.flatMap((track) => track.Cues).find(
+            (cue) => cue.Id === cueId,
+        );
+        console.debug('found cue', cue);
+
+        return cue;
     }
 
     /** Determines, whether one of the given string ends with the other

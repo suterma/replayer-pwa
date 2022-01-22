@@ -52,6 +52,15 @@ export interface Actions {
         { commit }: AugmentedActionContext,
         payload: { trackId: string; name: string },
     ): void;
+    [ActionTypes.UPDATE_CUE_DATA](
+        { commit }: AugmentedActionContext,
+        payload: {
+            cueId: string;
+            description: string;
+            shortcut: string;
+            time: number;
+        },
+    ): void;
 }
 export const actions: ActionTree<State, State> & Actions = {
     // [ActionTypes.PLAY_TRACK]({ commit }) {
@@ -485,8 +494,21 @@ export const actions: ActionTree<State, State> & Actions = {
             album: string;
         },
     ): void {
-        commit(MutationTypes.PUSH_PROGRESS_MESSAGE, `Updating track name...`);
+        commit(MutationTypes.PUSH_PROGRESS_MESSAGE, `Updating track...`);
         commit(MutationTypes.UPDATE_TRACK_DATA, payload);
+        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+    },
+    [ActionTypes.UPDATE_CUE_DATA](
+        { commit }: AugmentedActionContext,
+        payload: {
+            cueId: string;
+            description: string;
+            shortcut: string;
+            time: number;
+        },
+    ): void {
+        commit(MutationTypes.PUSH_PROGRESS_MESSAGE, `Updating cue...`);
+        commit(MutationTypes.UPDATE_CUE_DATA, payload);
         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
     },
 };

@@ -273,13 +273,6 @@ export default defineComponent({
     border-style: dashed;
 }
 
-.fill-available {
-    width: 100%;
-    width: -moz-available; /* WebKit-based browsers will ignore this. */
-    width: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
-    width: fill-available;
-}
-
 .media-drop-zone {
     /** Add a margin at the top, to have a space between this drop zone
     and the possible tracks above it. */

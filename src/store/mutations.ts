@@ -33,6 +33,15 @@ export type Mutations<S = State> = {
         state: State,
         payload: { trackId: string; name: string },
     ): void;
+    [MutationTypes.UPDATE_CUE_DATA](
+        state: State,
+        payload: {
+            cueId: string;
+            description: string;
+            shortcut: string;
+            time: number;
+        },
+    ): void;
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -176,6 +185,26 @@ export const mutations: MutationTree<State> & Mutations = {
             track.Name = payload.name;
             track.Artist = payload.artist;
             track.Album = payload.album;
+            PersistentStorage.storeCompilation(state.compilation);
+        }
+    },
+    [MutationTypes.UPDATE_CUE_DATA](
+        state: State,
+        payload: {
+            cueId: string;
+            description: string;
+            shortcut: string;
+            time: number;
+        },
+    ): void {
+        const cue = CompilationHandler.getCueById(
+            state.compilation,
+            payload.cueId,
+        );
+        if (cue) {
+            cue.Description = payload.description;
+            cue.Shortcut = payload.shortcut;
+            cue.Time = payload.time;
             PersistentStorage.storeCompilation(state.compilation);
         }
     },

@@ -11035,6 +11035,16 @@ but not at the "end/right" container's border */
   white-space: nowrap;
 }
 
+/* Allows to take maximum available horizontal space, especially in levels*/
+.fill-available {
+  width: 100%;
+  width: -moz-available;
+  /* WebKit-based browsers will ignore this. */
+  width: -webkit-fill-available;
+  /* Mozilla-based browsers will ignore this. */
+  width: fill-available;
+}
+
 /** **********************************************************
  * Additional adornments
 **************************************************************
