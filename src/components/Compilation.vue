@@ -8,7 +8,7 @@
         />
 
         <CompilationHeader
-            :title="this.compilation.Title"
+            :compilation="this.compilation"
             :isEditable="this.isEditable"
         />
         <!-- Tracks to work with -->
@@ -48,12 +48,7 @@ export default defineComponent({
             default: false,
         },
     },
-    emits: ['update:compilation'],
     methods: {
-        // updateTitle(event: InputEvent) {
-        //     this.compilation?.Title = $event.target.value;
-        // },
-
         /** Visually scrolls to the given track, making it visually at the top of
          * the view.
          * @remarks This takes into account whether there is a fixed top navbar
