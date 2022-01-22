@@ -27,6 +27,7 @@ export type Mutations<S = State> = {
     [MutationTypes.REVOKE_ALL_MEDIA_URLS](state: State): void;
     [MutationTypes.UPDATE_SETTINGS](state: S, settings: Settings): void;
     [MutationTypes.RETRIEVE_SETTINGS](state: S): void;
+    [MutationTypes.UPDATE_COMPILATION_TITLE](state: State, title: string): void;
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -145,5 +146,13 @@ export const mutations: MutationTree<State> & Mutations = {
     },
     [MutationTypes.RETRIEVE_SETTINGS](state: State) {
         state.settings = PersistentStorage.retrieveSettings();
+    },
+    [MutationTypes.UPDATE_COMPILATION_TITLE](
+        state: State,
+        title: string,
+    ): void {
+        console.debug('mutations::UPDATE_COMPILATION_TITLE:title', title);
+        state.compilation.Title = title;
+        PersistentStorage.storeCompilation(state.compilation);
     },
 };

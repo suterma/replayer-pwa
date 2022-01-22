@@ -49,4 +49,9 @@ export enum MutationTypes {
      * @devdoc This is a synchronous operation, to make sure, the settings are immediately available. It uses the Local Storage as persistence layer.
      */
     RETRIEVE_SETTINGS = 'RETRIEVE_SETTINGS',
+
+    /** Updates the compilation title
+     * @remarks Also updates the persitent store of the compilation
+     */
+    UPDATE_COMPILATION_TITLE = 'UPDATE_COMPILATION_TITLE',
 }

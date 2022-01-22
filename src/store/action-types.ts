@@ -30,7 +30,7 @@ export enum ActionTypes {
      */
     DOWNLOAD_REZ_PACKAGE = 'DOWNLOAD_REZ_PACKAGE',
 
-    /** Updates the compilation with new values
+    /** Updates the compilation title with a new value
      */
-    UPDATE_COMPILATION = 'UPDATE_COMPILATION',
+    UPDATE_COMPILATION_TITLE = 'UPDATE_COMPILATION_TITLE',
 }

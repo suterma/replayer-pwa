@@ -11,7 +11,6 @@ import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 import CompilationHandler from './compilation-handler';
 import FileSaver from 'file-saver';
 import FileHandler from './filehandler';
-import { Compilation } from './compilation-types';
 
 type AugmentedActionContext = {
     commit<K extends keyof Mutations>(
@@ -45,9 +44,9 @@ export interface Actions {
     [ActionTypes.DOWNLOAD_REZ_PACKAGE]({
         commit,
     }: AugmentedActionContext): void;
-    [ActionTypes.UPDATE_COMPILATION](
+    [ActionTypes.UPDATE_COMPILATION_TITLE](
         { commit }: AugmentedActionContext,
-        compilation: Compilation,
+        title: string,
     ): void;
 }
 export const actions: ActionTree<State, State> & Actions = {
@@ -462,13 +461,15 @@ export const actions: ActionTree<State, State> & Actions = {
                 });
         });
     },
-    [ActionTypes.UPDATE_COMPILATION](
+    [ActionTypes.UPDATE_COMPILATION_TITLE](
         { commit }: AugmentedActionContext,
-        compilation: Compilation,
+        title: string,
     ): void {
-        commit(MutationTypes.PUSH_PROGRESS_MESSAGE, `Updating compilation...`);
-        commit(MutationTypes.REPLACE_COMPILATION, compilation);
-        PersistentStorage.storeCompilation(compilation);
+        commit(
+            MutationTypes.PUSH_PROGRESS_MESSAGE,
+            `Updating compilation title...`,
+        );
+        commit(MutationTypes.UPDATE_COMPILATION_TITLE, title);
         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
     },
 };

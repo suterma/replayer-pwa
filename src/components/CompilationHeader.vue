@@ -5,14 +5,14 @@
         <div class="level-left">
             <div class="level-item">
                 <input
+                    v-if="this.isEditable"
                     class="input title is-3"
-                    :value="this.title"
-                    @input="this.updateCompilation()"
+                    v-model="title"
+                    @change="updateTitle($event.target.value)"
                     type="text"
                     placeholder="Compilation title"
                 />
-                <p class="title is-3">{{ this.compilation.Title }}</p>
-                <!-- v-if="this.isEditable" -->
+                <p v-else class="title is-3">{{ this.compilation.Title }}</p>
             </div>
         </div>
         <!-- Right side -->
@@ -138,7 +138,6 @@ export default defineComponent({
         /** Whether this component show editable inputs for the contained data
          * @devdoc Allows to reuse this component for more than one DisplayMode.
          */
-
         isEditable: {
             type: Boolean,
             default: false,
@@ -161,16 +160,10 @@ export default defineComponent({
         close(): void {
             this.$store.commit(MutationTypes.CLOSE_COMPILATION);
         },
-
-        /** Updates the compilation by setting the current title */
-        async updateCompilation(): Promise<void> {
-            this.compilation.Title = this.title;
-            this.$store.dispatch(
-                ActionTypes.UPDATE_COMPILATION,
-                this.compilation,
-            );
+        /** Updates the compilation title */
+        updateTitle(title: string) {
+            this.$store.dispatch(ActionTypes.UPDATE_COMPILATION_TITLE, title);
         },
-
         /** Initiates the download of the current compilation as a single XML (.rex) file
          */
         async downloadRexFile(): Promise<void> {
