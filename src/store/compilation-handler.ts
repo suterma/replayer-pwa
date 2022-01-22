@@ -115,6 +115,16 @@ export default class CompilationHandler {
             t.Cues.find((c) => c.Id === cueId),
         );
     }
+    /** Gets the the matching track, if any, in the compilation, by it's Id.
+     * @param compilation - The compilation, whose tracks are searched
+     * @param trackId - The Id of the track to find
+     * */
+    public static getTrackById(
+        compilation: ICompilation,
+        trackId: string,
+    ): ITrack | undefined {
+        return compilation?.Tracks?.find((t) => t.Id === trackId);
+    }
 
     /** Determines, whether one of the given string ends with the other
      * @param first - the first string for the comparison

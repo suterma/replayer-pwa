@@ -13,7 +13,11 @@
         />
         <!-- Tracks to work with -->
         <template v-for="track in tracks" :key="track.Id">
-            <Track :track="track" :ref="'track-' + track.Id" />
+            <Track
+                :track="track"
+                :ref="'track-' + track.Id"
+                :isEditable="this.isEditable"
+            />
         </template>
     </div>
 </template>

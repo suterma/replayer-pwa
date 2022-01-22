@@ -5,6 +5,7 @@ import { State } from './state';
 import { MediaUrl, Settings } from './state-types';
 import PersistentStorage from './persistent-storage';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
+import CompilationHandler from './compilation-handler';
 
 export type Mutations<S = State> = {
     [MutationTypes.PUSH_PROGRESS_MESSAGE](state: S, payload: string): void;
@@ -28,6 +29,10 @@ export type Mutations<S = State> = {
     [MutationTypes.UPDATE_SETTINGS](state: S, settings: Settings): void;
     [MutationTypes.RETRIEVE_SETTINGS](state: S): void;
     [MutationTypes.UPDATE_COMPILATION_TITLE](state: State, title: string): void;
+    [MutationTypes.UPDATE_TRACK_NAME](
+        state: State,
+        payload: { trackId: string; name: string },
+    ): void;
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -151,8 +156,20 @@ export const mutations: MutationTree<State> & Mutations = {
         state: State,
         title: string,
     ): void {
-        console.debug('mutations::UPDATE_COMPILATION_TITLE:title', title);
         state.compilation.Title = title;
         PersistentStorage.storeCompilation(state.compilation);
+    },
+    [MutationTypes.UPDATE_TRACK_NAME](
+        state: State,
+        payload: { trackId: string; name: string },
+    ): void {
+        const track = CompilationHandler.getTrackById(
+            state.compilation,
+            payload.trackId,
+        );
+        if (track) {
+            track.Name = payload.name;
+            PersistentStorage.storeCompilation(state.compilation);
+        }
     },
 };

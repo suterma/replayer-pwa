@@ -54,4 +54,9 @@ export enum MutationTypes {
      * @remarks Also updates the persitent store of the compilation
      */
     UPDATE_COMPILATION_TITLE = 'UPDATE_COMPILATION_TITLE',
+
+    /** Updates the track name
+     * @remarks Also updates the persitent store of the compilation
+     */
+    UPDATE_TRACK_NAME = 'UPDATE_TRACK_NAME',
 }

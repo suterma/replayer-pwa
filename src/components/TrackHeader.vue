@@ -10,7 +10,15 @@
         <div class="level-left">
             <!-- Title -->
             <div class="level-item">
-                <p class="subtitle is-4">{{ track.Name }}</p>
+                <input
+                    v-if="this.isEditable"
+                    class="input subtitle is-4"
+                    v-model="name"
+                    @change="updateName($event.target.value)"
+                    type="text"
+                    placeholder="Track name"
+                />
+                <p v-else class="subtitle is-4">{{ track.Name }}</p>
             </div>
             <!-- Artist info (don't show on small devices)-->
             <div class="level-item is-hidden-mobile">
@@ -67,6 +75,7 @@
 import { defineComponent } from 'vue';
 import { Track, ICue } from '@/store/compilation-types';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
+import { ActionTypes } from '@/store/action-types';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -81,7 +90,10 @@ export default defineComponent({
         CollapsibleButton,
     },
     props: {
-        track: Track,
+        track: {
+            type: Track,
+            required: true,
+        },
 
         modelValue: {
             type: Boolean,
@@ -107,11 +119,20 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
+        /** Whether this component show editable inputs for the contained data
+         * @devdoc Allows to reuse this component for more than one DisplayMode.
+         */
+        isEditable: {
+            type: Boolean,
+            default: false,
+        },
     },
     emits: ['update:modelValue'],
     data() {
         return {
             currentSeconds: 0,
+            /** The track name */
+            name: this.track.Name,
         };
     },
     methods: {
@@ -119,6 +140,14 @@ export default defineComponent({
             const expanded = !this.modelValue;
             console.debug(`TrackHeader::toggleExpanded:expanded:${expanded}`);
             this.$emit('update:modelValue', expanded);
+        },
+        /** Updates the track name */
+        updateName(name: string) {
+            const trackId = this.track.Id;
+            this.$store.dispatch(ActionTypes.UPDATE_TRACK_NAME, {
+                trackId,
+                name,
+            });
         },
     },
     watch: {},

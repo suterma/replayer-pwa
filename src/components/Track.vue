@@ -23,6 +23,7 @@
             :isPlaying="this.isPlaying"
             :isTrackLoaded="this.isTrackLoaded"
             :isActiveTrack="this.isActiveTrack"
+            :isEditable="this.isEditable"
         />
 
         <slide-up-down
@@ -134,6 +135,13 @@ export default defineComponent({
     mixins: [settingsMixin],
     props: {
         track: Track,
+        /** Whether this component show editable inputs for the contained data
+         * @devdoc Allows to reuse this component for more than one DisplayMode.
+         */
+        isEditable: {
+            type: Boolean,
+            default: false,
+        },
     },
     emits: ['update:expanded'],
     mounted() {
