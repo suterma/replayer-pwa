@@ -4,15 +4,15 @@
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <!-- @input="$emit('update:title', $event.target.value)" -->
                 <input
                     class="input title is-3"
-                    v-if="this.isEditable"
                     :value="this.title"
+                    @input="this.updateCompilation()"
                     type="text"
                     placeholder="Compilation title"
                 />
-                <p class="title is-3" v-else>{{ this.title }}</p>
+                <p class="title is-3">{{ this.compilation.Title }}</p>
+                <!-- v-if="this.isEditable" -->
             </div>
         </div>
         <!-- Right side -->
@@ -123,6 +123,7 @@ import { defineComponent } from 'vue';
 import { MutationTypes } from '@/store/mutation-types';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
+import { Compilation } from '@/store/compilation-types';
 
 /** A nav bar as header with a menu for a compilation
  */
@@ -130,9 +131,8 @@ export default defineComponent({
     name: 'CompilationHeader',
     components: {},
     props: {
-        title: {
-            type: String,
-            default: '',
+        compilation: {
+            type: Compilation,
             required: true,
         },
         /** Whether this component show editable inputs for the contained data
@@ -144,7 +144,6 @@ export default defineComponent({
             default: false,
         },
     },
-    emits: ['update:title'],
     data() {
         return {
             /** Whether the dropdown menu is shown as expanded.
@@ -152,6 +151,8 @@ export default defineComponent({
             isDropdownExpanded: false,
             /** The wake lock fill-in that can prevent screen timeout, while a compilation is in use */
             noSleep: new NoSleep(),
+            /** The compilation title */
+            title: this.compilation.Title,
         };
     },
     methods: {
@@ -159,6 +160,15 @@ export default defineComponent({
          */
         close(): void {
             this.$store.commit(MutationTypes.CLOSE_COMPILATION);
+        },
+
+        /** Updates the compilation by setting the current title */
+        async updateCompilation(): Promise<void> {
+            this.compilation.Title = this.title;
+            this.$store.dispatch(
+                ActionTypes.UPDATE_COMPILATION,
+                this.compilation,
+            );
         },
 
         /** Initiates the download of the current compilation as a single XML (.rex) file

@@ -29,4 +29,8 @@ export enum ActionTypes {
     /** Initiates the download of the current compilation as a ZIP (.rez) package
      */
     DOWNLOAD_REZ_PACKAGE = 'DOWNLOAD_REZ_PACKAGE',
+
+    /** Updates the compilation with new values
+     */
+    UPDATE_COMPILATION = 'UPDATE_COMPILATION',
 }
