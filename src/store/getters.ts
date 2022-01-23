@@ -1,6 +1,7 @@
 import { GetterTree } from 'vuex';
-import { ICompilation } from './compilation-types';
+import { ICompilation, ITrack } from './compilation-types';
 import PersistentStorage from './persistent-storage';
+import CompilationHandler from './compilation-handler';
 import { State } from './state';
 import { MediaUrl, Settings } from './state-types';
 
@@ -28,6 +29,8 @@ export type Getters = {
     /** Gets the application settings
      */
     settings(state: State): Settings;
+    /** Gets the active track (i.e. the globally selected cue is from this track ) */
+    activeTrack(state: State): ITrack | undefined;
 };
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -71,7 +74,20 @@ export const getters: GetterTree<State, State> & Getters = {
     selectedCueId: (state) => {
         return state.selectedCueId;
     },
-    settings: (state) => {
+    /** @inheritdoc */ settings: (state) => {
         return state.settings;
+    },
+    /** @inheritdoc */
+    activeTrack: (state): ITrack | undefined => {
+        const selectedCueId = state.selectedCueId as string;
+        if (selectedCueId) {
+            //Check for matching Ids
+            return CompilationHandler.getTrackByCueId(
+                state.compilation,
+                selectedCueId,
+            );
+        }
+        //if none selected, no track is active anyway
+        return undefined;
     },
 };

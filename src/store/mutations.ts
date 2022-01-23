@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex';
-import { Compilation, ICompilation, ITrack } from './compilation-types';
+import { Compilation, ICompilation, ICue, ITrack } from './compilation-types';
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
 import { MediaUrl, Settings } from './state-types';
@@ -15,6 +15,13 @@ export type Mutations<S = State> = {
     [MutationTypes.FINISH_PROGRESS](state: State): void;
     [MutationTypes.ADD_MEDIA_URL](state: S, mediaUrl: MediaUrl): void;
     [MutationTypes.ADD_TRACK](state: S, track: ITrack): void;
+    [MutationTypes.ADD_CUE](
+        state: State,
+        payload: { trackId: string; cue: ICue },
+    ): void;
+
+    [MutationTypes.DELETE_CUE](state: State, cueId: string): void;
+
     [MutationTypes.REPLACE_COMPILATION](
         state: S,
         compilation: ICompilation,
@@ -88,6 +95,37 @@ export const mutations: MutationTree<State> & Mutations = {
         console.debug('mutations::ADD_TRACK:', track);
         state.compilation.Tracks.push(track);
         PersistentStorage.storeCompilation(state.compilation);
+    },
+
+    [MutationTypes.ADD_CUE](
+        state: State,
+        payload: { trackId: string; cue: ICue },
+    ) {
+        console.debug('mutations::ADD_CUE:', payload.trackId);
+        const matchingTrack = CompilationHandler.getTrackById(
+            state.compilation,
+            payload.trackId,
+        );
+        if (matchingTrack) {
+            matchingTrack.Cues.push(payload.cue);
+            PersistentStorage.storeCompilation(state.compilation);
+        }
+    },
+
+    [MutationTypes.DELETE_CUE](state: State, cueId: string) {
+        console.debug('mutations::DELETE_CUE:', cueId);
+        const matchingTrack = CompilationHandler.getTrackByCueId(
+            state.compilation,
+            cueId,
+        );
+        if (matchingTrack) {
+            const removeIndex = matchingTrack.Cues.map(
+                (item) => item.Id,
+            ).indexOf(cueId);
+
+            ~removeIndex && matchingTrack.Cues.splice(removeIndex, 1);
+            PersistentStorage.storeCompilation(state.compilation);
+        }
     },
 
     [MutationTypes.REPLACE_COMPILATION](

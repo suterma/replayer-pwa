@@ -1,5 +1,16 @@
 <template>
+    <CueTrigger
+        v-if="isEditable"
+        :title="title"
+        :loaded="this.loaded"
+        v-model:playing="this.playing"
+        :isPlayingRequestOutstanding="this.isPlayingRequestOutstanding"
+        v-model:currentSeconds="this.currentSeconds"
+        @seek="seekToSeconds"
+        :durationSeconds="this.durationSeconds"
+    />
     <PlayerChrome
+        v-else
         :title="title"
         :loaded="this.loaded"
         @stop="stop"
@@ -20,15 +31,17 @@
 import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent } from 'vue';
 import PlayerChrome from '@/components/PlayerChrome.vue';
+import CueTrigger from '@/components/CueTrigger.vue';
 
 /** A simple vue audio player, for a single track, using the Web Audio API
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playing
  * @remarks Emits 'trackLoaded' with the track duration in seconds, once after successful load of the track's media file
  * @remarks Emits 'trackPlaying' when the track is playing
+ * @devdoc The 'newCueTriggered' is just passed up
  */
 export default defineComponent({
     name: 'TrackAudioApiPlayer',
-    components: { PlayerChrome },
+    components: { PlayerChrome, CueTrigger },
     emits: ['timeupdate', 'trackLoaded', 'trackPlaying'],
     props: {
         title: String,
@@ -41,6 +54,13 @@ export default defineComponent({
             default: null,
         },
         loop: {
+            type: Boolean,
+            default: false,
+        },
+        /** Whether this component show editable inputs for the contained data
+         * @devdoc Allows to reuse this component for more than one DisplayMode.
+         */
+        isEditable: {
             type: Boolean,
             default: false,
         },

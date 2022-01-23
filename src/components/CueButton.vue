@@ -56,7 +56,7 @@
                 <div class="level-left">
                     <div class="level-item mr-3">
                         <span class="has-opacity-half foreground">
-                            {{ convertSecondsToDisplayTime }}
+                            {{ cueDisplayTime }}
                         </span>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
                     <p class="level-item is-hidden-touch mr-3">
                         <!-- Use a right position for Durations, to keep them as much out of visibilty as possible -->
                         <span class="has-opacity-half foregrounds">{{
-                            convertDurationToDisplayTime
+                            cueDurationDisplayTime
                         }}</span>
                     </p>
                     <p class="level-item" v-if="cue?.Shortcut">
@@ -85,6 +85,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Cue } from '@/store/compilation-types';
+import CompilationHandler from '@/store/compilation-handler';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
@@ -150,34 +151,16 @@ export default defineComponent({
         /** Converts the cue's total seconds into a conveniently displayable hh:mm:ss.s format.
          * @remarks Omits the hour part, if not appliccable
          */
-        convertSecondsToDisplayTime(): string | null {
-            const seconds = this.cue?.Time;
-            if (seconds != null) {
-                //Uses the hour, minute, seconds, and 1 digit of the milliseconds part
-                const hhmmss = new Date(seconds * 1000)
-                    .toISOString()
-                    .substr(11, 10);
-                //skip the hour part, if not used
-                return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss;
-            } else {
-                return null;
-            }
+        cueDisplayTime(): string {
+            const seconds = this.cue.Time;
+            return CompilationHandler.convertToDisplayTime(seconds);
         },
         /** Converts the cue's duration into a conveniently displayable hh:mm:ss.s format.
          * @remarks Omits the hour part, if not appliccable
          */
-        convertDurationToDisplayTime(): string | null {
-            const duration = this.cue?.Duration;
-            if (duration != null) {
-                //Uses the hour, minute, seconds, and 1 digit of the milliseconds part
-                const hhmmss = new Date(duration * 1000)
-                    .toISOString()
-                    .substr(11, 10);
-                //skip the hour part, if not used
-                return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss;
-            } else {
-                return null;
-            }
+        cueDurationDisplayTime(): string {
+            const duration = this.cue.Duration;
+            return CompilationHandler.convertToDisplayTime(duration);
         },
         /** Determines whether this cue is currently selected
          * @remarks Note: only one cue in a compilation may be selected */

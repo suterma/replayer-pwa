@@ -42,20 +42,23 @@
                         ref="playerReference"
                         :title="trackFileUrl?.fileName"
                         :src="optimizedMediaObjectUrl"
-                        v-on:timeupdate="updateTime"
-                        v-on:trackLoaded="calculateCueDurations"
-                        v-on:trackPlaying="updatePlaying"
+                        @timeupdate="updateTime"
+                        @trackLoaded="calculateCueDurations"
+                        @trackPlaying="updatePlaying"
+                        @newCueTriggered="createNewCue"
                     ></TrackHowlerPlayer>
                 </template>
                 <template v-else>
                     <TrackAudioApiPlayer
+                        :isEditable="this.isEditable"
                         v-if="mediaObjectUrl"
                         ref="playerReference"
                         :title="trackFileUrl?.fileName"
                         :src="optimizedMediaObjectUrl"
-                        v-on:timeupdate="updateTime"
-                        v-on:trackLoaded="calculateCueDurations"
-                        v-on:trackPlaying="updatePlaying"
+                        @timeupdate="updateTime"
+                        @trackLoaded="calculateCueDurations"
+                        @trackPlaying="updatePlaying"
+                        @newCueTriggered="createNewCue"
                     ></TrackAudioApiPlayer>
                 </template>
             </template>
@@ -86,23 +89,29 @@
                 </div>
             </template>
 
-            <!-- The cue buttons (in play mode) -->
-            <div class="buttons">
-                <template v-for="cue in cues" :key="cue.Id">
-                    <CueButton
-                        :disabled="!trackFileUrl?.objectUrl || !isTrackLoaded"
-                        :cue="cue"
-                        :isTrackPlaying="isPlaying"
-                        :currentSeconds="currentSeconds"
-                        @click="cueClick(cue)"
-                    />
-                </template>
-            </div>
             <!-- The cue list (in edit mode) -->
-            <ul class="levels">
-                <template v-for="cue in cues" :key="cue.Id">
-                    <li>
-                        <CueLevel
+            <template v-if="this.isEditable">
+                <ul class="levels">
+                    <template v-for="cue in cues" :key="cue.Id">
+                        <li>
+                            <CueLevel
+                                :disabled="
+                                    !trackFileUrl?.objectUrl || !isTrackLoaded
+                                "
+                                :cue="cue"
+                                :isTrackPlaying="isPlaying"
+                                :currentSeconds="currentSeconds"
+                                @click="cueClick(cue)"
+                            />
+                        </li>
+                    </template>
+                </ul>
+            </template>
+            <template v-else>
+                <!-- The cue buttons (in play mode) -->
+                <div class="buttons">
+                    <template v-for="cue in cues" :key="cue.Id">
+                        <CueButton
                             :disabled="
                                 !trackFileUrl?.objectUrl || !isTrackLoaded
                             "
@@ -111,9 +120,9 @@
                             :currentSeconds="currentSeconds"
                             @click="cueClick(cue)"
                         />
-                    </li>
-                </template>
-            </ul>
+                    </template>
+                </div>
+            </template>
         </slide-up-down>
     </div>
 </template>
@@ -132,6 +141,7 @@ import TrackHeader from '@/components/TrackHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import NoSleep from 'nosleep.js';
+import { ActionTypes } from '@/store/action-types';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -152,7 +162,10 @@ export default defineComponent({
     },
     mixins: [settingsMixin],
     props: {
-        track: Track,
+        track: {
+            type: Track,
+            required: true,
+        },
         /** Whether this component show editable inputs for the contained data
          * @devdoc Allows to reuse this component for more than one DisplayMode.
          */
@@ -308,6 +321,17 @@ export default defineComponent({
                 }
                 this.activateWakeLock();
             }
+        },
+        /** Handles the request for a new cue by creating one for the current time
+         */
+        createNewCue(): void {
+            const time = this.currentSeconds;
+            const trackId = this.track.Id;
+            const payload = { trackId, time };
+            console.debug(
+                `Track(${this.title})::createNewCue:playback:${time}`,
+            );
+            this.$store.dispatch(ActionTypes.ADD_CUE, payload);
         },
 
         /** Updates the current seconds property with the temporal position of the track audio player

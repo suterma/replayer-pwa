@@ -11,6 +11,8 @@ import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 import CompilationHandler from './compilation-handler';
 import FileSaver from 'file-saver';
 import FileHandler from './filehandler';
+import { v4 as uuidv4 } from 'uuid';
+import { Cue } from './compilation-types';
 
 type AugmentedActionContext = {
     commit<K extends keyof Mutations>(
@@ -60,6 +62,14 @@ export interface Actions {
             shortcut: string;
             time: number;
         },
+    ): void;
+    [ActionTypes.ADD_CUE](
+        { commit }: AugmentedActionContext,
+        payload: { trackId: string; time: number },
+    ): void;
+    [ActionTypes.DELETE_CUE](
+        { commit }: AugmentedActionContext,
+        cueId: string,
     ): void;
 }
 export const actions: ActionTree<State, State> & Actions = {
@@ -509,6 +519,40 @@ export const actions: ActionTree<State, State> & Actions = {
     ): void {
         commit(MutationTypes.PUSH_PROGRESS_MESSAGE, `Updating cue...`);
         commit(MutationTypes.UPDATE_CUE_DATA, payload);
+        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+    },
+    [ActionTypes.ADD_CUE](
+        { commit }: AugmentedActionContext,
+        payload: { trackId: string; time: number },
+    ): void {
+        const trackId = payload.trackId;
+        const time = payload.time;
+
+        commit(
+            MutationTypes.PUSH_PROGRESS_MESSAGE,
+            `Adding cue to trackId '${trackId}'...`,
+        );
+
+        const cueId = uuidv4();
+        //TODO later, auto-assign also a cue shortcut of an incremental number
+        const cue = new Cue(
+            'Cue at ' + CompilationHandler.convertToDisplayTime(time),
+            '',
+            time,
+            null,
+            cueId,
+        );
+
+        commit(MutationTypes.ADD_CUE, { trackId, cue });
+        commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);
+        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+    },
+    [ActionTypes.DELETE_CUE](
+        { commit }: AugmentedActionContext,
+        cueId: string,
+    ): void {
+        commit(MutationTypes.PUSH_PROGRESS_MESSAGE, `Deleting cue...`);
+        commit(MutationTypes.DELETE_CUE, cueId);
         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
     },
 };

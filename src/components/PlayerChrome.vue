@@ -45,7 +45,7 @@
                     button: true,
                     'is-loading': !this.loaded,
                 }"
-                v-on:click.prevent="stop"
+                @click.prevent="stop"
                 title="Stop"
             >
                 <!-- STOP -->
@@ -70,7 +70,7 @@
                     'is-loading':
                         this.isPlayingRequestOutstanding || !this.loaded,
                 }"
-                v-on:click.prevent="togglePlayback"
+                @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
             >
                 <!-- PLAY/PAUSE -->
@@ -107,7 +107,7 @@
                         this.isPlayingRequestOutstanding || !this.loaded,
                     'has-left-radius': true,
                 }"
-                v-on:click.prevent="togglePlayback"
+                @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
             >
                 <!-- PLAY/PAUSE -->
@@ -143,20 +143,20 @@
             <div class="player-timeline">
                 <div :style="progressStyle" class="player-progress"></div>
                 <div
-                    v-on:click="seekByClick"
+                    @click="seekByClick"
                     class="player-seeker"
                     title="Seek"
                 ></div>
                 <div class="player-time">
                     <div class="player-time-current is-unselectable">
-                        {{ convertToDisplayTime(currentSeconds) }}
+                        {{ currentDisplayTime }}
                         &nbsp;
                         <span :class="{ 'is-invisible': !this.isFading }">
                             (fading...)</span
                         >
                     </div>
                     <div class="player-time-total is-unselectable">
-                        {{ convertToDisplayTime(durationSeconds) }}
+                        {{ durationDisplayTime }}
                     </div>
                 </div>
             </div>
@@ -166,7 +166,7 @@
             <button
                 class="button"
                 v-show="!showVolume"
-                v-on:click.prevent="download"
+                @click.prevent="download"
                 title="Download"
             >
                 <!-- DOWNLOAD -->
@@ -192,7 +192,7 @@
                     button: true,
                 }"
                 v-show="!showVolume"
-                v-on:click.prevent="toggleMuted"
+                @click.prevent="toggleMuted"
                 title="Mute"
             >
                 <!-- MUTE -->
@@ -232,9 +232,9 @@
                     'volume-button-expanded': showVolume,
                     'has-right-radius': showVolume,
                 }"
-                v-on:click.prevent=""
-                v-on:mouseenter="showVolume = true"
-                v-on:mouseleave="showVolume = false"
+                @click.prevent=""
+                @mouseenter="showVolume = true"
+                @mouseleave="showVolume = false"
                 :title="volumeTitle"
             >
                 <!-- VOLUME -->
@@ -271,7 +271,7 @@
                     button: true,
                 }"
                 v-show="!showVolume"
-                v-on:click.prevent="toggleLooping"
+                @click.prevent="toggleLooping"
                 title="Loop"
             >
                 <!-- LOOP -->
@@ -301,6 +301,7 @@
 </template>
 
 <script lang="ts">
+import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent } from 'vue';
 
 /** A UI representation for a media player
@@ -414,22 +415,26 @@ export default defineComponent({
                 'max-width': '100%',
             };
         },
+
+        /** Converts the current time into a conveniently displayable hh:mm:ss.s format.
+         * @remarks Omits the hour part, if not appliccable
+         */
+        currentDisplayTime(): string {
+            return CompilationHandler.convertToDisplayTime(this.currentSeconds);
+        },
+        /** Converts the track duration into a conveniently displayable hh:mm:ss.s format.
+         * @remarks Omits the hour part, if not appliccable
+         */
+        durationDisplayTime(): string {
+            return CompilationHandler.convertToDisplayTime(
+                this.durationSeconds,
+            );
+        },
         volumeTitle(): string {
             return `Volume (${this.volume}%)`;
         },
     },
     methods: {
-        /** Converts the total seconds into a conveniently displayable hh:mm:ss.zz format.
-         * @remarks Omits the hour part, if not appliccable
-         */
-        convertToDisplayTime(seconds: number): string {
-            //Uses the hour, minute, seconds, and 3 digits of the milliseconds part
-            const hhmmss = new Date(seconds * 1000)
-                .toISOString()
-                .substr(11, 12);
-            //skip the hour part, if not used
-            return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss;
-        },
         download() {
             this.$emit('download');
         },

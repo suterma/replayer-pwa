@@ -39,4 +39,10 @@ export enum ActionTypes {
     /** Updates the cue data with a new values
      */
     UPDATE_CUE_DATA = 'UPDATE_CUE_DATA',
+    /** Adds a new cue with the given time
+     */
+    ADD_CUE = 'ADD_CUE',
+    /** Deletes the cue with the given Id
+     */
+    DELETE_CUE = 'DELETE_CUE',
 }

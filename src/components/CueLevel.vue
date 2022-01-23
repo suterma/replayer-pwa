@@ -2,7 +2,7 @@
     <!-- Main container -->
     <div class="level">
         <!-- Left side -->
-        <div class="level-left fill-available">
+        <div class="level-left">
             <div class="level-item">
                 <p class="control">
                     <button
@@ -15,6 +15,7 @@
                         }"
                         :id="'cue-' + cue.Id"
                         :title="'Play from ' + cue.Description"
+                        @click="$emit('click')"
                     >
                         <span class="player-timeline is-fullwidth">
                             <!-- Progress -->
@@ -61,19 +62,20 @@
             </div>
 
             <div class="level-item is-flex-grow-5 is-flex-shrink-1">
-                <div class="field fill-available">
-                    <p class="control fill-available">
+                <div class="field">
+                    <p class="control">
                         <input
                             class="input"
                             type="text"
                             v-model="cueData.Description"
                             @change="updateDescription($event.target.value)"
-                            @click="$event.stopPropagation()"
                             placeholder="Cue description"
+                            size="60"
                         />
                     </p>
                 </div>
             </div>
+            <!-- A rather slim input for the time (in seconds, typically 1 decimal digit) -->
             <div class="level-item">
                 <div class="field">
                     <p class="control">
@@ -83,12 +85,13 @@
                             step="0.1"
                             v-model="cueData.Time"
                             @change="updateTime($event.target.value)"
-                            @click="$event.stopPropagation()"
                             placeholder="time [seconds]"
+                            size="8"
                         />
                     </p>
                 </div>
             </div>
+            <!-- A rather slim input for the shortcut (a short mnemonic) -->
             <div class="level-item">
                 <div class="field">
                     <p class="control">
@@ -97,8 +100,8 @@
                             type="text"
                             v-model="cueData.Shortcut"
                             @change="updateShortcut($event.target.value)"
-                            @click="$event.stopPropagation()"
                             placeholder="shortcut"
+                            size="8"
                         />
                     </p>
                 </div>
@@ -109,7 +112,7 @@
         <div class="level-right">
             <div class="field">
                 <p class="control">
-                    <button class="button">Trash</button>
+                    <button class="button" @click="deleteCue()">Trash</button>
                 </p>
             </div>
         </div>
@@ -127,6 +130,7 @@ import { ActionTypes } from '@/store/action-types';
 export default defineComponent({
     name: 'CueLevel',
     components: {},
+    emits: ['click'],
     props: {
         cue: {
             type: Cue,
@@ -160,6 +164,11 @@ export default defineComponent({
                 shortcut,
                 time,
             });
+        },
+        /** Deletes the cue */
+        deleteCue(): void {
+            const cueId = this.cue.Id;
+            this.$store.dispatch(ActionTypes.DELETE_CUE, cueId);
         },
         /** Updates the cue time */
         updateTime(time: string) {

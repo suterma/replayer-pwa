@@ -5,6 +5,35 @@ import { MediaBlob, MediaUrl } from './state-types';
  * Provides handling methods for compilation manipulation.
  */
 export default class CompilationHandler {
+    /** Converts the total seconds into a conveniently displayable hh:mm:ss.zz format,
+     * if a suitable input value is provieded.
+     * @remarks Omits the hour part, if not appliccable
+     * @return The display representation or the emtpy string.
+     */
+    static convertToDisplayTime(seconds: number | null): string {
+        if (seconds != null) {
+            //Uses the hour, minute, seconds, and 3 digits of the milliseconds part
+            const hhmmss = new Date(seconds * 1000)
+                .toISOString()
+                .substr(11, 12);
+            //skip the hour part, if not used
+            return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss;
+        }
+        return '';
+
+        //TODO check implementation below
+        //             if (seconds != null) {
+        //     //Uses the hour, minute, seconds, and 1 digit of the milliseconds part
+        //     const hhmmss = new Date(seconds * 1000)
+        //         .toISOString()
+        //         .substr(11, 10);
+        //     //skip the hour part, if not used
+        //     return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss;
+        // } else {
+        //     return null;
+        // }
+    }
+
     /** Gets a lazy variant of the given file name, for better non-literal matching in case of special characters.
      * @remarks This removes non-printable characters (below the space, 32dec, 20hex) and non-ascii characters.
      * See https://stackoverflow.com/a/9364527/79485 and
@@ -107,6 +136,8 @@ export default class CompilationHandler {
      * @param compilation - The compilation, whose tracks are searched
      * @param cueId - The Id of the cue to find
      * */
+    //TODO rename and use the selected cue from the store
+    //TODO use the method from the stor for all this: getters.activeTrack
     public static getActiveTrack(
         compilation: ICompilation,
         cueId: string,
@@ -115,6 +146,21 @@ export default class CompilationHandler {
             t.Cues.find((c) => c.Id === cueId),
         );
     }
+
+    /** Gets the the track, if any, in the compilation, which contains the
+     * cue with the given cue Id.
+     * @param compilation - The compilation, whose tracks are searched
+     * @param cueId - The Id of the cue to find
+     * */
+    public static getTrackByCueId(
+        compilation: ICompilation,
+        cueId: string,
+    ): ITrack | undefined {
+        return compilation?.Tracks?.find((t) =>
+            t.Cues.find((c) => c.Id === cueId),
+        );
+    }
+
     /** Gets the the matching track, if any, in the compilation, by it's Id.
      * @param compilation - The compilation, whose tracks are searched
      * @param trackId - The Id of the track to find
