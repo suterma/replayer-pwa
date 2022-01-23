@@ -23,10 +23,6 @@ type AugmentedActionContext = {
 
 /** Implements the actions for the store */
 export interface Actions {
-    // [ActionTypes.PLAY_TRACK](
-    //     { commit }: AugmentedActionContext,
-    //     payload: string,
-    // ): Promise<string>;
     [ActionTypes.RETRIEVE_COMPILATION]({
         commit,
     }: AugmentedActionContext): void;
@@ -73,15 +69,6 @@ export interface Actions {
     ): void;
 }
 export const actions: ActionTree<State, State> & Actions = {
-    // [ActionTypes.PLAY_TRACK]({ commit }) {
-    //     return new Promise((resolve) => {
-    //         setTimeout(() => {
-    //             const data = 'action return value';
-    //             commit(MutationTypes.PUSH_PROGRESS_MESSAGE, 'Playing track...');
-    //             resolve(data);
-    //         }, 500);
-    //     });
-    // },
     [ActionTypes.RETRIEVE_COMPILATION]({ commit }) {
         console.debug('actions::RETRIEVE_COMPILATION');
         commit(
@@ -488,12 +475,9 @@ export const actions: ActionTree<State, State> & Actions = {
         { commit }: AugmentedActionContext,
         title: string,
     ): void {
-        commit(
-            MutationTypes.PUSH_PROGRESS_MESSAGE,
-            `Updating compilation title...`,
-        );
-        commit(MutationTypes.UPDATE_COMPILATION_TITLE, title);
-        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+        withProgress(`Updating compilation title...`, commit, () => {
+            commit(MutationTypes.UPDATE_COMPILATION_TITLE, title);
+        });
     },
     [ActionTypes.UPDATE_TRACK_DATA](
         { commit }: AugmentedActionContext,
@@ -504,9 +488,9 @@ export const actions: ActionTree<State, State> & Actions = {
             album: string;
         },
     ): void {
-        commit(MutationTypes.PUSH_PROGRESS_MESSAGE, `Updating track...`);
-        commit(MutationTypes.UPDATE_TRACK_DATA, payload);
-        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+        withProgress(`Updating track...`, commit, () => {
+            commit(MutationTypes.UPDATE_TRACK_DATA, payload);
+        });
     },
     [ActionTypes.UPDATE_CUE_DATA](
         { commit }: AugmentedActionContext,
@@ -517,42 +501,51 @@ export const actions: ActionTree<State, State> & Actions = {
             time: number;
         },
     ): void {
-        commit(MutationTypes.PUSH_PROGRESS_MESSAGE, `Updating cue...`);
-        commit(MutationTypes.UPDATE_CUE_DATA, payload);
-        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+        withProgress(`Updating cue...`, commit, () => {
+            commit(MutationTypes.UPDATE_CUE_DATA, payload);
+        });
     },
     [ActionTypes.ADD_CUE](
         { commit }: AugmentedActionContext,
         payload: { trackId: string; time: number },
     ): void {
-        const trackId = payload.trackId;
-        const time = payload.time;
+        withProgress(`Adding cue...`, commit, () => {
+            const trackId = payload.trackId;
+            const time = payload.time;
 
-        commit(
-            MutationTypes.PUSH_PROGRESS_MESSAGE,
-            `Adding cue to trackId '${trackId}'...`,
-        );
+            const cueId = uuidv4();
+            //TODO later, auto-assign also a cue shortcut of an incremental number
+            const cue = new Cue(
+                'Cue at ' + CompilationHandler.convertToDisplayTime(time),
+                '',
+                time,
+                null,
+                cueId,
+            );
 
-        const cueId = uuidv4();
-        //TODO later, auto-assign also a cue shortcut of an incremental number
-        const cue = new Cue(
-            'Cue at ' + CompilationHandler.convertToDisplayTime(time),
-            '',
-            time,
-            null,
-            cueId,
-        );
-
-        commit(MutationTypes.ADD_CUE, { trackId, cue });
-        commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);
-        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+            commit(MutationTypes.ADD_CUE, { trackId, cue });
+            commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);
+        });
     },
     [ActionTypes.DELETE_CUE](
         { commit }: AugmentedActionContext,
         cueId: string,
     ): void {
-        commit(MutationTypes.PUSH_PROGRESS_MESSAGE, `Deleting cue...`);
-        commit(MutationTypes.DELETE_CUE, cueId);
-        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+        withProgress(`Deleting cue...`, commit, () => {
+            commit(MutationTypes.DELETE_CUE, cueId);
+        });
     },
 };
+
+function withProgress(
+    message: string,
+    commit: <K extends keyof Mutations<State>>(
+        key: K,
+        payload: Parameters<Mutations<State>[K]>[1],
+    ) => ReturnType<Mutations<State>[K]>,
+    callee: () => void,
+) {
+    commit(MutationTypes.PUSH_PROGRESS_MESSAGE, message);
+    callee();
+    commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+}
