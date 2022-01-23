@@ -31,6 +31,10 @@ export type Mutations<S = State> = {
         compilation: ICompilation,
     ): void;
     [MutationTypes.UPDATE_SELECTED_CUE_ID](state: S, cueId: string): void;
+    [MutationTypes.UPDATE_CUE_DURATIONS](
+        state: S,
+        payload: { trackId: string; trackDurationSeconds: number },
+    ): void;
     [MutationTypes.CLOSE_COMPILATION](state: S): void;
     [MutationTypes.REVOKE_ALL_MEDIA_URLS](state: State): void;
     [MutationTypes.UPDATE_SETTINGS](state: S, settings: Settings): void;
@@ -84,6 +88,8 @@ export const mutations: MutationTree<State> & Mutations = {
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.objectUrl);
             state.mediaUrls.delete(mediaUrl.fileName);
+
+            //TODO maybe remove the track duration on unload?
         }
 
         //Keep the others and add the new one
@@ -107,7 +113,30 @@ export const mutations: MutationTree<State> & Mutations = {
             payload.trackId,
         );
         if (matchingTrack) {
+            console.debug('mutations::ADD_CUE:matchingTrack', matchingTrack);
+
             matchingTrack.Cues.push(payload.cue);
+
+            //Sort the resulting set by time
+            matchingTrack.Cues.sort((a, b) =>
+                (a.Time ?? 0) > (b.Time ?? 0)
+                    ? 1
+                    : (b.Time ?? 0) > (a.Time ?? 0)
+                    ? -1
+                    : 0,
+            );
+
+            if (matchingTrack.Duration != null) {
+                console.debug(
+                    'mutations::ADD_CUE:matchingTrack.Duration',
+                    matchingTrack.Duration,
+                );
+                CompilationHandler.updateCueDurations(
+                    matchingTrack.Cues,
+                    matchingTrack.Duration,
+                );
+            }
+
             PersistentStorage.storeCompilation(state.compilation);
         }
     },
@@ -124,6 +153,14 @@ export const mutations: MutationTree<State> & Mutations = {
             ).indexOf(cueId);
 
             ~removeIndex && matchingTrack.Cues.splice(removeIndex, 1);
+
+            if (matchingTrack.Duration != null) {
+                CompilationHandler.updateCueDurations(
+                    matchingTrack.Cues,
+                    matchingTrack.Duration,
+                );
+            }
+
             PersistentStorage.storeCompilation(state.compilation);
         }
     },
@@ -171,6 +208,28 @@ export const mutations: MutationTree<State> & Mutations = {
         PersistentStorage.storeSelectedCueId(cueId);
     },
 
+    [MutationTypes.UPDATE_CUE_DURATIONS](
+        state: State,
+        payload: { trackId: string; trackDurationSeconds: number },
+    ): void {
+        console.debug('mutations::UPDATE_CUE_DURATIONS:payload', payload);
+        const trackDuration = payload.trackDurationSeconds;
+        const track = CompilationHandler.getTrackById(
+            state.compilation,
+            payload.trackId,
+        );
+        console.debug('mutations::UPDATE_CUE_DURATIONS:track', track);
+
+        if (track) {
+            track.Duration = trackDuration;
+            console.debug(
+                'mutations::UPDATE_CUE_DURATIONS: track.Duration',
+                track.Duration,
+            );
+            CompilationHandler.updateCueDurations(track.Cues, trackDuration);
+        }
+    },
+
     [MutationTypes.CLOSE_COMPILATION](state: State) {
         PersistentStorage.clearCompilation();
 
@@ -187,6 +246,8 @@ export const mutations: MutationTree<State> & Mutations = {
             ObjectUrlHandler.revokeObjectURL(file.objectUrl);
         });
         state.mediaUrls.clear();
+
+        //TODO remove the durations from all tracks
     },
     /** Updates the application settings
      * @param state - The vuex state
@@ -240,9 +301,37 @@ export const mutations: MutationTree<State> & Mutations = {
             payload.cueId,
         );
         if (cue) {
+            const hasChangedTime = cue.Time !== payload.time;
+
             cue.Description = payload.description;
             cue.Shortcut = payload.shortcut;
             cue.Time = payload.time;
+
+            if (hasChangedTime) {
+                const track = CompilationHandler.getTrackByCueId(
+                    state.compilation,
+                    payload.cueId,
+                );
+
+                if (track) {
+                    //Maybe a sort is also due?  (//TODO Move code to central place, in CompilationHandler)
+                    track.Cues.sort((a, b) =>
+                        (a.Time ?? 0) > (b.Time ?? 0)
+                            ? 1
+                            : (b.Time ?? 0) > (a.Time ?? 0)
+                            ? -1
+                            : 0,
+                    );
+
+                    if (track && track.Duration != null) {
+                        CompilationHandler.updateCueDurations(
+                            track.Cues,
+                            track.Duration,
+                        );
+                    }
+                }
+            }
+
             PersistentStorage.storeCompilation(state.compilation);
         }
     },
