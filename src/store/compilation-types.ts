@@ -37,6 +37,13 @@ export interface ICompilation {
 export interface ITrack {
     /** The cues */
     Cues: Array<ICue>;
+
+    /** The extracted duration of the loaded media file for this track.
+     * @remarks This is only defined if there is a loaded media file for this track.
+     * @devdoc This must get calculated/reset if the track is loaded/unloaded. It must never get persisted.
+     */
+    Duration: number | null;
+
     /** The artist */
     Artist: string;
 
@@ -135,6 +142,7 @@ export class Compilation implements ICompilation {
                             cue.Id,
                         );
                     }),
+                    track.Duration,
                 );
             }),
         );
@@ -164,6 +172,8 @@ export class Track implements ITrack {
     Url = '';
     Id = '';
     Cues: Array<ICue> = new Array<ICue>();
+    /**   @inheritdoc */
+    Duration: number | null = null;
 
     /** Creates a new track
      * @param url {string} - The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
@@ -176,6 +186,7 @@ export class Track implements ITrack {
         url: string,
         id: string,
         cues: Array<ICue>,
+        duration: number | null,
     ) {
         this.Name = name;
         this.Album = album;
@@ -184,6 +195,7 @@ export class Track implements ITrack {
         this.Url = url;
         this.Id = id;
         this.Cues = cues;
+        this.Duration = duration;
     }
 
     /** Parses the JSON and returns new instance of this class.
@@ -201,6 +213,7 @@ export class Track implements ITrack {
             obj.Url,
             obj.Id,
             obj.Cues,
+            null,
         );
         console.debug('Track::fromJson:'), track;
         return track;

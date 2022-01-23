@@ -90,6 +90,7 @@ export default class CompilationParser {
                 CompilationParser.FirstStringOf(xmlTrack.Url),
                 CompilationParser.FirstStringOf(xmlTrack.Id),
                 CompilationParser.parseFromXmlCues(xmlTrack.Cues[0].Cue),
+                null,
             );
             tracks.push(track);
         });
@@ -114,6 +115,7 @@ export default class CompilationParser {
                     decodeURI(plistTrack.Path).normalize(),
                     uuidv4(),
                     CompilationParser.parseFromPlistCues(plistTrack.Markers),
+                    null,
                 );
                 tracks.push(track);
             }

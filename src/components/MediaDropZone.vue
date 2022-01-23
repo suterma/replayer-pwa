@@ -258,6 +258,7 @@ export default defineComponent({
                 url,
                 trackId,
                 new Array<ICue>(new Cue('Intro', '', 0, null, cueId)),
+                null,
             );
             this.$store.commit(MutationTypes.ADD_TRACK, newTrack);
             this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);

@@ -16,7 +16,7 @@ export enum MutationTypes {
     /** Adds a new track for the given media URL to the compilation
      */
     ADD_TRACK = 'ADD_TRACK',
-    /** Adds the given new cue for the given track to the compilation
+    /** Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.
      */
     ADD_CUE = 'ADD_CUE',
     /** Deletes the given cue from the matching track in the compilation
@@ -36,6 +36,11 @@ export enum MutationTypes {
      * @remarks This does not control the playback itself. It is intended for display and handling purposes.
      */
     UPDATE_SELECTED_CUE_ID = 'UPDATE_SELECTED_CUE_ID',
+    /** Using the provided track duration, calculates the cue duration of all cues of the track.
+     * @remarks No ordering is done with this operation
+     */
+    UPDATE_CUE_DURATIONS = 'UPDATE_CUE_DURATIONS',
+
     /** Closes an existing compilation
      * @remarks Removes the compilation with all data, including the media files and the object URL references to it
      */

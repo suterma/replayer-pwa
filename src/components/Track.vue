@@ -349,25 +349,11 @@ export default defineComponent({
                     trackDurationSeconds,
             );
             this.isTrackLoaded = true;
-
-            const originalCues = this.cues?.filter(function (el) {
-                return el.Time !== null;
+            const trackId = this.track.Id;
+            this.$store.commit(MutationTypes.UPDATE_CUE_DURATIONS, {
+                trackId,
+                trackDurationSeconds,
             });
-            if (originalCues && originalCues.length > 0) {
-                //Create a shallow, backward sorted copy of the cue list, to iterate through, and setting the duration of the cue objects
-                const sortedBackwards = [...originalCues].sort(
-                    (a, b) => (b.Time ?? 0) - (a.Time ?? 0),
-                );
-
-                var lastTime: number | null = trackDurationSeconds;
-
-                sortedBackwards.forEach((element) => {
-                    if (lastTime && element.Time !== null) {
-                        element.Duration = lastTime - element.Time;
-                    }
-                    lastTime = element.Time;
-                });
-            }
         },
         /** Updates the playing flag from the associated player event */
         updatePlaying(value: boolean) {
@@ -447,7 +433,7 @@ export default defineComponent({
         },
 
         cues(): Array<ICue> | undefined {
-            return this.track?.Cues;
+            return this.track.Cues;
         },
 
         /** Returns the media file (playable file content) for a track's file name

@@ -5,6 +5,36 @@ import { MediaBlob, MediaUrl } from './state-types';
  * Provides handling methods for compilation manipulation.
  */
 export default class CompilationHandler {
+    /** Updates (recalculates) the durations of the given cues, by using the track duration for the last cue.
+     * @remarks Not the following:
+     * - the cues with a null time are not used
+     * - the track duration is larger than largest cue time
+     */
+    static updateCueDurations(cues: ICue[], trackDuration: number): void {
+        console.debug(
+            'CompilationHandler::updateCueDurations:trackDuration',
+            trackDuration,
+        );
+
+        const originalCues = cues.filter(function (el) {
+            return el.Time !== null;
+        });
+        if (originalCues && originalCues.length > 0) {
+            //Create a shallow, backward sorted copy of the cue list, to iterate through, and setting the duration of the cue objects
+            const sortedBackwards = [...originalCues].sort(
+                (a, b) => (b.Time ?? 0) - (a.Time ?? 0),
+            );
+
+            let lastTime: number | null = trackDuration;
+
+            sortedBackwards.forEach((element) => {
+                if (lastTime && element.Time !== null) {
+                    element.Duration = lastTime - element.Time;
+                }
+                lastTime = element.Time;
+            });
+        }
+    }
     /** Converts the total seconds into a conveniently displayable hh:mm:ss.zz format,
      * if a suitable input value is provieded.
      * @remarks Omits the hour part, if not appliccable
@@ -169,7 +199,7 @@ export default class CompilationHandler {
         compilation: ICompilation,
         trackId: string,
     ): ITrack | undefined {
-        return compilation?.Tracks?.find((t) => t.Id === trackId);
+        return compilation.Tracks.find((t) => t.Id === trackId);
     }
 
     /** Gets the the matching cue, if any, in the compilation, by it's Id.
