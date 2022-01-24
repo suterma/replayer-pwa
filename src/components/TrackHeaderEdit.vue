@@ -1,50 +1,62 @@
 <template>
     <!-- Level, also on mobile 
     @remarks The id is used to scroll to this item when it's becoming the active track-->
-    <nav
-        class="level is-mobile is-clickable"
-        v-bind:id="'track-' + track.Id"
-        @click="toggleExpanded()"
-    >
+    <div class="level">
         <!-- Left side -->
         <div class="level-left">
             <!-- Title -->
             <div class="level-item">
-                <input
-                    class="input subtitle is-4"
-                    v-model="trackData.Name"
-                    @change="updateName($event.target.value)"
-                    @click="$event.stopPropagation()"
-                    type="text"
-                    placeholder="Track name"
-                />
+                <div class="field">
+                    <p class="control">
+                        <input
+                            class="input"
+                            v-model="trackData.Name"
+                            @change="updateName($event.target.value)"
+                            type="text"
+                            placeholder="Track name"
+                        />
+                    </p>
+                </div>
             </div>
-            <!-- Artist info (don't show on small devices)-->
-            <div class="level-item is-hidden-mobile">
-                <p class="is-size-7">
-                    <span class="has-text-nowrap">
-                        <span class="has-opacity-half">by&nbsp;</span>
+            <!-- by -->
+            <div class="level-item">
+                <p class="has-text-nowrap">
+                    <span class="has-opacity-half">by&nbsp;</span>
+                </p>
+            </div>
+            <!-- Artist -->
+            <div class="level-item">
+                <div class="field">
+                    <p class="control">
                         <input
                             class="input is-italic"
                             v-model="trackData.Artist"
                             @change="updateArtist($event.target.value)"
-                            @click="$event.stopPropagation()"
                             type="text"
                             placeholder="Artist"
                         />
-                    </span>
-                    <span class="has-text-nowrap">
-                        <span class="has-opacity-half">on&nbsp;</span>
+                    </p>
+                </div>
+            </div>
+            <!-- on -->
+            <div class="level-item">
+                <p class="has-text-nowrap">
+                    <span class="has-opacity-half">on&nbsp;</span>
+                </p>
+            </div>
+            <!-- Album -->
+            <div class="level-item">
+                <div class="field">
+                    <p class="control">
                         <input
                             class="input is-italic"
                             v-model="trackData.Album"
                             @change="updateAlbum($event.target.value)"
-                            @click="$event.stopPropagation()"
                             type="text"
                             placeholder="Album"
                         />
-                    </span>
-                </p>
+                    </p>
+                </div>
             </div>
         </div>
         <!-- Right side -->
@@ -77,7 +89,7 @@
                 </button>
             </div>
         </div>
-    </nav>
+    </div>
 </template>
 
 <script lang="ts">
@@ -174,6 +186,8 @@ export default defineComponent({
 
     margin-top: 12px;
 }
+
+//TODO fix these modification to better suit the edit layout
 
 /** Custom modification for the level in the context of a track.
 * @remarks Allow the title text (on the left) to break between words, 
