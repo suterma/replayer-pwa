@@ -10850,10 +10850,11 @@ button.dropdown-item.is-active {
 .select select,
 .textarea,
 .input {
-  background-color: #0a0a0a;
-  border-color: #52575c;
+  background-color: #151719;
+  border-color: #151719;
   border-radius: 4px px;
-  color: white;
+  color: #fafafa;
+  box-shadow: none;
 }
 
 .textarea::placeholder,

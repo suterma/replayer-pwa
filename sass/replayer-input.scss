@@ -8,10 +8,13 @@
 .select select,
 .textarea,
 .input {
-    background-color: $black;
-    border-color: $grey;
+    // background-color: $black-ter;
+    // border-color: $black-ter;
+    background-color: darken($dark, 5%);
+    border-color: darken($dark, 5%);
     border-radius: 4px px;
-    color: $white;
+    color: $white-bis;
+    box-shadow: none;
 }
 
 .textarea::placeholder,
