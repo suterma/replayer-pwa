@@ -199,12 +199,6 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-/** Specific icon alignment for this button  */
-.icon {
-    margin-left: -6px;
-    margin-top: -1px;
-}
-
 /* //TODO later put these into a scss file for player and progress */
 .player-timeline .player-progress {
     /* Smooth progress shade, with no visible border or slider line */

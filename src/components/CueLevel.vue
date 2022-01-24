@@ -34,7 +34,6 @@
                                 }"
                                 :style="progressStyle"
                             ></span>
-                            <!-- first line (Do not use a level here, this has only complicated things for smaller widths so far)-->
                             <!-- PLAY/Skip-Next -->
                             <span class="icon foreground">
                                 <i class="mdi mdi-24px">
@@ -63,7 +62,9 @@
             </div>
 
             <!-- Cue Description -->
-            <div class="level-item is-flex-grow-5 is-flex-shrink-1">
+            <div
+                class="level-item fill-available is-flex-grow-5 is-flex-shrink-1"
+            >
                 <div class="field fill-available">
                     <p class="control">
                         <input
@@ -76,6 +77,14 @@
                         />
                     </p>
                 </div>
+            </div>
+            <!-- at (keep as small as possible)-->
+            <div
+                class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
+            >
+                <p class="has-text-nowrap">
+                    <span class="has-opacity-half">at</span>
+                </p>
             </div>
             <!-- A rather slim input for the time (in seconds, typically 1 decimal digit) -->
             <div class="level-item is-flex-shrink-1">
@@ -92,6 +101,16 @@
                         />
                     </p>
                 </div>
+            </div>
+            <!-- Duration (keep small)-->
+            <div
+                class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
+            >
+                <p class="has-text-nowrap">
+                    <span class="has-opacity-half">{{
+                        cueDurationDisplayTime
+                    }}</span>
+                </p>
             </div>
             <!-- A rather slim input for the shortcut (a short mnemonic) -->
             <div class="level-item is-flex-shrink-1">
@@ -113,8 +132,23 @@
         <!-- Right side -->
         <div class="level-right">
             <div class="field">
-                <p class="control">
-                    <button class="button" @click="deleteCue()">Trash</button>
+                <p class="control" title="Trash this cue">
+                    <button class="button" @click="deleteCue()">
+                        <!-- Trash -->
+                        <span class="icon">
+                            <i class="mdi mdi-24px">
+                                <svg
+                                    style="width: 24px; height: 24px"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        fill="currentColor"
+                                        d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"
+                                    />
+                                </svg>
+                            </i>
+                        </span>
+                    </button>
                 </p>
             </div>
         </div>
@@ -125,6 +159,7 @@
 import { defineComponent } from 'vue';
 import { Cue } from '@/store/compilation-types';
 import { ActionTypes } from '@/store/action-types';
+import CompilationHandler from '@/store/compilation-handler';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
@@ -198,6 +233,13 @@ export default defineComponent({
         },
     },
     computed: {
+        /** Converts the cue's duration into a conveniently displayable hh:mm:ss.s format.
+         * @remarks Omits the hour part, if not appliccable
+         */
+        cueDurationDisplayTime(): string {
+            const duration = this.cue.Duration;
+            return CompilationHandler.convertToDisplayTime(duration);
+        },
         /** The playback progress within this cue, in [percent], or null if not appliccable */
         percentComplete(): number | null {
             if (this.hasCuePassed) {
@@ -274,13 +316,7 @@ export default defineComponent({
     },
 });
 </script>
-<style scoped>
-/** Specific icon alignment for this button  */
-.icon {
-    margin-left: -6px;
-    margin-top: -1px;
-}
-
+<style lang="scss" scoped>
 /* //TODO later put these into a scss file for player and progress */
 .player-timeline .player-progress {
     /* Smooth progress shade, with no visible border or slider line */
@@ -319,21 +355,45 @@ export default defineComponent({
     z-index: 2;
 }
 
-/** A standard-sized cue button only should have a small left/right padding, to save real estate and to look better */
-.button {
-    padding-left: 8px;
-    padding-right: 8px;
+/** In Edit mode, cue buttons should be wider,to better represent the cue progress */
+.cue.button {
+    padding-left: 3rem;
+    padding-right: 3rem;
 }
 
-/* The content of a cue button should be full width */
-.cue.button .is-fullwidth {
-    width: 100%;
-}
+//TODO fix these modification to better suit the edit layout
 
-/** Align the items in a line of the button vertically centered
-(similar to the level class, but without content justification) */
-.level-line {
-    align-items: center;
-    /* justify-content: stretch; */
+/** Custom modification for the level in the context of a track.
+* @remarks Allow the title text (on the left) to break between words, 
+* and keep the context items (on the right) as close as reasonably possible */
+.level {
+    .level-left {
+        word-break: break-word;
+        /* This basis is set empirically to fit for two elements on the right */
+        flex-basis: calc(100% - 80px);
+
+        /* These items should grow, and shrink */
+        .level-item {
+            flex-shrink: 1;
+            flex-grow: 1;
+            text-align: left;
+            /* Title, always justify left */
+            justify-content: left;
+        }
+    }
+
+    .level-right {
+        min-width: 0;
+
+        /* Keep the right hand items (play indicator, expander) as small as possible */
+        flex-basis: 0;
+
+        /* These items should keep their size */
+        .level-item {
+            flex-shrink: 0;
+            flex-grow: 0;
+            text-align: right;
+        }
+    }
 }
 </style>
