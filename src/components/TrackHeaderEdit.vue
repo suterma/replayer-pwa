@@ -5,8 +5,8 @@
         <!-- Left side -->
         <div class="level-left">
             <!-- Title -->
-            <div class="level-item">
-                <div class="field">
+            <div class="level-item is-flex-grow-5 is-flex-shrink-1">
+                <div class="field fill-available">
                     <p class="control">
                         <input
                             class="input"
@@ -18,14 +18,16 @@
                     </p>
                 </div>
             </div>
-            <!-- by -->
-            <div class="level-item">
+            <!-- by (keep as small as possible)-->
+            <div
+                class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
+            >
                 <p class="has-text-nowrap">
                     <span class="has-opacity-half">by&nbsp;</span>
                 </p>
             </div>
             <!-- Artist -->
-            <div class="level-item">
+            <div class="level-item is-flex-shrink-1">
                 <div class="field">
                     <p class="control">
                         <input
@@ -38,8 +40,10 @@
                     </p>
                 </div>
             </div>
-            <!-- on -->
-            <div class="level-item">
+            <!-- on (keep as small as possible)-->
+            <div
+                class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
+            >
                 <p class="has-text-nowrap">
                     <span class="has-opacity-half">on&nbsp;</span>
                 </p>
