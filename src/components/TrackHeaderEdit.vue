@@ -11,7 +11,6 @@
             <!-- Title -->
             <div class="level-item">
                 <input
-                    v-if="this.isEditable"
                     class="input subtitle is-4"
                     v-model="trackData.Name"
                     @change="updateName($event.target.value)"
@@ -19,18 +18,13 @@
                     type="text"
                     placeholder="Track name"
                 />
-                <p v-else class="subtitle is-4">{{ track.Name }}</p>
             </div>
             <!-- Artist info (don't show on small devices)-->
             <div class="level-item is-hidden-mobile">
                 <p class="is-size-7">
-                    <span
-                        v-if="track.Artist || this.isEditable"
-                        class="has-text-nowrap"
-                    >
+                    <span class="has-text-nowrap">
                         <span class="has-opacity-half">by&nbsp;</span>
                         <input
-                            v-if="this.isEditable"
                             class="input is-italic"
                             v-model="trackData.Artist"
                             @change="updateArtist($event.target.value)"
@@ -38,17 +32,10 @@
                             type="text"
                             placeholder="Artist"
                         />
-                        <span v-else class="is-italic"
-                            >{{ track.Artist }}&nbsp;</span
-                        >
                     </span>
-                    <span
-                        v-if="track.Album || this.isEditable"
-                        class="has-text-nowrap"
-                    >
+                    <span class="has-text-nowrap">
                         <span class="has-opacity-half">on&nbsp;</span>
                         <input
-                            v-if="this.isEditable"
                             class="input is-italic"
                             v-model="trackData.Album"
                             @change="updateAlbum($event.target.value)"
@@ -56,7 +43,6 @@
                             type="text"
                             placeholder="Album"
                         />
-                        <span v-else class="is-italic">{{ track.Album }}</span>
                     </span>
                 </p>
             </div>
@@ -90,10 +76,6 @@
                     </span>
                 </button>
             </div>
-            <!-- Expander -->
-            <div class="level-item">
-                <CollapsibleButton :modelValue="this.modelValue" />
-            </div>
         </div>
     </nav>
 </template>
@@ -101,32 +83,20 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Track } from '@/store/compilation-types';
-import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
 
-/** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
- * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
- * Details:
- * - The collapsed panel is not removed from the DOM because of issues with the $ref handling in conjunction with v-if
- * - However, the player's src property is only set when actually used to keep the memory footprint low.
- * @remarks Also handles the common replayer events for tracks
+/** A header for editing track metadata
  */
-//TODO later remove the editable parts, once the TrackHeaderEdit is accepted as the edit control
+//TODO later remove the editable parts from TrackHeader, once the TrackHeaderEdit is accepted as the edit control
 export default defineComponent({
-    name: 'TrackHeader',
-    components: {
-        CollapsibleButton,
-    },
+    name: 'TrackHeaderEdit',
+    components: {},
     props: {
         track: {
             type: Track,
             required: true,
         },
 
-        modelValue: {
-            type: Boolean,
-            default: false,
-        },
         /** Flag to indicate whether the player is currently playing
          */
         isPlaying: {
@@ -147,15 +117,7 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
-        /** Whether this component show editable inputs for the contained data
-         * @devdoc Allows to reuse this component for more than one DisplayMode.
-         */
-        isEditable: {
-            type: Boolean,
-            default: false,
-        },
     },
-    emits: ['update:modelValue'],
     data() {
         return {
             currentSeconds: 0,
@@ -163,14 +125,6 @@ export default defineComponent({
         };
     },
     methods: {
-        /** Toogles the expansion state
-         * @devdoc To prevent toggling with the input fields, use "$event.stopPropagation()" on the respective input controls
-         */
-        toggleExpanded() {
-            const expanded = !this.modelValue;
-            console.debug(`TrackHeader::toggleExpanded:expanded:${expanded}`);
-            this.$emit('update:modelValue', expanded);
-        },
         /** Updates the track name */
         updateName(name: string) {
             const trackId = this.track.Id;

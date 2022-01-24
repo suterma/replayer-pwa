@@ -17,7 +17,15 @@
 
         <!-- Each track is an item in a list and contains all the cues -->
         <!-- Track header, including artist info, expansion-toggler and adaptive spacing -->
+        <TrackHeaderEdit
+            v-if="this.isEditable"
+            :track="this.track"
+            :isPlaying="this.isPlaying"
+            :isTrackLoaded="this.isTrackLoaded"
+            :isActiveTrack="this.isActiveTrack"
+        />
         <TrackHeader
+            v-else
             :track="this.track"
             v-model="this.expanded"
             :isPlaying="this.isPlaying"
@@ -137,6 +145,7 @@ import TrackHowlerPlayer from '@/components/TrackHowlerPlayer.vue';
 import { MediaUrl } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
+import TrackHeaderEdit from '@/components/TrackHeaderEdit.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
@@ -159,6 +168,7 @@ export default defineComponent({
         TrackHowlerPlayer,
         ReplayerEventHandler,
         TrackHeader,
+        TrackHeaderEdit,
     },
     mixins: [settingsMixin],
     props: {
@@ -190,8 +200,9 @@ export default defineComponent({
     data() {
         return {
             /** Whether this track tile is shown as expanded, with the player and the cue buttons displayed.
+             * @remarks Default is true, when editable, false otherwise
              */
-            expanded: false,
+            expanded: this.isEditable,
             /** The playback progress in the current track, in [seconds]
              * @remarks This is used for track progress display within the set of cues
              */
@@ -210,7 +221,7 @@ export default defineComponent({
         };
     },
     methods: {
-        /** Activates the wake lock
+        /** Activates the wake lock (if enabled in settings)
          * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
          */
         activateWakeLock(): void {
@@ -220,7 +231,7 @@ export default defineComponent({
                 }
             }
         },
-        /** Deactivates the wake lock
+        /** Deactivates the wake lock (if enabled in settings)
          * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
          */
         deactivateWakeLock(): void {
