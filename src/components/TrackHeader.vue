@@ -64,9 +64,8 @@
         <!-- Right side -->
         <div class="level-right">
             <!-- Playback indicator (using a small ghost button aligns the icon properly)-->
-
-            <div class="level-item">
-                <button class="button is-small is-ghost ml-3">
+            <nav class="level-item">
+                <button class="button is-small is-ghost ml-3 is-unselectable">
                     <span
                         :class="{
                             icon: true,
@@ -89,7 +88,7 @@
                         </i>
                     </span>
                 </button>
-            </div>
+            </nav>
             <!-- Expander -->
             <div class="level-item">
                 <CollapsibleButton :modelValue="this.modelValue" />

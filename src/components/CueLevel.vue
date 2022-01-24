@@ -3,6 +3,7 @@
     <div class="level">
         <!-- Left side -->
         <div class="level-left">
+            <!-- Play Button -->
             <div class="level-item">
                 <p class="control">
                     <button
@@ -61,8 +62,9 @@
                 </p>
             </div>
 
+            <!-- Cue Description -->
             <div class="level-item is-flex-grow-5 is-flex-shrink-1">
-                <div class="field">
+                <div class="field fill-available">
                     <p class="control">
                         <input
                             class="input"
@@ -76,7 +78,7 @@
                 </div>
             </div>
             <!-- A rather slim input for the time (in seconds, typically 1 decimal digit) -->
-            <div class="level-item">
+            <div class="level-item is-flex-shrink-1">
                 <div class="field">
                     <p class="control">
                         <input
@@ -92,7 +94,7 @@
                 </div>
             </div>
             <!-- A rather slim input for the shortcut (a short mnemonic) -->
-            <div class="level-item">
+            <div class="level-item is-flex-shrink-1">
                 <div class="field">
                     <p class="control">
                         <input

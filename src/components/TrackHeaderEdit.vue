@@ -5,7 +5,9 @@
         <!-- Left side -->
         <div class="level-left">
             <!-- Title -->
-            <div class="level-item is-flex-grow-5 is-flex-shrink-1">
+            <div
+                class="level-item fill-available is-flex-grow-5 is-flex-shrink-1"
+            >
                 <div class="field fill-available">
                     <p class="control">
                         <input
@@ -66,9 +68,8 @@
         <!-- Right side -->
         <div class="level-right">
             <!-- Playback indicator (using a small ghost button aligns the icon properly)-->
-
-            <div class="level-item">
-                <button class="button is-small is-ghost ml-3">
+            <nav class="level-item">
+                <button class="button is-small is-ghost ml-3 is-unselectable">
                     <span
                         :class="{
                             icon: true,
@@ -91,7 +92,7 @@
                         </i>
                     </span>
                 </button>
-            </div>
+            </nav>
         </div>
     </div>
 </template>
