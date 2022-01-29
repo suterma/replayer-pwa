@@ -1,0 +1,4 @@
+# An ignore file for the Azure pipeline artifact
+
+# Statistics are not used in the distribution
+stats.json
