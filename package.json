@@ -21,7 +21,7 @@
         "css-build": "sass --no-source-map sass/replayer.scss public/css/replayer.css",
         "css-watch": "npm run css-build -- --watch",
         "start": "npm run css-watch",
-        "test": "jest",
+        "test": "jest --ci --reporters=default --reporters=jest-junit",
         "bundle-report": "webpack-bundle-analyzer --port 4200 dist/stats.json"
     },
     "dependencies": {
@@ -32,6 +32,7 @@
         "file-saver": "^2.0.5",
         "howler": "^2.2.3",
         "idb-keyval": "^6.0.3",
+        "jest-junit": "^13.0.0",
         "jszip": "^3.7.1",
         "nosleep.js": "^0.12.0",
         "outfront": "^1.1.1",

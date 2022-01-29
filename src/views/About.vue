@@ -231,6 +231,20 @@
                     >, a vue3 directive to react on clicks outside an element.
                     (Released under the MIT License, by Andy Mark)
                 </li>
+                <li>
+                    <a href="https://jestjs.io/" target="_blank"> Jest</a>, a
+                    delightful JavaScript Testing Framework. (Released under the
+                    MIT License, by Facebook)
+                </li>
+                <li>
+                    <a
+                        href="https://github.com/jest-community/jest-junit"
+                        target="_blank"
+                    >
+                        jest-junit</a
+                    >, a Jest reporter that creates compatible junit xml files.
+                    (Released under the MIT License, by the jest community)
+                </li>
             </ul>
         </div>
         <h1 class="title">License</h1>

@@ -22,5 +22,6 @@ module.exports = {
         '^@/(.*)$': '<rootDir>/src/$1',
         '^lib/(.*)$': '<rootDir>/common/$1',
     },
-    setupFiles: ["core-js"]
+    setupFiles: ['core-js'],
+    reporters: ['default', 'jest-junit'],
 };
