@@ -26,3 +26,8 @@ steps:
       inputs:
           testRunner: JUnit
           testResultsFiles: '**/junit.xml'
+
+    - task: PublishPipelineArtifact@1
+      inputs:
+      targetPath: $(System.DefaultWorkingDirectory)/dist
+      artifactName: replayer-pwa-distribution
