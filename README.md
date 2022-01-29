@@ -4,6 +4,7 @@
 ![GitHub All Releases](https://img.shields.io/github/downloads/suterma/replayer-pwa/total.svg)
 ![Release](https://img.shields.io/github/release/suterma/replayer-pwa.svg)
 ![Language](https://img.shields.io/github/languages/top/suterma/replayer-pwa.svg)
+[![Build Status](https://dev.azure.com/suterma/replayer-pwa/_apis/build/status/suterma.replayer-pwa?branchName=main)](https://dev.azure.com/suterma/replayer-pwa/_build/latest?definitionId=1&branchName=main)
 
 The [Replayer, as a Web App](https://replayer.app), for compilations from the classic [Windows Desktop Replayer](https://github.com/suterma/replayer) application.
 
