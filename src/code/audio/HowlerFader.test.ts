@@ -34,7 +34,7 @@ describe('the HowerFader handler', function () {
 
     it('should not fade out when the duration is zero', () => {
         //Arrange
-        const howlerFader = new HowlerFader(testHowl, 0);
+        const howlerFader = new HowlerFader(testHowl, 0, 0);
         testHowl.fade = jest.fn(); //calls will be counted from here on
 
         //Act
@@ -47,7 +47,7 @@ describe('the HowerFader handler', function () {
 
     it('should fade out when the duration is non-zero', () => {
         // Arrange
-        const howlerFader = new HowlerFader(testHowl, 1000);
+        const howlerFader = new HowlerFader(testHowl, 1000, 500);
         testHowl.fade = jest.fn(); //calls will be counted from here on
 
         //Act

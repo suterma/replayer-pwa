@@ -12,6 +12,7 @@ describe('the XML mapping', function () {
             'https://test.example.com?myfile.mp3',
             'testId',
             new Array<ICue>(),
+            60,
         );
 
         //Act
@@ -25,5 +26,6 @@ describe('the XML mapping', function () {
         expect(target.Measure).toBe(track.Measure);
         expect(target.Name).toBe(track.Name);
         expect(target.Url).toBe(track.Url);
+        //HINT: Duration is not serialized
     });
 });

@@ -177,6 +177,7 @@ export class Track implements ITrack {
 
     /** Creates a new track
      * @param url {string} - The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
+     * @param duration {number | null} - Duration of the media associated with the track. This is not persisted, but set to a specific value once after a matching track has been loaded.
      */
     constructor(
         name: string,
