@@ -43,7 +43,8 @@ steps:
           password: 'super-long-and-secure-password' # Required when credentialsOption == Inputs
           rootDirectory: $(System.DefaultWorkingDirectory)/dist
           filePatterns: '**'
-          #remoteDirectory: '/upload/$(Build.BuildId)/'
+          #Just use the defined root for the FTP user
+          remoteDirectory: '/'
           clean: false
           cleanContents: false # Required when clean == False
           preservePaths: true
