@@ -37,8 +37,9 @@ steps:
       inputs:
           credentialsOption: 'inputs' # Options: serviceEndpoint, inputs
           #serverEndpoint: # Required when credentialsOption == ServiceEndpoint
+          #The FTP server URL must begin with ftp:// or ftps://
           serverUrl: 'ftp://s052.cyon.net' # Required when credentialsOption == Inputs
-          username: 'web-devel-replayer' # Required when credentialsOption == Inputs
+          username: 'web-devel-replayer@replayer.app' # Required when credentialsOption == Inputs
           password: 'super-long-and-secure-password' # Required when credentialsOption == Inputs
           rootDirectory: $(System.DefaultWorkingDirectory)/dist
           filePatterns: '**'
