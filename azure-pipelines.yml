@@ -37,7 +37,7 @@ steps:
       inputs:
           credentialsOption: 'inputs' # Options: serviceEndpoint, inputs
           #serverEndpoint: # Required when credentialsOption == ServiceEndpoint
-          serverUrl: s052.cyon.net # Required when credentialsOption == Inputs
+          serverUrl: 'ftp://s052.cyon.net' # Required when credentialsOption == Inputs
           username: 'web-devel-replayer' # Required when credentialsOption == Inputs
           password: 'super-long-and-secure-password' # Required when credentialsOption == Inputs
           rootDirectory: $(System.DefaultWorkingDirectory)/dist
