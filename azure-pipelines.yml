@@ -36,8 +36,8 @@ steps:
           credentialsOption: 'inputs' # Options: serviceEndpoint, inputs
           #The FTP server URL must begin with ftp:// or ftps://
           serverUrl: 'ftps://s052.cyon.net' # Required when credentialsOption == Inputs
-          username: 'web-devel-replayer@replayer.app' # Required when credentialsOption == Inputs
-          password: 'super-long-and-secure-password' # Required when credentialsOption == Inputs
+          username: $(ftp-username) # Required when credentialsOption == Inputs
+          password: $(ftp-password) # Required when credentialsOption == Inputs
           rootDirectory: $(System.DefaultWorkingDirectory)/dist
           # Deploy all except the stats.json
           filePatterns: '**/!(stats.json)'
