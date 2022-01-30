@@ -31,3 +31,19 @@ steps:
       inputs:
           targetPath: $(System.DefaultWorkingDirectory)/dist
           artifactName: replayer-pwa-distribution
+    # FTP upload
+    # Upload files using FTP
+    - task: FtpUpload@2
+      inputs:
+          credentialsOption: 'inputs' # Options: serviceEndpoint, inputs
+          #serverEndpoint: # Required when credentialsOption == ServiceEndpoint
+          serverUrl: # Required when credentialsOption == Inputs
+          username: 'web-devel-replayer' # Required when credentialsOption == Inputs
+          password: 'super-long-and-secure-password' # Required when credentialsOption == Inputs
+          rootDirectory: $(System.DefaultWorkingDirectory)/dist
+          filePatterns: '**'
+          #remoteDirectory: '/upload/$(Build.BuildId)/'
+          clean: false
+          cleanContents: false # Required when clean == False
+          preservePaths: true
+          #trustSSL: false
