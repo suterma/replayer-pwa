@@ -47,7 +47,7 @@ steps:
           remoteDirectory: '/'
           #keep the directory, as it's the root anyway
           clean: false
-          #remove the last upload
-          cleanContents: true
+          #removing content does not work, because I have static files that are not allowed to access for this upload task
+          cleanContents: false
           preservePaths: true
           #trustSSL: false
