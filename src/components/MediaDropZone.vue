@@ -10,6 +10,7 @@ The URL input should be wider, because it should be able to easily deal with len
                     'fill-available': true,
                     'has-background-info-dark': this.isDraggingOver,
                     'has-border-info': this.isDraggingOver,
+                    'is-loading': this.isLoadingFromFile,
                 }"
                 @dragover="dragover"
                 @dragleave="dragleave"
@@ -70,7 +71,11 @@ The URL input should be wider, because it should be able to easily deal with len
                 <div class="control">
                     <button
                         tabindex="30"
-                        class="button is-primary"
+                        :class="{
+                            button: true,
+                            'is-primary': true,
+                            'is-loading': this.isLoadingFromUrl,
+                        }"
                         type="submit"
                         @click="fetchUrl"
                     >
@@ -130,6 +135,11 @@ export default defineComponent({
 
         /** The URL from whitch the media can be fetched from */
         url: '',
+
+        /** Whether this component is curretly loading data from an URL */
+        isLoadingFromUrl: false,
+        /** Whether this component is curretly loading data from a file */
+        isLoadingFromFile: false,
     }),
     methods: {
         onChange() {
@@ -163,6 +173,7 @@ export default defineComponent({
         /** Loads a single file by loading it's content
          */
         async loadFile(file: File): Promise<void> {
+            this.isLoadingFromFile = true;
             this.$store
                 .dispatch(ActionTypes.LOAD_FROM_FILE, file)
                 .catch((errorMessage: string) => {
@@ -175,6 +186,9 @@ export default defineComponent({
                 })
                 .then(() => {
                     this.createDefaultTrackForFile(file);
+                })
+                .finally(() => {
+                    this.isLoadingFromFile = false;
                 });
         },
 
@@ -211,6 +225,7 @@ export default defineComponent({
 
             console.debug('MediaDropZone::fetchUrl:url:', this.url);
             if (this.url) {
+                this.isLoadingFromUrl = true;
                 this.$store
                     .dispatch(ActionTypes.LOAD_FROM_URL, this.url)
                     .catch((errorMessage: string) => {
@@ -226,6 +241,9 @@ export default defineComponent({
                     })
                     .then(() => {
                         this.createDefaultTrackForUrl(new URL(this.url));
+                    })
+                    .finally(() => {
+                        this.isLoadingFromUrl = false;
                     });
             }
         },

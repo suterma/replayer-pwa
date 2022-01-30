@@ -164,7 +164,7 @@ export const actions: ActionTree<State, State> & Actions = {
             if (!FileHandler.isValidHttpUrl(url)) {
                 commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                 reject(`Provided input is not a valid URL: '${url}'`);
-                return;
+                return; //to avoid running the code below
             }
 
             commit(
@@ -172,59 +172,82 @@ export const actions: ActionTree<State, State> & Actions = {
                 `Loading URL '${url}'...`,
             );
             console.debug('RezLoader::loadUrl:url', url);
-            fetch(url).then((response) => {
-                if (!response.ok) {
-                    commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
-                    reject(
-                        `Network response while fetching URL '${url}' was not OK`,
-                    );
-                    return;
-                }
-                //Use the final (possibly redirected URL for the next time)
-                //TODO test on real life URL whether this works reliably...
-                const finalUrl = new URL(response.url);
-                console.debug('RezLoader::loadUrl:response', response);
-                response.blob().then((blob) => {
-                    const mimeType = FileHandler.getMimeType(
-                        finalUrl,
-                        response,
-                    );
-
-                    //Check whether MIME Type is supported
-                    if (!FileHandler.isSupportedMimeType(mimeType)) {
+            fetch(url)
+                .then((response) => {
+                    if (!response.ok) {
                         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                         reject(
-                            `Content MIME type '${mimeType}' is not supported`,
+                            `Network response while fetching URL '${url}' was not OK`,
                         );
+                        //The action is done, so terminate the progress
+                        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                         return;
                     }
-                    const localResourceName =
-                        FileHandler.getLocalResourceName(finalUrl);
-                    const file = new File(
-                        [blob],
-                        localResourceName /* as name */,
-                        {
-                            type: mimeType ?? undefined,
-                        },
-                    );
+                    //Use the final (possibly redirected URL for the next time)
+                    //TODO test on real life URL whether this works reliably...
+                    const finalUrl = new URL(response.url);
+                    console.debug('RezLoader::loadUrl:response', response);
+                    response.blob().then((blob) => {
+                        const mimeType = FileHandler.getMimeType(
+                            finalUrl,
+                            response,
+                        );
 
-                    dispatch(ActionTypes.LOAD_FROM_FILE, file)
-                        .catch((errorMessage: string) => {
-                            // commit(
-                            //     MutationTypes.PUSH_ERROR_MESSAGE,
-                            //     errorMessage,
-                            // );
-                            reject(errorMessage);
-                        })
-                        .finally(() => {
+                        //Check whether MIME Type is supported
+                        if (!FileHandler.isSupportedMimeType(mimeType)) {
                             commit(
                                 MutationTypes.POP_PROGRESS_MESSAGE,
                                 undefined,
                             );
-                            resolve(localResourceName);
-                        });
+                            reject(
+                                `Content MIME type '${mimeType}' is not supported`,
+                            );
+                            //The action is done, so terminate the progress
+                            commit(
+                                MutationTypes.POP_PROGRESS_MESSAGE,
+                                undefined,
+                            );
+                            return;
+                        }
+                        const localResourceName =
+                            FileHandler.getLocalResourceName(finalUrl);
+                        const file = new File(
+                            [blob],
+                            localResourceName /* as name */,
+                            {
+                                type: mimeType ?? undefined,
+                            },
+                        );
+
+                        dispatch(ActionTypes.LOAD_FROM_FILE, file)
+                            .then(() => {
+                                resolve(localResourceName);
+                            })
+                            .catch((errorMessage: string) => {
+                                reject(
+                                    `Loading from the received resource file has failed for URL: '${url}' with the message: '${errorMessage}'`,
+                                );
+                            })
+                            .finally(() => {
+                                //The action is done, so terminate the progress
+                                commit(
+                                    MutationTypes.POP_PROGRESS_MESSAGE,
+                                    undefined,
+                                );
+                                return;
+                            });
+                    });
+                })
+                .catch((errorMessage: string) => {
+                    reject(
+                        `Fetch has failed for URL: '${url}' with the message: '${errorMessage}'`,
+                    );
+                })
+                .finally(() => {
+                    //The action is done, so terminate the progress
+                    commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                    return;
                 });
-            });
         });
     },
 

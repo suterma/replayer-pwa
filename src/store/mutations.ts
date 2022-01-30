@@ -62,7 +62,7 @@ export const mutations: MutationTree<State> & Mutations = {
     },
     [MutationTypes.PUSH_ERROR_MESSAGE](state: State, message: string) {
         state.errorMessageStack.push(message);
-        console.log('ERROR: ' + message);
+        console.error('ERROR: ' + message);
     },
     [MutationTypes.POP_PROGRESS_MESSAGE](state: State) {
         const message = state.progressMessageStack.pop();
