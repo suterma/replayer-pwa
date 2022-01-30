@@ -156,6 +156,9 @@ export const actions: ActionTree<State, State> & Actions = {
     //With xml, rex, bplist, ZIP
     //Then simplify by handling ZIP files separately, unzipping all files and recursively call this method
 
+    //HINT: How to use Google Chrome without CORS, for testing purposes:
+    //google-chrome -–allow-file-access-from-files --disable-web-security --user-data-dir="~/Desktop/google-temp/"
+
     [ActionTypes.LOAD_FROM_URL](
         { commit, dispatch }: AugmentedActionContext,
         url: string,
@@ -172,21 +175,33 @@ export const actions: ActionTree<State, State> & Actions = {
                 `Loading URL '${url}'...`,
             );
             console.debug('RezLoader::loadUrl:url', url);
-            fetch(url)
+            fetch(url, {
+                mode: 'cors', // to allow any accessible resource
+                method: 'GET',
+            })
                 .then((response) => {
+                    //Use the final (possibly redirected URL for the next time)
+                    //TODO test on real life URL whether this works reliably...
+                    console.debug('RezLoader::loadUrl:response', response);
+
+                    //Get the possibly redirected url
+                    let finalUrl: URL;
+                    if (response.redirected) {
+                        finalUrl = new URL(response.url);
+                    } else {
+                        finalUrl = new URL(url);
+                    }
+
                     if (!response.ok) {
-                        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                         reject(
                             `Network response while fetching URL '${url}' was not OK`,
                         );
+                        console.debug('RezLoader::loadUrl:response', response);
                         //The action is done, so terminate the progress
                         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                         return;
                     }
-                    //Use the final (possibly redirected URL for the next time)
-                    //TODO test on real life URL whether this works reliably...
-                    const finalUrl = new URL(response.url);
-                    console.debug('RezLoader::loadUrl:response', response);
+
                     response.blob().then((blob) => {
                         const mimeType = FileHandler.getMimeType(
                             finalUrl,
