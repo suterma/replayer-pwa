@@ -1,7 +1,4 @@
-# Node.js with Vue
-# Build a Node.js project that uses Vue.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+# Build Pipeline for replayer-pwa
 
 trigger:
     - main
@@ -14,35 +11,36 @@ steps:
       inputs:
           versionSpec: '10.x'
       displayName: 'Install Node.js'
-
+    # Building the package
     - script: |
           npm install
           npm test 
           npm run build
       displayName: 'npm install and build'
-
+    # Publishing the test results
     - task: PublishTestResults@2
       condition: succeededOrFailed()
       inputs:
           testRunner: JUnit
           testResultsFiles: '**/junit.xml'
-
+    # Publishing the build pipeline artifact (optional)
+    # This honors the .artifactignore file
     - task: PublishPipelineArtifact@1
       inputs:
           targetPath: $(System.DefaultWorkingDirectory)/dist
           artifactName: replayer-pwa-distribution
-    # FTP upload
-    # Upload files using FTP
+    # FTP upload the build output
+    # Note: This does not honor the .artifactignore file
     - task: FtpUpload@2
       inputs:
           credentialsOption: 'inputs' # Options: serviceEndpoint, inputs
-          #serverEndpoint: # Required when credentialsOption == ServiceEndpoint
           #The FTP server URL must begin with ftp:// or ftps://
           serverUrl: 'ftps://s052.cyon.net' # Required when credentialsOption == Inputs
           username: 'web-devel-replayer@replayer.app' # Required when credentialsOption == Inputs
           password: 'super-long-and-secure-password' # Required when credentialsOption == Inputs
           rootDirectory: $(System.DefaultWorkingDirectory)/dist
-          filePatterns: '**'
+          # Deploy all except the stats.json
+          filePatterns: '**/!(stats.json)'
           #Just use the defined root for the FTP user
           remoteDirectory: '/'
           #keep the directory, as it's the root anyway
@@ -50,4 +48,3 @@ steps:
           #removing content does not work, because I have static files that are not allowed to access for this upload task
           cleanContents: false
           preservePaths: true
-          #trustSSL: false
