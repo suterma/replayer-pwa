@@ -203,8 +203,8 @@ export default class FileHandler {
             //However, Replayer does currently only use the bare mime type, omitting any probable charset
             mimeType = contentType.split(';')[0];
         }
-        //Otherwise try to guess the MIME type from the URL
-        if (!mimeType) {
+        //If no MIME type available, or it's just a generic one, try to guess the correct MIME type from the URL
+        if (!mimeType || mimeType == 'application/octet-stream') {
             const fileName = this.extractFileNameFromUrl(url);
             const fileExtension = fileName?.split('.').pop()?.toLowerCase();
             console.debug(
