@@ -242,8 +242,6 @@ export const actions: ActionTree<State, State> & Actions = {
                                 reject(
                                     `Loading from the received resource file has failed for URL: '${url}' with the message: '${errorMessage}'`,
                                 );
-                            })
-                            .finally(() => {
                                 //The action is done, so terminate the progress
                                 commit(
                                     MutationTypes.POP_PROGRESS_MESSAGE,
@@ -257,8 +255,6 @@ export const actions: ActionTree<State, State> & Actions = {
                     reject(
                         `Fetch has failed for URL: '${url}' with the message: '${errorMessage}'`,
                     );
-                })
-                .finally(() => {
                     //The action is done, so terminate the progress
                     commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                     return;
