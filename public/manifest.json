@@ -44,7 +44,7 @@
             "purpose": "maskable"
         }
     ],
-    "start_url": "./#/play",
+    "start_url": ".",
     "display": "standalone",
     "screenshots": [
         {
