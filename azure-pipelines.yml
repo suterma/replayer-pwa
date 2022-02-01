@@ -23,12 +23,6 @@ steps:
       inputs:
           testRunner: JUnit
           testResultsFiles: '**/junit.xml'
-    # Publishing the build pipeline artifact (optional)
-    # This honors the .artifactignore file
-    - task: PublishPipelineArtifact@1
-      inputs:
-          targetPath: $(System.DefaultWorkingDirectory)/dist
-          artifactName: replayer-pwa-distribution
     # FTP upload the build output
     # Note: This does not honor the .artifactignore file
     - task: FtpUpload@2
