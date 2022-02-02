@@ -16,7 +16,7 @@
                         }"
                         :id="'cue-' + cue.Id"
                         :title="'Play from ' + cue.Description"
-                        @click="$emit('click')"
+                        @click="cueButtonClicked"
                     >
                         <span class="player-timeline is-fullwidth">
                             <!-- Progress -->
@@ -68,6 +68,7 @@
                 <div class="field fill-available">
                     <p class="control">
                         <input
+                            ref="cueDescription"
                             class="input"
                             type="text"
                             v-model="cueData.Description"
@@ -190,7 +191,7 @@ export default defineComponent({
         };
     },
     methods: {
-        /** Updates the cue description */
+        /** Updates the set cue description */
         updateDescription(description: string) {
             const cueId = this.cue.Id;
             const shortcut = this.cueData.Shortcut;
@@ -207,7 +208,7 @@ export default defineComponent({
             const cueId = this.cue.Id;
             this.$store.dispatch(ActionTypes.DELETE_CUE, cueId);
         },
-        /** Updates the cue time */
+        /** Updates the set cue time */
         updateTime(time: string) {
             const cueId = this.cue.Id;
             const shortcut = this.cueData.Shortcut;
@@ -219,7 +220,7 @@ export default defineComponent({
                 time,
             });
         },
-        /** Updates the cue shortcut */
+        /** Updates the set cue shortcut */
         updateShortcut(shortcut: string) {
             const cueId = this.cue.Id;
             const description = this.cueData.Description;
@@ -230,6 +231,28 @@ export default defineComponent({
                 shortcut,
                 time,
             });
+        },
+        /** Handles the click event of the cue button */
+        cueButtonClicked() {
+            this.$emit('click');
+            this.setFocusToDescriptionInput();
+        },
+        /** Sets the focus to the cue description input box */
+        setFocusToDescriptionInput() {
+            console.debug('focussing to cue', this.cue.Id);
+            const cueDescription = this.$refs
+                .cueDescription as HTMLInputElement;
+            cueDescription.focus();
+        },
+    },
+    watch: {
+        /** Track updates to the selected cue and follows the focus to the matching description input.
+         * @remarks This helps navigating the cues and updating the description along with it.
+         */
+        isCueSelected(val, oldVal) {
+            if (oldVal == false && val == true) {
+                this.setFocusToDescriptionInput();
+            }
         },
     },
     computed: {
