@@ -10863,23 +10863,45 @@ button.dropdown-item.is-active {
 }
 
 /*************************************************************
- * Unfortunately, the existing style is different for primary buttons
-   However, for Replayer, primary buttons should have the same 
+ * Unfortunately, the existing focus style is different for colored buttons
+   However, for Replayer, colored buttons should have the same 
    focus styles as all the other buttons.
    Thus, this style is set here for them all the same   
 **************************************************************/
+/* focus */
 .button:focus,
 .button.is-primary:focus,
+.button.is-link:focus,
+.button.is-info:focus,
+.button.is-success:focus,
+.button.is-warning:focus,
+.button.is-danger:focus,
 .button.is-focused,
-.button.is-primary.is-focused {
+.button.is-primary.is-focused,
+.button.is-link.is-focused,
+.button.is-info.is-focused,
+.button.is-success.is-focused,
+.button.is-warning.is-focused,
+.button.is-danger.is-focused {
   border-color: #ededed;
   color: #ededed;
 }
 
+/* focus */
 .button:focus:not(:active),
 .button.is-primary:focus:not(:active),
+.button.is-link:focus:not(:active),
+.button.is-info:focus:not(:active),
+.button.is-success:focus:not(:active),
+.button.is-warning:focus:not(:active),
+.button.is-danger:focus:not(:active),
 .button.is-focused:not(:active),
-.button.is-primary.is-focused:not(:active) {
+.button.is-primary.is-focused:not(:active),
+.button.is-link.is-focused:not(:active),
+.button.is-info.is-focused:not(:active),
+.button.is-success.is-focused:not(:active),
+.button.is-warning.is-focused:not(:active),
+.button.is-danger.is-focused:not(:active) {
   box-shadow: 0 0 0 0.125em rgba(250, 250, 250, 0.25);
 }
 

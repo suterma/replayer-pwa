@@ -190,6 +190,12 @@ export default defineComponent({
             cueData: { ...this.cue }, // clone the object
         };
     },
+    mounted: function (): void {
+        //Track the selection
+        if (this.isCueSelected) {
+            this.setFocusToDescriptionInput();
+        }
+    },
     methods: {
         /** Updates the set cue description */
         updateDescription(description: string) {
