@@ -1,6 +1,6 @@
 <template>
     <!-- This level is designed that the two input methods can grow and shink, filling up the available horizontal space.
-The URL input should be wider, because it should be able to easily deal with lenghty input values -->
+The URL input is wider, because it should be able to easily deal with lenghty input values -->
     <div class="level media-drop-zone">
         <div class="level-item has-text-centered">
             <div
@@ -46,7 +46,7 @@ The URL input should be wider, because it should be able to easily deal with len
                             </svg>
                         </i>
                     </span>
-                    <span> Click or drop to add file(s) </span>
+                    <span> Click or drop to load file(s) </span>
                 </label>
             </div>
         </div>
@@ -91,23 +91,28 @@ The URL input should be wider, because it should be able to easily deal with len
             </div>
         </div>
     </div>
-    Supported items:
-    <div class="content">
+    <div class="box has-border has-background-transparent">
         <SupportedFilesText />
-    </div>
 
-    Example URLs:
-    <br />
-    https://galiander.ca/corogaliano/2022springrehearsal/01%20Down%20To%20The%20River%20To%20Pray%202016.mp3
-    <br />
-    https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20sop.mp3
-    <br />
-    https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20alt.mp3
-    <br />
-    https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20ten.mp3
-    <br />
-    https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20bas.mp3
-    <br />
+        <p>
+            <a href="https://replayer.app/en/documentation-app" target="_blank"
+                >Learn more...</a
+            >
+        </p>
+
+        Example URLs:
+        <br />
+        https://galiander.ca/corogaliano/2022springrehearsal/01%20Down%20To%20The%20River%20To%20Pray%202016.mp3
+        <br />
+        https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20sop.mp3
+        <br />
+        https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20alt.mp3
+        <br />
+        https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20ten.mp3
+        <br />
+        https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20bas.mp3
+        <br />
+    </div>
 </template>
 
 <script lang="ts">
@@ -287,7 +292,7 @@ export default defineComponent({
 </script>
 <style scoped>
 /** Style the box like a typical drop zone */
-.box {
+.media-drop-zone .box {
     border-width: 1px;
     border-style: dashed;
 }

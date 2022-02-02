@@ -11050,6 +11050,12 @@ but not at the "end/right" container's border */
  * Additional adornments
 **************************************************************
 */
+/* A default border  */
+.has-border-primary,
+.has-border {
+  border: 1px solid #52575c;
+}
+
 /* A success variant of a border  */
 .has-border-success {
   border: 1px solid #62c462;
@@ -11058,4 +11064,9 @@ but not at the "end/right" container's border */
 /* A info variant of a border  */
 .has-border-info {
   border: 1px solid #3e8ed0;
+}
+
+/* A transparent background, usable e.g. in a box */
+.has-background-transparent {
+  background-color: transparent;
 }
