@@ -113,6 +113,8 @@ The URL input is wider, because it should be able to easily deal with lenghty in
 
         Example URLs:
         <br />
+        https://web-devel.replayer.app/your-light-by-lidija-roos.mp3
+        <br />
         https://galiander.ca/corogaliano/2022springrehearsal/01%20Down%20To%20The%20River%20To%20Pray%202016.mp3
         <br />
         https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20sop.mp3
@@ -262,6 +264,7 @@ export default defineComponent({
                     })
                     .finally(() => {
                         this.isLoadingFromUrl = false;
+                        this.url = ''; //remove the now loaded url
                     });
             }
         },
@@ -289,6 +292,7 @@ export default defineComponent({
                     })
                     .finally(() => {
                         this.isUsingMediaFromUrl = false;
+                        this.url = ''; //remove the now loaded url
                     });
             }
         },
