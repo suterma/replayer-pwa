@@ -76,18 +76,29 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                             'is-primary': true,
                             'is-loading': this.isLoadingFromUrl,
                         }"
-                        type="submit"
                         @click="fetchUrl"
                     >
                         Fetch
                         <!-- Download &amp; use offline -->
                     </button>
                 </div>
-                <!-- <div class="control">
-                    <button class="button is-info" @click="fetchUrl">
-                        Use online
+                <div class="control">
+                    <!-- Use as default, thus set as the submit button -->
+                    <button
+                        tabindex="40"
+                        :class="{
+                            button: true,
+                            'is-info': true,
+                            'is-loading': this.isUsingMediaFromUrl,
+                        }"
+                        type="submit"
+                        @click="useMediaUrl"
+                    >
+                        Set
+
+                        <!-- Apply and use online -->
                     </button>
-                </div> -->
+                </div>
             </div>
         </div>
     </div>
@@ -143,6 +154,8 @@ export default defineComponent({
 
         /** Whether this component is curretly loading data from an URL */
         isLoadingFromUrl: false,
+        /** Whether this component is curretly using media data from an URL */
+        isUsingMediaFromUrl: false,
         /** Whether this component is curretly loading data from a file */
         isLoadingFromFile: false,
     }),
@@ -249,6 +262,33 @@ export default defineComponent({
                     })
                     .finally(() => {
                         this.isLoadingFromUrl = false;
+                    });
+            }
+        },
+
+        /** Uses a single media URL by applying it to a new track */
+        useMediaUrl(): void {
+            console.debug('MediaDropZone::useMediaUrl:url:', this.url);
+            if (this.url) {
+                this.isUsingMediaFromUrl = true;
+                this.$store
+                    .dispatch(ActionTypes.USE_MEDIA_FROM_URL, this.url)
+                    .catch((errorMessage: string) => {
+                        console.debug(
+                            'MediaDropZone::useMediaUrl:catch:errorMessage',
+                            errorMessage,
+                        );
+                        this.$store.commit(
+                            MutationTypes.PUSH_ERROR_MESSAGE,
+                            errorMessage,
+                        );
+                        throw new Error(errorMessage);
+                    })
+                    .then(() => {
+                        this.createDefaultTrackForUrl(new URL(this.url));
+                    })
+                    .finally(() => {
+                        this.isUsingMediaFromUrl = false;
                     });
             }
         },

@@ -34,6 +34,10 @@ export interface Actions {
         { commit }: AugmentedActionContext,
         url: string,
     ): Promise<string>;
+    [ActionTypes.USE_MEDIA_FROM_URL](
+        { commit }: AugmentedActionContext,
+        url: string,
+    ): Promise<string>;
     [ActionTypes.LOAD_FROM_FILE](
         { commit }: AugmentedActionContext,
         file: File,
@@ -174,7 +178,6 @@ export const actions: ActionTree<State, State> & Actions = {
                 MutationTypes.PUSH_PROGRESS_MESSAGE,
                 `Loading URL '${url}'...`,
             );
-            console.debug('RezLoader::loadUrl:url', url);
             fetch(url, {
                 mode: 'cors', // to allow any accessible resource
                 method: 'GET',
@@ -259,6 +262,36 @@ export const actions: ActionTree<State, State> & Actions = {
                     commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                     return;
                 });
+        });
+    },
+
+    [ActionTypes.USE_MEDIA_FROM_URL](
+        { commit }: AugmentedActionContext,
+        url: string,
+    ): Promise<string> {
+        return new Promise((resolve, reject) => {
+            if (!FileHandler.isValidHttpUrl(url)) {
+                commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                reject(`Provided input is not a valid URL: '${url}'`);
+                return; //to avoid running the code below
+            }
+
+            commit(
+                MutationTypes.PUSH_PROGRESS_MESSAGE,
+                `Using URL '${url}'...`,
+            );
+            const finalUrl = new URL(url);
+            const localResourceName =
+                FileHandler.getLocalResourceName(finalUrl);
+
+            commit(
+                MutationTypes.ADD_MEDIA_URL,
+                new MediaUrl(localResourceName, url),
+            );
+            resolve(localResourceName);
+
+            //The action is done, so terminate the progress
+            commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
         });
     },
 
