@@ -1,3 +1,5 @@
+import FileHandler from './filehandler';
+
 /** @enum An enumeration of display modes
  *  @remarks Defines the intention of the display layout and feature set
  */
@@ -114,39 +116,52 @@ export class Settings {
 }
 
 /** @class Implements a playable media URL
- * @remarks A media URL is an annotated object URL for a blob, representing a media file
+ * @remarks A media URL is an annotated URL; either an online URL (with http|https protocol), or an object URL for a blob, representing a media file
  */
 export class MediaUrl {
-    /** @constructor
-     * @param {string} fileName - The name of the original media file (from the disk or from within a REZ/ZIP-file)
-     * @param {string} objectUrl - The object URL representing the playable blob
+    /** Creates a new MediaUrl object from an online URL, with the file name derived from the URL.
+     * @remarks An online URL is a valid URL starting with the protocol http|https.
+     * @param {string} url - The online URL
      */
-    constructor(fileName: string, objectUrl: string) {
-        this.fileName = fileName;
-        //TODO make sure object urls for directly loaded files are directly used for the object url, see https://stackoverflow.com/a/49346614
-        this.objectUrl = objectUrl;
+    static FromOnlineUrl(url: string): MediaUrl {
+        const finalUrl = new URL(url);
+        const localResourceName = FileHandler.getLocalResourceName(finalUrl);
+        return new MediaUrl(localResourceName, url);
     }
-    /** The name of the original media file (from the disk or from within a REZ/ZIP-file)  */
-    fileName: string;
-    /** The object URL representing the playable blob  */
-    objectUrl: string;
+    /** @constructor
+     * @param {string} resourceName - A name for the resource.
+     * For online URL's: a simplified resource name, derived from the URL;
+     * For files: the full name (including a possible path) of the original media file (from the disk or from within a REZ/ZIP-file)
+     * @param {string} url - The online URL, or an object URL representing the playable blob
+     */
+    constructor(resourceName: string, url: string) {
+        this.resourceName = resourceName;
+        //TODO make sure object urls for directly loaded files are directly used for the object url, see https://stackoverflow.com/a/49346614
+        this.url = url;
+    }
+    /** A name for the resource.
+     * For online URL's: a simplified resource name, derived from the URL;
+     * For files: the full name (including a possible path) of the original media file (from the disk or from within a REZ/ZIP-file) */
+    resourceName: string;
+    /** The online URL, or an object URL representing the playable blob */
+    url: string;
 }
 
 /** @class Implements a named media blob
- * @remarks A media blob contains playable content with a name
+ * @remarks A media blob contains playable binary content with a name
  */
 export class MediaBlob {
     /** @constructor
-     * @param {string} fileName - The name of the original media file (from the disk or from within a REZ/ZIP-file)
-     * @param {Blob} blob - The blob with playable content
+     * @param {string} fileName - The full name (including a possible path) of the original media file (from the disk or from within a REZ/ZIP-file)
+     * @param {Blob} blob - The blob with playable binary content
      */
     constructor(fileName: string, blob: Blob) {
         this.fileName = fileName;
         this.blob = blob;
     }
-    /** The name of the original media file (from the disk or from within a REZ/ZIP-file)  */
-
+    /** The full name (including a possible path) of the original media file (from the disk or from within a REZ/ZIP-file)  */
     fileName: string;
+
     /** The playable blob  */
     blob: Blob;
 }

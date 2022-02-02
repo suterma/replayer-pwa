@@ -89,7 +89,7 @@ export const actions: ActionTree<State, State> & Actions = {
                 //(which should actually be the matching media blobs for the afore-loaded compilation)
                 PersistentStorage.retrieveAllMediaBlobs()
                     .then((mediaBlobs) => {
-                        //Sort to the active track first (the one, what contains the selected cue)
+                        //Sort to the active track first (the one, that contains the selected cue)
                         const activeTrack = CompilationHandler.getActiveTrack(
                             compilation,
                             cueId,

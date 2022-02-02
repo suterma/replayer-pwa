@@ -102,9 +102,7 @@
                 <div class="buttons">
                     <template v-for="cue in cues" :key="cue.Id">
                         <CueButton
-                            :disabled="
-                                !trackFileUrl?.objectUrl || !isTrackLoaded
-                            "
+                            :disabled="!mediaObjectUrl || !isTrackLoaded"
                             :cue="cue"
                             :isTrackPlaying="isPlaying"
                             :currentSeconds="currentSeconds"
@@ -121,9 +119,7 @@
                 <template v-for="cue in cues" :key="cue.Id">
                     <li>
                         <CueLevel
-                            :disabled="
-                                !trackFileUrl?.objectUrl || !isTrackLoaded
-                            "
+                            :disabled="!mediaObjectUrl || !isTrackLoaded"
                             :cue="cue"
                             :isTrackPlaying="isPlaying"
                             :currentSeconds="currentSeconds"
@@ -428,7 +424,7 @@ export default defineComponent({
         /** Gets the media object URL, if available
          */
         mediaObjectUrl(): string | undefined {
-            return this.trackFileUrl?.objectUrl;
+            return this.trackFileUrl?.url;
         },
 
         /** Gets the media object URL, if available,
@@ -438,7 +434,7 @@ export default defineComponent({
          */
         optimizedMediaObjectUrl(): string | undefined {
             if (this.expanded || this.isActiveTrack) {
-                return this.trackFileUrl?.objectUrl;
+                return this.trackFileUrl?.url;
             } else {
                 return undefined;
             }

@@ -24,11 +24,15 @@ export enum MutationTypes {
     DELETE_CUE = 'DELETE_CUE',
     /** Replaces the current compilation with a new one
      * @remarks Does not set the selected cue
+     * @remarks Removes all data from the previous compilation, including media URL's.
+     * @remarks Also immediately updates the media URL storage with the contained online (http|https) URL's from the compilation.
      */
     REPLACE_COMPILATION = 'REPLACE_COMPILATION',
     /** Replaces the current compilation with a new one, and selects the first cue
      * @remarks This can be used to make sure that any a cue is selected for the new compilation,
      * in order to present the user with an immediately dispatchable play action
+     * @remarks Removes all data from the previous compilation, including media URL's.
+     * @remarks Also immediately updates the media URL storage with the contained online (http|https) URL's from the compilation.
      */
     REPLACE_COMPILATION_AND_SELECT_FIRST_CUE = 'REPLACE_COMPILATION_AND_SELECT_FIRST_CUE',
 

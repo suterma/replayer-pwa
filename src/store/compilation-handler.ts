@@ -1,10 +1,28 @@
 import { ICompilation, ICue, ITrack } from './compilation-types';
+import FileHandler from './filehandler';
 import { MediaBlob, MediaUrl } from './state-types';
 
 /**
  * Provides handling methods for compilation manipulation.
  */
 export default class CompilationHandler {
+    /** Extracts all online URLs from a compilation's tracks.
+     * @remarks An online URL is a valid URL starting with the http|https protocol.
+     * @param compilation - The compilation to work on.
+     */
+    static getOnlineMediaUrls(compilation: ICompilation): MediaUrl[] {
+        const mediaUrls = new Array<MediaUrl>();
+        if (compilation) {
+            const trackUrls = compilation.Tracks.flatMap((track) => track.Url);
+            trackUrls.forEach((url) => {
+                if (FileHandler.isValidHttpUrl(url)) {
+                    mediaUrls.push(MediaUrl.FromOnlineUrl(url));
+                }
+            });
+        }
+        return mediaUrls;
+    }
+
     /** Updates (recalculates) the durations of the given cues, by using the track duration for the last cue.
      * @remarks Not the following:
      * - the cues with a null time are not used
@@ -78,7 +96,7 @@ export default class CompilationHandler {
         );
     }
 
-    /** Finds the matching the media URL (playable data) for a track's file name, from an already loaded package
+    /** Finds the matching media URL (playable data) for a track's file name, from an already loaded package
      * @param fileName - The file name to search for.
      * @param mediaUrlMap - A set of media URL's to search through.
      * @remarks If strict file names do not match, a more lazy approach without case and without non-ascii characters is attempted

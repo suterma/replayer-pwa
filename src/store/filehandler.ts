@@ -243,6 +243,9 @@ export default class FileHandler {
         );
     }
 
+    /** Determines whether the string contains a valid URL, starting with the http|https protocol.
+     * @returns true, when the URL is valid, false otherwise.
+     */
     public static isValidHttpUrl(url: string): boolean {
         let parsedUrl;
 
