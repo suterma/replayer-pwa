@@ -2,7 +2,7 @@
     <!-- This level is designed that the two input methods can grow and shink, filling up the available horizontal space.
 The URL input is wider, because it should be able to easily deal with lenghty input values -->
     <div class="level media-drop-zone">
-        <div class="level-item has-text-centered">
+        <div v-if="isExpanded" class="level-item has-text-centered">
             <div
                 :class="{
                     box: true,
@@ -51,10 +51,37 @@ The URL input is wider, because it should be able to easily deal with lenghty in
             </div>
         </div>
 
-        <div class="level-item has-text-centered">
+        <div v-if="isExpanded" class="level-item has-text-centered">
             <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
         </div>
+        <div v-else class="level-item has-text-centered">
+            <div class="ml-3 mr-3">
+                <!-- expanded-trigger -->
+                <nav>
+                    <button
+                        class="button"
+                        title="Expand media drop zone"
+                        @click="expand"
+                    >
+                        <span class="icon">
+                            <i class="mdi mdi-24px">
+                                <svg
+                                    style="width: 24px; height: 24px"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        fill="currentColor"
+                                        d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
+                                    />
+                                </svg>
+                            </i>
+                        </span>
+                    </button>
+                </nav>
+            </div>
+        </div>
         <div
+            v-if="isExpanded"
             class="level-item has-text-centered is-flex-grow-5 is-flex-shrink-1"
         >
             <div class="field fill-available has-addons">
@@ -102,7 +129,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
             </div>
         </div>
     </div>
-    <div class="box has-border has-background-transparent">
+    <div v-if="isExpanded" class="box has-border has-background-transparent">
         <SupportedFilesText />
 
         <p>
@@ -138,11 +165,19 @@ import { v4 as uuidv4 } from 'uuid';
 import FileHandler from '@/store/filehandler';
 
 /** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
+ * @remarks Supports collapsing the control after load, to keep the user more focused
  */
 export default defineComponent({
     name: 'MediaDropZone',
     components: { SupportedFilesText },
-    props: {},
+    props: {
+        /** Whether to show the zone in the expanded state */
+        isExpanded: {
+            type: Boolean,
+            default: false,
+        },
+    },
+    emits: ['update:is-expanded'],
     delimiters: ['${', '}'], // Avoid Twig conflicts
     data: () => ({
         /** Store our uploaded files
@@ -169,6 +204,12 @@ export default defineComponent({
             ];
 
             this.loadFiles();
+        },
+        expand() {
+            this.$emit('update:is-expanded', true);
+        },
+        collapse() {
+            this.$emit('update:is-expanded', false);
         },
         /** Checks whether a file is supported by examining mime type and/or ending */
         isSupported(file: File): boolean {
@@ -209,6 +250,7 @@ export default defineComponent({
                 })
                 .finally(() => {
                     this.isLoadingFromFile = false;
+                    this.collapse();
                 });
         },
 
@@ -265,6 +307,7 @@ export default defineComponent({
                     .finally(() => {
                         this.isLoadingFromUrl = false;
                         this.url = ''; //remove the now loaded url
+                        this.collapse();
                     });
             }
         },
@@ -293,6 +336,7 @@ export default defineComponent({
                     .finally(() => {
                         this.isUsingMediaFromUrl = false;
                         this.url = ''; //remove the now loaded url
+                        this.collapse();
                     });
             }
         },

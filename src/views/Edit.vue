@@ -5,7 +5,10 @@
         :isEditable="true"
         @update="onCompilationUpdate"
     />
-    <MediaDropZone />
+    <MediaDropZone
+        :is-expanded="this.isExpanded"
+        @update:is-expanded="updateExpanded"
+    />
 </template>
 
 <script lang="ts">
@@ -21,9 +24,32 @@ export default defineComponent({
         Compilation,
         MediaDropZone,
     },
+    data() {
+        return {
+            /** Whether the media drop zone is displayed in the expanded state */
+            isExpanded: true,
+        };
+    },
+    mounted: function (): void {
+        /* Check whether a compilation (most possible having a track) is available.
+         * Then, collapse the media drop zone to keep the ui clean. */
+        if (this.hasCompilation) {
+            this.isExpanded = false;
+        }
+    },
     methods: {
         onCompilationUpdate() {
             console.debug('//TODO implement');
+        },
+        updateExpanded(isExpanded: boolean) {
+            this.isExpanded = isExpanded;
+        },
+    },
+    watch: {
+        /** Watches whether a compilation (most possible having a track) is available.
+         * Then, collapse the media drop zone to keep the ui clean. */
+        hasCompilation(hasCompilation) {
+            this.isExpanded = !hasCompilation;
         },
     },
     computed: {

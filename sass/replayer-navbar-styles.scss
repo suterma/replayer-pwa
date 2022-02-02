@@ -46,7 +46,7 @@ html.has-navbar-fixed-top-laptop {
     padding-top: 0;
 }
 /** Define the fixed navbar from the laptop breakpoint and larger
-* HINT: "latop" is defined same as "desktop"
+* HINT: "laptop" is defined same as "desktop"
 */
 @media screen and (min-width: 1024px) {
     /** Use appropriate padding for the fixed menu */
@@ -72,4 +72,37 @@ html.has-navbar-fixed-top-laptop {
         max-height: calc(100vh - 4rem);
         overflow: auto;
     }
+}
+
+/*************************************************************
+ * Specific styles for nav buttons
+ * These nav buttons do not have an immediate function, but rather serve
+ * a navigational purpose
+**************************************************************/
+
+/* Navigational buttons should have no border (like is-ghost), but have a subtle hover background*/
+
+nav .button {
+    background: none;
+    border-color: transparent;
+    color: #fafafa;
+    text-decoration: none;
+}
+
+nav .button:hover {
+    background: $grey-dark;
+}
+
+/*************************************************************
+ * Specific styles for indicator buttons (similar to is-static)
+ * These buttons are placeholders, to display a certain state
+**************************************************************/
+
+/* Indicator buttons should have no border and no background */
+
+.button.is-indicator,
+.button.is-indicator:hover {
+    background: none;
+    border-color: transparent;
+    pointer-events: none;
 }

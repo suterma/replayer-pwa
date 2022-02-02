@@ -3,7 +3,6 @@
         :class="{
             button: true,
             'is-small': true,
-            'is-ghost': true,
         }"
         @click="toggleExpanded()"
         :title="titleText"
@@ -41,6 +40,7 @@ export default defineComponent({
     emits: ['update:modelValue'],
     components: {},
     props: {
+        /** Whether this represents the expanded state. */
         modelValue: {
             type: Boolean,
             default: false,
