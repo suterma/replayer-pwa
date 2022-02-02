@@ -384,13 +384,22 @@ export default defineComponent({
     z-index: 2;
 }
 
+/*************************************************************
+ * Specific Cue edit level layout
+**************************************************************
+*/
+
+/** Apply a very small gap between cues */
+.levels .level {
+    margin-bottom: 1px;
+    margin-top: 1px;
+}
+
 /** In Edit mode, cue buttons should be wider,to better represent the cue progress */
 .cue.button {
     padding-left: 3rem;
     padding-right: 3rem;
 }
-
-//TODO fix these modification to better suit the edit layout
 
 /** Custom modification for the level in the context of a track.
 * @remarks Allow the title text (on the left) to break between words, 
