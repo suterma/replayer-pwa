@@ -25,7 +25,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     class="is-hidden"
                     @change="onChange"
                     ref="file"
-                    accept=".rez,.zip,.xml,.rex,.mp3"
+                    accept=".rex,.xml,.rez,.zip,.mp3,.bplist"
                 />
 
                 <label for="assetsFieldHandle" class="is-clickable">
@@ -127,6 +127,15 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     </button>
                 </div>
             </div>
+        </div>
+
+        <div v-if="isExpanded" class="level-item has-text-centered">
+            <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
+        </div>
+        <div class="level-item">
+            <button tabindex="50" class="button" @click="loadDemo()">
+                Try the demo
+            </button>
         </div>
     </div>
     <!-- <div v-if="isExpanded" class="box has-border has-background-transparent">
@@ -251,6 +260,16 @@ export default defineComponent({
                     this.isLoadingFromFile = false;
                     this.collapse();
                 });
+        },
+
+        loadDemo() {
+            this.url =
+                location.protocol +
+                '//' +
+                location.host +
+                location.pathname +
+                'demo-compilation-featuring-lidija-roos.rez';
+            this.fetchUrl();
         },
 
         remove(i: number) {
