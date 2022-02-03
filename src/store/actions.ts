@@ -12,7 +12,7 @@ import CompilationHandler from './compilation-handler';
 import FileSaver from 'file-saver';
 import FileHandler from './filehandler';
 import { v4 as uuidv4 } from 'uuid';
-import { Cue } from './compilation-types';
+import { Cue, ICompilation } from './compilation-types';
 
 type AugmentedActionContext = {
     commit<K extends keyof Mutations>(
@@ -573,18 +573,20 @@ export const actions: ActionTree<State, State> & Actions = {
         });
     },
     [ActionTypes.ADD_CUE](
-        { commit }: AugmentedActionContext,
+        { commit, getters }: AugmentedActionContext,
         payload: { trackId: string; time: number },
     ): void {
         withProgress(`Adding cue...`, commit, () => {
             const trackId = payload.trackId;
             const time = payload.time;
+            const nextShortcut = CompilationHandler.getNextShortcut(
+                getters.compilation as ICompilation,
+            );
 
             const cueId = uuidv4();
-            //TODO later, auto-assign also a cue shortcut of an incremental number
             const cue = new Cue(
                 'Cue at ' + CompilationHandler.convertToDisplayTime(time),
-                '',
+                nextShortcut,
                 time,
                 null,
                 cueId,

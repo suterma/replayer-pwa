@@ -6,6 +6,27 @@ import { MediaBlob, MediaUrl } from './state-types';
  * Provides handling methods for compilation manipulation.
  */
 export default class CompilationHandler {
+    /** Guesses the next useful shortcut, based on the previously existing shortcuts.
+     * @remarks Simply tries to parse all existing shortcuts, then increases the number by 1.
+     * @param compilation - The compilation to work on.
+     */
+    static getNextShortcut(compilation: ICompilation): string {
+        const cueShortcuts = compilation.Tracks.flatMap((track) =>
+            track.Cues.flatMap((cue) => cue.Shortcut)
+                //Skip empty items
+                .filter((el) => el)
+                .map((shortCut) => parseInt(shortCut)),
+        );
+        const lastShortcut = cueShortcuts
+            .sort(function (a, b) {
+                return a - b;
+            })
+            .pop();
+        if (lastShortcut && lastShortcut != null) {
+            return (lastShortcut + 1).toString();
+        }
+        return '1';
+    }
     /** Extracts all online URLs from a compilation's tracks.
      * @remarks An online URL is a valid URL starting with the http|https protocol.
      * @param compilation - The compilation to work on.
@@ -68,18 +89,6 @@ export default class CompilationHandler {
             return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss;
         }
         return '';
-
-        //TODO check implementation below
-        //             if (seconds != null) {
-        //     //Uses the hour, minute, seconds, and 1 digit of the milliseconds part
-        //     const hhmmss = new Date(seconds * 1000)
-        //         .toISOString()
-        //         .substr(11, 10);
-        //     //skip the hour part, if not used
-        //     return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss;
-        // } else {
-        //     return null;
-        // }
     }
 
     /** Gets a lazy variant of the given file name, for better non-literal matching in case of special characters.
