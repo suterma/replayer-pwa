@@ -132,7 +132,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
         <div v-if="isExpanded" class="level-item has-text-centered">
             <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
         </div>
-        <div class="level-item">
+        <div v-if="isExpanded" class="level-item">
             <button tabindex="50" class="button" @click="loadDemo()">
                 Try the demo
             </button>

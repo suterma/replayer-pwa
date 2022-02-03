@@ -6,7 +6,7 @@
             <div class="level-item">
                 <input
                     v-if="this.isEditable"
-                    class="input title is-3"
+                    class="input"
                     v-model="title"
                     @change="updateTitle($event.target.value)"
                     type="text"
@@ -122,7 +122,7 @@ import { defineComponent } from 'vue';
 import { MutationTypes } from '@/store/mutation-types';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
-import { Compilation } from '@/store/compilation-types';
+import { Compilation, ICompilation } from '@/store/compilation-types';
 
 /** A nav bar as header with a menu for a compilation
  */
@@ -194,6 +194,11 @@ export default defineComponent({
     },
     unmounted() {
         this.noSleep.disable();
+    },
+    watch: {
+        compilation(compilation: ICompilation) {
+            this.title = compilation.Title;
+        },
     },
     computed: {
         isPreventingScreenTimeoutNow(): boolean {
