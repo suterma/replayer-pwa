@@ -129,7 +129,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
             </div>
         </div>
     </div>
-    <div v-if="isExpanded" class="box has-border has-background-transparent">
+    <!-- <div v-if="isExpanded" class="box has-border has-background-transparent">
         <SupportedFilesText />
 
         <p>
@@ -152,12 +152,11 @@ The URL input is wider, because it should be able to easily deal with lenghty in
         <br />
         https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20bas.mp3
         <br />
-    </div>
+    </div> -->
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import SupportedFilesText from '@/components/SupportedFilesText.vue';
 import { ActionTypes } from '@/store/action-types';
 import { Cue, ICue, Track } from '@/store/compilation-types';
 import { MutationTypes } from '@/store/mutation-types';
@@ -169,7 +168,7 @@ import FileHandler from '@/store/filehandler';
  */
 export default defineComponent({
     name: 'MediaDropZone',
-    components: { SupportedFilesText },
+    components: {},
     props: {
         /** Whether to show the zone in the expanded state */
         isExpanded: {
