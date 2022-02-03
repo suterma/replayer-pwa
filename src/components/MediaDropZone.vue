@@ -167,7 +167,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
-import { Cue, ICue, Track } from '@/store/compilation-types';
+import { ICue, Track } from '@/store/compilation-types';
 import { MutationTypes } from '@/store/mutation-types';
 import { v4 as uuidv4 } from 'uuid';
 import FileHandler from '@/store/filehandler';
@@ -378,7 +378,6 @@ export default defineComponent({
          */
         commitNewTrackWithName(name: string, url: string) {
             const trackId = uuidv4();
-            const cueId = uuidv4();
             const newTrack = new Track(
                 `${name}`,
                 '',
@@ -386,11 +385,10 @@ export default defineComponent({
                 0,
                 url,
                 trackId,
-                new Array<ICue>(new Cue('Intro', '', 0, null, cueId)),
+                new Array<ICue>(),
                 null,
             );
             this.$store.commit(MutationTypes.ADD_TRACK, newTrack);
-            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);
         },
     },
     computed: {},
