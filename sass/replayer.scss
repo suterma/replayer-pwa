@@ -4,9 +4,9 @@
  * Application-specific presets to the Bulma CSS 
 **************************************************************
 */
-/* Keep the menu visible on most but the smallest devices
+/* Keep the menu stowed away also on large screens
     * @devdoc Must be applied before the bulma.sass is used, because this is used there */
-$navbar-breakpoint: 320px;
+$navbar-breakpoint: 2400px;
 
 /** Using Bulma CSS with a theme for Bulma */
 @import '../node_modules/bulmaswatch/slate/_variables.scss';
