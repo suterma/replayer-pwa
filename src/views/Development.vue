@@ -67,6 +67,20 @@
         </button>
     </div>
 
+    <h1 class="title has-text-danger">Icons test</h1>
+    <CollapsibleButton
+        v-model="isExpanded"
+        collapsedText="Show 11 somethings"
+        expandedText="Hide all this stuff"
+    />
+    (Is expanded: {{ isExpanded }})
+    <nav>
+        <ToggleButton v-model="isOn" onText="On" offText="Off" />
+    </nav>
+    (Is on: {{ isOn }})
+    <h3>Buttons with icons</h3>
+    <p>Icons are "Inline SVG's from from https://materialdesignicons.com/</p>
+
     <h1 class="title has-text-danger">Context Menu</h1>
 
     <div class="dropdown is-active">
@@ -94,16 +108,6 @@
             </div>
         </div>
     </div>
-
-    <h1 class="title has-text-danger">Icons test</h1>
-    <CollapsibleButton
-        v-model="isExpanded"
-        collapsedText="Show 11 somethings"
-        expandedText="Hide all this stuff"
-    />
-    (Is expanded: {{ isExpanded }})
-    <h3>Buttons with icons</h3>
-    <p>Icons are "Inline SVG's from from https://materialdesignicons.com/</p>
 </template>
 
 <script lang="ts">
@@ -111,15 +115,18 @@ import { defineComponent } from 'vue';
 import { ICompilation } from '@/store/compilation-types';
 import CompilationXmlDisplay from '@/components/CompilationXmlDisplay.vue';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
+import ToggleButton from '@/components/ToggleButton.vue';
 
 export default defineComponent({
     name: 'Development',
     components: {
         CompilationXmlDisplay,
         CollapsibleButton,
+        ToggleButton,
     },
     data: () => ({
         isExpanded: false,
+        isOn: false,
     }),
     methods: {
         writeDebug() {

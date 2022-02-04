@@ -1,13 +1,35 @@
 <template>
+    <!-- <button class="is-transparent">
+        <div class="tags has-addons">
+            <span
+                :class="{
+                    tag: true,
+                    'is-dark': this.modelValue,
+                    'is-primary': !this.modelValue,
+                }"
+                @click="toggleOn()"
+                >{{ offText }}</span
+            >
+            <span
+                :class="{
+                    tag: true,
+                    'is-dark': !this.modelValue,
+                    'is-primary': this.modelValue,
+                }"
+                @click="toggleOn()"
+                >{{ onText }}</span
+            >
+        </div>
+    </button> -->
+
     <div class="buttons has-addons is-centered">
         <!-- Off -->
         <button
             :class="{
                 button: true,
                 'is-small': true,
-                'is-outlined': this.modelValue,
-                'is-primary': true,
-                'is-selected': !this.modelValue,
+                'is-black': this.modelValue,
+                'is-primary': !this.modelValue,
             }"
             @click="toggleOn()"
             :title="offText"
@@ -19,9 +41,8 @@
             :class="{
                 button: true,
                 'is-small': true,
-                'is-outlined': !this.modelValue,
-                'is-primary': true,
-                'is-selected': this.modelValue,
+                'is-black': !this.modelValue,
+                'is-primary': this.modelValue,
             }"
             @click="toggleOn()"
             :title="onText"

@@ -1,8 +1,10 @@
 <template>
+    <ToggleButton v-model="isEditable" onText="Edit" offText="Play" />
+
     <Compilation
         :compilation="compilation"
         v-if="hasCompilation"
-        :isEditable="true"
+        :isEditable="this.isEditable"
         @update="onCompilationUpdate"
     />
     <MediaDropZone
@@ -15,6 +17,7 @@
 import { defineComponent } from 'vue';
 import Compilation from '@/components/Compilation.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
+import ToggleButton from '@/components/ToggleButton.vue';
 import { ICompilation } from '@/store/compilation-types';
 
 /** A view for playing an existing compilation */
@@ -23,11 +26,15 @@ export default defineComponent({
     components: {
         Compilation,
         MediaDropZone,
+        ToggleButton,
     },
     data() {
         return {
             /** Whether the media drop zone is displayed in the expanded state */
             isExpanded: true,
+
+            /** Whether the compilatio is shown as editable */
+            isEditable: true,
         };
     },
     mounted: function (): void {
