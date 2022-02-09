@@ -13,13 +13,30 @@ export default class FileHandler {
         return url.toString().replace(/^(https?:|)\/\//, '');
     }
 
-    /** Tries to infer a useful name from the URL, by splitting on the path, if possible.
+    /** Tries to infer a useful track name from the URL, by splitting on the path, if possible.
      * @remarks can be used to get a human readable name for a Track, which originates from an URL
      */
-    static extractNameFromUrl(url: URL): string {
+    static extractTrackNameFromUrl(url: URL): string {
         const fileName = this.extractFileNameFromUrl(url);
         const decodedFileName = decodeURI(fileName);
         return FileHandler.removeExtension(decodedFileName);
+    }
+
+    /** Tries to infer a useful artist name from the URL, by using the second level domain name, if possible.
+     * @remarks can be used to get a human readable artist name for a Track, which originates from an URL
+     */
+    static extractArtistNameFromUrl(url: URL): string {
+        return url.hostname.split('.').reverse()[1];
+    }
+
+    /** Tries to infer a useful album name from the URL, by using the last path section, if possible.
+     * @remarks can be used to get a human readable album name for a Track, which originates from an URL
+     */
+    static extractAlbumNameFromUrl(url: URL): string {
+        const pathName = url.pathname;
+        const pathParts = pathName.split('/');
+        const albumName = pathParts.reverse()[1];
+        return albumName;
     }
 
     static removeExtension(filename: string): string {

@@ -362,26 +362,36 @@ export default defineComponent({
         createDefaultTrackForFile(file: File) {
             const fileName = file.name.normalize();
             const nameWithoutExtension = FileHandler.removeExtension(fileName);
-            this.commitNewTrackWithName(nameWithoutExtension, fileName);
+            this.commitNewTrackWithName(nameWithoutExtension, '', '', fileName);
         },
         /** Creates a default track for the given URL (Using part of the URL as the name, and the original URL as the URL)
          * @remarks The effectively used name for the resource in the local Indexed DB storage, if stored, differs from the URL.
          * It can be derived from the URL by using the CompilationParser.getLocalResourceName() method.
          */
         createDefaultTrackForUrl(url: URL) {
-            const name = FileHandler.extractNameFromUrl(url);
-            this.commitNewTrackWithName(name, url.toString());
+            const name = FileHandler.extractTrackNameFromUrl(url);
+            const artist = FileHandler.extractArtistNameFromUrl(url);
+            const album = FileHandler.extractAlbumNameFromUrl(url);
+            this.commitNewTrackWithName(name, album, artist, url.toString());
         },
 
         /** Commits a new track with the given name
+         * @param name {string} - The name for the track.
+         * @param album {string} - The album name, if any.
+         * @param artist {string} - The artist name, if any.
          *  @param - url {string}  The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
          */
-        commitNewTrackWithName(name: string, url: string) {
+        commitNewTrackWithName(
+            name: string,
+            album: string,
+            artist: string,
+            url: string,
+        ) {
             const trackId = uuidv4();
             const newTrack = new Track(
-                `${name}`,
-                '',
-                '',
+                name,
+                album,
+                artist,
                 0,
                 url,
                 trackId,
