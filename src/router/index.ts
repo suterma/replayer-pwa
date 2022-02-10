@@ -1,10 +1,11 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Play from '../views/Play.vue';
 import Home from '../views/Home.vue';
+import Edit from '../views/Edit.vue';
 
 const routes: Array<RouteRecordRaw> = [
-    //Always use the explicit play route as default instead of the default "Home" root.
-    { path: '/', redirect: { name: 'Play' } },
+    //Always use the explicit edit route as default instead of the default "Home" root.
+    { path: '/', redirect: { name: 'Edit' } },
     {
         path: '/home',
         name: 'Home',
@@ -18,11 +19,13 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/edit',
         name: 'Edit',
+        component: Edit,
+
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () =>
-            import(/* webpackChunkName: "about" */ '../views/Edit.vue'),
+        // component: () =>
+        //     import(/* webpackChunkName: "about" */ '../views/Edit.vue'),
     },
 
     // Allow loading of arbitrary files

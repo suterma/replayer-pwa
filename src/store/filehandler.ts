@@ -13,13 +13,30 @@ export default class FileHandler {
         return url.toString().replace(/^(https?:|)\/\//, '');
     }
 
-    /** Tries to infer a useful name from the URL, by splitting on the path, if possible.
+    /** Tries to infer a useful track name from the URL, by splitting on the path, if possible.
      * @remarks can be used to get a human readable name for a Track, which originates from an URL
      */
-    static extractNameFromUrl(url: URL): string {
+    static extractTrackNameFromUrl(url: URL): string {
         const fileName = this.extractFileNameFromUrl(url);
         const decodedFileName = decodeURI(fileName);
         return FileHandler.removeExtension(decodedFileName);
+    }
+
+    /** Tries to infer a useful artist name from the URL, by using the second level domain name, if possible.
+     * @remarks can be used to get a human readable artist name for a Track, which originates from an URL
+     */
+    static extractArtistNameFromUrl(url: URL): string {
+        return url.hostname.split('.').reverse()[1];
+    }
+
+    /** Tries to infer a useful album name from the URL, by using the last path section, if possible.
+     * @remarks can be used to get a human readable album name for a Track, which originates from an URL
+     */
+    static extractAlbumNameFromUrl(url: URL): string {
+        const pathName = url.pathname;
+        const pathParts = pathName.split('/');
+        const albumName = pathParts.reverse()[1];
+        return albumName;
     }
 
     static removeExtension(filename: string): string {
@@ -203,8 +220,8 @@ export default class FileHandler {
             //However, Replayer does currently only use the bare mime type, omitting any probable charset
             mimeType = contentType.split(';')[0];
         }
-        //Otherwise try to guess the MIME type from the URL
-        if (!mimeType) {
+        //If no MIME type available, or it's just a generic one, try to guess the correct MIME type from the URL
+        if (!mimeType || mimeType == 'application/octet-stream') {
             const fileName = this.extractFileNameFromUrl(url);
             const fileExtension = fileName?.split('.').pop()?.toLowerCase();
             console.debug(
@@ -243,6 +260,9 @@ export default class FileHandler {
         );
     }
 
+    /** Determines whether the string contains a valid URL, starting with the http|https protocol.
+     * @returns true, when the URL is valid, false otherwise.
+     */
     public static isValidHttpUrl(url: string): boolean {
         let parsedUrl;
 

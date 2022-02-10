@@ -97,32 +97,12 @@
                 </div>
             </template>
 
-            <!-- The cue list (in edit mode) -->
-            <template v-if="this.isEditable">
-                <ul class="levels">
-                    <template v-for="cue in cues" :key="cue.Id">
-                        <li>
-                            <CueLevel
-                                :disabled="
-                                    !trackFileUrl?.objectUrl || !isTrackLoaded
-                                "
-                                :cue="cue"
-                                :isTrackPlaying="isPlaying"
-                                :currentSeconds="currentSeconds"
-                                @click="cueClick(cue)"
-                            />
-                        </li>
-                    </template>
-                </ul>
-            </template>
-            <template v-else>
-                <!-- The cue buttons (in play mode) -->
+            <!-- The cue buttons (in play mode) -->
+            <template v-if="!this.isEditable">
                 <div class="buttons">
                     <template v-for="cue in cues" :key="cue.Id">
                         <CueButton
-                            :disabled="
-                                !trackFileUrl?.objectUrl || !isTrackLoaded
-                            "
+                            :disabled="!mediaObjectUrl || !isTrackLoaded"
                             :cue="cue"
                             :isTrackPlaying="isPlaying"
                             :currentSeconds="currentSeconds"
@@ -132,6 +112,23 @@
                 </div>
             </template>
         </slide-up-down>
+
+        <!-- The cue list (in edit mode, outside the slider, because of layouting problems when the height changes due to changing cue count ) -->
+        <template v-if="this.isEditable">
+            <ul class="levels">
+                <template v-for="cue in cues" :key="cue.Id">
+                    <li>
+                        <CueLevel
+                            :disabled="!mediaObjectUrl || !isTrackLoaded"
+                            :cue="cue"
+                            :isTrackPlaying="isPlaying"
+                            :currentSeconds="currentSeconds"
+                            @click="cueClick(cue)"
+                        />
+                    </li>
+                </template>
+            </ul>
+        </template>
     </div>
 </template>
 
@@ -427,7 +424,7 @@ export default defineComponent({
         /** Gets the media object URL, if available
          */
         mediaObjectUrl(): string | undefined {
-            return this.trackFileUrl?.objectUrl;
+            return this.trackFileUrl?.url;
         },
 
         /** Gets the media object URL, if available,
@@ -437,7 +434,7 @@ export default defineComponent({
          */
         optimizedMediaObjectUrl(): string | undefined {
             if (this.expanded || this.isActiveTrack) {
-                return this.trackFileUrl?.objectUrl;
+                return this.trackFileUrl?.url;
             } else {
                 return undefined;
             }
@@ -507,6 +504,11 @@ div.compilation div.track:last-child {
 }
 
 .track .levels {
+    /** The cue levels have also an additional small margin at their top.
+    This results in a similar space between levels as use within 
+    the environment      */
+    margin-top: 12px;
+
     /** The cue levels have also an additional small margin at their end.
     This results in a similar space between levels as use within 
     the environment      */

@@ -1,158 +1,161 @@
 <template>
     <!-- Main container -->
-    <div class="level">
-        <!-- Left side -->
-        <div class="level-left">
-            <!-- Play Button -->
-            <div class="level-item">
-                <p class="control">
-                    <button
-                        :class="{
-                            button: true,
-                            cue: true,
-                            'has-text-left': 'true',
-                            'is-warning': !isCueSelected,
-                            'is-success': isCueSelected,
-                        }"
-                        :id="'cue-' + cue.Id"
-                        :title="'Play from ' + cue.Description"
-                        @click="$emit('click')"
-                    >
-                        <span class="player-timeline is-fullwidth">
-                            <!-- Progress -->
-                            <span
+    <fieldset :disabled="disabled">
+        <div class="level">
+            <!-- Left side -->
+            <div class="level-left">
+                <!-- Play Button -->
+                <div class="level-item">
+                    <div class="field has-addons">
+                        <p class="control">
+                            <button
                                 :class="{
-                                    'player-progress': true,
-                                    'player-progress-full':
-                                        hasCuePassed ||
-                                        (percentComplete !== null &&
-                                            percentComplete >= 100),
-                                    'player-progress-none':
-                                        isCueAhead ||
-                                        (percentComplete !== null &&
-                                            percentComplete <= 0),
+                                    button: true,
+                                    cue: true,
+                                    'has-text-left': 'true',
+                                    'is-warning': !isCueSelected,
+                                    'is-success': isCueSelected,
                                 }"
-                                :style="progressStyle"
-                            ></span>
-                            <!-- PLAY/Skip-Next -->
-                            <span class="icon foreground">
+                                :id="'cue-' + cue.Id"
+                                :title="'Play from ' + cue.Description"
+                                @click="cueButtonClicked"
+                            >
+                                <span class="player-timeline is-fullwidth">
+                                    <!-- Progress -->
+                                    <span
+                                        :class="{
+                                            'player-progress': true,
+                                            'player-progress-full':
+                                                hasCuePassed ||
+                                                (percentComplete !== null &&
+                                                    percentComplete >= 100),
+                                            'player-progress-none':
+                                                isCueAhead ||
+                                                (percentComplete !== null &&
+                                                    percentComplete <= 0),
+                                        }"
+                                        :style="progressStyle"
+                                    ></span>
+                                    <!-- PLAY/Skip-Next -->
+                                    <span class="icon foreground">
+                                        <i class="mdi mdi-24px">
+                                            <svg
+                                                style="
+                                                    width: 24px;
+                                                    height: 24px;
+                                                "
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <!-- play -->
+                                                <path
+                                                    v-if="!isTrackPlaying"
+                                                    fill="currentColor"
+                                                    d="M8,5.14V19.14L19,12.14L8,5.14Z"
+                                                />
+                                                <!-- skip-next -->
+                                                <path
+                                                    v-else
+                                                    fill="currentColor"
+                                                    d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z"
+                                                />
+                                            </svg>
+                                        </i>
+                                    </span>
+                                </span>
+                            </button>
+                        </p>
+                        <!-- Cue Description -->
+                        <p
+                            class="control fill-available is-flex-grow-5 is-flex-shrink-1"
+                        >
+                            <input
+                                ref="cueDescription"
+                                class="input"
+                                type="text"
+                                v-model="cueData.Description"
+                                @change="updateDescription($event.target.value)"
+                                placeholder="Cue description"
+                                size="60"
+                            />
+                        </p>
+                    </div>
+                </div>
+                <!-- at (keep as small as possible)-->
+                <div
+                    class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
+                >
+                    <p class="has-text-nowrap">
+                        <span class="has-opacity-half">at</span>
+                    </p>
+                </div>
+                <!-- A rather slim input for the time (in seconds, typically 1 decimal digit) -->
+                <div class="level-item is-flex-shrink-1">
+                    <div class="field">
+                        <p class="control">
+                            <input
+                                class="input"
+                                type="number"
+                                step="0.1"
+                                v-model="cueData.Time"
+                                @change="updateTime($event.target.value)"
+                                placeholder="time [seconds]"
+                                size="8"
+                            />
+                        </p>
+                    </div>
+                </div>
+                <!-- Duration (keep small)-->
+                <div
+                    class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
+                >
+                    <p class="has-text-nowrap">
+                        <span class="has-opacity-half">{{
+                            cueDurationDisplayTime
+                        }}</span>
+                    </p>
+                </div>
+                <!-- A rather slim input for the shortcut (a short mnemonic) -->
+                <div class="level-item is-flex-shrink-1">
+                    <div class="field">
+                        <p class="control">
+                            <input
+                                class="input"
+                                type="text"
+                                v-model="cueData.Shortcut"
+                                @change="updateShortcut($event.target.value)"
+                                placeholder="shortcut"
+                                size="8"
+                            />
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right side -->
+            <div class="level-right">
+                <div class="field">
+                    <p class="control" title="Trash this cue">
+                        <button class="button" @click="deleteCue()">
+                            <!-- Trash -->
+                            <span class="icon">
                                 <i class="mdi mdi-24px">
                                     <svg
                                         style="width: 24px; height: 24px"
                                         viewBox="0 0 24 24"
                                     >
-                                        <!-- play -->
                                         <path
-                                            v-if="!isTrackPlaying"
                                             fill="currentColor"
-                                            d="M8,5.14V19.14L19,12.14L8,5.14Z"
-                                        />
-                                        <!-- skip-next -->
-                                        <path
-                                            v-else
-                                            fill="currentColor"
-                                            d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z"
+                                            d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"
                                         />
                                     </svg>
                                 </i>
                             </span>
-                        </span>
-                    </button>
-                </p>
-            </div>
-
-            <!-- Cue Description -->
-            <div
-                class="level-item fill-available is-flex-grow-5 is-flex-shrink-1"
-            >
-                <div class="field fill-available">
-                    <p class="control">
-                        <input
-                            class="input"
-                            type="text"
-                            v-model="cueData.Description"
-                            @change="updateDescription($event.target.value)"
-                            placeholder="Cue description"
-                            size="60"
-                        />
-                    </p>
-                </div>
-            </div>
-            <!-- at (keep as small as possible)-->
-            <div
-                class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
-            >
-                <p class="has-text-nowrap">
-                    <span class="has-opacity-half">at</span>
-                </p>
-            </div>
-            <!-- A rather slim input for the time (in seconds, typically 1 decimal digit) -->
-            <div class="level-item is-flex-shrink-1">
-                <div class="field">
-                    <p class="control">
-                        <input
-                            class="input"
-                            type="number"
-                            step="0.1"
-                            v-model="cueData.Time"
-                            @change="updateTime($event.target.value)"
-                            placeholder="time [seconds]"
-                            size="8"
-                        />
-                    </p>
-                </div>
-            </div>
-            <!-- Duration (keep small)-->
-            <div
-                class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
-            >
-                <p class="has-text-nowrap">
-                    <span class="has-opacity-half">{{
-                        cueDurationDisplayTime
-                    }}</span>
-                </p>
-            </div>
-            <!-- A rather slim input for the shortcut (a short mnemonic) -->
-            <div class="level-item is-flex-shrink-1">
-                <div class="field">
-                    <p class="control">
-                        <input
-                            class="input"
-                            type="text"
-                            v-model="cueData.Shortcut"
-                            @change="updateShortcut($event.target.value)"
-                            placeholder="shortcut"
-                            size="8"
-                        />
+                        </button>
                     </p>
                 </div>
             </div>
         </div>
-
-        <!-- Right side -->
-        <div class="level-right">
-            <div class="field">
-                <p class="control" title="Trash this cue">
-                    <button class="button" @click="deleteCue()">
-                        <!-- Trash -->
-                        <span class="icon">
-                            <i class="mdi mdi-24px">
-                                <svg
-                                    style="width: 24px; height: 24px"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        fill="currentColor"
-                                        d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"
-                                    />
-                                </svg>
-                            </i>
-                        </span>
-                    </button>
-                </p>
-            </div>
-        </div>
-    </div>
+    </fieldset>
 </template>
 
 <script lang="ts">
@@ -173,6 +176,11 @@ export default defineComponent({
             type: Cue,
             required: true,
         },
+        disabled: {
+            type: Boolean,
+            required: false,
+        },
+
         /** The playback progress in the current track, in [seconds]
          * @remarks This is used for progress display within the set of cues
          */
@@ -189,8 +197,14 @@ export default defineComponent({
             cueData: { ...this.cue }, // clone the object
         };
     },
+    mounted: function (): void {
+        //Track the selection
+        if (this.isCueSelected) {
+            this.setFocusToDescriptionInput();
+        }
+    },
     methods: {
-        /** Updates the cue description */
+        /** Updates the set cue description */
         updateDescription(description: string) {
             const cueId = this.cue.Id;
             const shortcut = this.cueData.Shortcut;
@@ -207,7 +221,7 @@ export default defineComponent({
             const cueId = this.cue.Id;
             this.$store.dispatch(ActionTypes.DELETE_CUE, cueId);
         },
-        /** Updates the cue time */
+        /** Updates the set cue time */
         updateTime(time: string) {
             const cueId = this.cue.Id;
             const shortcut = this.cueData.Shortcut;
@@ -219,7 +233,7 @@ export default defineComponent({
                 time,
             });
         },
-        /** Updates the cue shortcut */
+        /** Updates the set cue shortcut */
         updateShortcut(shortcut: string) {
             const cueId = this.cue.Id;
             const description = this.cueData.Description;
@@ -230,6 +244,28 @@ export default defineComponent({
                 shortcut,
                 time,
             });
+        },
+        /** Handles the click event of the cue button */
+        cueButtonClicked() {
+            this.$emit('click');
+            this.setFocusToDescriptionInput();
+        },
+        /** Sets the focus to the cue description input box */
+        setFocusToDescriptionInput() {
+            console.debug('focussing to cue', this.cue.Id);
+            const cueDescription = this.$refs
+                .cueDescription as HTMLInputElement;
+            cueDescription.focus();
+        },
+    },
+    watch: {
+        /** Track updates to the selected cue and follows the focus to the matching description input.
+         * @remarks This helps navigating the cues and updating the description along with it.
+         */
+        isCueSelected(val, oldVal) {
+            if (oldVal == false && val == true) {
+                this.setFocusToDescriptionInput();
+            }
         },
     },
     computed: {
@@ -355,13 +391,22 @@ export default defineComponent({
     z-index: 2;
 }
 
+/*************************************************************
+ * Specific Cue edit level layout
+**************************************************************
+*/
+
+/** Apply a very small gap between cues */
+.levels .level {
+    margin-bottom: 1px;
+    margin-top: 1px;
+}
+
 /** In Edit mode, cue buttons should be wider,to better represent the cue progress */
 .cue.button {
     padding-left: 3rem;
     padding-right: 3rem;
 }
-
-//TODO fix these modification to better suit the edit layout
 
 /** Custom modification for the level in the context of a track.
 * @remarks Allow the title text (on the left) to break between words, 

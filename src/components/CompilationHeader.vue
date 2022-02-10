@@ -6,7 +6,7 @@
             <div class="level-item">
                 <input
                     v-if="this.isEditable"
-                    class="input title is-3"
+                    class="input"
                     v-model="title"
                     @change="updateTitle($event.target.value)"
                     type="text"
@@ -30,30 +30,29 @@
                         @blur="collapseDropdown()"
                         v-click-outside="collapseDropdown"
                     >
-                        <div class="dropdown-trigger">
-                            <button
-                                class="button is-ghost"
-                                aria-haspopup="true"
-                                aria-controls="dropdown-menu"
-                                title="Compilation context menu"
-                            >
-                                <span class="icon">
-                                    <i class="mdi mdi-24px">
-                                        <svg
-                                            style="width: 24px; height: 24px"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                fill="currentColor"
-                                                d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z"
-                                            />
-                                        </svg>
-                                    </i>
-                                </span>
-                            </button>
-                        </div>
+                        <!-- dropdown-trigger -->
+                        <button
+                            class="button"
+                            aria-haspopup="true"
+                            aria-controls="dropdown-menu"
+                            title="Compilation context menu"
+                        >
+                            <span class="icon">
+                                <i class="mdi mdi-24px">
+                                    <svg
+                                        style="width: 24px; height: 24px"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            fill="currentColor"
+                                            d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z"
+                                        />
+                                    </svg>
+                                </i>
+                            </span>
+                        </button>
                         <div
-                            class="dropdown-menu"
+                            class="dropdown-menu is-unselectable"
                             id="dropdown-menu"
                             role="menu"
                         >
@@ -123,7 +122,7 @@ import { defineComponent } from 'vue';
 import { MutationTypes } from '@/store/mutation-types';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
-import { Compilation } from '@/store/compilation-types';
+import { Compilation, ICompilation } from '@/store/compilation-types';
 
 /** A nav bar as header with a menu for a compilation
  */
@@ -195,6 +194,11 @@ export default defineComponent({
     },
     unmounted() {
         this.noSleep.disable();
+    },
+    watch: {
+        compilation(compilation: ICompilation) {
+            this.title = compilation.Title;
+        },
     },
     computed: {
         isPreventingScreenTimeoutNow(): boolean {

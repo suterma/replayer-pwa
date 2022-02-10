@@ -67,31 +67,13 @@
         </div>
         <!-- Right side -->
         <div class="level-right">
-            <!-- Playback indicator (using a small ghost button aligns the icon properly)-->
+            <!-- Playback indicator -->
             <nav class="level-item">
-                <button class="button is-small is-ghost ml-3 is-unselectable">
-                    <span
-                        :class="{
-                            icon: true,
-                            'has-text-success': this.isPlaying,
-                            'has-text-grey-dark':
-                                !this.isPlaying && this.isTrackLoaded,
-                            'is-invisible': !this.isTrackLoaded,
-                        }"
-                    >
-                        <i class="mdi mdi-24px">
-                            <svg
-                                style="width: 24px; height: 24px"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M19,12C19,15.86 15.86,19 12,19C8.14,19 5,15.86 5,12C5,8.14 8.14,5 12,5C15.86,5 19,8.14 19,12Z"
-                                />
-                            </svg>
-                        </i>
-                    </span>
-                </button>
+                <PlaybackIndicator
+                    :is-ready="!this.isPlaying && this.isTrackLoaded"
+                    :is-playing="this.isPlaying"
+                    :is-unloaded="!this.isTrackLoaded"
+                />
             </nav>
         </div>
     </div>
@@ -100,6 +82,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Track } from '@/store/compilation-types';
+import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import { ActionTypes } from '@/store/action-types';
 
 /** A header for editing track metadata
@@ -107,7 +90,7 @@ import { ActionTypes } from '@/store/action-types';
 //TODO later remove the editable parts from TrackHeader, once the TrackHeaderEdit is accepted as the edit control
 export default defineComponent({
     name: 'TrackHeaderEdit',
-    components: {},
+    components: { PlaybackIndicator },
     props: {
         track: {
             type: Track,

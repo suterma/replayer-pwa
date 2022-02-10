@@ -1,5 +1,12 @@
 import { MutationTree } from 'vuex';
-import { Compilation, ICompilation, ICue, ITrack } from './compilation-types';
+import { v4 as uuidv4 } from 'uuid';
+import {
+    Compilation,
+    Cue,
+    ICompilation,
+    ICue,
+    ITrack,
+} from './compilation-types';
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
 import { MediaUrl, Settings } from './state-types';
@@ -80,26 +87,45 @@ export const mutations: MutationTree<State> & Mutations = {
     [MutationTypes.ADD_MEDIA_URL](state: State, mediaUrl: MediaUrl) {
         //Remove any previously matching, even it was the same object, because
         //the caller has already create a new one for this mediaUrl's blob.
-        const matchingFile = state.mediaUrls.get(mediaUrl.fileName);
+        const matchingFile = state.mediaUrls.get(mediaUrl.resourceName);
         if (matchingFile) {
             console.debug(
                 'mutations::ADD_MEDIA_URL:removing matching item for key:',
-                mediaUrl.fileName,
+                mediaUrl.resourceName,
             );
-            ObjectUrlHandler.revokeObjectURL(matchingFile.objectUrl);
-            state.mediaUrls.delete(mediaUrl.fileName);
+            ObjectUrlHandler.revokeObjectURL(matchingFile.url);
+            state.mediaUrls.delete(mediaUrl.resourceName);
 
             //TODO maybe remove the track duration on unload?
         }
 
         //Keep the others and add the new one
-        console.debug('mutations::ADD_MEDIA_URL:', mediaUrl.fileName);
-        state.mediaUrls.set(mediaUrl.fileName, mediaUrl);
+        console.debug('mutations::ADD_MEDIA_URL:', mediaUrl.resourceName);
+        state.mediaUrls.set(mediaUrl.resourceName, mediaUrl);
     },
 
     [MutationTypes.ADD_TRACK](state: State, track: ITrack) {
         console.debug('mutations::ADD_TRACK:', track);
+
+        //Add a first cue first, then select it
+        const nextShortcut = CompilationHandler.getNextShortcut(
+            state.compilation as ICompilation,
+        );
+
+        const time = 0;
+        const cueId = uuidv4();
+        const cue = new Cue(
+            'Cue at ' + CompilationHandler.convertToDisplayTime(time),
+            nextShortcut,
+            time,
+            null,
+            cueId,
+        );
+
+        track.Cues.push(cue);
         state.compilation.Tracks.push(track);
+        state.selectedCueId = cueId;
+
         PersistentStorage.storeCompilation(state.compilation);
     },
 
@@ -176,6 +202,13 @@ export const mutations: MutationTree<State> & Mutations = {
 
         state.compilation = compilation;
         PersistentStorage.storeCompilation(compilation);
+
+        //Add the (non-blob) media URL's from the compilation to the media storage
+        const onlineMediaUrls =
+            CompilationHandler.getOnlineMediaUrls(compilation);
+        onlineMediaUrls.forEach((mediaUrl) => {
+            state.mediaUrls.set(mediaUrl.resourceName, mediaUrl);
+        });
     },
     [MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE](
         state: State,
@@ -198,6 +231,13 @@ export const mutations: MutationTree<State> & Mutations = {
 
         state.compilation = compilation;
         PersistentStorage.storeCompilation(compilation);
+
+        //Add the (non-blob) media URL's from the compilation to the media storage
+        const onlineMediaUrls =
+            CompilationHandler.getOnlineMediaUrls(compilation);
+        onlineMediaUrls.forEach((mediaUrl) => {
+            state.mediaUrls.set(mediaUrl.resourceName, mediaUrl);
+        });
     },
     [MutationTypes.UPDATE_SELECTED_CUE_ID](state: State, cueId: string) {
         //Do not update the store, when it's the same value
@@ -236,14 +276,14 @@ export const mutations: MutationTree<State> & Mutations = {
         state.selectedCueId = '';
         state.compilation = Compilation.empty();
 
-        state.mediaUrls.forEach((file) => {
-            ObjectUrlHandler.revokeObjectURL(file.objectUrl);
+        state.mediaUrls.forEach((mediaUrl) => {
+            ObjectUrlHandler.revokeObjectURL(mediaUrl.url);
         });
         state.mediaUrls.clear();
     },
     [MutationTypes.REVOKE_ALL_MEDIA_URLS](state: State) {
-        state.mediaUrls.forEach((file) => {
-            ObjectUrlHandler.revokeObjectURL(file.objectUrl);
+        state.mediaUrls.forEach((mediaUrl) => {
+            ObjectUrlHandler.revokeObjectURL(mediaUrl.url);
         });
         state.mediaUrls.clear();
 

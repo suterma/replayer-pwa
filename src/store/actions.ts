@@ -12,7 +12,7 @@ import CompilationHandler from './compilation-handler';
 import FileSaver from 'file-saver';
 import FileHandler from './filehandler';
 import { v4 as uuidv4 } from 'uuid';
-import { Cue } from './compilation-types';
+import { Cue, ICompilation } from './compilation-types';
 
 type AugmentedActionContext = {
     commit<K extends keyof Mutations>(
@@ -31,6 +31,10 @@ export interface Actions {
         payload: { fileName: string; blob: Blob },
     ): void;
     [ActionTypes.LOAD_FROM_URL](
+        { commit }: AugmentedActionContext,
+        url: string,
+    ): Promise<string>;
+    [ActionTypes.USE_MEDIA_FROM_URL](
         { commit }: AugmentedActionContext,
         url: string,
     ): Promise<string>;
@@ -85,7 +89,7 @@ export const actions: ActionTree<State, State> & Actions = {
                 //(which should actually be the matching media blobs for the afore-loaded compilation)
                 PersistentStorage.retrieveAllMediaBlobs()
                     .then((mediaBlobs) => {
-                        //Sort to the active track first (the one, what contains the selected cue)
+                        //Sort to the active track first (the one, that contains the selected cue)
                         const activeTrack = CompilationHandler.getActiveTrack(
                             compilation,
                             cueId,
@@ -174,7 +178,6 @@ export const actions: ActionTree<State, State> & Actions = {
                 MutationTypes.PUSH_PROGRESS_MESSAGE,
                 `Loading URL '${url}'...`,
             );
-            console.debug('RezLoader::loadUrl:url', url);
             fetch(url, {
                 mode: 'cors', // to allow any accessible resource
                 method: 'GET',
@@ -242,8 +245,6 @@ export const actions: ActionTree<State, State> & Actions = {
                                 reject(
                                     `Loading from the received resource file has failed for URL: '${url}' with the message: '${errorMessage}'`,
                                 );
-                            })
-                            .finally(() => {
                                 //The action is done, so terminate the progress
                                 commit(
                                     MutationTypes.POP_PROGRESS_MESSAGE,
@@ -257,12 +258,40 @@ export const actions: ActionTree<State, State> & Actions = {
                     reject(
                         `Fetch has failed for URL: '${url}' with the message: '${errorMessage}'`,
                     );
-                })
-                .finally(() => {
                     //The action is done, so terminate the progress
                     commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                     return;
                 });
+        });
+    },
+
+    [ActionTypes.USE_MEDIA_FROM_URL](
+        { commit }: AugmentedActionContext,
+        url: string,
+    ): Promise<string> {
+        return new Promise((resolve, reject) => {
+            if (!FileHandler.isValidHttpUrl(url)) {
+                commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                reject(`Provided input is not a valid URL: '${url}'`);
+                return; //to avoid running the code below
+            }
+
+            commit(
+                MutationTypes.PUSH_PROGRESS_MESSAGE,
+                `Using URL '${url}'...`,
+            );
+            const finalUrl = new URL(url);
+            const localResourceName =
+                FileHandler.getLocalResourceName(finalUrl);
+
+            commit(
+                MutationTypes.ADD_MEDIA_URL,
+                new MediaUrl(localResourceName, url),
+            );
+            resolve(localResourceName);
+
+            //The action is done, so terminate the progress
+            commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
         });
     },
 
@@ -544,18 +573,20 @@ export const actions: ActionTree<State, State> & Actions = {
         });
     },
     [ActionTypes.ADD_CUE](
-        { commit }: AugmentedActionContext,
+        { commit, getters }: AugmentedActionContext,
         payload: { trackId: string; time: number },
     ): void {
         withProgress(`Adding cue...`, commit, () => {
             const trackId = payload.trackId;
             const time = payload.time;
+            const nextShortcut = CompilationHandler.getNextShortcut(
+                getters.compilation as ICompilation,
+            );
 
             const cueId = uuidv4();
-            //TODO later, auto-assign also a cue shortcut of an incremental number
             const cue = new Cue(
                 'Cue at ' + CompilationHandler.convertToDisplayTime(time),
-                '',
+                nextShortcut,
                 time,
                 null,
                 cueId,

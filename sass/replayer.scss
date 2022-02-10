@@ -4,9 +4,9 @@
  * Application-specific presets to the Bulma CSS 
 **************************************************************
 */
-/* Keep the menu visible on most but the smallest devices
+/* Keep the menu stowed away also on large screens
     * @devdoc Must be applied before the bulma.sass is used, because this is used there */
-$navbar-breakpoint: 320px;
+$navbar-breakpoint: 2400px;
 
 /** Using Bulma CSS with a theme for Bulma */
 @import '../node_modules/bulmaswatch/slate/_variables.scss';
@@ -200,6 +200,12 @@ but not at the "end/right" container's border */
 **************************************************************
 */
 
+/* A default border  */
+.has-border-primary,
+.has-border {
+    border: 1px solid $primary;
+}
+
 /* A success variant of a border  */
 .has-border-success {
     border: 1px solid $success;
@@ -208,4 +214,9 @@ but not at the "end/right" container's border */
 /* A info variant of a border  */
 .has-border-info {
     border: 1px solid $info;
+}
+
+/* A transparent background, usable e.g. in a box */
+.has-background-transparent {
+    background-color: transparent;
 }
