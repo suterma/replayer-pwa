@@ -1,0 +1,12 @@
+[
+    {
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "app.replayer.web.twa",
+            "sha256_cert_fingerprints": [
+                "CC:61:7F:5C:43:39:44:5C:9E:34:95:DA:18:2E:C2:B8:FF:AA:FF:33:F6:D6:7B:74:84:AD:B9:4F:F1:C2:AD:D1"
+            ]
+        }
+    }
+]
