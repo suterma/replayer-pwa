@@ -95,7 +95,8 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                         size="60"
                     />
                 </div>
-                <div class="control">
+                <!-- //TODO fetch is currenlty not suported at URL load time -->
+                <!-- <div class="control">
                     <button
                         tabindex="30"
                         :class="{
@@ -106,22 +107,21 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                         @click="fetchUrl"
                     >
                         Fetch
-                        <!-- Download &amp; use offline -->
                     </button>
-                </div>
+                </div> -->
                 <div class="control">
                     <!-- Use as default, thus set as the submit button -->
                     <button
                         tabindex="40"
                         :class="{
                             button: true,
-                            'is-info': true,
+                            'is-primary': true,
                             'is-loading': this.isUsingMediaFromUrl,
                         }"
                         type="submit"
                         @click="useMediaUrl"
                     >
-                        Set
+                        Load
 
                         <!-- Apply and use online -->
                     </button>
