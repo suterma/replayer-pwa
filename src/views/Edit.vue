@@ -1,6 +1,4 @@
 <template>
-    <ToggleButton v-model="isEditable" onText="Edit" offText="Play" />
-
     <Compilation
         :compilation="compilation"
         v-if="hasCompilation"
@@ -17,7 +15,6 @@
 import { defineComponent } from 'vue';
 import Compilation from '@/components/Compilation.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
-import ToggleButton from '@/components/ToggleButton.vue';
 import { ICompilation } from '@/store/compilation-types';
 
 /** A view for playing an existing compilation */
@@ -26,7 +23,6 @@ export default defineComponent({
     components: {
         Compilation,
         MediaDropZone,
-        ToggleButton,
     },
     data() {
         return {
