@@ -1,12 +1,5 @@
 import { MutationTree } from 'vuex';
-import { v4 as uuidv4 } from 'uuid';
-import {
-    Compilation,
-    Cue,
-    ICompilation,
-    ICue,
-    ITrack,
-} from './compilation-types';
+import { Compilation, ICompilation, ICue, ITrack } from './compilation-types';
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
 import { MediaUrl, Settings } from './state-types';
@@ -108,7 +101,8 @@ export const mutations: MutationTree<State> & Mutations = {
         console.debug('mutations::ADD_TRACK:', track);
 
         //Add a first cue first, then select it
-        const nextShortcut = CompilationHandler.getNextShortcut(
+        //TODO currently do not add a cue, for ui tidyness
+        /*const nextShortcut = CompilationHandler.getNextShortcut(
             state.compilation as ICompilation,
         );
 
@@ -125,6 +119,10 @@ export const mutations: MutationTree<State> & Mutations = {
         track.Cues.push(cue);
         state.compilation.Tracks.push(track);
         state.selectedCueId = cueId;
+        */
+
+        //Just add the track with no cues
+        state.compilation.Tracks.push(track);
 
         PersistentStorage.storeCompilation(state.compilation);
     },
