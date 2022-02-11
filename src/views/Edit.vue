@@ -9,6 +9,14 @@
         :is-expanded="this.isExpanded"
         @update:is-expanded="updateExpanded"
     />
+    <div v-if="!this.hasCompilation" class="level">
+        <div class="level-item has-text-centered">
+            <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
+            <button tabindex="50" class="button" @click="loadDemo()">
+                Try the demo
+            </button>
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -16,6 +24,7 @@ import { defineComponent } from 'vue';
 import Compilation from '@/components/Compilation.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import { ICompilation } from '@/store/compilation-types';
+import { ActionTypes } from '@/store/action-types';
 
 /** A view for playing an existing compilation */
 export default defineComponent({
@@ -46,6 +55,17 @@ export default defineComponent({
         },
         updateExpanded(isExpanded: boolean) {
             this.isExpanded = isExpanded;
+        },
+
+        loadDemo() {
+            const url =
+                location.protocol +
+                '//' +
+                location.host +
+                location.pathname +
+                'demo-compilation-featuring-lidija-roos.rez';
+
+            this.$store.dispatch(ActionTypes.LOAD_FROM_URL, url);
         },
     },
     watch: {

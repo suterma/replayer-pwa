@@ -128,15 +128,6 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                 </div>
             </div>
         </div>
-
-        <div v-if="isExpanded" class="level-item has-text-centered">
-            <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
-        </div>
-        <div v-if="isExpanded" class="level-item">
-            <button tabindex="50" class="button" @click="loadDemo()">
-                Try the demo
-            </button>
-        </div>
     </div>
     <!-- <div v-if="isExpanded" class="box has-border has-background-transparent">
         <SupportedFilesText />
@@ -260,16 +251,6 @@ export default defineComponent({
                     this.isLoadingFromFile = false;
                     this.collapse();
                 });
-        },
-
-        loadDemo() {
-            this.url =
-                location.protocol +
-                '//' +
-                location.host +
-                location.pathname +
-                'demo-compilation-featuring-lidija-roos.rez';
-            this.fetchUrl();
         },
 
         remove(i: number) {
