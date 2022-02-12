@@ -4,12 +4,10 @@
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <input
+                <EditableInput
                     v-if="this.isEditable"
-                    class="input"
                     v-model="title"
                     @change="updateTitle($event.target.value)"
-                    type="text"
                     placeholder="Compilation title"
                 />
                 <p v-else class="title is-3">{{ this.compilation.Title }}</p>
@@ -123,12 +121,13 @@ import { MutationTypes } from '@/store/mutation-types';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
 import { Compilation, ICompilation } from '@/store/compilation-types';
+import EditableInput from '@/components/EditableInput.vue';
 
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
     name: 'CompilationHeader',
-    components: {},
+    components: { EditableInput },
     props: {
         compilation: {
             type: Compilation,

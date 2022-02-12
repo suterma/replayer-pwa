@@ -10814,13 +10814,23 @@ body.has-navbar-fixed-top-laptop {
  * These nav buttons do not have an immediate function, but rather serve
  * a navigational purpose
  **************************************************************/
-/* Navigational buttons should have no border (like is-ghost), but have a subtle hover background*/
+/* Navigational buttons generally should have no border (like is-ghost), 
+* but have a subtle hover background
+* Except, when focused this should not apply (and the usual focus border should be applied)
+* to allow visual cues for keyboard navigation
+*/
 .button.is-nav,
 nav .button {
   background: none;
+  border-width: 1px;
+  border-style: solid;
   border-color: transparent;
-  color: #fafafa;
   text-decoration: none;
+}
+
+.button.is-nav:focus,
+nav .button:focus {
+  border-color: #ededed;
 }
 
 .button.is-nav:hover,
@@ -11037,21 +11047,6 @@ This is useful to fix situations when the outermost child temporarily is hidden 
   position: relative;
   top: -0.05em;
   vertical-align: middle;
-}
-
-/*************************************************************
- * Navigational stylings
-**************************************************************
-*/
-/** Navigational buttons never have borders or shadows (a la ghost), 
-*   even when focused or hovered, to keep them undistracting */
-nav .button {
-  border: none;
-}
-
-nav .button:focus:not(:active),
-nav .button.is-focused:not(:active) {
-  box-shadow: none;
 }
 
 /*************************************************************

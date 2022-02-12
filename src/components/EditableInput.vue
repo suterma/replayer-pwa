@@ -10,6 +10,7 @@
             type="text"
             placeholder="placeholder"
             ref="textInput"
+            tabindex="0"
         />
         <span v-else>
             {{ modelValue }}
@@ -17,7 +18,7 @@
         <!-- Edit -->
 
         <!-- dropdown-trigger -->
-        <button class="button is-nav" @click="toggleEditMode()">
+        <button class="button is-nav" @click="toggleEditMode()" tabindex="0">
             <span
                 :class="{
                     icon: true,
