@@ -46,6 +46,11 @@
         </ul>
     </div>
 
+    <h2 class="subtitle has-text-danger">Editable input</h2>
+    <div class="">
+        <EditableInput placeholder="Add text..." v-model="editableInputText" />
+    </div>
+
     <h2 class="subtitle has-text-danger">Log test buttons</h2>
     <div class="buttons">
         <button class="button is-success" @click="this.writeDebug">
@@ -116,6 +121,7 @@ import { ICompilation } from '@/store/compilation-types';
 import CompilationXmlDisplay from '@/components/CompilationXmlDisplay.vue';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import ToggleButton from '@/components/ToggleButton.vue';
+import EditableInput from '@/components/EditableInput.vue';
 
 export default defineComponent({
     name: 'Development',
@@ -123,10 +129,12 @@ export default defineComponent({
         CompilationXmlDisplay,
         CollapsibleButton,
         ToggleButton,
+        EditableInput,
     },
     data: () => ({
         isExpanded: false,
         isOn: false,
+        editableInputText: 'some input text',
     }),
     methods: {
         writeDebug() {

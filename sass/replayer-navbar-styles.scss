@@ -75,13 +75,14 @@ html.has-navbar-fixed-top-laptop {
 }
 
 /*************************************************************
- * Specific styles for nav buttons
+ * Specific styles for nav buttons (inside a nav element or with the is-nav class)
  * These nav buttons do not have an immediate function, but rather serve
  * a navigational purpose
-**************************************************************/
+ **************************************************************/
 
 /* Navigational buttons should have no border (like is-ghost), but have a subtle hover background*/
 
+.button.is-nav,
 nav .button {
     background: none;
     border-color: transparent;
@@ -89,13 +90,15 @@ nav .button {
     text-decoration: none;
 }
 
+.button.is-nav:hover,
 nav .button:hover {
     background: $grey-dark;
 }
 
 /*************************************************************
  * Specific styles for indicator buttons (similar to is-static)
- * These buttons are placeholders, to display a certain state
+ * These buttons are placeholders,
+ * without action, to display a certain state
 **************************************************************/
 
 /* Indicator buttons should have no border and no background */
