@@ -135,22 +135,6 @@ This is useful to fix situations when the outermost child temporarily is hidden 
 }
 
 /*************************************************************
- * Navigational stylings
-**************************************************************
-*/
-
-/** Navigational buttons never have borders or shadows (a la ghost), 
-*   even when focused or hovered, to keep them undistracting */
-nav .button {
-    border: none;
-}
-
-nav .button:focus:not(:active),
-nav .button.is-focused:not(:active) {
-    box-shadow: none;
-}
-
-/*************************************************************
  * (Track) Button layout
 **************************************************************
 */
