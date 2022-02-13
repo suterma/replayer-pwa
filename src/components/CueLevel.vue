@@ -1,7 +1,7 @@
 <template>
     <!-- Main container (disabled when track is not loaded)-->
     <fieldset :disabled="disabled">
-        <div class="level">
+        <div class="level is-mobile">
             <!-- Left side -->
             <div class="level-left">
                 <!-- Play Button -->
@@ -400,10 +400,18 @@ export default defineComponent({
     margin-top: 1px;
 }
 
-/** In Edit mode, cue buttons should be wider,to better represent the cue progress */
-.cue.button {
-    padding-left: 3rem;
-    padding-right: 3rem;
+/** In Edit mode, cue buttons should be wider, at least on larger screens, to better represent the cue progress */
+@media screen and (min-width: 769px) {
+    .cue.button {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+}
+@media screen and (min-width: 1024px) {
+    .cue.button {
+        padding-left: 4rem;
+        padding-right: 4rem;
+    }
 }
 
 /** Custom modification for the cue level.
