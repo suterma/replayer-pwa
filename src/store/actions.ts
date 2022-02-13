@@ -569,6 +569,7 @@ export const actions: ActionTree<State, State> & Actions = {
         },
     ): void {
         withProgress(`Updating cue...`, commit, () => {
+            payload.time = CompilationHandler.roundTime(payload.time);
             commit(MutationTypes.UPDATE_CUE_DATA, payload);
         });
     },
@@ -578,7 +579,7 @@ export const actions: ActionTree<State, State> & Actions = {
     ): void {
         withProgress(`Adding cue...`, commit, () => {
             const trackId = payload.trackId;
-            const time = Math.round(payload.time * 100) / 100;
+            const time = CompilationHandler.roundTime(payload.time);
             const nextShortcut = CompilationHandler.getNextShortcut(
                 getters.compilation as ICompilation,
             );

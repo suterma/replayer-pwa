@@ -44,7 +44,6 @@ export enum ActionTypes {
      */
     UPDATE_CUE_DATA = 'UPDATE_CUE_DATA',
     /** Adds a new cue with the given time
-     * @remarks The time will be rounded to two decimals after the point (1/100th of a second)
      */
     ADD_CUE = 'ADD_CUE',
     /** Deletes the cue with the given Id

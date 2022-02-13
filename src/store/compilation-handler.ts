@@ -27,6 +27,14 @@ export default class CompilationHandler {
         }
         return '1';
     }
+
+    /** Rounds the given time to the Replayer default precision.
+     * @remarks The time will be rounded to two decimal digits after the point (1/100th of a second)
+     */
+    static roundTime(time: number): number {
+        return Math.round(time * 100) / 100;
+    }
+
     /** Extracts all online URLs from a compilation's tracks.
      * @remarks An online URL is a valid URL starting with the http|https protocol.
      * @param compilation - The compilation to work on.

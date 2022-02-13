@@ -41,9 +41,25 @@
                         <span class="has-opacity-half">at</span>
                     </p>
                 </div>
-                <!-- A rather slim input for the time (in seconds, typically 1 decimal digit) -->
-                <div class="level-item is-flex-shrink-1">
+                <!-- A rather slim input for the time, only on mobiles-->
+                <div class="level-item is-flex-shrink-1 is-hidden-tablet">
                     <div class="field">
+                        <p class="control">
+                            <input
+                                class="input"
+                                type="number"
+                                step="0.1"
+                                v-model="cueData.Time"
+                                @change="updateTime($event.target.value)"
+                                placeholder="time [seconds]"
+                                size="5"
+                            />
+                        </p>
+                    </div>
+                </div>
+                <!-- A normal input for the time, with an adjustment add-on, for larger than mobile-->
+                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                    <div class="field has-addons">
                         <p class="control">
                             <input
                                 class="input"
@@ -55,8 +71,18 @@
                                 size="8"
                             />
                         </p>
+                        <div class="control">
+                            <button
+                                class="button"
+                                title="Adjusts the cue time to the current playback time"
+                                @click="adjustTime()"
+                            >
+                                Adjust
+                            </button>
+                        </div>
                     </div>
                 </div>
+
                 <!-- Duration (keep small and hide on touch)-->
                 <div class="level-item is-flex-shrink-1 is-hidden-touch">
                     <p class="has-text-nowrap">
@@ -188,6 +214,25 @@ export default defineComponent({
             //Also , for user convenience, to simplify adjusting cues, autoplay at change
             //(while keeping the focus at the number spinner)
             this.$emit('play');
+        },
+        /** Adjusts the time of the cue to the current playback time */
+        adjustTime() {
+            if (this.currentSeconds !== undefined) {
+                const time = CompilationHandler.roundTime(this.currentSeconds);
+
+                //update the local copy first
+                this.cueData.Time = time;
+
+                const cueId = this.cue.Id;
+                const shortcut = this.cueData.Shortcut;
+                const description = this.cueData.Description;
+                this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
+                    cueId,
+                    description,
+                    shortcut,
+                    time,
+                });
+            }
         },
         /** Updates the set cue shortcut */
         updateShortcut(shortcut: string) {
