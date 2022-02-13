@@ -1,10 +1,21 @@
 <template>
     <Compilation
-        :compilation="compilation"
         v-if="hasCompilation"
+        :compilation="compilation"
         :isEditable="this.isEditable"
         @update="onCompilationUpdate"
     />
+
+    <div v-else class="box has-background-transparent">
+        <p class="has-text-centered">
+            Replayer is a free, cue-based media player for rehearsals with
+            playback music. <br />By the click of a button, Replayer starts to
+            play at predefined times in the audio file.
+        </p>
+    </div>
+
+    <CompilationLoader v-if="!hasCompilation" />
+
     <MediaDropZone
         :is-expanded="this.isExpanded"
         @update:is-expanded="updateExpanded"
@@ -25,6 +36,7 @@ import Compilation from '@/components/Compilation.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import { ICompilation } from '@/store/compilation-types';
 import { ActionTypes } from '@/store/action-types';
+import CompilationLoader from '@/components/CompilationLoader.vue'; // @ is an alias to /src
 
 /** A view for playing an existing compilation */
 export default defineComponent({
@@ -32,6 +44,7 @@ export default defineComponent({
     components: {
         Compilation,
         MediaDropZone,
+        CompilationLoader,
     },
     data() {
         return {

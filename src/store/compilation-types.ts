@@ -152,13 +152,7 @@ export class Compilation implements ICompilation {
     /** Returns a new, empty compilation
      */
     static empty(): Compilation {
-        return new Compilation(
-            '',
-            'New Compilation',
-            '',
-            uuidv4(),
-            new Array<ITrack>(),
-        );
+        return new Compilation('', '', '', uuidv4(), new Array<ITrack>());
     }
 }
 

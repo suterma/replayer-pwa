@@ -9,7 +9,12 @@
     >
         <!-- The brand -->
         <div class="navbar-brand">
-            <a class="navbar-item" href="#">
+            <a
+                class="navbar-item"
+                href="#"
+                title="Replayer is a free, cue-based media player for rehearsals with playback music.
+By the click of a button, Replayer starts to play at predefined times in the audio file."
+            >
                 <!-- HINT: Provide explicit height and widht as an optimization measure -->
                 <img
                     src="../assets/logo.png"
