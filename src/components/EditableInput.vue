@@ -1,18 +1,26 @@
 <template>
     <div class="editableInput" v-click-outside="acceptValue">
         <!-- Note: Enter to accept the value -->
-        <GlobalEvents v-if="editMode" @keydown.prevent.enter="acceptValue" />
+        <GlobalEvents
+            v-if="editMode"
+            @keydown.prevent.enter="acceptValue()"
+            @keydown.prevent.escape="revertValue()"
+        />
         <input
             v-if="editMode"
             :class="{ input: true, 'is-static': !editMode }"
             :value="modelValue"
             @input="$emit('update:modelValue', $event.target.value)"
+            @blur="acceptValue()"
             type="text"
-            placeholder="placeholder"
+            :placeholder="placeholder"
             ref="textInput"
             tabindex="0"
         />
         <span v-else @click="toggleEditMode()">
+            <template v-if="!modelValue"
+                >Click to set: {{ placeholder }}
+            </template>
             {{ modelValue }}
         </span>
         <!-- Edit -->
@@ -79,6 +87,9 @@ export default defineComponent({
     data: () => ({
         /** Whether the input is in Edit mode */
         editMode: false,
+
+        /* The previous input text, to reverse an edit */
+        previousValue: '' as string | undefined,
     }),
 
     computed: {},
@@ -98,6 +109,12 @@ export default defineComponent({
             this.editMode = false;
         },
 
+        /** Accept the value and end the edit mode */
+        revertValue() {
+            this.$emit('update:modelValue', this.previousValue);
+            this.editMode = false;
+        },
+
         /** Sets the focus to the input box
          * @devdoc Use next-tick, because the input is not yet existing according to the v-if
          */
@@ -106,6 +123,16 @@ export default defineComponent({
                 const inputElement = this.$refs.textInput as HTMLInputElement;
                 inputElement.focus();
             });
+        },
+    },
+    watch: {
+        /** Watch for changes in the edit mode
+         * @remarks Handles the restoration of the previous value in case of an escape
+         */
+        editMode(newVal: boolean): void {
+            if (newVal) {
+                this.previousValue = this.modelValue;
+            }
         },
     },
 });
