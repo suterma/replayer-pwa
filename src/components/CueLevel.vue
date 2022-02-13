@@ -10,7 +10,7 @@
                         <p class="control">
                             <CueButton
                                 :cue="cue"
-                                :isTrackPlaying="isPlaying"
+                                :isTrackPlaying="isTrackPlaying"
                                 :currentSeconds="currentSeconds"
                                 @click="cueClick(cue)"
                                 :isMinified="true"
@@ -309,8 +309,8 @@ export default defineComponent({
 @media screen and (max-width: 480px) {
     .cue.button {
         /* very narrow on very small screens */
-        padding-left: 0;
-        padding-right: 0;
+        padding-left: 3px;
+        padding-right: 3px;
     }
 }
 
