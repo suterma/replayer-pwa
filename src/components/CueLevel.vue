@@ -27,7 +27,7 @@
                                 type="text"
                                 v-model="cueData.Description"
                                 @change="updateDescription($event.target.value)"
-                                placeholder="Cue description"
+                                :placeholder="cuePlaceholder"
                                 size="60"
                             />
                         </p>
@@ -233,6 +233,11 @@ export default defineComponent({
          * @remarks Note: only one cue in a compilation may be selected */
         isCueSelected(): boolean {
             return this.$store.getters.selectedCueId == this.cue?.Id;
+        },
+
+        /** Gets a cue placeholder denoting the cue's position */
+        cuePlaceholder(): string {
+            return `Cue at ${this.cue.Time} seconds`;
         },
     },
 });
