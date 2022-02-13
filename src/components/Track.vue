@@ -124,6 +124,7 @@
                             :isTrackPlaying="isPlaying"
                             :currentSeconds="currentSeconds"
                             @click="cueClick(cue)"
+                            @play="cuePlay(cue)"
                         />
                     </li>
                 </template>
@@ -310,7 +311,7 @@ export default defineComponent({
             this.$emit('update:expanded', value);
         },
         /** Handles the click of a cue button, by toggling playback and seeking to it
-         * @remarks Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
+         * @devdoc Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
          */
         cueClick(cue: ICue) {
             console.debug('Track::cueClick:cue:', cue);
@@ -324,6 +325,27 @@ export default defineComponent({
                 //Set the position to this cue and handle playback
                 if (this.trackPlayerInstance?.playing === true) {
                     this.trackPlayerInstance?.pauseAndSeekTo(cue.Time);
+                } else {
+                    this.trackPlayerInstance?.playFrom(cue.Time);
+                }
+                this.activateWakeLock();
+            }
+        },
+        /** Handles the play event of a cue button, by immediately restarting playback at the cue (instead of toggling)
+         * @devdoc Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
+         */
+        cuePlay(cue: ICue) {
+            console.debug('Track::cueClick:cue:', cue);
+            if (cue.Time != null) {
+                //Update the selected cue to this cue
+                this.$store.commit(
+                    MutationTypes.UPDATE_SELECTED_CUE_ID,
+                    cue.Id,
+                );
+
+                //Set the position to this cue and handle playback
+                if (this.trackPlayerInstance?.playing === true) {
+                    this.trackPlayerInstance?.seekTo(cue.Time); //keep playing
                 } else {
                     this.trackPlayerInstance?.playFrom(cue.Time);
                 }

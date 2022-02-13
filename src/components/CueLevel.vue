@@ -122,7 +122,7 @@ import CueButton from '@/components/CueButton.vue';
 export default defineComponent({
     name: 'CueLevel',
     components: { CueButton },
-    emits: ['click'],
+    emits: ['click', 'play'],
     props: {
         cue: {
             type: Cue,
@@ -184,6 +184,10 @@ export default defineComponent({
                 shortcut,
                 time,
             });
+
+            //Also , for user convenience, to simplify adjusting cues, autoplay at change
+            //(while keeping the focus at the number spinner)
+            this.$emit('play');
         },
         /** Updates the set cue shortcut */
         updateShortcut(shortcut: string) {
