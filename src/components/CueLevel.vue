@@ -400,7 +400,15 @@ export default defineComponent({
     margin-top: 1px;
 }
 
-/** In Edit mode, cue buttons should be wider, at least on larger screens, to better represent the cue progress */
+/** In Edit mode, cue buttons should be gradually be wider on larger screens, to better represent the cue progress */
+@media screen and (max-width: 480px) {
+    .cue.button {
+        /* very narrow on very small screens */
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
 @media screen and (min-width: 769px) {
     .cue.button {
         padding-left: 3rem;
@@ -418,8 +426,8 @@ export default defineComponent({
 */
 .level {
     .level-left {
-        /* This basis is set empirically to fit for two button elements on the right */
-        flex-basis: calc(100% - 80px);
+        /* This basis is set empirically to fit for one button element, plus 0.75rem margin, on the right */
+        flex-basis: calc(100% - 40px - 0.75rem);
 
         /* These items should grow, and shrink */
         .level-item {
