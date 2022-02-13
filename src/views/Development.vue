@@ -73,6 +73,10 @@
     </div>
 
     <h1 class="title has-text-danger">Icons test</h1>
+    <NavButton
+        iconPathData="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"
+        title="some test title"
+    />
     <CollapsibleButton
         v-model="isExpanded"
         collapsedText="Show 11 somethings"
@@ -122,6 +126,7 @@ import CompilationXmlDisplay from '@/components/CompilationXmlDisplay.vue';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import ToggleButton from '@/components/ToggleButton.vue';
 import EditableInput from '@/components/EditableInput.vue';
+import NavButton from '@/components/NavButton.vue';
 
 export default defineComponent({
     name: 'Development',
@@ -130,6 +135,7 @@ export default defineComponent({
         CollapsibleButton,
         ToggleButton,
         EditableInput,
+        NavButton,
     },
     data: () => ({
         isExpanded: false,

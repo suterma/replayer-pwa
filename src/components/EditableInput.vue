@@ -26,50 +26,31 @@
         <!-- Edit -->
 
         <!-- dropdown-trigger -->
-        <button class="button is-nav" @click="toggleEditMode()" tabindex="0">
-            <span
-                :class="{
-                    icon: true,
-                }"
-            >
-                <i class="mdi mdi-24px">
-                    <!-- A checkmark icon -->
-                    <svg
-                        v-if="editMode"
-                        style="width: 24px; height: 24px"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            fill="currentColor"
-                            d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"
-                        />
-                    </svg>
-                    <!-- A pencil icon -->
-                    <svg
-                        v-else
-                        style="width: 24px; height: 24px"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            fill="currentColor"
-                            d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
-                        />
-                    </svg>
-                </i>
-            </span>
-        </button>
+        <NavButton
+            v-if="editMode"
+            @click="toggleEditMode()"
+            iconPathData="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"
+            title="Click to accept"
+        />
+        <NavButton
+            v-else
+            @click="toggleEditMode()"
+            iconPathData="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
+            title="Click to edit"
+        />
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { GlobalEvents } from 'vue-global-events';
+import NavButton from '@/components/NavButton.vue';
 
 /** A text input, which has a dedicated edit icon.
  */
 export default defineComponent({
     name: 'EditableInput',
-    components: { GlobalEvents },
+    components: { GlobalEvents, NavButton },
     emits: ['update:modelValue'],
     props: {
         /* The input text */
