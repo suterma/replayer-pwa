@@ -1,5 +1,5 @@
 <template>
-    <div class="editableInput">
+    <div class="editableInput" v-click-outside="acceptValue">
         <!-- Note: Enter to accept the value -->
         <GlobalEvents v-if="editMode" @keydown.prevent.enter="acceptValue" />
         <input
@@ -12,7 +12,7 @@
             ref="textInput"
             tabindex="0"
         />
-        <span v-else>
+        <span v-else @click="toggleEditMode()">
             {{ modelValue }}
         </span>
         <!-- Edit -->
