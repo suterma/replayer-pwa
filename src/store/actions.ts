@@ -578,19 +578,13 @@ export const actions: ActionTree<State, State> & Actions = {
     ): void {
         withProgress(`Adding cue...`, commit, () => {
             const trackId = payload.trackId;
-            const time = payload.time;
+            const time = Math.round(payload.time * 100) / 100;
             const nextShortcut = CompilationHandler.getNextShortcut(
                 getters.compilation as ICompilation,
             );
 
             const cueId = uuidv4();
-            const cue = new Cue(
-                'Cue at ' + CompilationHandler.convertToDisplayTime(time),
-                nextShortcut,
-                time,
-                null,
-                cueId,
-            );
+            const cue = new Cue('', nextShortcut, time, null, cueId);
 
             commit(MutationTypes.ADD_CUE, { trackId, cue });
             commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);

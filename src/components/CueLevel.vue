@@ -237,7 +237,9 @@ export default defineComponent({
 
         /** Gets a cue placeholder denoting the cue's position */
         cuePlaceholder(): string {
-            return `Cue at ${this.cue.Time} seconds`;
+            return `Cue at ${CompilationHandler.convertToDisplayTime(
+                this.cue.Time,
+            )}`;
         },
     },
 });
