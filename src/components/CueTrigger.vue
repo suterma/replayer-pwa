@@ -1,4 +1,5 @@
 <template>
+    <!-- Placeholder for an unloaded track -->
     <div class="field has-addons player-panel" v-if="!this.loaded">
         <p class="control">
             <button class="button">
@@ -37,7 +38,8 @@
             </div>
         </div>
     </div>
-    <div class="field has-addons player-panel" v-else>
+    <!-- Playback control when the track is loaded -->
+    <div v-else class="field has-addons player-panel">
         <!-- Play/Pause (Only available when the track is loaded, and no playback request is outstanding) -->
         <p class="control">
             <button
@@ -123,19 +125,22 @@
                 <span> Create Cue!</span>
             </button>
         </p>
+        <!-- Handle the insert key as trigger for a nue cue Handle the insert key as  trigger for a nue cue -->
+        <GlobalEvents @keydown.prevent.insert="this.$emit('newCueTriggered')" />
     </div>
 </template>
 
 <script lang="ts">
 import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent } from 'vue';
+import { GlobalEvents } from 'vue-global-events';
 
 /** A UI representation for a media player
  * @remarks Handles and emits various states and event for playback control.
  */
 export default defineComponent({
     name: 'CueTrigger',
-    components: {},
+    components: { GlobalEvents },
     emits: [
         'update:playing',
         'update:currentSeconds',
