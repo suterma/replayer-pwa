@@ -87,7 +87,7 @@ import { defineComponent } from 'vue';
 import { Cue } from '@/store/compilation-types';
 import CompilationHandler from '@/store/compilation-handler';
 
-/** A button for displaying and invoking a cue
+/** A two-lined button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
  */
 export default defineComponent({
