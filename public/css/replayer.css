@@ -10682,9 +10682,10 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   top: 0;
 }
 .player-timeline .player-progress {
-  border-right-width: 0.4em;
-  border-right-color: #fafafa;
+  background-color: rgba(0, 0, 0, 0.33);
+  border-right-width: 0.3em;
   border-right-style: solid;
+  border-right-color: #fafafa;
   z-index: 1;
 }
 .player-timeline .player-seeker {

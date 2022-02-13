@@ -3,7 +3,7 @@
         :class="{
             button: true,
             cue: true,
-            'is-multiline': 'true',
+            'is-multiline': !isMinified,
             'has-text-left': 'true',
             'is-warning': !isCueSelected,
             'is-success': isCueSelected,
@@ -16,12 +16,9 @@
             <span
                 :class="{
                     'player-progress': true,
-                    'player-progress-full':
-                        hasCuePassed ||
-                        (percentComplete !== null && percentComplete >= 100),
-                    'player-progress-none':
-                        isCueAhead ||
-                        (percentComplete !== null && percentComplete <= 0),
+                    'player-progress-full': this.hasCuePassed,
+                    'has-addons-right': this.hasAddonsRight,
+                    'player-progress-none': this.isCueAhead,
                 }"
                 :style="progressStyle"
             ></span>
@@ -43,41 +40,44 @@
                             d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z"
                         />
                     </svg>
-                </i> </span
-            >&nbsp;
-            <span class="has-text-weight-semibold foreground">{{
-                cue?.Description
-            }}</span>
-
-            <br />
-            <!-- second line (use a horizontal level also on mobile. This keeps text evert)-->
-            <span class="level is-mobile">
-                <!-- Left side -->
-                <div class="level-left">
-                    <div class="level-item mr-3">
-                        <span class="has-opacity-half foreground">
-                            {{ cueDisplayTime }}
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Right side -->
-                <div class="level-right">
-                    <p class="level-item is-hidden-touch mr-3">
-                        <!-- Use a right position for Durations, to keep them as much out of visibilty as possible -->
-                        <span class="has-opacity-half foregrounds">{{
-                            cueDurationDisplayTime
-                        }}</span>
-                    </p>
-                    <p class="level-item" v-if="cue?.Shortcut">
-                        <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibilty as possible -->
-                        <span
-                            class="tag is-warning is-light is-outlined foreground has-opacity-third is-family-monospace"
-                            >{{ cue?.Shortcut }}</span
-                        >
-                    </p>
-                </div>
+                </i>
             </span>
+            <template v-if="!isMinified">
+                &nbsp;
+                <span class="has-text-weight-semibold foreground">{{
+                    cue?.Description
+                }}</span>
+
+                <br />
+                <!-- second line (use a horizontal level also on mobile. This keeps text evert)-->
+                <span class="level is-mobile">
+                    <!-- Left side -->
+                    <div class="level-left">
+                        <div class="level-item mr-3">
+                            <span class="has-opacity-half foreground">
+                                {{ cueDisplayTime }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Right side -->
+                    <div class="level-right">
+                        <p class="level-item is-hidden-touch mr-3">
+                            <!-- Use a right position for Durations, to keep them as much out of visibilty as possible -->
+                            <span class="has-opacity-half foregrounds">{{
+                                cueDurationDisplayTime
+                            }}</span>
+                        </p>
+                        <p class="level-item" v-if="cue?.Shortcut">
+                            <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibilty as possible -->
+                            <span
+                                class="tag is-warning is-light is-outlined foreground has-opacity-third is-family-monospace"
+                                >{{ cue?.Shortcut }}</span
+                            >
+                        </p>
+                    </div>
+                </span>
+            </template>
         </span>
     </button>
 </template>
@@ -87,8 +87,9 @@ import { defineComponent } from 'vue';
 import { Cue } from '@/store/compilation-types';
 import CompilationHandler from '@/store/compilation-handler';
 
-/** A two-lined button for displaying and invoking a cue
+/** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
+ * @remarks Supports a default, two-line display with icon, description and other indications, as well as a minified, icon-only, variant.
  */
 export default defineComponent({
     name: 'CueButton',
@@ -107,16 +108,26 @@ export default defineComponent({
          * @remarks This is used to depict the expected acktion on button press. While playing, this is pause, and vice versa.
          */
         isTrackPlaying: Boolean,
+        /** Whether the button is shown in a minified, single-line, icon only, variant.
+         * @remarks This is currently used for the edit mode.
+         */
+        isMinified: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+        /** Whether the button has addons at it's right side. This determines progress bar styling.
+         * @remarks The progress bar radius at the right side must be removed for fully progressed cues.
+         */
+        hasAddonsRight: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
     },
     computed: {
         /** The playback progress within this cue, in [percent], or null if not appliccable */
-        percentComplete(): number | null {
-            if (this.hasCuePassed) {
-                return 100; //percent
-            }
-            if (this.isCueAhead) {
-                return 0; //percent
-            }
+        percentComplete(): number {
             if (this.currentSeconds !== undefined) {
                 if (
                     this.cue &&
@@ -129,18 +140,35 @@ export default defineComponent({
                     );
                 }
             }
-            return null;
+            return 0;
         },
+
+        /** The width offset for the progress-bar
+         * @remarks this allows to dynamically offset for the width of the progress bar in [em] during cue completion
+         * @devdoc The width is defined in CSS
+         */
+        progressBarWidthOffset(): number {
+            return (
+                ((100 - this.percentComplete) / 100) *
+                0.3 /* value in [em], as defined in CSS */
+            );
+        },
+
         /** Returns the progress as width style, for use as a css style set, dynamically depending on the actual progress in the cue duration
          * @devdoc max-width makes sure, the progress bar never overflows the given space.
          */
         progressStyle(): any {
             if (this.percentComplete !== null) {
-                //show the progress according to the percentage available
-                return {
-                    width: `calc(${this.percentComplete}%)`,
-                    'max-width': '100%',
-                };
+                if (this.percentComplete >= 0 && this.percentComplete <= 100) {
+                    //show the progress according to the percentage available
+                    return {
+                        width: `calc(${this.percentComplete}% +
+                     ${this.progressBarWidthOffset}em)`,
+                        'max-width': '100%',
+                    };
+                } else {
+                    return '';
+                }
             } else {
                 //percentage is undefined, thus hide the progress
                 return {
@@ -176,7 +204,7 @@ export default defineComponent({
                     this.cue.Duration !== null
                 ) {
                     return (
-                        this.cue.Time + this.cue.Duration < this.currentSeconds
+                        this.cue.Time + this.cue.Duration <= this.currentSeconds
                     );
                 }
             }
@@ -201,26 +229,30 @@ export default defineComponent({
 <style scoped>
 /* //TODO later put these into a scss file for player and progress */
 .player-timeline .player-progress {
-    /* Smooth progress shade, with no visible border or slider line */
-    /** similar to has-opacity-third */
-    background-color: rgba(0, 0, 0, 0.33);
-    border-right-width: 1px;
-    border-right-color: black;
-    border-right-style: solid;
-
     /* Progress shade to appear inside button area (creates outlined style)  */
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
 }
 
+/** The current position has already fully passed this cue (including it's duration) */
 .player-timeline .player-progress.player-progress-full {
     /* 100% Progress shade to appear inside button area (creates outlined style)  */
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
     border-right: none;
+    width: 100%;
 }
+
+/** The current position has already fully passed this cue (with addons assumed at the right side, thus omit the radius) */
+.player-timeline .player-progress.player-progress-full.has-addons-right {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/** The current position has not yet reached this cue */
 .player-timeline .player-progress.player-progress-none {
     border-right: none;
+    width: 0;
 }
 
 .player-timeline {

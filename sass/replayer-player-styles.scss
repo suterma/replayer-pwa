@@ -36,9 +36,11 @@ $player-playing-color: darken($green, 35%);
 
     /* A player progress as simple vertical handle */
     .player-progress {
-        border-right-width: 0.4em;
-        border-right-color: $button-color;
+        background-color: rgba(0, 0, 0, 0.33);
+        border-right-width: 0.3em;
         border-right-style: solid;
+        border-right-color: $button-color;
+
         z-index: 1;
     }
 
