@@ -1,5 +1,5 @@
 <template>
-    <!-- Main container -->
+    <!-- Main container (disabled when track is not loaded)-->
     <fieldset :disabled="disabled">
         <div class="level">
             <!-- Left side -->
@@ -104,10 +104,8 @@
                         </p>
                     </div>
                 </div>
-                <!-- Duration (keep small)-->
-                <div
-                    class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
-                >
+                <!-- Duration (keep small and hide on touch)-->
+                <div class="level-item is-flex-shrink-1 is-hidden-touch">
                     <p class="has-text-nowrap">
                         <span class="has-opacity-half">{{
                             cueDurationDisplayTime
@@ -115,7 +113,7 @@
                     </p>
                 </div>
                 <!-- A rather slim input for the shortcut (a short mnemonic) -->
-                <div class="level-item is-flex-shrink-1">
+                <div class="level-item is-flex-shrink-1 is-hidden-touch">
                     <div class="field">
                         <p class="control">
                             <input
@@ -408,37 +406,25 @@ export default defineComponent({
     padding-right: 3rem;
 }
 
-/** Custom modification for the level in the context of a track.
-* @remarks Allow the title text (on the left) to break between words, 
-* and keep the context items (on the right) as close as reasonably possible */
+/** Custom modification for the cue level.
+*/
 .level {
     .level-left {
-        word-break: break-word;
-        /* This basis is set empirically to fit for two elements on the right */
+        /* This basis is set empirically to fit for two button elements on the right */
         flex-basis: calc(100% - 80px);
 
         /* These items should grow, and shrink */
         .level-item {
             flex-shrink: 1;
             flex-grow: 1;
-            text-align: left;
-            /* Title, always justify left */
+            /* Items always justify left */
             justify-content: left;
         }
     }
 
     .level-right {
-        min-width: 0;
-
-        /* Keep the right hand items (play indicator, expander) as small as possible */
+        /* Keep the right hand items small */
         flex-basis: 0;
-
-        /* These items should keep their size */
-        .level-item {
-            flex-shrink: 0;
-            flex-grow: 0;
-            text-align: right;
-        }
     }
 }
 </style>
