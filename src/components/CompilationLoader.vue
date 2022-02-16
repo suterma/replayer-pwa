@@ -1,30 +1,36 @@
 <template>
-    <!-- Main container (This level is not a nav, since the containted buttons dispatch actions, not navigations) -->
-    <div
-        v-if="
-            !this.getSettings.autoRetrieveLastCompilation &&
-            hasRetrievableCompilation &&
-            !hasCompilation
-        "
-        class="level"
-    >
-        <!-- Left side -->
-        <div class="level-left">
-            <div class="level-item">
+    <!-- Query the user in the modal dialog whether to load an existing compilation, if required -->
+    <div :class="{ modal: true, 'is-active': showDialog }">
+        <div class="modal-background"></div>
+
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <h1 class="modal-card-title title">
+                    Retrieve last compilation?
+                </h1>
+            </header>
+            <section class="modal-card-body">
+                <div class="content">
+                    A previously preserved compilation is available. Do you want
+                    to retrieve it or discard it?
+                    <WelcomeText />
+                </div>
+            </section>
+            <footer class="modal-card-foot is-justify-content-flex-end">
                 <button
-                    tabindex="0"
-                    class="button"
+                    class="button pl-6 pr-6"
+                    @click="discardLastCompilation()"
+                >
+                    Discard
+                </button>
+
+                <button
+                    class="button is-success pl-6 pr-6"
                     @click="retrieveLastCompilation()"
                 >
-                    Retrieve last compilation
+                    Retrieve
                 </button>
-            </div>
-            <div class="level-item">&mdash; OR &mdash;</div>
-        </div>
-
-        <!-- Right side -->
-        <div class="level-right">
-            <p class="level-item"></p>
+            </footer>
         </div>
     </div>
 </template>
@@ -35,13 +41,18 @@ import { ActionTypes } from '@/store/action-types';
 import { settingsMixin } from '@/mixins/settingsMixin';
 
 /** A Loader for compilations, from either the URL or the local storage files
- * @remarks Provides a button for loading the last compilation, if available
+ * @remarks Provides a dialog for loading the last compilation, if available
  * @remarks loads a compilation from either local files and also listens to url params
  */
 export default defineComponent({
     name: 'CompilationLoader',
     components: {},
     mixins: [settingsMixin],
+    data() {
+        return {
+            showDialog: false,
+        };
+    },
     mounted: function (): void {
         //Check whether a given compilation is to be loaded (by URL or by Auto-Retrieve, if enabled)
         if (this.paramsUrl) {
@@ -54,8 +65,11 @@ export default defineComponent({
             }
         } else if (this.getSettings.autoRetrieveLastCompilation) {
             this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
+        } else if (this.hasRetrievableCompilation && !this.hasCompilation) {
+            this.showDialog = true;
         }
     },
+
     methods: {
         /** Handles the request to load a file from an online resource, using a URL
          * @remarks This method can be called multiple times, each resource gets appropriately added to the current compilation
@@ -65,8 +79,15 @@ export default defineComponent({
             this.$store.dispatch(ActionTypes.LOAD_FROM_URL, url);
         },
 
+        discardLastCompilation(): void {
+            this.$store.dispatch(ActionTypes.DISCARD_COMPILATION).then(() => {
+                this.showDialog = false;
+            });
+        },
         retrieveLastCompilation(): void {
-            this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
+            this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION).then(() => {
+                this.showDialog = false;
+            });
         },
     },
     computed: {

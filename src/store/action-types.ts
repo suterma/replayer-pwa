@@ -3,6 +3,10 @@ export enum ActionTypes {
      * and commits it all into the store as the current compilation*/
     RETRIEVE_COMPILATION = 'RETRIEVE_COMPILATION',
 
+    /** Discards the last stored compilation from the persistent storage, including all blobs and the selected cue,
+     * and commits it all into the store, effectively removing the current compilation.*/
+    DISCARD_COMPILATION = 'DISCARD_COMPILATION',
+
     /** Adds a blob as a media source, using a name and a blob  */
     ADD_MEDIA_BLOB = 'ADD_MEDIA_BLOB',
 

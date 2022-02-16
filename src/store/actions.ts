@@ -26,6 +26,7 @@ export interface Actions {
     [ActionTypes.RETRIEVE_COMPILATION]({
         commit,
     }: AugmentedActionContext): void;
+    [ActionTypes.DISCARD_COMPILATION]({ commit }: AugmentedActionContext): void;
     [ActionTypes.ADD_MEDIA_BLOB](
         { commit }: AugmentedActionContext,
         payload: { fileName: string; blob: Blob },
@@ -138,7 +139,16 @@ export const actions: ActionTree<State, State> & Actions = {
             });
         });
     },
+    [ActionTypes.DISCARD_COMPILATION]({ commit }) {
+        console.debug('actions::DISCARD_COMPILATION');
+        commit(
+            MutationTypes.PUSH_PROGRESS_MESSAGE,
+            'Discarding last compilation...',
+        );
 
+        commit(MutationTypes.CLOSE_COMPILATION, undefined);
+        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+    },
     [ActionTypes.ADD_MEDIA_BLOB]({ commit }, mediaBlob: MediaBlob) {
         console.debug(
             'actions::ADD_MEDIA_BLOB:mediaBlob-filename',
