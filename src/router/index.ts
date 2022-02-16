@@ -29,7 +29,7 @@ const routes: Array<RouteRecordRaw> = [
     },
 
     // Allow loading of arbitrary files
-    { path: '/play/:url*', component: Play },
+    { path: '/edit/:url*', component: Edit },
     {
         path: '/settings',
         name: 'Settings',

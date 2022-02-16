@@ -20,6 +20,16 @@
     </div>
     <h1 class="title has-text-danger">Tests</h1>
 
+    <h2 class="subtitle has-text-danger">API tests</h2>
+    <div class="content">
+        <p>
+            //TODO this following URL should work (if CORS is disabled) and
+            download the media file, creating a track
+            http://localhost:8080/#/edit/https%3A%2F%2Fwww.christoffankhauser.ch%2Fapp%2Fdownload%2F15906779025%2FGwBl15_I%2520danke%2520Dir-Pb.mp3%3Ft%3D1496741278
+            Why does it not work?
+        </p>
+    </div>
+
     <h2 class="subtitle has-text-danger">
         Loader component with various compilations
     </h2>
@@ -30,14 +40,14 @@
         </p>
         <ul>
             <li>
-                <a href="/#/play/demo-compilation-featuring-lidija-roos.rez"
+                <a href="/#/edit/demo-compilation-featuring-lidija-roos.rez"
                     >Demo package with a compilation featuring Lidija Roos</a
                 ><br />
                 A REZ Package containing an REX compilation with 2 tracks and
                 matching mp3 files.
             </li>
             <li>
-                <a href="/#/play/Demo%20Adonia%20Junior%2021.bplist"
+                <a href="/#/edit/Demo%20Adonia%20Junior%2021.bplist"
                     >Demo Binary Property List compilation (as from the
                     LivePlayback app)</a
                 ><br />

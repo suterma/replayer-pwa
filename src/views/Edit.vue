@@ -14,7 +14,7 @@
         </p>
     </div>
 
-    <CompilationLoader v-if="!hasCompilation" />
+    <CompilationLoader />
 
     <MediaDropZone
         :is-expanded="this.isExpanded"

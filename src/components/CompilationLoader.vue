@@ -13,7 +13,6 @@
                 <div class="content">
                     A previously preserved compilation is available. Do you want
                     to retrieve it or discard it?
-                    <WelcomeText />
                 </div>
             </section>
             <footer class="modal-card-foot is-justify-content-flex-end">
@@ -40,9 +39,12 @@ import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
 import { settingsMixin } from '@/mixins/settingsMixin';
 
-/** A Loader for compilations, from either the URL or the local storage files
+/** A Loader for compilations, from either the URL or the local persistent storage
  * @remarks Provides a dialog for loading the last compilation, if available
- * @remarks loads a compilation from either local files and also listens to url params
+ * @remarks The order is as follows:
+ * 1) if given, load items from the URL parameters (discards any previously persisted compilation)
+ * 2) if available, and set to auto-retrieva, automatically retrieve an existing persisted compilation
+ * 3) if available, but not set to auto-retrieve, offer it via UI
  */
 export default defineComponent({
     name: 'CompilationLoader',
@@ -55,13 +57,17 @@ export default defineComponent({
     },
     mounted: function (): void {
         //Check whether a given compilation is to be loaded (by URL or by Auto-Retrieve, if enabled)
+        console.debug('paramsUrl:' + this.paramsUrl);
+
         if (this.paramsUrl) {
             if (typeof this.paramsUrl === 'string') {
                 //Handle the single item
-                this.loadUrl(this.paramsUrl);
+                this.loadUrl(decodeURIComponent(this.paramsUrl));
             } else {
                 //Handle the array
-                this.paramsUrl.forEach((url) => this.loadUrl(url));
+                this.paramsUrl.forEach((url) =>
+                    this.loadUrl(decodeURIComponent(url)),
+                );
             }
         } else if (this.getSettings.autoRetrieveLastCompilation) {
             this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
