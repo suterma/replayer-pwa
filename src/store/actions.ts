@@ -184,8 +184,7 @@ export const actions: ActionTree<State, State> & Actions = {
             })
                 .then((response) => {
                     //Use the final (possibly redirected URL for the next time)
-                    //TODO test on real life URL whether this works reliably...
-                    console.debug('RezLoader::loadUrl:response', response);
+                    console.debug('LOAD_FROM_URL::response', response);
 
                     //Get the possibly redirected url
                     let finalUrl: URL;
@@ -199,7 +198,6 @@ export const actions: ActionTree<State, State> & Actions = {
                         reject(
                             `Network response while fetching URL '${url}' was not OK`,
                         );
-                        console.debug('RezLoader::loadUrl:response', response);
                         //The action is done, so terminate the progress
                         commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
                         return;
