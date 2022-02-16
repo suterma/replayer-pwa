@@ -3,7 +3,7 @@
  */
 
 import { shallowMount } from '@vue/test-utils';
-import RezLoader from '@/components/RezLoader.vue';
+import CompilationLoader from '@/components/CompilationLoader.vue';
 import { createStore } from 'vuex';
 import { MutationTypes } from '@/store/mutation-types';
 import { State } from '@/store/state';
@@ -14,7 +14,7 @@ import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 import PersistentStorage from '@/store/persistent-storage';
 import 'core-js';
 
-describe('RezLoader.vue', () => {
+describe('CompilationLoader.vue', () => {
     //https://stackoverflow.com/a/56643520
     beforeEach(() => {
         URL.createObjectURL = jest.fn();
@@ -48,7 +48,7 @@ describe('RezLoader.vue', () => {
             },
             mutations: {
                 [MutationTypes.ADD_MEDIA_URL](state: State, payload: MediaUrl) {
-                    state.mediaUrls.set(payload.fileName, payload);
+                    state.mediaUrls.set(payload.resourceName, payload);
                 },
             },
             actions: {
@@ -69,7 +69,8 @@ describe('RezLoader.vue', () => {
                     //Store persistently, but after committing, to keep the process faster
                     PersistentStorage.storeMediaBlob(mediaBlob);
                 },
-                [ActionTypes.RETRIEVE_COMPILATION]({}) {
+                // eslint-disable-next-line no-empty-pattern
+                [ActionTypes.RETRIEVE_COMPILATION]({}): void {
                     //empty mock
                 },
             },
@@ -79,7 +80,7 @@ describe('RezLoader.vue', () => {
                 },
             },
         });
-        const wrapper = shallowMount(RezLoader, {
+        const wrapper = shallowMount(CompilationLoader, {
             global: {
                 plugins: [store],
             },
