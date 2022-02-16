@@ -6,6 +6,20 @@ import { MediaBlob, MediaUrl } from './state-types';
  * Provides handling methods for compilation manipulation.
  */
 export default class CompilationHandler {
+    /**Sorts the cues array in place, by time. This method mutates the array and returns a reference to the same array.
+     * @param cues - The array of cues to sort.
+     * @returns The mutated array.
+     */
+    static sort(cues: ICue[]): ICue[] {
+        cues.sort((a, b) =>
+            (a.Time ?? 0) > (b.Time ?? 0)
+                ? 1
+                : (b.Time ?? 0) > (a.Time ?? 0)
+                ? -1
+                : 0,
+        );
+        return cues;
+    }
     /** Guesses the next useful shortcut, based on the previously existing shortcuts.
      * @remarks Simply tries to parse all existing shortcuts, then increases the number by 1.
      * @param compilation - The compilation to work on.
@@ -68,9 +82,9 @@ export default class CompilationHandler {
         });
         if (originalCues && originalCues.length > 0) {
             //Create a shallow, backward sorted copy of the cue list, to iterate through, and setting the duration of the cue objects
-            const sortedBackwards = [...originalCues].sort(
-                (a, b) => (b.Time ?? 0) - (a.Time ?? 0),
-            );
+            const sortedBackwards = CompilationHandler.sort([
+                ...originalCues,
+            ]).reverse();
 
             let lastTime: number | null = trackDuration;
 

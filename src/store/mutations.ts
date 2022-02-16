@@ -142,13 +142,7 @@ export const mutations: MutationTree<State> & Mutations = {
             matchingTrack.Cues.push(payload.cue);
 
             //Sort the resulting set by time
-            matchingTrack.Cues.sort((a, b) =>
-                (a.Time ?? 0) > (b.Time ?? 0)
-                    ? 1
-                    : (b.Time ?? 0) > (a.Time ?? 0)
-                    ? -1
-                    : 0,
-            );
+            CompilationHandler.sort(matchingTrack.Cues);
 
             if (matchingTrack.Duration != null) {
                 console.debug(
@@ -352,14 +346,8 @@ export const mutations: MutationTree<State> & Mutations = {
                 );
 
                 if (track) {
-                    //Maybe a sort is also due?  (//TODO Move code to central place, in CompilationHandler)
-                    track.Cues.sort((a, b) =>
-                        (a.Time ?? 0) > (b.Time ?? 0)
-                            ? 1
-                            : (b.Time ?? 0) > (a.Time ?? 0)
-                            ? -1
-                            : 0,
-                    );
+                    //Sort by the updated time
+                    CompilationHandler.sort(track.Cues);
 
                     if (track && track.Duration != null) {
                         CompilationHandler.updateCueDurations(
