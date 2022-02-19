@@ -11,7 +11,7 @@
             <component :is="Component" />
             <!-- </keep-alive> -->
         </router-view>
-
+        <CompilationLoader />
         <ProgressOverlay />
         <ErrorOverlay />
         <WelcomeMessage />
@@ -24,10 +24,17 @@ import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import ErrorOverlay from '@/components/ErrorOverlay.vue';
 import WelcomeMessage from '@/components/WelcomeMessage.vue';
 import { MutationTypes } from './store/mutation-types';
+import CompilationLoader from '@/components/CompilationLoader.vue';
 
 export default defineComponent({
     name: 'App',
-    components: { NavbarTop, ProgressOverlay, ErrorOverlay, WelcomeMessage },
+    components: {
+        NavbarTop,
+        CompilationLoader,
+        ProgressOverlay,
+        ErrorOverlay,
+        WelcomeMessage,
+    },
     beforeCreate() {
         this.$store.commit(MutationTypes.RETRIEVE_SETTINGS);
     },

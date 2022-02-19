@@ -14,8 +14,6 @@
         </p>
     </div>
 
-    <CompilationLoader />
-
     <MediaDropZone
         :is-expanded="this.isExpanded"
         @update:is-expanded="updateExpanded"
@@ -36,7 +34,6 @@ import Compilation from '@/components/Compilation.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import { ICompilation } from '@/store/compilation-types';
 import { ActionTypes } from '@/store/action-types';
-import CompilationLoader from '@/components/CompilationLoader.vue'; // @ is an alias to /src
 
 /** A view for playing an existing compilation */
 export default defineComponent({
@@ -44,7 +41,6 @@ export default defineComponent({
     components: {
         Compilation,
         MediaDropZone,
-        CompilationLoader,
     },
     data() {
         return {
