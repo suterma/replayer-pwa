@@ -32,6 +32,7 @@
             :isTrackLoaded="this.isTrackLoaded"
             :isActiveTrack="this.isActiveTrack"
             :isEditable="this.isEditable"
+            :isCollapsible="this.isCollapsible"
         />
 
         <slide-up-down
@@ -170,16 +171,29 @@ export default defineComponent({
     },
     mixins: [settingsMixin],
     props: {
+        /** The track to display
+         * @remarks One of track or trackId is required.
+         */
         track: {
             type: Track,
             required: true,
         },
         /** Whether this component show editable inputs for the contained data
-         * @devdoc Allows to reuse this component for more than one DisplayMode.
+         * @devdoc Allows to reuse this component for more than one display mode.
          */
         isEditable: {
             type: Boolean,
             default: false,
+            required: false,
+        },
+        /** Whether this component shows supports expand/collapse (using a button)
+         * If set to false, the component is always shown in the expanded state, without the toggling button.
+         * @devdoc Allows to reuse this component for more than one display mode.
+         */
+        isCollapsible: {
+            type: Boolean,
+            default: true,
+            required: false,
         },
     },
     emits: ['update:expanded'],
@@ -198,9 +212,9 @@ export default defineComponent({
     data() {
         return {
             /** Whether this track tile is shown as expanded, with the player and the cue buttons displayed.
-             * @remarks Default is true, when editable, false otherwise
+             * @remarks True, when editable, otherwise depending on whether it is collapsible.
              */
-            expanded: this.isEditable,
+            expanded: this.isEditable || !this.isCollapsible,
             /** The playback progress in the current track, in [seconds]
              * @remarks This is used for track progress display within the set of cues
              */

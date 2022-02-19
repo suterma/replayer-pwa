@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Play from '../views/Play.vue';
+import TrackPlayer from '../views/TrackPlayer.vue';
 import Home from '../views/Home.vue';
 import Edit from '../views/Edit.vue';
 
@@ -15,6 +16,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/play',
         name: 'Play',
         component: Play,
+    },
+    {
+        path: '/track-player/:id*',
+        name: 'Track-Player',
+        component: TrackPlayer,
     },
     {
         path: '/edit',

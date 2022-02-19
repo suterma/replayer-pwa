@@ -2,9 +2,17 @@
     <!-- Level, also on mobile 
     @remarks The id is used to scroll to this item when it's becoming the active track-->
     <nav
-        class="level is-mobile is-clickable"
+        :class="{
+            level: true,
+            'is-mobile': true,
+            'is-clickable': this.isCollapsible,
+        }"
         v-bind:id="'track-' + track.Id"
-        @click="toggleExpanded()"
+        @click="
+            if (this.isCollapsible) {
+                toggleExpanded();
+            }
+        "
     >
         <!-- Left side -->
         <div class="level-left">
@@ -72,7 +80,7 @@
                 />
             </nav>
             <!-- Expander -->
-            <div class="level-item">
+            <div v-if="this.isCollapsible" class="level-item">
                 <CollapsibleButton :modelValue="this.modelValue" />
             </div>
         </div>
@@ -136,6 +144,15 @@ export default defineComponent({
         isEditable: {
             type: Boolean,
             default: false,
+        },
+        /** Whether this component shows supports expand/collapse (using a button)
+         * If set to false, the component is always shown in the expanded state, without the toggling button.
+         * @devdoc Allows to reuse this component for more than one display mode.
+         */
+        isCollapsible: {
+            type: Boolean,
+            default: true,
+            required: false,
         },
     },
     emits: ['update:modelValue'],
