@@ -82,6 +82,8 @@ export default defineComponent({
          * @param url - The URL to load the file from
          */
         loadUrl(url: string): void {
+            console.debug('CompilationLoader::loadUrl:', url);
+
             this.$store.dispatch(ActionTypes.LOAD_FROM_URL, url);
         },
 
@@ -99,7 +101,9 @@ export default defineComponent({
     computed: {
         /** Provide the URL parameter from the route, if available */
         paramsUrl(): string | string[] {
+            console.debug('CompilationLoader::paramsUrl', this.$route);
             return this.$route?.params.url;
+            //TODO learn about routing first
         },
 
         hasRetrievableCompilation(): boolean {

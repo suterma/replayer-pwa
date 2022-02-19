@@ -22,12 +22,19 @@
 
     <h2 class="subtitle has-text-danger">API tests</h2>
     <div class="content">
-        <p>
-            //TODO this following URL should work (if CORS is disabled) and
-            download the media file, creating a track
-            http://localhost:8080/#/edit/https%3A%2F%2Fwww.christoffankhauser.ch%2Fapp%2Fdownload%2F15906779025%2FGwBl15_I%2520danke%2520Dir-Pb.mp3%3Ft%3D1496741278
-            Why does it not work?
-        </p>
+        <p>These API calls should work (if CORS is disabled)</p>
+        <ul>
+            <li>
+                Loading a media URL (downloading the media file, creating a
+                track):
+                <a
+                    href="http://localhost:8080/https%3A%2F%2Fwww.christoffankhauser.ch%2Fapp%2Fdownload%2F15906779025%2FGwBl15_I%2520danke%2520Dir-Pb.mp3%3Ft%3D1496741278"
+                >
+                    CF Media link
+                </a>
+                Why does it not work?
+            </li>
+        </ul>
     </div>
 
     <h2 class="subtitle has-text-danger">

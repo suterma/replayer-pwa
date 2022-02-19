@@ -77,6 +77,7 @@ export default defineComponent({
                 location.host +
                 location.pathname +
                 'demo-compilation-featuring-lidija-roos.rez';
+            console.debug('loadDemo:', url);
 
             this.$store.dispatch(ActionTypes.LOAD_FROM_URL, url);
         },
