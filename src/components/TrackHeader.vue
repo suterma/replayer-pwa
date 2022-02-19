@@ -1,6 +1,6 @@
 <template>
     <!-- Level, also on mobile 
-    @remarks The id is used to scroll to this item when it's becoming the active track-->
+     The id is used to scroll to this item when it's becoming the active track-->
     <nav
         :class="{
             level: true,
@@ -94,11 +94,7 @@ import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
 
-/** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
- * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
- * Details:
- * - The collapsed panel is not removed from the DOM because of issues with the $ref handling in conjunction with v-if
- * - However, the player's src property is only set when actually used to keep the memory footprint low.
+/** Displays a track header with a title.
  * @remarks Also handles the common replayer events for tracks
  */
 //TODO later remove the editable parts, once the TrackHeaderEdit is accepted as the edit control
