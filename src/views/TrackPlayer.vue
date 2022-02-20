@@ -3,36 +3,34 @@
         v-if="track"
         :track="track"
         :ref="'track-' + track.Id"
-        :isEditable="false"
-        :isCollapsible="false"
+        :displayMode="this.trackDisplayMode"
     ></Track>
 
     <template v-else>
-        <!-- Tracks to work with -->
-        <p>Available Track Ids</p>
-        <div class="content">
-            <ul>
-                <template v-for="track in tracks" :key="track.Id">
-                    <li>
-                        {{ track.Id }}
-                    </li>
-                </template>
-            </ul>
-        </div>
+        <p>No matching track is available.</p>
     </template>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ICompilation, ITrack } from '@/store/compilation-types';
+import {
+    ICompilation,
+    ITrack,
+    TrackDisplayMode,
+} from '@/store/compilation-types';
 import Track from '@/components/Track.vue';
 import CompilationHandler from '@/store/compilation-handler';
 
-/** A view for playback of a single track */
+/** A view for playback of a single track, expanded and not collapsible */
 export default defineComponent({
     name: 'TrackPlayer',
     components: {
         Track,
+    },
+    data() {
+        return {
+            trackDisplayMode: TrackDisplayMode.Play,
+        };
     },
     computed: {
         compilation(): ICompilation {
@@ -50,7 +48,8 @@ export default defineComponent({
 
         /** Gets the track, matching the id parameter */
         track(): ITrack | undefined {
-            const trackId = this.$route.params.id[0];
+            const trackId = this.$route.params.id as string;
+            console.debug('TrackPlayer::track:trackId', trackId);
             const track = CompilationHandler.getTrackById(
                 this.compilation,
                 trackId,

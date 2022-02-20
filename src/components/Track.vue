@@ -33,88 +33,10 @@
             :isActiveTrack="this.isActiveTrack"
             :isEditable="this.isEditable"
             :isCollapsible="this.isCollapsible"
+            :isLinkOnly="this.isLinkOnly"
         />
 
-        <slide-up-down
-            v-model="expanded"
-            :duration="250"
-            timingFunction="ease-out"
-        >
-            <!-- The audio player, but only once the source is available 
-            Note: The actual src property/attribute is also depending 
-            on the show state as a performance optimizations
-            -->
-            <template v-if="mediaObjectUrl">
-                <template v-if="this.getSettings.useHowlerJsAudioEngine">
-                    <TrackHowlerPlayer
-                        v-if="mediaObjectUrl"
-                        ref="playerReference"
-                        :title="trackFileUrl?.fileName"
-                        :src="optimizedMediaObjectUrl"
-                        @timeupdate="updateTime"
-                        @trackLoaded="calculateCueDurations"
-                        @trackPlaying="updatePlaying"
-                        @newCueTriggered="createNewCue"
-                    ></TrackHowlerPlayer>
-                </template>
-                <template v-else>
-                    <TrackAudioApiPlayer
-                        :isEditable="this.isEditable"
-                        v-if="mediaObjectUrl"
-                        ref="playerReference"
-                        :title="trackFileUrl?.fileName"
-                        :src="optimizedMediaObjectUrl"
-                        @timeupdate="updateTime"
-                        @trackLoaded="calculateCueDurations"
-                        @trackPlaying="updatePlaying"
-                        @newCueTriggered="createNewCue"
-                    ></TrackAudioApiPlayer>
-                </template>
-            </template>
-            <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
-            <template v-else>
-                <div class="field has-addons player-panel">
-                    <p class="control">
-                        <button class="button">
-                            <!-- empty, as a placeholder to have rounded edges -->
-                        </button>
-                    </p>
-                    <p
-                        class="control player-seekbar player-timeline player-time"
-                    >
-                        <span class="player-time-current">
-                            <span class="has-opacity-half"> Waiting for </span>
-                            <span class="is-italic">
-                                {{ track?.Url }}
-                            </span>
-                        </span>
-                    </p>
-                    <p class="control">
-                        <button class="button">
-                            <!-- empty, as a placeholder to have rounded edges -->
-                            <!-- //TODO later, here we could  have a file load or URL input element to fix the missing URL -->
-                        </button>
-                    </p>
-                </div>
-            </template>
-
-            <!-- The cue buttons (in play mode) -->
-            <template v-if="!this.isEditable">
-                <div class="buttons">
-                    <template v-for="cue in cues" :key="cue.Id">
-                        <CueButton
-                            :disabled="!mediaObjectUrl || !isTrackLoaded"
-                            :cue="cue"
-                            :isTrackPlaying="isPlaying"
-                            :currentSeconds="currentSeconds"
-                            @click="cueClick(cue)"
-                        />
-                    </template>
-                </div>
-            </template>
-        </slide-up-down>
-
-        <!-- The cue list (in edit mode, outside the slider, because of layouting problems when the height changes due to changing cue count ) -->
+        <!-- The cues as a list (in edit mode, outside the slider, because of layouting problems when the height changes due to changing cue count ) -->
         <template v-if="this.isEditable">
             <ul class="levels">
                 <template v-for="cue in cues" :key="cue.Id">
@@ -131,12 +53,95 @@
                 </template>
             </ul>
         </template>
+        <!-- The cues as buttons (in a slider, for a better overview-->
+        <template v-if="this.isCollapsible || this.isPlayable">
+            <slide-up-down
+                v-model="expanded"
+                :duration="250"
+                timingFunction="ease-out"
+            >
+                <!-- The audio player, but only once the source is available 
+            Note: The actual src property/attribute is also depending 
+            on the show state as a performance optimizations
+            -->
+                <template v-if="mediaObjectUrl">
+                    <template v-if="this.getSettings.useHowlerJsAudioEngine">
+                        <TrackHowlerPlayer
+                            v-if="mediaObjectUrl"
+                            ref="playerReference"
+                            :title="trackFileUrl?.fileName"
+                            :src="optimizedMediaObjectUrl"
+                            @timeupdate="updateTime"
+                            @trackLoaded="calculateCueDurations"
+                            @trackPlaying="updatePlaying"
+                            @newCueTriggered="createNewCue"
+                        ></TrackHowlerPlayer>
+                    </template>
+                    <template v-else>
+                        <TrackAudioApiPlayer
+                            :isEditable="this.isEditable"
+                            v-if="mediaObjectUrl"
+                            ref="playerReference"
+                            :title="trackFileUrl?.fileName"
+                            :src="optimizedMediaObjectUrl"
+                            @timeupdate="updateTime"
+                            @trackLoaded="calculateCueDurations"
+                            @trackPlaying="updatePlaying"
+                            @newCueTriggered="createNewCue"
+                        ></TrackAudioApiPlayer>
+                    </template>
+                </template>
+                <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
+                <template v-else>
+                    <div class="field has-addons player-panel">
+                        <p class="control">
+                            <button class="button">
+                                <!-- empty, as a placeholder to have rounded edges -->
+                            </button>
+                        </p>
+                        <p
+                            class="control player-seekbar player-timeline player-time"
+                        >
+                            <span class="player-time-current">
+                                <span class="has-opacity-half">
+                                    Waiting for
+                                </span>
+                                <span class="is-italic">
+                                    {{ track?.Url }}
+                                </span>
+                            </span>
+                        </p>
+                        <p class="control">
+                            <button class="button">
+                                <!-- empty, as a placeholder to have rounded edges -->
+                                <!-- //TODO later, here we could  have a file load or URL input element to fix the missing URL -->
+                            </button>
+                        </p>
+                    </div>
+                </template>
+
+                <!-- The cue buttons (in play mode) -->
+                <template v-if="!this.isEditable">
+                    <div class="buttons">
+                        <template v-for="cue in cues" :key="cue.Id">
+                            <CueButton
+                                :disabled="!mediaObjectUrl || !isTrackLoaded"
+                                :cue="cue"
+                                :isTrackPlaying="isPlaying"
+                                :currentSeconds="currentSeconds"
+                                @click="cueClick(cue)"
+                            />
+                        </template>
+                    </div>
+                </template>
+            </slide-up-down>
+        </template>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Track, ICue } from '@/store/compilation-types';
+import { Track, ICue, TrackDisplayMode } from '@/store/compilation-types';
 import CueButton from '@/components/CueButton.vue';
 import CueLevel from '@/components/CueLevel.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
@@ -178,22 +183,14 @@ export default defineComponent({
             type: Track,
             required: true,
         },
-        /** Whether this component show editable inputs for the contained data
-         * @devdoc Allows to reuse this component for more than one display mode.
+
+        /** The display mode of this track.
+         * @devdoc Allows to reuse this component for more than one DisplayMode.
+         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
          */
-        isEditable: {
-            type: Boolean,
-            default: false,
-            required: false,
-        },
-        /** Whether this component shows supports expand/collapse (using a button)
-         * If set to false, the component is always shown in the expanded state, without the toggling button.
-         * @devdoc Allows to reuse this component for more than one display mode.
-         */
-        isCollapsible: {
-            type: Boolean,
-            default: true,
-            required: false,
+        displayMode: {
+            type: String as () => TrackDisplayMode,
+            default: TrackDisplayMode.Collapsible,
         },
     },
     emits: ['update:expanded'],
@@ -211,10 +208,33 @@ export default defineComponent({
     },
     data() {
         return {
-            /** Whether this track tile is shown as expanded, with the player and the cue buttons displayed.
-             * @remarks True, when editable, otherwise depending on whether it is collapsible.
+            /** Whether this component shows editable inputs for the contained data
+             * @devdoc Allows to reuse this component for more than one display mode.
              */
-            expanded: this.isEditable || !this.isCollapsible,
+            isEditable: this.displayMode === TrackDisplayMode.Edit,
+
+            /** Whether this component shows non-collapsible playback buttons
+             * @devdoc Allows to reuse this component for more than one display mode.
+             */
+            isPlayable: this.displayMode === TrackDisplayMode.Play,
+
+            /** Whether this component supports expand/collapse (using a button)
+             * If set to false, the component is always shown in the expanded state, without the toggling button.
+             * @devdoc Allows to reuse this component for more than one display mode.
+             */
+            isCollapsible: this.displayMode === TrackDisplayMode.Collapsible,
+
+            /** Whether this component shows the tracks only with a link to the track detail
+             * @devdoc Allows to reuse this component for more than one display mode.
+             */
+            isLinkOnly: this.displayMode === TrackDisplayMode.Link,
+
+            /** Whether this track tile is shown as expanded, with the player and the cue buttons displayed.
+             * @remarks True, when editable or in play mode, otherwise depending on whether it is collapsed dynamically.
+             */
+            expanded:
+                this.displayMode === TrackDisplayMode.Edit ||
+                this.displayMode === TrackDisplayMode.Play,
             /** The playback progress in the current track, in [seconds]
              * @remarks This is used for track progress display within the set of cues
              */

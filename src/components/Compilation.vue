@@ -9,14 +9,14 @@
 
         <CompilationHeader
             :compilation="this.compilation"
-            :isEditable="this.isEditable"
+            :isEditable="isHeaderEditable"
         />
         <!-- Tracks to work with -->
         <template v-for="track in tracks" :key="track.Id">
             <Track
                 :track="track"
                 :ref="'track-' + track.Id"
-                :isEditable="this.isEditable"
+                :displayMode="this.tracksDisplayMode"
             />
         </template>
     </div>
@@ -25,7 +25,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import VueScrollTo from 'vue-scrollto';
-import { Compilation, ITrack, ICue } from '@/store/compilation-types';
+import {
+    Compilation,
+    ITrack,
+    ICue,
+    TrackDisplayMode,
+} from '@/store/compilation-types';
 import Track from '@/components/Track.vue';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
@@ -43,14 +48,24 @@ export default defineComponent({
     },
     props: {
         compilation: Compilation,
-        /** Whether this component show editable inputs for the contained data
+        /** The display mode of the contained tracks.
          * @devdoc Allows to reuse this component for more than one DisplayMode.
+         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
          */
-
-        isEditable: {
-            type: Boolean,
-            default: false,
+        tracksDisplayMode: {
+            type: String as () => TrackDisplayMode,
+            default: TrackDisplayMode.Collapsible,
+            required: false,
         },
+    },
+    data() {
+        return {
+            /** Whether the header component show editable inputs for the contained data
+             * @remarks For simplicity, the header is shown as editable, as long as the tracks are editable, too.
+             * @devdoc Allows to reuse this component for more than one display mode.
+             */
+            isHeaderEditable: this.tracksDisplayMode === TrackDisplayMode.Edit,
+        };
     },
     methods: {
         /** Visually scrolls to the given track, making it visually at the top of

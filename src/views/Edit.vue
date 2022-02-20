@@ -2,7 +2,7 @@
     <Compilation
         v-if="hasCompilation"
         :compilation="compilation"
-        :isEditable="this.isEditable"
+        :tracksDisplayMode="this.tracksDisplayMode"
         @update="onCompilationUpdate"
     />
 
@@ -32,7 +32,7 @@
 import { defineComponent } from 'vue';
 import Compilation from '@/components/Compilation.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
-import { ICompilation } from '@/store/compilation-types';
+import { ICompilation, TrackDisplayMode } from '@/store/compilation-types';
 import { ActionTypes } from '@/store/action-types';
 
 /** A view for playing an existing compilation */
@@ -47,8 +47,8 @@ export default defineComponent({
             /** Whether the media drop zone is displayed in the expanded state */
             isExpanded: true,
 
-            /** Whether the compilatio is shown as editable */
-            isEditable: true,
+            /** Whether the compilation is shown as editable */
+            tracksDisplayMode: TrackDisplayMode.Edit,
         };
     },
     mounted: function (): void {

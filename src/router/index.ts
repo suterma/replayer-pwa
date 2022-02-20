@@ -3,6 +3,7 @@ import Play from '../views/Play.vue';
 import TrackPlayer from '../views/TrackPlayer.vue';
 import Home from '../views/Home.vue';
 import Edit from '../views/Edit.vue';
+import List from '../views/List.vue';
 
 const routes: Array<RouteRecordRaw> = [
     //Always use the explicit edit route as default instead of the default "Home" root.
@@ -16,6 +17,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/play',
         name: 'Play',
         component: Play,
+    },
+    {
+        path: '/list',
+        name: 'List',
+        component: List,
     },
     {
         path: '/track-player/:id*',

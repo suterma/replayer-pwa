@@ -5,6 +5,18 @@ export enum CompilationType {
     XML = 'XML',
 }
 
+/** A display mode for tracks. Specifying this mode makes the track component reusable for different display modes. */
+export enum TrackDisplayMode {
+    /** Shown as fully expanded, not collapsible, and with editable inputs for the contained data */
+    Edit = 'edit',
+    /** Shown as fully expanded, not collapsible, optimized for playback */
+    Play = 'play',
+    /** Show as single line, usable for lists, with a link to a track detail view */
+    Link = 'link',
+    /** Show initially as fully expanded, but supporting expand/collapse (using a button) */
+    Collapsible = 'collapsible',
+}
+
 /** @interface Defines a Replayer Compilation, consisting of a set of tracks with their cuepoints.
  * @remarks This definition corresponds to the defitions in https://github.com/suterma/Replayer/blob/master/SOURCE/Replayer.Model/ICompilation.cs for the classic WinForms Replayer
  * @remarks The implemented type is advertised as the Type. Using this pattern saves the code from implementing a full blown plugin architecture.

@@ -14,10 +14,12 @@
             }
         "
     >
+        <!-- //TODO Consolidate normal and edt controls into one -->
         <!-- Left side -->
         <div class="level-left">
             <!-- Title -->
             <div class="level-item">
+                <!-- Display/Edit -->
                 <input
                     v-if="this.isEditable"
                     class="input subtitle is-4"
@@ -82,6 +84,17 @@
             <!-- Expander -->
             <div v-if="this.isCollapsible" class="level-item">
                 <CollapsibleButton :modelValue="this.modelValue" />
+            </div>
+            <!-- Forward navigation -->
+            <div v-if="this.isLinkOnly" class="level-item">
+                <!-- <ForwardLinkButton :href= /> -->
+                <router-link
+                    :to="{
+                        name: 'Track-Player',
+                        params: { id: this.track.Id },
+                    }"
+                    >Track-Player</router-link
+                >
             </div>
         </div>
     </nav>
@@ -149,6 +162,14 @@ export default defineComponent({
             type: Boolean,
             default: true,
             required: false,
+        },
+        /** Whether this component shows a link to a track detail only, instead of the collapse/expand function.
+         * @remarks Using this is mutually exclusive with the collapsible variant.
+         * @devdoc Allows to reuse this component for more than one DisplayMode.
+         */
+        isLinkOnly: {
+            type: Boolean,
+            default: false,
         },
     },
     emits: ['update:modelValue'],
