@@ -24,6 +24,7 @@ const routes: Array<RouteRecordRaw> = [
         component: List,
     },
     {
+        //HINT: The track player is not accessible from the menu
         path: '/track-player/:id*',
         name: 'Track-Player',
         component: TrackPlayer,
