@@ -17,6 +17,37 @@
         <!-- //TODO Consolidate normal and edt controls into one -->
         <!-- Left side -->
         <div class="level-left">
+            <!-- Back Link -->
+            <div
+                v-if="!this.isCollapsible && !this.isLinkOnly"
+                class="level-item"
+            >
+                <router-link
+                    :to="{
+                        name: 'List',
+                    }"
+                    :title="`Back to track track list`"
+                >
+                    <p class="control">
+                        <span class="button is-nav">
+                            <span class="icon">
+                                <i class="mdi mdi-24px">
+                                    <!-- Chevron left -->
+                                    <svg
+                                        style="width: 24px; height: 24px"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            fill="currentColor"
+                                            d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"
+                                        />
+                                    </svg>
+                                </i>
+                            </span>
+                        </span>
+                    </p>
+                </router-link>
+            </div>
             <!-- Title -->
             <div class="level-item">
                 <!-- Display/Edit -->
@@ -87,14 +118,32 @@
             </div>
             <!-- Forward navigation -->
             <div v-if="this.isLinkOnly" class="level-item">
-                <!-- <ForwardLinkButton :href= /> -->
                 <router-link
                     :to="{
                         name: 'Track-Player',
                         params: { id: this.track.Id },
                     }"
-                    >Track-Player</router-link
+                    :title="`Show track '${this.track.Name}'`"
                 >
+                    <p class="control">
+                        <span class="button is-nav">
+                            <span class="icon">
+                                <i class="mdi mdi-24px">
+                                    <!-- Chevron right -->
+                                    <svg
+                                        style="width: 24px; height: 24px"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            fill="currentColor"
+                                            d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"
+                                        />
+                                    </svg>
+                                </i>
+                            </span>
+                        </span>
+                    </p>
+                </router-link>
             </div>
         </div>
     </nav>
