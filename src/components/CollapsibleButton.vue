@@ -8,23 +8,12 @@
         :title="titleText"
     >
         <!-- Collapsed/Expanded -->
-        <span
+        <ChevronDownIcon
             :class="{
-                icon: true,
                 rotate: true,
                 down: this.modelValue,
             }"
-        >
-            <i class="mdi mdi-24px">
-                <!-- A chevron down icon -->
-                <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-                    <path
-                        fill="currentColor"
-                        d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"
-                    />
-                </svg>
-            </i>
-        </span>
+        />
         <span v-if="this.modelValue" class=""> {{ this.expandedText }}</span>
         <span v-else class=""> {{ this.collapsedText }} </span>
     </button>
@@ -32,13 +21,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import ChevronDownIcon from '@/components/icons/ChevronDownIcon.vue';
 
 /** A button to select the collapsed or expanded state
  */
 export default defineComponent({
     name: 'CollapsibleButton',
     emits: ['update:modelValue'],
-    components: {},
+    components: { ChevronDownIcon },
     props: {
         /** Whether this represents the expanded state. */
         modelValue: {

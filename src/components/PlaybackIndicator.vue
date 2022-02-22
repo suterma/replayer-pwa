@@ -1,35 +1,27 @@
 <template>
     <p class="control">
         <span class="button is-indicator">
-            <span
+            <PlaybackIndicatorIcon
                 :class="{
-                    icon: true,
                     'has-text-success': this.isPlaying,
                     'has-text-grey-dark': this.isReady,
                     'is-invisible': this.isUnloaded,
                 }"
             >
-                <i class="mdi mdi-24px">
-                    <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
-                        <path
-                            fill="currentColor"
-                            d="M19,12C19,15.86 15.86,19 12,19C8.14,19 5,15.86 5,12C5,8.14 8.14,5 12,5C15.86,5 19,8.14 19,12Z"
-                        />
-                    </svg>
-                </i>
-            </span>
+            </PlaybackIndicatorIcon>
         </span>
     </p>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import PlaybackIndicatorIcon from '@/components/icons/PlaybackIndicatorIcon.vue';
 
 /** An indicator for the track playback state
  */
 export default defineComponent({
     name: 'PlaybackIndicator',
-    components: {},
+    components: { PlaybackIndicatorIcon },
     props: {
         /** Whether the indicator should convey the playing state */
         isPlaying: {
