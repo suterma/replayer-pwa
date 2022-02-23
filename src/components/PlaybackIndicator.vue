@@ -1,27 +1,27 @@
 <template>
     <p class="control">
         <span class="button is-indicator">
-            <PlaybackIndicatorIcon
+            <Icon
+                name="indicator"
                 :class="{
                     'has-text-success': this.isPlaying,
                     'has-text-grey-dark': this.isReady,
                     'is-invisible': this.isUnloaded,
                 }"
-            >
-            </PlaybackIndicatorIcon>
+            />
         </span>
     </p>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import PlaybackIndicatorIcon from '@/components/icons/PlaybackIndicatorIcon.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 /** An indicator for the track playback state
  */
 export default defineComponent({
     name: 'PlaybackIndicator',
-    components: { PlaybackIndicatorIcon },
+    components: { Icon },
     props: {
         /** Whether the indicator should convey the playing state */
         isPlaying: {

@@ -113,20 +113,7 @@
                 <div class="field">
                     <p class="control" title="Trash this cue">
                         <button class="button" @click="deleteCue()">
-                            <!-- Trash -->
-                            <span class="icon">
-                                <i class="mdi mdi-24px">
-                                    <svg
-                                        style="width: 24px; height: 24px"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            fill="currentColor"
-                                            d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"
-                                        />
-                                    </svg>
-                                </i>
-                            </span>
+                            <Icon name="trash" />
                         </button>
                     </p>
                 </div>
@@ -141,13 +128,14 @@ import { Cue } from '@/store/compilation-types';
 import { ActionTypes } from '@/store/action-types';
 import CompilationHandler from '@/store/compilation-handler';
 import CueButton from '@/components/CueButton.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
  */
 export default defineComponent({
     name: 'CueLevel',
-    components: { CueButton },
+    components: { CueButton, Icon },
     emits: ['click', 'play'],
     props: {
         cue: {

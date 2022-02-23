@@ -24,8 +24,8 @@
             ></span>
             <!-- first line (Do not use a level here, this has only complicated things for smaller widths so far)-->
             <!-- PLAY/Skip-Next -->
-            <PlayIcon v-if="!isTrackPlaying" class="foreground" />
-            <SkipNextIcon v-else class="foreground" />
+            <Icon name="play" v-if="!isTrackPlaying" class="foreground" />
+            <Icon name="skip-next" v-else class="foreground" />
 
             <template v-if="!isMinified">
                 &nbsp;
@@ -71,8 +71,7 @@
 import { defineComponent } from 'vue';
 import { Cue } from '@/store/compilation-types';
 import CompilationHandler from '@/store/compilation-handler';
-import PlayIcon from '@/components/icons/PlayIcon.vue';
-import SkipNextIcon from '@/components/icons/SkipNextIcon.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
@@ -80,7 +79,7 @@ import SkipNextIcon from '@/components/icons/SkipNextIcon.vue';
  */
 export default defineComponent({
     name: 'CueButton',
-    components: { SkipNextIcon, PlayIcon },
+    components: { Icon },
     props: {
         cue: {
             type: Cue,
