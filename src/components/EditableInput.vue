@@ -29,13 +29,13 @@
         <NavButton
             v-if="editMode"
             @click="toggleEditMode()"
-            iconPathData="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"
+            iconName="checkmark"
             title="Click to accept"
         />
         <NavButton
             v-else
             @click="toggleEditMode()"
-            iconPathData="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
+            iconName="pencil"
             title="Click to edit"
         />
     </div>

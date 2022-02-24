@@ -1,6 +1,6 @@
 <template>
     <button class="button is-nav" :title="title" tabindex="0">
-        <Icon :d="iconPathData" />
+        <Icon :name="this.iconName" />
     </button>
 </template>
 
@@ -8,10 +8,10 @@
 import { defineComponent } from 'vue';
 import Icon from '@/components/icons/Icon.vue';
 
-/** A button for navigational purposes
+/** A button for navigational purposes, featuring an optional  icon
  * @remarks This button is intended for non-actional buttons like menu togglers, edit togglers etc.
  * These are buttons that do not effectively change the data, but serve a more navigational purpose.
- * The are styled distinctivel, without border and just a slight hover indication.
+ * The are styled distinctively, without border and just a slight hover indication.
  */
 export default defineComponent({
     name: 'NavButton',
@@ -23,8 +23,8 @@ export default defineComponent({
             default: '',
         },
 
-        /** The icon path data for the icon to draw, if any */
-        iconPathData: {
+        /** The icon name, if any */
+        iconName: {
             type: String,
             default: '',
         },
