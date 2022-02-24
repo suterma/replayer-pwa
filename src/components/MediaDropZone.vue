@@ -29,23 +29,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                 />
 
                 <label for="assetsFieldHandle" class="is-clickable">
-                    <span
-                        :class="{
-                            icon: true,
-                        }"
-                    >
-                        <i class="mdi mdi-24px">
-                            <svg
-                                style="width: 24px; height: 24px"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
-                                />
-                            </svg>
-                        </i>
-                    </span>
+                    <Icon name="plus" />
                     <span> Click or drop to load file(s) </span>
                 </label>
             </div>
@@ -63,19 +47,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                         title="Expand media drop zone"
                         @click="expand"
                     >
-                        <span class="icon">
-                            <i class="mdi mdi-24px">
-                                <svg
-                                    style="width: 24px; height: 24px"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        fill="currentColor"
-                                        d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
-                                    />
-                                </svg>
-                            </i>
-                        </span>
+                        <Icon name="plus" />
                     </button>
                 </nav>
             </div>
@@ -162,13 +134,14 @@ import { ICue, Track } from '@/store/compilation-types';
 import { MutationTypes } from '@/store/mutation-types';
 import { v4 as uuidv4 } from 'uuid';
 import FileHandler from '@/store/filehandler';
+import Icon from '@/components/icons/Icon.vue';
 
 /** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
  * @remarks Supports collapsing the control after load, to keep the user more focused
  */
 export default defineComponent({
     name: 'MediaDropZone',
-    components: {},
+    components: { Icon },
     props: {
         /** Whether to show the zone in the expanded state */
         isExpanded: {

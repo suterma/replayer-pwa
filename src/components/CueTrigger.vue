@@ -36,27 +36,8 @@
                 @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
             >
-                <!-- PLAY/PAUSE -->
-                <span class="icon">
-                    <i class="mdi mdi-24px">
-                        <svg
-                            style="width: 24px; height: 24px"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                v-if="!playing"
-                                fill="currentColor"
-                                d="M8,5.14V19.14L19,12.14L8,5.14Z"
-                            />
-
-                            <path
-                                v-else
-                                fill="currentColor"
-                                d="M14,19H18V5H14M6,19H10V5H6V19Z"
-                            />
-                        </svg>
-                    </i>
-                </span>
+                <Icon v-if="playing" name="plause" />
+                <Icon v-else name="play" />
             </button>
         </p>
         <!-- The seek bar -->
@@ -93,19 +74,7 @@
                 @click.prevent="this.$emit('newCueTriggered')"
                 title="Create a cue now (at the current position)!"
             >
-                <span class="icon">
-                    <i class="mdi mdi-24px">
-                        <svg
-                            style="width: 24px; height: 24px"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                fill="currentColor"
-                                d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"
-                            />
-                        </svg>
-                    </i>
-                </span>
+                <Icon name="plus" />
                 <span> Create Cue!</span>
             </button>
         </p>

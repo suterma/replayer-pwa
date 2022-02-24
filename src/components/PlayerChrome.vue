@@ -32,17 +32,7 @@
                 @click.prevent="stop"
                 title="Stop"
             >
-                <!-- STOP -->
-                <span class="icon">
-                    <i class="mdi mdi-24px">
-                        <svg
-                            style="width: 24px; height: 24px"
-                            viewBox="0 0 24 24"
-                        >
-                            <path fill="currentColor" d="M18,18H6V6H18V18Z" />
-                        </svg>
-                    </i>
-                </span>
+                <Icon name="stop" />
             </button>
         </p>
         <!-- Play/Pause, when STOP is shown (Only available when the track is loaded, and no playback request is outstanding) -->
@@ -57,28 +47,8 @@
                 @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
             >
-                <!-- PLAY/PAUSE -->
-                <span class="icon">
-                    <i class="mdi mdi-24px">
-                        <svg
-                            style="width: 24px; height: 24px"
-                            viewBox="0 0 24 24"
-                        >
-                            <!-- play -->
-                            <path
-                                v-if="!playing"
-                                fill="currentColor"
-                                d="M8,5.14V19.14L19,12.14L8,5.14Z"
-                            />
-                            <!-- pause -->
-                            <path
-                                v-else
-                                fill="currentColor"
-                                d="M14,19H18V5H14M6,19H10V5H6V19Z"
-                            />
-                        </svg>
-                    </i>
-                </span>
+                <Icon v-if="playing" name="plause" />
+                <Icon v-else name="play" />
             </button>
         </p>
         <!-- Play/Pause, as the outermost element, when STOP is hidden (Only available when the track is loaded, and no playback request is outstanding) -->
@@ -94,27 +64,8 @@
                 @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
             >
-                <!-- PLAY/PAUSE -->
-                <span class="icon">
-                    <i class="mdi mdi-24px">
-                        <svg
-                            style="width: 24px; height: 24px"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                v-if="!playing"
-                                fill="currentColor"
-                                d="M8,5.14V19.14L19,12.14L8,5.14Z"
-                            />
-
-                            <path
-                                v-else
-                                fill="currentColor"
-                                d="M14,19H18V5H14M6,19H10V5H6V19Z"
-                            />
-                        </svg>
-                    </i>
-                </span>
+                <Icon v-if="playing" name="plause" />
+                <Icon v-else name="play" />
             </button>
         </p>
         <!-- The seek bar -->
@@ -153,20 +104,7 @@
                 @click.prevent="download"
                 title="Download"
             >
-                <!-- DOWNLOAD -->
-                <span class="icon">
-                    <i class="mdi mdi-24px">
-                        <svg
-                            style="width: 24px; height: 24px"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                fill="currentColor"
-                                d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"
-                            />
-                        </svg>
-                    </i>
-                </span>
+                <Icon name="download" />
             </button>
         </p>
         <!-- Mute (do not show on small devices, user still can use the volume) -->
@@ -179,26 +117,8 @@
                 @click.prevent="toggleMuted"
                 title="Mute"
             >
-                <!-- MUTE -->
-                <span class="icon">
-                    <i class="mdi mdi-24px">
-                        <svg
-                            style="width: 24px; height: 24px"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                v-if="!muted"
-                                fill="currentColor"
-                                d="M7,9V15H11L16,20V4L11,9H7Z"
-                            />
-                            <path
-                                v-else
-                                fill="currentColor"
-                                d="M5.64,3.64L21.36,19.36L19.95,20.78L16,16.83V20L11,15H7V9H8.17L4.22,5.05L5.64,3.64M16,4V11.17L12.41,7.58L16,4Z"
-                            />
-                        </svg>
-                    </i>
-                </span>
+                <Icon v-if="!muted" name="unmuted" />
+                <Icon v-else name="muted" />
             </button>
         </p>
         <!-- Volume (do not show on small devices, user still can use the device volume) -->
@@ -221,20 +141,7 @@
                 @mouseleave="showVolume = false"
                 :title="volumeTitle"
             >
-                <!-- VOLUME -->
-                <span class="icon">
-                    <i class="mdi mdi-24px">
-                        <svg
-                            style="width: 24px; height: 24px"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                fill="currentColor"
-                                d="M 18,18 H 6 C 18,6 6,18 18,6 Z"
-                            />
-                        </svg>
-                    </i>
-                </span>
+                <Icon name="volume" />
                 <input
                     :value="this.volume"
                     v-if="showVolume"
@@ -259,26 +166,8 @@
                 title="Loop"
             >
                 <!-- LOOP -->
-                <!-- //TODO See also "looping once" icon -->
-                <span class="icon">
-                    <i class="mdi mdi-24px">
-                        <svg
-                            style="width: 24px; height: 24px"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                v-if="!looping"
-                                fill="currentColor"
-                                d="m 7,17 h 10 v -3 l 4,4 -4,4 V 19 H 5 v -6 h 2"
-                            />
-                            <path
-                                v-else
-                                fill="currentColor"
-                                d="M17,17H7V14L3,18L7,22V19H19V13H17M7,7H17V10L21,6L17,2V5H5V11H7V7Z"
-                            />
-                        </svg>
-                    </i>
-                </span>
+                <Icon v-if="!looping" name="loop-none" />
+                <Icon v-else name="loop-track" />
             </button>
         </p>
     </div>

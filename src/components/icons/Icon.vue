@@ -13,17 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-
-export enum IconName {
-    Heart = 'heart',
-    ChevronDown = 'chevron-down',
-    Indicator = 'indicator',
-    Play = 'play',
-    SkiptNext = 'skip-next',
-    Trash = 'trash',
-    Empty = 'empty',
-}
+import { defineComponent } from 'vue';
 
 /** An icon
  * @remarks This component provides a finite set of icons to the replayer app
@@ -35,8 +25,8 @@ export default defineComponent({
     props: {
         /** The icon name, according to icons.json */
         name: {
-            type: String as PropType<IconName>,
-            default: IconName.Heart,
+            type: String,
+            default: 'heart',
         },
     },
     methods: {
@@ -60,9 +50,20 @@ export default defineComponent({
                     'M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z',
                 'chevron-left':
                     'M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z',
+
+                'loop-none': 'm 7,17 h 10 v -3 l 4,4 -4,4 V 19 H 5 v -6 h 2',
+                'loop-track':
+                    'M17,17H7V14L3,18L7,22V19H19V13H17M7,7H17V10L21,6L17,2V5H5V11H7V7Z',
+                volume: 'M 18,18 H 6 C 18,6 6,18 18,6 Z',
+                unmuted: 'M7,9V15H11L16,20V4L11,9H7Z',
+                muted: 'M5.64,3.64L21.36,19.36L19.95,20.78L16,16.83V20L11,15H7V9H8.17L4.22,5.05L5.64,3.64M16,4V11.17L12.41,7.58L16,4Z',
+                download: 'M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z',
+                pause: 'M14,19H18V5H14M6,19H10V5H6V19Z',
+                stop: 'M18,18H6V6H18V18Z',
+                plus: 'M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z',
             };
 
-            const icon = (str: IconName) => ICON_MAP[str] || '';
+            const icon = (name: string) => ICON_MAP[name] || '';
             return icon(this.name);
         },
     },
