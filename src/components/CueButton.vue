@@ -33,7 +33,7 @@
                 }}</span>
 
                 <br />
-                <!-- second line (use a horizontal level also on mobile. This keeps text evert)-->
+                <!-- second line (use a horizontal level also on mobile)-->
                 <span class="level is-mobile">
                     <!-- Left side -->
                     <div class="level-left">
@@ -142,7 +142,7 @@ export default defineComponent({
         /** Returns the progress as width style, for use as a css style set, dynamically depending on the actual progress in the cue duration
          * @devdoc max-width makes sure, the progress bar never overflows the given space.
          */
-        progressStyle(): any {
+        progressStyle(): Record<string, unknown> {
             if (this.percentComplete !== null) {
                 if (this.percentComplete >= 0 && this.percentComplete <= 100) {
                     //show the progress according to the percentage available
@@ -152,7 +152,7 @@ export default defineComponent({
                         'max-width': '100%',
                     };
                 } else {
-                    return '';
+                    return {};
                 }
             } else {
                 //percentage is undefined, thus hide the progress
@@ -165,15 +165,13 @@ export default defineComponent({
          * @remarks Omits the hour part, if not appliccable
          */
         cueDisplayTime(): string {
-            const seconds = this.cue.Time;
-            return CompilationHandler.convertToDisplayTime(seconds);
+            return CompilationHandler.convertToDisplayTime(this.cue.Time);
         },
         /** Converts the cue's duration into a conveniently displayable hh:mm:ss.s format.
          * @remarks Omits the hour part, if not appliccable
          */
         cueDurationDisplayTime(): string {
-            const duration = this.cue.Duration;
-            return CompilationHandler.convertToDisplayTime(duration);
+            return CompilationHandler.convertToDisplayTime(this.cue.Duration);
         },
         /** Determines whether this cue is currently selected
          * @remarks Note: only one cue in a compilation may be selected */
