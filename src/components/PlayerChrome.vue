@@ -2,28 +2,12 @@
     <div class="field has-addons player-panel" v-if="!this.loaded">
         <p class="control">
             <button class="button">
-                <!-- empty -->
-                <span class="icon">
-                    <i class="mdi mdi-24px">
-                        <svg
-                            style="width: 24px; height: 24px"
-                            viewBox="0 0 24 24"
-                        ></svg>
-                    </i>
-                </span>
+                <Icon name="empty" />
             </button>
         </p>
         <p class="control">
             <button class="button is-loading">
-                <!-- loading -->
-                <span class="icon">
-                    <i class="mdi mdi-24px">
-                        <svg
-                            style="width: 24px; height: 24px"
-                            viewBox="0 0 24 24"
-                        ></svg>
-                    </i>
-                </span>
+                <Icon name="empty" />
             </button>
         </p>
         <!-- An empty player with a seekbar/timeline as placeholder -->
@@ -303,13 +287,14 @@
 <script lang="ts">
 import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent } from 'vue';
+import Icon from '@/components/icons/Icon.vue';
 
 /** A UI representation for a media player
  * @remarks Handles and emits various states and event for playback control.
  */
 export default defineComponent({
     name: 'PlayerChrome',
-    components: {},
+    components: { Icon },
     emits: [
         'stop',
         /** Flags, whether the UI represents the playing (true) or the paused (false) state
