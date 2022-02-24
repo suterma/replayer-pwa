@@ -10709,6 +10709,16 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   padding-right: 5px;
 }
 
+/** Allows to show elements in front of the player-progress background span
+   * @devdoc Otherwise, due to unknown reasons, these elements would be shown behind the progress shade, regardless of that they are defined after the progress shade.
+   */
+.player-timeline .foreground {
+  /* //TODO maybe use a similar css directly on the the audio player progress to have the progress bar behind the text there, too */
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
 .player-volume {
   display: inline-block;
   height: 1.1rem;
@@ -10733,9 +10743,9 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   margin-right: -1px;
 }
 
-/* When playing, overrides the non-playing default background */
+/* When playing, indicate by this changing style */
 .player-playing-indication {
-  background-color: #205420;
+  color: #62c462;
 }
 
 /* Menu styles */

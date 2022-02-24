@@ -47,7 +47,7 @@
                 @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
             >
-                <Icon v-if="playing" name="plause" />
+                <Icon v-if="playing" name="pause" />
                 <Icon v-else name="play" />
             </button>
         </p>
@@ -64,7 +64,7 @@
                 @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
             >
-                <Icon v-if="playing" name="plause" />
+                <Icon v-if="playing" name="pause" />
                 <Icon v-else name="play" />
             </button>
         </p>
@@ -72,7 +72,6 @@
         <div
             :class="{
                 'player-seekbar': true,
-                'player-playing-indication': playing,
             }"
         >
             <div class="player-timeline">
@@ -82,15 +81,16 @@
                     class="player-seeker"
                     title="Seek"
                 ></div>
-                <div class="player-time">
-                    <div class="player-time-current is-unselectable">
+                <div class="player-time is-unselectable foreground">
+                    <div
+                        :class="{
+                            'player-time-current': true,
+                            'player-playing-indication': playing,
+                        }"
+                    >
                         {{ currentDisplayTime }}
-                        &nbsp;
-                        <span :class="{ 'is-invisible': !this.isFading }">
-                            (fading...)</span
-                        >
                     </div>
-                    <div class="player-time-total is-unselectable">
+                    <div class="player-time-total is-unselectable foreground">
                         {{ durationDisplayTime }}
                     </div>
                 </div>

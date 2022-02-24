@@ -210,14 +210,14 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-/* //TODO later put these into a scss file for player and progress */
+/* Button progress-styles, in addition to player progress styles, that support also full/none progress specifically */
 .player-timeline .player-progress {
     /* Progress shade to appear inside button area (creates outlined style)  */
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
 }
 
-/** The current position has already fully passed this cue (including it's duration) */
+/** The current position has already fully passed this cue button (including it's duration) */
 .player-timeline .player-progress.player-progress-full {
     /* 100% Progress shade to appear inside button area (creates outlined style)  */
     border-top-right-radius: 3px;
@@ -226,13 +226,13 @@ export default defineComponent({
     width: 100%;
 }
 
-/** The current position has already fully passed this cue (with addons assumed at the right side, thus omit the radius) */
+/** The current position has already fully passed this cue button (with addons assumed at the right side, thus omit the radius) */
 .player-timeline .player-progress.player-progress-full.has-addons-right {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 
-/** The current position has not yet reached this cue */
+/** The current position has not yet reached this cue button */
 .player-timeline .player-progress.player-progress-none {
     border-right: none;
     width: 0;
@@ -241,15 +241,6 @@ export default defineComponent({
 .player-timeline {
     /** dont use a relative position */
     position: unset;
-}
-
-/** Allows to show elements in front of the player-progress background span
-   * @devdoc Otherwise, due to unknown reasons, these elements would be shown behind the progress shade, regardless of that they are defined after the progress shade.
-   */
-.player-timeline .foreground {
-    /* //TODO maybe use a similar css directly on the the audio player progress to have the progress bar behind the text there, too */
-    position: relative;
-    z-index: 2;
 }
 
 /** A standard-sized cue button only should have a small left/right padding, to save real estate and to look better */

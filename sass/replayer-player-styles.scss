@@ -9,7 +9,8 @@
 $player-progress-color: $green; //from BULMA-Swatch theme
 $player-timeline-color: $button-background-color; //from BULMA-Swatch theme: same as other button's background, to get a consistent "player bar"
 /* The playing color should be non-distracting, but be strong enough to visually indicate the playing state*/
-$player-playing-color: darken($green, 35%);
+$player-playing-color: $success;
+//$player-playing-color: darken($green, 35%);
 // $player-playing-color: lighten($green, 35%);
 // $player-playing-color: $green;
 
@@ -39,8 +40,8 @@ $player-playing-color: darken($green, 35%);
         background-color: rgba(0, 0, 0, 0.33);
         border-right-width: 0.3em;
         border-right-style: solid;
+        //red instead of: $button-color; border-right-color: darken($danger, 14%);
         border-right-color: $button-color;
-
         z-index: 1;
     }
 
@@ -69,6 +70,17 @@ $player-playing-color: darken($green, 35%);
     }
 }
 
+/** Allows to show elements in front of the player-progress background span
+   * @devdoc Otherwise, due to unknown reasons, these elements would be shown behind the progress shade, regardless of that they are defined after the progress shade.
+   */
+.player-timeline .foreground {
+    /* //TODO maybe use a similar css directly on the the audio player progress to have the progress bar behind the text there, too */
+    position: relative;
+    z-index: 2;
+    // However in the foreground, these display elements should not capture click events
+    pointer-events: none;
+}
+
 .player-volume {
     display: inline-block;
     height: 1.1rem;
@@ -95,7 +107,8 @@ $player-playing-color: darken($green, 35%);
     margin-right: -1px;
 }
 
-/* When playing, overrides the non-playing default background */
+/* When playing, indicate by this changing style */
 .player-playing-indication {
-    background-color: $player-playing-color;
+    //background-color: $player-playing-color;
+    color: $player-playing-color;
 }
