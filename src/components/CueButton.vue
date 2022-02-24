@@ -23,7 +23,6 @@
                 :style="progressStyle"
             ></span>
             <!-- first line (Do not use a level here, this has only complicated things for smaller widths so far)-->
-            <!-- PLAY/Skip-Next -->
             <Icon name="play" v-if="!isTrackPlaying" class="foreground" />
             <Icon name="skip-next" v-else class="foreground" />
 

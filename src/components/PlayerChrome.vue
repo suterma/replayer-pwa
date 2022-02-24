@@ -165,7 +165,6 @@
                 @click.prevent="toggleLooping"
                 title="Loop"
             >
-                <!-- LOOP -->
                 <Icon v-if="!looping" name="loop-none" />
                 <Icon v-else name="loop-track" />
             </button>
