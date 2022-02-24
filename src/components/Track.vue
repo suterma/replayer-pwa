@@ -132,7 +132,6 @@
                 </ul>
             </template>
         </slide-up-down>
-        <!-- </template> -->
     </div>
 </template>
 
