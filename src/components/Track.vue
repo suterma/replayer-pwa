@@ -41,7 +41,7 @@
             v-model="expanded"
             :duration="250"
             timingFunction="linear"
-            :responsive="Boolean.True"
+            :responsive="true"
         >
             <!-- The audio player, but only once the source is available 
             Note: The actual src property/attribute is also depending 
