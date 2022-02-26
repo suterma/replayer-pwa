@@ -2,7 +2,7 @@
     <div v-bind:id="'track-' + track.Id">
         <!-- Level, also on mobile 
      @remarks The id is used to scroll to this item when it's becoming the active track-->
-        <div class="level">
+        <div class="level is-mobile">
             <!-- Left side -->
             <div class="level-left">
                 <!-- Title -->
@@ -65,19 +65,17 @@
                         </p>
                     </div>
                 </div>
-                <!-- URL -->
-                <div class="level-item" :title="'URL: ' + trackData.Url">
-                    <p class="control">
+            </div>
+            <!-- Right side -->
+            <div class="level-right">
+                <nav class="level-item">
+                    <!-- URL -->
+                    <p class="control" :title="'URL: ' + trackData.Url">
                         <span class="button is-indicator">
                             <Icon name="world" class="has-opacity-half" />
                         </span>
                     </p>
-                </div>
-            </div>
-            <!-- Right side -->
-            <div class="level-right">
-                <!-- Playback indicator -->
-                <nav class="level-item">
+
                     <PlaybackIndicator
                         :is-ready="!this.isPlaying && this.isTrackLoaded"
                         :is-playing="this.isPlaying"
