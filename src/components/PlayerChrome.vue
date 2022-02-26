@@ -42,7 +42,9 @@
                     button: true,
                     disabled: this.isPlayingRequestOutstanding || !this.loaded,
                     'is-loading':
-                        this.isPlayingRequestOutstanding || !this.loaded,
+                        this.isPlayingRequestOutstanding ||
+                        !this.loaded ||
+                        this.isFading,
                 }"
                 @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
@@ -58,7 +60,9 @@
                     button: true,
                     disabled: this.isPlayingRequestOutstanding || !this.loaded,
                     'is-loading':
-                        this.isPlayingRequestOutstanding || !this.loaded,
+                        this.isPlayingRequestOutstanding ||
+                        !this.loaded ||
+                        this.isFading,
                     'has-left-radius': true,
                 }"
                 @click.prevent="togglePlayback"
@@ -88,7 +92,8 @@
                             'player-playing-indication': playing,
                         }"
                     >
-                        {{ currentDisplayTime }}
+                        <span>{{ currentDisplayTime }}</span>
+                        <span v-if="this.isFading"> (fading...) </span>
                     </div>
                     <div class="player-time-total is-unselectable foreground">
                         {{ durationDisplayTime }}
@@ -195,11 +200,11 @@ export default defineComponent({
         'seek',
         'download',
         'mute',
-        /** Emitted, when the represents the playing state
+        /** Emitted, when this represents the playing state
          * @remarks This is emitted in conjunction with the 'update:playing' event
          */
         'play',
-        /** Emitted, when the represents the paused state
+        /** Emitted, when this represents the paused state
          * @remarks This is emitted in conjunction with the 'update:playing' event
          */
         'pause',
@@ -323,6 +328,7 @@ export default defineComponent({
             this.$emit('seek', seekTime);
         },
         stop() {
+            console.debug(`PlayerChrome(${this.title})::stop`);
             this.$emit('stop');
         },
         togglePlayback() {

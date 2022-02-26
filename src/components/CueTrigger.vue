@@ -31,7 +31,9 @@
                     button: true,
                     disabled: this.isPlayingRequestOutstanding || !this.loaded,
                     'is-loading':
-                        this.isPlayingRequestOutstanding || !this.loaded,
+                        this.isPlayingRequestOutstanding ||
+                        !this.loaded ||
+                        this.isFading,
                 }"
                 @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
@@ -60,7 +62,8 @@
                             'player-playing-indication': playing,
                         }"
                     >
-                        {{ currentDisplayTime }}
+                        <span>{{ currentDisplayTime }}</span>
+                        <span v-if="this.isFading"> (fading...) </span>
                     </div>
                     <div class="player-time-total is-unselectable foreground">
                         {{ durationDisplayTime }}
@@ -119,6 +122,13 @@ export default defineComponent({
          * @remarks Controls the display of the player, to hint the track availability
          */
         loaded: {
+            type: Boolean,
+            default: false,
+        },
+        /** Whether the sound is currently fading
+         * @remarks Controls the display of the player, to hint the fading action
+         */
+        isFading: {
             type: Boolean,
             default: false,
         },
