@@ -6,11 +6,15 @@
                 'player-playing-indication': this.isPlaying,
             }"
         >
-            <span>{{ currentDisplayTime }}</span>
-            <span v-if="this.isFading"> (fading...) </span>
+            <span class="is-hidden-mobile">{{ currentDisplayTime }}</span>
+            <span class="is-hidden-tablet">{{ currentDisplayTimeShort }}</span>
+            <span class="is-hidden-mobile" v-if="this.isFading">
+                (fading...)
+            </span>
         </div>
-        <div class="player-time-total is-unselectable foreground">
-            {{ durationDisplayTime }}
+        <div class="player-time-total">
+            <span class="is-hidden-mobile">{{ durationDisplayTime }}</span>
+            <span class="is-hidden-tablet">{{ durationDisplayTimeShort }}</span>
         </div>
     </div>
 </template>
@@ -63,6 +67,18 @@ export default defineComponent({
          */
         durationDisplayTime(): string {
             return CompilationHandler.convertToDisplayTime(this.duration);
+        },
+        /** Converts the current time into a conveniently displayable format.
+         * @remarks Omits the hour part, if not appliccable
+         */
+        currentDisplayTimeShort(): string {
+            return CompilationHandler.convertToDisplayTime(this.position, 1);
+        },
+        /** Converts the track duration into a conveniently displayable format.
+         * @remarks Omits the hour part, if not appliccable
+         */
+        durationDisplayTimeShort(): string {
+            return CompilationHandler.convertToDisplayTime(this.duration, 1);
         },
     },
     methods: {},
