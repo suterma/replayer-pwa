@@ -85,20 +85,12 @@
                     class="player-seeker"
                     title="Seek"
                 ></div>
-                <div class="player-time is-unselectable foreground">
-                    <div
-                        :class="{
-                            'player-time-current': true,
-                            'player-playing-indication': playing,
-                        }"
-                    >
-                        <span>{{ currentDisplayTime }}</span>
-                        <span v-if="this.isFading"> (fading...) </span>
-                    </div>
-                    <div class="player-time-total is-unselectable foreground">
-                        {{ durationDisplayTime }}
-                    </div>
-                </div>
+                <PlayerTime
+                    :isFading="this.isFading"
+                    :isPlaying="this.playing"
+                    :duration="this.durationSeconds"
+                    :position="this.currentSeconds"
+                />
             </div>
         </div>
         <!-- Download (do not show on small devices) -->
@@ -181,13 +173,14 @@
 import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent } from 'vue';
 import Icon from '@/components/icons/Icon.vue';
+import PlayerTime from '@/components/PlayerTime.vue';
 
 /** A UI representation for a media player
  * @remarks Handles and emits various states and event for playback control.
  */
 export default defineComponent({
     name: 'PlayerChrome',
-    components: { Icon },
+    components: { Icon, PlayerTime },
     emits: [
         'stop',
         /** Flags, whether the UI represents the playing (true) or the paused (false) state

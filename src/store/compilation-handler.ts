@@ -96,7 +96,7 @@ export default class CompilationHandler {
             });
         }
     }
-    /** Converts the total seconds into a conveniently displayable hh:mm:ss.zz format,
+    /** Converts the total seconds into a conveniently displayable hh:mm:ss.zzz format,
      * if a suitable input value is provieded.
      * @remarks Omits the hour part, if not appliccable
      * @return The display representation or the emtpy string.
