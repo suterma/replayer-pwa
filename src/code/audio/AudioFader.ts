@@ -3,10 +3,16 @@
  * The goal is to free the actual player from fading handling.
  * Using this promise-based approach especially frees the using code from
  * using timers for calling delayed stop or pause operations after a fade operation.
+ * @remarks Currently only supports a linear fade, with a constant gradient, only determined by the predefined durations for a full-scale fade.
  * @remarks Fading is only actually executed for non-zero fading durations.
  * For zero fading durations, the call immediately returns with a resolved promise, without any call to a fade operation.
+ * This can be used as a convenient way to skip fadings.
  */
 export default class AudioFader {
+    /** This is set to a fixed value, as a tradeoff between call frequency and smoothness
+     * @devdoc currently set to 50 milliseconds which is barely audible
+     */
+    stepDuration = 50;
     /** @constructor
      * @param {HTMLAudioElement} audio - The audio elenent to act upon
      * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
@@ -83,13 +89,13 @@ export default class AudioFader {
             console.debug(`AudioFader::cancel:toMinimum`);
             const currentVolume = this.getCurrentVolume();
             if (currentVolume != this.minAudioLevel) {
-                //TODO                 this.audio.fade(currentVolume, this.minAudioLevel, 0);
+                this.fade(currentVolume, this.minAudioLevel, 0);
             }
         } else {
             console.debug(`HowlerFader::cancel:toMaximum`);
             const currentVolume = this.getCurrentVolume();
             if (currentVolume != this.maxAudioLevel) {
-                //TODO                 this.audio.fade(currentVolume, this.maxAudioLevel, 0);
+                this.fade(currentVolume, this.maxAudioLevel, 0);
             }
         }
     }
@@ -182,16 +188,36 @@ export default class AudioFader {
                     console.debug(
                         `AudioFader::fading for:${this.fadeInDuration};from:${from}; to:${to}`,
                     );
+                    //Set exactly to the expected begin volume
+                    this.audio.volume = from;
 
-                    //TODO implement
-                    // this.sound.fade(from, to, duration, id);
-                    // this.sound.once('fade', function () {
-                    //     resolve();
-                    // });
-                    //TODO implement (currently just waits duration time)
-                    setTimeout(() => {
-                        resolve();
-                    }, duration);
+                    //Start a repeated call sequence to gradually adjust the volume
+                    const stepSize = to - from;
+                    const endTime = new Date().getTime() + duration;
+                    const refreshIntervalId = setInterval(() => {
+                        const now = new Date().getTime();
+                        //Check whether it's time to end the fade
+                        if (now >= endTime) {
+                            clearInterval(refreshIntervalId);
+                            //Set exactly to the expected end volume, in case it was missed slightly
+                            this.audio.volume = to;
+                            resolve();
+                        }
+
+                        const remainingTime = endTime - now;
+                        const passedTime = duration - remainingTime;
+                        const newTarget =
+                            from + (stepSize / duration) * passedTime;
+                        const limitedTarget = Math.min(
+                            1,
+                            Math.max(0, newTarget),
+                        );
+
+                        console.debug(
+                            `AudioFader::setting to:${limitedTarget}`,
+                        );
+                        this.audio.volume = limitedTarget;
+                    }, this.stepDuration);
                 } catch (err) {
                     reject('HowlerFader::Linear fade failed.');
                 }
