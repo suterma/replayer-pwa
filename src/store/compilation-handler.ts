@@ -96,19 +96,23 @@ export default class CompilationHandler {
             });
         }
     }
-    /** Converts the total seconds into a conveniently displayable hh:mm:ss.zz format,
+    /** Converts the total seconds into a conveniently displayable hh:mm:ss.zzz format,
      * if a suitable input value is provieded.
      * @remarks Omits the hour part, if not appliccable
+     * @param subsecondDigits - The number of digits for the sub-second precision. Should be 1, 2, or 3 (default).
      * @return The display representation or the emtpy string.
      */
-    static convertToDisplayTime(seconds: number | null): string {
+    static convertToDisplayTime(
+        seconds: number | null,
+        subsecondDigits = 3,
+    ): string {
         if (seconds != null) {
             //Uses the hour, minute, seconds, and 3 digits of the milliseconds part
             const hhmmss = new Date(seconds * 1000)
                 .toISOString()
-                .substr(11, 12);
+                .substring(11, 11 + 9 + subsecondDigits);
             //skip the hour part, if not used
-            return hhmmss.indexOf('00:') === 0 ? hhmmss.substr(3) : hhmmss;
+            return hhmmss.indexOf('00:') === 0 ? hhmmss.substring(3) : hhmmss;
         }
         return '';
     }
