@@ -33,7 +33,8 @@ import { defineComponent } from 'vue';
 import PlayerChrome from '@/components/PlayerChrome.vue';
 import CueTrigger from '@/components/CueTrigger.vue';
 
-/** A simple vue audio player, for a single track, using the Web Audio API
+/** A simple vue audio player, for a single track, using the Web Audio API.
+ * @devdoc Internally maintains it's state, updating the enclosed audio element accordingly.
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playing
  * @remarks Emits 'trackLoaded' with the track duration in seconds, once after successful load of the track's media file
  * @remarks Emits 'trackPlaying' when the track is playing
@@ -72,6 +73,7 @@ export default defineComponent({
          * @remarks This is only available after successful load of the media file
          */
         durationSeconds: 0,
+        isMuted: false,
         loaded: false,
         looping: false,
         playing: false,
@@ -130,7 +132,7 @@ export default defineComponent({
 
     computed: {
         muted(): boolean {
-            return this.volume / 100 === 0;
+            return this.isMuted;
         },
         volumeTitle(): string {
             return `Volume (${this.volume}%)`;
@@ -220,12 +222,8 @@ export default defineComponent({
         },
         mute() {
             console.debug(`TrackAudioApiPlayer(${this.title})::mute`);
-            if (this.muted) {
-                return (this.volume = this.previousVolume);
-            }
-
-            this.previousVolume = this.volume;
-            this.volume = 0;
+            this.isMuted = !this.isMuted;
+            this.audioElement.muted = this.isMuted;
         },
         seekByClick(e: MouseEvent) {
             console.debug(`TrackAudioApiPlayer(${this.title})::seekByClick`, e);
