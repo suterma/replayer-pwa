@@ -92,7 +92,7 @@ export default class AudioFader {
                 this.fade(currentVolume, this.minAudioLevel, 0);
             }
         } else {
-            console.debug(`HowlerFader::cancel:toMaximum`);
+            console.debug(`AudioFader::cancel:toMaximum`);
             const currentVolume = this.getCurrentVolume();
             if (currentVolume != this.maxAudioLevel) {
                 this.fade(currentVolume, this.maxAudioLevel, 0);
@@ -139,7 +139,6 @@ export default class AudioFader {
      *
      * otherwise
      * - the promise is immediately resolved.
-     * @devdoc Howler only supports linear fade operations
      */
     fadeIn(): Promise<void> {
         if (this.fadeInDuration) {
@@ -213,13 +212,13 @@ export default class AudioFader {
                             Math.max(0, newTarget),
                         );
 
-                        console.debug(
-                            `AudioFader::setting to:${limitedTarget}`,
-                        );
+                        // console.debug(
+                        //     `AudioFader::setting to:${limitedTarget}`,
+                        // );
                         this.audio.volume = limitedTarget;
                     }, this.stepDuration);
                 } catch (err) {
-                    reject('HowlerFader::Linear fade failed.');
+                    reject('AudioFader::Linear fade failed.');
                 }
             });
         } else {
@@ -236,7 +235,6 @@ export default class AudioFader {
      *
      * otherwise
      * - a fade with duration zero is started and the promise is immediately resolved.
-     * @devdoc Howler only supports linear fade operations
      */
     fadeOut(): Promise<void> {
         if (this.fadeOutDuration) {

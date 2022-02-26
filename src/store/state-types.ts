@@ -19,7 +19,6 @@ export class Settings {
             /*neverShowWelcomeMessageAgain*/ false,
             /*autoRetrieveLastCompilation*/ true,
             /*preventScreenTimeout*/ false,
-            /*useHowlerJsAudioEngine*/ true,
             /*fadeInDuration*/ 1000,
             /*fadeOutDuration*/ 500,
             /*applyFadeInOffset*/ true,
@@ -39,11 +38,6 @@ export class Settings {
      * @remarks Default is false
      */
     preventScreenTimeout;
-
-    /** Whether to use the alternative HowlerJs audio engine
-     * @remarks Default is false
-     */
-    useHowlerJsAudioEngine;
 
     /** The fade-in duration in [milliseconds]. Use zero for no fading.
      * @remarks Default is 1000
@@ -79,9 +73,6 @@ export class Settings {
         if (obj.preventScreenTimeout != undefined) {
             settings.preventScreenTimeout = obj.preventScreenTimeout;
         }
-        if (obj.useHowlerJsAudioEngine != undefined) {
-            settings.useHowlerJsAudioEngine = obj.useHowlerJsAudioEngine;
-        }
         if (obj.fadeInDuration != undefined) {
             settings.fadeInDuration = obj.fadeInDuration;
         }
@@ -100,7 +91,6 @@ export class Settings {
         neverShowWelcomeMessageAgain: boolean,
         autoRetrieveLastCompilation: boolean,
         preventScreenTimeout: boolean,
-        useHowlerJsAudioEngine: boolean,
         fadeInDuration: number,
         fadeOutDuration: number,
         applyFadeInOffset: boolean,
@@ -108,7 +98,6 @@ export class Settings {
         this.neverShowWelcomeMessageAgain = neverShowWelcomeMessageAgain;
         this.autoRetrieveLastCompilation = autoRetrieveLastCompilation;
         this.preventScreenTimeout = preventScreenTimeout;
-        this.useHowlerJsAudioEngine = useHowlerJsAudioEngine;
         this.fadeInDuration = fadeInDuration;
         this.fadeOutDuration = fadeOutDuration;
         this.applyFadeInOffset = applyFadeInOffset;

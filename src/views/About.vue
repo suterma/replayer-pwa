@@ -193,14 +193,6 @@
                 </li>
                 <li>
                     <a
-                        href="https://github.com/goldfire/howler.js"
-                        target="_blank"
-                        >howler.js </a
-                    >, an audio library for the modern web. (Released under the
-                    MIT License, by James Simpson)
-                </li>
-                <li>
-                    <a
                         href="https://github.com/richtr/NoSleep.js"
                         target="_blank"
                         >NoSleep.js </a

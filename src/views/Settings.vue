@@ -53,34 +53,6 @@
 
         <h3 class="subtitle">Audio</h3>
 
-        <div class="field">
-            <div class="control">
-                <label class="label">
-                    Note: The audio settings are applied only at next app start
-                    <span class="has-opacity-half is-size-7">
-                        (If available, in the browser, you can use use the
-                        "Reload" button. Otherwise terminate and re-open the
-                        app.)</span
-                    >
-                </label>
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="control">
-                <label class="checkbox">
-                    <input
-                        type="checkbox"
-                        :checked="this.getSettings.useHowlerJsAudioEngine"
-                        @change="useHowlerJsAudioEngineChanged"
-                    />
-                    Use howler.js as audio engine
-                    <span class="has-opacity-half is-size-7">
-                        (supports fading)</span
-                    >
-                </label>
-            </div>
-        </div>
         <!-- Fading durations, with two columns -->
         <div class="columns">
             <div class="column">
@@ -234,15 +206,6 @@ export default defineComponent({
             const settings = this.getSettings;
 
             settings.preventScreenTimeout = checked;
-
-            this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
-        },
-
-        useHowlerJsAudioEngineChanged(event: Event) {
-            const checked = (event.target as HTMLInputElement)?.checked;
-            const settings = this.getSettings;
-
-            settings.useHowlerJsAudioEngine = checked;
 
             this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
         },

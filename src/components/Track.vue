@@ -48,31 +48,17 @@
             on the show state as a performance optimizations
             -->
             <template v-if="mediaObjectUrl">
-                <template v-if="this.getSettings.useHowlerJsAudioEngine">
-                    <TrackHowlerPlayer
-                        v-if="mediaObjectUrl"
-                        ref="playerReference"
-                        :title="trackFileUrl?.fileName"
-                        :src="optimizedMediaObjectUrl"
-                        @timeupdate="updateTime"
-                        @trackLoaded="calculateCueDurations"
-                        @trackPlaying="updatePlaying"
-                        @newCueTriggered="createNewCue"
-                    ></TrackHowlerPlayer>
-                </template>
-                <template v-else>
-                    <TrackAudioApiPlayer
-                        :isEditable="this.isEditable"
-                        v-if="mediaObjectUrl"
-                        ref="playerReference"
-                        :title="trackFileUrl?.fileName"
-                        :src="optimizedMediaObjectUrl"
-                        @timeupdate="updateTime"
-                        @trackLoaded="calculateCueDurations"
-                        @trackPlaying="updatePlaying"
-                        @newCueTriggered="createNewCue"
-                    ></TrackAudioApiPlayer>
-                </template>
+                <TrackAudioApiPlayer
+                    :isEditable="this.isEditable"
+                    v-if="mediaObjectUrl"
+                    ref="playerReference"
+                    :title="trackFileUrl?.fileName"
+                    :src="optimizedMediaObjectUrl"
+                    @timeupdate="updateTime"
+                    @trackLoaded="calculateCueDurations"
+                    @trackPlaying="updatePlaying"
+                    @newCueTriggered="createNewCue"
+                ></TrackAudioApiPlayer>
             </template>
             <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
             <template v-else>
@@ -141,7 +127,6 @@ import { Track, ICue, TrackDisplayMode } from '@/store/compilation-types';
 import CueButton from '@/components/CueButton.vue';
 import CueLevel from '@/components/CueLevel.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
-import TrackHowlerPlayer from '@/components/TrackHowlerPlayer.vue';
 import { MediaUrl } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
@@ -165,7 +150,6 @@ export default defineComponent({
         CueButton,
         CueLevel,
         TrackAudioApiPlayer,
-        TrackHowlerPlayer,
         ReplayerEventHandler,
         TrackHeader,
         TrackHeaderEdit,
@@ -472,9 +456,9 @@ export default defineComponent({
          * Thus, referencing an instance after it has been removed from the DOM (e.g. by v-if)
          * does not work, even after it's rendered again later.
          */
-        trackPlayerInstance(): InstanceType<typeof TrackHowlerPlayer> {
+        trackPlayerInstance(): InstanceType<typeof TrackAudioApiPlayer> {
             return this.$refs.playerReference as InstanceType<
-                typeof TrackHowlerPlayer
+                typeof TrackAudioApiPlayer
             >;
         },
         /** Gets the media object URL, if available

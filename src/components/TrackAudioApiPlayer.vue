@@ -166,7 +166,7 @@ export default defineComponent({
             return `Volume (${this.volume}%)`;
         },
         /** A simple token for the settings
-         * @remarks This is only used to detect changes, to recreate the howler fader.
+         * @remarks This is only used to detect changes, to recreate the audio fader.
          */
         audioFaderSettingsToken(): string {
             return (

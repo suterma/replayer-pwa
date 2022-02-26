@@ -30,7 +30,6 @@
         "bulmaswatch": "^0.8.1",
         "click-outside-vue3": "^4.0.1",
         "file-saver": "^2.0.5",
-        "howler": "^2.2.3",
         "idb-keyval": "^6.0.3",
         "jest-junit": "^13.0.0",
         "jszip": "^3.7.1",
@@ -49,7 +48,6 @@
     "devDependencies": {
         "@types/core-js": "^2.5.5",
         "@types/file-saver": "^2.0.3",
-        "@types/howler": "^2.2.4",
         "@types/jest": "^27.0.3",
         "@types/node": "^16.11.10",
         "@types/uuid": "^8.3.1",
