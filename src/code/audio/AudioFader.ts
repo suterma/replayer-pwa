@@ -80,7 +80,7 @@ export default class AudioFader {
     maxAudioLevel = 1;
 
     /** Immediately cancel any running fade operation.
-     * @remarks This immediately fades to the initial value.
+     * @remarks This immediately sets the volume to the initial value.
      * When a non-zero fading duration is set, this is the minimum value (finish a possible fade-out/prepare for the next fade-in).
      * When a zero fading duration is set, this is the maximum value (effectively remove any fade)
      */
@@ -89,13 +89,13 @@ export default class AudioFader {
             console.debug(`AudioFader::cancel:toMinimum`);
             const currentVolume = this.getCurrentVolume();
             if (currentVolume != this.minAudioLevel) {
-                this.fade(currentVolume, this.minAudioLevel, 0);
+                this.audio.volume = this.minAudioLevel;
             }
         } else {
             console.debug(`AudioFader::cancel:toMaximum`);
             const currentVolume = this.getCurrentVolume();
             if (currentVolume != this.maxAudioLevel) {
-                this.fade(currentVolume, this.maxAudioLevel, 0);
+                this.audio.volume = this.maxAudioLevel;
             }
         }
     }

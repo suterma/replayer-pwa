@@ -130,7 +130,7 @@ export default defineComponent({
             this.playing = true;
 
             //NOTE: Having the fade-in operation to start here, instead of after the thenable play action
-            //ensures, that a possible pre-play transport is applied without any audible delay.
+            //ensures, that a fade operation is applied without any audible delay.
             console.debug('Playback started');
             this.$emit('trackPlaying', true);
             this.isFading = true;
@@ -348,6 +348,7 @@ export default defineComponent({
         },
         /** Updates the current seconds display and emits an event with the temporal position of the player
          * @devdoc This must get only privately called from the audio player
+         * @devdoc This is known to result in setTimout violations on slower systems
          */
         updateTime(/*event: Event*/) {
             //console.debug(`TrackAudioApiPlayer(${this.title})::updateTime:e`, e);
@@ -367,16 +368,17 @@ export default defineComponent({
             if (!this.playing) {
                 if (!this.isPlayingRequestOutstanding) {
                     this.isPlayingRequestOutstanding = true;
+
+                    //Just BEFORE playback, apply the possible pre-play transport
+                    if (
+                        this.settings.applyFadeInOffset &&
+                        this.settings.fadeInDuration
+                    ) {
+                        this.applyPreFadeInOffset();
+                    }
+
                     this.audioElement
                         .play()
-                        .then(() => {
-                            // console.debug('Playback started');
-                            // this.$emit('trackPlaying', true);
-                            // this.isFading = true;
-                            // this.fader.fadeIn().then(() => {
-                            //     this.isFading = false;
-                            // });
-                        })
                         .catch((e) => {
                             console.error('Playback failed with message: ' + e);
                             this.$emit('trackPlaying', false);
@@ -391,6 +393,18 @@ export default defineComponent({
                 }
             }
         },
+
+        /** Applies an offset to compensate fade-in durations */
+        applyPreFadeInOffset(): void {
+            const time = this.audioElement.currentTime;
+            const offset = this.settings.fadeInDuration / 1000;
+            const target = time - offset;
+            console.debug(
+                `TrackAudioApiPlayer::applyPreFadeInOffset:by:${this.fadeInDuration};from time:${time}; to target:${target}`,
+            );
+            this.audioElement.currentTime = target;
+        },
+
         /** Transports (seeks) the playback to the given temporal position */
         seekTo(position: number): void {
             console.debug(

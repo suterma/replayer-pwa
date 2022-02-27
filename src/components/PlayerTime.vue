@@ -6,15 +6,15 @@
                 'player-playing-indication': this.isPlaying,
             }"
         >
-            <span class="is-hidden-mobile">{{ currentDisplayTime }}</span>
-            <span class="is-hidden-tablet">{{ currentDisplayTimeShort }}</span>
+            <span v-if="this.isMobile">{{ currentDisplayTimeShort }}</span>
+            <span v-else>{{ currentDisplayTime }}</span>
             <span class="is-hidden-mobile" v-if="this.isFading">
                 (fading...)
             </span>
         </div>
         <div class="player-time-total">
-            <span class="is-hidden-mobile">{{ durationDisplayTime }}</span>
-            <span class="is-hidden-tablet">{{ durationDisplayTimeShort }}</span>
+            <span v-if="this.isMobile">{{ durationDisplayTimeShort }}</span>
+            <span v-else>{{ durationDisplayTime }}</span>
         </div>
     </div>
 </template>
@@ -79,6 +79,13 @@ export default defineComponent({
          */
         durationDisplayTimeShort(): string {
             return CompilationHandler.convertToDisplayTime(this.duration, 1);
+        },
+        isMobile() {
+            if (document.body.clientWidth <= 768 /* isMobile by Bulma */) {
+                return true;
+            } else {
+                return false;
+            }
         },
     },
     methods: {},
