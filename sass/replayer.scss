@@ -204,3 +204,39 @@ but not at the "end/right" container's border */
 .has-background-transparent {
     background-color: transparent;
 }
+
+/*************************************************************
+ * Experimental content
+**************************************************************
+*/
+
+/* Use danger text */
+.is-experimental,
+.is-experimental .title,
+.is-experimental .subtitle,
+.is-experimental h1,
+.is-experimental h3,
+.is-experimental .navbar,
+.is-experimental .navbar-item,
+.is-experimental .navbar,
+.is-experimental .navbar-link {
+    color: $danger;
+}
+
+/* elements on a slight danger-like area */
+.is-experimental {
+    // background-color: rgba($danger, 0.14);
+    outline: dashed $danger;
+    outline-offset: 0.5em;
+}
+
+/* However, navbar menu entries should not use an outer outline, but show it inside the items, like a border */
+.navbar .is-experimental {
+    outline-offset: -0.3em;
+}
+
+/* Hovered menu item in bright danger, similar to standard hovered items */
+.navbar .is-experimental .navbar-item:hover,
+.navbar .is-experimental .navbar-link:hover {
+    color: lighten($danger, 14%);
+}

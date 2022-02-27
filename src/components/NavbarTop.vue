@@ -59,12 +59,14 @@ By the click of a button, Replayer starts to play at predefined times in the aud
                     to="/edit"
                     >Edit</router-link
                 >
-                <router-link
-                    @click="toggleBurger"
-                    class="navbar-item"
-                    to="/list"
-                    >List</router-link
-                >
+                <Experimental>
+                    <router-link
+                        @click="toggleBurger"
+                        class="navbar-item"
+                        to="/list"
+                        >List</router-link
+                    >
+                </Experimental>
                 <router-link
                     @click="toggleBurger"
                     class="navbar-item"
@@ -77,12 +79,14 @@ By the click of a button, Replayer starts to play at predefined times in the aud
                     to="/about"
                     >About</router-link
                 >
-                <router-link
-                    @click="toggleBurger"
-                    class="navbar-item has-text-danger"
-                    to="/development"
-                    >BETA
-                </router-link>
+                <Experimental>
+                    <router-link
+                        @click="toggleBurger"
+                        class="navbar-item"
+                        to="/development"
+                        >BETA
+                    </router-link>
+                </Experimental>
             </div>
         </div>
     </nav>
@@ -90,10 +94,12 @@ By the click of a button, Replayer starts to play at predefined times in the aud
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import Experimental from '@/components/Experimental.vue';
 
 /** A top navbar for the application*/
 export default defineComponent({
     name: 'NavbarTop',
+    components: { Experimental },
 
     data() {
         return {

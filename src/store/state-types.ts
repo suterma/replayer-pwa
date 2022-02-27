@@ -22,6 +22,7 @@ export class Settings {
             /*fadeInDuration*/ 1000,
             /*fadeOutDuration*/ 500,
             /*applyFadeInOffset*/ true,
+            /*displayExperimentalContent*/ false,
         );
     }
     /** Whether to never show the welcome message at application start
@@ -54,6 +55,11 @@ export class Settings {
      */
     applyFadeInOffset;
 
+    /** Whether to show experimental content
+     * @remarks Default is false
+     */
+    displayExperimentalContent;
+
     /** Parses the JSON and returns new instance of this class, with the defined values applied.
      * @remarks For udefined values, the application default is used.
      * @remarks Instead of creating an unprototyped object with JSON.parse, this creates a new object of this type
@@ -82,6 +88,10 @@ export class Settings {
         if (obj.applyFadeInOffset != undefined) {
             settings.applyFadeInOffset = obj.applyFadeInOffset;
         }
+        if (obj.displayExperimentalContent != undefined) {
+            settings.displayExperimentalContent =
+                obj.displayExperimentalContent;
+        }
         return settings;
     }
 
@@ -94,6 +104,7 @@ export class Settings {
         fadeInDuration: number,
         fadeOutDuration: number,
         applyFadeInOffset: boolean,
+        displayExperimentalContent: boolean,
     ) {
         this.neverShowWelcomeMessageAgain = neverShowWelcomeMessageAgain;
         this.autoRetrieveLastCompilation = autoRetrieveLastCompilation;
@@ -101,6 +112,7 @@ export class Settings {
         this.fadeInDuration = fadeInDuration;
         this.fadeOutDuration = fadeOutDuration;
         this.applyFadeInOffset = applyFadeInOffset;
+        this.displayExperimentalContent = displayExperimentalContent;
     }
 }
 

@@ -156,14 +156,44 @@
         </div>
 
         <!-- Experimental settings -->
-        <!-- <hr />
+        <hr />
 
-        <div class="has-text-danger">
-            <h1 class="title has-text-danger">Experimental settings</h1>
-            <h3 class="subtitle has-text-danger">
-                Here be dragons (use at your own risk)
-            </h3>
-        </div> -->
+        <CollapsibleButton
+            v-model="this.isExperimentalExpanded"
+            collapsedText="Experimental"
+            expandedText="Here be dragons (use at your own risk)"
+        />
+        <br />
+        <br />
+        <slide-up-down
+            v-model="this.isExperimentalExpanded"
+            :duration="250"
+            timingFunction="linear"
+            :responsive="true"
+        >
+            <div class="is-experimental">
+                <h1 class="title">Experimental</h1>
+                <h3 class="subtitle">Here be dragons (use at your own risk)</h3>
+                <div class="field">
+                    <div class="control">
+                        <label class="checkbox">
+                            <input
+                                type="checkbox"
+                                :checked="
+                                    this.getSettings.displayExperimentalContent
+                                "
+                                @change="displayExperimentalContentChanged"
+                            />
+                            Display Experimental features
+                            <span class="has-opacity-half is-size-7">
+                                (Allows to test upcoming, experimental
+                                features)</span
+                            >
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </slide-up-down>
     </div>
 </template>
 
@@ -172,14 +202,17 @@ import { defineComponent } from 'vue';
 import { MutationTypes } from '@/store/mutation-types';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import { Settings } from '@/store/state-types';
+import CollapsibleButton from '@/components/CollapsibleButton.vue';
 
 /** A Settings view
  */
 export default defineComponent({
     name: 'Settings',
     mixins: [settingsMixin],
+    components: { CollapsibleButton },
     data: () => ({
         localSettings: undefined as unknown as Settings,
+        isExperimentalExpanded: Boolean,
     }),
     created() {
         this.localSettings = this.getSettings;
@@ -224,6 +257,14 @@ export default defineComponent({
         },
         fadeOutDurationChanged(event: Event) {
             console.debug('event', event);
+            this.$store.commit(MutationTypes.UPDATE_SETTINGS, this.settings);
+        },
+
+        displayExperimentalContentChanged(event: Event) {
+            const checked = (event.target as HTMLInputElement)?.checked;
+            const settings = this.getSettings;
+
+            settings.displayExperimentalContent = checked;
             this.$store.commit(MutationTypes.UPDATE_SETTINGS, this.settings);
         },
     },
