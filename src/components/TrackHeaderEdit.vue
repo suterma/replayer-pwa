@@ -6,13 +6,10 @@
             <!-- Left side -->
             <div class="level-left">
                 <!-- Title -->
-                <div
-                    class="level-item fill-available is-flex-grow-5 is-flex-shrink-1"
-                >
+                <div class="level-item is-flex-grow-5 is-flex-shrink-1">
                     <div class="field fill-available">
                         <p class="control">
-                            <input
-                                class="input"
+                            <EditableInput
                                 v-model="trackData.Name"
                                 @change="updateName($event.target.value)"
                                 type="text"
@@ -33,8 +30,8 @@
                 <div class="level-item is-flex-shrink-1">
                     <div class="field">
                         <p class="control">
-                            <input
-                                class="input is-italic"
+                            <EditableInput
+                                class="is-italic"
                                 v-model="trackData.Artist"
                                 @change="updateArtist($event.target.value)"
                                 type="text"
@@ -52,11 +49,11 @@
                     </p>
                 </div>
                 <!-- Album -->
-                <div class="level-item">
+                <div class="level-item is-flex-shrink-1">
                     <div class="field">
                         <p class="control">
-                            <input
-                                class="input is-italic"
+                            <EditableInput
+                                class="is-italic"
                                 v-model="trackData.Album"
                                 @change="updateAlbum($event.target.value)"
                                 type="text"
@@ -91,6 +88,7 @@
 import { defineComponent } from 'vue';
 import { Track } from '@/store/compilation-types';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
+import EditableInput from '@/components/EditableInput.vue';
 import { ActionTypes } from '@/store/action-types';
 import Icon from '@/components/icons/Icon.vue';
 
@@ -99,7 +97,7 @@ import Icon from '@/components/icons/Icon.vue';
 //TODO later remove the editable parts from TrackHeader, once the TrackHeaderEdit is accepted as the edit control
 export default defineComponent({
     name: 'TrackHeaderEdit',
-    components: { PlaybackIndicator, Icon },
+    components: { PlaybackIndicator, Icon, EditableInput },
     props: {
         track: {
             type: Track,
