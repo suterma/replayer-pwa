@@ -4,9 +4,9 @@
         :title="title"
         :loaded="this.loaded"
         :isFading="this.isFading"
+        :playing="this.playing"
         @pause="pause"
         @play="play"
-        :playing="this.playing"
         :isPlayingRequestOutstanding="this.isPlayingRequestOutstanding"
         v-model:currentSeconds="this.currentSeconds"
         @seek="seekToSeconds"
@@ -17,10 +17,10 @@
         :title="title"
         :loaded="this.loaded"
         :isFading="this.isFading"
+        :playing="this.playing"
         @stop="stop"
         @pause="pause"
         @play="play"
-        :playing="this.playing"
         :isPlayingRequestOutstanding="this.isPlayingRequestOutstanding"
         v-model:currentSeconds="this.currentSeconds"
         v-model:volume="this.volume"
@@ -109,12 +109,6 @@ export default defineComponent({
 
         /** The fader to use */
         fader: undefined as unknown as AudioFader,
-        /** Flags whether the user has requested to play, which will be handeled with a subsequent fade-in
-         * @remarks This flag allows to generally handle play requests,
-         * with a distinction whether the play request was caused by a loop or by an explicit user
-         * action. This flag is reset after each issued fade-in.
-         */
-        hasUserPlayRequestOutstanding: false,
     }),
     /** Handles the setup of the audio graph outside the mounted lifespan.
      * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
@@ -134,6 +128,15 @@ export default defineComponent({
         };
         this.audioElement.onplay = () => {
             this.playing = true;
+
+            //NOTE: Having the fade-in operation to start here, instead of after the thenable play action
+            //ensures, that a possible pre-play transport is applied without any audible delay.
+            console.debug('Playback started');
+            this.$emit('trackPlaying', true);
+            this.isFading = true;
+            this.fader.fadeIn().then(() => {
+                this.isFading = false;
+            });
         };
         this.audioElement.preload = 'auto';
 
@@ -196,55 +199,6 @@ export default defineComponent({
                 );
             }
         },
-        /** Watch whether the player state changed, and then update the audio element accordingly
-         * @remarks Tracks outstanding play requests and starts a new one only when none is outstanding already.
-         */
-        playing(value: boolean): Promise<void> | undefined {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::watch:playing:value${value}`,
-            );
-            if (value) {
-                // if (!this.isPlayingRequestOutstanding) {
-                //     this.isPlayingRequestOutstanding = true;
-                //     return this.audioElement
-                //         .play()
-                //         .then(() => {
-                //             console.debug('Playback started');
-                //             this.$emit('trackPlaying', true);
-                //             // if (this.hasUserPlayRequestOutstanding) {
-                //             //     this.hasUserPlayRequestOutstanding = false;
-                //             this.isFading = true;
-                //             this.fader.fadeIn().then(() => {
-                //                 this.isFading = false;
-                //                 //TODO a subsequent seek operation can only be started NOW
-                //             });
-                //             //}
-                //         })
-                //         .catch((e) => {
-                //             console.error('Playback failed with message: ' + e);
-                //             this.$emit('trackPlaying', false);
-                //         })
-                //         .finally(() => {
-                //             this.isPlayingRequestOutstanding = false;
-                //         });
-                // } else {
-                //     console.warn(
-                //         'A play request is already outstanding. This request is discarded.',
-                //     );
-                // }
-            } else {
-                //Handle fade directly on request....
-                // this.isFading = true;
-                // this.fader.fadeOut().then(() => {
-                //     this.audioElement.pause();
-                //     this.isFading = false;
-                //     this.$emit('trackPlaying', false);
-                // });
-                // TODO handle stop correctly
-                // this.audioElement.pause();
-            }
-            return undefined;
-        },
         /** Watch whether the volume changed, and then update the audio element accordingly  */
         volume(): void {
             console.debug(
@@ -265,6 +219,7 @@ export default defineComponent({
                 `TrackAudioApiPlayer(${this.title})::src:${this.src}`,
             );
             this.audioElement.src = this.src;
+            this.fader.cancel();
         },
     },
     methods: {
@@ -324,7 +279,6 @@ export default defineComponent({
                 this.audioElement.pause();
                 this.$emit('trackPlaying', false);
             }
-            this.playing = false;
             //no fading at stop
             this.isFading = false;
             this.audioElement.currentTime = 0;
@@ -375,7 +329,6 @@ export default defineComponent({
                 this.isFading = true;
                 this.fader.fadeOut().then(() => {
                     this.audioElement.pause();
-                    this.playing = false;
                     this.isFading = false;
                     this.$emit('trackPlaying', false);
                 });
@@ -388,7 +341,6 @@ export default defineComponent({
             this.isFading = true;
             this.fader.fadeOut().then(() => {
                 this.audioElement.pause();
-                this.playing = false;
                 this.isFading = false;
                 this.$emit('trackPlaying', false);
                 this.seekTo(position);
@@ -408,12 +360,6 @@ export default defineComponent({
         playFrom(position: number): void {
             this.seekTo(position);
             this.play();
-            // console.debug(
-            //     `TrackAudioApiPlayer(${this.title}):playFrom:position`,
-            //     position,
-            // );
-            // this.hasUserPlayRequestOutstanding = true;
-            // this.playing = true;
         },
         /** Starts playback at the current position
          */
@@ -424,15 +370,12 @@ export default defineComponent({
                     this.audioElement
                         .play()
                         .then(() => {
-                            console.debug('Playback started');
-                            this.$emit('trackPlaying', true);
-                            // if (this.hasUserPlayRequestOutstanding) {
-                            //     this.hasUserPlayRequestOutstanding = false;
-                            this.isFading = true;
-                            this.fader.fadeIn().then(() => {
-                                this.isFading = false;
-                            });
-                            //}
+                            // console.debug('Playback started');
+                            // this.$emit('trackPlaying', true);
+                            // this.isFading = true;
+                            // this.fader.fadeIn().then(() => {
+                            //     this.isFading = false;
+                            // });
                         })
                         .catch((e) => {
                             console.error('Playback failed with message: ' + e);
