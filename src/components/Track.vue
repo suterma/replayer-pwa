@@ -20,6 +20,7 @@
         <TrackHeaderEdit
             v-if="this.isEditable"
             :track="this.track"
+            v-model="this.expanded"
             :isPlaying="this.isPlaying"
             :isTrackLoaded="this.isTrackLoaded"
             :isActiveTrack="this.isActiveTrack"
@@ -209,12 +210,9 @@ export default defineComponent({
              */
             isLinkOnly: this.displayMode === TrackDisplayMode.Link,
 
-            /** Whether this track tile is shown as expanded, with the player and the cue buttons displayed.
-             * @remarks True, when editable or in play mode, otherwise depending on whether it is collapsed dynamically.
+            /** Whether this track tile is shown as expanded. Default: false, but can later be dynamically changed.
              */
-            expanded:
-                this.displayMode === TrackDisplayMode.Edit ||
-                this.displayMode === TrackDisplayMode.Play,
+            expanded: false,
             /** The playback progress in the current track, in [seconds]
              * @remarks This is used for track progress display within the set of cues
              */

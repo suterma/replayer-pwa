@@ -1,7 +1,10 @@
 <template>
+    <!-- //TODO remove transitioning, when not used, later -->
+    <!-- 'is-loading': this.isTransitioning, -->
     <button
         :class="{
             button: true,
+            'is-nav': true,
             'is-small': true,
         }"
         @click="toggleExpanded()"
@@ -45,13 +48,18 @@ export default defineComponent({
             default: '',
         },
     },
+    data() {
+        return {
+            requestedModelValue: this.modelValue,
+        };
+    },
     methods: {
         toggleExpanded() {
-            const expanded = !this.modelValue;
+            this.requestedModelValue = !this.modelValue;
             console.debug(
-                `CollapsibleButton::toggleExpanded:expanded:${expanded}`,
+                `CollapsibleButton::toggleExpanded:requestedModelValue:${this.requestedModelValue}`,
             );
-            this.$emit('update:modelValue', expanded);
+            this.$emit('update:modelValue', this.requestedModelValue);
         },
     },
     computed: {
@@ -60,6 +68,9 @@ export default defineComponent({
                 return 'collapse';
             }
             return 'expand';
+        },
+        isTransitioning(): boolean {
+            return this.requestedModelValue !== this.modelValue;
         },
     },
 });

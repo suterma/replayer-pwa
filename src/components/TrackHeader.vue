@@ -101,7 +101,10 @@
             </nav>
             <!-- Expander -->
             <div v-if="this.isCollapsible" class="level-item">
-                <CollapsibleButton :modelValue="this.modelValue" />
+                <CollapsibleButton
+                    :modelValue="this.modelValue"
+                    class="is-nav"
+                />
             </div>
             <!-- Forward navigation -->
             <div v-if="this.isLinkOnly" class="level-item">

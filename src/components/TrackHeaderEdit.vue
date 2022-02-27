@@ -79,6 +79,13 @@
                         :is-unloaded="!this.isTrackLoaded"
                     />
                 </nav>
+                <!-- Expander -->
+                <div class="level-item">
+                    <CollapsibleButton
+                        :modelValue="this.modelValue"
+                        @click="toggleExpanded()"
+                    />
+                </div>
             </div>
         </div>
     </div>
@@ -89,6 +96,7 @@ import { defineComponent } from 'vue';
 import { Track } from '@/store/compilation-types';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import EditableInput from '@/components/EditableInput.vue';
+import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
 import Icon from '@/components/icons/Icon.vue';
 
@@ -97,11 +105,18 @@ import Icon from '@/components/icons/Icon.vue';
 //TODO later remove the editable parts from TrackHeader, once the TrackHeaderEdit is accepted as the edit control
 export default defineComponent({
     name: 'TrackHeaderEdit',
-    components: { PlaybackIndicator, Icon, EditableInput },
+    components: { PlaybackIndicator, Icon, EditableInput, CollapsibleButton },
+    emits: ['update:modelValue'],
+
     props: {
         track: {
             type: Track,
             required: true,
+        },
+        /** Whether this track is expanded */
+        modelValue: {
+            type: Boolean,
+            default: false,
         },
 
         /** Flag to indicate whether the player is currently playing
@@ -132,6 +147,13 @@ export default defineComponent({
         };
     },
     methods: {
+        /** Toogles the expansion state
+         */
+        toggleExpanded() {
+            const expanded = !this.modelValue;
+            console.debug(`TrackHeader::toggleExpanded:expanded:${expanded}`);
+            this.$emit('update:modelValue', expanded);
+        },
         /** Updates the track name */
         updateName(name: string) {
             const trackId = this.track.Id;
@@ -190,8 +212,8 @@ export default defineComponent({
 .level {
     .level-left {
         word-break: break-word;
-        /* This basis is set empirically to fit for two elements on the right */
-        flex-basis: calc(100% - 80px);
+        /* This basis is set empirically to fit for three elements on the right */
+        flex-basis: calc(100% - 120px);
 
         /* These items should grow, and shrink */
         .level-item {
