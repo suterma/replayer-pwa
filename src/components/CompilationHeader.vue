@@ -18,19 +18,15 @@
             <div class="level-item">
                 <span class="is-pulled-right ml-3">
                     <DropdownMenu title="Compilation context menu">
-                        <a
-                            href="#"
+                        <DropdownMenuItem
+                            title="Prevent screen timeout"
+                            subTitle="(while this compilation is open)"
                             :class="{
-                                'dropdown-item': true,
                                 'is-active': isPreventingScreenTimeoutNow,
                             }"
                             @click="togglePreventScreenTimeoutNow"
-                        >
-                            Prevent screen timeout<br />
-                            <span class="has-opacity-half is-size-7">
-                                (while this compilation is in open)</span
-                            >
-                        </a>
+                        />
+
                         <a
                             href="#"
                             class="dropdown-item"
@@ -74,12 +70,13 @@ import { ActionTypes } from '@/store/action-types';
 import { Compilation, ICompilation } from '@/store/compilation-types';
 import EditableInput from '@/components/EditableInput.vue';
 import DropdownMenu from '@/components/DropdownMenu.vue';
+import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
 
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
     name: 'CompilationHeader',
-    components: { EditableInput, DropdownMenu },
+    components: { EditableInput, DropdownMenu, DropdownMenuItem },
     props: {
         compilation: {
             type: Compilation,
