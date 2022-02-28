@@ -9,8 +9,7 @@
     <div v-else class="box has-background-transparent">
         <p class="has-text-centered">
             Replayer is a free, cue-based media player for rehearsals with
-            playback music. <br />By the click of a button, Replayer starts to
-            play at predefined times in the audio file.
+            playback music.
         </p>
     </div>
 

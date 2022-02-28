@@ -17,85 +17,49 @@
         <div class="level-right">
             <div class="level-item">
                 <span class="is-pulled-right ml-3">
-                    <div
-                        :class="{
-                            dropdown: true,
-                            'is-right': true,
-                            'is-hoverable': false,
-                            'is-active': isDropdownExpanded,
-                        }"
-                        @click="toggleDropdownExpanded()"
-                        v-click-outside="collapseDropdown"
-                        @blur="collapseDropdown()"
-                    >
-                        <!-- dropdown-trigger -->
-                        <NavButton
-                            class="button"
-                            aria-haspopup="true"
-                            aria-controls="dropdown-menu"
-                            title="Compilation context menu"
-                            iconName="menu"
-                        />
-                        <div
-                            class="dropdown-menu is-unselectable"
-                            id="dropdown-menu"
-                            role="menu"
+                    <DropdownMenu title="Compilation context menu">
+                        <a
+                            href="#"
+                            :class="{
+                                'dropdown-item': true,
+                                'is-active': isPreventingScreenTimeoutNow,
+                            }"
+                            @click="togglePreventScreenTimeoutNow"
                         >
-                            <div class="dropdown-content">
-                                <a
-                                    href="#"
-                                    :class="{
-                                        'dropdown-item': true,
-                                        'is-active':
-                                            isPreventingScreenTimeoutNow,
-                                    }"
-                                    @click="togglePreventScreenTimeoutNow"
-                                >
-                                    Prevent screen timeout<br />
-                                    <span class="has-opacity-half is-size-7">
-                                        (while this compilation is in
-                                        open)</span
-                                    >
-                                </a>
-                                <a
-                                    href="#"
-                                    class="dropdown-item"
-                                    @click="downloadRezPackage"
-                                >
-                                    Download as
-                                    <span class="has-text-weight-bold">ZIP</span
-                                    ><br />
-                                    <span class="has-opacity-half is-size-7">
-                                        (<span class="is-family-monospace"
-                                            >.rez</span
-                                        >), including media files
-                                    </span>
-                                </a>
-                                <a
-                                    href="#"
-                                    class="dropdown-item"
-                                    @click="downloadRexFile"
-                                >
-                                    Download as
-                                    <span class="has-text-weight-bold">XML</span
-                                    ><br />
-                                    <span class="has-opacity-half is-size-7">
-                                        (<span class="is-family-monospace"
-                                            >.rex</span
-                                        >), without media files
-                                    </span>
-                                </a>
-                                <hr class="dropdown-divider" />
-                                <a
-                                    href="#"
-                                    @click="close"
-                                    class="dropdown-item"
-                                >
-                                    Close</a
-                                >
-                            </div>
-                        </div>
-                    </div>
+                            Prevent screen timeout<br />
+                            <span class="has-opacity-half is-size-7">
+                                (while this compilation is in open)</span
+                            >
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            @click="downloadRezPackage"
+                        >
+                            Download as
+                            <span class="has-text-weight-bold">ZIP</span><br />
+                            <span class="has-opacity-half is-size-7">
+                                (<span class="is-family-monospace">.rez</span>),
+                                including media files
+                            </span>
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            @click="downloadRexFile"
+                        >
+                            Download as
+                            <span class="has-text-weight-bold">XML</span><br />
+                            <span class="has-opacity-half is-size-7">
+                                (<span class="is-family-monospace">.rex</span>),
+                                without media files
+                            </span>
+                        </a>
+                        <hr class="dropdown-divider" />
+                        <a href="#" @click="close" class="dropdown-item">
+                            Close</a
+                        >
+                    </DropdownMenu>
                 </span>
             </div>
         </div>
@@ -109,13 +73,13 @@ import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
 import { Compilation, ICompilation } from '@/store/compilation-types';
 import EditableInput from '@/components/EditableInput.vue';
-import NavButton from '@/components/NavButton.vue';
+import DropdownMenu from '@/components/DropdownMenu.vue';
 
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
     name: 'CompilationHeader',
-    components: { EditableInput, NavButton },
+    components: { EditableInput, DropdownMenu },
     props: {
         compilation: {
             type: Compilation,

@@ -119,17 +119,6 @@ export default class AudioFader {
         return currentVolume;
     }
 
-    /** Applies an offset to compensate fade-in durations */
-    applyPreFadeInOffset(): void {
-        const time = this.audio.currentTime;
-        const offset = this.fadeInDuration / 1000;
-        const target = time - offset;
-        console.debug(
-            `AudioFader::applyPreFadeInOffset:by:${this.fadeInDuration};from time:${time}; to target:${target}`,
-        );
-        this.audio.currentTime = target;
-    }
-
     /** Returns a linear fade-in promise for the currently playing track
      * @remarks The sound is faded to the maximum audio level.
      * A pre-fade offset is applied, when configured
@@ -144,10 +133,6 @@ export default class AudioFader {
         if (this.fadeInDuration) {
             return new Promise((resolve, reject) => {
                 try {
-                    if (this.applyFadeInOffset) {
-                        this.applyPreFadeInOffset();
-                    }
-
                     const currentVolume = this.minAudioLevel; //always start fade-in from minimum
                     if (currentVolume < this.maxAudioLevel) {
                         //Determine the required fade, based on the current volume
