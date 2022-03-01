@@ -83,8 +83,22 @@
                 <div class="level-item">
                     <CollapsibleButton
                         :modelValue="this.modelValue"
+                        title="Track"
+                        collapsedText="Click to edit"
                         @click="toggleExpanded()"
                     />
+                </div>
+
+                <div class="level-item">
+                    <span class="is-pulled-right ml-3">
+                        <DropdownMenu title="Track context menu">
+                            <hr class="dropdown-divider" />
+                            <DropdownMenuItem
+                                title="Close"
+                                subTitle="(discard the compilation)"
+                            />
+                        </DropdownMenu>
+                    </span>
                 </div>
             </div>
         </div>
@@ -99,13 +113,21 @@ import EditableInput from '@/components/EditableInput.vue';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
 import Icon from '@/components/icons/Icon.vue';
-
+import DropdownMenu from '@/components/DropdownMenu.vue';
+import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
 /** A header for editing track metadata
  */
 //TODO later remove the editable parts from TrackHeader, once the TrackHeaderEdit is accepted as the edit control
 export default defineComponent({
     name: 'TrackHeaderEdit',
-    components: { PlaybackIndicator, Icon, EditableInput, CollapsibleButton },
+    components: {
+        PlaybackIndicator,
+        Icon,
+        EditableInput,
+        CollapsibleButton,
+        DropdownMenu,
+        DropdownMenuItem,
+    },
     emits: ['update:modelValue'],
 
     props: {
@@ -212,8 +234,8 @@ export default defineComponent({
 .level {
     .level-left {
         word-break: break-word;
-        /* This basis is set empirically to fit for three elements on the right */
-        flex-basis: calc(100% - 120px);
+        /* This basis is set empirically to fit for four elements on the right (40px each) */
+        flex-basis: calc(100% - 160px);
 
         /* These items should grow, and shrink */
         .level-item {

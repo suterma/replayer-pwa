@@ -1,38 +1,27 @@
 <template>
     <!-- //TODO remove transitioning, when not used, later -->
     <!-- 'is-loading': this.isTransitioning, -->
-    <button
-        :class="{
-            button: true,
-            'is-nav': true,
-            'is-small': true,
-        }"
+
+    <NavButton
+        :iconClass="this.navIconClass"
+        aria-haspopup="true"
+        aria-controls="dropdown-menu"
+        :title="this.titleText"
+        iconName="chevron-down"
         @click="toggleExpanded()"
-        :title="titleText"
-    >
-        <!-- Collapsed/Expanded -->
-        <Icon
-            name="chevron-down"
-            :class="{
-                rotate: true,
-                down: this.modelValue,
-            }"
-        />
-        <span v-if="this.modelValue" class=""> {{ this.expandedText }}</span>
-        <span v-else class=""> {{ this.collapsedText }} </span>
-    </button>
+    />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Icon from '@/components/icons/Icon.vue';
+import NavButton from '@/components/NavButton.vue';
 
 /** A button to select the collapsed or expanded state
  */
 export default defineComponent({
     name: 'CollapsibleButton',
     emits: ['update:modelValue'],
-    components: { Icon },
+    components: { NavButton },
     props: {
         /** Whether this represents the expanded state. */
         modelValue: {
@@ -44,6 +33,11 @@ export default defineComponent({
             default: '',
         },
         collapsedText: {
+            type: String,
+            default: '',
+        },
+        /* The title*/
+        title: {
             type: String,
             default: '',
         },
@@ -65,17 +59,23 @@ export default defineComponent({
     computed: {
         titleText(): string {
             if (this.modelValue) {
-                return 'collapse';
+                const addOn = this.expandedText ? `(${this.expandedText})` : '';
+                return `${this.title} ${addOn}`;
             }
-            return 'expand';
+            const addOn = this.collapsedText ? `(${this.collapsedText})` : '';
+            return `${this.title} ${addOn}`;
         },
         isTransitioning(): boolean {
             return this.requestedModelValue !== this.modelValue;
         },
+        /** The dynamic class for the rotating expander button icon */
+        navIconClass(): string {
+            return 'rotate ' + (this.modelValue == true ? 'down' : '');
+        },
     },
 });
 </script>
-<style scoped>
+<style>
 .rotate {
     -moz-transition: all 0.3s linear;
     -webkit-transition: all 0.3s linear;

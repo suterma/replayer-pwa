@@ -22,7 +22,7 @@
                             title="Prevent screen timeout"
                             subTitle="(while this compilation is open)"
                             :class="{
-                                'is-active': isPreventingScreenTimeoutNow,
+                                'is-active': this.isPreventingScreenTimeoutNow,
                             }"
                             @click="togglePreventScreenTimeoutNow"
                         />
@@ -52,9 +52,11 @@
                             </span>
                         </a>
                         <hr class="dropdown-divider" />
-                        <a href="#" @click="close" class="dropdown-item">
-                            Close</a
-                        >
+                        <DropdownMenuItem
+                            title="Close"
+                            subTitle="(discard the compilation)"
+                            @click="close"
+                        />
                     </DropdownMenu>
                 </span>
             </div>
