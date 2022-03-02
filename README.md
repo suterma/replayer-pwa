@@ -14,7 +14,11 @@ The [Replayer, as a Web App](https://replayer.app), for compilations from the cl
 
 It's aim is to replace the classic, Microsoft Windows based, [Replayer](https://github.com/suterma/replayer) desktop application with a progressive web app, that is locally installable on devices.
 
--   The latest version is available at https://web.replayer.app
+# Latest release
+
+-   The latest version is available at https://web.replayer.app (official release)
+    - Test release at https://web-test.replayer.app 
+    - Development release at https://web-devel.replayer.app
 -   Source code is availabe at [GitHub](https://github.com/suterma/replayer-pwa)
 
 # Glossary
@@ -39,7 +43,7 @@ It's aim is to replace the classic, Microsoft Windows based, [Replayer](https://
 * [ ] Multitrack playback
 * Persistence
   * [x] Keep last open complilation loaded
-  * [ ] Edit mode, along with ZIP-Package export
+  * [x] Edit mode, along with ZIP-Package export
 * Sharing
   * [ ] Sharing by link
   * [ ] Sharing by QR code
