@@ -95,8 +95,13 @@
                             <hr class="dropdown-divider" />
                             <DropdownMenuItem
                                 title="Remove"
-                                subTitle="(remove the track from the compilation)"
-                                @click="removeTrack()"
+                                subTitle="(remove
+                            the track from the compilation)"
+                                @click="
+                                    assert('Are you sure?').then(() =>
+                                        removeTrack(),
+                                    )
+                                "
                             />
                         </DropdownMenu>
                     </span>
@@ -177,6 +182,15 @@ export default defineComponent({
             console.debug(`TrackHeader::toggleExpanded:expanded:${expanded}`);
             this.$emit('update:modelValue', expanded);
         },
+
+        /** Asserts with a dialog, that the user is ready to take the action
+         */
+        assert(action: () => void): void {
+            //TODOcontinue show the dialog, then do the action
+
+            action();
+        },
+
         /** Removes the track from the compilation
          */
         removeTrack() {
