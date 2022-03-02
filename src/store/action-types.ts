@@ -10,6 +10,9 @@ export enum ActionTypes {
     /** Adds a blob as a media source, using a name and a blob  */
     ADD_MEDIA_BLOB = 'ADD_MEDIA_BLOB',
 
+    /** Removes a track from the compilation */
+    REMOVE_TRACK = 'REMOVE_TRACK',
+
     /** Loads a single file or package from an URL
      * @remarks The content might be a package or single file of any supported content.
      * @remarks This method can be called multiple times, each resource gets appropriately added to the current compilation

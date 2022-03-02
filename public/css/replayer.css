@@ -11140,6 +11140,11 @@ but not at the "end/right" container's border */
   background-color: #52575c;
 }
 
+/* static menu items are not clickable */
+.dropdown-item.is-static {
+  pointer-events: none;
+}
+
 /*************************************************************
  * Experimental content
 **************************************************************

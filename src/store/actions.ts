@@ -31,6 +31,11 @@ export interface Actions {
         { commit }: AugmentedActionContext,
         payload: { fileName: string; blob: Blob },
     ): void;
+    [ActionTypes.REMOVE_TRACK](
+        { commit }: AugmentedActionContext,
+        trackId: string,
+    ): void;
+
     [ActionTypes.LOAD_FROM_URL](
         { commit }: AugmentedActionContext,
         url: string,
@@ -165,6 +170,11 @@ export const actions: ActionTree<State, State> & Actions = {
         );
         //Store persistently, but after committing, to keep the process faster
         PersistentStorage.storeMediaBlob(mediaBlob);
+    },
+    [ActionTypes.REMOVE_TRACK]({ commit }, trackId: string) {
+        console.debug('actions::REMOVE_TRACK:trackId', trackId);
+
+        commit(MutationTypes.REMOVE_TRACK, trackId);
     },
     //TODO WIP check whether all these loading function actually work:
     //With xml, rex, bplist, ZIP

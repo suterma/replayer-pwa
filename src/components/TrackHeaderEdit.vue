@@ -90,12 +90,13 @@
                 </div>
 
                 <div class="level-item">
-                    <span class="is-pulled-right ml-3">
+                    <span class="is-pulled-right">
                         <DropdownMenu title="Track context menu">
                             <hr class="dropdown-divider" />
                             <DropdownMenuItem
-                                title="Close"
-                                subTitle="(discard the compilation)"
+                                title="Remove"
+                                subTitle="(remove the track from the compilation)"
+                                @click="removeTrack()"
                             />
                         </DropdownMenu>
                     </span>
@@ -176,6 +177,11 @@ export default defineComponent({
             console.debug(`TrackHeader::toggleExpanded:expanded:${expanded}`);
             this.$emit('update:modelValue', expanded);
         },
+        /** Removes the track from the compilation
+         */
+        removeTrack() {
+            this.$store.dispatch(ActionTypes.REMOVE_TRACK, this.track.Id);
+        },
         /** Updates the track name */
         updateName(name: string) {
             const trackId = this.track.Id;
@@ -234,8 +240,8 @@ export default defineComponent({
 .level {
     .level-left {
         word-break: break-word;
-        /* This basis is set empirically to fit for four elements on the right (40px each) */
-        flex-basis: calc(100% - 160px);
+        /* This basis is set empirically to fit for the elements on the right */
+        flex-basis: calc(100% - 190px);
 
         /* These items should grow, and shrink */
         .level-item {

@@ -45,6 +45,11 @@ export enum MutationTypes {
      */
     UPDATE_CUE_DURATIONS = 'UPDATE_CUE_DURATIONS',
 
+    /** Removes an existing track, with it's cues.
+     * @remarks Removes the track from the compilation. If the selected cue was one of the track, the selection is cleared.
+     */
+    REMOVE_TRACK = 'REMOVE_TRACK',
+
     /** Closes an existing compilation
      * @remarks Removes the compilation with all data, including the media files and the object URL references to it
      */

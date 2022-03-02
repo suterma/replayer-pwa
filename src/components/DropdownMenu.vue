@@ -23,11 +23,11 @@
             role="menu"
         >
             <div class="dropdown-content">
+                <!-- HINT: Because of 'is-static', this should not be clickable, but unfortunately I was not able to prevent this yet -->
                 <div class="dropdown-item is-static">
                     <p>{{ this.title }}</p>
                 </div>
                 <hr class="dropdown-divider" />
-
                 <slot>
                     <!-- The menu items -->
                 </slot>

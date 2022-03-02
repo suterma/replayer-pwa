@@ -35,6 +35,7 @@ export type Mutations<S = State> = {
         state: S,
         payload: { trackId: string; trackDurationSeconds: number },
     ): void;
+    [MutationTypes.REMOVE_TRACK](state: S, trackId: string): void;
     [MutationTypes.CLOSE_COMPILATION](state: S): void;
     [MutationTypes.REVOKE_ALL_MEDIA_URLS](state: State): void;
     [MutationTypes.UPDATE_SETTINGS](state: S, settings: Settings): void;
@@ -260,6 +261,23 @@ export const mutations: MutationTree<State> & Mutations = {
             );
             CompilationHandler.updateCueDurations(track.Cues, trackDuration);
         }
+    },
+
+    [MutationTypes.REMOVE_TRACK](state: State, trackId: string) {
+        const trackToRemove = CompilationHandler.getTrackById(
+            state.compilation,
+            trackId,
+        );
+        trackToRemove?.Cues.forEach((cue) => {
+            if (state.selectedCueId === cue.Id) {
+                state.selectedCueId =
+                    ''; /* unselect cue, this track is no longer the active track */
+            }
+        });
+
+        state.compilation.Tracks = state.compilation.Tracks.filter(
+            (track) => track.Id !== trackId,
+        );
     },
 
     [MutationTypes.CLOSE_COMPILATION](state: State) {
