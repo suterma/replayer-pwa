@@ -15,6 +15,7 @@
         <ProgressOverlay />
         <ErrorOverlay />
         <WelcomeMessage />
+        <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
     </section>
 </template>
 <script lang="ts">
@@ -25,6 +26,7 @@ import ErrorOverlay from '@/components/ErrorOverlay.vue';
 import WelcomeMessage from '@/components/WelcomeMessage.vue';
 import { MutationTypes } from './store/mutation-types';
 import CompilationLoader from '@/components/CompilationLoader.vue';
+import { DialogWrapper } from 'vue3-promise-dialog';
 
 export default defineComponent({
     name: 'App',
@@ -34,6 +36,7 @@ export default defineComponent({
         ProgressOverlay,
         ErrorOverlay,
         WelcomeMessage,
+        DialogWrapper,
     },
     beforeCreate() {
         this.$store.commit(MutationTypes.RETRIEVE_SETTINGS);

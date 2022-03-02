@@ -73,6 +73,7 @@ import { Compilation, ICompilation } from '@/store/compilation-types';
 import EditableInput from '@/components/EditableInput.vue';
 import DropdownMenu from '@/components/DropdownMenu.vue';
 import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
+import { confirm } from '@/code/ui/dialogs';
 
 /** A nav bar as header with a menu for a compilation
  */
@@ -107,7 +108,14 @@ export default defineComponent({
         /** Closes the compilation
          */
         close(): void {
-            this.$store.commit(MutationTypes.CLOSE_COMPILATION);
+            confirm(
+                'Closing compilation',
+                `Do you want to close (and discard any changes to) compilation "${this.compilation.Title}"? Hint: to keep changes for later use, download a copy first.`,
+            ).then((ok) => {
+                if (ok) {
+                    this.$store.commit(MutationTypes.CLOSE_COMPILATION);
+                }
+            });
         },
         /** Updates the compilation title */
         updateTitle(title: string) {

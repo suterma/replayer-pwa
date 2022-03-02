@@ -11145,6 +11145,12 @@ but not at the "end/right" container's border */
   pointer-events: none;
 }
 
+/* header menu items are shorter */
+.dropdown-item.is-header {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 /*************************************************************
  * Experimental content
 **************************************************************

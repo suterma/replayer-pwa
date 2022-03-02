@@ -247,6 +247,15 @@
                     >, a Jest reporter that creates compatible junit xml files.
                     (Released under the MIT License, by the jest community)
                 </li>
+                <li>
+                    <a
+                        href="https://github.com/rlemaigre/vue3-promise-dialog"
+                        target="_blank"
+                    >
+                        vue3-promise-dialog</a
+                    >, dialogs meet promises in Vue 3! (Released under the MIT
+                    License, by Régis Lemaigre)
+                </li>
             </ul>
         </div>
         <h1 class="title">License</h1>

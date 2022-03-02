@@ -92,16 +92,11 @@
                 <div class="level-item">
                     <span class="is-pulled-right">
                         <DropdownMenu title="Track context menu">
-                            <hr class="dropdown-divider" />
                             <DropdownMenuItem
                                 title="Remove"
                                 subTitle="(remove
                             the track from the compilation)"
-                                @click="
-                                    assert('Are you sure?').then(() =>
-                                        removeTrack(),
-                                    )
-                                "
+                                @click="removeTrack()"
                             />
                         </DropdownMenu>
                     </span>
@@ -121,6 +116,8 @@ import { ActionTypes } from '@/store/action-types';
 import Icon from '@/components/icons/Icon.vue';
 import DropdownMenu from '@/components/DropdownMenu.vue';
 import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
+import { confirm } from '@/code/ui/dialogs';
+
 /** A header for editing track metadata
  */
 //TODO later remove the editable parts from TrackHeader, once the TrackHeaderEdit is accepted as the edit control
@@ -183,18 +180,20 @@ export default defineComponent({
             this.$emit('update:modelValue', expanded);
         },
 
-        /** Asserts with a dialog, that the user is ready to take the action
-         */
-        assert(action: () => void): void {
-            //TODOcontinue show the dialog, then do the action
-
-            action();
-        },
-
         /** Removes the track from the compilation
          */
         removeTrack() {
-            this.$store.dispatch(ActionTypes.REMOVE_TRACK, this.track.Id);
+            confirm(
+                'Removing track',
+                `Do you want to remove track "${this.track.Name}"?`,
+            ).then((ok) => {
+                if (ok) {
+                    this.$store.dispatch(
+                        ActionTypes.REMOVE_TRACK,
+                        this.track.Id,
+                    );
+                }
+            });
         },
         /** Updates the track name */
         updateName(name: string) {

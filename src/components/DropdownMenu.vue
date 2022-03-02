@@ -24,7 +24,7 @@
         >
             <div class="dropdown-content">
                 <!-- HINT: Because of 'is-static', this should not be clickable, but unfortunately I was not able to prevent this yet -->
-                <div class="dropdown-item is-static">
+                <div class="dropdown-item is-static is-header">
                     <p>{{ this.title }}</p>
                 </div>
                 <hr class="dropdown-divider" />
