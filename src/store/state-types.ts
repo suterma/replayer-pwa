@@ -16,7 +16,6 @@ export class Settings {
     /** Returns the settings with their default value */
     static default(): Settings {
         return new Settings(
-            /*neverShowWelcomeMessageAgain*/ false,
             /*autoRetrieveLastCompilation*/ true,
             /*preventScreenTimeout*/ false,
             /*fadeInDuration*/ 1000,
@@ -25,10 +24,6 @@ export class Settings {
             /*displayExperimentalContent*/ false,
         );
     }
-    /** Whether to never show the welcome message at application start
-     * @remarks Default is false (show the message)
-     */
-    neverShowWelcomeMessageAgain;
 
     /** Whether to automatically retrieve the last compilation on startup, if available and not overridden by a URL parameter
      * @remarks Default is true (auto retrieve)
@@ -68,10 +63,6 @@ export class Settings {
     static fromJson(jsonSettings: string): Settings {
         const obj = JSON.parse(jsonSettings) as Settings;
         const settings = Settings.default();
-        if (obj.neverShowWelcomeMessageAgain != undefined) {
-            settings.neverShowWelcomeMessageAgain =
-                obj.neverShowWelcomeMessageAgain;
-        }
         if (obj.autoRetrieveLastCompilation != undefined) {
             settings.autoRetrieveLastCompilation =
                 obj.autoRetrieveLastCompilation;
@@ -98,7 +89,6 @@ export class Settings {
     /** Creates new settings
      */
     constructor(
-        neverShowWelcomeMessageAgain: boolean,
         autoRetrieveLastCompilation: boolean,
         preventScreenTimeout: boolean,
         fadeInDuration: number,
@@ -106,7 +96,6 @@ export class Settings {
         applyFadeInOffset: boolean,
         displayExperimentalContent: boolean,
     ) {
-        this.neverShowWelcomeMessageAgain = neverShowWelcomeMessageAgain;
         this.autoRetrieveLastCompilation = autoRetrieveLastCompilation;
         this.preventScreenTimeout = preventScreenTimeout;
         this.fadeInDuration = fadeInDuration;

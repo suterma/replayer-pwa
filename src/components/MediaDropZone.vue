@@ -35,10 +35,8 @@ The URL input is wider, because it should be able to easily deal with lenghty in
             </div>
         </div>
 
-        <div v-if="isExpanded" class="level-item has-text-centered">
-            <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
-        </div>
-        <div v-else class="level-item has-text-centered">
+        <!-- The unexpanded plus sign -->
+        <div v-if="!isExpanded" class="level-item has-text-centered">
             <div class="ml-3 mr-3">
                 <!-- expanded-trigger -->
                 <nav>
@@ -52,23 +50,29 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                 </nav>
             </div>
         </div>
-        <div
-            v-if="isExpanded"
-            class="level-item has-text-centered is-flex-grow-5 is-flex-shrink-1"
-        >
-            <div class="field fill-available has-addons">
-                <div class="control fill-available">
-                    <input
-                        tabindex="20"
-                        class="input"
-                        type="url"
-                        v-model="url"
-                        placeholder="Paste an URL"
-                        size="60"
-                    />
-                </div>
-                <!-- //TODO fetch is currenlty not suported at URL load time -->
-                <!-- <div class="control">
+
+        <!-- The experimental URL loading part -->
+        <Experimental>
+            <div v-if="isExpanded" class="level-item has-text-centered">
+                <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
+            </div>
+            <div
+                v-if="isExpanded"
+                class="level-item has-text-centered is-flex-grow-5 is-flex-shrink-1"
+            >
+                <div class="field fill-available has-addons">
+                    <div class="control fill-available">
+                        <input
+                            tabindex="20"
+                            class="input"
+                            type="url"
+                            v-model="url"
+                            placeholder="Paste an URL"
+                            size="60"
+                        />
+                    </div>
+                    <!-- //TODO fetch is currenlty not suported at URL load time -->
+                    <!-- <div class="control">
                     <button
                         tabindex="30"
                         :class="{
@@ -81,25 +85,26 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                         Fetch
                     </button>
                 </div> -->
-                <div class="control">
-                    <!-- Use as default, thus set as the submit button -->
-                    <button
-                        tabindex="40"
-                        :class="{
-                            button: true,
-                            'is-primary': true,
-                            'is-loading': this.isUsingMediaFromUrl,
-                        }"
-                        type="submit"
-                        @click="useMediaUrl"
-                    >
-                        Load
+                    <div class="control">
+                        <!-- Use as default, thus set as the submit button -->
+                        <button
+                            tabindex="40"
+                            :class="{
+                                button: true,
+                                'is-primary': true,
+                                'is-loading': this.isUsingMediaFromUrl,
+                            }"
+                            type="submit"
+                            @click="useMediaUrl"
+                        >
+                            Load
 
-                        <!-- Apply and use online -->
-                    </button>
+                            <!-- Apply and use online -->
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </Experimental>
     </div>
     <!-- <div v-if="isExpanded" class="box has-border has-background-transparent">
         <SupportedFilesText />
@@ -135,13 +140,14 @@ import { MutationTypes } from '@/store/mutation-types';
 import { v4 as uuidv4 } from 'uuid';
 import FileHandler from '@/store/filehandler';
 import Icon from '@/components/icons/Icon.vue';
+import Experimental from '@/components/Experimental.vue';
 
 /** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
  * @remarks Supports collapsing the control after load, to keep the user more focused
  */
 export default defineComponent({
     name: 'MediaDropZone',
-    components: { Icon },
+    components: { Icon, Experimental },
     props: {
         /** Whether to show the zone in the expanded state */
         isExpanded: {

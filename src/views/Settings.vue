@@ -9,19 +9,6 @@
                 <label class="checkbox">
                     <input
                         type="checkbox"
-                        :checked="this.getSettings.neverShowWelcomeMessageAgain"
-                        @change="neverShowAgainChanged"
-                    />
-                    Never show the welcome message again
-                </label>
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="control">
-                <label class="checkbox">
-                    <input
-                        type="checkbox"
                         :checked="this.getSettings.autoRetrieveLastCompilation"
                         @change="autoRetrieveLastCompilationChanged"
                     />
@@ -238,14 +225,6 @@ export default defineComponent({
         this.localSettings = this.getSettings;
     },
     methods: {
-        neverShowAgainChanged(event: Event) {
-            const checked = (event.target as HTMLInputElement)?.checked;
-            const settings = this.getSettings;
-
-            settings.neverShowWelcomeMessageAgain = checked;
-
-            this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
-        },
         reset() {
             console.debug('Settings::reset');
             this.$store.dispatch(ActionTypes.RESET_APPLICATION).then(() => {

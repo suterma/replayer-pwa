@@ -14,7 +14,6 @@
         <CompilationLoader />
         <ProgressOverlay />
         <ErrorOverlay />
-        <WelcomeMessage />
         <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
     </section>
 </template>
@@ -23,7 +22,6 @@ import { defineComponent } from 'vue';
 import NavbarTop from '@/components/NavbarTop.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import ErrorOverlay from '@/components/ErrorOverlay.vue';
-import WelcomeMessage from '@/components/WelcomeMessage.vue';
 import { MutationTypes } from './store/mutation-types';
 import CompilationLoader from '@/components/CompilationLoader.vue';
 import { DialogWrapper } from 'vue3-promise-dialog';
@@ -35,7 +33,6 @@ export default defineComponent({
         CompilationLoader,
         ProgressOverlay,
         ErrorOverlay,
-        WelcomeMessage,
         DialogWrapper,
     },
     beforeCreate() {
