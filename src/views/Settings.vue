@@ -155,14 +155,33 @@
             </div>
         </div>
 
+        <div class="field">
+            <label class="label"
+                >Reset all data and settings
+                <span class="has-opacity-half is-size-7">
+                    (Restores the initial application state)</span
+                >
+            </label>
+            <div class="control">
+                <button class="button" @click="reset()">Reset</button>
+            </div>
+        </div>
+
         <!-- Experimental settings -->
         <hr />
 
-        <CollapsibleButton
-            v-model="this.isExperimentalExpanded"
-            collapsedText="Experimental"
-            expandedText="Here be dragons (use at your own risk)"
-        />
+        <div class="field">
+            <label class="label"
+                >Experimental settings
+                <span class="has-opacity-half is-size-7">
+                    (Here be dragons (use at your own risk))</span
+                >
+            </label>
+            <div class="control">
+                <CollapsibleButton v-model="this.isExperimentalExpanded" />
+            </div>
+        </div>
+
         <br />
         <br />
         <slide-up-down
@@ -203,6 +222,7 @@ import { MutationTypes } from '@/store/mutation-types';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import { Settings } from '@/store/state-types';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
+import { ActionTypes } from '@/store/action-types';
 
 /** A Settings view
  */
@@ -212,7 +232,7 @@ export default defineComponent({
     components: { CollapsibleButton },
     data: () => ({
         localSettings: undefined as unknown as Settings,
-        isExperimentalExpanded: Boolean,
+        isExperimentalExpanded: false,
     }),
     created() {
         this.localSettings = this.getSettings;
@@ -225,6 +245,12 @@ export default defineComponent({
             settings.neverShowWelcomeMessageAgain = checked;
 
             this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
+        },
+        reset() {
+            console.debug('Settings::reset');
+            this.$store.dispatch(ActionTypes.RESET_APPLICATION).then(() => {
+                this.$router.push('home');
+            });
         },
         autoRetrieveLastCompilationChanged(event: Event) {
             const checked = (event.target as HTMLInputElement)?.checked;

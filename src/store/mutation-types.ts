@@ -51,7 +51,7 @@ export enum MutationTypes {
     REMOVE_TRACK = 'REMOVE_TRACK',
 
     /** Closes an existing compilation
-     * @remarks Removes the compilation with all data, including the media files and the object URL references to it
+     * @remarks Removes the compilation with all data, including the media files and the object URL references to it. Clears the selected cue.
      */
     CLOSE_COMPILATION = 'CLOSE_COMPILATION',
 
@@ -60,6 +60,7 @@ export enum MutationTypes {
      * This is usually the case when the user closes the tab or browser window, without actually closing the compilation.
      */
     REVOKE_ALL_MEDIA_URLS = 'REVOKE_ALL_MEDIA_URLS',
+
     /** Updates the application settings */
     UPDATE_SETTINGS = 'UPDATE_SETTINGS',
     /** Retrieves the application settings from the persisted store during startup.

@@ -297,7 +297,9 @@ export const mutations: MutationTree<State> & Mutations = {
         });
         state.mediaUrls.clear();
 
-        //TODO remove the durations from all tracks
+        state.compilation.Tracks.forEach((track) => {
+            track.Duration = null;
+        });
     },
     /** Updates the application settings
      * @param state - The vuex state

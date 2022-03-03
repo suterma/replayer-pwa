@@ -56,4 +56,7 @@ export enum ActionTypes {
     /** Deletes the cue with the given Id
      */
     DELETE_CUE = 'DELETE_CUE',
+
+    /** Completely resests all data and settings to the initial (default) state */
+    RESET_APPLICATION = 'RESET_APPLICATION',
 }

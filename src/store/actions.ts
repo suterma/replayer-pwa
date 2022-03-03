@@ -5,7 +5,7 @@ import { ActionTypes } from './action-types';
 import { MutationTypes } from './mutation-types';
 import PersistentStorage from './persistent-storage';
 import CompilationParser from './compilation-parser';
-import { MediaBlob, MediaUrl, RezMimeTypes } from './state-types';
+import { MediaBlob, MediaUrl, RezMimeTypes, Settings } from './state-types';
 import JSZip from 'jszip';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 import CompilationHandler from './compilation-handler';
@@ -77,6 +77,7 @@ export interface Actions {
         { commit }: AugmentedActionContext,
         cueId: string,
     ): void;
+    [ActionTypes.RESET_APPLICATION]({ commit }: AugmentedActionContext): void;
 }
 export const actions: ActionTree<State, State> & Actions = {
     [ActionTypes.RETRIEVE_COMPILATION]({ commit }) {
@@ -615,6 +616,12 @@ export const actions: ActionTree<State, State> & Actions = {
     ): void {
         withProgress(`Deleting cue...`, commit, () => {
             commit(MutationTypes.DELETE_CUE, cueId);
+        });
+    },
+    [ActionTypes.RESET_APPLICATION]({ commit }: AugmentedActionContext): void {
+        withProgress(`Resetting application...`, commit, () => {
+            commit(MutationTypes.CLOSE_COMPILATION, undefined);
+            commit(MutationTypes.UPDATE_SETTINGS, Settings.default());
         });
     },
 };
