@@ -17,7 +17,7 @@
         :is-expanded="this.isExpanded"
         @update:is-expanded="updateExpanded"
     />
-    <div class="content">
+    <div v-if="!hasCompilation" class="content">
         <WelcomeText />
     </div>
 </template>

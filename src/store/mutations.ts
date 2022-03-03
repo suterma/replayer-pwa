@@ -1,11 +1,18 @@
 import { MutationTree } from 'vuex';
-import { Compilation, ICompilation, ICue, ITrack } from './compilation-types';
+import {
+    Compilation,
+    Cue,
+    ICompilation,
+    ICue,
+    ITrack,
+} from './compilation-types';
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
 import { MediaUrl, Settings } from './state-types';
 import PersistentStorage from './persistent-storage';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 import CompilationHandler from './compilation-handler';
+import { v4 as uuidv4 } from 'uuid';
 
 export type Mutations<S = State> = {
     [MutationTypes.PUSH_PROGRESS_MESSAGE](state: S, payload: string): void;
@@ -102,28 +109,20 @@ export const mutations: MutationTree<State> & Mutations = {
         console.debug('mutations::ADD_TRACK:', track);
 
         //Add a first cue first, then select it
-        //TODO currently do not add a cue, for ui tidyness
-        /*const nextShortcut = CompilationHandler.getNextShortcut(
+        const nextShortcut = CompilationHandler.getNextShortcut(
             state.compilation as ICompilation,
         );
 
         const time = 0;
         const cueId = uuidv4();
-        const cue = new Cue(
-            'Cue at ' + CompilationHandler.convertToDisplayTime(time),
-            nextShortcut,
-            time,
-            null,
-            cueId,
-        );
+        const cue = new Cue('', nextShortcut, time, null, cueId);
 
         track.Cues.push(cue);
         state.compilation.Tracks.push(track);
         state.selectedCueId = cueId;
-        */
 
         //Just add the track with no cues
-        state.compilation.Tracks.push(track);
+        //state.compilation.Tracks.push(track);
 
         PersistentStorage.storeCompilation(state.compilation);
     },
