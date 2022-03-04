@@ -17,7 +17,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                 @drop="drop"
             >
                 <input
-                    tabindex="10"
+                    v-focus
                     type="file"
                     multiple
                     name="fields[assetsFieldHandle][]"
@@ -25,7 +25,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     class="is-hidden"
                     @change="onChange"
                     ref="file"
-                    accept=".rex,.xml,.rez,.zip,.mp3,.bplist"
+                    :accept="this.acceptedFiles"
                 />
 
                 <label for="assetsFieldHandle" class="is-clickable">
@@ -63,7 +63,6 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                 <div class="field fill-available has-addons">
                     <div class="control fill-available">
                         <input
-                            tabindex="20"
                             class="input"
                             type="url"
                             v-model="url"
@@ -74,7 +73,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     <!-- //TODO fetch is currenlty not suported at URL load time -->
                     <!-- <div class="control">
                     <button
-                        tabindex="30"
+                      
                         :class="{
                             button: true,
                             'is-primary': true,
@@ -88,7 +87,6 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     <div class="control">
                         <!-- Use as default, thus set as the submit button -->
                         <button
-                            tabindex="40"
                             :class="{
                                 button: true,
                                 'is-primary': true,
@@ -106,30 +104,6 @@ The URL input is wider, because it should be able to easily deal with lenghty in
             </div>
         </Experimental>
     </div>
-    <!-- <div v-if="isExpanded" class="box has-border has-background-transparent">
-        <SupportedFilesText />
-
-        <p>
-            <a href="https://replayer.app/en/documentation-app" target="_blank"
-                >Learn more...</a
-            >
-        </p>
-
-        Example URLs:
-        <br />
-        https://web-devel.replayer.app/your-light-by-lidija-roos.mp3
-        <br />
-        https://galiander.ca/corogaliano/2022springrehearsal/01%20Down%20To%20The%20River%20To%20Pray%202016.mp3
-        <br />
-        https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20sop.mp3
-        <br />
-        https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20alt.mp3
-        <br />
-        https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20ten.mp3
-        <br />
-        https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20bas.mp3
-        <br />
-    </div> -->
 </template>
 
 <script lang="ts">
@@ -202,9 +176,7 @@ export default defineComponent({
          */
         async loadFiles(): Promise<void> {
             Array.from(this.filelist).forEach((file) => {
-                if (this.isSupported(file)) {
-                    this.loadFile(file);
-                }
+                this.loadFile(file);
                 this.filelist.pop();
             });
         },
@@ -213,6 +185,8 @@ export default defineComponent({
          * @param {file} - Any supported file (package, compilation or media)
          */
         async loadFile(file: File): Promise<void> {
+            console.debug('MediaDropZone::loadFile:file.name', file.name);
+
             this.isLoadingFromFile = true;
             this.$store
                 .dispatch(ActionTypes.LOAD_FROM_FILE, file)
@@ -364,7 +338,11 @@ export default defineComponent({
             this.$store.commit(MutationTypes.ADD_TRACK, newTrack);
         },
     },
-    computed: {},
+    computed: {
+        acceptedFiles(): string {
+            return FileHandler.acceptedFileList;
+        },
+    },
 });
 </script>
 <style scoped>
