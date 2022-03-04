@@ -112,11 +112,7 @@ export default defineComponent({
                 `Do you want to close (and discard any changes to) compilation "${this.compilation.Title}"? Hint: to keep changes for later use, download a copy first.`,
             ).then((ok) => {
                 if (ok) {
-                    this.$store
-                        .dispatch(ActionTypes.DISCARD_COMPILATION)
-                        .then(() => {
-                            this.$router.push('home');
-                        });
+                    this.$store.dispatch(ActionTypes.DISCARD_COMPILATION);
                 }
             });
         },

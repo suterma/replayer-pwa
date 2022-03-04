@@ -175,10 +175,22 @@ export default defineComponent({
         /** Immediately loads all available files by loading their content
          */
         async loadFiles(): Promise<void> {
-            Array.from(this.filelist).forEach((file) => {
+            const files = Array.from(this.filelist);
+            files.forEach((file) => {
                 this.loadFile(file);
                 this.filelist.pop();
             });
+
+            //If a single package or complilation has been loaded, the intention was most likely to play it
+            console.debug('MediaDropZone::loadFiles:filelist', files);
+
+            if (
+                files.length === 1 &&
+                (FileHandler.isSupportedPackageFile(files[0]) ||
+                    FileHandler.isSupportedCompilationFileName(files[0].name))
+            ) {
+                this.$router.push('play');
+            }
         },
 
         /** Loads a single file by loading it's content
