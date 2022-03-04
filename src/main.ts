@@ -30,4 +30,7 @@ createApp(App)
     .use(vClickOutside)
     .use(PromiseDialog)
     .component('slide-up-down', SlideUpDown)
+    .directive('focus', {
+        mounted: (el) => el.focus(),
+    })
     .mount('#app');

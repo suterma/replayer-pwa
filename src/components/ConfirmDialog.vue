@@ -17,7 +17,11 @@
                         </button>
                     </p>
                     <p class="control">
-                        <button class="button is-success" @click="$close(this)">
+                        <button
+                            v-focus
+                            class="button is-success"
+                            @click="$close(this)"
+                        >
                             Ok
                         </button>
                     </p>
