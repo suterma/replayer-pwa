@@ -50,10 +50,11 @@ export enum MutationTypes {
      */
     REMOVE_TRACK = 'REMOVE_TRACK',
 
-    /** Closes an existing compilation
-     * @remarks Removes the compilation with all data, including the media files and the object URL references to it. Clears the selected cue.
+    /** Discards the current compilation
+     * @remarks Permanently removes the compilation with all data, including the media files and the object URL references to it from
+     * both the persistent storage and the application store. Clears the selected cue.
      */
-    CLOSE_COMPILATION = 'CLOSE_COMPILATION',
+    DISCARD_COMPILATION = 'DISCARD_COMPILATION',
 
     /** Revokes all currently known media blob URLs
      * @remarks Use this to avoid memory leaks when abandoning (but not closing) a compilation

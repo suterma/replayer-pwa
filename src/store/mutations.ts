@@ -43,7 +43,7 @@ export type Mutations<S = State> = {
         payload: { trackId: string; trackDurationSeconds: number },
     ): void;
     [MutationTypes.REMOVE_TRACK](state: S, trackId: string): void;
-    [MutationTypes.CLOSE_COMPILATION](state: S): void;
+    [MutationTypes.DISCARD_COMPILATION](state: S): void;
     [MutationTypes.REVOKE_ALL_MEDIA_URLS](state: State): void;
     [MutationTypes.UPDATE_SETTINGS](state: S, settings: Settings): void;
     [MutationTypes.RETRIEVE_SETTINGS](state: S): void;
@@ -279,7 +279,7 @@ export const mutations: MutationTree<State> & Mutations = {
         );
     },
 
-    [MutationTypes.CLOSE_COMPILATION](state: State) {
+    [MutationTypes.DISCARD_COMPILATION](state: State) {
         PersistentStorage.clearCompilation();
 
         state.selectedCueId = '';

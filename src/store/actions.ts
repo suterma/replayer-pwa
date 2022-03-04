@@ -146,36 +146,32 @@ export const actions: ActionTree<State, State> & Actions = {
         });
     },
     [ActionTypes.DISCARD_COMPILATION]({ commit }) {
-        console.debug('actions::DISCARD_COMPILATION');
-        commit(
-            MutationTypes.PUSH_PROGRESS_MESSAGE,
-            'Discarding last compilation...',
-        );
-
-        commit(MutationTypes.CLOSE_COMPILATION, undefined);
-        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+        withProgress(`Discarding the compilation...`, commit, () => {
+            commit(MutationTypes.DISCARD_COMPILATION, undefined);
+        });
     },
     [ActionTypes.ADD_MEDIA_BLOB]({ commit }, mediaBlob: MediaBlob) {
-        console.debug(
-            'actions::ADD_MEDIA_BLOB:mediaBlob-filename',
-            mediaBlob.fileName,
+        withProgress(
+            `Adding media blob ${mediaBlob.fileName}...`,
+            commit,
+            () => {
+                const objectUrl = ObjectUrlHandler.createObjectURL(
+                    mediaBlob.blob,
+                    mediaBlob.fileName,
+                );
+                commit(
+                    MutationTypes.ADD_MEDIA_URL,
+                    new MediaUrl(mediaBlob.fileName, objectUrl),
+                );
+                //Store persistently, but after committing, to keep the process faster
+                PersistentStorage.storeMediaBlob(mediaBlob);
+            },
         );
-
-        const objectUrl = ObjectUrlHandler.createObjectURL(
-            mediaBlob.blob,
-            mediaBlob.fileName,
-        );
-        commit(
-            MutationTypes.ADD_MEDIA_URL,
-            new MediaUrl(mediaBlob.fileName, objectUrl),
-        );
-        //Store persistently, but after committing, to keep the process faster
-        PersistentStorage.storeMediaBlob(mediaBlob);
     },
     [ActionTypes.REMOVE_TRACK]({ commit }, trackId: string) {
-        console.debug('actions::REMOVE_TRACK:trackId', trackId);
-
-        commit(MutationTypes.REMOVE_TRACK, trackId);
+        withProgress(`Removing track...`, commit, () => {
+            commit(MutationTypes.REMOVE_TRACK, trackId);
+        });
     },
     //TODO WIP check whether all these loading function actually work:
     //With xml, rex, bplist, ZIP
@@ -620,7 +616,7 @@ export const actions: ActionTree<State, State> & Actions = {
     },
     [ActionTypes.RESET_APPLICATION]({ commit }: AugmentedActionContext): void {
         withProgress(`Resetting application...`, commit, () => {
-            commit(MutationTypes.CLOSE_COMPILATION, undefined);
+            commit(MutationTypes.DISCARD_COMPILATION, undefined);
             commit(MutationTypes.UPDATE_SETTINGS, Settings.default());
         });
     },
