@@ -1,5 +1,5 @@
 <template>
-    <a href="#" class="dropdown-item">
+    <a class="dropdown-item">
         {{ this.title }}<br />
         <span class="has-opacity-half is-size-7"> {{ this.subTitle }}</span>
     </a>
