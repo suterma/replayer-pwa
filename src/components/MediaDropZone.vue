@@ -3,7 +3,13 @@
 The URL input is wider, because it should be able to easily deal with lenghty input values -->
     <div class="level media-drop-zone">
         <div v-if="isExpanded" class="level-item has-text-centered">
-            <div
+            <!-- This is a combined file load and drop zone -->
+            <!-- tabindex, to make the label tabbable with focus-->
+            <!-- Because the label is tied to the file handler, clicking on it invokes the invisible file input -->
+            <!-- @keydown.enter handler to have it working with the enter key, too -->
+            <label
+                for="assetsFieldHandle"
+                class="is-clickable"
                 :class="{
                     box: true,
                     button: true,
@@ -12,9 +18,12 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     'has-border-info': this.isDraggingOver,
                     'is-loading': this.isLoadingFromFile,
                 }"
+                tabindex="0"
                 @dragover="dragover"
                 @dragleave="dragleave"
                 @drop="drop"
+                @keydown.enter="openFile()"
+                v-focus
             >
                 <input
                     v-focus
@@ -28,11 +37,9 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     :accept="this.acceptedFiles"
                 />
 
-                <label for="assetsFieldHandle" class="is-clickable">
-                    <Icon name="plus" />
-                    <span> Click or drop to load file(s) </span>
-                </label>
-            </div>
+                <Icon name="plus" />
+                <span> Click or drop to load file(s) </span>
+            </label>
         </div>
 
         <!-- The unexpanded plus sign -->
@@ -149,6 +156,10 @@ export default defineComponent({
         isLoadingFromFile: false,
     }),
     methods: {
+        openFile() {
+            console.debug('MediaDropZone::openFile');
+            (this.$refs.file as HTMLInputElement).click();
+        },
         onChange() {
             this.filelist = [
                 ...((this.$refs.file as HTMLInputElement)
