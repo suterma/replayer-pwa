@@ -1,9 +1,9 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
-import Play from '../views/Play.vue';
-import TrackPlayer from '../views/TrackPlayer.vue';
-import Home from '../views/Home.vue';
+//import Play from '../views/Play.vue';
+//import TrackPlayer from '../views/TrackPlayer.vue';
+//import Home from '../views/Home.vue';
 import Edit from '../views/Edit.vue';
-import List from '../views/List.vue';
+//import List from '../views/List.vue';
 
 const routes: Array<RouteRecordRaw> = [
     //Always use the explicit edit route as default instead of the default "Home" root.
@@ -11,34 +11,59 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/home',
         name: 'Home',
-        component: Home,
+        //component: Home,
+
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+            import(/* webpackChunkName: "home" */ '../views/Home.vue'),
     },
     {
         path: '/play',
         name: 'Play',
-        component: Play,
+        //component: Play,
+
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+            import(/* webpackChunkName: "play" */ '../views/Play.vue'),
     },
     {
         path: '/list',
         name: 'List',
-        component: List,
+        //component: List,
+
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+            import(/* webpackChunkName: "list" */ '../views/List.vue'),
     },
     {
         //HINT: The track player is not accessible from the menu
         path: '/track-player/:id*',
         name: 'Track-Player',
-        component: TrackPlayer,
-    },
-    {
-        path: '/edit',
-        name: 'Edit',
-        component: Edit,
 
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        // component: () =>
-        //     import(/* webpackChunkName: "about" */ '../views/Edit.vue'),
+        component: () =>
+            import(
+                /* webpackChunkName: "/track-player/:id*" */ '../views/TrackPlayer.vue'
+            ),
+    },
+    {
+        path: '/edit',
+        name: 'Edit',
+        //component: Edit,
+
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+            import(/* webpackChunkName: "edit" */ '../views/Edit.vue'),
     },
 
     // Allow loading of arbitrary files
