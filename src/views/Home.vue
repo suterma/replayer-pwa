@@ -33,11 +33,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import WelcomeText from '@/components/WelcomeText.vue';
+import { settingsMixin } from '@/mixins/settingsMixin';
 
 /** A Home view
+ * @remarks also decides on an automatic redirect route, depending on appliction state
  */
 export default defineComponent({
     name: 'Home',
+    mixins: [settingsMixin],
+
     components: { WelcomeText },
     computed: {
         version(): string {
@@ -50,6 +54,21 @@ export default defineComponent({
         git(): string {
             return 'git version: ' + process.env.VUE_APP_GIT_VERSION;
         },
+
+        hasCompilation(): boolean {
+            return this.$store.getters.hasCompilation;
+        },
+    },
+
+    beforeMount(): void {
+        if (
+            this.getSettings.autoRetrieveLastCompilation &&
+            this.hasCompilation
+        ) {
+            this.$router.push('play');
+        } else {
+            this.$router.push('edit');
+        }
     },
 });
 </script>

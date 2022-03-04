@@ -6,8 +6,7 @@ import Edit from '../views/Edit.vue';
 //import List from '../views/List.vue';
 
 const routes: Array<RouteRecordRaw> = [
-    //Always use the explicit edit route as default instead of the default "Home" root.
-    { path: '/', redirect: { name: 'Edit' } },
+    { path: '/', redirect: { name: 'Home' } },
     {
         path: '/home',
         name: 'Home',

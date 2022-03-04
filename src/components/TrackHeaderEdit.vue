@@ -67,6 +67,7 @@
             <div class="level-right">
                 <nav class="level-item">
                     <!-- URL -->
+
                     <p class="control" :title="'URL: ' + trackData.Url">
                         <span class="button is-indicator">
                             <Icon name="world" class="has-opacity-half" />
