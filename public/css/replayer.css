@@ -3,7 +3,7 @@
  * Application-specific presets to the Bulma CSS 
 **************************************************************
 */
-/* Keep the menu stowed away also on large screens
+/* Controls when the menu is stowed away 
     * @devdoc Must be applied before the bulma.sass is used, because this is used there */
 /** Using Bulma CSS with a theme for Bulma */
 /*! bulma.io v0.9.3 | MIT License | github.com/jgthms/bulma */
@@ -4456,7 +4456,7 @@ button.dropdown-item.is-active {
 .navbar.is-white .navbar-burger {
   color: #0a0a0a;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-white .navbar-start > .navbar-item,
 .navbar.is-white .navbar-start .navbar-link,
 .navbar.is-white .navbar-end > .navbar-item,
@@ -4512,7 +4512,7 @@ button.dropdown-item.is-active {
 .navbar.is-black .navbar-burger {
   color: white;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-black .navbar-start > .navbar-item,
 .navbar.is-black .navbar-start .navbar-link,
 .navbar.is-black .navbar-end > .navbar-item,
@@ -4568,7 +4568,7 @@ button.dropdown-item.is-active {
 .navbar.is-light .navbar-burger {
   color: rgba(0, 0, 0, 0.7);
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-light .navbar-start > .navbar-item,
 .navbar.is-light .navbar-start .navbar-link,
 .navbar.is-light .navbar-end > .navbar-item,
@@ -4624,7 +4624,7 @@ button.dropdown-item.is-active {
 .navbar.is-dark .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-dark .navbar-start > .navbar-item,
 .navbar.is-dark .navbar-start .navbar-link,
 .navbar.is-dark .navbar-end > .navbar-item,
@@ -4680,7 +4680,7 @@ button.dropdown-item.is-active {
 .navbar.is-primary .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-primary .navbar-start > .navbar-item,
 .navbar.is-primary .navbar-start .navbar-link,
 .navbar.is-primary .navbar-end > .navbar-item,
@@ -4736,7 +4736,7 @@ button.dropdown-item.is-active {
 .navbar.is-link .navbar-burger {
   color: #52575c;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-link .navbar-start > .navbar-item,
 .navbar.is-link .navbar-start .navbar-link,
 .navbar.is-link .navbar-end > .navbar-item,
@@ -4792,7 +4792,7 @@ button.dropdown-item.is-active {
 .navbar.is-info .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-info .navbar-start > .navbar-item,
 .navbar.is-info .navbar-start .navbar-link,
 .navbar.is-info .navbar-end > .navbar-item,
@@ -4848,7 +4848,7 @@ button.dropdown-item.is-active {
 .navbar.is-success .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-success .navbar-start > .navbar-item,
 .navbar.is-success .navbar-start .navbar-link,
 .navbar.is-success .navbar-end > .navbar-item,
@@ -4904,7 +4904,7 @@ button.dropdown-item.is-active {
 .navbar.is-warning .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-warning .navbar-start > .navbar-item,
 .navbar.is-warning .navbar-start .navbar-link,
 .navbar.is-warning .navbar-end > .navbar-item,
@@ -4960,7 +4960,7 @@ button.dropdown-item.is-active {
 .navbar.is-danger .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-danger .navbar-start > .navbar-item,
 .navbar.is-danger .navbar-start .navbar-link,
 .navbar.is-danger .navbar-end > .navbar-item,
@@ -5186,7 +5186,7 @@ a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover, a.navbar-i
   margin: 0.5rem 0;
 }
 
-@media screen and (max-width: 2399px) {
+@media screen and (max-width: 319px) {
   .navbar > .container {
     display: block;
   }
@@ -5240,7 +5240,7 @@ body.has-navbar-fixed-bottom-touch {
     padding-bottom: 4rem;
   }
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar,
 .navbar-menu,
 .navbar-start,
