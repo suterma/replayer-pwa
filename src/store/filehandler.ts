@@ -3,6 +3,8 @@
  * originating both from the local file system or an online resource.
  */
 export default class FileHandler {
+    static acceptedFileList = '.rex,.xml,.rez,.zip,.mp3,.bplist';
+
     /** Returns whether the given string is a path
      * @remarks When ending with a slash, it's considered a path.
      */

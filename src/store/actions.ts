@@ -522,7 +522,9 @@ export const actions: ActionTree<State, State> & Actions = {
                 reader.readAsArrayBuffer(file);
             } else {
                 commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
-                reject(`Unsupported file, not loaded: '${file.name}'`);
+                reject(
+                    `Unsupported content type for file '${file.name}', content was not processed.`,
+                );
             }
         });
     },
