@@ -345,6 +345,9 @@ export const actions: ActionTree<State, State> & Actions = {
                                             //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
                                             const zipEntryName =
                                                 zipEntry.name.normalize();
+                                            console.debug(
+                                                `Processing buffer for ZIP entry name '${zipEntryName}'...`,
+                                            );
 
                                             if (
                                                 FileHandler.isXmlFileName(
@@ -406,9 +409,28 @@ export const actions: ActionTree<State, State> & Actions = {
                                                             undefined,
                                                         );
                                                     });
+                                            } else if (
+                                                FileHandler.isSupportedPackageFileName(
+                                                    zipEntryName,
+                                                )
+                                            ) {
+                                                //We do not handle packages within packages.
+                                                //HINT: Unfortunately JSZip seems to report the currently
+                                                //open package as file within itself. This mitigates that.
+                                                console.debug(
+                                                    `ZIP: Not processing package file '${zipEntryName}' within package: '${file.name}'`,
+                                                );
+                                            } else if (
+                                                FileHandler.isPath(zipEntryName)
+                                            ) {
+                                                //We do not handle paths on their own
+                                                console.debug(
+                                                    `ZIP: Not processing path '${zipEntryName}' within package: '${file.name}'`,
+                                                );
                                             } else {
-                                                console.warn(
-                                                    `un-ZIP: Unknown content type for filename: ${file.name}`,
+                                                commit(
+                                                    MutationTypes.PUSH_ERROR_MESSAGE,
+                                                    `ZIP: Unknown content type for file '${zipEntryName}' within package: '${file.name}'`,
                                                 );
                                             }
                                         })

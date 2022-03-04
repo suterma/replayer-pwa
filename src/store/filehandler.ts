@@ -3,6 +3,13 @@
  * originating both from the local file system or an online resource.
  */
 export default class FileHandler {
+    /** Returns whether the given string is a path
+     * @remarks When ending with a slash, it's considered a path.
+     */
+    static isPath(input: string) {
+        return input.endsWith('/');
+    }
+
     /** Maps a URL to a locally usable file name
      * @remarks can be used to match a track URL to a stored media file
      * @devdoc Just removes the protocol
@@ -120,15 +127,20 @@ export default class FileHandler {
     /** Returns whether the given file name (by it's extension) is a supported package file name by Replayer
      */
     static isSupportedPackageFileName(fileName: string | undefined): boolean {
+        let isSupportedPackageFileName = false;
         if (fileName) {
             const fileExtension = fileName.split('.').pop()?.toLowerCase();
             if (fileExtension) {
                 if (['zip', 'rez' /*replayer zip*/].includes(fileExtension)) {
-                    return true;
+                    isSupportedPackageFileName = true;
                 }
             }
         }
-        return false;
+
+        console.debug(
+            `filehander::isSupportedPackageFileName:fileName:'${fileName}' is isSupportedPackage?:'${isSupportedPackageFileName}'`,
+        );
+        return isSupportedPackageFileName;
     }
 
     /** Returns whether the given file name (by it's extension) is a supported compilation file name by Replayer
@@ -146,15 +158,20 @@ export default class FileHandler {
     }
     /** Returns whether the given file name (by it's extension) is a supported media file name by Replayer */
     static isSupportedMediaFileName(fileName: string | undefined): boolean {
+        let isSupportedMediaFileName = false;
         if (fileName) {
             const fileExtension = fileName.split('.').pop()?.toLowerCase();
             if (fileExtension) {
                 if (['mp3'].includes(fileExtension)) {
-                    return true;
+                    isSupportedMediaFileName = true;
                 }
             }
         }
-        return false;
+
+        console.debug(
+            `filehander::isSupportedMediaFileName:fileName:'${fileName}' is isSupportedMedia?:'${isSupportedMediaFileName}'`,
+        );
+        return isSupportedMediaFileName;
     }
 
     /** Returns whether the given MIME type is a supported package MIME type by Replayer
@@ -246,18 +263,24 @@ export default class FileHandler {
 
     /** Asserts whether the file name represents an XML compilation file */
     public static isXmlFileName(fileName: string): boolean {
-        return (
+        const isXmlFileName =
             fileName.toLowerCase().endsWith('.rex') ||
-            fileName.toLowerCase().endsWith('.xml')
+            fileName.toLowerCase().endsWith('.xml');
+        console.debug(
+            `filehander::isXmlFileName:fileName:'${fileName}' is XML?:'${isXmlFileName}'`,
         );
+        return isXmlFileName;
     }
 
     /** Asserts whether the file name represents a bplist (Binary Propertylist) compilation file */
     public static isBplistFileName(fileName: string): boolean {
-        return (
+        const isBplistFileName =
             fileName.toLowerCase().endsWith('.bplist') ||
-            fileName.toLowerCase().endsWith('playlist')
+            fileName.toLowerCase().endsWith('playlist');
+        console.debug(
+            `filehander::isBplistFileName:fileName:'${fileName}' is Bplist?:'${isBplistFileName}'`,
         );
+        return isBplistFileName;
     }
 
     /** Determines whether the string contains a valid URL, starting with the http|https protocol.

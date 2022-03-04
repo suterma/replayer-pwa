@@ -210,6 +210,7 @@ export default defineComponent({
         },
 
         /** Loads a single file by loading it's content
+         * @param {file} - Any supported file (package, compilation or media)
          */
         async loadFile(file: File): Promise<void> {
             this.isLoadingFromFile = true;
@@ -224,11 +225,13 @@ export default defineComponent({
                     throw new Error(errorMessage);
                 })
                 .then(() => {
-                    this.createDefaultTrackForFile(file);
+                    if (FileHandler.isSupportedMediaFile(file)) {
+                        this.createDefaultTrackForFile(file);
+                    }
                 })
                 .finally(() => {
                     this.isLoadingFromFile = false;
-                    this.collapse();
+                    this.collapse(); //This component
                 });
         },
 
@@ -318,7 +321,7 @@ export default defineComponent({
                     });
             }
         },
-        /** Creates a default track for the given File (Using the File name both as the name and the URL for the track)*/
+        /** Creates a default track for the given Media File (Using the File name both as the name and the URL for the track)*/
         createDefaultTrackForFile(file: File) {
             const fileName = file.name.normalize();
             const nameWithoutExtension = FileHandler.removeExtension(fileName);

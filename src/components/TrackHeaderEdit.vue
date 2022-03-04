@@ -85,16 +85,6 @@
                         :is-unloaded="!this.isTrackLoaded"
                     />
                 </nav>
-                <!-- Expander -->
-                <div class="level-item">
-                    <CollapsibleButton
-                        :modelValue="this.modelValue"
-                        title="Track"
-                        collapsedText="Click to edit"
-                        @click="toggleExpanded()"
-                    />
-                </div>
-
                 <div class="level-item">
                     <span class="is-pulled-right">
                         <DropdownMenu title="Track context menu">
@@ -106,6 +96,15 @@
                             />
                         </DropdownMenu>
                     </span>
+                </div>
+                <!-- Expander -->
+                <div class="level-item">
+                    <CollapsibleButton
+                        :modelValue="this.modelValue"
+                        title="Track"
+                        collapsedText="Click to edit"
+                        @click="toggleExpanded()"
+                    />
                 </div>
             </div>
         </div>
