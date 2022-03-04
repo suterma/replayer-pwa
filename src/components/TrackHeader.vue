@@ -60,6 +60,8 @@
             <div v-if="this.isCollapsible" class="level-item">
                 <CollapsibleButton
                     :modelValue="this.modelValue"
+                    title="Track"
+                    collapsedText="Expand to play"
                     class="is-nav"
                 />
             </div>

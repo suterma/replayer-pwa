@@ -71,14 +71,7 @@
             <!-- Right side -->
             <div class="level-right">
                 <nav class="level-item">
-                    <!-- URL -->
-
-                    <p class="control" :title="'URL: ' + trackData.Url">
-                        <span class="button is-indicator">
-                            <Icon name="world" class="has-opacity-half" />
-                        </span>
-                    </p>
-
+                    <MediaSourceIndicator :source="this.trackData.Url" />
                     <PlaybackIndicator
                         :is-ready="!this.isPlaying && this.isTrackLoaded"
                         :is-playing="this.isPlaying"
@@ -102,7 +95,7 @@
                     <CollapsibleButton
                         :modelValue="this.modelValue"
                         title="Track"
-                        collapsedText="Click to edit"
+                        collapsedText="Expand to edit"
                         @click="toggleExpanded()"
                     />
                 </div>
@@ -115,10 +108,10 @@
 import { defineComponent } from 'vue';
 import { Track } from '@/store/compilation-types';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
+import MediaSourceIndicator from '@/components/MediaSourceIndicator.vue';
 import EditableInput from '@/components/EditableInput.vue';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
-import Icon from '@/components/icons/Icon.vue';
 import DropdownMenu from '@/components/DropdownMenu.vue';
 import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
 import { confirm } from '@/code/ui/dialogs';
@@ -129,8 +122,8 @@ import { confirm } from '@/code/ui/dialogs';
 export default defineComponent({
     name: 'TrackHeaderEdit',
     components: {
+        MediaSourceIndicator,
         PlaybackIndicator,
-        Icon,
         EditableInput,
         CollapsibleButton,
         DropdownMenu,

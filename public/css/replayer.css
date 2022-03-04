@@ -10871,11 +10871,13 @@ nav .button:hover {
  * without action, to display a certain state
 **************************************************************/
 /* Indicator buttons should have no border and no background */
+/* Their foreground color should be like normal text */
 .button.is-indicator,
 .button.is-indicator:hover {
   background: none;
   border-color: transparent;
   pointer-events: none;
+  color: #aaa;
 }
 
 /* Dropdown styles */
