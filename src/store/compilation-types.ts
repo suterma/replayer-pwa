@@ -17,6 +17,18 @@ export enum TrackDisplayMode {
     Collapsible = 'collapsible',
 }
 
+/** A playback mode for tracks and cues. */
+export enum PlaybackMode {
+    /** Play to the end of the track */
+    PlayTrack = 'PlayTrack',
+    /** Plays the track in a loop */
+    LoopTrack = 'LoopTrack',
+    /** Plays to the end of the cue */
+    PlayCue = 'PlayCue',
+    /** Plays the cue in a loop */
+    LoopCue = 'LoopCue',
+}
+
 /** @interface Defines a Replayer Compilation, consisting of a set of tracks with their cuepoints.
  * @remarks This definition corresponds to the defitions in https://github.com/suterma/Replayer/blob/master/SOURCE/Replayer.Model/ICompilation.cs for the classic WinForms Replayer
  * @remarks The implemented type is advertised as the Type. Using this pattern saves the code from implementing a full blown plugin architecture.

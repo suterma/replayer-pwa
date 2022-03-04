@@ -37,7 +37,7 @@ export default defineComponent({
                 return 'world';
             }
 
-            return 'file-music';
+            return 'file';
         },
         isUrl() {
             return FileHandler.isValidHttpUrl(this.source);

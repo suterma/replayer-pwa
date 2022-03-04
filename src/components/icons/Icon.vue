@@ -50,10 +50,6 @@ export default defineComponent({
                     'M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z',
                 'chevron-left':
                     'M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z',
-
-                'loop-none': 'm 7,17 h 10 v -3 l 4,4 -4,4 V 19 H 5 v -6 h 2',
-                'loop-track':
-                    'M17,17H7V14L3,18L7,22V19H19V13H17M7,7H17V10L21,6L17,2V5H5V11H7V7Z',
                 volume: 'M 18,18 H 6 C 18,6 6,18 18,6 Z',
                 unmuted: 'M7,9V15H11L16,20V4L11,9H7Z',
                 muted: 'M5.64,3.64L21.36,19.36L19.95,20.78L16,16.83V20L11,15H7V9H8.17L4.22,5.05L5.64,3.64M16,4V11.17L12.41,7.58L16,4Z',
@@ -68,6 +64,13 @@ export default defineComponent({
                 file: 'M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z',
                 'file-music':
                     'M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M13,10V12H11V17A2,2 0 0,1 9,19A2,2 0 0,1 7,17A2,2 0 0,1 9,15C9.4,15 9.7,15.1 10,15.3V10H13Z',
+                'track-play': 'm 7,17 h 10 v -3 l 4,4 -4,4 V 19 H 5 v -6 h 2',
+                'track-repeat':
+                    'M 17,17 H 7 v -3 l -4,4 4,4 V 19 H 19 V 13 H 17 M 7,7 h 10 v 3 L 21,6 17,2 V 5 H 5 v 6 h 2 z',
+                'track-play-once':
+                    'm 7,17 h 10 v -3 l 4,4 -4,4 V 19 H 5 v -6 h 2 m 7,2 V 9 h -1 l -2,1 v 1 h 1.5 v 4',
+                'track-repeat-once':
+                    'M13,15V9H12L10,10V11H11.5V15M17,17H7V14L3,18L7,22V19H19V13H17M7,7H17V10L21,6L17,2V5H5V11H7V7Z',
             };
 
             const icon = (name: string) => ICON_MAP[name] || '';

@@ -152,18 +152,19 @@
                 />
             </button>
         </p>
-        <!-- Loop -->
+        <!-- Play mode -->
         <p class="control">
             <button
                 :class="{
                     button: true,
                 }"
                 v-show="!showVolume"
-                @click.prevent="toggleLooping"
+                @click.prevent="togglePlaybackMode"
                 title="Loop"
             >
-                <Icon v-if="!looping" name="loop-none" />
-                <Icon v-else name="loop-track" />
+                //TODO update the icon and looping handling here
+                <Icon v-if="!looping" name="track-play" />
+                <Icon v-else name="track-repeat" />
             </button>
         </p>
     </div>
@@ -174,6 +175,7 @@ import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent } from 'vue';
 import Icon from '@/components/icons/Icon.vue';
 import PlayerTime from '@/components/PlayerTime.vue';
+import { PlaybackMode } from '@/store/compilation-types';
 
 /** A UI representation for a media player
  * @remarks Handles and emits various states and event for playback control.
@@ -186,7 +188,7 @@ export default defineComponent({
         /** Flags, whether the UI represents the playing (true) or the paused (false) state
          */
         'update:playing',
-        'update:looping',
+        'update:playbackMode',
         'update:currentSeconds',
         'update:volume',
         'update:muted',
@@ -244,11 +246,13 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
-        /** Whether the player is currently playing
-         * @remarks Implements a two-way binding */
-        looping: {
-            type: Boolean,
-            default: false,
+        /** The play mode
+         * @remarks Implements a two-way binding
+         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+         */
+        playbackMode: {
+            type: String as () => PlaybackMode,
+            default: PlaybackMode.PlayTrack,
         },
         /** Whether the player is currently muted
          * @remarks Implements a two-way binding */
@@ -336,12 +340,23 @@ export default defineComponent({
                 this.$emit('pause');
             }
         },
-        toggleLooping() {
-            const looping = !this.looping;
+        togglePlaybackMode() {
+            //Turn the mode ratchet one step
+            let playbackMode = '';
+            if (this.playbackMode === PlaybackMode.PlayTrack) {
+                playbackMode = PlaybackMode.LoopTrack;
+            } else if (this.playbackMode === PlaybackMode.LoopTrack) {
+                playbackMode = PlaybackMode.PlayCue;
+            } else if (this.playbackMode === PlaybackMode.PlayCue) {
+                playbackMode = PlaybackMode.LoopCue;
+            } else if (this.playbackMode === PlaybackMode.LoopCue) {
+                playbackMode = PlaybackMode.PlayTrack;
+            }
+
             console.debug(
-                `PlayerChrome(${this.title})::toggleLooping:looping:${looping}`,
+                `PlayerChrome(${this.title})::togglePlaybackMode:playbackMode:${playbackMode}`,
             );
-            this.$emit('update:looping', looping);
+            this.$emit('update:playbackMode', playbackMode);
         },
         toggleMuted() {
             const muted = !this.muted;

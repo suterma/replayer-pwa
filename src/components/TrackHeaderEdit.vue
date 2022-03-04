@@ -71,6 +71,7 @@
             <!-- Right side -->
             <div class="level-right">
                 <nav class="level-item">
+                    <!-- Show the media source only on larger devices -->
                     <MediaSourceIndicator :source="this.trackData.Url" />
                     <PlaybackIndicator
                         :is-ready="!this.isPlaying && this.isTrackLoaded"
@@ -130,7 +131,6 @@ export default defineComponent({
         DropdownMenuItem,
     },
     emits: ['update:modelValue'],
-
     props: {
         track: {
             type: Track,

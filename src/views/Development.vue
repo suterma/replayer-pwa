@@ -95,6 +95,10 @@
         </div>
 
         <h1 class="title has-text-danger">Icons test</h1>
+        <Icon name="track-repeat-once" title="track-repeat-once" />
+        <Icon name="track-repeat" title="track-repeat" />
+        <Icon name="track-play" title="track-play" />
+        <Icon name="track-play-once" title="track-play-once" />
         <NavButton iconName="pencil" title="some test title" />
         <CollapsibleButton
             v-model="isExpanded"
@@ -148,6 +152,7 @@ import CompilationXmlDisplay from '@/components/CompilationXmlDisplay.vue';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import ToggleButton from '@/components/ToggleButton.vue';
 import EditableInput from '@/components/EditableInput.vue';
+import Icon from '@/components/icons/Icon.vue';
 import NavButton from '@/components/NavButton.vue';
 import Experimental from '@/components/Experimental.vue';
 
@@ -158,6 +163,7 @@ export default defineComponent({
         CollapsibleButton,
         ToggleButton,
         EditableInput,
+        Icon,
         NavButton,
         Experimental,
     },
