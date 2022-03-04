@@ -10827,7 +10827,7 @@ body.has-navbar-fixed-top-laptop {
  **************************************************************/
 /* Navigational buttons generally should have no border (like is-ghost), 
 * but have a subtle hover background
-* Except, when focused this should not apply (and the usual focus border should be applied)
+* Except, when focused by keyboard this should not apply (and the usual focus border should be applied)
 * to allow visual cues for keyboard navigation
 */
 .button.is-nav,
@@ -10839,11 +10839,27 @@ nav .button {
   text-decoration: none;
 }
 
+.button.is-nav:focus:not(:active),
+nav .button:focus:not(:active) {
+  box-shadow: none;
+}
+
+/* Specific handling for focus visility.
+* Nav-Buttons should in general not show a focus visual,
+* except for keyboard navigation, with the specific modifier, focus-visible
+*/
 .button.is-nav:focus,
 nav .button:focus {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.button.is-nav:focus-visible,
+nav .button:focus-visible {
   border-color: #ededed;
 }
 
+/* Indicate an actionable item */
 .button.is-nav:hover,
 nav .button:hover {
   background: #3a3f44;
