@@ -18,6 +18,10 @@
                         </p>
                     </div>
                 </div>
+
+                <!-- Artist Info (completely hidden on mobile, thus not editable there. 
+                NOTE: It's also not shown in the play view on mobile anyways) -->
+
                 <!-- by (keep as small as possible)-->
                 <div
                     class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
@@ -27,7 +31,7 @@
                     </p>
                 </div>
                 <!-- Artist -->
-                <div class="level-item is-flex-shrink-1">
+                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
                     <div class="field">
                         <p class="control">
                             <EditableInput
@@ -49,7 +53,7 @@
                     </p>
                 </div>
                 <!-- Album -->
-                <div class="level-item is-flex-shrink-1">
+                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
                     <div class="field">
                         <p class="control">
                             <EditableInput
@@ -63,6 +67,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Right side -->
             <div class="level-right">
                 <nav class="level-item">
