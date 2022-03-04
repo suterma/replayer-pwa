@@ -205,6 +205,12 @@ but not at the "end/right" container's border */
     background-color: transparent;
 }
 
+/* Selection Colors */
+::selection {
+    background-color: $link;
+    color: $link-invert;
+}
+
 /*************************************************************
  * Dropdown menu
 **************************************************************

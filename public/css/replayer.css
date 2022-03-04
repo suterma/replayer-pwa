@@ -11131,6 +11131,12 @@ but not at the "end/right" container's border */
   background-color: transparent;
 }
 
+/* Selection Colors */
+::selection {
+  background-color: #fafafa;
+  color: #52575c;
+}
+
 /*************************************************************
  * Dropdown menu
 **************************************************************
