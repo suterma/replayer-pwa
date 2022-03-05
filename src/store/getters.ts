@@ -1,5 +1,5 @@
 import { GetterTree } from 'vuex';
-import { ICompilation, ITrack } from './compilation-types';
+import { ICompilation, ICue, ITrack } from './compilation-types';
 import PersistentStorage from './persistent-storage';
 import CompilationHandler from './compilation-handler';
 import { State } from './state';
@@ -26,6 +26,11 @@ export type Getters = {
      * @remarks Only one cue may be selected at any time, within one compilation / application instance.
      */
     selectedCueId(state: State): string;
+    /** Gets the currently selected cue
+     * @remarks This is more expensive than only getting the selected cue id
+     * @remarks Only one cue may be selected at any time, within one compilation / application instance.
+     */
+    selectedCue(state: State): ICue | undefined;
     /** Gets the application settings
      */
     settings(state: State): Settings;
@@ -73,6 +78,13 @@ export const getters: GetterTree<State, State> & Getters = {
     /** @inheritdoc */
     selectedCueId: (state) => {
         return state.selectedCueId;
+    },
+    /** @inheritdoc */
+    selectedCue: (state) => {
+        return CompilationHandler.getCueById(
+            state.compilation,
+            state.selectedCueId,
+        );
     },
     /** @inheritdoc */ settings: (state) => {
         return state.settings;

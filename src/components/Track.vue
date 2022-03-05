@@ -59,6 +59,8 @@
                     @trackLoaded="calculateCueDurations"
                     @trackPlaying="updatePlaying"
                     @newCueTriggered="createNewCue"
+                    :loopStart="this.selectedCue.Time"
+                    :loopEnd="this.selectedCue.Time + this.selectedCue.Duration"
                 ></TrackAudioApiPlayer>
             </template>
             <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
@@ -458,6 +460,10 @@ export default defineComponent({
             return this.$refs.playerReference as InstanceType<
                 typeof TrackAudioApiPlayer
             >;
+        },
+
+        selectedCue(): ICue {
+            return this.$store.getters.selectedCue as ICue;
         },
         /** Gets the media object URL, if available
          */

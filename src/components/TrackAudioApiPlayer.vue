@@ -24,7 +24,7 @@
         :isPlayingRequestOutstanding="this.isPlayingRequestOutstanding"
         v-model:currentSeconds="this.currentSeconds"
         v-model:volume="this.volume"
-        v-model:looping="this.looping"
+        v-model:playbackMode="this.playbackMode"
         :muted="this.muted"
         @mute="mute"
         @seek="seekToSeconds"
@@ -40,6 +40,7 @@ import PlayerChrome from '@/components/PlayerChrome.vue';
 import CueTrigger from '@/components/CueTrigger.vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { settingsMixin } from '@/mixins/settingsMixin';
+import { PlaybackMode } from '@/store/compilation-types';
 
 /** A simple vue audio player, for a single track, using the Web Audio API.
  * @devdoc Internally maintains it's state, updating the enclosed audio element accordingly.
@@ -64,16 +65,32 @@ export default defineComponent({
             type: String,
             default: null,
         },
-        loop: {
-            type: Boolean,
-            default: false,
-        },
         /** Whether this component show editable inputs for the contained data
          * @devdoc Allows to reuse this component for more than one DisplayMode.
          */
         isEditable: {
             type: Boolean,
             default: false,
+        },
+        /** The start of the loop, when in cue loop mode.
+         * @remarks This is used to emulate the buffer looping for the enclosed audio element.
+         * See https://www.w3.org/TR/webaudio/#looping-AudioBufferSourceNode for information about looping.
+         * @remarks This is only applied when the playback mode is set to "repeat-cue".
+         */
+        loopStart: {
+            type: Number,
+            default: undefined,
+            required: false,
+        },
+        /** The end of the loop, when in cue loop mode.
+         * @remarks This is used to emulate the buffer looping for the enclosed audio element.
+         * See https://www.w3.org/TR/webaudio/#looping-AudioBufferSourceNode for information about looping.
+         * @remarks This is only applied when the playback mode is set to "repeat-cue".
+         */
+        loopEnd: {
+            type: Number,
+            default: undefined,
+            required: false,
         },
     },
     data: () => ({
@@ -87,7 +104,7 @@ export default defineComponent({
         loaded: false,
         /** Whether the audio is currently fading */
         isFading: false,
-        looping: false,
+        playbackMode: PlaybackMode.PlayTrack, //by default
         playing: false,
         previousVolume: 50,
         showVolume: false,
@@ -118,8 +135,7 @@ export default defineComponent({
             `TrackAudioApiPlayer::created:src:${this.src} for title ${this.title}`,
         );
 
-        this.looping = this.loop;
-        this.audioElement.loop = this.looping;
+        this.audioElement.loop = false; //according to the above default
         this.audioElement.src = this.src;
         this.audioElement.ontimeupdate = this.updateTime;
         this.audioElement.onloadeddata = this.load;
@@ -206,12 +222,16 @@ export default defineComponent({
             );
             this.audioElement.volume = this.volume / 100;
         },
-        /** Watch whether the looping changed, and then update the audio element accordingly  */
-        looping(): void {
+        /** Watch whether the playbackMode changed, and then update the audio element accordingly  */
+        playbackMode(): void {
             console.debug(
-                `TrackAudioApiPlayer(${this.title})::looping:${this.looping}`,
+                `TrackAudioApiPlayer(${this.title})::playbackMode:${this.playbackMode}`,
             );
-            this.audioElement.loop = this.looping;
+            this.audioElement.loop =
+                this.playbackMode === PlaybackMode.LoopTrack;
+            //HINT: For the cue loop, an explicit implementation is required,
+            //because automatic looping is not supported with the used HTMLAudioEleemnt.
+            //This is solved in this component by observing the recurring time updates.
         },
         /** Watch whether the source changed, and then update the audio element accordingly  */
         src(): void {
@@ -351,10 +371,57 @@ export default defineComponent({
          * @devdoc This is known to result in setTimout violations on slower systems
          */
         updateTime(/*event: Event*/) {
-            //console.debug(`TrackAudioApiPlayer(${this.title})::updateTime:e`, e);
             this.currentSeconds = this.audioElement.currentTime;
             this.$emit('timeupdate', this.currentSeconds);
+
+            this.handleCueLoop();
         },
+        /** Handles looping for a single cue, if requested
+         */
+        handleCueLoop(): void {
+            if (this.playbackMode === PlaybackMode.LoopCue) {
+                //Detect, with a safety margin, whether the possible loop is at track end
+                const trackDurationSafetyMarginSeconds = 0.3;
+                const isAtTrackEnd =
+                    this.currentSeconds >=
+                    this.durationSeconds - trackDurationSafetyMarginSeconds;
+
+                //Is a loop due?
+                if (
+                    this.loopStart !== undefined &&
+                    this.loopEnd !== undefined &&
+                    (this.currentSeconds >= this.loopEnd || isAtTrackEnd)
+                ) {
+                    //Back to loop start
+                    this.seekTo(this.loopStart);
+
+                    if (isAtTrackEnd) {
+                        console.debug(
+                            `TrackAudioApiPlayer::handleCueLoop:loopEnd:${this.loopEnd};durationSeconds:${this.durationSeconds}`,
+                        );
+                        //At the end of the track, a seek operation alone would not be enough to continue the loop
+                        //if playback already has ended (when the safety margin from above was too small)
+                        this.$nextTick(() => {
+                            //Directly issue the play command, without any safety net
+                            //(should be working, since play was successful already)
+                            //This handling here has the disadvantage, that a fading operation does take place however,
+                            //if configured and the safety margin was too short.
+                            this.audioElement.play();
+                        });
+                    }
+                }
+            }
+            if (this.playbackMode === PlaybackMode.PlayCue) {
+                if (
+                    this.loopStart !== undefined &&
+                    this.loopEnd !== undefined &&
+                    this.currentSeconds >= this.loopEnd
+                ) {
+                    this.pauseAndSeekTo(this.loopStart);
+                }
+            }
+        },
+
         /** Starts playback from the given temporal position
          * @remarks This first seeks to the position, then starts playing
          */
