@@ -59,8 +59,10 @@
                     @trackLoaded="calculateCueDurations"
                     @trackPlaying="updatePlaying"
                     @newCueTriggered="createNewCue"
-                    :loopStart="this.selectedCue.Time"
-                    :loopEnd="this.selectedCue.Time + this.selectedCue.Duration"
+                    :loopStart="this.selectedCue?.Time"
+                    :loopEnd="
+                        this.selectedCue?.Time + this.selectedCue?.Duration
+                    "
                 ></TrackAudioApiPlayer>
             </template>
             <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->

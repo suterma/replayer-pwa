@@ -17,16 +17,23 @@
         :is-expanded="this.isExpanded"
         @update:is-expanded="updateExpanded"
     />
+
     <div v-if="!hasCompilation" class="content">
         <WelcomeText />
     </div>
+    <Experimental>
+        <hr />
+        <MediaList />
+    </Experimental>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Compilation from '@/components/Compilation.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
+import MediaList from '@/components/MediaList.vue';
 import WelcomeText from '@/components/WelcomeText.vue';
+import Experimental from '@/components/Experimental.vue';
 import { ICompilation, TrackDisplayMode } from '@/store/compilation-types';
 
 /** A view for playing an existing compilation */
@@ -35,6 +42,8 @@ export default defineComponent({
     components: {
         Compilation,
         MediaDropZone,
+        MediaList,
+        Experimental,
         WelcomeText,
     },
     data() {
@@ -79,3 +88,9 @@ export default defineComponent({
     },
 });
 </script>
+<style lang="css" scoped>
+/** Add a margin at the top of the media drop zone level, to have a space between the tracks and the drop zone */
+.media-drop-zone {
+    margin-top: 1.5rem;
+}
+</style>

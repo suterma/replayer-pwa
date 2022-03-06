@@ -71,6 +71,8 @@ export default defineComponent({
                     'm 7,17 h 10 v -3 l 4,4 -4,4 V 19 H 5 v -6 h 2 m 7,2 V 9 h -1 l -2,1 v 1 h 1.5 v 4',
                 'track-repeat-once':
                     'M13,15V9H12L10,10V11H11.5V15M17,17H7V14L3,18L7,22V19H19V13H17M7,7H17V10L21,6L17,2V5H5V11H7V7Z',
+                'swap-horizontal':
+                    'M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z',
             };
 
             const icon = (name: string) => ICON_MAP[name] || '';

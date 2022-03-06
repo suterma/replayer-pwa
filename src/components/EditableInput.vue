@@ -8,13 +8,13 @@
         />
         <input
             v-if="editMode"
+            v-focus
             :class="{ input: true, 'is-static': !editMode }"
             :value="modelValue"
             @input="$emit('update:modelValue', $event.target.value)"
             @blur="acceptValue()"
             type="text"
             :placeholder="placeholder"
-            ref="textInput"
             tabindex="0"
         />
         <span v-else @click="toggleEditMode()">
@@ -25,7 +25,6 @@
         </span>
         <!-- Edit -->
 
-        <!-- dropdown-trigger -->
         <NavButton
             v-if="editMode"
             @click="toggleEditMode()"
@@ -80,9 +79,6 @@ export default defineComponent({
         },
         toggleEditMode() {
             this.editMode = !this.editMode;
-            if (this.editMode) {
-                this.setFocusToInput();
-            }
         },
 
         /** Accept the value and end the edit mode */
@@ -94,16 +90,6 @@ export default defineComponent({
         revertValue() {
             this.$emit('update:modelValue', this.previousValue);
             this.editMode = false;
-        },
-
-        /** Sets the focus to the input box
-         * @devdoc Use next-tick, because the input is not yet existing according to the v-if
-         */
-        setFocusToInput() {
-            this.$nextTick(() => {
-                const inputElement = this.$refs.textInput as HTMLInputElement;
-                inputElement.focus();
-            });
         },
     },
     watch: {

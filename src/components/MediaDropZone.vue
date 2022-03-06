@@ -36,9 +36,14 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     ref="file"
                     :accept="this.acceptedFiles"
                 />
-
-                <Icon name="plus" />
-                <span> Click or drop to load file(s) </span>
+                <template v-if="this.isReplacementMode">
+                    <Icon name="swap-horizontal" />
+                    <span>Click or drop to replace file</span>
+                </template>
+                <template v-else>
+                    <Icon name="plus" />
+                    <span>Click or drop to load file(s)</span>
+                </template>
             </label>
         </div>
 
@@ -125,6 +130,7 @@ import Experimental from '@/components/Experimental.vue';
 
 /** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
  * @remarks Supports collapsing the control after load, to keep the user more focused
+ * @remarks Supports two modes: "replace", intended to replace an existing source, or "add", to add a new source.
  */
 export default defineComponent({
     name: 'MediaDropZone',
@@ -134,6 +140,21 @@ export default defineComponent({
         isExpanded: {
             type: Boolean,
             default: false,
+        },
+        /** The URL/file name of the media source to replace
+         * @remarks If set, the single-file replacement mode is considered active
+         * @remarks In the store, the file is not replaced, since it may be used by other tracks.
+         */
+        replaceUrl: {
+            type: String,
+            default: undefined,
+        },
+        /** The track Id of the track, whose media source is to replace
+         * @remarks If set, the single-file replacement mode is considered active
+         */
+        trackId: {
+            type: String,
+            default: undefined,
         },
     },
     emits: ['update:is-expanded'],
@@ -222,8 +243,16 @@ export default defineComponent({
                     throw new Error(errorMessage);
                 })
                 .then(() => {
+                    //For new media sources, create a default track
                     if (FileHandler.isSupportedMediaFile(file)) {
-                        this.createDefaultTrackForFile(file);
+                        if (!this.isReplacementMode) {
+                            this.createDefaultTrackForFile(file);
+                        } else {
+                            //Replace the URL for this track
+                            if (this.trackId) {
+                                this.updateUrlForTrack(this.trackId, file);
+                            }
+                        }
                     }
                 })
                 .finally(() => {
@@ -324,6 +353,16 @@ export default defineComponent({
             const nameWithoutExtension = FileHandler.removeExtension(fileName);
             this.commitNewTrackWithName(nameWithoutExtension, '', '', fileName);
         },
+
+        /** Replaces the track's URL with a reference to this replacement file
+         * @param {replacementFile} - the File to update the reference to
+         * @param {trackId} - The Id of the track to update
+         */
+        updateUrlForTrack(trackId: string, replacementFile: File): void {
+            const fileName = replacementFile.name.normalize();
+            this.updateExistingTrackWithUrl(trackId, fileName);
+        },
+
         /** Creates a default track for the given URL (Using part of the URL as the name, and the original URL as the URL)
          * @remarks The effectively used name for the resource in the local Indexed DB storage, if stored, differs from the URL.
          * It can be derived from the URL by using the CompilationParser.getLocalResourceName() method.
@@ -360,10 +399,31 @@ export default defineComponent({
             );
             this.$store.commit(MutationTypes.ADD_TRACK, newTrack);
         },
+        /** Updates an existing track the given URL
+         * @param {trackId} - The Id of the track to update
+         *  @param - url {string}  The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
+         */
+        updateExistingTrackWithUrl(
+            trackId: string,
+
+            url: string,
+        ) {
+            this.$store.commit(MutationTypes.UPDATE_TRACK_URL, {
+                trackId,
+                url,
+            });
+        },
     },
     computed: {
         acceptedFiles(): string {
             return FileHandler.acceptedFileList;
+        },
+        /** Determines whether this control is in the replacement mode */
+        isReplacementMode(): boolean {
+            if (this.replaceUrl && this.replaceUrl.length > 0) {
+                return true;
+            }
+            return false;
         },
     },
 });
@@ -375,9 +435,10 @@ export default defineComponent({
     border-style: dashed;
 }
 
+/* This level is designed to be contained inside other controls, possibly a level itself. Thus, no margin is applied here. 
+    If you require a typical BULMA level top/bottom margin, you must apply that externally. */
 .media-drop-zone {
-    /** Add a margin at the top, to have a space between this drop zone
-    and the possible tracks above it. */
-    margin-top: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 </style>

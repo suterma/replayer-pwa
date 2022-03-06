@@ -66,13 +66,18 @@
                         </p>
                     </div>
                 </div>
+                <div class="level-item">
+                    <MediaEdit :track="this.track" />
+                </div>
             </div>
 
             <!-- Right side -->
             <div class="level-right">
-                <nav class="level-item">
-                    <!-- Show the media source only on larger devices -->
+                <!-- Show the media source only on larger devices -->
+                <!-- <nav class="level-item is-hidden-touch">
                     <MediaSourceIndicator :source="this.trackData.Url" />
+                </nav> -->
+                <nav class="level-item">
                     <PlaybackIndicator
                         :is-ready="!this.isPlaying && this.isTrackLoaded"
                         :is-playing="this.isPlaying"
@@ -109,7 +114,8 @@
 import { defineComponent } from 'vue';
 import { Track } from '@/store/compilation-types';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
-import MediaSourceIndicator from '@/components/MediaSourceIndicator.vue';
+// import MediaSourceIndicator from '@/components/MediaSourceIndicator.vue';
+import MediaEdit from '@/components/MediaEdit.vue';
 import EditableInput from '@/components/EditableInput.vue';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
@@ -123,7 +129,8 @@ import { confirm } from '@/code/ui/dialogs';
 export default defineComponent({
     name: 'TrackHeaderEdit',
     components: {
-        MediaSourceIndicator,
+        // MediaSourceIndicator,
+        MediaEdit,
         PlaybackIndicator,
         EditableInput,
         CollapsibleButton,
