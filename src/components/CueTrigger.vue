@@ -16,7 +16,7 @@
             <div class="player-timeline">
                 <div class="player-time">
                     <div class="player-time-current is-unselectable">
-                        Loading media...
+                        Loading {{ this.source }} ...
                     </div>
                 </div>
             </div>
@@ -58,6 +58,7 @@
                 <PlayerTime
                     :isFading="this.isFading"
                     :isPlaying="this.playing"
+                    :source="this.source"
                     :duration="this.durationSeconds"
                     :position="this.currentSeconds"
                 />
@@ -152,6 +153,13 @@ export default defineComponent({
         isPlayingRequestOutstanding: {
             type: Boolean,
             default: false,
+        },
+        /** The track source description
+         * @remarks This is a textual indication of the track media source. It's displayed as part of the timing display
+         */
+        source: {
+            type: String,
+            default: '',
         },
     },
     data: () => ({}),

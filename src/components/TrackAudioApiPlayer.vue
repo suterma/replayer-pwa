@@ -30,6 +30,7 @@
         @seek="seekToSeconds"
         :durationSeconds="this.durationSeconds"
         @download="this.download"
+        :source="this.source"
     />
 </template>
 
@@ -91,6 +92,13 @@ export default defineComponent({
             type: Number,
             default: undefined,
             required: false,
+        },
+        /** The track source description
+         * @remarks This is a textual indication of the track media source. It's displayed as part of the timing display
+         */
+        source: {
+            type: String,
+            default: '',
         },
     },
     data: () => ({

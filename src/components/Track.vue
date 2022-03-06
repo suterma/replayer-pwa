@@ -63,6 +63,7 @@
                     :loopEnd="
                         this.selectedCue?.Time + this.selectedCue?.Duration
                     "
+                    :source="this.track?.Url"
                 ></TrackAudioApiPlayer>
             </template>
             <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->

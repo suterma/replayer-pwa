@@ -12,6 +12,9 @@
                 (fading...)
             </span>
         </div>
+        <div class="has-opacity-half player-source-indication is-hidden-mobile">
+            {{ source }}
+        </div>
         <div class="player-time-total">
             <span v-if="this.isMobile">{{ durationDisplayTimeShort }}</span>
             <span v-else>{{ durationDisplayTime }}</span>
@@ -52,6 +55,13 @@ export default defineComponent({
             type: Number,
             default: null,
         },
+        /** The track source description
+         * @remarks This is a textual indication of the track media source. It's displayed as part of the timing display
+         */
+        source: {
+            type: String,
+            default: '',
+        },
     },
     data: () => ({}),
 
@@ -91,3 +101,14 @@ export default defineComponent({
     methods: {},
 });
 </script>
+<style scoped>
+/** Show the full,source only when the place is wide enough, otherwise shrink from the left side. */
+.player-source-indication {
+    white-space: nowrap;
+    overflow: hidden;
+    /* "overflow" value must be different from "visible" */
+    text-overflow: ellipsis;
+    direction: rtl;
+    max-width: 50%;
+}
+</style>
