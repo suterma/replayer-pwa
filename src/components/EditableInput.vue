@@ -1,5 +1,6 @@
 <template>
-    <div class="editableInput" v-click-outside="acceptValue">
+    <!-- align like a bulma level, vertically centered -->
+    <div class="is-flex is-align-items-center" v-click-outside="acceptValue">
         <!-- Note: Enter to accept the value -->
         <GlobalEvents
             v-if="editMode"
@@ -104,10 +105,3 @@ export default defineComponent({
     },
 });
 </script>
-<style scoped>
-.editableInput {
-    /** align like a bulma level, vertically centered */
-    display: flex;
-    align-items: center;
-}
-</style>
