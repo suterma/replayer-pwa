@@ -11,6 +11,7 @@
         v-model:currentSeconds="this.currentSeconds"
         @seek="seekToSeconds"
         :durationSeconds="this.durationSeconds"
+        :source="this.source"
     />
     <PlayerChrome
         v-else

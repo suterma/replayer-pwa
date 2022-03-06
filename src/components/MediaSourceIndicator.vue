@@ -34,10 +34,10 @@ export default defineComponent({
         },
         iconName(): string {
             if (this.isUrl) {
-                return 'world';
+                return 'music-circle-outline';
             }
 
-            return 'file';
+            return 'music-note';
         },
         isUrl() {
             return FileHandler.isValidHttpUrl(this.source);

@@ -109,6 +109,7 @@ export default defineComponent({
     /* "overflow" value must be different from "visible" */
     text-overflow: ellipsis;
     direction: rtl;
-    max-width: 50%;
+    /* Use max half of the viewport width */
+    max-width: 50vw;
 }
 </style>

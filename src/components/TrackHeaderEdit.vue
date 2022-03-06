@@ -67,7 +67,11 @@
                     </div>
                 </div>
                 <div class="level-item">
-                    <MediaEdit :track="this.track" />
+                    <div class="field">
+                        <p class="control">
+                            <MediaEdit :track="this.track" />
+                        </p>
+                    </div>
                 </div>
             </div>
 

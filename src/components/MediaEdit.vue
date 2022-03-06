@@ -1,24 +1,30 @@
 <template>
-    <MediaSourceIndicator v-if="!editMode" :source="this.track.Url" />
-    <MediaDropZone
-        v-else
-        :isExpanded="true"
-        :replaceUrl="this.track.Url"
-        :trackId="this.track.Id"
-        ref="mediaDropZone"
-    />
-    <NavButton
-        v-if="editMode"
-        @click="toggleEditMode()"
-        iconName="checkmark"
-        title="Click to finish editing the media source"
-    />
-    <NavButton
-        v-else
-        @click="toggleEditMode()"
-        iconName="pencil"
-        title="Click to edit the media source"
-    />
+    <div class="editableInput" v-click-outside="acceptValue">
+        <MediaSourceIndicator
+            v-if="!editMode"
+            :source="this.track.Url"
+            @click="toggleEditMode()"
+        />
+        <MediaDropZone
+            v-else
+            :isExpanded="true"
+            :replaceUrl="this.track.Url"
+            :trackId="this.track.Id"
+            ref="mediaDropZone"
+        />
+        <NavButton
+            v-if="editMode"
+            @click="toggleEditMode()"
+            iconName="checkmark"
+            title="Click to finish editing the media source"
+        />
+        <NavButton
+            v-else
+            @click="toggleEditMode()"
+            iconName="pencil"
+            title="Click to edit the media source"
+        />
+    </div>
 </template>
 
 <script lang="ts">
@@ -48,8 +54,18 @@ export default defineComponent({
         toggleEditMode() {
             this.editMode = !this.editMode;
         },
+        /** Accept the value and end the edit mode */
+        acceptValue() {
+            this.editMode = false;
+        },
     },
     computed: {},
 });
 </script>
-<style scoped></style>
+<style scoped>
+.editableInput {
+    /** align like a bulma level, vertically centered */
+    display: flex;
+    align-items: center;
+}
+</style>

@@ -90,6 +90,7 @@
                     :isPlaying="this.playing"
                     :duration="this.durationSeconds"
                     :position="this.currentSeconds"
+                    :source="this.source"
                 />
             </div>
         </div>
@@ -249,6 +250,13 @@ export default defineComponent({
         isPlayingRequestOutstanding: {
             type: Boolean,
             default: false,
+        },
+        /** The track source description
+         * @remarks This is a textual indication of the track media source. It's displayed as part of the timing display
+         */
+        source: {
+            type: String,
+            default: '',
         },
     },
     data: () => ({
