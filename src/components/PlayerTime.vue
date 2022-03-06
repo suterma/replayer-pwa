@@ -1,5 +1,9 @@
 <template>
     <div class="player-time is-unselectable foreground">
+        <!-- align like a bulma level, vertically centered -->
+        <!-- 'is-flex': true,
+                'is-align-items-center': true, -->
+        <!-- <div class="player-playing-indication"></div> -->
         <div
             :class="{
                 'player-time-current': true,
@@ -8,10 +12,17 @@
         >
             <span v-if="this.isMobile">{{ currentDisplayTimeShort }}</span>
             <span v-else>{{ currentDisplayTime }}</span>
-            <span class="is-hidden-mobile" v-if="this.isFading">
-                (fading...)
-            </span>
+
+            <Icon
+                v-if="this.isPlaying && !this.isFading"
+                class=""
+                name="volume-high"
+            />
+
+            <Icon v-if="this.isPlaying && this.isFading" name="volume-medium" />
+            <Icon v-if="!this.isPlaying" name="empty" />
         </div>
+
         <div class="has-opacity-half player-source-indication is-hidden-mobile">
             {{ source }}
         </div>
@@ -25,12 +36,13 @@
 <script lang="ts">
 import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent } from 'vue';
+import Icon from '@/components/icons/Icon.vue';
 
 /** A UI for playback time and duration
  */
 export default defineComponent({
     name: 'PlayerTime',
-    components: {},
+    components: { Icon },
 
     props: {
         isFading: {
@@ -111,5 +123,12 @@ export default defineComponent({
     direction: rtl;
     /* Use max half of the viewport width */
     max-width: 50vw;
+}
+
+/** Align icons in the indicator text */
+.player-time .icon {
+    height: inherit;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
-    <div class="editableInput" v-click-outside="acceptValue">
+    <!-- align like a bulma level, vertically centered -->
+    <div class="is-flex is-align-items-center" v-click-outside="acceptValue">
         <MediaSourceIndicator
             v-if="!editMode"
             :source="this.track.Url"
@@ -62,10 +63,3 @@ export default defineComponent({
     computed: {},
 });
 </script>
-<style scoped>
-.editableInput {
-    /** align like a bulma level, vertically centered */
-    display: flex;
-    align-items: center;
-}
-</style>
