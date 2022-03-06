@@ -1,9 +1,5 @@
 <template>
     <div class="player-time is-unselectable foreground">
-        <!-- align like a bulma level, vertically centered -->
-        <!-- 'is-flex': true,
-                'is-align-items-center': true, -->
-        <!-- <div class="player-playing-indication"></div> -->
         <div
             :class="{
                 'player-time-current': true,
@@ -13,12 +9,7 @@
             <span v-if="this.isMobile">{{ currentDisplayTimeShort }}</span>
             <span v-else>{{ currentDisplayTime }}</span>
 
-            <Icon
-                v-if="this.isPlaying && !this.isFading"
-                class=""
-                name="volume-high"
-            />
-
+            <Icon v-if="this.isPlaying && !this.isFading" name="volume-high" />
             <Icon v-if="this.isPlaying && this.isFading" name="volume-medium" />
             <Icon v-if="!this.isPlaying" name="empty" />
         </div>
