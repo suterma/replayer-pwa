@@ -53,12 +53,14 @@ By the click of a button, Replayer starts to play at predefined times in the aud
                     to="/play"
                     >Play</router-link
                 >
-                <router-link
-                    @click="toggleBurger"
-                    class="navbar-item"
-                    to="/edit"
-                    >Edit</router-link
-                >
+                <Experimental>
+                    <router-link
+                        @click="toggleBurger"
+                        class="navbar-item"
+                        to="/edit"
+                        >Edit</router-link
+                    >
+                </Experimental>
                 <Experimental>
                     <router-link
                         @click="toggleBurger"
