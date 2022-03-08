@@ -17,7 +17,7 @@ export class Settings {
     static default(): Settings {
         return new Settings(
             /*autoRetrieveLastCompilation*/ true,
-            /*preventScreenTimeout*/ false,
+            /*preventScreenTimeout*/ true,
             /*fadeInDuration*/ 1000,
             /*fadeOutDuration*/ 500,
             /*applyFadeInOffset*/ true,
