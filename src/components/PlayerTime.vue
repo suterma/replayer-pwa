@@ -14,7 +14,9 @@
             <Icon v-if="!this.isPlaying" name="empty" />
         </div>
 
-        <div class="has-opacity-half player-source-indication is-hidden-mobile">
+        <div
+            class="has-opacity-half player-source-indication is-clipped has-left-ellipsis is-single-line is-hidden-touch"
+        >
             {{ source }}
         </div>
         <div class="player-time-total">
@@ -107,13 +109,19 @@ export default defineComponent({
 <style scoped>
 /** Show the full,source only when the place is wide enough, otherwise shrink from the left side. */
 .player-source-indication {
-    white-space: nowrap;
-    overflow: hidden;
-    /* "overflow" value must be different from "visible" */
+    /* Use only part of the available space to allow shrinking of the player to a very small amount */
+    max-width: calc(80% - 200px);
+}
+
+/** Adds an overflow-ellipsis on the left side 
+* @remarks "overflow" value must be different from "visible", e.g. using is-clipped
+*/
+.has-left-ellipsis {
     text-overflow: ellipsis;
     direction: rtl;
-    /* Use max half of the viewport width */
-    max-width: 50vw;
+}
+.is-single-line {
+    white-space: nowrap;
 }
 
 /** Align icons in the indicator text */
