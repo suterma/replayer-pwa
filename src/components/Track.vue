@@ -40,9 +40,8 @@
         <!-- The cues as buttons (in a slider, whose use is optional, for a better overview)-->
         <slide-up-down
             v-model="expanded"
-            :duration="250"
+            :duration="300"
             timingFunction="linear"
-            :responsive="true"
         >
             <!-- The audio player, but only once the source is available 
             Note: The actual src property/attribute is also depending 
