@@ -16,10 +16,13 @@
             playback music.
         </p>
     </div>
-
-    <MediaDropZone v-if="!hasCompilation" is-expanded="true" />
-    <div v-if="!hasCompilation" class="content">
-        <WelcomeText />
+    <div class="box has-background-transparent">
+        <MediaDropZone v-if="!hasCompilation" is-expanded="true" />
+    </div>
+    <div class="box has-background-transparent">
+        <div v-if="!hasCompilation" class="content">
+            <WelcomeText />
+        </div>
     </div>
 </template>
 

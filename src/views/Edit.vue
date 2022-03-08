@@ -12,14 +12,13 @@
             playback music.
         </p>
     </div>
-
-    <MediaDropZone
-        :is-expanded="this.isExpanded"
-        @update:is-expanded="updateExpanded"
-    />
-
-    <div v-if="!hasCompilation" class="content">
-        <WelcomeText />
+    <div class="box has-background-transparent">
+        <MediaDropZone v-if="!hasCompilation" is-expanded="true" />
+    </div>
+    <div class="box has-background-transparent">
+        <div v-if="!hasCompilation" class="content">
+            <WelcomeText />
+        </div>
     </div>
     <Experimental>
         <hr />
