@@ -67,7 +67,9 @@ export default defineComponent({
         ) {
             this.$router.push('play');
         } else {
-            this.$router.push('edit');
+            this.$router.push('play');
+            //Currently EDIT is only experimental
+            //this.$router.push('edit');
         }
     },
 });
