@@ -193,27 +193,6 @@ export default defineComponent({
     },
     data() {
         return {
-            /** Whether this component shows editable inputs for the contained data
-             * @devdoc Allows to reuse this component for more than one display mode.
-             */
-            isEditable: this.displayMode === TrackDisplayMode.Edit,
-
-            /** Whether this component shows non-collapsible playback buttons
-             * @devdoc Allows to reuse this component for more than one display mode.
-             */
-            isPlayable: this.displayMode === TrackDisplayMode.Play,
-
-            /** Whether this component supports expand/collapse (using a button)
-             * If set to false, the component is always shown in the expanded state, without the toggling button.
-             * @devdoc Allows to reuse this component for more than one display mode.
-             */
-            isCollapsible: this.displayMode === TrackDisplayMode.Collapsible,
-
-            /** Whether this component shows the tracks only with a link to the track detail
-             * @devdoc Allows to reuse this component for more than one display mode.
-             */
-            isLinkOnly: this.displayMode === TrackDisplayMode.Link,
-
             /** Whether this track tile is shown as expanded. Default: false, but can later be dynamically changed.
              */
             expanded: false,
@@ -453,6 +432,34 @@ export default defineComponent({
         },
     },
     computed: {
+        /** Whether this component shows editable inputs for the contained data
+         * @devdoc Allows to reuse this component for more than one display mode.
+         */
+        isEditable(): boolean {
+            return this.displayMode === TrackDisplayMode.Edit;
+        },
+
+        /** Whether this component shows non-collapsible playback buttons
+         * @devdoc Allows to reuse this component for more than one display mode.
+         */
+        isPlayable(): boolean {
+            return this.displayMode === TrackDisplayMode.Play;
+        },
+
+        /** Whether this component supports expand/collapse (using a button)
+         * If set to false, the component is always shown in the expanded state, without the toggling button.
+         * @devdoc Allows to reuse this component for more than one display mode.
+         */
+        isCollapsible(): boolean {
+            return this.displayMode === TrackDisplayMode.Collapsible;
+        },
+
+        /** Whether this component shows the tracks only with a link to the track detail
+         * @devdoc Allows to reuse this component for more than one display mode.
+         */
+        isLinkOnly(): boolean {
+            return this.displayMode === TrackDisplayMode.Link;
+        },
         /** Gets a reference to the player instance.
          * @devdoc $ref's are non-reactive, see https://v3.vuejs.org/api/special-attributes.html#ref
          * Thus, referencing an instance after it has been removed from the DOM (e.g. by v-if)

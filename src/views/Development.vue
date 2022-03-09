@@ -48,7 +48,7 @@
             </p>
             <ul>
                 <li>
-                    <a href="/#/edit/demo-compilation-featuring-lidija-roos.rez"
+                    <a href="/#/play/demo-compilation-featuring-lidija-roos.rez"
                         >Demo package with a compilation featuring Lidija
                         Roos</a
                     ><br />
@@ -56,7 +56,7 @@
                     and matching mp3 files.
                 </li>
                 <li>
-                    <a href="/#/edit/Demo%20Adonia%20Junior%2021.bplist"
+                    <a href="/#/play/Demo%20Adonia%20Junior%2021.bplist"
                         >Demo Binary Property List compilation (as from the
                         LivePlayback app)</a
                     ><br />

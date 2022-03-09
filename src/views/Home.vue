@@ -58,18 +58,19 @@ export default defineComponent({
         hasCompilation(): boolean {
             return this.$store.getters.hasCompilation;
         },
+        isEditMode(): boolean {
+            return !(
+                this.getSettings.autoRetrieveLastCompilation &&
+                this.hasCompilation
+            );
+        },
     },
 
     beforeMount(): void {
-        if (
-            this.getSettings.autoRetrieveLastCompilation &&
-            this.hasCompilation
-        ) {
+        if (this.isEditMode) {
             this.$router.push('play');
         } else {
-            this.$router.push('play');
-            //Currently EDIT is only experimental
-            //this.$router.push('edit');
+            this.$router.push('edit');
         }
     },
 });

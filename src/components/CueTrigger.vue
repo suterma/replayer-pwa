@@ -75,7 +75,7 @@
                 title="Create a cue now (at the current position)!"
             >
                 <Icon name="plus" />
-                <span> Create Cue!</span>
+                <span class="is-hidden-mobile"> Create Cue!</span>
             </button>
         </p>
         <!-- Handle the insert key as trigger for a nue cue Handle the insert key as  trigger for a nue cue -->

@@ -77,31 +77,23 @@
 
             <!-- Right side -->
             <div class="level-right">
-                <!-- Show the media source only on larger devices -->
-                <!-- <nav class="level-item is-hidden-touch">
-                    <MediaSourceIndicator :source="this.trackData.Url" />
-                </nav> -->
-                <nav class="level-item">
+                <div class="level-item">
                     <PlaybackIndicator
                         :is-ready="!this.isPlaying && this.isTrackLoaded"
                         :is-playing="this.isPlaying"
                         :is-unloaded="!this.isTrackLoaded"
                     />
-                </nav>
-                <div class="level-item">
-                    <span class="is-pulled-right">
-                        <DropdownMenu title="Track context menu">
-                            <DropdownMenuItem
-                                title="Remove"
-                                subTitle="(remove
+
+                    <DropdownMenu title="Track context menu">
+                        <DropdownMenuItem
+                            title="Remove"
+                            subTitle="(remove
                             the track from the compilation)"
-                                @click="removeTrack()"
-                            />
-                        </DropdownMenu>
-                    </span>
-                </div>
-                <!-- Expander -->
-                <div class="level-item">
+                            @click="removeTrack()"
+                        />
+                    </DropdownMenu>
+
+                    <!-- Expander -->
                     <CollapsibleButton
                         :modelValue="this.modelValue"
                         title="Track"
@@ -254,8 +246,6 @@ export default defineComponent({
     margin-top: 12px;
 }
 
-//TODO fix these modification to better suit the edit layout
-
 /** Custom modification for the level in the context of a track.
 * @remarks Allow the title text (on the left) to break between words, 
 * and keep the context items (on the right) as close as reasonably possible */
@@ -263,14 +253,13 @@ export default defineComponent({
     .level-left {
         word-break: break-word;
         /* This basis is set empirically to fit for the elements on the right */
-        flex-basis: calc(100% - 190px);
+        flex-basis: calc(100% - 180px);
 
         /* These items should grow, and shrink */
         .level-item {
             flex-shrink: 1;
             flex-grow: 1;
             text-align: left;
-            /* Title, always justify left */
             justify-content: left;
         }
     }
@@ -286,6 +275,7 @@ export default defineComponent({
             flex-shrink: 0;
             flex-grow: 0;
             text-align: right;
+            justify-content: right;
         }
     }
 }
