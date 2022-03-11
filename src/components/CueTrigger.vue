@@ -31,9 +31,7 @@
                     button: true,
                     disabled: this.isPlayingRequestOutstanding || !this.loaded,
                     'is-loading':
-                        this.isPlayingRequestOutstanding ||
-                        !this.loaded ||
-                        this.isFading,
+                        this.isPlayingRequestOutstanding || !this.loaded,
                 }"
                 @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
