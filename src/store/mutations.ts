@@ -5,6 +5,7 @@ import {
     ICompilation,
     ICue,
     ITrack,
+    Track,
 } from './compilation-types';
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
@@ -43,6 +44,8 @@ export type Mutations<S = State> = {
         payload: { trackId: string; trackDurationSeconds: number },
     ): void;
     [MutationTypes.REMOVE_TRACK](state: S, trackId: string): void;
+    [MutationTypes.CLONE_TRACK](state: S, trackId: string): void;
+
     [MutationTypes.DISCARD_COMPILATION](state: S): void;
     [MutationTypes.REVOKE_ALL_MEDIA_URLS](state: State): void;
     [MutationTypes.UPDATE_SETTINGS](state: S, settings: Settings): void;
@@ -124,14 +127,11 @@ export const mutations: MutationTree<State> & Mutations = {
 
         const time = 0;
         const cueId = uuidv4();
-        const cue = new Cue('', nextShortcut, time, null, cueId);
+        const cue = new Cue('', nextShortcut.toString(), time, null, cueId);
 
         track.Cues.push(cue);
         state.compilation.Tracks.push(track);
         state.selectedCueId = cueId;
-
-        //Just add the track with no cues
-        //state.compilation.Tracks.push(track);
 
         PersistentStorage.storeCompilation(state.compilation);
     },
@@ -286,6 +286,43 @@ export const mutations: MutationTree<State> & Mutations = {
         state.compilation.Tracks = state.compilation.Tracks.filter(
             (track) => track.Id !== trackId,
         );
+        PersistentStorage.storeCompilation(state.compilation);
+    },
+
+    [MutationTypes.CLONE_TRACK](state: State, trackId: string) {
+        const sourceTrack = CompilationHandler.getTrackById(
+            state.compilation,
+            trackId,
+        );
+
+        if (sourceTrack) {
+            const clonedTrack = Track.fromJson(JSON.stringify(sourceTrack));
+            clonedTrack.Cues = clonedTrack.Cues.map((cue) => {
+                return new Cue(
+                    cue.Description,
+                    cue.Shortcut,
+                    cue.Time,
+                    cue.Duration,
+                    cue.Id,
+                );
+            });
+
+            //Now, in the clone, reassign all variable items, like id's and shortcuts
+            let nextShortcut = CompilationHandler.getNextShortcut(
+                state.compilation,
+            );
+            clonedTrack.Id = uuidv4();
+            clonedTrack.Name = sourceTrack.Name + ' (cloned)';
+            clonedTrack.Cues.forEach((cue) => {
+                cue.Id = uuidv4();
+                cue.Shortcut = (nextShortcut++).toString();
+            });
+
+            //Insert just after original
+            const index = state.compilation.Tracks.indexOf(sourceTrack);
+            state.compilation.Tracks.splice(index + 1, 0, clonedTrack);
+            PersistentStorage.storeCompilation(state.compilation);
+        }
     },
 
     [MutationTypes.DISCARD_COMPILATION](state: State) {

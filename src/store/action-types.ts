@@ -13,6 +13,8 @@ export enum ActionTypes {
 
     /** Removes a track from the compilation */
     REMOVE_TRACK = 'REMOVE_TRACK',
+    /** Clones the track in the compilation */
+    CLONE_TRACK = 'CLONE_TRACK',
 
     /** Loads a single file or package from an URL
      * @remarks The content might be a package or single file of any supported content.

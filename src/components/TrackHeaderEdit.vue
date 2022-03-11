@@ -86,6 +86,22 @@
 
                     <DropdownMenu title="Track context menu">
                         <DropdownMenuItem
+                            title="Move up"
+                            subTitle="(to an earlier position)"
+                            @click="moveUp()"
+                        />
+                        <DropdownMenuItem
+                            title="Move down"
+                            subTitle="(to a later position)"
+                            @click="moveDown()"
+                        />
+                        <DropdownMenuItem
+                            title="Clone"
+                            subTitle="(with cues and media)"
+                            @click="cloneTrack()"
+                        />
+                        <hr class="dropdown-divider" />
+                        <DropdownMenuItem
                             title="Remove"
                             subTitle="(remove
                             the track from the compilation)"
@@ -195,6 +211,20 @@ export default defineComponent({
                     );
                 }
             });
+        },
+
+        /** Clones the track by creating a deep copy
+         */
+        cloneTrack() {
+            this.$store.dispatch(ActionTypes.CLONE_TRACK, this.track.Id);
+        },
+        moveUp() {
+            //TODO implement
+            //this.$store.dispatch(ActionTypes.CLONE_TRACK, this.track.Id);
+        },
+        moveDown() {
+            //TODO implement
+            //this.$store.dispatch(ActionTypes.CLONE_TRACK, this.track.Id);
         },
         /** Updates the track name */
         updateName(name: string) {

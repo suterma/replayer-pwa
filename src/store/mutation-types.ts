@@ -50,6 +50,11 @@ export enum MutationTypes {
      */
     REMOVE_TRACK = 'REMOVE_TRACK',
 
+    /** Clones an existing track, with it's cues.
+     * @remarks Effectively copies the track, and replaces any previous ids.
+     */
+    CLONE_TRACK = 'CLONE_TRACK',
+
     /** Discards the current compilation
      * @remarks Permanently removes the compilation with all data, including the media files and the object URL references to it from
      * both the persistent storage and the application store. Clears the selected cue.

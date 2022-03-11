@@ -24,7 +24,7 @@ export default class CompilationHandler {
      * @remarks Simply tries to parse all existing shortcuts, then increases the number by 1.
      * @param compilation - The compilation to work on.
      */
-    static getNextShortcut(compilation: ICompilation): string {
+    static getNextShortcut(compilation: ICompilation): number {
         const cueShortcuts = compilation.Tracks.flatMap((track) =>
             track.Cues.flatMap((cue) => cue.Shortcut)
                 //Skip empty items
@@ -37,9 +37,9 @@ export default class CompilationHandler {
             })
             .pop();
         if (lastShortcut && lastShortcut != null) {
-            return (lastShortcut + 1).toString();
+            return lastShortcut + 1;
         }
-        return '1';
+        return 1;
     }
 
     /** Rounds the given time to the Replayer default precision.

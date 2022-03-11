@@ -225,7 +225,7 @@ export class Track implements ITrack {
      * @param jsonTrack - a JSON representation of a Track
      * @devdoc See https://stackoverflow.com/a/5874189/79485
      */
-    static fromJson(jsonTrack: string): Track {
+    public static fromJson(jsonTrack: string): Track {
         const obj = JSON.parse(jsonTrack) as Track;
         const track = new Track(
             obj.Name,

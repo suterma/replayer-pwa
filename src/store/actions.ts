@@ -35,7 +35,10 @@ export interface Actions {
         { commit }: AugmentedActionContext,
         trackId: string,
     ): void;
-
+    [ActionTypes.CLONE_TRACK](
+        { commit, getters }: AugmentedActionContext,
+        trackId: string,
+    ): void;
     [ActionTypes.LOAD_FROM_URL](
         { commit }: AugmentedActionContext,
         url: string,
@@ -171,6 +174,11 @@ export const actions: ActionTree<State, State> & Actions = {
     [ActionTypes.REMOVE_TRACK]({ commit }, trackId: string) {
         withProgress(`Removing track...`, commit, () => {
             commit(MutationTypes.REMOVE_TRACK, trackId);
+        });
+    },
+    [ActionTypes.CLONE_TRACK]({ commit }, trackId: string) {
+        withProgress(`Cloning track...`, commit, () => {
+            commit(MutationTypes.CLONE_TRACK, trackId);
         });
     },
     //TODO WIP check whether all these loading function actually work:
@@ -624,7 +632,7 @@ export const actions: ActionTree<State, State> & Actions = {
             );
 
             const cueId = uuidv4();
-            const cue = new Cue('', nextShortcut, time, null, cueId);
+            const cue = new Cue('', nextShortcut.toString(), time, null, cueId);
 
             commit(MutationTypes.ADD_CUE, { trackId, cue });
             commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);
