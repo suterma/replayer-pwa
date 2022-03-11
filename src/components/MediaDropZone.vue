@@ -51,15 +51,13 @@ The URL input is wider, because it should be able to easily deal with lenghty in
         <div v-if="!isExpanded" class="level-item has-text-centered">
             <div class="ml-3 mr-3">
                 <!-- expanded-trigger -->
-                <nav>
-                    <button
-                        class="button"
-                        title="Expand media drop zone"
-                        @click="expand"
-                    >
-                        <Icon name="plus" />
-                    </button>
-                </nav>
+                <button
+                    class="button is-nav"
+                    title="Expand media drop zone"
+                    @click="expand"
+                >
+                    <Icon name="plus" />
+                </button>
             </div>
         </div>
 

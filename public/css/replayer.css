@@ -10928,9 +10928,11 @@ button.dropdown-item.is-active {
   box-shadow: none;
 }
 
+.is-placeholder,
 .textarea::placeholder,
 .input::placeholder {
   color: #7a8288;
+  font-style: italic;
 }
 
 /*************************************************************

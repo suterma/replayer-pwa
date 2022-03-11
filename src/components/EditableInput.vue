@@ -19,9 +19,9 @@
             tabindex="0"
         />
         <span v-else @click="toggleEditMode()">
-            <template v-if="!modelValue"
-                >Click to set: {{ placeholder }}
-            </template>
+            <span v-if="!modelValue" class="is-placeholder"
+                >{{ placeholder }}
+            </span>
             {{ modelValue }}
         </span>
         <!-- Edit -->
