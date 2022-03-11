@@ -55,15 +55,16 @@ export default defineComponent({
     data() {
         return {
             /** Whether the media drop zone is displayed in the expanded state */
-            isExpanded: true,
+            isExpanded: false,
         };
     },
-    mounted: function (): void {
-        /* Check whether a compilation (most possible having a track) is available.
-         * Then, collapse the media drop zone to keep the ui clean. */
-        if (this.hasCompilation) {
-            this.isExpanded = false;
-        }
+    watch: {
+        /** When the compilation loads or closes, update the media loader expansion accordingly
+         * @remarks When there is already something loaded, only the unobtrusive icon should be shown
+         */
+        hasCompilation(newVal): void {
+            this.isExpanded = !newVal;
+        },
     },
     computed: {
         compilation(): ICompilation {
