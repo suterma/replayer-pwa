@@ -10,19 +10,20 @@
         :tracksDisplayMode="this.tracksDisplayMode"
     />
 
-    <div v-else class="box has-background-transparent">
+    <div v-else class="section pl-0 pr-0">
         <p class="has-text-centered">
             Replayer is a free, cue-based media player for rehearsals with
             playback music.
         </p>
     </div>
-    <div class="box has-background-transparent">
-        <MediaDropZone v-if="!hasCompilation" is-expanded="true" />
+    <div class="section pl-0 pr-0">
+        <MediaDropZone
+            v-if="this.isEditMode || !hasCompilation"
+            v-model:isExpanded="isExpanded"
+        />
     </div>
-    <div class="box has-background-transparent">
-        <div v-if="!hasCompilation" class="content">
-            <WelcomeText />
-        </div>
+    <div v-if="!hasCompilation" class="section pl-0 pr-0 content">
+        <WelcomeText />
     </div>
     <Experimental>
         <hr />
