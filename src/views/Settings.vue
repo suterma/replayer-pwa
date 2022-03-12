@@ -233,12 +233,12 @@ export default defineComponent({
                 `Do you want to reset the application to the initial settings? Already downloaded compilations remain available on the device.`,
             ).then((ok) => {
                 if (ok) {
-                    this.$store.dispatch(ActionTypes.DISCARD_COMPILATION);
+                    this.$store
+                        .dispatch(ActionTypes.RESET_APPLICATION)
+                        .then(() => {
+                            this.$router.push('home');
+                        });
                 }
-            });
-
-            this.$store.dispatch(ActionTypes.RESET_APPLICATION).then(() => {
-                this.$router.push('home');
             });
         },
         autoRetrieveLastCompilationChanged(event: Event) {
