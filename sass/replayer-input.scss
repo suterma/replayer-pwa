@@ -17,9 +17,11 @@
     box-shadow: none;
 }
 
+.is-placeholder,
 .textarea::placeholder,
 .input::placeholder {
     color: $grey-light;
+    font-style: italic;
 }
 
 /*************************************************************

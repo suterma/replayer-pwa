@@ -1,11 +1,19 @@
 import { MutationTree } from 'vuex';
-import { Compilation, ICompilation, ICue, ITrack } from './compilation-types';
+import {
+    Compilation,
+    Cue,
+    ICompilation,
+    ICue,
+    ITrack,
+    Track,
+} from './compilation-types';
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
 import { MediaUrl, Settings } from './state-types';
 import PersistentStorage from './persistent-storage';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 import CompilationHandler from './compilation-handler';
+import { v4 as uuidv4 } from 'uuid';
 
 export type Mutations<S = State> = {
     [MutationTypes.PUSH_PROGRESS_MESSAGE](state: S, payload: string): void;
@@ -35,14 +43,26 @@ export type Mutations<S = State> = {
         state: S,
         payload: { trackId: string; trackDurationSeconds: number },
     ): void;
-    [MutationTypes.CLOSE_COMPILATION](state: S): void;
+    [MutationTypes.REMOVE_TRACK](state: S, trackId: string): void;
+    [MutationTypes.CLONE_TRACK](state: S, trackId: string): void;
+
+    [MutationTypes.DISCARD_COMPILATION](state: S): void;
     [MutationTypes.REVOKE_ALL_MEDIA_URLS](state: State): void;
     [MutationTypes.UPDATE_SETTINGS](state: S, settings: Settings): void;
     [MutationTypes.RETRIEVE_SETTINGS](state: S): void;
     [MutationTypes.UPDATE_COMPILATION_TITLE](state: State, title: string): void;
     [MutationTypes.UPDATE_TRACK_DATA](
         state: State,
-        payload: { trackId: string; name: string },
+        payload: {
+            trackId: string;
+            name: string;
+            artist: string;
+            album: string;
+        },
+    ): void;
+    [MutationTypes.UPDATE_TRACK_URL](
+        state: State,
+        payload: { trackId: string; url: string },
     ): void;
     [MutationTypes.UPDATE_CUE_DATA](
         state: State,
@@ -101,28 +121,17 @@ export const mutations: MutationTree<State> & Mutations = {
         console.debug('mutations::ADD_TRACK:', track);
 
         //Add a first cue first, then select it
-        //TODO currently do not add a cue, for ui tidyness
-        /*const nextShortcut = CompilationHandler.getNextShortcut(
+        const nextShortcut = CompilationHandler.getNextShortcut(
             state.compilation as ICompilation,
         );
 
         const time = 0;
         const cueId = uuidv4();
-        const cue = new Cue(
-            'Cue at ' + CompilationHandler.convertToDisplayTime(time),
-            nextShortcut,
-            time,
-            null,
-            cueId,
-        );
+        const cue = new Cue('', nextShortcut.toString(), time, null, cueId);
 
         track.Cues.push(cue);
         state.compilation.Tracks.push(track);
         state.selectedCueId = cueId;
-        */
-
-        //Just add the track with no cues
-        state.compilation.Tracks.push(track);
 
         PersistentStorage.storeCompilation(state.compilation);
     },
@@ -262,7 +271,97 @@ export const mutations: MutationTree<State> & Mutations = {
         }
     },
 
-    [MutationTypes.CLOSE_COMPILATION](state: State) {
+    [MutationTypes.REMOVE_TRACK](state: State, trackId: string) {
+        const trackToRemove = CompilationHandler.getTrackById(
+            state.compilation,
+            trackId,
+        );
+        trackToRemove?.Cues.forEach((cue) => {
+            if (state.selectedCueId === cue.Id) {
+                state.selectedCueId =
+                    ''; /* unselect cue, this track is no longer the active track */
+            }
+        });
+
+        state.compilation.Tracks = state.compilation.Tracks.filter(
+            (track) => track.Id !== trackId,
+        );
+        PersistentStorage.storeCompilation(state.compilation);
+    },
+
+    [MutationTypes.CLONE_TRACK](state: State, trackId: string) {
+        const sourceTrack = CompilationHandler.getTrackById(
+            state.compilation,
+            trackId,
+        );
+
+        if (sourceTrack) {
+            const clonedTrack = Track.fromJson(JSON.stringify(sourceTrack));
+            clonedTrack.Cues = clonedTrack.Cues.map((cue) => {
+                return new Cue(
+                    cue.Description,
+                    cue.Shortcut,
+                    cue.Time,
+                    cue.Duration,
+                    cue.Id,
+                );
+            });
+
+            //Now, in the clone, reassign all variable items, like id's and shortcuts
+            let nextShortcut = CompilationHandler.getNextShortcut(
+                state.compilation,
+            );
+            clonedTrack.Id = uuidv4();
+            clonedTrack.Name = sourceTrack.Name + ' (cloned)';
+            clonedTrack.Cues.forEach((cue) => {
+                cue.Id = uuidv4();
+                cue.Shortcut = (nextShortcut++).toString();
+            });
+
+            //Insert just after original
+            const index = state.compilation.Tracks.indexOf(sourceTrack);
+            state.compilation.Tracks.splice(index + 1, 0, clonedTrack);
+            PersistentStorage.storeCompilation(state.compilation);
+        }
+    },
+
+    [MutationTypes.MOVE_TRACK_UP](state: State, trackId: string) {
+        const moveIndex = CompilationHandler.getIndexOfTrackById(
+            state.compilation,
+            trackId,
+        );
+
+        //Swap the items
+        const targetIndex = moveIndex - 1;
+        [
+            state.compilation.Tracks[targetIndex],
+            state.compilation.Tracks[moveIndex],
+        ] = [
+            state.compilation.Tracks[moveIndex],
+            state.compilation.Tracks[targetIndex],
+        ];
+        PersistentStorage.storeCompilation(state.compilation);
+    },
+
+    [MutationTypes.MOVE_TRACK_DOWN](state: State, trackId: string) {
+        const moveIndex = CompilationHandler.getIndexOfTrackById(
+            state.compilation,
+            trackId,
+        );
+
+        //Swap the items
+        const targetIndex = moveIndex + 1;
+        [
+            state.compilation.Tracks[targetIndex],
+            state.compilation.Tracks[moveIndex],
+        ] = [
+            state.compilation.Tracks[moveIndex],
+            state.compilation.Tracks[targetIndex],
+        ];
+        PersistentStorage.storeCompilation(state.compilation);
+    },
+
+    [MutationTypes.DISCARD_COMPILATION](state: State) {
         PersistentStorage.clearCompilation();
 
         state.selectedCueId = '';
@@ -279,7 +378,9 @@ export const mutations: MutationTree<State> & Mutations = {
         });
         state.mediaUrls.clear();
 
-        //TODO remove the durations from all tracks
+        state.compilation.Tracks.forEach((track) => {
+            track.Duration = null;
+        });
     },
     /** Updates the application settings
      * @param state - The vuex state
@@ -316,6 +417,22 @@ export const mutations: MutationTree<State> & Mutations = {
             track.Name = payload.name;
             track.Artist = payload.artist;
             track.Album = payload.album;
+            PersistentStorage.storeCompilation(state.compilation);
+        }
+    },
+    [MutationTypes.UPDATE_TRACK_URL](
+        state: State,
+        payload: {
+            trackId: string;
+            url: string;
+        },
+    ): void {
+        const track = CompilationHandler.getTrackById(
+            state.compilation,
+            payload.trackId,
+        );
+        if (track) {
+            track.Url = payload.url;
             PersistentStorage.storeCompilation(state.compilation);
         }
     },

@@ -12,10 +12,9 @@
     >
         <!-- dropdown-trigger -->
         <NavButton
-            class="button"
             aria-haspopup="true"
             aria-controls="dropdown-menu"
-            :title="this.Title"
+            :title="this.title"
             iconName="menu"
         />
         <div
@@ -24,6 +23,11 @@
             role="menu"
         >
             <div class="dropdown-content">
+                <!-- HINT: Because of 'is-static', this should not be clickable, but unfortunately I was not able to prevent this yet -->
+                <div class="dropdown-item is-static is-header">
+                    <p>{{ this.title }}</p>
+                </div>
+                <hr class="dropdown-divider" />
                 <slot>
                     <!-- The menu items -->
                 </slot>

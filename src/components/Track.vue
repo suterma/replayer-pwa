@@ -39,10 +39,9 @@
 
         <!-- The cues as buttons (in a slider, whose use is optional, for a better overview)-->
         <slide-up-down
-            v-model="expanded"
-            :duration="250"
+            v-model="this.expanded"
+            :duration="300"
             timingFunction="linear"
-            :responsive="true"
         >
             <!-- The audio player, but only once the source is available 
             Note: The actual src property/attribute is also depending 
@@ -59,6 +58,11 @@
                     @trackLoaded="calculateCueDurations"
                     @trackPlaying="updatePlaying"
                     @newCueTriggered="createNewCue"
+                    :loopStart="this.selectedCue?.Time"
+                    :loopEnd="
+                        this.selectedCue?.Time + this.selectedCue?.Duration
+                    "
+                    :source="this.track?.Url"
                 ></TrackAudioApiPlayer>
             </template>
             <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
@@ -189,28 +193,7 @@ export default defineComponent({
     },
     data() {
         return {
-            /** Whether this component shows editable inputs for the contained data
-             * @devdoc Allows to reuse this component for more than one display mode.
-             */
-            isEditable: this.displayMode === TrackDisplayMode.Edit,
-
-            /** Whether this component shows non-collapsible playback buttons
-             * @devdoc Allows to reuse this component for more than one display mode.
-             */
-            isPlayable: this.displayMode === TrackDisplayMode.Play,
-
-            /** Whether this component supports expand/collapse (using a button)
-             * If set to false, the component is always shown in the expanded state, without the toggling button.
-             * @devdoc Allows to reuse this component for more than one display mode.
-             */
-            isCollapsible: this.displayMode === TrackDisplayMode.Collapsible,
-
-            /** Whether this component shows the tracks only with a link to the track detail
-             * @devdoc Allows to reuse this component for more than one display mode.
-             */
-            isLinkOnly: this.displayMode === TrackDisplayMode.Link,
-
-            /** Whether this track tile is shown as expanded. Default: false, but can later be dynamically changed.
+            /** Whether this track is shown as expanded. Default: false, but can later be dynamically changed.
              */
             expanded: false,
             /** The playback progress in the current track, in [seconds]
@@ -322,9 +305,13 @@ export default defineComponent({
             if (this.displayMode === TrackDisplayMode.Link) {
                 value = false;
             }
-            console.debug('Track::updateExpanded:value:', value);
-            this.expanded = value;
-            this.$emit('update:expanded', value);
+
+            //Let the DOM update first, to have proper height handling when items get added late on
+            this.$nextTick(() => {
+                console.debug('Track::updateExpanded:value:', value);
+                this.expanded = value;
+                this.$emit('update:expanded', value);
+            });
         },
         /** Handles the click of a cue button, by toggling playback and seeking to it
          * @devdoc Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
@@ -449,6 +436,34 @@ export default defineComponent({
         },
     },
     computed: {
+        /** Whether this component shows editable inputs for the contained data
+         * @devdoc Allows to reuse this component for more than one display mode.
+         */
+        isEditable(): boolean {
+            return this.displayMode === TrackDisplayMode.Edit;
+        },
+
+        /** Whether this component shows non-collapsible playback buttons
+         * @devdoc Allows to reuse this component for more than one display mode.
+         */
+        isPlayable(): boolean {
+            return this.displayMode === TrackDisplayMode.Play;
+        },
+
+        /** Whether this component supports expand/collapse (using a button)
+         * If set to false, the component is always shown in the expanded state, without the toggling button.
+         * @devdoc Allows to reuse this component for more than one display mode.
+         */
+        isCollapsible(): boolean {
+            return this.displayMode === TrackDisplayMode.Collapsible;
+        },
+
+        /** Whether this component shows the tracks only with a link to the track detail
+         * @devdoc Allows to reuse this component for more than one display mode.
+         */
+        isLinkOnly(): boolean {
+            return this.displayMode === TrackDisplayMode.Link;
+        },
         /** Gets a reference to the player instance.
          * @devdoc $ref's are non-reactive, see https://v3.vuejs.org/api/special-attributes.html#ref
          * Thus, referencing an instance after it has been removed from the DOM (e.g. by v-if)
@@ -458,6 +473,10 @@ export default defineComponent({
             return this.$refs.playerReference as InstanceType<
                 typeof TrackAudioApiPlayer
             >;
+        },
+
+        selectedCue(): ICue {
+            return this.$store.getters.selectedCue as ICue;
         },
         /** Gets the media object URL, if available
          */

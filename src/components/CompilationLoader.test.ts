@@ -53,11 +53,6 @@ describe('CompilationLoader.vue', () => {
             },
             actions: {
                 [ActionTypes.ADD_MEDIA_BLOB]({ commit }, mediaBlob: MediaBlob) {
-                    console.debug(
-                        'actions::ADD_MEDIA_BLOB:mediaBlob-filename',
-                        mediaBlob.fileName,
-                    );
-
                     const objectUrl = ObjectUrlHandler.createObjectURL(
                         mediaBlob.blob,
                         mediaBlob.fileName,

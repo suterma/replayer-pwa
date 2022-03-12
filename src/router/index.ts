@@ -1,48 +1,59 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Play from '../views/Play.vue';
-import TrackPlayer from '../views/TrackPlayer.vue';
-import Home from '../views/Home.vue';
-import Edit from '../views/Edit.vue';
-import List from '../views/List.vue';
+//import TrackPlayer from '../views/TrackPlayer.vue';
+//import Home from '../views/Home.vue';
+//import List from '../views/List.vue';
 
 const routes: Array<RouteRecordRaw> = [
-    //Always use the explicit edit route as default instead of the default "Home" root.
-    { path: '/', redirect: { name: 'Edit' } },
+    { path: '/', redirect: { name: 'Home' } },
     {
         path: '/home',
         name: 'Home',
-        component: Home,
+        //component: Home,
+
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+            import(/* webpackChunkName: "home" */ '../views/Home.vue'),
     },
     {
+        /** The route to the playback
+         * @remarks This represents the expectedly most used feature, playback of a file or compilation.
+         * @devdoc The /edit alias serves as a flag and supports the reuse of the playback view for editing, too.
+         * Specific this flag is passed down to components as necessary.
+         */
         path: '/play',
         name: 'Play',
         component: Play,
+        alias: '/edit',
     },
     {
         path: '/list',
         name: 'List',
-        component: List,
+        //component: List,
+
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+            import(/* webpackChunkName: "list" */ '../views/List.vue'),
     },
     {
         //HINT: The track player is not accessible from the menu
         path: '/track-player/:id*',
         name: 'Track-Player',
-        component: TrackPlayer,
-    },
-    {
-        path: '/edit',
-        name: 'Edit',
-        component: Edit,
 
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        // component: () =>
-        //     import(/* webpackChunkName: "about" */ '../views/Edit.vue'),
+        component: () =>
+            import(
+                /* webpackChunkName: "/track-player/:id*" */ '../views/TrackPlayer.vue'
+            ),
     },
-
     // Allow loading of arbitrary files
-    { path: '/edit/:url*', component: Edit },
+    { path: '/play/:url*', component: Play },
     {
         path: '/settings',
         name: 'Settings',

@@ -42,9 +42,7 @@
                     button: true,
                     disabled: this.isPlayingRequestOutstanding || !this.loaded,
                     'is-loading':
-                        this.isPlayingRequestOutstanding ||
-                        !this.loaded ||
-                        this.isFading,
+                        this.isPlayingRequestOutstanding || !this.loaded,
                 }"
                 @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
@@ -60,9 +58,7 @@
                     button: true,
                     disabled: this.isPlayingRequestOutstanding || !this.loaded,
                     'is-loading':
-                        this.isPlayingRequestOutstanding ||
-                        !this.loaded ||
-                        this.isFading,
+                        this.isPlayingRequestOutstanding || !this.loaded,
                     'has-left-radius': true,
                 }"
                 @click.prevent="togglePlayback"
@@ -90,6 +86,7 @@
                     :isPlaying="this.playing"
                     :duration="this.durationSeconds"
                     :position="this.currentSeconds"
+                    :source="this.source"
                 />
             </div>
         </div>
@@ -152,19 +149,9 @@
                 />
             </button>
         </p>
-        <!-- Loop -->
+        <!-- Play mode -->
         <p class="control">
-            <button
-                :class="{
-                    button: true,
-                }"
-                v-show="!showVolume"
-                @click.prevent="toggleLooping"
-                title="Loop"
-            >
-                <Icon v-if="!looping" name="loop-none" />
-                <Icon v-else name="loop-track" />
-            </button>
+            <PlaybackModeButton v-model="this.playbackMode" />
         </p>
     </div>
 </template>
@@ -174,19 +161,21 @@ import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent } from 'vue';
 import Icon from '@/components/icons/Icon.vue';
 import PlayerTime from '@/components/PlayerTime.vue';
+import PlaybackModeButton from '@/components/PlaybackModeButton.vue';
+import { PlaybackMode } from '@/store/compilation-types';
 
 /** A UI representation for a media player
  * @remarks Handles and emits various states and event for playback control.
  */
 export default defineComponent({
     name: 'PlayerChrome',
-    components: { Icon, PlayerTime },
+    components: { Icon, PlayerTime, PlaybackModeButton },
     emits: [
         'stop',
         /** Flags, whether the UI represents the playing (true) or the paused (false) state
          */
         'update:playing',
-        'update:looping',
+        'update:playbackMode',
         'update:currentSeconds',
         'update:volume',
         'update:muted',
@@ -244,12 +233,6 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
-        /** Whether the player is currently playing
-         * @remarks Implements a two-way binding */
-        looping: {
-            type: Boolean,
-            default: false,
-        },
         /** Whether the player is currently muted
          * @remarks Implements a two-way binding */
         muted: {
@@ -264,9 +247,17 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
+        /** The track source description
+         * @remarks This is a textual indication of the track media source. It's displayed as part of the timing display
+         */
+        source: {
+            type: String,
+            default: '',
+        },
     },
     data: () => ({
         showVolume: false,
+        playbackMode: PlaybackMode.PlayTrack,
     }),
 
     computed: {
@@ -304,6 +295,19 @@ export default defineComponent({
         volumeTitle(): string {
             return `Volume (${this.volume}%)`;
         },
+
+        isPlaybackTrack(): boolean {
+            return this.playbackMode === PlaybackMode.PlayTrack;
+        },
+        isPlaybackLoopTrack(): boolean {
+            return this.playbackMode === PlaybackMode.LoopTrack;
+        },
+        isPlaybackCue(): boolean {
+            return this.playbackMode === PlaybackMode.PlayCue;
+        },
+        isPlaybackLoopCue(): boolean {
+            return this.playbackMode === PlaybackMode.LoopCue;
+        },
     },
     methods: {
         download() {
@@ -336,13 +340,7 @@ export default defineComponent({
                 this.$emit('pause');
             }
         },
-        toggleLooping() {
-            const looping = !this.looping;
-            console.debug(
-                `PlayerChrome(${this.title})::toggleLooping:looping:${looping}`,
-            );
-            this.$emit('update:looping', looping);
-        },
+
         toggleMuted() {
             const muted = !this.muted;
             console.debug(
@@ -350,6 +348,14 @@ export default defineComponent({
             );
             this.$emit('update:muted', muted);
             this.$emit('mute', muted);
+        },
+    },
+    watch: {
+        playbackMode() {
+            console.debug(
+                `PlayerChrome(${this.title})::updatePlaybackMode:playbackMode:${this.playbackMode}`,
+            );
+            this.$emit('update:playbackMode', this.playbackMode);
         },
     },
 });

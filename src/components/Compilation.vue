@@ -59,13 +59,7 @@ export default defineComponent({
         },
     },
     data() {
-        return {
-            /** Whether the header component show editable inputs for the contained data
-             * @remarks For simplicity, the header is shown as editable, as long as the tracks are editable, too.
-             * @devdoc Allows to reuse this component for more than one display mode.
-             */
-            isHeaderEditable: this.tracksDisplayMode === TrackDisplayMode.Edit,
-        };
+        return {};
     },
     methods: {
         /** Visually scrolls to the given track, making it visually at the top of
@@ -154,13 +148,20 @@ export default defineComponent({
          * certain cue within the same track, no scrolling should occurr, to keep the UI calm.
          */
         activeTrack(track: ITrack | null) {
-            console.debug('scrolling to track ', track);
+            console.debug('scrolling to track ', track?.Name);
             if (track) {
                 this.scrollToTrack(track);
             }
         },
     },
     computed: {
+        /** Whether the header component shows editable inputs for the contained data
+         * @remarks For simplicity, the header is shown as editable, as long as the tracks are editable, too.
+         * @devdoc Allows to reuse this component for more than one display mode.
+         */
+        isHeaderEditable(): boolean {
+            return this.tracksDisplayMode === TrackDisplayMode.Edit;
+        },
         /** Gets the list of tracks within this compilation */
         tracks(): Array<ITrack> | undefined {
             return this.compilation?.Tracks;

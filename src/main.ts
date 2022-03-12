@@ -6,6 +6,7 @@ import { store } from './store/store';
 import VueScrollTo from 'vue-scrollto';
 import SlideUpDown from 'vue3-slide-up-down';
 import vClickOutside from 'click-outside-vue3';
+import { PromiseDialog } from 'vue3-promise-dialog';
 import outfront from 'outfront';
 
 /** Custom outfront variant from the replayer project
@@ -27,5 +28,9 @@ createApp(App)
     .use(router)
     .use(VueScrollTo)
     .use(vClickOutside)
+    .use(PromiseDialog)
     .component('slide-up-down', SlideUpDown)
+    .directive('focus', {
+        mounted: (el) => el.focus(),
+    })
     .mount('#app');

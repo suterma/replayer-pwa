@@ -18,15 +18,17 @@
             <div class="level-item">
                 <span class="is-pulled-right ml-3">
                     <DropdownMenu title="Compilation context menu">
-                        <DropdownMenuItem
-                            title="Prevent screen timeout"
-                            subTitle="(while this compilation is open)"
-                            :class="{
-                                'is-active': isPreventingScreenTimeoutNow,
-                            }"
-                            @click="togglePreventScreenTimeoutNow"
-                        />
-
+                        <Experimental>
+                            <DropdownMenuItem
+                                title="Prevent screen timeout"
+                                subTitle="(while this compilation is open)"
+                                :class="{
+                                    'is-active':
+                                        this.isPreventingScreenTimeoutNow,
+                                }"
+                                @click="togglePreventScreenTimeoutNow"
+                            />
+                        </Experimental>
                         <a
                             href="#"
                             class="dropdown-item"
@@ -52,9 +54,12 @@
                             </span>
                         </a>
                         <hr class="dropdown-divider" />
-                        <a href="#" @click="close" class="dropdown-item">
-                            Close</a
-                        >
+
+                        <DropdownMenuItem
+                            title="Close"
+                            subTitle="(discard the compilation)"
+                            @click="close"
+                        />
                     </DropdownMenu>
                 </span>
             </div>
@@ -64,19 +69,20 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { MutationTypes } from '@/store/mutation-types';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
 import { Compilation, ICompilation } from '@/store/compilation-types';
 import EditableInput from '@/components/EditableInput.vue';
 import DropdownMenu from '@/components/DropdownMenu.vue';
 import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
+import Experimental from '@/components/Experimental.vue';
+import { confirm } from '@/code/ui/dialogs';
 
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
     name: 'CompilationHeader',
-    components: { EditableInput, DropdownMenu, DropdownMenuItem },
+    components: { EditableInput, DropdownMenu, DropdownMenuItem, Experimental },
     props: {
         compilation: {
             type: Compilation,
@@ -105,7 +111,14 @@ export default defineComponent({
         /** Closes the compilation
          */
         close(): void {
-            this.$store.commit(MutationTypes.CLOSE_COMPILATION);
+            confirm(
+                'Closing compilation',
+                `Do you want to close (and discard any changes to) compilation '${this.compilation.Title}'? Hint: to keep changes for later use, download a copy first.`,
+            ).then((ok) => {
+                if (ok) {
+                    this.$store.dispatch(ActionTypes.DISCARD_COMPILATION);
+                }
+            });
         },
         /** Updates the compilation title */
         updateTitle(title: string) {

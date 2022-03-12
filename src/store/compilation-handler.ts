@@ -6,7 +6,14 @@ import { MediaBlob, MediaUrl } from './state-types';
  * Provides handling methods for compilation manipulation.
  */
 export default class CompilationHandler {
-    /**Sorts the cues array in place, by time. This method mutates the array and returns a reference to the same array.
+    /** Return the index of the track in the given compilation */
+    static getIndexOfTrackById(
+        compilation: ICompilation,
+        trackId: string,
+    ): number {
+        return compilation.Tracks.map((item) => item.Id).indexOf(trackId);
+    }
+    /** Sorts the cues array in place, by time. This method mutates the array and returns a reference to the same array.
      * @param cues - The array of cues to sort.
      * @returns The mutated array.
      */
@@ -24,7 +31,7 @@ export default class CompilationHandler {
      * @remarks Simply tries to parse all existing shortcuts, then increases the number by 1.
      * @param compilation - The compilation to work on.
      */
-    static getNextShortcut(compilation: ICompilation): string {
+    static getNextShortcut(compilation: ICompilation): number {
         const cueShortcuts = compilation.Tracks.flatMap((track) =>
             track.Cues.flatMap((cue) => cue.Shortcut)
                 //Skip empty items
@@ -37,9 +44,9 @@ export default class CompilationHandler {
             })
             .pop();
         if (lastShortcut && lastShortcut != null) {
-            return (lastShortcut + 1).toString();
+            return lastShortcut + 1;
         }
-        return '1';
+        return 1;
     }
 
     /** Rounds the given time to the Replayer default precision.

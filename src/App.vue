@@ -6,15 +6,14 @@
         <!-- To keep the audio within the media player component running, 
             simply keep this component alive over route changes -->
         <router-view v-slot="{ Component }">
-            <!-- Currently not used to allow editing without playback from the play view -->
-            <!-- <keep-alive include="Play"> -->
-            <component :is="Component" />
-            <!-- </keep-alive> -->
+            <keep-alive include="Play">
+                <component :is="Component" />
+            </keep-alive>
         </router-view>
         <CompilationLoader />
         <ProgressOverlay />
         <ErrorOverlay />
-        <WelcomeMessage />
+        <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
     </section>
 </template>
 <script lang="ts">
@@ -22,9 +21,9 @@ import { defineComponent } from 'vue';
 import NavbarTop from '@/components/NavbarTop.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import ErrorOverlay from '@/components/ErrorOverlay.vue';
-import WelcomeMessage from '@/components/WelcomeMessage.vue';
 import { MutationTypes } from './store/mutation-types';
 import CompilationLoader from '@/components/CompilationLoader.vue';
+import { DialogWrapper } from 'vue3-promise-dialog';
 
 export default defineComponent({
     name: 'App',
@@ -33,7 +32,7 @@ export default defineComponent({
         CompilationLoader,
         ProgressOverlay,
         ErrorOverlay,
-        WelcomeMessage,
+        DialogWrapper,
     },
     beforeCreate() {
         this.$store.commit(MutationTypes.RETRIEVE_SETTINGS);

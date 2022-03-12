@@ -3,7 +3,7 @@
  * Application-specific presets to the Bulma CSS 
 **************************************************************
 */
-/* Keep the menu stowed away also on large screens
+/* Controls when the menu is stowed away 
     * @devdoc Must be applied before the bulma.sass is used, because this is used there */
 /** Using Bulma CSS with a theme for Bulma */
 /*! bulma.io v0.9.3 | MIT License | github.com/jgthms/bulma */
@@ -4456,7 +4456,7 @@ button.dropdown-item.is-active {
 .navbar.is-white .navbar-burger {
   color: #0a0a0a;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-white .navbar-start > .navbar-item,
 .navbar.is-white .navbar-start .navbar-link,
 .navbar.is-white .navbar-end > .navbar-item,
@@ -4512,7 +4512,7 @@ button.dropdown-item.is-active {
 .navbar.is-black .navbar-burger {
   color: white;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-black .navbar-start > .navbar-item,
 .navbar.is-black .navbar-start .navbar-link,
 .navbar.is-black .navbar-end > .navbar-item,
@@ -4568,7 +4568,7 @@ button.dropdown-item.is-active {
 .navbar.is-light .navbar-burger {
   color: rgba(0, 0, 0, 0.7);
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-light .navbar-start > .navbar-item,
 .navbar.is-light .navbar-start .navbar-link,
 .navbar.is-light .navbar-end > .navbar-item,
@@ -4624,7 +4624,7 @@ button.dropdown-item.is-active {
 .navbar.is-dark .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-dark .navbar-start > .navbar-item,
 .navbar.is-dark .navbar-start .navbar-link,
 .navbar.is-dark .navbar-end > .navbar-item,
@@ -4680,7 +4680,7 @@ button.dropdown-item.is-active {
 .navbar.is-primary .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-primary .navbar-start > .navbar-item,
 .navbar.is-primary .navbar-start .navbar-link,
 .navbar.is-primary .navbar-end > .navbar-item,
@@ -4736,7 +4736,7 @@ button.dropdown-item.is-active {
 .navbar.is-link .navbar-burger {
   color: #52575c;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-link .navbar-start > .navbar-item,
 .navbar.is-link .navbar-start .navbar-link,
 .navbar.is-link .navbar-end > .navbar-item,
@@ -4792,7 +4792,7 @@ button.dropdown-item.is-active {
 .navbar.is-info .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-info .navbar-start > .navbar-item,
 .navbar.is-info .navbar-start .navbar-link,
 .navbar.is-info .navbar-end > .navbar-item,
@@ -4848,7 +4848,7 @@ button.dropdown-item.is-active {
 .navbar.is-success .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-success .navbar-start > .navbar-item,
 .navbar.is-success .navbar-start .navbar-link,
 .navbar.is-success .navbar-end > .navbar-item,
@@ -4904,7 +4904,7 @@ button.dropdown-item.is-active {
 .navbar.is-warning .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-warning .navbar-start > .navbar-item,
 .navbar.is-warning .navbar-start .navbar-link,
 .navbar.is-warning .navbar-end > .navbar-item,
@@ -4960,7 +4960,7 @@ button.dropdown-item.is-active {
 .navbar.is-danger .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar.is-danger .navbar-start > .navbar-item,
 .navbar.is-danger .navbar-start .navbar-link,
 .navbar.is-danger .navbar-end > .navbar-item,
@@ -5186,7 +5186,7 @@ a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover, a.navbar-i
   margin: 0.5rem 0;
 }
 
-@media screen and (max-width: 2399px) {
+@media screen and (max-width: 319px) {
   .navbar > .container {
     display: block;
   }
@@ -5240,7 +5240,7 @@ body.has-navbar-fixed-bottom-touch {
     padding-bottom: 4rem;
   }
 }
-@media screen and (min-width: 2400px) {
+@media screen and (min-width: 320px) {
   .navbar,
 .navbar-menu,
 .navbar-start,
@@ -10702,11 +10702,11 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   padding: 0.5em;
 }
 .player-time .player-time-current {
-  padding-left: 5px;
+  padding-left: 0.75em;
 }
 .player-time .player-time-total {
   opacity: 0.5;
-  padding-right: 5px;
+  padding-right: 0.75em;
 }
 
 /** Allows to show elements in front of the player-progress background span
@@ -10827,7 +10827,7 @@ body.has-navbar-fixed-top-laptop {
  **************************************************************/
 /* Navigational buttons generally should have no border (like is-ghost), 
 * but have a subtle hover background
-* Except, when focused this should not apply (and the usual focus border should be applied)
+* Except, when focused by keyboard this should not apply (and the usual focus border should be applied)
 * to allow visual cues for keyboard navigation
 */
 .button.is-nav,
@@ -10839,11 +10839,27 @@ nav .button {
   text-decoration: none;
 }
 
+.button.is-nav:focus:not(:active),
+nav .button:focus:not(:active) {
+  box-shadow: none;
+}
+
+/* Specific handling for focus visility.
+* Nav-Buttons should in general not show a focus visual,
+* except for keyboard navigation, with the specific modifier, focus-visible
+*/
 .button.is-nav:focus,
 nav .button:focus {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.button.is-nav:focus-visible,
+nav .button:focus-visible {
   border-color: #ededed;
 }
 
+/* Indicate an actionable item */
 .button.is-nav:hover,
 nav .button:hover {
   background: #3a3f44;
@@ -10855,11 +10871,13 @@ nav .button:hover {
  * without action, to display a certain state
 **************************************************************/
 /* Indicator buttons should have no border and no background */
+/* Their foreground color should be like normal text */
 .button.is-indicator,
 .button.is-indicator:hover {
   background: none;
   border-color: transparent;
   pointer-events: none;
+  color: #aaa;
 }
 
 /* Dropdown styles */
@@ -10910,9 +10928,11 @@ button.dropdown-item.is-active {
   box-shadow: none;
 }
 
+.is-placeholder,
 .textarea::placeholder,
 .input::placeholder {
   color: #7a8288;
+  font-style: italic;
 }
 
 /*************************************************************
@@ -10969,6 +10989,7 @@ button.dropdown-item.is-active {
   right: 0 !important;
   width: 35px !important;
   /*square*/
+  display: none;
 }
 
 #outfront-container {
@@ -11129,6 +11150,32 @@ but not at the "end/right" container's border */
 /* A transparent background, usable e.g. in a box */
 .has-background-transparent {
   background-color: transparent;
+}
+
+/* Selection Colors */
+::selection {
+  background-color: #fafafa;
+  color: #52575c;
+}
+
+/*************************************************************
+ * Dropdown menu
+**************************************************************
+*/
+/* divider similar to menu border */
+.dropdown-divider {
+  background-color: #52575c;
+}
+
+/* static menu items are not clickable */
+.dropdown-item.is-static {
+  pointer-events: none;
+}
+
+/* header menu items are shorter */
+.dropdown-item.is-header {
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 /*************************************************************

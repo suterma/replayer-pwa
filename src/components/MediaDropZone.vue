@@ -3,7 +3,13 @@
 The URL input is wider, because it should be able to easily deal with lenghty input values -->
     <div class="level media-drop-zone">
         <div v-if="isExpanded" class="level-item has-text-centered">
-            <div
+            <!-- This is a combined file load and drop zone -->
+            <!-- tabindex, to make the label tabbable with focus-->
+            <!-- Because the label is tied to the file handler, clicking on it invokes the invisible file input -->
+            <!-- @keydown.enter handler to have it working with the enter key, too -->
+            <label
+                for="assetsFieldHandle"
+                class="is-clickable"
                 :class="{
                     box: true,
                     button: true,
@@ -12,12 +18,15 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     'has-border-info': this.isDraggingOver,
                     'is-loading': this.isLoadingFromFile,
                 }"
+                tabindex="0"
                 @dragover="dragover"
                 @dragleave="dragleave"
                 @drop="drop"
+                @keydown.enter="openFile()"
+                v-focus
             >
                 <input
-                    tabindex="10"
+                    v-focus
                     type="file"
                     multiple
                     name="fields[assetsFieldHandle][]"
@@ -25,52 +34,56 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     class="is-hidden"
                     @change="onChange"
                     ref="file"
-                    accept=".rex,.xml,.rez,.zip,.mp3,.bplist"
+                    :accept="this.acceptedFiles"
                 />
-
-                <label for="assetsFieldHandle" class="is-clickable">
+                <template v-if="this.isReplacementMode">
+                    <Icon name="swap-horizontal" />
+                    <span>Click or drop to replace file</span>
+                </template>
+                <template v-else>
                     <Icon name="plus" />
-                    <span> Click or drop to load file(s) </span>
-                </label>
-            </div>
+                    <span>Click or drop to load file(s)</span>
+                </template>
+            </label>
         </div>
 
-        <div v-if="isExpanded" class="level-item has-text-centered">
-            <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
-        </div>
-        <div v-else class="level-item has-text-centered">
+        <!-- The unexpanded plus sign -->
+        <div v-if="!isExpanded" class="level-item has-text-centered">
             <div class="ml-3 mr-3">
                 <!-- expanded-trigger -->
-                <nav>
-                    <button
-                        class="button"
-                        title="Expand media drop zone"
-                        @click="expand"
-                    >
-                        <Icon name="plus" />
-                    </button>
-                </nav>
+                <button
+                    class="button is-nav"
+                    title="Expand media drop zone"
+                    @click="expand"
+                >
+                    <Icon name="plus" />
+                </button>
             </div>
         </div>
-        <div
-            v-if="isExpanded"
-            class="level-item has-text-centered is-flex-grow-5 is-flex-shrink-1"
-        >
-            <div class="field fill-available has-addons">
-                <div class="control fill-available">
-                    <input
-                        tabindex="20"
-                        class="input"
-                        type="url"
-                        v-model="url"
-                        placeholder="Paste an URL"
-                        size="60"
-                    />
-                </div>
-                <!-- //TODO fetch is currenlty not suported at URL load time -->
-                <!-- <div class="control">
+
+        <!-- The experimental URL loading part -->
+        <Experimental>
+            <div v-if="isExpanded" class="level-item has-text-centered">
+                <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
+            </div>
+            <div
+                v-if="isExpanded"
+                class="level-item has-text-centered is-flex-grow-5 is-flex-shrink-1"
+            >
+                <div class="field fill-available has-addons">
+                    <div class="control fill-available">
+                        <input
+                            class="input"
+                            type="url"
+                            v-model="url"
+                            placeholder="Paste an URL"
+                            size="60"
+                        />
+                    </div>
+                    <!-- //TODO fetch is currenlty not suported at URL load time -->
+                    <!-- <div class="control">
                     <button
-                        tabindex="30"
+                      
                         :class="{
                             button: true,
                             'is-primary': true,
@@ -81,50 +94,26 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                         Fetch
                     </button>
                 </div> -->
-                <div class="control">
-                    <!-- Use as default, thus set as the submit button -->
-                    <button
-                        tabindex="40"
-                        :class="{
-                            button: true,
-                            'is-primary': true,
-                            'is-loading': this.isUsingMediaFromUrl,
-                        }"
-                        type="submit"
-                        @click="useMediaUrl"
-                    >
-                        Load
+                    <div class="control">
+                        <!-- Use as default, thus set as the submit button -->
+                        <button
+                            :class="{
+                                button: true,
+                                'is-primary': true,
+                                'is-loading': this.isUsingMediaFromUrl,
+                            }"
+                            type="submit"
+                            @click="useMediaUrl"
+                        >
+                            Load
 
-                        <!-- Apply and use online -->
-                    </button>
+                            <!-- Apply and use online -->
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </Experimental>
     </div>
-    <!-- <div v-if="isExpanded" class="box has-border has-background-transparent">
-        <SupportedFilesText />
-
-        <p>
-            <a href="https://replayer.app/en/documentation-app" target="_blank"
-                >Learn more...</a
-            >
-        </p>
-
-        Example URLs:
-        <br />
-        https://web-devel.replayer.app/your-light-by-lidija-roos.mp3
-        <br />
-        https://galiander.ca/corogaliano/2022springrehearsal/01%20Down%20To%20The%20River%20To%20Pray%202016.mp3
-        <br />
-        https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20sop.mp3
-        <br />
-        https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20alt.mp3
-        <br />
-        https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20ten.mp3
-        <br />
-        https://galiander.ca/corogaliano/2022springrehearsal/Down%20to%20the%20river%20to%20pray%20bas.mp3
-        <br />
-    </div> -->
 </template>
 
 <script lang="ts">
@@ -135,18 +124,35 @@ import { MutationTypes } from '@/store/mutation-types';
 import { v4 as uuidv4 } from 'uuid';
 import FileHandler from '@/store/filehandler';
 import Icon from '@/components/icons/Icon.vue';
+import Experimental from '@/components/Experimental.vue';
 
 /** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
  * @remarks Supports collapsing the control after load, to keep the user more focused
+ * @remarks Supports two modes: "replace", intended to replace an existing source, or "add", to add a new source.
  */
 export default defineComponent({
     name: 'MediaDropZone',
-    components: { Icon },
+    components: { Icon, Experimental },
     props: {
         /** Whether to show the zone in the expanded state */
         isExpanded: {
             type: Boolean,
             default: false,
+        },
+        /** The URL/file name of the media source to replace
+         * @remarks If set, the single-file replacement mode is considered active
+         * @remarks In the store, the file is not replaced, since it may be used by other tracks.
+         */
+        replaceUrl: {
+            type: String,
+            default: undefined,
+        },
+        /** The track Id of the track, whose media source is to replace
+         * @remarks If set, the single-file replacement mode is considered active
+         */
+        trackId: {
+            type: String,
+            default: undefined,
         },
     },
     emits: ['update:is-expanded'],
@@ -169,6 +175,10 @@ export default defineComponent({
         isLoadingFromFile: false,
     }),
     methods: {
+        openFile() {
+            console.debug('MediaDropZone::openFile');
+            (this.$refs.file as HTMLInputElement).click();
+        },
         onChange() {
             this.filelist = [
                 ...((this.$refs.file as HTMLInputElement)
@@ -195,17 +205,38 @@ export default defineComponent({
         /** Immediately loads all available files by loading their content
          */
         async loadFiles(): Promise<void> {
-            Array.from(this.filelist).forEach((file) => {
-                if (this.isSupported(file)) {
-                    this.loadFile(file);
-                }
+            const files = Array.from(this.filelist);
+            files.forEach((file) => {
+                this.loadFile(file);
                 this.filelist.pop();
             });
+
+            //If a single package or complilation has been loaded, the intention was most likely to play it
+            console.table(
+                files.map(function (file) {
+                    return {
+                        name: file.name,
+                        size: file.size,
+                        type: file.type,
+                    };
+                }),
+            );
+
+            if (
+                files.length === 1 &&
+                (FileHandler.isSupportedPackageFile(files[0]) ||
+                    FileHandler.isSupportedCompilationFileName(files[0].name))
+            ) {
+                this.$router.push('play');
+            }
         },
 
         /** Loads a single file by loading it's content
+         * @param {file} - Any supported file (package, compilation or media)
          */
         async loadFile(file: File): Promise<void> {
+            console.debug('MediaDropZone::loadFile:file.name', file.name);
+
             this.isLoadingFromFile = true;
             this.$store
                 .dispatch(ActionTypes.LOAD_FROM_FILE, file)
@@ -218,11 +249,21 @@ export default defineComponent({
                     throw new Error(errorMessage);
                 })
                 .then(() => {
-                    this.createDefaultTrackForFile(file);
+                    //For new media sources, create a default track
+                    if (FileHandler.isSupportedMediaFile(file)) {
+                        if (!this.isReplacementMode) {
+                            this.createDefaultTrackForFile(file);
+                        } else {
+                            //Replace the URL for this track
+                            if (this.trackId) {
+                                this.updateUrlForTrack(this.trackId, file);
+                            }
+                        }
+                    }
                 })
                 .finally(() => {
                     this.isLoadingFromFile = false;
-                    this.collapse();
+                    this.collapse(); //This component
                 });
         },
 
@@ -312,12 +353,22 @@ export default defineComponent({
                     });
             }
         },
-        /** Creates a default track for the given File (Using the File name both as the name and the URL for the track)*/
+        /** Creates a default track for the given Media File (Using the File name both as the name and the URL for the track)*/
         createDefaultTrackForFile(file: File) {
             const fileName = file.name.normalize();
             const nameWithoutExtension = FileHandler.removeExtension(fileName);
             this.commitNewTrackWithName(nameWithoutExtension, '', '', fileName);
         },
+
+        /** Replaces the track's URL with a reference to this replacement file
+         * @param {replacementFile} - the File to update the reference to
+         * @param {trackId} - The Id of the track to update
+         */
+        updateUrlForTrack(trackId: string, replacementFile: File): void {
+            const fileName = replacementFile.name.normalize();
+            this.updateExistingTrackWithUrl(trackId, fileName);
+        },
+
         /** Creates a default track for the given URL (Using part of the URL as the name, and the original URL as the URL)
          * @remarks The effectively used name for the resource in the local Indexed DB storage, if stored, differs from the URL.
          * It can be derived from the URL by using the CompilationParser.getLocalResourceName() method.
@@ -354,8 +405,33 @@ export default defineComponent({
             );
             this.$store.commit(MutationTypes.ADD_TRACK, newTrack);
         },
+        /** Updates an existing track the given URL
+         * @param {trackId} - The Id of the track to update
+         *  @param - url {string}  The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
+         */
+        updateExistingTrackWithUrl(
+            trackId: string,
+
+            url: string,
+        ) {
+            this.$store.commit(MutationTypes.UPDATE_TRACK_URL, {
+                trackId,
+                url,
+            });
+        },
     },
-    computed: {},
+    computed: {
+        acceptedFiles(): string {
+            return FileHandler.acceptedFileList;
+        },
+        /** Determines whether this control is in the replacement mode */
+        isReplacementMode(): boolean {
+            if (this.replaceUrl && this.replaceUrl.length > 0) {
+                return true;
+            }
+            return false;
+        },
+    },
 });
 </script>
 <style scoped>
@@ -365,9 +441,10 @@ export default defineComponent({
     border-style: dashed;
 }
 
+/* This level is designed to be contained inside other controls, possibly a level itself. Thus, no margin is applied here. 
+    If you require a typical BULMA level top/bottom margin, you must apply that externally. */
 .media-drop-zone {
-    /** Add a margin at the top, to have a space between this drop zone
-    and the possible tracks above it. */
-    margin-top: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 </style>

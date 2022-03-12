@@ -1,5 +1,5 @@
 <template>
-    <p class="control">
+    <p class="control" :title="this.indication">
         <span class="button is-indicator">
             <Icon
                 name="indicator"
@@ -41,6 +41,16 @@ export default defineComponent({
             type: Boolean,
             default: true,
             required: false,
+        },
+    },
+    computed: {
+        indication(): string {
+            if (this.isPlaying) {
+                return 'Track is playing';
+            }
+            if (this.isReady) {
+                return 'Track is loaded and ready to play';
+            } else return 'Track is not yet loaded';
         },
     },
 });

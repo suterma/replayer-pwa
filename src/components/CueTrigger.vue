@@ -16,7 +16,7 @@
             <div class="player-timeline">
                 <div class="player-time">
                     <div class="player-time-current is-unselectable">
-                        Loading media...
+                        Loading {{ this.source }} ...
                     </div>
                 </div>
             </div>
@@ -31,9 +31,7 @@
                     button: true,
                     disabled: this.isPlayingRequestOutstanding || !this.loaded,
                     'is-loading':
-                        this.isPlayingRequestOutstanding ||
-                        !this.loaded ||
-                        this.isFading,
+                        this.isPlayingRequestOutstanding || !this.loaded,
                 }"
                 @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
@@ -58,6 +56,7 @@
                 <PlayerTime
                     :isFading="this.isFading"
                     :isPlaying="this.playing"
+                    :source="this.source"
                     :duration="this.durationSeconds"
                     :position="this.currentSeconds"
                 />
@@ -74,7 +73,7 @@
                 title="Create a cue now (at the current position)!"
             >
                 <Icon name="plus" />
-                <span> Create Cue!</span>
+                <span class="is-hidden-mobile"> Create Cue!</span>
             </button>
         </p>
         <!-- Handle the insert key as trigger for a nue cue Handle the insert key as  trigger for a nue cue -->
@@ -152,6 +151,13 @@ export default defineComponent({
         isPlayingRequestOutstanding: {
             type: Boolean,
             default: false,
+        },
+        /** The track source description
+         * @remarks This is a textual indication of the track media source. It's displayed as part of the timing display
+         */
+        source: {
+            type: String,
+            default: '',
         },
     },
     data: () => ({}),

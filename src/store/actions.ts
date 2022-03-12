@@ -5,7 +5,7 @@ import { ActionTypes } from './action-types';
 import { MutationTypes } from './mutation-types';
 import PersistentStorage from './persistent-storage';
 import CompilationParser from './compilation-parser';
-import { MediaBlob, MediaUrl, RezMimeTypes } from './state-types';
+import { MediaBlob, MediaUrl, RezMimeTypes, Settings } from './state-types';
 import JSZip from 'jszip';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 import CompilationHandler from './compilation-handler';
@@ -30,6 +30,14 @@ export interface Actions {
     [ActionTypes.ADD_MEDIA_BLOB](
         { commit }: AugmentedActionContext,
         payload: { fileName: string; blob: Blob },
+    ): void;
+    [ActionTypes.REMOVE_TRACK](
+        { commit }: AugmentedActionContext,
+        trackId: string,
+    ): void;
+    [ActionTypes.CLONE_TRACK](
+        { commit, getters }: AugmentedActionContext,
+        trackId: string,
     ): void;
     [ActionTypes.LOAD_FROM_URL](
         { commit }: AugmentedActionContext,
@@ -72,6 +80,7 @@ export interface Actions {
         { commit }: AugmentedActionContext,
         cueId: string,
     ): void;
+    [ActionTypes.RESET_APPLICATION]({ commit }: AugmentedActionContext): void;
 }
 export const actions: ActionTree<State, State> & Actions = {
     [ActionTypes.RETRIEVE_COMPILATION]({ commit }) {
@@ -140,31 +149,37 @@ export const actions: ActionTree<State, State> & Actions = {
         });
     },
     [ActionTypes.DISCARD_COMPILATION]({ commit }) {
-        console.debug('actions::DISCARD_COMPILATION');
-        commit(
-            MutationTypes.PUSH_PROGRESS_MESSAGE,
-            'Discarding last compilation...',
-        );
-
-        commit(MutationTypes.CLOSE_COMPILATION, undefined);
-        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+        withProgress(`Discarding the compilation...`, commit, () => {
+            commit(MutationTypes.DISCARD_COMPILATION, undefined);
+        });
     },
     [ActionTypes.ADD_MEDIA_BLOB]({ commit }, mediaBlob: MediaBlob) {
-        console.debug(
-            'actions::ADD_MEDIA_BLOB:mediaBlob-filename',
-            mediaBlob.fileName,
+        withProgress(
+            `Adding media blob ${mediaBlob.fileName}...`,
+            commit,
+            () => {
+                const objectUrl = ObjectUrlHandler.createObjectURL(
+                    mediaBlob.blob,
+                    mediaBlob.fileName,
+                );
+                commit(
+                    MutationTypes.ADD_MEDIA_URL,
+                    new MediaUrl(mediaBlob.fileName, objectUrl),
+                );
+                //Store persistently, but after committing, to keep the process faster
+                PersistentStorage.storeMediaBlob(mediaBlob);
+            },
         );
-
-        const objectUrl = ObjectUrlHandler.createObjectURL(
-            mediaBlob.blob,
-            mediaBlob.fileName,
-        );
-        commit(
-            MutationTypes.ADD_MEDIA_URL,
-            new MediaUrl(mediaBlob.fileName, objectUrl),
-        );
-        //Store persistently, but after committing, to keep the process faster
-        PersistentStorage.storeMediaBlob(mediaBlob);
+    },
+    [ActionTypes.REMOVE_TRACK]({ commit }, trackId: string) {
+        withProgress(`Removing track...`, commit, () => {
+            commit(MutationTypes.REMOVE_TRACK, trackId);
+        });
+    },
+    [ActionTypes.CLONE_TRACK]({ commit }, trackId: string) {
+        withProgress(`Cloning track...`, commit, () => {
+            commit(MutationTypes.CLONE_TRACK, trackId);
+        });
     },
     //TODO WIP check whether all these loading function actually work:
     //With xml, rex, bplist, ZIP
@@ -338,6 +353,9 @@ export const actions: ActionTree<State, State> & Actions = {
                                             //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
                                             const zipEntryName =
                                                 zipEntry.name.normalize();
+                                            console.debug(
+                                                `Processing buffer for ZIP entry name '${zipEntryName}'...`,
+                                            );
 
                                             if (
                                                 FileHandler.isXmlFileName(
@@ -399,9 +417,28 @@ export const actions: ActionTree<State, State> & Actions = {
                                                             undefined,
                                                         );
                                                     });
+                                            } else if (
+                                                FileHandler.isSupportedPackageFileName(
+                                                    zipEntryName,
+                                                )
+                                            ) {
+                                                //We do not handle packages within packages.
+                                                //HINT: Unfortunately JSZip seems to report the currently
+                                                //open package as file within itself. This mitigates that.
+                                                console.debug(
+                                                    `ZIP: Not processing package file '${zipEntryName}' within package: '${file.name}'`,
+                                                );
+                                            } else if (
+                                                FileHandler.isPath(zipEntryName)
+                                            ) {
+                                                //We do not handle paths on their own
+                                                console.debug(
+                                                    `ZIP: Not processing path '${zipEntryName}' within package: '${file.name}'`,
+                                                );
                                             } else {
-                                                console.warn(
-                                                    `un-ZIP: Unknown content type for filename: ${file.name}`,
+                                                commit(
+                                                    MutationTypes.PUSH_ERROR_MESSAGE,
+                                                    `ZIP: Unknown content type for file '${zipEntryName}' within package: '${file.name}'`,
                                                 );
                                             }
                                         })
@@ -493,7 +530,9 @@ export const actions: ActionTree<State, State> & Actions = {
                 reader.readAsArrayBuffer(file);
             } else {
                 commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
-                reject(`Unsupported file, not loaded: '${file.name}'`);
+                reject(
+                    `Unsupported content type for file '${file.name}', content was not processed.`,
+                );
             }
         });
     },
@@ -593,7 +632,7 @@ export const actions: ActionTree<State, State> & Actions = {
             );
 
             const cueId = uuidv4();
-            const cue = new Cue('', nextShortcut, time, null, cueId);
+            const cue = new Cue('', nextShortcut.toString(), time, null, cueId);
 
             commit(MutationTypes.ADD_CUE, { trackId, cue });
             commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);
@@ -605,6 +644,12 @@ export const actions: ActionTree<State, State> & Actions = {
     ): void {
         withProgress(`Deleting cue...`, commit, () => {
             commit(MutationTypes.DELETE_CUE, cueId);
+        });
+    },
+    [ActionTypes.RESET_APPLICATION]({ commit }: AugmentedActionContext): void {
+        withProgress(`Resetting application...`, commit, () => {
+            commit(MutationTypes.DISCARD_COMPILATION, undefined);
+            commit(MutationTypes.UPDATE_SETTINGS, Settings.default());
         });
     },
 };

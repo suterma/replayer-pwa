@@ -196,10 +196,6 @@ export default class AudioFader {
                             1,
                             Math.max(0, newTarget),
                         );
-
-                        // console.debug(
-                        //     `AudioFader::setting to:${limitedTarget}`,
-                        // );
                         this.audio.volume = limitedTarget;
                     }, this.stepDuration);
                 } catch (err) {

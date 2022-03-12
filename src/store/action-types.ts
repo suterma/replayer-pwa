@@ -3,12 +3,18 @@ export enum ActionTypes {
      * and commits it all into the store as the current compilation*/
     RETRIEVE_COMPILATION = 'RETRIEVE_COMPILATION',
 
-    /** Discards the last stored compilation from the persistent storage, including all blobs and the selected cue,
-     * and commits it all into the store, effectively removing the current compilation.*/
-    DISCARD_COMPILATION = 'DISCARD_COMPILATION',
+    /** Discards the current compilation
+     * @remarks Permanently removes the compilation with all data, including the media files and the object URL references to it from
+     * both the persistent storage and the application store. Clears the selected cue.
+     */ DISCARD_COMPILATION = 'DISCARD_COMPILATION',
 
     /** Adds a blob as a media source, using a name and a blob  */
     ADD_MEDIA_BLOB = 'ADD_MEDIA_BLOB',
+
+    /** Removes a track from the compilation */
+    REMOVE_TRACK = 'REMOVE_TRACK',
+    /** Clones the track in the compilation */
+    CLONE_TRACK = 'CLONE_TRACK',
 
     /** Loads a single file or package from an URL
      * @remarks The content might be a package or single file of any supported content.
@@ -53,4 +59,7 @@ export enum ActionTypes {
     /** Deletes the cue with the given Id
      */
     DELETE_CUE = 'DELETE_CUE',
+
+    /** Completely resests all data and settings to the initial (default) state */
+    RESET_APPLICATION = 'RESET_APPLICATION',
 }

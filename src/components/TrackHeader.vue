@@ -37,55 +37,12 @@
             </div>
             <!-- Title -->
             <div class="level-item">
-                <!-- Display/Edit -->
-                <input
-                    v-if="this.isEditable"
-                    class="input subtitle is-4"
-                    v-model="trackData.Name"
-                    @change="updateName($event.target.value)"
-                    @click="$event.stopPropagation()"
-                    type="text"
-                    placeholder="Track name"
-                />
-                <p v-else class="subtitle is-4">{{ track.Name }}</p>
+                <p class="subtitle is-4">{{ track.Name }}</p>
             </div>
             <!-- Artist info (don't show on small devices)-->
             <div class="level-item is-hidden-mobile">
                 <p class="is-size-7">
-                    <span
-                        v-if="track.Artist || this.isEditable"
-                        class="has-text-nowrap"
-                    >
-                        <span class="has-opacity-half">by&nbsp;</span>
-                        <input
-                            v-if="this.isEditable"
-                            class="input is-italic"
-                            v-model="trackData.Artist"
-                            @change="updateArtist($event.target.value)"
-                            @click="$event.stopPropagation()"
-                            type="text"
-                            placeholder="Artist"
-                        />
-                        <span v-else class="is-italic"
-                            >{{ track.Artist }}&nbsp;</span
-                        >
-                    </span>
-                    <span
-                        v-if="track.Album || this.isEditable"
-                        class="has-text-nowrap"
-                    >
-                        <span class="has-opacity-half">on&nbsp;</span>
-                        <input
-                            v-if="this.isEditable"
-                            class="input is-italic"
-                            v-model="trackData.Album"
-                            @change="updateAlbum($event.target.value)"
-                            @click="$event.stopPropagation()"
-                            type="text"
-                            placeholder="Album"
-                        />
-                        <span v-else class="is-italic">{{ track.Album }}</span>
-                    </span>
+                    <ArtistInfo :track="this.track" />
                 </p>
             </div>
         </div>
@@ -103,6 +60,8 @@
             <div v-if="this.isCollapsible" class="level-item">
                 <CollapsibleButton
                     :modelValue="this.modelValue"
+                    title="Track"
+                    collapsedText="Expand to play"
                     class="is-nav"
                 />
             </div>
@@ -131,6 +90,7 @@ import { defineComponent } from 'vue';
 import { Track } from '@/store/compilation-types';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
+import ArtistInfo from '@/components/ArtistInfo.vue';
 import { ActionTypes } from '@/store/action-types';
 import Icon from '@/components/icons/Icon.vue';
 
@@ -144,6 +104,7 @@ export default defineComponent({
         CollapsibleButton,
         PlaybackIndicator,
         Icon,
+        ArtistInfo,
     },
     props: {
         track: {

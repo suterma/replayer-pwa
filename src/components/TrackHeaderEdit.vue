@@ -2,7 +2,7 @@
     <div v-bind:id="'track-' + track.Id">
         <!-- Level, also on mobile 
      @remarks The id is used to scroll to this item when it's becoming the active track-->
-        <div class="level is-mobile">
+        <div class="level">
             <!-- Left side -->
             <div class="level-left">
                 <!-- Title -->
@@ -18,6 +18,10 @@
                         </p>
                     </div>
                 </div>
+
+                <!-- Artist Info (completely hidden on mobile, thus not editable there. 
+                NOTE: It's also not shown in the play view on mobile anyways) -->
+
                 <!-- by (keep as small as possible)-->
                 <div
                     class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
@@ -27,7 +31,7 @@
                     </p>
                 </div>
                 <!-- Artist -->
-                <div class="level-item is-flex-shrink-1">
+                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
                     <div class="field">
                         <p class="control">
                             <EditableInput
@@ -49,7 +53,7 @@
                     </p>
                 </div>
                 <!-- Album -->
-                <div class="level-item is-flex-shrink-1">
+                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
                     <div class="field">
                         <p class="control">
                             <EditableInput
@@ -62,27 +66,56 @@
                         </p>
                     </div>
                 </div>
+                <div class="level-item">
+                    <div class="field">
+                        <p class="control">
+                            <MediaEdit :track="this.track" />
+                        </p>
+                    </div>
+                </div>
             </div>
+
             <!-- Right side -->
             <div class="level-right">
-                <nav class="level-item">
-                    <!-- URL -->
-                    <p class="control" :title="'URL: ' + trackData.Url">
-                        <span class="button is-indicator">
-                            <Icon name="world" class="has-opacity-half" />
-                        </span>
-                    </p>
-
+                <div class="level-item">
                     <PlaybackIndicator
                         :is-ready="!this.isPlaying && this.isTrackLoaded"
                         :is-playing="this.isPlaying"
                         :is-unloaded="!this.isTrackLoaded"
                     />
-                </nav>
-                <!-- Expander -->
-                <div class="level-item">
+
+                    <DropdownMenu title="Track context menu">
+                        <DropdownMenuItem
+                            v-if="!isFirstTrack"
+                            title="Move up"
+                            subTitle="(to an earlier position)"
+                            @click="moveUp()"
+                        />
+                        <DropdownMenuItem
+                            v-if="!isLastTrack"
+                            title="Move down"
+                            subTitle="(to a later position)"
+                            @click="moveDown()"
+                        />
+                        <DropdownMenuItem
+                            title="Clone"
+                            subTitle="(with cues and media)"
+                            @click="cloneTrack()"
+                        />
+                        <hr class="dropdown-divider" />
+                        <DropdownMenuItem
+                            title="Remove"
+                            subTitle="(remove
+                            the track from the compilation)"
+                            @click="removeTrack()"
+                        />
+                    </DropdownMenu>
+
+                    <!-- Expander -->
                     <CollapsibleButton
                         :modelValue="this.modelValue"
+                        title="Track"
+                        collapsedText="Expand to edit"
                         @click="toggleExpanded()"
                     />
                 </div>
@@ -93,21 +126,33 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Track } from '@/store/compilation-types';
+import { ITrack, Track } from '@/store/compilation-types';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
+// import MediaSourceIndicator from '@/components/MediaSourceIndicator.vue';
+import MediaEdit from '@/components/MediaEdit.vue';
 import EditableInput from '@/components/EditableInput.vue';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
-import Icon from '@/components/icons/Icon.vue';
+import DropdownMenu from '@/components/DropdownMenu.vue';
+import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
+import { confirm } from '@/code/ui/dialogs';
+import { MutationTypes } from '@/store/mutation-types';
 
 /** A header for editing track metadata
  */
 //TODO later remove the editable parts from TrackHeader, once the TrackHeaderEdit is accepted as the edit control
 export default defineComponent({
     name: 'TrackHeaderEdit',
-    components: { PlaybackIndicator, Icon, EditableInput, CollapsibleButton },
+    components: {
+        // MediaSourceIndicator,
+        MediaEdit,
+        PlaybackIndicator,
+        EditableInput,
+        CollapsibleButton,
+        DropdownMenu,
+        DropdownMenuItem,
+    },
     emits: ['update:modelValue'],
-
     props: {
         track: {
             type: Track,
@@ -154,6 +199,34 @@ export default defineComponent({
             console.debug(`TrackHeader::toggleExpanded:expanded:${expanded}`);
             this.$emit('update:modelValue', expanded);
         },
+
+        /** Removes the track from the compilation
+         */
+        removeTrack() {
+            confirm(
+                'Removing track',
+                `Do you want to remove track "${this.track.Name}"?`,
+            ).then((ok) => {
+                if (ok) {
+                    this.$store.dispatch(
+                        ActionTypes.REMOVE_TRACK,
+                        this.track.Id,
+                    );
+                }
+            });
+        },
+
+        /** Clones the track by creating a deep copy
+         */
+        cloneTrack() {
+            this.$store.dispatch(ActionTypes.CLONE_TRACK, this.track.Id);
+        },
+        moveUp() {
+            this.$store.commit(MutationTypes.MOVE_TRACK_UP, this.track.Id);
+        },
+        moveDown() {
+            this.$store.commit(MutationTypes.MOVE_TRACK_DOWN, this.track.Id);
+        },
         /** Updates the track name */
         updateName(name: string) {
             const trackId = this.track.Id;
@@ -192,7 +265,17 @@ export default defineComponent({
         },
     },
     watch: {},
-    computed: {},
+    computed: {
+        isFirstTrack(): boolean {
+            return this.tracks[0].Id === this.track.Id;
+        },
+        isLastTrack(): boolean {
+            return this.tracks[this.tracks.length - 1].Id === this.track.Id;
+        },
+        tracks(): ITrack[] {
+            return this.$store.getters.compilation.Tracks as ITrack[];
+        },
+    },
 });
 </script>
 <style lang="scss" scoped>
@@ -204,23 +287,20 @@ export default defineComponent({
     margin-top: 12px;
 }
 
-//TODO fix these modification to better suit the edit layout
-
 /** Custom modification for the level in the context of a track.
 * @remarks Allow the title text (on the left) to break between words, 
 * and keep the context items (on the right) as close as reasonably possible */
 .level {
     .level-left {
         word-break: break-word;
-        /* This basis is set empirically to fit for three elements on the right */
-        flex-basis: calc(100% - 120px);
+        /* This basis is set empirically to fit for the elements on the right */
+        flex-basis: calc(100% - 180px);
 
         /* These items should grow, and shrink */
         .level-item {
             flex-shrink: 1;
             flex-grow: 1;
             text-align: left;
-            /* Title, always justify left */
             justify-content: left;
         }
     }
@@ -236,6 +316,7 @@ export default defineComponent({
             flex-shrink: 0;
             flex-grow: 0;
             text-align: right;
+            justify-content: right;
         }
     }
 }

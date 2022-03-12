@@ -61,12 +61,12 @@ $player-playing-color: $success;
     padding: 0.5em;
 
     .player-time-current {
-        padding-left: 5px;
+        padding-left: 0.75em;
     }
 
     .player-time-total {
         opacity: 0.5;
-        padding-right: 5px;
+        padding-right: 0.75em;
     }
 }
 

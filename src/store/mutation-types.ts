@@ -45,16 +45,36 @@ export enum MutationTypes {
      */
     UPDATE_CUE_DURATIONS = 'UPDATE_CUE_DURATIONS',
 
-    /** Closes an existing compilation
-     * @remarks Removes the compilation with all data, including the media files and the object URL references to it
+    /** Removes an existing track, with it's cues.
+     * @remarks Removes the track from the compilation. If the selected cue was one of the track, the selection is cleared.
      */
-    CLOSE_COMPILATION = 'CLOSE_COMPILATION',
+    REMOVE_TRACK = 'REMOVE_TRACK',
+
+    /** Clones an existing track, with it's cues.
+     * @remarks Effectively copies the track, and replaces any previous ids.
+     */
+    CLONE_TRACK = 'CLONE_TRACK',
+
+    /** Moves an existing track one position up in the list of tracks.
+     */
+    MOVE_TRACK_UP = 'MOVE_TRACK_UP',
+
+    /** Moves an existing track one position down in the list of tracks.
+     */
+    MOVE_TRACK_DOWN = 'MOVE_TRACK_DOWN',
+
+    /** Discards the current compilation
+     * @remarks Permanently removes the compilation with all data, including the media files and the object URL references to it from
+     * both the persistent storage and the application store. Clears the selected cue.
+     */
+    DISCARD_COMPILATION = 'DISCARD_COMPILATION',
 
     /** Revokes all currently known media blob URLs
      * @remarks Use this to avoid memory leaks when abandoning (but not closing) a compilation
      * This is usually the case when the user closes the tab or browser window, without actually closing the compilation.
      */
     REVOKE_ALL_MEDIA_URLS = 'REVOKE_ALL_MEDIA_URLS',
+
     /** Updates the application settings */
     UPDATE_SETTINGS = 'UPDATE_SETTINGS',
     /** Retrieves the application settings from the persisted store during startup.
@@ -74,6 +94,11 @@ export enum MutationTypes {
      * @remarks Also updates the persitent store of the compilation
      */
     UPDATE_TRACK_DATA = 'UPDATE_TRACK_DATA',
+
+    /** Specifically updates the track media source URL
+     * @remarks Also updates the persitent store of the compilation
+     */
+    UPDATE_TRACK_URL = 'UPDATE_TRACK_URL',
 
     /** Updates the cue data
      * @remarks Also updates the persitent store of the compilation
