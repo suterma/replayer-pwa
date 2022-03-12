@@ -6,45 +6,29 @@
 ![Language](https://img.shields.io/github/languages/top/suterma/replayer-pwa.svg)
 [![Build Status](https://dev.azure.com/suterma/replayer-pwa/_apis/build/status/suterma.replayer-pwa?branchName=main)](https://dev.azure.com/suterma/replayer-pwa/_build/latest?definitionId=1&branchName=main)
 
-The [Replayer, as a Web App](https://replayer.app), for compilations from the classic [Windows Desktop Replayer](https://github.com/suterma/replayer) application.
+Replayer is a free, cue-based media player for rehearsals with playback music.
+By the click of a button, Replayer starts to play at predefined times in the audio file
 
 ![Visual Functioning Overview](/doc/images/WebAppOnPhoneStand.webp)
 
-# Goal
+# How it works
 
-It's aim is to replace the classic, Microsoft Windows based, [Replayer](https://github.com/suterma/replayer) desktop application with a progressive web app, that is locally installable on devices.
+1 First, create a compilation of music files (mp3, wav, ...) as tracks and cues
+1 Each cue represents a point in time (e.g. intro, verse, chorus,...) in the playback file, with a name and an optional shortcut mnemonic
+1 In the session, using Replayer on your portable computer, play any part of your set with the click of a cue button.
+1 Additionally, you can use a (bluetooth) numeric keypad, as a remote control
 
 # Latest release
 
 -   The latest version is available at https://web.replayer.app (official release)
-    - Test release at https://web-test.replayer.app 
-    - Development release at https://web-devel.replayer.app
+    -   Test release at https://web-test.replayer.app
+    -   Development release at https://web-devel.replayer.app
 -   Source code is availabe at [GitHub](https://github.com/suterma/replayer-pwa)
 
-# Glossary
+# Documentation
 
--   A **package** is a zip file (\*.zip, \*.rez) which contains a set of media files and typically one compilation. The tracks reference to the media files.
--   A **compilation** is a set of tracks, usually representing a playlist for a concert or rehearsal session.
--   A **track** represents a single media file and a set of cues for it. Within a compilation, more than one track may reference the same media file, to simplify rehearsal variants e.g. for different voices or parts in large pieces.
--   A **media file** is a binary file, containing playable music. Currently only files of type [MP3](https://en.wikipedia.org/wiki/MP3) (\*.mp3) from a local file system are supported.
--   A **cue** represents a named temporal position in a track. A cue can have a (keyboard) shortcut.
--   A **shortcut** is a short mnemonic for a cue, to speed up navigation within a track or compilation, using a keyboard.
-
-# Behaviour
-
--   Opening a new package removes all previously open files and compilations.
--   Opening a new / multiple compilations merges the contained tracks with the already open compilation.
--   Opening a new / multiple media files adds them to the set of currently available media files.
+The full documentation is available at https://replayer.app/en/documentation
 
 # Roadmap
 
-* [x] Keyboard Shortcut support
-* [x] Fade-in / Fade-out
-* [ ] Multitrack playback
-* Persistence
-  * [x] Keep last open complilation loaded
-  * [x] Edit mode, along with ZIP-Package export
-* Sharing
-  * [ ] Sharing by link
-  * [ ] Sharing by QR code
-  * [ ] Sharing by link mail
+See [Trello](]https://trello.com/b/UqdfomQI/replayer-20)
