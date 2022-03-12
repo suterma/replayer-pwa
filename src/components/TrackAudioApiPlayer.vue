@@ -65,7 +65,8 @@ export default defineComponent({
         },
         src: {
             type: String,
-            default: null,
+            default: '',
+            required: false,
         },
         /** Whether this component show editable inputs for the contained data
          * @devdoc Allows to reuse this component for more than one DisplayMode.
