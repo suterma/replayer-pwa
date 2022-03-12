@@ -39,7 +39,7 @@
 
         <!-- The cues as buttons (in a slider, whose use is optional, for a better overview)-->
         <slide-up-down
-            v-model="expanded"
+            v-model="this.expanded"
             :duration="300"
             timingFunction="linear"
         >
@@ -193,7 +193,7 @@ export default defineComponent({
     },
     data() {
         return {
-            /** Whether this track tile is shown as expanded. Default: false, but can later be dynamically changed.
+            /** Whether this track is shown as expanded. Default: false, but can later be dynamically changed.
              */
             expanded: false,
             /** The playback progress in the current track, in [seconds]
@@ -305,9 +305,13 @@ export default defineComponent({
             if (this.displayMode === TrackDisplayMode.Link) {
                 value = false;
             }
-            console.debug('Track::updateExpanded:value:', value);
-            this.expanded = value;
-            this.$emit('update:expanded', value);
+
+            //Let the DOM update first, to have proper height handling when items get added late on
+            this.$nextTick(() => {
+                console.debug('Track::updateExpanded:value:', value);
+                this.expanded = value;
+                this.$emit('update:expanded', value);
+            });
         },
         /** Handles the click of a cue button, by toggling playback and seeking to it
          * @devdoc Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
