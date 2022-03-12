@@ -6,7 +6,14 @@ import { MediaBlob, MediaUrl } from './state-types';
  * Provides handling methods for compilation manipulation.
  */
 export default class CompilationHandler {
-    /**Sorts the cues array in place, by time. This method mutates the array and returns a reference to the same array.
+    /** Return the index of the track in the given compilation */
+    static getIndexOfTrackById(
+        compilation: ICompilation,
+        trackId: string,
+    ): number {
+        return compilation.Tracks.map((item) => item.Id).indexOf(trackId);
+    }
+    /** Sorts the cues array in place, by time. This method mutates the array and returns a reference to the same array.
      * @param cues - The array of cues to sort.
      * @returns The mutated array.
      */

@@ -86,11 +86,13 @@
 
                     <DropdownMenu title="Track context menu">
                         <DropdownMenuItem
+                            v-if="!isFirstTrack"
                             title="Move up"
                             subTitle="(to an earlier position)"
                             @click="moveUp()"
                         />
                         <DropdownMenuItem
+                            v-if="!isLastTrack"
                             title="Move down"
                             subTitle="(to a later position)"
                             @click="moveDown()"
@@ -124,7 +126,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Track } from '@/store/compilation-types';
+import { ITrack, Track } from '@/store/compilation-types';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 // import MediaSourceIndicator from '@/components/MediaSourceIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
@@ -134,6 +136,7 @@ import { ActionTypes } from '@/store/action-types';
 import DropdownMenu from '@/components/DropdownMenu.vue';
 import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
 import { confirm } from '@/code/ui/dialogs';
+import { MutationTypes } from '@/store/mutation-types';
 
 /** A header for editing track metadata
  */
@@ -219,12 +222,10 @@ export default defineComponent({
             this.$store.dispatch(ActionTypes.CLONE_TRACK, this.track.Id);
         },
         moveUp() {
-            //TODO implement
-            //this.$store.dispatch(ActionTypes.CLONE_TRACK, this.track.Id);
+            this.$store.commit(MutationTypes.MOVE_TRACK_UP, this.track.Id);
         },
         moveDown() {
-            //TODO implement
-            //this.$store.dispatch(ActionTypes.CLONE_TRACK, this.track.Id);
+            this.$store.commit(MutationTypes.MOVE_TRACK_DOWN, this.track.Id);
         },
         /** Updates the track name */
         updateName(name: string) {
@@ -264,7 +265,17 @@ export default defineComponent({
         },
     },
     watch: {},
-    computed: {},
+    computed: {
+        isFirstTrack(): boolean {
+            return this.tracks[0].Id === this.track.Id;
+        },
+        isLastTrack(): boolean {
+            return this.tracks[this.tracks.length - 1].Id === this.track.Id;
+        },
+        tracks(): ITrack[] {
+            return this.$store.getters.compilation.Tracks as ITrack[];
+        },
+    },
 });
 </script>
 <style lang="scss" scoped>

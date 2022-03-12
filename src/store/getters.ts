@@ -6,7 +6,7 @@ import { State } from './state';
 import { MediaUrl, Settings } from './state-types';
 
 export type Getters = {
-    /** Determines whether a compilation is availabe (created or loaded) */
+    /** Returns the currently available compilation */
     compilation(state: State): ICompilation;
     /** Defines the function to determine whether a compilation is availabe (created or loaded) */
     hasCompilation(state: State): boolean;

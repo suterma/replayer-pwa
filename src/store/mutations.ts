@@ -325,6 +325,42 @@ export const mutations: MutationTree<State> & Mutations = {
         }
     },
 
+    [MutationTypes.MOVE_TRACK_UP](state: State, trackId: string) {
+        const moveIndex = CompilationHandler.getIndexOfTrackById(
+            state.compilation,
+            trackId,
+        );
+
+        //Swap the items
+        const targetIndex = moveIndex - 1;
+        [
+            state.compilation.Tracks[targetIndex],
+            state.compilation.Tracks[moveIndex],
+        ] = [
+            state.compilation.Tracks[moveIndex],
+            state.compilation.Tracks[targetIndex],
+        ];
+        PersistentStorage.storeCompilation(state.compilation);
+    },
+
+    [MutationTypes.MOVE_TRACK_DOWN](state: State, trackId: string) {
+        const moveIndex = CompilationHandler.getIndexOfTrackById(
+            state.compilation,
+            trackId,
+        );
+
+        //Swap the items
+        const targetIndex = moveIndex + 1;
+        [
+            state.compilation.Tracks[targetIndex],
+            state.compilation.Tracks[moveIndex],
+        ] = [
+            state.compilation.Tracks[moveIndex],
+            state.compilation.Tracks[targetIndex],
+        ];
+        PersistentStorage.storeCompilation(state.compilation);
+    },
+
     [MutationTypes.DISCARD_COMPILATION](state: State) {
         PersistentStorage.clearCompilation();
 

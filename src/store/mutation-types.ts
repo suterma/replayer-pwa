@@ -55,6 +55,14 @@ export enum MutationTypes {
      */
     CLONE_TRACK = 'CLONE_TRACK',
 
+    /** Moves an existing track one position up in the list of tracks.
+     */
+    MOVE_TRACK_UP = 'MOVE_TRACK_UP',
+
+    /** Moves an existing track one position down in the list of tracks.
+     */
+    MOVE_TRACK_DOWN = 'MOVE_TRACK_DOWN',
+
     /** Discards the current compilation
      * @remarks Permanently removes the compilation with all data, including the media files and the object URL references to it from
      * both the persistent storage and the application store. Clears the selected cue.
