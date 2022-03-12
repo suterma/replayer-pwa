@@ -55,8 +55,12 @@ export default defineComponent({
     data() {
         return {
             /** Whether the media drop zone is displayed in the expanded state */
-            isExpanded: false,
+            isExpanded: true,
         };
+    },
+    beforeMount() {
+        //Immediately apply the hasCompilation watch with the current state. (Emulates the "immediate watch" from vue2 in the options API)
+        this.isExpanded = !this.hasCompilation;
     },
     watch: {
         /** When the compilation loads or closes, update the media loader expansion accordingly
