@@ -9,6 +9,9 @@
     left: 15px !important;
     right: 0 !important;
     width: 35px !important; /*square*/
+
+    // Start hidden, will be shown upon explicit request in the settings
+    display: none;
 }
 #outfront-container {
     left: 20px !important;

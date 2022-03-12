@@ -10989,6 +10989,7 @@ button.dropdown-item.is-active {
   right: 0 !important;
   width: 35px !important;
   /*square*/
+  display: none;
 }
 
 #outfront-container {
