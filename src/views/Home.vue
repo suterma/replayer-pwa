@@ -68,9 +68,9 @@ export default defineComponent({
 
     beforeMount(): void {
         if (this.isEditMode) {
-            this.$router.push('play');
-        } else {
             this.$router.push('edit');
+        } else {
+            this.$router.push('play');
         }
     },
 });
