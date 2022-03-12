@@ -28,37 +28,33 @@
                                 }"
                                 @click="togglePreventScreenTimeoutNow"
                             />
-
-                            <a
-                                href="#"
-                                class="dropdown-item"
-                                @click="downloadRezPackage"
-                            >
-                                Download as
-                                <span class="has-text-weight-bold">ZIP</span
-                                ><br />
-                                <span class="has-opacity-half is-size-7">
-                                    (<span class="is-family-monospace"
-                                        >.rez</span
-                                    >), including media files
-                                </span>
-                            </a>
-                            <a
-                                href="#"
-                                class="dropdown-item"
-                                @click="downloadRexFile"
-                            >
-                                Download as
-                                <span class="has-text-weight-bold">XML</span
-                                ><br />
-                                <span class="has-opacity-half is-size-7">
-                                    (<span class="is-family-monospace"
-                                        >.rex</span
-                                    >), without media files
-                                </span>
-                            </a>
-                            <hr class="dropdown-divider" />
                         </Experimental>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            @click="downloadRezPackage"
+                        >
+                            Download as
+                            <span class="has-text-weight-bold">ZIP</span><br />
+                            <span class="has-opacity-half is-size-7">
+                                (<span class="is-family-monospace">.rez</span>),
+                                including media files
+                            </span>
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item"
+                            @click="downloadRexFile"
+                        >
+                            Download as
+                            <span class="has-text-weight-bold">XML</span><br />
+                            <span class="has-opacity-half is-size-7">
+                                (<span class="is-family-monospace">.rex</span>),
+                                without media files
+                            </span>
+                        </a>
+                        <hr class="dropdown-divider" />
+
                         <DropdownMenuItem
                             title="Close"
                             subTitle="(discard the compilation)"
@@ -80,7 +76,7 @@ import EditableInput from '@/components/EditableInput.vue';
 import DropdownMenu from '@/components/DropdownMenu.vue';
 import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
 import Experimental from '@/components/Experimental.vue';
-//import { confirm } from '@/code/ui/dialogs';
+import { confirm } from '@/code/ui/dialogs';
 
 /** A nav bar as header with a menu for a compilation
  */
@@ -115,15 +111,14 @@ export default defineComponent({
         /** Closes the compilation
          */
         close(): void {
-            //TODO if later with Edit, uncomment the quesiton
-            // confirm(
-            //     'Closing compilation',
-            //     `Do you want to close (and discard any changes to) compilation "${this.compilation.Title}"? Hint: to keep changes for later use, download a copy first.`,
-            // ).then((ok) => {
-            //     if (ok) {
-            this.$store.dispatch(ActionTypes.DISCARD_COMPILATION);
-            //     }
-            // });
+            confirm(
+                'Closing compilation',
+                `Do you want to close (and discard any changes to) compilation '${this.compilation.Title}'? Hint: to keep changes for later use, download a copy first.`,
+            ).then((ok) => {
+                if (ok) {
+                    this.$store.dispatch(ActionTypes.DISCARD_COMPILATION);
+                }
+            });
         },
         /** Updates the compilation title */
         updateTitle(title: string) {

@@ -210,6 +210,7 @@ import { settingsMixin } from '@/mixins/settingsMixin';
 import { Settings } from '@/store/state-types';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
+import { confirm } from '@/code/ui/dialogs';
 
 /** A Settings view
  */
@@ -227,6 +228,15 @@ export default defineComponent({
     methods: {
         reset() {
             console.debug('Settings::reset');
+            confirm(
+                'Reset',
+                `Do you want to reset the application to the initial settings? Already downloaded compilations remain available on the device.`,
+            ).then((ok) => {
+                if (ok) {
+                    this.$store.dispatch(ActionTypes.DISCARD_COMPILATION);
+                }
+            });
+
             this.$store.dispatch(ActionTypes.RESET_APPLICATION).then(() => {
                 this.$router.push('home');
             });
