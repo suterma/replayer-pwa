@@ -148,7 +148,7 @@ export default defineComponent({
          * certain cue within the same track, no scrolling should occurr, to keep the UI calm.
          */
         activeTrack(track: ITrack | null) {
-            console.debug('scrolling to track ', track);
+            console.debug('scrolling to track ', track?.Name);
             if (track) {
                 this.scrollToTrack(track);
             }

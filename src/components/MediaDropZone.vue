@@ -212,7 +212,15 @@ export default defineComponent({
             });
 
             //If a single package or complilation has been loaded, the intention was most likely to play it
-            console.debug('MediaDropZone::loadFiles:filelist', files);
+            console.table(
+                files.map(function (file) {
+                    return {
+                        name: file.name,
+                        size: file.size,
+                        type: file.type,
+                    };
+                }),
+            );
 
             if (
                 files.length === 1 &&
