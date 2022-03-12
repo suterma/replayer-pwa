@@ -19,7 +19,7 @@
     <div class="section pl-0 pr-0">
         <MediaDropZone
             v-if="this.isEditMode || !hasCompilation"
-            v-model:isExpanded="isExpanded"
+            v-model:isExpanded="isMediaDropZoneExpanded"
         />
     </div>
     <div v-if="!hasCompilation" class="section pl-0 pr-0 content">
@@ -55,19 +55,24 @@ export default defineComponent({
     data() {
         return {
             /** Whether the media drop zone is displayed in the expanded state */
-            isExpanded: true,
+            isMediaDropZoneExpanded: false,
         };
     },
     beforeMount() {
         //Immediately apply the hasCompilation watch with the current state. (Emulates the "immediate watch" from vue2 in the options API)
-        this.isExpanded = !this.hasCompilation;
+        this.updateMediaDropZoneExpansion(!this.hasCompilation);
     },
     watch: {
         /** When the compilation loads or closes, update the media loader expansion accordingly
          * @remarks When there is already something loaded, only the unobtrusive icon should be shown
          */
         hasCompilation(newVal): void {
-            this.isExpanded = !newVal;
+            this.updateMediaDropZoneExpansion(!newVal);
+        },
+    },
+    methods: {
+        updateMediaDropZoneExpansion(expanded: boolean): void {
+            this.isMediaDropZoneExpanded = expanded;
         },
     },
     computed: {
