@@ -2,20 +2,22 @@
     <div class="container">
         <h1 class="title">About</h1>
         <div class="content">
-            <WelcomeText />
             <p>
                 <a href="https://replayer.app" target="_blank">Replayer</a> is a
                 free, cue-based media player for rehearsals with playback music.
                 By the click of a button, Replayer starts to play at predefined
                 times in the audio file.
             </p>
-            <p title="App info" class="has-text-right is-italic">
+            <WelcomeText />
+            <p
+                title="App info"
+                class="has-text-right is-italic has-opacity-half"
+            >
                 <small
-                    >App version: {{ version }} ({{ environment }}),
-                    {{ git }}</small
+                    ><span>App version: {{ version }} ({{ environment }}),</span
+                    ><span> {{ git }}</span></small
                 >
             </p>
-
             <hr />
         </div>
         <h1 class="title">Demo</h1>
