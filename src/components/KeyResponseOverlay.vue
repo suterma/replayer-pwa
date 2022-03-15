@@ -2,22 +2,15 @@
     <div
         :class="{ modal: true, 'is-active': hasDisplayKey || hasDisplayAction }"
     >
-        <!-- <div class="modal-background"></div> -->
         <div class="modal-content has-text-centered">
-            <!-- <h1 class="has-text-centered">Key</h1> -->
-
-            <!-- <div class="has-text-centered">
-                <span class="tag is-dark is-large"> {{ displayText }}</span>
-            </div> -->
-            <div class="tags has-addons has-opacity-half is-size-mega">
+            <!-- Note: use a large font for good visibility of the displayed info -->
+            <!-- Note2: Zero margin bottom is to avoid a visible scrollbar -->
+            <div class="tags has-addons has-opacity-half is-size-1 mb-0">
                 <span
-                    class="
-                        tag
-                        is-large is-white is-size-mega is-family-monospace
-                    "
+                    class="tag is-large is-white is-size-1 is-family-monospace"
                     >{{ displayKey }}</span
                 >
-                <span class="tag is-dark is-large is-size-mega">{{
+                <span class="tag is-dark is-large is-size-1">{{
                     displayAction
                 }}</span>
             </div>
@@ -33,6 +26,12 @@ export default defineComponent({
     props: {
         /** The character representation of the currently pressed key (or keys, when handling a shortcut) */
         keyText: null,
+
+        /** The duration of display for each updated string */
+        displayTimeout: {
+            type: Number,
+            default: 1000,
+        },
     },
     data() {
         return {
@@ -55,7 +54,6 @@ export default defineComponent({
             return this.displayAction != null && this.displayAction.length > 0;
         },
     },
-    watch: {},
     methods: {
         /** Displays the given data and the associated action for a short duration */
         DisplayDataAndAction(key: string, action: string) {
@@ -67,7 +65,7 @@ export default defineComponent({
                 this.keyTimeoutId = window.setTimeout(() => {
                     this.displayKey = '';
                     this.displayAction = '';
-                }, 500);
+                }, this.displayTimeout);
             } else {
                 this.displayKey = '';
                 this.displayAction = '';
@@ -76,15 +74,3 @@ export default defineComponent({
     },
 });
 </script>
-<style scoped>
-.is-size-mega {
-    font-size: 3rem !important;
-    /** very large */
-    /* font-size: 10vw !important; */
-}
-
-.tags:last-child {
-    /* Avoid scrollbar */
-    margin-bottom: 0;
-}
-</style>
