@@ -22,6 +22,7 @@ export class Settings {
             /*fadeOutDuration*/ 500,
             /*applyFadeInOffset*/ true,
             /*displayExperimentalContent*/ false,
+            /*keyboardShortcutTimeout*/ 1000,
         );
     }
 
@@ -55,6 +56,10 @@ export class Settings {
      */
     displayExperimentalContent;
 
+    /** A timeout duration, used for the mnemonic build-up as well as the keyboard shortcut display timeout
+     */
+    keyboardShortcutTimeout;
+
     /** Parses the JSON and returns new instance of this class, with the defined values applied.
      * @remarks For udefined values, the application default is used.
      * @remarks Instead of creating an unprototyped object with JSON.parse, this creates a new object of this type
@@ -83,6 +88,10 @@ export class Settings {
             settings.displayExperimentalContent =
                 obj.displayExperimentalContent;
         }
+        if (obj.keyboardShortcutTimeout != undefined) {
+            settings.keyboardShortcutTimeout = obj.keyboardShortcutTimeout;
+        }
+
         return settings;
     }
 
@@ -95,6 +104,7 @@ export class Settings {
         fadeOutDuration: number,
         applyFadeInOffset: boolean,
         displayExperimentalContent: boolean,
+        keyboardShortcutTimeout: number,
     ) {
         this.autoRetrieveLastCompilation = autoRetrieveLastCompilation;
         this.preventScreenTimeout = preventScreenTimeout;
@@ -102,6 +112,7 @@ export class Settings {
         this.fadeOutDuration = fadeOutDuration;
         this.applyFadeInOffset = applyFadeInOffset;
         this.displayExperimentalContent = displayExperimentalContent;
+        this.keyboardShortcutTimeout = keyboardShortcutTimeout;
     }
 }
 

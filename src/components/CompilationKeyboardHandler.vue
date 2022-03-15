@@ -9,13 +9,18 @@
         @keydown.prevent.left="rewind"
         @keydown.prevent.right="forward"
     />
-    <KeyResponseOverlay :keyText="key" ref="keyResponseOverlay" />
+    <KeyResponseOverlay
+        :keyText="key"
+        ref="keyResponseOverlay"
+        :displayTimeout="this.keyboardShortcutTimeout"
+    />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import KeyResponseOverlay from '@/components/KeyResponseOverlay.vue';
 import { GlobalEvents } from 'vue-global-events';
+import { settingsMixin } from '@/mixins/settingsMixin';
 
 /** A set of Replayer events that are emitted by this Keyboard handler */
 export enum Replayer {
@@ -45,6 +50,7 @@ export enum Replayer {
 export default defineComponent({
     name: 'CompilationKeyboardHandler',
     components: { GlobalEvents, KeyResponseOverlay },
+    mixins: [settingsMixin],
     props: {},
     data() {
         return {
@@ -65,6 +71,11 @@ export default defineComponent({
     computed: {
         hasCompilation(): boolean {
             return this.$store.getters.hasCompilation;
+        },
+        /** A timeout duration, used for the mnemonic build-up as well as the keyboard shortcut display timeout
+         */
+        keyboardShortcutTimeout(): number {
+            return this.getSettings.keyboardShortcutTimeout;
         },
     },
     methods: {
@@ -115,7 +126,8 @@ export default defineComponent({
                     this.togglePlayback(event);
                 }
             }
-            //any one alphanumeric character from the basic Latin alphabet, including the underscore (shortcut mnemonic key)?
+            //is it a shortcut mnemonic key?
+            //(any one alphanumeric character from the basic Latin alphabet, including the underscore)
             else if (event.key.match(/^\w{1}$/g)) {
                 this.mnemonic = this.mnemonic + event.key;
                 this.DisplayDataAndAction(this.mnemonic, 'mnemonic');
@@ -124,7 +136,7 @@ export default defineComponent({
                 window.clearTimeout(this.keyTimeoutId);
                 this.keyTimeoutId = window.setTimeout(() => {
                     this.mnemonic = '';
-                }, 500);
+                }, this.keyboardShortcutTimeout);
             }
             //HINT if later necessary, specifically allow some keys to have the default function, like F12
         },
