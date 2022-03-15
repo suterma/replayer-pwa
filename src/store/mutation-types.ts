@@ -13,7 +13,8 @@ export enum MutationTypes {
      * @remarks A new blob URL replaces any existing with an exact same path.
      */
     ADD_MEDIA_URL = 'ADD_MEDIA_URL',
-    /** Adds a new track for the given media URL to the compilation
+    /** Adds a new track for the given media URL to the compilation.
+     * This also adds a first cue for this track and uses it as selected cue.
      */
     ADD_TRACK = 'ADD_TRACK',
     /** Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.

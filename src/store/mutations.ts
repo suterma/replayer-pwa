@@ -133,6 +133,7 @@ export const mutations: MutationTree<State> & Mutations = {
         state.compilation.Tracks.push(track);
         state.selectedCueId = cueId;
 
+        PersistentStorage.storeSelectedCueId(cueId);
         PersistentStorage.storeCompilation(state.compilation);
     },
 
@@ -276,10 +277,13 @@ export const mutations: MutationTree<State> & Mutations = {
             state.compilation,
             trackId,
         );
+        const currentlySelectedCueId = state.selectedCueId;
         trackToRemove?.Cues.forEach((cue) => {
-            if (state.selectedCueId === cue.Id) {
-                state.selectedCueId =
-                    ''; /* unselect cue, this track is no longer the active track */
+            if (currentlySelectedCueId === cue.Id) {
+                /* unselect cue, this track is no longer the active track */
+                const noSelectedCueId = '';
+                state.selectedCueId = noSelectedCueId;
+                PersistentStorage.storeSelectedCueId(noSelectedCueId);
             }
         });
 
@@ -363,9 +367,12 @@ export const mutations: MutationTree<State> & Mutations = {
 
     [MutationTypes.DISCARD_COMPILATION](state: State) {
         PersistentStorage.clearCompilation();
-
-        state.selectedCueId = '';
         state.compilation = Compilation.empty();
+
+        /* unselect cue, none is selected anymore */
+        const noSelectedCueId = '';
+        state.selectedCueId = noSelectedCueId;
+        PersistentStorage.storeSelectedCueId(noSelectedCueId);
 
         state.mediaUrls.forEach((mediaUrl) => {
             ObjectUrlHandler.revokeObjectURL(mediaUrl.url);
