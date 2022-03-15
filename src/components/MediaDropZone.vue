@@ -211,7 +211,6 @@ export default defineComponent({
                 this.filelist.pop();
             });
 
-            //If a single package or complilation has been loaded, the intention was most likely to play it
             console.table(
                 files.map(function (file) {
                     return {
@@ -222,12 +221,16 @@ export default defineComponent({
                 }),
             );
 
+            //If a single package or complilation has been loaded, the intention was most likely to play it
             if (
                 files.length === 1 &&
                 (FileHandler.isSupportedPackageFile(files[0]) ||
                     FileHandler.isSupportedCompilationFileName(files[0].name))
             ) {
                 this.$router.push('play');
+            } else {
+                //otherwise (for a new media file, for example), suggest editing it's track
+                this.$router.push('edit');
             }
         },
 
