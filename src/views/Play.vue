@@ -40,6 +40,9 @@ import WelcomeText from '@/components/WelcomeText.vue';
 import Experimental from '@/components/Experimental.vue';
 import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
+import { ActionTypes } from '@/store/action-types';
+import { MutationTypes } from '@/store/mutation-types';
+import CompilationParser from '@/store/compilation-parser';
 
 /** A view for playing an existing compilation */
 export default defineComponent({
@@ -61,6 +64,23 @@ export default defineComponent({
     beforeMount() {
         //Immediately apply the hasCompilation watch with the current state. (Emulates the "immediate watch" from vue2 in the options API)
         this.updateMediaDropZoneExpansion(!this.hasCompilation);
+
+        //Experimental: If the track API is invoked, apply the parameters
+        const query = this.$route?.query;
+        const track = CompilationParser.parseFromUrlQuery(query);
+        if (track && track.Url) {
+            this.$store
+                .dispatch(ActionTypes.USE_MEDIA_FROM_URL, track.Url)
+
+                .then(() => {
+                    this.$store.commit(MutationTypes.ADD_TRACK, track);
+                });
+        } else {
+            this.$store.commit(
+                MutationTypes.PUSH_ERROR_MESSAGE,
+                'No valid track data or media URL found, no track is loaded',
+            );
+        }
     },
     watch: {
         /** When the compilation loads or closes, update the media loader expansion accordingly
@@ -71,6 +91,31 @@ export default defineComponent({
         },
     },
     methods: {
+        /** Commits a new track with the given name
+         * @param name {string} - The name for the track.
+         * @param album {string} - The album name, if any.
+         * @param artist {string} - The artist name, if any.
+         *  @param - url {string}  The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
+         */
+        // commitNewTrackWithName(
+        //     name: string,
+        //     album: string,
+        //     artist: string,
+        //     url: string,
+        // ) {
+        //     const trackId = uuidv4();
+        //     const newTrack = new Track(
+        //         name,
+        //         album,
+        //         artist,
+        //         0,
+        //         url,
+        //         trackId,
+        //         new Array<ICue>(),
+        //         null,
+        //     );
+        //     this.$store.commit(MutationTypes.ADD_TRACK, newTrack);
+        // },
         updateMediaDropZoneExpansion(expanded: boolean): void {
             this.isMediaDropZoneExpanded = expanded;
         },

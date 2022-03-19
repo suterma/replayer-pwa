@@ -14,7 +14,7 @@ export enum MutationTypes {
      */
     ADD_MEDIA_URL = 'ADD_MEDIA_URL',
     /** Adds a new track for the given media URL to the compilation.
-     * This also adds a first cue for this track and uses it as selected cue.
+     * @remarks If no cue is provided, this also adds a first cue for this track. The first cue is used as the selected cue.
      */
     ADD_TRACK = 'ADD_TRACK',
     /** Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.

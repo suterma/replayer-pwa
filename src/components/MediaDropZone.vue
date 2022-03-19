@@ -335,17 +335,17 @@ export default defineComponent({
                 this.isUsingMediaFromUrl = true;
                 this.$store
                     .dispatch(ActionTypes.USE_MEDIA_FROM_URL, this.url)
-                    .catch((errorMessage: string) => {
-                        console.debug(
-                            'MediaDropZone::useMediaUrl:catch:errorMessage',
-                            errorMessage,
-                        );
-                        this.$store.commit(
-                            MutationTypes.PUSH_ERROR_MESSAGE,
-                            errorMessage,
-                        );
-                        throw new Error(errorMessage);
-                    })
+                    // .catch((errorMessage: string) => {
+                    //     console.debug(
+                    //         'MediaDropZone::useMediaUrl:catch:errorMessage',
+                    //         errorMessage,
+                    //     );
+                    //     this.$store.commit(
+                    //         MutationTypes.PUSH_ERROR_MESSAGE,
+                    //         errorMessage,
+                    //     );
+                    //     throw new Error(errorMessage);
+                    // })
                     .then(() => {
                         this.createDefaultTrackForUrl(new URL(this.url));
                     })

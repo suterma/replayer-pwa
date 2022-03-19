@@ -53,7 +53,7 @@ const routes: Array<RouteRecordRaw> = [
             ),
     },
     // Allow loading of arbitrary files
-    { path: '/play/:url*', component: Play },
+    { path: '/play/:media*', name: 'apiMedia', component: Play },
     {
         path: '/settings',
         name: 'Settings',

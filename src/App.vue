@@ -10,7 +10,7 @@
                 <component :is="Component" />
             </keep-alive>
         </router-view>
-        <CompilationLoader />
+        <!-- <CompilationLoader /> -->
         <ProgressOverlay />
         <ErrorOverlay />
         <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
@@ -22,14 +22,14 @@ import NavbarTop from '@/components/NavbarTop.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import ErrorOverlay from '@/components/ErrorOverlay.vue';
 import { MutationTypes } from './store/mutation-types';
-import CompilationLoader from '@/components/CompilationLoader.vue';
+// import CompilationLoader from '@/components/CompilationLoader.vue';
 import { DialogWrapper } from 'vue3-promise-dialog';
 
 export default defineComponent({
     name: 'App',
     components: {
         NavbarTop,
-        CompilationLoader,
+        // CompilationLoader,
         ProgressOverlay,
         ErrorOverlay,
         DialogWrapper,

@@ -13,16 +13,32 @@
         <a href="#" alt="Link to the Replayer app demo" @click="loadDemo()"
             >try the demo</a
         >.
+        <Experimental>
+            <a
+                href="http://localhost:8080/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
+                alt="Link to the Replayer app demo"
+            >
+                Try the API</a
+            >
+
+            <a
+                href="http://localhost:8080/?media=https%3A%2F%2Fweb.replayer.app%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro#/play"
+                alt="Link to the Replayer app demo"
+            >
+                Try the API2</a
+            >
+        </Experimental>
     </p>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
 import SupportedFilesText from '@/components/SupportedFilesText.vue';
+import Experimental from '@/components/Experimental.vue';
 import { ActionTypes } from '@/store/action-types';
 
 export default defineComponent({
     name: 'WelcomeText',
-    components: { SupportedFilesText },
+    components: { SupportedFilesText, Experimental },
     methods: {
         loadDemo() {
             const url =

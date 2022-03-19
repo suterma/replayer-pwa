@@ -120,16 +120,22 @@ export const mutations: MutationTree<State> & Mutations = {
     [MutationTypes.ADD_TRACK](state: State, track: ITrack) {
         console.debug('mutations::ADD_TRACK:', track);
 
-        //Add a first cue first, then select it
-        const nextShortcut = CompilationHandler.getNextShortcut(
-            state.compilation as ICompilation,
-        );
+        let cueId;
+        if (track.Cues.length === 0) {
+            //Add a first cue first
+            const nextShortcut = CompilationHandler.getNextShortcut(
+                state.compilation as ICompilation,
+            );
 
-        const time = 0;
-        const cueId = uuidv4();
-        const cue = new Cue('', nextShortcut.toString(), time, null, cueId);
+            const time = 0;
+            cueId = uuidv4();
+            const cue = new Cue('', nextShortcut.toString(), time, null, cueId);
 
-        track.Cues.push(cue);
+            track.Cues.push(cue);
+        } else {
+            cueId = track.Cues[0]?.Id;
+        }
+
         state.compilation.Tracks.push(track);
         state.selectedCueId = cueId;
 
