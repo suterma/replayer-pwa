@@ -18,14 +18,13 @@
                 href="http://localhost:8080/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
                 alt="Link to the Replayer app demo"
             >
-                Try the API</a
+                API test with Lidija Roos</a
             >
-
             <a
-                href="http://localhost:8080/?media=https%3A%2F%2Fweb.replayer.app%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro#/play"
+                href="http://localhost:8080/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro&12=twelve"
                 alt="Link to the Replayer app demo"
             >
-                Try the API2</a
+                API test with Lidija Roos2</a
             >
         </Experimental>
     </p>

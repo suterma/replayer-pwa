@@ -66,20 +66,24 @@ export default defineComponent({
         this.updateMediaDropZoneExpansion(!this.hasCompilation);
 
         //Experimental: If the track API is invoked, apply the parameters
+        console.debug('Play::beforeMount:route', this.$route);
         const query = this.$route?.query;
-        const track = CompilationParser.parseFromUrlQuery(query);
-        if (track && track.Url) {
-            this.$store
-                .dispatch(ActionTypes.USE_MEDIA_FROM_URL, track.Url)
+        const isTrackApiRequest = query && query['media'];
+        if (isTrackApiRequest) {
+            const track = CompilationParser.parseFromUrlQuery(query);
+            if (track && track.Url) {
+                this.$store
+                    .dispatch(ActionTypes.USE_MEDIA_FROM_URL, track.Url)
 
-                .then(() => {
-                    this.$store.commit(MutationTypes.ADD_TRACK, track);
-                });
-        } else {
-            this.$store.commit(
-                MutationTypes.PUSH_ERROR_MESSAGE,
-                'No valid track data or media URL found, no track is loaded',
-            );
+                    .then(() => {
+                        this.$store.commit(MutationTypes.ADD_TRACK, track);
+                    });
+            } else {
+                this.$store.commit(
+                    MutationTypes.PUSH_ERROR_MESSAGE,
+                    'No valid track data or media URL found, no track is loaded',
+                );
+            }
         }
     },
     watch: {

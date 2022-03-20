@@ -239,6 +239,9 @@ export default class CompilationParser {
                     cues.push(new Cue(description, null, time, null, cueId));
                 }
             }
+
+            //TODO order cues by time ascending
+
             const trackId = uuidv4();
             const newTrack = new Track(
                 title,
