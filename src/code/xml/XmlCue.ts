@@ -15,6 +15,6 @@ export class XmlCue {
 
     Id: string;
     Description: string;
-    Shortcut: string;
+    Shortcut: string | null;
     Time: number | null;
 }

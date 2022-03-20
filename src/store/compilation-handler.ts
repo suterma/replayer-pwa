@@ -29,14 +29,15 @@ export default class CompilationHandler {
     }
     /** Guesses the next useful shortcut, based on the previously existing shortcuts.
      * @remarks Simply tries to parse all existing shortcuts, then increases the number by 1.
+     * @remarks Cues without shortcut mnemonic are trated as having '0' as their shortcut.
      * @param compilation - The compilation to work on.
      */
     static getNextShortcut(compilation: ICompilation): number {
         const cueShortcuts = compilation.Tracks.flatMap((track) =>
             track.Cues.flatMap((cue) => cue.Shortcut)
                 //Skip empty items
-                .filter((el) => el)
-                .map((shortCut) => parseInt(shortCut)),
+                .filter((el) => el !== null && el)
+                .map((shortCut) => parseInt(shortCut ?? '0')),
         );
         const lastShortcut = cueShortcuts
             .sort(function (a, b) {
