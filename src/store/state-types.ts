@@ -137,7 +137,6 @@ export class MediaUrl {
      */
     constructor(resourceName: string, url: string) {
         this.resourceName = resourceName;
-        //TODO make sure object urls for directly loaded files are directly used for the object url, see https://stackoverflow.com/a/49346614
         this.url = url;
     }
     /** A name for the resource.

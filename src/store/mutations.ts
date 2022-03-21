@@ -97,7 +97,7 @@ export const mutations: MutationTree<State> & Mutations = {
         console.debug('FINISH_PROGRESS');
     },
 
-    [MutationTypes.ADD_MEDIA_URL](state: State, mediaUrl: MediaUrl) {
+    [MutationTypes.ADD_MEDIA_URL](state: State, mediaUrl: MediaUrl): void {
         //Remove any previously matching, even it was the same object, because
         //the caller has already create a new one for this mediaUrl's blob.
         const matchingFile = state.mediaUrls.get(mediaUrl.resourceName);
@@ -109,7 +109,15 @@ export const mutations: MutationTree<State> & Mutations = {
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);
             state.mediaUrls.delete(mediaUrl.resourceName);
 
-            //TODO maybe remove the track duration on unload?
+            //If any track uses this media, remove the now stale duration
+            const compilation = state.compilation;
+            const matchingTrack = compilation.Tracks.find(
+                (t) => t.Url === mediaUrl.resourceName,
+            );
+            if (matchingTrack) {
+                matchingTrack.Duration = null;
+                PersistentStorage.storeCompilation(compilation);
+            }
         }
 
         //Keep the others and add the new one
@@ -446,6 +454,8 @@ export const mutations: MutationTree<State> & Mutations = {
         );
         if (track) {
             track.Url = payload.url;
+            //The duration is now stale, since the new track will have it's own duration, so remove it
+            track.Duration = null;
             PersistentStorage.storeCompilation(state.compilation);
         }
     },

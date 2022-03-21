@@ -121,7 +121,6 @@ export default defineComponent({
         /** Default value, user may change later */
         volume: 25,
         /** The audio context to use
-         * @devdoc //TODO later allow to use the "playback" option via a settings panel: https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/AudioContext#options
          * @devdoc This code does not support the old webkitAudioContext formerly used with webkit. It's expected to run on modern browsers only.
          */
         audioContext: new AudioContext({

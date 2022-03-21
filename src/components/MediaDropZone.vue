@@ -105,9 +105,14 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                             type="submit"
                             @click="useMediaUrl"
                         >
-                            Load
-
-                            <!-- Apply and use online -->
+                            <template v-if="this.isReplacementMode">
+                                <Icon name="swap-horizontal" />
+                                <span>Replace</span>
+                            </template>
+                            <template v-else>
+                                <Icon name="plus" />
+                                <span>Use</span>
+                            </template>
                         </button>
                     </div>
                 </div>
@@ -259,7 +264,7 @@ export default defineComponent({
                         } else {
                             //Replace the URL for this track
                             if (this.trackId) {
-                                this.updateUrlForTrack(this.trackId, file);
+                                this.updateFileForTrack(this.trackId, file);
                             }
                         }
                     }
@@ -318,7 +323,17 @@ export default defineComponent({
                         throw new Error(errorMessage);
                     })
                     .then(() => {
-                        this.createDefaultTrackForUrl(new URL(this.url));
+                        if (!this.isReplacementMode) {
+                            this.createDefaultTrackForUrl(new URL(this.url));
+                        } else {
+                            //Replace the URL for this track
+                            if (this.trackId) {
+                                this.updateExistingTrackWithUrl(
+                                    this.trackId,
+                                    this.url,
+                                );
+                            }
+                        }
                     })
                     .finally(() => {
                         this.isLoadingFromUrl = false;
@@ -335,19 +350,18 @@ export default defineComponent({
                 this.isUsingMediaFromUrl = true;
                 this.$store
                     .dispatch(ActionTypes.USE_MEDIA_FROM_URL, this.url)
-                    // .catch((errorMessage: string) => {
-                    //     console.debug(
-                    //         'MediaDropZone::useMediaUrl:catch:errorMessage',
-                    //         errorMessage,
-                    //     );
-                    //     this.$store.commit(
-                    //         MutationTypes.PUSH_ERROR_MESSAGE,
-                    //         errorMessage,
-                    //     );
-                    //     throw new Error(errorMessage);
-                    // })
                     .then(() => {
-                        this.createDefaultTrackForUrl(new URL(this.url));
+                        if (!this.isReplacementMode) {
+                            this.createDefaultTrackForUrl(new URL(this.url));
+                        } else {
+                            //Replace the URL for this track
+                            if (this.trackId) {
+                                this.updateExistingTrackWithUrl(
+                                    this.trackId,
+                                    this.url,
+                                );
+                            }
+                        }
                     })
                     .finally(() => {
                         this.isUsingMediaFromUrl = false;
@@ -367,7 +381,7 @@ export default defineComponent({
          * @param {replacementFile} - the File to update the reference to
          * @param {trackId} - The Id of the track to update
          */
-        updateUrlForTrack(trackId: string, replacementFile: File): void {
+        updateFileForTrack(trackId: string, replacementFile: File): void {
             const fileName = replacementFile.name.normalize();
             this.updateExistingTrackWithUrl(trackId, fileName);
         },
@@ -408,7 +422,7 @@ export default defineComponent({
             );
             this.$store.commit(MutationTypes.ADD_TRACK, newTrack);
         },
-        /** Updates an existing track the given URL
+        /** Updates an existing track with the given URL
          * @param {trackId} - The Id of the track to update
          *  @param - url {string}  The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
          */
