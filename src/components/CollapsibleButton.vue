@@ -1,7 +1,4 @@
 <template>
-    <!-- //TODO remove transitioning, when not used, later -->
-    <!-- 'is-loading': this.isTransitioning, -->
-
     <NavButton
         :iconClass="this.navIconClass"
         aria-haspopup="true"
@@ -64,9 +61,6 @@ export default defineComponent({
             }
             const addOn = this.collapsedText ? `(${this.collapsedText})` : '';
             return `${this.title} ${addOn}`;
-        },
-        isTransitioning(): boolean {
-            return this.requestedModelValue !== this.modelValue;
         },
         /** The dynamic class for the rotating expander button icon */
         navIconClass(): string {

@@ -222,22 +222,6 @@ export default class CompilationHandler {
         return mediaBlobs;
     }
 
-    /** Determines the active track, if any, in the compilation.
-     * @remarks The active track is the one, that contains the given cue.
-     * @param compilation - The compilation, whose tracks are searched
-     * @param cueId - The Id of the cue to find
-     * */
-    //TODO rename and use the selected cue from the store
-    //TODO use the method from the stor for all this: getters.activeTrack
-    public static getActiveTrack(
-        compilation: ICompilation,
-        cueId: string,
-    ): ITrack | undefined {
-        return compilation?.Tracks?.find((t) =>
-            t.Cues.find((c) => c.Id === cueId),
-        );
-    }
-
     /** Gets the the track, if any, in the compilation, which contains the
      * cue with the given cue Id.
      * @param compilation - The compilation, whose tracks are searched
