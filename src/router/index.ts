@@ -52,13 +52,11 @@ const routes: Array<RouteRecordRaw> = [
                 /* webpackChunkName: "/track-player/:id*" */ '../views/TrackPlayer.vue'
             ),
     },
-    // Allow loading of arbitrary files
-    { path: '/play/:url*', component: Play },
     {
         path: '/settings',
         name: 'Settings',
         // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
+        // this generates a separate chunk (about.[hash].js) for this routeF
         // which is lazy-loaded when the route is visited.
         component: () =>
             import(/* webpackChunkName: "settings" */ '../views/Settings.vue'),

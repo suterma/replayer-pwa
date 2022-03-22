@@ -57,6 +57,12 @@ export default defineComponent({
     },
     mounted: function (): void {
         //Check whether a given compilation is to be loaded (by URL or by Auto-Retrieve, if enabled)
+
+        //TODO experimental load from API
+        console.debug('CompilationLoader::route', this.$route);
+        console.debug('CompilationLoader::fullPath', this.$route?.fullPath);
+        console.debug('CompilationLoader::query', this.$route?.query);
+
         console.debug('paramsUrl:' + this.paramsUrl);
 
         if (this.paramsUrl) {

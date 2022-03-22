@@ -6,13 +6,15 @@ export enum ActionTypes {
     /** Discards the current compilation
      * @remarks Permanently removes the compilation with all data, including the media files and the object URL references to it from
      * both the persistent storage and the application store. Clears the selected cue.
-     */ DISCARD_COMPILATION = 'DISCARD_COMPILATION',
+     */
+    DISCARD_COMPILATION = 'DISCARD_COMPILATION',
 
     /** Adds a blob as a media source, using a name and a blob  */
     ADD_MEDIA_BLOB = 'ADD_MEDIA_BLOB',
 
     /** Removes a track from the compilation */
     REMOVE_TRACK = 'REMOVE_TRACK',
+
     /** Clones the track in the compilation */
     CLONE_TRACK = 'CLONE_TRACK',
 

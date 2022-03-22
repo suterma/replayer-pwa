@@ -29,14 +29,15 @@ export default class CompilationHandler {
     }
     /** Guesses the next useful shortcut, based on the previously existing shortcuts.
      * @remarks Simply tries to parse all existing shortcuts, then increases the number by 1.
+     * @remarks Cues without shortcut mnemonic are trated as having '0' as their shortcut.
      * @param compilation - The compilation to work on.
      */
     static getNextShortcut(compilation: ICompilation): number {
         const cueShortcuts = compilation.Tracks.flatMap((track) =>
             track.Cues.flatMap((cue) => cue.Shortcut)
                 //Skip empty items
-                .filter((el) => el)
-                .map((shortCut) => parseInt(shortCut)),
+                .filter((el) => el !== null && el)
+                .map((shortCut) => parseInt(shortCut ?? '0')),
         );
         const lastShortcut = cueShortcuts
             .sort(function (a, b) {
@@ -219,22 +220,6 @@ export default class CompilationHandler {
             return sortedArray;
         }
         return mediaBlobs;
-    }
-
-    /** Determines the active track, if any, in the compilation.
-     * @remarks The active track is the one, that contains the given cue.
-     * @param compilation - The compilation, whose tracks are searched
-     * @param cueId - The Id of the cue to find
-     * */
-    //TODO rename and use the selected cue from the store
-    //TODO use the method from the stor for all this: getters.activeTrack
-    public static getActiveTrack(
-        compilation: ICompilation,
-        cueId: string,
-    ): ITrack | undefined {
-        return compilation?.Tracks?.find((t) =>
-            t.Cues.find((c) => c.Id === cueId),
-        );
     }
 
     /** Gets the the track, if any, in the compilation, which contains the

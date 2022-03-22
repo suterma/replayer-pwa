@@ -21,7 +21,7 @@
         "css-build": "sass --no-source-map sass/replayer.scss public/css/replayer.css",
         "css-watch": "npm run css-build -- --watch",
         "start": "npm run css-watch",
-        "test": "jest --ci --reporters=default --reporters=jest-junit",
+        "test": "jest --ci --reporters=default --reporters=jest-junit -- --watch",
         "bundle-report": "webpack-bundle-analyzer --port 4200 dist/stats.json"
     },
     "dependencies": {

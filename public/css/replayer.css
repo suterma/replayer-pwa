@@ -11197,8 +11197,9 @@ but not at the "end/right" container's border */
 
 /* elements on a slight danger-like area */
 .is-experimental {
+  background-color: rgba(238, 95, 91, 0.14);
   outline: dashed #ee5f5b;
-  outline-offset: 0.5em;
+  outline-offset: 0;
 }
 
 /* However, navbar menu entries should not use an outer outline, but show it inside the items, like a border */

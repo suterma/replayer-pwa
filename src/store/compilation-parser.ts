@@ -12,6 +12,7 @@ import xml2js from 'xml2js';
 import NSKeyedUnarchiver from '@suterma/nskeyedunarchiver-liveplayback/source';
 import bplist from 'bplist-parser';
 import { XmlCompilation } from '@/code/xml/XmlCompilation';
+import { LocationQuery } from 'vue-router';
 
 /**
  * Provides helper methods for parsing compilations from and to external storage formats.
@@ -209,5 +210,66 @@ export default class CompilationParser {
             type: mimeType,
         });
         return new MediaBlob(mediaFileName, blob);
+    }
+
+    /** Parses a new track from a query
+     * @remarks Assumes that the query follows the track API definition.
+     * See https://replayer.app/en/documentation/track-api
+     * @param query {LocationQuery} - The URL query to pars
+     * @devdoc Currently does not support shortcuts
+     */
+    public static parseFromUrlQuery(query: LocationQuery): ITrack | undefined {
+        const mediaUrl = CompilationParser.getSingle(query.media);
+
+        if (mediaUrl) {
+            //Get the track metadata
+            const title = CompilationParser.getSingle(query.title) ?? '';
+            const artist = CompilationParser.getSingle(query.artist) ?? '';
+            const album = CompilationParser.getSingle(query.album) ?? '';
+
+            //Get the cues if available
+            const cues = Array<ICue>();
+            for (const key in query) {
+                const time = parseFloat(key);
+                if (!isNaN(time)) {
+                    const description = CompilationParser.getSingle(
+                        query[key],
+                    ) as string;
+                    const cueId = uuidv4();
+                    cues.push(new Cue(description, null, time, null, cueId));
+                }
+            }
+
+            //TODO order cues by time ascending
+
+            const trackId = uuidv4();
+            const newTrack = new Track(
+                title,
+                album,
+                artist,
+                0,
+                mediaUrl,
+                trackId,
+                cues,
+                null,
+            );
+            return newTrack;
+        } else {
+            return undefined;
+        }
+    }
+
+    /** Gets a single item from either an array, or just the single value */
+    public static getSingle<T>(set: T | T[]): T {
+        return Array.isArray(set) ? set[0] : set;
+    }
+    /** Gets a set of items from either an array, or just the single value */
+    public static getSet<T>(set: T | T[]): T[] {
+        if (Array.isArray(set)) {
+            return set;
+        }
+        const arr = Array<T>();
+        arr.push(set);
+        return arr;
     }
 }
