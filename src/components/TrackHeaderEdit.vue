@@ -97,6 +97,14 @@
                             subTitle="(to a later position)"
                             @click="moveDown()"
                         />
+                        <Experimental>
+                            <DropdownMenuItem
+                                title="Share"
+                                subTitle="(allows to share a track)"
+                                @click="this.isSharing = true"
+                            />
+                        </Experimental>
+
                         <DropdownMenuItem
                             title="Clone"
                             subTitle="(with cues and media)"
@@ -122,6 +130,7 @@
             </div>
         </div>
     </div>
+    <TrackSharingDialog v-if="this.isSharing"></TrackSharingDialog>
 </template>
 
 <script lang="ts">
@@ -135,6 +144,7 @@ import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
 import DropdownMenu from '@/components/DropdownMenu.vue';
 import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
+import TrackSharingDialog from '@/components/TrackSharingDialog.vue';
 import { confirm } from '@/code/ui/dialogs';
 import { MutationTypes } from '@/store/mutation-types';
 
@@ -151,6 +161,7 @@ export default defineComponent({
         CollapsibleButton,
         DropdownMenu,
         DropdownMenuItem,
+        TrackSharingDialog,
     },
     emits: ['update:modelValue'],
     props: {
@@ -189,6 +200,9 @@ export default defineComponent({
         return {
             currentSeconds: 0,
             trackData: { ...this.track }, // clone the object
+            /** Flag to indicate whether the track is currently shared via the dialog.
+             */
+            isSharing: false,
         };
     },
     methods: {
