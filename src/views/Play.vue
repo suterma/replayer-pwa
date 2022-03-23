@@ -77,11 +77,13 @@ export default defineComponent({
 
                     .then(() => {
                         this.$store.commit(MutationTypes.ADD_TRACK, track);
+
+                        //TODO clean up the parsed params
                     });
             } else {
                 this.$store.commit(
                     MutationTypes.PUSH_ERROR_MESSAGE,
-                    'No valid track data or media URL found, no track is loaded',
+                    'No valid track media URL found, no track is loaded',
                 );
             }
         }

@@ -13,6 +13,7 @@ import NSKeyedUnarchiver from '@suterma/nskeyedunarchiver-liveplayback/source';
 import bplist from 'bplist-parser';
 import { XmlCompilation } from '@/code/xml/XmlCompilation';
 import { LocationQuery } from 'vue-router';
+import CompilationHandler from './compilation-handler';
 
 /**
  * Provides helper methods for parsing compilations from and to external storage formats.
@@ -228,7 +229,7 @@ export default class CompilationParser {
             const album = CompilationParser.getSingle(query.album) ?? '';
 
             //Get the cues if available
-            const cues = Array<ICue>();
+            let cues = Array<ICue>();
             for (const key in query) {
                 const time = parseFloat(key);
                 if (!isNaN(time)) {
@@ -240,7 +241,7 @@ export default class CompilationParser {
                 }
             }
 
-            //TODO order cues by time ascending
+            cues = CompilationHandler.sortByTime(cues);
 
             const trackId = uuidv4();
             const newTrack = new Track(
