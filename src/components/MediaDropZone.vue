@@ -97,6 +97,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     <div class="control">
                         <!-- Use as default, thus set as the submit button -->
                         <button
+                            :disabled="!this.url"
                             :class="{
                                 button: true,
                                 'is-primary': true,
