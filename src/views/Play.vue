@@ -40,9 +40,6 @@ import WelcomeText from '@/components/WelcomeText.vue';
 import Experimental from '@/components/Experimental.vue';
 import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
-import { ActionTypes } from '@/store/action-types';
-import { MutationTypes } from '@/store/mutation-types';
-import CompilationParser from '@/store/compilation-parser';
 
 /** A view for playing an existing compilation */
 export default defineComponent({
@@ -64,39 +61,6 @@ export default defineComponent({
     beforeMount() {
         //Immediately apply the hasCompilation watch with the current state. (Emulates the "immediate watch" from vue2 in the options API)
         this.updateMediaDropZoneExpansion(!this.hasCompilation);
-
-        //Experimental: If the track API is invoked, apply the parameters
-        console.debug('Play::beforeMount:route', this.$route);
-        const query = this.$route?.query;
-
-        //Handle a Track API Request (mandatory media is available)
-        const isTrackApiRequest = query && query['media'];
-        if (isTrackApiRequest) {
-            const track = CompilationParser.parseFromUrlQuery(query);
-            if (track && track.Url) {
-                this.$store
-                    .dispatch(ActionTypes.USE_MEDIA_FROM_URL, track.Url)
-                    .then(() => {
-                        this.$store.commit(MutationTypes.ADD_TRACK, track);
-                    })
-                    .then(() => {
-                        //get rid of the query, since it has been applied now
-                        this.$router.replace({ query: undefined });
-                    });
-            } else {
-                this.$store.commit(
-                    MutationTypes.PUSH_ERROR_MESSAGE,
-                    'No valid track media URL found, no track is loaded',
-                );
-            }
-        }
-        //Handle a Package API Request (mandatory package is available)
-        const isPackageApiRequest = query && query['package'];
-        if (isPackageApiRequest) {
-            this.$store.dispatch(ActionTypes.LOAD_FROM_URL, query['package']);
-            //get rid of the query, since it has been applied now
-            this.$router.replace({ query: undefined });
-        }
     },
     watch: {
         /** When the compilation loads or closes, update the media loader expansion accordingly

@@ -38,6 +38,8 @@
 import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
 import { settingsMixin } from '@/mixins/settingsMixin';
+import CompilationParser from '@/store/compilation-parser';
+import { MutationTypes } from '@/store/mutation-types';
 
 /** A Loader for compilations, from either the URL or the local persistent storage
  * @remarks Provides a dialog for loading the last compilation, if available
@@ -56,24 +58,40 @@ export default defineComponent({
         };
     },
     mounted: function (): void {
-        //Check whether a given compilation is to be loaded (by URL or by Auto-Retrieve, if enabled)
+        //Check whether a given compilation is to be loaded (by Track API or by Auto-Retrieve, if enabled)
 
-        //TODO experimental load from API
-        console.debug('CompilationLoader::route', this.$route);
-        console.debug('CompilationLoader::fullPath', this.$route?.fullPath);
-        console.debug('CompilationLoader::query', this.$route?.query);
-
-        console.debug('paramsUrl:' + this.paramsUrl);
-
-        if (this.paramsUrl) {
-            if (typeof this.paramsUrl === 'string') {
-                //Handle the single item
-                this.loadUrl(decodeURIComponent(this.paramsUrl));
-            } else {
-                //Handle the array
-                this.paramsUrl.forEach((url) =>
-                    this.loadUrl(decodeURIComponent(url)),
+        const query = this.$route?.query;
+        if (query) {
+            //Handle a Track API Request (mandatory media is available)
+            const isTrackApiRequest = query && query['media'];
+            if (isTrackApiRequest) {
+                const track = CompilationParser.parseFromUrlQuery(query);
+                if (track && track.Url) {
+                    this.$store
+                        .dispatch(ActionTypes.USE_MEDIA_FROM_URL, track.Url)
+                        .then(() => {
+                            this.$store.commit(MutationTypes.ADD_TRACK, track);
+                        })
+                        .then(() => {
+                            //get rid of the query, since it has been applied now
+                            this.$router.replace({ query: undefined });
+                        });
+                } else {
+                    this.$store.commit(
+                        MutationTypes.PUSH_ERROR_MESSAGE,
+                        'No valid track media URL found, no track is loaded',
+                    );
+                }
+            }
+            //Handle a Package API Request (mandatory package is available)
+            const isPackageApiRequest = query && query['package'];
+            if (isPackageApiRequest) {
+                this.$store.dispatch(
+                    ActionTypes.LOAD_FROM_URL,
+                    query['package'],
                 );
+                //get rid of the query, since it has been applied now
+                this.$router.replace({ query: undefined });
             }
         } else if (this.getSettings.autoRetrieveLastCompilation) {
             this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
@@ -83,16 +101,6 @@ export default defineComponent({
     },
 
     methods: {
-        /** Handles the request to load a file from an online resource, using a URL
-         * @remarks This method can be called multiple times, each resource gets appropriately added to the current compilation
-         * @param url - The URL to load the file from
-         */
-        loadUrl(url: string): void {
-            console.debug('CompilationLoader::loadUrl:', url);
-
-            this.$store.dispatch(ActionTypes.LOAD_FROM_URL, url);
-        },
-
         discardLastCompilation(): void {
             this.$store.dispatch(ActionTypes.DISCARD_COMPILATION).then(() => {
                 this.showDialog = false;
@@ -105,13 +113,6 @@ export default defineComponent({
         },
     },
     computed: {
-        /** Provide the URL parameter from the route, if available */
-        paramsUrl(): string | string[] {
-            console.debug('CompilationLoader::paramsUrl', this.$route);
-            return this.$route?.params.url;
-            //TODO learn about routing first
-        },
-
         hasRetrievableCompilation(): boolean {
             return this.$store.getters.hasRetrievableCompilation;
         },
