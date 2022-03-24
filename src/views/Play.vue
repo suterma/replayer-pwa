@@ -78,8 +78,10 @@ export default defineComponent({
                     .dispatch(ActionTypes.USE_MEDIA_FROM_URL, track.Url)
                     .then(() => {
                         this.$store.commit(MutationTypes.ADD_TRACK, track);
-
-                        //TODO clean up the parsed params by loading the play or edit route
+                    })
+                    .then(() => {
+                        //get rid of the query, since it has been applied now
+                        this.$router.replace({ query: undefined });
                     });
             } else {
                 this.$store.commit(
@@ -89,11 +91,11 @@ export default defineComponent({
             }
         }
         //Handle a Package API Request (mandatory package is available)
-        //TODO descript in the docs
         const isPackageApiRequest = query && query['package'];
         if (isPackageApiRequest) {
             this.$store.dispatch(ActionTypes.LOAD_FROM_URL, query['package']);
-            //TODO clean up the parsed params by loading the play or edit route
+            //get rid of the query, since it has been applied now
+            this.$router.replace({ query: undefined });
         }
     },
     watch: {
