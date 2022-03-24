@@ -8,17 +8,7 @@
                 </div>
             </section>
         </div>
-        <h1 class="title has-text-danger">XML export</h1>
-        <div class="content">
-            <template v-if="hasCompilation">
-                <h2 class="subtitle">See the compilation as XML</h2>
-                <CompilationXmlDisplay :compilation="compilation" />
-            </template>
-            <template v-else>
-                <p>Please load a compilation first</p>
-            </template>
-            <hr />
-        </div>
+
         <h1 class="title has-text-danger">Tests</h1>
 
         <h2 class="subtitle has-text-danger">API tests</h2>
@@ -29,11 +19,45 @@
                     Loading a media URL (downloading the media file, creating a
                     track):
                     <a
-                        href="http://localhost:8080/https%3A%2F%2Fwww.christoffankhauser.ch%2Fapp%2Fdownload%2F15906779025%2FGwBl15_I%2520danke%2520Dir-Pb.mp3%3Ft%3D1496741278"
+                        href="http://localhost:8080/#/play?media=https%3A%2F%2Fwww.christoffankhauser.ch%2Fapp%2Fdownload%2F15906779025%2FGwBl15_I%2520danke%2520Dir-Pb.mp3%3Ft%3D1496741278"
+                        target="_blank"
                     >
-                        CF Media link
+                        Christof Fankhauser Danke Dir Media link
                     </a>
-                    Why does it not work?
+                </li>
+                <li>
+                    <a
+                        href="http://localhost:8080/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
+                        target="_blank"
+                    >
+                        API test with Lidija Roos</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="http://localhost:8080/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro&12=twelve"
+                        target="_blank"
+                    >
+                        API test with 2 Cues with Lidija Roos</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="http://localhost:8080/#/play?package=https%3A%2F%2Fweb.replayer.app%2Fdemo-compilation-featuring-lidija-roos.rez"
+                        alt="Link to the Replayer app demo"
+                        target="_blank"
+                    >
+                        API test with Demo package (absolute URL)</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="http://localhost:8080/#/play?package=%2Fdemo-compilation-featuring-lidija-roos.rez"
+                        alt="Link to the Replayer app demo"
+                        target="_blank"
+                    >
+                        API test with Demo package (relative URL)</a
+                    >
                 </li>
             </ul>
         </div>
@@ -148,7 +172,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ICompilation } from '@/store/compilation-types';
-import CompilationXmlDisplay from '@/components/CompilationXmlDisplay.vue';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import ToggleButton from '@/components/ToggleButton.vue';
 import EditableInput from '@/components/EditableInput.vue';
@@ -159,7 +182,6 @@ import Experimental from '@/components/Experimental.vue';
 export default defineComponent({
     name: 'Development',
     components: {
-        CompilationXmlDisplay,
         CollapsibleButton,
         ToggleButton,
         EditableInput,

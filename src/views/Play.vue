@@ -68,17 +68,18 @@ export default defineComponent({
         //Experimental: If the track API is invoked, apply the parameters
         console.debug('Play::beforeMount:route', this.$route);
         const query = this.$route?.query;
+
+        //Handle a Track API Request (mandatory media is available)
         const isTrackApiRequest = query && query['media'];
         if (isTrackApiRequest) {
             const track = CompilationParser.parseFromUrlQuery(query);
             if (track && track.Url) {
                 this.$store
                     .dispatch(ActionTypes.USE_MEDIA_FROM_URL, track.Url)
-
                     .then(() => {
                         this.$store.commit(MutationTypes.ADD_TRACK, track);
 
-                        //TODO clean up the parsed params
+                        //TODO clean up the parsed params by loading the play or edit route
                     });
             } else {
                 this.$store.commit(
@@ -86,6 +87,13 @@ export default defineComponent({
                     'No valid track media URL found, no track is loaded',
                 );
             }
+        }
+        //Handle a Package API Request (mandatory package is available)
+        //TODO descript in the docs
+        const isPackageApiRequest = query && query['package'];
+        if (isPackageApiRequest) {
+            this.$store.dispatch(ActionTypes.LOAD_FROM_URL, query['package']);
+            //TODO clean up the parsed params by loading the play or edit route
         }
     },
     watch: {
