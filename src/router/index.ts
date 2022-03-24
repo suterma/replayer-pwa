@@ -20,13 +20,20 @@ const routes: Array<RouteRecordRaw> = [
     {
         /** The route to the playback
          * @remarks This represents the expectedly most used feature, playback of a file or compilation.
-         * @devdoc The /edit alias serves as a flag and supports the reuse of the playback view for editing, too.
-         * Specific this flag is passed down to components as necessary.
          */
         path: '/play',
         name: 'Play',
         component: Play,
-        alias: '/edit',
+    },
+    {
+        /** The route to the edit mode
+         * @remarks The /edit route serves as some form of alias, as a flag, and supports the reuse of the playback view for editing, too.
+         * This flag is passed down to components as necessary.
+         * A real alias for the play route is not used to distinguish the menu entries for /play and /edit
+         */
+        path: '/edit',
+        name: 'Edit',
+        component: Play,
     },
     {
         path: '/list',
