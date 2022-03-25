@@ -99,9 +99,9 @@
                         />
                         <Experimental>
                             <DropdownMenuItem
-                                title="Share"
+                                title="Share..."
                                 subTitle="(allows to share a track)"
-                                @click="this.isSharing = true"
+                                @click="share()"
                             />
                         </Experimental>
 
@@ -130,7 +130,7 @@
             </div>
         </div>
     </div>
-    <TrackSharingDialog v-if="this.isSharing"></TrackSharingDialog>
+    <!-- <TrackSharingDialog v-if="this.isSharing"></TrackSharingDialog> -->
 </template>
 
 <script lang="ts">
@@ -145,8 +145,9 @@ import { ActionTypes } from '@/store/action-types';
 import DropdownMenu from '@/components/DropdownMenu.vue';
 import Experimental from '@/components/Experimental.vue';
 import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
-import TrackSharingDialog from '@/components/TrackSharingDialog.vue';
+// import TrackSharingDialog from '@/components/TrackSharingDialog.vue';
 import { confirm } from '@/code/ui/dialogs';
+import { shareTrack } from '@/code/ui/dialogs';
 import { MutationTypes } from '@/store/mutation-types';
 
 /** A header for editing track metadata
@@ -162,7 +163,7 @@ export default defineComponent({
         CollapsibleButton,
         DropdownMenu,
         DropdownMenuItem,
-        TrackSharingDialog,
+        // TrackSharingDialog,
         Experimental,
     },
     emits: ['update:modelValue'],
@@ -208,6 +209,13 @@ export default defineComponent({
         };
     },
     methods: {
+        share() {
+            shareTrack(this.track).then((ok) => {
+                if (ok) {
+                    console.debug(`TrackHeader::sharing done`);
+                }
+            });
+        },
         /** Toogles the expansion state
          */
         toggleExpanded() {

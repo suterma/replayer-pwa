@@ -5,7 +5,7 @@
             <div class="modal-card">
                 <header class="modal-card-head">
                     <h1 class="modal-card-title title">
-                        Sharing {{ track?.Title }}
+                        Share '{{ track?.Name }}' via...
                     </h1>
                 </header>
                 <section class="modal-card-body">//TODO</section>
@@ -43,10 +43,7 @@ export default defineComponent({
         Experimental,
     },
     props: {
-        track: {
-            type: Track,
-            required: true,
-        },
+        track: Track,
     },
     setup() {
         function returnValue() {
