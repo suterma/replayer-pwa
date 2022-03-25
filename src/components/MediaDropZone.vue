@@ -2,7 +2,11 @@
     <!-- This level is designed that the two input methods can grow and shink, filling up the available horizontal space.
 The URL input is wider, because it should be able to easily deal with lenghty input values -->
     <div class="level media-drop-zone">
-        <div v-if="isExpanded" class="level-item has-text-centered">
+        <div
+            v-if="isExpanded"
+            class="level-item has-text-centered"
+            v-click-outside="collapse"
+        >
             <!-- This is a combined file load and drop zone -->
             <!-- tabindex, to make the label tabbable with focus-->
             <!-- Because the label is tied to the file handler, clicking on it invokes the invisible file input -->
