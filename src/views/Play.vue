@@ -22,6 +22,11 @@
         <MediaDropZone
             v-if="this.isEditMode || !hasCompilation"
             v-model:isExpanded="isMediaDropZoneExpanded"
+            v-click-outside="
+                () => {
+                    this.isMediaDropZoneExpanded = !this.hasCompilation;
+                }
+            "
         />
     </div>
     <div v-if="!hasCompilation" class="section pl-0 pr-0 content">
