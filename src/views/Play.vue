@@ -1,4 +1,6 @@
 <template>
+    <CompilationLoader />
+
     <!-- Handle and translate the keyboard shortcuts into Replayer events -->
     <!-- This is only used for playback view only, because it otherwise disturbs editing -->
     <CompilationKeyboardHandler v-if="!this.isEditMode" />
@@ -38,6 +40,7 @@ import { ICompilation, TrackDisplayMode } from '@/store/compilation-types';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import WelcomeText from '@/components/WelcomeText.vue';
 import Experimental from '@/components/Experimental.vue';
+import CompilationLoader from '@/components/CompilationLoader.vue';
 import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
 
@@ -48,6 +51,7 @@ export default defineComponent({
         Compilation,
         CompilationKeyboardHandler,
         MediaDropZone,
+        CompilationLoader,
         WelcomeText,
         Experimental,
         MediaList,
@@ -117,8 +121,7 @@ export default defineComponent({
         },
         /** Whether the compilation is shown as editable */
         isEditMode(): boolean {
-            console.debug('Play::isEditMode:route', this.$route);
-            return this.$route.path === '/edit';
+            return this.$route.name === 'Edit';
         },
     },
 });

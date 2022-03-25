@@ -20,30 +20,7 @@
             </p>
             <hr />
         </div>
-        <h1 class="title">Demo</h1>
-        <div class="content">
-            <ul>
-                <li>
-                    <a
-                        href="/#/play/demo-compilation-featuring-lidija-roos.rez"
-                        target="_blank"
-                        >Demo package with a compilation featuring Lidija
-                        Roos</a
-                    ><br />
-                    A REZ Package containing an REX compilation with 2 tracks
-                    and matching mp3 files.
-                </li>
-                <li>
-                    <a
-                        href="/#/play/Demo%20Adonia%20Junior%2021.bplist"
-                        target="_blank"
-                        >Demo Binary Property List compilation (as from the
-                        LivePlayback app)</a
-                    ><br />
-                    A bplist file with 21 tracks (no media files).
-                </li>
-            </ul>
-        </div>
+
         <h1 class="title">Credits</h1>
         <div class="content">
             <p>This project uses</p>

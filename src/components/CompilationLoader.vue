@@ -59,43 +59,54 @@ export default defineComponent({
     },
     mounted: function (): void {
         //Check whether a given compilation is to be loaded (by Track API or by Auto-Retrieve, if enabled)
-
+        console.debug('CompilationLoader::mounted:route', this.$route);
         const query = this.$route?.query;
-        if (query) {
-            //Handle a Track API Request (mandatory media is available)
-            const isTrackApiRequest = query && query['media'];
-            if (isTrackApiRequest) {
-                const track = CompilationParser.parseFromUrlQuery(query);
-                if (track && track.Url) {
-                    this.$store
-                        .dispatch(ActionTypes.USE_MEDIA_FROM_URL, track.Url)
-                        .then(() => {
-                            this.$store.commit(MutationTypes.ADD_TRACK, track);
-                        })
-                        .then(() => {
-                            //get rid of the query, since it has been applied now
-                            this.$router.replace({ query: undefined });
-                        });
-                } else {
-                    this.$store.commit(
-                        MutationTypes.PUSH_ERROR_MESSAGE,
-                        'No valid track media URL found, no track is loaded',
-                    );
-                }
-            }
-            //Handle a Package API Request (mandatory package is available)
-            const isPackageApiRequest = query && query['package'];
-            if (isPackageApiRequest) {
-                this.$store.dispatch(
-                    ActionTypes.LOAD_FROM_URL,
-                    query['package'],
+
+        //Handle a Track API Request (mandatory media is available)
+        if (query && query['media']) {
+            console.debug(
+                'CompilationLoader::mounted:handeling Track API request for media:',
+                query['media'],
+            );
+            const track = CompilationParser.parseFromUrlQuery(query);
+            if (track && track.Url) {
+                this.$store
+                    .dispatch(ActionTypes.USE_MEDIA_FROM_URL, track.Url)
+                    .then(() => {
+                        this.$store.commit(MutationTypes.ADD_TRACK, track);
+                    })
+                    .then(() => {
+                        //get rid of the query, since it has been applied now
+                        this.$router.replace({ query: undefined });
+                    });
+            } else {
+                this.$store.commit(
+                    MutationTypes.PUSH_ERROR_MESSAGE,
+                    'No valid track media URL found, no track is loaded',
                 );
-                //get rid of the query, since it has been applied now
-                this.$router.replace({ query: undefined });
             }
-        } else if (this.getSettings.autoRetrieveLastCompilation) {
+        }
+        //Handle a Package API Request (mandatory package is available)
+        else if (query && query['package']) {
+            console.debug(
+                'CompilationLoader::mounted:handeling Track API request for package:',
+                query['package'],
+            );
+
+            this.$store.dispatch(ActionTypes.LOAD_FROM_URL, query['package']);
+            //get rid of the query, since it has been applied now
+            this.$router.replace({ query: undefined });
+        }
+        //Handle auto-retrieval
+        else if (this.getSettings.autoRetrieveLastCompilation) {
+            console.debug(
+                'CompilationLoader::mounted:auto-retriving available compilation',
+            );
             this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
-        } else if (this.hasRetrievableCompilation && !this.hasCompilation) {
+        }
+        //Query the user about manual retrieval
+        else if (this.hasRetrievableCompilation && !this.hasCompilation) {
+            console.debug('CompilationLoader::mounted:user-choice');
             this.showDialog = true;
         }
     },
