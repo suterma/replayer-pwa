@@ -21,15 +21,13 @@ describe('compilation-parser.ts', () => {
         //Arrange
 
         const query = {
-            media: 'https://web.replayer.app/your-light-by-lidija-roos.mp3',
+            media: 'https://web.replayer.app/music/your-light-by-lidija-roos.mp3',
             title: 'Your Light',
             artist: 'Lidija Roos',
             album: 'Not For Sale',
             '6.49': 'Intro',
         } as LocationQuery;
 
-        // query['media'] =
-        //     'https%3A%2F%2Fweb.replayer.app%2Fyour-light-by-lidija-roos.mp3';
         console.debug('jest', query);
 
         //Act
@@ -38,7 +36,7 @@ describe('compilation-parser.ts', () => {
         //Assert
         expect(track).toBeDefined();
         expect(track?.Url).toBe(
-            'https://web.replayer.app/your-light-by-lidija-roos.mp3',
+            'https://web.replayer.app/music/your-light-by-lidija-roos.mp3',
         );
         expect(track?.Name).toBe('Your Light');
         expect(track?.Artist).toBe('Lidija Roos');
@@ -57,7 +55,7 @@ describe('compilation-parser.ts', () => {
         //Arrange
 
         const query = {
-            media: 'https://web.replayer.app/your-light-by-lidija-roos.mp3',
+            media: 'https://web.replayer.app/music/your-light-by-lidija-roos.mp3',
             6.49: 'Intro',
             12.1: 'Intro2',
         } as LocationQuery;
@@ -85,7 +83,7 @@ describe('compilation-parser.ts', () => {
         //Arrange
 
         const query = {
-            media: 'https://web.replayer.app/your-light-by-lidija-roos.mp3',
+            media: 'https://web.replayer.app/music/your-light-by-lidija-roos.mp3',
             0: 'Zero',
         } as LocationQuery;
 
@@ -104,7 +102,7 @@ describe('compilation-parser.ts', () => {
         //Arrange
 
         const query = {
-            media: 'https://web.replayer.app/your-light-by-lidija-roos.mp3',
+            media: 'https://web.replayer.app/music/your-light-by-lidija-roos.mp3',
             12: 'Twelve',
             13: 'Thirteen',
         } as LocationQuery;

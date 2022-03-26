@@ -25,7 +25,7 @@
             <ul>
                 <li>
                     <a
-                        href="https://web-devel.replayer.app/#/play?media=https%3A%2F%2Fweb-devel.replayer.app%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&21.2688935=Verse+1&40.8880182=Bridge&46.7937461=Refrain+%22Not+for+Sale%22&64.5614468=Bridge+2&72.3591588=Verse+2&98.1517279=Refrain+%22Not+for+Sale%22&114.5918753=Rap+Part&156.2238253=Bridge+(Guitar+Solo)&174.1005193=Refrain+%22Not+for+Sale%22+soft+style&207.8065624=Outro"
+                        href="https://web-devel.replayer.app/#/play?media=https%3A%2F%2Fweb-devel.replayer.app%2Fmusic%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&21.2688935=Verse+1&40.8880182=Bridge&46.7937461=Refrain+%22Not+for+Sale%22&64.5614468=Bridge+2&72.3591588=Verse+2&98.1517279=Refrain+%22Not+for+Sale%22&114.5918753=Rap+Part&156.2238253=Bridge+(Guitar+Solo)&174.1005193=Refrain+%22Not+for+Sale%22+soft+style&207.8065624=Outro"
                         target="_blank"
                     >
                         Your Light by Lidija Roos (Development)</a
@@ -33,7 +33,7 @@
                 </li>
                 <li>
                     <a
-                        href="http://localhost:8080/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
+                        href="http://localhost:8080/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fmusic%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
                         target="_blank"
                     >
                         Your Light by Lidija Roos (Local)</a
@@ -41,7 +41,7 @@
                 </li>
                 <li>
                     <a
-                        href="https://web.replayer.app/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
+                        href="https://web.replayer.app/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fmusic%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
                         target="_blank"
                         class="link-external"
                     >

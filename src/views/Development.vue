@@ -27,7 +27,7 @@
                 </li>
                 <li>
                     <a
-                        href="http://localhost:8080/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
+                        href="http://localhost:8080/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fmusic%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
                         target="_blank"
                     >
                         API test with Lidija Roos</a
@@ -35,7 +35,7 @@
                 </li>
                 <li>
                     <a
-                        href="http://localhost:8080/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro&12=twelve"
+                        href="http://localhost:8080/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fmusic%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro&12=twelve"
                         target="_blank"
                     >
                         API test with 2 Cues with Lidija Roos</a
@@ -43,7 +43,7 @@
                 </li>
                 <li>
                     <a
-                        href="http://localhost:8080/#/play?package=https%3A%2F%2Fweb.replayer.app%2Fdemo-compilation-featuring-lidija-roos.rez"
+                        href="http://localhost:8080/#/play?package=https%3A%2F%2Fweb.replayer.app%2Fmusic%2Fdemo-compilation-featuring-lidija-roos.rez"
                         alt="Link to the Replayer app demo"
                         target="_blank"
                     >
