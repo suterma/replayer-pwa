@@ -20,6 +20,36 @@
             </p>
             <hr />
         </div>
+        <h1 class="title">Online Demo</h1>
+        <div class="content">
+            <ul>
+                <li>
+                    <a
+                        href="https://web-devel.replayer.app/#/play?media=https%3A%2F%2Fweb-devel.replayer.app%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
+                        target="_blank"
+                    >
+                        Your Light by Lidija Roos (Development)</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="http://localhost:8080/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
+                        target="_blank"
+                    >
+                        Your Light by Lidija Roos (Local)</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="https://web.replayer.app/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
+                        target="_blank"
+                        class="link-external"
+                    >
+                        Your Light by Lidija Roos (Production)</a
+                    >
+                </li>
+            </ul>
+        </div>
 
         <h1 class="title">Credits</h1>
         <div class="content">
@@ -255,7 +285,9 @@
                     target="_blank"
                     >GitHub</a
                 >. To report an issue or submit a feature request, use the
-                <a href="https://github.com/suterma/replayer-pwa/issues"
+                <a
+                    href="https://github.com/suterma/replayer-pwa/issues"
+                    target="_blank"
                     >issues</a
                 >
                 page on the GitHub repository.
