@@ -5,11 +5,23 @@
             <div class="modal-card">
                 <header class="modal-card-head">
                     <h1 class="modal-card-title title">
-                        Share '{{ track?.Name }}' via...
+                        Share track '{{ track?.Name }}' via...
                     </h1>
                 </header>
                 <section class="modal-card-body">
-                    <a :href="this.trackUrl" target="_blank">Link</a>
+                    <div class="content">
+                        You are not sharing the media file, only it's name and
+                        location.
+                    </div>
+                    <div class="control">
+                        <textarea
+                            class="textarea has-fixed-size is-size-7"
+                            placeholder="Track link"
+                            disabled
+                            v-text="this.trackUrl"
+                        ></textarea>
+                    </div>
+                    <a :href="this.trackUrl" target="_blank">Click to follow</a>
                 </section>
                 <footer class="modal-card-foot is-justify-content-flex-end">
                     <div class="field is-grouped">
@@ -35,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { Track } from '@/store/compilation-types';
+import { ICue, Track } from '@/store/compilation-types';
 import Experimental from '@/components/Experimental.vue';
 import { defineComponent } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
@@ -57,32 +69,46 @@ export default defineComponent({
         };
     },
 
+    methods: {
+        /** Gets the timestamp of a cue as an object key
+         * @devdoc Makes sure the numeric keys are not integers, to keep a more suitable order
+         * later on when creating the API query parameters
+         * Javascript unfortunately orders integer object keys as first
+         */
+        getCueObjectKey(value: ICue): string {
+            if (!value.Time) {
+                return '0.0';
+            }
+            return value.Time.toString();
+        },
+    },
+
     computed: {
         trackUrl(): string {
-            //Prepare cues and track metadata
-            let apiCues = {};
-            const cues = this.track?.Cues;
-            if (cues) {
-                apiCues = Object.assign(
-                    {},
-                    ...cues.map((x) => ({
-                        [x.Time?.toString() ?? '0']: x.Description,
-                    })),
-                );
-                console.debug(apiCues);
-            }
-
-            const apiTrackMetadata = {
+            //Prepare track metadata
+            let apiQuery = {
                 media: this.track?.Url,
                 title: this.track?.Name,
                 album: this.track?.Album,
                 artist: this.track?.Artist,
             };
 
+            //Add available cues
+            const cues = this.track?.Cues;
+            if (cues) {
+                apiQuery = Object.assign(
+                    apiQuery,
+                    ...cues.map((cue) => ({
+                        [this.getCueObjectKey(cue)]: cue.Description,
+                    })),
+                );
+            }
+            console.debug('TrackSharingDialog::trackUrl:apiQuery:', apiQuery);
+
             //Build the URL
             const route = {
                 name: 'Play',
-                query: { ...apiTrackMetadata, ...apiCues },
+                query: apiQuery,
             } as unknown as RouteLocationRaw;
             return (
                 window.location.protocol +
@@ -95,5 +121,3 @@ export default defineComponent({
     },
 });
 </script>
-
-<style scoped></style>
