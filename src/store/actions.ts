@@ -386,7 +386,6 @@ export const actions: ActionTree<State, State> & Actions = {
                                                     CompilationParser.handleAsMediaContent(
                                                         zipEntryName,
                                                         content,
-                                                        RezMimeTypes.AUDIO_MP3,
                                                     );
                                                 dispatch(
                                                     ActionTypes.ADD_MEDIA_BLOB,

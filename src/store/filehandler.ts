@@ -259,10 +259,13 @@ export default class FileHandler {
         return false;
     }
 
-    /** Gets the content MIME type from the response
+    /** Gets the content MIME type from a fetch response
      * @remarks Applies some educated guess in case the content type is not available from the response headers
      */
-    static getMimeType(url: URL, response: Response): string | undefined {
+    static getResponseMimeType(
+        url: URL,
+        response: Response,
+    ): string | undefined {
         const contentType = response.headers.get('Content-Type');
         let mimeType = undefined;
         //Try to get the MIME type from the content type
@@ -274,30 +277,39 @@ export default class FileHandler {
         //If no MIME type available, or it's just a generic one, try to guess the correct MIME type from the URL
         if (!mimeType || mimeType == 'application/octet-stream') {
             const fileName = this.extractFileNameFromUrl(url);
-            const fileExtension = fileName?.split('.').pop()?.toLowerCase();
-            console.debug(
-                'CompilationParser::getMimeType:fileExtension',
-                fileExtension,
-            );
-
-            if (fileExtension == 'mp3') {
-                mimeType = RezMimeTypes.AUDIO_MPEG /*mp3*/;
-            } else if (fileExtension == 'wav' || fileExtension == 'wave') {
-                mimeType = RezMimeTypes.AUDIO_WAV /*wav*/;
-            } else if (fileExtension == 'flac') {
-                mimeType = RezMimeTypes.AUDIO_FLAC /*flac*/;
-            } else if (fileExtension == 'ogg') {
-                mimeType = RezMimeTypes.AUDIO_OGG /*ogg*/;
-            } else if (fileExtension == 'aiff' || fileExtension == 'aif') {
-                mimeType = RezMimeTypes.AUDIO_AIFF /*aiff*/;
-            } else if (fileExtension == 'aac' || fileExtension == 'm4a') {
-                mimeType = RezMimeTypes.AUDIO_AAC /*aac*/;
-            } else if (fileExtension == 'zip' || fileExtension == 'rez') {
-                mimeType = RezMimeTypes.APPLICATION_ZIP /*zip*/;
-            } else if (fileExtension == 'xml' || fileExtension == 'rex') {
-                mimeType = RezMimeTypes.TEXT_XML /*xml*/;
-            }
+            mimeType = this.getFileMimeType(fileName);
         }
+        return mimeType;
+    }
+
+    /** Gets a guessed MIME type from a filename, using an expected extension
+     * @remarks Applies some educated guess
+     */
+    static getFileMimeType(fileName: string): string | undefined {
+        const fileExtension = fileName?.split('.').pop()?.toLowerCase();
+        console.debug(
+            'CompilationParser::getMimeType:fileExtension',
+            fileExtension,
+        );
+        let mimeType = undefined;
+        if (fileExtension == 'mp3') {
+            mimeType = RezMimeTypes.AUDIO_MPEG /*mp3*/;
+        } else if (fileExtension == 'wav' || fileExtension == 'wave') {
+            mimeType = RezMimeTypes.AUDIO_WAV /*wav*/;
+        } else if (fileExtension == 'flac') {
+            mimeType = RezMimeTypes.AUDIO_FLAC /*flac*/;
+        } else if (fileExtension == 'ogg') {
+            mimeType = RezMimeTypes.AUDIO_OGG /*ogg*/;
+        } else if (fileExtension == 'aiff' || fileExtension == 'aif') {
+            mimeType = RezMimeTypes.AUDIO_AIFF /*aiff*/;
+        } else if (fileExtension == 'aac' || fileExtension == 'm4a') {
+            mimeType = RezMimeTypes.AUDIO_AAC /*aac*/;
+        } else if (fileExtension == 'zip' || fileExtension == 'rez') {
+            mimeType = RezMimeTypes.APPLICATION_ZIP /*zip*/;
+        } else if (fileExtension == 'xml' || fileExtension == 'rex') {
+            mimeType = RezMimeTypes.TEXT_XML /*xml*/;
+        }
+
         return mimeType;
     }
 

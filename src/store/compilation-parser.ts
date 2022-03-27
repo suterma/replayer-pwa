@@ -7,13 +7,14 @@ import {
     Track,
 } from './compilation-types';
 import { v4 as uuidv4 } from 'uuid';
-import { MediaBlob, RezMimeTypes } from './state-types';
+import { MediaBlob } from './state-types';
 import xml2js from 'xml2js';
 import NSKeyedUnarchiver from '@suterma/nskeyedunarchiver-liveplayback/source';
 import bplist from 'bplist-parser';
 import { XmlCompilation } from '@/code/xml/XmlCompilation';
 import { LocationQuery } from 'vue-router';
 import CompilationHandler from './compilation-handler';
+import FileHandler from './filehandler';
 
 /**
  * Provides helper methods for parsing compilations from and to external storage formats.
@@ -197,18 +198,17 @@ export default class CompilationParser {
             });
     }
 
-    /** Handles the given Buffer as having media content and converts it into a MediaBlob
+    /** Handles the given filename and buffer as having media content and converts it into a MediaBlob
+     * @remarks Guesses the MIME type from the file name extension
      * @devdoc This is used when a file is read from the ZIP package and not yet available as blob
      */
     public static handleAsMediaContent(
         mediaFileName: string,
         content: Buffer,
-        mimeType: RezMimeTypes,
     ): MediaBlob {
         console.debug('CompilationParser::handleAsMediaContent');
-        //TODO https://stackoverflow.com/questions/21737224/using-local-file-as-audio-src
         const blob = new Blob([content], {
-            type: mimeType,
+            type: FileHandler.getFileMimeType(mediaFileName),
         });
         return new MediaBlob(mediaFileName, blob);
     }
