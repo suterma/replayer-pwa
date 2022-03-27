@@ -6,7 +6,7 @@
     "main": "./public/index.html",
     "private": true,
     "keywords": [
-        "mp3, wav, ogg, flac, player, start, point, time, button, click, link, music, file, voice, choir, singer, solo, song, software, app, free, fast, simple, Spotify, YouTube, Vimeo, SoundCloud, SATB, Soprano, Alto, Tenor, Bass, drum, track, entertainer, dancer"
+        "mp3, wav, ogg, flac, aiff, aac, player, start, point, time, button, click, link, music, file, voice, choir, singer, solo, song, software, app, free, fast, simple, Spotify, YouTube, Vimeo, SoundCloud, SATB, Soprano, Alto, Tenor, Bass, drum, track, entertainer, dancer"
     ],
     "author": {
         "name": "Marcel Suter",

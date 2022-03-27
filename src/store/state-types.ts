@@ -168,7 +168,13 @@ export class MediaBlob {
 
 /** The set of supported mime type in a REZ container */
 export enum RezMimeTypes {
-    AUDIO_MP3 = 'audio/mp3',
+    AUDIO_MPEG = 'audio/mpeg',
+    AUDIO_WAV = 'audio/x-wav',
+    AUDIO_FLAC = 'audio/flac',
+    AUDIO_OGG = 'audio/ogg',
+    AUDIO_AIFF = 'audio/aiff',
+    AUDIO_AAC = 'audio/aac',
+    APPLICATION_ZIP = 'application/zip',
     TEXT_XML = 'text/xml',
     APPLICATION_XBPLIST = 'application/x-bplist',
 }

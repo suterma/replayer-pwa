@@ -1,14 +1,17 @@
+import { RezMimeTypes } from './state-types';
+
 /**
  * Provides handling methods for package, media and compilation files,
  * originating both from the local file system or an online resource.
  */
 export default class FileHandler {
-    static acceptedFileList = '.rex,.xml,.rez,.zip,.mp3,.bplist';
+    static acceptedFileList =
+        '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.bplist';
 
     /** Returns whether the given string is a path
      * @remarks When ending with a slash, it's considered a path.
      */
-    static isPath(input: string) {
+    static isPath(input: string): boolean {
         return input.endsWith('/');
     }
 
@@ -84,7 +87,7 @@ export default class FileHandler {
     }
 
     /** Asserts whether the file represents a media file
-     * @remarks Currently, only mp3 is supported
+     * @remarks Currently, mp3, wav, flac, ogg, aiff, are supported
      */
     public static isSupportedMediaFile(file: File): boolean {
         return (
@@ -158,13 +161,27 @@ export default class FileHandler {
         }
         return false;
     }
-    /** Returns whether the given file name (by it's extension) is a supported media file name by Replayer */
+    /** Returns whether the given file name (by it's extension) is a supported media file name by Replayer
+     * @remarks Currently, mp3, wav, flac, ogg, aiff, are supported
+     */
     static isSupportedMediaFileName(fileName: string | undefined): boolean {
         let isSupportedMediaFileName = false;
         if (fileName) {
             const fileExtension = fileName.split('.').pop()?.toLowerCase();
             if (fileExtension) {
-                if (['mp3'].includes(fileExtension)) {
+                if (
+                    [
+                        'mp3',
+                        'wav',
+                        'wave',
+                        'flac',
+                        'ogg',
+                        'aiff',
+                        'aif',
+                        'aac',
+                        'm4a',
+                    ].includes(fileExtension)
+                ) {
                     isSupportedMediaFileName = true;
                 }
             }
@@ -212,14 +229,29 @@ export default class FileHandler {
         return false;
     }
 
-    /** Returns whether the given MIME type is a supported media MIME type by Replayer */
+    /** Returns whether the given MIME type is a supported media MIME type by Replayer
+     * @remarks Currently, MIME types for mp3, wav, flac, ogg, aiff, are supported
+     */
     static isSupportedMediaMimeType(type: string | undefined): boolean {
         if (type) {
             //Check for supported MIME types (see https://stackoverflow.com/a/29672957)
             if (
-                ['audio/mp3' /*mp3, by chrome*/, 'audio/mpeg' /*mp3*/].includes(
-                    type,
-                )
+                [
+                    'audio/mp3' /*mp3, by chrome*/,
+                    'audio/mpeg' /*mp3*/,
+                    'audio/vnd.wave' /*wav*/,
+                    'audio/wav' /*wav*/,
+                    'audio/wave' /*wav*/,
+                    'audio/x-wav' /*wav*/,
+                    'audio/flac' /*flac*/,
+                    'application/ogg' /*ogg*/,
+                    'audio/ogg' /*ogg*/,
+                    'audio/vorbis' /*ogg*/,
+                    'audio/vorbis-config' /*ogg*/,
+                    'audio/x-aiff' /*aiff*/,
+                    'audio/aiff' /*aiff*/,
+                    'audio/aac' /*aac*/,
+                ].includes(type)
             ) {
                 return true;
             }
@@ -247,12 +279,23 @@ export default class FileHandler {
                 'CompilationParser::getMimeType:fileExtension',
                 fileExtension,
             );
+
             if (fileExtension == 'mp3') {
-                mimeType = 'audio/mpeg' /*mp3*/;
+                mimeType = RezMimeTypes.AUDIO_MPEG /*mp3*/;
+            } else if (fileExtension == 'wav' || fileExtension == 'wave') {
+                mimeType = RezMimeTypes.AUDIO_WAV /*wav*/;
+            } else if (fileExtension == 'flac') {
+                mimeType = RezMimeTypes.AUDIO_FLAC /*flac*/;
+            } else if (fileExtension == 'ogg') {
+                mimeType = RezMimeTypes.AUDIO_OGG /*ogg*/;
+            } else if (fileExtension == 'aiff' || fileExtension == 'aif') {
+                mimeType = RezMimeTypes.AUDIO_AIFF /*aiff*/;
+            } else if (fileExtension == 'aac' || fileExtension == 'm4a') {
+                mimeType = RezMimeTypes.AUDIO_AAC /*aac*/;
             } else if (fileExtension == 'zip' || fileExtension == 'rez') {
-                mimeType = 'application/zip' /*zip*/;
+                mimeType = RezMimeTypes.APPLICATION_ZIP /*zip*/;
             } else if (fileExtension == 'xml' || fileExtension == 'rex') {
-                mimeType = 'application/xml' /*xml*/;
+                mimeType = RezMimeTypes.TEXT_XML /*xml*/;
             }
         }
         return mimeType;

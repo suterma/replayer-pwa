@@ -24,6 +24,9 @@ describe('CompilationLoader.vue', () => {
         //https://stackoverflow.com/a/60300568
         (URL.createObjectURL as unknown as jest.Mock).mockReset();
     });
+
+    //TODOadd mp3, wav, .wave flac, ogg, aiff,
+
     it('should store an mp3 file as media file, and return an object url', async () => {
         //Arrange
 
