@@ -19,7 +19,8 @@
                 (<span class="is-family-monospace">.aiff, .aif</span>),
 
                 <span class="has-text-weight-bold">AAC</span>
-                (<span class="is-family-monospace">.m4a</span>), for a track.
+                (<span class="is-family-monospace">.aac, .m4a</span>), for a
+                track.
             </li>
         </ul>
     </div>

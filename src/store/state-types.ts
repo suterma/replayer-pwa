@@ -166,7 +166,9 @@ export class MediaBlob {
     blob: Blob;
 }
 
-/** The set of supported mime type in a REZ container */
+/** The set of supported mime type in a REZ container
+ * //TODO maybe use a lib like https://www.npmjs.com/package/mime-types for this
+ */
 export enum RezMimeTypes {
     AUDIO_MPEG = 'audio/mpeg',
     AUDIO_WAV = 'audio/x-wav',

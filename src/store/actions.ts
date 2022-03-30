@@ -5,7 +5,7 @@ import { ActionTypes } from './action-types';
 import { MutationTypes } from './mutation-types';
 import PersistentStorage from './persistent-storage';
 import CompilationParser from './compilation-parser';
-import { MediaBlob, MediaUrl, RezMimeTypes, Settings } from './state-types';
+import { MediaBlob, MediaUrl, Settings } from './state-types';
 import JSZip from 'jszip';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 import CompilationHandler from './compilation-handler';
@@ -229,7 +229,7 @@ export const actions: ActionTree<State, State> & Actions = {
                     }
 
                     response.blob().then((blob) => {
-                        const mimeType = FileHandler.getMimeType(
+                        const mimeType = FileHandler.getResponseMimeType(
                             finalUrl,
                             response,
                         );

@@ -6,7 +6,7 @@ import { RezMimeTypes } from './state-types';
  */
 export default class FileHandler {
     static acceptedFileList =
-        '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.bplist';
+        '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.bplist';
 
     /** Returns whether the given string is a path
      * @remarks When ending with a slash, it's considered a path.
