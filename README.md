@@ -24,6 +24,7 @@ By the click of a button, Replayer starts to play at predefined times in the aud
     -   Test release at https://web-test.replayer.app
     -   Development release at https://web-devel.replayer.app
 -   Source code is availabe at [GitHub](https://github.com/suterma/replayer-pwa)
+-   [Azure Build Pipeline](https://dev.azure.com/suterma/replayer-pwa/_build?definitionId=1)
 
 # Documentation
 
