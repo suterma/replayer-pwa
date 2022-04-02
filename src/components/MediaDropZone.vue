@@ -194,9 +194,11 @@ export default defineComponent({
             this.loadFiles();
         },
         expand() {
+            console.debug('MediaDropZone::expand');
             this.$emit('update:is-expanded', true);
         },
         collapse() {
+            console.debug('MediaDropZone::collapse');
             this.$emit('update:is-expanded', false);
         },
         /** Checks whether a file is supported by examining mime type and/or ending */

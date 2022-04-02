@@ -19,15 +19,14 @@
         </p>
     </div>
     <div class="section pl-0 pr-0">
-        <MediaDropZone
-            v-if="this.isEditMode || !hasCompilation"
-            v-model:isExpanded="isMediaDropZoneExpanded"
-            v-click-outside="
-                () => {
-                    this.isMediaDropZoneExpanded = !this.hasCompilation;
-                }
-            "
-        />
+        <!-- v-click-outside seems not to work well with v-if -->
+        <!-- Additionally, v-show seems not to work properly when used directly on the MediaDropZone-Element, thus it's applied to an extra div -->
+        <div v-show="this.isEditMode || !hasCompilation">
+            <MediaDropZone
+                v-model:isExpanded="isMediaDropZoneExpanded"
+                v-click-outside="clickedOutside"
+            />
+        </div>
     </div>
     <div v-if="!hasCompilation" class="section pl-0 pr-0 content">
         <WelcomeText />
@@ -80,31 +79,11 @@ export default defineComponent({
         },
     },
     methods: {
-        /** Commits a new track with the given name
-         * @param name {string} - The name for the track.
-         * @param album {string} - The album name, if any.
-         * @param artist {string} - The artist name, if any.
-         *  @param - url {string}  The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
-         */
-        // commitNewTrackWithName(
-        //     name: string,
-        //     album: string,
-        //     artist: string,
-        //     url: string,
-        // ) {
-        //     const trackId = uuidv4();
-        //     const newTrack = new Track(
-        //         name,
-        //         album,
-        //         artist,
-        //         0,
-        //         url,
-        //         trackId,
-        //         new Array<ICue>(),
-        //         null,
-        //     );
-        //     this.$store.commit(MutationTypes.ADD_TRACK, newTrack);
-        // },
+        clickedOutside(): void {
+            console.log('Play::v-click-outside:MediaDropZone');
+            this.isMediaDropZoneExpanded = !this.hasCompilation;
+        },
+
         updateMediaDropZoneExpansion(expanded: boolean): void {
             this.isMediaDropZoneExpanded = expanded;
         },
