@@ -1,25 +1,14 @@
 <template>
-    <div class="field has-addons player-panel" v-if="!this.loaded">
+    <div class="field player-panel is-fullwidth" v-if="!this.loaded">
         <p class="control">
-            <button class="button">
-                <Icon name="empty" />
+            <button class="button is-fullwidth" v-if="!this.loaded">
+                <span class="has-opacity-half"> Loading '{{ source }}'</span
+                ><progress
+                    class="progress is-small is-primary"
+                    max="100"
+                ></progress>
             </button>
         </p>
-        <p class="control">
-            <button class="button is-loading">
-                <Icon name="empty" />
-            </button>
-        </p>
-        <!-- An empty player with a seekbar/timeline as placeholder -->
-        <div class="player-seekbar">
-            <div class="player-timeline">
-                <div class="player-time">
-                    <div class="player-time-current is-unselectable">
-                        Loading media...
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     <div class="field has-addons player-panel" v-else>
         <!-- Stop (do not show on small devices, user still can use play/pause) -->
