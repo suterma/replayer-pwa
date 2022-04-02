@@ -120,14 +120,15 @@ export default defineComponent({
         showVolume: false,
         /** Default value, user may change later */
         volume: 25,
+        //TODO later remove: The audio context is currently not used
         /** The audio context to use
          */
-        audioContext: new (window.AudioContext /*Default*/ ||
-            (window as any).webkitAudioContext)(
-            /*Safari and old versions of Chrome*/ {
-                latencyHint: 'interactive',
-            },
-        ),
+        // audioContext: new (window.AudioContext /*Default*/ ||
+        //     (window as any).webkitAudioContext)(
+        //     /*Safari and old versions of Chrome*/ {
+        //         latencyHint: 'interactive',
+        //     },
+        // ),
         audioElement: document.createElement('audio'),
         /** Flags, whether a playing request is currently outstanding. This is true after a play request was received, for as long
          * as playback has not yet started.
@@ -185,7 +186,8 @@ export default defineComponent({
         this.audioElement.pause();
         this.audioElement.remove();
 
-        this.audioContext.close();
+        //TODO later remove: The audio context is currently not used
+        //this.audioContext.close();
     },
 
     computed: {
