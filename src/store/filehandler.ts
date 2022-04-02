@@ -229,6 +229,19 @@ export default class FileHandler {
         return false;
     }
 
+    /** Returns whether the given MIME type is a supported XML compilation MIME type by Replayer
+     */
+    static isXmlMimeType(type: string | undefined): boolean {
+        if (type) {
+            if (
+                ['application/xml' /*xml*/, 'text/xml' /*xml*/].includes(type)
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** Returns whether the given MIME type is a supported media MIME type by Replayer
      * @remarks Currently, MIME types for mp3, wav, flac, ogg, aiff, are supported
      */
@@ -313,9 +326,11 @@ export default class FileHandler {
         return mimeType;
     }
 
-    /** Asserts whether the file represents an XML compilation file */
+    /** Asserts whether the file represents an XML compilation file
+     * @remarks Currently, xml, rex are supported
+     */
     public static isXmlFile(file: File): boolean {
-        return this.isXmlFileName(file.name);
+        return this.isXmlFileName(file.name) || this.isXmlMimeType(file.type);
     }
 
     /** Asserts whether the file name represents an XML compilation file */

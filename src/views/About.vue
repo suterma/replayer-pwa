@@ -48,6 +48,27 @@
                         Your Light by Lidija Roos (Production)</a
                     >
                 </li>
+
+                <li>
+                    <a
+                        href="http://localhost:8080/#/play?package=http%3A%2F%2Flocalhost:8080%2Fdemo-compilation-with-online-resources-of-multiple-types.rex"
+                        target="_blank"
+                        class="link-external"
+                    >
+                        Demo Compilation with online resources of multiple types
+                        (Featuring Lidija Roos) (Local)</a
+                    >
+                </li>
+                <li>
+                    <a
+                        href="https://web-develreplayer.app/#/play?package=https%3A%2F%2Fweb-devel.replayer.app%2Fdemo-compilation-with-online-resources-of-multiple-types.rex"
+                        target="_blank"
+                        class="link-external"
+                    >
+                        Demo Compilation with online resources of multiple types
+                        (Featuring Lidija Roos) (Development)</a
+                    >
+                </li>
             </ul>
         </div>
 

@@ -263,6 +263,11 @@ export const actions: ActionTree<State, State> & Actions = {
                         dispatch(ActionTypes.LOAD_FROM_FILE, file)
                             .then(() => {
                                 resolve(localResourceName);
+                                //The action is done, so terminate the progress
+                                commit(
+                                    MutationTypes.POP_PROGRESS_MESSAGE,
+                                    undefined,
+                                );
                             })
                             .catch((errorMessage: string) => {
                                 reject(
@@ -325,7 +330,9 @@ export const actions: ActionTree<State, State> & Actions = {
         return new Promise((resolve, reject) => {
             commit(
                 MutationTypes.PUSH_PROGRESS_MESSAGE,
-                `Loading file '${file.name}' (${file.size / 1000000}MB)`,
+                `Loading file '${file.name}' '${file.type}' (${
+                    file.size / 1000000
+                }MB)`,
             );
 
             //TODO handle the file types from buffer, and use the same methods for both from ZIP and from standalone content
