@@ -1,26 +1,15 @@
 <template>
     <!-- Placeholder for an unloaded track -->
-    <div class="field has-addons player-panel" v-if="!this.loaded">
+    <div v-if="!this.loaded" class="field player-panel is-fullwidth">
         <p class="control">
-            <button class="button">
-                <Icon name="empty" />
+            <button disabled class="button is-fullwidth">
+                <span class="has-opacity-half">Loading '{{ source }}'</span
+                ><progress
+                    class="progress is-small is-primary"
+                    max="100"
+                ></progress>
             </button>
         </p>
-        <p class="control">
-            <button class="button is-loading">
-                <Icon name="empty" />
-            </button>
-        </p>
-        <!-- An empty player with a seekbar/timeline as placeholder -->
-        <div class="player-seekbar">
-            <div class="player-timeline">
-                <div class="player-time">
-                    <div class="player-time-current is-unselectable">
-                        Loading {{ this.source }} ...
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     <!-- Playback control when the track is loaded -->
     <div v-else class="field has-addons player-panel">
@@ -222,4 +211,9 @@ export default defineComponent({
     },
 });
 </script>
-<style scoped></style>
+<style scoped>
+/** The disabled button without special background */
+.button[disabled] {
+    background-color: #3a3f44;
+}
+</style>

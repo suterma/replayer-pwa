@@ -67,26 +67,15 @@
             </template>
             <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
             <template v-else>
-                <div class="field has-addons player-panel">
+                <div class="field player-panel is-fullwidth">
                     <p class="control">
-                        <button class="button">
-                            <!-- empty, as a placeholder to have rounded edges -->
-                        </button>
-                    </p>
-                    <p
-                        class="control player-seekbar player-timeline player-time"
-                    >
-                        <span class="player-time-current">
-                            <span class="has-opacity-half"> Waiting for </span>
-                            <span class="is-italic">
-                                {{ track?.Url }}
-                            </span>
-                        </span>
-                    </p>
-                    <p class="control">
-                        <button class="button">
-                            <!-- empty, as a placeholder to have rounded edges -->
-                            <!-- //TODO later, here we could  have a file load or URL input element to fix the missing URL -->
+                        <button disabled class="button is-fullwidth">
+                            <span class="has-opacity-half"
+                                >Waiting for '{{ source }}'</span
+                            ><progress
+                                class="progress is-small is-primary"
+                                max="100"
+                            ></progress>
                         </button>
                     </p>
                 </div>

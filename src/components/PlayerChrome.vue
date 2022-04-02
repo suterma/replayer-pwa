@@ -2,7 +2,7 @@
     <div class="field player-panel is-fullwidth" v-if="!this.loaded">
         <p class="control">
             <button disabled class="button is-fullwidth">
-                <span class="has-opacity-quarter">Loading '{{ source }}'</span
+                <span class="has-opacity-half">Loading '{{ source }}'</span
                 ><progress
                     class="progress is-small is-primary"
                     max="100"
@@ -357,6 +357,6 @@ export default defineComponent({
 
 /** The disabled button without special background */
 .button[disabled] {
-    background-color: transparent;
+    background-color: #3a3f44;
 }
 </style>
