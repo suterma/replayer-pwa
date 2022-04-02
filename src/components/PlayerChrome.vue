@@ -1,8 +1,8 @@
 <template>
     <div class="field player-panel is-fullwidth" v-if="!this.loaded">
         <p class="control">
-            <button class="button is-fullwidth" v-if="!this.loaded">
-                <span class="has-opacity-half"> Loading '{{ source }}'</span
+            <button disabled class="button is-fullwidth">
+                <span class="has-opacity-quarter">Loading '{{ source }}'</span
                 ><progress
                     class="progress is-small is-primary"
                     max="100"
@@ -353,5 +353,10 @@ export default defineComponent({
 /** Shows the button expanded over 4 slots */
 .volume-button-expanded {
     width: 158px;
+}
+
+/** The disabled button without special background */
+.button[disabled] {
+    background-color: transparent;
 }
 </style>
