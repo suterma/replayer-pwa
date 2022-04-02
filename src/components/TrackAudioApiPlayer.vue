@@ -121,11 +121,13 @@ export default defineComponent({
         /** Default value, user may change later */
         volume: 25,
         /** The audio context to use
-         * @devdoc This code does not support the old webkitAudioContext formerly used with webkit. It's expected to run on modern browsers only.
          */
-        audioContext: new AudioContext({
-            latencyHint: 'interactive',
-        }),
+        audioContext: new (window.AudioContext /*Default*/ ||
+            (window as any).webkitAudioContext)(
+            /*Safari and old versions of Chrome*/ {
+                latencyHint: 'interactive',
+            },
+        ),
         audioElement: document.createElement('audio'),
         /** Flags, whether a playing request is currently outstanding. This is true after a play request was received, for as long
          * as playback has not yet started.
