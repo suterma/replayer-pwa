@@ -1,9 +1,9 @@
 <template>
-    <span v-if="track.Artist" class="has-text-nowrap">
+    <span v-if="track.Artist" class="is-single-line">
         <span class="has-opacity-half">by&nbsp;</span>
         <span class="is-italic">{{ track.Artist }}&nbsp;</span>
     </span>
-    <span v-if="track.Album" class="has-text-nowrap">
+    <span v-if="track.Album" class="is-single-line">
         <span class="has-opacity-half">on&nbsp;</span>
         <span class="is-italic">{{ track.Album }}</span>
     </span>

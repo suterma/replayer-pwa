@@ -20,57 +20,59 @@
             </p>
             <hr />
         </div>
-        <h1 class="title">Online Demo</h1>
-        <div class="content">
-            <ul>
-                <li>
-                    <a
-                        href="https://web-devel.replayer.app/#/play?media=https%3A%2F%2Fweb-devel.replayer.app%2Fmusic%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&21.2688935=Verse+1&40.8880182=Bridge&46.7937461=Refrain+%22Not+for+Sale%22&64.5614468=Bridge+2&72.3591588=Verse+2&98.1517279=Refrain+%22Not+for+Sale%22&114.5918753=Rap+Part&156.2238253=Bridge+(Guitar+Solo)&174.1005193=Refrain+%22Not+for+Sale%22+soft+style&207.8065624=Outro"
-                        target="_blank"
-                    >
-                        Your Light by Lidija Roos (Development)</a
-                    >
-                </li>
-                <li>
-                    <a
-                        href="http://localhost:8080/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fmusic%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
-                        target="_blank"
-                    >
-                        Your Light by Lidija Roos (Local)</a
-                    >
-                </li>
-                <li>
-                    <a
-                        href="https://web.replayer.app/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fmusic%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
-                        target="_blank"
-                        class="link-external"
-                    >
-                        Your Light by Lidija Roos (Production)</a
-                    >
-                </li>
+        <Experimental>
+            <h1 class="title">Online Demo</h1>
+            <div class="content">
+                <ul>
+                    <li>
+                        <a
+                            href="https://web-devel.replayer.app/#/play?media=https%3A%2F%2Fweb-devel.replayer.app%2Fmusic%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&21.2688935=Verse+1&40.8880182=Bridge&46.7937461=Refrain+%22Not+for+Sale%22&64.5614468=Bridge+2&72.3591588=Verse+2&98.1517279=Refrain+%22Not+for+Sale%22&114.5918753=Rap+Part&156.2238253=Bridge+(Guitar+Solo)&174.1005193=Refrain+%22Not+for+Sale%22+soft+style&207.8065624=Outro"
+                            target="_blank"
+                        >
+                            Your Light by Lidija Roos (Development)</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="http://localhost:8080/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fmusic%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
+                            target="_blank"
+                        >
+                            Your Light by Lidija Roos (Local)</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="https://web.replayer.app/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fmusic%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
+                            target="_blank"
+                            class="link-external"
+                        >
+                            Your Light by Lidija Roos (Production)</a
+                        >
+                    </li>
 
-                <li>
-                    <a
-                        href="http://localhost:8080/#/play?package=http%3A%2F%2Flocalhost:8080%2Fdemo-compilation-with-online-resources-of-multiple-types.rex"
-                        target="_blank"
-                        class="link-external"
-                    >
-                        Demo Compilation with online resources of multiple types
-                        (Featuring Lidija Roos) (Local)</a
-                    >
-                </li>
-                <li>
-                    <a
-                        href="https://web-develreplayer.app/#/play?package=https%3A%2F%2Fweb-devel.replayer.app%2Fdemo-compilation-with-online-resources-of-multiple-types.rex"
-                        target="_blank"
-                        class="link-external"
-                    >
-                        Demo Compilation with online resources of multiple types
-                        (Featuring Lidija Roos) (Development)</a
-                    >
-                </li>
-            </ul>
-        </div>
+                    <li>
+                        <a
+                            href="http://localhost:8080/#/play?package=http%3A%2F%2Flocalhost:8080%2Fdemo-compilation-with-online-resources-of-multiple-types.rex"
+                            target="_blank"
+                            class="link-external"
+                        >
+                            Demo Compilation with online resources of multiple
+                            types (Featuring Lidija Roos) (Local)</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="https://web-devel.replayer.app/#/play?package=https%3A%2F%2Fweb-devel.replayer.app%2Fdemo-compilation-with-online-resources-of-multiple-types.rex"
+                            target="_blank"
+                            class="link-external"
+                        >
+                            Demo Compilation with online resources of multiple
+                            types (Featuring Lidija Roos) (Development)</a
+                        >
+                    </li>
+                </ul>
+            </div>
+        </Experimental>
 
         <h1 class="title">Credits</h1>
         <div class="content">
@@ -325,12 +327,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import WelcomeText from '@/components/WelcomeText.vue';
+import Experimental from '@/components/Experimental.vue';
 
 /** An About view
  */
 export default defineComponent({
     name: 'About',
-    components: { WelcomeText },
+    components: { WelcomeText, Experimental },
     computed: {
         version(): string {
             return '' + process.env.VUE_APP_VERSION;

@@ -37,7 +37,7 @@
                 <div
                     class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
                 >
-                    <p class="has-text-nowrap">
+                    <p class="is-single-line">
                         <span class="has-opacity-half">at</span>
                     </p>
                 </div>
@@ -85,7 +85,7 @@
 
                 <!-- Duration (keep small and hide on touch)-->
                 <div class="level-item is-flex-shrink-1 is-hidden-touch">
-                    <p class="has-text-nowrap">
+                    <p class="is-single-line">
                         <span class="has-opacity-half">{{
                             cueDurationDisplayTime
                         }}</span>

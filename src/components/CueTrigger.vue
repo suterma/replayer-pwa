@@ -3,11 +3,7 @@
     <div v-if="!this.loaded" class="field player-panel is-fullwidth">
         <p class="control">
             <button disabled class="button is-fullwidth">
-                <span class="has-opacity-half">Loading '{{ source }}'</span
-                ><progress
-                    class="progress is-small is-primary"
-                    max="100"
-                ></progress>
+                <LongLine :text="source" hasProgress="true" />
             </button>
         </p>
     </div>
@@ -76,13 +72,14 @@ import { defineComponent } from 'vue';
 import { GlobalEvents } from 'vue-global-events';
 import Icon from '@/components/icons/Icon.vue';
 import PlayerTime from '@/components/PlayerTime.vue';
+import LongLine from '@/components/LongLine.vue';
 
 /** A UI representation for a media player
  * @remarks Handles and emits various states and event for playback control.
  */
 export default defineComponent({
     name: 'CueTrigger',
-    components: { GlobalEvents, Icon, PlayerTime },
+    components: { GlobalEvents, Icon, PlayerTime, LongLine },
     emits: [
         'update:playing',
         'update:currentSeconds',

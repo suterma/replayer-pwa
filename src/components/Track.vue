@@ -71,7 +71,7 @@
                     <p class="control">
                         <button disabled class="button is-fullwidth">
                             <span class="has-opacity-half"
-                                >Waiting for '{{ source }}'</span
+                                >Fetching resource '{{ this.track?.Url }}'</span
                             ><progress
                                 class="progress is-small is-primary"
                                 max="100"

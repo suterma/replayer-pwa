@@ -26,7 +26,7 @@
                 <div
                     class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
                 >
-                    <p class="has-text-nowrap">
+                    <p class="is-single-line">
                         <span class="has-opacity-half">by</span>
                     </p>
                 </div>
@@ -48,7 +48,7 @@
                 <div
                     class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
                 >
-                    <p class="has-text-nowrap">
+                    <p class="is-single-line">
                         <span class="has-opacity-half">on</span>
                     </p>
                 </div>

@@ -11112,8 +11112,15 @@ but not at the "end/right" container's border */
  * Layout helpers
 **************************************************************
 */
-/* Some text that does not wrap */
-.has-text-nowrap {
+/** Adds an overflow-ellipsis on the left side 
+* @remarks "overflow" value must be different from "visible", e.g. using is-clipped
+*/
+.has-left-ellipsis {
+  text-overflow: ellipsis;
+  direction: rtl;
+}
+
+.is-single-line {
   white-space: nowrap;
 }
 

@@ -113,17 +113,6 @@ export default defineComponent({
     max-width: calc(80% - 200px);
 }
 
-/** Adds an overflow-ellipsis on the left side 
-* @remarks "overflow" value must be different from "visible", e.g. using is-clipped
-*/
-.has-left-ellipsis {
-    text-overflow: ellipsis;
-    direction: rtl;
-}
-.is-single-line {
-    white-space: nowrap;
-}
-
 /** Align icons in the indicator text */
 .player-time .icon {
     height: inherit;

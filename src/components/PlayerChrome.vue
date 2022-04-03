@@ -2,11 +2,7 @@
     <div class="field player-panel is-fullwidth" v-if="!this.loaded">
         <p class="control">
             <button disabled class="button is-fullwidth">
-                <span class="has-opacity-half">Loading '{{ source }}'</span
-                ><progress
-                    class="progress is-small is-primary"
-                    max="100"
-                ></progress>
+                <LongLine :text="`Loading '${source}'`" hasProgress="true" />
             </button>
         </p>
     </div>
@@ -151,6 +147,7 @@ import { defineComponent } from 'vue';
 import Icon from '@/components/icons/Icon.vue';
 import PlayerTime from '@/components/PlayerTime.vue';
 import PlaybackModeButton from '@/components/PlaybackModeButton.vue';
+import LongLine from '@/components/LongLine.vue';
 import { PlaybackMode } from '@/store/compilation-types';
 
 /** A UI representation for a media player
@@ -158,7 +155,7 @@ import { PlaybackMode } from '@/store/compilation-types';
  */
 export default defineComponent({
     name: 'PlayerChrome',
-    components: { Icon, PlayerTime, PlaybackModeButton },
+    components: { Icon, PlayerTime, PlaybackModeButton, LongLine },
     emits: [
         'stop',
         /** Flags, whether the UI represents the playing (true) or the paused (false) state
