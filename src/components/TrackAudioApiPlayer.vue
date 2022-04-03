@@ -150,8 +150,9 @@ export default defineComponent({
             `TrackAudioApiPlayer::created:src:${this.src} for title ${this.title}`,
         );
 
+        //Preparing the audio element
+        //NOTE: Not using CORS, property crossOrigin is not set, not asking for permission
         this.audioElement.loop = false; //according to the above default
-        this.audioElement.crossOrigin = 'anonymous';
         this.audioElement.ontimeupdate = this.updateTime;
         this.audioElement.onloadeddata = this.load;
         this.audioElement.onerror = () => {
