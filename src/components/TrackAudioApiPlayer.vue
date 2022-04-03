@@ -151,6 +151,7 @@ export default defineComponent({
         );
 
         this.audioElement.loop = false; //according to the above default
+        this.audioElement.crossOrigin = 'anonymous';
         this.audioElement.ontimeupdate = this.updateTime;
         this.audioElement.onloadeddata = this.load;
         this.audioElement.onerror = () => {
@@ -289,6 +290,8 @@ export default defineComponent({
                 `TrackAudioApiPlayer(${this.title})::updateSource:${source}`,
             );
             if (source) {
+                //TODO experimentally get the mime type from the url name
+                //Later get from server response or the file name
                 this.audioElement.src = source;
             }
         },
