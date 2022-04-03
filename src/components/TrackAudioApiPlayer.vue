@@ -179,11 +179,7 @@ export default defineComponent({
         };
         this.audioElement.preload = 'auto';
 
-        //Only start loading the element, when a source is actually available
-        //Otherwise the element throws an avoidable error
-        if (this.src) {
-            this.audioElement.src = this.src;
-        }
+        this.updateSource(this.src);
 
         this.fader = new AudioFader(
             this.audioElement,
@@ -268,11 +264,22 @@ export default defineComponent({
             console.debug(
                 `TrackAudioApiPlayer(${this.title})::src:${this.src}`,
             );
-            this.audioElement.src = this.src;
+            this.updateSource(this.src);
             this.fader.cancel();
         },
     },
     methods: {
+        /** Updates the audio element source with the media source, if it's available */
+        updateSource(source: string): void {
+            //Only start loading the element, when a source is actually available
+            //Otherwise the element throws an avoidable error
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::updateSource:${source}`,
+            );
+            if (source) {
+                this.audioElement.src = source;
+            }
+        },
         download() {
             console.debug(`TrackAudioApiPlayer(${this.title})::download`);
             this.stop();

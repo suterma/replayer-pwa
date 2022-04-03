@@ -272,7 +272,7 @@ export default class CompilationHandler {
         const cue = compilation.Tracks.flatMap((track) => track.Cues).find(
             (cue) => cue.Id === cueId,
         );
-        console.debug('found cue', cue);
+        //console.debug('found cue', cue);
 
         return cue;
     }
