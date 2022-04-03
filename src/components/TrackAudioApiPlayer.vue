@@ -151,10 +151,13 @@ export default defineComponent({
         );
 
         //Preparing the audio element
-        //NOTE: Not using CORS, property crossOrigin is not set, not asking for permission
-        this.audioElement.loop = false; //according to the above default
+
+        //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
         this.audioElement.ontimeupdate = this.updateTime;
         this.audioElement.onloadeddata = this.load;
+        this.audioElement.onloadedmetadata = () => {
+            console.debug('TrackAudioApiPlayer::onloadedmetadata');
+        };
         this.audioElement.onerror = () => {
             this.mediaError = this.audioElement?.error;
             console.log(
@@ -191,9 +194,6 @@ export default defineComponent({
                 this.isFading = false;
             });
         };
-        this.audioElement.preload = 'auto';
-
-        this.updateSource(this.src);
 
         this.fader = new AudioFader(
             this.audioElement,
@@ -201,6 +201,14 @@ export default defineComponent({
             this.getSettings.fadeOutDuration,
             this.getSettings.applyFadeInOffset,
         );
+
+        //NOTE: Not using CORS, property crossOrigin is not set, not asking for permission
+
+        this.audioElement.loop = false; //according to the above default playbackMode
+
+        //Last, update the souce, if already available
+        this.audioElement.preload = 'auto';
+        this.updateSource(this.src);
     },
     /** Handles the teardown of the audio graph outside the mounted lifespan.
      * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
