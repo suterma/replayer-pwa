@@ -162,6 +162,18 @@ export default defineComponent({
                     this.audioElement?.error?.message,
             );
         };
+        this.audioElement.onabort = () => {
+            console.debug('TrackAudioApiPlayer::abort');
+        };
+        this.audioElement.oncanplay = (event) => {
+            console.debug('TrackAudioApiPlayer::oncanplay', event);
+        };
+        this.audioElement.oncanplaythrough = (event) => {
+            console.debug('TrackAudioApiPlayer::oncanplaythrough', event);
+        };
+        this.audioElement.onloadstart = (event) => {
+            console.debug('TrackAudioApiPlayer::onloadstart', event);
+        };
         this.audioElement.onpause = () => {
             this.playing = false;
         };
