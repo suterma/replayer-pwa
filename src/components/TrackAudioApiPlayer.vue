@@ -12,6 +12,7 @@
         @seek="seekToSeconds"
         :durationSeconds="this.durationSeconds"
         :source="this.source"
+        :error="this.mediaError"
     />
     <PlayerChrome
         v-else
@@ -32,6 +33,7 @@
         :durationSeconds="this.durationSeconds"
         @download="this.download"
         :source="this.source"
+        :error="this.mediaError"
     />
 </template>
 
@@ -112,6 +114,7 @@ export default defineComponent({
         durationSeconds: 0,
         isMuted: false,
         loaded: false,
+        mediaError: null as MediaError | null,
         /** Whether the audio is currently fading */
         isFading: false,
         playbackMode: PlaybackMode.PlayTrack, //by default
@@ -148,9 +151,17 @@ export default defineComponent({
         );
 
         this.audioElement.loop = false; //according to the above default
-        this.audioElement.src = this.src;
         this.audioElement.ontimeupdate = this.updateTime;
         this.audioElement.onloadeddata = this.load;
+        this.audioElement.onerror = () => {
+            this.mediaError = this.audioElement?.error;
+            console.log(
+                'TrackAudioApiPlayer::mediaError ' +
+                    this.audioElement?.error?.code +
+                    '; details: ' +
+                    this.audioElement?.error?.message,
+            );
+        };
         this.audioElement.onpause = () => {
             this.playing = false;
         };
@@ -167,6 +178,12 @@ export default defineComponent({
             });
         };
         this.audioElement.preload = 'auto';
+
+        //Only start loading the element, when a source is actually available
+        //Otherwise the element throws an avoidable error
+        if (this.src) {
+            this.audioElement.src = this.src;
+        }
 
         this.fader = new AudioFader(
             this.audioElement,

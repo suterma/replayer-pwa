@@ -166,7 +166,13 @@ but not at the "end/right" container's border */
 **************************************************************
 */
 
-/** Adds an overflow-ellipsis on the left side 
+/** Adds an overflow-ellipsis 
+* @remarks "overflow" value must be different from "visible", e.g. using is-clipped
+*/
+.has-ellipsis {
+    text-overflow: ellipsis;
+}
+/** Adds an overflow-ellipsis specifically on the left side 
 * @remarks "overflow" value must be different from "visible", e.g. using is-clipped
 */
 .has-left-ellipsis {

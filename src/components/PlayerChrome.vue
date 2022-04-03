@@ -1,8 +1,21 @@
 <template>
     <div class="field player-panel is-fullwidth" v-if="!this.loaded">
         <p class="control">
-            <button disabled class="button is-fullwidth">
-                <LongLine :text="`Loading '${source}'`" hasProgress="true" />
+            <button
+                v-if="this.error"
+                class="button is-fullwidth is-danger is-static is-outlined"
+            >
+                <LongLine
+                    :text="`Error ${errorText} occurred when using ${source}`"
+                    :hasProgress="false"
+                />
+            </button>
+            <button v-else disabled class="button is-fullwidth">
+                <LongLine
+                    :text="`Loading ${source}`"
+                    :hasProgress="true"
+                    :clipLeft="true"
+                />
             </button>
         </p>
     </div>
@@ -149,6 +162,7 @@ import PlayerTime from '@/components/PlayerTime.vue';
 import PlaybackModeButton from '@/components/PlaybackModeButton.vue';
 import LongLine from '@/components/LongLine.vue';
 import { PlaybackMode } from '@/store/compilation-types';
+import AudioUtil from '@/code/audio/AudioUtil';
 
 /** A UI representation for a media player
  * @remarks Handles and emits various states and event for playback control.
@@ -240,6 +254,14 @@ export default defineComponent({
             type: String,
             default: '',
         },
+
+        /** The media error, if any
+         * @remarks This is used to display an error for the last action on the player instance.
+         */
+        error: {
+            type: MediaError,
+            default: null,
+        },
     },
     data: () => ({
         showVolume: false,
@@ -247,6 +269,10 @@ export default defineComponent({
     }),
 
     computed: {
+        /** Returns a displayable text for the provided error */
+        errorText(): string {
+            return AudioUtil.getDisplayText(this.error);
+        },
         /** The playback progress in the current track, in [percent] */
         percentComplete(): number {
             return (this.currentSeconds / this.durationSeconds) * 100;

@@ -43,7 +43,7 @@
             :duration="300"
             timingFunction="linear"
         >
-            <!-- The audio player, but only once the source is available 
+            <!-- The audio player, but only once the source is available from the store
             Note: The actual src property/attribute is also depending 
             on the show state as a performance optimizations
             -->
@@ -70,12 +70,11 @@
                 <div class="field player-panel is-fullwidth">
                     <p class="control">
                         <button disabled class="button is-fullwidth">
-                            <span class="has-opacity-half"
-                                >Fetching resource '{{ this.track?.Url }}'</span
-                            ><progress
-                                class="progress is-small is-primary"
-                                max="100"
-                            ></progress>
+                            <LongLine
+                                :text="`Fetching resource ${this.track?.Url}`"
+                                :hasProgress="true"
+                                :clipLeft="true"
+                            />
                         </button>
                     </p>
                 </div>
@@ -126,6 +125,7 @@ import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeaderEdit from '@/components/TrackHeaderEdit.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
+import LongLine from '@/components/LongLine.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import NoSleep from 'nosleep.js';
@@ -147,6 +147,7 @@ export default defineComponent({
         ReplayerEventHandler,
         TrackHeader,
         TrackHeaderEdit,
+        LongLine,
     },
     mixins: [settingsMixin],
     props: {
