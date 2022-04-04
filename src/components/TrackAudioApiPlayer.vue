@@ -109,11 +109,19 @@ export default defineComponent({
         /** The playback progress in the current track, in [seconds] */
         currentSeconds: 0,
         /** Gets the duration of the current track, in [seconds]
-         * @remarks This is only available after successful load of the media file
+         * @remarks This is only available after successful load of the media metadata
          */
         durationSeconds: 0,
         isMuted: false,
+        /** Whether the media data has loaded (at least enough to start playback)
+         * @remarks This implies that metadata also has been loaded already
+         * @devdoc see HAVE_CURRENT_DATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
+         */
         loaded: false,
+        /** Whether the media metadata has loaded. Duration is available now.
+         * @devdoc see HAVE_METADATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
+         */
+        loadedMetadata: false,
         mediaError: null as MediaError | null,
         /** Whether the audio is currently fading */
         isFading: false,
@@ -155,9 +163,7 @@ export default defineComponent({
         //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
         this.audioElement.ontimeupdate = this.updateTime;
         this.audioElement.onloadeddata = this.load;
-        this.audioElement.onloadedmetadata = () => {
-            console.debug('TrackAudioApiPlayer::onloadedmetadata');
-        };
+        this.audioElement.onloadedmetadata = this.loadMetadata;
         this.audioElement.onerror = () => {
             this.mediaError = this.audioElement?.error;
             console.log(
@@ -219,6 +225,7 @@ export default defineComponent({
         //properly destroy the audio element and the audio context
         this.playing = false;
         this.audioElement.pause();
+        this.audioElement.removeAttribute('src'); // empty source
         this.audioElement.remove();
 
         //TODO later remove: The audio context is currently not used
@@ -291,7 +298,9 @@ export default defineComponent({
         },
     },
     methods: {
-        /** Updates the audio element source with the media source, if it's available */
+        /** Updates the audio element source with the media source, if it's available $
+         * @devdoc To be used only privately. To change the source from the outside, use the src prop.
+         */
         updateSource(source: string): void {
             //Only start loading the element, when a source is actually available
             //Otherwise the element throws an avoidable error
@@ -299,8 +308,6 @@ export default defineComponent({
                 `TrackAudioApiPlayer(${this.title})::updateSource:${source}`,
             );
             if (source) {
-                //TODO experimentally get the mime type from the url name
-                //Later get from server response or the file name
                 this.audioElement.src = source;
             }
         },
@@ -309,10 +316,27 @@ export default defineComponent({
             this.stop();
             window.open(this.src, 'download');
         },
-        load() {
+        load(): boolean {
             console.debug(`TrackAudioApiPlayer(${this.title})::load`);
-            if (this.audioElement.readyState >= 2) {
+            //Data is available for at least the current playback position?
+            if (
+                this.audioElement.readyState >=
+                HTMLMediaElement.HAVE_CURRENT_DATA
+            ) {
                 this.loaded = true;
+                //TODO apply fade in here... if required
+                return (this.playing = this.autoPlay);
+            }
+
+            throw new Error('Failed to load sound data.');
+        },
+        loadMetadata() {
+            console.debug(`TrackAudioApiPlayer(${this.title})::loadMetadata`);
+            //Enough of the media resource has been retrieved that the metadata attributes are initialized?
+            if (
+                this.audioElement.readyState >= HTMLMediaElement.HAVE_METADATA
+            ) {
+                this.loadedMetadata = true;
                 this.durationSeconds = this.audioElement.duration;
 
                 this.$emit('trackLoaded', this.durationSeconds);
@@ -322,12 +346,10 @@ export default defineComponent({
 
                 //Apply the currently known position to the player. It could be non-zero already.
                 this.seekTo(this.currentSeconds);
-
-                //TODO apply fade in here... if required
-                return (this.playing = this.autoPlay);
+                return;
             }
 
-            throw new Error('Failed to load sound file.');
+            throw new Error('Failed to load sound metadata.');
         },
         mute() {
             console.debug(`TrackAudioApiPlayer(${this.title})::mute`);
@@ -336,7 +358,7 @@ export default defineComponent({
         },
         seekByClick(e: MouseEvent) {
             console.debug(`TrackAudioApiPlayer(${this.title})::seekByClick`, e);
-            if (!this.loaded) return;
+            if (!this.loadedMetadata) return;
 
             const bounds = (e.target as HTMLDivElement).getBoundingClientRect();
             const seekPos = (e.clientX - bounds.left) / bounds.width;
@@ -349,7 +371,7 @@ export default defineComponent({
                 `TrackAudioApiPlayer(${this.title})::seekToSeconds`,
                 seconds,
             );
-            if (!this.loaded) return;
+            if (!this.loadedMetadata) return;
 
             this.audioElement.currentTime = seconds;
         },

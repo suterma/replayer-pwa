@@ -62,6 +62,14 @@
                     </li>
                     <li>
                         <a
+                            href="./#/play?package=http%3A%2F%2Flocalhost:8080%2Fdemo-compilation-with-online-resources-of-multiple-types.rex"
+                        >
+                            Demo Compilation with online resources of multiple
+                            types (Featuring Lidija Roos) (internal)</a
+                        >
+                    </li>
+                    <li>
+                        <a
                             href="https://web-devel.replayer.app/#/play?package=https%3A%2F%2Fweb-devel.replayer.app%2Fdemo-compilation-with-online-resources-of-multiple-types.rex"
                             target="_blank"
                             class="link-external"
