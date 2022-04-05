@@ -52,7 +52,7 @@
                     :isEditable="this.isEditable"
                     v-if="mediaObjectUrl"
                     ref="playerReference"
-                    :title="trackFileUrl?.fileName"
+                    :title="this.track?.Name"
                     :src="optimizedMediaObjectUrl"
                     @timeupdate="updateTime"
                     @trackLoaded="calculateCueDurations"
@@ -368,7 +368,7 @@ export default defineComponent({
          * @devdoc The calculated durations are only valid as long as the cues, their times, and the track does not change */
         calculateCueDurations(trackDurationSeconds: number) {
             console.debug(
-                'Track::calculateCueDurations:trackDurationSeconds:' +
+                `Track(${this.title})::calculateCueDurations:trackDurationSeconds:` +
                     trackDurationSeconds,
             );
             this.isTrackLoaded = true;
