@@ -49,9 +49,10 @@ import { PlaybackMode } from '@/store/compilation-types';
 /** A simple vue audio player, for a single track, using the Web Audio API.
  * @devdoc Internally maintains it's state, updating the enclosed audio element accordingly.
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playing
- * @remarks Emits 'trackLoaded' with the track duration in seconds, once after successful load of the track's media file
+ * @remarks Emits 'trackLoaded' with the track duration in seconds, once after successful load of the metadata of the track's media file
  * @remarks Emits 'trackPlaying' when the track is playing
  * @devdoc The 'newCueTriggered' is just passed up
+ * @devdoc Autoplay after load is intentionally not supported, as this is of no use for the Replayer app.
  */
 export default defineComponent({
     name: 'TrackAudioApiPlayer',
@@ -60,11 +61,14 @@ export default defineComponent({
 
     emits: ['timeupdate', 'trackLoaded', 'trackPlaying'],
     props: {
-        title: String,
-        autoPlay: {
-            type: Boolean,
-            default: false,
+        title: {
+            type: String,
+            default: '',
+            required: false,
         },
+        /** The media file resource URL
+         * @remark This URL can point to an online resource or be a local object URL
+         */
         src: {
             type: String,
             default: '',
@@ -155,7 +159,7 @@ export default defineComponent({
      */
     created() {
         console.debug(
-            `TrackAudioApiPlayer::created:src:${this.src} for title ${this.title}`,
+            `TrackAudioApiPlayer(${this.title})::created:src:${this.src} for title ${this.title}`,
         );
 
         //Preparing the audio element
@@ -167,23 +171,32 @@ export default defineComponent({
         this.audioElement.onerror = () => {
             this.mediaError = this.audioElement?.error;
             console.log(
-                'TrackAudioApiPlayer::mediaError ' +
+                `TrackAudioApiPlayer(${this.title})::mediaError ` +
                     this.audioElement?.error?.code +
                     '; details: ' +
                     this.audioElement?.error?.message,
             );
         };
         this.audioElement.onabort = () => {
-            console.debug('TrackAudioApiPlayer::abort');
+            console.debug(`TrackAudioApiPlayer(${this.title})::abort`);
         };
         this.audioElement.oncanplay = (event) => {
-            console.debug('TrackAudioApiPlayer::oncanplay', event);
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::oncanplay`,
+                event,
+            );
         };
         this.audioElement.oncanplaythrough = (event) => {
-            console.debug('TrackAudioApiPlayer::oncanplaythrough', event);
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::oncanplaythrough`,
+                event,
+            );
         };
         this.audioElement.onloadstart = (event) => {
-            console.debug('TrackAudioApiPlayer::onloadstart', event);
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::onloadstart`,
+                event,
+            );
         };
         this.audioElement.onpause = () => {
             this.playing = false;
@@ -220,7 +233,10 @@ export default defineComponent({
      * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
      */
     unmounted() {
-        console.debug('TrackAudioApiPlayer::unmounted:', this.title);
+        console.debug(
+            `TrackAudioApiPlayer(${this.title})::unmounted:`,
+            this.title,
+        );
 
         //properly destroy the audio element and the audio context
         this.playing = false;
@@ -301,34 +317,20 @@ export default defineComponent({
         /** Updates the audio element source with the media source, if it's available $
          * @devdoc To be used only privately. To change the source from the outside, use the src prop.
          */
-        updateSource(source: string): void {
+        updateSource(src: string): void {
             //Only start loading the element, when a source is actually available
             //Otherwise the element throws an avoidable error
             console.debug(
-                `TrackAudioApiPlayer(${this.title})::updateSource:${source}`,
+                `TrackAudioApiPlayer(${this.title})::updateSource:${src}`,
             );
-            if (source) {
-                this.audioElement.src = source;
+            if (src) {
+                this.audioElement.src = src;
             }
         },
         download() {
             console.debug(`TrackAudioApiPlayer(${this.title})::download`);
             this.stop();
             window.open(this.src, 'download');
-        },
-        load(): boolean {
-            console.debug(`TrackAudioApiPlayer(${this.title})::load`);
-            //Data is available for at least the current playback position?
-            if (
-                this.audioElement.readyState >=
-                HTMLMediaElement.HAVE_CURRENT_DATA
-            ) {
-                this.loaded = true;
-                //TODO apply fade in here... if required
-                return (this.playing = this.autoPlay);
-            }
-
-            throw new Error('Failed to load sound data.');
         },
         loadMetadata() {
             console.debug(`TrackAudioApiPlayer(${this.title})::loadMetadata`);
@@ -351,6 +353,19 @@ export default defineComponent({
 
             throw new Error('Failed to load sound metadata.');
         },
+        load(): boolean {
+            console.debug(`TrackAudioApiPlayer(${this.title})::load`);
+            //Data is available for at least the current playback position?
+            if (
+                this.audioElement.readyState >=
+                HTMLMediaElement.HAVE_CURRENT_DATA
+            ) {
+                this.loaded = true;
+            }
+
+            throw new Error('Failed to load sound data.');
+        },
+
         mute() {
             console.debug(`TrackAudioApiPlayer(${this.title})::mute`);
             this.isMuted = !this.isMuted;
@@ -480,7 +495,7 @@ export default defineComponent({
 
                     if (isAtTrackEnd) {
                         console.debug(
-                            `TrackAudioApiPlayer::handleCueLoop:loopEnd:${this.loopEnd};durationSeconds:${this.durationSeconds}`,
+                            `TrackAudioApiPlayer(${this.title})::handleCueLoop:loopEnd:${this.loopEnd};durationSeconds:${this.durationSeconds}`,
                         );
                         //At the end of the track, a seek operation alone would not be enough to continue the loop
                         //if playback already has ended (when the safety margin from above was too small)
@@ -550,7 +565,7 @@ export default defineComponent({
             const offset = this.settings.fadeInDuration / 1000;
             const target = time - offset;
             console.debug(
-                `TrackAudioApiPlayer::applyPreFadeInOffset:by:${this.fadeInDuration};from time:${time}; to target:${target}`,
+                `TrackAudioApiPlayer(${this.title})::applyPreFadeInOffset:by:${this.fadeInDuration};from time:${time}; to target:${target}`,
             );
             this.audioElement.currentTime = target;
         },

@@ -199,7 +199,7 @@ export default defineComponent({
                 time,
             });
 
-            //Also , for user convenience, to simplify adjusting cues, autoplay at change
+            //Also , for user convenience, to simplify adjusting cues, play at change
             //(while keeping the focus at the number spinner)
             this.$emit('play');
         },
