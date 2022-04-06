@@ -198,6 +198,32 @@ export default defineComponent({
                 event,
             );
         };
+        /** The progress event is fired periodically as the browser loads a resource.
+         */
+        this.audioElement.onprogress = (event) => {
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::onprogress`,
+                event,
+            );
+        };
+        this.audioElement.onstalled = (event) => {
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::onstalled`,
+                event,
+            );
+        };
+        this.audioElement.onsuspend = (event) => {
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::onsuspend `,
+                event,
+            );
+        };
+        this.audioElement.ondurationchange = (event) => {
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::ondurationchange `,
+                event,
+            );
+        };
         this.audioElement.onpause = () => {
             this.playing = false;
         };
