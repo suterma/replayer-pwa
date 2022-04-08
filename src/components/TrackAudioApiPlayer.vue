@@ -35,6 +35,9 @@
         :source="this.source"
         :error="this.mediaError"
     />
+    <button v-if="isClickToLoadRequired" @click="this.audioElement.load()">
+        Click to load track
+    </button>
 </template>
 
 <script lang="ts">
@@ -59,7 +62,7 @@ export default defineComponent({
     components: { PlayerChrome, CueTrigger },
     mixins: [settingsMixin],
 
-    emits: ['timeupdate', 'trackLoaded', 'trackPlaying'],
+    emits: ['timeupdate', 'trackLoaded', 'trackPlaying', 'newCueTriggered'],
     props: {
         title: {
             type: String,
@@ -150,6 +153,12 @@ export default defineComponent({
          * @devdoc See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted for more information
          */
         isPlayingRequestOutstanding: false,
+
+        /** Flags, whether a user click event is required to load the track media file
+         * @remarks When true, shows a button to capture the click event
+         * @remarks This is currenlty required on iOS devices, because they only load data upon explicit user request.
+         */
+        isClickToLoadRequired: false,
 
         /** The fader to use */
         fader: undefined as unknown as AudioFader,
@@ -367,6 +376,7 @@ export default defineComponent({
             this.handleReadyState(readyState);
         },
         load(): void {
+            this.isClickToLoadRequired = false;
             const readyState = this.audioElement.readyState;
 
             console.debug(
@@ -403,6 +413,13 @@ export default defineComponent({
             console.debug(
                 `TrackAudioApiPlayer(${this.title})::handleReadyState:networkState:${this.audioElement.networkState}`,
             );
+
+            //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
+            //most probably due to load restriction on an iOS device.
+            //Show a request to load button
+            if (this.audioElement.buffered.length === 0) {
+                this.isClickToLoadRequired = true;
+            }
         },
 
         mute() {
