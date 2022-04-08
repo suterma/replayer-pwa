@@ -35,9 +35,9 @@
         :source="this.source"
         :error="this.mediaError"
     />
-    <button v-if="isClickToLoadRequired" @click="this.play()">
+    <!-- <button v-if="isClickToLoadRequired" @click="this.play()">
         Click to load track
-    </button>
+    </button> -->
 </template>
 
 <script lang="ts">
@@ -262,6 +262,7 @@ export default defineComponent({
 
         //Last, update the souce, if already available
         this.audioElement.preload = 'auto';
+        //this.audioElement.preload = 'metadata';
         this.updateSource(this.src);
     },
     /** Handles the teardown of the audio graph outside the mounted lifespan.
@@ -586,6 +587,11 @@ export default defineComponent({
         /** Starts playback at the current position
          */
         play(): void {
+            //TODO test this on iOS and MacOS Devices
+            if (this.isClickToLoadRequired) {
+                this.audioElement.load();
+                this.isClickToLoadRequired = false;
+            }
             if (!this.playing) {
                 if (!this.isPlayingRequestOutstanding) {
                     this.isPlayingRequestOutstanding = true;

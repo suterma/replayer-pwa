@@ -80,7 +80,7 @@ export default defineComponent({
     },
     methods: {
         clickedOutside(): void {
-            console.log('Play::v-click-outside:MediaDropZone');
+            //console.log('Play::v-click-outside:MediaDropZone');
             this.isMediaDropZoneExpanded = !this.hasCompilation;
         },
 
