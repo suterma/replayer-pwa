@@ -358,38 +358,40 @@ export default defineComponent({
             this.stop();
             window.open(this.src, 'download');
         },
-        loadMetadata() {
-            console.debug(`TrackAudioApiPlayer(${this.title})::loadMetadata`);
-            //Enough of the media resource has been retrieved that the metadata attributes are initialized?
-            if (
-                this.audioElement.readyState >= HTMLMediaElement.HAVE_METADATA
-            ) {
-                this.loadedMetadata = true;
-                this.durationSeconds = this.audioElement.duration;
+        loadMetadata(): void {
+            const readyState = this.audioElement.readyState;
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::loadMetadata:readyState:${readyState}`,
+            );
 
-                this.$emit('trackLoaded', this.durationSeconds);
-
-                //Apply the initial volume. This is a hack to trigger the volumes watcher here, to apply some form of default other than 100
-                this.volume = this.previousVolume;
-
-                //Apply the currently known position to the player. It could be non-zero already.
-                this.seekTo(this.currentSeconds);
-                return;
-            }
-
-            throw new Error('Failed to load sound metadata.');
+            this.handleReadyState(readyState);
         },
-        load(): boolean {
-            console.debug(`TrackAudioApiPlayer(${this.title})::load`);
-            //Data is available for at least the current playback position?
-            if (
-                this.audioElement.readyState >=
-                HTMLMediaElement.HAVE_CURRENT_DATA
-            ) {
-                this.loaded = true;
-            }
+        load(): void {
+            const readyState = this.audioElement.readyState;
 
-            throw new Error('Failed to load sound data.');
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::load:readyState:${readyState}`,
+            );
+            this.handleReadyState(readyState);
+        },
+
+        handleReadyState(readyState: number) {
+            //Enough of the media resource has been retrieved that the metadata attributes are initialized?
+            if (readyState >= HTMLMediaElement.HAVE_METADATA) {
+                if (!this.loadedMetadata && !this.loaded) {
+                    this.loadedMetadata = true;
+                    this.loaded = true;
+                    this.durationSeconds = this.audioElement.duration;
+
+                    this.$emit('trackLoaded', this.durationSeconds);
+
+                    //Apply the initial volume. This is a hack to trigger the volumes watcher here, to apply some form of default other than 100
+                    this.volume = this.previousVolume;
+
+                    //Apply the currently known position to the player. It could be non-zero already.
+                    this.seekTo(this.currentSeconds);
+                }
+            }
         },
 
         mute() {
