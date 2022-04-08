@@ -392,6 +392,17 @@ export default defineComponent({
                     this.seekTo(this.currentSeconds);
                 }
             }
+
+            //TODO Fix for iOS not loading without explicit user interaction:
+            //Offer a dedicated load button when
+            //The state is at HAVE_METADATA and loading is suspended
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::handleReadyState:buffered:`,
+                this.audioElement.buffered,
+            );
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::handleReadyState:networkState:${this.audioElement.networkState}`,
+            );
         },
 
         mute() {
