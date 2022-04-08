@@ -35,7 +35,7 @@
         :source="this.source"
         :error="this.mediaError"
     />
-    <button v-if="isClickToLoadRequired" @click="this.audioElement.load()">
+    <button v-if="isClickToLoadRequired" @click="this.play()">
         Click to load track
     </button>
 </template>
