@@ -618,39 +618,48 @@ export default defineComponent({
         /** Starts playback at the current position
          */
         play(): void {
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::play:isClickToLoadRequired${this.isClickToLoadRequired}`,
+            );
             //TODO test this on iOS and MacOS Devices
             if (this.isClickToLoadRequired) {
                 this.loadAfterClick().then(() => {
+                    console.debug(
+                        `TrackAudioApiPlayer(${this.title})::loadAfterClick-then`,
+                    );
+
                     this.isClickToLoadRequired = false;
                     this.play();
                 });
-                return;
-            }
-            if (!this.playing) {
-                if (!this.isPlayingRequestOutstanding) {
-                    this.isPlayingRequestOutstanding = true;
+            } else {
+                if (!this.playing) {
+                    if (!this.isPlayingRequestOutstanding) {
+                        this.isPlayingRequestOutstanding = true;
 
-                    //Just BEFORE playback, apply the possible pre-play transport
-                    if (
-                        this.settings.applyFadeInOffset &&
-                        this.settings.fadeInDuration
-                    ) {
-                        this.applyPreFadeInOffset();
+                        //Just BEFORE playback, apply the possible pre-play transport
+                        if (
+                            this.settings.applyFadeInOffset &&
+                            this.settings.fadeInDuration
+                        ) {
+                            this.applyPreFadeInOffset();
+                        }
+
+                        this.audioElement
+                            .play()
+                            .catch((e) => {
+                                console.error(
+                                    'Playback failed with message: ' + e,
+                                );
+                                this.$emit('trackPlaying', false);
+                            })
+                            .finally(() => {
+                                this.isPlayingRequestOutstanding = false;
+                            });
+                    } else {
+                        console.warn(
+                            'A play request is already outstanding. This request is discarded.',
+                        );
                     }
-
-                    this.audioElement
-                        .play()
-                        .catch((e) => {
-                            console.error('Playback failed with message: ' + e);
-                            this.$emit('trackPlaying', false);
-                        })
-                        .finally(() => {
-                            this.isPlayingRequestOutstanding = false;
-                        });
-                } else {
-                    console.warn(
-                        'A play request is already outstanding. This request is discarded.',
-                    );
                 }
             }
         },
