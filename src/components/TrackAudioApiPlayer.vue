@@ -584,13 +584,46 @@ export default defineComponent({
             this.seekTo(position);
             this.play();
         },
+
+        /** If not yet loaded, loads the media, then when it's playable, resolves. */
+        loadAfterClick(): Promise<void> {
+            console.debug(`TrackAudioApiPlayer(${this.title})::loadAfterClick`);
+            return new Promise((resolve) => {
+                //Is further loading required?
+                const readyState = this.audioElement.readyState;
+                if (readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
+                    if (!this.loaded) {
+                        //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
+                        //most probably due to load restriction on an iOS device.
+                        //Show a request to load button
+                        if (this.audioElement.buffered.length === 0) {
+                            //Further loading should be triggered, then when playable resolve the promise
+                            this.audioElement.oncanplay = (event) => {
+                                console.debug(
+                                    `TrackAudioApiPlayer(${this.title})::loadAfterClick:oncanplay`,
+                                    event,
+                                );
+                                resolve(); //to play now
+                                return;
+                            };
+                            this.audioElement.load();
+                            return;
+                        }
+                    }
+                }
+
+                resolve(); //immediately because there is noting to load
+            });
+        },
         /** Starts playback at the current position
          */
         play(): void {
             //TODO test this on iOS and MacOS Devices
             if (this.isClickToLoadRequired) {
-                this.audioElement.load();
-                this.isClickToLoadRequired = false;
+                this.loadAfterClick().then(() => {
+                    this.isClickToLoadRequired = false;
+                    this.play();
+                });
             }
             if (!this.playing) {
                 if (!this.isPlayingRequestOutstanding) {
