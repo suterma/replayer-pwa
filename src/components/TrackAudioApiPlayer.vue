@@ -591,28 +591,39 @@ export default defineComponent({
             return new Promise((resolve) => {
                 //Is further loading required?
                 const readyState = this.audioElement.readyState;
-                if (readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
-                    if (!this.loaded) {
-                        //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
-                        //most probably due to load restriction on an iOS device.
-                        //Show a request to load button
-                        if (this.audioElement.buffered.length === 0) {
-                            //Further loading should be triggered, then when playable resolve the promise
-                            this.audioElement.oncanplay = (event) => {
-                                console.debug(
-                                    `TrackAudioApiPlayer(${this.title})::loadAfterClick:oncanplay`,
-                                    event,
-                                );
-                                resolve(); //to play now
-                                return;
-                            };
-                            this.audioElement.load();
-                            return;
-                        }
-                    }
+                if (
+                    readyState < HTMLMediaElement.HAVE_CURRENT_DATA &&
+                    !this.loaded &&
+                    //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
+                    //most probably due to load restriction on an iOS device.
+                    this.audioElement.buffered.length === 0
+                ) {
+                    //Further loading should be triggered now,
+                    //then once load has succeeded and the track becomes playable,
+                    //resolve the promise
+                    this.audioElement.addEventListener(
+                        'canplay',
+                        (event) => {
+                            console.debug(
+                                `TrackAudioApiPlayer(${this.title})::loadAfterClick:oncanplay`,
+                                event,
+                            );
+                            resolve(); //to play now
+                        },
+                        { once: true },
+                    );
+                    // this.audioElement.oncanplay = (event) => {
+                    //     console.debug(
+                    //         `TrackAudioApiPlayer(${this.title})::loadAfterClick:oncanplay`,
+                    //         event,
+                    //     );
+                    //     resolve(); //to play now
+                    //     return;
+                    // };
+                    this.audioElement.load();
+                } else {
+                    resolve(); //immediately because there is nothing required to load
                 }
-
-                resolve(); //immediately because there is noting to load
             });
         },
         /** Starts playback at the current position
