@@ -624,6 +624,7 @@ export default defineComponent({
                     this.isClickToLoadRequired = false;
                     this.play();
                 });
+                return;
             }
             if (!this.playing) {
                 if (!this.isPlayingRequestOutstanding) {
