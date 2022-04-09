@@ -154,9 +154,9 @@ export default defineComponent({
          */
         isPlayingRequestOutstanding: false,
 
-        /** Flags, whether a user click event is required to load the track media file
-         * @remarks When true, shows a button to capture the click event
-         * @remarks This is currenlty required on iOS devices, because they only load data upon explicit user request.
+        /** Flags, whether a user click event is required to further load the track media file data after the metadata was successfully loaded
+         * @remarks When true, handling of a subsequent play action must first invoke a load operation.
+         * @remarks This specific handling is currenlty required on (some?) iOS devices, because they only load data upon explicit user interaction.
          */
         isClickToLoadRequired: false,
 
