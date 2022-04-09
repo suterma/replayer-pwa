@@ -593,11 +593,13 @@ export default defineComponent({
                 const readyState = this.audioElement.readyState;
                 if (
                     readyState < HTMLMediaElement.HAVE_CURRENT_DATA &&
-                    !this.loaded &&
                     //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
                     //most probably due to load restriction on an iOS device.
                     this.audioElement.buffered.length === 0
                 ) {
+                    console.debug(
+                        `TrackAudioApiPlayer(${this.title})::loadAfterClick:load-with-handler`,
+                    );
                     //Further loading should be triggered now,
                     //then once load has succeeded and the track becomes playable,
                     //resolve the promise
@@ -622,6 +624,10 @@ export default defineComponent({
                     // };
                     this.audioElement.load();
                 } else {
+                    console.debug(
+                        `TrackAudioApiPlayer(${this.title})::loadAfterClick:resolve-immediately`,
+                    );
+
                     resolve(); //immediately because there is nothing required to load
                 }
             });
