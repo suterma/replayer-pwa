@@ -53,7 +53,7 @@
                     v-if="mediaObjectUrl"
                     ref="playerReference"
                     :title="this.track?.Name"
-                    :src="optimizedMediaObjectUrl"
+                    :mediaUrl="optimizedMediaObjectUrl"
                     @timeupdate="updateTime"
                     @trackLoaded="calculateCueDurations"
                     @trackPlaying="updatePlaying"
@@ -173,7 +173,10 @@ export default defineComponent({
         //If it's mounted as already the active track, show expanded already
         //(unfortunately the watcher only handles changes after mounted)
         if (this.isActiveTrack) {
-            console.debug('Track::mounted:isActiveTrack:' + this.track?.Name);
+            console.debug(
+                `Track(${this.track.Name})::mounted:isActiveTrack:` +
+                    this.track?.Name,
+            );
 
             this.updateExpanded(true);
         }
@@ -298,7 +301,10 @@ export default defineComponent({
 
             //Let the DOM update first, to have proper height handling when items get added late on
             this.$nextTick(() => {
-                console.debug('Track::updateExpanded:value:', value);
+                console.debug(
+                    `Track(${this.track.Name})::updateExpanded:value:`,
+                    value,
+                );
                 this.expanded = value;
                 this.$emit('update:expanded', value);
             });
@@ -307,7 +313,7 @@ export default defineComponent({
          * @devdoc Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
          */
         cueClick(cue: ICue) {
-            console.debug('Track::cueClick:cue:', cue);
+            console.debug(`Track(${this.track.Name})::cueClick:cue:`, cue);
             if (cue.Time != null) {
                 //Update the selected cue to this cue
                 this.$store.commit(
@@ -328,7 +334,7 @@ export default defineComponent({
          * @devdoc Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
          */
         cuePlay(cue: ICue) {
-            console.debug('Track::cueClick:cue:', cue);
+            console.debug(`Track(${this.track.Name})::cueClick:cue:`, cue);
             if (cue.Time != null) {
                 //Update the selected cue to this cue
                 this.$store.commit(
@@ -368,7 +374,7 @@ export default defineComponent({
          * @devdoc The calculated durations are only valid as long as the cues, their times, and the track does not change */
         calculateCueDurations(trackDurationSeconds: number) {
             console.debug(
-                `Track(${this.title})::calculateCueDurations:trackDurationSeconds:` +
+                `Track(${this.track.Name})::calculateCueDurations:trackDurationSeconds:` +
                     trackDurationSeconds,
             );
             this.isTrackLoaded = true;
@@ -380,7 +386,9 @@ export default defineComponent({
         },
         /** Updates the playing flag from the associated player event */
         updatePlaying(value: boolean) {
-            console.debug('Track::updatePlaying:value:' + value);
+            console.debug(
+                `Track(${this.track.Name})::updatePlaying:value:` + value,
+            );
             this.isPlaying = value;
         },
     },
@@ -392,7 +400,7 @@ export default defineComponent({
            @remarks Always show newly active tracks as expanded
          */
         isActiveTrack(val, oldVal) {
-            console.debug('Track::isActiveTrack:val:', val);
+            console.debug(`Track(${this.track.Name})::isActiveTrack:val:`, val);
             //Pause no more active track
             if (oldVal === true && val === false) {
                 this.trackPlayerInstance?.pause();
@@ -407,7 +415,7 @@ export default defineComponent({
          * @remarks This activates the wake lock, when playing starts.
          */
         isPlaying(val) {
-            console.debug('Track::isPlaying:val:', val);
+            console.debug(`Track(${this.track.Name})::isPlaying:val:`, val);
             if (val) {
                 this.activateWakeLock();
             }
@@ -416,7 +424,10 @@ export default defineComponent({
          * @remarks This deactivates the wake lock, when collapsed. It activates it back, when expanded while already playing.
          */
         expanded(expanded) {
-            console.debug('Track::expanded:expanded:', expanded);
+            console.debug(
+                `Track(${this.track.Name})::expanded:expanded:`,
+                expanded,
+            );
             if (!expanded) {
                 this.deactivateWakeLock();
             }

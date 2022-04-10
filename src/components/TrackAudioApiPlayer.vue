@@ -64,15 +64,16 @@ export default defineComponent({
 
     emits: ['timeupdate', 'trackLoaded', 'trackPlaying', 'newCueTriggered'],
     props: {
+        /** The title of the track */
         title: {
             type: String,
             default: '',
             required: false,
         },
-        /** The media file resource URL
+        /** The media file URL
          * @remark This URL can point to an online resource or be a local object URL
          */
-        src: {
+        mediaUrl: {
             type: String,
             default: '',
             required: false,
@@ -168,7 +169,7 @@ export default defineComponent({
      */
     created() {
         console.debug(
-            `TrackAudioApiPlayer(${this.title})::created:src:${this.src} for title ${this.title}`,
+            `TrackAudioApiPlayer(${this.title})::created:mediaUrl:${this.mediaUrl} for title ${this.title}`,
         );
 
         //Preparing the audio element
@@ -263,7 +264,7 @@ export default defineComponent({
         //Last, update the souce, if already available
         this.audioElement.preload = 'auto';
         //this.audioElement.preload = 'metadata';
-        this.updateSource(this.src);
+        this.updateSource(this.mediaUrl);
     },
     /** Handles the teardown of the audio graph outside the mounted lifespan.
      * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
@@ -277,7 +278,7 @@ export default defineComponent({
         //properly destroy the audio element and the audio context
         this.playing = false;
         this.audioElement.pause();
-        this.audioElement.removeAttribute('src'); // empty source
+        this.audioElement.removeAttribute('src'); // empty resource
         this.audioElement.remove();
 
         //TODO later remove: The audio context is currently not used
@@ -340,33 +341,33 @@ export default defineComponent({
             //because automatic looping is not supported with the used HTMLAudioEleemnt.
             //This is solved in this component by observing the recurring time updates.
         },
-        /** Watch whether the source changed, and then update the audio element accordingly  */
-        src(): void {
+        /** Watch whether the media URL property changed, and then update the audio element accordingly  */
+        mediaUrl(): void {
             console.debug(
-                `TrackAudioApiPlayer(${this.title})::src:${this.src}`,
+                `TrackAudioApiPlayer(${this.title})::mediaUrl:${this.mediaUrl}`,
             );
-            this.updateSource(this.src);
+            this.updateSource(this.mediaUrl);
             this.fader.cancel();
         },
     },
     methods: {
-        /** Updates the audio element source with the media source, if it's available $
-         * @devdoc To be used only privately. To change the source from the outside, use the src prop.
+        /** Updates the audio element source with the media source, if it's available
+         * @devdoc To be used only privately. To change the source from the outside, use the mediaUrl property.
          */
-        updateSource(src: string): void {
+        updateSource(mediaUrl: string): void {
             //Only start loading the element, when a source is actually available
             //Otherwise the element throws an avoidable error
             console.debug(
-                `TrackAudioApiPlayer(${this.title})::updateSource:${src}`,
+                `TrackAudioApiPlayer(${this.title})::updateSource:${mediaUrl}`,
             );
-            if (src) {
-                this.audioElement.src = src;
+            if (mediaUrl) {
+                this.audioElement.src = mediaUrl;
             }
         },
         download() {
             console.debug(`TrackAudioApiPlayer(${this.title})::download`);
             this.stop();
-            window.open(this.src, 'download');
+            window.open(this.mediaUrl, 'download');
         },
         loadMetadata(): void {
             const readyState = this.audioElement.readyState;
