@@ -11,7 +11,7 @@
         v-model:currentSeconds="this.currentSeconds"
         @seek="seekToSeconds"
         :durationSeconds="this.durationSeconds"
-        :source="this.source"
+        :sourceDescription="this.sourceDescription"
         :error="this.mediaError"
     />
     <PlayerChrome
@@ -32,7 +32,7 @@
         @seek="seekToSeconds"
         :durationSeconds="this.durationSeconds"
         @download="this.download"
-        :source="this.source"
+        :sourceDescription="this.sourceDescription"
         :error="this.mediaError"
     />
     <!-- <button v-if="isClickToLoadRequired" @click="this.play()">
@@ -108,7 +108,7 @@ export default defineComponent({
         /** The track source description
          * @remarks This is a textual indication of the track media source. It's displayed as part of the timing display
          */
-        source: {
+        sourceDescription: {
             type: String,
             default: '',
         },
