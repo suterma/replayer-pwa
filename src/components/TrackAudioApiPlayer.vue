@@ -62,7 +62,12 @@ export default defineComponent({
     components: { PlayerChrome, CueTrigger },
     mixins: [settingsMixin],
 
-    emits: ['timeupdate', 'trackLoaded', 'trackPlaying', 'newCueTriggered'],
+    emits: [
+        'timeupdate',
+        'trackLoaded',
+        'trackPlaying',
+        /* Do not add newCueTriggered here, to let it just get passed up */
+    ],
     props: {
         /** The title of the track */
         title: {
