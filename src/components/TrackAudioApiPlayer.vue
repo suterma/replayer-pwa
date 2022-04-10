@@ -2,7 +2,7 @@
     <CueTrigger
         v-if="isEditable"
         :title="title"
-        :loaded="this.loaded"
+        :loaded="this.hasLoadedData"
         :isFading="this.isFading"
         :playing="this.playing"
         @pause="pause"
@@ -17,7 +17,7 @@
     <PlayerChrome
         v-else
         :title="title"
-        :loaded="this.loaded"
+        :loaded="this.hasLoadedData"
         :isFading="this.isFading"
         :playing="this.playing"
         @stop="stop"
@@ -35,9 +35,6 @@
         :sourceDescription="this.sourceDescription"
         :error="this.mediaError"
     />
-    <!-- <button v-if="isClickToLoadRequired" @click="this.play()">
-        Click to load track
-    </button> -->
 </template>
 
 <script lang="ts">
@@ -61,7 +58,6 @@ export default defineComponent({
     name: 'TrackAudioApiPlayer',
     components: { PlayerChrome, CueTrigger },
     mixins: [settingsMixin],
-
     emits: [
         'timeupdate',
         'trackLoaded',
@@ -83,7 +79,7 @@ export default defineComponent({
             default: '',
             required: false,
         },
-        /** Whether this component show editable inputs for the contained data
+        /** Whether this component shows editable inputs for the contained data
          * @devdoc Allows to reuse this component for more than one DisplayMode.
          */
         isEditable: {
@@ -130,11 +126,11 @@ export default defineComponent({
          * @remarks This implies that metadata also has been loaded already
          * @devdoc see HAVE_CURRENT_DATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
          */
-        loaded: false,
+        hasLoadedData: false,
         /** Whether the media metadata has loaded. Duration is available now.
          * @devdoc see HAVE_METADATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
          */
-        loadedMetadata: false,
+        hasLoadedMetadata: false,
         mediaError: null as MediaError | null,
         /** Whether the audio is currently fading */
         isFading: false,
@@ -156,13 +152,16 @@ export default defineComponent({
         audioElement: document.createElement('audio'),
         /** Flags, whether a playing request is currently outstanding. This is true after a play request was received, for as long
          * as playback has not yet started.
+         * @remaks This is not equal to deferred loading with the isClickToLoadRequired flag.
          * @devdoc See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted for more information
          */
         isPlayingRequestOutstanding: false,
 
-        /** Flags, whether a user click event is required to further load the track media file data after the metadata was successfully loaded
-         * @remarks When true, handling of a subsequent play action must first invoke a load operation.
-         * @remarks This specific handling is currenlty required on (some?) iOS devices, because they only load data upon explicit user interaction.
+        /** Flags, whether deferred loading (until a user play click event is handeled)
+         * is required to further load the track media file data. The flag may be set once after the metadata was successfully loaded.
+         * @remarks When true, handling of a subsequent play action must first invoke a user-triggered load operation.
+         * @remarks This specific handling is currenlty required on (some?) iOS devices,
+         * because they only load data upon explicit user interaction.
          */
         isClickToLoadRequired: false,
 
@@ -181,8 +180,8 @@ export default defineComponent({
 
         //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
         this.audioElement.ontimeupdate = this.updateTime;
-        this.audioElement.onloadeddata = this.load;
-        this.audioElement.onloadedmetadata = this.loadMetadata;
+        this.audioElement.onloadeddata = this.handleLoadedData;
+        this.audioElement.onloadedmetadata = this.handleLoadedMetadata;
         this.audioElement.onerror = () => {
             this.mediaError = this.audioElement?.error;
             console.log(
@@ -193,51 +192,30 @@ export default defineComponent({
             );
         };
         this.audioElement.onabort = () => {
-            console.debug(`TrackAudioApiPlayer(${this.title})::abort`);
+            this.debugLog(`onabort`);
         };
         this.audioElement.oncanplay = (event) => {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::oncanplay`,
-                event,
-            );
+            this.debugLog(`oncanplay`, event);
         };
         this.audioElement.oncanplaythrough = (event) => {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::oncanplaythrough`,
-                event,
-            );
+            this.debugLog(`oncanplaythrough`, event);
         };
         this.audioElement.onloadstart = (event) => {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::onloadstart`,
-                event,
-            );
+            this.debugLog(`onloadstart`, event);
         };
         /** The progress event is fired periodically as the browser loads a resource.
          */
         this.audioElement.onprogress = (event) => {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::onprogress`,
-                event,
-            );
+            this.debugLog(`onprogress`, event);
         };
         this.audioElement.onstalled = (event) => {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::onstalled`,
-                event,
-            );
+            this.debugLog(`onstalled`, event);
         };
         this.audioElement.onsuspend = (event) => {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::onsuspend `,
-                event,
-            );
+            this.debugLog(`onsuspend `, event);
         };
         this.audioElement.ondurationchange = (event) => {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::ondurationchange `,
-                event,
-            );
+            this.debugLog(`ondurationchange `, event);
         };
         this.audioElement.onpause = () => {
             this.playing = false;
@@ -247,7 +225,7 @@ export default defineComponent({
 
             //NOTE: Having the fade-in operation to start here, instead of after the thenable play action
             //ensures, that a fade operation is applied without any audible delay.
-            console.debug('Playback started');
+            this.debugLog('Playback started');
             this.$emit('trackPlaying', true);
             this.isFading = true;
             this.fader.fadeIn().then(() => {
@@ -269,16 +247,13 @@ export default defineComponent({
         //Last, update the souce, if already available
         this.audioElement.preload = 'auto';
         //this.audioElement.preload = 'metadata';
-        this.updateSource(this.mediaUrl);
+        this.updateMediaSource(this.mediaUrl);
     },
     /** Handles the teardown of the audio graph outside the mounted lifespan.
      * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
      */
     unmounted() {
-        console.debug(
-            `TrackAudioApiPlayer(${this.title})::unmounted:`,
-            this.title,
-        );
+        this.debugLog(`unmounted:`, this.title);
 
         //properly destroy the audio element and the audio context
         this.playing = false;
@@ -316,8 +291,8 @@ export default defineComponent({
          */
         audioFaderSettingsToken(): void {
             if (this.fader) {
-                console.debug(
-                    `TrackAudioApiPlayer(${this.title})::audioFaderSettingsToken:${this.audioFaderSettingsToken}`,
+                this.debugLog(
+                    `audioFaderSettingsToken:${this.audioFaderSettingsToken}`,
                 );
 
                 const newSettings = this.getSettings;
@@ -330,16 +305,12 @@ export default defineComponent({
         },
         /** Watch whether the volume changed, and then update the audio element accordingly  */
         volume(): void {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::volume:${this.volume}`,
-            );
+            this.debugLog(`volume:${this.volume}`);
             this.audioElement.volume = this.volume / 100;
         },
         /** Watch whether the playbackMode changed, and then update the audio element accordingly  */
         playbackMode(): void {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::playbackMode:${this.playbackMode}`,
-            );
+            this.debugLog(`playbackMode:${this.playbackMode}`);
             this.audioElement.loop =
                 this.playbackMode === PlaybackMode.LoopTrack;
             //HINT: For the cue loop, an explicit implementation is required,
@@ -348,56 +319,63 @@ export default defineComponent({
         },
         /** Watch whether the media URL property changed, and then update the audio element accordingly  */
         mediaUrl(): void {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::mediaUrl:${this.mediaUrl}`,
-            );
-            this.updateSource(this.mediaUrl);
+            this.debugLog(`mediaUrl:${this.mediaUrl}`);
+            this.updateMediaSource(this.mediaUrl);
             this.fader.cancel();
         },
     },
     methods: {
+        /** Writes a debug log message message for this component */
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        debugLog(message: string, ...optionalParams: any[]): void {
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::${message}:`,
+                optionalParams,
+            );
+        },
         /** Updates the audio element source with the media source, if it's available
          * @devdoc To be used only privately. To change the source from the outside, use the mediaUrl property.
          */
-        updateSource(mediaUrl: string): void {
+        updateMediaSource(mediaUrl: string): void {
             //Only start loading the element, when a source is actually available
             //Otherwise the element throws an avoidable error
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::updateSource:${mediaUrl}`,
-            );
+            this.debugLog(`UpdateMediaSource:${mediaUrl}`);
             if (mediaUrl) {
                 this.audioElement.src = mediaUrl;
             }
         },
         download() {
-            console.debug(`TrackAudioApiPlayer(${this.title})::download`);
+            this.debugLog(`download`);
             this.stop();
             window.open(this.mediaUrl, 'download');
         },
-        loadMetadata(): void {
+        handleLoadedMetadata(): void {
             const readyState = this.audioElement.readyState;
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::loadMetadata:readyState:${readyState}`,
-            );
+            this.debugLog(`handleLoadedMetadata:readyState:${readyState}`);
 
             this.handleReadyState(readyState);
         },
-        load(): void {
+        /** Handles the load event of the audio element
+         * @remarks Since loading is usually in progress now, this also resets the isClickToLoadRequired flag, unless
+         * it is specifically detected, that further loading needs to be triggered
+         */
+        handleLoadedData(): void {
             this.isClickToLoadRequired = false;
             const readyState = this.audioElement.readyState;
 
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::load:readyState:${readyState}`,
-            );
+            this.debugLog(`handleLoadedData:readyState:${readyState}`);
             this.handleReadyState(readyState);
         },
 
+        /** Handles the current ready state of the audio element's media, with regard to playability
+         * @remarks Decides, whether deferred loading is required.
+         */
         handleReadyState(readyState: number) {
             //Enough of the media resource has been retrieved that the metadata attributes are initialized?
             if (readyState >= HTMLMediaElement.HAVE_METADATA) {
-                if (!this.loadedMetadata && !this.loaded) {
-                    this.loadedMetadata = true;
-                    this.loaded = true;
+                if (!this.hasLoadedMetadata && !this.hasLoadedData) {
+                    this.hasLoadedMetadata = true;
+                    this.hasLoadedData = true;
                     this.durationSeconds = this.audioElement.duration;
 
                     this.$emit('trackLoaded', this.durationSeconds);
@@ -410,33 +388,31 @@ export default defineComponent({
                 }
             }
 
-            //TODO Fix for iOS not loading without explicit user interaction:
-            //Offer a dedicated load button when
-            //The state is at HAVE_METADATA and loading is suspended
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::handleReadyState:buffered:`,
+            //Special flag handling, when not  automatically loading further now
+            this.debugLog(
+                `handleReadyState:buffered:`,
                 this.audioElement.buffered,
             );
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::handleReadyState:networkState:${this.audioElement.networkState}`,
+            this.debugLog(
+                `handleReadyState:networkState:${this.audioElement.networkState}`,
             );
 
             //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
             //most probably due to load restriction on an iOS device.
-            //Show a request to load button
             if (this.audioElement.buffered.length === 0) {
+                //The isClickToLoadRequired flag defers further media loading until the next user's explicit play request
                 this.isClickToLoadRequired = true;
             }
         },
 
         mute() {
-            console.debug(`TrackAudioApiPlayer(${this.title})::mute`);
+            this.debugLog(`mute`);
             this.isMuted = !this.isMuted;
             this.audioElement.muted = this.isMuted;
         },
         seekByClick(e: MouseEvent) {
-            console.debug(`TrackAudioApiPlayer(${this.title})::seekByClick`, e);
-            if (!this.loadedMetadata) return;
+            this.debugLog(`seekByClick`, e);
+            if (!this.hasLoadedMetadata) return;
 
             const bounds = (e.target as HTMLDivElement).getBoundingClientRect();
             const seekPos = (e.clientX - bounds.left) / bounds.width;
@@ -445,16 +421,13 @@ export default defineComponent({
                 this.audioElement.duration * seekPos;
         },
         seekToSeconds(seconds: number) {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::seekToSeconds`,
-                seconds,
-            );
-            if (!this.loadedMetadata) return;
+            this.debugLog(`seekToSeconds`, seconds);
+            if (!this.hasLoadedMetadata) return;
 
             this.audioElement.currentTime = seconds;
         },
         stop() {
-            console.debug(`TrackAudioApiPlayer(${this.title})::stop`);
+            this.debugLog(`stop`);
             //If it's still playing (e.g. during a fade operation, stil immediately stop)
             if (!this.audioElement.paused) {
                 this.audioElement.pause();
@@ -466,7 +439,7 @@ export default defineComponent({
             this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, undefined);
         },
         togglePlayback() {
-            console.debug(`TrackAudioApiPlayer(${this.title})::togglePlayback`);
+            this.debugLog(`togglePlayback`);
             if (this.playing) {
                 this.pause();
             } else {
@@ -475,37 +448,27 @@ export default defineComponent({
         },
         /** Rewinds 1 second */
         rewindOneSecond() {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::rewindOneSecond`,
-            );
+            this.debugLog(`rewindOneSecond`);
             const time = this.audioElement.currentTime;
             this.audioElement.currentTime = time - 1;
         },
         /** Forwards 1 second */
         forwardOneSecond() {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::forwardOneSecond`,
-            );
+            this.debugLog(`forwardOneSecond`);
             const time = this.audioElement.currentTime;
             this.audioElement.currentTime = time + 1;
         },
         volumeDown() {
             this.volume = this.volume * 0.71;
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::volumeDown`,
-                this.volume,
-            );
+            this.debugLog(`volumeDown`, this.volume);
         },
         volumeUp() {
             this.volume = Math.min(this.volume * 1.41, 100);
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::volumeUp`,
-                this.volume,
-            );
+            this.debugLog(`volumeUp`, this.volume);
         },
         /** Pauses playback */
         pause(): void {
-            console.debug(`TrackAudioApiPlayer(${this.title})::pause`);
+            this.debugLog(`pause`);
             if (this.playing) {
                 this.isFading = true;
                 this.fader.fadeOut().then(() => {
@@ -517,7 +480,7 @@ export default defineComponent({
         },
         /** Pauses playback (with a subsequent seek operation) */
         pauseAndSeekTo(position: number): void {
-            console.debug(`TrackAudioApiPlayer(${this.title})::pauseAndSeekTo`);
+            this.debugLog(`pauseAndSeekTo`);
 
             this.isFading = true;
             this.fader.fadeOut().then(() => {
@@ -557,8 +520,8 @@ export default defineComponent({
                     this.seekTo(this.loopStart);
 
                     if (isAtTrackEnd) {
-                        console.debug(
-                            `TrackAudioApiPlayer(${this.title})::handleCueLoop:loopEnd:${this.loopEnd};durationSeconds:${this.durationSeconds}`,
+                        this.debugLog(
+                            `loopEnd:${this.loopEnd};durationSeconds:${this.durationSeconds}`,
                         );
                         //At the end of the track, a seek operation alone would not be enough to continue the loop
                         //if playback already has ended (when the safety margin from above was too small)
@@ -593,7 +556,7 @@ export default defineComponent({
 
         /** If not yet loaded, loads the media, then when it's playable, resolves. */
         loadAfterClick(): Promise<void> {
-            console.debug(`TrackAudioApiPlayer(${this.title})::loadAfterClick`);
+            this.debugLog(`loadAfterClick`);
             return new Promise((resolve) => {
                 //Is further loading required?
                 const readyState = this.audioElement.readyState;
@@ -603,53 +566,34 @@ export default defineComponent({
                     //most probably due to load restriction on an iOS device.
                     this.audioElement.buffered.length === 0
                 ) {
-                    console.debug(
-                        `TrackAudioApiPlayer(${this.title})::loadAfterClick:load-with-handler`,
-                    );
-                    //Further loading should be triggered now,
-                    //then once load has succeeded and the track becomes playable,
-                    //resolve the promise
+                    this.debugLog(`loadAfterClick:load-with-handler`);
+                    //Trigger and observe further loading
                     this.audioElement.addEventListener(
                         'canplay',
                         (event) => {
-                            console.debug(
-                                `TrackAudioApiPlayer(${this.title})::loadAfterClick:oncanplay`,
-                                event,
-                            );
+                            this.debugLog(`loadAfterClick:oncanplay`, event);
                             resolve(); //to play now
                         },
                         { once: true },
                     );
-                    // this.audioElement.oncanplay = (event) => {
-                    //     console.debug(
-                    //         `TrackAudioApiPlayer(${this.title})::loadAfterClick:oncanplay`,
-                    //         event,
-                    //     );
-                    //     resolve(); //to play now
-                    //     return;
-                    // };
                     this.audioElement.load();
                 } else {
-                    console.debug(
-                        `TrackAudioApiPlayer(${this.title})::loadAfterClick:resolve-immediately`,
-                    );
+                    this.debugLog(`loadAfterClick:resolve-immediately`);
 
                     resolve(); //immediately because there is nothing required to load
                 }
             });
         },
         /** Starts playback at the current position
+         * @remarks Asserts (and if necessary) resolves the playability of the track media
          */
         play(): void {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::play:isClickToLoadRequired${this.isClickToLoadRequired}`,
+            this.debugLog(
+                `play:isClickToLoadRequired${this.isClickToLoadRequired}`,
             );
-            //TODO test this on iOS and MacOS Devices
             if (this.isClickToLoadRequired) {
                 this.loadAfterClick().then(() => {
-                    console.debug(
-                        `TrackAudioApiPlayer(${this.title})::loadAfterClick-then`,
-                    );
+                    this.debugLog(`loadAfterClick-then`);
 
                     this.isClickToLoadRequired = false;
                     this.play();
@@ -692,21 +636,17 @@ export default defineComponent({
             const time = this.audioElement.currentTime;
             const offset = this.settings.fadeInDuration / 1000;
             const target = time - offset;
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::applyPreFadeInOffset:by:${this.fadeInDuration};from time:${time}; to target:${target}`,
+            this.debugLog(
+                `applyPreFadeInOffset:by:${this.fadeInDuration};from time:${time}; to target:${target}`,
             );
             this.audioElement.currentTime = target;
         },
 
         /** Transports (seeks) the playback to the given temporal position */
         seekTo(position: number): void {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::seekTo:position`,
-                position,
-            );
+            this.debugLog(`seekTo:position`, position);
             this.audioElement.currentTime = position;
         },
     },
 });
 </script>
-<style scoped></style>
