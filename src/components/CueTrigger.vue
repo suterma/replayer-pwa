@@ -7,13 +7,13 @@
                 class="button is-fullwidth is-danger is-static is-outlined"
             >
                 <LongLine
-                    :text="`Error ${errorText} occurred when using ${source}`"
+                    :text="`Error ${errorText} occurred when using ${sourceDescription}`"
                     :hasProgress="false"
                 />
             </button>
             <button v-else disabled class="button is-fullwidth">
                 <LongLine
-                    :text="`Loading ${source}`"
+                    :text="`Loading ${sourceDescription}`"
                     :hasProgress="true"
                     :clipLeft="true"
                 />
@@ -54,7 +54,7 @@
                 <PlayerTime
                     :isFading="this.isFading"
                     :isPlaying="this.playing"
-                    :source="this.source"
+                    :sourceDescription="this.sourceDescription"
                     :duration="this.durationSeconds"
                     :position="this.currentSeconds"
                 />
@@ -155,7 +155,7 @@ export default defineComponent({
         /** The track source description
          * @remarks This is a textual indication of the track media source. It's displayed as part of the timing display
          */
-        source: {
+        sourceDescription: {
             type: String,
             default: '',
         },

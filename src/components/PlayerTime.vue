@@ -17,7 +17,7 @@
         <div
             class="has-opacity-half player-source-indication is-clipped has-left-ellipsis is-single-line is-hidden-touch"
         >
-            {{ source }}
+            {{ sourceDescription }}
         </div>
         <div class="player-time-total">
             <span v-if="this.isMobile">{{ durationDisplayTimeShort }}</span>
@@ -63,7 +63,7 @@ export default defineComponent({
         /** The track source description
          * @remarks This is a textual indication of the track media source. It's displayed as part of the timing display
          */
-        source: {
+        sourceDescription: {
             type: String,
             default: '',
         },
