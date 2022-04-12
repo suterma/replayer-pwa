@@ -7,6 +7,7 @@
             @keydown.prevent.enter="acceptValue()"
             @keydown.prevent.escape="revertValue()"
         />
+        <!-- //TODO later, also support other input types than just simple text -->
         <input
             v-if="editMode"
             v-focus
@@ -15,6 +16,7 @@
             @input="$emit('update:modelValue', $event.target.value)"
             @blur="acceptValue()"
             type="text"
+            inputmode="text"
             :placeholder="placeholder"
             tabindex="0"
         />

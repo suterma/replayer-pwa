@@ -75,6 +75,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                         <input
                             class="input"
                             type="url"
+                            inputmode="url"
                             v-model="url"
                             placeholder="Paste an URL"
                             size="60"

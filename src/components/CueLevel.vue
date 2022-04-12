@@ -25,6 +25,7 @@
                                 ref="cueDescription"
                                 class="input"
                                 type="text"
+                                inputmode="text"
                                 v-model="cueData.Description"
                                 @change="updateDescription($event.target.value)"
                                 :placeholder="cuePlaceholder"
@@ -48,6 +49,7 @@
                             <input
                                 class="input"
                                 type="number"
+                                inputmode="decimal"
                                 step="0.1"
                                 v-model="cueData.Time"
                                 @change="updateTime($event.target.value)"
@@ -64,6 +66,7 @@
                             <input
                                 class="input"
                                 type="number"
+                                inputmode="decimal"
                                 step="0.1"
                                 v-model="cueData.Time"
                                 @change="updateTime($event.target.value)"
@@ -98,6 +101,7 @@
                             <input
                                 class="input"
                                 type="text"
+                                inputmode="numeric"
                                 v-model="cueData.Shortcut"
                                 @change="updateShortcut($event.target.value)"
                                 placeholder="shortcut"

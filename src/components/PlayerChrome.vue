@@ -139,6 +139,7 @@
                     v-if="showVolume"
                     class="player-volume"
                     type="range"
+                    inputmode="numeric"
                     min="0"
                     max="100"
                     @change="
