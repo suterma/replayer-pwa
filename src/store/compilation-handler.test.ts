@@ -37,9 +37,9 @@ describe('CompilationHandler.ts', () => {
 
         //Assert
         //The order should be unchanged
-        expect(sortedMediaBlobs[0].fileName).toEqual('first.name');
-        expect(sortedMediaBlobs[1].fileName).toEqual('second.name');
-        expect(sortedMediaBlobs[2].fileName).toEqual('third.name');
+        expect(sortedMediaBlobs[0].fileName).toBe('first.name');
+        expect(sortedMediaBlobs[1].fileName).toBe('second.name');
+        expect(sortedMediaBlobs[2].fileName).toBe('third.name');
     });
     it('should not sort the blobs when no name is given', async () => {
         //Arrange
@@ -52,9 +52,9 @@ describe('CompilationHandler.ts', () => {
 
         //Assert
         //The order should be unchanged
-        expect(sortedMediaBlobs[0].fileName).toEqual('first.name');
-        expect(sortedMediaBlobs[1].fileName).toEqual('second.name');
-        expect(sortedMediaBlobs[2].fileName).toEqual('third.name');
+        expect(sortedMediaBlobs[0].fileName).toBe('first.name');
+        expect(sortedMediaBlobs[1].fileName).toBe('second.name');
+        expect(sortedMediaBlobs[2].fileName).toBe('third.name');
     });
     it('should sort the blobs in order for the given track name', async () => {
         //Arrange
@@ -66,7 +66,7 @@ describe('CompilationHandler.ts', () => {
         );
 
         //Assert
-        expect(sortedMediaBlobs[0].fileName).toEqual('third.name');
+        expect(sortedMediaBlobs[0].fileName).toBe('third.name');
     });
     it('should sort the blobs in order for the given second track name', async () => {
         //Arrange
@@ -78,7 +78,7 @@ describe('CompilationHandler.ts', () => {
         );
 
         //Assert
-        expect(sortedMediaBlobs[0].fileName).toEqual('second.name');
+        expect(sortedMediaBlobs[0].fileName).toBe('second.name');
     });
     it('should sort the blobs in order for the given ending track name', async () => {
         //Arrange
@@ -90,7 +90,7 @@ describe('CompilationHandler.ts', () => {
         );
 
         //Assert
-        expect(sortedMediaBlobs[0].fileName).toEqual('third.name');
+        expect(sortedMediaBlobs[0].fileName).toBe('third.name');
     });
 
     it('should sort the blobs in order for the given distorted track name', async () => {
@@ -103,14 +103,14 @@ describe('CompilationHandler.ts', () => {
         );
 
         //Assert
-        expect(sortedMediaBlobs[0].fileName).toEqual('third.name');
+        expect(sortedMediaBlobs[0].fileName).toBe('third.name');
     });
 
     it('should resolve mixed case for lazy conversion', async () => {
         //Arrange
 
         //Act
-        var actual = CompilationHandler.getLazyFileName('SomeName');
+        const actual = CompilationHandler.getLazyFileName('SomeName');
 
         //Assert
         expect(actual).toEqual(CompilationHandler.getLazyFileName('somename'));
@@ -119,16 +119,18 @@ describe('CompilationHandler.ts', () => {
         //Arrange
 
         //Act
-        var actual = CompilationHandler.getLazyFileName('Some\rName');
+        const actual = CompilationHandler.getLazyFileName('Some\rName');
 
         //Assert
         expect(actual).toEqual(CompilationHandler.getLazyFileName('SOMEname'));
     });
-    it('should resolve non-printable characters for lazy conversion', async () => {
+    it('should resolve other non-printable characters for lazy conversion', async () => {
         //Arrange
 
         //Act
-        var actual = CompilationHandler.getLazyFileName('01 OuvertБre_pb.mp3');
+        const actual = CompilationHandler.getLazyFileName(
+            '01 OuvertБre_pb.mp3',
+        );
 
         //Assert
         expect(actual).toEqual(
