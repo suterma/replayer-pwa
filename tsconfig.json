@@ -10,6 +10,7 @@
         "experimentalDecorators": true,
         "skipLibCheck": true,
         "allowSyntheticDefaultImports": true,
+        "noUncheckedIndexedAccess": true,
         "sourceMap": true,
         "noUnusedParameters": true,
         "strictNullChecks": true,
