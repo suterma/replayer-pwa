@@ -25,9 +25,7 @@ describe('CompilationLoader.vue', () => {
         (URL.createObjectURL as unknown as jest.Mock).mockReset();
     });
 
-    //TODOadd mp3, wav, .wave flac, ogg, aiff,
-
-    it('should store an mp3 file as media file, and return an object url', async () => {
+    it('should store a media file, and return an object url', async () => {
         //Arrange
 
         const store = createStore({
@@ -83,13 +81,14 @@ describe('CompilationLoader.vue', () => {
                 plugins: [store],
             },
         });
-
-        const dataBase64 = 'VEhJUyBJUyBUSEUgQU5TV0VSCg==';
+        //Taken from https://github.com/mathiasbynens/small
+        const dataBase64 =
+            '/+MYxAAAAANIAAAAAExBTUUzLjk4LjIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
         const arrayBuffer = Uint8Array.from(window.atob(dataBase64), (c) =>
             c.charCodeAt(0),
         );
-        const file = new File([arrayBuffer], 'dummy.pdf', {
-            type: 'application/pdf',
+        const file = new File([arrayBuffer], 'mp3.mp3', {
+            type: 'audio/mpeg',
         });
 
         //Act
@@ -98,6 +97,7 @@ describe('CompilationLoader.vue', () => {
             new MediaBlob(file.name, file),
         );
 
+        //Assert
         expect(URL.createObjectURL).toHaveBeenCalledTimes(1);
 
         //Assert the free memory?
