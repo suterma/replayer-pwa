@@ -120,17 +120,6 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                 </div>
             </div>
         </Experimental>
-        <div v-if="isExpanded" class="level-item has-text-centered">
-            <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
-        </div>
-        <div
-            v-if="isExpanded"
-            class="level-item has-text-centered is-flex-grow-5 is-flex-shrink-1"
-        >
-            <button class="button" @click="loadDemo()">
-                <span>Try the demo</span>
-            </button>
-        </div>
     </div>
 </template>
 
@@ -193,17 +182,6 @@ export default defineComponent({
         isLoadingFromFile: false,
     }),
     methods: {
-        loadDemo() {
-            const url =
-                location.protocol +
-                '//' +
-                location.host +
-                location.pathname +
-                'demo-compilation-featuring-lidija-roos.rez';
-            console.debug('loadDemo:', url);
-
-            this.$store.dispatch(ActionTypes.LOAD_FROM_URL, url);
-        },
         openFile() {
             console.debug('MediaDropZone::openFile');
             (this.$refs.file as HTMLInputElement).click();

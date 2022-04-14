@@ -22,10 +22,25 @@
         <!-- v-click-outside seems not to work well with v-if -->
         <!-- Additionally, v-show seems not to work properly when used directly on the MediaDropZone-Element, thus it's applied to an extra div -->
         <div v-show="this.isEditMode || !hasCompilation">
-            <MediaDropZone
-                v-model:isExpanded="isMediaDropZoneExpanded"
-                v-click-outside="clickedOutside"
-            />
+            <div class="level media-loader">
+                <div class="level-item has-text-centered">
+                    <MediaDropZone
+                        v-model:isExpanded="isMediaDropZoneExpanded"
+                        v-click-outside="clickedOutside"
+                    />
+                </div>
+                <!-- Suggest the demo only when no compilation/track is shown -->
+                <template v-if="!hasCompilation">
+                    <div class="level-item has-text-centered">
+                        <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
+                    </div>
+                    <div class="level-item has-text-centered">
+                        <button class="button" @click="loadDemo()">
+                            <span>Try the demo</span>
+                        </button>
+                    </div>
+                </template>
+            </div>
         </div>
     </div>
     <div v-if="!hasCompilation" class="section pl-0 pr-0 content">
@@ -47,6 +62,7 @@ import Experimental from '@/components/Experimental.vue';
 import CompilationLoader from '@/components/CompilationLoader.vue';
 import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
+import { ActionTypes } from '@/store/action-types';
 
 /** A view for playing an existing compilation */
 export default defineComponent({
@@ -87,6 +103,17 @@ export default defineComponent({
         updateMediaDropZoneExpansion(expanded: boolean): void {
             this.isMediaDropZoneExpanded = expanded;
         },
+        loadDemo() {
+            const url =
+                location.protocol +
+                '//' +
+                location.host +
+                location.pathname +
+                'demo-compilation-featuring-lidija-roos.rez';
+            console.debug('loadDemo:', url);
+
+            this.$store.dispatch(ActionTypes.LOAD_FROM_URL, url);
+        },
     },
     computed: {
         compilation(): ICompilation {
@@ -111,8 +138,8 @@ export default defineComponent({
 });
 </script>
 <style lang="css" scoped>
-/** Add a margin at the top of the media drop zone level, to have a space between the tracks and the drop zone */
-.media-drop-zone {
+/** Add a margin at the top of the media loader level, to have a space between the tracks and the loader */
+.media-loader {
     margin-top: 1.5rem;
 }
 </style>
