@@ -132,11 +132,17 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
     }
     /** Persistently stores the selected cue Id for later retrieval
      * @devdoc The local storage is used for performance reasons here. No need to use the Indexed Db for small data
+     * @param cueId - The cue's identifier. Set to null, when no cue should be considered selected.
+     * @devdoc null values are simply stored as empty string, since null values are considered as not existing. Removing the key entirely
+     * would not improve the meaning in the context of the cue storage.
      */
-    static storeSelectedCueId(cueId: string): void {
-        localStorage.setItem(StorageKeys.SELECTED_CUE_ID, cueId);
+    static storeSelectedCueId(cueId: string | null): void {
+        localStorage.setItem(StorageKeys.SELECTED_CUE_ID, cueId ?? '');
     }
-    /** Retrieves the selected cue Id from the persistent store
+    /** Retrieves the selected cue Id from the persistent store.
+     * @devdoc null values are simply stored as empty string, since null values are considered as not existing. Removing the key entirely
+     * would not improve the meaning in the context of the cue storage.
+     * @remarks Returns the identifier or null if there was none or an empty one.
      * */
     static async retrieveSelectedCueId(): Promise<string> {
         return createPromise(() => {

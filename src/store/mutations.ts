@@ -128,26 +128,30 @@ export const mutations: MutationTree<State> & Mutations = {
     [MutationTypes.ADD_TRACK](state: State, track: ITrack) {
         console.debug('mutations::ADD_TRACK:', track);
 
-        let cueId;
-        if (track.Cues.length === 0) {
-            //Add a first cue first
+        //Use the fisrt cue, if it exists (and has an Id)
+        let firstCueId = track.Cues[0]?.Id;
+
+        if (!firstCueId) {
+            //Add a first cue
             const nextShortcut = CompilationHandler.getNextShortcut(
                 state.compilation as ICompilation,
             );
 
             const time = 0;
-            cueId = uuidv4();
-            const cue = new Cue('', nextShortcut.toString(), time, null, cueId);
-
+            firstCueId = uuidv4();
+            const cue = new Cue(
+                '',
+                nextShortcut.toString(),
+                time,
+                null,
+                firstCueId,
+            );
             track.Cues.push(cue);
-        } else {
-            cueId = track.Cues[0]?.Id;
         }
-
+        //Use the track, plus the cue as the selected cue
         state.compilation.Tracks.push(track);
-        state.selectedCueId = cueId;
-
-        PersistentStorage.storeSelectedCueId(cueId);
+        state.selectedCueId = firstCueId;
+        PersistentStorage.storeSelectedCueId(firstCueId);
         PersistentStorage.storeCompilation(state.compilation);
     },
 
@@ -239,7 +243,7 @@ export const mutations: MutationTree<State> & Mutations = {
         if (compilation) {
             const tracks = compilation.Tracks;
             const cues = tracks.flatMap((track) => track.Cues);
-            const firstCueId = cues[0]?.Id;
+            const firstCueId = cues[0]?.Id ?? null;
 
             state.selectedCueId = firstCueId;
             PersistentStorage.storeSelectedCueId(firstCueId);
@@ -355,8 +359,8 @@ export const mutations: MutationTree<State> & Mutations = {
             state.compilation.Tracks[targetIndex],
             state.compilation.Tracks[moveIndex],
         ] = [
-            state.compilation.Tracks[moveIndex],
-            state.compilation.Tracks[targetIndex],
+            state.compilation.Tracks[moveIndex] as ITrack,
+            state.compilation.Tracks[targetIndex] as ITrack,
         ];
         PersistentStorage.storeCompilation(state.compilation);
     },
@@ -373,8 +377,8 @@ export const mutations: MutationTree<State> & Mutations = {
             state.compilation.Tracks[targetIndex],
             state.compilation.Tracks[moveIndex],
         ] = [
-            state.compilation.Tracks[moveIndex],
-            state.compilation.Tracks[targetIndex],
+            state.compilation.Tracks[moveIndex] as ITrack,
+            state.compilation.Tracks[targetIndex] as ITrack,
         ];
         PersistentStorage.storeCompilation(state.compilation);
     },

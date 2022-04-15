@@ -14,8 +14,9 @@ interface IState {
 
     /** The currently selected cue Id.
      * @remarks This does not control the playback itself. It is intended for display purposes.
+     * @remarks Set to null, when no cue should be considered selected.
      */
-    selectedCueId: string;
+    selectedCueId: string | null;
 
     /** An application work message stack, used for progress indication
      * @remarks during ongoing work, the stack is non-empty

@@ -260,11 +260,15 @@ export default class CompilationParser {
         }
     }
 
-    /** Gets a single item from either an array, or just the single value */
+    /** Gets a single item from either an array, or just the single value
+     * @remarks The items of the array are expected to be all of the same type T.
+     */
     public static getSingle<T>(set: T | T[]): T {
-        return Array.isArray(set) ? set[0] : set;
+        return Array.isArray(set) ? (set[0] as T) : set;
     }
-    /** Gets a set of items from either an array, or just the single value */
+    /** Gets a set of items from either an array, or just the single value
+     * @remarks The items of the array are expected to be all of the same type T.
+     */
     public static getSet<T>(set: T | T[]): T[] {
         if (Array.isArray(set)) {
             return set;

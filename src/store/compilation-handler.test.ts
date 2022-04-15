@@ -37,9 +37,9 @@ describe('CompilationHandler.ts', () => {
 
         //Assert
         //The order should be unchanged
-        expect(sortedMediaBlobs[0].fileName).toBe('first.name');
-        expect(sortedMediaBlobs[1].fileName).toBe('second.name');
-        expect(sortedMediaBlobs[2].fileName).toBe('third.name');
+        expect(sortedMediaBlobs[0]?.fileName).toBe('first.name');
+        expect(sortedMediaBlobs[1]?.fileName).toBe('second.name');
+        expect(sortedMediaBlobs[2]?.fileName).toBe('third.name');
     });
     it('should not sort the blobs when no name is given', async () => {
         //Arrange
@@ -52,9 +52,9 @@ describe('CompilationHandler.ts', () => {
 
         //Assert
         //The order should be unchanged
-        expect(sortedMediaBlobs[0].fileName).toBe('first.name');
-        expect(sortedMediaBlobs[1].fileName).toBe('second.name');
-        expect(sortedMediaBlobs[2].fileName).toBe('third.name');
+        expect(sortedMediaBlobs[0]?.fileName).toBe('first.name');
+        expect(sortedMediaBlobs[1]?.fileName).toBe('second.name');
+        expect(sortedMediaBlobs[2]?.fileName).toBe('third.name');
     });
     it('should sort the blobs in order for the given track name', async () => {
         //Arrange
@@ -66,7 +66,7 @@ describe('CompilationHandler.ts', () => {
         );
 
         //Assert
-        expect(sortedMediaBlobs[0].fileName).toBe('third.name');
+        expect(sortedMediaBlobs[0]?.fileName).toBe('third.name');
     });
     it('should sort the blobs in order for the given second track name', async () => {
         //Arrange
@@ -78,7 +78,7 @@ describe('CompilationHandler.ts', () => {
         );
 
         //Assert
-        expect(sortedMediaBlobs[0].fileName).toBe('second.name');
+        expect(sortedMediaBlobs[0]?.fileName).toBe('second.name');
     });
     it('should sort the blobs in order for the given ending track name', async () => {
         //Arrange
@@ -90,7 +90,7 @@ describe('CompilationHandler.ts', () => {
         );
 
         //Assert
-        expect(sortedMediaBlobs[0].fileName).toBe('third.name');
+        expect(sortedMediaBlobs[0]?.fileName).toBe('third.name');
     });
 
     it('should sort the blobs in order for the given distorted track name', async () => {
@@ -103,7 +103,7 @@ describe('CompilationHandler.ts', () => {
         );
 
         //Assert
-        expect(sortedMediaBlobs[0].fileName).toBe('third.name');
+        expect(sortedMediaBlobs[0]?.fileName).toBe('third.name');
     });
 
     it('should resolve mixed case for lazy conversion', async () => {

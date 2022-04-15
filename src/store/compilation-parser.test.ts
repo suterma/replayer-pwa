@@ -44,11 +44,11 @@ describe('compilation-parser.ts', () => {
         expect(track?.Duration).toBeNull(); //"Because a duration is only available after track loading in the player."
         expect(track?.Cues).toBeDefined();
         expect(track?.Cues).toHaveLength(1);
-        expect(track?.Cues[0].Description).toBe('Intro');
-        expect(track?.Cues[0].Time).toBe(6.49);
-        expect(track?.Cues[0].Id).toBeDefined();
-        expect(track?.Cues[0].Duration).toBeNull(); //"Because a duration is only available after track loading in the player."
-        expect(track?.Cues[0].Shortcut).toBeNull(); //because there is none
+        expect(track?.Cues[0]?.Description).toBe('Intro');
+        expect(track?.Cues[0]?.Time).toBe(6.49);
+        expect(track?.Cues[0]?.Id).toBeDefined();
+        expect(track?.Cues[0]?.Duration).toBeNull(); //"Because a duration is only available after track loading in the player."
+        expect(track?.Cues[0]?.Shortcut).toBeNull(); //because there is none
     });
 
     it('should parse multliple cues into a list', () => {
@@ -67,16 +67,16 @@ describe('compilation-parser.ts', () => {
         expect(track).toBeDefined();
         expect(track?.Cues).toBeDefined();
         expect(track?.Cues).toHaveLength(2);
-        expect(track?.Cues[0].Description).toBe('Intro');
-        expect(track?.Cues[0].Time).toBe(6.49);
-        expect(track?.Cues[0].Id).toBeDefined();
-        expect(track?.Cues[0].Duration).toBeNull(); //"Because a duration is only available after track loading in the player."
-        expect(track?.Cues[0].Shortcut).toBeNull(); //because there is none
-        expect(track?.Cues[1].Description).toBe('Intro2');
-        expect(track?.Cues[1].Time).toBe(12.1);
-        expect(track?.Cues[1].Id).toBeDefined();
-        expect(track?.Cues[1].Duration).toBeNull(); //"Because a duration is only available after track loading in the player."
-        expect(track?.Cues[1].Shortcut).toBeNull(); //because there is none
+        expect(track?.Cues[0]?.Description).toBe('Intro');
+        expect(track?.Cues[0]?.Time).toBe(6.49);
+        expect(track?.Cues[0]?.Id).toBeDefined();
+        expect(track?.Cues[0]?.Duration).toBeNull(); //"Because a duration is only available after track loading in the player."
+        expect(track?.Cues[0]?.Shortcut).toBeNull(); //because there is none
+        expect(track?.Cues[1]?.Description).toBe('Intro2');
+        expect(track?.Cues[1]?.Time).toBe(12.1);
+        expect(track?.Cues[1]?.Id).toBeDefined();
+        expect(track?.Cues[1]?.Duration).toBeNull(); //"Because a duration is only available after track loading in the player."
+        expect(track?.Cues[1]?.Shortcut).toBeNull(); //because there is none
     });
 
     it('should parse a single cue with time 0 correctly', () => {
@@ -94,8 +94,8 @@ describe('compilation-parser.ts', () => {
         expect(track).toBeDefined();
         expect(track?.Cues).toBeDefined();
         expect(track?.Cues).toHaveLength(1);
-        expect(track?.Cues[0].Time).toBe(0);
-        expect(track?.Cues[0].Description).toBe('Zero');
+        expect(track?.Cues[0]?.Time).toBe(0);
+        expect(track?.Cues[0]?.Description).toBe('Zero');
     });
 
     it('should parse multiple cues with an integer time correctly', () => {
@@ -111,9 +111,9 @@ describe('compilation-parser.ts', () => {
         const track = CompilationParser.parseFromUrlQuery(query);
 
         //Assert
-        expect(track?.Cues[0].Time).toBe(12);
-        expect(track?.Cues[0].Description).toBe('Twelve');
-        expect(track?.Cues[1].Time).toBe(13);
-        expect(track?.Cues[1].Description).toBe('Thirteen');
+        expect(track?.Cues[0]?.Time).toBe(12);
+        expect(track?.Cues[0]?.Description).toBe('Twelve');
+        expect(track?.Cues[1]?.Time).toBe(13);
+        expect(track?.Cues[1]?.Description).toBe('Thirteen');
     });
 });

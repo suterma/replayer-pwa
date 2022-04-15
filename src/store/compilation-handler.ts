@@ -262,19 +262,19 @@ export default class CompilationHandler {
 
     /** Gets the the matching cue, if any, in the compilation, by it's Id.
      * @param compilation - The compilation, whose (tracks and) cues are searched
-     * @param cueId - The Id of the cue to find
+     * @param cueId - The Id of the cue to find.
+     * @returns The cue; or null, if no cue id is provided or the selected cue is can not be found.
      * */
     public static getCueById(
         compilation: ICompilation,
-        cueId: string,
-    ): ICue | undefined {
+        cueId: string | null,
+    ): ICue | null {
         console.debug('finding cueID', cueId);
         const cue = compilation.Tracks.flatMap((track) => track.Cues).find(
             (cue) => cue.Id === cueId,
         );
-        //console.debug('found cue', cue);
 
-        return cue;
+        return cue ?? null;
     }
 
     /** Determines, whether one of the given string ends with the other

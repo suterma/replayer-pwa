@@ -24,13 +24,15 @@ export type Getters = {
     isSelected(state: State, cueId: string): boolean;
     /** Gets the currently selected cue id
      * @remarks Only one cue may be selected at any time, within one compilation / application instance.
+     * @returns The cue identifier; or null, if no cue is selected.
      */
-    selectedCueId(state: State): string;
+    selectedCueId(state: State): string | null;
     /** Gets the currently selected cue
      * @remarks This is more expensive than only getting the selected cue id
      * @remarks Only one cue may be selected at any time, within one compilation / application instance.
+     * @returns The cue; or null, if no cue is selected or the selected cue is can not be found.
      */
-    selectedCue(state: State): ICue | undefined;
+    selectedCue(state: State): ICue | null;
     /** Gets the application settings
      */
     settings(state: State): Settings;
@@ -63,13 +65,13 @@ export const getters: GetterTree<State, State> & Getters = {
     progressMessage: (state) => {
         const progressMessage =
             state.progressMessageStack[state.progressMessageStack.length - 1];
-        return progressMessage;
+        return progressMessage ?? null;
     },
     /** @inheritdoc */
     errorMessage: (state) => {
         const errorMessage =
             state.errorMessageStack[state.errorMessageStack.length - 1];
-        return errorMessage;
+        return errorMessage ?? null;
     },
     /** @inheritdoc */
     isSelected: (state, cueId: string) => {

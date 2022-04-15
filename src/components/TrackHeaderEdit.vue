@@ -291,10 +291,10 @@ export default defineComponent({
     watch: {},
     computed: {
         isFirstTrack(): boolean {
-            return this.tracks[0].Id === this.track.Id;
+            return this.tracks[0]?.Id === this.track.Id;
         },
         isLastTrack(): boolean {
-            return this.tracks[this.tracks.length - 1].Id === this.track.Id;
+            return this.tracks[this.tracks.length - 1]?.Id === this.track.Id;
         },
         tracks(): ITrack[] {
             return this.$store.getters.compilation.Tracks as ITrack[];

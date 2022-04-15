@@ -36,19 +36,21 @@ export default class FileHandler {
 
     /** Tries to infer a useful artist name from the URL, by using the second level domain name, if possible.
      * @remarks can be used to get a human readable artist name for a Track, which originates from an URL
+     * @returns A guess for an artist name or the empty string.
      */
     static extractArtistNameFromUrl(url: URL): string {
-        return url.hostname.split('.').reverse()[1];
+        return url.hostname.split('.').reverse()[1] ?? '';
     }
 
     /** Tries to infer a useful album name from the URL, by using the last path section, if possible.
      * @remarks can be used to get a human readable album name for a Track, which originates from an URL
+     * @returns A guess for the album name or the empty string.
      */
     static extractAlbumNameFromUrl(url: URL): string {
         const pathName = url.pathname;
         const pathParts = pathName.split('/');
         const albumName = pathParts.reverse()[1];
-        return albumName;
+        return albumName ?? '';
     }
 
     static removeExtension(filename: string): string {

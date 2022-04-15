@@ -233,6 +233,7 @@ export default defineComponent({
             //If a single package or complilation has been loaded, the intention was most likely to play it
             if (
                 files.length === 1 &&
+                files[0] &&
                 (FileHandler.isSupportedPackageFile(files[0]) ||
                     FileHandler.isSupportedCompilationFileName(files[0].name))
             ) {
