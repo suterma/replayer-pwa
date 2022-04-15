@@ -12,12 +12,14 @@ export default class AudioFader {
     /** This is set to a fixed value, as a tradeoff between call frequency and smoothness
      * @devdoc currently set to 50 milliseconds which is barely audible
      */
-    stepDuration = 50;
+    stepDuration = 30;
+    refreshIntervalId: NodeJS.Timer = 0 as unknown as NodeJS.Timer;
     /** @constructor
      * @param {HTMLAudioElement} audio - The audio elenent to act upon
      * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
      * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
      * @param {boolean} applyFadeInOffset - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
+     * @param {number} masterVolume - The overall volume of the output. Can be used to control the output volume in addition to fadings. (Default: 1, representing full scale)
      */
     constructor(
         audio: HTMLAudioElement,
@@ -27,14 +29,16 @@ export default class AudioFader {
         fadeOutDuration: number = 500,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         applyFadeInOffset: boolean = true,
+        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+        masterVolume: number = 0.5,
     ) {
         this.audio = audio;
         this.fadeInDuration = fadeInDuration;
         this.fadeOutDuration = fadeOutDuration;
         this.applyFadeInOffset = applyFadeInOffset;
+        this.masterVolume = masterVolume;
 
-        //Initialize by setting the fader level to the initial value
-        this.cancel();
+        this.setInitialAudioVolume();
     }
     /** Updates the current settings.
      * @remarks The settings will be used for the next fade.
@@ -74,77 +78,107 @@ export default class AudioFader {
     fadeOutDuration;
     /** Whether to apply a seek offset before fade-in operations, to compensate the fading duration.*/
     applyFadeInOffset = true;
+
+    /** The master volume level */
+    masterVolume = 0.5;
+
     /** The minimum audio level */
-    minAudioLevel = 0;
+    audioVolumeMin = 0;
     /** The maximum audio level */
-    maxAudioLevel = 1;
+    audioVolumeMax = 1;
 
     /** Immediately cancel any running fade operation.
-     * @remarks This immediately sets the volume to the initial value.
-     * When a non-zero fading duration is set, this is the minimum value (finish a possible fade-out/prepare for the next fade-in).
-     * When a zero fading duration is set, this is the maximum value (effectively remove any fade)
      */
     cancel(): void {
+        console.debug(
+            `AudioFader::cancel:refreshIntervalId:${this.refreshIntervalId}`,
+        );
+        clearInterval(this.refreshIntervalId);
+    }
+
+    /** Sets the volume to the initial value.
+     * When a non-zero fading duration is set, this is the minimum value (prepare for the fade-in).
+     * When a zero fading duration is set, this is the maximum value (effectively remove any fade)
+     */
+    setInitialAudioVolume(): void {
         if (this.fadeInDuration || this.fadeOutDuration) {
-            console.debug(`AudioFader::cancel:toMinimum`);
-            const currentVolume = this.getCurrentVolume();
-            if (currentVolume != this.minAudioLevel) {
-                this.audio.volume = this.minAudioLevel;
-            }
+            this.setAudioVolume(this.audioVolumeMin);
         } else {
-            console.debug(`AudioFader::cancel:toMaximum`);
-            const currentVolume = this.getCurrentVolume();
-            if (currentVolume != this.maxAudioLevel) {
-                this.audio.volume = this.maxAudioLevel;
-            }
+            this.setAudioVolume(this.masterVolume);
         }
     }
 
-    /** Gets the current volume, with a boundary check to make sure
+    /** Sets the audio volume to the given value.
+     * @remarks Applies a range check for the allowed maximum range (0..1)
+     */
+    private setAudioVolume(volume: number): void {
+        const limitedVolume = Math.min(
+            this.audioVolumeMax,
+            Math.max(this.audioVolumeMin, volume),
+        );
+        this.audio.volume = limitedVolume;
+        // console.debug(
+        //     `AudioFader::setAudioVolume:limitedVolume:${limitedVolume}`,
+        // );
+    }
+
+    /** Gets the master audio volume
+     * @returns A value between 0 (zero) and 1 (representing full scale)
+     */
+    public getMasterAudioVolume(): number {
+        return this.masterVolume;
+    }
+
+    /** Sets the master audio volume
+     * @remarks The value is applied immediately, without any fading
+     * @param volume -  A value between 0 (zero) and 1 (representing full scale)
+     */
+    public setMasterAudioVolume(volume: number): void {
+        const fadingRatio = this.getCurrentAudioVolume() / this.masterVolume;
+        this.masterVolume = volume;
+        this.setAudioVolume(volume * fadingRatio);
+    }
+
+    /** Gets the current audio volume, with a boundary check to make sure
      * it's a valid number between minAudioLevel and maxAudioLevel, inclusive.
      * If not valid, an average level is returned as a compromise. */
-    getCurrentVolume(): number {
+    private getCurrentAudioVolume(): number {
         let currentVolume = this.audio.volume;
-        console.debug(
-            `AudioFader::getCurrentVolume:currentVolume:${currentVolume}`,
-        );
+        // console.debug(
+        //     `AudioFader::getCurrentAudioVolume:currentVolume:${currentVolume}`,
+        // );
 
         if (
-            currentVolume < this.minAudioLevel ||
-            currentVolume > this.maxAudioLevel ||
+            currentVolume < this.audioVolumeMin ||
+            currentVolume > this.audioVolumeMax ||
             isNaN(currentVolume)
         ) {
-            currentVolume = (this.minAudioLevel + this.maxAudioLevel) / 2;
+            currentVolume = (this.audioVolumeMin + this.audioVolumeMax) / 2;
         }
         return currentVolume;
     }
 
     /** Returns a linear fade-in promise for the currently playing track
-     * @remarks The sound is faded to the maximum audio level.
+     * @remarks The sound is faded to the master volume audio level.
      * A pre-fade offset is applied, when configured
      * An actual fade operation is only started when
      * - the duration is non-zero and
-     * - the current volume is also non-maximum
+     * - the current volume is also already at the target level
      *
      * otherwise
      * - the promise is immediately resolved.
      */
     fadeIn(): Promise<void> {
+        this.cancel();
         if (this.fadeInDuration) {
             return new Promise((resolve, reject) => {
                 try {
-                    const currentVolume = this.minAudioLevel; //always start fade-in from minimum
-                    if (currentVolume < this.maxAudioLevel) {
-                        //Determine the required fade, based on the current volume
-                        //(an existing fade-out could be currently running, requiring a partial fade only)
-                        const requiredDuration =
-                            this.fadeInDuration *
-                            (this.maxAudioLevel - currentVolume);
-
+                    const currentVolume = this.getCurrentAudioVolume();
+                    if (currentVolume < this.masterVolume) {
                         return this.fade(
                             currentVolume,
-                            this.maxAudioLevel,
-                            requiredDuration,
+                            this.masterVolume,
+                            this.fadeInDuration,
                         ).then(() => {
                             console.debug(`AudioFader::fadeIn:linear:ended`);
                             resolve();
@@ -158,6 +192,7 @@ export default class AudioFader {
             });
         } else {
             //nothing to fade
+            this.setAudioVolume(this.masterVolume);
             return Promise.resolve();
         }
     }
@@ -173,18 +208,21 @@ export default class AudioFader {
                         `AudioFader::fading for:${this.fadeInDuration};from:${from}; to:${to}`,
                     );
                     //Set exactly to the expected begin volume
-                    this.audio.volume = from;
+                    this.setAudioVolume(from);
 
                     //Start a repeated call sequence to gradually adjust the volume
                     const stepSize = to - from;
                     const endTime = new Date().getTime() + duration;
-                    const refreshIntervalId = setInterval(() => {
+                    this.refreshIntervalId = setInterval(() => {
                         const now = new Date().getTime();
-                        //Check whether it's time to end the fade
-                        if (now >= endTime) {
-                            clearInterval(refreshIntervalId);
+                        //Check whether it's time to end the fade (either by target reached or time is up)
+                        if (
+                            this.getCurrentAudioVolume() === to ||
+                            now >= endTime
+                        ) {
+                            clearInterval(this.refreshIntervalId);
                             //Set exactly to the expected end volume, in case it was missed slightly
-                            this.audio.volume = to;
+                            this.setAudioVolume(to);
                             resolve();
                         }
 
@@ -192,11 +230,7 @@ export default class AudioFader {
                         const passedTime = duration - remainingTime;
                         const newTarget =
                             from + (stepSize / duration) * passedTime;
-                        const limitedTarget = Math.min(
-                            1,
-                            Math.max(0, newTarget),
-                        );
-                        this.audio.volume = limitedTarget;
+                        this.setAudioVolume(newTarget);
                     }, this.stepDuration);
                 } catch (err) {
                     reject('AudioFader::Linear fade failed.');
@@ -218,23 +252,19 @@ export default class AudioFader {
      * - a fade with duration zero is started and the promise is immediately resolved.
      */
     fadeOut(): Promise<void> {
+        this.cancel();
         if (this.fadeOutDuration) {
             return new Promise((resolve, reject) => {
                 try {
-                    const currentVolume = this.getCurrentVolume();
+                    const currentVolume = this.getCurrentAudioVolume();
                     console.debug(
                         `AudioFader::fadeOut:volume:${currentVolume}`,
                     );
-                    if (currentVolume > this.minAudioLevel) {
-                        //Determine the required fade, based on the current volume
-                        //(an existing fade-in could be currently running, requiring a partial fade only)
-                        const requiredDuration =
-                            this.fadeOutDuration * currentVolume;
-
+                    if (currentVolume > this.audioVolumeMin) {
                         return this.fade(
                             currentVolume,
-                            this.minAudioLevel,
-                            requiredDuration,
+                            this.audioVolumeMin,
+                            this.fadeOutDuration,
                         ).then(() => {
                             console.debug(`AudioFader::fadeOut:linear:ended`);
                             resolve();
@@ -247,7 +277,7 @@ export default class AudioFader {
                 }
             });
         } else {
-            //nothing to fade
+            this.setAudioVolume(this.audioVolumeMin);
             return Promise.resolve();
         }
     }

@@ -135,15 +135,25 @@
             >
                 <Icon name="volume" />
                 <input
-                    :value="this.volume"
+                    :value="this.trackVolume"
                     v-if="showVolume"
                     class="player-volume"
                     type="range"
                     inputmode="numeric"
                     min="0"
-                    max="100"
+                    step="0.01"
+                    max="1"
                     @change="
-                        $emit('update:volume', parseInt($event.target.value))
+                        $emit(
+                            'update:trackVolume',
+                            parseFloat($event.target.value),
+                        )
+                    "
+                    @input="
+                        $emit(
+                            'update:trackVolume',
+                            parseFloat($event.target.value),
+                        )
                     "
                 />
             </button>
@@ -178,7 +188,7 @@ export default defineComponent({
         'update:playing',
         'update:playbackMode',
         'update:currentSeconds',
-        'update:volume',
+        'update:trackVolume',
         'update:muted',
         'seek',
         'download',
@@ -222,11 +232,11 @@ export default defineComponent({
             type: Number,
             default: null,
         },
-        /** The volume in [percent]
+        /** The volume in the range [0..1]
          * @remarks Implements a two-way binding */
-        volume: {
+        trackVolume: {
             type: Number,
-            default: 50,
+            default: 0.5,
         },
         /** Whether the player is currently playing
          * @remarks Implements a two-way binding */
@@ -265,7 +275,8 @@ export default defineComponent({
         },
     },
     data: () => ({
-        showVolume: false,
+        //TODO test
+        showVolume: true,
         playbackMode: PlaybackMode.PlayTrack,
     }),
 
@@ -306,7 +317,7 @@ export default defineComponent({
             );
         },
         volumeTitle(): string {
-            return `Volume (${this.volume}%)`;
+            return `Volume (${this.trackVolume * 100}%)`;
         },
 
         isPlaybackTrack(): boolean {

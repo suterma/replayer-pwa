@@ -10,6 +10,7 @@
         :isPlayingRequestOutstanding="this.isPlayingRequestOutstanding"
         v-model:currentSeconds="this.currentSeconds"
         @seek="seekToSeconds"
+        @newCueTriggered="this.$emit('newCueTriggered')"
         :durationSeconds="this.durationSeconds"
         :sourceDescription="this.sourceDescription"
         :error="this.mediaError"
@@ -25,7 +26,7 @@
         @play="play"
         :isPlayingRequestOutstanding="this.isPlayingRequestOutstanding"
         v-model:currentSeconds="this.currentSeconds"
-        v-model:volume="this.volume"
+        v-model:trackVolume="this.trackVolume"
         v-model:playbackMode="this.playbackMode"
         :muted="this.muted"
         @mute="mute"
@@ -62,6 +63,7 @@ export default defineComponent({
         'timeupdate',
         'trackLoaded',
         'trackPlaying',
+        'newCueTriggered',
         /* Do not add newCueTriggered here, to let it just get passed up */
     ],
     props: {
@@ -136,10 +138,9 @@ export default defineComponent({
         isFading: false,
         playbackMode: PlaybackMode.PlayTrack, //by default
         playing: false,
-        previousVolume: 50,
         showVolume: false,
         /** Default value, user may change later */
-        volume: 25,
+        trackVolume: 0.5,
         //TODO later remove: The audio context is currently not used
         /** The audio context to use
          */
@@ -238,6 +239,7 @@ export default defineComponent({
             this.getSettings.fadeInDuration,
             this.getSettings.fadeOutDuration,
             this.getSettings.applyFadeInOffset,
+            this.trackVolume,
         );
 
         //NOTE: Not using CORS, property crossOrigin is not set, not asking for permission
@@ -268,9 +270,6 @@ export default defineComponent({
     computed: {
         muted(): boolean {
             return this.isMuted;
-        },
-        volumeTitle(): string {
-            return `Volume (${this.volume}%)`;
         },
         /** A simple token for the settings
          * @remarks This is only used to detect changes, to recreate the audio fader.
@@ -304,9 +303,9 @@ export default defineComponent({
             }
         },
         /** Watch whether the volume changed, and then update the audio element accordingly  */
-        volume(): void {
-            this.debugLog(`volume:${this.volume}`);
-            this.audioElement.volume = this.volume / 100;
+        trackVolume(trackVolume: number): void {
+            //this.debugLog(`trackVolume:${trackVolume}`);
+            this.fader.setMasterAudioVolume(trackVolume);
         },
         /** Watch whether the playbackMode changed, and then update the audio element accordingly  */
         playbackMode(): void {
@@ -380,9 +379,6 @@ export default defineComponent({
 
                     this.$emit('trackLoaded', this.durationSeconds);
 
-                    //Apply the initial volume. This is a hack to trigger the volumes watcher here, to apply some form of default other than 100
-                    this.volume = this.previousVolume;
-
                     //Apply the currently known position to the player. It could be non-zero already.
                     this.seekTo(this.currentSeconds);
                 }
@@ -431,6 +427,7 @@ export default defineComponent({
             //If it's still playing (e.g. during a fade operation, stil immediately stop)
             if (!this.audioElement.paused) {
                 this.audioElement.pause();
+                this.fader.cancel();
                 this.$emit('trackPlaying', false);
             }
             //no fading at stop
@@ -458,13 +455,23 @@ export default defineComponent({
             const time = this.audioElement.currentTime;
             this.audioElement.currentTime = time + 1;
         },
+        /**Dereases the track audio volume level
+         */
         volumeDown() {
-            this.volume = this.volume * 0.71;
-            this.debugLog(`volumeDown`, this.volume);
+            this.trackVolume = this.trackVolume * 0.71;
+            this.debugLog(`volumeDown`, this.trackVolume);
         },
+        /**Inreases the track audio volume level
+         * @remarks Applies some limitation on the lower and upper end of the range
+         * to keep the value within the valid range from [0..1]
+         */
         volumeUp() {
-            this.volume = Math.min(this.volume * 1.41, 100);
-            this.debugLog(`volumeUp`, this.volume);
+            //Use a very faint minimum value allow for faster increase from very low volume levels
+            this.trackVolume = Math.min(
+                Math.max(this.trackVolume * 1.41, 0.001),
+                1,
+            );
+            this.debugLog(`volumeUp`, this.trackVolume);
         },
         /** Pauses playback */
         pause(): void {
