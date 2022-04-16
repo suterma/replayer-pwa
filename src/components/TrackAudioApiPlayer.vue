@@ -511,45 +511,51 @@ export default defineComponent({
         /** Handles looping for a single cue, if requested
          */
         handleCueLoop(): void {
-            if (this.playbackMode === PlaybackMode.LoopCue) {
-                //Detect, with a safety margin, whether the possible loop is at track end
-                const trackDurationSafetyMarginSeconds = 0.3;
-                const isAtTrackEnd =
-                    this.currentSeconds >=
-                    this.durationSeconds - trackDurationSafetyMarginSeconds;
+            switch (this.playbackMode) {
+                case PlaybackMode.LoopCue: {
+                    //Detect, with a safety margin, whether the possible loop is at track end
+                    const trackDurationSafetyMarginSeconds = 0.3;
+                    const isAtTrackEnd =
+                        this.currentSeconds >=
+                        this.durationSeconds - trackDurationSafetyMarginSeconds;
 
-                //Is a loop due?
-                if (
-                    this.loopStart !== undefined &&
-                    this.loopEnd !== undefined &&
-                    (this.currentSeconds >= this.loopEnd || isAtTrackEnd)
-                ) {
-                    //Back to loop start
-                    this.seekTo(this.loopStart);
+                    //Is a loop due?
+                    if (
+                        this.loopStart !== undefined &&
+                        this.loopEnd !== undefined &&
+                        (this.currentSeconds >= this.loopEnd || isAtTrackEnd)
+                    ) {
+                        //Back to loop start
+                        this.seekTo(this.loopStart);
 
-                    if (isAtTrackEnd) {
-                        this.debugLog(
-                            `loopEnd:${this.loopEnd};durationSeconds:${this.durationSeconds}`,
-                        );
-                        //At the end of the track, a seek operation alone would not be enough to continue the loop
-                        //if playback already has ended (when the safety margin from above was too small)
-                        this.$nextTick(() => {
-                            //Directly issue the play command, without any safety net
-                            //(should be working, since play was successful already)
-                            //This handling here has the disadvantage, that a fading operation does take place however,
-                            //if configured and the safety margin was too short.
-                            this.audioElement.play();
-                        });
+                        if (isAtTrackEnd) {
+                            this.debugLog(
+                                `loopEnd:${this.loopEnd};durationSeconds:${this.durationSeconds}`,
+                            );
+                            //At the end of the track, a seek operation alone would not be enough to continue the loop
+                            //if playback already has ended (when the safety margin from above was too small)
+                            this.$nextTick(() => {
+                                //Directly issue the play command, without any safety net
+                                //(should be working, since play was successful already)
+                                //This handling here has the disadvantage, that a fading operation does take place however,
+                                //if configured and the safety margin was too short.
+                                this.audioElement.play();
+                            });
+                        }
                     }
+                    break;
                 }
-            }
-            if (this.playbackMode === PlaybackMode.PlayCue) {
-                if (
-                    this.loopStart !== undefined &&
-                    this.loopEnd !== undefined &&
-                    this.currentSeconds >= this.loopEnd
-                ) {
-                    this.pauseAndSeekTo(this.loopStart);
+                case PlaybackMode.PlayCue: {
+                    //Execute once, when past the end and not yet fading (avoid repeated calls)
+                    if (
+                        this.loopStart !== undefined &&
+                        this.loopEnd !== undefined &&
+                        this.currentSeconds >= this.loopEnd &&
+                        this.isFading == false
+                    ) {
+                        this.pause();
+                    }
+                    break;
                 }
             }
         },
