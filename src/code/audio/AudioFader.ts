@@ -1,19 +1,29 @@
-/** @class A fader for an audio element instance
- * @remarks This transparently handles fading operations during playback.
+import { v4 as uuidv4 } from 'uuid';
+
+/** @class A fader for an audio element instance.
+ * @remarks This handles fading operations during playback.
  * The goal is to free the actual player from fading handling.
  * Using this promise-based approach especially frees the using code from
  * using timers for calling delayed stop or pause operations after a fade operation.
- * @remarks Currently only supports a linear fade, with a constant gradient, only determined by the predefined durations for a full-scale fade.
+ * @remarks Also supports a master volume that is applied on top of the fading volume changes.
+ * @remarks Currently only supports a linear fade, with a constant gradient,
+ * only determined by the predefined durations for a full-scale fade.
  * @remarks Fading is only actually executed for non-zero fading durations.
  * For zero fading durations, the call immediately returns with a resolved promise, without any call to a fade operation.
  * This can be used as a convenient way to skip fadings.
  */
 export default class AudioFader {
     /** This is set to a fixed value, as a tradeoff between call frequency and smoothness
-     * @devdoc currently set to 50 milliseconds which is barely audible
+     * @devdoc currently set to 30 milliseconds which is barely audible
      */
     stepDuration = 30;
-    refreshIntervalId: NodeJS.Timer = 0 as unknown as NodeJS.Timer;
+
+    /** Allows an ongoing fading operation to determine whether it has been superseded
+     * by a subsequent operation. This allows the first operation to reject the promise
+     * while abandoning the fade operation.
+     */
+    operationToken = '';
+
     /** @constructor
      * @param {HTMLAudioElement} audio - The audio elenent to act upon
      * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
@@ -38,7 +48,7 @@ export default class AudioFader {
         this.applyFadeInOffset = applyFadeInOffset;
         this.masterVolume = masterVolume;
 
-        this.setInitialAudioVolume();
+        this.reset();
     }
     /** Updates the current settings.
      * @remarks The settings will be used for the next fade.
@@ -87,20 +97,19 @@ export default class AudioFader {
     /** The maximum audio level */
     audioVolumeMax = 1;
 
-    /** Immediately cancel any running fade operation.
+    /** Token for the currently running fade operation.
+     * @remarks Allows operations to cancel themselves in favor of a subsequent operation.
      */
     cancel(): void {
-        console.debug(
-            `AudioFader::cancel:refreshIntervalId:${this.refreshIntervalId}`,
-        );
-        clearInterval(this.refreshIntervalId);
+        this.operationToken = '';
     }
 
     /** Sets the volume to the initial value.
+     * @remarks This method is to be used at creation time or for a hard reset.
      * When a non-zero fading duration is set, this is the minimum value (prepare for the fade-in).
      * When a zero fading duration is set, this is the maximum value (effectively remove any fade)
      */
-    setInitialAudioVolume(): void {
+    public reset(): void {
         if (this.fadeInDuration || this.fadeOutDuration) {
             this.setAudioVolume(this.audioVolumeMin);
         } else {
@@ -117,9 +126,9 @@ export default class AudioFader {
             Math.max(this.audioVolumeMin, volume),
         );
         this.audio.volume = limitedVolume;
-        // console.debug(
-        //     `AudioFader::setAudioVolume:limitedVolume:${limitedVolume}`,
-        // );
+        console.debug(
+            `AudioFader::setAudioVolume:limitedVolume:${limitedVolume}`,
+        );
     }
 
     /** Gets the master audio volume
@@ -205,7 +214,7 @@ export default class AudioFader {
             return new Promise((resolve, reject) => {
                 try {
                     console.debug(
-                        `AudioFader::fading for:${this.fadeInDuration};from:${from}; to:${to}`,
+                        `AudioFader::fading for:${this.fadeInDuration}ms from:${from} to:${to}`,
                     );
                     //Set exactly to the expected begin volume
                     this.setAudioVolume(from);
@@ -213,19 +222,30 @@ export default class AudioFader {
                     //Start a repeated call sequence to gradually adjust the volume
                     const stepSize = to - from;
                     const endTime = new Date().getTime() + duration;
-                    this.refreshIntervalId = setInterval(() => {
+                    const currentOperationToken = uuidv4();
+                    this.operationToken = currentOperationToken;
+                    const clearIntervalId = setInterval(() => {
                         const now = new Date().getTime();
-                        //Check whether it's time to end the fade (either by target reached or time is up)
+                        //Check whether it's time to end the fade
+                        //(either by target reached or time is up, or a subsequent operation)
+                        if (this.operationToken != currentOperationToken) {
+                            clearInterval(clearIntervalId);
+                            reject('AudioFader::Linear fade aborted.');
+                            return;
+                        }
+
                         if (
                             this.getCurrentAudioVolume() === to ||
                             now >= endTime
                         ) {
-                            clearInterval(this.refreshIntervalId);
+                            clearInterval(clearIntervalId);
                             //Set exactly to the expected end volume, in case it was missed slightly
                             this.setAudioVolume(to);
                             resolve();
+                            return;
                         }
 
+                        //continue fading
                         const remainingTime = endTime - now;
                         const passedTime = duration - remainingTime;
                         const newTarget =

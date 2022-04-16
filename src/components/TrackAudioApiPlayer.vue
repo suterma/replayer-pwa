@@ -428,6 +428,7 @@ export default defineComponent({
             if (!this.audioElement.paused) {
                 this.audioElement.pause();
                 this.fader.cancel();
+                this.fader.reset();
                 this.$emit('trackPlaying', false);
             }
             //no fading at stop
