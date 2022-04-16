@@ -126,9 +126,9 @@ export default class AudioFader {
             Math.max(this.audioVolumeMin, volume),
         );
         this.audio.volume = limitedVolume;
-        console.debug(
-            `AudioFader::setAudioVolume:limitedVolume:${limitedVolume}`,
-        );
+        // console.debug(
+        //     `AudioFader::setAudioVolume:limitedVolume:${limitedVolume}`,
+        // );
     }
 
     /** Gets the master audio volume

@@ -275,8 +275,7 @@ export default defineComponent({
         },
     },
     data: () => ({
-        //TODO test
-        showVolume: true,
+        showVolume: false,
         playbackMode: PlaybackMode.PlayTrack,
     }),
 
