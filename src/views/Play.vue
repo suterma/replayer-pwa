@@ -35,9 +35,11 @@
                         <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
                     </div>
                     <div class="level-item has-text-centered">
-                        <button class="button" @click="loadDemo()">
-                            <span>Try the demo</span>
-                        </button>
+                        <router-link to="/demo">
+                            <button class="button">
+                                <span>Try the demo</span>
+                            </button></router-link
+                        >
                     </div>
                 </template>
             </div>
@@ -62,7 +64,6 @@ import Experimental from '@/components/Experimental.vue';
 import CompilationLoader from '@/components/CompilationLoader.vue';
 import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
-import { ActionTypes } from '@/store/action-types';
 
 /** A view for playing an existing compilation */
 export default defineComponent({
@@ -102,17 +103,6 @@ export default defineComponent({
 
         updateMediaDropZoneExpansion(expanded: boolean): void {
             this.isMediaDropZoneExpanded = expanded;
-        },
-        loadDemo() {
-            const url =
-                location.protocol +
-                '//' +
-                location.host +
-                location.pathname +
-                'demo-compilation-featuring-lidija-roos.rez';
-            console.debug('loadDemo:', url);
-
-            this.$store.dispatch(ActionTypes.LOAD_FROM_URL, url);
         },
     },
     computed: {
