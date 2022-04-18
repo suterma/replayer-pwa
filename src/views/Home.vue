@@ -58,19 +58,14 @@ export default defineComponent({
         hasCompilation(): boolean {
             return this.$store.getters.hasCompilation;
         },
-        isEditMode(): boolean {
-            return !(
-                this.getSettings.autoRetrieveLastCompilation &&
-                this.hasCompilation
-            );
-        },
     },
 
     beforeMount(): void {
-        if (this.isEditMode) {
-            this.$router.push('edit');
-        } else {
+        //When a compilation is available, assume it should be played
+        if (this.hasCompilation) {
             this.$router.push('play');
+        } else {
+            this.$router.push('edit');
         }
     },
 });
