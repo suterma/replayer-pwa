@@ -4,12 +4,28 @@
             button: true,
         }"
         @click="togglePlaybackMode()"
-        title="Toggle playback mode"
+        title="click to toggle"
     >
-        <Icon v-if="this.isPlaybackTrack" name="track-play" />
-        <Icon v-if="this.isPlaybackLoopTrack" name="track-repeat" />
-        <Icon v-if="this.isPlaybackCue" name="track-play-once" />
-        <Icon v-if="this.isPlaybackLoopCue" name="track-repeat-once" />
+        <Icon
+            v-if="this.isPlaybackTrack"
+            name="track-play"
+            title="Play track (click to toggle)"
+        />
+        <Icon
+            v-if="this.isPlaybackLoopTrack"
+            name="track-repeat"
+            title="Loop track (click to toggle)"
+        />
+        <Icon
+            v-if="this.isPlaybackCue"
+            name="track-play-once"
+            title="Play cue (click to toggle)"
+        />
+        <Icon
+            v-if="this.isPlaybackLoopCue"
+            name="track-repeat-once"
+            title="Loop cue (click to toggle)"
+        />
     </button>
 </template>
 
