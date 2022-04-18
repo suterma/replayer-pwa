@@ -9,7 +9,7 @@
             'is-success': isCueSelected,
         }"
         :id="'cue-' + cue.Id"
-        :title="'Play from ' + cue.Description"
+        :title="this.cueTitle"
     >
         <span class="player-timeline is-fullwidth">
             <!-- Progress -->
@@ -111,6 +111,13 @@ export default defineComponent({
         },
     },
     computed: {
+        /** Gets a displayable title for the cue */
+        cueTitle(): string {
+            if (this.cue.Description) {
+                return `Play from ${this.cue.Description}`;
+            }
+            return `Play from ${this.cueDisplayTime}`;
+        },
         /** The playback progress within this cue, in [percent], or null if not appliccable */
         percentComplete(): number {
             if (this.currentSeconds !== undefined) {
