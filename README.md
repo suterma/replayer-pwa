@@ -33,4 +33,4 @@ The full documentation is available at https://replayer.app/en/documentation
 
 # Roadmap
 
-See [Trello](]https://trello.com/b/UqdfomQI/replayer-20)
+See [Trello](https://trello.com/b/UqdfomQI/replayer-20)
