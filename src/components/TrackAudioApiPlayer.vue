@@ -229,9 +229,12 @@ export default defineComponent({
             this.debugLog('Playback started');
             this.$emit('trackPlaying', true);
             this.isFading = true;
-            this.fader.fadeIn().then(() => {
-                this.isFading = false;
-            });
+            this.fader
+                .fadeIn()
+                .catch((message) => console.log(message))
+                .then(() => {
+                    this.isFading = false;
+                });
         };
 
         this.fader = new AudioFader(
@@ -486,11 +489,14 @@ export default defineComponent({
             this.debugLog(`pause`);
             if (this.playing) {
                 this.isFading = true;
-                this.fader.fadeOut().then(() => {
-                    this.audioElement.pause();
-                    this.isFading = false;
-                    this.$emit('trackPlaying', false);
-                });
+                this.fader
+                    .fadeOut()
+                    .catch((message) => console.log(message))
+                    .then(() => {
+                        this.audioElement.pause();
+                        this.isFading = false;
+                        this.$emit('trackPlaying', false);
+                    });
             }
         },
         /** Pauses playback (with a subsequent seek operation) */
