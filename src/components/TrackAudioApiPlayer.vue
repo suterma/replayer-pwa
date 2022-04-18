@@ -88,20 +88,20 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
-        /** The start of the loop, when in cue loop mode.
-         * @remarks This is used to emulate the buffer looping for the enclosed audio element.
+        /** The start time of the selected cue. Used in conjunction with the playbackMode, when in cue loop mode or track play mode.
+         * @devdoc This is used to emulate the buffer looping for the enclosed audio element.
          * See https://www.w3.org/TR/webaudio/#looping-AudioBufferSourceNode for information about looping.
-         * @remarks This is only applied when the playback mode is set to "repeat-cue".
+         * @remarks This is used as the start time for any repetition, either from looping or when played to end.
          */
         loopStart: {
             type: Number,
             default: undefined,
             required: false,
         },
-        /** The end of the loop, when in cue loop mode.
-         * @remarks This is used to emulate the buffer looping for the enclosed audio element.
+        /** The end time of the selected cue. Used in conjunction with the playbackMode, when in cue loop mode.
+         * @devdoc This is used to emulate the buffer looping for the enclosed audio element.
          * See https://www.w3.org/TR/webaudio/#looping-AudioBufferSourceNode for information about looping.
-         * @remarks This is only applied when the playback mode is set to "repeat-cue".
+         * @remarks This is only used when the playback mode is set to "repeat-cue".
          */
         loopEnd: {
             type: Number,
@@ -215,6 +215,16 @@ export default defineComponent({
         this.audioElement.onsuspend = (event) => {
             this.debugLog(`onsuspend `, event);
         };
+        this.audioElement.onended = (event) => {
+            this.debugLog(`onended `, event);
+            //Handle the track play mode
+            if (this.playbackMode === PlaybackMode.PlayTrack) {
+                if (this.loopStart) {
+                    //Back to start (keep pausing)
+                    this.seekTo(this.loopStart);
+                }
+            }
+        };
         this.audioElement.ondurationchange = (event) => {
             this.debugLog(`ondurationchange `, event);
         };
@@ -325,7 +335,7 @@ export default defineComponent({
             this.debugLog(`playbackMode:${this.playbackMode}`);
             this.audioElement.loop =
                 this.playbackMode === PlaybackMode.LoopTrack;
-            //HINT: For the cue loop, an explicit implementation is required,
+            //HINT: For the cue loop, a dedicated looping implementation is required,
             //because automatic looping is not supported with the used HTMLAudioEleemnt.
             //This is solved in this component by observing the recurring time updates.
         },
@@ -543,7 +553,7 @@ export default defineComponent({
                         this.loopEnd !== undefined &&
                         (this.currentSeconds >= this.loopEnd || isAtTrackEnd)
                     ) {
-                        //Back to loop start
+                        //Back to start
                         this.seekTo(this.loopStart);
 
                         if (isAtTrackEnd) {
@@ -571,7 +581,7 @@ export default defineComponent({
                         this.currentSeconds >= this.loopEnd &&
                         this.isFading == false
                     ) {
-                        this.pause();
+                        this.pauseAndSeekTo(this.loopStart);
                     }
                     break;
                 }
