@@ -457,9 +457,13 @@ export default defineComponent({
             this.audioElement.currentTime = time + 1;
         },
         /**Dereases the track audio volume level
+         * @remars The minimum level is -90dB Full Scale
          */
         volumeDown() {
-            this.trackVolume = this.trackVolume * 0.71;
+            this.trackVolume = Math.max(
+                this.trackVolume * 0.71,
+                0.00003162 /* -90dbFS Amplitude */,
+            );
             this.debugLog(`volumeDown`, this.trackVolume);
         },
         /**Inreases the track audio volume level
@@ -467,9 +471,12 @@ export default defineComponent({
          * to keep the value within the valid range from [0..1]
          */
         volumeUp() {
-            //Use a very faint minimum value allow for faster increase from very low volume levels
+            //Relies a minimum level of -90dB Full Scale to allow for reasonably fast increase from the minimum
             this.trackVolume = Math.min(
-                Math.max(this.trackVolume * 1.41, 0.001),
+                Math.max(
+                    this.trackVolume * 1.41,
+                    0.00003162 /* -90dbFS Amplitude */,
+                ),
                 1,
             );
             this.debugLog(`volumeUp`, this.trackVolume);
