@@ -23,6 +23,8 @@ module.exports = {
             return args;
         });
     },
+    //https://cli.vuejs.org/config/#publicpath, using the relative path option
+    publicPath: './',
     configureWebpack: {
         plugins: [
             new BundleAnalyzerPlugin({
