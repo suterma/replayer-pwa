@@ -305,10 +305,20 @@ export default defineComponent({
                 );
             }
         },
-        /** Watch whether the volume changed, and then update the audio element accordingly  */
+        /** Watch whether the volume changed, and then update the audio element accordingly
+         * @remars Limits the minimum level at -90dB Full Scale
+         */
         trackVolume(trackVolume: number): void {
-            //this.debugLog(`trackVolume:${trackVolume}`);
-            this.fader.setMasterAudioVolume(trackVolume);
+            //Limit the minimum
+            const limitedTrackVolume = Math.max(
+                trackVolume,
+                AudioFader.audioVolumeMin,
+            );
+            this.debugLog(`limitedTrackVolume:${limitedTrackVolume}`);
+            this.fader.setMasterAudioVolume(limitedTrackVolume);
+            if (this.trackVolume !== limitedTrackVolume) {
+                this.trackVolume = limitedTrackVolume; //loop back the corrected value
+            }
         },
         /** Watch whether the playbackMode changed, and then update the audio element accordingly  */
         playbackMode(): void {
@@ -460,27 +470,22 @@ export default defineComponent({
             this.audioElement.currentTime = time + 1;
         },
         /**Dereases the track audio volume level
-         * @remars The minimum level is -90dB Full Scale
+         * @remarks Applies some limitation on the upper and lower end of the range
          */
         volumeDown() {
             this.trackVolume = Math.max(
                 this.trackVolume * 0.71,
-                0.00003162 /* -90dbFS Amplitude */,
+                AudioFader.audioVolumeMin,
             );
             this.debugLog(`volumeDown`, this.trackVolume);
         },
         /**Inreases the track audio volume level
-         * @remarks Applies some limitation on the lower and upper end of the range
-         * to keep the value within the valid range from [0..1]
+         * @remarks Applies some limitation on the upper and lower end of the range
          */
         volumeUp() {
-            //Relies a minimum level of -90dB Full Scale to allow for reasonably fast increase from the minimum
-            this.trackVolume = Math.min(
-                Math.max(
-                    this.trackVolume * 1.41,
-                    0.00003162 /* -90dbFS Amplitude */,
-                ),
-                1,
+            this.trackVolume = Math.max(
+                Math.min(this.trackVolume * 1.41, 1),
+                AudioFader.audioVolumeMin,
             );
             this.debugLog(`volumeUp`, this.trackVolume);
         },

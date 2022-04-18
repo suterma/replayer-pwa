@@ -92,10 +92,12 @@ export default class AudioFader {
     /** The master volume level */
     masterVolume = 0.5;
 
-    /** The minimum audio level */
-    audioVolumeMin = 0;
-    /** The maximum audio level */
-    audioVolumeMax = 1;
+    /** The minimum audio volume level
+     * @remarks  -90dbFS Amplitude
+     */
+    public static audioVolumeMin = 0.00003162;
+    /** The maximum audio volume level */
+    public static audioVolumeMax = 1;
 
     /** Token for the currently running fade operation.
      * @remarks Allows operations to cancel themselves in favor of a subsequent operation.
@@ -111,7 +113,7 @@ export default class AudioFader {
      */
     public reset(): void {
         if (this.fadeInDuration || this.fadeOutDuration) {
-            this.setAudioVolume(this.audioVolumeMin);
+            this.setAudioVolume(AudioFader.audioVolumeMin);
         } else {
             this.setAudioVolume(this.masterVolume);
         }
@@ -122,8 +124,8 @@ export default class AudioFader {
      */
     private setAudioVolume(volume: number): void {
         const limitedVolume = Math.min(
-            this.audioVolumeMax,
-            Math.max(this.audioVolumeMin, volume),
+            AudioFader.audioVolumeMax,
+            Math.max(AudioFader.audioVolumeMin, volume),
         );
         this.audio.volume = limitedVolume;
         // console.debug(
@@ -158,11 +160,12 @@ export default class AudioFader {
         // );
 
         if (
-            currentVolume < this.audioVolumeMin ||
-            currentVolume > this.audioVolumeMax ||
+            currentVolume < AudioFader.audioVolumeMin ||
+            currentVolume > AudioFader.audioVolumeMax ||
             isNaN(currentVolume)
         ) {
-            currentVolume = (this.audioVolumeMin + this.audioVolumeMax) / 2;
+            currentVolume =
+                (AudioFader.audioVolumeMin + AudioFader.audioVolumeMax) / 2;
         }
         return currentVolume;
     }
@@ -290,11 +293,11 @@ export default class AudioFader {
                     console.debug(
                         `AudioFader::fadeOut:volume:${currentVolume}`,
                     );
-                    if (currentVolume > this.audioVolumeMin) {
+                    if (currentVolume > AudioFader.audioVolumeMin) {
                         return (
                             this.fade(
                                 currentVolume,
-                                this.audioVolumeMin,
+                                AudioFader.audioVolumeMin,
                                 this.fadeOutDuration,
                             )
                                 /** In case of rejection, just pass the rejection up  */
@@ -314,7 +317,7 @@ export default class AudioFader {
                 }
             });
         } else {
-            this.setAudioVolume(this.audioVolumeMin);
+            this.setAudioVolume(AudioFader.audioVolumeMin);
             return Promise.resolve();
         }
     }
