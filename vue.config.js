@@ -25,6 +25,11 @@ module.exports = {
     },
     //https://cli.vuejs.org/config/#publicpath, using the relative path option
     publicPath: './',
+    productionSourceMap: true,
+    css: {
+        sourceMap: true,
+    },
+    integrity: true,
     configureWebpack: {
         plugins: [
             new BundleAnalyzerPlugin({
