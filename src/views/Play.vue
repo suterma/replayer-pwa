@@ -111,7 +111,9 @@ export default defineComponent({
         },
 
         hasCompilation(): boolean {
-            return this.$store.getters.hasCompilation;
+            const hasCompilation = this.$store.getters.hasCompilation;
+            console.log(`Play::hasCompilation:${hasCompilation}`);
+            return hasCompilation;
         },
 
         tracksDisplayMode(): TrackDisplayMode {

@@ -317,7 +317,7 @@ export default defineComponent({
                     this.$store
                         .dispatch(ActionTypes.RESET_APPLICATION)
                         .then(() => {
-                            this.$router.push('home');
+                            this.$router.push('/');
                         });
                 }
             });

@@ -1,19 +1,10 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Play from '../views/Play.vue';
 //import TrackPlayer from '../views/TrackPlayer.vue';
-import Home from '../views/Home.vue';
 //import List from '../views/List.vue';
 
 const routes: Array<RouteRecordRaw> = [
-    { path: '/', redirect: { name: 'Home' } },
-    /** The default route
-     * @remarks This decides to either load the play or edit route, depending on the last known application state.
-     */
-    {
-        path: '/home',
-        name: 'Home',
-        component: Home,
-    },
+    { path: '/', redirect: { name: 'Play' } },
     {
         /** The route to the playback
          * @remarks This represents the expectedly most used feature, playback of a file or compilation.
