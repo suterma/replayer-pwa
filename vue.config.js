@@ -23,7 +23,7 @@ module.exports = {
             return args;
         });
     },
-    //https://cli.vuejs.org/config/#publicpath, using the relative path option
+    //See https://cli.vuejs.org/config/#publicpath, using the relative path option. Solves linking problems for images
     publicPath: './',
     productionSourceMap: true,
     css: {
@@ -37,5 +37,11 @@ module.exports = {
                 generateStatsFile: true,
             }),
         ],
+    },
+    //Using workbox from a local file, instead of the googleapi CDN. See https://github.com/vuejs/vue-cli/issues/3361#issuecomment-457134243
+    pwa: {
+        workboxOptions: {
+            importWorkboxFrom: 'local',
+        },
     },
 };
