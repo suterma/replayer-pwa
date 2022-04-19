@@ -417,7 +417,12 @@ export default defineComponent({
             );
 
             //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
-            //most probably due to load restriction on an iOS device.
+            //most probably due to load restriction on an iOS device using Safari.
+            //Works on
+            //- iPhone 13/Safari
+            //- iPad Pro 12.9 2021/Safari (with audio from URL)
+            //NOTE: This solution however seems not to work on:
+            //- iPad 9th/Safari, because the buffered lenght is 1, but the sound will only play on 2nd click.
             if (this.audioElement.buffered.length === 0) {
                 //The isClickToLoadRequired flag defers further media loading until the next user's explicit play request
                 this.isClickToLoadRequired = true;
@@ -631,7 +636,7 @@ export default defineComponent({
          */
         play(): void {
             this.debugLog(
-                `play:isClickToLoadRequired${this.isClickToLoadRequired}`,
+                `play:isClickToLoadRequired:${this.isClickToLoadRequired}`,
             );
             if (this.isClickToLoadRequired) {
                 this.loadAfterClick().then(() => {
