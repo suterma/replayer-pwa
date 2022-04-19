@@ -60,19 +60,14 @@ export default defineComponent({
             console.log(`Home::hasCompilation:${hasCompilation}`);
             return hasCompilation;
         },
-        isEditMode(): boolean {
-            return !(
-                this.getSettings.autoRetrieveLastCompilation &&
-                this.hasCompilation
-            );
-        },
     },
 
     beforeMount(): void {
-        if (this.isEditMode) {
-            this.$router.push('edit');
-        } else {
+        //When a compilation is available, assume it should be played
+        if (this.hasCompilation) {
             this.$router.push('play');
+        } else {
+            this.$router.push('edit');
         }
     },
 });
