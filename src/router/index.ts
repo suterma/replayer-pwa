@@ -1,21 +1,18 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Play from '../views/Play.vue';
 //import TrackPlayer from '../views/TrackPlayer.vue';
-//import Home from '../views/Home.vue';
+import Home from '../views/Home.vue';
 //import List from '../views/List.vue';
 
 const routes: Array<RouteRecordRaw> = [
     { path: '/', redirect: { name: 'Home' } },
+    /** The default route
+     * @remarks This decides to either load the play or edit route, depending on the last known application state.
+     */
     {
         path: '/home',
         name: 'Home',
-        //component: Home,
-
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-            import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+        component: Home,
     },
     {
         /** The route to the playback

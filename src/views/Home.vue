@@ -56,7 +56,9 @@ export default defineComponent({
         },
 
         hasCompilation(): boolean {
-            return this.$store.getters.hasCompilation;
+            const hasCompilation = this.$store.getters.hasCompilation;
+            console.log(`Home::hasCompilation:${hasCompilation}`);
+            return hasCompilation;
         },
         isEditMode(): boolean {
             return !(
