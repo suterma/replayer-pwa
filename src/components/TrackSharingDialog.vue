@@ -9,19 +9,19 @@
                     </h1>
                 </header>
                 <section class="modal-card-body">
-                    <div class="content">
-                        You are not sharing the media file, only it's name and
-                        location.
-                    </div>
                     <div class="control">
                         <textarea
                             class="textarea has-fixed-size is-size-7"
                             placeholder="Track link"
-                            disabled
+                            readonly
                             v-text="this.trackUrl"
                         ></textarea>
                     </div>
                     <a :href="this.trackUrl" target="_blank">Click to follow</a>
+                    <div class="content">
+                        You are sharing the track metadata and the URL, not the
+                        media file itself.
+                    </div>
                 </section>
                 <footer class="modal-card-foot is-justify-content-flex-end">
                     <div class="field is-grouped">
