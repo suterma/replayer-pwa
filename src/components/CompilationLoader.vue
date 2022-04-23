@@ -63,7 +63,7 @@ export default defineComponent({
         const query = this.$route?.query;
 
         //Handle a Track API Request (mandatory media is available)
-        if (query && query['media']) {
+        if (query && query['media'] !== undefined) {
             console.debug(
                 'CompilationLoader::mounted:handeling Track API request for media:',
                 query['media'],
@@ -79,6 +79,7 @@ export default defineComponent({
                         //get rid of the query, since it has been applied now
                         this.$router.replace({ query: undefined });
                     });
+                return; //With this URL's track loading
             } else {
                 this.$store.commit(
                     MutationTypes.PUSH_ERROR_MESSAGE,
@@ -87,7 +88,7 @@ export default defineComponent({
             }
         }
         //Handle a Package API Request (mandatory package is available)
-        else if (query && query['package']) {
+        if (query && query['package']) {
             console.debug(
                 'CompilationLoader::mounted:handeling Track API request for package:',
                 query['package'],
@@ -96,16 +97,18 @@ export default defineComponent({
             this.$store.dispatch(ActionTypes.LOAD_FROM_URL, query['package']);
             //get rid of the query, since it has been applied now
             this.$router.replace({ query: undefined });
+            return; //With this package loading
         }
         //Handle auto-retrieval
-        else if (this.getSettings.autoRetrieveLastCompilation) {
+        if (this.getSettings.autoRetrieveLastCompilation) {
             console.debug(
                 'CompilationLoader::mounted:auto-retriving available compilation',
             );
             this.$store.dispatch(ActionTypes.RETRIEVE_COMPILATION);
+            return; //With this compilation retrieving
         }
         //Query the user about manual retrieval
-        else if (this.hasRetrievableCompilation && !this.hasCompilation) {
+        if (this.hasRetrievableCompilation && !this.hasCompilation) {
             console.debug('CompilationLoader::mounted:user-choice');
             this.showDialog = true;
         }
