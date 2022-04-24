@@ -47,33 +47,21 @@ By the click of a button, Replayer starts to play at predefined times in the aud
             v-bind:class="{ 'is-active': activator }"
         >
             <div class="navbar-start">
-                <Hotkey
-                    :keys="['ctrl', 'p']"
-                    @hotkey="
-                        () => {
-                            this.$router.push('/play');
-                        }
-                    "
-                >
+                <Hotkey :keys="['ctrl', 'p']" v-slot="{ clickRef }">
                     <router-link
                         title="Switch to play view [CTRL+P]"
                         @click="toggleBurger"
+                        :ref="clickRef"
                         class="navbar-item"
                         to="/play"
                         >Play</router-link
                     >
                 </Hotkey>
-                <Hotkey
-                    :keys="['ctrl', 'e']"
-                    @hotkey="
-                        () => {
-                            this.$router.push('/edit');
-                        }
-                    "
-                >
+                <Hotkey :keys="['ctrl', 'e']" v-slot="{ clickRef }">
                     <router-link
                         title="Switch to edit view [CTRL+E]"
                         @click="toggleBurger"
+                        :ref="clickRef"
                         class="navbar-item"
                         to="/edit"
                         >Edit</router-link
