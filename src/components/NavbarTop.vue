@@ -47,18 +47,38 @@ By the click of a button, Replayer starts to play at predefined times in the aud
             v-bind:class="{ 'is-active': activator }"
         >
             <div class="navbar-start">
-                <router-link
-                    @click="toggleBurger"
-                    class="navbar-item"
-                    to="/play"
-                    >Play</router-link
+                <Hotkey
+                    :keys="['ctrl', 'p']"
+                    @hotkey="
+                        () => {
+                            this.$router.push('/play');
+                        }
+                    "
                 >
-                <router-link
-                    @click="toggleBurger"
-                    class="navbar-item"
-                    to="/edit"
-                    >Edit</router-link
+                    <router-link
+                        title="Switch to play view [CTRL+P]"
+                        @click="toggleBurger"
+                        class="navbar-item"
+                        to="/play"
+                        >Play</router-link
+                    >
+                </Hotkey>
+                <Hotkey
+                    :keys="['ctrl', 'e']"
+                    @hotkey="
+                        () => {
+                            this.$router.push('/edit');
+                        }
+                    "
                 >
+                    <router-link
+                        title="Switch to edit view [CTRL+E]"
+                        @click="toggleBurger"
+                        class="navbar-item"
+                        to="/edit"
+                        >Edit</router-link
+                    >
+                </Hotkey>
                 <Experimental>
                     <router-link
                         @click="toggleBurger"
@@ -95,11 +115,12 @@ By the click of a button, Replayer starts to play at predefined times in the aud
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Experimental from '@/components/Experimental.vue';
+import { Hotkey } from '@simolation/vue-hotkey';
 
 /** A top navbar for the application*/
 export default defineComponent({
     name: 'NavbarTop',
-    components: { Experimental },
+    components: { Experimental, Hotkey },
 
     data() {
         return {

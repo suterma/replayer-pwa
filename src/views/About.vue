@@ -318,6 +318,15 @@
                     >, dialogs meet promises in Vue 3! (Released under the MIT
                     License, by Régis Lemaigre)
                 </li>
+                <li>
+                    <a
+                        href="https://github.com/Simolation/vue-hotkey"
+                        target="_blank"
+                    >
+                        vue-hotkey</a
+                    >, a Vue 3 keyboard shortcut library (Released under the MIT
+                    License, by Simon Osterlehner)
+                </li>
             </ul>
         </div>
         <h1 class="title">License</h1>
