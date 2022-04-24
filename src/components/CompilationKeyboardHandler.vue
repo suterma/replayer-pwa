@@ -35,17 +35,19 @@ export enum Replayer {
     VOLUME_UP = 'volumeup',
 }
 
-/** A keyboard handler, which translates keyboard events into global Replayer events
- * (at the DOM document level) to handle as
+/** A keyboard handler, which translates specific keyboard events into global
+ * Replayer events(at the DOM document level) to handle as
  * - cue actions, for all cues in a compilation
  * - player actions, which get handeled by the currently active player (if any)
  * @devdoc The idea is to register for keypresses at the document level,
- * then translate these keypresses
- * into custom Replayer events, and emit them back at the document level.
- * This should only be done (or handeled) if a compilation is loaded.
- * Using a specific Replayer event handler at the appropriate level, these issued Replayer action events
- * can then be handeled properly in the suitable Vue component.
- * See also https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events
+ * then translate these keypresses into custom Replayer events, and emit them
+ * back at the document level. This should only be done (or handeled) if a
+ * compilation is loaded.
+ * Using a specific Replayer event handler at the appropriate level, these
+ * issued Replayer action events can then be handeled properly in the suitable
+ * Vue component. See also https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events
+ * @devdoc This keyboard hander is distinct from the general application hotkey
+ * handling, which is implemented separately.
  */
 export default defineComponent({
     name: 'CompilationKeyboardHandler',
@@ -54,10 +56,12 @@ export default defineComponent({
     props: {},
     data() {
         return {
-            /** The character representation of the currently pressed key (or keys, when handling a shortcut) */
+            /** The character representation of the currently pressed key
+             * (or keys, when handling a shortcut) */
             key: '',
             /** The mnemonic store.
-             * @remarks Used to build up the mnemonic by adding characters to it, for a short amount of time.
+             * @remarks Used to build up the mnemonic by adding characters to it,
+             * for a short amount of time.
              */
             mnemonic: '',
 
