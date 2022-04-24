@@ -62,38 +62,45 @@
         </div>
         <!-- Create Cue -->
         <p class="control">
-            <button
-                :class="{
-                    button: true,
-                    'is-warning': true,
-                }"
-                @click.prevent="this.$emit('newCueTriggered')"
-                title="Create a cue now (at the current position)!"
-            >
-                <Icon name="plus" />
-                <span class="is-hidden-mobile"> Create Cue!</span>
-            </button>
+            <!-- Handle the insert key as trigger for a new cue -->
+            <Hotkey :keys="['insert']" v-slot="{ clickRef }">
+                <button
+                    :class="{
+                        button: true,
+                        'is-warning': true,
+                    }"
+                    @click.prevent="this.$emit('newCueTriggered')"
+                    :ref="clickRef"
+                    title="Create a cue now (at the current position)!"
+                >
+                    <Icon name="plus" />
+                    <span class="is-hidden-mobile"> Create Cue!</span>
+                </button>
+            </Hotkey>
         </p>
-        <!-- Handle the insert key as trigger for a nue cue Handle the insert key as  trigger for a nue cue -->
-        <GlobalEvents @keydown.prevent.insert="this.$emit('newCueTriggered')" />
     </div>
 </template>
 
 <script lang="ts">
 import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent } from 'vue';
-import { GlobalEvents } from 'vue-global-events';
 import Icon from '@/components/icons/Icon.vue';
 import PlayerTime from '@/components/PlayerTime.vue';
 import LongLine from '@/components/LongLine.vue';
 import AudioUtil from '@/code/audio/AudioUtil';
+import { Hotkey } from '@simolation/vue-hotkey';
 
 /** A UI representation for a media player
  * @remarks Handles and emits various states and event for playback control.
  */
 export default defineComponent({
     name: 'CueTrigger',
-    components: { GlobalEvents, Icon, PlayerTime, LongLine },
+    components: {
+        Icon,
+        PlayerTime,
+        LongLine,
+        Hotkey,
+    },
     emits: [
         'update:playing',
         'update:currentSeconds',
