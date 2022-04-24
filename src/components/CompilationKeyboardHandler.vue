@@ -1,14 +1,24 @@
 <template>
-    <!-- Note: Enter (when not terminating a mnemonic, also toggles playback, via "handleKey") -->
-    <!-- Note: "/"" and "*"" are also handeled via "handleKey" -->
-    <GlobalEvents
-        v-if="hasCompilation"
-        @keydown.prevent="handleKey"
-        @keydown.prevent.-="volumeDown"
-        @keydown.prevent.+="volumeUp"
-        @keydown.prevent.left="rewind"
-        @keydown.prevent.right="forward"
-    />
+    <template v-if="hasCompilation">
+        <!-- Note: Enter (when not terminating a mnemonic, also toggles playback, via "handleKey") -->
+        <!-- Note: "/"" and "*"" are also handeled via "handleKey" -->
+        <GlobalEvents
+            v-if="useCtrlModifier"
+            @keydown.ctrl.prevent="handleKey"
+            @keydown.ctrl.prevent.-="volumeDown"
+            @keydown.ctrl.prevent.+="volumeUp"
+            @keydown.ctrl.prevent.left="rewind"
+            @keydown.ctrl.prevent.right="forward"
+        />
+        <GlobalEvents
+            v-else
+            @keydown.prevent="handleKey"
+            @keydown.prevent.-="volumeDown"
+            @keydown.prevent.+="volumeUp"
+            @keydown.prevent.left="rewind"
+            @keydown.prevent.right="forward"
+        />
+    </template>
     <KeyResponseOverlay
         :keyText="key"
         ref="keyResponseOverlay"
@@ -39,6 +49,8 @@ export enum Replayer {
  * Replayer events(at the DOM document level) to handle as
  * - cue actions, for all cues in a compilation
  * - player actions, which get handeled by the currently active player (if any)
+ * @remarks Events are only handeled, when a compilation is currently loaded
+ * @remarks The emitted events are those from the @see Replayer enumeration
  * @devdoc The idea is to register for keypresses at the document level,
  * then translate these keypresses into custom Replayer events, and emit them
  * back at the document level. This should only be done (or handeled) if a
@@ -53,7 +65,14 @@ export default defineComponent({
     name: 'CompilationKeyboardHandler',
     components: { GlobalEvents, KeyResponseOverlay },
     mixins: [settingsMixin],
-    props: {},
+    props: {
+        /** Whether to require the CTRL modfier keys for the keyboard events */
+        requiresCtrlModifier: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+    },
     data() {
         return {
             /** The character representation of the currently pressed key

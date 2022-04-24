@@ -2,8 +2,10 @@
     <CompilationLoader />
 
     <!-- Handle and translate the keyboard shortcuts into Replayer events -->
-    <!-- This is only used for playback view only, because it otherwise disturbs editing -->
-    <CompilationKeyboardHandler v-if="!this.isEditMode" />
+    <!-- In playback view, do not require the CTRL modifier -->
+    <!-- In edit view, the CTRL modifier helps disambiguate
+         between other uses of the shortcut keys-->
+    <CompilationKeyboardHandler :useCtrlModifier="this.isEditMode" />
 
     <!-- Show a loading panel, similar to the edit view, but not in edit mode -->
     <Compilation
