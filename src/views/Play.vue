@@ -5,7 +5,7 @@
     <!-- In playback view, do not require the CTRL modifier -->
     <!-- In edit view, the CTRL modifier helps disambiguate
          between other uses of the shortcut keys-->
-    <CompilationKeyboardHandler :useCtrlModifier="isEditMode" />
+    <CompilationKeyboardHandler :requireCtrlModifier="isEditMode" />
 
     <!-- Show a loading panel, similar to the edit view, but not in edit mode -->
     <Compilation

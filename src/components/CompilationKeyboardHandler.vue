@@ -3,8 +3,8 @@
         <!-- Note: Enter (when not terminating a mnemonic, also toggles playback, via "handleKey") -->
         <!-- Note: "/"" and "*"" are also handeled via "handleKey" -->
         <GlobalEvents
-            v-if="useCtrlModifier"
-            @keydown.ctrl.prevent="handleKey"
+            v-if="requireCtrlModifier"
+            @keydown.ctrl="handleKey"
             @keydown.ctrl.prevent.-="volumeDown"
             @keydown.ctrl.prevent.+="volumeUp"
             @keydown.ctrl.prevent.left="rewind"
@@ -12,7 +12,7 @@
         />
         <GlobalEvents
             v-else
-            @keydown.prevent="handleKey"
+            @keydown="handleKey"
             @keydown.prevent.-="volumeDown"
             @keydown.prevent.+="volumeUp"
             @keydown.prevent.left="rewind"
@@ -22,7 +22,7 @@
     <KeyResponseOverlay
         :keyText="key"
         ref="keyResponseOverlay"
-        :displayTimeout="this.keyboardShortcutTimeout"
+        :displayTimeout="keyboardShortcutTimeout"
     />
 </template>
 
@@ -67,7 +67,7 @@ export default defineComponent({
     mixins: [settingsMixin],
     props: {
         /** Whether to require the CTRL modfier keys for the keyboard events */
-        requiresCtrlModifier: {
+        requireCtrlModifier: {
             type: Boolean,
             required: false,
             default: false,
@@ -115,21 +115,25 @@ export default defineComponent({
 
             //Back to cue (dot)?
             if (event.code === 'NumpadDecimal' || event.code === 'Period') {
+                event.preventDefault();
                 this.DisplayKeyAndAction(event, 'back to cue');
                 document.dispatchEvent(new Event(Replayer.BACK_TO_CUE));
             }
             //Next cue?
             else if (event.key === '*') {
+                event.preventDefault();
                 this.DisplayKeyAndAction(event, 'to next cue');
                 document.dispatchEvent(new Event(Replayer.TO_NEXT_CUE));
             }
             //Previous cue?
             else if (event.key === '/') {
+                event.preventDefault();
                 this.DisplayKeyAndAction(event, 'to previous cue');
                 document.dispatchEvent(new Event(Replayer.TO_PREV_CUE));
             }
             //Mnemonic termination / play/pause-toggeling?
             else if (event.key === 'Enter') {
+                event.preventDefault();
                 if (this.mnemonic) {
                     this.DisplayDataAndAction(
                         this.mnemonic,
@@ -150,8 +154,9 @@ export default defineComponent({
                 }
             }
             //is it a shortcut mnemonic key?
-            //(any one alphanumeric character from the basic Latin alphabet, including the underscore)
-            else if (event.key.match(/^\w{1}$/g)) {
+            //(any one numeric character)
+            else if (event.key.match(/^[0-9]{1}$/g)) {
+                event.preventDefault();
                 this.mnemonic = this.mnemonic + event.key;
                 this.DisplayDataAndAction(this.mnemonic, 'mnemonic');
 
@@ -161,7 +166,7 @@ export default defineComponent({
                     this.mnemonic = '';
                 }, this.keyboardShortcutTimeout);
             }
-            //HINT if later necessary, specifically allow some keys to have the default function, like F12
+            //HINT: if it's not handle, do not prevent the default action, like F12, CTRL-V etc...
         },
 
         /** Toggles playback
