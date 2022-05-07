@@ -5,13 +5,13 @@
     <!-- In playback view, do not require the CTRL modifier -->
     <!-- In edit view, the CTRL modifier helps disambiguate
          between other uses of the shortcut keys-->
-    <CompilationKeyboardHandler :useCtrlModifier="this.isEditMode" />
+    <CompilationKeyboardHandler :useCtrlModifier="isEditMode" />
 
     <!-- Show a loading panel, similar to the edit view, but not in edit mode -->
     <Compilation
         v-if="hasCompilation"
         :compilation="compilation"
-        :tracksDisplayMode="this.tracksDisplayMode"
+        :tracksDisplayMode="tracksDisplayMode"
     />
 
     <div v-else class="section pl-0 pr-0">
@@ -23,7 +23,7 @@
     <div class="section pl-0 pr-0">
         <!-- v-click-outside seems not to work well with v-if -->
         <!-- Additionally, v-show seems not to work properly when used directly on the MediaDropZone-Element, thus it's applied to an extra div -->
-        <div v-show="this.isEditMode || !hasCompilation">
+        <div v-show="isEditMode || !hasCompilation">
             <div class="level media-loader">
                 <div class="level-item has-text-centered">
                     <MediaDropZone
