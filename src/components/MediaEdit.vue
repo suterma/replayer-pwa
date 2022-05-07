@@ -3,14 +3,14 @@
     <div class="is-flex is-align-items-center" v-click-outside="acceptValue">
         <MediaSourceIndicator
             v-if="!editMode"
-            :source="this.track.Url"
+            :source="track.Url"
             @click="toggleEditMode()"
         />
         <MediaDropZone
             v-else
             :isExpanded="true"
-            :replaceUrl="this.track.Url"
-            :trackId="this.track.Id"
+            :replaceUrl="track.Url"
+            :trackId="track.Id"
             ref="mediaDropZone"
         />
         <NavButton
