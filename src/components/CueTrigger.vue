@@ -1,9 +1,9 @@
 <template>
     <!-- Placeholder for an unloaded track -->
-    <div v-if="!this.loaded" class="field player-panel is-fullwidth">
+    <div v-if="!loaded" class="field player-panel is-fullwidth">
         <p class="control">
             <button
-                v-if="this.error"
+                v-if="error"
                 class="button is-fullwidth is-danger is-static is-outlined"
             >
                 <LongLine
@@ -27,9 +27,8 @@
             <button
                 :class="{
                     button: true,
-                    disabled: this.isPlayingRequestOutstanding || !this.loaded,
-                    'is-loading':
-                        this.isPlayingRequestOutstanding || !this.loaded,
+                    disabled: isPlayingRequestOutstanding || !loaded,
+                    'is-loading': isPlayingRequestOutstanding || !loaded,
                 }"
                 @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
@@ -52,11 +51,11 @@
                     title="Seek"
                 ></div>
                 <PlayerTime
-                    :isFading="this.isFading"
-                    :isPlaying="this.playing"
-                    :sourceDescription="this.sourceDescription"
-                    :duration="this.durationSeconds"
-                    :position="this.currentSeconds"
+                    :isFading="isFading"
+                    :isPlaying="playing"
+                    :sourceDescription="sourceDescription"
+                    :duration="durationSeconds"
+                    :position="currentSeconds"
                 />
             </div>
         </div>
@@ -69,7 +68,7 @@
                         button: true,
                         'is-warning': true,
                     }"
-                    @click.prevent="this.$emit('newCueTriggered')"
+                    @click.prevent="$emit('newCueTriggered')"
                     :ref="clickRef"
                     title="Create a cue now (at the current position)!"
                 >
@@ -83,7 +82,7 @@
 
 <script lang="ts">
 import CompilationHandler from '@/store/compilation-handler';
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import Icon from '@/components/icons/Icon.vue';
 import PlayerTime from '@/components/PlayerTime.vue';
 import LongLine from '@/components/LongLine.vue';
@@ -170,7 +169,7 @@ export default defineComponent({
          * @remarks This is used to display an error for the last action on the player instance.
          */
         error: {
-            type: MediaError,
+            type: null as unknown as PropType<MediaError | null>,
             default: null,
         },
     },
