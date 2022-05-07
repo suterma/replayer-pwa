@@ -6,7 +6,7 @@
             v-for="[fileName, mediaUrl] in mediaUrls"
             :key="fileName"
         >
-            <span :title="mediaUrl.objectUrl">{{ fileName }}</span>
+            <span :title="mediaUrl.url">{{ fileName }}</span>
             <button class="delete"></button>
         </span>
     </div>
