@@ -5,11 +5,11 @@
         :class="{
             level: true,
             'is-mobile': true,
-            'is-clickable': this.isCollapsible,
+            'is-clickable': isCollapsible,
         }"
         v-bind:id="'track-' + track.Id"
         @click="
-            if (this.isCollapsible) {
+            if (isCollapsible) {
                 toggleExpanded();
             }
         "
@@ -18,10 +18,7 @@
         <!-- Left side -->
         <div class="level-left">
             <!-- Back Link -->
-            <div
-                v-if="!this.isCollapsible && !this.isLinkOnly"
-                class="level-item"
-            >
+            <div v-if="!isCollapsible && !isLinkOnly" class="level-item">
                 <router-link
                     :to="{
                         name: 'List',
@@ -37,12 +34,14 @@
             </div>
             <!-- Title -->
             <div class="level-item">
-                <p class="subtitle is-4">{{ track.Name }}</p>
+                <p class="subtitle is-4">
+                    <LinkableText :text="track.Name"></LinkableText>
+                </p>
             </div>
             <!-- Artist info (don't show on small devices)-->
             <div class="level-item is-hidden-mobile">
                 <p class="is-size-7">
-                    <ArtistInfo :track="this.track" />
+                    <ArtistInfo :track="track" />
                 </p>
             </div>
         </div>
@@ -51,28 +50,28 @@
             <!-- Playback indicator -->
             <nav class="level-item">
                 <PlaybackIndicator
-                    :is-ready="!this.isPlaying && this.isTrackLoaded"
-                    :is-playing="this.isPlaying"
-                    :is-unloaded="!this.isTrackLoaded"
+                    :is-ready="!isPlaying && isTrackLoaded"
+                    :is-playing="isPlaying"
+                    :is-unloaded="!isTrackLoaded"
                 />
             </nav>
             <!-- Expander -->
-            <div v-if="this.isCollapsible" class="level-item">
+            <div v-if="isCollapsible" class="level-item">
                 <CollapsibleButton
-                    :modelValue="this.modelValue"
+                    :modelValue="modelValue"
                     title="Track"
                     collapsedText="Expand to play"
                     class="is-nav"
                 />
             </div>
             <!-- Forward navigation -->
-            <div v-if="this.isLinkOnly" class="level-item">
+            <div v-if="isLinkOnly" class="level-item">
                 <router-link
                     :to="{
                         name: 'Track-Player',
-                        params: { id: this.track.Id },
+                        params: { id: track.Id },
                     }"
-                    :title="`Show track '${this.track.Name}'`"
+                    :title="`Show track '${track.Name}'`"
                 >
                     <p class="control">
                         <span class="button is-nav">
@@ -93,6 +92,7 @@ import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import { ActionTypes } from '@/store/action-types';
 import Icon from '@/components/icons/Icon.vue';
+import LinkableText from './LinkableText.vue';
 
 /** Displays a track header with a title.
  * @remarks Also handles the common replayer events for tracks
@@ -105,6 +105,7 @@ export default defineComponent({
         PlaybackIndicator,
         Icon,
         ArtistInfo,
+        LinkableText,
     },
     props: {
         track: {
