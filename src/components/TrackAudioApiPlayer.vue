@@ -359,11 +359,26 @@ export default defineComponent({
          * @devdoc To be used only privately. To change the source from the outside, use the mediaUrl property.
          */
         updateMediaSource(mediaUrl: string): void {
-            //Only start loading the element, when a source is actually available
-            //Otherwise the element throws an avoidable error
             this.debugLog(`UpdateMediaSource:${mediaUrl}`);
             if (mediaUrl) {
+                //Only update the audio element, when a source is actually available
+                //Otherwise the element throws an avoidable error
+
+                //NOTE: Just changing the .src property does not work when the track is currently playing
+                //(observed on Ubuntu Google Chrome)
+                //An error is only thrown only after the playback ends.
+                //Thus, additional handling is necessary
+
+                //NOTE2: This method assumes, that the new media for this is of (roghly) the same
+                //lenght, just replacing the voice/instrument in the piece.
+                //Thus, the playback position is maintained and not reset.
+                //Otherwise the user will need to restart playback from
+                //new position anyway
+                const lastPosition = this.audioElement.currentTime;
+                this.audioElement.pause();
                 this.audioElement.src = mediaUrl;
+                this.audioElement.currentTime = lastPosition;
+                this.audioElement.play();
             }
         },
         download() {

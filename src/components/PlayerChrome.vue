@@ -1,8 +1,8 @@
 <template>
-    <div class="field player-panel is-fullwidth" v-if="!this.loaded">
+    <div class="field player-panel is-fullwidth" v-if="!loaded">
         <p class="control">
             <button
-                v-if="this.error"
+                v-if="error"
                 class="button is-fullwidth is-danger is-static is-outlined"
             >
                 <LongLine
@@ -25,7 +25,7 @@
             <button
                 :class="{
                     button: true,
-                    'is-loading': !this.loaded,
+                    'is-loading': !loaded,
                 }"
                 @click.prevent="stop"
                 title="Stop"
@@ -38,9 +38,8 @@
             <button
                 :class="{
                     button: true,
-                    disabled: this.isPlayingRequestOutstanding || !this.loaded,
-                    'is-loading':
-                        this.isPlayingRequestOutstanding || !this.loaded,
+                    disabled: isPlayingRequestOutstanding || !loaded,
+                    'is-loading': isPlayingRequestOutstanding || !loaded,
                 }"
                 @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
@@ -54,9 +53,8 @@
             <button
                 :class="{
                     button: true,
-                    disabled: this.isPlayingRequestOutstanding || !this.loaded,
-                    'is-loading':
-                        this.isPlayingRequestOutstanding || !this.loaded,
+                    disabled: isPlayingRequestOutstanding || !loaded,
+                    'is-loading': isPlayingRequestOutstanding || !loaded,
                     'has-left-radius': true,
                 }"
                 @click.prevent="togglePlayback"
@@ -80,11 +78,11 @@
                     title="Seek"
                 ></div>
                 <PlayerTime
-                    :isFading="this.isFading"
-                    :isPlaying="this.playing"
-                    :duration="this.durationSeconds"
-                    :position="this.currentSeconds"
-                    :sourceDescription="this.sourceDescription"
+                    :isFading="isFading"
+                    :isPlaying="playing"
+                    :duration="durationSeconds"
+                    :position="currentSeconds"
+                    :sourceDescription="sourceDescription"
                 />
             </div>
         </div>
@@ -135,7 +133,7 @@
             >
                 <Icon name="volume" />
                 <input
-                    :value="this.trackVolume"
+                    :value="trackVolume"
                     v-if="showVolume"
                     class="player-volume"
                     type="range"
@@ -160,14 +158,14 @@
         </p>
         <!-- Play mode -->
         <p class="control">
-            <PlaybackModeButton v-model="this.playbackMode" />
+            <PlaybackModeButton v-model="playbackMode" />
         </p>
     </div>
 </template>
 
 <script lang="ts">
 import CompilationHandler from '@/store/compilation-handler';
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import Icon from '@/components/icons/Icon.vue';
 import PlayerTime from '@/components/PlayerTime.vue';
 import PlaybackModeButton from '@/components/PlaybackModeButton.vue';
@@ -270,7 +268,7 @@ export default defineComponent({
          * @remarks This is used to display an error for the last action on the player instance.
          */
         error: {
-            type: MediaError,
+            type: null as unknown as PropType<MediaError | null>,
             default: null,
         },
     },
