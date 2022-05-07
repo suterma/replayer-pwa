@@ -55,7 +55,7 @@
                     :title="this.track?.Name"
                     :mediaUrl="optimizedMediaObjectUrl"
                     @timeupdate="updateTime"
-                    @trackLoaded="calculateCueDurations"
+                    @durationChanged="calculateCueDurations"
                     @trackPlaying="updatePlaying"
                     @newCueTriggered="createNewCue"
                     :loopStart="this.selectedCue?.Time"

@@ -50,7 +50,7 @@ import { PlaybackMode } from '@/store/compilation-types';
 /** A simple vue audio player, for a single track, using the Web Audio API.
  * @devdoc Internally maintains it's state, updating the enclosed audio element accordingly.
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playing
- * @remarks Emits 'trackLoaded' with the track duration in seconds, once after successful load of the metadata of the track's media file
+ * @remarks Emits 'durationChanged' with the track duration in seconds, once after successful load of the metadata of the track's media file
  * @remarks Emits 'trackPlaying' when the track is playing
  * @devdoc The 'newCueTriggered' is just passed up
  * @devdoc Autoplay after load is intentionally not supported, as this is of no use for the Replayer app.
@@ -61,7 +61,7 @@ export default defineComponent({
     mixins: [settingsMixin],
     emits: [
         'timeupdate',
-        'trackLoaded',
+        'durationChanged',
         'trackPlaying',
         'newCueTriggered',
         /* Do not add newCueTriggered here, to let it just get passed up */
@@ -227,6 +227,8 @@ export default defineComponent({
         };
         this.audioElement.ondurationchange = (event) => {
             this.debugLog(`ondurationchange `, event);
+            //Unfortunately, the src element in the event is null, thus directly use the audioElement here.
+            this.updateDuration(this.audioElement.duration);
         };
         this.audioElement.onpause = () => {
             this.playing = false;
@@ -404,6 +406,15 @@ export default defineComponent({
             this.handleReadyState(readyState);
         },
 
+        /** If changed, updates the internal duration and emits the durationChanged event
+         */
+        updateDuration(duration: number): void {
+            if (this.durationSeconds !== duration) {
+                this.durationSeconds = duration;
+                this.$emit('durationChanged', this.durationSeconds);
+            }
+        },
+
         /** Handles the current ready state of the audio element's media, with regard to playability
          * @remarks Decides, whether deferred loading is required.
          */
@@ -413,9 +424,7 @@ export default defineComponent({
                 if (!this.hasLoadedMetadata && !this.hasLoadedData) {
                     this.hasLoadedMetadata = true;
                     this.hasLoadedData = true;
-                    this.durationSeconds = this.audioElement.duration;
-
-                    this.$emit('trackLoaded', this.durationSeconds);
+                    this.updateDuration(this.audioElement.duration);
 
                     //Apply the currently known position to the player. It could be non-zero already.
                     this.seekTo(this.currentSeconds);
