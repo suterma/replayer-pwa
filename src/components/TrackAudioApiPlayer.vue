@@ -137,6 +137,7 @@ export default defineComponent({
         /** Whether the audio is currently fading */
         isFading: false,
         playbackMode: PlaybackMode.PlayTrack, //by default
+        /** Whether playback is currently ongoing */
         playing: false,
         showVolume: false,
         /** Default value, user may change later */
@@ -362,25 +363,30 @@ export default defineComponent({
          */
         updateMediaSource(mediaUrl: string): void {
             this.debugLog(`UpdateMediaSource:${mediaUrl}`);
+            //Only update the audio element, when a source is actually available
+            //Otherwise the element throws an avoidable error
             if (mediaUrl) {
-                //Only update the audio element, when a source is actually available
-                //Otherwise the element throws an avoidable error
-
                 //NOTE: Just changing the .src property does not work when the track is currently playing
                 //(observed on Ubuntu Google Chrome)
                 //An error is only thrown only after the playback ends.
                 //Thus, additional handling is necessary
-
-                //NOTE2: This method assumes, that the new media for this is of (roghly) the same
-                //lenght, just replacing the voice/instrument in the piece.
-                //Thus, the playback position is maintained and not reset.
-                //Otherwise the user will need to restart playback from
-                //new position anyway
+                const isCurrentlyPlaying = this.playing;
                 const lastPosition = this.audioElement.currentTime;
                 this.audioElement.pause();
+
+                //Switch the source now, after pause
                 this.audioElement.src = mediaUrl;
+
+                //NOTE: This method assumes, that the new media for this is of (roghly) the same
+                //lenght, just replacing the voice/instrument in the piece.
+                //Thus, the playback position is maintained and not reset,
+                //and the playing state is set again after the switch.
+                //Otherwise the user will need to restart playback from
+                //new position anyway
                 this.audioElement.currentTime = lastPosition;
-                this.audioElement.play();
+                if (isCurrentlyPlaying) {
+                    this.audioElement.play();
+                }
             }
         },
         download() {
