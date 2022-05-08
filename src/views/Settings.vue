@@ -10,9 +10,7 @@
                     <label class="checkbox">
                         <input
                             type="checkbox"
-                            :checked="
-                                this.getSettings.autoRetrieveLastCompilation
-                            "
+                            :checked="getSettings.autoRetrieveLastCompilation"
                             @change="autoRetrieveLastCompilationChanged"
                         />
                         Automatically retrieve the last compilation at startup
@@ -29,7 +27,7 @@
                     <label class="checkbox">
                         <input
                             type="checkbox"
-                            :checked="this.getSettings.preventScreenTimeout"
+                            :checked="getSettings.preventScreenTimeout"
                             @change="preventScreenTimeoutChanged"
                         />
                         Always prevent screen timeout while any track is in use
@@ -56,7 +54,7 @@
                     <div class="select">
                         <select
                             v-model.number="
-                                this.localSettings.keyboardShortcutTimeout
+                                localSettings.keyboardShortcutTimeout
                             "
                             @change="keyboardShortcutTimeoutChanged"
                             class=""
@@ -96,7 +94,7 @@
                             <div class="select">
                                 <select
                                     v-model.number="
-                                        this.localSettings.fadeInDuration
+                                        localSettings.fadeInDuration
                                     "
                                     @change="fadeInDurationChanged"
                                     class=""
@@ -143,7 +141,7 @@
                             <div class="select">
                                 <select
                                     v-model.number="
-                                        this.localSettings.fadeOutDuration
+                                        localSettings.fadeOutDuration
                                     "
                                     @change="fadeOutDurationChanged"
                                     class=""
@@ -185,7 +183,7 @@
                     <label class="checkbox">
                         <input
                             type="checkbox"
-                            :checked="this.getSettings.applyFadeInOffset"
+                            :checked="getSettings.applyFadeInOffset"
                             @change="applyFadeInOffsetChanged"
                         />
                         Apply an offset before fade-in operations
@@ -241,7 +239,7 @@
                     >
 
                     <!-- <div class="control"> -->
-                    <CollapsibleButton v-model="this.isExperimentalExpanded" />
+                    <CollapsibleButton v-model="isExperimentalExpanded" />
                     <!-- </div> -->
                 </label>
             </div>
@@ -249,7 +247,7 @@
             <br />
             <br />
             <slide-up-down
-                v-model="this.isExperimentalExpanded"
+                v-model="isExperimentalExpanded"
                 :duration="250"
                 timingFunction="linear"
                 :responsive="true"
@@ -265,8 +263,7 @@
                                 <input
                                     type="checkbox"
                                     :checked="
-                                        this.getSettings
-                                            .displayExperimentalContent
+                                        getSettings.displayExperimentalContent
                                     "
                                     @change="displayExperimentalContentChanged"
                                 />

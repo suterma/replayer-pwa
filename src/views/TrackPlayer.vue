@@ -3,7 +3,7 @@
         v-if="track"
         :track="track"
         :ref="'track-' + track.Id"
-        :displayMode="this.trackDisplayMode"
+        :displayMode="trackDisplayMode"
     ></Track>
 
     <template v-else>
