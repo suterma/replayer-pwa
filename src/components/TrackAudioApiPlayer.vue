@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import { MutationTypes } from '@/store/mutation-types';
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import PlayerChrome from '@/components/PlayerChrome.vue';
 import CueTrigger from '@/components/CueTrigger.vue';
 import AudioFader from '@/code/audio/AudioFader';
@@ -94,9 +94,10 @@ export default defineComponent({
          * @remarks This is used as the start time for any repetition, either from looping or when played to end.
          */
         loopStart: {
-            type: Number,
-            default: undefined,
+            type: null as unknown as PropType<number | null>,
+            default: null,
             required: false,
+            validator: (v: any) => typeof v === 'number' || v === null,
         },
         /** The end time of the selected cue. Used in conjunction with the playbackMode, when in cue loop mode.
          * @devdoc This is used to emulate the buffer looping for the enclosed audio element.
@@ -104,9 +105,10 @@ export default defineComponent({
          * @remarks This is only used when the playback mode is set to "repeat-cue".
          */
         loopEnd: {
-            type: Number,
-            default: undefined,
+            type: null as unknown as PropType<number | null>,
+            default: null,
             required: false,
+            validator: (v: any) => typeof v === 'number' || v === null,
         },
         /** The track source description
          * @remarks This is a textual indication of the track media source. It's displayed as part of the timing display
@@ -587,8 +589,8 @@ export default defineComponent({
 
                     //Is a loop due?
                     if (
-                        this.loopStart !== undefined &&
-                        this.loopEnd !== undefined &&
+                        this.loopStart !== null &&
+                        this.loopEnd !== null &&
                         (this.currentSeconds >= this.loopEnd || isAtTrackEnd)
                     ) {
                         //Back to start
@@ -614,8 +616,8 @@ export default defineComponent({
                 case PlaybackMode.PlayCue: {
                     //Execute once, when past the end and not yet fading (avoid repeated calls)
                     if (
-                        this.loopStart !== undefined &&
-                        this.loopEnd !== undefined &&
+                        this.loopStart !== null &&
+                        this.loopEnd !== null &&
                         this.currentSeconds >= this.loopEnd &&
                         this.isFading == false
                     ) {

@@ -18,28 +18,28 @@
         <!-- Each track is an item in a list and contains all the cues -->
         <!-- Track header, including artist info, expansion-toggler and adaptive spacing -->
         <TrackHeaderEdit
-            v-if="this.isEditable"
-            :track="this.track"
-            v-model="this.expanded"
-            :isPlaying="this.isPlaying"
-            :isTrackLoaded="this.isTrackLoaded"
-            :isActiveTrack="this.isActiveTrack"
+            v-if="isEditable"
+            :track="track"
+            v-model="expanded"
+            :isPlaying="isPlaying"
+            :isTrackLoaded="isTrackLoaded"
+            :isActiveTrack="isActiveTrack"
         />
         <TrackHeader
             v-else
-            :track="this.track"
-            v-model="this.expanded"
-            :isPlaying="this.isPlaying"
-            :isTrackLoaded="this.isTrackLoaded"
-            :isActiveTrack="this.isActiveTrack"
-            :isEditable="this.isEditable"
-            :isCollapsible="this.isCollapsible"
-            :isLinkOnly="this.isLinkOnly"
+            :track="track"
+            v-model="expanded"
+            :isPlaying="isPlaying"
+            :isTrackLoaded="isTrackLoaded"
+            :isActiveTrack="isActiveTrack"
+            :isEditable="isEditable"
+            :isCollapsible="isCollapsible"
+            :isLinkOnly="isLinkOnly"
         />
 
         <!-- The cues as buttons (in a slider, whose use is optional, for a better overview)-->
         <slide-up-down
-            v-model="this.expanded"
+            v-model="expanded"
             :duration="300"
             timingFunction="linear"
         >
@@ -49,20 +49,18 @@
             -->
             <template v-if="mediaObjectUrl">
                 <TrackAudioApiPlayer
-                    :isEditable="this.isEditable"
+                    :isEditable="isEditable"
                     v-if="mediaObjectUrl"
                     ref="playerReference"
-                    :title="this.track?.Name"
+                    :title="track?.Name"
                     :mediaUrl="optimizedMediaObjectUrl"
                     @timeupdate="updateTime"
                     @durationChanged="calculateCueDurations"
                     @trackPlaying="updatePlaying"
                     @newCueTriggered="createNewCue"
-                    :loopStart="this.selectedCue?.Time"
-                    :loopEnd="
-                        this.selectedCue?.Time + this.selectedCue?.Duration
-                    "
-                    :sourceDescription="this.track?.Url"
+                    :loopStart="selectedCue?.Time"
+                    :loopEnd="selectedCue?.Time + selectedCue?.Duration"
+                    :sourceDescription="track?.Url"
                 ></TrackAudioApiPlayer>
             </template>
             <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
@@ -71,7 +69,7 @@
                     <p class="control">
                         <button disabled class="button is-fullwidth">
                             <LongLine
-                                :text="`Fetching resource ${this.track?.Url}`"
+                                :text="`Fetching resource ${track?.Url}`"
                                 :hasProgress="true"
                                 :clipLeft="true"
                             />
@@ -81,7 +79,7 @@
             </template>
 
             <!-- The cue buttons (in play mode) -->
-            <template v-if="!this.isEditable">
+            <template v-if="!isEditable">
                 <div class="buttons">
                     <template v-for="cue in cues" :key="cue.Id">
                         <CueButton
