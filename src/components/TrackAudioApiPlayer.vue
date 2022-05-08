@@ -186,11 +186,14 @@ export default defineComponent({
         this.audioElement.onloadedmetadata = this.handleLoadedMetadata;
         this.audioElement.onerror = () => {
             this.mediaError = this.audioElement?.error;
-            console.log(
-                `TrackAudioApiPlayer(${this.title})::mediaError ` +
-                    this.audioElement?.error?.code +
-                    '; details: ' +
-                    this.audioElement?.error?.message,
+            console.debug(
+                `TrackAudioApiPlayer(${this.title})::onerror:mediaError:${this.mediaError}`,
+                this.mediaError,
+            );
+            this.$store.commit(
+                MutationTypes.PUSH_ERROR_MESSAGE,
+                'Error while retrieving media source. Message: ' +
+                    this.mediaError?.message,
             );
         };
         this.audioElement.onabort = () => {
