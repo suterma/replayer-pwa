@@ -4,6 +4,7 @@ import {
     ICompilation,
     ICue,
     ITrack,
+    PlaybackMode,
     Track,
 } from './compilation-types';
 import { v4 as uuidv4 } from 'uuid';
@@ -94,6 +95,10 @@ export default class CompilationParser {
                 CompilationParser.FirstStringOf(xmlTrack.Id),
                 CompilationParser.parseFromXmlCues(xmlTrack.Cues[0].Cue),
                 null,
+                (<any>PlaybackMode)[
+                    CompilationParser.FirstStringOf(xmlTrack.PlaybackMode) ??
+                        PlaybackMode.PlayTrack /** as a default */
+                ],
             );
             tracks.push(track);
         });
@@ -119,6 +124,7 @@ export default class CompilationParser {
                     uuidv4(),
                     CompilationParser.parseFromPlistCues(plistTrack.Markers),
                     null,
+                    PlaybackMode.PlayTrack /** as a default */,
                 );
                 tracks.push(track);
             }
@@ -253,6 +259,7 @@ export default class CompilationParser {
                 trackId,
                 cues,
                 null,
+                PlaybackMode.PlayTrack /** as a default */,
             );
             return newTrack;
         } else {

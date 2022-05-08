@@ -62,6 +62,11 @@ export interface ITrack {
     /** The cues */
     Cues: Array<ICue>;
 
+    /** The playback mode for this track.
+     * @remarks This can be set by the user, and is persisted.
+     */
+    PlaybackMode: PlaybackMode;
+
     /** The extracted duration of the loaded media file for this track.
      * @remarks This is only defined if there is a loaded media file for this track.
      * @devdoc This must get calculated/reset if the track is loaded/unloaded. It must never get persisted.
@@ -168,6 +173,7 @@ export class Compilation implements ICompilation {
                         );
                     }),
                     track.Duration,
+                    track.PlaybackMode ?? PlaybackMode.PlayTrack /** default */,
                 );
             }),
         );
@@ -193,6 +199,8 @@ export class Track implements ITrack {
     Cues: Array<ICue> = new Array<ICue>();
     /**   @inheritdoc */
     Duration: number | null = null;
+    /**   @inheritdoc */
+    PlaybackMode: PlaybackMode;
 
     /** Creates a new track
      * @param name {string} - The name for the track.
@@ -200,6 +208,7 @@ export class Track implements ITrack {
      * @param artist {string} - The artist name, if any.
      * @param url {string} - The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
      * @param duration {number | null} - Duration of the media associated with the track. This is not persisted, but set to a specific value once after a matching track has been loaded.
+     * @param playbackMode {playbackMode} - Plaback mode. This is persisted in the application state for user convenience.
      */
     constructor(
         name: string,
@@ -210,6 +219,7 @@ export class Track implements ITrack {
         id: string,
         cues: Array<ICue>,
         duration: number | null,
+        playbackMode: PlaybackMode,
     ) {
         this.Name = name;
         this.Album = album;
@@ -219,6 +229,7 @@ export class Track implements ITrack {
         this.Id = id;
         this.Cues = cues;
         this.Duration = duration;
+        this.PlaybackMode = playbackMode;
     }
 
     /** Parses the JSON and returns new instance of this class.
@@ -237,6 +248,7 @@ export class Track implements ITrack {
             obj.Id,
             obj.Cues,
             null,
+            obj.PlaybackMode ?? PlaybackMode.PlayTrack /** as a default */,
         );
         console.debug('Track::fromJson:'), track;
         return track;

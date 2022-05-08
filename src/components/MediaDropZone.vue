@@ -126,7 +126,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
-import { ICue, Track } from '@/store/compilation-types';
+import { ICue, PlaybackMode, Track } from '@/store/compilation-types';
 import { MutationTypes } from '@/store/mutation-types';
 import { v4 as uuidv4 } from 'uuid';
 import FileHandler from '@/store/filehandler';
@@ -424,6 +424,7 @@ export default defineComponent({
                 trackId,
                 new Array<ICue>(),
                 null,
+                PlaybackMode.PlayTrack /** default */,
             );
             this.$store.commit(MutationTypes.ADD_TRACK, newTrack);
         },
