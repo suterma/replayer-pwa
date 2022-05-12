@@ -58,9 +58,11 @@
                     @durationChanged="calculateCueDurations"
                     @trackPlaying="updatePlaying"
                     @newCueTriggered="createNewCue"
+                    @update:playbackMode="updatedPlaybackMode"
                     :loopStart="selectedCue?.Time"
                     :loopEnd="selectedCue?.Time + selectedCue?.Duration"
                     :sourceDescription="track?.Url"
+                    :playbackMode="track.PlaybackMode"
                 ></TrackAudioApiPlayer>
             </template>
             <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
@@ -114,7 +116,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Track, ICue, TrackDisplayMode } from '@/store/compilation-types';
+import {
+    Track,
+    ICue,
+    TrackDisplayMode,
+    PlaybackMode,
+} from '@/store/compilation-types';
 import CueButton from '@/components/CueButton.vue';
 import CueLevel from '@/components/CueLevel.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
@@ -305,6 +312,19 @@ export default defineComponent({
                 );
                 this.expanded = value;
                 this.$emit('update:expanded', value);
+            });
+        },
+
+        /** Handle playback mode updates */
+        updatedPlaybackMode(playbackMode: PlaybackMode): void {
+            console.debug(
+                `Track(${this.track.Name})::updatedPlaybackMode:${playbackMode}`,
+            );
+
+            const trackId = this.track.Id;
+            this.$store.commit(MutationTypes.UPDATE_TRACK_PLAYBACK_MODE, {
+                trackId,
+                playbackMode,
             });
         },
         /** Handles the click of a cue button, by toggling playback and seeking to it

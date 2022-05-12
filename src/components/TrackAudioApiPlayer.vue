@@ -8,6 +8,8 @@
         @pause="pause"
         @play="play"
         :isPlayingRequestOutstanding="isPlayingRequestOutstanding"
+        :playbackMode="playbackMode"
+        @update:playbackMode="updatePlaybackMode"
         v-model:currentSeconds="currentSeconds"
         @seek="seekToSeconds"
         @newCueTriggered="$emit('newCueTriggered')"
@@ -27,7 +29,8 @@
         :isPlayingRequestOutstanding="isPlayingRequestOutstanding"
         v-model:currentSeconds="currentSeconds"
         v-model:trackVolume="trackVolume"
-        v-model:playbackMode="playbackMode"
+        :playbackMode="playbackMode"
+        @update:playbackMode="updatePlaybackMode"
         :muted="muted"
         @mute="mute"
         @seek="seekToSeconds"
@@ -64,6 +67,7 @@ export default defineComponent({
         'durationChanged',
         'trackPlaying',
         'newCueTriggered',
+        'update:playbackMode',
         /* Do not add newCueTriggered here, to let it just get passed up */
     ],
     props: {
@@ -117,6 +121,15 @@ export default defineComponent({
             type: String,
             default: '',
         },
+
+        /** The playback mode
+         * @remarks Implements a two-way binding
+         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+         */
+        playbackMode: {
+            type: String as () => PlaybackMode,
+            required: true,
+        },
     },
     data: () => ({
         /** The playback progress in the current track, in [seconds] */
@@ -138,7 +151,6 @@ export default defineComponent({
         mediaError: null as MediaError | null,
         /** Whether the audio is currently fading */
         isFading: false,
-        playbackMode: PlaybackMode.PlayTrack, //by default
         /** Whether playback is currently ongoing */
         playing: false,
         showVolume: false,
@@ -255,6 +267,9 @@ export default defineComponent({
                 });
         };
 
+        //Initialize with the current playback mode
+        this.updatePlaybackMode(this.playbackMode);
+
         this.fader = new AudioFader(
             this.audioElement,
             this.getSettings.fadeInDuration,
@@ -338,15 +353,7 @@ export default defineComponent({
                 this.trackVolume = limitedTrackVolume; //loop back the corrected value
             }
         },
-        /** Watch whether the playbackMode changed, and then update the audio element accordingly  */
-        playbackMode(): void {
-            this.debugLog(`playbackMode:${this.playbackMode}`);
-            this.audioElement.loop =
-                this.playbackMode === PlaybackMode.LoopTrack;
-            //HINT: For the cue loop, a dedicated looping implementation is required,
-            //because automatic looping is not supported with the used HTMLAudioEleemnt.
-            //This is solved in this component by observing the recurring time updates.
-        },
+
         /** Watch whether the media URL property changed, and then update the audio element accordingly  */
         mediaUrl(): void {
             this.debugLog(`mediaUrl:${this.mediaUrl}`);
@@ -355,6 +362,15 @@ export default defineComponent({
         },
     },
     methods: {
+        /** Set the playback mode to a new value */
+        updatePlaybackMode(playbackMode: PlaybackMode): void {
+            //HINT: For the cue loop, a dedicated looping implementation is required,
+            //because automatic looping is not supported with the used HTMLAudioEleemnt.
+            //This is solved in this component by observing the recurring time updates.
+            this.audioElement.loop = playbackMode === PlaybackMode.LoopTrack;
+            this.$emit('update:playbackMode', playbackMode);
+        },
+
         /** Writes a debug log message message for this component */
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         debugLog(message: string, ...optionalParams: any[]): void {

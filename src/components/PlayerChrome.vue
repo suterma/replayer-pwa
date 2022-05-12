@@ -158,7 +158,10 @@
         </p>
         <!-- Play mode -->
         <p class="control">
-            <PlaybackModeButton v-model="playbackMode" />
+            <PlaybackModeButton
+                :modelValue="playbackMode"
+                @update:modelValue="updatePlaybackMode"
+            />
         </p>
     </div>
 </template>
@@ -271,10 +274,17 @@ export default defineComponent({
             type: null as unknown as PropType<MediaError | null>,
             default: null,
         },
+        /** The playback mode
+         * @remarks Implements a two-way binding
+         * @devdoc casting the type for TypeScript, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+         */
+        playbackMode: {
+            type: String as () => PlaybackMode,
+            required: true,
+        },
     },
     data: () => ({
         showVolume: false,
-        playbackMode: PlaybackMode.PlayTrack,
     }),
 
     computed: {
@@ -331,6 +341,10 @@ export default defineComponent({
         },
     },
     methods: {
+        /** Updates the playback mode to a new value */
+        updatePlaybackMode(playbackMode: PlaybackMode) {
+            this.$emit('update:playbackMode', playbackMode);
+        },
         download() {
             this.$emit('download');
         },
@@ -369,14 +383,6 @@ export default defineComponent({
             );
             this.$emit('update:muted', muted);
             this.$emit('mute', muted);
-        },
-    },
-    watch: {
-        playbackMode() {
-            console.debug(
-                `PlayerChrome(${this.title})::updatePlaybackMode:playbackMode:${this.playbackMode}`,
-            );
-            this.$emit('update:playbackMode', this.playbackMode);
         },
     },
 });

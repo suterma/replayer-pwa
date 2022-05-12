@@ -5,6 +5,7 @@ import {
     ICompilation,
     ICue,
     ITrack,
+    PlaybackMode,
     Track,
 } from './compilation-types';
 import { MutationTypes } from './mutation-types';
@@ -58,6 +59,13 @@ export type Mutations<S = State> = {
             name: string;
             artist: string;
             album: string;
+        },
+    ): void;
+    [MutationTypes.UPDATE_TRACK_PLAYBACK_MODE](
+        state: State,
+        payload: {
+            trackId: string;
+            playbackMode: PlaybackMode;
         },
     ): void;
     [MutationTypes.UPDATE_TRACK_URL](
@@ -442,6 +450,22 @@ export const mutations: MutationTree<State> & Mutations = {
             track.Name = payload.name;
             track.Artist = payload.artist;
             track.Album = payload.album;
+            PersistentStorage.storeCompilation(state.compilation);
+        }
+    },
+    [MutationTypes.UPDATE_TRACK_PLAYBACK_MODE](
+        state: State,
+        payload: {
+            trackId: string;
+            playbackMode: PlaybackMode;
+        },
+    ): void {
+        const track = CompilationHandler.getTrackById(
+            state.compilation,
+            payload.trackId,
+        );
+        if (track) {
+            track.PlaybackMode = payload.playbackMode;
             PersistentStorage.storeCompilation(state.compilation);
         }
     },

@@ -37,6 +37,23 @@
                 <Icon v-else name="play" />
             </button>
         </p>
+        <!-- Create Cue -->
+        <p class="control">
+            <Hotkey :keys="['insert']" v-slot="{ clickRef }">
+                <button
+                    :class="{
+                        button: true,
+                        'is-warning': true,
+                    }"
+                    @click.prevent="$emit('newCueTriggered')"
+                    :ref="clickRef"
+                    title="Create a cue now (at the current position)!"
+                >
+                    <Icon name="plus" />
+                    <span class="is-hidden-mobile"> Create Cue!</span>
+                </button>
+            </Hotkey>
+        </p>
         <!-- The seek bar -->
         <div
             :class="{
@@ -59,23 +76,12 @@
                 />
             </div>
         </div>
-        <!-- Create Cue -->
+        <!-- Play mode -->
         <p class="control">
-            <!-- Handle the insert key as trigger for a new cue -->
-            <Hotkey :keys="['insert']" v-slot="{ clickRef }">
-                <button
-                    :class="{
-                        button: true,
-                        'is-warning': true,
-                    }"
-                    @click.prevent="$emit('newCueTriggered')"
-                    :ref="clickRef"
-                    title="Create a cue now (at the current position)!"
-                >
-                    <Icon name="plus" />
-                    <span class="is-hidden-mobile"> Create Cue!</span>
-                </button>
-            </Hotkey>
+            <PlaybackModeButton
+                :modelValue="playbackMode"
+                @update:modelValue="updatePlaybackMode"
+            />
         </p>
     </div>
 </template>
@@ -88,6 +94,8 @@ import PlayerTime from '@/components/PlayerTime.vue';
 import LongLine from '@/components/LongLine.vue';
 import AudioUtil from '@/code/audio/AudioUtil';
 import { Hotkey } from '@simolation/vue-hotkey';
+import PlaybackModeButton from '@/components/PlaybackModeButton.vue';
+import { PlaybackMode } from '@/store/compilation-types';
 
 /** A UI representation for a media player
  * @remarks Handles and emits various states and event for playback control.
@@ -99,6 +107,7 @@ export default defineComponent({
         PlayerTime,
         LongLine,
         Hotkey,
+        PlaybackModeButton,
     },
     emits: [
         'update:playing',
@@ -113,6 +122,7 @@ export default defineComponent({
          */
         'pause',
         'newCueTriggered',
+        'update:playbackMode',
     ],
     props: {
         title: String,
@@ -172,6 +182,14 @@ export default defineComponent({
             type: null as unknown as PropType<MediaError | null>,
             default: null,
         },
+        /** The playback mode
+         * @remarks Implements a two-way binding
+         * @devdoc casting the type for TypeScript, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+         */
+        playbackMode: {
+            type: String as () => PlaybackMode,
+            required: true,
+        },
     },
     data: () => ({}),
 
@@ -212,6 +230,11 @@ export default defineComponent({
         },
     },
     methods: {
+        /** Updates the playback mode to a new value */
+        updatePlaybackMode(playbackMode: PlaybackMode) {
+            this.$emit('update:playbackMode', playbackMode);
+        },
+
         seekByClick(e: MouseEvent) {
             console.debug(`CueTrigger(${this.title})::seekByClick`, e);
             if (!this.loaded) return;

@@ -99,24 +99,35 @@
 
         <h2 class="subtitle has-text-danger">Log test buttons</h2>
         <div class="buttons">
-            <button class="button is-success" @click="this.writeDebug">
+            <button class="button is-success" @click="writeDebug">
                 A debug log
             </button>
 
-            <button class="button is-info" @click="this.writeLog">A log</button>
-            <button class="button is-warning" @click="this.writeWarnLog">
+            <button class="button is-info" @click="writeLog">A log</button>
+            <button class="button is-warning" @click="writeWarnLog">
                 A warning
             </button>
-            <button class="button is-danger" @click="this.writeErrorLog">
+            <button class="button is-danger" @click="writeErrorLog">
                 Something dangerous
             </button>
             <button
                 class="button is-danger has-text-dark"
-                @click="this.throwException"
+                @click="throwException"
             >
                 Throw an exception
             </button>
         </div>
+
+        <h1 class="title has-text-danger">Spotify embedding</h1>
+        <iframe
+            style="border-radius: 12px"
+            src="https://open.spotify.com/embed/track/6tNDVXXaYWsBd3Mqhfelvl?utm_source=generator&theme=0"
+            width="100%"
+            height="80"
+            frameBorder="0"
+            allowfullscreen="false"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        ></iframe>
 
         <h1 class="title has-text-danger">Icons test</h1>
         <Icon name="track-repeat-once" title="track-repeat-once" />

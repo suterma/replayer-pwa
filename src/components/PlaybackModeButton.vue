@@ -1,45 +1,48 @@
 <template>
-    <button
-        :class="{
-            button: true,
-        }"
-        @click="togglePlaybackMode()"
-        title="click to toggle"
-    >
-        <Icon
-            v-if="this.isPlaybackTrack"
-            name="track-play"
-            title="Play track (click to toggle)"
-        />
-        <Icon
-            v-if="this.isPlaybackLoopTrack"
-            name="track-repeat"
-            title="Loop track (click to toggle)"
-        />
-        <Icon
-            v-if="this.isPlaybackCue"
-            name="track-play-once"
-            title="Play cue (click to toggle)"
-        />
-        <Icon
-            v-if="this.isPlaybackLoopCue"
-            name="track-repeat-once"
-            title="Loop cue (click to toggle)"
-        />
-    </button>
+    <Hotkey :keys="['ctrl', 'r']" v-slot="{ clickRef }">
+        <button
+            :class="{
+                button: true,
+            }"
+            :ref="clickRef"
+            @click="togglePlaybackMode()"
+            title="click to toggle"
+        >
+            <Icon
+                v-if="this.isPlaybackTrack"
+                name="track-play"
+                title="Play track (click to toggle)"
+            />
+            <Icon
+                v-if="this.isPlaybackLoopTrack"
+                name="track-repeat"
+                title="Loop track (click to toggle)"
+            />
+            <Icon
+                v-if="this.isPlaybackCue"
+                name="track-play-once"
+                title="Play cue (click to toggle)"
+            />
+            <Icon
+                v-if="this.isPlaybackLoopCue"
+                name="track-repeat-once"
+                title="Loop cue (click to toggle)"
+            /></button
+    ></Hotkey>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Icon from '@/components/icons/Icon.vue';
 import { PlaybackMode } from '@/store/compilation-types';
+import { Hotkey } from '@simolation/vue-hotkey';
 
 /** A UI representation for a media player
  * @remarks Handles and emits various states and event for playback control.
  */
 export default defineComponent({
     name: 'PlaybackModeButton',
-    components: { Icon },
+    components: { Icon, Hotkey },
     emits: ['update:modelValue'],
     props: {
         /** The playback mode

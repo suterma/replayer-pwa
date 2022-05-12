@@ -96,6 +96,11 @@ export enum MutationTypes {
      */
     UPDATE_TRACK_DATA = 'UPDATE_TRACK_DATA',
 
+    /** Updates the track playback mode
+     * @remarks Also updates the persitent store of the compilation
+     */
+    UPDATE_TRACK_PLAYBACK_MODE = 'UPDATE_TRACK_PLAYBACK_MODE',
+
     /** Specifically updates the track media source URL
      * @remarks Also updates the persitent store of the compilation
      */
