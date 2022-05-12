@@ -22,6 +22,24 @@
     </div>
     <!-- Playback control when the track is loaded -->
     <div v-else class="field has-addons player-panel">
+        <!-- Create Cue -->
+        <p class="control">
+            <Hotkey :keys="['insert']" v-slot="{ clickRef }">
+                <button
+                    :class="{
+                        button: true,
+
+                        'is-warning': true,
+                    }"
+                    @click.prevent="$emit('newCueTriggered')"
+                    :ref="clickRef"
+                    title="Create a cue now (at the current position)!"
+                >
+                    <Icon name="plus" />
+                    <span class="is-hidden-mobile"> Create Cue!</span>
+                </button>
+            </Hotkey>
+        </p>
         <!-- Play/Pause (Only available when the track is loaded, and no playback request is outstanding) -->
         <p class="control">
             <button
@@ -36,23 +54,6 @@
                 <Icon v-if="playing" name="pause" />
                 <Icon v-else name="play" />
             </button>
-        </p>
-        <!-- Create Cue -->
-        <p class="control">
-            <Hotkey :keys="['insert']" v-slot="{ clickRef }">
-                <button
-                    :class="{
-                        button: true,
-                        'is-warning': true,
-                    }"
-                    @click.prevent="$emit('newCueTriggered')"
-                    :ref="clickRef"
-                    title="Create a cue now (at the current position)!"
-                >
-                    <Icon name="plus" />
-                    <span class="is-hidden-mobile"> Create Cue!</span>
-                </button>
-            </Hotkey>
         </p>
         <!-- The seek bar -->
         <div
