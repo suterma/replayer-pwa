@@ -18,6 +18,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     'has-border-info': isDraggingOver,
                     'is-loading': isLoadingFromFile,
                 }"
+                :title="replaceInfo"
                 tabindex="0"
                 @dragover="dragover"
                 @dragleave="dragleave"
@@ -38,11 +39,11 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                 />
                 <template v-if="isReplacementMode">
                     <Icon name="swap-horizontal" />
-                    <span>Click or drop to replace file</span>
+                    <span>Click / drop to replace file</span>
                 </template>
                 <template v-else>
                     <Icon name="plus" />
-                    <span>Click or drop to load file(s)</span>
+                    <span>Click / drop to load file(s)</span>
                 </template>
             </label>
         </div>
@@ -76,6 +77,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                         class="input"
                         type="url"
                         inputmode="url"
+                        :title="replaceInfo"
                         v-model="url"
                         placeholder="Paste an URL"
                         size="60"
@@ -83,7 +85,6 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                 </div>
                 <Experimental class="control">
                     <!-- //TODO fetch is currenlty not suported at URL load time -->
-
                     <button
                         :class="{
                             button: true,
@@ -104,6 +105,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                             'is-primary': true,
                             'is-loading': isUsingMediaFromUrl,
                         }"
+                        :title="replaceInfo"
                         type="submit"
                         @click="useMediaUrl"
                     >
@@ -452,6 +454,11 @@ export default defineComponent({
                 return true;
             }
             return false;
+        },
+        replaceInfo(): string {
+            return this.isReplacementMode
+                ? `Replace: '${this.replaceUrl}'`
+                : ``;
         },
     },
 });
