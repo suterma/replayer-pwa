@@ -1,5 +1,5 @@
 <template>
-    <div v-if="this.isExperimental" class="is-experimental">
+    <div v-if="isExperimental" class="is-experimental">
         <slot> </slot>
     </div>
 </template>
