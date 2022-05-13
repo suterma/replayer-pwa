@@ -14,9 +14,9 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     box: true,
                     button: true,
                     'fill-available': true,
-                    'has-background-info-dark': this.isDraggingOver,
-                    'has-border-info': this.isDraggingOver,
-                    'is-loading': this.isLoadingFromFile,
+                    'has-background-info-dark': isDraggingOver,
+                    'has-border-info': isDraggingOver,
+                    'is-loading': isLoadingFromFile,
                 }"
                 tabindex="0"
                 @dragover="dragover"
@@ -34,9 +34,9 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     class="is-hidden"
                     @change="onChange"
                     ref="file"
-                    :accept="this.acceptedFiles"
+                    :accept="acceptedFiles"
                 />
-                <template v-if="this.isReplacementMode">
+                <template v-if="isReplacementMode">
                     <Icon name="swap-horizontal" />
                     <span>Click or drop to replace file</span>
                 </template>
@@ -61,65 +61,64 @@ The URL input is wider, because it should be able to easily deal with lenghty in
             </div>
         </div>
 
-        <!-- The experimental URL loading part -->
-        <Experimental>
-            <div v-if="isExpanded" class="level-item has-text-centered">
-                <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
-            </div>
-            <div
-                v-if="isExpanded"
-                class="level-item has-text-centered is-flex-grow-5 is-flex-shrink-1"
-            >
-                <div class="field fill-available has-addons">
-                    <div class="control fill-available">
-                        <input
-                            class="input"
-                            type="url"
-                            inputmode="url"
-                            v-model="url"
-                            placeholder="Paste an URL"
-                            size="60"
-                        />
-                    </div>
+        <!-- The URL loading part -->
+
+        <div v-if="isExpanded" class="level-item has-text-centered">
+            <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
+        </div>
+        <div
+            v-if="isExpanded"
+            class="level-item has-text-centered is-flex-grow-5 is-flex-shrink-1"
+        >
+            <div class="field fill-available has-addons">
+                <div class="control fill-available">
+                    <input
+                        class="input"
+                        type="url"
+                        inputmode="url"
+                        v-model="url"
+                        placeholder="Paste an URL"
+                        size="60"
+                    />
+                </div>
+                <Experimental class="control">
                     <!-- //TODO fetch is currenlty not suported at URL load time -->
-                    <!-- <div class="control">
+
                     <button
-                      
                         :class="{
                             button: true,
                             'is-primary': true,
-                            'is-loading': this.isLoadingFromUrl,
+                            'is-loading': isLoadingFromUrl,
                         }"
                         @click="fetchUrl"
                     >
                         Fetch
                     </button>
-                </div> -->
-                    <div class="control">
-                        <!-- Use as default, thus set as the submit button -->
-                        <button
-                            :disabled="!this.url"
-                            :class="{
-                                button: true,
-                                'is-primary': true,
-                                'is-loading': this.isUsingMediaFromUrl,
-                            }"
-                            type="submit"
-                            @click="useMediaUrl"
-                        >
-                            <template v-if="this.isReplacementMode">
-                                <Icon name="swap-horizontal" />
-                                <span>Replace</span>
-                            </template>
-                            <template v-else>
-                                <Icon name="plus" />
-                                <span>Use</span>
-                            </template>
-                        </button>
-                    </div>
+                </Experimental>
+                <div class="control">
+                    <!-- Use as default, thus set as the submit button -->
+                    <button
+                        :disabled="!url"
+                        :class="{
+                            button: true,
+                            'is-primary': true,
+                            'is-loading': isUsingMediaFromUrl,
+                        }"
+                        type="submit"
+                        @click="useMediaUrl"
+                    >
+                        <template v-if="isReplacementMode">
+                            <Icon name="swap-horizontal" />
+                            <span>Replace</span>
+                        </template>
+                        <template v-else>
+                            <Icon name="plus" />
+                            <span>Use</span>
+                        </template>
+                    </button>
                 </div>
             </div>
-        </Experimental>
+        </div>
     </div>
 </template>
 
