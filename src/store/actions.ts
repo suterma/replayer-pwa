@@ -373,6 +373,8 @@ export const actions: ActionTree<State, State> & Actions = {
                                                     content,
                                                 )
                                                     .then((compilation) => {
+                                                        compilation.Url =
+                                                            file.name;
                                                         commit(
                                                             MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
                                                             compilation,
@@ -473,6 +475,7 @@ export const actions: ActionTree<State, State> & Actions = {
                     const content = Buffer.from(reader.result as string);
                     CompilationParser.handleAsXmlCompilation(content)
                         .then((compilation) => {
+                            compilation.Url = file.name;
                             commit(
                                 MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
                                 compilation,
