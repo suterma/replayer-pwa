@@ -10757,7 +10757,6 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
    * @devdoc Otherwise, due to unknown reasons, these elements would be shown behind the progress shade, regardless of that they are defined after the progress shade.
    */
 .player-timeline .foreground {
-  /* //TODO maybe use a similar css directly on the the audio player progress to have the progress bar behind the text there, too */
   position: relative;
   z-index: 2;
   pointer-events: none;
