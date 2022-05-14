@@ -96,10 +96,12 @@ export default class CompilationParser {
                 CompilationParser.parseFromXmlCues(xmlTrack.Cues[0].Cue),
                 null,
                 (<any>PlaybackMode)[
-                    CompilationParser.FirstStringOf(xmlTrack.PlaybackMode) ??
-                        PlaybackMode.PlayTrack /** as a default */
+                    CompilationParser.FirstStringOf(xmlTrack.PlaybackMode)
                 ],
             );
+            if (!track.PlaybackMode) {
+                track.PlaybackMode = PlaybackMode.PlayTrack; /** as a default */
+            }
             tracks.push(track);
         });
 
