@@ -30,7 +30,7 @@ export default class CompilationParser {
         return new Compilation(
             CompilationParser.FirstStringOf(xmlCompilation.MediaPath),
             CompilationParser.FirstStringOf(xmlCompilation.Title),
-            '', //TODO Use URL from ZIP filename
+            '', //NOTE: URL will be set from calling code, with the standalone XML or ZIP file name
             CompilationParser.FirstStringOf(xmlCompilation.Id),
             CompilationParser.parseFromXmlTracks(
                 xmlCompilation.Tracks[0].Track,
@@ -56,11 +56,10 @@ export default class CompilationParser {
     private static parseFromPListCompilation(
         plistCompilation: any,
     ): ICompilation {
-        //TODO Use URL from ZIP filename
         return new Compilation(
-            ''.normalize(), //TODO from ZIP filename
-            'Imported from LivePlayback'.normalize(), //TODO from ZIP filename
-            ''.normalize(), //TODO from ZIP filename
+            ''.normalize(),
+            'Imported from LivePlayback'.normalize(),
+            ''.normalize(),
             uuidv4(),
             CompilationParser.parseFromPlistTracks(plistCompilation),
         );
@@ -96,10 +95,12 @@ export default class CompilationParser {
                 CompilationParser.parseFromXmlCues(xmlTrack.Cues[0].Cue),
                 null,
                 (<any>PlaybackMode)[
-                    CompilationParser.FirstStringOf(xmlTrack.PlaybackMode) ??
-                        PlaybackMode.PlayTrack /** as a default */
+                    CompilationParser.FirstStringOf(xmlTrack.PlaybackMode)
                 ],
             );
+            if (!track.PlaybackMode) {
+                track.PlaybackMode = PlaybackMode.PlayTrack; /** as a default */
+            }
             tracks.push(track);
         });
 
@@ -157,7 +158,6 @@ export default class CompilationParser {
 
         plistCues.forEach((plistCue: any) => {
             //NOTE: the plist compilation type does not have all data corresponding to a Replayer compilation. Thus some of the information like the GUID, is just made up    .
-            //TODO Update instead of push, if exists
             const cue = new Cue(
                 plistCue.Name,
                 plistCue.ShortCut,

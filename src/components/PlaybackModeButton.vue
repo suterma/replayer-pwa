@@ -75,15 +75,23 @@ export default defineComponent({
                 `PlaybackModeButton::togglePlaybackMode:playbackMode:${playbackMode}`,
             );
             //Turn the mode ratchet one step
-            let nextPlaybackMode = '';
-            if (playbackMode == PlaybackMode.PlayTrack) {
-                nextPlaybackMode = PlaybackMode.LoopTrack;
-            } else if (playbackMode == PlaybackMode.LoopTrack) {
-                nextPlaybackMode = PlaybackMode.PlayCue;
-            } else if (playbackMode == PlaybackMode.PlayCue) {
-                nextPlaybackMode = PlaybackMode.LoopCue;
-            } else if (playbackMode == PlaybackMode.LoopCue) {
-                nextPlaybackMode = PlaybackMode.PlayTrack;
+            let nextPlaybackMode;
+            switch (playbackMode) {
+                case PlaybackMode.PlayTrack:
+                    nextPlaybackMode = PlaybackMode.LoopTrack;
+                    break;
+                case PlaybackMode.LoopTrack:
+                    nextPlaybackMode = PlaybackMode.PlayCue;
+                    break;
+                case PlaybackMode.PlayCue:
+                    nextPlaybackMode = PlaybackMode.LoopCue;
+                    break;
+                case PlaybackMode.LoopCue:
+                    nextPlaybackMode = PlaybackMode.PlayTrack;
+                    break;
+                default:
+                    nextPlaybackMode = PlaybackMode.PlayTrack;
+                    break;
             }
 
             console.debug(

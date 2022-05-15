@@ -69,7 +69,7 @@
                 <div class="level-item">
                     <div class="field">
                         <p class="control">
-                            <MediaEdit :track="this.track" />
+                            <MediaEdit :track="track" />
                         </p>
                     </div>
                 </div>
@@ -79,9 +79,9 @@
             <div class="level-right">
                 <div class="level-item">
                     <PlaybackIndicator
-                        :is-ready="!this.isPlaying && this.isTrackLoaded"
-                        :is-playing="this.isPlaying"
-                        :is-unloaded="!this.isTrackLoaded"
+                        :is-ready="!isPlaying && isTrackLoaded"
+                        :is-playing="isPlaying"
+                        :is-unloaded="!isTrackLoaded"
                     />
 
                     <DropdownMenu title="Track context menu">
@@ -121,7 +121,7 @@
 
                     <!-- Expander -->
                     <CollapsibleButton
-                        :modelValue="this.modelValue"
+                        :modelValue="modelValue"
                         title="Track"
                         collapsedText="Expand to edit"
                         @click="toggleExpanded()"
@@ -152,7 +152,6 @@ import { MutationTypes } from '@/store/mutation-types';
 
 /** A header for editing track metadata
  */
-//TODO later remove the editable parts from TrackHeader, once the TrackHeaderEdit is accepted as the edit control
 export default defineComponent({
     name: 'TrackHeaderEdit',
     components: {

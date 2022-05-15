@@ -1,4 +1,4 @@
-import { ICue, Track } from '@/store/compilation-types';
+import { ICue, PlaybackMode, Track } from '@/store/compilation-types';
 import { XmlTrack } from './XmlTrack';
 
 describe('the XML mapping', function () {
@@ -13,6 +13,7 @@ describe('the XML mapping', function () {
             'testId',
             new Array<ICue>(),
             60,
+            PlaybackMode.LoopCue,
         );
 
         //Act
@@ -26,6 +27,7 @@ describe('the XML mapping', function () {
         expect(target.Measure).toBe(track.Measure);
         expect(target.Name).toBe(track.Name);
         expect(target.Url).toBe(track.Url);
+        expect(target.PlaybackMode).toBe(track.PlaybackMode);
         //HINT: Duration is not serialized
     });
 });

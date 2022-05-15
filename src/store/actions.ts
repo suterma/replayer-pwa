@@ -181,13 +181,6 @@ export const actions: ActionTree<State, State> & Actions = {
             commit(MutationTypes.CLONE_TRACK, trackId);
         });
     },
-    //TODO WIP check whether all these loading function actually work:
-    //With xml, rex, bplist, ZIP
-    //Then simplify by handling ZIP files separately, unzipping all files and recursively call this method
-
-    //HINT: How to use Google Chrome without CORS, for testing purposes:
-    //google-chrome -–allow-file-access-from-files --disable-web-security --user-data-dir="~/Desktop/google-temp/"
-
     [ActionTypes.LOAD_FROM_URL](
         { commit, dispatch }: AugmentedActionContext,
         url: string,
@@ -373,6 +366,8 @@ export const actions: ActionTree<State, State> & Actions = {
                                                     content,
                                                 )
                                                     .then((compilation) => {
+                                                        compilation.Url =
+                                                            file.name;
                                                         commit(
                                                             MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
                                                             compilation,
@@ -473,6 +468,7 @@ export const actions: ActionTree<State, State> & Actions = {
                     const content = Buffer.from(reader.result as string);
                     CompilationParser.handleAsXmlCompilation(content)
                         .then((compilation) => {
+                            compilation.Url = file.name;
                             commit(
                                 MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
                                 compilation,
