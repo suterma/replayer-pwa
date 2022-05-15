@@ -1,5 +1,5 @@
 <template>
-    <p>Supported media files:</p>
+    <p>Supported media formats:</p>
     <div class="content">
         <ul>
             <li>
