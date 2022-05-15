@@ -39,7 +39,8 @@
                 :class="{
                     button: true,
                     disabled: isPlayingRequestOutstanding || !loaded,
-                    'is-loading': isPlayingRequestOutstanding || !loaded,
+                    'is-loading':
+                        isPlayingRequestOutstanding || !loaded || isFading,
                 }"
                 @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
