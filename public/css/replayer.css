@@ -10978,25 +10978,6 @@ button.dropdown-item.is-active {
   box-shadow: 0 0 0 0.125em rgba(250, 250, 250, 0.25);
 }
 
-/* Outfront styles */
-/** **********************************************************
- * Styles for the outfront widget
-**************************************************************
-
-/* outfront on the left lower corner */
-#outfront-float {
-  left: 15px !important;
-  right: 0 !important;
-  width: 35px !important;
-  /*square*/
-  display: none;
-}
-
-#outfront-container {
-  left: 20px !important;
-  right: 0 !important;
-}
-
 /* Below: Application-specific add-ons/modifications to the Bulma CSS */
 /*************************************************************
  * Overscroll / scrollbar handling

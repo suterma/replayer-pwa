@@ -156,14 +156,6 @@
                 </li>
                 <li>
                     <a
-                        href="https://github.com/paanSinghCoder/OutFrontJS"
-                        target="_blank"
-                        >OutFrontJS </a
-                    >Console for mobile browsers. (Released under the MIT
-                    License, by Gaurav Singh)
-                </li>
-                <li>
-                    <a
                         href="https://github.com/Leonidas-from-XIV/node-xml2js"
                         target="_blank"
                         >node-xml2js </a

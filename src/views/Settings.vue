@@ -209,21 +209,6 @@
                     <button class="button" @click="reset()">Reset</button>
                 </div>
             </div>
-
-            <div class="field">
-                <label class="label"
-                    >Reveal logging component
-                    <span class="has-opacity-half is-size-7">
-                        (Reveals the logging component, until next app
-                        restart)</span
-                    >
-                </label>
-                <div class="control">
-                    <button class="button" @click="revealLogs()">
-                        Reveal logger
-                    </button>
-                </div>
-            </div>
         </div>
 
         <!-- Experimental settings -->
@@ -318,13 +303,6 @@ export default defineComponent({
                         });
                 }
             });
-        },
-        revealLogs() {
-            console.debug('Settings::revealLogs');
-            const outFrontButton = document.getElementById('outfront-float');
-            if (outFrontButton && outFrontButton.style.display !== 'block') {
-                outFrontButton.style.display = 'block';
-            }
         },
         autoRetrieveLastCompilationChanged(event: Event) {
             const checked = (event.target as HTMLInputElement)?.checked;
