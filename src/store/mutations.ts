@@ -46,7 +46,7 @@ export type Mutations<S = State> = {
     ): void;
     [MutationTypes.REMOVE_TRACK](state: S, trackId: string): void;
     [MutationTypes.CLONE_TRACK](state: S, trackId: string): void;
-
+    [MutationTypes.REASSIGN_CUE_SHORTCUTS](state: S, trackId: string): void;
     [MutationTypes.DISCARD_COMPILATION](state: S): void;
     [MutationTypes.REVOKE_ALL_MEDIA_URLS](state: State): void;
     [MutationTypes.UPDATE_SETTINGS](state: S, settings: Settings): void;
@@ -354,7 +354,22 @@ export const mutations: MutationTree<State> & Mutations = {
             PersistentStorage.storeCompilation(state.compilation);
         }
     },
+    [MutationTypes.REASSIGN_CUE_SHORTCUTS](state: State, trackId: string) {
+        const track = CompilationHandler.getTrackById(
+            state.compilation,
+            trackId,
+        );
 
+        if (track) {
+            let seed = parseInt(track.Cues[0]?.Shortcut ?? '');
+            if (seed) {
+                track.Cues.forEach((cue) => {
+                    cue.Shortcut = (seed++).toString();
+                });
+                PersistentStorage.storeCompilation(state.compilation);
+            }
+        }
+    },
     [MutationTypes.MOVE_TRACK_UP](state: State, trackId: string) {
         const moveIndex = CompilationHandler.getIndexOfTrackById(
             state.compilation,

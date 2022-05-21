@@ -56,6 +56,9 @@ export enum MutationTypes {
      */
     CLONE_TRACK = 'CLONE_TRACK',
 
+    /** Reassigns the cue shortcuts, starting with the first cue's shortcut as seed number */
+    REASSIGN_CUE_SHORTCUTS = 'REASSIGN_CUE_SHORTCUTS',
+
     /** Moves an existing track one position up in the list of tracks.
      */
     MOVE_TRACK_UP = 'MOVE_TRACK_UP',

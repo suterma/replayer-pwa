@@ -110,6 +110,11 @@
                             subTitle="(with cues and media)"
                             @click="cloneTrack()"
                         />
+                        <DropdownMenuItem
+                            title="Reassign cue shortcuts"
+                            subTitle="(first as seed, then incrementing the number)"
+                            @click="reassignCueShortcuts()"
+                        />
                         <hr class="dropdown-divider" />
                         <DropdownMenuItem
                             title="Remove"
@@ -239,6 +244,15 @@ export default defineComponent({
             });
         },
 
+        /** Reassign shortcut
+         * @remarks Uses the first shortcut mnemonic as seed, then incrementing the number
+         */
+        reassignCueShortcuts() {
+            this.$store.commit(
+                MutationTypes.REASSIGN_CUE_SHORTCUTS,
+                this.track.Id,
+            );
+        },
         /** Clones the track by creating a deep copy
          */
         cloneTrack() {
