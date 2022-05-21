@@ -5,12 +5,12 @@
         <div class="level-left">
             <div class="level-item">
                 <EditableInput
-                    v-if="this.isEditable"
+                    v-if="isEditable"
                     v-model="title"
                     @change="updateTitle($event.target.value)"
                     placeholder="Compilation title"
                 />
-                <p v-else class="title is-3">{{ this.compilation.Title }}</p>
+                <p v-else class="title is-3">{{ compilation.Title }}</p>
             </div>
         </div>
         <!-- Right side -->
@@ -23,8 +23,7 @@
                                 title="Prevent screen timeout"
                                 subTitle="(while this compilation is open)"
                                 :class="{
-                                    'is-active':
-                                        this.isPreventingScreenTimeoutNow,
+                                    'is-active': isPreventingScreenTimeoutNow,
                                 }"
                                 @click="togglePreventScreenTimeoutNow"
                             />
