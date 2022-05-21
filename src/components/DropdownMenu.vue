@@ -14,7 +14,7 @@
         <NavButton
             aria-haspopup="true"
             aria-controls="dropdown-menu"
-            :title="this.title"
+            :title="title"
             iconName="menu"
         />
         <div
@@ -24,8 +24,8 @@
         >
             <div class="dropdown-content">
                 <!-- HINT: Because of 'is-static', this should not be clickable, but unfortunately I was not able to prevent this yet -->
-                <div class="dropdown-item is-static is-header">
-                    <p>{{ this.title }}</p>
+                <div class="dropdown-item is-static is-header has-opacity-half">
+                    <p>{{ title }}</p>
                 </div>
                 <hr class="dropdown-divider" />
                 <slot>

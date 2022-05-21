@@ -1,8 +1,8 @@
 <template>
-    <a href="#" class="dropdown-item">
+    <div class="dropdown-item">
         {{ title }}<br />
         <span class="has-opacity-half is-size-7"> {{ subTitle }}</span>
-    </a>
+    </div>
 </template>
 
 <script lang="ts">

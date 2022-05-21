@@ -166,14 +166,14 @@
             </button>
             <div class="dropdown-menu" id="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                    <a href="#" class="dropdown-item"> Dropdown item </a>
-                    <a class="dropdown-item"> Other dropdown item </a>
-                    <a href="#" class="dropdown-item is-active">
+                    <div class="dropdown-item">Dropdown item</div>
+                    <div class="dropdown-item">Other dropdown item</div>
+                    <div class="dropdown-item is-active">
                         Active dropdown item
-                    </a>
-                    <a href="#" class="dropdown-item"> Other dropdown item </a>
+                    </div>
+                    <div class="dropdown-item">Other dropdown item</div>
                     <hr class="dropdown-divider" />
-                    <a href="#" class="dropdown-item"> With a divider </a>
+                    <div class="dropdown-item">With a divider</div>
                 </div>
             </div>
         </div>

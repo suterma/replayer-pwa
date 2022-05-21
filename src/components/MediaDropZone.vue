@@ -215,6 +215,8 @@ export default defineComponent({
         /** Immediately loads all available files by loading their content
          */
         async loadFiles(): Promise<void> {
+            console.debug('MediaDropZone::loadFiles');
+
             const files = Array.from(this.filelist);
             files.forEach((file) => {
                 this.loadFile(file);

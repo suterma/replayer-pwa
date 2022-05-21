@@ -7,21 +7,18 @@
 */
 
 /* Dropdown item with better suited contrast for a dark theme */
-a.dropdown-item,
-button.dropdown-item {
+.dropdown-item {
     color: $white-bis;
 }
 
 /* Hovered dropdown item with better suited contrast for a dark theme */
-a.dropdown-item:hover,
-button.dropdown-item:hover {
+.dropdown-item:hover {
     background-color: $grey; //$background; //$dark; //$button-background-color; //from BULMA-Swatch theme
     color: $white-bis;
 }
 
 /* Hovered active dropdown item with better suited contrast for a dark theme */
-a.dropdown-item.is-active,
-button.dropdown-item.is-active {
+.dropdown-item.is-active {
     background-color: $light;
     color: $dark;
 }
@@ -31,3 +28,9 @@ button.dropdown-item.is-active {
     border-width: 1px;
     border-style: solid;
 }
+
+/* The menus should not be very narrow to have fewer word-breaking for longer entries*/
+.dropdown-menu {
+    /* wider than the 12 rem default*/
+    min-width: 15rem;
+ }

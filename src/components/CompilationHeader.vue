@@ -29,30 +29,22 @@
                                 @click="togglePreventScreenTimeoutNow"
                             />
                         </Experimental>
-                        <a
-                            href="#"
-                            class="dropdown-item"
-                            @click="downloadRezPackage"
-                        >
+                        <div class="dropdown-item" @click="downloadRezPackage">
                             Download as
                             <span class="has-text-weight-bold">ZIP</span><br />
                             <span class="has-opacity-half is-size-7">
                                 (<span class="is-family-monospace">.rez</span>),
                                 including media files
                             </span>
-                        </a>
-                        <a
-                            href="#"
-                            class="dropdown-item"
-                            @click="downloadRexFile"
-                        >
+                        </div>
+                        <div class="dropdown-item" @click="downloadRexFile">
                             Download as
                             <span class="has-text-weight-bold">XML</span><br />
                             <span class="has-opacity-half is-size-7">
                                 (<span class="is-family-monospace">.rex</span>),
                                 without media files
                             </span>
-                        </a>
+                        </div>
                         <hr class="dropdown-divider" />
 
                         <DropdownMenuItem
