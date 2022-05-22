@@ -2,10 +2,12 @@ import { Store } from '@/store/store';
 import { MutationTypes } from './mutation-types';
 import PersistentStorage from './persistent-storage';
 
-/** Called when the store is initialized */
+/** A plugin that handles persistence, to keep the compilation and selected
+ * cue over app restarts.
+ *  */
 export const persistencePlugin = (store: Store) => {
-    /** Called after every mutation.
-     * @remarks The mutation comes in the format of `{ type, payload }`.
+    /** Subscribes to mutations.
+     * @remarks Called after every mutation. The mutation comes in the format of `{ type, payload }`.
      */
     store.subscribe((mutation, state) => {
         //console.debug('store:mutation', mutation);
