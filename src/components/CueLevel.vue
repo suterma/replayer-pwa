@@ -12,7 +12,7 @@
                                 :cue="cue"
                                 :isTrackPlaying="isTrackPlaying"
                                 :currentSeconds="currentSeconds"
-                                @click="cueClick(cue)"
+                                @click="cueClick()"
                                 :isMinified="true"
                                 :hasAddonsRight="true"
                             />
@@ -28,7 +28,7 @@
                                 type="text"
                                 inputmode="text"
                                 :value="cue.Description"
-                                @change="updateDescription($event.target.value)"
+                                @change="updateDescription($event)"
                                 :placeholder="cuePlaceholder"
                                 size="60"
                             />
@@ -53,7 +53,7 @@
                                 inputmode="decimal"
                                 step="0.1"
                                 :value="cue.Time"
-                                @change="updateTime($event.target.value)"
+                                @change="updateTime($event)"
                                 placeholder="time [seconds]"
                                 size="5"
                             />
@@ -70,7 +70,7 @@
                                 inputmode="decimal"
                                 step="0.1"
                                 :value="cue.Time"
-                                @change="updateTime($event.target.value)"
+                                @change="updateTime($event)"
                                 placeholder="time [seconds]"
                                 size="8"
                             />
@@ -110,7 +110,7 @@
                                 type="text"
                                 inputmode="numeric"
                                 :value="cue.Shortcut"
-                                @change="updateShortcut($event.target.value)"
+                                @change="updateShortcut($event)"
                                 placeholder="shortcut"
                                 size="8"
                             />
@@ -187,10 +187,11 @@ export default defineComponent({
     },
     methods: {
         /** Updates the set cue description */
-        updateDescription(description: string) {
+        updateDescription(event: Event) {
             const cueId = this.cue.Id;
             const shortcut = this.cueData.Shortcut;
             const time = this.cueData.Time;
+            const description = (event.target as HTMLInputElement).value;
             this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
                 cueId,
                 description,
@@ -204,10 +205,11 @@ export default defineComponent({
             this.$store.dispatch(ActionTypes.DELETE_CUE, cueId);
         },
         /** Updates the set cue time */
-        updateTime(time: string) {
+        updateTime(event: Event) {
             const cueId = this.cue.Id;
             const shortcut = this.cueData.Shortcut;
             const description = this.cueData.Description;
+            const time = (event.target as HTMLInputElement).value;
             this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
                 cueId,
                 description,
@@ -239,10 +241,11 @@ export default defineComponent({
             }
         },
         /** Updates the set cue shortcut */
-        updateShortcut(shortcut: string) {
+        updateShortcut(event: Event) {
             const cueId = this.cue.Id;
             const description = this.cueData.Description;
             const time = this.cueData.Time;
+            const shortcut = (event.target as HTMLInputElement).value;
             this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
                 cueId,
                 description,
