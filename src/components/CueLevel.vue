@@ -246,19 +246,15 @@ export default defineComponent({
         /** Handles the click event of the cue button */
         cueClick() {
             this.$emit('click');
-            this.setFocusToDescriptionInput();
         },
 
         /** Sets the focus to the cue description input box
-         * @devdoc Later, this navigation aid was perceived as not helpful on handheld devices
-         * with the automatic on-screen keyboard popping up while
-         * just selectig cues. Thus, this is currently not used.
          */
         setFocusToDescriptionInput() {
-            // console.debug('focussing to cue', this.cue.Id);
-            // const cueDescription = this.$refs
-            //     .cueDescription as HTMLInputElement;
-            // cueDescription.focus();
+            console.debug('focussing to cue', this.cue.Id);
+            const cueDescription = this.$refs
+                .cueDescription as HTMLInputElement;
+            cueDescription.focus();
         },
     },
     watch: {
