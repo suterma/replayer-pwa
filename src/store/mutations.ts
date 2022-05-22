@@ -355,6 +355,8 @@ export const mutations: MutationTree<State> & Mutations = {
         }
     },
     [MutationTypes.REASSIGN_CUE_SHORTCUTS](state: State, trackId: string) {
+        console.debug('mutations::REASSIGN_CUE_SHORTCUTS:trackId', trackId);
+
         const track = CompilationHandler.getTrackById(
             state.compilation,
             trackId,

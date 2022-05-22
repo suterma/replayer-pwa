@@ -112,7 +112,7 @@
                         />
                         <DropdownMenuItem
                             title="Reassign cue shortcuts"
-                            subTitle="(first as seed, then incrementing the number)"
+                            subTitle="(first as seed, then incrementing)"
                             @click="reassignCueShortcuts()"
                         />
                         <hr class="dropdown-divider" />
@@ -248,6 +248,10 @@ export default defineComponent({
          * @remarks Uses the first shortcut mnemonic as seed, then incrementing the number
          */
         reassignCueShortcuts() {
+            console.debug(
+                `TrackHeader::reassignCueShortcuts:trackId:${this.track.Id}`,
+            );
+
             this.$store.commit(
                 MutationTypes.REASSIGN_CUE_SHORTCUTS,
                 this.track.Id,

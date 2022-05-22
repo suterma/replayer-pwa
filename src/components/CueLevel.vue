@@ -26,7 +26,7 @@
                                 class="input"
                                 type="text"
                                 inputmode="text"
-                                v-model="cueData.Description"
+                                :value="cue.Description"
                                 @change="updateDescription($event.target.value)"
                                 :placeholder="cuePlaceholder"
                                 size="60"
@@ -51,7 +51,7 @@
                                 type="number"
                                 inputmode="decimal"
                                 step="0.1"
-                                v-model="cueData.Time"
+                                :value="cue.Time"
                                 @change="updateTime($event.target.value)"
                                 placeholder="time [seconds]"
                                 size="5"
@@ -68,7 +68,7 @@
                                 type="number"
                                 inputmode="decimal"
                                 step="0.1"
-                                v-model="cueData.Time"
+                                :value="cue.Time"
                                 @change="updateTime($event.target.value)"
                                 placeholder="time [seconds]"
                                 size="8"
@@ -102,7 +102,7 @@
                                 class="input"
                                 type="text"
                                 inputmode="numeric"
-                                v-model="cueData.Shortcut"
+                                :value="cue.Shortcut"
                                 @change="updateShortcut($event.target.value)"
                                 placeholder="shortcut"
                                 size="8"
@@ -134,8 +134,13 @@ import CompilationHandler from '@/store/compilation-handler';
 import CueButton from '@/components/CueButton.vue';
 import Icon from '@/components/icons/Icon.vue';
 
-/** A button for displaying and invoking a cue
- * @remarks Shows playback progress with an inline progress bar
+/** An Editor for for a single cue
+ * @remarks Shows a cue button with an inline progress bar, plus input fields for all properties
+ * @devdoc Input value binding is not implemented with a two-way v-model binding because the incoming values are taken
+ * from a property (where setting of values is not permitted).
+ * Instead, the values are one-way bound via :value and changes are directly stored in the state via vuex mutations.
+ * This approach is chosen over the ...data pattern because the shortcut values can also change from a menu entry
+ * in the track's dropdown menu.
  */
 export default defineComponent({
     name: 'CueLevel',
