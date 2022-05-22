@@ -23,6 +23,7 @@ export const persistencePlugin = (store: Store) => {
                 mutation.type === MutationTypes.PUSH_ERROR_MESSAGE
             )
         ) {
+            //TODO check for equality before doing the persistence
             PersistentStorage.storeCompilation(state.compilation);
         }
 
@@ -37,6 +38,7 @@ export const persistencePlugin = (store: Store) => {
                 mutation.type === MutationTypes.REPLACE_COMPILATION
             )
         ) {
+            //TODO check for equality before doing the persistence
             PersistentStorage.storeSelectedCueId(state.selectedCueId);
         }
     });
