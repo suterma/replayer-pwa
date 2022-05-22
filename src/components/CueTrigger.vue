@@ -28,15 +28,16 @@
                 <button
                     :class="{
                         button: true,
-
                         'is-warning': true,
                     }"
                     @click.prevent="$emit('newCueTriggered')"
                     :ref="clickRef"
-                    title="Create a cue now (at the current position)!"
+                    title="Create a cue now (at the current playback time)!"
                 >
                     <Icon name="plus" />
-                    <span class="is-hidden-mobile"> Create Cue!</span>
+                    <span class="is-hidden-mobile has-opacity-half"
+                        >Create Cue!</span
+                    >
                 </button>
             </Hotkey>
         </p>

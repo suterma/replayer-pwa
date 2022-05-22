@@ -20,6 +20,7 @@
                         <!-- Cue Description -->
                         <p
                             class="control fill-available is-flex-grow-5 is-flex-shrink-1"
+                            title="Description for this cue"
                         >
                             <input
                                 ref="cueDescription"
@@ -80,7 +81,10 @@
                                 title="Adjusts the cue time to the current playback time"
                                 @click="adjustTime()"
                             >
-                                Adjust
+                                <Icon name="timer-sync-outline" />
+                                <span class="is-hidden-touch has-opacity-half"
+                                    >Adjust</span
+                                >
                             </button>
                         </div>
                     </div>
@@ -88,7 +92,7 @@
 
                 <!-- Duration (keep small and hide on touch)-->
                 <div class="level-item is-flex-shrink-1 is-hidden-touch">
-                    <p class="is-single-line">
+                    <p class="is-single-line" title="Duration (until next cue)">
                         <span class="has-opacity-half">{{
                             cueDurationDisplayTime
                         }}</span>
@@ -97,7 +101,10 @@
                 <!-- A rather slim input for the shortcut (a short mnemonic) -->
                 <div class="level-item is-flex-shrink-1 is-hidden-touch">
                     <div class="field">
-                        <p class="control">
+                        <p
+                            class="control"
+                            title="Mnemonic (as keyboard shortcut)"
+                        >
                             <input
                                 class="input"
                                 type="text"
@@ -297,7 +304,7 @@ export default defineComponent({
 **************************************************************
 */
 
-/** Apply a very small gap between cues */
+/** Apply a very small vertical gap between cues */
 .levels .level {
     margin-bottom: 1px;
     margin-top: 1px;
