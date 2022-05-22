@@ -8,6 +8,7 @@ import { State, state } from './state';
 import { Getters, getters } from './getters';
 import { Mutations, mutations } from './mutations';
 import { Actions, actions } from './actions';
+import { persistencePlugin } from './persistencePlugin';
 
 export const store = createStore({
     state,
@@ -15,6 +16,7 @@ export const store = createStore({
     mutations,
     actions,
     modules: {},
+    plugins: [persistencePlugin],
 });
 
 /** @devdoc Store code as per the example from https://dev.to/3vilarthas/vuex-typescript-m4j */

@@ -124,7 +124,6 @@ export const mutations: MutationTree<State> & Mutations = {
             );
             if (matchingTrack) {
                 matchingTrack.Duration = null;
-                PersistentStorage.storeCompilation(compilation);
             }
         }
 
@@ -159,8 +158,6 @@ export const mutations: MutationTree<State> & Mutations = {
         //Use the track, plus the cue as the selected cue
         state.compilation.Tracks.push(track);
         state.selectedCueId = firstCueId;
-        PersistentStorage.storeSelectedCueId(firstCueId);
-        PersistentStorage.storeCompilation(state.compilation);
     },
 
     [MutationTypes.ADD_CUE](
@@ -190,8 +187,6 @@ export const mutations: MutationTree<State> & Mutations = {
                     matchingTrack.Duration,
                 );
             }
-
-            PersistentStorage.storeCompilation(state.compilation);
         }
     },
 
@@ -214,8 +209,6 @@ export const mutations: MutationTree<State> & Mutations = {
                     matchingTrack.Duration,
                 );
             }
-
-            PersistentStorage.storeCompilation(state.compilation);
         }
     },
 
@@ -229,7 +222,6 @@ export const mutations: MutationTree<State> & Mutations = {
         );
 
         state.compilation = compilation;
-        PersistentStorage.storeCompilation(compilation);
 
         //Add the (non-blob) media URL's from the compilation to the media storage
         const onlineMediaUrls =
@@ -254,11 +246,9 @@ export const mutations: MutationTree<State> & Mutations = {
             const firstCueId = cues[0]?.Id ?? null;
 
             state.selectedCueId = firstCueId;
-            PersistentStorage.storeSelectedCueId(firstCueId);
         }
 
         state.compilation = compilation;
-        PersistentStorage.storeCompilation(compilation);
 
         //Add the (non-blob) media URL's from the compilation to the media storage
         const onlineMediaUrls =
@@ -273,7 +263,6 @@ export const mutations: MutationTree<State> & Mutations = {
             return;
         }
         state.selectedCueId = cueId;
-        PersistentStorage.storeSelectedCueId(cueId);
     },
 
     [MutationTypes.UPDATE_CUE_DURATIONS](
@@ -309,14 +298,12 @@ export const mutations: MutationTree<State> & Mutations = {
                 /* unselect cue, this track is no longer the active track */
                 const noSelectedCueId = '';
                 state.selectedCueId = noSelectedCueId;
-                PersistentStorage.storeSelectedCueId(noSelectedCueId);
             }
         });
 
         state.compilation.Tracks = state.compilation.Tracks.filter(
             (track) => track.Id !== trackId,
         );
-        PersistentStorage.storeCompilation(state.compilation);
     },
 
     [MutationTypes.CLONE_TRACK](state: State, trackId: string) {
@@ -351,7 +338,6 @@ export const mutations: MutationTree<State> & Mutations = {
             //Insert just after original
             const index = state.compilation.Tracks.indexOf(sourceTrack);
             state.compilation.Tracks.splice(index + 1, 0, clonedTrack);
-            PersistentStorage.storeCompilation(state.compilation);
         }
     },
     [MutationTypes.REASSIGN_CUE_SHORTCUTS](state: State, trackId: string) {
@@ -368,7 +354,6 @@ export const mutations: MutationTree<State> & Mutations = {
                 track.Cues.forEach((cue) => {
                     cue.Shortcut = (seed++).toString();
                 });
-                PersistentStorage.storeCompilation(state.compilation);
             }
         }
     },
@@ -387,7 +372,6 @@ export const mutations: MutationTree<State> & Mutations = {
             state.compilation.Tracks[moveIndex] as ITrack,
             state.compilation.Tracks[targetIndex] as ITrack,
         ];
-        PersistentStorage.storeCompilation(state.compilation);
     },
 
     [MutationTypes.MOVE_TRACK_DOWN](state: State, trackId: string) {
@@ -405,7 +389,6 @@ export const mutations: MutationTree<State> & Mutations = {
             state.compilation.Tracks[moveIndex] as ITrack,
             state.compilation.Tracks[targetIndex] as ITrack,
         ];
-        PersistentStorage.storeCompilation(state.compilation);
     },
 
     [MutationTypes.DISCARD_COMPILATION](state: State) {
@@ -415,7 +398,6 @@ export const mutations: MutationTree<State> & Mutations = {
         /* unselect cue, none is selected anymore */
         const noSelectedCueId = '';
         state.selectedCueId = noSelectedCueId;
-        PersistentStorage.storeSelectedCueId(noSelectedCueId);
 
         state.mediaUrls.forEach((mediaUrl) => {
             ObjectUrlHandler.revokeObjectURL(mediaUrl.url);
@@ -448,7 +430,6 @@ export const mutations: MutationTree<State> & Mutations = {
         title: string,
     ): void {
         state.compilation.Title = title;
-        PersistentStorage.storeCompilation(state.compilation);
     },
     [MutationTypes.UPDATE_TRACK_DATA](
         state: State,
@@ -467,7 +448,6 @@ export const mutations: MutationTree<State> & Mutations = {
             track.Name = payload.name;
             track.Artist = payload.artist;
             track.Album = payload.album;
-            PersistentStorage.storeCompilation(state.compilation);
         }
     },
     [MutationTypes.UPDATE_TRACK_PLAYBACK_MODE](
@@ -483,7 +463,6 @@ export const mutations: MutationTree<State> & Mutations = {
         );
         if (track) {
             track.PlaybackMode = payload.playbackMode;
-            PersistentStorage.storeCompilation(state.compilation);
         }
     },
     [MutationTypes.UPDATE_TRACK_URL](
@@ -501,7 +480,6 @@ export const mutations: MutationTree<State> & Mutations = {
             track.Url = payload.url;
             //The duration is now stale, since the new track will have it's own duration, so remove it
             track.Duration = null;
-            PersistentStorage.storeCompilation(state.compilation);
         }
     },
     [MutationTypes.UPDATE_CUE_DATA](
@@ -542,8 +520,6 @@ export const mutations: MutationTree<State> & Mutations = {
                     }
                 }
             }
-
-            PersistentStorage.storeCompilation(state.compilation);
         }
     },
 };
