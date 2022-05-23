@@ -23,9 +23,6 @@ type AugmentedActionContext = {
 
 /** Implements the actions for the store */
 export interface Actions {
-    [ActionTypes.RETRIEVE_COMPILATION]({
-        commit,
-    }: AugmentedActionContext): void;
     [ActionTypes.DISCARD_COMPILATION]({ commit }: AugmentedActionContext): void;
     [ActionTypes.ADD_MEDIA_BLOB](
         { commit }: AugmentedActionContext,
@@ -83,71 +80,6 @@ export interface Actions {
     [ActionTypes.RESET_APPLICATION]({ commit }: AugmentedActionContext): void;
 }
 export const actions: ActionTree<State, State> & Actions = {
-    [ActionTypes.RETRIEVE_COMPILATION]({ commit }) {
-        console.debug('actions::RETRIEVE_COMPILATION');
-        commit(
-            MutationTypes.PUSH_PROGRESS_MESSAGE,
-            'Retrieving last compilation...',
-        );
-
-        //retrieving the compilation first, to display it to the user ASAP
-        PersistentStorage.retrieveCompilation().then((compilation) => {
-            commit(MutationTypes.REPLACE_COMPILATION, compilation);
-
-            PersistentStorage.retrieveSelectedCueId().then((cueId) => {
-                //retrieve all available blobs into object urls
-                //(which should actually be the matching media blobs for the afore-loaded compilation)
-                PersistentStorage.retrieveAllMediaBlobs()
-                    .then((mediaBlobs) => {
-                        //Sort to the active track first (the one, that contains the selected cue)
-                        const activeTrack = CompilationHandler.getTrackByCueId(
-                            compilation,
-                            cueId,
-                        );
-                        const sortedBlobs =
-                            CompilationHandler.sortByFirstFileName(
-                                mediaBlobs,
-                                activeTrack?.Url,
-                            );
-
-                        sortedBlobs.forEach((mediaBlob, index) => {
-                            //NOTE: Setting an increasing timeout for each blob retrieval
-                            //here makes the loading work properly for more than a few
-                            //media blobs on an Android Fairphone 3+. Otherwise most
-                            //(not all) the blobs are corrupted and
-                            //not playable by the audio element.
-                            //The exact reasion is unknown, but might be excessive
-                            //memory consumption when the object URL's are created
-                            //synchronously or too fast in a row.
-                            //This problem does only occur on larger compilations.
-                            //The current timeout of 150ms has been empirically found to work reliably
-                            //on a Fairphone 3+ with the "Family21" test compilation.
-                            setTimeout(() => {
-                                const objectUrl =
-                                    ObjectUrlHandler.createObjectURL(
-                                        mediaBlob.blob,
-                                        mediaBlob.fileName,
-                                    );
-                                commit(
-                                    MutationTypes.ADD_MEDIA_URL,
-                                    new MediaUrl(mediaBlob.fileName, objectUrl),
-                                );
-                            }, (index + 1) * 150);
-                        });
-
-                        //Update the selected cue now
-                        //HINT: This must be done last, otherwise the scrolling feature to the
-                        //the active track does not work properly, because the track that would be
-                        //scrolled to, would still be in the collapsed state. This would
-                        //lead to an undesired offset, when the track is at the end of the visible area.
-                        commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);
-                    })
-                    .finally(() => {
-                        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
-                    });
-            });
-        });
-    },
     [ActionTypes.DISCARD_COMPILATION]({ commit }) {
         withProgress(`Discarding the compilation...`, commit, () => {
             commit(MutationTypes.DISCARD_COMPILATION, undefined);

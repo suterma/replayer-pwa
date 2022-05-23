@@ -1,8 +1,4 @@
 export enum ActionTypes {
-    /** Retrieves the last stored compilation from the persistent storage, including all blobs and the selected cue,
-     * and commits it all into the store as the current compilation*/
-    RETRIEVE_COMPILATION = 'RETRIEVE_COMPILATION',
-
     /** Discards the current compilation
      * @remarks Permanently removes the compilation with all data, including the media files and the object URL references to it from
      * both the persistent storage and the application store. Clears the selected cue.

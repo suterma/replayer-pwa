@@ -16,7 +16,6 @@ export class Settings {
     /** Returns the settings with their default value */
     static default(): Settings {
         return new Settings(
-            /*autoRetrieveLastCompilation*/ true,
             /*preventScreenTimeout*/ true,
             /*fadeInDuration*/ 1000,
             /*fadeOutDuration*/ 500,
@@ -25,11 +24,6 @@ export class Settings {
             /*keyboardShortcutTimeout*/ 1000,
         );
     }
-
-    /** Whether to automatically retrieve the last compilation on startup, if available and not overridden by a URL parameter
-     * @remarks Default is true (auto retrieve)
-     */
-    autoRetrieveLastCompilation;
 
     /** Whether to always keep the screen lit while a track is in use
      * @remarks Default is false
@@ -68,10 +62,6 @@ export class Settings {
     static fromJson(jsonSettings: string): Settings {
         const obj = JSON.parse(jsonSettings) as Settings;
         const settings = Settings.default();
-        if (obj.autoRetrieveLastCompilation != undefined) {
-            settings.autoRetrieveLastCompilation =
-                obj.autoRetrieveLastCompilation;
-        }
         if (obj.preventScreenTimeout != undefined) {
             settings.preventScreenTimeout = obj.preventScreenTimeout;
         }
@@ -98,7 +88,6 @@ export class Settings {
     /** Creates new settings
      */
     constructor(
-        autoRetrieveLastCompilation: boolean,
         preventScreenTimeout: boolean,
         fadeInDuration: number,
         fadeOutDuration: number,
@@ -106,7 +95,6 @@ export class Settings {
         displayExperimentalContent: boolean,
         keyboardShortcutTimeout: number,
     ) {
-        this.autoRetrieveLastCompilation = autoRetrieveLastCompilation;
         this.preventScreenTimeout = preventScreenTimeout;
         this.fadeInDuration = fadeInDuration;
         this.fadeOutDuration = fadeOutDuration;

@@ -65,10 +65,6 @@ describe('CompilationLoader.vue', () => {
                     //Store persistently, but after committing, to keep the process faster
                     PersistentStorage.storeMediaBlob(mediaBlob);
                 },
-                // eslint-disable-next-line no-empty-pattern
-                [ActionTypes.RETRIEVE_COMPILATION]({}): void {
-                    //empty mock
-                },
             },
             getters: {
                 settings: (state) => {

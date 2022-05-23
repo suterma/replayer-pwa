@@ -81,13 +81,6 @@ export enum MutationTypes {
 
     /** Updates the application settings */
     UPDATE_SETTINGS = 'UPDATE_SETTINGS',
-    /** Retrieves the application settings from the persisted store during startup.
-     * @remarks This provides continuous settings over app restarts and should be called when the app is created
-     * @remarks These settings can also be used for (light-weight) application state, not only option-type settings.
-     * However, these settings here are  distinct from the more heavy-weight store and retrieval of the previously used compilation.
-     * @devdoc This is a synchronous operation, to make sure, the settings are immediately available. It uses the Local Storage as persistence layer.
-     */
-    RETRIEVE_SETTINGS = 'RETRIEVE_SETTINGS',
 
     /** Updates the compilation title
      * @remarks Also updates the persitent store of the compilation

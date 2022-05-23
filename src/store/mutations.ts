@@ -50,7 +50,6 @@ export type Mutations<S = State> = {
     [MutationTypes.DISCARD_COMPILATION](state: S): void;
     [MutationTypes.REVOKE_ALL_MEDIA_URLS](state: State): void;
     [MutationTypes.UPDATE_SETTINGS](state: S, settings: Settings): void;
-    [MutationTypes.RETRIEVE_SETTINGS](state: S): void;
     [MutationTypes.UPDATE_COMPILATION_TITLE](state: State, title: string): void;
     [MutationTypes.UPDATE_TRACK_DATA](
         state: State,
@@ -419,11 +418,7 @@ export const mutations: MutationTree<State> & Mutations = {
      * @param settings - The application settings
      */
     [MutationTypes.UPDATE_SETTINGS](state: State, settings: Settings) {
-        PersistentStorage.storeSettings(settings);
         state.settings = settings;
-    },
-    [MutationTypes.RETRIEVE_SETTINGS](state: State) {
-        state.settings = PersistentStorage.retrieveSettings();
     },
     [MutationTypes.UPDATE_COMPILATION_TITLE](
         state: State,

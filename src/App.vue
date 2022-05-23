@@ -31,9 +31,6 @@ export default defineComponent({
         ErrorOverlay,
         DialogWrapper,
     },
-    beforeCreate() {
-        this.$store.commit(MutationTypes.RETRIEVE_SETTINGS);
-    },
     beforeMount() {
         //Handle reloads and tab/browser exits
         //Using the "unmounted" lifecycle event proved to be unreliable: Page reload in the Browser did not trigger "unmounted"

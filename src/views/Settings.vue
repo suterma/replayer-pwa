@@ -10,23 +10,6 @@
                     <label class="checkbox">
                         <input
                             type="checkbox"
-                            :checked="getSettings.autoRetrieveLastCompilation"
-                            @change="autoRetrieveLastCompilationChanged"
-                        />
-                        Automatically retrieve the last compilation at startup
-                        <span class="has-opacity-half is-size-7">
-                            (if available, and not overridden by a URL
-                            parameter)</span
-                        >
-                    </label>
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <label class="checkbox">
-                        <input
-                            type="checkbox"
                             :checked="getSettings.preventScreenTimeout"
                             @change="preventScreenTimeoutChanged"
                         />
@@ -303,14 +286,6 @@ export default defineComponent({
                         });
                 }
             });
-        },
-        autoRetrieveLastCompilationChanged(event: Event) {
-            const checked = (event.target as HTMLInputElement)?.checked;
-            const settings = this.getSettings;
-
-            settings.autoRetrieveLastCompilation = checked;
-
-            this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
         },
         preventScreenTimeoutChanged(event: Event) {
             const checked = (event.target as HTMLInputElement)?.checked;
