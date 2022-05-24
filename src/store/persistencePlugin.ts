@@ -14,10 +14,9 @@ export const persistencePlugin = (store: Store) => {
     /** Subscribes to mutations of the state and persists the updated state.
      * @remarks Called after every mutation. The mutation comes in the format of `{ type, payload }`.
      */
-    store.subscribe((mutation, state) => {
-        //console.debug('store:mutation', mutation);
-        //console.debug('store:state', state);
-
+    store.subscribe((mutation, state): void => {
+        console.debug('store:mutation', mutation);
+        console.debug('store:state', state);
         // Updated Messages are not persisted
         if (
             mutation.type === MutationTypes.PUSH_PROGRESS_MESSAGE ||
@@ -51,7 +50,6 @@ function retrieveState(store: Store) {
             //Commit the compilation and selected cue only after both have been retrieved,
             //to make sure, committing one does not overwrite the other
             store.commit(MutationTypes.REPLACE_COMPILATION, compilation);
-            store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);
 
             //retrieve all available blobs into object urls
             //(which should actually be the matching media blobs for the afore-loaded compilation)
@@ -96,7 +94,12 @@ function retrieveState(store: Store) {
                     //the active track does not work properly, because the track that would be
                     //scrolled to, would still be in the collapsed state. This would
                     //lead to an undesired offset, when the track is at the end of the visible area.
-                    store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, cueId);
+                    if (cueId) {
+                        store.commit(
+                            MutationTypes.UPDATE_SELECTED_CUE_ID,
+                            cueId,
+                        );
+                    }
                 })
                 .finally(() => {
                     store.commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);

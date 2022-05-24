@@ -257,10 +257,6 @@ export const mutations: MutationTree<State> & Mutations = {
         });
     },
     [MutationTypes.UPDATE_SELECTED_CUE_ID](state: State, cueId: string) {
-        //Do not update the store, when it's the same value
-        if (state.selectedCueId == cueId) {
-            return;
-        }
         state.selectedCueId = cueId;
     },
 

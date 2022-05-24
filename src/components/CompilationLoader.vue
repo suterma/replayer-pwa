@@ -8,10 +8,10 @@ import CompilationParser from '@/store/compilation-parser';
 import { MutationTypes } from '@/store/mutation-types';
 
 /** A Loader for packages or tracks, from the URL
- * @remarks The order is as follows:
- * 1) if given, load items from the URL parameters (discards any previously persisted compilation)
- * 2) automatically retrieve an existing persisted compilation
- * //TODO rework this as something else than a component, maybe into somethign like the persistence plugin
+ * @remarks Loads items from the URL parameters
+ * @devdoc According to my current understanding this must be run
+ * as part of a component. Otherwise the URL fragment part is not processed
+ * as the query part within vue-router
  */
 export default defineComponent({
     name: 'CompilationLoader',
@@ -34,6 +34,17 @@ export default defineComponent({
                     .dispatch(ActionTypes.USE_MEDIA_FROM_URL, track.Url)
                     .then(() => {
                         this.$store.commit(MutationTypes.ADD_TRACK, track);
+                        const firstCueId = track.Cues[0]?.Id;
+                        console.debug(
+                            'CompilationLoader::mounted:firstCueId:',
+                            firstCueId,
+                        );
+                        if (firstCueId) {
+                            this.$store.commit(
+                                MutationTypes.UPDATE_SELECTED_CUE_ID,
+                                firstCueId,
+                            );
+                        }
                     })
                     .then(() => {
                         //get rid of the query, since it has been applied now
