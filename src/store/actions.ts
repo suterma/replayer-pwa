@@ -129,7 +129,7 @@ export const actions: ActionTree<State, State> & Actions = {
                 `Loading URL '${url}'...`,
             );
             fetch(url, {
-                mode: 'cors', // to allow any accessible resource
+                mode: 'no-cors', // to allow any accessible resource
                 method: 'GET',
             })
                 .then((response) => {

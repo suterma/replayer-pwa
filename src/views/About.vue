@@ -21,123 +21,85 @@
             <hr />
         </div>
 
-        <h1 class="title">API Demo</h1>
-        <div class="content">
-            <ul>
-                <li>
-                    <a
-                        href="./#/play?media=https://web.replayer.app/music/your-light-by-lidija-roos.mp3&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&0.0=Intro&17.2=Verse+1&33.98=Verse+1b&49.21=Refrain&64.87=Verse+2&82.4=Verse+2b&100.89=Refrain&112.88=Refrain+Repeat&129.65=Brigde+%2B+Solo&149.86=Refrain+Reprise&161.86=Verse+3b&178.46=Refrain+Variations&224.51=Fade+Out"
-                        target="_blank"
-                    >
-                        MP3 media, Your Light by Lidija Roos</a
-                    >
-                </li>
-                <li>
-                    <a
-                        href="./#/edit?media=https://web.app/music/your-light-by-lidija-roos.mp3&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&0.0=Intro&17.2=Verse+1&33.98=Verse+1b&49.21=Refrain&64.87=Verse+2&82.4=Verse+2b&100.89=Refrain&112.88=Refrain+Repeat&129.65=Brigde+%2B+Solo&149.86=Refrain+Reprise&161.86=Verse+3b&178.46=Refrain+Variations&224.51=Fade+Out"
-                        target="_blank"
-                    >
-                        MP3 media, Your Light by Lidija Roos (Edit Mode)</a
-                    >
-                </li>
-                <li>
-                    <a
-                        href="./#/play?media=https://web.replayer.app/music/as-a-child-by-lidja-roos.aiff&title=As+A+Child+(AIFF)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
-                        target="_blank"
-                    >
-                        AIFF media, with only 1 cue</a
-                    >
-                </li>
-                <li>
-                    <a
-                        href="./#/play?media=https://web.replayer.app/music/decisions-by-lidija-roos.ogg"
-                        target="_blank"
-                    >
-                        OGG Vorbis media, without metadata</a
-                    >
-                </li>
-                <li>
-                    <a
-                        href="./#/play?media=https://web.replayer.app/music/eyes-have-not-seen-by-lidija-roos.flac&title=Eyes+Have+Not+Seen&album=Not+For+Sale&artist=Lidija+Roos&0.0="
-                        target="_blank"
-                    >
-                        FLAC media</a
-                    >
-                </li>
-                <li>
-                    <a
-                        href="./#/play?media=https://web.replayer.app/music/psalm-4-38-by-lidija-roos.wav&title=Psalm+4.38+(WAV)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
-                        target="_blank"
-                    >
-                        WAV media</a
-                    >
-                </li>
-                <li>
-                    <a
-                        href="./#/play?media=https://web.replayer.app/music/the-gift-by-lidija-roos.m4a&title=The+Gift+(AAC)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
-                        target="_blank"
-                    >
-                        AAC media</a
-                    >
-                </li>
-            </ul>
-        </div>
         <Experimental>
-            <h1 class="title">Online Demo</h1>
+            <h1 class="title">Track API Demo</h1>
             <div class="content">
                 <ul>
                     <li>
                         <a
-                            href="https://web-devel.replayer.app/#/play?media=https%3A%2F%2Fweb-devel.replayer.app%2Fmusic%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&21.2688935=Verse+1&40.8880182=Bridge&46.7937461=Refrain+%22Not+for+Sale%22&64.5614468=Bridge+2&72.3591588=Verse+2&98.1517279=Refrain+%22Not+for+Sale%22&114.5918753=Rap+Part&156.2238253=Bridge+(Guitar+Solo)&174.1005193=Refrain+%22Not+for+Sale%22+soft+style&207.8065624=Outro"
+                            href="./#/play?media=https://web.replayer.app/music/your-light-by-lidija-roos.mp3&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&0.0=Intro&17.2=Verse+1&33.98=Verse+1b&49.21=Refrain&64.87=Verse+2&82.4=Verse+2b&100.89=Refrain&112.88=Refrain+Repeat&129.65=Brigde+%2B+Solo&149.86=Refrain+Reprise&161.86=Verse+3b&178.46=Refrain+Variations&224.51=Fade+Out"
                             target="_blank"
                         >
-                            Your Light by Lidija Roos (Development)</a
+                            MP3 media, Your Light by Lidija Roos</a
                         >
                     </li>
                     <li>
                         <a
-                            href="http://localhost:8080/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fmusic%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
+                            href="./#/edit?media=https://web.app/music/your-light-by-lidija-roos.mp3&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&0.0=Intro&17.2=Verse+1&33.98=Verse+1b&49.21=Refrain&64.87=Verse+2&82.4=Verse+2b&100.89=Refrain&112.88=Refrain+Repeat&129.65=Brigde+%2B+Solo&149.86=Refrain+Reprise&161.86=Verse+3b&178.46=Refrain+Variations&224.51=Fade+Out"
                             target="_blank"
                         >
-                            Your Light by Lidija Roos (Local)</a
+                            MP3 media, Your Light by Lidija Roos (Edit Mode)</a
                         >
                     </li>
                     <li>
                         <a
-                            href="https://web.replayer.app/#/play?media=https%3A%2F%2Fweb.replayer.app%2Fmusic%2Fyour-light-by-lidija-roos.mp3&title=Your%20Light&artist=Lidija%20Roos&album=Not%20For%20Sale&6.49=Intro"
+                            href="./#/play?media=https://web.replayer.app/music/as-a-child-by-lidja-roos.aiff&title=As+A+Child+(AIFF)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
                             target="_blank"
-                            class="link-external"
                         >
-                            Your Light by Lidija Roos (Production)</a
-                        >
-                    </li>
-
-                    <li>
-                        <a
-                            href="http://localhost:8080/#/play?package=http%3A%2F%2Flocalhost:8080%2Fdemo-compilation-with-online-resources-of-multiple-types.rex"
-                            target="_blank"
-                            class="link-external"
-                        >
-                            Demo Compilation with online resources of multiple
-                            types (Featuring Lidija Roos) (Local)</a
+                            AIFF media, with only 1 cue</a
                         >
                     </li>
                     <li>
                         <a
-                            href="./#/play?package=http%3A%2F%2Flocalhost:8080%2Fdemo-compilation-with-online-resources-of-multiple-types.rex"
+                            href="./#/play?media=https://web.replayer.app/music/decisions-by-lidija-roos.ogg"
+                            target="_blank"
                         >
-                            Demo Compilation with online resources of multiple
-                            types (Featuring Lidija Roos) (internal)</a
+                            OGG Vorbis media, without metadata</a
                         >
                     </li>
                     <li>
                         <a
-                            href="https://web-devel.replayer.app/#/play?package=https%3A%2F%2Fweb-devel.replayer.app%2Fdemo-compilation-with-online-resources-of-multiple-types.rex"
+                            href="./#/play?media=https://web.replayer.app/music/eyes-have-not-seen-by-lidija-roos.flac&title=Eyes+Have+Not+Seen&album=Not+For+Sale&artist=Lidija+Roos&0.0="
                             target="_blank"
-                            class="link-external"
                         >
-                            Demo Compilation with online resources of multiple
-                            types (Featuring Lidija Roos) (Development)</a
+                            FLAC media</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="./#/play?media=https://web.replayer.app/music/psalm-4-38-by-lidija-roos.wav&title=Psalm+4.38+(WAV)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
+                            target="_blank"
+                        >
+                            WAV media</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="./#/play?media=https://web.replayer.app/music/the-gift-by-lidija-roos.m4a&title=The+Gift+(AAC)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
+                            target="_blank"
+                        >
+                            AAC media</a
+                        >
+                    </li>
+                </ul>
+            </div>
+            <h1 class="title">Package API Demo</h1>
+            <div class="content">
+                <ul>
+                    <li>
+                        <a
+                            href="./#/play?package=https://web.replayer.app/demo-compilation-featuring-lidija-roos.rez"
+                            target="_blank"
+                        >
+                            ZIP (.rez) compressed package, with 1 track</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="./#/play?package=https://web.replayer.app/demo-compilation-with-online-resources-of-multiple-types.rex"
+                            target="_blank"
+                        >
+                            XML (.rex) package, with 5 tracks</a
                         >
                     </li>
                 </ul>

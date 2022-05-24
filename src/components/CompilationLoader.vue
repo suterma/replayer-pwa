@@ -47,8 +47,7 @@ export default defineComponent({
                         }
                     })
                     .then(() => {
-                        //get rid of the query, since it has been applied now
-                        this.$router.replace({ query: undefined });
+                        this.removeQuery();
                     });
                 return; //With this URL's track loading
             } else {
@@ -66,10 +65,16 @@ export default defineComponent({
             );
 
             this.$store.dispatch(ActionTypes.LOAD_FROM_URL, query['package']);
-            //get rid of the query, since it has been applied now
-            this.$router.replace({ query: undefined });
+            this.removeQuery();
             return; //With this package loading
         }
+    },
+    methods: {
+        /** Removes the API query from the fragment, since it has been applied now
+         */
+        removeQuery() {
+            this.$router.replace({ query: undefined });
+        },
     },
 });
 </script>
