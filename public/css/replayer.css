@@ -10858,9 +10858,7 @@ body.has-navbar-fixed-top-laptop {
   }
 
   .navbar.is-fixed-top-laptop .navbar-menu {
-    -webkit-overflow-scrolling: touch;
     max-height: calc(100vh - 4rem);
-    overflow: auto;
   }
 }
 /*************************************************************
