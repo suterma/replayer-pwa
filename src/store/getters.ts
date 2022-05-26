@@ -18,10 +18,6 @@ export type Getters = {
     progressMessage(state: State): string | null;
     /** Gets the latest (newest) error message from the stack */
     errorMessage(state: State): string | null;
-    /** Determines whether the given cue is the currently selected one
-     * @devdoc //TODO parametrized call currently do not work, reason is unknown
-     */
-    isSelected(state: State, cueId: string): boolean;
     /** Gets the currently selected cue id
      * @remarks Only one cue may be selected at any time, within one compilation / application instance.
      * @returns The cue identifier; or null, if no cue is selected.
@@ -72,10 +68,6 @@ export const getters: GetterTree<State, State> & Getters = {
         const errorMessage =
             state.errorMessageStack[state.errorMessageStack.length - 1];
         return errorMessage ?? null;
-    },
-    /** @inheritdoc */
-    isSelected: (state, cueId: string) => {
-        return cueId == state.selectedCueId;
     },
     /** @inheritdoc */
     selectedCueId: (state) => {

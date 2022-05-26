@@ -14,7 +14,6 @@
             }
         "
     >
-        <!-- //TODO Consolidate normal and edt controls into one -->
         <!-- Left side -->
         <div class="level-left">
             <!-- Back Link -->

@@ -259,11 +259,6 @@ export const actions: ActionTree<State, State> & Actions = {
                     file.size / 1000000
                 }MB)`,
             );
-
-            //TODO handle the file types from buffer, and use the same methods for both from ZIP and from standalone content
-            //THis simplifies the code and reduces redundancy
-            //TODO then handle the progress messages properly, so that they stay until the very end when all files have properly loaded
-
             if (FileHandler.isSupportedPackageFile(file)) {
                 // 1) read the Blob
                 JSZip.loadAsync(file)
@@ -285,8 +280,9 @@ export const actions: ActionTree<State, State> & Actions = {
                                             //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
                                             const zipEntryName =
                                                 zipEntry.name.normalize();
-                                            console.debug(
-                                                `Processing buffer for ZIP entry name '${zipEntryName}'...`,
+                                            commit(
+                                                MutationTypes.PUSH_PROGRESS_MESSAGE,
+                                                `Processing content for ZIP entry '${zipEntryName}'...`,
                                             );
 
                                             if (
@@ -374,6 +370,10 @@ export const actions: ActionTree<State, State> & Actions = {
                                                     `ZIP: Unknown content type for file '${zipEntryName}' within package: '${file.name}'`,
                                                 );
                                             }
+                                            commit(
+                                                MutationTypes.POP_PROGRESS_MESSAGE,
+                                                undefined,
+                                            );
                                         })
                                         .finally(() => {
                                             commit(
