@@ -20,14 +20,10 @@ $navbar-breakpoint: 320px;
 /* Player styles (to be used for the audio player) */
 @import 'replayer-player-styles.scss';
 
-/* Menu styles */
 @import 'replayer-navbar-styles.scss';
-
-/* Dropdown styles */
 @import 'replayer-dropdown.scss';
-
-/* Input styles */
 @import 'replayer-input.scss';
+@import 'replayer-print.sass';
 
 /* Below: Application-specific add-ons/modifications to the Bulma CSS */
 

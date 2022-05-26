@@ -1,5 +1,5 @@
 <template>
-    <NavbarTop />
+    <NavbarTop class="is-hidden-print" />
 
     <!-- The pages section -->
     <section class="section">

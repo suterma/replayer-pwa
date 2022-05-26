@@ -10791,7 +10791,6 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   color: #62c462;
 }
 
-/* Menu styles */
 /*************************************************************
  * General navbar stylings
  * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
@@ -10921,7 +10920,6 @@ nav .button:hover {
   color: #aaa;
 }
 
-/* Dropdown styles */
 /*************************************************************
  * Dropdown stylings
  * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
@@ -10956,7 +10954,6 @@ nav .button:hover {
   min-width: 15rem;
 }
 
-/* Input styles */
 /*************************************************************
  * Styles for user input
  * These styles are based on the slate bulmaswatch theme and borrow variables from there
@@ -11022,6 +11019,66 @@ nav .button:hover {
   box-shadow: 0 0 0 0.125em rgba(250, 250, 250, 0.25);
 }
 
+/**
+ * * Compulsory and optional styling for printing.
+ * *
+ * * Note: Ideas are taken from
+ * * https://www.matuzo.at/blog/i-totally-forgot-about-print-style-sheets/ 
+ * * and from
+ * * https://gitlab.com/find-it-program-locator/newtowne/-/blob/8.x-1.x/src/global/_print.sass
+ * * As stated there, such code may get into Bulma proper with 
+ * * https://github.com/jgthms/bulma/pull/2329 and https://github.com/jgthms/bulma/issues/721
+ * */
+/* Tags should have always an outline to distinguish them from simple text */
+@media print {
+  .tag {
+    border: 1px solid black;
+  }
+}
+
+/* Rest from https://github.com/jgthms/bulma/pull/2329/files as was mixin */
+@media print {
+  .is-hidden-print {
+    display: none !important;
+  }
+
+  /* i added or modified these print link URLs */
+  a:not(.is-not-linked-print)[href]::after,
+a[href].clearfix::after {
+    content: "(" attr(href) ")";
+    text-decoration: underline;
+    font-size: 90%;
+    padding-left: 0.25rem;
+    /* make sure the content fits like standard text after the link text*/
+    width: fit-content;
+    top: unset;
+  }
+
+  /* Make sure all is black/white, even opacity is removed */
+  * {
+    background-color: white !important;
+    color: black !important;
+    opacity: 100%;
+  }
+
+  /* Optional page breaks and break avoidance */
+  .has-page-break-after {
+    break-after: page;
+  }
+
+  .has-page-break-before {
+    break-before: page;
+  }
+
+  .is-together-print {
+    page-break-inside: avoid;
+  }
+
+  /* Better use of paper space*/
+  .section {
+    padding-top: 0;
+  }
+}
 /* Below: Application-specific add-ons/modifications to the Bulma CSS */
 /*************************************************************
  * Overscroll / scrollbar handling
