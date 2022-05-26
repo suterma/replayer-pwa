@@ -17,10 +17,10 @@ import CompilationHandler from './compilation-handler';
 import { v4 as uuidv4 } from 'uuid';
 
 export type Mutations<S = State> = {
-    [MutationTypes.PUSH_PROGRESS_MESSAGE](state: S, payload: string): void;
-    [MutationTypes.POP_PROGRESS_MESSAGE](state: S): void;
-    [MutationTypes.PUSH_ERROR_MESSAGE](state: S, payload: string): void;
-    [MutationTypes.POP_ERROR_MESSAGE](state: S): void;
+    [MutationTypes.PUSH_PROGRESS](state: S, payload: string): void;
+    [MutationTypes.POP_PROGRESS](state: S): void;
+    [MutationTypes.PUSH_ERROR](state: S, payload: string): void;
+    [MutationTypes.POP_ERROR](state: S): void;
     [MutationTypes.FINISH_PROGRESS](state: State): void;
     [MutationTypes.ADD_MEDIA_URL](state: S, mediaUrl: MediaUrl): void;
     [MutationTypes.ADD_TRACK](state: S, track: ITrack): void;
@@ -83,21 +83,21 @@ export type Mutations<S = State> = {
 };
 
 export const mutations: MutationTree<State> & Mutations = {
-    [MutationTypes.PUSH_PROGRESS_MESSAGE](state: State, message: string) {
+    [MutationTypes.PUSH_PROGRESS](state: State, message: string) {
         state.progressMessageStack.push(message);
         console.log('PROGRESS: ' + message);
     },
-    [MutationTypes.PUSH_ERROR_MESSAGE](state: State, message: string) {
+    [MutationTypes.PUSH_ERROR](state: State, message: string) {
         state.errorMessageStack.push(message);
         console.error('ERROR: ' + message);
     },
-    [MutationTypes.POP_PROGRESS_MESSAGE](state: State) {
+    [MutationTypes.POP_PROGRESS](state: State) {
         const message = state.progressMessageStack.pop();
-        console.debug('POP_PROGRESS_MESSAGE: ' + message);
+        console.debug('POP_PROGRESS: ' + message);
     },
-    [MutationTypes.POP_ERROR_MESSAGE](state: State) {
+    [MutationTypes.POP_ERROR](state: State) {
         const message = state.errorMessageStack.pop();
-        console.debug('POP_ERROR_MESSAGE: ' + message);
+        console.debug('POP_ERROR: ' + message);
     },
     [MutationTypes.FINISH_PROGRESS](state: State) {
         state.progressMessageStack.length = 0;

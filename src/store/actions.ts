@@ -119,15 +119,12 @@ export const actions: ActionTree<State, State> & Actions = {
     ): Promise<string> {
         return new Promise((resolve, reject) => {
             if (!FileHandler.isValidHttpUrl(url)) {
-                commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                commit(MutationTypes.POP_PROGRESS, undefined);
                 reject(`Provided input is not a valid URL: '${url}'`);
                 return; //to avoid running the code below
             }
 
-            commit(
-                MutationTypes.PUSH_PROGRESS_MESSAGE,
-                `Loading URL '${url}'...`,
-            );
+            commit(MutationTypes.PUSH_PROGRESS, `Loading URL '${url}'...`);
             fetch(url, {
                 mode: 'no-cors', // to allow any accessible resource
                 method: 'GET',
@@ -149,7 +146,7 @@ export const actions: ActionTree<State, State> & Actions = {
                             `Network response while fetching URL '${url}' was not OK`,
                         );
                         //The action is done, so terminate the progress
-                        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                        commit(MutationTypes.POP_PROGRESS, undefined);
                         return;
                     }
 
@@ -161,18 +158,12 @@ export const actions: ActionTree<State, State> & Actions = {
 
                         //Check whether MIME Type is supported
                         if (!FileHandler.isSupportedMimeType(mimeType)) {
-                            commit(
-                                MutationTypes.POP_PROGRESS_MESSAGE,
-                                undefined,
-                            );
+                            commit(MutationTypes.POP_PROGRESS, undefined);
                             reject(
                                 `Content MIME type '${mimeType}' is not supported`,
                             );
                             //The action is done, so terminate the progress
-                            commit(
-                                MutationTypes.POP_PROGRESS_MESSAGE,
-                                undefined,
-                            );
+                            commit(MutationTypes.POP_PROGRESS, undefined);
                             return;
                         }
                         const localResourceName =
@@ -189,20 +180,14 @@ export const actions: ActionTree<State, State> & Actions = {
                             .then(() => {
                                 resolve(localResourceName);
                                 //The action is done, so terminate the progress
-                                commit(
-                                    MutationTypes.POP_PROGRESS_MESSAGE,
-                                    undefined,
-                                );
+                                commit(MutationTypes.POP_PROGRESS, undefined);
                             })
                             .catch((errorMessage: string) => {
                                 reject(
                                     `Loading from the received resource file has failed for URL: '${url}' with the message: '${errorMessage}'`,
                                 );
                                 //The action is done, so terminate the progress
-                                commit(
-                                    MutationTypes.POP_PROGRESS_MESSAGE,
-                                    undefined,
-                                );
+                                commit(MutationTypes.POP_PROGRESS, undefined);
                                 return;
                             });
                     });
@@ -212,7 +197,7 @@ export const actions: ActionTree<State, State> & Actions = {
                         `Fetch has failed for URL: '${url}' with the message: '${errorMessage}'`,
                     );
                     //The action is done, so terminate the progress
-                    commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                    commit(MutationTypes.POP_PROGRESS, undefined);
                     return;
                 });
         });
@@ -224,15 +209,12 @@ export const actions: ActionTree<State, State> & Actions = {
     ): Promise<string> {
         return new Promise((resolve, reject) => {
             if (!FileHandler.isValidHttpUrl(url)) {
-                commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                commit(MutationTypes.POP_PROGRESS, undefined);
                 reject(`Provided input is not a valid URL: '${url}'`);
                 return; //to avoid running the code below
             }
 
-            commit(
-                MutationTypes.PUSH_PROGRESS_MESSAGE,
-                `Using URL '${url}'...`,
-            );
+            commit(MutationTypes.PUSH_PROGRESS, `Using URL '${url}'...`);
             const finalUrl = new URL(url);
             const localResourceName =
                 FileHandler.getLocalResourceName(finalUrl);
@@ -244,7 +226,7 @@ export const actions: ActionTree<State, State> & Actions = {
             resolve(localResourceName);
 
             //The action is done, so terminate the progress
-            commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+            commit(MutationTypes.POP_PROGRESS, undefined);
         });
     },
 
@@ -254,7 +236,7 @@ export const actions: ActionTree<State, State> & Actions = {
     ): Promise<void> {
         return new Promise((resolve, reject) => {
             commit(
-                MutationTypes.PUSH_PROGRESS_MESSAGE,
+                MutationTypes.PUSH_PROGRESS,
                 `Loading file '${file.name}' '${file.type}' (${
                     file.size / 1000000
                 }MB)`,
@@ -271,7 +253,7 @@ export const actions: ActionTree<State, State> & Actions = {
                                 ): void => {
                                     commit(
                                         //Set the progress message, before using any of the async functions
-                                        MutationTypes.PUSH_PROGRESS_MESSAGE,
+                                        MutationTypes.PUSH_PROGRESS,
                                         `Processing ZIP content: ${zipEntry.name}`,
                                     );
                                     zipEntry
@@ -281,7 +263,7 @@ export const actions: ActionTree<State, State> & Actions = {
                                             const zipEntryName =
                                                 zipEntry.name.normalize();
                                             commit(
-                                                MutationTypes.PUSH_PROGRESS_MESSAGE,
+                                                MutationTypes.PUSH_PROGRESS,
                                                 `Processing content for ZIP entry '${zipEntryName}'...`,
                                             );
 
@@ -303,7 +285,7 @@ export const actions: ActionTree<State, State> & Actions = {
                                                     })
                                                     .finally(() => {
                                                         commit(
-                                                            MutationTypes.POP_PROGRESS_MESSAGE,
+                                                            MutationTypes.POP_PROGRESS,
                                                             undefined,
                                                         );
                                                     });
@@ -322,7 +304,7 @@ export const actions: ActionTree<State, State> & Actions = {
                                                     mediaBlob,
                                                 ).finally(() => {
                                                     commit(
-                                                        MutationTypes.POP_PROGRESS_MESSAGE,
+                                                        MutationTypes.POP_PROGRESS,
                                                         undefined,
                                                     );
                                                 });
@@ -342,7 +324,7 @@ export const actions: ActionTree<State, State> & Actions = {
                                                     })
                                                     .finally(() => {
                                                         commit(
-                                                            MutationTypes.POP_PROGRESS_MESSAGE,
+                                                            MutationTypes.POP_PROGRESS,
                                                             undefined,
                                                         );
                                                     });
@@ -366,18 +348,18 @@ export const actions: ActionTree<State, State> & Actions = {
                                                 );
                                             } else {
                                                 commit(
-                                                    MutationTypes.PUSH_ERROR_MESSAGE,
+                                                    MutationTypes.PUSH_ERROR,
                                                     `ZIP: Unknown content type for file '${zipEntryName}' within package: '${file.name}'`,
                                                 );
                                             }
                                             commit(
-                                                MutationTypes.POP_PROGRESS_MESSAGE,
+                                                MutationTypes.POP_PROGRESS,
                                                 undefined,
                                             );
                                         })
                                         .finally(() => {
                                             commit(
-                                                MutationTypes.POP_PROGRESS_MESSAGE,
+                                                MutationTypes.POP_PROGRESS,
                                                 undefined,
                                             );
                                         });
@@ -391,7 +373,7 @@ export const actions: ActionTree<State, State> & Actions = {
                         },
                     )
                     .finally(() => {
-                        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                        commit(MutationTypes.POP_PROGRESS, undefined);
                         resolve();
                     });
             } else if (FileHandler.isXmlFile(file)) {
@@ -407,10 +389,7 @@ export const actions: ActionTree<State, State> & Actions = {
                             );
                         })
                         .finally(() => {
-                            commit(
-                                MutationTypes.POP_PROGRESS_MESSAGE,
-                                undefined,
-                            );
+                            commit(MutationTypes.POP_PROGRESS, undefined);
                             resolve();
                         });
                 };
@@ -429,7 +408,7 @@ export const actions: ActionTree<State, State> & Actions = {
                     ActionTypes.ADD_MEDIA_BLOB,
                     new MediaBlob(file.name, file),
                 ).finally(() => {
-                    commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                    commit(MutationTypes.POP_PROGRESS, undefined);
                     resolve();
                 });
             } else if (FileHandler.isBplistFileName(file.name)) {
@@ -445,10 +424,7 @@ export const actions: ActionTree<State, State> & Actions = {
                             );
                         })
                         .finally(() => {
-                            commit(
-                                MutationTypes.POP_PROGRESS_MESSAGE,
-                                undefined,
-                            );
+                            commit(MutationTypes.POP_PROGRESS, undefined);
                             resolve();
                         });
                 };
@@ -463,7 +439,7 @@ export const actions: ActionTree<State, State> & Actions = {
                 };
                 reader.readAsArrayBuffer(file);
             } else {
-                commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                commit(MutationTypes.POP_PROGRESS, undefined);
                 reject(
                     `Unsupported content type for file '${file.name}', content was not processed.`,
                 );
@@ -474,7 +450,7 @@ export const actions: ActionTree<State, State> & Actions = {
         commit,
         getters,
     }: AugmentedActionContext): void {
-        commit(MutationTypes.PUSH_PROGRESS_MESSAGE, `Downloading REX file...`);
+        commit(MutationTypes.PUSH_PROGRESS, `Downloading REX file...`);
 
         const compilation = getters.compilation;
         const xml = CompilationParser.convertToXml(compilation);
@@ -483,13 +459,13 @@ export const actions: ActionTree<State, State> & Actions = {
         });
         FileSaver.saveAs(blob, `${compilation?.Title}.rex`);
 
-        commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+        commit(MutationTypes.POP_PROGRESS, undefined);
     },
     [ActionTypes.DOWNLOAD_REZ_PACKAGE]({
         commit,
         getters,
     }: AugmentedActionContext): void {
-        commit(MutationTypes.PUSH_PROGRESS_MESSAGE, `Downloading REZ file...`);
+        commit(MutationTypes.PUSH_PROGRESS, `Downloading REZ file...`);
 
         //Get the XML first
         const compilation = getters.compilation;
@@ -515,7 +491,7 @@ export const actions: ActionTree<State, State> & Actions = {
                     FileSaver.saveAs(content, `${compilation?.Title}.rez`);
                 })
                 .finally(() => {
-                    commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                    commit(MutationTypes.POP_PROGRESS, undefined);
                 });
         });
     },
@@ -596,7 +572,7 @@ function withProgress(
     ) => ReturnType<Mutations<State>[K]>,
     callee: () => void,
 ) {
-    commit(MutationTypes.PUSH_PROGRESS_MESSAGE, message);
+    commit(MutationTypes.PUSH_PROGRESS, message);
     callee();
-    commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+    commit(MutationTypes.POP_PROGRESS, undefined);
 }

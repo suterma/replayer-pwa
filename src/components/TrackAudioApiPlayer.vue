@@ -205,7 +205,7 @@ export default defineComponent({
                 this.mediaError,
             );
             this.$store.commit(
-                MutationTypes.PUSH_ERROR_MESSAGE,
+                MutationTypes.PUSH_ERROR,
                 'Error while retrieving media source. Message: ' +
                     this.mediaError?.message,
             );

@@ -52,7 +52,7 @@ export default defineComponent({
                 return; //With this URL's track loading
             } else {
                 this.$store.commit(
-                    MutationTypes.PUSH_ERROR_MESSAGE,
+                    MutationTypes.PUSH_ERROR,
                     'No valid track media URL found, no track is loaded',
                 );
             }

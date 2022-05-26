@@ -257,10 +257,7 @@ export default defineComponent({
             this.$store
                 .dispatch(ActionTypes.LOAD_FROM_FILE, file)
                 .catch((errorMessage: string) => {
-                    this.$store.commit(
-                        MutationTypes.PUSH_ERROR_MESSAGE,
-                        errorMessage,
-                    );
+                    this.$store.commit(MutationTypes.PUSH_ERROR, errorMessage);
                     //Do not create a new track
                     throw new Error(errorMessage);
                 })
@@ -325,7 +322,7 @@ export default defineComponent({
                             errorMessage,
                         );
                         this.$store.commit(
-                            MutationTypes.PUSH_ERROR_MESSAGE,
+                            MutationTypes.PUSH_ERROR,
                             errorMessage,
                         );
                         throw new Error(errorMessage);

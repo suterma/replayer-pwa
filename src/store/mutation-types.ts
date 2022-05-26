@@ -1,12 +1,12 @@
 export enum MutationTypes {
     /** Initiates the display of a progress message by pushing the message onto the stack of progress messages */
-    PUSH_PROGRESS_MESSAGE = 'PUSH_PROGRESS_MESSAGE',
+    PUSH_PROGRESS = 'PUSH_PROGRESS',
     /** Ends the display of a previous progress message, by popping the message from the stack of progress messages */
-    POP_PROGRESS_MESSAGE = 'POP_PROGRESS_MESSAGE',
+    POP_PROGRESS = 'POP_PROGRESS',
     /** Initiates the display of an error message by pushing the message onto the stack of error messages */
-    PUSH_ERROR_MESSAGE = 'PUSH_ERROR_MESSAGE',
+    PUSH_ERROR = 'PUSH_ERROR',
     /** Ends the display of a previous error message, by popping the message from the stack of error messages */
-    POP_ERROR_MESSAGE = 'POP_ERROR_MESSAGE',
+    POP_ERROR = 'POP_ERROR',
     /** Ends the display any previous progress message, by clearing all messages from the stack of progress messages */
     FINISH_PROGRESS = 'FINISH_PROGRESS',
     /** Adds a media blob URL to the store

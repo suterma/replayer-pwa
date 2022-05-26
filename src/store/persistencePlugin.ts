@@ -19,10 +19,10 @@ export const persistencePlugin = (store: Store) => {
         console.debug('store:state', state);
         // Updated Messages are not persisted
         if (
-            mutation.type === MutationTypes.PUSH_PROGRESS_MESSAGE ||
-            mutation.type === MutationTypes.PUSH_ERROR_MESSAGE ||
-            mutation.type === MutationTypes.POP_ERROR_MESSAGE ||
-            mutation.type === MutationTypes.POP_PROGRESS_MESSAGE
+            mutation.type === MutationTypes.PUSH_PROGRESS ||
+            mutation.type === MutationTypes.PUSH_ERROR ||
+            mutation.type === MutationTypes.POP_ERROR ||
+            mutation.type === MutationTypes.POP_PROGRESS
         ) {
             return;
         }
@@ -40,10 +40,7 @@ function retrieveState(store: Store) {
     //console.debug('store:retrieveSettings', settings);
     store.commit(MutationTypes.UPDATE_SETTINGS, settings);
 
-    store.commit(
-        MutationTypes.PUSH_PROGRESS_MESSAGE,
-        'Retrieving last compilation...',
-    );
+    store.commit(MutationTypes.PUSH_PROGRESS, 'Retrieving last compilation...');
 
     PersistentStorage.retrieveCompilation().then((compilation) => {
         PersistentStorage.retrieveSelectedCueId().then((cueId) => {
@@ -102,7 +99,7 @@ function retrieveState(store: Store) {
                     }
                 })
                 .finally(() => {
-                    store.commit(MutationTypes.POP_PROGRESS_MESSAGE, undefined);
+                    store.commit(MutationTypes.POP_PROGRESS, undefined);
                 });
         });
     });
