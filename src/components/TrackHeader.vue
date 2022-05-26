@@ -33,7 +33,7 @@
             </div>
             <!-- Title -->
             <div class="level-item">
-                <p class="subtitle is-4">
+                <p class="title has-text-weight-light is-4">
                     <LinkableText :text="track.Name"></LinkableText>
                 </p>
             </div>

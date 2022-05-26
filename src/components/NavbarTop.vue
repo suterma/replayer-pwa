@@ -67,14 +67,7 @@ By the click of a button, Replayer starts to play at predefined times in the aud
                         >Edit</router-link
                     >
                 </Hotkey>
-                <Experimental>
-                    <router-link
-                        @click="toggleBurger"
-                        class="navbar-item"
-                        to="/list"
-                        >List</router-link
-                    >
-                </Experimental>
+
                 <router-link
                     @click="toggleBurger"
                     class="navbar-item"
@@ -88,12 +81,30 @@ By the click of a button, Replayer starts to play at predefined times in the aud
                     >About</router-link
                 >
                 <Experimental>
-                    <router-link
-                        @click="toggleBurger"
-                        class="navbar-item"
-                        to="/development"
-                        >BETA
-                    </router-link>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link"> Experimental </a>
+
+                        <div class="navbar-dropdown">
+                            <router-link
+                                @click="toggleBurger"
+                                class="navbar-item"
+                                to="/development"
+                                >Development
+                            </router-link>
+                            <router-link
+                                @click="toggleBurger"
+                                class="navbar-item"
+                                to="/list"
+                                >List</router-link
+                            >
+                            <router-link
+                                @click="toggleBurger"
+                                class="navbar-item"
+                                to="/printable-list"
+                                >Printable list</router-link
+                            >
+                        </div>
+                    </div>
                 </Experimental>
             </div>
         </div>
