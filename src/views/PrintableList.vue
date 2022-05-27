@@ -12,10 +12,11 @@
             <div class="field">
                 <div class="control">
                     <button
-                        class="button is-success is-medium is-hidden-print"
+                        class="button is-success is-hidden-print"
                         @click="printWindow()"
                     >
-                        Print (b/w)
+                        <Icon name="printer-outline" />
+                        <span> Print (b/w)</span>
                     </button>
                 </div>
             </div>
@@ -105,6 +106,7 @@ import { defineComponent } from 'vue';
 import { ICompilation } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import Experimental from '@/components/Experimental.vue';
+import Icon from '@/components/icons/Icon.vue';
 import CompilationHandler from '@/store/compilation-handler';
 
 /** A printable display of a complete compilation, with a simple track and cue listing */
@@ -113,6 +115,7 @@ export default defineComponent({
     components: {
         Experimental,
         ArtistInfo,
+        Icon,
     },
     data() {
         return {
