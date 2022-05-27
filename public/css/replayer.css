@@ -11042,7 +11042,7 @@ nav .button:hover {
     display: none !important;
   }
 
-  /* i added or modified these print link URLs */
+  /* print out link URLs */
   a:not(.is-not-linked-print)[href]::after,
 a[href].clearfix::after {
     content: "(" attr(href) ")";
@@ -11074,9 +11074,18 @@ a[href].clearfix::after {
     page-break-inside: avoid;
   }
 
-  /* Better use of paper space*/
+  /* Better use of paper space, padding is done via page margins */
   .section {
     padding-top: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  @page {
+    margin-top: 2cm;
+    margin-left: 2cm;
+    margin-right: 2cm;
+    margin-bottom: 2cm;
   }
 }
 /* Below: Application-specific add-ons/modifications to the Bulma CSS */
