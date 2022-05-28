@@ -15,15 +15,15 @@ $navbar-breakpoint: 320px;
 @import '../node_modules/bulmaswatch/slate/_overrides.scss';
 
 /* Replayer-specific (smaller) section margins */
-@import 'replayer-section.scss';
+@import '_replayer-section.scss';
 
 /* Player styles (to be used for the audio player) */
-@import 'replayer-player-styles.scss';
+@import '_replayer-player-styles.scss';
 
-@import 'replayer-navbar-styles.scss';
-@import 'replayer-dropdown.scss';
-@import 'replayer-input.scss';
-@import 'replayer-print.sass';
+@import '_replayer-navbar-styles.scss';
+@import '_replayer-dropdown.scss';
+@import '_replayer-input.scss';
+@import '_replayer-print.scss';
 
 /* Below: Application-specific add-ons/modifications to the Bulma CSS */
 

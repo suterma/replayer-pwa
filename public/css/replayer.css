@@ -11020,24 +11020,23 @@ nav .button:hover {
 }
 
 /**
- * * Compulsory and optional styling for printing.
- * *
- * * Note: Ideas are taken from
- * * https://www.matuzo.at/blog/i-totally-forgot-about-print-style-sheets/ 
- * * and from
- * * https://gitlab.com/find-it-program-locator/newtowne/-/blob/8.x-1.x/src/global/_print.sass
- * * As stated there, such code may get into Bulma proper with 
- * * https://github.com/jgthms/bulma/pull/2329 and https://github.com/jgthms/bulma/issues/721
- * */
-/* Tags should have always an outline to distinguish them from simple text */
+ * Compulsory and optional styling for printing.
+ *
+ * Note: Ideas are taken from
+ * https://www.matuzo.at/blog/i-totally-forgot-about-print-style-sheets/
+ * and from
+ * https://gitlab.com/find-it-program-locator/newtowne/-/blob/8.x-1.x/src/global/_print.sass
+ * As stated there, such code may get into Bulma proper with
+ * https://github.com/jgthms/bulma/pull/2329 and https://github.com/jgthms/bulma/issues/721
+ */
 @media print {
-  .tag {
-    border: 1px solid black;
+  /* Tags and buttons should have always an outline to distinguish them from simple text */
+  .tag,
+.button {
+    border: 1px solid black !important;
   }
-}
 
-/* Rest from https://github.com/jgthms/bulma/pull/2329/files as was mixin */
-@media print {
+  /* Optional non-printable elements*/
   .is-hidden-print {
     display: none !important;
   }
@@ -11057,8 +11056,11 @@ a[href].clearfix::after {
   /* Make sure all is black/white, even opacity is removed */
   * {
     background-color: white !important;
+    background-image: none !important;
     color: black !important;
     opacity: 100%;
+    /* remove shadows */
+    text-shadow: none;
   }
 
   /* Optional page breaks and break avoidance */
