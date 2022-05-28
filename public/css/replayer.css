@@ -11063,6 +11063,15 @@ a[href].clearfix::after {
     text-shadow: none;
   }
 
+  /* hr elements should print black (they do not by default),
+  * in contrast to the other elements defined.
+  * Note: just setting the background to black does only work in the
+  * print media emulation (in Google Chrome), not in the actual printout
+  */
+  hr {
+    border-top: solid 1px #000 !important;
+  }
+
   /* Optional page breaks and break avoidance */
   .has-page-break-after {
     break-after: page;
@@ -11088,6 +11097,12 @@ a[href].clearfix::after {
     margin-left: 2cm;
     margin-right: 2cm;
     margin-bottom: 2cm;
+  }
+}
+/* Optional print-only elements*/
+@media not print {
+  .is-print-only {
+    display: none !important;
   }
 }
 /* Below: Application-specific add-ons/modifications to the Bulma CSS */
@@ -11275,6 +11290,11 @@ a[target=_blank]:after {
   display: inline-flex;
   justify-content: center;
   width: 1.2rem;
+}
+
+/* Tables dont have a background */
+.table {
+  background-color: transparent;
 }
 
 /*************************************************************

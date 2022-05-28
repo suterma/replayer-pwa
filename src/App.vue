@@ -14,11 +14,13 @@
         <ErrorOverlay />
         <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
     </section>
+    <Ad class="is-print-only" />
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
 import NavbarTop from '@/components/NavbarTop.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
+import Ad from '@/components/Ad.vue';
 import ErrorOverlay from '@/components/ErrorOverlay.vue';
 import { MutationTypes } from './store/mutation-types';
 import { DialogWrapper } from 'vue3-promise-dialog';
@@ -30,6 +32,7 @@ export default defineComponent({
         ProgressOverlay,
         ErrorOverlay,
         DialogWrapper,
+        Ad,
     },
     beforeMount() {
         //Handle reloads and tab/browser exits

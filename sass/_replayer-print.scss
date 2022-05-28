@@ -47,6 +47,16 @@
         /* remove shadows */
         text-shadow: none;
     }
+
+    /* hr elements should print black (they do not by default),
+    * in contrast to the other elements defined.
+    * Note: just setting the background to black does only work in the
+    * print media emulation (in Google Chrome), not in the actual printout
+    */
+    hr {
+        border-top: solid 1px #000 !important;
+    }
+
     /* Optional page breaks and break avoidance */
     .has-page-break-after {
         break-after: page;
@@ -68,5 +78,11 @@
         margin-left: 2cm;
         margin-right: 2cm;
         margin-bottom: 2cm;
+    }
+}
+/* Optional print-only elements*/
+@media not print {
+    .is-print-only {
+        display: none !important;
     }
 }

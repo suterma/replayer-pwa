@@ -228,6 +228,11 @@ a[target='_blank']:after {
     width: 1.2rem;
 }
 
+/* Tables dont have a background */
+.table {
+    background-color: transparent;
+}
+
 /*************************************************************
  * Dropdown menu
 **************************************************************
