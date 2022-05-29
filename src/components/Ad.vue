@@ -1,7 +1,7 @@
 <template>
-    <section class="hero has-border is-together-print">
+    <section class="hero has-border is-together-print is-scaled-50">
         <div class="hero-body">
-            <div class="box is-pulled-right">
+            <div class="is-pulled-right">
                 <img
                     alt="QR image for https://.replayer.app"
                     width="150"
@@ -16,8 +16,8 @@
             </p>
             <p>
                 Replayer is a free, cue-based media player for rehearsals with
-                playback music. By the click of a button, Replayer starts to
-                play at predefined times in the audio file.
+                playback music. <br />By the click of a button, Replayer starts
+                to play at predefined times in the audio file.
             </p>
         </div>
     </section>
@@ -32,3 +32,9 @@ export default defineComponent({
     name: 'Ad',
 });
 </script>
+<style lang="css" scoped>
+.is-scaled-50 {
+    transform: scale(0.5) translate(-50%, -50%);
+    width: 200%;
+}
+</style>
