@@ -35,15 +35,15 @@ const routes: Array<RouteRecordRaw> = [
             import(/* webpackChunkName: "list" */ '../views/List.vue'),
     },
     {
-        path: '/printable-list',
-        name: 'PrintableList',
-        //component: PrintableList,
+        path: '/setlist',
+        name: 'Setlist',
+        //component: Setlist,
 
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-            import(/* webpackChunkName: "list" */ '../views/PrintableList.vue'),
+            import(/* webpackChunkName: "list" */ '../views/Setlist.vue'),
     },
     {
         //HINT: The track player is not accessible from the menu

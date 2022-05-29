@@ -100,8 +100,8 @@ By the click of a button, Replayer starts to play at predefined times in the aud
                             <router-link
                                 @click="toggleBurger"
                                 class="navbar-item"
-                                to="/printable-list"
-                                >Printable list</router-link
+                                to="/setlist"
+                                >Setlist</router-link
                             >
                         </div>
                     </div>
