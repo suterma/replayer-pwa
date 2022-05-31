@@ -158,7 +158,7 @@ export default defineComponent({
             else if (event.key.match(/^[0-9]{1}$/g)) {
                 event.preventDefault();
                 this.mnemonic = this.mnemonic + event.key;
-                this.DisplayDataAndAction(this.mnemonic, 'mnemonic');
+                this.DisplayDataAndAction(this.mnemonic, ' + [ENTER]');
 
                 //(Re-)schedule the timeout
                 window.clearTimeout(this.keyTimeoutId);
