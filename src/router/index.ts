@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Play from '../views/Play.vue';
+import { store } from '../store/store';
 
 //import TrackPlayer from '../views/TrackPlayer.vue';
 //import List from '../views/List.vue';
@@ -104,9 +105,21 @@ const router = createRouter({
     routes,
 });
 
-/** Set some generic title for the view */
+/** Set some generic title for the current route's view */
 router.afterEach((to /*from*/) => {
-    document.title = `${to.name?.toString()} | Replayer`;
+    let compilationInfo = '';
+    const compilationTitle = store.getters.compilation.Title;
+    const toName = to.name?.toString();
+    //on some routes, also display the compilation title
+    if (
+        compilationTitle &&
+        toName &&
+        ['Play', 'Edit', 'Setlist'].includes(toName)
+    ) {
+        compilationInfo = ' | ' + compilationTitle;
+    }
+
+    document.title = `${to.name?.toString()}${compilationInfo} | Replayer`;
 });
 
 export default router;
