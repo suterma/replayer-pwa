@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Play from '../views/Play.vue';
+
 //import TrackPlayer from '../views/TrackPlayer.vue';
 //import List from '../views/List.vue';
 
@@ -101,6 +102,11 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
     history: createWebHashHistory(),
     routes,
+});
+
+/** Set some generic title for the view */
+router.afterEach((to /*from*/) => {
+    document.title = `${to.name?.toString()} | Replayer`;
 });
 
 export default router;
