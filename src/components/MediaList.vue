@@ -22,7 +22,6 @@ import { MediaUrl } from '@/store/state-types';
 export default defineComponent({
     name: 'MediaList',
     components: {},
-    props: {},
     methods: {},
     computed: {
         /** A dictionary of media URLs, representing playable media files
