@@ -1,8 +1,10 @@
 <template>
-    <p class="control" :title="this.indication">
+    <!-- align like a bulma level, vertically centered -->
+    <p class="control is-flex is-align-items-center" :title="indication">
         <span class="button is-indicator">
-            <Icon :name="this.iconName" />
+            <Icon :name="iconName" />
         </span>
+        <span>{{ indication }}</span>
     </p>
 </template>
 

@@ -1,13 +1,36 @@
 <template>
+    <!-- @remarks The id is used to scroll to this item when it's becoming the active track -->
     <div v-bind:id="'track-' + track.Id">
-        <!-- Level, also on mobile 
-     @remarks The id is used to scroll to this item when it's becoming the active track-->
+        <!-- Extra level for the media edit, except on very large screens -->
+        <div class="level is-hidden-fullhd">
+            <div class="level-left">
+                <div class="level-item">
+                    <div class="field">
+                        <p class="control">
+                            <MediaEdit :track="track" />
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level, also on mobile -->
         <div class="level">
             <!-- Left side -->
             <div class="level-left">
+                <!-- Only for wide screens, who the media edit in the level -->
+                <div
+                    class="level-item is-hidden-widescreen-only is-hidden-desktop-only is-hidden-touch"
+                >
+                    <div class="field">
+                        <p class="control">
+                            <MediaEdit :track="track" />
+                        </p>
+                    </div>
+                </div>
                 <!-- Title -->
                 <div class="level-item is-flex-grow-5 is-flex-shrink-1">
-                    <div class="field fill-available">
+                    <div class="field">
                         <p class="control">
                             <EditableInput
                                 v-model="trackData.Name"
@@ -63,13 +86,6 @@
                                 type="text"
                                 placeholder="Album"
                             />
-                        </p>
-                    </div>
-                </div>
-                <div class="level-item">
-                    <div class="field">
-                        <p class="control">
-                            <MediaEdit :track="track" />
                         </p>
                     </div>
                 </div>

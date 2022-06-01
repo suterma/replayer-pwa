@@ -13,7 +13,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                 :class="{
                     box: true,
                     button: true,
-                    'fill-available': true,
+
                     'has-background-info-dark': isDraggingOver,
                     'has-border-info': isDraggingOver,
                     'is-loading': isLoadingFromFile,
@@ -71,8 +71,8 @@ The URL input is wider, because it should be able to easily deal with lenghty in
             v-if="isExpanded"
             class="level-item has-text-centered is-flex-grow-5 is-flex-shrink-1"
         >
-            <div class="field fill-available has-addons">
-                <div class="control fill-available">
+            <div class="field has-addons is-flex-grow-5 is-flex-shrink-1">
+                <p class="control is-flex-grow-5 is-flex-shrink-1">
                     <input
                         class="input"
                         type="url"
@@ -80,9 +80,8 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                         :title="replaceInfo"
                         v-model="url"
                         placeholder="Paste an URL"
-                        size="60"
                     />
-                </div>
+                </p>
                 <Experimental class="control">
                     <!-- //TODO fetch is currenlty not suported at URL load time -->
                     <button
@@ -121,6 +120,19 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                 </div>
             </div>
         </div>
+
+        <template v-if="offerDemo">
+            <div class="level-item has-text-centered">
+                <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
+            </div>
+            <div class="level-item has-text-centered">
+                <router-link to="/demo">
+                    <button class="button">
+                        <span>Try the demo</span>
+                    </button></router-link
+                >
+            </div>
+        </template>
     </div>
 </template>
 
@@ -161,6 +173,11 @@ export default defineComponent({
         trackId: {
             type: String,
             default: undefined,
+        },
+        /** Whether to offer a demo button */
+        offerDemo: {
+            type: Boolean,
+            default: false,
         },
     },
     emits: ['update:is-expanded'],

@@ -24,26 +24,13 @@
         <!-- v-click-outside seems not to work well with v-if -->
         <!-- Additionally, v-show seems not to work properly when used directly on the MediaDropZone-Element, thus it's applied to an extra div -->
         <div v-show="isEditMode || !hasCompilation">
-            <div class="level media-loader">
-                <div class="level-item has-text-centered">
-                    <MediaDropZone
-                        v-model:isExpanded="isMediaDropZoneExpanded"
-                        v-click-outside="clickedOutside"
-                    />
-                </div>
-                <!-- Suggest the demo only when no compilation/track is shown -->
-                <template v-if="!hasCompilation">
-                    <div class="level-item has-text-centered">
-                        <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
-                    </div>
-                    <div class="level-item has-text-centered">
-                        <router-link to="/demo">
-                            <button class="button">
-                                <span>Try the demo</span>
-                            </button></router-link
-                        >
-                    </div>
-                </template>
+            <div class="media-loader">
+                <!-- Offer the demo only when no compilation/track is shown -->
+                <MediaDropZone
+                    v-model:isExpanded="isMediaDropZoneExpanded"
+                    v-click-outside="clickedOutside"
+                    :offerDemo="!hasCompilation"
+                />
             </div>
         </div>
     </div>

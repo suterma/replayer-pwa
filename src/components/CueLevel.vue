@@ -19,7 +19,7 @@
                         </p>
                         <!-- Cue Description -->
                         <p
-                            class="control fill-available is-flex-grow-5 is-flex-shrink-1"
+                            class="control is-flex-grow-5 is-flex-shrink-1"
                             title="Description for this cue"
                         >
                             <input
