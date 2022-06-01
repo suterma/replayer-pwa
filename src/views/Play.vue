@@ -70,6 +70,7 @@ import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.
 /** A view for playing an existing compilation */
 export default defineComponent({
     name: 'Play',
+    id: 'play-view',
     components: {
         Compilation,
         CompilationKeyboardHandler,
@@ -96,6 +97,16 @@ export default defineComponent({
         hasCompilation(newVal): void {
             this.updateMediaDropZoneExpansion(!newVal);
         },
+
+        compilationTitle(newCompilationTitle): void {
+            let compilationInfo = '';
+            const routeName = this.$route.name?.toString();
+            if (newCompilationTitle && routeName) {
+                compilationInfo = ' | ' + newCompilationTitle;
+            }
+
+            document.title = `${routeName}${compilationInfo} | Replayer`;
+        },
     },
     methods: {
         clickedOutside(): void {
@@ -110,6 +121,10 @@ export default defineComponent({
     computed: {
         compilation(): ICompilation {
             return this.$store.getters.compilation;
+        },
+
+        compilationTitle(): ICompilation {
+            return this.$store.getters.compilation.Title;
         },
 
         hasCompilation(): boolean {

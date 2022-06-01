@@ -5,9 +5,9 @@
     <section class="section">
         <!-- To keep the audio within the media player component running, 
             simply keep this component alive over route changes -->
-        <router-view v-slot="{ Component }">
+        <router-view v-slot="{ Component, id }">
             <keep-alive include="Play">
-                <component :is="Component" />
+                <component :is="Component" :key="id" />
             </keep-alive>
         </router-view>
         <ProgressOverlay />
