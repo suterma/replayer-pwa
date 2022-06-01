@@ -72,17 +72,25 @@ By the click of a button, Replayer starts to play at predefined times in the aud
                     @click="toggleBurger"
                     class="navbar-item"
                     to="/settings"
+                    title="Switch to settings view"
                     >Settings</router-link
                 >
                 <router-link
                     @click="toggleBurger"
                     class="navbar-item"
                     to="/about"
-                    >About</router-link
+                    title="Switch to about view"
+                >
+                    About</router-link
                 >
                 <Experimental>
                     <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link"> Experimental </a>
+                        <a
+                            class="navbar-link"
+                            title="Switch to experimental view"
+                        >
+                            <Icon name="flask-outline"></Icon>
+                        </a>
 
                         <div class="navbar-dropdown">
                             <router-link
@@ -115,11 +123,12 @@ By the click of a button, Replayer starts to play at predefined times in the aud
 import { defineComponent } from 'vue';
 import Experimental from '@/components/Experimental.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
+import Icon from '@/components/icons/Icon.vue';
 
 /** A top navbar for the application*/
 export default defineComponent({
     name: 'NavbarTop',
-    components: { Experimental, Hotkey },
+    components: { Experimental, Hotkey, Icon },
 
     data() {
         return {
