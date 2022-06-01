@@ -4,10 +4,6 @@
             <div class="hero-body">
                 <div class="block">
                     <p class="title">Set list</p>
-                    <p>
-                        The set list allows you to review and print the
-                        compilation, in a suitable format.
-                    </p>
                 </div>
                 <div class="block">
                     <div class="field is-pulled-right">
