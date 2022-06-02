@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Play from '../views/Play.vue';
-import { store } from '../store/store';
+import { useTitle } from '@vueuse/core';
+import { store } from '@/store/store';
+import { computed } from 'vue';
 
 //import TrackPlayer from '../views/TrackPlayer.vue';
 //import List from '../views/List.vue';
@@ -105,11 +107,11 @@ const router = createRouter({
     routes,
 });
 
-/** Set some generic title for the current route's view */
-router.afterEach((to /*from*/) => {
+/** Use the current route and complilation as the title for the document */
+const title = computed(() => {
     let compilationInfo = '';
     const compilationTitle = store.getters.compilation.Title;
-    const toName = to.name?.toString();
+    const toName = router.currentRoute.value.name?.toString();
     //on some routes, also display the compilation title
     if (
         compilationTitle &&
@@ -118,8 +120,10 @@ router.afterEach((to /*from*/) => {
     ) {
         compilationInfo = ' | ' + compilationTitle;
     }
-
-    document.title = `${to.name?.toString()}${compilationInfo} | Replayer`;
+    return `${toName}${compilationInfo}`;
+});
+useTitle(title, {
+    titleTemplate: '%s | Replayer',
 });
 
 export default router;
