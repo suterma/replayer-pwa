@@ -321,6 +321,11 @@
                     >, a Vue 3 keyboard shortcut library (Released under the MIT
                     License, by Simon Osterlehner)
                 </li>
+                <li>
+                    <a href="https://vueuse.org/" target="_blank"> VueUse</a>, a
+                    Collection of essential Vue Composition Utilities (Released
+                    under the MIT License, by the VueUse team)
+                </li>
             </ul>
         </div>
         <h1 class="title">License</h1>
