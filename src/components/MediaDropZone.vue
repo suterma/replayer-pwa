@@ -83,7 +83,6 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     />
                 </p>
                 <Experimental class="control">
-                    <!-- //TODO fetch is currenlty not suported at URL load time -->
                     <button
                         :class="{
                             button: true,
@@ -326,8 +325,6 @@ export default defineComponent({
         /** Fetches a single URL by loading it's content
          */
         fetchUrl(): void {
-            //TODO show legal info about download first
-
             console.debug('MediaDropZone::fetchUrl:url:', this.url);
             if (this.url) {
                 this.isLoadingFromUrl = true;

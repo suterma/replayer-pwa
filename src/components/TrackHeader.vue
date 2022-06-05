@@ -96,7 +96,6 @@ import LinkableText from './LinkableText.vue';
 /** Displays a track header with a title.
  * @remarks Also handles the common replayer events for tracks
  */
-//TODO later remove the editable parts, once the TrackHeaderEdit is accepted as the edit control
 export default defineComponent({
     name: 'TrackHeader',
     components: {
