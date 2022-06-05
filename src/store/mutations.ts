@@ -105,8 +105,8 @@ export const mutations: MutationTree<State> & Mutations = {
     },
 
     [MutationTypes.ADD_MEDIA_URL](state: State, mediaUrl: MediaUrl): void {
-        //Remove any previously matching, even it was the same object, because
-        //the caller has already create a new one for this mediaUrl's blob.
+        //Remove any previously matching media URL, even it was the same object, because
+        //the caller has already created a new one for this mediaUrl's blob.
         const matchingFile = state.mediaUrls.get(mediaUrl.resourceName);
         if (matchingFile) {
             console.debug(
@@ -115,44 +115,39 @@ export const mutations: MutationTree<State> & Mutations = {
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);
             state.mediaUrls.delete(mediaUrl.resourceName);
-
-            //If any track uses this media, remove the now stale duration
-            const compilation = state.compilation;
-            const matchingTrack = compilation.Tracks.find(
-                (t) => t.Url === mediaUrl.resourceName,
-            );
-            if (matchingTrack) {
-                matchingTrack.Duration = null;
-            }
         }
 
-        //Keep the others and add the new one
+        //Now add the new media URL as a replacement
         console.debug('mutations::ADD_MEDIA_URL:', mediaUrl.resourceName);
         state.mediaUrls.set(mediaUrl.resourceName, mediaUrl);
+
+        //If any track uses this media, remove the now stale duration for this track
+        const matchingTrack = state.compilation.Tracks.find(
+            (t) => t.Url === mediaUrl.resourceName,
+        );
+        if (matchingTrack) {
+            matchingTrack.Duration = null;
+        }
+        //If no track is using this media yet, add a default track
+        else {
+            const track = CompilationHandler.createDefaultTrack(mediaUrl);
+            const cue = CompilationHandler.createDefaultCue(state.compilation);
+            track.Cues.push(cue);
+            state.compilation.Tracks.push(track);
+            state.selectedCueId = cue.Id;
+        }
     },
 
     [MutationTypes.ADD_TRACK](state: State, track: ITrack) {
         console.debug('mutations::ADD_TRACK:', track);
 
-        //Use the fisrt cue, if it exists (and has an Id)
+        //Use the first cue, if it exists (and has an Id)
         let firstCueId = track.Cues[0]?.Id;
 
         if (!firstCueId) {
-            //Add a first cue
-            const nextShortcut = CompilationHandler.getNextShortcut(
-                state.compilation as ICompilation,
-            );
-
-            const time = 0;
-            firstCueId = uuidv4();
-            const cue = new Cue(
-                '',
-                nextShortcut.toString(),
-                time,
-                null,
-                firstCueId,
-            );
+            const cue = CompilationHandler.createDefaultCue(state.compilation);
             track.Cues.push(cue);
+            firstCueId = cue.Id;
         }
         //Use the track, plus the cue as the selected cue
         state.compilation.Tracks.push(track);

@@ -9,11 +9,12 @@ export enum MutationTypes {
     POP_ERROR = 'POP_ERROR',
     /** Ends the display any previous progress message, by clearing all messages from the stack of progress messages */
     FINISH_PROGRESS = 'FINISH_PROGRESS',
-    /** Adds a media blob URL to the store
+    /** Adds a media blob URL to the store.
      * @remarks A new blob URL replaces any existing with an exact same path.
      */
     ADD_MEDIA_URL = 'ADD_MEDIA_URL',
     /** Adds a new track for the given media URL to the compilation.
+     * @remarks No media URL is added, it must get handeled elsewhere.
      * @remarks If no cue is provided, this also adds a first cue for this track. The first cue is used as the selected cue.
      */
     ADD_TRACK = 'ADD_TRACK',
