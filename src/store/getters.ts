@@ -34,6 +34,9 @@ export type Getters = {
     settings(state: State): Settings;
     /** Gets the active track (i.e. the globally selected cue is from this track ) */
     activeTrack(state: State): ITrack | undefined;
+
+    /** Gets the set of tracks */
+    tracks(state: State): Array<ITrack> | undefined;
 };
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -95,5 +98,9 @@ export const getters: GetterTree<State, State> & Getters = {
         }
         //if none selected, no track is active anyway
         return undefined;
+    },
+    /** @inheritdoc */
+    tracks: (state): Array<ITrack> | undefined => {
+        return state.compilation?.Tracks;
     },
 };

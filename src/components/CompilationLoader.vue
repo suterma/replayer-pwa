@@ -8,7 +8,7 @@ import CompilationParser from '@/store/compilation-parser';
 import { MutationTypes } from '@/store/mutation-types';
 
 /** A Loader for packages or tracks, from the URL
- * @remarks Loads items from the URL parameters
+ * @remarks Implements the Track and Package API by loading  items from the URL parameters
  * @devdoc According to my current understanding this must be run
  * as part of a component. Otherwise the URL fragment part is not processed
  * as the query part within vue-router
@@ -33,6 +33,7 @@ export default defineComponent({
                 this.$store
                     .dispatch(ActionTypes.USE_MEDIA_FROM_URL, track.Url)
                     .then(() => {
+                        //TODO can be removed after default track add??
                         this.$store.commit(MutationTypes.ADD_TRACK, track);
                         const firstCueId = track.Cues[0]?.Id;
                         console.debug(

@@ -37,9 +37,8 @@ export default defineComponent({
             return this.$store.getters.compilation;
         },
 
-        /** Gets the list of tracks within this compilation */
         tracks(): Array<ITrack> | undefined {
-            return this.compilation?.Tracks;
+            return this.$store.getters.tracks;
         },
 
         hasCompilation(): boolean {

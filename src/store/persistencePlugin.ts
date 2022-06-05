@@ -15,8 +15,8 @@ export const persistencePlugin = (store: Store) => {
      * @remarks Called after every mutation. The mutation comes in the format of `{ type, payload }`.
      */
     store.subscribe((mutation, state): void => {
-        console.debug('store:mutation', mutation);
-        console.debug('store:state', state);
+        // console.debug('store:mutation', mutation);
+        // console.debug('store:state', state);
         // Updated Messages are not persisted
         if (
             mutation.type === MutationTypes.PUSH_PROGRESS ||

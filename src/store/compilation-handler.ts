@@ -57,7 +57,7 @@ export default class CompilationHandler {
         return Math.round(time * 100) / 100;
     }
 
-    /** Extracts all online URLs from a compilation's tracks.
+    /** Extracts all online URLs from the compilation's tracks.
      * @remarks An online URL is a valid URL starting with the http|https protocol.
      * @param compilation - The compilation to work on.
      */
@@ -186,6 +186,55 @@ export default class CompilationHandler {
             return null;
         }
     }
+
+    /** Finds the matching track(s) for a resource name, using a given set of media urls
+     * @param resourceName - The media URL to search for.
+     * @param mediaUrlMap - A set of media URL's to search through.
+     * @remarks If strict file names do not match, a more lazy approach without case and without non-ascii characters is attempted
+     */
+    // public static getMatchingTracksForMediaUrl(
+    //     resourceName: string | undefined,
+    //     mediaUrlMap: Map<string, MediaUrl>,
+    //     tracks: Array<ITrack>,
+    // ): Array<ITrack> | null {
+    //     if (mediaUrlMap && resourceName && tracks) {
+    //         //Default: Find by literal partial match of the file name
+    //         let url = null;
+    //         for (const [resourceName, mediaUrl] of mediaUrlMap) {
+    //             if (
+    //                 CompilationHandler.isEndingWithOneAnother(
+    //                     resourceName,
+    //                     mediaUrl.resourceName,
+    //                 )
+    //             ) {
+    //                 url = mediaUrl;
+    //             }
+    //         }
+
+    //         if (!url) {
+    //             //In case of possible weird characters, or case mismatch, try a more lazy match.
+    //             const lazyFileName =
+    //                 CompilationHandler.getLazyFileName(fileName);
+
+    //             for (const [mediaFileName, mediaUrl] of mediaUrlMap) {
+    //                 const lazyMediaFileName =
+    //                     CompilationHandler.getLazyFileName(mediaFileName);
+
+    //                 if (
+    //                     CompilationHandler.isEndingWithOneAnother(
+    //                         lazyFileName,
+    //                         lazyMediaFileName,
+    //                     )
+    //                 ) {
+    //                     url = mediaUrl;
+    //                 }
+    //             }
+    //         }
+    //         return url;
+    //     } else {
+    //         return null;
+    //     }
+    // }
 
     /** Sorts the blobs by whether their fileName lazily
      * starts or ends with the given fileName, returning the matching one first.
