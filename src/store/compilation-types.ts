@@ -206,7 +206,7 @@ export class Track implements ITrack {
      * @param name {string} - The name for the track.
      * @param album {string} - The album name, if any.
      * @param artist {string} - The artist name, if any.
-     * @param url {string} - The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
+     * @param url {string} - The online URL (starting with http(s)) or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
      * @param duration {number | null} - Duration of the media associated with the track. This is not persisted, but set to a specific value once after a matching track has been loaded.
      * @param playbackMode {playbackMode} - Plaback mode. This is persisted in the application state for user convenience.
      */

@@ -138,9 +138,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
-import { ICue, PlaybackMode, Track } from '@/store/compilation-types';
 import { MutationTypes } from '@/store/mutation-types';
-import { v4 as uuidv4 } from 'uuid';
 import FileHandler from '@/store/filehandler';
 import Icon from '@/components/icons/Icon.vue';
 import Experimental from '@/components/Experimental.vue';
@@ -279,17 +277,13 @@ export default defineComponent({
                     throw new Error(errorMessage);
                 })
                 .then(() => {
-                    //For new single media sources, create a default track
                     if (FileHandler.isSupportedMediaFile(file)) {
-                        if (!this.isReplacementMode) {
-                            this.createDefaultTrackForFile(file);
-                        } else {
-                            //Replace the URL for this track
+                        if (this.isReplacementMode) {
                             if (this.trackId) {
                                 this.updateFileForTrack(this.trackId, file);
                             }
                         }
-                    } //TODO fix default track for package loading
+                    }
                 })
                 .finally(() => {
                     this.isLoadingFromFile = false;
@@ -343,10 +337,7 @@ export default defineComponent({
                         throw new Error(errorMessage);
                     })
                     .then(() => {
-                        if (!this.isReplacementMode) {
-                            this.createDefaultTrackForUrl(new URL(this.url));
-                        } else {
-                            //Replace the URL for this track
+                        if (this.isReplacementMode) {
                             if (this.trackId) {
                                 this.updateExistingTrackWithUrl(
                                     this.trackId,
@@ -371,10 +362,7 @@ export default defineComponent({
                 this.$store
                     .dispatch(ActionTypes.USE_MEDIA_FROM_URL, this.url)
                     .then(() => {
-                        if (!this.isReplacementMode) {
-                            this.createDefaultTrackForUrl(new URL(this.url));
-                        } else {
-                            //Replace the URL for this track
+                        if (this.isReplacementMode) {
                             if (this.trackId) {
                                 this.updateExistingTrackWithUrl(
                                     this.trackId,
@@ -390,12 +378,6 @@ export default defineComponent({
                     });
             }
         },
-        /** Creates a default track for the given Media File (Using the File name both as the name and the URL for the track)*/
-        createDefaultTrackForFile(file: File) {
-            const fileName = file.name.normalize();
-            const nameWithoutExtension = FileHandler.removeExtension(fileName);
-            this.commitNewTrackWithName(nameWithoutExtension, '', '', fileName);
-        },
 
         /** Replaces the track's URL with a reference to this replacement file
          * @param {replacementFile} - the File to update the reference to
@@ -406,46 +388,9 @@ export default defineComponent({
             this.updateExistingTrackWithUrl(trackId, fileName);
         },
 
-        /** Creates a default track for the given URL (Using part of the URL as the name, and the original URL as the URL)
-         * @remarks The effectively used name for the resource in the local Indexed DB storage, if stored, differs from the URL.
-         * It can be derived from the URL by using the CompilationParser.getLocalResourceName() method.
-         */
-        createDefaultTrackForUrl(url: URL) {
-            const name = FileHandler.extractTrackNameFromUrl(url);
-            const artist = FileHandler.extractArtistNameFromUrl(url);
-            const album = FileHandler.extractAlbumNameFromUrl(url);
-            this.commitNewTrackWithName(name, album, artist, url.toString());
-        },
-
-        /** Commits a new track with the given name
-         * @param name {string} - The name for the track.
-         * @param album {string} - The album name, if any.
-         * @param artist {string} - The artist name, if any.
-         * @param url {string} - The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
-         */
-        commitNewTrackWithName(
-            name: string,
-            album: string,
-            artist: string,
-            url: string,
-        ) {
-            const trackId = uuidv4();
-            const newTrack = new Track(
-                name,
-                album,
-                artist,
-                0,
-                url,
-                trackId,
-                new Array<ICue>(),
-                null,
-                PlaybackMode.PlayTrack /** default */,
-            );
-            this.$store.commit(MutationTypes.ADD_TRACK, newTrack);
-        },
         /** Updates an existing track with the given URL
-         * @param {trackId} - The Id of the track to update
-         *  @param - url {string}  The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
+         * @param trackId {string} - The Id of the track to update
+         *  @param url {string} - The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
          */
         updateExistingTrackWithUrl(
             trackId: string,

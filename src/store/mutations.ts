@@ -110,8 +110,9 @@ export const mutations: MutationTree<State> & Mutations = {
         const matchingFile = state.mediaUrls.get(mediaUrl.resourceName);
         if (matchingFile) {
             console.debug(
-                'mutations::ADD_MEDIA_URL:removing matching item for key:',
-                mediaUrl.resourceName,
+                `mutations::ADD_MEDIA_URL:removing matching item for key:${
+                    mediaUrl.resourceName
+                }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);
             state.mediaUrls.delete(mediaUrl.resourceName);
@@ -122,14 +123,18 @@ export const mutations: MutationTree<State> & Mutations = {
         state.mediaUrls.set(mediaUrl.resourceName, mediaUrl);
 
         //If any track uses this media, remove the now stale duration for this track
-        const matchingTrack = state.compilation.Tracks.find(
-            (t) => t.Url === mediaUrl.resourceName,
+        const matchingTrack = state.compilation.Tracks.find((t) =>
+            CompilationHandler.isMatchingMediaUrl(t.Url, mediaUrl),
         );
         if (matchingTrack) {
             matchingTrack.Duration = null;
         }
         //If no track is using this media yet, add a default track
         else {
+            console.debug(
+                'mutations::ADD_MEDIA_URL:adding-default-track-for-mediaUrl:',
+                mediaUrl.resourceName,
+            );
             const track = CompilationHandler.createDefaultTrack(mediaUrl);
             const cue = CompilationHandler.createDefaultCue(state.compilation);
             track.Cues.push(cue);

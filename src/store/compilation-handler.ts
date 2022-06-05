@@ -28,15 +28,35 @@ export default class CompilationHandler {
         );
         return cue;
     }
+
     /** Get a new track, with values derived from the media URL properties */
     static createDefaultTrack(mediaUrl: MediaUrl): ITrack {
+        console.debug(
+            'CompilationHandler::createDefaultTrack:mediaUrl',
+            mediaUrl,
+        );
+        let name = null;
+        let artist = '';
+        let album = '';
+        let trackUrl = mediaUrl.resourceName;
+
+        if (FileHandler.isValidHttpUrl(mediaUrl.url)) {
+            trackUrl = mediaUrl.url;
+            const url = new URL(mediaUrl.url);
+            name = FileHandler.extractTrackNameFromUrl(url);
+            artist = FileHandler.extractArtistNameFromUrl(url);
+            album = FileHandler.extractAlbumNameFromUrl(url);
+        } else {
+            name = mediaUrl.resourceName;
+        }
+
         const trackId = uuidv4();
         const newTrack = new Track(
-            mediaUrl.resourceName,
-            'default-album',
-            'default-artist',
+            name,
+            artist,
+            album,
             0,
-            mediaUrl.resourceName,
+            trackUrl,
             trackId,
             new Array<ICue>(),
             null,
@@ -223,6 +243,41 @@ export default class CompilationHandler {
         } else {
             return null;
         }
+    }
+
+    /** Whether the media URL (playable data) matches the given file name.
+     * @param fileName - The file name to search for.
+     * @param mediaUrl - A media URL
+     * @remarks If strict file names do not match, a more lazy approach without case and without non-ascii characters is attempted
+     */
+    public static isMatchingMediaUrl(
+        fileName: string | undefined,
+        mediaUrl: MediaUrl,
+    ): boolean {
+        if (mediaUrl && fileName) {
+            //Default: Find by literal partial match of the file name
+            if (
+                CompilationHandler.isEndingWithOneAnother(
+                    fileName,
+                    mediaUrl.resourceName,
+                )
+            ) {
+                return true;
+            }
+
+            //In case of possible weird characters, or case mismatch, try a more lazy match.
+            const lazyFileName = CompilationHandler.getLazyFileName(fileName);
+
+            const lazyMediaFileName = CompilationHandler.getLazyFileName(
+                mediaUrl.resourceName,
+            );
+
+            return CompilationHandler.isEndingWithOneAnother(
+                lazyFileName,
+                lazyMediaFileName,
+            );
+        }
+        return false;
     }
 
     /** Sorts the blobs by whether their fileName lazily
