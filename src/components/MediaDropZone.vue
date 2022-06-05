@@ -138,13 +138,12 @@ The URL input is wider, because it should be able to easily deal with lenghty in
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
-import { ICue, ITrack, PlaybackMode, Track } from '@/store/compilation-types';
+import { ICue, PlaybackMode, Track } from '@/store/compilation-types';
 import { MutationTypes } from '@/store/mutation-types';
 import { v4 as uuidv4 } from 'uuid';
 import FileHandler from '@/store/filehandler';
 import Icon from '@/components/icons/Icon.vue';
 import Experimental from '@/components/Experimental.vue';
-import { MediaUrl } from '@/store/state-types';
 
 /** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
  * @remarks Supports collapsing the control after load, to keep the user more focused
@@ -459,22 +458,21 @@ export default defineComponent({
             });
         },
     },
-        computed: {
-            acceptedFiles(): string {
-                return FileHandler.acceptedFileList;
-            },
-            /** Determines whether this control is in the replacement mode */
-            isReplacementMode(): boolean {
-                if (this.replaceUrl && this.replaceUrl.length > 0) {
-                    return true;
-                }
-                return false;
-            },
-            replaceInfo(): string {
-                return this.isReplacementMode
-                    ? `Replace: '${this.replaceUrl}'`
-                    : ``;
-            },
+    computed: {
+        acceptedFiles(): string {
+            return FileHandler.acceptedFileList;
+        },
+        /** Determines whether this control is in the replacement mode */
+        isReplacementMode(): boolean {
+            if (this.replaceUrl && this.replaceUrl.length > 0) {
+                return true;
+            }
+            return false;
+        },
+        replaceInfo(): string {
+            return this.isReplacementMode
+                ? `Replace: '${this.replaceUrl}'`
+                : ``;
         },
     },
 });
