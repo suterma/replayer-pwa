@@ -47,13 +47,13 @@
             Note: The actual src property/attribute is also depending 
             on the show state as a performance optimizations
             -->
-            <template v-if="mediaObjectUrl">
+            <template v-if="mediaUrl">
                 <TrackAudioApiPlayer
                     :isEditable="isEditable"
-                    v-if="mediaObjectUrl"
+                    v-if="mediaUrl"
                     ref="playerReference"
                     :title="track?.Name"
-                    :mediaUrl="optimizedMediaObjectUrl"
+                    :mediaUrl="optimizedmediaUrl"
                     @timeupdate="updateTime"
                     @durationChanged="calculateCueDurations"
                     @trackPlaying="updatePlaying"
@@ -85,7 +85,7 @@
                 <div class="buttons">
                     <template v-for="cue in cues" :key="cue.Id">
                         <CueButton
-                            :disabled="!mediaObjectUrl || !isTrackLoaded"
+                            :disabled="!mediaUrl || !isTrackLoaded"
                             :cue="cue"
                             :isTrackPlaying="isPlaying"
                             :currentSeconds="currentSeconds"
@@ -99,7 +99,7 @@
                     <template v-for="cue in cues" :key="cue.Id">
                         <li>
                             <CueLevel
-                                :disabled="!mediaObjectUrl || !isTrackLoaded"
+                                :disabled="!mediaUrl || !isTrackLoaded"
                                 :cue="cue"
                                 :isTrackPlaying="isPlaying"
                                 :currentSeconds="currentSeconds"
@@ -499,8 +499,8 @@ export default defineComponent({
         },
         /** Gets the media object URL, if available
          */
-        mediaObjectUrl(): string | undefined {
-            return this.trackFileUrl?.url;
+        mediaUrl(): string | undefined {
+            return this.trackMediaUrl?.url;
         },
 
         /** Gets the media object URL, if available,
@@ -508,9 +508,9 @@ export default defineComponent({
          * @remarks To save memory in the audio elements, an URL is only provided when
          * the player is actually in the expanded state and the track is the currently active track
          */
-        optimizedMediaObjectUrl(): string | undefined {
+        optimizedmediaUrl(): string | undefined {
             if (this.expanded || this.isActiveTrack) {
-                return this.trackFileUrl?.url;
+                return this.trackMediaUrl?.url;
             } else {
                 return undefined;
             }
@@ -520,12 +520,12 @@ export default defineComponent({
             return this.track.Cues;
         },
 
-        /** Returns the media file (playable file content) for a track's file name
+        /** Returns the media URL (playable file content) for a track's file name
          * @remarks if available, the tracks from a compilation package are used, otherwise the
          * files are to be loaded from the file system or from the internet
          */
 
-        trackFileUrl(): MediaUrl | null {
+        trackMediaUrl(): MediaUrl | null {
             const mediaUrls = this.$store.getters.mediaUrls as Map<
                 string,
                 MediaUrl

@@ -151,7 +151,7 @@ export default class FileHandler {
     }
 
     /** Returns whether the given file name (by it's extension) is a supported compilation file name by Replayer
-     * @remarks XML and bplist data is always considered a Compilation in this context
+     * @remarks XML (.rex, .xml) and bplist data is always considered a Compilation in this context
      */
     static isSupportedCompilationFileName(
         fileName: string | undefined,
@@ -164,7 +164,7 @@ export default class FileHandler {
         return false;
     }
     /** Returns whether the given file name (by it's extension) is a supported media file name by Replayer
-     * @remarks Currently, mp3, wav, flac, ogg, aiff, are supported
+     * @remarks Currently, mp3, wav, flac, ogg, aiff, with name variations, are supported
      */
     static isSupportedMediaFileName(fileName: string | undefined): boolean {
         let isSupportedMediaFileName = false;

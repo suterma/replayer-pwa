@@ -8,7 +8,7 @@
         />
 
         <CompilationHeader
-            :compilation="this.compilation"
+            :compilation="compilation"
             :isEditable="isHeaderEditable"
         />
         <!-- Tracks to work with -->
@@ -16,7 +16,7 @@
             <Track
                 :track="track"
                 :ref="'track-' + track.Id"
-                :displayMode="this.tracksDisplayMode"
+                :displayMode="tracksDisplayMode"
             />
         </template>
     </div>
@@ -162,9 +162,8 @@ export default defineComponent({
         isHeaderEditable(): boolean {
             return this.tracksDisplayMode === TrackDisplayMode.Edit;
         },
-        /** Gets the list of tracks within this compilation */
         tracks(): Array<ITrack> | undefined {
-            return this.compilation?.Tracks;
+            return this.$store.getters.tracks as Array<ITrack> | undefined;
         },
         selectedCueId(): string {
             return this.$store.getters.selectedCueId as string;

@@ -138,16 +138,18 @@ The URL input is wider, because it should be able to easily deal with lenghty in
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
-import { ICue, PlaybackMode, Track } from '@/store/compilation-types';
+import { ICue, ITrack, PlaybackMode, Track } from '@/store/compilation-types';
 import { MutationTypes } from '@/store/mutation-types';
 import { v4 as uuidv4 } from 'uuid';
 import FileHandler from '@/store/filehandler';
 import Icon from '@/components/icons/Icon.vue';
 import Experimental from '@/components/Experimental.vue';
+import { MediaUrl } from '@/store/state-types';
 
 /** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
  * @remarks Supports collapsing the control after load, to keep the user more focused
- * @remarks Supports two modes: "replace", intended to replace an existing source, or "add", to add a new source.
+ * @remarks Supports two modes: "replace", intended to replace an existing source for a single track,
+ *  or "add", to add a new source, possibly producing multiple new tracks.
  */
 export default defineComponent({
     name: 'MediaDropZone',
@@ -159,7 +161,7 @@ export default defineComponent({
             default: false,
         },
         /** The URL/file name of the media source to replace
-         * @remarks If set, the single-file replacement mode is considered active
+         * @remarks If set, the single-file "replace" mode is considered active
          * @remarks In the store, the file is not replaced, since it may be used by other tracks.
          */
         replaceUrl: {
@@ -167,7 +169,7 @@ export default defineComponent({
             default: undefined,
         },
         /** The track Id of the track, whose media source is to replace
-         * @remarks If set, the single-file replacement mode is considered active
+         * @remarks If set, the single-file "replace" mode is considered active
          */
         trackId: {
             type: String,
@@ -278,7 +280,7 @@ export default defineComponent({
                     throw new Error(errorMessage);
                 })
                 .then(() => {
-                    //For new media sources, create a default track
+                    //For new single media sources, create a default track
                     if (FileHandler.isSupportedMediaFile(file)) {
                         if (!this.isReplacementMode) {
                             this.createDefaultTrackForFile(file);
@@ -288,7 +290,7 @@ export default defineComponent({
                                 this.updateFileForTrack(this.trackId, file);
                             }
                         }
-                    }
+                    } //TODO fix default track for package loading
                 })
                 .finally(() => {
                     this.isLoadingFromFile = false;
@@ -420,7 +422,7 @@ export default defineComponent({
          * @param name {string} - The name for the track.
          * @param album {string} - The album name, if any.
          * @param artist {string} - The artist name, if any.
-         *  @param - url {string}  The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
+         * @param url {string} - The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
          */
         commitNewTrackWithName(
             name: string,
@@ -457,21 +459,22 @@ export default defineComponent({
             });
         },
     },
-    computed: {
-        acceptedFiles(): string {
-            return FileHandler.acceptedFileList;
-        },
-        /** Determines whether this control is in the replacement mode */
-        isReplacementMode(): boolean {
-            if (this.replaceUrl && this.replaceUrl.length > 0) {
-                return true;
-            }
-            return false;
-        },
-        replaceInfo(): string {
-            return this.isReplacementMode
-                ? `Replace: '${this.replaceUrl}'`
-                : ``;
+        computed: {
+            acceptedFiles(): string {
+                return FileHandler.acceptedFileList;
+            },
+            /** Determines whether this control is in the replacement mode */
+            isReplacementMode(): boolean {
+                if (this.replaceUrl && this.replaceUrl.length > 0) {
+                    return true;
+                }
+                return false;
+            },
+            replaceInfo(): string {
+                return this.isReplacementMode
+                    ? `Replace: '${this.replaceUrl}'`
+                    : ``;
+            },
         },
     },
 });
