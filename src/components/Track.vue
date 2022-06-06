@@ -92,6 +92,37 @@
                             @click="cueClick(cue)"
                         />
                     </template>
+                    <!-- Extra cue trigger button (with similar layouting as a regular cue button) -->
+
+                    //TODO move the cue class styles up to the
+                    .track.buttons.button selector. Then remove the cue class
+                    here
+                    <button
+                        :class="{
+                            button: true,
+                            cue: true,
+                            'is-multiline': true,
+                            'has-text-left': 'true',
+                        }"
+                        title="Create a cue now (at the current playback time)!"
+                    >
+                        <span>
+                            <Icon name="plus" />
+                            &nbsp;
+                            <span class="has-text-weight-semibold foreground"
+                                >Add cue!</span
+                            >
+                            <br />
+                            <!-- second line (use a horizontal level also on mobile)-->
+                            <span class="level is-mobile">
+                                <div class="level-item mr-3">
+                                    <span class="has-opacity-half foreground">
+                                        {{ currentDisplaySeconds }}
+                                    </span>
+                                </div>
+                            </span>
+                        </span>
+                    </button>
                 </div>
             </template>
             <template v-else>
@@ -135,6 +166,7 @@ import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
+import Icon from '@/components/icons/Icon.vue';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -153,6 +185,7 @@ export default defineComponent({
         TrackHeader,
         TrackHeaderEdit,
         LongLine,
+        Icon,
     },
     mixins: [settingsMixin],
     props: {
@@ -549,6 +582,12 @@ export default defineComponent({
                 (this.cues?.filter((c) => c.Id === selectedCueId).length ?? 0) >
                 0
             );
+        },
+        /** Converts the current seconds into a conveniently displayable hh:mm:ss.s format.
+         * @remarks Omits the hour part, if not appliccable
+         */
+        currentDisplaySeconds(): string {
+            return CompilationHandler.convertToDisplayTime(this.currentSeconds);
         },
     },
 });

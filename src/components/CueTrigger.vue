@@ -35,9 +35,7 @@
                     title="Create a cue now (at the current playback time)!"
                 >
                     <Icon name="plus" />
-                    <span class="is-hidden-mobile has-opacity-half"
-                        >Create Cue!</span
-                    >
+                    <span class="is-hidden-mobile">Create Cue!</span>
                 </button>
             </Hotkey>
         </p>
