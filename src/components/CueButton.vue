@@ -9,16 +9,16 @@
             'is-success': isCueSelected,
         }"
         :id="'cue-' + cue.Id"
-        :title="this.cueTitle"
+        :title="cueTitle"
     >
         <span class="player-timeline is-fullwidth">
             <!-- Progress -->
             <span
                 :class="{
                     'player-progress': true,
-                    'player-progress-full': this.hasCuePassed,
-                    'has-addons-right': this.hasAddonsRight,
-                    'player-progress-none': this.isCueAhead,
+                    'player-progress-full': hasCuePassed,
+                    'has-addons-right': hasAddonsRight,
+                    'player-progress-none': isCueAhead,
                 }"
                 :style="progressStyle"
             ></span>
