@@ -247,131 +247,144 @@ export const actions: ActionTree<State, State> & Actions = {
                     .then(
                         (zip: JSZip) => {
                             //For performance reasons, explicitly process only expected files
-                            zip.filter((relativePath /*, file*/) => {
-                                console.debug(
-                                    'Filtering relativePath: ',
-                                    relativePath,
-                                );
-                                return (
-                                    FileHandler.isSupportedCompilationFileName(
+                            const processables = zip.filter(
+                                (relativePath /*, file*/) => {
+                                    console.debug(
+                                        'Filtering relativePath: ',
                                         relativePath,
-                                    ) ||
-                                    FileHandler.isSupportedMediaFileName(
-                                        relativePath,
-                                    )
-                                );
-                            }).forEach((zipEntry: JSZip.JSZipObject): void => {
-                                commit(
-                                    //Set the progress message, before using any of the async functions
-                                    MutationTypes.PUSH_PROGRESS,
-                                    `Processing ZIP entry: ${zipEntry.name}`,
-                                );
-                                zipEntry
-                                    .async('nodebuffer')
-                                    .then((content: Buffer): void => {
-                                        //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
-                                        const zipEntryName =
-                                            zipEntry.name.normalize();
-                                        commit(
-                                            MutationTypes.PUSH_PROGRESS,
-                                            `Processing content for ZIP entry '${zipEntryName}'...`,
-                                        );
+                                    );
+                                    return (
+                                        FileHandler.isSupportedCompilationFileName(
+                                            relativePath,
+                                        ) ||
+                                        FileHandler.isSupportedMediaFileName(
+                                            relativePath,
+                                        )
+                                    );
+                                },
+                            );
+                            //Note: even without explicit sort order and asynchronous processing,
+                            //the (XML) compilation is always processed first, as currently observed
+                            //in all situations.
+                            //This accidental behaviour is useful to avoid the creation of unwanted default tracks for
+                            //not yet loaded track objects.
+                            //Once this would not be the case, code must be written to ensure, that
+                            //any contained compilation gets processed first, synchronously.
+                            processables.forEach(
+                                (zipEntry: JSZip.JSZipObject): void => {
+                                    commit(
+                                        //Set the progress message, before using any of the async functions
+                                        MutationTypes.PUSH_PROGRESS,
+                                        `Processing ZIP entry: ${zipEntry.name}`,
+                                    );
+                                    zipEntry
+                                        .async('nodebuffer')
+                                        .then((content: Buffer): void => {
+                                            //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
+                                            const zipEntryName =
+                                                zipEntry.name.normalize();
+                                            commit(
+                                                MutationTypes.PUSH_PROGRESS,
+                                                `Processing content for ZIP entry '${zipEntryName}'...`,
+                                            );
 
-                                        if (
-                                            FileHandler.isXmlFileName(
-                                                zipEntryName,
-                                            )
-                                        ) {
-                                            CompilationParser.handleAsXmlCompilation(
-                                                content,
-                                            )
-                                                .then((compilation) => {
-                                                    compilation.Url = file.name;
-                                                    commit(
-                                                        MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
-                                                        compilation,
-                                                    );
-                                                })
-                                                .finally(() => {
-                                                    commit(
-                                                        MutationTypes.POP_PROGRESS,
-                                                        undefined,
-                                                    );
-                                                });
-                                        } else if (
-                                            FileHandler.isSupportedMediaFileName(
-                                                zipEntryName,
-                                            )
-                                        ) {
-                                            const mediaBlob =
-                                                CompilationParser.handleAsMediaContent(
+                                            if (
+                                                FileHandler.isXmlFileName(
                                                     zipEntryName,
+                                                )
+                                            ) {
+                                                CompilationParser.handleAsXmlCompilation(
                                                     content,
-                                                );
-                                            dispatch(
-                                                ActionTypes.ADD_MEDIA_BLOB,
-                                                mediaBlob,
-                                            ).finally(() => {
-                                                commit(
-                                                    MutationTypes.POP_PROGRESS,
-                                                    undefined,
-                                                );
-                                            });
-                                        } else if (
-                                            FileHandler.isBplistFileName(
-                                                zipEntryName,
-                                            )
-                                        ) {
-                                            CompilationParser.handleAsLivePlaybackPlaylist(
-                                                content,
-                                            )
-                                                .then((compilation) => {
-                                                    commit(
-                                                        MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
-                                                        compilation,
+                                                )
+                                                    .then((compilation) => {
+                                                        compilation.Url =
+                                                            file.name;
+                                                        commit(
+                                                            MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
+                                                            compilation,
+                                                        );
+                                                    })
+                                                    .finally(() => {
+                                                        commit(
+                                                            MutationTypes.POP_PROGRESS,
+                                                            undefined,
+                                                        );
+                                                    });
+                                            } else if (
+                                                FileHandler.isSupportedMediaFileName(
+                                                    zipEntryName,
+                                                )
+                                            ) {
+                                                const mediaBlob =
+                                                    CompilationParser.handleAsMediaContent(
+                                                        zipEntryName,
+                                                        content,
                                                     );
-                                                })
-                                                .finally(() => {
+                                                dispatch(
+                                                    ActionTypes.ADD_MEDIA_BLOB,
+                                                    mediaBlob,
+                                                ).finally(() => {
                                                     commit(
                                                         MutationTypes.POP_PROGRESS,
                                                         undefined,
                                                     );
                                                 });
-                                        } else if (
-                                            FileHandler.isSupportedPackageFileName(
-                                                zipEntryName,
-                                            )
-                                        ) {
-                                            //We do not handle packages within packages.
-                                            //HINT: Unfortunately JSZip seems to report the currently
-                                            //open package as file within itself. This mitigates that.
-                                            console.debug(
-                                                `ZIP: Not processing package file '${zipEntryName}' within package: '${file.name}'`,
+                                            } else if (
+                                                FileHandler.isBplistFileName(
+                                                    zipEntryName,
+                                                )
+                                            ) {
+                                                CompilationParser.handleAsLivePlaybackPlaylist(
+                                                    content,
+                                                )
+                                                    .then((compilation) => {
+                                                        commit(
+                                                            MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
+                                                            compilation,
+                                                        );
+                                                    })
+                                                    .finally(() => {
+                                                        commit(
+                                                            MutationTypes.POP_PROGRESS,
+                                                            undefined,
+                                                        );
+                                                    });
+                                            } else if (
+                                                FileHandler.isSupportedPackageFileName(
+                                                    zipEntryName,
+                                                )
+                                            ) {
+                                                //We do not handle packages within packages.
+                                                //HINT: Unfortunately JSZip seems to report the currently
+                                                //open package as file within itself. This mitigates that.
+                                                console.debug(
+                                                    `ZIP: Not processing package file '${zipEntryName}' within package: '${file.name}'`,
+                                                );
+                                            } else if (
+                                                FileHandler.isPath(zipEntryName)
+                                            ) {
+                                                //We do not handle paths on their own
+                                                console.debug(
+                                                    `ZIP: Not processing path '${zipEntryName}' within package: '${file.name}'`,
+                                                );
+                                            } else {
+                                                console.warn(
+                                                    `ZIP: Unknown content type for file '${zipEntryName}' within package: '${file.name}'`,
+                                                );
+                                            }
+                                            commit(
+                                                MutationTypes.POP_PROGRESS,
+                                                undefined,
                                             );
-                                        } else if (
-                                            FileHandler.isPath(zipEntryName)
-                                        ) {
-                                            //We do not handle paths on their own
-                                            console.debug(
-                                                `ZIP: Not processing path '${zipEntryName}' within package: '${file.name}'`,
+                                        })
+                                        .finally(() => {
+                                            commit(
+                                                MutationTypes.POP_PROGRESS,
+                                                undefined,
                                             );
-                                        } else {
-                                            console.warn(
-                                                `ZIP: Unknown content type for file '${zipEntryName}' within package: '${file.name}'`,
-                                            );
-                                        }
-                                        commit(
-                                            MutationTypes.POP_PROGRESS,
-                                            undefined,
-                                        );
-                                    })
-                                    .finally(() => {
-                                        commit(
-                                            MutationTypes.POP_PROGRESS,
-                                            undefined,
-                                        );
-                                    });
-                            });
+                                        });
+                                },
+                            );
                         },
                         function (e) {
                             console.error(
