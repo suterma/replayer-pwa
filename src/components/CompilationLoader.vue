@@ -8,7 +8,7 @@ import CompilationParser from '@/store/compilation-parser';
 import { MutationTypes } from '@/store/mutation-types';
 
 /** A Loader for packages or tracks, from the URL
- * @remarks Implements the Track and Package API by loading  items from the URL parameters
+ * @remarks Implements the Track and Package API by loading items from the URL parameters
  * @devdoc According to my current understanding this must be run
  * as part of a component. Otherwise the URL fragment part is not processed
  * as the query part within vue-router
@@ -30,27 +30,21 @@ export default defineComponent({
             );
             const track = CompilationParser.parseFromUrlQuery(query);
             if (track && track.Url) {
-                this.$store
-                    .dispatch(ActionTypes.USE_MEDIA_FROM_URL, track.Url)
-                    .then(() => {
-                        //TODO can be removed after default track add??
-                        this.$store.commit(MutationTypes.ADD_TRACK, track);
-                        const firstCueId = track.Cues[0]?.Id;
-                        console.debug(
-                            'CompilationLoader::mounted:firstCueId:',
-                            firstCueId,
-                        );
-                        if (firstCueId) {
-                            this.$store.commit(
-                                MutationTypes.UPDATE_SELECTED_CUE_ID,
-                                firstCueId,
-                            );
-                        }
-                    })
-                    .then(() => {
-                        this.removeQuery();
-                    });
-                return; //With this URL's track loading
+                //Add the track, before the track media URL (to avoid the creation of a default track)
+                this.$store.commit(MutationTypes.ADD_TRACK, track);
+                const firstCueId = track.Cues[0]?.Id;
+                console.debug(
+                    'CompilationLoader::mounted:firstCueId:',
+                    firstCueId,
+                );
+                if (firstCueId) {
+                    this.$store.commit(
+                        MutationTypes.UPDATE_SELECTED_CUE_ID,
+                        firstCueId,
+                    );
+                }
+                //Now, after the track has been added, add the track's media URL
+                this.$store.dispatch(ActionTypes.USE_MEDIA_FROM_URL, track.Url);
             } else {
                 this.$store.commit(
                     MutationTypes.PUSH_ERROR,
@@ -66,9 +60,8 @@ export default defineComponent({
             );
 
             this.$store.dispatch(ActionTypes.LOAD_FROM_URL, query['package']);
-            this.removeQuery();
-            return; //With this package loading
         }
+        this.removeQuery();
     },
     methods: {
         /** Removes the API query from the fragment, since it has been applied now
