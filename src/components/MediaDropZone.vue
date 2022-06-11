@@ -43,7 +43,10 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                 </template>
                 <template v-else>
                     <Icon name="plus" />
-                    <span>Click / drop to load file(s)</span>
+                    <span class="is-hidden-desktop">Load file(s)</span>
+                    <span class="is-hidden-touch"
+                        >Click / drop to load file(s)</span
+                    >
                 </template>
             </label>
         </div>
