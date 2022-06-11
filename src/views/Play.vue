@@ -34,8 +34,10 @@
             </div>
         </div>
     </div>
-    <div v-if="!hasCompilation" class="section pl-0 pr-0 content">
-        <WelcomeText />
+    <div class="section pl-0 pr-0">
+        <div v-if="!hasCompilation" class="content box">
+            <WelcomeText />
+        </div>
     </div>
     <Experimental>
         <hr />

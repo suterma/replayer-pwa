@@ -1,13 +1,13 @@
 <template>
-    <SupportedFilesText />
-
-    <p class="has-text-centered">
-        Find more details in the online
+    <p class="">
+        <SupportedFilesText />
+    </p>
+    <p class="">
         <a
             href="https://replayer.app/documentation-app"
             alt="Link to the Replayer app documentation"
             target="_blank"
-            >app documentation</a
+            >App documentation</a
         >.
     </p>
 </template>
