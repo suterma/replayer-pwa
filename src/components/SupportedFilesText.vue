@@ -96,31 +96,4 @@
             </ul>
         </div>
     </div>
-    <!-- <div class="is-hidden-touch">
-        <p>Compilations:</p>
-        <div class="content">
-            <ul>
-                <li>
-                    <span class="has-text-weight-bold">XML</span> (<span
-                        class="is-family-monospace"
-                        >.rex</span
-                    >, <span class="is-family-monospace">.xml</span>), without
-                    media files
-                </li>
-                <li>
-                    <span class="has-text-weight-bold">bplist</span> (<span
-                        class="is-family-monospace"
-                        >.bplist</span
-                    >), from the LivePlayback app, without media files
-                </li>
-                <li>
-                    <span class="has-text-weight-bold">ZIP</span> (<span
-                        class="is-family-monospace"
-                        >.rez</span
-                    >, <span class="is-family-monospace">.zip</span>), a
-                    package, having one of the above, including media files
-                </li>
-            </ul>
-        </div>
-    </div> -->
 </template>

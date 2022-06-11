@@ -16,8 +16,8 @@
 
     <div v-else class="section pl-0 pr-0">
         <p class="has-text-centered">
-            Replayer is a free, cue-based media player for rehearsals with
-            playback music.
+            <a href="https://replayer.app" target="_blank">Replayer</a> is a
+            free, cue-based media player for rehearsals with playback music.
         </p>
     </div>
     <div class="section pl-0 pr-0">
