@@ -32,6 +32,7 @@ export default defineComponent({
         knobOptions(): Record<string, unknown> {
             return {
                 imageSize: 40,
+                showValue: false,
                 hideDefaultValue: false,
                 minValue: this.minValue,
                 maxValue: this.maxValue,
@@ -39,15 +40,15 @@ export default defineComponent({
                 valueTextY: 55,
                 tickLength: 20,
                 tickOffset: -7,
-                tickStroke: 4,
+                tickStroke: 8,
                 rimStroke: 4,
-                valueArchStroke: 10,
+                valueArchStroke: 16,
                 bgRadius: 39,
                 rimClass: this.rimClass,
-                bgClass: 'has-text-dark',
-                tickClass: 'has-text-light',
+                bgClass: 'has-text-grey-dark',
+                tickClass: this.valueClass,
                 ariaLabel: 'Knob',
-                svgClass: 'has-text-info',
+                svgClass: this.valueClass,
                 valueTextClass: this.valueClass,
                 valueArchClass: this.valueClass,
             };

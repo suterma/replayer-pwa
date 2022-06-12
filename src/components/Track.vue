@@ -92,37 +92,43 @@
                             @click="cueClick(cue)"
                         />
                     </template>
-                    <!-- Extra cue trigger button (with similar layouting as a regular cue button) -->
 
-                    //TODO move the cue class styles up to the
-                    .track.buttons.button selector. Then remove the cue class
-                    here
-                    <button
-                        :class="{
-                            button: true,
-                            cue: true,
-                            'is-multiline': true,
-                            'has-text-left': 'true',
-                        }"
-                        title="Create a cue now (at the current playback time)!"
-                    >
-                        <span>
-                            <Icon name="plus" />
-                            &nbsp;
-                            <span class="has-text-weight-semibold foreground"
-                                >Add cue!</span
-                            >
-                            <br />
-                            <!-- second line (use a horizontal level also on mobile)-->
-                            <span class="level is-mobile">
-                                <div class="level-item mr-3">
-                                    <span class="has-opacity-half foreground">
-                                        {{ currentDisplaySeconds }}
-                                    </span>
-                                </div>
+                    <Experimental>
+                        <!-- Extra cue trigger button (with similar layouting as a regular cue button) -->
+
+                        //TODO move the cue class styles up to the
+                        .track.buttons.button selector. Then remove the cue
+                        class here
+                        <button
+                            :class="{
+                                button: true,
+                                cue: true,
+                                'is-multiline': true,
+                                'has-text-left': 'true',
+                            }"
+                            title="Create a cue now (at the current playback time)!"
+                        >
+                            <span>
+                                <Icon name="plus" />
+                                &nbsp;
+                                <span
+                                    class="has-text-weight-semibold foreground"
+                                    >Add cue!</span
+                                >
+                                <br />
+                                <!-- second line (use a horizontal level also on mobile)-->
+                                <span class="level is-mobile">
+                                    <div class="level-item mr-3">
+                                        <span
+                                            class="has-opacity-half foreground"
+                                        >
+                                            {{ currentDisplaySeconds }}
+                                        </span>
+                                    </div>
+                                </span>
                             </span>
-                        </span>
-                    </button>
+                        </button>
+                    </Experimental>
                 </div>
             </template>
             <template v-else>
@@ -160,6 +166,7 @@ import { MediaUrl } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeaderEdit from '@/components/TrackHeaderEdit.vue';
+import Experimental from '@/components/Experimental.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
 import LongLine from '@/components/LongLine.vue';
 import CompilationHandler from '@/store/compilation-handler';
@@ -186,6 +193,7 @@ export default defineComponent({
         TrackHeaderEdit,
         LongLine,
         Icon,
+        Experimental,
     },
     mixins: [settingsMixin],
     props: {
