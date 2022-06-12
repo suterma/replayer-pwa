@@ -145,39 +145,40 @@
             <ToggleButton v-model="isOn" onText="On" offText="Off" />
         </nav>
         (Is on: {{ isOn }})
+
         <h3>Buttons with icons</h3>
         <p>
             Icons are "Inline SVG's from from https://materialdesignicons.com/
         </p>
-
-        <h1 class="title has-text-danger">Context Menu</h1>
-
-        <div class="dropdown is-active">
-            <!-- dropdown-trigger -->
-            <button
-                class="button"
-                aria-haspopup="true"
-                aria-controls="dropdown-menu"
-            >
-                <span>Dropdown button</span>
-                <span class="icon is-small">
-                    <i class="fas fa-angle-down" aria-hidden="true"></i>
-                </span>
-            </button>
-            <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                <div class="dropdown-content">
-                    <div class="dropdown-item">Dropdown item</div>
-                    <div class="dropdown-item">Other dropdown item</div>
-                    <div class="dropdown-item is-active">
-                        Active dropdown item
-                    </div>
-                    <div class="dropdown-item">Other dropdown item</div>
-                    <hr class="dropdown-divider" />
-                    <div class="dropdown-item">With a divider</div>
-                </div>
-            </div>
-        </div>
     </Experimental>
+
+    <h3>Control knobs</h3>
+
+    <ControlKnob id="knob1" v-model="knobValue" />
+    <ControlKnob
+        class="button is-knob is-unselectable"
+        id="knob2"
+        v-model="knobValue"
+        :options="{
+            imageSize: 40,
+            hideDefaultValue: false,
+            valueTextY: 50,
+            valueTextY: 55,
+            tickLength: 20,
+            tickOffset: -7,
+            tickStroke: 2,
+            rimStroke: 4,
+            valueArchStroke: 10,
+            bgRadius: 39,
+            rimClass: 'has-text-warning-dark',
+            bgClass: 'has-text-dark',
+            tickClass: 'has-text-light',
+            ariaLabel: 'Knob',
+            svgClass: 'has-text-info',
+            valueTextClass: 'has-text-warning',
+            valueArchClass: 'has-text-warning',
+        }"
+    /><Knob :minValue="0" :maxValue="50" v-model="knobValue"></Knob>
 </template>
 
 <script lang="ts">
@@ -189,6 +190,8 @@ import EditableInput from '@/components/EditableInput.vue';
 import Icon from '@/components/icons/Icon.vue';
 import NavButton from '@/components/NavButton.vue';
 import Experimental from '@/components/Experimental.vue';
+import ControlKnob from '@slipmatio/control-knob';
+import Knob from '@/components/Knob.vue';
 
 export default defineComponent({
     name: 'Development',
@@ -199,11 +202,14 @@ export default defineComponent({
         Icon,
         NavButton,
         Experimental,
+        ControlKnob,
+        Knob,
     },
     data: () => ({
         isExpanded: false,
         isOn: false,
         editableInputText: 'some input text',
+        knobValue: 0,
     }),
     methods: {
         writeDebug() {

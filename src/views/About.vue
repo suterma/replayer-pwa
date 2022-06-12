@@ -326,6 +326,15 @@
                     Collection of essential Vue Composition Utilities (Released
                     under the MIT License, by the VueUse team)
                 </li>
+                <li>
+                    <a
+                        href="https://github.com/slipmatio/control-knob"
+                        target="_blank"
+                        >Vue Control Knob</a
+                    >, a Rotary control knob component for Vue 3 that behaves
+                    like native audio app controls in Logic Pro or Ableton Live.
+                    (Released under the MIT License, by Slipmat.io)
+                </li>
             </ul>
         </div>
         <h1 class="title">License</h1>

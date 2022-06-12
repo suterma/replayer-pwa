@@ -26,6 +26,7 @@
     },
     "dependencies": {
         "@simolation/vue-hotkey": "^1.1.10",
+        "@slipmatio/control-knob": "^0.0.1",
         "@suterma/nskeyedunarchiver-liveplayback": "^0.1.3",
         "@vueuse/core": "^8.6.0",
         "bplist-parser": "^0.3.1",

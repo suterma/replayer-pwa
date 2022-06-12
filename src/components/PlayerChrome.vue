@@ -66,11 +66,7 @@
             </button>
         </p>
         <!-- The seek bar -->
-        <div
-            :class="{
-                'player-seekbar': true,
-            }"
-        >
+        <div class="player-seekbar">
             <div class="player-timeline">
                 <div :style="progressStyle" class="player-progress"></div>
                 <div
@@ -101,60 +97,13 @@
         <!-- Mute (do not show on small devices, user still can use the volume) -->
         <p class="control is-hidden-mobile">
             <button
-                :class="{
-                    button: true,
-                }"
+                class="button"
                 v-show="!showVolume"
                 @click.prevent="toggleMuted"
                 title="Mute"
             >
                 <Icon v-if="!muted" name="unmuted" />
                 <Icon v-else name="muted" />
-            </button>
-        </p>
-        <!-- Volume (do not show on small devices, user still can use the device volume) -->
-        <p
-            class="control is-hidden-mobile"
-            :class="{
-                control: true,
-                'is-hidden-mobile': true,
-                'mr-0': showVolume /* Use no margin right to remove the otherwise used compensation for the rounded corners */,
-            }"
-        >
-            <button
-                :class="{
-                    button: true,
-                    'volume-button-expanded': showVolume,
-                    'has-right-radius': showVolume,
-                }"
-                @click.prevent=""
-                @mouseenter="showVolume = true"
-                @mouseleave="showVolume = false"
-                :title="volumeTitle"
-            >
-                <Icon name="volume" />
-                <input
-                    :value="trackVolume"
-                    v-if="showVolume"
-                    class="player-volume"
-                    type="range"
-                    inputmode="numeric"
-                    min="0"
-                    step="0.01"
-                    max="1"
-                    @change="
-                        $emit(
-                            'update:trackVolume',
-                            parseFloat($event.target.value),
-                        )
-                    "
-                    @input="
-                        $emit(
-                            'update:trackVolume',
-                            parseFloat($event.target.value),
-                        )
-                    "
-                />
             </button>
         </p>
         <!-- Play mode -->
@@ -164,6 +113,20 @@
                 @update:modelValue="updatePlaybackMode"
             />
         </p>
+        <p
+            class="control"
+            title="Drag, scroll or use the arrow keys to change volume"
+        >
+            <Knob
+                class="button"
+                :modelValue="trackVolume"
+                @update:modelValue="updateTrackVolume"
+                :minValue="0"
+                :maxValue="1"
+                valueClass="has-text-light"
+                rimClass="has-text-grey-light"
+            />
+        </p>
     </div>
 </template>
 
@@ -171,6 +134,7 @@
 import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent, PropType } from 'vue';
 import Icon from '@/components/icons/Icon.vue';
+import Knob from '@/components/Knob.vue';
 import PlayerTime from '@/components/PlayerTime.vue';
 import PlaybackModeButton from '@/components/PlaybackModeButton.vue';
 import LongLine from '@/components/LongLine.vue';
@@ -182,7 +146,7 @@ import AudioUtil from '@/code/audio/AudioUtil';
  */
 export default defineComponent({
     name: 'PlayerChrome',
-    components: { Icon, PlayerTime, PlaybackModeButton, LongLine },
+    components: { Icon, PlayerTime, PlaybackModeButton, LongLine, Knob },
     emits: [
         'stop',
         /** Flags, whether the UI represents the playing (true) or the paused (false) state
@@ -286,6 +250,7 @@ export default defineComponent({
     },
     data: () => ({
         showVolume: false,
+        trackVolume2: 0.5,
     }),
 
     computed: {
@@ -345,6 +310,10 @@ export default defineComponent({
         /** Updates the playback mode to a new value */
         updatePlaybackMode(playbackMode: PlaybackMode) {
             this.$emit('update:playbackMode', playbackMode);
+        },
+        /** Updates the track volume to a new value */
+        updateTrackVolume(volume: number) {
+            this.$emit('update:trackVolume', volume);
         },
         download() {
             this.$emit('download');

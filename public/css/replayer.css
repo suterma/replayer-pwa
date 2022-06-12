@@ -10906,6 +10906,20 @@ nav .button:hover {
 }
 
 /*************************************************************
+ * Specific styles for knob buttons (showing a knob input
+ * within a button, with the is-knob class
+ * These knob buttons do not have a clickable action, but serve as
+ * a slider type input
+ **************************************************************/
+/** Knobs that are inside buttons should appear with minimal padding (using most space) inside the button */
+.button.is-knob {
+  padding-left: 0.25em;
+  padding-top: 0.25em;
+  padding-right: 0.25em;
+  padding-bottom: 0.25em;
+}
+
+/*************************************************************
  * Specific styles for indicator buttons (similar to is-static)
  * These buttons are placeholders,
  * without action, to display a certain state
