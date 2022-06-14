@@ -29,6 +29,7 @@
                                 inputmode="text"
                                 :value="cue.Description"
                                 @change="updateDescription($event)"
+                                @input="updateDescription($event)"
                                 :placeholder="cuePlaceholder"
                                 size="60"
                             />
@@ -54,6 +55,7 @@
                                 step="0.1"
                                 :value="cue.Time"
                                 @change="updateTime($event)"
+                                @input="updateTime($event)"
                                 placeholder="time [seconds]"
                                 size="5"
                             />
@@ -71,6 +73,7 @@
                                 step="0.1"
                                 :value="cue.Time"
                                 @change="updateTime($event)"
+                                @input="updateTime($event)"
                                 placeholder="time [seconds]"
                                 size="8"
                             />
@@ -111,6 +114,7 @@
                                 inputmode="numeric"
                                 :value="cue.Shortcut"
                                 @change="updateShortcut($event)"
+                                @input="updateShortcut($event)"
                                 placeholder="shortcut"
                                 size="8"
                             />
@@ -192,6 +196,7 @@ export default defineComponent({
             const shortcut = this.cueData.Shortcut;
             const time = this.cueData.Time;
             const description = (event.target as HTMLInputElement).value;
+            this.cueData.Description = description;
             this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
                 cueId,
                 description,
@@ -209,7 +214,10 @@ export default defineComponent({
             const cueId = this.cue.Id;
             const shortcut = this.cueData.Shortcut;
             const description = this.cueData.Description;
-            const time = (event.target as HTMLInputElement).value;
+            const time = CompilationHandler.roundTime(
+                parseFloat((event.target as HTMLInputElement).value),
+            );
+            this.cueData.Time = time;
             this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
                 cueId,
                 description,
@@ -225,13 +233,10 @@ export default defineComponent({
         adjustTime() {
             if (this.currentSeconds !== undefined) {
                 const time = CompilationHandler.roundTime(this.currentSeconds);
-
-                //update the local copy first
-                this.cueData.Time = time;
-
                 const cueId = this.cue.Id;
                 const shortcut = this.cueData.Shortcut;
                 const description = this.cueData.Description;
+                this.cueData.Time = time;
                 this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
                     cueId,
                     description,
@@ -246,6 +251,7 @@ export default defineComponent({
             const description = this.cueData.Description;
             const time = this.cueData.Time;
             const shortcut = (event.target as HTMLInputElement).value;
+            this.cueData.Shortcut = shortcut;
             this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
                 cueId,
                 description,

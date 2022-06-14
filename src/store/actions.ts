@@ -545,10 +545,8 @@ export const actions: ActionTree<State, State> & Actions = {
             time: number;
         },
     ): void {
-        withProgress(`Updating cue...`, commit, () => {
-            payload.time = CompilationHandler.roundTime(payload.time);
-            commit(MutationTypes.UPDATE_CUE_DATA, payload);
-        });
+        payload.time = CompilationHandler.roundTime(payload.time);
+        commit(MutationTypes.UPDATE_CUE_DATA, payload);
     },
     [ActionTypes.ADD_CUE](
         { commit, getters }: AugmentedActionContext,
