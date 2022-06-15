@@ -41,28 +41,28 @@
                 </li>
             </ul>
         </div>
-        <p>Compilations:</p>
+        <p>Compilations, with multiple tracks:</p>
         <div class="content">
             <ul>
+                <li>
+                    <span class="has-text-weight-bold">ZIP</span> (<span
+                        class="is-family-monospace"
+                        >.rez</span
+                    >, <span class="is-family-monospace">.zip</span>), including
+                    media files
+                </li>
                 <li>
                     <span class="has-text-weight-bold">XML</span> (<span
                         class="is-family-monospace"
                         >.rex</span
-                    >, <span class="is-family-monospace">.xml</span>), without
-                    media files
+                    >, <span class="is-family-monospace">.xml</span>), with URLs
+                    to online media resources
                 </li>
                 <li>
                     <span class="has-text-weight-bold">bplist</span> (<span
                         class="is-family-monospace"
                         >.bplist</span
                     >), from the LivePlayback app, without media files
-                </li>
-                <li>
-                    <span class="has-text-weight-bold">ZIP</span> (<span
-                        class="is-family-monospace"
-                        >.rez</span
-                    >, <span class="is-family-monospace">.zip</span>), a
-                    package, having one of the above, including media files
                 </li>
             </ul>
         </div>
@@ -87,11 +87,10 @@
                     ,&nbsp;for a track.
                 </li>
                 <li>
-                    <span class="has-text-weight-bold">XML</span> (without media
-                    files)<br />
                     <span class="has-text-weight-bold">ZIP</span
-                    >&nbsp;(including media files),&nbsp;<br />for a
-                    compilation.
+                    >&nbsp;(including media files)&nbsp;<br />
+                    <span class="has-text-weight-bold">XML</span> (with URLs to
+                    online media resources),&nbsp; <br />for a compilation.
                 </li>
             </ul>
         </div>
