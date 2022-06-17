@@ -7,7 +7,7 @@
 [![Build Status](https://dev.azure.com/suterma/replayer-pwa/_apis/build/status/suterma.replayer-pwa?branchName=main)](https://dev.azure.com/suterma/replayer-pwa/_build/latest?definitionId=1&branchName=main)
 
 Replayer is a free, cue-based media player for rehearsals with playback music.
-By the click of a button, Replayer starts to play at predefined times in the audio file
+By the click of a button, Replayer starts to play at predefined times in the audio file.
 
 ![Visual Functioning Overview](/doc/images/WebAppOnPhoneStand.webp)
 
