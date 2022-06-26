@@ -288,6 +288,11 @@ export default defineComponent({
                             if (this.trackId) {
                                 this.updateFileForTrack(this.trackId, file);
                             }
+                        } else {
+                            this.$store.commit(
+                                MutationTypes.ADD_DEFAULT_TRACK,
+                                file.name,
+                            );
                         }
                     }
                 })
@@ -368,7 +373,7 @@ export default defineComponent({
                 this.$store
                     .dispatch(ActionTypes.USE_MEDIA_FROM_URL, {
                         url: this.url,
-                        createDefaultTrack: !this.isReplacementMode,
+                        createDefaultTrack: false,
                     })
                     .then(() => {
                         if (this.isReplacementMode) {
@@ -378,6 +383,11 @@ export default defineComponent({
                                     this.url,
                                 );
                             }
+                        } else {
+                            this.$store.commit(
+                                MutationTypes.ADD_DEFAULT_TRACK,
+                                this.url,
+                            );
                         }
                     })
                     .finally(() => {
