@@ -82,7 +82,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                         inputmode="url"
                         :title="replaceInfo"
                         v-model="url"
-                        placeholder="Paste an URL"
+                        :placeholder="replaceUrl ? replaceUrl : 'Paste an URL'"
                     />
                 </p>
                 <Experimental class="control">
