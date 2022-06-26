@@ -24,7 +24,7 @@ export type Mutations<S = State> = {
   [MutationTypes.FINISH_PROGRESS](state: State): void;
   [MutationTypes.ADD_MEDIA_URL](
     state: S,
-    mediaUrl: { mediaUrl: MediaUrl; createDefaultTrack: boolean },
+    mediaUrl: MediaUrl,
   ): void;
   [MutationTypes.ADD_DEFAULT_TRACK](state: S, resourceName: string): void;
   [MutationTypes.ADD_TRACK](state: S, track: ITrack): void;
@@ -110,32 +110,32 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationTypes.ADD_MEDIA_URL](
     state: State,
-    mediaUrl: { mediaUrl: MediaUrl; createDefaultTrack: boolean },
+    mediaUrl: MediaUrl,
   ): void {
     //Remove any previously matching media URL, even it was the same object, because
     //the caller has already created a new one for this mediaUrl's blob.
     const matchingFile = state.mediaUrls.get(
-      mediaUrl.mediaUrl.resourceName,
+      mediaUrl.resourceName,
     );
     if (matchingFile) {
       console.debug(
-        `mutations::ADD_MEDIA_URL:removing matching item for key:${mediaUrl.mediaUrl.resourceName
-        }, normalized: ${mediaUrl.mediaUrl.resourceName.normalize()}`,
+        `mutations::ADD_MEDIA_URL:removing matching item for key:${mediaUrl.resourceName
+        }, normalized: ${mediaUrl.resourceName.normalize()}`,
       );
       ObjectUrlHandler.revokeObjectURL(matchingFile.url);
-      state.mediaUrls.delete(mediaUrl.mediaUrl.resourceName);
+      state.mediaUrls.delete(mediaUrl.resourceName);
     }
 
     //Now add the new media URL as a replacement
     console.debug(
       'mutations::ADD_MEDIA_URL:',
-      mediaUrl.mediaUrl.resourceName,
+      mediaUrl.resourceName,
     );
-    state.mediaUrls.set(mediaUrl.mediaUrl.resourceName, mediaUrl.mediaUrl);
+    state.mediaUrls.set(mediaUrl.resourceName, mediaUrl);
 
     //If any track uses this media, remove the now stale duration for this track
     const matchingTrack = state.compilation.Tracks.find((t) =>
-      CompilationHandler.isMatchingMediaUrl(t.Url, mediaUrl.mediaUrl),
+      CompilationHandler.isMatchingMediaUrl(t.Url, mediaUrl),
     );
     if (matchingTrack) {
       matchingTrack.Duration = null;
@@ -144,7 +144,6 @@ export const mutations: MutationTree<State> & Mutations = {
 
   [MutationTypes.ADD_DEFAULT_TRACK](state: State, resourceName: string) {
     console.debug('mutations::ADD_DEFAULT_TRACK:', resourceName);
-
     const track = CompilationHandler.createDefaultTrack(resourceName);
     const cue = CompilationHandler.createDefaultCue(state.compilation);
     track.Cues.push(cue);

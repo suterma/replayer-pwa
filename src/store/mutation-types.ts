@@ -11,8 +11,7 @@ export enum MutationTypes {
   FINISH_PROGRESS = 'FINISH_PROGRESS',
   /** Adds a media blob URL to the store.
    * @remarks A new blob URL replaces any existing with an exact same path.
-   * @param mediaUrl.url - The MediaUrl to use
-   * @param mediaUrl.createDefaultTrack - Whether to add a default track for the new media resource
+   * @param url - The MediaUrl to use
    */
   ADD_MEDIA_URL = 'ADD_MEDIA_URL',
   /** Adds a new default track for the given file name or media URL to the compilation.

@@ -24,16 +24,14 @@ export enum ActionTypes {
   /** Uses a single media resource from an URL, by adding the URL to the set of stored media URLs.
    * @remarks The resource must be a single media file.
    * @remarks This method can be called multiple times, each URL gets appropriately added to the current compilation
-   * @param media.url - The URL to use
-   * @param media.createDefaultTrack - Whether to add a default track for the new media resource
+   * @param url - The URL to use
    * @return A locally usable name, derived from the URL, which can be used to match the track to the stored media URL
    */
   USE_MEDIA_FROM_URL = 'USE_MEDIA_FROM_URL',
   /** Loads a single file or package from the local file system
    * @remarks The item might be a package or single file of any supported content.
    * @remarks This method can be called multiple times, each resource gets appropriately added to the current compilation
-   * @param media.file - The file to use
-   * @param media.createDefaultTrack - Whether to add a default track for the new media resource
+   * @param file - The file to use
    */
   LOAD_FROM_FILE = 'LOAD_FROM_FILE',
 

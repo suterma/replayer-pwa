@@ -273,10 +273,7 @@ export default defineComponent({
 
             this.isLoadingFromFile = true;
             this.$store
-                .dispatch(ActionTypes.LOAD_FROM_FILE, {
-                    file: file,
-                    createDefaultTrack: false,
-                })
+                .dispatch(ActionTypes.LOAD_FROM_FILE, file)
                 .catch((errorMessage: string) => {
                     this.$store.commit(MutationTypes.PUSH_ERROR, errorMessage);
                     //Do not create a new track
@@ -371,10 +368,7 @@ export default defineComponent({
             if (this.url) {
                 this.isUsingMediaFromUrl = true;
                 this.$store
-                    .dispatch(ActionTypes.USE_MEDIA_FROM_URL, {
-                        url: this.url,
-                        createDefaultTrack: false,
-                    })
+                    .dispatch(ActionTypes.USE_MEDIA_FROM_URL, this.url)
                     .then(() => {
                         if (this.isReplacementMode) {
                             if (this.trackId) {

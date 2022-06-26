@@ -59,8 +59,7 @@ describe('CompilationLoader.vue', () => {
             mediaBlob.fileName,
           );
           commit(
-            MutationTypes.ADD_MEDIA_URL,
-            { mediaUrl: new MediaUrl(mediaBlob.fileName, objectUrl), createDefaultTrack: true },
+            MutationTypes.ADD_MEDIA_URL, new MediaUrl(mediaBlob.fileName, objectUrl),
           );
           //Store persistently, but after committing, to keep the process faster
           PersistentStorage.storeMediaBlob(mediaBlob);

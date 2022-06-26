@@ -81,7 +81,7 @@ function retrieveState(store: Store) {
               );
               store.commit(
                 MutationTypes.ADD_MEDIA_URL,
-                { mediaUrl: new MediaUrl(mediaBlob.fileName, objectUrl), createDefaultTrack: false },
+                new MediaUrl(mediaBlob.fileName, objectUrl),
               );
             }, (index + 1) * 150);
           });
