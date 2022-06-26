@@ -46,7 +46,10 @@ export interface Actions {
   ): Promise<string>;
   [ActionTypes.LOAD_FROM_FILE](
     { commit }: AugmentedActionContext,
-    file: File,
+    media: {
+      file: File,
+      createDefaultTrack: boolean,
+    },
   ): Promise<void>;
   [ActionTypes.DOWNLOAD_REX_FILE]({ commit }: AugmentedActionContext): void;
   [ActionTypes.DOWNLOAD_REZ_PACKAGE]({
@@ -178,7 +181,7 @@ export const actions: ActionTree<State, State> & Actions = {
               },
             );
 
-            dispatch(ActionTypes.LOAD_FROM_FILE, file)
+            dispatch(ActionTypes.LOAD_FROM_FILE, { file: file, createDefaultTrack: true })
               .then(() => {
                 resolve(localResourceName);
                 //The action is done, so terminate the progress
@@ -234,17 +237,20 @@ export const actions: ActionTree<State, State> & Actions = {
 
   [ActionTypes.LOAD_FROM_FILE](
     { commit, dispatch }: AugmentedActionContext,
-    file: File,
+    media: {
+      file: File,
+      createDefaultTrack: boolean,
+    },
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       commit(
         MutationTypes.PUSH_PROGRESS,
-        `Loading file '${file.name}' '${file.type}' (${file.size / 1000000
+        `Loading file '${media.file.name}' '${media.file.type}' (${media.file.size / 1000000
         }MB)`,
       );
-      if (FileHandler.isSupportedPackageFile(file)) {
+      if (FileHandler.isSupportedPackageFile(media.file)) {
         // 1) read the Blob
-        JSZip.loadAsync(file)
+        JSZip.loadAsync(media.file)
           .then(
             (zip: JSZip) => {
               //For performance reasons, explicitly process only expected files
@@ -299,7 +305,7 @@ export const actions: ActionTree<State, State> & Actions = {
                         )
                           .then((compilation) => {
                             compilation.Url =
-                              file.name;
+                              media.file.name;
                             commit(
                               MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
                               compilation,
@@ -359,18 +365,18 @@ export const actions: ActionTree<State, State> & Actions = {
                         //HINT: Unfortunately JSZip seems to report the currently
                         //open package as file within itself. This mitigates that.
                         console.debug(
-                          `ZIP: Not processing package file '${zipEntryName}' within package: '${file.name}'`,
+                          `ZIP: Not processing package file '${zipEntryName}' within package: '${media.file.name}'`,
                         );
                       } else if (
                         FileHandler.isPath(zipEntryName)
                       ) {
                         //We do not handle paths on their own
                         console.debug(
-                          `ZIP: Not processing path '${zipEntryName}' within package: '${file.name}'`,
+                          `ZIP: Not processing path '${zipEntryName}' within package: '${media.file.name}'`,
                         );
                       } else {
                         console.warn(
-                          `ZIP: Unknown content type for file '${zipEntryName}' within package: '${file.name}'`,
+                          `ZIP: Unknown content type for file '${zipEntryName}' within package: '${media.file.name}'`,
                         );
                       }
                       commit(
@@ -389,7 +395,7 @@ export const actions: ActionTree<State, State> & Actions = {
             },
             function (e) {
               console.error(
-                `un-ZIP: Error reading ${file.name}: ${e.message}`,
+                `un-ZIP: Error reading ${media.file.name}: ${e.message}`,
               );
             },
           )
@@ -397,13 +403,13 @@ export const actions: ActionTree<State, State> & Actions = {
             commit(MutationTypes.POP_PROGRESS, undefined);
             resolve();
           });
-      } else if (FileHandler.isXmlFile(file)) {
+      } else if (FileHandler.isXmlFile(media.file)) {
         const reader = new FileReader();
         reader.onload = () => {
           const content = Buffer.from(reader.result as string);
           CompilationParser.handleAsXmlCompilation(content)
             .then((compilation) => {
-              compilation.Url = file.name;
+              compilation.Url = media.file.name;
               commit(
                 MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
                 compilation,
@@ -417,22 +423,27 @@ export const actions: ActionTree<State, State> & Actions = {
         reader.onerror = (): void => {
           console.error(
             'Failed to read file ' +
-            file.name +
+            media.file.name +
             ': ' +
             reader.error,
           );
           reader.abort(); // (...does this do anything useful in an onerror handler?)
         };
-        reader.readAsText(file);
-      } else if (FileHandler.isSupportedMediaFile(file)) {
+        reader.readAsText(media.file);
+      } else if (FileHandler.isSupportedMediaFile(media.file)) {
         dispatch(
           ActionTypes.ADD_MEDIA_BLOB,
-          new MediaBlob(file.name, file),
-        ).finally(() => {
-          commit(MutationTypes.POP_PROGRESS, undefined);
-          resolve();
-        });
-      } else if (FileHandler.isBplistFileName(file.name)) {
+          new MediaBlob(media.file.name, media.file),
+        ).then(() => {
+          if (media.createDefaultTrack) {
+            commit(MutationTypes.ADD_DEFAULT_TRACK, media.file.name);
+          }
+        })
+          .finally(() => {
+            commit(MutationTypes.POP_PROGRESS, undefined);
+            resolve();
+          });
+      } else if (FileHandler.isBplistFileName(media.file.name)) {
         const reader = new FileReader();
 
         reader.onload = () => {
@@ -452,17 +463,17 @@ export const actions: ActionTree<State, State> & Actions = {
         reader.onerror = (): void => {
           console.error(
             'Failed to read file ' +
-            file.name +
+            media.file.name +
             ': ' +
             reader.error,
           );
           reader.abort(); // (...does this do anything useful in an onerror handler?)
         };
-        reader.readAsArrayBuffer(file);
+        reader.readAsArrayBuffer(media.file);
       } else {
         commit(MutationTypes.POP_PROGRESS, undefined);
         reject(
-          `Unsupported content type for file '${file.name}', content was not processed.`,
+          `Unsupported content type for file '${media.file.name}', content was not processed.`,
         );
       }
     });
