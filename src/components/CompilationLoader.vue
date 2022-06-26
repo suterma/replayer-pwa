@@ -44,7 +44,10 @@ export default defineComponent({
                     );
                 }
                 //Now, after the track has been added, add the track's media URL
-                this.$store.dispatch(ActionTypes.USE_MEDIA_FROM_URL, track.Url);
+                this.$store.dispatch(ActionTypes.USE_MEDIA_FROM_URL, {
+                    url: track.Url,
+                    createDefaultTrack: false,
+                });
             } else {
                 this.$store.commit(
                     MutationTypes.PUSH_ERROR,

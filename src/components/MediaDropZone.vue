@@ -363,7 +363,10 @@ export default defineComponent({
             if (this.url) {
                 this.isUsingMediaFromUrl = true;
                 this.$store
-                    .dispatch(ActionTypes.USE_MEDIA_FROM_URL, this.url)
+                    .dispatch(ActionTypes.USE_MEDIA_FROM_URL, {
+                        url: this.url,
+                        createDefaultTrack: !this.isReplacementMode,
+                    })
                     .then(() => {
                         if (this.isReplacementMode) {
                             if (this.trackId) {
