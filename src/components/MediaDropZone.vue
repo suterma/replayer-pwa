@@ -211,7 +211,7 @@ export default defineComponent({
                     .files as unknown as File[]),
             ];
 
-            this.loadFiles();
+            this.loadMediaFiles();
         },
         expand() {
             console.debug('MediaDropZone::expand');
@@ -230,14 +230,14 @@ export default defineComponent({
             return FileHandler.isSupportedFile(file);
         },
 
-        /** Immediately loads all available files by loading their content
+        /** Immediately loads all available media files by loading their content
          */
-        async loadFiles(): Promise<void> {
-            console.debug('MediaDropZone::loadFiles');
+        async loadMediaFiles(): Promise<void> {
+            console.debug('MediaDropZone::loadMediaFiles');
 
             const files = Array.from(this.filelist);
             files.forEach((file) => {
-                this.loadFile(file);
+                this.loadMediaFile(file);
                 this.filelist.pop();
             });
 
@@ -265,15 +265,18 @@ export default defineComponent({
             }
         },
 
-        /** Loads a single file by loading it's content
+        /** Loads a single media file by loading it's content
          * @param {file} - Any supported file (package, compilation or media)
          */
-        async loadFile(file: File): Promise<void> {
-            console.debug('MediaDropZone::loadFile:file.name', file.name);
+        async loadMediaFile(file: File): Promise<void> {
+            console.debug('MediaDropZone::loadMediaFile:file.name', file.name);
 
             this.isLoadingFromFile = true;
             this.$store
-                .dispatch(ActionTypes.LOAD_FROM_FILE, file)
+                .dispatch(ActionTypes.LOAD_FROM_FILE, {
+                    file: file,
+                    createDefaultTrack: false,
+                })
                 .catch((errorMessage: string) => {
                     this.$store.commit(MutationTypes.PUSH_ERROR, errorMessage);
                     //Do not create a new track

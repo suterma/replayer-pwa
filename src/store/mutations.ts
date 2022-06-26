@@ -26,6 +26,7 @@ export type Mutations<S = State> = {
     state: S,
     mediaUrl: { mediaUrl: MediaUrl; createDefaultTrack: boolean },
   ): void;
+  [MutationTypes.ADD_DEFAULT_TRACK](state: S, resourceName: string): void;
   [MutationTypes.ADD_TRACK](state: S, track: ITrack): void;
   [MutationTypes.ADD_CUE](
     state: State,
@@ -139,19 +140,16 @@ export const mutations: MutationTree<State> & Mutations = {
     if (matchingTrack) {
       matchingTrack.Duration = null;
     }
-    if (mediaUrl.createDefaultTrack) {
-      console.debug(
-        'mutations::ADD_MEDIA_URL:adding-default-track-for-mediaUrl:',
-        mediaUrl.mediaUrl.resourceName,
-      );
-      const track = CompilationHandler.createDefaultTrack(
-        mediaUrl.mediaUrl,
-      );
-      const cue = CompilationHandler.createDefaultCue(state.compilation);
-      track.Cues.push(cue);
-      state.compilation.Tracks.push(track);
-      state.selectedCueId = cue.Id;
-    }
+  },
+
+  [MutationTypes.ADD_DEFAULT_TRACK](state: State, resourceName: string) {
+    console.debug('mutations::ADD_DEFAULT_TRACK:', resourceName);
+
+    const track = CompilationHandler.createDefaultTrack(resourceName);
+    const cue = CompilationHandler.createDefaultCue(state.compilation);
+    track.Cues.push(cue);
+    state.compilation.Tracks.push(track);
+    state.selectedCueId = cue.Id;
   },
 
   [MutationTypes.ADD_TRACK](state: State, track: ITrack) {

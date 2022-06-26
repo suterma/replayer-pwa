@@ -32,7 +32,8 @@ export enum ActionTypes {
   /** Loads a single file or package from the local file system
    * @remarks The item might be a package or single file of any supported content.
    * @remarks This method can be called multiple times, each resource gets appropriately added to the current compilation
-   * @param filename - The URL to load the file from
+   * @param media.file - The file to use
+   * @param media.createDefaultTrack - Whether to add a default track for the new media resource
    */
   LOAD_FROM_FILE = 'LOAD_FROM_FILE',
 

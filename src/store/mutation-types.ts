@@ -15,6 +15,10 @@ export enum MutationTypes {
    * @param mediaUrl.createDefaultTrack - Whether to add a default track for the new media resource
    */
   ADD_MEDIA_URL = 'ADD_MEDIA_URL',
+  /** Adds a new default track for the given file name or media URL to the compilation.
+ * @remarks No media URL is added, it must get handeled elsewhere.
+ */
+  ADD_DEFAULT_TRACK = 'ADD_DEFAULT_TRACK',
   /** Adds a new track for the given media URL to the compilation.
    * @remarks No media URL is added, it must get handeled elsewhere.
    * @remarks If no cue is provided, this also adds a first cue for this track. The first cue is used as the selected cue.
