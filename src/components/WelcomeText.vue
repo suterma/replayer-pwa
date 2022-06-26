@@ -7,7 +7,7 @@
             href="https://replayer.app/documentation-app"
             alt="Link to the Replayer app documentation"
             target="_blank"
-            >Documentation</a
+            >Learn more...</a
         >.
     </p>
 </template>
