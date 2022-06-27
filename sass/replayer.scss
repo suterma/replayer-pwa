@@ -202,6 +202,10 @@ but not at the "end/right" container's border */
     background-color: transparent;
 }
 
+.has-background-none {
+    background: none;
+}
+
 /* Selection Colors */
 ::selection {
     background-color: $link;

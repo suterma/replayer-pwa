@@ -1,6 +1,12 @@
 <template>
-    <NavbarTop class="is-hidden-print" />
-
+    <Experimental>
+        <NavbarTop class="is-hidden-print" />
+    </Experimental>
+    <section
+        class="section has-background-none is-hidden-print is-pulled-right"
+    >
+        <AppContextMenu style="z-index: 3"></AppContextMenu>
+    </section>
     <!-- The pages section -->
     <section class="section">
         <!-- To keep the audio within the media player component running, 
@@ -19,7 +25,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import NavbarTop from '@/components/NavbarTop.vue';
+import AppContextMenu from '@/components/AppContextMenu.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
+import Experimental from '@/components/Experimental.vue';
 import Ad from '@/components/Ad.vue';
 import ErrorOverlay from '@/components/ErrorOverlay.vue';
 import { MutationTypes } from './store/mutation-types';
@@ -29,8 +37,10 @@ export default defineComponent({
     name: 'App',
     components: {
         NavbarTop,
+        AppContextMenu,
         ProgressOverlay,
         ErrorOverlay,
+        Experimental,
         DialogWrapper,
         Ad,
     },

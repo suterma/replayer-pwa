@@ -59,9 +59,6 @@ export default defineComponent({
     },
     data() {
         return {
-            /** Whether the dropdown menu is shown as expanded.
-             */
-            isDropdownExpanded: false,
             /** The wake lock fill-in that can prevent screen timeout, while a compilation is in use */
             noSleep: new NoSleep(),
         };
@@ -89,16 +86,6 @@ export default defineComponent({
          */
         async downloadRezPackage(): Promise<void> {
             this.$store.dispatch(ActionTypes.DOWNLOAD_REZ_PACKAGE);
-        },
-
-        toggleDropdownExpanded() {
-            this.isDropdownExpanded = !this.isDropdownExpanded;
-        },
-        collapseDropdown() {
-            this.isDropdownExpanded = false;
-        },
-        expandDropdown() {
-            this.isDropdownExpanded = true;
         },
         togglePreventScreenTimeoutNow() {
             if (this.isPreventingScreenTimeoutNow) {

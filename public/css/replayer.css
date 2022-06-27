@@ -10939,6 +10939,12 @@ nav .button:hover {
  * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
 **************************************************************
 */
+/* Dropdowns are above other items
+(may otherwise be a problem when used with float) */
+.dropdown {
+  z-index: 3;
+}
+
 /* Dropdown item with better suited contrast for a dark theme */
 .dropdown-item {
   color: hsl(0deg, 0%, 98%);
@@ -10966,6 +10972,7 @@ nav .button:hover {
 .dropdown-menu {
   /* wider than the 12 rem default*/
   min-width: 15rem;
+  z-index: 4;
 }
 
 /*************************************************************
@@ -11276,6 +11283,10 @@ but not at the "end/right" container's border */
 /* A transparent background, usable e.g. in a box */
 .has-background-transparent {
   background-color: transparent;
+}
+
+.has-background-none {
+  background: none;
 }
 
 /* Selection Colors */

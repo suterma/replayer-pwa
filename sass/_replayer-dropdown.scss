@@ -6,6 +6,12 @@
 **************************************************************
 */
 
+/* Dropdowns are above other items
+(may otherwise be a problem when used with float) */
+.dropdown {    
+    z-index: 3;
+  }
+
 /* Dropdown item with better suited contrast for a dark theme */
 .dropdown-item {
     color: $white-bis;
@@ -33,4 +39,5 @@
 .dropdown-menu {
     /* wider than the 12 rem default*/
     min-width: 15rem;
+     z-index: 4;
  }
