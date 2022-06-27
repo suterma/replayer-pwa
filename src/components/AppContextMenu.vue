@@ -1,5 +1,9 @@
 <template>
-    <DropdownMenu ref="dropdownMenu" title="App context menu">
+    <DropdownMenu
+        ref="dropdownMenu"
+        title="App context menu"
+        style="z-index: 3"
+    >
         <Hotkey :keys="['ctrl', 'p']" v-slot="{ clickRef }">
             <router-link
                 to="/play"
