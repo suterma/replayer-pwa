@@ -1,11 +1,22 @@
 <template>
-    <DropdownMenu title="App context menu">
-        <router-link to="/play" title="Switch to play view">
-            <DropdownMenuItem title="Play"></DropdownMenuItem>
-        </router-link>
-        <router-link to="/edit" title="Switch to edit view">
-            <DropdownMenuItem title="Edit"> </DropdownMenuItem
-        ></router-link>
+    <DropdownMenu ref="dropdownMenu" title="App context menu">
+        <Hotkey :keys="['ctrl', 'p']" v-slot="{ clickRef }">
+            <router-link
+                to="/play"
+                title="Switch to play view [CTRL+P]"
+                :ref="clickRef"
+            >
+                <DropdownMenuItem title="Play"></DropdownMenuItem>
+            </router-link>
+        </Hotkey>
+        <Hotkey :keys="['ctrl', 'e']" v-slot="{ clickRef }">
+            <router-link
+                to="/edit"
+                title="Switch to edit view [CTRL+E]"
+                :ref="clickRef"
+            >
+                <DropdownMenuItem title="Edit"> </DropdownMenuItem></router-link
+        ></Hotkey>
         <router-link to="/settings" title="Switch to settings view">
             <DropdownMenuItem title="Settings"></DropdownMenuItem>
         </router-link>
@@ -26,11 +37,13 @@ import { defineComponent } from 'vue';
 import DropdownMenu from '@/components/DropdownMenu.vue';
 import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
 import Experimental from '@/components/Experimental.vue';
+import { Hotkey } from '@simolation/vue-hotkey';
 
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
     name: 'CompilationHeader',
-    components: { DropdownMenu, DropdownMenuItem, Experimental },
+    components: { DropdownMenu, DropdownMenuItem, Experimental, Hotkey },
+    methods: {},
 });
 </script>

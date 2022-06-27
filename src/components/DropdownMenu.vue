@@ -6,21 +6,22 @@
             'is-hoverable': false,
             'is-active': isDropdownExpanded,
         }"
-        @click="toggleDropdownExpanded()"
         v-click-outside="collapseDropdown"
-        @blur="collapseDropdown()"
     >
+        <!-- //TODO above add v-focus-outside feature -->
         <!-- dropdown-trigger -->
         <NavButton
             aria-haspopup="true"
             aria-controls="dropdown-menu"
             :title="title"
             iconName="menu"
+            @click="toggleDropdownExpanded()"
         />
         <div
             class="dropdown-menu is-unselectable"
             id="dropdown-menu"
             role="menu"
+            @click="collapseDropdown()"
         >
             <div class="dropdown-content">
                 <!-- HINT: Because of 'is-static', this should not be clickable, but unfortunately I was not able to prevent this yet -->

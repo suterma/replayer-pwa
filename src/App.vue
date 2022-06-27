@@ -5,7 +5,7 @@
     <section
         class="section has-background-none is-hidden-print is-pulled-right"
     >
-        <AppContextMenu style="z-index: 3"></AppContextMenu>
+        <AppContextMenu></AppContextMenu>
     </section>
     <!-- The pages section -->
     <section class="section">
