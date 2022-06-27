@@ -82,7 +82,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                         inputmode="url"
                         :title="replaceInfo"
                         v-model="url"
-                        placeholder="Paste an URL"
+                        :placeholder="replaceUrl ? replaceUrl : 'Paste an URL'"
                     />
                 </p>
                 <Experimental class="control">
@@ -211,7 +211,7 @@ export default defineComponent({
                     .files as unknown as File[]),
             ];
 
-            this.loadFiles();
+            this.loadMediaFiles();
         },
         expand() {
             console.debug('MediaDropZone::expand');
@@ -230,14 +230,14 @@ export default defineComponent({
             return FileHandler.isSupportedFile(file);
         },
 
-        /** Immediately loads all available files by loading their content
+        /** Immediately loads all available media files by loading their content
          */
-        async loadFiles(): Promise<void> {
-            console.debug('MediaDropZone::loadFiles');
+        async loadMediaFiles(): Promise<void> {
+            console.debug('MediaDropZone::loadMediaFiles');
 
             const files = Array.from(this.filelist);
             files.forEach((file) => {
-                this.loadFile(file);
+                this.loadMediaFile(file);
                 this.filelist.pop();
             });
 
@@ -265,11 +265,11 @@ export default defineComponent({
             }
         },
 
-        /** Loads a single file by loading it's content
+        /** Loads a single media file by loading it's content
          * @param {file} - Any supported file (package, compilation or media)
          */
-        async loadFile(file: File): Promise<void> {
-            console.debug('MediaDropZone::loadFile:file.name', file.name);
+        async loadMediaFile(file: File): Promise<void> {
+            console.debug('MediaDropZone::loadMediaFile:file.name', file.name);
 
             this.isLoadingFromFile = true;
             this.$store
@@ -285,6 +285,11 @@ export default defineComponent({
                             if (this.trackId) {
                                 this.updateFileForTrack(this.trackId, file);
                             }
+                        } else {
+                            this.$store.commit(
+                                MutationTypes.ADD_DEFAULT_TRACK,
+                                file.name,
+                            );
                         }
                     }
                 })
@@ -372,6 +377,11 @@ export default defineComponent({
                                     this.url,
                                 );
                             }
+                        } else {
+                            this.$store.commit(
+                                MutationTypes.ADD_DEFAULT_TRACK,
+                                this.url,
+                            );
                         }
                     })
                     .finally(() => {
