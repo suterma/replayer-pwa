@@ -1,15 +1,13 @@
 <template>
     <DropdownMenu title="Compilation context menu">
-        <Experimental>
-            <DropdownMenuItem
-                title="Prevent screen timeout"
-                subTitle="(while this compilation is open)"
-                :class="{
-                    'is-active': isPreventingScreenTimeoutNow,
-                }"
-                @click="togglePreventScreenTimeoutNow"
-            />
-        </Experimental>
+        <DropdownMenuItem
+            title="Prevent screen timeout"
+            subTitle="(while this compilation is open)"
+            :class="{
+                'is-active': isPreventingScreenTimeoutNow,
+            }"
+            @click="togglePreventScreenTimeoutNow"
+        />
         <div class="dropdown-item" @click="downloadRezPackage">
             Download as
             <span class="has-text-weight-bold">ZIP</span><br />
@@ -43,14 +41,13 @@ import { ActionTypes } from '@/store/action-types';
 import { Compilation } from '@/store/compilation-types';
 import DropdownMenu from '@/components/DropdownMenu.vue';
 import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
-import Experimental from '@/components/Experimental.vue';
 import { confirm } from '@/code/ui/dialogs';
 
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
     name: 'CompilationHeader',
-    components: { DropdownMenu, DropdownMenuItem, Experimental },
+    components: { DropdownMenu, DropdownMenuItem },
     props: {
         compilation: {
             type: Compilation,
