@@ -2,7 +2,7 @@
     <DropdownMenu
         ref="dropdownMenu"
         title="App menu"
-        iconName="hamburger-menu"
+        iconName="dots-menu"
         style="z-index: 3"
     >
         <Hotkey :keys="['ctrl', 'p']" v-slot="{ clickRef }">
