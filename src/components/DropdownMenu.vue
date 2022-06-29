@@ -14,7 +14,7 @@
             aria-haspopup="true"
             aria-controls="dropdown-menu"
             :title="title"
-            iconName="menu"
+            :iconName="iconName"
             @click="toggleDropdownExpanded()"
         />
         <div
@@ -51,6 +51,10 @@ export default defineComponent({
         title: {
             type: String,
             default: undefined,
+        },
+        iconName: {
+            type: String,
+            default: 'dots-menu',
         },
     },
     data() {

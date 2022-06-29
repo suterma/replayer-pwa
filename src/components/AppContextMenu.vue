@@ -1,7 +1,8 @@
 <template>
     <DropdownMenu
         ref="dropdownMenu"
-        title="App context menu"
+        title="App menu"
+        iconName="hamburger-menu"
         style="z-index: 3"
     >
         <Hotkey :keys="['ctrl', 'p']" v-slot="{ clickRef }">
