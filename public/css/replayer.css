@@ -10824,43 +10824,6 @@ a.navbar-item {
 }
 
 /*************************************************************
- * Fixes for the fixed navbar, to have it enabled only for the larger screen widhts
-**************************************************************/
-/** The fixed navbar helper for desktop must be redefined, because it is broken
-    The designator "laptop" is defined here for this purpose
-    NOTE: This solution here only provides a top fixed menu, not a bottom fixed menu */
-/** Use no padding by default, for the non-fixed menu */
-html.has-navbar-fixed-top-laptop {
-  padding-top: 0;
-}
-
-/** Define the fixed navbar from the laptop breakpoint and larger
-* HINT: "laptop" is defined same as "desktop"
-*/
-@media screen and (min-width: 1024px) {
-  /** Use appropriate padding for the fixed menu */
-  html.has-navbar-fixed-top-laptop,
-body.has-navbar-fixed-top-laptop {
-    padding-top: 4rem;
-  }
-
-  /** fix the menu menu */
-  .navbar.is-fixed-top-laptop {
-    top: 0;
-  }
-
-  .navbar.is-fixed-top-laptop {
-    left: 0;
-    position: fixed;
-    right: 0;
-    z-index: 30;
-  }
-
-  .navbar.is-fixed-top-laptop .navbar-menu {
-    max-height: calc(100vh - 4rem);
-  }
-}
-/*************************************************************
  * Specific styles for nav buttons (inside a nav element or with the is-nav class)
  * These nav buttons do not have an immediate function, but rather serve
  * a navigational purpose
