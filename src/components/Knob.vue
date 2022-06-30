@@ -8,7 +8,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import ControlKnob from '@slipmatio/control-knob';
+//import ControlKnob from '@slipmatio/control-knob';
+import ControlKnob from '@/components/control-knob';
 
 /** A Knob for manipulating values
  */
