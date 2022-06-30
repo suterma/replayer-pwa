@@ -333,7 +333,8 @@
                         >Vue Control Knob</a
                     >, a Rotary control knob component for Vue 3 that behaves
                     like native audio app controls in Logic Pro or Ableton Live.
-                    (Released under the MIT License, by Slipmat.io)
+                    (Released under the MIT License, by Slipmat.io). Modified by
+                    suterma.
                 </li>
             </ul>
         </div>
