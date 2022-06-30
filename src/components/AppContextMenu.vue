@@ -22,6 +22,9 @@
             >
                 <DropdownMenuItem title="Edit"> </DropdownMenuItem></router-link
         ></Hotkey>
+        <router-link to="/setlist" title="Switch to set list view">
+            <DropdownMenuItem title="Set list"></DropdownMenuItem>
+        </router-link>
         <router-link to="/settings" title="Switch to settings view">
             <DropdownMenuItem title="Settings"></DropdownMenuItem>
         </router-link>

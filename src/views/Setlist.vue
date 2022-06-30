@@ -1,60 +1,50 @@
 <template>
-    <div class="block">
-        <section class="hero is-hidden-print is-unselectable">
-            <div class="hero-body">
-                <div class="block">
-                    <p class="title">Set list</p>
-                </div>
-                <div class="block">
-                    <div class="field is-pulled-right">
-                        <div class="control">
-                            <button
-                                class="button is-success is-hidden-print"
-                                @click="printWindow()"
-                            >
-                                <Icon name="printer-outline" />
-                                <span> Print (b/w)</span>
-                            </button>
-                        </div>
-                    </div>
+    <div class="container">
+        <h1 class="title">Set list</h1>
 
-                    <div class="field is-horizontal">
-                        <div class="field-label">
-                            <label class="label">Options</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field is-narrow">
-                                <div class="control">
-                                    <label class="checkbox mr-4">
-                                        <input
-                                            type="checkbox"
-                                            v-model="showCues"
-                                        />
-                                        show cues
-                                    </label>
-                                    <label class="checkbox mr-4">
-                                        <input
-                                            type="checkbox"
-                                            v-model="showMediaSource"
-                                        />
-                                        show media source
-                                    </label>
-                                    <label class="checkbox mr-4">
-                                        <input
-                                            type="checkbox"
-                                            v-model="printTracksOnNewPage"
-                                        />
-                                        each track on a new page
-                                    </label>
-                                </div>
-                            </div>
+        <div class="box">
+            <div class="field">
+                <div class="control">
+                    <button
+                        class="button is-success is-hidden-print is-pulled-right"
+                        @click="printWindow()"
+                    >
+                        <Icon name="printer-outline" />
+                        <span> Print (b/w)</span>
+                    </button>
+                </div>
+            </div>
+            <div class="field is-horizontal">
+                <div class="field-label">
+                    <label class="label">Options</label>
+                </div>
+                <div class="field-body">
+                    <div class="field is-narrow">
+                        <div class="control">
+                            <label class="checkbox mr-4">
+                                <input type="checkbox" v-model="showCues" />
+                                show cues
+                            </label>
+                            <label class="checkbox mr-4">
+                                <input
+                                    type="checkbox"
+                                    v-model="showMediaSource"
+                                />
+                                show media source
+                            </label>
+                            <label class="checkbox mr-4">
+                                <input
+                                    type="checkbox"
+                                    v-model="printTracksOnNewPage"
+                                />
+                                each track on a new page
+                            </label>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
-    <div class="block">
+        </div>
+
         <!-- When not each track is on a new page, show the compilation only once -->
 
         <h1 class="title is-3" v-if="!printTracksOnNewPage">
