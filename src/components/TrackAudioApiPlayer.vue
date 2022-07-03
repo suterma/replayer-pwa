@@ -133,6 +133,8 @@ export default defineComponent({
     },
     data: () => ({
         /** The playback progress in the current track, in [seconds] */
+        //TODO later provide the currentSeconds from the track (at least initially), similar to the playback mode
+        //supporting storage and retrieval with the track persistence
         currentSeconds: 0,
         /** Gets the duration of the current track, in [seconds]
          * @remarks This is only available after successful load of the media metadata
@@ -155,6 +157,7 @@ export default defineComponent({
         playing: false,
         showVolume: false,
         /** Default value, user may change later */
+        //TODO later provide the volume from the track, similar to the playback mode
         trackVolume: 0.5,
         audioElement: document.createElement('audio'),
         /** Flags, whether a playing request is currently outstanding. This is true after a play request was received, for as long

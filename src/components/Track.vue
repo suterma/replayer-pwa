@@ -356,7 +356,10 @@ export default defineComponent({
             });
         },
 
-        /** Handle playback mode updates */
+        /** Handle playback mode updates
+         * @devdoc Handeled here as part of the track because the playback mode is
+         * essentially a property of the track, not of the player of the player chrome.
+         */
         updatedPlaybackMode(playbackMode: PlaybackMode): void {
             console.debug(
                 `Track(${this.track.Name})::updatedPlaybackMode:${playbackMode}`,
