@@ -100,6 +100,7 @@ export const actions: ActionTree<State, State> & Actions = {
         );
         //Store persistently, but after committing, to keep the process faster
         PersistentStorage.storeMediaBlob(mediaBlob);
+
       },
     );
   },
@@ -263,13 +264,17 @@ export const actions: ActionTree<State, State> & Actions = {
                   );
                 },
               );
-              //Note: even without explicit sort order and asynchronous processing,
-              //the (XML) compilation is always processed first, as currently observed
-              //in all situations.
-              //This accidental behaviour is useful to avoid the creation of unwanted default tracks for
-              //not yet loaded track objects.
-              //Once this would not be the case, code must be written to ensure, that
-              //any contained compilation gets processed first, synchronously.
+
+              const hasCompilation = processables.some(
+                (zipFile /*, file*/) => {
+                  return (
+                    FileHandler.isSupportedCompilationFileName(
+                      zipFile.name,
+                    )
+                  );
+                },
+              );
+
               processables.forEach(
                 (zipEntry: JSZip.JSZipObject): void => {
                   commit(
@@ -323,12 +328,20 @@ export const actions: ActionTree<State, State> & Actions = {
                         dispatch(
                           ActionTypes.ADD_MEDIA_BLOB,
                           mediaBlob,
-                        ).finally(() => {
-                          commit(
-                            MutationTypes.POP_PROGRESS,
-                            undefined,
-                          );
-                        });
+                        ).
+                          then(() => {
+                            if (!hasCompilation) {
+                              commit(
+                                MutationTypes.ADD_DEFAULT_TRACK, mediaBlob.fileName
+                              )
+                            }
+                          })
+                          .finally(() => {
+                            commit(
+                              MutationTypes.POP_PROGRESS,
+                              undefined,
+                            );
+                          });
                       } else if (
                         FileHandler.isBplistFileName(
                           zipEntryName,
