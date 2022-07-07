@@ -93,6 +93,8 @@ export default defineComponent({
                     'M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z',
                 'menu-down-outline':
                     'M18,9V10.5L12,16.5L6,10.5V9H18M12,13.67L14.67,11H9.33L12,13.67Z',
+                fullscreen:
+                    'M5,5H10V7H7V10H5V5M14,5H19V10H17V7H14V5M17,14H19V19H14V17H17V14M10,17V19H5V14H7V17H10Z',
             };
 
             const icon = (name: string) => ICON_MAP[name] || '';

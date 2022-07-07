@@ -2,7 +2,7 @@
     <DropdownMenu
         ref="dropdownMenu"
         title="App menu"
-        iconName="dots-menu"
+        iconName="fullscreen"
         style="z-index: 3"
     >
         <Hotkey :keys="['ctrl', 'p']" v-slot="{ clickRef }">

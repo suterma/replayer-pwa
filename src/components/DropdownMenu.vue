@@ -54,7 +54,7 @@ export default defineComponent({
         },
         iconName: {
             type: String,
-            default: 'menu-down-outline',
+            default: 'dots-menu',
         },
     },
     data() {
