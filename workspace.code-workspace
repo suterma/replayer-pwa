@@ -9,6 +9,10 @@
         "prettier.tabWidth": 4,
         "editor.formatOnSave": true,
         "editor.detectIndentation": false,
-        "vetur.format.options.tabSize": 4
+        "vetur.format.options.tabSize": 4,
+        "cSpell.words": [
+          "fullwidth",
+          "semibold"
+        ]
     }
 }
