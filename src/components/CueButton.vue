@@ -11,6 +11,9 @@
         :id="'cue-' + cue.Id"
         :title="cueTitle"
     >
+        <!-- Use the full width of the button for the inside content
+        This causes the icon and description to start from the left side, 
+        representing the begin of the cue, which suits the intention -->
         <span class="player-timeline is-fullwidth">
             <!-- Progress -->
             <span
@@ -47,13 +50,13 @@
                     <!-- Right side -->
                     <div class="level-right">
                         <p class="level-item is-hidden-touch mr-3">
-                            <!-- Use a right position for Durations, to keep them as much out of visibilty as possible -->
+                            <!-- Use a right position for Durations, to keep them as much out of visibility as possible -->
                             <span class="has-opacity-half foregrounds">{{
                                 cueDurationDisplayTime
                             }}</span>
                         </p>
                         <p class="level-item" v-if="cue?.Shortcut">
-                            <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibilty as possible -->
+                            <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibility as possible -->
                             <span
                                 class="tag is-warning is-light is-outlined foreground has-opacity-third is-family-monospace"
                                 >{{ cue?.Shortcut }}</span
@@ -67,7 +70,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, StyleValue } from 'vue';
 import { Cue } from '@/store/compilation-types';
 import CompilationHandler from '@/store/compilation-handler';
 import Icon from '@/components/icons/Icon.vue';
@@ -90,7 +93,7 @@ export default defineComponent({
         currentSeconds: Number,
 
         /** Indicates whether the associated Track is currently playing
-         * @remarks This is used to depict the expected acktion on button press. While playing, this is pause, and vice versa.
+         * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
          */
         isTrackPlaying: Boolean,
         /** Whether the button is shown in a minified, single-line, icon only, variant.
@@ -102,6 +105,7 @@ export default defineComponent({
             default: false,
         },
         /** Whether the button has addons at it's right side. This determines progress bar styling.
+         * @remarks This can be used when the button is part of a button group.
          * @remarks The progress bar radius at the right side must be removed for fully progressed cues.
          */
         hasAddonsRight: {
@@ -118,7 +122,7 @@ export default defineComponent({
             }
             return `Play from ${this.cueDisplayTime}`;
         },
-        /** The playback progress within this cue, in [percent], or null if not appliccable */
+        /** The playback progress within this cue, in [percent], or null if not applicable */
         percentComplete(): number {
             if (this.currentSeconds !== undefined) {
                 if (
@@ -149,7 +153,7 @@ export default defineComponent({
         /** Returns the progress as width style, for use as a css style set, dynamically depending on the actual progress in the cue duration
          * @devdoc max-width makes sure, the progress bar never overflows the given space.
          */
-        progressStyle(): Record<string, unknown> {
+        progressStyle(): StyleValue {
             if (this.percentComplete !== null) {
                 if (this.percentComplete >= 0 && this.percentComplete <= 100) {
                     //show the progress according to the percentage available
@@ -169,13 +173,13 @@ export default defineComponent({
             }
         },
         /** Converts the cue's total seconds into a conveniently displayable hh:mm:ss.s format.
-         * @remarks Omits the hour part, if not appliccable
+         * @remarks Omits the hour part, if not applicable
          */
         cueDisplayTime(): string {
             return CompilationHandler.convertToDisplayTime(this.cue.Time);
         },
         /** Converts the cue's duration into a conveniently displayable hh:mm:ss.s format.
-         * @remarks Omits the hour part, if not appliccable
+         * @remarks Omits the hour part, if not applicable
          */
         cueDurationDisplayTime(): string {
             return CompilationHandler.convertToDisplayTime(this.cue.Duration);
@@ -246,7 +250,7 @@ export default defineComponent({
 }
 
 .player-timeline {
-    /** dont use a relative position */
+    /** don't use a relative position */
     position: unset;
 }
 
