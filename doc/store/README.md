@@ -17,4 +17,4 @@ Most components typically do not access the store directly, following the [dumb 
 
 The following picture gives an overview:
 
-![Store overview](/store.svg)
+![Store overview](/doc/store/store.svg)
