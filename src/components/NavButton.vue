@@ -1,12 +1,12 @@
 <template>
     <button class="button is-nav" :title="this.title" tabindex="0">
-        <Icon :name="this.iconName" :class="this.iconClass" />
+        <BaseIcon :name="this.iconName" :class="this.iconClass" />
     </button>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Icon from '@/components/icons/Icon.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 
 /** A button for navigational purposes, featuring an optional icon
  * @remarks This button is intended for non-actional buttons like menu togglers, edit togglers etc.
@@ -15,7 +15,7 @@ import Icon from '@/components/icons/Icon.vue';
  */
 export default defineComponent({
     name: 'NavButton',
-    components: { Icon },
+    components: { BaseIcon },
     props: {
         /** The text for a tooltip */
         title: {

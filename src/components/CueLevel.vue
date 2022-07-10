@@ -84,7 +84,7 @@
                                 title="Adjusts the cue time to the current playback time"
                                 @click="adjustTime()"
                             >
-                                <Icon name="timer-sync-outline" />
+                                <BaseIcon name="timer-sync-outline" />
                                 <span class="is-hidden-touch has-opacity-half"
                                     >Adjust</span
                                 >
@@ -128,7 +128,7 @@
                 <div class="field">
                     <p class="control" title="Trash this cue">
                         <button class="button" @click="deleteCue()">
-                            <Icon name="trash" />
+                            <BaseIcon name="trash" />
                         </button>
                     </p>
                 </div>
@@ -143,7 +143,7 @@ import { Cue } from '@/store/compilation-types';
 import { ActionTypes } from '@/store/action-types';
 import CompilationHandler from '@/store/compilation-handler';
 import CueButton from '@/components/CueButton.vue';
-import Icon from '@/components/icons/Icon.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 
 /** An Editor for for a single cue
  * @remarks Shows a cue button with an inline progress bar, plus input fields for all properties
@@ -155,7 +155,7 @@ import Icon from '@/components/icons/Icon.vue';
  */
 export default defineComponent({
     name: 'CueLevel',
-    components: { CueButton, Icon },
+    components: { CueButton, BaseIcon },
     emits: ['click', 'play'],
     props: {
         cue: {

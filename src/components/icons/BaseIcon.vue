@@ -11,13 +11,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-/** An icon
- * @remarks This component provides a finite set of icons to the replayer app
+/** A basic icon
+ * @remarks This component provides a finite set of icons to the Replayer app
  * @remarks All icons are taken from the material design icon set (see credits in the about page)
- * @devdoc For how to internally provice svg icons, see https://github.com/ismail9k/use-svg
+ * @devdoc For how to internally provide svg icons, see https://github.com/ismail9k/use-svg
  */
 export default defineComponent({
-    name: 'Icon',
+    name: 'BaseIcon',
     props: {
         /** The icon name, according to icons.json */
         name: {

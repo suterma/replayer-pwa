@@ -8,22 +8,22 @@
             @click="togglePlaybackMode()"
             title="click to toggle"
         >
-            <Icon
+            <BaseIcon
                 v-if="this.isPlaybackTrack"
                 name="track-play"
                 title="Play track (click to toggle)"
             />
-            <Icon
+            <BaseIcon
                 v-if="this.isPlaybackLoopTrack"
                 name="track-repeat"
                 title="Loop track (click to toggle)"
             />
-            <Icon
+            <BaseIcon
                 v-if="this.isPlaybackCue"
                 name="track-play-once"
                 title="Play cue (click to toggle)"
             />
-            <Icon
+            <BaseIcon
                 v-if="this.isPlaybackLoopCue"
                 name="track-repeat-once"
                 title="Loop cue (click to toggle)"
@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Icon from '@/components/icons/Icon.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { PlaybackMode } from '@/store/compilation-types';
 import { Hotkey } from '@simolation/vue-hotkey';
 
@@ -42,7 +42,7 @@ import { Hotkey } from '@simolation/vue-hotkey';
  */
 export default defineComponent({
     name: 'PlaybackModeButton',
-    components: { Icon, Hotkey },
+    components: { BaseIcon, Hotkey },
     emits: ['update:modelValue'],
     props: {
         /** The playback mode

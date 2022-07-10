@@ -109,7 +109,7 @@
                             title="Create a cue now (at the current playback time)!"
                         >
                             <span>
-                                <Icon name="plus" />
+                                <BaseIcon name="plus" />
                                 &nbsp;
                                 <span
                                     class="has-text-weight-semibold foreground"
@@ -173,7 +173,7 @@ import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
-import Icon from '@/components/icons/Icon.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -192,7 +192,7 @@ export default defineComponent({
         TrackHeader,
         TrackHeaderEdit,
         LongLine,
-        Icon,
+        BaseIcon,
         Experimental,
     },
     mixins: [settingsMixin],

@@ -26,8 +26,8 @@
                 :style="progressStyle"
             ></span>
             <!-- first line (Do not use a level here, this has only complicated things for smaller widths so far)-->
-            <Icon name="play" v-if="!isTrackPlaying" class="foreground" />
-            <Icon name="skip-next" v-else class="foreground" />
+            <BaseIcon name="play" v-if="!isTrackPlaying" class="foreground" />
+            <BaseIcon name="skip-next" v-else class="foreground" />
 
             <template v-if="!isMinified">
                 &nbsp;
@@ -73,7 +73,7 @@
 import { defineComponent, StyleValue } from 'vue';
 import { Cue } from '@/store/compilation-types';
 import CompilationHandler from '@/store/compilation-handler';
-import Icon from '@/components/icons/Icon.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
@@ -81,7 +81,7 @@ import Icon from '@/components/icons/Icon.vue';
  */
 export default defineComponent({
     name: 'CueButton',
-    components: { Icon },
+    components: { BaseIcon },
     props: {
         cue: {
             type: Cue,

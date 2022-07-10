@@ -130,10 +130,10 @@
         ></iframe>
 
         <h1 class="title has-text-danger">Icons test</h1>
-        <Icon name="track-repeat-once" title="track-repeat-once" />
-        <Icon name="track-repeat" title="track-repeat" />
-        <Icon name="track-play" title="track-play" />
-        <Icon name="track-play-once" title="track-play-once" />
+        <BaseIcon name="track-repeat-once" title="track-repeat-once" />
+        <BaseIcon name="track-repeat" title="track-repeat" />
+        <BaseIcon name="track-play" title="track-play" />
+        <BaseIcon name="track-play-once" title="track-play-once" />
         <NavButton iconName="pencil" title="some test title" />
         <CollapsibleButton
             v-model="isExpanded"
@@ -187,7 +187,7 @@ import { ICompilation } from '@/store/compilation-types';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import ToggleButton from '@/components/ToggleButton.vue';
 import EditableInput from '@/components/EditableInput.vue';
-import Icon from '@/components/icons/Icon.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 import NavButton from '@/components/NavButton.vue';
 import Experimental from '@/components/Experimental.vue';
 import ControlKnob from '@slipmatio/control-knob';
@@ -199,7 +199,7 @@ export default defineComponent({
         CollapsibleButton,
         ToggleButton,
         EditableInput,
-        Icon,
+        BaseIcon,
         NavButton,
         Experimental,
         ControlKnob,

@@ -34,7 +34,7 @@
                     :ref="clickRef"
                     title="Create a cue now (at the current playback time)!"
                 >
-                    <Icon name="plus" />
+                    <BaseIcon name="plus" />
                     <span class="is-hidden-mobile">Create Cue!</span>
                 </button>
             </Hotkey>
@@ -51,8 +51,8 @@
                 @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
             >
-                <Icon v-if="playing" name="pause" />
-                <Icon v-else name="play" />
+                <BaseIcon v-if="playing" name="pause" />
+                <BaseIcon v-else name="play" />
             </button>
         </p>
         <!-- The seek bar -->
@@ -90,7 +90,7 @@
 <script lang="ts">
 import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent, PropType } from 'vue';
-import Icon from '@/components/icons/Icon.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 import PlayerTime from '@/components/PlayerTime.vue';
 import LongLine from '@/components/LongLine.vue';
 import AudioUtil from '@/code/audio/AudioUtil';
@@ -104,7 +104,7 @@ import { PlaybackMode } from '@/store/compilation-types';
 export default defineComponent({
     name: 'CueTrigger',
     components: {
-        Icon,
+        BaseIcon,
         PlayerTime,
         LongLine,
         Hotkey,

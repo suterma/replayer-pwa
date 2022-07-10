@@ -9,9 +9,15 @@
             <span v-if="this.isMobile">{{ currentDisplayTimeShort }}</span>
             <span v-else>{{ currentDisplayTime }}</span>
 
-            <Icon v-if="this.isPlaying && !this.isFading" name="volume-high" />
-            <Icon v-if="this.isPlaying && this.isFading" name="volume-medium" />
-            <Icon v-if="!this.isPlaying" name="empty" />
+            <BaseIcon
+                v-if="this.isPlaying && !this.isFading"
+                name="volume-high"
+            />
+            <BaseIcon
+                v-if="this.isPlaying && this.isFading"
+                name="volume-medium"
+            />
+            <BaseIcon v-if="!this.isPlaying" name="empty" />
         </div>
 
         <div
@@ -29,13 +35,13 @@
 <script lang="ts">
 import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent } from 'vue';
-import Icon from '@/components/icons/Icon.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 
 /** A UI for playback time and duration
  */
 export default defineComponent({
     name: 'PlayerTime',
-    components: { Icon },
+    components: { BaseIcon },
 
     props: {
         isFading: {

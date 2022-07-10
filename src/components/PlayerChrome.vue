@@ -30,7 +30,7 @@
                 @click.prevent="stop"
                 title="Stop"
             >
-                <Icon name="stop" />
+                <BaseIcon name="stop" />
             </button>
         </p>
         <!-- Play/Pause, when STOP is shown (Only available when the track is loaded, and no playback request is outstanding) -->
@@ -45,8 +45,8 @@
                 @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
             >
-                <Icon v-if="playing" name="pause" />
-                <Icon v-else name="play" />
+                <BaseIcon v-if="playing" name="pause" />
+                <BaseIcon v-else name="play" />
             </button>
         </p>
         <!-- Play/Pause, as the outermost element, when STOP is hidden (Only available when the track is loaded, and no playback request is outstanding) -->
@@ -61,8 +61,8 @@
                 @click.prevent="togglePlayback"
                 :title="playing ? 'Pause' : 'Play'"
             >
-                <Icon v-if="playing" name="pause" />
-                <Icon v-else name="play" />
+                <BaseIcon v-if="playing" name="pause" />
+                <BaseIcon v-else name="play" />
             </button>
         </p>
         <!-- The seek bar -->
@@ -91,7 +91,7 @@
                 @click.prevent="download"
                 title="Download"
             >
-                <Icon name="download" />
+                <BaseIcon name="download" />
             </button>
         </p>
         <!-- Mute (do not show on small devices, user still can use the volume) -->
@@ -102,8 +102,8 @@
                 @click.prevent="toggleMuted"
                 title="Mute"
             >
-                <Icon v-if="!muted" name="unmuted" />
-                <Icon v-else name="muted" />
+                <BaseIcon v-if="!muted" name="unmuted" />
+                <BaseIcon v-else name="muted" />
             </button>
         </p>
         <!-- Play mode -->
@@ -133,7 +133,7 @@
 <script lang="ts">
 import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent, PropType } from 'vue';
-import Icon from '@/components/icons/Icon.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 import Knob from '@/components/Knob.vue';
 import PlayerTime from '@/components/PlayerTime.vue';
 import PlaybackModeButton from '@/components/PlaybackModeButton.vue';
@@ -146,7 +146,7 @@ import AudioUtil from '@/code/audio/AudioUtil';
  */
 export default defineComponent({
     name: 'PlayerChrome',
-    components: { Icon, PlayerTime, PlaybackModeButton, LongLine, Knob },
+    components: { BaseIcon, PlayerTime, PlaybackModeButton, LongLine, Knob },
     emits: [
         'stop',
         /** Flags, whether the UI represents the playing (true) or the paused (false) state

@@ -89,7 +89,7 @@ By the click of a button, Replayer starts to play at predefined times in the aud
                             class="navbar-link"
                             title="Switch to experimental view"
                         >
-                            <Icon name="flask-outline"></Icon>
+                            <BaseIcon name="flask-outline" />
                         </a>
 
                         <div class="navbar-dropdown">
@@ -123,12 +123,12 @@ By the click of a button, Replayer starts to play at predefined times in the aud
 import { defineComponent } from 'vue';
 import Experimental from '@/components/Experimental.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
-import Icon from '@/components/icons/Icon.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 
 /** A top navbar for the application*/
 export default defineComponent({
     name: 'NavbarTop',
-    components: { Experimental, Hotkey, Icon },
+    components: { Experimental, Hotkey, BaseIcon },
 
     data() {
         return {

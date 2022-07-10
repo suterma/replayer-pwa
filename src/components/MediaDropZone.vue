@@ -38,11 +38,11 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     :accept="acceptedFiles"
                 />
                 <template v-if="isReplacementMode">
-                    <Icon name="swap-horizontal" />
+                    <BaseIcon name="swap-horizontal" />
                     <span>Click / drop to replace file</span>
                 </template>
                 <template v-else>
-                    <Icon name="plus" />
+                    <BaseIcon name="plus" />
                     <span class="is-hidden-desktop">Load file(s)</span>
                     <span class="is-hidden-touch"
                         >Click / drop to load file(s)</span
@@ -60,7 +60,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     title="Expand media drop zone"
                     @click="expand"
                 >
-                    <Icon name="plus" />
+                    <BaseIcon name="plus" />
                 </button>
             </div>
         </div>
@@ -111,11 +111,11 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                         @click="useMediaUrl"
                     >
                         <template v-if="isReplacementMode">
-                            <Icon name="swap-horizontal" />
+                            <BaseIcon name="swap-horizontal" />
                             <span>Replace</span>
                         </template>
                         <template v-else>
-                            <Icon name="plus" />
+                            <BaseIcon name="plus" />
                             <span>Use</span>
                         </template>
                     </button>
@@ -143,7 +143,7 @@ import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
 import FileHandler from '@/store/filehandler';
-import Icon from '@/components/icons/Icon.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 import Experimental from '@/components/Experimental.vue';
 
 /** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
@@ -153,7 +153,7 @@ import Experimental from '@/components/Experimental.vue';
  */
 export default defineComponent({
     name: 'MediaDropZone',
-    components: { Icon, Experimental },
+    components: { BaseIcon, Experimental },
     props: {
         /** Whether to show the zone in the expanded state */
         isExpanded: {

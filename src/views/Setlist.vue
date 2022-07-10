@@ -9,7 +9,7 @@
                         class="button is-success is-hidden-print is-pulled-right"
                         @click="printWindow()"
                     >
-                        <Icon name="printer-outline" />
+                        <BaseIcon name="printer-outline" />
                         <span> Print (b/w)</span>
                     </button>
                 </div>
@@ -134,7 +134,7 @@
 import { defineComponent } from 'vue';
 import { ICompilation } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
-import Icon from '@/components/icons/Icon.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 import CompilationHandler from '@/store/compilation-handler';
 
 /** A printable display of a complete compilation, with a track and cue listing */
@@ -142,7 +142,7 @@ export default defineComponent({
     name: 'Setlist',
     components: {
         ArtistInfo,
-        Icon,
+        BaseIcon,
     },
     data() {
         return {

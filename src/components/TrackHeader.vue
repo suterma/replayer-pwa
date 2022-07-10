@@ -26,7 +26,7 @@
                 >
                     <p class="control">
                         <span class="button is-nav">
-                            <Icon name="chevron-left" />
+                            <BaseIcon name="chevron-left" />
                         </span>
                     </p>
                 </router-link>
@@ -74,7 +74,7 @@
                 >
                     <p class="control">
                         <span class="button is-nav">
-                            <Icon name="chevron-right" />
+                            <BaseIcon name="chevron-right" />
                         </span>
                     </p>
                 </router-link>
@@ -90,7 +90,7 @@ import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import { ActionTypes } from '@/store/action-types';
-import Icon from '@/components/icons/Icon.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 import LinkableText from './LinkableText.vue';
 
 /** Displays a track header with a title.
@@ -101,7 +101,7 @@ export default defineComponent({
     components: {
         CollapsibleButton,
         PlaybackIndicator,
-        Icon,
+        BaseIcon,
         ArtistInfo,
         LinkableText,
     },
