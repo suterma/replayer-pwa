@@ -1,5 +1,5 @@
 <template>
-    <section class="hero has-border is-together-print is-scaled-50">
+    <section class="hero has-border">
         <div class="hero-body">
             <div class="is-pulled-right">
                 <img
@@ -26,15 +26,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-/** Displays a track's artist info, namely the artist's name and the album the track appears on.
+/** Displays an ad about Replayer
  */
 export default defineComponent({
-    name: 'Ad',
+    name: 'ReplayerAd',
 });
 </script>
-<style lang="css" scoped>
-.is-scaled-50 {
-    transform: scale(0.5) translate(-50%, -50%);
-    width: 200%;
-}
-</style>

@@ -54,17 +54,17 @@ html {
 **************************************************************
 */
 
-/* A variant for a dimmed item (e.g. supporitve/informational text parts)*/
+/* A variant for a dimmed item (e.g. supportive/informational text parts)*/
 .has-opacity-half {
     opacity: 50%;
 }
 
-/* A variant for a slightly dimmed item (e.g. supporitve/informational text parts)*/
+/* A variant for a slightly dimmed item (e.g. supportive/informational text parts)*/
 .has-opacity-quarter {
     opacity: 25%;
 }
 
-/* A variant for a slightly dimmed item (e.g. supporitve/informational text parts)*/
+/* A variant for a slightly dimmed item (e.g. supportive/informational text parts)*/
 .has-opacity-third {
     opacity: 33%;
 }
@@ -176,6 +176,14 @@ but not at the "end/right" container's border */
     white-space: nowrap;
 }
 
+/** Scales down the element to 50% of the size, maintaining the inner component's aspect ratio,
+while also keeping the original with. 
+@remarks This is useful to save (vertical) space while not altering the layout.*/
+.is-scaled-50 {
+    transform: scale(0.5) translate(-50%, -50%);
+    width: 200%;
+}
+
 /** **********************************************************
  * Additional adornments
 **************************************************************
@@ -212,7 +220,7 @@ but not at the "end/right" container's border */
     color: $link-invert;
 }
 
-/* Tables dont have a background */
+/* Tables don't have a background */
 .table {
     background-color: transparent;
 }

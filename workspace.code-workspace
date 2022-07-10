@@ -11,7 +11,10 @@
         "editor.detectIndentation": false,
         "vetur.format.options.tabSize": 4,
         "cSpell.words": [
+          "Bulma",
+          "bulmaswatch",
           "fullwidth",
+          "Overscroll",
           "Replayer",
           "semibold"
         ]

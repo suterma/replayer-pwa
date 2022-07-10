@@ -20,7 +20,8 @@
         <ErrorOverlay />
         <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
     </section>
-    <Ad class="is-print-only" />
+    <!-- The ad is only used for print outputs, to allow a printout recipient to explore the app. -->
+    <ReplayerAd class="is-print-only is-together-print is-scaled-50" />
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
@@ -28,7 +29,7 @@ import NavbarTop from '@/components/NavbarTop.vue';
 import AppContextMenu from '@/components/AppContextMenu.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import Experimental from '@/components/Experimental.vue';
-import Ad from '@/components/Ad.vue';
+import ReplayerAd from '@/components/ReplayerAd.vue';
 import ErrorOverlay from '@/components/ErrorOverlay.vue';
 import { MutationTypes } from './store/mutation-types';
 import { DialogWrapper } from 'vue3-promise-dialog';
@@ -42,7 +43,7 @@ export default defineComponent({
         ErrorOverlay,
         Experimental,
         DialogWrapper,
-        Ad,
+        ReplayerAd,
     },
     beforeMount() {
         //Handle reloads and tab/browser exits
