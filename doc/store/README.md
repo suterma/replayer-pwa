@@ -17,4 +17,4 @@ Most components typically do not access the store directly, following the [dumb 
 
 The following picture gives an overview:
 
-![Visual Functioning Overview](/doc/images/WebAppOnPhoneStand.webp)
+![Store overview](/store.svg)
