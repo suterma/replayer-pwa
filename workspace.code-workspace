@@ -8,15 +8,17 @@
         "prettier.singleQuote": true,
         "prettier.tabWidth": 4,
         "editor.formatOnSave": true,
-        "editor.detectIndentation": false,
+        "editor.detectIndentation": true,
         "vetur.format.options.tabSize": 4,
+        "editor.rulers": [80],
+        "editor.guides.indentation": true,
         "cSpell.words": [
-          "Bulma",
-          "bulmaswatch",
-          "fullwidth",
-          "Overscroll",
-          "Replayer",
-          "semibold"
+            "Bulma",
+            "bulmaswatch",
+            "fullwidth",
+            "Overscroll",
+            "Replayer",
+            "semibold"
         ]
     }
 }
