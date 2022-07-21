@@ -23,7 +23,9 @@ $navbar-breakpoint: 320px;
 @import '_replayer-navbar-styles.scss';
 @import '_replayer-dropdown.scss';
 @import '_replayer-input.scss';
-@import '_replayer-print.scss';
+@import "../node_modules/bulma-print/bulma-print"; //add bulma-print.scss
+@import "../node_modules/bulma-print/sass/experimental/bw.scss"; 
+@import "../node_modules/bulma-print/sass/experimental/outlined.scss"; 
 
 /* Below: Application-specific add-ons/modifications to the Bulma CSS */
 

@@ -2,11 +2,11 @@
     <div class="container">
         <h1 class="title">Set list</h1>
 
-        <div class="box">
+        <div class="box is-hidden-print ">
             <div class="field">
                 <div class="control">
                     <button
-                        class="button is-success is-hidden-print is-pulled-right"
+                        class="button is-success is-pulled-right"
                         @click="printWindow()"
                     >
                         <BaseIcon name="printer-outline" />

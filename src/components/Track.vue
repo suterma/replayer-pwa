@@ -1,5 +1,5 @@
 <template>
-    <div class="track">
+    <div class="track is-together-print">
         <!-- Handle all relevant events here
     Note: A check for the active track is done in the handler methods. 
     A v-if here would work, but would register the events not in a useful order. -->
