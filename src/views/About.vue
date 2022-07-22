@@ -187,6 +187,15 @@
                 </li>
                 <li>
                     <a
+                        href="https://github.com/suterma/bulma-print"
+                        target="_blank"
+                        >bulma-print</a
+                    >, extends the Bulma CSS framework with additional classes
+                    and styles suitable for printing. (Released under the MIT
+                    License, by Marcel Suter)
+                </li>
+                <li>
+                    <a
                         href="https://github.com/joeferner/node-bplist-parser"
                         target="_blank"
                         >bplist-parser</a
