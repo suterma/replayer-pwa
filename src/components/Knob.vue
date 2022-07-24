@@ -3,7 +3,9 @@
         class="is-knob is-unselectable"
         v-model="value"
         :options="knobOptions"
-    />
+    >
+        
+    </ControlKnob>
 </template>
 
 <script lang="ts">
@@ -33,7 +35,6 @@ export default defineComponent({
         knobOptions(): Record<string, unknown> {
             return {
                 imageSize: 40,
-                showValue: false,
                 hideDefaultValue: false,
                 minValue: this.minValue,
                 maxValue: this.maxValue,
