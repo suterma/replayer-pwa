@@ -95,7 +95,7 @@
             </button>
         </p>
         <!-- Mute (do not show on small devices, user still can use the volume) -->
-        <p class="control is-hidden-mobile">
+        <p class="control is-hidden-touch">
             <button
                 class="button"
                 v-show="!showVolume"
