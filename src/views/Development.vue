@@ -141,11 +141,7 @@
             expandedText="Hide all this stuff"
         />
         (Is expanded: {{ isExpanded }})
-        <nav>
-            <ToggleButton v-model="isOn" onText="On" offText="Off" />
-        </nav>
-        (Is on: {{ isOn }})
-
+  
         <h3>Buttons with icons</h3>
         <p>
             Icons are "Inline SVG's from from https://materialdesignicons.com/
@@ -185,7 +181,6 @@
 import { defineComponent } from 'vue';
 import { ICompilation } from '@/store/compilation-types';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
-import ToggleButton from '@/components/ToggleButton.vue';
 import EditableInput from '@/components/EditableInput.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import NavButton from '@/components/NavButton.vue';
@@ -197,7 +192,6 @@ export default defineComponent({
     name: 'Development',
     components: {
         CollapsibleButton,
-        ToggleButton,
         EditableInput,
         BaseIcon,
         NavButton,
