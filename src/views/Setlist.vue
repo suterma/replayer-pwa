@@ -2,7 +2,7 @@
     <div class="container">
         <h1 class="title">Set list</h1>
 
-        <div class="box is-hidden-print ">
+        <div class="box is-hidden-print">
             <div class="field">
                 <div class="control">
                     <button

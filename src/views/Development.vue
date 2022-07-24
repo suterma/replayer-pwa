@@ -141,7 +141,7 @@
             expandedText="Hide all this stuff"
         />
         (Is expanded: {{ isExpanded }})
-  
+
         <h3>Buttons with icons</h3>
         <p>
             Icons are "Inline SVG's from from https://materialdesignicons.com/
