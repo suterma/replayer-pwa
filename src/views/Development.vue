@@ -185,7 +185,8 @@ import EditableInput from '@/components/EditableInput.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import NavButton from '@/components/NavButton.vue';
 import Experimental from '@/components/Experimental.vue';
-import ControlKnob from '@slipmatio/control-knob';
+//import ControlKnob from '@slipmatio/control-knob';
+import ControlKnob from '@/components/control-knob';
 import Knob from '@/components/Knob.vue';
 
 export default defineComponent({
