@@ -4,7 +4,6 @@
         v-model="value"
         :options="knobOptions"
     >
-        
     </ControlKnob>
 </template>
 
@@ -35,6 +34,7 @@ export default defineComponent({
         knobOptions(): Record<string, unknown> {
             return {
                 imageSize: 40,
+                showValue: false,
                 hideDefaultValue: false,
                 minValue: this.minValue,
                 maxValue: this.maxValue,
