@@ -2,8 +2,9 @@
     <Experimental>
         <NavbarTop class="is-hidden-print" />
     </Experimental>
+    <!-- The app menu, on the right, without bottom margin to not alter the layout of content below -->
     <section
-        class="section has-background-none is-hidden-print is-pulled-right"
+        class="section has-background-none is-hidden-print is-pulled-right pb-0"
     >
         <AppContextMenu></AppContextMenu>
     </section>

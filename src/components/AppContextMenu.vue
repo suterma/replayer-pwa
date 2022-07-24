@@ -50,7 +50,7 @@ import { Hotkey } from '@simolation/vue-hotkey';
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
-    name: 'CompilationHeader',
+    name: 'AppContextMenu',
     components: { DropdownMenu, DropdownMenuItem, Experimental, Hotkey },
     methods: {},
 });
