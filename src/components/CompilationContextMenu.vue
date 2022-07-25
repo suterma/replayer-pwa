@@ -8,6 +8,18 @@
             }"
             @click="togglePreventScreenTimeoutNow"
         />
+        <Experimental>
+            <Hotkey :keys="['ctrl', 's']" v-slot="{ clickRef }">
+                <DropdownMenuItem
+                    title="Download... [CTRL+S]"
+                    subTitle="Save as file to the device"
+                    @click="download"
+                    :ref="clickRef"
+                />
+
+                ></Hotkey
+            >
+        </Experimental>
         <div class="dropdown-item" @click="downloadRezPackage">
             Download as
             <span class="has-text-weight-bold">ZIP</span><br />
@@ -41,13 +53,15 @@ import { ActionTypes } from '@/store/action-types';
 import { Compilation } from '@/store/compilation-types';
 import DropdownMenu from '@/components/DropdownMenu.vue';
 import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
-import { confirm } from '@/code/ui/dialogs';
+import { confirm, downloadCompilation } from '@/code/ui/dialogs';
+import Experimental from './Experimental.vue';
+import { Hotkey } from '@simolation/vue-hotkey';
 
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
-    name: 'CompilationHeader',
-    components: { DropdownMenu, DropdownMenuItem },
+    name: 'CompilationContextMenu',
+    components: { DropdownMenu, DropdownMenuItem, Experimental, Hotkey },
     props: {
         compilation: {
             type: Compilation,
@@ -70,6 +84,13 @@ export default defineComponent({
             ).then((ok) => {
                 if (ok) {
                     this.$store.dispatch(ActionTypes.DISCARD_COMPILATION);
+                }
+            });
+        },
+        download() {
+            downloadCompilation(this.compilation).then((ok) => {
+                if (ok) {
+                    console.debug(`CompilationContextMenu::download done`);
                 }
             });
         },
