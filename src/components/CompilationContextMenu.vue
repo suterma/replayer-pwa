@@ -11,7 +11,7 @@
         <Hotkey :keys="['ctrl', 's']" v-slot="{ clickRef }">
             <DropdownMenuItem
                 title="Download... [CTRL+S]"
-                subTitle="Save as file to the device"
+                subTitle="Save compilation to the device"
                 @click="download"
                 :ref="clickRef"
             />
