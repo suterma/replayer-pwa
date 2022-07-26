@@ -23,9 +23,9 @@ $navbar-breakpoint: 320px;
 @import '_replayer-navbar-styles.scss';
 @import '_replayer-dropdown.scss';
 @import '_replayer-input.scss';
-@import "../node_modules/bulma-print/bulma-print"; //add bulma-print.scss
-@import "../node_modules/bulma-print/sass/experimental/bw.scss"; 
-@import "../node_modules/bulma-print/sass/experimental/outlined.scss"; 
+@import '../node_modules/bulma-print/bulma-print'; //add bulma-print.scss
+@import '../node_modules/bulma-print/sass/experimental/bw.scss';
+@import '../node_modules/bulma-print/sass/experimental/outlined.scss';
 
 /* Below: Application-specific add-ons/modifications to the Bulma CSS */
 
@@ -118,8 +118,6 @@ This is useful to fix situations when the outermost child temporarily is hidden 
 [class*=' icon'],
 [class^='icon'] {
     display: inline-block;
-    width: 1em;
-    height: 1em;
     stroke-width: 0;
     stroke: currentColor;
     fill: currentColor;
@@ -160,6 +158,14 @@ but not at the "end/right" container's border */
  * Layout helpers
 **************************************************************
 */
+
+/** Like with columns, 
+* if you want to remove the space to a subsequent item, 
+* add the is-gapless modifier on the level:
+*/
+.level:not(:last-child).is-gapless {
+    margin-bottom: inherit;
+}
 
 /** Adds an overflow-ellipsis 
 * @remarks "overflow" value must be different from "visible", e.g. using is-clipped

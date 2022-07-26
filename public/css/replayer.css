@@ -221,8 +221,7 @@ fieldset[disabled] .file-name, fieldset[disabled] .select select, .select fields
   padding: 0;
 }
 
-/* Bulma Base */
-/*! minireset.css v0.0.6 | MIT License | github.com/jgthms/minireset.css */
+/* Bulma Base */ /*! minireset.css v0.0.6 | MIT License | github.com/jgthms/minireset.css */
 html,
 body,
 p,
@@ -1571,16 +1570,13 @@ a.box:active {
   .button.is-responsive.is-small {
     font-size: 0.6375rem;
   }
-
   .button.is-responsive,
 .button.is-responsive.is-normal {
     font-size: 0.74375rem;
   }
-
   .button.is-responsive.is-medium {
     font-size: 0.85rem;
   }
-
   .button.is-responsive.is-large {
     font-size: 1rem;
   }
@@ -1589,16 +1585,13 @@ a.box:active {
   .button.is-responsive.is-small {
     font-size: 0.74375rem;
   }
-
   .button.is-responsive,
 .button.is-responsive.is-normal {
     font-size: 0.85rem;
   }
-
   .button.is-responsive.is-medium {
     font-size: 1rem;
   }
-
   .button.is-responsive.is-large {
     font-size: 1.25rem;
   }
@@ -5232,17 +5225,14 @@ a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover, a.navbar-i
   .navbar > .container {
     display: block;
   }
-
   .navbar-brand .navbar-item,
 .navbar-tabs .navbar-item {
     align-items: center;
     display: flex;
   }
-
   .navbar-link::after {
     display: none;
   }
-
   .navbar-menu {
     background-color: #3a3f44;
     box-shadow: 0 8px 16px rgba(10, 10, 10, 0.1);
@@ -5251,7 +5241,6 @@ a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover, a.navbar-i
   .navbar-menu.is-active {
     display: block;
   }
-
   .navbar.is-fixed-bottom-touch, .navbar.is-fixed-top-touch {
     left: 0;
     position: fixed;
@@ -5272,7 +5261,6 @@ a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover, a.navbar-i
     max-height: calc(100vh - 4rem);
     overflow: auto;
   }
-
   html.has-navbar-fixed-top-touch,
 body.has-navbar-fixed-top-touch {
     padding-top: 4rem;
@@ -5290,7 +5278,6 @@ body.has-navbar-fixed-bottom-touch {
     align-items: stretch;
     display: flex;
   }
-
   .navbar {
     min-height: 4rem;
   }
@@ -5322,17 +5309,14 @@ body.has-navbar-fixed-bottom-touch {
     background-color: #2e3236;
     color: #fafafa;
   }
-
   .navbar-burger {
     display: none;
   }
-
   .navbar-item,
 .navbar-link {
     align-items: center;
     display: flex;
   }
-
   .navbar-item.has-dropdown {
     align-items: stretch;
   }
@@ -5355,22 +5339,18 @@ body.has-navbar-fixed-bottom-touch {
     pointer-events: auto;
     transform: translateY(0);
   }
-
   .navbar-menu {
     flex-grow: 1;
     flex-shrink: 0;
   }
-
   .navbar-start {
     justify-content: flex-start;
     margin-right: auto;
   }
-
   .navbar-end {
     justify-content: flex-end;
     margin-left: auto;
   }
-
   .navbar-dropdown {
     background-color: #3a3f44;
     border-bottom-left-radius: 6px;
@@ -5416,11 +5396,9 @@ body.has-navbar-fixed-bottom-touch {
     left: auto;
     right: 0;
   }
-
   .navbar-divider {
     display: block;
   }
-
   .navbar > .container .navbar-brand,
 .container > .navbar .navbar-brand {
     margin-left: -0.75rem;
@@ -5429,7 +5407,6 @@ body.has-navbar-fixed-bottom-touch {
 .container > .navbar .navbar-menu {
     margin-right: -0.75rem;
   }
-
   .navbar.is-fixed-bottom-desktop, .navbar.is-fixed-top-desktop {
     left: 0;
     position: fixed;
@@ -5445,7 +5422,6 @@ body.has-navbar-fixed-bottom-touch {
   .navbar.is-fixed-top-desktop {
     top: 0;
   }
-
   html.has-navbar-fixed-top-desktop,
 body.has-navbar-fixed-top-desktop {
     padding-top: 4rem;
@@ -5462,7 +5438,6 @@ body.has-spaced-navbar-fixed-top {
 body.has-spaced-navbar-fixed-bottom {
     padding-bottom: 6rem;
   }
-
   a.navbar-item.is-active,
 .navbar-link.is-active {
     color: #fafafa;
@@ -5471,7 +5446,6 @@ body.has-spaced-navbar-fixed-bottom {
 .navbar-link.is-active:not(:focus):not(:hover) {
     background-color: #2e3236;
   }
-
   .navbar-item.has-dropdown:focus .navbar-link, .navbar-item.has-dropdown:hover .navbar-link, .navbar-item.has-dropdown.is-active .navbar-link {
     background-color: #2e3236;
   }
@@ -5587,13 +5561,11 @@ body.has-spaced-navbar-fixed-bottom {
   .pagination {
     flex-wrap: wrap;
   }
-
   .pagination-previous,
 .pagination-next {
     flex-grow: 1;
     flex-shrink: 1;
   }
-
   .pagination-list li {
     flex-grow: 1;
     flex-shrink: 1;
@@ -5606,7 +5578,6 @@ body.has-spaced-navbar-fixed-bottom {
     justify-content: flex-start;
     order: 1;
   }
-
   .pagination-previous,
 .pagination-next,
 .pagination-link,
@@ -5614,15 +5585,12 @@ body.has-spaced-navbar-fixed-bottom {
     margin-bottom: 0;
     margin-top: 0;
   }
-
   .pagination-previous {
     order: 2;
   }
-
   .pagination-next {
     order: 3;
   }
-
   .pagination {
     justify-content: space-between;
     margin-bottom: 0;
@@ -8827,27 +8795,21 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   .is-size-1-mobile {
     font-size: 3rem !important;
   }
-
   .is-size-2-mobile {
     font-size: 2.5rem !important;
   }
-
   .is-size-3-mobile {
     font-size: 2rem !important;
   }
-
   .is-size-4-mobile {
     font-size: 1.5rem !important;
   }
-
   .is-size-5-mobile {
     font-size: 1.25rem !important;
   }
-
   .is-size-6-mobile {
     font-size: 1rem !important;
   }
-
   .is-size-7-mobile {
     font-size: 0.85rem !important;
   }
@@ -8856,27 +8818,21 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   .is-size-1-tablet {
     font-size: 3rem !important;
   }
-
   .is-size-2-tablet {
     font-size: 2.5rem !important;
   }
-
   .is-size-3-tablet {
     font-size: 2rem !important;
   }
-
   .is-size-4-tablet {
     font-size: 1.5rem !important;
   }
-
   .is-size-5-tablet {
     font-size: 1.25rem !important;
   }
-
   .is-size-6-tablet {
     font-size: 1rem !important;
   }
-
   .is-size-7-tablet {
     font-size: 0.85rem !important;
   }
@@ -8885,27 +8841,21 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   .is-size-1-touch {
     font-size: 3rem !important;
   }
-
   .is-size-2-touch {
     font-size: 2.5rem !important;
   }
-
   .is-size-3-touch {
     font-size: 2rem !important;
   }
-
   .is-size-4-touch {
     font-size: 1.5rem !important;
   }
-
   .is-size-5-touch {
     font-size: 1.25rem !important;
   }
-
   .is-size-6-touch {
     font-size: 1rem !important;
   }
-
   .is-size-7-touch {
     font-size: 0.85rem !important;
   }
@@ -8914,27 +8864,21 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   .is-size-1-desktop {
     font-size: 3rem !important;
   }
-
   .is-size-2-desktop {
     font-size: 2.5rem !important;
   }
-
   .is-size-3-desktop {
     font-size: 2rem !important;
   }
-
   .is-size-4-desktop {
     font-size: 1.5rem !important;
   }
-
   .is-size-5-desktop {
     font-size: 1.25rem !important;
   }
-
   .is-size-6-desktop {
     font-size: 1rem !important;
   }
-
   .is-size-7-desktop {
     font-size: 0.85rem !important;
   }
@@ -8943,27 +8887,21 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   .is-size-1-widescreen {
     font-size: 3rem !important;
   }
-
   .is-size-2-widescreen {
     font-size: 2.5rem !important;
   }
-
   .is-size-3-widescreen {
     font-size: 2rem !important;
   }
-
   .is-size-4-widescreen {
     font-size: 1.5rem !important;
   }
-
   .is-size-5-widescreen {
     font-size: 1.25rem !important;
   }
-
   .is-size-6-widescreen {
     font-size: 1rem !important;
   }
-
   .is-size-7-widescreen {
     font-size: 0.85rem !important;
   }
@@ -8972,27 +8910,21 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   .is-size-1-fullhd {
     font-size: 3rem !important;
   }
-
   .is-size-2-fullhd {
     font-size: 2.5rem !important;
   }
-
   .is-size-3-fullhd {
     font-size: 2rem !important;
   }
-
   .is-size-4-fullhd {
     font-size: 1.5rem !important;
   }
-
   .is-size-5-fullhd {
     font-size: 1.25rem !important;
   }
-
   .is-size-6-fullhd {
     font-size: 1rem !important;
   }
-
   .is-size-7-fullhd {
     font-size: 0.85rem !important;
   }
@@ -11015,22 +10947,18 @@ nav .button:hover {
   .is-hidden-print {
     display: none !important;
   }
-
   /* print out link URLs */
   a:not(.is-not-linked-print)[href]::after {
     content: "(" attr(href) ")";
     padding-left: 0.25rem;
   }
-
   /* Page breaks and break avoidance */
   .has-page-break-after {
     break-after: page;
   }
-
   .has-page-break-before {
     break-before: page;
   }
-
   .is-together-print {
     page-break-inside: avoid;
   }
@@ -11051,7 +10979,6 @@ nav .button:hover {
     /* remove shadows */
     text-shadow: none;
   }
-
   /* hr elements should print black (they do not by default),
   * in contrast to the other elements defined.
   * Note: just setting the background to black does only work in the
@@ -11067,12 +10994,10 @@ nav .button:hover {
 .button {
     border: 1px solid black !important;
   }
-
   /* Optional non-printable elements*/
   .is-hidden-print {
     display: none !important;
   }
-
   /* print out link URLs */
   a:not(.is-not-linked-print)[href]::after,
 a[href].clearfix::after {
@@ -11084,7 +11009,6 @@ a[href].clearfix::after {
     width: fit-content;
     top: unset;
   }
-
   /* Make sure all is black/white, even opacity is removed */
   * {
     background-color: white !important;
@@ -11094,7 +11018,6 @@ a[href].clearfix::after {
     /* remove shadows */
     text-shadow: none;
   }
-
   /* hr elements should print black (they do not by default),
   * in contrast to the other elements defined.
   * Note: just setting the background to black does only work in the
@@ -11103,27 +11026,22 @@ a[href].clearfix::after {
   hr {
     border-top: solid 1px #000 !important;
   }
-
   /* Optional page breaks and break avoidance */
   .has-page-break-after {
     break-after: page;
   }
-
   .has-page-break-before {
     break-before: page;
   }
-
   .is-together-print {
     page-break-inside: avoid;
   }
-
   /* Better use of paper space, padding is done via page margins */
   .section {
     padding-top: 0;
     padding-left: 0;
     padding-right: 0;
   }
-
   @page {
     margin-top: 2cm;
     margin-left: 2cm;
@@ -11210,8 +11128,6 @@ This is useful to fix situations when the outermost child temporarily is hidden 
 [class*=" icon"],
 [class^=icon] {
   display: inline-block;
-  width: 1em;
-  height: 1em;
   stroke-width: 0;
   stroke: currentColor;
   fill: currentColor;
@@ -11252,6 +11168,14 @@ but not at the "end/right" container's border */
  * Layout helpers
 **************************************************************
 */
+/** Like with columns, 
+* if you want to remove the space to a subsequent item, 
+* add the is-gapless modifier on the level:
+*/
+.level:not(:last-child).is-gapless {
+  margin-bottom: inherit;
+}
+
 /** Adds an overflow-ellipsis 
 * @remarks "overflow" value must be different from "visible", e.g. using is-clipped
 */
