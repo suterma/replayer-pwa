@@ -11,7 +11,10 @@
                 title="Switch to play view [CTRL+P]"
                 :ref="clickRef"
             >
-                <DropdownMenuItem title="Play"></DropdownMenuItem>
+                <DropdownMenuItem
+                    title="Play"
+                    iconName="play"
+                ></DropdownMenuItem>
             </router-link>
         </Hotkey>
         <Hotkey :keys="['ctrl', 'e']" v-slot="{ clickRef }">
@@ -20,16 +23,24 @@
                 title="Switch to edit view [CTRL+E]"
                 :ref="clickRef"
             >
-                <DropdownMenuItem title="Edit"> </DropdownMenuItem></router-link
+                <DropdownMenuItem title="Edit" iconName="pencil">
+                </DropdownMenuItem></router-link
         ></Hotkey>
         <router-link to="/setlist" title="Switch to set list view">
-            <DropdownMenuItem title="Set list"></DropdownMenuItem>
+            <DropdownMenuItem
+                title="Set list"
+                iconName="list-box-outline"
+            ></DropdownMenuItem>
         </router-link>
         <router-link to="/settings" title="Switch to settings view">
-            <DropdownMenuItem title="Settings"></DropdownMenuItem>
+            <DropdownMenuItem
+                title="Settings"
+                iconName="cog-outline"
+            ></DropdownMenuItem>
         </router-link>
         <router-link to="/about" title="Switch to about view">
-            <DropdownMenuItem title="About"> </DropdownMenuItem
+            <DropdownMenuItem title="About" iconName="information-outline">
+            </DropdownMenuItem
         ></router-link>
 
         <Experimental>

@@ -7,6 +7,7 @@
                 'is-active': isPreventingScreenTimeoutNow,
             }"
             @click="togglePreventScreenTimeoutNow"
+            iconName="television-ambient-light"
         />
         <Hotkey :keys="['ctrl', 's']" v-slot="{ clickRef }">
             <DropdownMenuItem
@@ -14,7 +15,7 @@
                 subTitle="Save compilation to the device"
                 @click="download"
                 :ref="clickRef"
-                iconName="play"
+                iconName="tray-arrow-down"
             />
         </Hotkey>
         <hr class="dropdown-divider" />
@@ -23,6 +24,7 @@
             title="Close"
             subTitle="(discard the compilation)"
             @click="close"
+            iconName="close-box-outline"
         />
     </DropdownMenu>
 </template>
