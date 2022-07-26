@@ -15,9 +15,7 @@
                 @click="download"
                 :ref="clickRef"
             />
-
-            ></Hotkey
-        >
+        </Hotkey>
         <hr class="dropdown-divider" />
 
         <DropdownMenuItem
