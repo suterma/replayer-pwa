@@ -14,6 +14,7 @@
                 subTitle="Save compilation to the device"
                 @click="download"
                 :ref="clickRef"
+                iconName="play"
             />
         </Hotkey>
         <hr class="dropdown-divider" />

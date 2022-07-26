@@ -1,17 +1,28 @@
 <template>
     <div class="dropdown-item">
-        {{ title }}<br />
+        <div class="level is-mobile is-gapless">
+            <div class="level-left"></div>
+            <div class="level-right">
+                <span class="level-item"> {{ title }} </span>
+
+                <span class="level-item" v-if="iconName">
+                    <BaseIcon :name="iconName" />
+                </span>
+            </div>
+        </div>
+
         <span class="has-opacity-half is-size-7"> {{ subTitle }}</span>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 /** An item for a Dropdown menu
  */
 export default defineComponent({
     name: 'DropdownMenuItem',
-    components: {},
+    components: { BaseIcon },
     props: {
         title: {
             type: String,
@@ -19,6 +30,11 @@ export default defineComponent({
         },
 
         subTitle: {
+            type: String,
+            default: '',
+            required: false,
+        },
+        iconName: {
             type: String,
             default: '',
             required: false,
