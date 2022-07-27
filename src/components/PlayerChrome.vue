@@ -65,6 +65,13 @@
                 <BaseIcon v-else name="play" />
             </button>
         </p>
+        <!-- Play mode -->
+        <p class="control">
+            <PlaybackModeButton
+                :modelValue="playbackMode"
+                @update:modelValue="updatePlaybackMode"
+            />
+        </p>
         <!-- The seek bar -->
         <div class="player-seekbar">
             <div class="player-timeline">
@@ -83,36 +90,7 @@
                 />
             </div>
         </div>
-        <!-- Download (do not show on small devices) -->
-        <p class="control is-hidden-mobile">
-            <button
-                class="button"
-                v-show="!showVolume"
-                @click.prevent="download"
-                title="Download"
-            >
-                <BaseIcon name="download" />
-            </button>
-        </p>
-        <!-- Mute (do not show on small devices, user still can use the volume) -->
-        <p class="control is-hidden-touch">
-            <button
-                class="button"
-                v-show="!showVolume"
-                @click.prevent="toggleMuted"
-                title="Mute"
-            >
-                <BaseIcon v-if="!muted" name="unmuted" />
-                <BaseIcon v-else name="muted" />
-            </button>
-        </p>
-        <!-- Play mode -->
-        <p class="control">
-            <PlaybackModeButton
-                :modelValue="playbackMode"
-                @update:modelValue="updatePlaybackMode"
-            />
-        </p>
+
         <p
             class="control"
             title="Drag, scroll or use the arrow keys to change volume"
@@ -155,10 +133,7 @@ export default defineComponent({
         'update:playbackMode',
         'update:currentSeconds',
         'update:trackVolume',
-        'update:muted',
         'seek',
-        'download',
-        'mute',
         /** Emitted, when this represents the playing state
          * @remarks This is emitted in conjunction with the 'update:playing' event
          */
@@ -210,12 +185,6 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
-        /** Whether the player is currently muted
-         * @remarks Implements a two-way binding */
-        muted: {
-            type: Boolean,
-            default: false,
-        },
         /** Flags, whether a playing request is currently outstanding. This is true after a play request was received, for as long
          * as playback has not yet started.
          * @devdoc See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted for more information
@@ -249,7 +218,6 @@ export default defineComponent({
         },
     },
     data: () => ({
-        showVolume: false,
         trackVolume2: 0.5,
     }),
 
@@ -264,7 +232,7 @@ export default defineComponent({
         },
 
         /** Returns the progress style, dynamically depending on the actual progress in the track
-         * @remarks Calculates the witdh with respect to the progress bar width from the player styles (which is a border)
+         * @remarks Calculates the width with respect to the progress bar width from the player styles (which is a border)
          * max-width makes sure, the progress bar never overflows the given space.
          */
         // eslint-disable-next-line
@@ -276,13 +244,13 @@ export default defineComponent({
         },
 
         /** Converts the current time into a conveniently displayable hh:mm:ss.s format.
-         * @remarks Omits the hour part, if not appliccable
+         * @remarks Omits the hour part, if not applicable
          */
         currentDisplayTime(): string {
             return CompilationHandler.convertToDisplayTime(this.currentSeconds);
         },
         /** Converts the track duration into a conveniently displayable hh:mm:ss.s format.
-         * @remarks Omits the hour part, if not appliccable
+         * @remarks Omits the hour part, if not applicable
          */
         durationDisplayTime(): string {
             return CompilationHandler.convertToDisplayTime(
@@ -315,9 +283,6 @@ export default defineComponent({
         updateTrackVolume(volume: number) {
             this.$emit('update:trackVolume', volume);
         },
-        download() {
-            this.$emit('download');
-        },
         seekByClick(e: MouseEvent) {
             console.debug(`PlayerChrome(${this.title})::seekByClick`, e);
             if (!this.loaded) return;
@@ -344,15 +309,6 @@ export default defineComponent({
             } else {
                 this.$emit('pause');
             }
-        },
-
-        toggleMuted() {
-            const muted = !this.muted;
-            console.debug(
-                `PlayerChrome(${this.title})::toggleMuted:muted:${muted}`,
-            );
-            this.$emit('update:muted', muted);
-            this.$emit('mute', muted);
         },
     },
 });
