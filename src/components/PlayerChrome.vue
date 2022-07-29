@@ -90,7 +90,6 @@
                 />
             </div>
         </div>
-
         <p
             class="control"
             title="Drag, scroll or use the arrow keys to change volume"

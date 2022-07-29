@@ -7,7 +7,7 @@
 import { defineComponent } from 'vue';
 import { settingsMixin } from '@/mixins/settingsMixin';
 
-/** A wrapper around experiemntal content, which is only rendered, when the 'displayExperimentalContent' setting is set to true
+/** A wrapper around experimental content, which is only rendered, when the 'displayExperimentalContent' setting is set to true
  * @devdoc the v-if directive is used, completely omitting experimental content, if not displayed.
  */
 export default defineComponent({
