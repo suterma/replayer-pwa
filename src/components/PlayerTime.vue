@@ -3,21 +3,15 @@
         <div
             :class="{
                 'player-time-current': true,
-                'player-playing-indication': this.isPlaying,
+                'player-playing-indication': isPlaying,
             }"
         >
-            <span v-if="this.isMobile">{{ currentDisplayTimeShort }}</span>
+            <span v-if="isMobile">{{ currentDisplayTimeShort }}</span>
             <span v-else>{{ currentDisplayTime }}</span>
 
-            <BaseIcon
-                v-if="this.isPlaying && !this.isFading"
-                name="volume-high"
-            />
-            <BaseIcon
-                v-if="this.isPlaying && this.isFading"
-                name="volume-medium"
-            />
-            <BaseIcon v-if="!this.isPlaying" name="empty" />
+            <BaseIcon v-if="isPlaying && !isFading" name="volume-high" />
+            <BaseIcon v-if="isPlaying && isFading" name="volume-medium" />
+            <BaseIcon v-if="!isPlaying" name="empty" />
         </div>
 
         <div
@@ -26,7 +20,7 @@
             {{ sourceDescription }}
         </div>
         <div class="player-time-total">
-            <span v-if="this.isMobile">{{ durationDisplayTimeShort }}</span>
+            <span v-if="isMobile">{{ durationDisplayTimeShort }}</span>
             <span v-else>{{ durationDisplayTime }}</span>
         </div>
     </div>
@@ -76,25 +70,25 @@ export default defineComponent({
     },
     computed: {
         /** Converts the current time into a conveniently displayable format.
-         * @remarks Omits the hour part, if not appliccable
+         * @remarks Omits the hour part, if not applicable
          */
         currentDisplayTime(): string {
             return CompilationHandler.convertToDisplayTime(this.position);
         },
         /** Converts the track duration into a conveniently displayable format.
-         * @remarks Omits the hour part, if not appliccable
+         * @remarks Omits the hour part, if not applicable
          */
         durationDisplayTime(): string {
             return CompilationHandler.convertToDisplayTime(this.duration);
         },
         /** Converts the current time into a conveniently displayable format.
-         * @remarks Omits the hour part, if not appliccable
+         * @remarks Omits the hour part, if not applicable
          */
         currentDisplayTimeShort(): string {
             return CompilationHandler.convertToDisplayTime(this.position, 1);
         },
         /** Converts the track duration into a conveniently displayable format.
-         * @remarks Omits the hour part, if not appliccable
+         * @remarks Omits the hour part, if not applicable
          */
         durationDisplayTimeShort(): string {
             return CompilationHandler.convertToDisplayTime(this.duration, 1);

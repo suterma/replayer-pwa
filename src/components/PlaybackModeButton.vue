@@ -9,22 +9,22 @@
             title="click to toggle"
         >
             <BaseIcon
-                v-if="this.isPlaybackTrack"
+                v-if="isPlaybackTrack"
                 name="track-play"
                 title="Play track (click to toggle)"
             />
             <BaseIcon
-                v-if="this.isPlaybackLoopTrack"
+                v-if="isPlaybackLoopTrack"
                 name="track-repeat"
                 title="Loop track (click to toggle)"
             />
             <BaseIcon
-                v-if="this.isPlaybackCue"
+                v-if="isPlaybackCue"
                 name="track-play-once"
                 title="Play cue (click to toggle)"
             />
             <BaseIcon
-                v-if="this.isPlaybackLoopCue"
+                v-if="isPlaybackLoopCue"
                 name="track-repeat-once"
                 title="Loop cue (click to toggle)"
             /></button
