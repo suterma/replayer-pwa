@@ -131,53 +131,55 @@ export default defineComponent({
             required: true,
         },
     },
-    data: () => ({
-        /** The playback progress in the current track, in [seconds] */
-        //TODO later provide the currentSeconds from the track (at least initially), similar to the playback mode
-        //supporting storage and retrieval with the track persistence
-        currentSeconds: 0,
-        /** Gets the duration of the current track, in [seconds]
-         * @remarks This is only available after successful load of the media metadata
-         */
-        durationSeconds: 0,
-        isMuted: false,
-        /** Whether the media data has loaded (at least enough to start playback)
-         * @remarks This implies that metadata also has been loaded already
-         * @devdoc see HAVE_CURRENT_DATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
-         */
-        hasLoadedData: false,
-        /** Whether the media metadata has loaded. Duration is available now.
-         * @devdoc see HAVE_METADATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
-         */
-        hasLoadedMetadata: false,
-        mediaError: null as MediaError | null,
-        /** Whether the audio is currently fading */
-        isFading: false,
-        /** Whether playback is currently ongoing */
-        playing: false,
-        showVolume: false,
-        /** Default value, user may change later */
-        //TODO later provide the volume from the track, similar to the playback mode
-        trackVolume: 0.5,
-        audioElement: document.createElement('audio'),
-        /** Flags, whether a playing request is currently outstanding. This is true after a play request was received, for as long
-         * as playback has not yet started.
-         * @remaks This is not equal to deferred loading with the isClickToLoadRequired flag.
-         * @devdoc See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted for more information
-         */
-        isPlayingRequestOutstanding: false,
+    data() {
+        return {
+            /** The playback progress in the current track, in [seconds] */
+            //TODO later provide the currentSeconds from the track (at least initially), similar to the playback mode
+            //supporting storage and retrieval with the track persistence
+            currentSeconds: 0,
+            /** Gets the duration of the current track, in [seconds]
+             * @remarks This is only available after successful load of the media metadata
+             */
+            durationSeconds: 0,
+            isMuted: false,
+            /** Whether the media data has loaded (at least enough to start playback)
+             * @remarks This implies that metadata also has been loaded already
+             * @devdoc see HAVE_CURRENT_DATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
+             */
+            hasLoadedData: false,
+            /** Whether the media metadata has loaded. Duration is available now.
+             * @devdoc see HAVE_METADATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
+             */
+            hasLoadedMetadata: false,
+            mediaError: null as MediaError | null,
+            /** Whether the audio is currently fading */
+            isFading: false,
+            /** Whether playback is currently ongoing */
+            playing: false,
+            showVolume: false,
+            /** Default value, user may change later */
+            //TODO later provide the volume from the track, similar to the playback mode
+            trackVolume: 0.5,
+            audioElement: document.createElement('audio'),
+            /** Flags, whether a playing request is currently outstanding. This is true after a play request was received, for as long
+             * as playback has not yet started.
+             * @remaks This is not equal to deferred loading with the isClickToLoadRequired flag.
+             * @devdoc See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted for more information
+             */
+            isPlayingRequestOutstanding: false,
 
-        /** Flags, whether deferred loading (until a user play click event is handeled)
-         * is required to further load the track media file data. The flag may be set once after the metadata was successfully loaded.
-         * @remarks When true, handling of a subsequent play action must first invoke a user-triggered load operation.
-         * @remarks This specific handling is currenlty required on (some?) iOS devices,
-         * because they only load data upon explicit user interaction.
-         */
-        isClickToLoadRequired: false,
+            /** Flags, whether deferred loading (until a user play click event is handeled)
+             * is required to further load the track media file data. The flag may be set once after the metadata was successfully loaded.
+             * @remarks When true, handling of a subsequent play action must first invoke a user-triggered load operation.
+             * @remarks This specific handling is currenlty required on (some?) iOS devices,
+             * because they only load data upon explicit user interaction.
+             */
+            isClickToLoadRequired: false,
 
-        /** The fader to use */
-        fader: undefined as unknown as AudioFader,
-    }),
+            /** The fader to use */
+            fader: undefined as unknown as AudioFader,
+        };
+    },
     /** Handles the setup of the audio graph outside the mounted lifespan.
      * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
      */

@@ -200,12 +200,14 @@ export default defineComponent({
         ControlKnob,
         Knob,
     },
-    data: () => ({
-        isExpanded: false,
-        isOn: false,
-        editableInputText: 'some input text',
-        knobValue: 0,
-    }),
+    data() {
+        return {
+            isExpanded: false,
+            isOn: false,
+            editableInputText: 'some input text',
+            knobValue: 0,
+        };
+    },
     methods: {
         writeDebug() {
             console.debug('Just a debug log with an object', { some: 'data' });

@@ -216,10 +216,11 @@ export default defineComponent({
             required: true,
         },
     },
-    data: () => ({
-        trackVolume2: 0.5,
-    }),
-
+    data() {
+        return {
+            trackVolume2: 0.5,
+        };
+    },
     computed: {
         /** Returns a displayable text for the provided error */
         errorText(): string {

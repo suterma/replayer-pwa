@@ -74,8 +74,6 @@ export default defineComponent({
             default: '',
         },
     },
-    data: () => ({}),
-
     computed: {
         /** Converts the current time into a conveniently displayable format.
          * @remarks Omits the hour part, if not appliccable

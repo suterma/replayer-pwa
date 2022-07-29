@@ -46,11 +46,12 @@ export default defineComponent({
             required: true,
         },
     },
-
-    data: () => ({
-        /** Whether the input is in Edit mode */
-        editMode: false,
-    }),
+    data() {
+        return {
+            /** Whether the input is in Edit mode */
+            editMode: false,
+        };
+    },
     methods: {
         toggleEditMode() {
             this.editMode = !this.editMode;

@@ -64,14 +64,15 @@ export default defineComponent({
             default: undefined,
         },
     },
-    data: () => ({
-        /** Whether the input is in Edit mode */
-        editMode: false,
+    data() {
+        return {
+            /** Whether the input is in Edit mode */
+            editMode: false,
 
-        /* The previous input text, to reverse an edit */
-        previousValue: '' as string | undefined,
-    }),
-
+            /* The previous input text, to reverse an edit */
+            previousValue: '' as string | undefined,
+        };
+    },
     computed: {},
     methods: {
         updateValue() {

@@ -264,10 +264,12 @@ export default defineComponent({
     name: 'Settings',
     mixins: [settingsMixin],
     components: { CollapsibleButton },
-    data: () => ({
-        localSettings: undefined as unknown as Settings,
-        isExperimentalExpanded: false,
-    }),
+    data() {
+        return {
+            localSettings: undefined as unknown as Settings,
+            isExperimentalExpanded: false,
+        };
+    },
     created() {
         this.localSettings = this.getSettings;
     },

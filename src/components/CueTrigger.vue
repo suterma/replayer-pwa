@@ -192,7 +192,6 @@ export default defineComponent({
             required: true,
         },
     },
-    data: () => ({}),
 
     computed: {
         /** Returns a displayable text for the provided error */

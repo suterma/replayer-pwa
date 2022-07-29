@@ -183,23 +183,25 @@ export default defineComponent({
     },
     emits: ['update:is-expanded'],
     delimiters: ['${', '}'], // Avoid Twig conflicts
-    data: () => ({
-        /** Store our uploaded files
-         */
-        filelist: new Array<File>(),
-        /** Indicates whether there is currently a dragging operation ongoing */
-        isDraggingOver: false,
+    data() {
+        return {
+            /** Store our uploaded files
+             */
+            filelist: new Array<File>(),
+            /** Indicates whether there is currently a dragging operation ongoing */
+            isDraggingOver: false,
 
-        /** The URL from whitch the media can be fetched from */
-        url: '',
+            /** The URL from whitch the media can be fetched from */
+            url: '',
 
-        /** Whether this component is curretly loading data from an URL */
-        isLoadingFromUrl: false,
-        /** Whether this component is curretly using media data from an URL */
-        isUsingMediaFromUrl: false,
-        /** Whether this component is curretly loading data from a file */
-        isLoadingFromFile: false,
-    }),
+            /** Whether this component is curretly loading data from an URL */
+            isLoadingFromUrl: false,
+            /** Whether this component is curretly using media data from an URL */
+            isUsingMediaFromUrl: false,
+            /** Whether this component is curretly loading data from a file */
+            isLoadingFromFile: false,
+        };
+    },
     methods: {
         openFile() {
             console.debug('MediaDropZone::openFile');

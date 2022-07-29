@@ -19,13 +19,15 @@
             />
         </Hotkey>
         <hr class="dropdown-divider" />
-
-        <DropdownMenuItem
-            title="Close"
-            subTitle="(discard the compilation)"
-            @click="close"
-            iconName="close-box-outline"
-        />
+        <Hotkey :keys="['ctrl', 'x']" v-slot="{ clickRef }">
+            <DropdownMenuItem
+                title="Close [CTRL+X]"
+                subTitle="(discard the compilation)"
+                @click="close"
+                :ref="clickRef"
+                iconName="close-box-outline"
+            />
+        </Hotkey>
     </DropdownMenu>
 </template>
 
