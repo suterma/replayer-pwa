@@ -1,7 +1,7 @@
 <template>
     <template v-if="hasCompilation">
         <!-- Note: Enter (when not terminating a mnemonic, also toggles playback, via "handleKey") -->
-        <!-- Note: "/"" and "*"" are also handeled via "handleKey" -->
+        <!-- Note: "/"" and "*"" are also handled via "handleKey" -->
         <GlobalEvents
             v-if="requireCtrlModifier"
             @keydown.ctrl="handleKey"
@@ -48,17 +48,17 @@ export enum Replayer {
 /** A keyboard handler, which translates specific keyboard events into global
  * Replayer events(at the DOM document level) to handle as
  * - cue actions, for all cues in a compilation
- * - player actions, which get handeled by the currently active player (if any)
- * @remarks Events are only handeled, when a compilation is currently loaded
+ * - player actions, which get handled by the currently active player (if any)
+ * @remarks Events are only handled, when a compilation is currently loaded
  * @remarks The emitted events are those from the @see Replayer enumeration
- * @devdoc The idea is to register for keypresses at the document level,
- * then translate these keypresses into custom Replayer events, and emit them
- * back at the document level. This should only be done (or handeled) if a
+ * @devdoc The idea is to register for key presses at the document level,
+ * then translate these key presses into custom Replayer events, and emit them
+ * back at the document level. This should only be done (or handled) if a
  * compilation is loaded.
  * Using a specific Replayer event handler at the appropriate level, these
- * issued Replayer action events can then be handeled properly in the suitable
+ * issued Replayer action events can then be handled properly in the suitable
  * Vue component. See also https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events
- * @devdoc This keyboard hander is distinct from the general application hotkey
+ * @devdoc This keyboard handler is distinct from the general application hotkey
  * handling, which is implemented separately.
  */
 export default defineComponent({
@@ -85,7 +85,7 @@ export default defineComponent({
             mnemonic: '',
 
             /** A timeout id, to handle timeout extensions for building up the mnemonic
-             * @devdoc This implementation only suppors the browser.
+             * @devdoc This implementation only supports the browser.
              * See https://stackoverflow.com/questions/45802988/typescript-use-correct-version-of-settimeout-node-vs-window
              */
             keyTimeoutId: 0,
@@ -102,7 +102,7 @@ export default defineComponent({
         },
     },
     methods: {
-        /** Generally handle all keydown events, by checking for recognisable events
+        /** Generally handle all keydown events, by checking for recognizable events
          * @remarks Handles "Enter for play/pause", "back to cue" and "keyboard mnemonic" events
          * @remarks Skips repeated events
          * @devdoc Keydown events are used as trigger instead of the non-repetitive keyup events

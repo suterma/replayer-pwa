@@ -64,7 +64,6 @@
 
 <script lang="ts">
 import { defineComponent, StyleValue } from 'vue';
-import CompilationHandler from '@/store/compilation-handler';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 
 /** A button with an inline progress bar

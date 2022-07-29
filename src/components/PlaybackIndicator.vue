@@ -1,12 +1,12 @@
 <template>
-    <p class="control" :title="this.indication">
+    <p class="control" :title="indication">
         <span class="button is-indicator">
             <BaseIcon
                 name="indicator"
                 :class="{
-                    'has-text-success': this.isPlaying,
-                    'has-text-grey-dark': this.isReady,
-                    'is-invisible': this.isUnloaded,
+                    'has-text-success': isPlaying,
+                    'has-text-grey-dark': isReady,
+                    'is-invisible': isUnloaded,
                 }"
             />
         </span>

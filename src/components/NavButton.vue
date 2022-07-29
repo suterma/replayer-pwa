@@ -1,6 +1,6 @@
 <template>
-    <button class="button is-nav" :title="this.title" tabindex="0">
-        <BaseIcon :name="this.iconName" :class="this.iconClass" />
+    <button class="button is-nav" :title="title" tabindex="0">
+        <BaseIcon :name="iconName" :class="iconClass" />
     </button>
 </template>
 
@@ -9,7 +9,7 @@ import { defineComponent } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 
 /** A button for navigational purposes, featuring an optional icon
- * @remarks This button is intended for non-actional buttons like menu togglers, edit togglers etc.
+ * @remarks This button is intended for non-actionable buttons like menu togglers, edit togglers etc.
  * These are buttons that do not effectively change the data, but serve a more navigational purpose.
  * The are styled distinctively, without border and just a slight hover indication.
  */
