@@ -1,7 +1,4 @@
 <template>
-    <Experimental>
-        <NavbarTop class="is-hidden-print" />
-    </Experimental>
     <!-- The app menu, on the right, without bottom margin to not alter the layout of content below -->
     <section
         class="section has-background-none is-hidden-print is-pulled-right pb-0"
@@ -26,7 +23,6 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import NavbarTop from '@/components/NavbarTop.vue';
 import AppContextMenu from '@/components/AppContextMenu.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import Experimental from '@/components/Experimental.vue';
@@ -38,7 +34,6 @@ import { DialogWrapper } from 'vue3-promise-dialog';
 export default defineComponent({
     name: 'App',
     components: {
-        NavbarTop,
         AppContextMenu,
         ProgressOverlay,
         ErrorOverlay,

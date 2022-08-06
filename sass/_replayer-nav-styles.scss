@@ -1,42 +1,10 @@
 @charset "utf-8";
 
 /*************************************************************
- * General navbar stylings
- * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
-**************************************************************
-*/
-
-/* Disable touch callout on menu items */
-a.navbar-item {
-    /*Nonstandard, only expected to work on Safari on iOS*/
-    -webkit-touch-callout: none;
-}
-
-/* No border around the whole navbar, to keep it more visually docked at the viewport */
-.navbar {
-    border: none;
-}
-
-/* Instead of the whole navbar, just use bottom border on the relevant items */
-.navbar-item {
-    border-bottom: 1px solid $dark;
-}
-
-/* Show the active item connected to the view background
-* @remarks Intended to work with the bulmaswatch slate theme */
-.navbar-item.router-link-active,
-.navbar-item.router-link-hover,
-.navbar-item.router-link-active:focus,
-.navbar-item.router-link-active:focus-within {
-    background-color: $body-background-color;
-    border-bottom: none;
-    border-left: 1px solid $dark;
-}
-
-/*************************************************************
  * Specific styles for nav buttons (inside a nav element or with the is-nav class)
  * These nav buttons do not have an immediate function, but rather serve
  * a navigational purpose
+ * Note: These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
  **************************************************************/
 
 /* Navigational buttons generally should have no border (like is-ghost), 

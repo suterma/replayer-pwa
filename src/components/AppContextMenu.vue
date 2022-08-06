@@ -26,6 +26,14 @@
                 <DropdownMenuItem title="Edit" iconName="pencil">
                 </DropdownMenuItem></router-link
         ></Hotkey>
+        <Experimental>
+            <router-link to="/list">
+                <DropdownMenuItem
+                    title="List"
+                    iconName="list-box-outline"
+                ></DropdownMenuItem>
+            </router-link>
+        </Experimental>
         <router-link to="/setlist" title="Switch to set list view">
             <DropdownMenuItem
                 title="Set list"

@@ -64,7 +64,6 @@ export default defineComponent({
     methods: {
         /** Visually scrolls to the given track, making it visually at the top of
          * the view.
-         * @remarks This takes into account whether there is a fixed top navbar
          */
         scrollToTrack(track: ITrack) {
             if (track) {
@@ -72,23 +71,11 @@ export default defineComponent({
                     'track-' + track.Id,
                 );
 
-                /* Try to target the scroll somewhat above the element in question to make it fully visible */
-                let scrollOffset = -88; //empirical value for taking into account the fixed top navbar
-
-                //Check whether there is a fixed top navbar at all
-                const bodyPaddingTop = window
-                    .getComputedStyle(document.body, null)
-                    .getPropertyValue('padding-top');
-                //When no padding, there is no fixed top navbar (which equals to 0px or the empty string)?
-                if (!bodyPaddingTop || bodyPaddingTop.startsWith('0')) {
-                    scrollOffset = -22; //empirical value for taking into account the missing fixed top navbar
-                }
-
                 VueScrollTo.scrollTo(trackElement, {
                     /** Always scroll, make it on top of the view */
                     force: true,
-                    /** Use the calcualted offset */
-                    offset: scrollOffset,
+                    /** empirical value (taking into account the non-existing fixed top navbar) */
+                    offset: -22,
                     /** Avoid interference with the key press overlay */
                     cancelable: false,
                 });

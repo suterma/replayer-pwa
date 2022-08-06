@@ -6,9 +6,6 @@
  * (Must be loaded before bulmaswatch)
 **************************************************************
 */
-/* Controls when the menu is stowed away 
-    * @devdoc Must be applied before the bulma.sass is used, because this is used there */
-$navbar-breakpoint: 320px;
 
 /* stronger shadow, for better visibility with the dark bulma slate theme*/
 $shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 100%), 0 0 0 1px rgb(10 10 10 / 2%);

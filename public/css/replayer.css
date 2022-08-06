@@ -10,8 +10,6 @@
  * (Must be loaded before bulmaswatch)
 **************************************************************
 */
-/* Controls when the menu is stowed away 
-    * @devdoc Must be applied before the bulma.sass is used, because this is used there */
 /* stronger shadow, for better visibility with the dark bulma slate theme*/
 /** Using Bulma CSS with a theme for Bulma */
 /*! bulma.io v0.9.4 | MIT License | github.com/jgthms/bulma */
@@ -4494,7 +4492,7 @@ button.dropdown-item.is-active {
 .navbar.is-white .navbar-burger {
   color: hsl(0deg, 0%, 4%);
 }
-@media screen and (min-width: 320px) {
+@media screen and (min-width: 1024px) {
   .navbar.is-white .navbar-start > .navbar-item,
 .navbar.is-white .navbar-start .navbar-link,
 .navbar.is-white .navbar-end > .navbar-item,
@@ -4550,7 +4548,7 @@ button.dropdown-item.is-active {
 .navbar.is-black .navbar-burger {
   color: hsl(0deg, 0%, 100%);
 }
-@media screen and (min-width: 320px) {
+@media screen and (min-width: 1024px) {
   .navbar.is-black .navbar-start > .navbar-item,
 .navbar.is-black .navbar-start .navbar-link,
 .navbar.is-black .navbar-end > .navbar-item,
@@ -4606,7 +4604,7 @@ button.dropdown-item.is-active {
 .navbar.is-light .navbar-burger {
   color: rgba(0, 0, 0, 0.7);
 }
-@media screen and (min-width: 320px) {
+@media screen and (min-width: 1024px) {
   .navbar.is-light .navbar-start > .navbar-item,
 .navbar.is-light .navbar-start .navbar-link,
 .navbar.is-light .navbar-end > .navbar-item,
@@ -4662,7 +4660,7 @@ button.dropdown-item.is-active {
 .navbar.is-dark .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 320px) {
+@media screen and (min-width: 1024px) {
   .navbar.is-dark .navbar-start > .navbar-item,
 .navbar.is-dark .navbar-start .navbar-link,
 .navbar.is-dark .navbar-end > .navbar-item,
@@ -4718,7 +4716,7 @@ button.dropdown-item.is-active {
 .navbar.is-primary .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 320px) {
+@media screen and (min-width: 1024px) {
   .navbar.is-primary .navbar-start > .navbar-item,
 .navbar.is-primary .navbar-start .navbar-link,
 .navbar.is-primary .navbar-end > .navbar-item,
@@ -4774,7 +4772,7 @@ button.dropdown-item.is-active {
 .navbar.is-link .navbar-burger {
   color: #52575c;
 }
-@media screen and (min-width: 320px) {
+@media screen and (min-width: 1024px) {
   .navbar.is-link .navbar-start > .navbar-item,
 .navbar.is-link .navbar-start .navbar-link,
 .navbar.is-link .navbar-end > .navbar-item,
@@ -4830,7 +4828,7 @@ button.dropdown-item.is-active {
 .navbar.is-info .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 320px) {
+@media screen and (min-width: 1024px) {
   .navbar.is-info .navbar-start > .navbar-item,
 .navbar.is-info .navbar-start .navbar-link,
 .navbar.is-info .navbar-end > .navbar-item,
@@ -4886,7 +4884,7 @@ button.dropdown-item.is-active {
 .navbar.is-success .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 320px) {
+@media screen and (min-width: 1024px) {
   .navbar.is-success .navbar-start > .navbar-item,
 .navbar.is-success .navbar-start .navbar-link,
 .navbar.is-success .navbar-end > .navbar-item,
@@ -4942,7 +4940,7 @@ button.dropdown-item.is-active {
 .navbar.is-warning .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 320px) {
+@media screen and (min-width: 1024px) {
   .navbar.is-warning .navbar-start > .navbar-item,
 .navbar.is-warning .navbar-start .navbar-link,
 .navbar.is-warning .navbar-end > .navbar-item,
@@ -4998,7 +4996,7 @@ button.dropdown-item.is-active {
 .navbar.is-danger .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 320px) {
+@media screen and (min-width: 1024px) {
   .navbar.is-danger .navbar-start > .navbar-item,
 .navbar.is-danger .navbar-start .navbar-link,
 .navbar.is-danger .navbar-end > .navbar-item,
@@ -5229,7 +5227,7 @@ a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover, a.navbar-i
   margin: 0.5rem 0;
 }
 
-@media screen and (max-width: 319px) {
+@media screen and (max-width: 1023px) {
   .navbar > .container {
     display: block;
   }
@@ -5278,7 +5276,7 @@ body.has-navbar-fixed-bottom-touch {
     padding-bottom: 4rem;
   }
 }
-@media screen and (min-width: 320px) {
+@media screen and (min-width: 1024px) {
   .navbar,
 .navbar-menu,
 .navbar-start,
@@ -10732,41 +10730,10 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 
 /*************************************************************
- * General navbar stylings
- * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
-**************************************************************
-*/
-/* Disable touch callout on menu items */
-a.navbar-item {
-  /*Nonstandard, only expected to work on Safari on iOS*/
-  -webkit-touch-callout: none;
-}
-
-/* No border around the whole navbar, to keep it more visually docked at the viewport */
-.navbar {
-  border: none;
-}
-
-/* Instead of the whole navbar, just use bottom border on the relevant items */
-.navbar-item {
-  border-bottom: 1px solid #202328;
-}
-
-/* Show the active item connected to the view background
-* @remarks Intended to work with the bulmaswatch slate theme */
-.navbar-item.router-link-active,
-.navbar-item.router-link-hover,
-.navbar-item.router-link-active:focus,
-.navbar-item.router-link-active:focus-within {
-  background-color: #272b30;
-  border-bottom: none;
-  border-left: 1px solid #202328;
-}
-
-/*************************************************************
  * Specific styles for nav buttons (inside a nav element or with the is-nav class)
  * These nav buttons do not have an immediate function, but rather serve
  * a navigational purpose
+ * Note: These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
  **************************************************************/
 /* Navigational buttons generally should have no border (like is-ghost), 
 * but have a subtle hover background
@@ -11342,11 +11309,7 @@ a[target=_blank]:hover {
 .is-experimental .title,
 .is-experimental .subtitle,
 .is-experimental h1,
-.is-experimental h3,
-.is-experimental .navbar,
-.is-experimental .navbar-item,
-.is-experimental .navbar,
-.is-experimental .navbar-link {
+.is-experimental h3 {
   color: #ee5f5b;
 }
 
@@ -11355,15 +11318,4 @@ a[target=_blank]:hover {
   background-color: rgba(238, 95, 91, 0.14);
   outline: dashed #ee5f5b;
   outline-offset: 0;
-}
-
-/* However, navbar menu entries should not use an outer outline, but show it inside the items, like a border */
-.navbar .is-experimental {
-  outline-offset: -0.3em;
-}
-
-/* Hovered menu item in bright danger, similar to standard hovered items */
-.navbar .is-experimental .navbar-item:hover,
-.navbar .is-experimental .navbar-link:hover {
-  color: #f59e9c;
 }

@@ -17,7 +17,7 @@
 /** Additional changes for specific components within Replayer */
 @import '_replayer-section.scss';
 @import '_replayer-player-styles.scss';
-@import '_replayer-navbar-styles.scss';
+@import '_replayer-nav-styles.scss';
 @import '_replayer-dropdown.scss';
 @import '_replayer-input.scss';
 @import '_replayer-modal.scss';
@@ -271,11 +271,7 @@ a[target='_blank']:hover {
 .is-experimental .title,
 .is-experimental .subtitle,
 .is-experimental h1,
-.is-experimental h3,
-.is-experimental .navbar,
-.is-experimental .navbar-item,
-.is-experimental .navbar,
-.is-experimental .navbar-link {
+.is-experimental h3 {
     color: $danger;
 }
 
@@ -284,15 +280,4 @@ a[target='_blank']:hover {
     background-color: rgba($danger, 0.14);
     outline: dashed $danger;
     outline-offset: 0;
-}
-
-/* However, navbar menu entries should not use an outer outline, but show it inside the items, like a border */
-.navbar .is-experimental {
-    outline-offset: -0.3em;
-}
-
-/* Hovered menu item in bright danger, similar to standard hovered items */
-.navbar .is-experimental .navbar-item:hover,
-.navbar .is-experimental .navbar-link:hover {
-    color: lighten($danger, 14%);
 }
