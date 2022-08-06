@@ -106,12 +106,14 @@
                             title="Move up"
                             subTitle="(to an earlier position)"
                             @click="moveUp()"
+                            iconName="transfer-up"
                         />
                         <DropdownMenuItem
                             v-if="!isLastTrack"
                             title="Move down"
                             subTitle="(to a later position)"
                             @click="moveDown()"
+                            iconName="transfer-down"
                         />
                         <Experimental>
                             <DropdownMenuItem
@@ -125,11 +127,13 @@
                             title="Clone"
                             subTitle="(with cues and media)"
                             @click="cloneTrack()"
+                            iconName="content-duplicate"
                         />
                         <DropdownMenuItem
                             title="Reassign cue shortcuts"
                             subTitle="(first as seed, then incrementing)"
                             @click="reassignCueShortcuts()"
+                            iconName="order-numeric-ascending"
                         />
                         <hr class="dropdown-divider" />
                         <DropdownMenuItem
@@ -137,6 +141,7 @@
                             subTitle="(remove
                             the track from the compilation)"
                             @click="removeTrack()"
+                            iconName="trash"
                         />
                     </DropdownMenu>
 
