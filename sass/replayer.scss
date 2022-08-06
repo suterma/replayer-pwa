@@ -1,12 +1,12 @@
 @charset "utf-8";
 
 /** **********************************************************
- * Application-specific presets to the Bulma CSS 
+ * Application-specific usage of the Bulma CSS 
 **************************************************************
 */
-/* Controls when the menu is stowed away 
-    * @devdoc Must be applied before the bulma.sass is used, because this is used there */
-$navbar-breakpoint: 320px;
+
+/** Presets for the Bulma theme */
+@import '_replayer-variables.scss';
 
 /** Using Bulma CSS with a theme for Bulma */
 @import '../node_modules/bulmaswatch/slate/_variables.scss';
@@ -14,20 +14,18 @@ $navbar-breakpoint: 320px;
 @import '../node_modules/bulma/bulma.sass';
 @import '../node_modules/bulmaswatch/slate/_overrides.scss';
 
-/* Replayer-specific (smaller) section margins */
+/** Additional changes for specific components within Replayer */
 @import '_replayer-section.scss';
-
-/* Player styles (to be used for the audio player) */
 @import '_replayer-player-styles.scss';
-
 @import '_replayer-navbar-styles.scss';
 @import '_replayer-dropdown.scss';
 @import '_replayer-input.scss';
-@import '../node_modules/bulma-print/bulma-print'; //add bulma-print.scss
+@import '_replayer-modal.scss';
+@import '../node_modules/bulma-print/bulma-print';
 @import '../node_modules/bulma-print/sass/experimental/bw.scss';
 @import '../node_modules/bulma-print/sass/experimental/outlined.scss';
 
-/* Below: Application-specific add-ons/modifications to the Bulma CSS */
+/* Below: general application-specific add-ons/modifications to the Bulma CSS */
 
 /*************************************************************
  * Overscroll / scrollbar handling
@@ -261,36 +259,6 @@ a {
 /* External links should use the typical underline on hover */
 a[target='_blank']:hover {
     text-decoration: underline;
-}
-
-/*************************************************************
- * Dropdown menu
-**************************************************************
-*/
-
-/* divider similar to menu border */
-.dropdown-divider {
-    background-color: $border;
-}
-
-/* static menu items are not clickable */
-.dropdown-item.is-static {
-    pointer-events: none;
-}
-
-/* header menu items are shorter */
-.dropdown-item.is-header {
-    padding-top: 0;
-    padding-bottom: 0;
-}
-
-/* Show the active item with to the view background
-* @remarks Intended to work with the bulmaswatch slate theme */
-.router-link-active .dropdown-item,
-.router-link-hover .dropdown-item,
-.router-link-active:focus .dropdown-item,
-.router-link-active:focus-within .dropdown-item {
-    background-color: $body-background-color;
 }
 
 /*************************************************************

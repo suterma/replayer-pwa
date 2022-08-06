@@ -52,3 +52,28 @@
 .dropdown-content {
     text-align: left;
 }
+
+/* divider similar to menu border */
+.dropdown-divider {
+    background-color: $border;
+}
+
+/* static menu items are not clickable */
+.dropdown-item.is-static {
+    pointer-events: none;
+}
+
+/* header menu items are shorter */
+.dropdown-item.is-header {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* Show the active item with to the view background
+* @remarks Intended to work with the bulmaswatch slate theme */
+.router-link-active .dropdown-item,
+.router-link-hover .dropdown-item,
+.router-link-active:focus .dropdown-item,
+.router-link-active:focus-within .dropdown-item {
+    background-color: $body-background-color;
+}

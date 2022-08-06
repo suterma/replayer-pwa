@@ -1,10 +1,18 @@
 @charset "UTF-8";
 /** **********************************************************
- * Application-specific presets to the Bulma CSS 
+ * Application-specific usage of the Bulma CSS 
+**************************************************************
+*/
+/** Presets for the Bulma theme */
+/*************************************************************
+ * Specific overrides for Bulma variables, intend to be used 
+ * together with the "slate" bulmaswatch theme
+ * (Must be loaded before bulmaswatch)
 **************************************************************
 */
 /* Controls when the menu is stowed away 
     * @devdoc Must be applied before the bulma.sass is used, because this is used there */
+/* stronger shadow, for better visibility with the dark bulma slate theme*/
 /** Using Bulma CSS with a theme for Bulma */
 /*! bulma.io v0.9.4 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */
@@ -3952,7 +3960,7 @@ a.tag:hover {
 .dropdown-content {
   background-color: #3a3f44;
   border-radius: 4px;
-  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
+  box-shadow: 0 0.5em 1em -0.125em rgb(10, 10, 10), 0 0 0 1px rgba(10, 10, 10, 0.02);
   padding-bottom: 0.5rem;
   padding-top: 0.5rem;
 }
@@ -5619,7 +5627,7 @@ body.has-spaced-navbar-fixed-bottom {
 }
 .panel {
   border-radius: 6px;
-  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
+  box-shadow: 0 0.5em 1em -0.125em rgb(10, 10, 10), 0 0 0 1px rgba(10, 10, 10, 0.02);
   font-size: 1rem;
 }
 .panel:not(:last-child) {
@@ -10613,9 +10621,10 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   background-color: #272b30;
 }
 
-/* Replayer-specific (smaller) section margins */
+/** Additional changes for specific components within Replayer */
 /*************************************************************
  * Section stylings
+ * Replayer-specific (smaller) section margins
 **************************************************************
 */
 /* Default padding on section (for smaller screens) smaller, and equally small on all sides*/
@@ -10629,7 +10638,6 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
     padding: 0.5rem 0.5rem;
   }
 }
-/* Player styles (to be used for the audio player) */
 /*************************************************************
  * Player styles (to be used for the audio player)
  * These styles are based on the slate bulmaswatch theme and borrow variables from there
@@ -10779,7 +10787,7 @@ nav .button:focus:not(:active) {
   box-shadow: none;
 }
 
-/* Specific handling for focus visility.
+/* Specific handling for focus visibility.
 * Nav-Buttons should in general not show a focus visual,
 * except for keyboard navigation, with the specific modifier, focus-visible
 */
@@ -10881,6 +10889,31 @@ nav .button:hover {
   text-align: left;
 }
 
+/* divider similar to menu border */
+.dropdown-divider {
+  background-color: #52575c;
+}
+
+/* static menu items are not clickable */
+.dropdown-item.is-static {
+  pointer-events: none;
+}
+
+/* header menu items are shorter */
+.dropdown-item.is-header {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Show the active item with to the view background
+* @remarks Intended to work with the bulmaswatch slate theme */
+.router-link-active .dropdown-item,
+.router-link-hover .dropdown-item,
+.router-link-active:focus .dropdown-item,
+.router-link-active:focus-within .dropdown-item {
+  background-color: #272b30;
+}
+
 /*************************************************************
  * Styles for user input
  * These styles are based on the slate bulmaswatch theme and borrow variables from there
@@ -10944,6 +10977,15 @@ nav .button:hover {
 .button.is-warning.is-focused:not(:active),
 .button.is-danger.is-focused:not(:active) {
   box-shadow: 0 0 0 0.125em rgba(250, 250, 250, 0.25);
+}
+
+/*************************************************************
+ * Modal stylings
+ * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
+**************************************************************
+*/
+.modal-card {
+  box-shadow: 0 0.5em 1em -0.125em rgb(10, 10, 10), 0 0 0 1px rgba(10, 10, 10, 0.02);
 }
 
 /**
@@ -11073,7 +11115,7 @@ a[href].clearfix::after {
     display: none !important;
   }
 }
-/* Below: Application-specific add-ons/modifications to the Bulma CSS */
+/* Below: general application-specific add-ons/modifications to the Bulma CSS */
 /*************************************************************
  * Overscroll / scrollbar handling
 **************************************************************
@@ -11289,35 +11331,6 @@ a {
 /* External links should use the typical underline on hover */
 a[target=_blank]:hover {
   text-decoration: underline;
-}
-
-/*************************************************************
- * Dropdown menu
-**************************************************************
-*/
-/* divider similar to menu border */
-.dropdown-divider {
-  background-color: #52575c;
-}
-
-/* static menu items are not clickable */
-.dropdown-item.is-static {
-  pointer-events: none;
-}
-
-/* header menu items are shorter */
-.dropdown-item.is-header {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-/* Show the active item with to the view background
-* @remarks Intended to work with the bulmaswatch slate theme */
-.router-link-active .dropdown-item,
-.router-link-hover .dropdown-item,
-.router-link-active:focus .dropdown-item,
-.router-link-active:focus-within .dropdown-item {
-  background-color: #272b30;
 }
 
 /*************************************************************
