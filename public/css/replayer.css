@@ -10851,6 +10851,14 @@ nav .button:hover {
   color: #202328;
 }
 
+/* Icons are spaced similarly to a button */
+.dropdown-item-icon {
+  padding-bottom: calc(0.5em - 1px);
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: calc(0.5em - 1px);
+}
+
 .dropdown-content {
   border-color: #52575c;
   border-width: 1px;
@@ -11221,6 +11229,10 @@ while also keeping the original with.
 /* A info variant of a border  */
 .has-border-info {
   border: 1px solid hsl(207deg, 61%, 53%);
+}
+
+.is-borderless {
+  border: 0;
 }
 
 /* A transparent background, usable e.g. in a box */

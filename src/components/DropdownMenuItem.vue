@@ -5,7 +5,10 @@
             <div class="level-right">
                 <span class="level-item"> {{ title }} </span>
 
-                <span class="level-item" v-if="iconName">
+                <span
+                    class="dropdown-item-icon level-item is-borderless has-background-transparent"
+                    v-if="iconName"
+                >
                     <BaseIcon :name="iconName" />
                 </span>
             </div>

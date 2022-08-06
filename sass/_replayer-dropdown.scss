@@ -23,6 +23,14 @@
     color: $dark;
 }
 
+/* Icons are spaced similarly to a button */
+.dropdown-item-icon {
+    padding-bottom: calc(0.5em - 1px);
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: calc(0.5em - 1px);
+}
+
 .dropdown-content {
     border-color: $border;
     border-width: 1px;
@@ -33,4 +41,4 @@
 .dropdown-menu {
     /* wider than the 12 rem default*/
     min-width: 15rem;
- }
+}

@@ -213,6 +213,10 @@ while also keeping the original with.
     border: 1px solid $info;
 }
 
+.is-borderless {
+    border: 0;
+}
+
 /* A transparent background, usable e.g. in a box */
 .has-background-transparent {
     background-color: transparent;
