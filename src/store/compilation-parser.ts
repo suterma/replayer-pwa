@@ -98,15 +98,15 @@ export default class CompilationParser {
                 (<any>PlaybackMode)[
                     CompilationParser.FirstStringOf(xmlTrack.PlaybackMode)
                 ],
-                CompilationParser.FirstNumberOf(xmlTrack.TrackVolume),
+                CompilationParser.FirstNumberOf(xmlTrack.Volume),
             );
 
             // Set defaults
             if (!track.PlaybackMode) {
                 track.PlaybackMode = PlaybackMode.PlayTrack;
             }
-            if (!track.TrackVolume) {
-                track.TrackVolume = DefaultTrackVolume;
+            if (!track.Volume) {
+                track.Volume = DefaultTrackVolume;
             }
             tracks.push(track);
         });

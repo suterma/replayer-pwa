@@ -30,8 +30,8 @@
         v-model:currentSeconds="currentSeconds"
         :playbackMode="playbackMode"
         @update:playbackMode="updatePlaybackMode"
-        :trackVolume="trackVolume"
-        @update:trackVolume="updateTrackVolume"
+        :volume="volume"
+        @update:volume="updateVolume"
         :muted="muted"
         @mute="mute"
         @seek="seekToSeconds"
@@ -69,7 +69,7 @@ export default defineComponent({
         'trackPlaying',
         'newCueTriggered',
         'update:playbackMode',
-        'update:trackVolume',
+        'update:volume',
         /* Do not add newCueTriggered here, to let it just get passed up */
     ],
     props: {
@@ -136,7 +136,7 @@ export default defineComponent({
         /** The track volume
          * @remarks Implements a two-way binding
          */
-        trackVolume: {
+        volume: {
             type: Number,
             required: true,
             default: DefaultTrackVolume,
@@ -272,14 +272,14 @@ export default defineComponent({
         };
 
         this.updatePlaybackMode(this.playbackMode);
-        this.updateTrackVolume(this.trackVolume);
+        this.updateVolume(this.volume);
 
         this.fader = new AudioFader(
             this.audioElement,
             this.getSettings.fadeInDuration,
             this.getSettings.fadeOutDuration,
             this.getSettings.applyFadeInOffset,
-            this.trackVolume,
+            this.volume,
         );
 
         //NOTE: Not using CORS, property crossOrigin is not set, not asking for permission
@@ -360,7 +360,7 @@ export default defineComponent({
         /** Set the track volume to a new value
          *  @remarks Limits the minimum level at -90dB Full Scale
          */
-        updateTrackVolume(volume: number): void {
+        updateVolume(volume: number): void {
             //Limit the minimum
             const limitedTrackVolume = Math.max(
                 volume,
@@ -370,8 +370,8 @@ export default defineComponent({
             if (this.fader) {
                 this.fader.setMasterAudioVolume(limitedTrackVolume);
             }
-            if (this.trackVolume !== limitedTrackVolume) {
-                this.$emit('update:trackVolume', limitedTrackVolume); //loop back the corrected value
+            if (this.volume !== limitedTrackVolume) {
+                this.$emit('update:volume', limitedTrackVolume); //loop back the corrected value
             }
         },
 
@@ -543,19 +543,19 @@ export default defineComponent({
          * @remarks Applies some limitation on the upper and lower end of the range
          */
         volumeDown() {
-            this.debugLog(`volumeDown`, this.trackVolume);
-            this.updateTrackVolume(
-                Math.max(this.trackVolume * 0.71, AudioFader.audioVolumeMin),
+            this.debugLog(`volumeDown`, this.volume);
+            this.updateVolume(
+                Math.max(this.volume * 0.71, AudioFader.audioVolumeMin),
             );
         },
         /**Increases the track audio volume level
          * @remarks Applies some limitation on the upper and lower end of the range
          */
         volumeUp() {
-            this.debugLog(`volumeUp`, this.trackVolume);
-            this.updateTrackVolume(
+            this.debugLog(`volumeUp`, this.volume);
+            this.updateVolume(
                 Math.max(
-                    Math.min(this.trackVolume * 1.41, 1),
+                    Math.min(this.volume * 1.41, 1),
                     AudioFader.audioVolumeMin,
                 ),
             );

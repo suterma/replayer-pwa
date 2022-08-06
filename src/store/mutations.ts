@@ -72,7 +72,7 @@ export type Mutations<S = State> = {
         state: State,
         payload: {
             trackId: string;
-            trackVolume: number;
+            volume: number;
         },
     ): void;
     [MutationTypes.UPDATE_TRACK_URL](
@@ -465,7 +465,7 @@ export const mutations: MutationTree<State> & Mutations = {
         state: State,
         payload: {
             trackId: string;
-            trackVolume: number;
+            volume: number;
         },
     ): void {
         const track = CompilationHandler.getTrackById(
@@ -473,7 +473,7 @@ export const mutations: MutationTree<State> & Mutations = {
             payload.trackId,
         );
         if (track) {
-            track.TrackVolume = payload.trackVolume;
+            track.Volume = payload.volume;
         }
     },
     [MutationTypes.UPDATE_TRACK_URL](

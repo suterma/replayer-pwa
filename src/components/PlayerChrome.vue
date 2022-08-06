@@ -96,8 +96,8 @@
         >
             <Knob
                 class="button"
-                :modelValue="trackVolume"
-                @update:modelValue="updateTrackVolume"
+                :modelValue="volume"
+                @update:modelValue="updateVolume"
                 :minValue="0"
                 :maxValue="1"
                 valueClass="has-text-light"
@@ -131,7 +131,7 @@ export default defineComponent({
         'update:playing',
         'update:playbackMode',
         'update:currentSeconds',
-        'update:trackVolume',
+        'update:volume',
         'seek',
         /** Emitted, when this represents the playing state
          * @remarks This is emitted in conjunction with the 'update:playing' event
@@ -174,7 +174,7 @@ export default defineComponent({
         },
         /** The volume in the range [0..1]
          * @remarks Implements a two-way binding */
-        trackVolume: {
+        volume: {
             type: Number,
             default: DefaultTrackVolume,
         },
@@ -256,7 +256,7 @@ export default defineComponent({
             );
         },
         volumeTitle(): string {
-            return `Volume (${this.trackVolume * 100}%)`;
+            return `Volume (${this.volume * 100}%)`;
         },
 
         isPlaybackTrack(): boolean {
@@ -278,8 +278,8 @@ export default defineComponent({
             this.$emit('update:playbackMode', playbackMode);
         },
         /** Updates the track volume to a new value */
-        updateTrackVolume(volume: number) {
-            this.$emit('update:trackVolume', volume);
+        updateVolume(volume: number) {
+            this.$emit('update:volume', volume);
         },
         seekByClick(e: MouseEvent) {
             console.debug(`PlayerChrome(${this.title})::seekByClick`, e);

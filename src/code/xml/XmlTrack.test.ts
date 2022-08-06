@@ -29,7 +29,7 @@ describe('the XML mapping', function () {
         expect(target.Name).toBe(track.Name);
         expect(target.Url).toBe(track.Url);
         expect(target.PlaybackMode).toBe(track.PlaybackMode);
-        expect(target.TrackVolume).toBe(track.TrackVolume);
+        expect(target.Volume).toBe(track.Volume);
         //HINT: Duration is not serialized
     });
 });
