@@ -1,20 +1,26 @@
 <template>
     <div class="dropdown-item">
-        <div class="level is-mobile is-gapless">
-            <div class="level-left"></div>
+        <div class="level is-mobile">
+            <div class="level-left">
+                <div class="level-item">
+                    <div>
+                        <span class="">{{ title }}</span>
+                        <br />
+                        <span class="has-opacity-half is-size-7">{{
+                            subTitle
+                        }}</span>
+                    </div>
+                </div>
+            </div>
             <div class="level-right">
-                <span class="level-item"> {{ title }} </span>
-
-                <span
-                    class="dropdown-item-icon level-item is-borderless has-background-transparent"
+                <div
+                    class="level-item dropdown-item-icon is-borderless has-background-transparent"
                     v-if="iconName"
                 >
                     <BaseIcon :name="iconName" />
-                </span>
+                </div>
             </div>
         </div>
-
-        <span class="has-opacity-half is-size-7"> {{ subTitle }}</span>
     </div>
 </template>
 

@@ -6,6 +6,17 @@
 **************************************************************
 */
 
+/* Dropdown menu should encompass max menu item content by default */
+.dropdown-menu {
+    width: max-content;
+}
+
+/* The menus should not be very narrow to have fewer word-breaking for longer entries*/
+.dropdown-menu {
+    /* wider than the 12 rem default*/
+    min-width: 15rem;
+}
+
 /* Dropdown item with better suited contrast for a dark theme */
 .dropdown-item {
     color: $white-bis;
@@ -37,8 +48,7 @@
     border-style: solid;
 }
 
-/* The menus should not be very narrow to have fewer word-breaking for longer entries*/
-.dropdown-menu {
-    /* wider than the 12 rem default*/
-    min-width: 15rem;
+/* The alignment should be left always (No LTR support) */
+.dropdown-content {
+    text-align: left;
 }
