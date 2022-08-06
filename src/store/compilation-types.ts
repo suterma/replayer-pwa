@@ -67,6 +67,11 @@ export interface ITrack {
      */
     PlaybackMode: PlaybackMode;
 
+    /** The playback volume for this track.
+     * @remarks This can be set by the user, and is persisted.
+     */
+    TrackVolume: number;
+
     /** The extracted duration of the loaded media file for this track.
      * @remarks This is only defined if there is a loaded media file for this track.
      * @devdoc This must get calculated/reset if the track is loaded/unloaded. It must never get persisted.
@@ -144,7 +149,7 @@ export class Compilation implements ICompilation {
     }
 
     /** Parses the JSON and returns new instance of this class.
-     * @remparks Instead of creating an unprototyped object with JSON.parse, this creates a new object of this type
+     * @remarks Instead of creating an unprototyped object with JSON.parse, this creates a new object of this type
      * @param jsonCompilation - a JSON representation of a Compilation
      * @devdoc See https://stackoverflow.com/a/5874189/79485
      */
@@ -174,6 +179,7 @@ export class Compilation implements ICompilation {
                     }),
                     track.Duration,
                     track.PlaybackMode ?? PlaybackMode.PlayTrack /** default */,
+                    track.TrackVolume ?? DefaultTrackVolume,
                 );
             }),
         );
@@ -186,6 +192,9 @@ export class Compilation implements ICompilation {
         return new Compilation('', '', '', uuidv4(), new Array<ITrack>());
     }
 }
+
+/** The default track volume */
+export const DefaultTrackVolume = 0.5;
 
 /** Implements a Replayer track
  *  @inheritdoc */
@@ -201,6 +210,7 @@ export class Track implements ITrack {
     Duration: number | null = null;
     /**   @inheritdoc */
     PlaybackMode: PlaybackMode;
+    TrackVolume: number;
 
     /** Creates a new track
      * @param name {string} - The name for the track.
@@ -208,7 +218,8 @@ export class Track implements ITrack {
      * @param artist {string} - The artist name, if any.
      * @param url {string} - The online URL (starting with http(s)) or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
      * @param duration {number | null} - Duration of the media associated with the track. This is not persisted, but set to a specific value once after a matching track has been loaded.
-     * @param playbackMode {playbackMode} - Plaback mode. This is persisted in the application state for user convenience.
+     * @param playbackMode {playbackMode} - Playback mode. This is persisted in the application state for user convenience.
+     * @param trackVolume {trackVolume} - Track volume. This is persisted in the application state for user convenience.
      */
     constructor(
         name: string,
@@ -220,6 +231,7 @@ export class Track implements ITrack {
         cues: Array<ICue>,
         duration: number | null,
         playbackMode: PlaybackMode,
+        trackVolume: number,
     ) {
         this.Name = name;
         this.Album = album;
@@ -230,10 +242,11 @@ export class Track implements ITrack {
         this.Cues = cues;
         this.Duration = duration;
         this.PlaybackMode = playbackMode;
+        this.TrackVolume = trackVolume;
     }
 
     /** Parses the JSON and returns new instance of this class.
-     * @remparks Instead of creating an unprototyped object with JSON.parse, this creates a new object of this type
+     * @remarks Instead of creating an unprototyped object with JSON.parse, this creates a new object of this type
      * @param jsonTrack - a JSON representation of a Track
      * @devdoc See https://stackoverflow.com/a/5874189/79485
      */
@@ -249,6 +262,7 @@ export class Track implements ITrack {
             obj.Cues,
             null,
             obj.PlaybackMode ?? PlaybackMode.PlayTrack /** as a default */,
+            obj.TrackVolume ?? DefaultTrackVolume,
         );
         console.debug('Track::fromJson:'), track;
         return track;

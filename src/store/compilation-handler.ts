@@ -1,5 +1,6 @@
 import {
     Cue,
+    DefaultTrackVolume,
     ICompilation,
     ICue,
     ITrack,
@@ -60,7 +61,8 @@ export default class CompilationHandler {
             trackId,
             new Array<ICue>(),
             null,
-            PlaybackMode.PlayTrack /** default */,
+            PlaybackMode.PlayTrack /** default mode */,
+            DefaultTrackVolume,
         );
         return newTrack;
     }

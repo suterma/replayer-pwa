@@ -1,6 +1,7 @@
 import {
     Compilation,
     Cue,
+    DefaultTrackVolume,
     ICompilation,
     ICue,
     ITrack,
@@ -97,9 +98,15 @@ export default class CompilationParser {
                 (<any>PlaybackMode)[
                     CompilationParser.FirstStringOf(xmlTrack.PlaybackMode)
                 ],
+                CompilationParser.FirstNumberOf(xmlTrack.TrackVolume),
             );
+
+            // Set defaults
             if (!track.PlaybackMode) {
-                track.PlaybackMode = PlaybackMode.PlayTrack; /** as a default */
+                track.PlaybackMode = PlaybackMode.PlayTrack;
+            }
+            if (!track.TrackVolume) {
+                track.TrackVolume = DefaultTrackVolume;
             }
             tracks.push(track);
         });
@@ -126,6 +133,7 @@ export default class CompilationParser {
                     CompilationParser.parseFromPlistCues(plistTrack.Markers),
                     null,
                     PlaybackMode.PlayTrack /** as a default */,
+                    DefaultTrackVolume,
                 );
                 tracks.push(track);
             }
@@ -260,6 +268,7 @@ export default class CompilationParser {
                 cues,
                 null,
                 PlaybackMode.PlayTrack /** as a default */,
+                DefaultTrackVolume,
             );
             return newTrack;
         } else {

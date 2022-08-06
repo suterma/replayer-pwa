@@ -15,6 +15,7 @@ export class XmlTrack {
         this.Measure = track.Measure;
         this.Url = track.Url;
         this.PlaybackMode = track.PlaybackMode;
+        this.TrackVolume = track.TrackVolume;
         this.Cues = new XmlCues(track.Cues);
     }
 
@@ -25,5 +26,6 @@ export class XmlTrack {
     Measure: number | null;
     Url: string;
     PlaybackMode: PlaybackMode;
+    TrackVolume: number;
     Cues: XmlCues;
 }

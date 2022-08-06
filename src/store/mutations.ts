@@ -68,6 +68,13 @@ export type Mutations<S = State> = {
             playbackMode: PlaybackMode;
         },
     ): void;
+    [MutationTypes.UPDATE_TRACK_VOLUME](
+        state: State,
+        payload: {
+            trackId: string;
+            trackVolume: number;
+        },
+    ): void;
     [MutationTypes.UPDATE_TRACK_URL](
         state: State,
         payload: { trackId: string; url: string },
@@ -452,6 +459,21 @@ export const mutations: MutationTree<State> & Mutations = {
         );
         if (track) {
             track.PlaybackMode = payload.playbackMode;
+        }
+    },
+    [MutationTypes.UPDATE_TRACK_VOLUME](
+        state: State,
+        payload: {
+            trackId: string;
+            trackVolume: number;
+        },
+    ): void {
+        const track = CompilationHandler.getTrackById(
+            state.compilation,
+            payload.trackId,
+        );
+        if (track) {
+            track.TrackVolume = payload.trackVolume;
         }
     },
     [MutationTypes.UPDATE_TRACK_URL](

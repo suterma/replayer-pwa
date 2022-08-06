@@ -37,7 +37,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { PlaybackMode } from '@/store/compilation-types';
 import { Hotkey } from '@simolation/vue-hotkey';
 
-/** A UI representation for a media player
+/** A toggle switch for the playback mode
  * @remarks Handles and emits various states and event for playback control.
  */
 export default defineComponent({

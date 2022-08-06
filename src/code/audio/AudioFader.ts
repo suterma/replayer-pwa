@@ -25,7 +25,7 @@ export default class AudioFader {
     operationToken = '';
 
     /** @constructor
-     * @param {HTMLAudioElement} audio - The audio elenent to act upon
+     * @param {HTMLAudioElement} audio - The audio element to act upon
      * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
      * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
      * @param {boolean} applyFadeInOffset - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
@@ -40,7 +40,7 @@ export default class AudioFader {
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         applyFadeInOffset: boolean = true,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        masterVolume: number = 0.5,
+        masterVolume: number = 1,
     ) {
         this.audio = audio;
         this.fadeInDuration = fadeInDuration;
@@ -90,7 +90,7 @@ export default class AudioFader {
     applyFadeInOffset = true;
 
     /** The master volume level */
-    masterVolume = 0.5;
+    masterVolume = 1;
 
     /** The minimum audio volume level
      * @remarks  -90dbFS Amplitude

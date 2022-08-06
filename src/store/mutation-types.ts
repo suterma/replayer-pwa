@@ -15,11 +15,11 @@ export enum MutationTypes {
      */
     ADD_MEDIA_URL = 'ADD_MEDIA_URL',
     /** Adds a new default track for the given file name or media URL to the compilation.
-     * @remarks No media URL is added, it must get handeled elsewhere.
+     * @remarks No media URL is added, it must get handled elsewhere.
      */
     ADD_DEFAULT_TRACK = 'ADD_DEFAULT_TRACK',
     /** Adds a new track for the given media URL to the compilation.
-     * @remarks No media URL is added, it must get handeled elsewhere.
+     * @remarks No media URL is added, it must get handled elsewhere.
      * @remarks If no cue is provided, this also adds a first cue for this track. The first cue is used as the selected cue.
      */
     ADD_TRACK = 'ADD_TRACK',
@@ -89,27 +89,32 @@ export enum MutationTypes {
     UPDATE_SETTINGS = 'UPDATE_SETTINGS',
 
     /** Updates the compilation title
-     * @remarks Also updates the persitent store of the compilation
+     * @remarks Also updates the persistent store of the compilation
      */
     UPDATE_COMPILATION_TITLE = 'UPDATE_COMPILATION_TITLE',
 
     /** Updates the track data
-     * @remarks Also updates the persitent store of the compilation
+     * @remarks Also updates the persistent store of the compilation
      */
     UPDATE_TRACK_DATA = 'UPDATE_TRACK_DATA',
 
     /** Updates the track playback mode
-     * @remarks Also updates the persitent store of the compilation
+     * @remarks Also updates the persistent store of the compilation
      */
     UPDATE_TRACK_PLAYBACK_MODE = 'UPDATE_TRACK_PLAYBACK_MODE',
 
+    /** Updates the track volume mode
+     * @remarks Also updates the persistent store of the compilation
+     */
+    UPDATE_TRACK_VOLUME = 'UPDATE_TRACK_VOLUME',
+
     /** Specifically updates the track media source URL
-     * @remarks Also updates the persitent store of the compilation
+     * @remarks Also updates the persistent store of the compilation
      */
     UPDATE_TRACK_URL = 'UPDATE_TRACK_URL',
 
     /** Updates the cue data
-     * @remarks Also updates the persitent store of the compilation
+     * @remarks Also updates the persistent store of the compilation
      */
     UPDATE_CUE_DATA = 'UPDATE_CUE_DATA',
 }

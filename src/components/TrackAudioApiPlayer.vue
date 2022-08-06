@@ -28,9 +28,10 @@
         @play="play"
         :isPlayingRequestOutstanding="isPlayingRequestOutstanding"
         v-model:currentSeconds="currentSeconds"
-        v-model:trackVolume="trackVolume"
         :playbackMode="playbackMode"
         @update:playbackMode="updatePlaybackMode"
+        :trackVolume="trackVolume"
+        @update:trackVolume="updateTrackVolume"
         :muted="muted"
         @mute="mute"
         @seek="seekToSeconds"
@@ -48,7 +49,7 @@ import PlayerChrome from '@/components/PlayerChrome.vue';
 import CueTrigger from '@/components/CueTrigger.vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { settingsMixin } from '@/mixins/settingsMixin';
-import { PlaybackMode } from '@/store/compilation-types';
+import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 
 /** A simple vue audio player, for a single track, using the Web Audio API.
  * @devdoc Internally maintains it's state, updating the enclosed audio element accordingly.
@@ -68,6 +69,7 @@ export default defineComponent({
         'trackPlaying',
         'newCueTriggered',
         'update:playbackMode',
+        'update:trackVolume',
         /* Do not add newCueTriggered here, to let it just get passed up */
     ],
     props: {
@@ -130,6 +132,15 @@ export default defineComponent({
             type: String as () => PlaybackMode,
             required: true,
         },
+
+        /** The track volume
+         * @remarks Implements a two-way binding
+         */
+        trackVolume: {
+            type: Number,
+            required: true,
+            default: DefaultTrackVolume,
+        },
     },
     data() {
         return {
@@ -157,13 +168,10 @@ export default defineComponent({
             /** Whether playback is currently ongoing */
             playing: false,
             showVolume: false,
-            /** Default value, user may change later */
-            //TODO later provide the volume from the track, similar to the playback mode
-            trackVolume: 0.5,
             audioElement: document.createElement('audio'),
             /** Flags, whether a playing request is currently outstanding. This is true after a play request was received, for as long
              * as playback has not yet started.
-             * @remaks This is not equal to deferred loading with the isClickToLoadRequired flag.
+             * @remarks This is not equal to deferred loading with the isClickToLoadRequired flag.
              * @devdoc See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted for more information
              */
             isPlayingRequestOutstanding: false,
@@ -263,8 +271,8 @@ export default defineComponent({
                 });
         };
 
-        //Initialize with the current playback mode
         this.updatePlaybackMode(this.playbackMode);
+        this.updateTrackVolume(this.trackVolume);
 
         this.fader = new AudioFader(
             this.audioElement,
@@ -278,7 +286,7 @@ export default defineComponent({
 
         this.audioElement.loop = false; //according to the above default playbackMode
 
-        //Last, update the souce, if already available
+        //Last, update the source, if already available
         this.audioElement.preload = 'auto';
         //this.audioElement.preload = 'metadata';
         this.updateMediaSource(this.mediaUrl);
@@ -331,21 +339,6 @@ export default defineComponent({
                 );
             }
         },
-        /** Watch whether the volume changed, and then update the audio element accordingly
-         * @remars Limits the minimum level at -90dB Full Scale
-         */
-        trackVolume(trackVolume: number): void {
-            //Limit the minimum
-            const limitedTrackVolume = Math.max(
-                trackVolume,
-                AudioFader.audioVolumeMin,
-            );
-            this.debugLog(`limitedTrackVolume:${limitedTrackVolume}`);
-            this.fader.setMasterAudioVolume(limitedTrackVolume);
-            if (this.trackVolume !== limitedTrackVolume) {
-                this.trackVolume = limitedTrackVolume; //loop back the corrected value
-            }
-        },
 
         /** Watch whether the media URL property changed, and then update the audio element accordingly  */
         mediaUrl(): void {
@@ -358,10 +351,28 @@ export default defineComponent({
         /** Set the playback mode to a new value */
         updatePlaybackMode(playbackMode: PlaybackMode): void {
             //HINT: For the cue loop, a dedicated looping implementation is required,
-            //because automatic looping is not supported with the used HTMLAudioEleemnt.
+            //because automatic looping is not supported with the used HTMLAudioElement.
             //This is solved in this component by observing the recurring time updates.
             this.audioElement.loop = playbackMode === PlaybackMode.LoopTrack;
             this.$emit('update:playbackMode', playbackMode);
+        },
+
+        /** Set the track volume to a new value
+         *  @remarks Limits the minimum level at -90dB Full Scale
+         */
+        updateTrackVolume(volume: number): void {
+            //Limit the minimum
+            const limitedTrackVolume = Math.max(
+                volume,
+                AudioFader.audioVolumeMin,
+            );
+            this.debugLog(`limitedTrackVolume:${limitedTrackVolume}`);
+            if (this.fader) {
+                this.fader.setMasterAudioVolume(limitedTrackVolume);
+            }
+            if (this.trackVolume !== limitedTrackVolume) {
+                this.$emit('update:trackVolume', limitedTrackVolume); //loop back the corrected value
+            }
         },
 
         /** Writes a debug log message message for this component */
@@ -528,25 +539,26 @@ export default defineComponent({
             const time = this.audioElement.currentTime;
             this.audioElement.currentTime = time + 1;
         },
-        /**Dereases the track audio volume level
+        /**Decreases the track audio volume level
          * @remarks Applies some limitation on the upper and lower end of the range
          */
         volumeDown() {
-            this.trackVolume = Math.max(
-                this.trackVolume * 0.71,
-                AudioFader.audioVolumeMin,
-            );
             this.debugLog(`volumeDown`, this.trackVolume);
+            this.updateTrackVolume(
+                Math.max(this.trackVolume * 0.71, AudioFader.audioVolumeMin),
+            );
         },
-        /**Inreases the track audio volume level
+        /**Increases the track audio volume level
          * @remarks Applies some limitation on the upper and lower end of the range
          */
         volumeUp() {
-            this.trackVolume = Math.max(
-                Math.min(this.trackVolume * 1.41, 1),
-                AudioFader.audioVolumeMin,
-            );
             this.debugLog(`volumeUp`, this.trackVolume);
+            this.updateTrackVolume(
+                Math.max(
+                    Math.min(this.trackVolume * 1.41, 1),
+                    AudioFader.audioVolumeMin,
+                ),
+            );
         },
         /** Pauses playback */
         pause(): void {

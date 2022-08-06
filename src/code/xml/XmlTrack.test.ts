@@ -2,7 +2,7 @@ import { ICue, PlaybackMode, Track } from '@/store/compilation-types';
 import { XmlTrack } from './XmlTrack';
 
 describe('the XML mapping', function () {
-    it('should return an initialised XmlTrack object', function () {
+    it('should return an initialized XmlTrack object', function () {
         // Arrange
         const track = new Track(
             'testName',
@@ -14,6 +14,7 @@ describe('the XML mapping', function () {
             new Array<ICue>(),
             60,
             PlaybackMode.LoopCue,
+            0.9,
         );
 
         //Act
@@ -28,6 +29,7 @@ describe('the XML mapping', function () {
         expect(target.Name).toBe(track.Name);
         expect(target.Url).toBe(track.Url);
         expect(target.PlaybackMode).toBe(track.PlaybackMode);
+        expect(target.TrackVolume).toBe(track.TrackVolume);
         //HINT: Duration is not serialized
     });
 });

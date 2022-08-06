@@ -115,7 +115,7 @@ import Knob from '@/components/Knob.vue';
 import PlayerTime from '@/components/PlayerTime.vue';
 import PlaybackModeButton from '@/components/PlaybackModeButton.vue';
 import LongLine from '@/components/LongLine.vue';
-import { PlaybackMode } from '@/store/compilation-types';
+import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import AudioUtil from '@/code/audio/AudioUtil';
 
 /** A UI representation for a media player
@@ -176,7 +176,7 @@ export default defineComponent({
          * @remarks Implements a two-way binding */
         trackVolume: {
             type: Number,
-            default: 0.5,
+            default: DefaultTrackVolume,
         },
         /** Whether the player is currently playing
          * @remarks Implements a two-way binding */
@@ -217,9 +217,7 @@ export default defineComponent({
         },
     },
     data() {
-        return {
-            trackVolume2: 0.5,
-        };
+        return {};
     },
     computed: {
         /** Returns a displayable text for the provided error */

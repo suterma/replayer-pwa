@@ -59,10 +59,12 @@
                     @trackPlaying="updatePlaying"
                     @newCueTriggered="createNewCue"
                     @update:playbackMode="updatedPlaybackMode"
+                    :playbackMode="track.PlaybackMode"
                     :loopStart="selectedCue?.Time"
                     :loopEnd="selectedCue?.Time + selectedCue?.Duration"
                     :sourceDescription="track?.Url"
-                    :playbackMode="track.PlaybackMode"
+                    @update:trackVolume="updatedTrackVolume"
+                    :trackVolume="track.TrackVolume"
                 ></TrackAudioApiPlayer>
             </template>
             <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
@@ -357,8 +359,8 @@ export default defineComponent({
         },
 
         /** Handle playback mode updates
-         * @devdoc Handeled here as part of the track because the playback mode is
-         * essentially a property of the track, not of the player of the player chrome.
+         * @devdoc Handled here as part of the track because the playback mode is
+         * essentially a property of the track, not of the player or the player chrome.
          */
         updatedPlaybackMode(playbackMode: PlaybackMode): void {
             console.debug(
@@ -369,6 +371,21 @@ export default defineComponent({
             this.$store.commit(MutationTypes.UPDATE_TRACK_PLAYBACK_MODE, {
                 trackId,
                 playbackMode,
+            });
+        },
+        /** Handle track volume updates
+         * @devdoc Handled here as part of the track because the track volume is
+         * essentially a property of the track, not of the player or the player chrome.
+         */
+        updatedTrackVolume(volume: number): void {
+            console.debug(
+                `Track(${this.track.Name})::updatedTrackVolume:${volume}`,
+            );
+
+            const trackId = this.track.Id;
+            this.$store.commit(MutationTypes.UPDATE_TRACK_VOLUME, {
+                trackId,
+                trackVolume: volume,
             });
         },
         /** Handles the click of a cue button, by toggling playback and seeking to it
