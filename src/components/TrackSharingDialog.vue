@@ -1,49 +1,56 @@
 <template>
-    <div class="modal is-active">
-        <div class="modal-background"></div>
-        <Experimental>
-            <div class="modal-card">
-                <header class="modal-card-head">
-                    <h1 class="modal-card-title title">
-                        Share track '{{ track?.Name }}' via...
-                    </h1>
-                </header>
-                <section class="modal-card-body">
-                    <div class="control">
-                        <textarea
-                            class="textarea has-fixed-size is-size-7"
-                            placeholder="Track link"
-                            readonly
-                            v-text="this.trackUrl"
-                        ></textarea>
-                    </div>
-                    <a :href="this.trackUrl" target="_blank">Click to follow</a>
-                    <div class="content">
-                        You are sharing the track metadata and the URL, not the
-                        media file itself.
-                    </div>
-                </section>
-                <footer class="modal-card-foot is-justify-content-flex-end">
-                    <div class="field is-grouped">
-                        <p class="control">
-                            <button class="button" @click="$close(this, false)">
-                                Cancel
-                            </button>
-                        </p>
-                        <p class="control">
-                            <button
-                                v-focus
-                                class="button is-success"
-                                @click="$close(this)"
-                            >
-                                Ok
-                            </button>
-                        </p>
-                    </div>
-                </footer>
-            </div>
-        </Experimental>
-    </div>
+    <UseFocusTrap>
+        <div class="modal is-active">
+            <div class="modal-background"></div>
+            <Experimental>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <h1 class="modal-card-title title">
+                            Share track '{{ track?.Name }}' via...
+                        </h1>
+                    </header>
+                    <section class="modal-card-body">
+                        <div class="control">
+                            <textarea
+                                class="textarea has-fixed-size is-size-7"
+                                placeholder="Track link"
+                                readonly
+                                v-text="this.trackUrl"
+                            ></textarea>
+                        </div>
+                        <a :href="this.trackUrl" target="_blank"
+                            >Click to follow</a
+                        >
+                        <div class="content">
+                            You are sharing the track metadata and the URL, not
+                            the media file itself.
+                        </div>
+                    </section>
+                    <footer class="modal-card-foot is-justify-content-flex-end">
+                        <div class="field is-grouped">
+                            <p class="control">
+                                <button
+                                    class="button"
+                                    @click="$close(this, false)"
+                                >
+                                    Cancel
+                                </button>
+                            </p>
+                            <p class="control">
+                                <button
+                                    v-focus
+                                    class="button is-success"
+                                    @click="$close(this)"
+                                >
+                                    Ok
+                                </button>
+                            </p>
+                        </div>
+                    </footer>
+                </div>
+            </Experimental>
+        </div>
+    </UseFocusTrap>
 </template>
 
 <script lang="ts">
@@ -51,11 +58,13 @@ import { ICue, Track } from '@/store/compilation-types';
 import Experimental from '@/components/Experimental.vue';
 import { defineComponent } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
+import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
 
 export default defineComponent({
     name: 'TrackSharingDialog',
     components: {
         Experimental,
+        UseFocusTrap,
     },
     props: {
         track: Track,

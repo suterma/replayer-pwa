@@ -1,40 +1,45 @@
 <template>
-    <div class="modal is-active">
-        <div class="modal-background"></div>
+    <UseFocusTrap>
+        <div class="modal is-active">
+            <div class="modal-background"></div>
 
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <h1 class="modal-card-title title">{{ header }}</h1>
-            </header>
-            <section class="modal-card-body">
-                {{ question }}
-            </section>
-            <footer class="modal-card-foot is-justify-content-flex-end">
-                <div class="field is-grouped">
-                    <p class="control">
-                        <button class="button" @click="$close(this, false)">
-                            Cancel
-                        </button>
-                    </p>
-                    <p class="control">
-                        <button
-                            v-focus
-                            class="button is-success"
-                            @click="$close(this)"
-                        >
-                            Ok
-                        </button>
-                    </p>
-                </div>
-            </footer>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <h1 class="modal-card-title title">{{ header }}</h1>
+                </header>
+                <section class="modal-card-body">
+                    {{ question }}
+                </section>
+                <footer class="modal-card-foot is-justify-content-flex-end">
+                    <div class="field is-grouped">
+                        <p class="control">
+                            <button class="button" @click="$close(this, false)">
+                                Cancel
+                            </button>
+                        </p>
+                        <p class="control">
+                            <button
+                                v-focus
+                                class="button is-success"
+                                @click="$close(this)"
+                            >
+                                Ok
+                            </button>
+                        </p>
+                    </div>
+                </footer>
+            </div>
         </div>
-    </div>
+    </UseFocusTrap>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
 
 export default defineComponent({
+    name: 'ConfirmDialog',
+    components: { UseFocusTrap },
     props: {
         question: String,
         header: String,
@@ -49,5 +54,3 @@ export default defineComponent({
     },
 });
 </script>
-
-<style scoped></style>
