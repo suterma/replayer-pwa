@@ -149,7 +149,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
  * @remarks Shows a cue button with an inline progress bar, plus input fields for all properties
  * @devdoc Input value binding is not implemented with a two-way v-model binding because the incoming values are taken
  * from a property (where setting of values is not permitted).
- * Instead, the values are one-way bound via :value and changes are directly stored in the state via vuex mutations.
+ * Instead, the values are one-way bound via :value and changes are directly stored in the state via Vuex mutations.
  * This approach is chosen over the ...data pattern because the shortcut values can also change from a menu entry
  * in the track's dropdown menu.
  */
@@ -285,7 +285,7 @@ export default defineComponent({
     },
     computed: {
         /** Converts the cue's duration into a conveniently displayable hh:mm:ss.s format.
-         * @remarks Omits the hour part, if not appliccable
+         * @remarks Omits the hour part, if not applicable
          */
         cueDurationDisplayTime(): string {
             const duration = this.cue.Duration;

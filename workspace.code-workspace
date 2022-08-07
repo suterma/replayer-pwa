@@ -23,7 +23,8 @@
             "Replayer",
             "semibold",
             "simolation",
-            "slipmatio"
+            "slipmatio",
+            "Vuex"
         ]
     }
 }
