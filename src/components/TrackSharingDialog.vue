@@ -29,12 +29,15 @@
                     <footer class="modal-card-foot is-justify-content-flex-end">
                         <div class="field is-grouped">
                             <p class="control">
-                                <button
-                                    class="button"
-                                    @click="$close(this, false)"
-                                >
-                                    Cancel
-                                </button>
+                                <Hotkey :keys="['esc']" v-slot="{ clickRef }">
+                                    <button
+                                        class="button"
+                                        :ref="clickRef"
+                                        @click="$close(this, false)"
+                                    >
+                                        Cancel
+                                    </button>
+                                </Hotkey>
                             </p>
                             <p class="control">
                                 <button
@@ -59,12 +62,14 @@ import Experimental from '@/components/Experimental.vue';
 import { defineComponent } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
+import { Hotkey } from '@simolation/vue-hotkey';
 
 export default defineComponent({
     name: 'TrackSharingDialog',
     components: {
         Experimental,
         UseFocusTrap,
+        Hotkey,
     },
     props: {
         track: Track,

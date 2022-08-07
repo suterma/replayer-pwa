@@ -13,9 +13,15 @@
                 <footer class="modal-card-foot is-justify-content-flex-end">
                     <div class="field is-grouped">
                         <p class="control">
-                            <button class="button" @click="$close(this, false)">
-                                Cancel
-                            </button>
+                            <Hotkey :keys="['esc']" v-slot="{ clickRef }">
+                                <button
+                                    class="button"
+                                    :ref="clickRef"
+                                    @click="$close(this, false)"
+                                >
+                                    Cancel
+                                </button>
+                            </Hotkey>
                         </p>
                         <p class="control">
                             <button
@@ -36,10 +42,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
+import { Hotkey } from '@simolation/vue-hotkey';
 
 export default defineComponent({
     name: 'ConfirmDialog',
-    components: { UseFocusTrap },
+    components: { UseFocusTrap, Hotkey },
     props: {
         question: String,
         header: String,
