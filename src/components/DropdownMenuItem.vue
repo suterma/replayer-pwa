@@ -1,5 +1,5 @@
 <template>
-    <div class="dropdown-item">
+    <button class="dropdown-item">
         <div class="level is-mobile">
             <div class="level-left">
                 <div class="level-item">
@@ -21,7 +21,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </button>
 </template>
 
 <script lang="ts">

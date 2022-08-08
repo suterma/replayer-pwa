@@ -17,19 +17,40 @@
     min-width: 15rem;
 }
 
+/** Unset default button styles for dropdown menu items. 
+ *  This makes buttons usable as dropdown items, 
+ *  supporting proper accessibility,
+ *  without visual interference of typical button styling
+ */
+button.dropdown-item {
+    border: unset;
+    color: unset;
+    background-color: unset;
+    cursor: pointer;
+}
+
 /* Dropdown item with better suited contrast for a dark theme */
-.dropdown-item {
+a.dropdown-item,
+button.dropdown-item {
     color: $white-bis;
 }
 
+/* No wide right padding, the area is used by an icon */
+a.dropdown-item,
+button.dropdown-item {
+    padding-right: 1em;
+}
+
 /* Hovered dropdown item with better suited contrast for a dark theme */
-.dropdown-item:hover {
+a.dropdown-item:hover,
+button.dropdown-item:hover {
     background-color: $grey; //$background; //$dark; //$button-background-color; //from BULMA-Swatch theme
     color: $white-bis;
 }
 
 /* Hovered active dropdown item with better suited contrast for a dark theme */
-.dropdown-item.is-active {
+a.dropdown-item.is-active,
+button.dropdown-item.is-active {
     background-color: $light;
     color: $dark;
 }
@@ -69,7 +90,7 @@
     padding-bottom: 0;
 }
 
-/* Show the active item with to the view background
+/* Indicate the active item
 * @remarks Intended to work with the bulmaswatch slate theme */
 .router-link-active .dropdown-item,
 .router-link-hover .dropdown-item,
