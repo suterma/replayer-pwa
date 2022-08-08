@@ -34,6 +34,7 @@
         "bulmaswatch": "^0.8.1",
         "click-outside-vue3": "^4.0.1",
         "file-saver": "^2.0.5",
+        "focus-trap": "^6.9.4",
         "idb-keyval": "^6.1.0",
         "jest-junit": "^13.1.0",
         "jszip": "^3.9.1",

@@ -337,13 +337,21 @@
                 </li>
                 <li>
                     <a
+                        href="https://github.com/focus-trap/focus-trap"
+                        target="_blank"
+                    >
+                        VueUse</a
+                    >, a Collection of essential Vue Composition Utilities
+                    (Released under the MIT License, by the VueUse team)
+                </li>
+                <li>
+                    <a
                         href="https://github.com/slipmatio/control-knob"
                         target="_blank"
-                        >Vue Control Knob</a
-                    >, a Rotary control knob component for Vue 3 that behaves
-                    like native audio app controls in Logic Pro or Ableton Live.
-                    (Released under the MIT License, by Slipmat.io). Modified by
-                    suterma.
+                        >focus-trap</a
+                    >, a little, modular vanilla JS solution to trap focus
+                    within a DOM node. (Released under the MIT License, by
+                    Marais Rossouw).
                 </li>
             </ul>
         </div>
@@ -359,7 +367,7 @@
                 or any later version.
             </p>
             <p>
-                The source code is availabe on
+                The source code is available on
                 <a
                     href="https://github.com/suterma/replayer-pwa"
                     target="_blank"
