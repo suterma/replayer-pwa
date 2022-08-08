@@ -6,55 +6,50 @@
         style="z-index: 3"
     >
         <Hotkey :keys="['ctrl', 'p']" v-slot="{ clickRef }">
-            <router-link
+            <DropdownMenuRouterLink
                 to="/play"
-                title="Switch to play view [CTRL+P]"
+                title="Play [CTRL+P]"
                 :ref="clickRef"
-            >
-                <DropdownMenuItem
-                    title="Play"
-                    iconName="play"
-                ></DropdownMenuItem>
-            </router-link>
+                iconName="play"
+            />
         </Hotkey>
         <Hotkey :keys="['ctrl', 'e']" v-slot="{ clickRef }">
-            <router-link
+            <DropdownMenuRouterLink
                 to="/edit"
-                title="Switch to edit view [CTRL+E]"
+                title="Edit [CTRL+E]"
                 :ref="clickRef"
-            >
-                <DropdownMenuItem title="Edit" iconName="pencil">
-                </DropdownMenuItem></router-link
-        ></Hotkey>
+                iconName="pencil"
+            />
+        </Hotkey>
         <Experimental>
-            <router-link to="/list">
-                <DropdownMenuItem
-                    title="List"
-                    iconName="list-box-outline"
-                ></DropdownMenuItem>
-            </router-link>
-        </Experimental>
-        <router-link to="/setlist" title="Switch to set list view">
-            <DropdownMenuItem
-                title="Set list"
+            <DropdownMenuRouterLink
+                to="/list"
+                title="List"
                 iconName="list-box-outline"
-            ></DropdownMenuItem>
-        </router-link>
-        <router-link to="/settings" title="Switch to settings view">
-            <DropdownMenuItem
-                title="Settings"
-                iconName="cog-outline"
-            ></DropdownMenuItem>
-        </router-link>
-        <router-link to="/about" title="Switch to about view">
-            <DropdownMenuItem title="About" iconName="information-outline">
-            </DropdownMenuItem
-        ></router-link>
+            />
+        </Experimental>
+        <DropdownMenuRouterLink
+            to="/setlist"
+            title="Set list"
+            iconName="list-box-outline"
+        />
 
+        <DropdownMenuRouterLink
+            to="/settings"
+            title="Settings"
+            iconName="cog-outline"
+        />
+        <DropdownMenuRouterLink
+            to="/about"
+            title="About"
+            iconName="information-outline"
+        />
         <Experimental>
-            <router-link to="/development" title="Switch to development view">
-                <DropdownMenuItem title="Development"> </DropdownMenuItem
-            ></router-link>
+            <DropdownMenuRouterLink
+                to="/development"
+                title="Development"
+                iconName="flask-outline"
+            />
         </Experimental>
     </DropdownMenu>
 </template>
@@ -62,7 +57,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import DropdownMenu from '@/components/DropdownMenu.vue';
-import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
+import DropdownMenuRouterLink from '@/components/DropdownMenuRouterLink.vue';
 import Experimental from '@/components/Experimental.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
 
@@ -70,7 +65,7 @@ import { Hotkey } from '@simolation/vue-hotkey';
  */
 export default defineComponent({
     name: 'AppContextMenu',
-    components: { DropdownMenu, DropdownMenuItem, Experimental, Hotkey },
+    components: { DropdownMenu, DropdownMenuRouterLink, Experimental, Hotkey },
     methods: {},
 });
 </script>

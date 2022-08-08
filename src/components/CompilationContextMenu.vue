@@ -1,6 +1,6 @@
 <template>
     <DropdownMenu title="Compilation context menu">
-        <DropdownMenuItem
+        <DropdownMenuButton
             title="Prevent screen timeout"
             subTitle="(while this compilation is open)"
             :class="{
@@ -10,7 +10,7 @@
             iconName="television-ambient-light"
         />
         <Hotkey :keys="['ctrl', 's']" v-slot="{ clickRef }">
-            <DropdownMenuItem
+            <DropdownMenuButton
                 title="Download... [CTRL+S]"
                 subTitle="Save compilation to the device"
                 @click="download"
@@ -20,7 +20,7 @@
         </Hotkey>
         <hr class="dropdown-divider" />
         <Hotkey :keys="['ctrl', 'x']" v-slot="{ clickRef }">
-            <DropdownMenuItem
+            <DropdownMenuButton
                 title="Close [CTRL+X]"
                 subTitle="(discard the compilation)"
                 @click="close"
@@ -37,7 +37,7 @@ import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
 import { Compilation } from '@/store/compilation-types';
 import DropdownMenu from '@/components/DropdownMenu.vue';
-import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
+import DropdownMenuButton from '@/components/DropdownMenuButton.vue';
 import { confirm, downloadCompilation } from '@/code/ui/dialogs';
 import { Hotkey } from '@simolation/vue-hotkey';
 
@@ -45,7 +45,7 @@ import { Hotkey } from '@simolation/vue-hotkey';
  */
 export default defineComponent({
     name: 'CompilationContextMenu',
-    components: { DropdownMenu, DropdownMenuItem, Hotkey },
+    components: { DropdownMenu, DropdownMenuButton, Hotkey },
     props: {
         compilation: {
             type: Compilation,

@@ -101,14 +101,14 @@
                     />
 
                     <DropdownMenu title="Track context menu">
-                        <DropdownMenuItem
+                        <DropdownMenuButton
                             v-if="!isFirstTrack"
                             title="Move up"
                             subTitle="(to an earlier position)"
                             @click="moveUp()"
                             iconName="transfer-up"
                         />
-                        <DropdownMenuItem
+                        <DropdownMenuButton
                             v-if="!isLastTrack"
                             title="Move down"
                             subTitle="(to a later position)"
@@ -116,27 +116,27 @@
                             iconName="transfer-down"
                         />
                         <Experimental>
-                            <DropdownMenuItem
+                            <DropdownMenuButton
                                 title="Share..."
                                 subTitle="(allows to share a track)"
                                 @click="share()"
                             />
                         </Experimental>
 
-                        <DropdownMenuItem
+                        <DropdownMenuButton
                             title="Clone"
                             subTitle="(with cues and media)"
                             @click="cloneTrack()"
                             iconName="content-duplicate"
                         />
-                        <DropdownMenuItem
+                        <DropdownMenuButton
                             title="Reassign cue shortcuts"
                             subTitle="(first as seed, then incrementing)"
                             @click="reassignCueShortcuts()"
                             iconName="order-numeric-ascending"
                         />
                         <hr class="dropdown-divider" />
-                        <DropdownMenuItem
+                        <DropdownMenuButton
                             title="Remove"
                             subTitle="(remove
                             the track from the compilation)"
@@ -170,7 +170,7 @@ import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
 import DropdownMenu from '@/components/DropdownMenu.vue';
 import Experimental from '@/components/Experimental.vue';
-import DropdownMenuItem from '@/components/DropdownMenuItem.vue';
+import DropdownMenuButton from '@/components/DropdownMenuButton.vue';
 // import TrackSharingDialog from '@/components/TrackSharingDialog.vue';
 import { confirm } from '@/code/ui/dialogs';
 import { shareTrack } from '@/code/ui/dialogs';
@@ -187,7 +187,7 @@ export default defineComponent({
         EditableInput,
         CollapsibleButton,
         DropdownMenu,
-        DropdownMenuItem,
+        DropdownMenuButton,
         // TrackSharingDialog,
         Experimental,
     },
