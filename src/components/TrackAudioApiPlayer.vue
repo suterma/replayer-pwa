@@ -210,8 +210,7 @@ export default defineComponent({
             );
             this.$store.commit(
                 MutationTypes.PUSH_ERROR,
-                'Error while retrieving media source. Message: ' +
-                    this.mediaError?.message,
+                `Error while retrieving media source for title '${this.title}'. Message: '${this.mediaError?.message}'`,
             );
         };
         this.audioElement.onabort = () => {
