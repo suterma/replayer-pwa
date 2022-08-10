@@ -285,11 +285,11 @@ export default class CompilationHandler {
     /** Sorts the blobs by whether their fileName lazily
      * starts or ends with the given fileName, returning the matching one first.
      * @remarks This method is useful to speed up delayed loading, to make sure the initially
-     * used blob is handeled first (or among the first)
+     * used blob is handled first (or among the first)
      * @remarks A lazy matching approach is always used here because an exact single match is not
      * strictly necessary for this kind of sorting.
      * @param mediaBlobs - The array of media blobs to sort
-     * @param sortFileName - The file name to sort for. If empty, no sorting does occurr.
+     * @param sortFileName - The file name to sort for. If empty, no sorting does occur.
      * */
     public static sortByFirstFileName(
         mediaBlobs: MediaBlob[],
@@ -297,12 +297,14 @@ export default class CompilationHandler {
     ): MediaBlob[] {
         if (sortFileName) {
             const sortedArray = [
+                /* the first */
                 ...mediaBlobs.filter(({ fileName }) =>
                     CompilationHandler.isEndingWithOneAnother(
                         CompilationHandler.getLazyFileName(fileName),
                         CompilationHandler.getLazyFileName(sortFileName),
                     ),
                 ),
+                /* the rest */
                 ...mediaBlobs.filter(
                     ({ fileName }) =>
                         !CompilationHandler.isEndingWithOneAnother(
