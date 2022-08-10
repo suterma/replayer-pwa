@@ -132,7 +132,7 @@ export const mutations: MutationTree<State> & Mutations = {
 
         //If any track uses this media, remove the now stale duration for this track
         const matchingTrack = state.compilation.Tracks.find((t) =>
-            CompilationHandler.isMatchingMediaUrl(t.Url, mediaUrl),
+            CompilationHandler.isLazyMatchingMediaUrl(t.Url, mediaUrl),
         );
         if (matchingTrack) {
             matchingTrack.Duration = null;

@@ -255,6 +255,13 @@ export const actions: ActionTree<State, State> & Actions = {
                                         'Filtering relativePath: ',
                                         relativePath,
                                     );
+                                    if (
+                                        FileHandler.isMacOsxResourceFork(
+                                            relativePath,
+                                        )
+                                    ) {
+                                        return false;
+                                    }
                                     return (
                                         FileHandler.isSupportedCompilationFileName(
                                             relativePath,

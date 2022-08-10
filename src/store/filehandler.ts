@@ -8,6 +8,17 @@ export default class FileHandler {
     static acceptedFileList =
         '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.bplist';
 
+    /** Returns whether the given path represents a Mac OSX resource fork.
+     * @remarks Mac OSX resource forks are not processed by Replayer.
+     */
+    static isMacOsxResourceFork(path: string): boolean {
+        const macOsxResourceFork = /.*(__MACOSX).*(\._).*/i;
+        if (path.match(macOsxResourceFork)) {
+            return true;
+        }
+        return false;
+    }
+
     /** Returns whether the given string is a path
      * @remarks When ending with a slash, it's considered a path.
      */
@@ -190,7 +201,7 @@ export default class FileHandler {
         }
 
         console.debug(
-            `filehander::isSupportedMediaFileName:fileName:'${fileName}' is isSupportedMedia?:'${isSupportedMediaFileName}'`,
+            `filehandler::isSupportedMediaFileName:fileName:'${fileName}' is isSupportedMedia?:'${isSupportedMediaFileName}'`,
         );
         return isSupportedMediaFileName;
     }

@@ -213,7 +213,7 @@ export default class CompilationHandler {
             let url = null;
             for (const [mediaFileName, mediaUrl] of mediaUrlMap) {
                 if (
-                    CompilationHandler.isEndingWithOneAnother(
+                    CompilationHandler.isMatchingResourceName(
                         fileName,
                         mediaFileName,
                     )
@@ -232,7 +232,7 @@ export default class CompilationHandler {
                         CompilationHandler.getLazyFileName(mediaFileName);
 
                     if (
-                        CompilationHandler.isEndingWithOneAnother(
+                        CompilationHandler.isMatchingResourceName(
                             lazyFileName,
                             lazyMediaFileName,
                         )
@@ -247,10 +247,32 @@ export default class CompilationHandler {
         }
     }
 
+    /** Whether the media URL (playable data) lazily matches the given file name.
+     * @param fileName - The file name to search for.
+     * @param mediaUrl - A media URL
+     * @remarks A lazy approach without case and without non-ascii characters is attempted
+     */
+    public static isLazyMatchingMediaUrl(
+        fileName: string | undefined,
+        mediaUrl: MediaUrl,
+    ): boolean {
+        if (mediaUrl && fileName) {
+            const lazyFileName = CompilationHandler.getLazyFileName(fileName);
+            const lazyMediaFileName = CompilationHandler.getLazyFileName(
+                mediaUrl.resourceName,
+            );
+
+            return CompilationHandler.isMatchingResourceName(
+                lazyFileName,
+                lazyMediaFileName,
+            );
+        }
+        return false;
+    }
+
     /** Whether the media URL (playable data) matches the given file name.
      * @param fileName - The file name to search for.
      * @param mediaUrl - A media URL
-     * @remarks If strict file names do not match, a more lazy approach without case and without non-ascii characters is attempted
      */
     public static isMatchingMediaUrl(
         fileName: string | undefined,
@@ -259,25 +281,13 @@ export default class CompilationHandler {
         if (mediaUrl && fileName) {
             //Default: Find by literal partial match of the file name
             if (
-                CompilationHandler.isEndingWithOneAnother(
+                CompilationHandler.isMatchingResourceName(
                     fileName,
                     mediaUrl.resourceName,
                 )
             ) {
                 return true;
             }
-
-            //In case of possible weird characters, or case mismatch, try a more lazy match.
-            const lazyFileName = CompilationHandler.getLazyFileName(fileName);
-
-            const lazyMediaFileName = CompilationHandler.getLazyFileName(
-                mediaUrl.resourceName,
-            );
-
-            return CompilationHandler.isEndingWithOneAnother(
-                lazyFileName,
-                lazyMediaFileName,
-            );
         }
         return false;
     }
@@ -299,7 +309,7 @@ export default class CompilationHandler {
             const sortedArray = [
                 /* the first */
                 ...mediaBlobs.filter(({ fileName }) =>
-                    CompilationHandler.isEndingWithOneAnother(
+                    CompilationHandler.isMatchingResourceName(
                         CompilationHandler.getLazyFileName(fileName),
                         CompilationHandler.getLazyFileName(sortFileName),
                     ),
@@ -307,7 +317,7 @@ export default class CompilationHandler {
                 /* the rest */
                 ...mediaBlobs.filter(
                     ({ fileName }) =>
-                        !CompilationHandler.isEndingWithOneAnother(
+                        !CompilationHandler.isMatchingResourceName(
                             CompilationHandler.getLazyFileName(fileName),
                             CompilationHandler.getLazyFileName(sortFileName),
                         ),
@@ -373,11 +383,13 @@ export default class CompilationHandler {
         return cue ?? null;
     }
 
-    /** Determines, whether one of the given string ends with the other
-     * @param first - the first string for the comparison
-     * @param second - the second string for the comparison
+    /** Determines, whether the resource names match
+     * @remarks For simplicity and fault tolerance, the matching
+     * is implemented simply by comparing the endings in the names
+     * @param first - the first resource name for the comparison
+     * @param second - the second resource name for the comparison
      */
-    public static isEndingWithOneAnother(
+    public static isMatchingResourceName(
         first: string,
         second: string,
     ): boolean {
