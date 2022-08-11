@@ -17,7 +17,10 @@
         <!-- Left side -->
         <div class="level-left">
             <!-- Back Link -->
-            <div v-if="!isCollapsible && !isLinkOnly" class="level-item">
+            <div
+                v-if="!isCollapsible && !isLinkOnly"
+                class="level-item is-narrow"
+            >
                 <router-link
                     :to="{
                         name: 'List',
@@ -31,8 +34,17 @@
                     </p>
                 </router-link>
             </div>
+            <!-- Expander -->
+            <div v-if="isCollapsible" class="level-item is-narrow">
+                <CollapsibleButton
+                    :modelValue="modelValue"
+                    title="Track"
+                    collapsedText="Expand to play"
+                    class="is-nav"
+                />
+            </div>
             <!-- Title -->
-            <div class="level-item">
+            <div class="level-item is-narrow">
                 <p class="title has-text-weight-light is-4">
                     <LinkableText :text="track.Name"></LinkableText>
                 </p>
@@ -54,15 +66,7 @@
                     :is-unloaded="!isTrackLoaded"
                 />
             </nav>
-            <!-- Expander -->
-            <div v-if="isCollapsible" class="level-item">
-                <CollapsibleButton
-                    :modelValue="modelValue"
-                    title="Track"
-                    collapsedText="Expand to play"
-                    class="is-nav"
-                />
-            </div>
+
             <!-- Forward navigation -->
             <div v-if="isLinkOnly" class="level-item">
                 <router-link
@@ -222,27 +226,16 @@ export default defineComponent({
 .level {
     /** similar margin to player with respect to cue buttons */
     margin-bottom: 12px;
-
     margin-top: 12px;
 }
 
 /** Custom modification for the level in the context of a track.
-* @remarks Allow the title text (on the left) to break between words, 
-* and keep the context items (on the right) as close as reasonably possible */
+* @remarks Allow the title text (on the left) to break between words. */
 .level {
     .level-left {
         word-break: break-word;
         /* This basis is set empirically to fit for two elements on the right */
         flex-basis: calc(100% - 80px);
-
-        /* These items should grow, and shrink */
-        .level-item {
-            flex-shrink: 1;
-            flex-grow: 1;
-            text-align: left;
-            /* Title, always justify left */
-            justify-content: left;
-        }
     }
 
     .level-right {

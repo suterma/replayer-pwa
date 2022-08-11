@@ -18,6 +18,15 @@
         <div class="level">
             <!-- Left side -->
             <div class="level-left">
+                <!-- Expander (on mobile, display with other right-hand items)-->
+                <div class="level-item is-narrow is-hidden-mobile">
+                    <CollapsibleButton
+                        :modelValue="modelValue"
+                        title="Track"
+                        collapsedText="Expand to edit"
+                        @click="toggleExpanded()"
+                    />
+                </div>
                 <!-- Only for wide screens, who the media edit in the level -->
                 <div
                     class="level-item is-hidden-widescreen-only is-hidden-desktop-only is-hidden-touch"
@@ -29,7 +38,7 @@
                     </div>
                 </div>
                 <!-- Title -->
-                <div class="level-item is-flex-grow-5 is-flex-shrink-1">
+                <div class="level-item is-narrow">
                     <div class="field">
                         <p class="control">
                             <EditableInput
@@ -94,6 +103,14 @@
             <!-- Right side -->
             <div class="level-right">
                 <div class="level-item">
+                    <!-- Expander (on mobile, display with other right-hand items)-->
+                    <CollapsibleButton
+                        class="is-hidden-tablet"
+                        :modelValue="modelValue"
+                        title="Track"
+                        collapsedText="Expand to edit"
+                        @click="toggleExpanded()"
+                    />
                     <PlaybackIndicator
                         :is-ready="!isPlaying && isTrackLoaded"
                         :is-playing="isPlaying"
@@ -144,14 +161,6 @@
                             iconName="trash"
                         />
                     </DropdownMenu>
-
-                    <!-- Expander -->
-                    <CollapsibleButton
-                        :modelValue="modelValue"
-                        title="Track"
-                        collapsedText="Expand to edit"
-                        @click="toggleExpanded()"
-                    />
                 </div>
             </div>
         </div>
@@ -356,15 +365,7 @@ export default defineComponent({
     .level-left {
         word-break: break-word;
         /* This basis is set empirically to fit for the elements on the right */
-        flex-basis: calc(100% - 180px);
-
-        /* These items should grow, and shrink */
-        .level-item {
-            flex-shrink: 1;
-            flex-grow: 1;
-            text-align: left;
-            justify-content: left;
-        }
+        flex-basis: calc(100% - 80px);
     }
 
     .level-right {
@@ -378,7 +379,6 @@ export default defineComponent({
             flex-shrink: 0;
             flex-grow: 0;
             text-align: right;
-            justify-content: right;
         }
     }
 }

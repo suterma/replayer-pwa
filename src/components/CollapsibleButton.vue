@@ -1,9 +1,9 @@
 <template>
     <NavButton
-        :iconClass="this.navIconClass"
+        :iconClass="navIconClass"
         aria-haspopup="true"
         aria-controls="dropdown-menu"
-        :title="this.titleText"
+        :title="titleText"
         iconName="chevron-down"
         @click="toggleExpanded()"
     />
@@ -74,12 +74,16 @@ export default defineComponent({
     -moz-transition: all 0.3s linear;
     -webkit-transition: all 0.3s linear;
     transition: all 0.3s linear;
+    -ms-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
 }
 
 .rotate.down {
-    -ms-transform: rotate(180deg);
-    -moz-transform: rotate(180deg);
-    -webkit-transform: rotate(180deg);
-    transform: rotate(180deg);
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
 }
 </style>
