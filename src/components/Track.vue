@@ -53,7 +53,7 @@
                     v-if="mediaUrl"
                     ref="playerReference"
                     :title="track?.Name"
-                    :mediaUrl="optimizedmediaUrl"
+                    :mediaUrl="optimizedMediaUrl"
                     @timeupdate="updateTime"
                     @durationChanged="calculateCueDurations"
                     @trackPlaying="updatePlaying"
@@ -564,10 +564,12 @@ export default defineComponent({
 
         /** Gets the media object URL, if available,
          * and optimized for the expanded and the active track state
-         * @remarks To save memory in the audio elements, an URL is only provided when
-         * the player is actually in the expanded state and the track is the currently active track
+         * @remarks To save memory in the audio elements,
+         * an URL is only provided when
+         * the player is actually in the expanded state or
+         * the track is the currently active track
          */
-        optimizedmediaUrl(): string | undefined {
+        optimizedMediaUrl(): string | undefined {
             if (this.expanded || this.isActiveTrack) {
                 return this.trackMediaUrl?.url;
             } else {
