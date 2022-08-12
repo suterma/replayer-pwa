@@ -250,7 +250,7 @@ export default defineComponent({
                 }
             });
         },
-        /** Toogles the expansion state
+        /** Toggles the expansion state
          */
         toggleExpanded() {
             const expanded = !this.modelValue;

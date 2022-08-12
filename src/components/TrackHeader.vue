@@ -44,7 +44,8 @@
                 />
             </div>
             <!-- Title -->
-            <div class="level-item is-narrow">
+            <!-- The title is the only header element that should shrink (break on words) if necessary -->
+            <div class="level-item is-narrow is-flex-shrink-1">
                 <p class="title has-text-weight-light is-4">
                     <LinkableText :text="track.Name"></LinkableText>
                 </p>
