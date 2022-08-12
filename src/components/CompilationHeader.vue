@@ -6,6 +6,7 @@
             <div class="level-item">
                 <EditableInput
                     v-if="isEditable"
+                    class="title is-3"
                     v-model="title"
                     @change="updateTitle($event.target.value)"
                     placeholder="Compilation title"

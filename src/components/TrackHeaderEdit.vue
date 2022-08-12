@@ -38,10 +38,13 @@
                     </div>
                 </div>
                 <!-- Title -->
-                <div class="level-item is-narrow">
+                <!-- The title is the only header element that should shrink (break on words) if necessary -->
+
+                <div class="level-item is-narrow is-flex-shrink-1">
                     <div class="field">
                         <p class="control">
                             <EditableInput
+                                class="title has-text-weight-light is-4"
                                 v-model="trackData.Name"
                                 @change="updateName($event.target.value)"
                                 type="text"
