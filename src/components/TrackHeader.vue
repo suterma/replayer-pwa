@@ -50,8 +50,8 @@
                     <LinkableText :text="track.Name"></LinkableText>
                 </p>
             </div>
-            <!-- Artist info (don't show on small devices)-->
-            <div class="level-item is-hidden-mobile">
+            <!-- Artist info (don't show on small devices, keep at end to keep the appearance calm)-->
+            <div class="level-item is-hidden-mobile is-justify-content-end">
                 <p class="is-size-7">
                     <ArtistInfo :track="track" />
                 </p>

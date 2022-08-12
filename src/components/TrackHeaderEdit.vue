@@ -39,7 +39,6 @@
                 </div>
                 <!-- Title -->
                 <!-- The title is the only header element that should shrink (break on words) if necessary -->
-
                 <div class="level-item is-narrow is-flex-shrink-1">
                     <div class="field">
                         <p class="control">
@@ -56,7 +55,6 @@
 
                 <!-- Artist Info (completely hidden on mobile, thus not editable there. 
                 NOTE: It's also not shown in the play view on mobile anyways) -->
-
                 <!-- by (keep as small as possible)-->
                 <div
                     class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
