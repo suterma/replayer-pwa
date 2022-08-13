@@ -23,7 +23,6 @@
             v-model="expanded"
             :isPlaying="isPlaying"
             :isTrackLoaded="isTrackLoaded"
-            :isActiveTrack="isActiveTrack"
         />
         <TrackHeader
             v-else
@@ -31,7 +30,6 @@
             v-model="expanded"
             :isPlaying="isPlaying"
             :isTrackLoaded="isTrackLoaded"
-            :isActiveTrack="isActiveTrack"
             :isEditable="isEditable"
             :isCollapsible="isCollapsible"
         />
