@@ -226,13 +226,6 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
-
-        /** Flag to indicate whether the current track is the active track
-         */
-        isActiveTrack: {
-            type: Boolean,
-            default: false,
-        },
     },
     data() {
         return {

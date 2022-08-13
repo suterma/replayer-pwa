@@ -134,12 +134,6 @@ export default defineComponent({
             default: false,
         },
 
-        /** Flag to indicate whether the current track is the active track
-         */
-        isActiveTrack: {
-            type: Boolean,
-            default: false,
-        },
         /** Whether this component show editable inputs for the contained data
          * @devdoc Allows to reuse this component for more than one DisplayMode.
          */
@@ -173,7 +167,7 @@ export default defineComponent({
         };
     },
     methods: {
-        /** Toogles the expansion state
+        /** Toggles the expansion state
          * @devdoc To prevent toggling with the input fields, use "$event.stopPropagation()" on the respective input controls
          */
         toggleExpanded() {
