@@ -16,21 +16,6 @@
     >
         <!-- Left side -->
         <div class="level-left">
-            <!-- Back Link -->
-            <div v-if="!isCollapsible" class="level-item is-narrow">
-                <router-link
-                    :to="{
-                        name: 'List',
-                    }"
-                    :title="`Back to track track list`"
-                >
-                    <p class="control">
-                        <span class="button is-nav">
-                            <BaseIcon name="chevron-left" />
-                        </span>
-                    </p>
-                </router-link>
-            </div>
             <!-- Expander -->
             <div v-if="isCollapsible" class="level-item is-narrow">
                 <CollapsibleButton
@@ -75,7 +60,6 @@ import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import CollapsibleButton from '@/components/CollapsibleButton.vue';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import { ActionTypes } from '@/store/action-types';
-import BaseIcon from '@/components/icons/BaseIcon.vue';
 import LinkableText from './LinkableText.vue';
 
 /** Displays a track header with a title.
@@ -86,7 +70,6 @@ export default defineComponent({
     components: {
         CollapsibleButton,
         PlaybackIndicator,
-        BaseIcon,
         ArtistInfo,
         LinkableText,
     },

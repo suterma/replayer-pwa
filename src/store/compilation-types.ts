@@ -11,8 +11,6 @@ export enum TrackDisplayMode {
     Edit = 'edit',
     /** Shown as fully expanded, not collapsible, optimized for playback */
     Play = 'play',
-    /** Show as single line, usable for lists, with a link to a track detail view */
-    Link = 'link',
     /** Show initially as fully expanded, but supporting expand/collapse (using a button) */
     Collapsible = 'collapsible',
 }
