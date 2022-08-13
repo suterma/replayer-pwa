@@ -17,10 +17,7 @@
         <!-- Left side -->
         <div class="level-left">
             <!-- Back Link -->
-            <div
-                v-if="!isCollapsible && !isLinkOnly"
-                class="level-item is-narrow"
-            >
+            <div v-if="!isCollapsible" class="level-item is-narrow">
                 <router-link
                     :to="{
                         name: 'List',
@@ -67,23 +64,6 @@
                     :is-unloaded="!isTrackLoaded"
                 />
             </nav>
-
-            <!-- Forward navigation -->
-            <div v-if="isLinkOnly" class="level-item">
-                <router-link
-                    :to="{
-                        name: 'Track-Player',
-                        params: { id: track.Id },
-                    }"
-                    :title="`Show track '${track.Name}'`"
-                >
-                    <p class="control">
-                        <span class="button is-nav">
-                            <BaseIcon name="chevron-right" />
-                        </span>
-                    </p>
-                </router-link>
-            </div>
         </div>
     </nav>
 </template>
@@ -149,14 +129,6 @@ export default defineComponent({
             type: Boolean,
             default: true,
             required: false,
-        },
-        /** Whether this component shows a link to a track detail only, instead of the collapse/expand function.
-         * @remarks Using this is mutually exclusive with the collapsible variant.
-         * @devdoc Allows to reuse this component for more than one DisplayMode.
-         */
-        isLinkOnly: {
-            type: Boolean,
-            default: false,
         },
     },
     emits: ['update:modelValue'],

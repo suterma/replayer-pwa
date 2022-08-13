@@ -34,7 +34,6 @@
             :isActiveTrack="isActiveTrack"
             :isEditable="isEditable"
             :isCollapsible="isCollapsible"
-            :isLinkOnly="isLinkOnly"
         />
 
         <!-- The cues as buttons (in a slider, whose use is optional, for a better overview)-->
@@ -342,11 +341,6 @@ export default defineComponent({
 
         /** Updates the expanded state with the given value*/
         updateExpanded(value: boolean) {
-            //In link mode, never expand
-            if (this.displayMode === TrackDisplayMode.Link) {
-                value = false;
-            }
-
             //Let the DOM update first, to have proper height handling when items get added late on
             this.$nextTick(() => {
                 console.debug(
@@ -536,12 +530,6 @@ export default defineComponent({
             return this.displayMode === TrackDisplayMode.Collapsible;
         },
 
-        /** Whether this component shows the tracks only with a link to the track detail
-         * @devdoc Allows to reuse this component for more than one display mode.
-         */
-        isLinkOnly(): boolean {
-            return this.displayMode === TrackDisplayMode.Link;
-        },
         /** Gets a reference to the player instance.
          * @devdoc $ref's are non-reactive, see https://v3.vuejs.org/api/special-attributes.html#ref
          * Thus, referencing an instance after it has been removed from the DOM (e.g. by v-if)
