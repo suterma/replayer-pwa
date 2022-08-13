@@ -235,8 +235,9 @@ export default defineComponent({
 .level {
     .level-left {
         word-break: break-word;
-        /* This basis is set empirically to fit for two elements on the right */
-        flex-basis: calc(100% - 80px);
+        /* This basis is set empirically to fit for one element
+        (equalling 40px) on the right */
+        flex-basis: calc(100% - 40px);
     }
 
     .level-right {
