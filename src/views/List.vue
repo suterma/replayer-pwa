@@ -3,7 +3,12 @@
         <CompilationHeader :compilation="compilation" />
         <template v-for="track in tracks" :key="track.Id">
             <!-- <button class="button is-nav"> -->
-            <TrackHeader :track="track" :isCollapsible="false">
+            <TrackHeader
+                :track="track"
+                :isCollapsible="false"
+                :isPlaying="isTrackPlaying(track)"
+                :isTrackLoaded="true"
+            >
                 <template v-slot:left>
                     <div class="level-item is-narrow">
                         <NavButton
@@ -16,6 +21,8 @@
             </TrackHeader>
             <!-- </button> -->
         </template>
+
+        {{ volume }} {{ isPlaying }}
 
         <nav
             class="navbar is-fixed-bottom"
@@ -31,8 +38,9 @@
                     :title="activeTrack?.Name"
                     :mediaUrl="mediaUrl"
                     :sourceDescription="activeTrack?.Url"
+                    @trackPlaying="updatePlaying"
                     :playbackMode="playbackMode"
-                    :volume="0.5"
+                    v-model:volume.number="volume"
                 ></TrackAudioApiPlayer>
                 <!-- </template> -->
                 <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
@@ -83,6 +91,10 @@ export default defineComponent({
             tracksDisplayMode: TrackDisplayMode.Play,
             playbackMode: PlaybackMode.PlayTrack,
             activeTrack: null as ITrack | null,
+            /** Flag to indicate whether the player is currently playing
+             */
+            isPlaying: false,
+            volume: 0.5,
         };
     },
     computed: {
@@ -132,6 +144,19 @@ export default defineComponent({
         playTrack(track: ITrack): void {
             this.activeTrack = track;
             this.trackPlayerInstance.playFrom(0.0);
+        },
+
+        /** Updates the playing flag from the associated player event */
+        updatePlaying(value: boolean) {
+            console.debug(
+                `Track(${this.activeTrack?.Name})::updatePlaying:value:` +
+                    value,
+            );
+            this.isPlaying = value;
+        },
+
+        isTrackPlaying(track: ITrack): boolean {
+            return track.Id === this.activeTrack?.Id && this.isPlaying;
         },
     },
 });
