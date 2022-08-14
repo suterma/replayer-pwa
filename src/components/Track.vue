@@ -53,7 +53,7 @@
                     :mediaUrl="optimizedMediaUrl"
                     @timeupdate="updateTime"
                     @durationChanged="calculateCueDurations"
-                    @trackPlaying="updatePlaying"
+                    v-model:isPlaying="isPlaying"
                     @newCueTriggered="createNewCue"
                     @update:playbackMode="updatedPlaybackMode"
                     :playbackMode="track.PlaybackMode"
@@ -452,13 +452,6 @@ export default defineComponent({
                 trackId,
                 trackDurationSeconds,
             });
-        },
-        /** Updates the playing flag from the associated player event */
-        updatePlaying(value: boolean) {
-            console.debug(
-                `Track(${this.track.Name})::updatePlaying:value:` + value,
-            );
-            this.isPlaying = value;
         },
     },
 

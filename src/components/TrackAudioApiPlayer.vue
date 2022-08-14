@@ -55,7 +55,6 @@ import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
  * @devdoc Internally maintains it's state, updating the enclosed audio element accordingly.
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playing
  * @remarks Emits 'durationChanged' with the track duration in seconds, once after successful load of the metadata of the track's media file
- * @remarks Emits 'trackPlaying' when the track is playing
  * @devdoc The 'newCueTriggered' is just passed up
  * @devdoc Autoplay after load is intentionally not supported, as this is of no use for the Replayer app.
  */
@@ -66,10 +65,10 @@ export default defineComponent({
     emits: [
         'timeupdate',
         'durationChanged',
-        'trackPlaying',
         'newCueTriggered',
         'update:playbackMode',
         'update:volume',
+        'update:isPlaying',
         /* Do not add newCueTriggered here, to let it just get passed up */
     ],
     props: {
@@ -133,6 +132,14 @@ export default defineComponent({
             required: true,
         },
 
+        /** Whether playback is currently ongoing
+         * @remarks Implements a two-way binding
+         */
+        isPlaying: {
+            type: Boolean,
+            required: true,
+            default: false,
+        },
         /** The track volume
          * @remarks Implements a two-way binding
          */
@@ -260,7 +267,7 @@ export default defineComponent({
             //NOTE: Having the fade-in operation to start here, instead of after the thenable play action
             //ensures, that a fade operation is applied without any audible delay.
             this.debugLog('Playback started');
-            this.$emit('trackPlaying', true);
+            this.$emit('update:isPlaying', true);
             this.isFading = true;
             this.fader
                 .fadeIn()
@@ -338,12 +345,19 @@ export default defineComponent({
                 );
             }
         },
-
         /** Watch whether the media URL property changed, and then update the audio element accordingly  */
         mediaUrl(): void {
             this.debugLog(`mediaUrl:${this.mediaUrl}`);
             this.updateMediaSource(this.mediaUrl);
             this.fader.cancel();
+        },
+        /** Watch the playback state, and then update the audio element accordingly  */
+        isPlaying(value: boolean): void {
+            if (value) {
+                this.play();
+            } else {
+                this.pause();
+            }
         },
     },
     methods: {
@@ -511,7 +525,7 @@ export default defineComponent({
                 this.audioElement.pause();
                 this.fader.cancel();
                 this.fader.reset();
-                this.$emit('trackPlaying', false);
+                this.$emit('update:isPlaying', false);
             }
             //no fading at stop
             this.isFading = false;
@@ -570,7 +584,7 @@ export default defineComponent({
                     .then(() => {
                         this.audioElement.pause();
                         this.isFading = false;
-                        this.$emit('trackPlaying', false);
+                        this.$emit('update:isPlaying', false);
                     });
             }
         },
@@ -582,7 +596,7 @@ export default defineComponent({
             this.fader.fadeOut().then(() => {
                 this.audioElement.pause();
                 this.isFading = false;
-                this.$emit('trackPlaying', false);
+                this.$emit('update:isPlaying', false);
                 this.seekTo(position);
             });
         },
@@ -719,7 +733,7 @@ export default defineComponent({
                                 console.error(
                                     'Playback failed with message: ' + e,
                                 );
-                                this.$emit('trackPlaying', false);
+                                this.$emit('update:isPlaying', false);
                             })
                             .finally(() => {
                                 this.isPlayingRequestOutstanding = false;

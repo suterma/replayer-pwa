@@ -1,6 +1,22 @@
 <template>
     <div class="has-navbar-fixed-bottom">
         <CompilationHeader :compilation="compilation" />
+
+        {{ volume }} {{ isPlaying }}
+
+        <NavButton
+            v-if="isPlaying"
+            title="pause"
+            iconName="pause"
+            @click="isPlaying = false"
+        />
+        <NavButton
+            v-else
+            title="play"
+            iconName="play"
+            @click="isPlaying = true"
+        />
+
         <template v-for="track in tracks" :key="track.Id">
             <!-- <button class="button is-nav"> -->
             <TrackHeader
@@ -22,8 +38,6 @@
             <!-- </button> -->
         </template>
 
-        {{ volume }} {{ isPlaying }}
-
         <nav
             class="navbar is-fixed-bottom"
             role="form"
@@ -38,9 +52,9 @@
                     :title="activeTrack?.Name"
                     :mediaUrl="mediaUrl"
                     :sourceDescription="activeTrack?.Url"
-                    @trackPlaying="updatePlaying"
                     :playbackMode="playbackMode"
                     v-model:volume.number="volume"
+                    v-model:isPlaying="isPlaying"
                 ></TrackAudioApiPlayer>
                 <!-- </template> -->
                 <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
@@ -154,7 +168,7 @@ export default defineComponent({
             );
             this.isPlaying = value;
         },
-
+        /** Determines whether the active track is currently playing */
         isTrackPlaying(track: ITrack): boolean {
             return track.Id === this.activeTrack?.Id && this.isPlaying;
         },
