@@ -1,12 +1,20 @@
 <template>
-    <Experimental class="has-navbar-fixed-bottom">
+    <div class="has-navbar-fixed-bottom">
         <CompilationHeader :compilation="compilation" />
         <template v-for="track in tracks" :key="track.Id">
-            <TrackHeader
-                :track="track"
-                :isCollapsible="false"
-                @click="activeTrack = track"
-            />
+            <!-- <button class="button is-nav"> -->
+            <TrackHeader :track="track" :isCollapsible="false">
+                <template v-slot:left>
+                    <div class="level-item is-narrow">
+                        <NavButton
+                            title="play"
+                            iconName="play"
+                            @click="activeTrack = track"
+                        />
+                    </div>
+                </template>
+            </TrackHeader>
+            <!-- </button> -->
         </template>
 
         <nav
@@ -44,7 +52,7 @@
                 </template>
             </div>
         </nav>
-    </Experimental>
+    </div>
 </template>
 
 <script lang="ts">
@@ -55,23 +63,23 @@ import {
     PlaybackMode,
     TrackDisplayMode,
 } from '@/store/compilation-types';
-import Experimental from '@/components/Experimental.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
 import { MediaUrl } from '@/store/state-types';
 import CompilationHandler from '@/store/compilation-handler';
 import LongLine from '@/components/LongLine.vue';
 import TrackHeader from '../components/TrackHeader.vue';
+import NavButton from '@/components/NavButton.vue';
 
 /** A Display of a complete compilation, with a simple track listing */
 export default defineComponent({
     name: 'List',
     components: {
-        Experimental,
         CompilationHeader,
         LongLine,
         TrackAudioApiPlayer,
         TrackHeader,
+        NavButton,
     },
     data() {
         return {

@@ -16,6 +16,8 @@
     >
         <!-- Left side -->
         <div class="level-left">
+            <!-- Slot for additional level items -->
+            <slot name="left"></slot>
             <!-- Expander -->
             <div v-if="isCollapsible" class="level-item is-narrow">
                 <CollapsibleButton
@@ -49,6 +51,7 @@
                     :is-unloaded="!isTrackLoaded"
                 />
             </nav>
+            <slot name="right"></slot>
         </div>
     </nav>
 </template>

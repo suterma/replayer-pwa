@@ -36,6 +36,5 @@ export default defineComponent({
             default: '',
         },
     },
-    methods: {},
 });
 </script>
