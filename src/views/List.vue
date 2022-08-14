@@ -9,7 +9,7 @@
                         <NavButton
                             title="play"
                             iconName="play"
-                            @click="activeTrack = track"
+                            @click="playTrack(track)"
                         />
                     </div>
                 </template>
@@ -25,19 +25,18 @@
             <div class="navbar-item">
                 <!-- The audio player, but only once the source is available
                 from the store -->
-                <template v-if="mediaUrl">
-                    <TrackAudioApiPlayer
-                        v-if="mediaUrl"
-                        ref="playerReference"
-                        :title="activeTrack?.Name"
-                        :mediaUrl="mediaUrl"
-                        :sourceDescription="activeTrack?.Url"
-                        :playbackMode="playbackMode"
-                        :volume="0.5"
-                    ></TrackAudioApiPlayer>
-                </template>
+                <!-- <template v-if="mediaUrl"> -->
+                <TrackAudioApiPlayer
+                    ref="playerReference"
+                    :title="activeTrack?.Name"
+                    :mediaUrl="mediaUrl"
+                    :sourceDescription="activeTrack?.Url"
+                    :playbackMode="playbackMode"
+                    :volume="0.5"
+                ></TrackAudioApiPlayer>
+                <!-- </template> -->
                 <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
-                <template v-else>
+                <!-- <template v-else>
                     <div class="field player-panel is-fullwidth">
                         <p class="control">
                             <button disabled class="button is-fullwidth">
@@ -49,7 +48,7 @@
                             </button>
                         </p>
                     </div>
-                </template>
+                </template> -->
             </div>
         </nav>
     </div>
@@ -67,7 +66,6 @@ import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
 import { MediaUrl } from '@/store/state-types';
 import CompilationHandler from '@/store/compilation-handler';
-import LongLine from '@/components/LongLine.vue';
 import TrackHeader from '../components/TrackHeader.vue';
 import NavButton from '@/components/NavButton.vue';
 
@@ -76,7 +74,6 @@ export default defineComponent({
     name: 'List',
     components: {
         CompilationHeader,
-        LongLine,
         TrackAudioApiPlayer,
         TrackHeader,
         NavButton,
@@ -119,6 +116,22 @@ export default defineComponent({
                 mediaUrls,
             );
             return mediaUrl;
+        },
+        /** Gets a reference to the player instance.
+         * @devdoc $ref's are non-reactive, see https://v3.vuejs.org/api/special-attributes.html#ref
+         * Thus, referencing an instance after it has been removed from the DOM (e.g. by v-if)
+         * does not work, even after it's rendered again later.
+         */
+        trackPlayerInstance(): InstanceType<typeof TrackAudioApiPlayer> {
+            return this.$refs.playerReference as InstanceType<
+                typeof TrackAudioApiPlayer
+            >;
+        },
+    },
+    methods: {
+        playTrack(track: ITrack): void {
+            this.activeTrack = track;
+            this.trackPlayerInstance.playFrom(0.0);
         },
     },
 });
