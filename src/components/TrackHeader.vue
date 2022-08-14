@@ -17,7 +17,7 @@
         <!-- Left side -->
         <div class="level-left">
             <!-- Slot for additional level items -->
-            <slot name="left"></slot>
+            <slot name="left-start"></slot>
             <!-- Expander -->
             <div v-if="isCollapsible" class="level-item is-narrow">
                 <CollapsibleButton
@@ -40,6 +40,8 @@
                     <ArtistInfo :track="track" />
                 </p>
             </div>
+            <!-- Slot for additional level items -->
+            <slot name="left-end"></slot>
         </div>
         <!-- Right side -->
         <div class="level-right">
@@ -51,6 +53,8 @@
                     :is-unloaded="!isTrackLoaded"
                 />
             </nav>
+            <!-- Slot for additional level items -->
+
             <slot name="right"></slot>
         </div>
     </nav>

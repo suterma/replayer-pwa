@@ -25,13 +25,18 @@
                 :isPlaying="isTrackPlaying(track)"
                 :isTrackLoaded="true"
             >
-                <template v-slot:left>
+                <template v-slot:left-start>
                     <div class="level-item is-narrow">
                         <NavButton
                             title="play"
                             iconName="play"
                             @click="playTrack(track)"
                         />
+                    </div>
+                </template>
+                <template v-slot:left-end>
+                    <div class="level-item is-narrow">
+                        {{ track?.Duration }}
                     </div>
                 </template>
             </TrackHeader>
