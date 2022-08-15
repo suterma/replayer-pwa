@@ -142,7 +142,7 @@ import { defineComponent } from 'vue';
 import { Cue } from '@/store/compilation-types';
 import { ActionTypes } from '@/store/action-types';
 import CompilationHandler from '@/store/compilation-handler';
-import CueButton from '@/components/CueButton.vue';
+import CueButton from '@/components/buttons/CueButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 
 /** An Editor for for a single cue

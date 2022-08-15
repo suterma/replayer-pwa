@@ -180,14 +180,14 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ICompilation } from '@/store/compilation-types';
-import CollapsibleButton from '@/components/CollapsibleButton.vue';
+import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import EditableInput from '@/components/EditableInput.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import NavButton from '@/components/NavButton.vue';
+import NavButton from '@/components/buttons/NavButton.vue';
 import Experimental from '@/components/Experimental.vue';
 //import ControlKnob from '@slipmatio/control-knob';
 import ControlKnob from '@/components/control-knob';
-import Knob from '@/components/Knob.vue';
+import Knob from '@/components/buttons/Knob.vue';
 
 export default defineComponent({
     name: 'Development',

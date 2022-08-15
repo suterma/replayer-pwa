@@ -56,8 +56,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import DropdownMenu from '@/components/DropdownMenu.vue';
-import DropdownMenuRouterLink from '@/components/DropdownMenuRouterLink.vue';
+import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
+import DropdownMenuRouterLink from '@/components/dropdown-menu/DropdownMenuRouterLink.vue';
 import Experimental from '@/components/Experimental.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
 

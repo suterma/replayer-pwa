@@ -158,7 +158,7 @@ import {
     TrackDisplayMode,
     PlaybackMode,
 } from '@/store/compilation-types';
-import CueButton from '@/components/CueButton.vue';
+import CueButton from '@/components/buttons/CueButton.vue';
 import CueLevel from '@/components/CueLevel.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
 import { MediaUrl } from '@/store/state-types';

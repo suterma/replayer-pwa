@@ -43,7 +43,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import NavButton from '@/components/NavButton.vue';
+import NavButton from '@/components/buttons/NavButton.vue';
 
 /** A text input, which has a dedicated edit icon.
  */

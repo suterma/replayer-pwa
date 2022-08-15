@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import DropdownMenuButton from '@/components/DropdownMenuButton.vue';
+import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
 /** An item for a Dropdown menu
  */
 export default defineComponent({

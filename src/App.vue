@@ -23,7 +23,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import AppContextMenu from '@/components/AppContextMenu.vue';
+import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import Experimental from '@/components/Experimental.vue';
 import ReplayerAd from '@/components/ReplayerAd.vue';

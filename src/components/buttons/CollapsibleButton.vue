@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import NavButton from '@/components/NavButton.vue';
+import NavButton from '@/components/buttons/NavButton.vue';
 
 /** A button to select the collapsed or expanded state
  */

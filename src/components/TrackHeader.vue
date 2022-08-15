@@ -54,7 +54,6 @@
                 />
             </nav>
             <!-- Slot for additional level items -->
-
             <slot name="right"></slot>
         </div>
     </nav>
@@ -64,7 +63,7 @@
 import { defineComponent } from 'vue';
 import { Track } from '@/store/compilation-types';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
-import CollapsibleButton from '@/components/CollapsibleButton.vue';
+import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import { ActionTypes } from '@/store/action-types';
 import LinkableText from './LinkableText.vue';

@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import NavButton from '@/components/NavButton.vue';
+import NavButton from '@/components/buttons/NavButton.vue';
 import MediaSourceIndicator from '@/components/MediaSourceIndicator.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import { Track } from '@/store/compilation-types';

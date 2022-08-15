@@ -30,7 +30,7 @@ import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
 import { Compilation, ICompilation } from '@/store/compilation-types';
 import EditableInput from '@/components/EditableInput.vue';
-import CompilationContextMenu from '@/components/CompilationContextMenu.vue';
+import CompilationContextMenu from '@/components/context-menu/CompilationContextMenu.vue';
 
 /** A nav bar as header with a menu for a compilation
  */

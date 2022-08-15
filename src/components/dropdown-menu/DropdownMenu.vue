@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import NavButton from '@/components/NavButton.vue';
+import NavButton from '@/components/buttons/NavButton.vue';
 
 /** A drop down menu, with a slot for the menu items.
  */

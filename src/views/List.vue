@@ -94,7 +94,7 @@ import CompilationHeader from '@/components/CompilationHeader.vue';
 import { MediaUrl } from '@/store/state-types';
 import CompilationHandler from '@/store/compilation-handler';
 import TrackHeader from '../components/TrackHeader.vue';
-import NavButton from '@/components/NavButton.vue';
+import NavButton from '@/components/buttons/NavButton.vue';
 
 /** A Display of a complete compilation, with a simple track listing */
 export default defineComponent({

@@ -254,7 +254,7 @@ import { defineComponent } from 'vue';
 import { MutationTypes } from '@/store/mutation-types';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import { Settings } from '@/store/state-types';
-import CollapsibleButton from '@/components/CollapsibleButton.vue';
+import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
 import { confirm } from '@/code/ui/dialogs';
 

@@ -36,8 +36,8 @@ import { defineComponent } from 'vue';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
 import { Compilation } from '@/store/compilation-types';
-import DropdownMenu from '@/components/DropdownMenu.vue';
-import DropdownMenuButton from '@/components/DropdownMenuButton.vue';
+import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
+import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
 import { confirm, downloadCompilation } from '@/code/ui/dialogs';
 import { Hotkey } from '@simolation/vue-hotkey';
 

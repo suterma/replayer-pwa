@@ -111,9 +111,9 @@
 import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent, PropType } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import Knob from '@/components/Knob.vue';
+import Knob from '@/components/buttons/Knob.vue';
 import PlayerTime from '@/components/PlayerTime.vue';
-import PlaybackModeButton from '@/components/PlaybackModeButton.vue';
+import PlaybackModeButton from '@/components/buttons/PlaybackModeButton.vue';
 import LongLine from '@/components/LongLine.vue';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import AudioUtil from '@/code/audio/AudioUtil';

@@ -95,7 +95,7 @@ import PlayerTime from '@/components/PlayerTime.vue';
 import LongLine from '@/components/LongLine.vue';
 import AudioUtil from '@/code/audio/AudioUtil';
 import { Hotkey } from '@simolation/vue-hotkey';
-import PlaybackModeButton from '@/components/PlaybackModeButton.vue';
+import PlaybackModeButton from '@/components/buttons/PlaybackModeButton.vue';
 import { PlaybackMode } from '@/store/compilation-types';
 
 /** A UI representation for a media player
