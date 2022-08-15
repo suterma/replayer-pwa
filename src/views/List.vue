@@ -2,20 +2,13 @@
     <div class="has-navbar-fixed-bottom">
         <CompilationHeader :compilation="compilation" />
 
-        {{ volume }} {{ isPlaying }}
+        {{ volume }}
 
-        <NavButton
-            v-if="isPlaying"
-            title="pause"
-            iconName="pause"
-            @click="isPlaying = false"
-        />
-        <NavButton
-            v-else
-            title="play"
-            iconName="play"
-            @click="isPlaying = true"
-        />
+        <PlayPauseButton
+            :isPlaying="isPlaying"
+            :isDisabled="!isPlayable"
+            @click="isPlaying = !isPlaying"
+        ></PlayPauseButton>
 
         <template v-for="track in tracks" :key="track.Id">
             <!-- <button class="button is-nav"> -->
@@ -27,6 +20,7 @@
             >
                 <template v-slot:left-start>
                     <div class="level-item is-narrow">
+                        //TODO add dedicated button
                         <NavButton
                             title="play"
                             iconName="play"
@@ -60,6 +54,7 @@
                     :playbackMode="playbackMode"
                     v-model:volume.number="volume"
                     v-model:isPlaying="isPlaying"
+                    @durationChanged="isPlayable = true"
                 ></TrackAudioApiPlayer>
                 <!-- </template> -->
                 <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
@@ -95,6 +90,7 @@ import { MediaUrl } from '@/store/state-types';
 import CompilationHandler from '@/store/compilation-handler';
 import TrackHeader from '../components/TrackHeader.vue';
 import NavButton from '@/components/buttons/NavButton.vue';
+import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 
 /** A Display of a complete compilation, with a simple track listing */
 export default defineComponent({
@@ -103,6 +99,7 @@ export default defineComponent({
         CompilationHeader,
         TrackAudioApiPlayer,
         TrackHeader,
+        PlayPauseButton,
         NavButton,
     },
     data() {
@@ -113,6 +110,12 @@ export default defineComponent({
             /** Flag to indicate whether the player is currently playing
              */
             isPlaying: false,
+
+            /** Indicates that a track media has been loaded and is available for play
+             * @remarks Because of a lack of a dedicated event, just uses the first duration update
+             * as indication of an available track media.
+             */
+            isPlayable: false,
             volume: 0.5,
         };
     },

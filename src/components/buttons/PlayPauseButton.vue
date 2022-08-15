@@ -2,9 +2,9 @@
     <button
         :class="{
             button: true,
-            disabled: isDisabled,
             'is-loading': isLoading,
         }"
+        :disabled="isDisabled"
         :title="isPlaying ? 'Pause' : 'Play'"
     >
         <BaseIcon v-if="isPlaying" name="pause" />
