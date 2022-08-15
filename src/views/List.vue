@@ -11,7 +11,11 @@
         ></PlayPauseButton>
 
         <template v-for="track in tracks" :key="track.Id">
-            <!-- <button class="button is-nav"> -->
+            <!-- <PlayPauseButton
+                :isPlaying="isPlaying"
+                @click="playTrack(track)"
+                title="play"
+             > -->
             <TrackHeader
                 :track="track"
                 :isCollapsible="false"
@@ -20,11 +24,10 @@
             >
                 <template v-slot:left-start>
                     <div class="level-item is-narrow">
-                        //TODO add dedicated button
-                        <NavButton
+                        <PlayPauseButton
+                            :isPlaying="isTrackPlaying(track)"
+                            @click="togglePlayTrack(track)"
                             title="play"
-                            iconName="play"
-                            @click="playTrack(track)"
                         />
                     </div>
                 </template>
@@ -34,7 +37,7 @@
                     </div>
                 </template>
             </TrackHeader>
-            <!-- </button> -->
+            <!-- </PlayPauseButton> -->
         </template>
 
         <nav
@@ -89,7 +92,6 @@ import CompilationHeader from '@/components/CompilationHeader.vue';
 import { MediaUrl } from '@/store/state-types';
 import CompilationHandler from '@/store/compilation-handler';
 import TrackHeader from '../components/TrackHeader.vue';
-import NavButton from '@/components/buttons/NavButton.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 
 /** A Display of a complete compilation, with a simple track listing */
@@ -100,7 +102,6 @@ export default defineComponent({
         TrackAudioApiPlayer,
         TrackHeader,
         PlayPauseButton,
-        NavButton,
     },
     data() {
         return {
@@ -163,9 +164,14 @@ export default defineComponent({
         },
     },
     methods: {
-        playTrack(track: ITrack): void {
-            this.activeTrack = track;
-            this.trackPlayerInstance.playFrom(0.0);
+        togglePlayTrack(track: ITrack): void {
+            if (this.activeTrack?.Id !== track.Id) {
+                this.activeTrack = track;
+                this.trackPlayerInstance.playFrom(0.0);
+            } else {
+                //same track: just toggle playback
+                this.trackPlayerInstance.togglePlayback();
+            }
         },
 
         /** Updates the playing flag from the associated player event */

@@ -9,6 +9,7 @@
     >
         <BaseIcon v-if="isPlaying" name="pause" />
         <BaseIcon v-else name="play" />
+        <slot></slot>
     </button>
 </template>
 

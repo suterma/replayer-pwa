@@ -1,7 +1,7 @@
 <template>
     <!-- Level, also on mobile 
      The id is used to scroll to this item when it's becoming the active track-->
-    <nav
+    <div
         :class="{
             level: true,
             'is-mobile': true,
@@ -56,7 +56,7 @@
             <!-- Slot for additional level items -->
             <slot name="right"></slot>
         </div>
-    </nav>
+    </div>
 </template>
 
 <script lang="ts">
