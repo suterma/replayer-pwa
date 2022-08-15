@@ -35,35 +35,24 @@
         </p>
         <!-- Play/Pause, when STOP is shown (Only available when the track is loaded, and no playback request is outstanding) -->
         <p class="control is-hidden-mobile">
-            <button
-                :class="{
-                    button: true,
-                    disabled: isPlayingRequestOutstanding || !loaded,
-                    'is-loading':
-                        isPlayingRequestOutstanding || !loaded || isFading,
-                }"
+            <PlayPauseButton
+                :isDisabled="isPlayingRequestOutstanding || !loaded"
+                :isLoading="isPlayingRequestOutstanding || !loaded || isFading"
+                :isPlaying="playing"
                 @click.prevent="togglePlayback"
-                :title="playing ? 'Pause' : 'Play'"
             >
-                <BaseIcon v-if="playing" name="pause" />
-                <BaseIcon v-else name="play" />
-            </button>
+            </PlayPauseButton>
         </p>
         <!-- Play/Pause, as the outermost element, when STOP is hidden (Only available when the track is loaded, and no playback request is outstanding) -->
         <p class="control is-hidden-tablet">
-            <button
-                :class="{
-                    button: true,
-                    disabled: isPlayingRequestOutstanding || !loaded,
-                    'is-loading': isPlayingRequestOutstanding || !loaded,
-                    'has-left-radius': true,
-                }"
+            <PlayPauseButton
+                class="has-left-radius"
+                :isDisabled="isPlayingRequestOutstanding || !loaded"
+                :isLoading="isPlayingRequestOutstanding || !loaded || isFading"
+                :isPlaying="playing"
                 @click.prevent="togglePlayback"
-                :title="playing ? 'Pause' : 'Play'"
             >
-                <BaseIcon v-if="playing" name="pause" />
-                <BaseIcon v-else name="play" />
-            </button>
+            </PlayPauseButton>
         </p>
         <!-- Play mode -->
         <p class="control">
@@ -114,6 +103,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import Knob from '@/components/buttons/Knob.vue';
 import PlayerTime from '@/components/PlayerTime.vue';
 import PlaybackModeButton from '@/components/buttons/PlaybackModeButton.vue';
+import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import LongLine from '@/components/LongLine.vue';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import AudioUtil from '@/code/audio/AudioUtil';
@@ -123,7 +113,14 @@ import AudioUtil from '@/code/audio/AudioUtil';
  */
 export default defineComponent({
     name: 'PlayerChrome',
-    components: { BaseIcon, PlayerTime, PlaybackModeButton, LongLine, Knob },
+    components: {
+        BaseIcon,
+        PlayerTime,
+        PlaybackModeButton,
+        PlayPauseButton,
+        LongLine,
+        Knob,
+    },
     emits: [
         'stop',
         /** Flags, whether the UI represents the playing (true) or the paused (false) state
