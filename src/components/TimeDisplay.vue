@@ -1,5 +1,6 @@
 <template>
     <span
+        style="min-width: 9ch"
         :class="{
             'is-invisible': hidePlaceholder && modelValue === null,
         }"
