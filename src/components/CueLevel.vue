@@ -96,9 +96,11 @@
                 <!-- Duration (keep small and hide on touch)-->
                 <div class="level-item is-flex-shrink-1 is-hidden-touch">
                     <p class="is-single-line" title="Duration (until next cue)">
-                        <span class="has-opacity-half">{{
-                            cueDurationDisplayTime
-                        }}</span>
+                        <TimeDisplay
+                            class="has-opacity-half"
+                            :modelValue="cue.Duration"
+                        >
+                        </TimeDisplay>
                     </p>
                 </div>
                 <!-- A rather slim input for the shortcut (a short mnemonic) -->
@@ -144,6 +146,7 @@ import { ActionTypes } from '@/store/action-types';
 import CompilationHandler from '@/store/compilation-handler';
 import CueButton from '@/components/buttons/CueButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
+import TimeDisplay from './TimeDisplay.vue';
 
 /** An Editor for for a single cue
  * @remarks Shows a cue button with an inline progress bar, plus input fields for all properties
@@ -155,7 +158,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
  */
 export default defineComponent({
     name: 'CueLevel',
-    components: { CueButton, BaseIcon },
+    components: { CueButton, BaseIcon, TimeDisplay },
     emits: ['click', 'play'],
     props: {
         cue: {
@@ -284,14 +287,6 @@ export default defineComponent({
         },
     },
     computed: {
-        /** Converts the cue's duration into a conveniently displayable hh:mm:ss.s format.
-         * @remarks Omits the hour part, if not applicable
-         */
-        cueDurationDisplayTime(): string {
-            const duration = this.cue.Duration;
-            return CompilationHandler.convertToDisplayTime(duration);
-        },
-
         /** Determines whether this cue is currently selected
          * @remarks Note: only one cue in a compilation may be selected */
         isCueSelected(): boolean {

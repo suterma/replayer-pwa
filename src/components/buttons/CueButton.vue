@@ -41,9 +41,10 @@
                     <!-- Left side -->
                     <div class="level-left">
                         <div class="level-item mr-3">
-                            <span class="has-opacity-half foreground">
-                                {{ cueDisplayTime }}
-                            </span>
+                            <TimeDisplay
+                                class="has-opacity-half foreground"
+                                :modelValue="cue.Time"
+                            ></TimeDisplay>
                         </div>
                     </div>
 
@@ -51,9 +52,10 @@
                     <div class="level-right">
                         <p class="level-item is-hidden-touch mr-3">
                             <!-- Use a right position for Durations, to keep them as much out of visibility as possible -->
-                            <span class="has-opacity-half foregrounds">{{
-                                cueDurationDisplayTime
-                            }}</span>
+                            <TimeDisplay
+                                class="has-opacity-half foreground"
+                                :modelValue="cue.Duration"
+                            ></TimeDisplay>
                         </p>
                         <p class="level-item" v-if="cue?.Shortcut">
                             <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibility as possible -->
@@ -72,8 +74,8 @@
 <script lang="ts">
 import { defineComponent, StyleValue } from 'vue';
 import { Cue } from '@/store/compilation-types';
-import CompilationHandler from '@/store/compilation-handler';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
+import TimeDisplay from '../TimeDisplay.vue';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
@@ -81,7 +83,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
  */
 export default defineComponent({
     name: 'CueButton',
-    components: { BaseIcon },
+    components: { BaseIcon, TimeDisplay },
     props: {
         cue: {
             type: Cue,
@@ -120,7 +122,7 @@ export default defineComponent({
             if (this.cue.Description) {
                 return `Play from ${this.cue.Description}`;
             }
-            return `Play from ${this.cueDisplayTime}`;
+            return `Play from here`;
         },
         /** The playback progress within this cue, in [percent], or null if not applicable */
         percentComplete(): number {
@@ -171,18 +173,6 @@ export default defineComponent({
                     display: `none`,
                 };
             }
-        },
-        /** Converts the cue's total seconds into a conveniently displayable hh:mm:ss.s format.
-         * @remarks Omits the hour part, if not applicable
-         */
-        cueDisplayTime(): string {
-            return CompilationHandler.convertToDisplayTime(this.cue.Time);
-        },
-        /** Converts the cue's duration into a conveniently displayable hh:mm:ss.s format.
-         * @remarks Omits the hour part, if not applicable
-         */
-        cueDurationDisplayTime(): string {
-            return CompilationHandler.convertToDisplayTime(this.cue.Duration);
         },
         /** Determines whether this cue is currently selected
          * @remarks Note: only one cue in a compilation may be selected */

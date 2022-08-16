@@ -118,11 +118,10 @@
                                 <!-- second line (use a horizontal level also on mobile)-->
                                 <span class="level is-mobile">
                                     <div class="level-item mr-3">
-                                        <span
+                                        <TimeDisplay
                                             class="has-opacity-half foreground"
-                                        >
-                                            {{ currentDisplaySeconds }}
-                                        </span>
+                                            :modelValue="currentSeconds"
+                                        ></TimeDisplay>
                                     </div>
                                 </span>
                             </span>
@@ -168,6 +167,7 @@ import TrackHeaderEdit from '@/components/TrackHeaderEdit.vue';
 import Experimental from '@/components/Experimental.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
 import LongLine from '@/components/LongLine.vue';
+import TimeDisplay from '@/components/TimeDisplay.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import NoSleep from 'nosleep.js';
@@ -193,6 +193,7 @@ export default defineComponent({
         LongLine,
         BaseIcon,
         Experimental,
+        TimeDisplay,
     },
     mixins: [settingsMixin],
     props: {
@@ -589,12 +590,6 @@ export default defineComponent({
                 (this.cues?.filter((c) => c.Id === selectedCueId).length ?? 0) >
                 0
             );
-        },
-        /** Converts the current seconds into a conveniently displayable hh:mm:ss.s format.
-         * @remarks Omits the hour part, if not appliccable
-         */
-        currentDisplaySeconds(): string {
-            return CompilationHandler.convertToDisplayTime(this.currentSeconds);
         },
     },
 });

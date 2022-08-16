@@ -97,7 +97,6 @@
 </template>
 
 <script lang="ts">
-import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent, PropType } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import Knob from '@/components/buttons/Knob.vue';
@@ -238,20 +237,6 @@ export default defineComponent({
             };
         },
 
-        /** Converts the current time into a conveniently displayable hh:mm:ss.s format.
-         * @remarks Omits the hour part, if not applicable
-         */
-        currentDisplayTime(): string {
-            return CompilationHandler.convertToDisplayTime(this.currentSeconds);
-        },
-        /** Converts the track duration into a conveniently displayable hh:mm:ss.s format.
-         * @remarks Omits the hour part, if not applicable
-         */
-        durationDisplayTime(): string {
-            return CompilationHandler.convertToDisplayTime(
-                this.durationSeconds,
-            );
-        },
         volumeTitle(): string {
             return `Volume (${this.volume * 100}%)`;
         },

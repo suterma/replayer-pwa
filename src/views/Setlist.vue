@@ -73,8 +73,12 @@
                     <span class="is-size-7">
                         {{ track.Url }}
                     </span>
-                    <span class="is-size-7" v-if="track.Duration">
-                        ({{ displayTime(track.Duration) }})
+                    <span v-if="track.Duration !== null" class="is-size-7">
+                        (<TimeDisplay
+                            class="is-size-7"
+                            :modelValue="track.Duration"
+                        ></TimeDisplay
+                        >)
                     </span>
                 </h3>
 
@@ -97,7 +101,9 @@
                                 {{ cue.Description }}
                             </td>
                             <td class="">
-                                {{ displayTime(cue.Time) }}
+                                <TimeDisplay
+                                    :modelValue="cue.Time"
+                                ></TimeDisplay>
                             </td>
                         </tr>
                     </tbody>
@@ -135,7 +141,7 @@ import { defineComponent } from 'vue';
 import { ICompilation } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import CompilationHandler from '@/store/compilation-handler';
+import TimeDisplay from '@/components/TimeDisplay.vue';
 
 /** A printable display of a complete compilation, with a track and cue listing */
 export default defineComponent({
@@ -143,6 +149,7 @@ export default defineComponent({
     components: {
         ArtistInfo,
         BaseIcon,
+        TimeDisplay,
     },
     data() {
         return {
@@ -166,12 +173,6 @@ export default defineComponent({
         },
     },
     methods: {
-        /** Converts the a time into a conveniently displayable hh:mm:ss.s format.
-         * @remarks Omits the hour part, if not appliccable
-         */
-        displayTime(value: number | null): string {
-            return CompilationHandler.convertToDisplayTime(value, 1);
-        },
         printWindow: function () {
             window.print();
         },

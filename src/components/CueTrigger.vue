@@ -88,7 +88,6 @@
 </template>
 
 <script lang="ts">
-import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent, PropType } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import PlayerTime from '@/components/PlayerTime.vue';
@@ -213,20 +212,6 @@ export default defineComponent({
                 width: `calc(${this.percentComplete}% + 0.4em)`,
                 'max-width': '100%',
             };
-        },
-        /** Converts the current time into a conveniently displayable hh:mm:ss.s format.
-         * @remarks Omits the hour part, if not appliccable
-         */
-        currentDisplayTime(): string {
-            return CompilationHandler.convertToDisplayTime(this.currentSeconds);
-        },
-        /** Converts the track duration into a conveniently displayable hh:mm:ss.s format.
-         * @remarks Omits the hour part, if not appliccable
-         */
-        durationDisplayTime(): string {
-            return CompilationHandler.convertToDisplayTime(
-                this.durationSeconds,
-            );
         },
     },
     methods: {

@@ -25,9 +25,11 @@
                     </div>
                 </template>
                 <template v-slot:left-end>
-                    <div class="level-item is-narrow">
-                        {{ track?.Duration }}
-                    </div>
+                    <TimeDisplay
+                        class="level-item is-narrow"
+                        :modelValue="track?.Duration"
+                        :hidePlaceholder="true"
+                    ></TimeDisplay>
                 </template>
             </TrackHeader>
         </template>
@@ -67,6 +69,7 @@ import { MediaUrl } from '@/store/state-types';
 import CompilationHandler from '@/store/compilation-handler';
 import TrackHeader from '../components/TrackHeader.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
+import TimeDisplay from '@/components/TimeDisplay.vue';
 
 /** A Display of a complete compilation, with a simple track listing */
 export default defineComponent({
@@ -76,6 +79,7 @@ export default defineComponent({
         TrackAudioApiPlayer,
         TrackHeader,
         PlayPauseButton,
+        TimeDisplay,
     },
     data() {
         return {
