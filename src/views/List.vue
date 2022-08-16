@@ -2,8 +2,6 @@
     <div class="has-navbar-fixed-bottom">
         <CompilationHeader :compilation="compilation" />
 
-        {{ volume }}
-
         <PlayPauseButton
             :isPlaying="isPlaying"
             :isDisabled="!isPlayable"
@@ -11,11 +9,6 @@
         ></PlayPauseButton>
 
         <template v-for="track in tracks" :key="track.Id">
-            <!-- <PlayPauseButton
-                :isPlaying="isPlaying"
-                @click="playTrack(track)"
-                title="play"
-             > -->
             <TrackHeader
                 :track="track"
                 :isCollapsible="false"
@@ -37,7 +30,6 @@
                     </div>
                 </template>
             </TrackHeader>
-            <!-- </PlayPauseButton> -->
         </template>
 
         <nav
@@ -46,9 +38,6 @@
             aria-label="media player"
         >
             <div class="navbar-item">
-                <!-- The audio player, but only once the source is available
-                from the store -->
-                <!-- <template v-if="mediaUrl"> -->
                 <TrackAudioApiPlayer
                     ref="playerReference"
                     :title="activeTrack?.Name"
@@ -59,21 +48,6 @@
                     v-model:isPlaying="isPlaying"
                     @durationChanged="isPlayable = true"
                 ></TrackAudioApiPlayer>
-                <!-- </template> -->
-                <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
-                <!-- <template v-else>
-                    <div class="field player-panel is-fullwidth">
-                        <p class="control">
-                            <button disabled class="button is-fullwidth">
-                                <LongLine
-                                    :text="`Fetching resource ${activeTrack?.Url}`"
-                                    :hasProgress="true"
-                                    :clipLeft="true"
-                                />
-                            </button>
-                        </p>
-                    </div>
-                </template> -->
             </div>
         </nav>
     </div>
