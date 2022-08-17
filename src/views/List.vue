@@ -138,6 +138,10 @@ export default defineComponent({
             return this.trackMediaUrl?.url;
         },
 
+        allTrackIds(): string[] {
+            return this.tracks?.map((track) => track.Id) ?? [];
+        },
+
         /** Returns the media URL (playable file content) for a track's file name
          * @remarks if available, the tracks from a compilation package are used, otherwise the
          * files are to be loaded from the file system or from the internet
@@ -196,13 +200,10 @@ export default defineComponent({
 
         toPreviousTrack(): void {
             if (this.tracks && this.activeTrack) {
-                const allTrackIds = this.tracks.map((track) => track.Id);
-
-                const indexOfSelected = allTrackIds.indexOf(
+                const indexOfSelected = this.allTrackIds.indexOf(
                     this.activeTrack.Id,
                 );
-                const prevTrackId = allTrackIds[indexOfSelected - 1];
-
+                const prevTrackId = this.allTrackIds[indexOfSelected - 1];
                 const previousTrack = this.tracks.filter(
                     (track) => track.Id === prevTrackId,
                 )[0];
@@ -213,13 +214,10 @@ export default defineComponent({
         },
         toNextTrack(): void {
             if (this.tracks && this.activeTrack) {
-                const allTrackIds = this.tracks.map((track) => track.Id);
-
-                const indexOfSelected = allTrackIds.indexOf(
+                const indexOfSelected = this.allTrackIds.indexOf(
                     this.activeTrack.Id,
                 );
-                const nextTrackId = allTrackIds[indexOfSelected + 1];
-
+                const nextTrackId = this.allTrackIds[indexOfSelected + 1];
                 const nextTrack = this.tracks.filter(
                     (track) => track.Id === nextTrackId,
                 )[0];
@@ -237,7 +235,7 @@ export default defineComponent({
             );
             this.isPlaying = value;
         },
-        /** Determines whether the active track is currently playing */
+        /** Determines whether the given track is currently playing */
         isTrackPlaying(track: ITrack): boolean {
             return track.Id === this.activeTrack?.Id && this.isPlaying;
         },
