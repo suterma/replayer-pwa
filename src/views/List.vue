@@ -3,10 +3,31 @@
         <CompilationHeader :compilation="compilation" />
 
         <PlayPauseButton
+            class="is-info"
             :isPlaying="isPlaying"
-            :isDisabled="!isPlayable"
-            @click="isPlaying = !isPlaying"
+            @click="togglePlayPause()"
         ></PlayPauseButton>
+
+        <button
+            :class="{
+                button: true,
+            }"
+            @click="toPreviousTrack()"
+            title="skip to previous track"
+        >
+            <BaseIcon name="skip-previous-outline" />
+        </button>
+        <button
+            :class="{
+                button: true,
+            }"
+            @click="toNextTrack()"
+            title="skip to next track"
+        >
+            <BaseIcon name="skip-next-outline" />
+        </button>
+
+        Previous Next
 
         <template v-for="track in tracks" :key="track.Id">
             <TrackHeader
@@ -19,7 +40,7 @@
                     <div class="level-item is-narrow">
                         <PlayPauseButton
                             :isPlaying="isTrackPlaying(track)"
-                            @click="togglePlayTrack(track)"
+                            @click="skipToPlayPause(track)"
                             title="play"
                         />
                     </div>
@@ -70,6 +91,7 @@ import CompilationHandler from '@/store/compilation-handler';
 import TrackHeader from '../components/TrackHeader.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 
 /** A Display of a complete compilation, with a simple track listing */
 export default defineComponent({
@@ -80,6 +102,7 @@ export default defineComponent({
         TrackHeader,
         PlayPauseButton,
         TimeDisplay,
+        BaseIcon,
     },
     data() {
         return {
@@ -142,13 +165,67 @@ export default defineComponent({
         },
     },
     methods: {
-        togglePlayTrack(track: ITrack): void {
+        /** Skips to and toggles play/pause of the given track.
+         * @remarks If the track is not yet active, tries to activate and play the track.
+         * If it's the active track, just toggles play/pause
+         */
+        skipToPlayPause(track: ITrack): void {
             if (this.activeTrack?.Id !== track.Id) {
                 this.activeTrack = track;
                 this.trackPlayerInstance.playFrom(0.0);
             } else {
                 //same track: just toggle playback
                 this.trackPlayerInstance.togglePlayback();
+            }
+        },
+
+        /** Toggles play/pause of the current track.
+         * @remarks If no track is yet active, tries to activate the first track.
+         */
+        togglePlayPause(): void {
+            if (!this.activeTrack) {
+                const firstTrack =
+                    this.tracks?.find((x) => x !== undefined) ?? null;
+                this.activeTrack = firstTrack;
+            }
+
+            if (this.activeTrack) {
+                this.isPlaying = !this.isPlaying;
+            }
+        },
+
+        toPreviousTrack(): void {
+            if (this.tracks && this.activeTrack) {
+                const allTrackIds = this.tracks.map((track) => track.Id);
+
+                const indexOfSelected = allTrackIds.indexOf(
+                    this.activeTrack.Id,
+                );
+                const prevTrackId = allTrackIds[indexOfSelected - 1];
+
+                const previousTrack = this.tracks.filter(
+                    (track) => track.Id === prevTrackId,
+                )[0];
+                if (previousTrack) {
+                    this.skipToPlayPause(previousTrack);
+                }
+            }
+        },
+        toNextTrack(): void {
+            if (this.tracks && this.activeTrack) {
+                const allTrackIds = this.tracks.map((track) => track.Id);
+
+                const indexOfSelected = allTrackIds.indexOf(
+                    this.activeTrack.Id,
+                );
+                const nextTrackId = allTrackIds[indexOfSelected + 1];
+
+                const nextTrack = this.tracks.filter(
+                    (track) => track.Id === nextTrackId,
+                )[0];
+                if (nextTrack) {
+                    this.skipToPlayPause(nextTrack);
+                }
             }
         },
 
