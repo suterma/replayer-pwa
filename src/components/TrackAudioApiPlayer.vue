@@ -245,6 +245,8 @@ export default defineComponent({
         };
         this.audioElement.onended = (event) => {
             this.debugLog(`onended `, event);
+            this.$emit('update:isPlaying', false);
+
             //Handle the track play mode
             if (this.playbackMode === PlaybackMode.PlayTrack) {
                 if (this.loopStart) {
