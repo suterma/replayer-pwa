@@ -39,6 +39,9 @@
                 <template v-slot:left-start>
                     <div class="level-item is-narrow">
                         <PlayPauseButton
+                            :class="{
+                                'is-success': isTrackPlaying(track),
+                            }"
                             :isPlaying="isTrackPlaying(track)"
                             @click="skipToPlayPause(track)"
                             title="play"
