@@ -1,4 +1,5 @@
 <template>
+    <slot></slot>
     <CueTrigger
         v-if="isEditable"
         :title="title"
@@ -69,6 +70,8 @@ export default defineComponent({
         'update:playbackMode',
         'update:volume',
         'update:isPlaying',
+        /** When the end of the track has been reached and playback has ended */
+        'ended',
         /* Do not add newCueTriggered here, to let it just get passed up */
     ],
     props: {
@@ -246,6 +249,7 @@ export default defineComponent({
         this.audioElement.onended = (event) => {
             this.debugLog(`onended `, event);
             this.$emit('update:isPlaying', false);
+            this.$emit('ended');
 
             //Handle the track play mode
             if (this.playbackMode === PlaybackMode.PlayTrack) {

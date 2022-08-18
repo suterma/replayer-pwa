@@ -3,31 +3,10 @@
         <CompilationHeader :compilation="compilation" />
 
         <PlayPauseButton
-            class="is-info"
+            class="is-success"
             :isPlaying="isPlaying"
             @click="togglePlayPause()"
         ></PlayPauseButton>
-
-        <button
-            :class="{
-                button: true,
-            }"
-            @click="toPreviousTrack()"
-            title="skip to previous track"
-        >
-            <BaseIcon name="skip-previous-outline" />
-        </button>
-        <button
-            :class="{
-                button: true,
-            }"
-            @click="toNextTrack()"
-            title="skip to next track"
-        >
-            <BaseIcon name="skip-next-outline" />
-        </button>
-
-        Previous Next
 
         <template v-for="track in tracks" :key="track.Id">
             <TrackHeader
@@ -35,12 +14,13 @@
                 :isCollapsible="false"
                 :isPlaying="isTrackPlaying(track)"
                 :isTrackLoaded="true"
+                :isActive="isActiveTrack(track)"
             >
                 <template v-slot:left-start>
                     <div class="level-item is-narrow">
                         <PlayPauseButton
                             :class="{
-                                'is-success': isTrackPlaying(track),
+                                'has-text-success': isActiveTrack(track),
                             }"
                             :isPlaying="isTrackPlaying(track)"
                             @click="skipToPlayPause(track)"
@@ -73,7 +53,31 @@
                     v-model:volume.number="volume"
                     v-model:isPlaying="isPlaying"
                     @durationChanged="isPlayable = true"
-                ></TrackAudioApiPlayer>
+                    @ended="trackEnded()"
+                >
+                    <button
+                        :class="{
+                            button: true,
+                        }"
+                        @click="toPreviousTrack()"
+                        title="skip to previous track"
+                    >
+                        <BaseIcon name="skip-previous-outline" />
+                    </button>
+                    <PlayPauseButton
+                        :isPlaying="isPlaying"
+                        @click="togglePlayPause()"
+                    ></PlayPauseButton>
+                    <button
+                        :class="{
+                            button: true,
+                        }"
+                        @click="toNextTrack()"
+                        title="skip to next track"
+                    >
+                        <BaseIcon name="skip-next-outline" />
+                    </button>
+                </TrackAudioApiPlayer>
             </div>
         </nav>
     </div>
@@ -197,37 +201,47 @@ export default defineComponent({
             }
 
             if (this.activeTrack) {
-                this.isPlaying = !this.isPlaying;
+                this.updatePlaying(!this.isPlaying);
             }
         },
 
-        toPreviousTrack(): void {
-            if (this.tracks && this.activeTrack) {
-                const indexOfSelected = this.allTrackIds.indexOf(
-                    this.activeTrack.Id,
-                );
-                const prevTrackId = this.allTrackIds[indexOfSelected - 1];
-                const previousTrack = this.tracks.filter(
-                    (track) => track.Id === prevTrackId,
-                )[0];
-                if (previousTrack) {
-                    this.skipToPlayPause(previousTrack);
+        toPreviousTrack(): Promise<void> {
+            return new Promise((resolve, reject) => {
+                if (this.tracks && this.activeTrack) {
+                    const indexOfSelected = this.allTrackIds.indexOf(
+                        this.activeTrack.Id,
+                    );
+                    const prevTrackId = this.allTrackIds[indexOfSelected - 1];
+                    const previousTrack = this.tracks.filter(
+                        (track) => track.Id === prevTrackId,
+                    )[0];
+                    if (previousTrack) {
+                        this.skipToPlayPause(previousTrack);
+                        resolve();
+                    } else {
+                        reject('No previous track available.');
+                    }
                 }
-            }
+            });
         },
-        toNextTrack(): void {
-            if (this.tracks && this.activeTrack) {
-                const indexOfSelected = this.allTrackIds.indexOf(
-                    this.activeTrack.Id,
-                );
-                const nextTrackId = this.allTrackIds[indexOfSelected + 1];
-                const nextTrack = this.tracks.filter(
-                    (track) => track.Id === nextTrackId,
-                )[0];
-                if (nextTrack) {
-                    this.skipToPlayPause(nextTrack);
+        toNextTrack(): Promise<void> {
+            return new Promise((resolve, reject) => {
+                if (this.tracks && this.activeTrack) {
+                    const indexOfSelected = this.allTrackIds.indexOf(
+                        this.activeTrack.Id,
+                    );
+                    const nextTrackId = this.allTrackIds[indexOfSelected + 1];
+                    const nextTrack = this.tracks.filter(
+                        (track) => track.Id === nextTrackId,
+                    )[0];
+                    if (nextTrack) {
+                        this.skipToPlayPause(nextTrack);
+                        resolve();
+                    } else {
+                        reject('No next track available.');
+                    }
                 }
-            }
+            });
         },
 
         /** Updates the playing flag from the associated player event */
@@ -240,7 +254,21 @@ export default defineComponent({
         },
         /** Determines whether the given track is currently playing */
         isTrackPlaying(track: ITrack): boolean {
-            return track.Id === this.activeTrack?.Id && this.isPlaying;
+            return this.isActiveTrack(track) && this.isPlaying;
+        },
+
+        /** Determines whether the given track is the currently active track */
+        isActiveTrack(track: ITrack): boolean {
+            return track.Id === this.activeTrack?.Id;
+        },
+
+        /** Handler for when a track has been played to end
+         * @remarks Plays the next track automatically
+         */
+        trackEnded(): void {
+            this.toNextTrack().then(() => {
+                this.updatePlaying(true);
+            });
         },
     },
 });
