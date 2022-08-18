@@ -24,13 +24,16 @@
                     :modelValue="modelValue"
                     title="Track"
                     collapsedText="Expand to play"
-                    class="is-nav"
+                    :class="{ 'is-nav': true, 'has-text-success': isActive }"
                 />
             </div>
             <!-- Title -->
             <!-- The title is the only header element that should shrink (break on words) if necessary -->
             <div class="level-item is-narrow is-flex-shrink-1">
-                <p class="title has-text-weight-light is-4">
+                <p
+                    class="title has-text-weight-light is-4"
+                    :class="{ 'has-text-success': isActive }"
+                >
                     <LinkableText :text="track.Name"></LinkableText>
                 </p>
             </div>
@@ -84,7 +87,12 @@ export default defineComponent({
             type: Track,
             required: true,
         },
-
+        /** Whether this track is to be considered as the active track */
+        isActive: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
         modelValue: {
             type: Boolean,
             default: false,

@@ -23,6 +23,7 @@
             v-model="expanded"
             :isPlaying="isPlaying"
             :isTrackLoaded="isTrackLoaded"
+            :isActive="isActiveTrack"
         />
         <TrackHeader
             v-else
@@ -32,6 +33,7 @@
             :isTrackLoaded="isTrackLoaded"
             :isEditable="isEditable"
             :isCollapsible="isCollapsible"
+            :isActive="isActiveTrack"
         />
 
         <!-- The cues as buttons (in a slider, whose use is optional, for a better overview)-->

@@ -13,7 +13,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Level, also on mobile -->
         <div class="level">
             <!-- Left side -->
@@ -21,13 +20,33 @@
                 <!-- Expander (on mobile, display with other right-hand items)-->
                 <div class="level-item is-narrow is-hidden-mobile">
                     <CollapsibleButton
+                        :class="{
+                            'is-nav': true,
+                            'has-text-success': isActive,
+                        }"
                         :modelValue="modelValue"
                         title="Track"
                         collapsedText="Expand to edit"
                         @click="toggleExpanded()"
                     />
                 </div>
-                <!-- Only for wide screens, who the media edit in the level -->
+                <!-- Title -->
+                <!-- The title is the only header element that should shrink (break on words) if necessary -->
+                <div class="level-item is-narrow is-flex-shrink-1">
+                    <div class="field">
+                        <p class="control">
+                            <EditableInput
+                                class="title has-text-weight-light is-4"
+                                :class="{ 'has-text-success': isActive }"
+                                v-model="trackData.Name"
+                                @change="updateName($event.target.value)"
+                                type="text"
+                                placeholder="Track name"
+                            />
+                        </p>
+                    </div>
+                </div>
+                <!-- Only for wide screens, edit the media edit in the level -->
                 <div
                     class="level-item is-hidden-widescreen-only is-hidden-desktop-only is-hidden-touch"
                 >
@@ -37,22 +56,6 @@
                         </p>
                     </div>
                 </div>
-                <!-- Title -->
-                <!-- The title is the only header element that should shrink (break on words) if necessary -->
-                <div class="level-item is-narrow is-flex-shrink-1">
-                    <div class="field">
-                        <p class="control">
-                            <EditableInput
-                                class="title has-text-weight-light is-4"
-                                v-model="trackData.Name"
-                                @change="updateName($event.target.value)"
-                                type="text"
-                                placeholder="Track name"
-                            />
-                        </p>
-                    </div>
-                </div>
-
                 <!-- Artist Info (completely hidden on mobile, thus not editable there. 
                 NOTE: It's also not shown in the play view on mobile anyways) -->
                 <!-- by (keep as small as possible)-->
@@ -206,6 +209,12 @@ export default defineComponent({
         track: {
             type: Track,
             required: true,
+        },
+        /** Whether this track is to be considered as the active track */
+        isActive: {
+            type: Boolean,
+            required: false,
+            default: false,
         },
         /** Whether this track is expanded */
         modelValue: {
