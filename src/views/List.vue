@@ -86,6 +86,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import {
+    DefaultTrackVolume,
     ICompilation,
     ITrack,
     PlaybackMode,
@@ -125,7 +126,7 @@ export default defineComponent({
              * as indication of an available track media.
              */
             isPlayable: false,
-            volume: 0.5,
+            volume: DefaultTrackVolume,
         };
     },
     computed: {
