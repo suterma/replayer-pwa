@@ -1,58 +1,33 @@
 <template>
-    <!-- The div is required as to provide a single root element. 
-    Otherwise the use of the two-way "v-model" binding for volume
-    yields a warning about "Extraneous non-props attributes" -->
-    <div>
-        <slot></slot>
-        <CueTrigger
-            v-if="isEditable"
-            :title="title"
-            :loaded="hasLoadedData"
-            :isFading="isFading"
-            :playing="playing"
-            @pause="pause"
-            @play="play"
-            :isPlayingRequestOutstanding="isPlayingRequestOutstanding"
-            :playbackMode="playbackMode"
-            @update:playbackMode="updatePlaybackMode"
-            v-model:currentSeconds="currentSeconds"
-            @seek="seekToSeconds"
-            @newCueTriggered="$emit('newCueTriggered')"
-            :durationSeconds="durationSeconds"
-            :sourceDescription="sourceDescription"
-            :error="mediaError"
-        />
-        <PlayerChrome
-            v-else
-            :title="title"
-            :loaded="hasLoadedData"
-            :isFading="isFading"
-            :playing="playing"
-            @stop="stop"
-            @pause="pause"
-            @play="play"
-            :isPlayingRequestOutstanding="isPlayingRequestOutstanding"
-            v-model:currentSeconds="currentSeconds"
-            :playbackMode="playbackMode"
-            @update:playbackMode="updatePlaybackMode"
-            :volume="volume"
-            @update:volume="updateVolume"
-            :muted="muted"
-            @mute="mute"
-            @seek="seekToSeconds"
-            :durationSeconds="durationSeconds"
-            @download="download"
-            :sourceDescription="sourceDescription"
-            :error="mediaError"
-        />
-    </div>
+    <slot></slot>
+    <PlayerChrome
+        :title="title"
+        :loaded="hasLoadedData"
+        :isFading="isFading"
+        :playing="playing"
+        @stop="stop"
+        @pause="pause"
+        @play="play"
+        :isPlayingRequestOutstanding="isPlayingRequestOutstanding"
+        v-model:currentSeconds="currentSeconds"
+        :playbackMode="playbackMode"
+        @update:playbackMode="updatePlaybackMode"
+        :volume="volume"
+        @update:volume="updateVolume"
+        :muted="muted"
+        @mute="mute"
+        @seek="seekToSeconds"
+        :durationSeconds="durationSeconds"
+        @download="download"
+        :sourceDescription="sourceDescription"
+        :error="mediaError"
+    />
 </template>
 
 <script lang="ts">
 import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent, PropType } from 'vue';
 import PlayerChrome from '@/components/PlayerChrome.vue';
-import CueTrigger from '@/components/CueTrigger.vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
@@ -61,23 +36,20 @@ import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
  * @devdoc Internally maintains it's state, updating the enclosed audio element accordingly.
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playing
  * @remarks Emits 'durationChanged' with the track duration in seconds, once after successful load of the metadata of the track's media file
- * @devdoc The 'newCueTriggered' is just passed up
  * @devdoc Autoplay after load is intentionally not supported, as this is of no use for the Replayer app.
  */
 export default defineComponent({
     name: 'TrackAudioApiPlayer',
-    components: { PlayerChrome, CueTrigger },
+    components: { PlayerChrome },
     mixins: [settingsMixin],
     emits: [
         'timeupdate',
         'durationChanged',
-        'newCueTriggered',
         'update:playbackMode',
         'update:volume',
         'update:isPlaying',
         /** When the end of the track has been reached and playback has ended */
         'ended',
-        /* Do not add newCueTriggered here, to let it just get passed up */
     ],
     props: {
         /** The title of the track */

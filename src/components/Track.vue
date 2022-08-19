@@ -56,7 +56,6 @@
                     @timeupdate="updateTime"
                     @durationChanged="calculateCueDurations"
                     v-model:isPlaying="isPlaying"
-                    @newCueTriggered="createNewCue"
                     @update:playbackMode="updatedPlaybackMode"
                     :playbackMode="track.PlaybackMode"
                     :loopStart="selectedCue?.Time"
@@ -132,6 +131,22 @@
                 </div>
             </template>
             <template v-else>
+                <!-- Create Cue -->
+                <Hotkey :keys="['insert']" v-slot="{ clickRef }">
+                    <button
+                        :class="{
+                            button: true,
+                            'is-warning': true,
+                        }"
+                        @click.prevent="createNewCue()"
+                        :ref="clickRef"
+                        title="Create a cue now (at the current playback time)!"
+                    >
+                        <BaseIcon name="plus" />
+                        <span class=" ">Create Cue!</span>
+                    </button>
+                </Hotkey>
+
                 <ul class="levels">
                     <template v-for="cue in cues" :key="cue.Id">
                         <li>
@@ -175,6 +190,7 @@ import { settingsMixin } from '@/mixins/settingsMixin';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
+import { Hotkey } from '@simolation/vue-hotkey';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -196,6 +212,7 @@ export default defineComponent({
         BaseIcon,
         Experimental,
         TimeDisplay,
+        Hotkey,
     },
     mixins: [settingsMixin],
     props: {
@@ -616,19 +633,19 @@ div.compilation div.track:last-child {
 }
 
 .track .buttons {
-    /** The cue button have also an additional small margin at their end.
+    /** The track's cue button have also an additional small margin at their end.
     This results in a similar space between level, player, cue buttons and the
     end of the track */
     margin-bottom: 4px;
 }
 
 .track .levels {
-    /** The cue levels have also an additional small margin at their top.
+    /** The track's cue levels have also an additional small margin at their top.
     This results in a similar space between levels as use within 
     the environment      */
     margin-top: 12px;
 
-    /** The cue levels have also an additional small margin at their end.
+    /** The track's cue levels have also an additional small margin at their end.
     This results in a similar space between levels as use within 
     the environment      */
     margin-bottom: 12px;
