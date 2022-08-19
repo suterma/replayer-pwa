@@ -265,7 +265,11 @@ export default defineComponent({
          */
         trackEnded(): void {
             this.toNextTrack().then(() => {
-                this.updatePlaying(true);
+                //TODO use a more dynamic approach
+                //this assumes a fixed timeout after which the track is playable (loaded up to oncanplay)
+                setTimeout(() => {
+                    this.updatePlaying(true);
+                }, 500);
             });
         },
     },
