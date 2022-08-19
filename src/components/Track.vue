@@ -131,8 +131,17 @@
                 </div>
             </template>
             <template v-else>
-                <!-- Create Cue -->
-                <Hotkey :keys="['insert']" v-slot="{ clickRef }">
+                <!-- Create Cue (With Hotkey for the active track)
+                Creating a cue should also work when invoked from inside a 
+                textbox, thus explicitly no elements are excluded.
+                NOTE: Using the ":enabled" property on Hotkey does not work
+                See https://github.com/Simolation/vue-hotkey/issues/2 -->
+                <Hotkey
+                    v-if="isActiveTrack"
+                    :keys="['insert']"
+                    :excluded-elements="[]"
+                    v-slot="{ clickRef }"
+                >
                     <button
                         :class="{
                             button: true,
@@ -143,9 +152,21 @@
                         title="Create a cue now (at the current playback time)!"
                     >
                         <BaseIcon name="plus" />
-                        <span class=" ">Create Cue!</span>
+                        <span>Create Cue! [INSERT]</span>
                     </button>
                 </Hotkey>
+                <button
+                    v-else
+                    :class="{
+                        button: true,
+                        'is-warning': true,
+                    }"
+                    @click.prevent="createNewCue()"
+                    title="Create a cue now (at the current playback time)!"
+                >
+                    <BaseIcon name="plus" />
+                    <span>Create Cue!</span>
+                </button>
 
                 <ul class="levels">
                     <template v-for="cue in cues" :key="cue.Id">
