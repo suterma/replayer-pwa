@@ -24,7 +24,7 @@
                     :modelValue="modelValue"
                     title="Track"
                     collapsedText="Expand to play"
-                    :class="{ 'is-nav': true, 'has-text-success': isActive }"
+                    class="is-nav"
                 />
             </div>
             <!-- Title -->
