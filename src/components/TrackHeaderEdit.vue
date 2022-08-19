@@ -22,7 +22,6 @@
                     <CollapsibleButton
                         :class="{
                             'is-nav': true,
-                            'has-text-success': isActive,
                         }"
                         :modelValue="modelValue"
                         title="Track"
