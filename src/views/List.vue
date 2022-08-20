@@ -5,6 +5,7 @@
         <PlayPauseButton
             class="is-success"
             :isPlaying="isPlaying"
+            :isLoading="isFading"
             @click="togglePlayPause()"
         ></PlayPauseButton>
 
@@ -20,6 +21,7 @@
                     <div class="level-item is-narrow">
                         <PlayPauseButton
                             :isPlaying="isTrackPlaying(track)"
+                            :isLoading="isTrackFading(track)"
                             @click="skipToPlayPause(track)"
                             title="play"
                         />
@@ -51,6 +53,7 @@
                     v-model:isPlaying="isPlaying"
                     @durationChanged="isPlayable = true"
                     @ended="trackEnded()"
+                    v-model:isFading.boolean="isFading"
                 >
                     <button
                         :class="{
@@ -63,6 +66,7 @@
                     </button>
                     <PlayPauseButton
                         :isPlaying="isPlaying"
+                        v-model:isLoading.boolean="isFading"
                         @click="togglePlayPause()"
                     ></PlayPauseButton>
                     <button
@@ -117,6 +121,8 @@ export default defineComponent({
             /** Flag to indicate whether the player is currently playing
              */
             isPlaying: false,
+            /** Readonly flag to indicate whether the player is currently fading */
+            isFading: false,
 
             /** Indicates that a track media has been loaded and is available for play
              * @remarks Because of a lack of a dedicated event, just uses the first duration update
@@ -253,6 +259,11 @@ export default defineComponent({
         /** Determines whether the given track is currently playing */
         isTrackPlaying(track: ITrack): boolean {
             return this.isActiveTrack(track) && this.isPlaying;
+        },
+
+        /** Determines whether the given track is currently fading */
+        isTrackFading(track: ITrack): boolean {
+            return this.isActiveTrack(track) && this.isFading;
         },
 
         /** Determines whether the given track is the currently active track */

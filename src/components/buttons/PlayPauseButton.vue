@@ -28,6 +28,7 @@ export default defineComponent({
             required: false,
             default: false,
         },
+        /** Flag to indicated the loading state */
         isLoading: {
             type: Boolean,
             required: false,

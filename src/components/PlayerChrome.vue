@@ -61,6 +61,7 @@
                 @update:modelValue="updatePlaybackMode"
             />
         </p>
+        <slot></slot>
         <!-- The seek bar -->
         <div class="player-seekbar">
             <div class="player-timeline">

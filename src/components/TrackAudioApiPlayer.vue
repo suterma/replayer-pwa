@@ -1,5 +1,4 @@
 <template>
-    <slot></slot>
     <PlayerChrome
         :title="title"
         :loaded="hasLoadedData"
@@ -21,7 +20,9 @@
         @download="download"
         :sourceDescription="sourceDescription"
         :error="mediaError"
-    />
+    >
+        <slot></slot
+    ></PlayerChrome>
 </template>
 
 <script lang="ts">
@@ -48,6 +49,7 @@ export default defineComponent({
         'update:playbackMode',
         'update:volume',
         'update:isPlaying',
+        'update:isFading',
         /** When the end of the track has been reached and playback has ended */
         'ended',
     ],
@@ -252,11 +254,13 @@ export default defineComponent({
             this.debugLog('Playback started');
             this.$emit('update:isPlaying', true);
             this.isFading = true;
+            this.$emit('update:isFading', true);
             this.fader
                 .fadeIn()
                 .catch((message) => console.log(message))
                 .then(() => {
                     this.isFading = false;
+                    this.$emit('update:isFading', false);
                 });
         };
 
@@ -512,6 +516,8 @@ export default defineComponent({
             }
             //no fading at stop
             this.isFading = false;
+            this.$emit('update:isFading', false);
+
             this.audioElement.currentTime = 0;
             this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, undefined);
         },
@@ -561,6 +567,8 @@ export default defineComponent({
             this.debugLog(`pause`);
             if (this.playing) {
                 this.isFading = true;
+                this.$emit('update:isFading', true);
+
                 this.fader
                     .fadeOut()
                     .catch((message) => console.log(message))
@@ -568,6 +576,7 @@ export default defineComponent({
                         this.audioElement.pause();
                         this.isFading = false;
                         this.$emit('update:isPlaying', false);
+                        this.$emit('update:isFading', false);
                     });
             }
         },
@@ -576,9 +585,12 @@ export default defineComponent({
             this.debugLog(`pauseAndSeekTo`);
 
             this.isFading = true;
+            this.$emit('update:isFading', true);
+
             this.fader.fadeOut().then(() => {
                 this.audioElement.pause();
                 this.isFading = false;
+                this.$emit('update:isFading', false);
                 this.$emit('update:isPlaying', false);
                 this.seekTo(position);
             });
