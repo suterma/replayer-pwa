@@ -132,7 +132,7 @@ export default defineComponent({
     watch: {
         /** Handle scrolling to the active track.
          * @remarks This is intentionally only invoked on when the active track changes. If a user scrolls to a
-         * certain cue within the same track, no scrolling should occurr, to keep the UI calm.
+         * certain cue within the same track, no scrolling should occur, to keep the UI calm.
          */
         activeTrack(track: ITrack | null) {
             console.debug('scrolling to track ', track?.Name);

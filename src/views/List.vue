@@ -104,6 +104,7 @@ import TrackHeader from '../components/TrackHeader.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
+import VueScrollTo from 'vue-scrollto';
 
 /** A Display of a complete compilation, with a simple track listing */
 export default defineComponent({
@@ -196,6 +197,24 @@ export default defineComponent({
         },
     },
     methods: {
+        /** Visually scrolls to the given track, making it appear.
+         */
+        scrollToTrack(track: ITrack) {
+            if (track) {
+                const trackElement = document.getElementById(
+                    'track-' + track.Id,
+                );
+
+                VueScrollTo.scrollTo(trackElement, {
+                    /** Only scroll into view, not necessarily on top */
+                    force: false,
+                    /** empirical value (taking into account the non-existing fixed top navbar) */
+                    offset: -22,
+                    /** Avoid interference with the key press overlay */
+                    cancelable: false,
+                });
+            }
+        },
         /** Skips to the given track.
          * @remarks If the track is not yet active, tries to activate the track (which will autoplay).
          * If it's the active track, just toggles play/pause
@@ -300,6 +319,17 @@ export default defineComponent({
                     this.updatePlaying(true);
                 }, 500);
             });
+        },
+    },
+    watch: {
+        /** Handle scrolling to the active track.
+         * @remarks This is intentionally only invoked on when the active track changes.
+         */
+        activeTrack(track: ITrack | null) {
+            console.debug('scrolling to track ', track?.Name);
+            if (track) {
+                this.scrollToTrack(track);
+            }
         },
     },
 });
