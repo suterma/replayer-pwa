@@ -54,11 +54,13 @@
                     @durationChanged="isPlayable = true"
                     @ended="trackEnded()"
                     v-model:isFading.boolean="isFading"
+                    :autoplay="true"
                 >
                     <button
                         :class="{
                             button: true,
                         }"
+                        :disabled="!hasPrevious"
                         @click="toPreviousTrack()"
                         title="skip to previous track"
                     >
@@ -73,6 +75,7 @@
                         :class="{
                             button: true,
                         }"
+                        :disabled="!hasNext"
                         @click="toNextTrack()"
                         title="skip to next track"
                     >
@@ -178,16 +181,31 @@ export default defineComponent({
                 typeof TrackAudioApiPlayer
             >;
         },
+
+        /** Whether the active track has a previous track
+         * @devdoc Calculated by whether the active track is not the first in all available
+         */
+        hasPrevious(): boolean {
+            return this.allTrackIds[0] !== this.activeTrack?.Id;
+        },
+        /** Whether the active track has a previous track
+         * @devdoc Calculated by whether the active track is not the last in all available
+         */
+        hasNext(): boolean {
+            return this.allTrackIds.slice(-1)[0] !== this.activeTrack?.Id;
+        },
     },
     methods: {
-        /** Skips to and toggles play/pause of the given track.
-         * @remarks If the track is not yet active, tries to activate and play the track.
+        /** Skips to the given track.
+         * @remarks If the track is not yet active, tries to activate the track (which will autoplay).
          * If it's the active track, just toggles play/pause
          */
         skipToPlayPause(track: ITrack): void {
             if (this.activeTrack?.Id !== track.Id) {
                 this.activeTrack = track;
-                this.trackPlayerInstance.playFrom(0.0);
+                //will autoplay
+                //                this.trackPlayerInstance.playFrom(0.0);
+                this.trackPlayerInstance.seekToSeconds(0);
             } else {
                 //same track: just toggle playback
                 this.trackPlayerInstance.togglePlayback();
