@@ -57,10 +57,17 @@
                     :autoplay="true"
                     :showTransportControls="false"
                 >
+                    <!-- Stop (do not show on small devices, user still can use play/pause) -->
                     <button
-                        :class="{
-                            button: true,
-                        }"
+                        class="button is-hidden-mobile"
+                        @click.prevent="stop()"
+                        title="Stop"
+                    >
+                        <BaseIcon name="stop" />
+                    </button>
+
+                    <button
+                        class="button"
                         :disabled="!hasPrevious"
                         @click="toPreviousTrack()"
                         title="skip to previous track"
@@ -194,6 +201,10 @@ export default defineComponent({
         },
     },
     methods: {
+        stop(): void {
+            this.trackPlayerInstance.stop();
+            this.activeTrack = null;
+        },
         /** Updates the track duration and calculates the cue durations */
         calculateCueDurations(trackDurationSeconds: number) {
             if (this.activeTrack) {
