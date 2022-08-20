@@ -29,7 +29,7 @@
                 </template>
                 <template v-slot:left-end>
                     <TimeDisplay
-                        class="level-item is-narrow"
+                        class="level-item is-narrow is-hidden-mobile"
                         :modelValue="track?.Duration"
                         :hidePlaceholder="true"
                     ></TimeDisplay>
@@ -51,10 +51,11 @@
                     :playbackMode="playbackMode"
                     v-model:volume.number="volume"
                     v-model:isPlaying="isPlaying"
-                    @durationChanged="isPlayable = true"
+                    @durationChanged="calculateCueDurations"
                     @ended="trackEnded()"
                     v-model:isFading.boolean="isFading"
                     :autoplay="true"
+                    :showTransportControls="false"
                 >
                     <button
                         :class="{
@@ -105,6 +106,7 @@ import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import VueScrollTo from 'vue-scrollto';
+import { MutationTypes } from '@/store/mutation-types';
 
 /** A Display of a complete compilation, with a simple track listing */
 export default defineComponent({
@@ -128,11 +130,6 @@ export default defineComponent({
             /** Readonly flag to indicate whether the player is currently fading */
             isFading: false,
 
-            /** Indicates that a track media has been loaded and is available for play
-             * @remarks Because of a lack of a dedicated event, just uses the first duration update
-             * as indication of an available track media.
-             */
-            isPlayable: false,
             volume: DefaultTrackVolume,
         };
     },
@@ -197,6 +194,16 @@ export default defineComponent({
         },
     },
     methods: {
+        /** Updates the track duration and calculates the cue durations */
+        calculateCueDurations(trackDurationSeconds: number) {
+            if (this.activeTrack) {
+                const trackId = this.activeTrack.Id;
+                this.$store.commit(MutationTypes.UPDATE_DURATIONS, {
+                    trackId,
+                    trackDurationSeconds,
+                });
+            }
+        },
         /** Visually scrolls to the given track, making it appear.
          */
         scrollToTrack(track: ITrack) {

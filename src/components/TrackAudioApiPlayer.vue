@@ -20,6 +20,7 @@
         @download="download"
         :sourceDescription="sourceDescription"
         :error="mediaError"
+        :showTransportControls="showTransportControls"
     >
         <slot></slot
     ></PlayerChrome>
@@ -121,6 +122,15 @@ export default defineComponent({
             type: Boolean,
             required: true,
             default: false,
+        },
+        /** Whether to show the transport controls (Play/Pause, Stop, PlaybackMode)
+         * @remarks Visibility does not affect functionality. All functions
+         * can still be invoked programmatically.
+         */
+        showTransportControls: {
+            type: Boolean,
+            required: false,
+            default: true,
         },
         /** Whether to automatically start playback after the media is loaded.
          */

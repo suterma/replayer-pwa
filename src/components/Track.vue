@@ -479,17 +479,12 @@ export default defineComponent({
         updateTime(currentTime: number) {
             this.currentSeconds = currentTime;
         },
-        /** Calculates the cue durations
-         * @remarks Using the existing cues, and the now available track duration, calculates the durations of all cues, including the last one
-         * @devdoc The calculated durations are only valid as long as the cues, their times, and the track does not change */
+
+        /** Updates the track duration and calculates the cue durations */
         calculateCueDurations(trackDurationSeconds: number) {
-            console.debug(
-                `Track(${this.track.Name})::calculateCueDurations:trackDurationSeconds:` +
-                    trackDurationSeconds,
-            );
             this.isTrackLoaded = true;
             const trackId = this.track.Id;
-            this.$store.commit(MutationTypes.UPDATE_CUE_DURATIONS, {
+            this.$store.commit(MutationTypes.UPDATE_DURATIONS, {
                 trackId,
                 trackDurationSeconds,
             });

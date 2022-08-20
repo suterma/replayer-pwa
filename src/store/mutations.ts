@@ -41,7 +41,7 @@ export type Mutations<S = State> = {
         compilation: ICompilation,
     ): void;
     [MutationTypes.UPDATE_SELECTED_CUE_ID](state: S, cueId: string): void;
-    [MutationTypes.UPDATE_CUE_DURATIONS](
+    [MutationTypes.UPDATE_DURATIONS](
         state: S,
         payload: { trackId: string; trackDurationSeconds: number },
     ): void;
@@ -265,24 +265,18 @@ export const mutations: MutationTree<State> & Mutations = {
         state.selectedCueId = cueId;
     },
 
-    [MutationTypes.UPDATE_CUE_DURATIONS](
+    [MutationTypes.UPDATE_DURATIONS](
         state: State,
         payload: { trackId: string; trackDurationSeconds: number },
     ): void {
-        //console.debug('mutations::UPDATE_CUE_DURATIONS:payload', payload);
         const trackDuration = payload.trackDurationSeconds;
         const track = CompilationHandler.getTrackById(
             state.compilation,
             payload.trackId,
         );
-        //console.debug('mutations::UPDATE_CUE_DURATIONS:track', track);
 
         if (track) {
             track.Duration = trackDuration;
-            // console.debug(
-            //     'mutations::UPDATE_CUE_DURATIONS: track.Duration',
-            //     track.Duration,
-            // );
             CompilationHandler.updateCueDurations(track.Cues, trackDuration);
         }
     },

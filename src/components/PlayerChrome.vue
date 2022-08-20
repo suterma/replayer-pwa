@@ -21,7 +21,7 @@
     </div>
     <div class="field has-addons player-panel" v-else>
         <!-- Stop (do not show on small devices, user still can use play/pause) -->
-        <p class="control is-hidden-mobile">
+        <p class="control is-hidden-mobile" v-if="showTransportControls">
             <button
                 :class="{
                     button: true,
@@ -34,7 +34,7 @@
             </button>
         </p>
         <!-- Play/Pause, when STOP is shown (Only available when the track is loaded, and no playback request is outstanding) -->
-        <p class="control is-hidden-mobile">
+        <p class="control is-hidden-mobile" v-if="showTransportControls">
             <PlayPauseButton
                 :isDisabled="isPlayingRequestOutstanding || !loaded"
                 :isLoading="isPlayingRequestOutstanding || !loaded || isFading"
@@ -44,7 +44,7 @@
             </PlayPauseButton>
         </p>
         <!-- Play/Pause, as the outermost element, when STOP is hidden (Only available when the track is loaded, and no playback request is outstanding) -->
-        <p class="control is-hidden-tablet">
+        <p class="control is-hidden-tablet" v-if="showTransportControls">
             <PlayPauseButton
                 class="has-left-radius"
                 :isDisabled="isPlayingRequestOutstanding || !loaded"
@@ -55,7 +55,7 @@
             </PlayPauseButton>
         </p>
         <!-- Play mode -->
-        <p class="control">
+        <p class="control" v-if="showTransportControls">
             <PlaybackModeButton
                 :modelValue="playbackMode"
                 @update:modelValue="updatePlaybackMode"
@@ -211,6 +211,15 @@ export default defineComponent({
         playbackMode: {
             type: String as () => PlaybackMode,
             required: true,
+        },
+        /** Whether to show the transport controls (Play/Pause, Stop, PlaybackMode)
+         * @remarks Visibility does not affect functionality. All functions
+         * can still be invoked programmatically.
+         */
+        showTransportControls: {
+            type: Boolean,
+            required: false,
+            default: true,
         },
     },
     data() {

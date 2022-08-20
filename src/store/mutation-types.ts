@@ -47,10 +47,13 @@ export enum MutationTypes {
      * @remarks This does not control the playback itself. It is intended for display and handling purposes.
      */
     UPDATE_SELECTED_CUE_ID = 'UPDATE_SELECTED_CUE_ID',
-    /** Using the provided track duration, calculates the cue duration of all cues of the track.
+
+    /** Sets the track duration. Using the track duration and the existing cues,
+     * calculates the durations of all cues, including the last one.
      * @remarks No ordering is done with this operation
+     * @remarks The calculated durations are only valid as long as the cues, their times, and the track does not change
      */
-    UPDATE_CUE_DURATIONS = 'UPDATE_CUE_DURATIONS',
+    UPDATE_DURATIONS = 'UPDATE_DURATIONS',
 
     /** Removes an existing track, with it's cues.
      * @remarks Removes the track from the compilation. If the selected cue was one of the track, the selection is cleared.
