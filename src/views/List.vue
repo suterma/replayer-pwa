@@ -42,7 +42,8 @@
             role="form"
             aria-label="media player"
         >
-            <div class="navbar-item">
+            <!-- The player is the single item, grown over the full width -->
+            <div class="navbar-item is-flex-grow-1">
                 <TrackAudioApiPlayer
                     ref="playerReference"
                     :title="activeTrack?.Name"

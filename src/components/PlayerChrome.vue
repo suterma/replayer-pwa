@@ -1,25 +1,5 @@
 <template>
-    <div class="field player-panel is-fullwidth" v-if="!loaded">
-        <p class="control">
-            <button
-                v-if="error"
-                class="button is-fullwidth is-danger is-static is-outlined"
-            >
-                <LongLine
-                    :text="`Error ${errorText} occurred when using ${sourceDescription}`"
-                    :hasProgress="false"
-                />
-            </button>
-            <button v-else disabled class="button is-fullwidth">
-                <LongLine
-                    :text="`Loading ${sourceDescription}`"
-                    :hasProgress="true"
-                    :clipLeft="true"
-                />
-            </button>
-        </p>
-    </div>
-    <div class="field has-addons player-panel" v-else>
+    <div class="field has-addons player-panel" :disabled="!loaded">
         <!-- Stop (do not show on small devices, user still can use play/pause) -->
         <p class="control is-hidden-mobile" v-if="showTransportControls">
             <button
@@ -104,7 +84,6 @@ import Knob from '@/components/buttons/Knob.vue';
 import PlayerTime from '@/components/PlayerTime.vue';
 import PlaybackModeButton from '@/components/buttons/PlaybackModeButton.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
-import LongLine from '@/components/LongLine.vue';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import AudioUtil from '@/code/audio/AudioUtil';
 
@@ -118,7 +97,6 @@ export default defineComponent({
         PlayerTime,
         PlaybackModeButton,
         PlayPauseButton,
-        LongLine,
         Knob,
     },
     emits: [
