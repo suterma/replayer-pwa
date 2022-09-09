@@ -8,7 +8,7 @@
     <slot></slot>
   </PlayerChrome>
   <Experimental>
-    <AudioPeaks v-if="audioElement && mediaUrl && hasLoadedData" :mediaElement="audioElement" />
+    <TrackAudioPeaks v-if="audioElement && mediaUrl && hasLoadedData" :mediaElement="audioElement" />
   </Experimental>
 </template>
 
@@ -20,8 +20,8 @@ import Experimental from '@/components/Experimental.vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
-//import AudioPeaks from 'vue-peaks/src/components/AudioPeaks.vue'
-import AudioPeaks from '@/components/AudioPeaks.vue';
+import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
+//import AudioPeaks from '@/components/AudioPeaks.vue';
 
 
 /** A simple vue audio player, for a single track, using the Web Audio API.
@@ -34,7 +34,7 @@ export default defineComponent({
   name: 'TrackAudioApiPlayer',
   components: {
     PlayerChrome,
-    AudioPeaks,
+    TrackAudioPeaks,
     Experimental
   },
   mixins: [settingsMixin],

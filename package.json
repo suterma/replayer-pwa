@@ -44,7 +44,7 @@
         "uuid": "^8.3.2",
         "vue": "^3.2.32",
         "vue-global-events": "^2.1.1",
-        "vue-peaks": "^0.0.4",
+        "vue-peaks": "^1.0.0-alpha.0",
         "vue-router": "^4.0.14",
         "vue-scrollto": "^2.20.0",
         "vue3-promise-dialog": "^0.2.6",
