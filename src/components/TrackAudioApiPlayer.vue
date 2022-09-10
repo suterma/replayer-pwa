@@ -21,8 +21,6 @@ import AudioFader from '@/code/audio/AudioFader';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
-//import AudioPeaks from '@/components/AudioPeaks.vue';
-
 
 /** A simple vue audio player, for a single track, using the Web Audio API.
  * @devdoc Internally maintains it's state, updating the enclosed audio element accordingly.
