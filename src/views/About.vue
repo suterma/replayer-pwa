@@ -348,10 +348,19 @@
                     <a
                         href="https://github.com/slipmatio/control-knob"
                         target="_blank"
+                        >control-knob</a
+                    >, a fully customizable rotary control knob component for Vue (Released under the MIT License, by
+                    Ville Säävuori).
+                </li>
+                <li>
+                    <a
+                        href="https://github.com/focus-trap/focus-trap"
+                        target="_blank"
                         >focus-trap</a
-                    >, a little, modular vanilla JS solution to trap focus
-                    within a DOM node. (Released under the MIT License, by
+                    >, trap focus within a DOM node. (Released under the MIT License, by
                     Marais Rossouw).
+                </li><li>
+                    Music from the Album "Not For Sale" by Lidija Roos (Released to the public, by Lidija Roos)
                 </li>
             </ul>
         </div>
