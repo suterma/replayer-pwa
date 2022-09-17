@@ -8,7 +8,7 @@
     <slot></slot>
   </PlayerChrome>
   <Experimental>
-    <TrackAudioPeaks v-if="audioElement && mediaUrl && hasLoadedData" :mediaElement="audioElement" />
+    <TrackAudioPeaks v-if="audioElement && mediaUrl && hasLoadedData" :mediaElement="audioElement" :key="mediaUrl" />
   </Experimental>
 </template>
 
