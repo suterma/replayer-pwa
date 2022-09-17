@@ -9,3 +9,13 @@
 
 /* stronger shadow, for better visibility with the dark bulma slate theme*/
 $shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 100%), 0 0 0 1px rgb(10 10 10 / 2%);
+
+/* Stack the navbar except on very wide screens
+(navbar is currently only used for the player controls in the bottom nav bar)*/
+$navbar-breakpoint: 2560px;  //ultra-wide FHD
+
+/* no hovering indication on the navbar*/
+$navbar-item-hover-color: inherit;
+$navbar-item-hover-background-color: inherit;
+
+

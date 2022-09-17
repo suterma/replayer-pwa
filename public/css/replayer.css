@@ -11,6 +11,9 @@
 **************************************************************
 */
 /* stronger shadow, for better visibility with the dark bulma slate theme*/
+/* Stack the navbar except on very wide screens
+(navbar is currently only used for the player controls in the bottom nav bar)*/
+/* no hovering indication on the navbar*/
 /** Using Bulma CSS with a theme for Bulma */
 /*! bulma.io v0.9.4 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */
@@ -4492,7 +4495,7 @@ button.dropdown-item.is-active {
 .navbar.is-white .navbar-burger {
   color: hsl(0deg, 0%, 4%);
 }
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 2560px) {
   .navbar.is-white .navbar-start > .navbar-item,
 .navbar.is-white .navbar-start .navbar-link,
 .navbar.is-white .navbar-end > .navbar-item,
@@ -4548,7 +4551,7 @@ button.dropdown-item.is-active {
 .navbar.is-black .navbar-burger {
   color: hsl(0deg, 0%, 100%);
 }
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 2560px) {
   .navbar.is-black .navbar-start > .navbar-item,
 .navbar.is-black .navbar-start .navbar-link,
 .navbar.is-black .navbar-end > .navbar-item,
@@ -4604,7 +4607,7 @@ button.dropdown-item.is-active {
 .navbar.is-light .navbar-burger {
   color: rgba(0, 0, 0, 0.7);
 }
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 2560px) {
   .navbar.is-light .navbar-start > .navbar-item,
 .navbar.is-light .navbar-start .navbar-link,
 .navbar.is-light .navbar-end > .navbar-item,
@@ -4660,7 +4663,7 @@ button.dropdown-item.is-active {
 .navbar.is-dark .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 2560px) {
   .navbar.is-dark .navbar-start > .navbar-item,
 .navbar.is-dark .navbar-start .navbar-link,
 .navbar.is-dark .navbar-end > .navbar-item,
@@ -4716,7 +4719,7 @@ button.dropdown-item.is-active {
 .navbar.is-primary .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 2560px) {
   .navbar.is-primary .navbar-start > .navbar-item,
 .navbar.is-primary .navbar-start .navbar-link,
 .navbar.is-primary .navbar-end > .navbar-item,
@@ -4772,7 +4775,7 @@ button.dropdown-item.is-active {
 .navbar.is-link .navbar-burger {
   color: #52575c;
 }
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 2560px) {
   .navbar.is-link .navbar-start > .navbar-item,
 .navbar.is-link .navbar-start .navbar-link,
 .navbar.is-link .navbar-end > .navbar-item,
@@ -4828,7 +4831,7 @@ button.dropdown-item.is-active {
 .navbar.is-info .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 2560px) {
   .navbar.is-info .navbar-start > .navbar-item,
 .navbar.is-info .navbar-start .navbar-link,
 .navbar.is-info .navbar-end > .navbar-item,
@@ -4884,7 +4887,7 @@ button.dropdown-item.is-active {
 .navbar.is-success .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 2560px) {
   .navbar.is-success .navbar-start > .navbar-item,
 .navbar.is-success .navbar-start .navbar-link,
 .navbar.is-success .navbar-end > .navbar-item,
@@ -4940,7 +4943,7 @@ button.dropdown-item.is-active {
 .navbar.is-warning .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 2560px) {
   .navbar.is-warning .navbar-start > .navbar-item,
 .navbar.is-warning .navbar-start .navbar-link,
 .navbar.is-warning .navbar-end > .navbar-item,
@@ -4996,7 +4999,7 @@ button.dropdown-item.is-active {
 .navbar.is-danger .navbar-burger {
   color: #fff;
 }
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 2560px) {
   .navbar.is-danger .navbar-start > .navbar-item,
 .navbar.is-danger .navbar-start .navbar-link,
 .navbar.is-danger .navbar-end > .navbar-item,
@@ -5227,7 +5230,7 @@ a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover, a.navbar-i
   margin: 0.5rem 0;
 }
 
-@media screen and (max-width: 1023px) {
+@media screen and (max-width: 2559px) {
   .navbar > .container {
     display: block;
   }
@@ -5276,7 +5279,7 @@ body.has-navbar-fixed-bottom-touch {
     padding-bottom: 4rem;
   }
 }
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 2560px) {
   .navbar,
 .navbar-menu,
 .navbar-start,
