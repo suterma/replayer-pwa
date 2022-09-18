@@ -10808,6 +10808,16 @@ nav .button:hover {
 }
 
 /*************************************************************
+ * Specific styles for navbar items
+ **************************************************************/
+/* On the navbar, remove the hover effect, since the navbar items themselves
+ * represent no action (currently only relevant on the bottom player navbar) */
+.navbar .navbar-item:hover,
+.navbar .navbar-link:hover {
+  background-color: inherit;
+}
+
+/*************************************************************
  * Dropdown stylings
  * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
 **************************************************************

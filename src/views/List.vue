@@ -21,7 +21,7 @@
       </TrackHeader>
     </template>
 
-    <nav class="navbar is-fixed-bottom has-shadow is-spaced" role="form" aria-label="media player">
+    <nav class="navbar is-fixed-bottom is-spaced" role="form" aria-label="media player">
       <!-- The player controls -->
       <div class="navbar-item is-expanded ">
         <div class="buttons has-addons is-centered">

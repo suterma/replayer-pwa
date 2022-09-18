@@ -77,3 +77,18 @@ nav .button:hover {
     pointer-events: none;
     color: $text;
 }
+
+/*************************************************************
+ * Specific styles for navbar items
+ **************************************************************/
+
+/* On the navbar, remove the hover effect, since the navbar items themselves
+ * represent no action (currently only relevant on the bottom player navbar) */
+ .navbar {
+  .navbar-item,
+  .navbar-link {
+    &:hover {
+      background-color: inherit;  
+    }
+  } 
+}
