@@ -63,9 +63,7 @@
                                 </button>
 
                                 <button
-                                    :class="{
-                                        button: true,
-                                    }"
+                                    class="button"
                                     :disabled="!hasNextTrack"
                                     @click="toNextTrack()"
                                     title="skip to next track"
@@ -91,9 +89,7 @@
                                     {{ playingCue?.Description }}
                                 </button>
                                 <button
-                                    :class="{
-                                        button: true,
-                                    }"
+                                    class="button"
                                     :disabled="!hasNextCue"
                                     @click="toNextCue()"
                                     title="skip to next cue"
