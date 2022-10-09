@@ -43,58 +43,90 @@
             role="form"
             aria-label="media player"
         >
-            <!-- The player controls -->
             <div class="navbar-item is-expanded">
-                <div class="buttons has-addons is-centered">
-                    <!-- Stop (do not show on small devices, user still can use play/pause) -->
-                    <button
-                        class="button is-hidden-mobile"
-                        @click.prevent="stop()"
-                        title="Stop"
-                    >
-                        <BaseIcon name="stop" />
-                    </button>
+                <nav class="level">
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">Track</p>
+                            <div class="buttons has-addons is-centered">
+                                <button
+                                    class="button"
+                                    :disabled="!hasPreviousTrack"
+                                    @click="toPreviousTrack()"
+                                    title="skip to previous track"
+                                >
+                                    <BaseIcon name="skip-previous-outline" />
+                                </button>
 
-                    <button
-                        class="button"
-                        :disabled="!hasPrevious"
-                        @click="toPreviousTrack()"
-                        title="skip to previous track"
-                    >
-                        <BaseIcon name="skip-previous-outline" />
-                    </button>
-                    <PlayPauseButton
-                        :isPlaying="isPlaying"
-                        v-model:isLoading.boolean="isFading"
-                        @click="togglePlayPause()"
-                    >
-                        <template
-                            v-for="cue in activeTrack?.Cues"
-                            :key="cue.Id"
-                        >
-                            <span
-                                v-show="
-                                    cue.Time !== null &&
-                                    currentSeconds >= cue.Time &&
-                                    currentSeconds <
-                                        cue.Time + (cue.Duration ?? 0)
-                                "
-                                >{{ cue.Description }}</span
-                            >
-                        </template>
-                    </PlayPauseButton>
-                    <button
-                        :class="{
-                            button: true,
-                        }"
-                        :disabled="!hasNext"
-                        @click="toNextTrack()"
-                        title="skip to next track"
-                    >
-                        <BaseIcon name="skip-next-outline" />
-                    </button>
-                </div>
+                                <button class="button is-indicator">
+                                    {{ activeTrack?.Name }}
+                                </button>
+
+                                <button
+                                    :class="{
+                                        button: true,
+                                    }"
+                                    :disabled="!hasNextTrack"
+                                    @click="toNextTrack()"
+                                    title="skip to next track"
+                                >
+                                    <BaseIcon name="skip-next-outline" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">Cue</p>
+                            <div class="buttons has-addons is-centered">
+                                <button
+                                    class="button"
+                                    :disabled="!hasPreviousCue"
+                                    @click="toPreviousCue()"
+                                    title="skip to previous cue"
+                                >
+                                    <BaseIcon name="skip-previous-outline" />
+                                </button>
+                                <button class="button is-indicator">
+                                    {{ playingCue?.Description }}
+                                </button>
+                                <button
+                                    :class="{
+                                        button: true,
+                                    }"
+                                    :disabled="!hasNextCue"
+                                    @click="toNextCue()"
+                                    title="skip to next cue"
+                                >
+                                    <BaseIcon name="skip-next-outline" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">Play</p>
+                            <div class="buttons has-addons is-centered">
+                                <!-- Stop (do not show on small devices, user still can use play/pause) -->
+                                <button
+                                    class="button is-hidden-mobile"
+                                    @click.prevent="stop()"
+                                    title="Stop"
+                                >
+                                    <BaseIcon name="stop" />
+                                </button>
+                                <PlayPauseButton
+                                    :isPlaying="isPlaying"
+                                    v-model:isLoading.boolean="isFading"
+                                    @click="togglePlayPause()"
+                                >
+                                </PlayPauseButton>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
             </div>
+
             <!-- The player  -->
             <div class="navbar-item is-expanded">
                 <TrackAudioApiPlayer
@@ -129,7 +161,7 @@
                 </TrackAudioApiPlayer>
             </div>
             <!-- The cue buttons -->
-            <div class="navbar-item is-expanded">
+            <!-- <div class="navbar-item is-expanded">
                 <div class="buttons">
                     <template v-for="cue in activeTrack?.Cues" :key="cue.Id">
                         <CueButton
@@ -137,14 +169,14 @@
                             :cue="cue"
                             :isTrackPlaying="isPlaying"
                             :currentSeconds="currentSeconds"
-                        />
-                        <!-- 
-                            @click="cueClick(cue)" -->
+                       
+                        
+                            @click="cueClick(cue)"   />
                     </template>
                 </div>
-            </div>
+            </div> -->
             <!-- The current cue -->
-            Current Cue:
+            <!-- Current Cue:
             <div class="navbar-item is-expanded">
                 <div class="buttons">
                     <template v-for="cue in activeTrack?.Cues" :key="cue.Id">
@@ -158,12 +190,12 @@
                             :cue="cue"
                             :isTrackPlaying="isPlaying"
                             :currentSeconds="currentSeconds"
-                        />
-                        <!-- 
-                            @click="cueClick(cue)" -->
+                       
+                       
+                            @click="cueClick(cue)"  />
                     </template>
                 </div>
-            </div>
+            </div> -->
         </nav>
     </div>
 </template>
@@ -173,6 +205,7 @@ import { defineComponent } from 'vue';
 import {
     DefaultTrackVolume,
     ICompilation,
+    ICue,
     ITrack,
     PlaybackMode,
     TrackDisplayMode,
@@ -181,7 +214,6 @@ import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
 import { MediaUrl } from '@/store/state-types';
 import CompilationHandler from '@/store/compilation-handler';
-import CueButton from '../components/buttons/CueButton.vue';
 import TrackHeader from '../components/TrackHeader.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
@@ -194,7 +226,6 @@ export default defineComponent({
     name: 'List',
     components: {
         CompilationHeader,
-        CueButton,
         TrackAudioApiPlayer,
         TrackHeader,
         PlayPauseButton,
@@ -236,8 +267,25 @@ export default defineComponent({
             return this.trackMediaUrl?.url;
         },
 
+        /** Gets the currently playing cue, if available
+         */
+        playingCue(): ICue | null {
+            return (
+                this.activeTrack?.Cues.filter(
+                    (cue) =>
+                        cue.Time !== null &&
+                        this.currentSeconds >= cue.Time &&
+                        this.currentSeconds < cue.Time + (cue.Duration ?? 0),
+                )[0] ?? null
+            );
+        },
+
         allTrackIds(): string[] {
             return this.tracks?.map((track) => track.Id) ?? [];
+        },
+
+        allActiveTrackCueIds(): string[] {
+            return this.activeTrack?.Cues.map((cue) => cue.Id) ?? [];
         },
 
         /** Returns the media URL (playable file content) for a track's file name
@@ -269,14 +317,26 @@ export default defineComponent({
         /** Whether the active track has a previous track
          * @devdoc Calculated by whether the active track is not the first in all available
          */
-        hasPrevious(): boolean {
+        hasPreviousTrack(): boolean {
             return this.allTrackIds[0] !== this.activeTrack?.Id;
         },
         /** Whether the active track has a previous track
          * @devdoc Calculated by whether the active track is not the last in all available
          */
-        hasNext(): boolean {
+        hasNextTrack(): boolean {
             return this.allTrackIds.slice(-1)[0] !== this.activeTrack?.Id;
+        },
+        /** Whether the playing cue has a previous cue
+         */
+        hasPreviousCue(): boolean {
+            return this.allActiveTrackCueIds[0] !== this.playingCue?.Id;
+        },
+        /** Whether the playing cue has a next cue
+         */
+        hasNextCue(): boolean {
+            return (
+                this.allActiveTrackCueIds.slice(-1)[0] !== this.playingCue?.Id
+            );
         },
     },
     methods: {
@@ -377,6 +437,50 @@ export default defineComponent({
                         resolve();
                     } else {
                         reject('No next track available.');
+                    }
+                }
+            });
+        },
+
+        toPreviousCue(): Promise<void> {
+            return new Promise((resolve, reject) => {
+                if (this.activeTrack && this.playingCue) {
+                    const indexOfSelected = this.allActiveTrackCueIds.indexOf(
+                        this.playingCue.Id,
+                    );
+                    const prevCueId =
+                        this.allActiveTrackCueIds[indexOfSelected - 1];
+                    const previousCue = this.activeTrack.Cues.filter(
+                        (cue) => cue.Id === prevCueId,
+                    )[0];
+                    if (previousCue && previousCue.Time != null) {
+                        this.trackPlayerInstance.seekToSeconds(
+                            previousCue.Time,
+                        );
+                        resolve();
+                    } else {
+                        reject('No previous cue or no cue time available.');
+                    }
+                }
+            });
+        },
+
+        toNextCue(): Promise<void> {
+            return new Promise((resolve, reject) => {
+                if (this.activeTrack && this.playingCue) {
+                    const indexOfSelected = this.allActiveTrackCueIds.indexOf(
+                        this.playingCue.Id,
+                    );
+                    const nextCueId =
+                        this.allActiveTrackCueIds[indexOfSelected + 1];
+                    const nextCue = this.activeTrack.Cues.filter(
+                        (cue) => cue.Id === nextCueId,
+                    )[0];
+                    if (nextCue && nextCue.Time != null) {
+                        this.trackPlayerInstance.seekToSeconds(nextCue.Time);
+                        resolve();
+                    } else {
+                        reject('No next cue or no cue time available.');
                     }
                 }
             });
