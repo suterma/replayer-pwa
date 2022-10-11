@@ -123,6 +123,19 @@
                                 >
                                     <BaseIcon name="fast-forward-5" />
                                 </button>
+                                <p
+                                    class="control"
+                                    title="Drag, scroll or use the arrow keys to change volume"
+                                >
+                                    <Knob
+                                        class="button"
+                                        v-model="volume"
+                                        :minValue="0"
+                                        :maxValue="1"
+                                        valueClass="has-text-light"
+                                        rimClass="has-text-grey-light"
+                                    />
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -220,6 +233,7 @@ import TrackHeader from '../components/TrackHeader.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
+import Knob from '@/components/buttons/Knob.vue';
 import VueScrollTo from 'vue-scrollto';
 import { MutationTypes } from '@/store/mutation-types';
 
@@ -233,6 +247,7 @@ export default defineComponent({
         PlayPauseButton,
         TimeDisplay,
         BaseIcon,
+        Knob,
     },
     data() {
         return {
