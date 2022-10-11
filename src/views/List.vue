@@ -1,15 +1,6 @@
 <template>
     <div class="has-navbar-fixed-bottom">
         <CompilationHeader :compilation="compilation" />
-
-        <PlayPauseButton
-            class="is-success"
-            :isPlaying="isPlaying"
-            :isLoading="isFading"
-            @click="togglePlayPause()"
-        >
-        </PlayPauseButton>
-
         <template v-for="track in tracks" :key="track.Id">
             <TrackHeader
                 :track="track"
@@ -119,6 +110,7 @@
                                     <BaseIcon name="rewind-5" />
                                 </button>
                                 <PlayPauseButton
+                                    class="is-success"
                                     :isPlaying="isPlaying"
                                     v-model:isLoading.boolean="isFading"
                                     @click="togglePlayPause()"
