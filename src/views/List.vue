@@ -55,7 +55,7 @@
                                     @click="toPreviousTrack()"
                                     title="skip to previous track"
                                 >
-                                    <BaseIcon name="skip-previous-outline" />
+                                    <BaseIcon name="skip-previous" />
                                 </button>
 
                                 <button class="button is-indicator">
@@ -68,7 +68,7 @@
                                     @click="toNextTrack()"
                                     title="skip to next track"
                                 >
-                                    <BaseIcon name="skip-next-outline" />
+                                    <BaseIcon name="skip-next" />
                                 </button>
                             </div>
                         </div>
@@ -106,10 +106,17 @@
                                 <!-- Stop (do not show on small devices, user still can use play/pause) -->
                                 <button
                                     class="button is-hidden-mobile"
-                                    @click.prevent="stop()"
+                                    @click="stop()"
                                     title="Stop"
                                 >
                                     <BaseIcon name="stop" />
+                                </button>
+                                <button
+                                    class="button"
+                                    @click="seek(-5)"
+                                    title="rewind 5 seconds"
+                                >
+                                    <BaseIcon name="rewind-5" />
                                 </button>
                                 <PlayPauseButton
                                     :isPlaying="isPlaying"
@@ -117,6 +124,13 @@
                                     @click="togglePlayPause()"
                                 >
                                 </PlayPauseButton>
+                                <button
+                                    class="button"
+                                    @click.prevent="seek(5)"
+                                    title="forward 5 seconds"
+                                >
+                                    <BaseIcon name="fast-forward-5" />
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -340,6 +354,13 @@ export default defineComponent({
             this.trackPlayerInstance.stop();
             this.activeTrack = null;
         },
+        seek(seconds: number): void {
+            //console.log(seconds);
+            //stop();
+            this.trackPlayerInstance.seekToSeconds(
+                this.currentSeconds + seconds,
+            );
+        },
         /** Updates the track duration and calculates the cue durations */
         calculateCueDurations(trackDurationSeconds: number) {
             if (this.activeTrack) {
@@ -450,9 +471,7 @@ export default defineComponent({
                         (cue) => cue.Id === prevCueId,
                     )[0];
                     if (previousCue && previousCue.Time != null) {
-                        this.trackPlayerInstance.seekToSeconds(
-                            previousCue.Time,
-                        );
+                        this.trackPlayerInstance.seekTo(previousCue.Time);
                         resolve();
                     } else {
                         reject('No previous cue or no cue time available.');
@@ -473,7 +492,7 @@ export default defineComponent({
                         (cue) => cue.Id === nextCueId,
                     )[0];
                     if (nextCue && nextCue.Time != null) {
-                        this.trackPlayerInstance.seekToSeconds(nextCue.Time);
+                        this.trackPlayerInstance.seekTo(nextCue.Time);
                         resolve();
                     } else {
                         reject('No next cue or no cue time available.');
