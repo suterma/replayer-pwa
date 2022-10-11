@@ -381,6 +381,10 @@ export default defineComponent({
         autoplay(value: boolean): void {
             this.audioElement.autoplay = value;
         },
+        /** Watch the volume prop to update according externals changes  */
+        volume(): void {
+            this.updateVolume(this.volume);
+        },
     },
     methods: {
         /** Set the playback mode to a new value */
