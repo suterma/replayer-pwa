@@ -36,45 +36,52 @@
         >
             <div class="navbar-item is-expanded">
                 <nav class="level">
-                    <div class="level-item has-text-centered">
-                        <div>
-                            <p class="heading is-hidden-mobile">Track</p>
-                            <div class="buttons has-addons is-centered">
-                                <button
-                                    class="button"
-                                    :disabled="
-                                        !hasPreviousTrack || !activeTrack
-                                    "
-                                    @click="toPreviousTrack()"
-                                    title="skip to previous track"
-                                >
-                                    <BaseIcon name="skip-previous" />
-                                </button>
-
-                                <button class="button is-indicator">
-                                    <template v-if="activeTrack">
-                                        {{ activeTrack?.Name }}
-                                    </template>
-                                    <!-- On mobile devices, show a heading as placeholder, but only as long as no selection is made, to save space -->
-                                    <span
-                                        class="heading is-hidden-tablet"
-                                        v-else
+                    <!-- Left side (track) -->
+                    <div class="level-left">
+                        <div class="level-item has-text-centered">
+                            <div>
+                                <p class="heading is-hidden-mobile">Track</p>
+                                <div class="buttons has-addons is-centered">
+                                    <button
+                                        class="button"
+                                        :disabled="
+                                            !hasPreviousTrack || !activeTrack
+                                        "
+                                        @click="toPreviousTrack()"
+                                        title="skip to previous track"
                                     >
-                                        Track
-                                    </span>
-                                </button>
+                                        <BaseIcon name="skip-previous" />
+                                    </button>
 
-                                <button
-                                    class="button"
-                                    :disabled="!hasNextTrack || !activeTrack"
-                                    @click="toNextTrack()"
-                                    title="skip to next track"
-                                >
-                                    <BaseIcon name="skip-next" />
-                                </button>
+                                    <button class="button is-indicator">
+                                        <template v-if="activeTrack">
+                                            {{ activeTrack?.Name }}
+                                        </template>
+                                        <!-- On mobile devices, show a heading as placeholder, but only as long as no selection is made, to save space -->
+                                        <span
+                                            class="heading is-hidden-tablet"
+                                            v-else
+                                        >
+                                            Track
+                                        </span>
+                                    </button>
+
+                                    <button
+                                        class="button"
+                                        :disabled="
+                                            !hasNextTrack || !activeTrack
+                                        "
+                                        @click="toNextTrack()"
+                                        title="skip to next track"
+                                    >
+                                        <BaseIcon name="skip-next" />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <!-- Center (cue) -->
+
                     <div class="level-item has-text-centered">
                         <div>
                             <p class="heading is-hidden-mobile">Cue</p>
@@ -102,6 +109,7 @@
                                         Cue
                                     </span>
                                 </button>
+
                                 <button
                                     class="button"
                                     :disabled="!hasNextCue"
@@ -113,52 +121,55 @@
                             </div>
                         </div>
                     </div>
-                    <div class="level-item has-text-centered">
-                        <div>
-                            <p class="heading is-hidden-mobile">Play</p>
-                            <div class="buttons has-addons is-centered">
-                                <!-- Stop (do not show on small devices, user still can use play/pause) -->
-                                <button
-                                    class="button is-hidden-mobile"
-                                    @click="stop()"
-                                    title="Stop"
-                                >
-                                    <BaseIcon name="stop" />
-                                </button>
-                                <button
-                                    class="button"
-                                    @click="seek(-5)"
-                                    title="rewind 5 seconds"
-                                >
-                                    <BaseIcon name="rewind-5" />
-                                </button>
-                                <PlayPauseButton
-                                    class="is-success"
-                                    :isPlaying="isPlaying"
-                                    v-model:isLoading.boolean="isFading"
-                                    @click="togglePlayPause()"
-                                >
-                                </PlayPauseButton>
-                                <button
-                                    class="button"
-                                    @click.prevent="seek(5)"
-                                    title="forward 5 seconds"
-                                >
-                                    <BaseIcon name="fast-forward-5" />
-                                </button>
-                                <p
-                                    class="control"
-                                    title="Drag, scroll or use the arrow keys to change volume"
-                                >
-                                    <Knob
+                    <!-- Right side -->
+                    <div class="level-right">
+                        <div class="level-item has-text-centered">
+                            <div>
+                                <p class="heading is-hidden-mobile">Play</p>
+                                <div class="buttons is-centered">
+                                    <!-- Stop (do not show on small devices, user still can use play/pause) -->
+                                    <button
+                                        class="button is-hidden-mobile"
+                                        @click="stop()"
+                                        title="Stop"
+                                    >
+                                        <BaseIcon name="stop" />
+                                    </button>
+                                    <button
                                         class="button"
-                                        v-model="volume"
-                                        :minValue="0"
-                                        :maxValue="1"
-                                        valueClass="has-text-light"
-                                        rimClass="has-text-grey-light"
-                                    />
-                                </p>
+                                        @click="seek(-5)"
+                                        title="rewind 5 seconds"
+                                    >
+                                        <BaseIcon name="rewind-5" />
+                                    </button>
+                                    <PlayPauseButton
+                                        class="is-success"
+                                        :isPlaying="isPlaying"
+                                        v-model:isLoading.boolean="isFading"
+                                        @click="togglePlayPause()"
+                                    >
+                                    </PlayPauseButton>
+                                    <button
+                                        class="button"
+                                        @click.prevent="seek(5)"
+                                        title="forward 5 seconds"
+                                    >
+                                        <BaseIcon name="fast-forward-5" />
+                                    </button>
+                                    <p
+                                        class="control"
+                                        title="Drag, scroll or use the arrow keys to change volume"
+                                    >
+                                        <Knob
+                                            class="button"
+                                            v-model="volume"
+                                            :minValue="0"
+                                            :maxValue="1"
+                                            valueClass="has-text-light"
+                                            rimClass="has-text-grey-light"
+                                        />
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -181,59 +192,8 @@
                     :autoplay="true"
                     :showTransportControls="false"
                 >
-                    <!-- Stop (do not show on small devices, user still can use play/pause)
-          <button class="button is-hidden-mobile" @click.prevent="stop()" title="Stop">
-            <BaseIcon name="stop" />
-          </button>
-
-          <button class="button" :disabled="!hasPrevious" @click="toPreviousTrack()" title="skip to previous track">
-            <BaseIcon name="skip-previous-outline" />
-          </button>
-          <PlayPauseButton :isPlaying="isPlaying" v-model:isLoading.boolean="isFading" @click="togglePlayPause()">
-          </PlayPauseButton>
-          <button :class="{
-              button: true,
-          }" :disabled="!hasNext" @click="toNextTrack()" title="skip to next track">
-            <BaseIcon name="skip-next-outline" />
-          </button> -->
                 </TrackAudioApiPlayer>
             </div>
-            <!-- The cue buttons -->
-            <!-- <div class="navbar-item is-expanded">
-                <div class="buttons">
-                    <template v-for="cue in activeTrack?.Cues" :key="cue.Id">
-                        <CueButton
-                            :disabled="!mediaUrl || cue.Duration == null"
-                            :cue="cue"
-                            :isTrackPlaying="isPlaying"
-                            :currentSeconds="currentSeconds"
-                       
-                        
-                            @click="cueClick(cue)"   />
-                    </template>
-                </div>
-            </div> -->
-            <!-- The current cue -->
-            <!-- Current Cue:
-            <div class="navbar-item is-expanded">
-                <div class="buttons">
-                    <template v-for="cue in activeTrack?.Cues" :key="cue.Id">
-                        <CueButton
-                            v-show="
-                                cue.Time !== null &&
-                                currentSeconds >= cue.Time &&
-                                currentSeconds < cue.Time + (cue.Duration ?? 0)
-                            "
-                            :disabled="!mediaUrl || cue.Duration == null"
-                            :cue="cue"
-                            :isTrackPlaying="isPlaying"
-                            :currentSeconds="currentSeconds"
-                       
-                       
-                            @click="cueClick(cue)"  />
-                    </template>
-                </div>
-            </div> -->
         </nav>
     </div>
 </template>
@@ -262,7 +222,7 @@ import { MutationTypes } from '@/store/mutation-types';
 
 /** A Display of a complete compilation, with a simple track listing */
 export default defineComponent({
-    name: 'List',
+    name: 'Playlist',
     components: {
         CompilationHeader,
         TrackAudioApiPlayer,
@@ -582,7 +542,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/** On mobile, consider the stacked level items */
 .has-navbar-fixed-bottom {
-    padding-bottom: 4rem;
+    padding-bottom: calc(8rem + 68px);
+}
+/** From tablet, consider the spread out level items */
+@media screen and (min-width: 769px), print {
+    .has-navbar-fixed-bottom {
+        padding-bottom: 8rem;
+    }
 }
 </style>

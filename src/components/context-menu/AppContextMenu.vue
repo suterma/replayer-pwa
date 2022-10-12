@@ -21,19 +21,16 @@
                 iconName="pencil"
             />
         </Hotkey>
-        <Experimental>
-            <DropdownMenuRouterLink
-                to="/list"
-                title="List"
-                iconName="list-box-outline"
-            />
-        </Experimental>
+        <DropdownMenuRouterLink
+            to="/playlist"
+            title="Play List"
+            iconName="list-box-outline"
+        />
         <DropdownMenuRouterLink
             to="/setlist"
             title="Set list"
             iconName="list-box-outline"
         />
-
         <DropdownMenuRouterLink
             to="/settings"
             title="Settings"
