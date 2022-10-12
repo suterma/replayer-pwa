@@ -493,7 +493,7 @@ export default defineComponent({
 
     watch: {
         /** Handles changes in whether this is the active track.
-         * @remarks When this ceases to be the active track, stop playback.
+         * @remarks When this ceases to be the active track, pause playback.
            This avoids having multiple tracks playing at the same time.
            @remarks Always show newly active tracks as expanded
          */
