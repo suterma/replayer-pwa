@@ -38,11 +38,13 @@
                 <nav class="level">
                     <div class="level-item has-text-centered">
                         <div>
-                            <p class="heading">Track</p>
+                            <p class="heading is-hidden-mobile">Track</p>
                             <div class="buttons has-addons is-centered">
                                 <button
                                     class="button"
-                                    :disabled="!hasPreviousTrack"
+                                    :disabled="
+                                        !hasPreviousTrack || !activeTrack
+                                    "
                                     @click="toPreviousTrack()"
                                     title="skip to previous track"
                                 >
@@ -50,12 +52,21 @@
                                 </button>
 
                                 <button class="button is-indicator">
-                                    {{ activeTrack?.Name }}
+                                    <template v-if="activeTrack">
+                                        {{ activeTrack?.Name }}
+                                    </template>
+                                    <!-- On mobile devices, show a heading as placeholder, but only as long as no selection is made, to save space -->
+                                    <span
+                                        class="heading is-hidden-tablet"
+                                        v-else
+                                    >
+                                        Track
+                                    </span>
                                 </button>
 
                                 <button
                                     class="button"
-                                    :disabled="!hasNextTrack"
+                                    :disabled="!hasNextTrack || !activeTrack"
                                     @click="toNextTrack()"
                                     title="skip to next track"
                                 >
@@ -66,8 +77,11 @@
                     </div>
                     <div class="level-item has-text-centered">
                         <div>
-                            <p class="heading">Cue</p>
-                            <div class="buttons has-addons is-centered">
+                            <p class="heading is-hidden-mobile">Cue</p>
+                            <div
+                                id="cue-buttons"
+                                class="buttons has-addons is-centered"
+                            >
                                 <button
                                     class="button"
                                     :disabled="!hasPreviousCue"
@@ -77,7 +91,16 @@
                                     <BaseIcon name="skip-previous-outline" />
                                 </button>
                                 <button class="button is-indicator">
-                                    {{ playingCue?.Description }}
+                                    <template v-if="playingCue">
+                                        {{ playingCue?.Description }}
+                                    </template>
+                                    <!-- On mobile devices, show a heading as placeholder, but only as long as no selection is made, to save space -->
+                                    <span
+                                        class="heading is-hidden-tablet"
+                                        v-else
+                                    >
+                                        Cue
+                                    </span>
                                 </button>
                                 <button
                                     class="button"
@@ -92,7 +115,7 @@
                     </div>
                     <div class="level-item has-text-centered">
                         <div>
-                            <p class="heading">Play</p>
+                            <p class="heading is-hidden-mobile">Play</p>
                             <div class="buttons has-addons is-centered">
                                 <!-- Stop (do not show on small devices, user still can use play/pause) -->
                                 <button
