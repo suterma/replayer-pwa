@@ -11308,6 +11308,11 @@ while also keeping the original with.
   background-color: transparent;
 }
 
+/* Headings should have a fixed color, not changing on hover */
+.heading {
+  color: #aaa;
+}
+
 /*************************************************************
  * Hyperlinks
 **************************************************************
