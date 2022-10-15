@@ -18,6 +18,14 @@
         <ErrorOverlay />
         <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
     </section>
+    <!-- The bottom nav bar, used for the player for the active track -->
+    <nav
+        id="media-player"
+        class="navbar is-fixed-bottom is-spaced"
+        role="form"
+        aria-label="media player"
+    ></nav>
+
     <!-- The ad is only used for print outputs, to allow a printout recipient to explore the app. -->
     <ReplayerAd class="is-print-only is-together-print is-scaled-50" />
 </template>

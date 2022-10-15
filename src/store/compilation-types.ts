@@ -12,6 +12,7 @@ export enum TrackDisplayMode {
     /** Shown as fully expanded, not collapsible, optimized for playback */
     Play = 'play',
     /** Show initially as fully expanded, but supporting expand/collapse (using a button) */
+    //TODO later remove
     Collapsible = 'collapsible',
 }
 

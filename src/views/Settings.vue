@@ -205,46 +205,28 @@
                     <span class="has-opacity-half is-size-7">
                         (Here be dragons (use at your own risk))</span
                     >
-
-                    <!-- <div class="control"> -->
-                    <CollapsibleButton v-model="isExperimentalExpanded" />
-                    <!-- </div> -->
                 </label>
             </div>
-
-            <br />
-            <br />
-            <slide-up-down
-                v-model="isExperimentalExpanded"
-                :duration="250"
-                timingFunction="linear"
-                :responsive="true"
-            >
-                <div class="is-experimental">
-                    <h1 class="title">Experimental</h1>
-                    <h3 class="subtitle">
-                        Here be dragons (use at your own risk)
-                    </h3>
-                    <div class="field">
-                        <div class="control">
-                            <label class="checkbox">
-                                <input
-                                    type="checkbox"
-                                    :checked="
-                                        getSettings.displayExperimentalContent
-                                    "
-                                    @change="displayExperimentalContentChanged"
-                                />
-                                Display Experimental features
-                                <span class="has-opacity-half is-size-7">
-                                    (Allows to test upcoming, experimental
-                                    features)</span
-                                >
-                            </label>
-                        </div>
+            <div class="is-experimental">
+                <div class="field">
+                    <div class="control">
+                        <label class="checkbox">
+                            <input
+                                type="checkbox"
+                                :checked="
+                                    getSettings.displayExperimentalContent
+                                "
+                                @change="displayExperimentalContentChanged"
+                            />
+                            Display Experimental features
+                            <span class="has-opacity-half is-size-7">
+                                (Allows to test upcoming, experimental
+                                features)</span
+                            >
+                        </label>
                     </div>
                 </div>
-            </slide-up-down>
+            </div>
         </div>
     </div>
 </template>
@@ -254,7 +236,6 @@ import { defineComponent } from 'vue';
 import { MutationTypes } from '@/store/mutation-types';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import { Settings } from '@/store/state-types';
-import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
 import { confirm } from '@/code/ui/dialogs';
 
@@ -263,11 +244,10 @@ import { confirm } from '@/code/ui/dialogs';
 export default defineComponent({
     name: 'Settings',
     mixins: [settingsMixin],
-    components: { CollapsibleButton },
+    components: {},
     data() {
         return {
             localSettings: undefined as unknown as Settings,
-            isExperimentalExpanded: false,
         };
     },
     created() {

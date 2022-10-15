@@ -20,7 +20,6 @@
         <TrackHeaderEdit
             v-if="isEditable"
             :track="track"
-            v-model="expanded"
             :isPlaying="isPlaying"
             :isTrackLoaded="isTrackLoaded"
             :isActive="isActiveTrack"
@@ -28,162 +27,148 @@
         <TrackHeader
             v-else
             :track="track"
-            v-model="expanded"
             :isPlaying="isPlaying"
             :isTrackLoaded="isTrackLoaded"
             :isEditable="isEditable"
-            :isCollapsible="isCollapsible"
             :isActive="isActiveTrack"
         />
 
-        <!-- The cues as buttons (in a slider, whose use is optional, for a better overview)-->
-        <slide-up-down
-            v-model="expanded"
-            :duration="300"
-            timingFunction="linear"
-        >
-            <!-- The audio player, but only once the source is available from the store
-            Note: The actual src property/attribute is also depending 
-            on the show state as a performance optimizations
+        <!-- The cues as buttons -->
+
+        <!-- The audio player, but only once the source is available from the store
+            Note: The mediaUrl property (the actual src attribute in the underlying media
+            element) is also depending 
+            on the track state as a performance optimizations
             -->
-            <template v-if="mediaUrl">
-                <TrackAudioApiPlayer
-                    :isEditable="isEditable"
-                    v-if="mediaUrl"
-                    ref="playerReference"
-                    :title="track?.Name"
-                    :mediaUrl="optimizedMediaUrl"
-                    @timeupdate="updateTime"
-                    @durationChanged="calculateCueDurations"
-                    v-model:isPlaying="isPlaying"
-                    @update:playbackMode="updatedPlaybackMode"
-                    :playbackMode="track.PlaybackMode"
-                    :loopStart="selectedCue?.Time"
-                    :loopEnd="selectedCue?.Time + selectedCue?.Duration"
-                    :sourceDescription="track?.Url"
-                    @update:volume="updatedVolume"
-                    :volume="track.Volume"
-                ></TrackAudioApiPlayer>
-            </template>
-            <!-- A simplified emulation of an empty player with a seekbar/timeline as placeholder for the missing track's URL -->
-            <template v-else>
-                <div class="field player-panel is-fullwidth">
-                    <p class="control">
-                        <button disabled class="button is-fullwidth">
-                            <LongLine
-                                :text="`Fetching resource ${track?.Url}`"
-                                :hasProgress="true"
-                                :clipLeft="true"
-                            />
-                        </button>
-                    </p>
+        <template v-if="mediaUrl">
+            <Teleport to="#media-player">
+                <!-- This player is only hidden via v-show (not removed via v-if) when this track is not the active track, to keep the reference alive -->
+                <!-- //TODO currently the mediaUrl is not using the optimized
+                variant, because otherwise the track is not correctly loaded
+                after it has become the active track ( gets
+                play-request-was-interrupted) -->
+                <div v-show="isActiveTrack">
+                    <TrackAudioApiPlayer
+                        :isEditable="isEditable"
+                        ref="playerReference"
+                        :title="track?.Name"
+                        :mediaUrl="mediaUrl"
+                        @timeupdate="updateTime"
+                        @durationChanged="calculateCueDurations"
+                        v-model:isPlaying="isPlaying"
+                        @update:playbackMode="updatedPlaybackMode"
+                        :playbackMode="track.PlaybackMode"
+                        :loopStart="selectedCue?.Time"
+                        :loopEnd="selectedCue?.Time + selectedCue?.Duration"
+                        :sourceDescription="track?.Url"
+                        @update:volume="updatedVolume"
+                        :volume="track.Volume"
+                    ></TrackAudioApiPlayer>
                 </div>
-            </template>
+            </Teleport>
+        </template>
 
-            <!-- The cue buttons (in play mode) -->
-            <template v-if="!isEditable">
-                <div class="buttons">
-                    <template v-for="cue in cues" :key="cue.Id">
-                        <CueButton
-                            :disabled="!mediaUrl || !isTrackLoaded"
-                            :cue="cue"
-                            :isTrackPlaying="isPlaying"
-                            :currentSeconds="currentSeconds"
-                            @click="cueClick(cue)"
-                        />
-                    </template>
+        <!-- The cue buttons (in play mode) -->
+        <template v-if="!isEditable">
+            <div class="buttons">
+                <template v-for="cue in cues" :key="cue.Id">
+                    <CueButton
+                        :cue="cue"
+                        :isTrackPlaying="isPlaying"
+                        :currentSeconds="currentSeconds"
+                        @click="cueClick(cue)"
+                    />
+                </template>
 
-                    <Experimental>
-                        <!-- Extra cue trigger button (with similar layouting as a regular cue button) -->
+                <Experimental>
+                    <!-- Extra cue trigger button (with similar layouting as a regular cue button) -->
 
-                        //TODO move the cue class styles up to the
-                        .track.buttons.button selector. Then remove the cue
-                        class here
-                        <button
-                            :class="{
-                                button: true,
-                                cue: true,
-                                'is-multiline': true,
-                                'has-text-left': 'true',
-                            }"
-                            title="Create a cue now (at the current playback time)!"
-                        >
-                            <span>
-                                <BaseIcon name="plus" />
-                                &nbsp;
-                                <span
-                                    class="has-text-weight-semibold foreground"
-                                    >Add cue!</span
-                                >
-                                <br />
-                                <!-- second line (use a horizontal level also on mobile)-->
-                                <span class="level is-mobile">
-                                    <div class="level-item mr-3">
-                                        <TimeDisplay
-                                            class="has-opacity-half foreground"
-                                            :modelValue="currentSeconds"
-                                        ></TimeDisplay>
-                                    </div>
-                                </span>
+                    //TODO move the cue class styles up to the
+                    .track.buttons.button selector. Then remove the cue class
+                    here
+                    <button
+                        :class="{
+                            button: true,
+                            cue: true,
+                            'is-multiline': true,
+                            'has-text-left': 'true',
+                        }"
+                        title="Create a cue now (at the current playback time)!"
+                    >
+                        <span>
+                            <BaseIcon name="plus" />
+                            &nbsp;
+                            <span class="has-text-weight-semibold foreground"
+                                >Add cue!</span
+                            >
+                            <br />
+                            <!-- second line (use a horizontal level also on mobile)-->
+                            <span class="level is-mobile">
+                                <div class="level-item mr-3">
+                                    <TimeDisplay
+                                        class="has-opacity-half foreground"
+                                        :modelValue="currentSeconds"
+                                    ></TimeDisplay>
+                                </div>
                             </span>
-                        </button>
-                    </Experimental>
-                </div>
-            </template>
-            <template v-else>
-                <!-- Create Cue (With Hotkey for the active track)
+                        </span>
+                    </button>
+                </Experimental>
+            </div>
+        </template>
+        <template v-else>
+            <!-- Create Cue (With Hotkey for the active track)
                 Creating a cue should also work when invoked from inside a 
                 textbox, thus explicitly no elements are excluded.
                 NOTE: Using the ":enabled" property on Hotkey does not work
                 See https://github.com/Simolation/vue-hotkey/issues/2 -->
-                <Hotkey
-                    v-if="isActiveTrack"
-                    :keys="['insert']"
-                    :excluded-elements="[]"
-                    v-slot="{ clickRef }"
-                >
-                    <button
-                        :class="{
-                            button: true,
-                            'is-warning': true,
-                        }"
-                        @click.prevent="createNewCue()"
-                        :ref="clickRef"
-                        title="Create a cue now (at the current playback time)!"
-                    >
-                        <BaseIcon name="plus" />
-                        <span>Create Cue! [INSERT]</span>
-                    </button>
-                </Hotkey>
+            <Hotkey
+                v-if="isActiveTrack"
+                :keys="['insert']"
+                :excluded-elements="[]"
+                v-slot="{ clickRef }"
+            >
                 <button
-                    v-else
                     :class="{
                         button: true,
                         'is-warning': true,
                     }"
                     @click.prevent="createNewCue()"
+                    :ref="clickRef"
                     title="Create a cue now (at the current playback time)!"
                 >
                     <BaseIcon name="plus" />
-                    <span>Create Cue!</span>
+                    <span>Create Cue! [INSERT]</span>
                 </button>
+            </Hotkey>
+            <button
+                v-else
+                :class="{
+                    button: true,
+                    'is-warning': true,
+                }"
+                @click.prevent="createNewCue()"
+                title="Create a cue now (at the current playback time)!"
+            >
+                <BaseIcon name="plus" />
+                <span>Create Cue!</span>
+            </button>
 
-                <ul class="levels">
-                    <template v-for="cue in cues" :key="cue.Id">
-                        <li>
-                            <CueLevel
-                                :disabled="!mediaUrl || !isTrackLoaded"
-                                :cue="cue"
-                                :isTrackPlaying="isPlaying"
-                                :currentSeconds="currentSeconds"
-                                @click="cueClick(cue)"
-                                @play="cuePlay(cue)"
-                            />
-                        </li>
-                    </template>
-                </ul>
-            </template>
-        </slide-up-down>
+            <ul class="levels">
+                <template v-for="cue in cues" :key="cue.Id">
+                    <li>
+                        <CueLevel
+                            :disabled="!mediaUrl || !isTrackLoaded"
+                            :cue="cue"
+                            :isTrackPlaying="isPlaying"
+                            :currentSeconds="currentSeconds"
+                            @click="cueClick(cue)"
+                            @play="cuePlay(cue)"
+                        />
+                    </li>
+                </template>
+            </ul>
+        </template>
     </div>
 </template>
 
@@ -204,7 +189,6 @@ import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeaderEdit from '@/components/TrackHeaderEdit.vue';
 import Experimental from '@/components/Experimental.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
-import LongLine from '@/components/LongLine.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
@@ -229,7 +213,6 @@ export default defineComponent({
         ReplayerEventHandler,
         TrackHeader,
         TrackHeaderEdit,
-        LongLine,
         BaseIcon,
         Experimental,
         TimeDisplay,
@@ -254,27 +237,11 @@ export default defineComponent({
             default: TrackDisplayMode.Collapsible,
         },
     },
-    emits: ['update:expanded'],
-    mounted() {
-        //If it's mounted as already the active track, show expanded already
-        //(unfortunately the watcher only handles changes after mounted)
-        if (this.isActiveTrack) {
-            console.debug(
-                `Track(${this.track.Name})::mounted:isActiveTrack:` +
-                    this.track?.Name,
-            );
-
-            this.updateExpanded(true);
-        }
-    },
     unmounted() {
         this.deactivateWakeLock();
     },
     data() {
         return {
-            /** Whether this track is shown as expanded. Default: false, but can later be dynamically changed.
-             */
-            expanded: false,
             /** The playback progress in the current track, in [seconds]
              * @remarks This is used for track progress display within the set of cues
              */
@@ -377,20 +344,6 @@ export default defineComponent({
                 }
             }
         },
-
-        /** Updates the expanded state with the given value*/
-        updateExpanded(value: boolean) {
-            //Let the DOM update first, to have proper height handling when items get added late on
-            this.$nextTick(() => {
-                console.debug(
-                    `Track(${this.track.Name})::updateExpanded:value:`,
-                    value,
-                );
-                this.expanded = value;
-                this.$emit('update:expanded', value);
-            });
-        },
-
         /** Handle playback mode updates
          * @devdoc Handled here as part of the track because the playback mode is
          * essentially a property of the track, not of the player or the player chrome.
@@ -432,7 +385,13 @@ export default defineComponent({
                 );
 
                 //Set the position to this cue and handle playback
-                if (this.trackPlayerInstance?.playing === true) {
+                const isPlaying = this.trackPlayerInstance?.playing;
+                console.debug(
+                    `Track(${this.track.Name})::cueClick:isPlaying:`,
+                    isPlaying,
+                );
+
+                if (isPlaying === true) {
                     this.trackPlayerInstance?.pauseAndSeekTo(cue.Time);
                 } else {
                     this.trackPlayerInstance?.playFrom(cue.Time);
@@ -495,7 +454,6 @@ export default defineComponent({
         /** Handles changes in whether this is the active track.
          * @remarks When this ceases to be the active track, pause playback.
            This avoids having multiple tracks playing at the same time.
-           @remarks Always show newly active tracks as expanded
          */
         isActiveTrack(val, oldVal) {
             console.debug(`Track(${this.track.Name})::isActiveTrack:val:`, val);
@@ -504,9 +462,11 @@ export default defineComponent({
                 this.trackPlayerInstance?.pause();
             }
 
-            //show active expanded
-            if (val === true) {
-                this.updateExpanded(true);
+            if (val == false) {
+                this.deactivateWakeLock();
+            }
+            if (val == true) {
+                this.activateWakeLock();
             }
         },
         /** Handles changes in whether this track is playing.
@@ -515,21 +475,6 @@ export default defineComponent({
         isPlaying(val) {
             console.debug(`Track(${this.track.Name})::isPlaying:val:`, val);
             if (val) {
-                this.activateWakeLock();
-            }
-        },
-        /** Handles changes in whether this track is expanded.
-         * @remarks This deactivates the wake lock, when collapsed. It activates it back, when expanded while already playing.
-         */
-        expanded(expanded) {
-            console.debug(
-                `Track(${this.track.Name})::expanded:expanded:`,
-                expanded,
-            );
-            if (!expanded) {
-                this.deactivateWakeLock();
-            }
-            if (expanded && this.isPlaying) {
                 this.activateWakeLock();
             }
         },
@@ -547,14 +492,6 @@ export default defineComponent({
          */
         isPlayable(): boolean {
             return this.displayMode === TrackDisplayMode.Play;
-        },
-
-        /** Whether this component supports expand/collapse (using a button)
-         * If set to false, the component is always shown in the expanded state, without the toggling button.
-         * @devdoc Allows to reuse this component for more than one display mode.
-         */
-        isCollapsible(): boolean {
-            return this.displayMode === TrackDisplayMode.Collapsible;
         },
 
         /** Gets a reference to the player instance.
@@ -578,14 +515,13 @@ export default defineComponent({
         },
 
         /** Gets the media object URL, if available,
-         * and optimized for the expanded and the active track state
+         * and optimized for the active track state
          * @remarks To save memory in the audio elements,
          * an URL is only provided when
-         * the player is actually in the expanded state or
-         * the track is the currently active track
+         * the player is actually in the currently active track
          */
         optimizedMediaUrl(): string | undefined {
-            if (this.expanded || this.isActiveTrack) {
+            if (this.isActiveTrack) {
                 return this.trackMediaUrl?.url;
             } else {
                 return undefined;
@@ -630,13 +566,6 @@ export default defineComponent({
 });
 </script>
 <style lang="css" scoped>
-/** Never show scrollbars on the track tiles (this important style is necessary
-     *  as remedy while using the slide-up-down control) */
-.slide-up-down__container {
-    overflow-x: hidden !important;
-    overflow-y: hidden !important;
-}
-
 div.track {
     /** a border as separator between the tracks */
     border-color: #52575c;
