@@ -364,10 +364,14 @@ export default defineComponent({
             }
         },
         /** Watch whether the media URL property changed, and then update the audio element accordingly  */
-        mediaUrl(): void {
-            this.debugLog(`mediaUrl:${this.mediaUrl}`);
-            this.updateMediaSource(this.mediaUrl);
+        mediaUrl(mediaUrl: string /*, oldMediaUrl: string*/): void {
+            /*this.debugLog(`mediaUrl:${mediaUrl};oldMediaUrl:${mediaUrl}`);*/
+
+            //if (mediaUrl !== oldMediaUrl) {
+            this.debugLog(`mediaUrl:${mediaUrl}`);
+            this.updateMediaSource(mediaUrl);
             this.fader.cancel();
+            //}
         },
         /** Watch the playback state, and then update the audio element accordingly  */
         isPlaying(value: boolean): void {
