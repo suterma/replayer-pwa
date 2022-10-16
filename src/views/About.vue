@@ -341,18 +341,29 @@
                         href="https://github.com/slipmatio/control-knob"
                         target="_blank"
                         >control-knob</a
-                    >, a fully customizable rotary control knob component for Vue (Released under the MIT License, by
-                    Ville Säävuori).
+                    >, a fully customizable rotary control knob component for
+                    Vue (Released under the MIT License, by Ville Säävuori).
                 </li>
                 <li>
                     <a
                         href="https://github.com/focus-trap/focus-trap"
                         target="_blank"
                         >focus-trap</a
-                    >, trap focus within a DOM node. (Released under the MIT License, by
-                    Marais Rossouw).
-                </li><li>
-                    Music from the Album "Not For Sale" by Lidija Roos (Released to the public, by Lidija Roos)
+                    >, trap focus within a DOM node. (Released under the MIT
+                    License, by Marais Rossouw).
+                </li>
+                <li>
+                    <a
+                        href="https://github.com/Wikiki/bulma-slider"
+                        target="_blank"
+                    >
+                        bulma-slider</a
+                    >, Bulma's extension to display sliders. (Released under the
+                    MIT License, by Wikiki).
+                </li>
+                <li>
+                    Music from the Album "Not For Sale" by Lidija Roos (Released
+                    to the public, by Lidija Roos)
                 </li>
             </ul>
         </div>

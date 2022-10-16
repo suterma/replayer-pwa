@@ -64,6 +64,15 @@
                         @update:volume="updatedVolume"
                         :volume="track.Volume"
                     ></TrackAudioApiPlayer>
+                    <!-- PlaybackProgress -->
+                    <input
+                        class="slider is-fullwidth is-small is-circle"
+                        step="0.1"
+                        min="0"
+                        :max="track.Duration ?? 0"
+                        v-model="currentSeconds"
+                        type="range"
+                    />
                 </div>
             </Teleport>
         </template>
