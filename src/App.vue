@@ -19,12 +19,13 @@
         <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
     </section>
     <!-- The bottom nav bar, used for the player for the active track -->
-    <nav
-        id="media-player"
-        class="navbar is-fixed-bottom is-spaced"
-        role="form"
-        aria-label="media player"
-    ></nav>
+    <nav class="navbar is-fixed-bottom" role="form">
+        <section
+            id="media-player"
+            aria-label="media player"
+            class="section has-background-grey-dark"
+        ></section>
+    </nav>
 
     <!-- The ad is only used for print outputs, to allow a printout recipient to explore the app. -->
     <ReplayerAd class="is-print-only is-together-print is-scaled-50" />
