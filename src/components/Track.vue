@@ -64,15 +64,14 @@
                         @update:volume="updatedVolume"
                         :volume="track.Volume"
                     ></TrackAudioApiPlayer>
-                    <!-- PlaybackProgress -->
-                    <input
+                     <PlayheadSlider
                         class="slider is-fullwidth is-small is-circle"
-                        step="0.1"
-                        min="0"
-                        :max="track.Duration ?? 0"
-                        v-model="currentSeconds"
-                        type="range"
-                    />
+                        v-model.number="currentSeconds"
+                        @update:modelValue="
+                            (position) => trackPlayerInstance?.seekTo(position)
+                        "
+                        :track="track"
+                    ></PlayheadSlider>
                 </div>
             </Teleport>
         </template>
@@ -205,6 +204,7 @@ import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
+import PlayheadSlider from '@/components/PlayheadSlider.vue';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -226,6 +226,7 @@ export default defineComponent({
         Experimental,
         TimeDisplay,
         Hotkey,
+        PlayheadSlider,
     },
     mixins: [settingsMixin],
     props: {
@@ -408,7 +409,7 @@ export default defineComponent({
                 this.activateWakeLock();
             }
         },
-        /** Handles the play event of a cue button, by immediately restarting playback at the cue (instead of toggling)
+         /** Handles the play event of a cue button, by immediately restarting playback at the cue (instead of toggling)
          * @devdoc Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
          */
         cuePlay(cue: ICue) {
