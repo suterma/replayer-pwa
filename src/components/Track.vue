@@ -64,7 +64,17 @@
                         @update:volume="updatedVolume"
                         :volume="track.Volume"
                     ></TrackAudioApiPlayer>
-                     <PlayheadSlider
+                    <CueButtonsBar
+                        :currentSeconds="currentSeconds"
+                        :isTrackPlaying="isPlaying"
+                        @click="
+                            (cue) => {
+                                cueClick(cue);
+                            }
+                        "
+                        :track="track"
+                    ></CueButtonsBar>
+                    <PlayheadSlider
                         class="slider is-fullwidth is-small is-circle"
                         v-model.number="currentSeconds"
                         @update:modelValue="
@@ -195,6 +205,7 @@ import { MediaUrl } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeaderEdit from '@/components/TrackHeaderEdit.vue';
+import CueButtonsBar from '@/components/CueButtonsBar.vue';
 import Experimental from '@/components/Experimental.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
@@ -227,6 +238,7 @@ export default defineComponent({
         TimeDisplay,
         Hotkey,
         PlayheadSlider,
+        CueButtonsBar,
     },
     mixins: [settingsMixin],
     props: {
@@ -409,7 +421,7 @@ export default defineComponent({
                 this.activateWakeLock();
             }
         },
-         /** Handles the play event of a cue button, by immediately restarting playback at the cue (instead of toggling)
+        /** Handles the play event of a cue button, by immediately restarting playback at the cue (instead of toggling)
          * @devdoc Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
          */
         cuePlay(cue: ICue) {

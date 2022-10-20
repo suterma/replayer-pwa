@@ -29,6 +29,8 @@
             <BaseIcon name="play" v-if="!isTrackPlaying" class="foreground" />
             <BaseIcon name="pause" v-else class="foreground" />
 
+            <slot></slot>
+
             <template v-if="!isMinified">
                 &nbsp;
                 <span class="has-text-weight-semibold foreground">{{
