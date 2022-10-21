@@ -24,14 +24,40 @@
             :isTrackLoaded="isTrackLoaded"
             :isActive="isActiveTrack"
         />
-        <TrackHeader
+        <!-- <TrackHeader
             v-else
             :track="track"
             :isPlaying="isPlaying"
             :isTrackLoaded="isTrackLoaded"
             :isEditable="isEditable"
             :isActive="isActiveTrack"
-        />
+        /> -->
+        <TrackHeader
+            v-else
+            :track="track"
+            :isCollapsible="false"
+            :isPlaying="isPlaying"
+            :isTrackLoaded="true"
+            :isActive="isActiveTrack"
+        >
+            <template v-slot:left-start>
+                <div class="level-item is-narrow">
+                    <PlayPauseButton
+                        :isPlaying="isPlaying"
+                        :isLoading="isFading"
+                        @click="skipToPlayPause()"
+                        title="play"
+                    />
+                </div>
+            </template>
+            <template v-slot:left-end>
+                <TimeDisplay
+                    class="level-item is-narrow is-hidden-mobile"
+                    :modelValue="track?.Duration"
+                    :hidePlaceholder="true"
+                ></TimeDisplay>
+            </template>
+        </TrackHeader>
 
         <!-- The cues as buttons -->
 
@@ -56,6 +82,7 @@
                         @timeupdate="updateTime"
                         @durationChanged="calculateCueDurations"
                         v-model:isPlaying="isPlaying"
+                        @update:isFading="updateFading"
                         @update:playbackMode="updatedPlaybackMode"
                         :playbackMode="track.PlaybackMode"
                         :loopStart="selectedCue?.Time"
@@ -66,7 +93,7 @@
                     ></TrackAudioApiPlayer>
                     <CueButtonsBar
                         :currentSeconds="currentSeconds"
-                        :isTrackPlaying="isPlaying"
+                        :isTrackPlaying="isPlaying"             
                         @click="
                             (cue) => {
                                 cueClick(cue);
@@ -86,55 +113,8 @@
             </Teleport>
         </template>
 
-        <!-- The cue buttons (in play mode) -->
-        <template v-if="!isEditable">
-            <div class="buttons">
-                <template v-for="cue in cues" :key="cue.Id">
-                    <CueButton
-                        :cue="cue"
-                        :isTrackPlaying="isPlaying"
-                        :currentSeconds="currentSeconds"
-                        @click="cueClick(cue)"
-                    />
-                </template>
-
-                <Experimental>
-                    <!-- Extra cue trigger button (with similar layouting as a regular cue button) -->
-
-                    //TODO move the cue class styles up to the
-                    .track.buttons.button selector. Then remove the cue class
-                    here
-                    <button
-                        :class="{
-                            button: true,
-                            cue: true,
-                            'is-multiline': true,
-                            'has-text-left': 'true',
-                        }"
-                        title="Create a cue now (at the current playback time)!"
-                    >
-                        <span>
-                            <BaseIcon name="plus" />
-                            &nbsp;
-                            <span class="has-text-weight-semibold foreground"
-                                >Add cue!</span
-                            >
-                            <br />
-                            <!-- second line (use a horizontal level also on mobile)-->
-                            <span class="level is-mobile">
-                                <div class="level-item mr-3">
-                                    <TimeDisplay
-                                        class="has-opacity-half foreground"
-                                        :modelValue="currentSeconds"
-                                    ></TimeDisplay>
-                                </div>
-                            </span>
-                        </span>
-                    </button>
-                </Experimental>
-            </div>
-        </template>
-        <template v-else>
+        <!-- The cue buttons (in edit mode) -->
+        <template v-if="isEditable">
             <!-- Create Cue (With Hotkey for the active track)
                 Creating a cue should also work when invoked from inside a 
                 textbox, thus explicitly no elements are excluded.
@@ -198,7 +178,6 @@ import {
     TrackDisplayMode,
     PlaybackMode,
 } from '@/store/compilation-types';
-import CueButton from '@/components/buttons/CueButton.vue';
 import CueLevel from '@/components/CueLevel.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
 import { MediaUrl } from '@/store/state-types';
@@ -206,8 +185,8 @@ import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeaderEdit from '@/components/TrackHeaderEdit.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';
-import Experimental from '@/components/Experimental.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
+import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
@@ -227,14 +206,13 @@ import PlayheadSlider from '@/components/PlayheadSlider.vue';
 export default defineComponent({
     name: 'Track',
     components: {
-        CueButton,
         CueLevel,
         TrackAudioApiPlayer,
         ReplayerEventHandler,
         TrackHeader,
         TrackHeaderEdit,
+        PlayPauseButton,
         BaseIcon,
-        Experimental,
         TimeDisplay,
         Hotkey,
         PlayheadSlider,
@@ -279,9 +257,26 @@ export default defineComponent({
 
             /** The wake lock fill-in that can prevent screen timeout, while a track is in use */
             noSleep: new NoSleep(),
+            /** Readonly flag to indicate whether the player is currently fading */
+            isFading: false,
         };
     },
     methods: {
+        /** Skips to this track
+         * @remarks If the track is not yet active, tries to activate the track (which will autoplay).
+         * If it's the active track, just toggles play/pause
+         */
+        skipToPlayPause(): void {
+            if (!this.isActiveTrack) {
+                //TODO make this the active track without using a cue (include an active track in the store, without the need of a selected cue)
+                const firstCue = this.track.Cues[0];
+                if (firstCue) {
+                    this.cuePlay(firstCue);
+                }
+            } else {
+                this.trackPlayerInstance.togglePlayback();
+            }
+        },
         /** Activates the wake lock (if enabled in settings)
          * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
          */
@@ -459,6 +454,10 @@ export default defineComponent({
          */
         updateTime(currentTime: number) {
             this.currentSeconds = currentTime;
+        },
+
+        updateFading(fading: boolean) {
+            this.isFading = fading;
         },
 
         /** Updates the track duration and calculates the cue durations */
