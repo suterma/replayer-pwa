@@ -1,5 +1,5 @@
 <template>
-    <div class="buttons has-addons is-fullwidth is-flex-wrap-nowrap">
+    <div class="buttons is-fullwidth is-flex-wrap-nowrap">
         <template v-for="cue in track.Cues" :key="cue.Id">
             <CueButton
                 class="is-flex-grow-1 long-and-truncated"

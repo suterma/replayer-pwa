@@ -1,8 +1,10 @@
 <template>
     <span
-        style="min-width: 9ch"
+        
         :class="{
             'is-invisible': hidePlaceholder && modelValue === null,
+            'is-minimum-9-characters': !isMobile,
+            'is-minimum-7-characters': isMobile,
         }"
         >{{ currentDisplayTime }}</span
     >
@@ -64,3 +66,11 @@ export default defineComponent({
     },
 });
 </script>
+<style scoped>
+.is-minimum-9-characters {
+    min-width: 9ch;
+}
+.is-minimum-7-characters {
+    min-width: 7ch;
+}
+</style>

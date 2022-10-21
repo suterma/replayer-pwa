@@ -1,17 +1,42 @@
 <template>
-    <input
-        step="stepSize"
-        min="0"
-        :max="track.Duration ?? 0"
-        :value="modelValue"
-        @change="onValueChange"
-        @input="onValueChange"
-        type="range"
-    />
+    <!-- Slider with time info around it -->
+    <div class="level is-mobile">
+        <!-- Left side -->
+        <div class="level-left">
+            <div class="level-item">
+                <TimeDisplay
+                    class="is-size-7"
+                    :modelValue="modelValue"
+                ></TimeDisplay>
+            </div>
+        </div>
+        <div class="level-item mr-0">
+            <input
+                class="slider is-fullwidth is-small is-circle"
+                step="stepSize"
+                min="0"
+                :max="track.Duration ?? 0"
+                :value="modelValue"
+                @change="onValueChange"
+                @input="onValueChange"
+                type="range"
+            />
+        </div>
+        <!-- Right side -->
+        <div class="level-right">
+            <div class="level-item">
+                <TimeDisplay
+                    class="has-text-right is-size-7"
+                    :modelValue="track.Duration"
+                ></TimeDisplay>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import TimeDisplay from '@/components/TimeDisplay.vue';
 import { Track } from '@/store/compilation-types';
 
 /** Slider that represents the playhead position in a track as the modelValue in a ranged input (slider).
@@ -19,7 +44,7 @@ import { Track } from '@/store/compilation-types';
 export default defineComponent({
     name: 'PlayheadSlider',
     emits: ['update:modelValue'],
-    components: {},
+    components: { TimeDisplay },
     props: {
         /** The current time of the slider
          */
