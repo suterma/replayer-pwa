@@ -93,7 +93,7 @@
                     ></TrackAudioApiPlayer>
                     <CueButtonsBar
                         :currentSeconds="currentSeconds"
-                        :isTrackPlaying="isPlaying"             
+                        :isTrackPlaying="isPlaying"
                         @click="
                             (cue) => {
                                 cueClick(cue);
@@ -101,8 +101,12 @@
                         "
                         :track="track"
                     ></CueButtonsBar>
+
                     <PlayheadSlider
                         class="slider is-fullwidth is-small is-circle"
+                        :class="{
+                            'is-success': isPlaying,
+                        }"
                         v-model.number="currentSeconds"
                         @update:modelValue="
                             (position) => trackPlayerInstance?.seekTo(position)
