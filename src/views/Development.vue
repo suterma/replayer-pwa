@@ -184,7 +184,6 @@ import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import EditableInput from '@/components/EditableInput.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import NavButton from '@/components/buttons/NavButton.vue';
-import Experimental from '@/components/Experimental.vue';
 //import ControlKnob from '@slipmatio/control-knob';
 import ControlKnob from '@/components/control-knob';
 import Knob from '@/components/buttons/Knob.vue';
@@ -196,7 +195,6 @@ export default defineComponent({
         EditableInput,
         BaseIcon,
         NavButton,
-        Experimental,
         ControlKnob,
         Knob,
     },

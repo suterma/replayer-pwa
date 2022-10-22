@@ -37,7 +37,6 @@
 import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent, PropType } from 'vue';
 import PlayerChrome from '@/components/PlayerChrome.vue';
-import Experimental from '@/components/Experimental.vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
@@ -54,7 +53,6 @@ export default defineComponent({
     components: {
         PlayerChrome,
         TrackAudioPeaks,
-        Experimental,
     },
     mixins: [settingsMixin],
     emits: [

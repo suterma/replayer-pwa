@@ -144,7 +144,6 @@ import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
 import FileHandler from '@/store/filehandler';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import Experimental from '@/components/Experimental.vue';
 
 /** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
  * @remarks Supports collapsing the control after load, to keep the user more focused
@@ -153,7 +152,7 @@ import Experimental from '@/components/Experimental.vue';
  */
 export default defineComponent({
     name: 'MediaDropZone',
-    components: { BaseIcon, Experimental },
+    components: { BaseIcon },
     props: {
         /** Whether to show the zone in the expanded state */
         isExpanded: {

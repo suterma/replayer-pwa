@@ -34,7 +34,6 @@
 import { defineComponent } from 'vue';
 import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
-import Experimental from '@/components/Experimental.vue';
 import ReplayerAd from '@/components/ReplayerAd.vue';
 import ErrorOverlay from '@/components/ErrorOverlay.vue';
 import { MutationTypes } from './store/mutation-types';
@@ -46,7 +45,6 @@ export default defineComponent({
         AppContextMenu,
         ProgressOverlay,
         ErrorOverlay,
-        Experimental,
         DialogWrapper,
         ReplayerAd,
     },
@@ -67,3 +65,15 @@ export default defineComponent({
     },
 });
 </script>
+<style>
+/** On mobile, consider the stacked level items */
+.has-navbar-fixed-bottom {
+    padding-bottom: calc(8rem + 68px);
+}
+/** From tablet, consider the spread out level items */
+@media screen and (min-width: 769px), print {
+    .has-navbar-fixed-bottom {
+        padding-bottom: 8rem;
+    }
+}
+</style>

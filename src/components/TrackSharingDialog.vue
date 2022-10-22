@@ -58,7 +58,6 @@
 
 <script lang="ts">
 import { ICue, Track } from '@/store/compilation-types';
-import Experimental from '@/components/Experimental.vue';
 import { defineComponent } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
@@ -67,7 +66,6 @@ import { Hotkey } from '@simolation/vue-hotkey';
 export default defineComponent({
     name: 'TrackSharingDialog',
     components: {
-        Experimental,
         UseFocusTrap,
         Hotkey,
     },

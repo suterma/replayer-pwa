@@ -404,13 +404,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import WelcomeText from '@/components/WelcomeText.vue';
-import Experimental from '@/components/Experimental.vue';
 
 /** An About view
  */
 export default defineComponent({
     name: 'About',
-    components: { WelcomeText, Experimental },
+    components: { WelcomeText },
     computed: {
         version(): string {
             return '' + process.env.VUE_APP_VERSION;

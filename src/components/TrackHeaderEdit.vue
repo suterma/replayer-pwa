@@ -181,7 +181,6 @@ import EditableInput from '@/components/EditableInput.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
-import Experimental from '@/components/Experimental.vue';
 import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
 // import TrackSharingDialog from '@/components/TrackSharingDialog.vue';
 import { confirm } from '@/code/ui/dialogs';
@@ -201,7 +200,6 @@ export default defineComponent({
         DropdownMenu,
         DropdownMenuButton,
         // TrackSharingDialog,
-        Experimental,
     },
     emits: ['update:modelValue'],
     props: {

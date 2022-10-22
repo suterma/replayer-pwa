@@ -55,14 +55,13 @@
 import { defineComponent } from 'vue';
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
 import DropdownMenuRouterLink from '@/components/dropdown-menu/DropdownMenuRouterLink.vue';
-import Experimental from '@/components/Experimental.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
 
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
     name: 'AppContextMenu',
-    components: { DropdownMenu, DropdownMenuRouterLink, Experimental, Hotkey },
+    components: { DropdownMenu, DropdownMenuRouterLink, Hotkey },
     methods: {},
 });
 </script>

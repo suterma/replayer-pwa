@@ -6,6 +6,7 @@ import { store } from './store/store';
 import VueScrollTo from 'vue-scrollto';
 import vClickOutside from 'click-outside-vue3';
 import { PromiseDialog } from 'vue3-promise-dialog';
+import Experimental from '@/components/Experimental.vue';
 
 console.log('App version: ' + process.env.VUE_APP_VERSION);
 console.log('Environment: ' + process.env.NODE_ENV);
@@ -18,6 +19,7 @@ createApp(App)
     .use(VueScrollTo)
     .use(vClickOutside)
     .use(PromiseDialog)
+    .component('Experimental', Experimental)
     .directive('focus', {
         mounted: (el) => el.focus(),
     })

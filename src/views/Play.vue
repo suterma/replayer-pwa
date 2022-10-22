@@ -51,7 +51,6 @@ import Compilation from '@/components/Compilation.vue';
 import { ICompilation, TrackDisplayMode } from '@/store/compilation-types';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import WelcomeText from '@/components/WelcomeText.vue';
-import Experimental from '@/components/Experimental.vue';
 import CompilationLoader from '@/components/CompilationLoader.vue';
 import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
@@ -66,7 +65,6 @@ export default defineComponent({
         MediaDropZone,
         CompilationLoader,
         WelcomeText,
-        Experimental,
         MediaList,
     },
     data() {
