@@ -591,16 +591,6 @@ export default defineComponent({
 });
 </script>
 <style lang="css" scoped>
-div.track {
-    /** a border as separator between the tracks */
-    border-color: #52575c;
-    border-style: solid;
-    border-width: 1px 0 0 0;
-}
-
-div.compilation div.track:last-child {
-    border-width: 1px 0 1px 0;
-}
 
 .track .buttons {
     /** The track's cue button have also an additional small margin at their end.
