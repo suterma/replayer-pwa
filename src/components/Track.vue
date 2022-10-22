@@ -102,17 +102,60 @@
                         :track="track"
                     ></CueButtonsBar>
 
-                    <PlayheadSlider
-                        class="slider is-fullwidth is-small is-circle"
-                        :class="{
-                            'is-success': isPlaying,
-                        }"
-                        v-model.number="currentSeconds"
-                        @update:modelValue="
-                            (position) => trackPlayerInstance?.seekTo(position)
-                        "
-                        :track="track"
-                    ></PlayheadSlider>
+                    <!-- Main container -->
+                    <nav class="level">
+                        <!-- Left side -->
+                        <div class="level-left">
+                            <!-- Title and Artist of the currently playing track-->
+
+                            <div class="level-item">
+                                <div>
+                                    <!-- The title is the only header element that should shrink (break on words) if necessary -->
+                                    <p
+                                        class="is-size-4"
+                                        :class="{
+                                            'has-text-success': isActive,
+                                        }"
+                                    >
+                                        <TrackTitleName
+                                            :track="track"
+                                        ></TrackTitleName>
+                                    </p>
+
+                                    <!-- Artist info (don't show on small devices, keep at end to keep the appearance calm)-->
+                                    <p class="is-size-7">
+                                        <ArtistInfo :track="track" />
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="level-item">
+                            <PlayheadSlider
+                                class="slider is-fullwidth is-small is-circle"
+                                :class="{
+                                    'is-success': isPlaying,
+                                }"
+                                v-model.number="currentSeconds"
+                                @update:modelValue="
+                                    (position) =>
+                                        trackPlayerInstance?.seekTo(position)
+                                "
+                                :track="track"
+                            ></PlayheadSlider>
+                        </div>
+
+                        <!-- Right side -->
+                        <div class="level-right">
+                            <p class="level-item">
+                                <PlayPauseButton
+                                    :isPlaying="isPlaying"
+                                    :isLoading="isFading"
+                                    @click="skipToPlayPause()"
+                                    title="play"
+                                />
+                            </p>
+                        </div>
+                    </nav>
                 </div>
             </Teleport>
         </template>
@@ -199,6 +242,8 @@ import { ActionTypes } from '@/store/action-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
+import TrackTitleName from './TrackTitleName.vue';
+import ArtistInfo from './ArtistInfo.vue';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -221,6 +266,8 @@ export default defineComponent({
         Hotkey,
         PlayheadSlider,
         CueButtonsBar,
+        TrackTitleName,
+        ArtistInfo,
     },
     mixins: [settingsMixin],
     props: {
@@ -591,7 +638,6 @@ export default defineComponent({
 });
 </script>
 <style lang="css" scoped>
-
 .track .buttons {
     /** The track's cue button have also an additional small margin at their end.
     This results in a similar space between level, player, cue buttons and the
