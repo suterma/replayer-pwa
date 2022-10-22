@@ -57,8 +57,8 @@
                 <h1 class="title is-3" v-if="printTracksOnNewPage">
                     <span> {{ compilation.Title }}</span>
                 </h1>
-                <h2 class="title has-text-weight-light is-4">
-                    <span>{{ track.Name }}</span>
+                <h2 class="title is-4">
+                    <TrackTitleName :track="track"></TrackTitleName>
                     <span class="ml-2 is-size-7"
                         >({{ index + 1 }}/{{ compilation.Tracks.length }})</span
                     >
@@ -142,6 +142,7 @@ import { ICompilation } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
+import TrackTitleName from '@/components/TrackTitleName.vue';
 
 /** A printable display of a complete compilation, with a track and cue listing */
 export default defineComponent({
@@ -149,6 +150,7 @@ export default defineComponent({
     components: {
         ArtistInfo,
         BaseIcon,
+        TrackTitleName,
         TimeDisplay,
     },
     data() {

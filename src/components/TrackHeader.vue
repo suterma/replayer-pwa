@@ -27,16 +27,15 @@
                     class="is-nav"
                 />
             </div>
+
             <!-- Title -->
             <!-- The title is the only header element that should shrink (break on words) if necessary -->
             <div class="level-item is-narrow is-flex-shrink-1">
-                <p
-                    class="title has-text-weight-light is-4"
-                    :class="{ 'has-text-success': isActive }"
-                >
-                    <LinkableText :text="track.Name"></LinkableText>
+                <p class="title is-4" :class="{ 'has-text-success': isActive }">
+                    <TrackTitleName :track="track"></TrackTitleName>
                 </p>
             </div>
+
             <!-- Artist info (don't show on small devices, keep at end to keep the appearance calm)-->
             <div class="level-item is-hidden-mobile is-justify-content-end">
                 <p class="is-size-7">
@@ -69,7 +68,8 @@ import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import { ActionTypes } from '@/store/action-types';
-import LinkableText from './LinkableText.vue';
+import TrackTitleName from './TrackTitleName.vue';
+
 
 /** Displays a track header with a title.
  * @remarks Also handles the common replayer events for tracks
@@ -79,8 +79,8 @@ export default defineComponent({
     components: {
         CollapsibleButton,
         PlaybackIndicator,
+        TrackTitleName,
         ArtistInfo,
-        LinkableText,
     },
     props: {
         track: {

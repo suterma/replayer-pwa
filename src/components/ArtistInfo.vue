@@ -20,6 +20,7 @@ import { Track } from '@/store/compilation-types';
 import LinkableText from './LinkableText.vue';
 
 /** Displays a track's artist info, namely the artist's name and the album the track appears on.
+ * @remarks This component makes some layout decisions, but intentionally no size or color decisions.
  */
 export default defineComponent({
     name: 'ArtistInfo',
