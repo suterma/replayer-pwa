@@ -52,7 +52,7 @@
             </template>
             <template v-slot:left-end>
                 <TimeDisplay
-                    class="level-item is-narrow is-hidden-mobile"
+                    class="level-item is-narrow is-hidden-mobile is-size-7"
                     :modelValue="track?.Duration"
                     :hidePlaceholder="true"
                 ></TimeDisplay>
