@@ -146,14 +146,44 @@
 
                         <!-- Right side -->
                         <div class="level-right">
+                            <!-- Stop (do not show on small devices, user still can use play/pause) -->
+                            <p class="level-item">
+                                <button
+                                    class="button is-hidden-mobile"
+                                    @click="stop()"
+                                    title="Stop"
+                                >
+                                    <BaseIcon name="stop" />
+                                </button>
+                            </p>
+                            <p class="level-item">
+                                <button
+                                    class="button"
+                                    @click="seek(-5)"
+                                    title="rewind 5 seconds"
+                                >
+                                    <BaseIcon name="rewind-5" />
+                                </button>
+                            </p>
                             <p class="level-item">
                                 <PlayPauseButton
+                                    class="is-success"
                                     :isPlaying="isPlaying"
                                     :isLoading="isFading"
                                     @click="skipToPlayPause()"
                                     title="play"
                                 />
                             </p>
+                            <p class="level-item">
+                                <button
+                                    class="button"
+                                    @click.prevent="seek(5)"
+                                    title="forward 5 seconds"
+                                >
+                                    <BaseIcon name="fast-forward-5" />
+                                </button>
+                            </p>
+
                             <p
                                 class="level-item"
                                 title="Drag, scroll or use the arrow keys to change volume"
@@ -331,6 +361,10 @@ export default defineComponent({
         };
     },
     methods: {
+        stop(): void {
+            this.trackPlayerInstance.stop();
+            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, null);
+        },
         /** Skips to this track
          * @remarks If the track is not yet active, tries to activate the track (which will autoplay).
          * If it's the active track, just toggles play/pause
@@ -384,6 +418,13 @@ export default defineComponent({
                 this.trackPlayerInstance?.forwardOneSecond();
                 this.activateWakeLock();
             }
+        },
+        seek(seconds: number): void {
+            //console.log(seconds);
+            //stop();
+            this.trackPlayerInstance.seekToSeconds(
+                this.currentSeconds + seconds,
+            );
         },
         volumeDown() {
             if (this.isActiveTrack) {
@@ -465,7 +506,6 @@ export default defineComponent({
             });
         },
 
- 
         /** Handles the click of a cue button, by toggling playback and seeking to it
          * @devdoc Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
          */
