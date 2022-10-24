@@ -114,7 +114,7 @@
                                     <p
                                         class="is-size-4"
                                         :class="{
-                                            'has-text-success': isActive,
+                                            'has-text-success': isActiveTrack,
                                         }"
                                     >
                                         <TrackTitleName
@@ -154,7 +154,23 @@
                                     title="play"
                                 />
                             </p>
+                            <p
+                                class="level-item"
+                                title="Drag, scroll or use the arrow keys to change volume"
+                            >
+                                <Knob
+                                    class="button"
+                                    :modelValue="track.Volume"
+                                    @update:modelValue="updatedVolume"
+                                    :minValue="0"
+                                    :maxValue="1"
+                                    valueClass="has-text-light"
+                                    rimClass="has-text-grey-light"
+                                />
+                            </p>
                         </div>
+                        <!-- <//TODO add the other controls from the player chrome, including the volumen Control -->
+                        <!-- <//TODO maybe replace the cue button bar with a carousel or somethingn similar -->
                     </nav>
                 </div>
             </Teleport>
@@ -235,6 +251,7 @@ import CueButtonsBar from '@/components/CueButtonsBar.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
+import Knob from '@/components/buttons/Knob.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import NoSleep from 'nosleep.js';
@@ -267,6 +284,7 @@ export default defineComponent({
         PlayheadSlider,
         CueButtonsBar,
         TrackTitleName,
+        Knob,
         ArtistInfo,
     },
     mixins: [settingsMixin],
@@ -379,6 +397,12 @@ export default defineComponent({
                 this.activateWakeLock();
             }
         },
+        volume(volume: number) {
+            if (this.isActiveTrack) {
+                this.trackPlayerInstance?.updateVolume(volume);
+                this.activateWakeLock();
+            }
+        },
 
         /** Pauses playback and seeks to the currently selected cue's position, but only
          * if this track is the active track (i.e. the selected cue is within this track)
@@ -440,6 +464,8 @@ export default defineComponent({
                 volume: volume,
             });
         },
+
+ 
         /** Handles the click of a cue button, by toggling playback and seeking to it
          * @devdoc Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
          */
