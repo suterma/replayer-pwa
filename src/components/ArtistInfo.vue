@@ -1,16 +1,18 @@
 <template>
-    <span v-if="track.Artist" class="is-single-line">
-        <span class="has-opacity-half">by&nbsp;</span>
-        <span class="is-italic">
-            <LinkableText :text="track.Artist"></LinkableText>
-            &nbsp;</span
-        >
-    </span>
-    <span v-if="track.Album" class="is-single-line">
-        <span class="has-opacity-half">on&nbsp;</span>
-        <span class="is-italic">
-            <LinkableText :text="track.Album"></LinkableText>
-        </span>
+    <span class="is-single-line">
+        <template v-if="track.Artist">
+            <span class="has-opacity-half">by&nbsp;</span>
+            <span class="is-italic">
+                <LinkableText :text="track.Artist"></LinkableText>
+                &nbsp;</span
+            >
+        </template>
+        <template v-if="track.Album">
+            <span class="has-opacity-half">on&nbsp;</span>
+            <span class="is-italic">
+                <LinkableText :text="track.Album"></LinkableText>
+            </span>
+        </template>
     </span>
 </template>
 
