@@ -102,17 +102,17 @@
                         :track="track"
                     ></CueButtonsBar>
 
-                    <!-- Main container -->
+                    <!-- Player controls container -->
                     <nav class="level">
                         <!-- Left side -->
                         <div class="level-left">
                             <!-- Title and Artist of the currently playing track-->
-
-                            <div class="level-item">
-                                <div>
-                                    <!-- The title is the only header element that should shrink (break on words) if necessary -->
+                            <div
+                                class="level-item is-justify-content-left is-cropped-parent"
+                            >
+                                <div class="is-cropped-child">
                                     <p
-                                        class="is-size-4"
+                                        class="is-size-4 is-cropped-child"
                                         :class="{
                                             'has-text-success': isActiveTrack,
                                         }"
@@ -123,7 +123,7 @@
                                     </p>
 
                                     <!-- Artist info (don't show on small devices, keep at end to keep the appearance calm)-->
-                                    <p class="is-size-7">
+                                    <p class="is-size-7 is-cropped-child">
                                         <ArtistInfo :track="track" />
                                     </p>
                                 </div>
@@ -155,8 +155,7 @@
                                 >
                                     <BaseIcon name="stop" />
                                 </button>
-                            </p>
-                            <p class="level-item">
+
                                 <button
                                     class="button"
                                     @click="seek(-5)"
@@ -164,8 +163,7 @@
                                 >
                                     <BaseIcon name="rewind-5" />
                                 </button>
-                            </p>
-                            <p class="level-item">
+
                                 <PlayPauseButton
                                     class="is-success"
                                     :isPlaying="isPlaying"
@@ -173,8 +171,7 @@
                                     @click="skipToPlayPause()"
                                     title="play"
                                 />
-                            </p>
-                            <p class="level-item">
+
                                 <button
                                     class="button"
                                     @click.prevent="seek(5)"
@@ -182,13 +179,9 @@
                                 >
                                     <BaseIcon name="fast-forward-5" />
                                 </button>
-                            </p>
 
-                            <p
-                                class="level-item"
-                                title="Drag, scroll or use the arrow keys to change volume"
-                            >
                                 <Knob
+                                    title="Drag, scroll or use the arrow keys to change volume"
                                     class="button"
                                     :modelValue="track.Volume"
                                     @update:modelValue="updatedVolume"
@@ -703,7 +696,7 @@ export default defineComponent({
     },
 });
 </script>
-<style lang="css" scoped>
+<style lang="scss" scoped>
 .track .buttons {
     /** The track's cue button have also an additional small margin at their end.
     This results in a similar space between level, player, cue buttons and the
@@ -721,5 +714,38 @@ export default defineComponent({
     This results in a similar space between levels as use within 
     the environment      */
     margin-bottom: 12px;
+}
+
+// Define an overall width allocation for the playback control level items
+.level {
+    .level-left {
+        flex-basis: 45%;
+        .level-item {
+            flex-shrink: 1;
+        }
+    }
+
+    .level-right {
+        flex-basis: 160px;
+        .level-item {
+            flex-shrink: 0;
+        }
+    }
+}
+
+/** Text cropping with ellipsis are difficult. Here is a solution from https://stackoverflow.com/a/66329909/79485
+    You need to select a parent, then additionally annotate each child you want to actually crop (possibly nested)
+    Some element above the parent must have a size constraint, e.g. flex-basis or max-width.
+ */
+
+.is-cropped-parent {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.is-cropped-child {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 </style>
