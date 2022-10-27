@@ -1,0 +1,11 @@
+@charset "utf-8";
+
+/*************************************************************
+ * Additional flexbox helpers
+ * These styles are based on and extending the bulma flexbox helpers
+**************************************************************
+*/
+
+.is-flex-basis-min-content {
+    flex-basis: min-content;
+}

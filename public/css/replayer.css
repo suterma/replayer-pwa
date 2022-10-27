@@ -10818,6 +10818,15 @@ nav .button:hover {
 }
 
 /*************************************************************
+ * Additional flexbox helpers
+ * These styles are based on and extending the bulma flexbox helpers
+**************************************************************
+*/
+.is-flex-basis-min-content {
+  flex-basis: min-content;
+}
+
+/*************************************************************
  * Dropdown stylings
  * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
 **************************************************************
