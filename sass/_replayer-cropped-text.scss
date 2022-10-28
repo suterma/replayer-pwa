@@ -1,0 +1,26 @@
+@charset "utf-8";
+
+/*************************************************************
+ * Specific styles for cropping text, with the ellipsis character
+ * Applies styles to force the use of the ellipsis according to 
+ * the requirements.
+ **************************************************************/
+
+/** Text cropping with ellipsis are difficult. Here is a solution from https://stackoverflow.com/a/66329909/79485
+    You need to select a parent, then additionally annotate each child you want to actually crop (possibly nested)
+    Some element above the parent must have a size constraint, e.g. flex-basis or max-width.
+ */
+
+/** This is the parent element, whose children should have their text cropped with the ellipsis,
+ *   when the space is running out
+ */
+.has-cropped-text {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+/** This selects the actual children that get their text cropped*/
+.has-cropped-text * {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

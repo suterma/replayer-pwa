@@ -108,11 +108,11 @@
                         <div class="level-left">
                             <!-- Title and Artist of the currently playing track-->
                             <div
-                                class="level-item is-justify-content-left is-cropped-parent"
+                                class="level-item is-justify-content-left has-cropped-text"
                             >
-                                <div class="is-cropped-child">
+                                <div>
                                     <p
-                                        class="is-size-4 is-cropped-child"
+                                        class="is-size-4"
                                         :class="{
                                             'has-text-success': isActiveTrack,
                                         }"
@@ -123,7 +123,7 @@
                                     </p>
 
                                     <!-- Artist info (don't show on small devices, keep at end to keep the appearance calm)-->
-                                    <p class="is-size-7 is-cropped-child">
+                                    <p class="is-size-7">
                                         <ArtistInfo :track="track" />
                                     </p>
                                 </div>
@@ -731,21 +731,5 @@ export default defineComponent({
             flex-shrink: 0;
         }
     }
-}
-
-/** Text cropping with ellipsis are difficult. Here is a solution from https://stackoverflow.com/a/66329909/79485
-    You need to select a parent, then additionally annotate each child you want to actually crop (possibly nested)
-    Some element above the parent must have a size constraint, e.g. flex-basis or max-width.
- */
-
-.is-cropped-parent {
-    display: grid;
-    grid-template-columns: auto 1fr;
-}
-
-.is-cropped-child {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
 }
 </style>

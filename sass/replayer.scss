@@ -14,7 +14,7 @@
 @import '../node_modules/bulma/bulma.sass';
 @import '../node_modules/bulmaswatch/slate/_overrides.scss';
 
-/** Additional changes for specific components within Replayer */
+/** Additional changes for specific components/features within Replayer */
 @import '_replayer-section.scss';
 @import '_replayer-player-styles.scss';
 @import '_replayer-nav-styles.scss';
@@ -26,6 +26,8 @@
 @import '../node_modules/bulma-print/bulma-print';
 @import '../node_modules/bulma-print/sass/experimental/bw.scss';
 @import '../node_modules/bulma-print/sass/experimental/outlined.scss';
+
+@import '_replayer-cropped-text.scss';
 
 /* Slider (from bulma-slider) without border for the thumb*/
 $slider-thumb-border: none !default;
