@@ -43,6 +43,23 @@
         <hr />
         <MediaList />
     </Experimental>
+
+    <!-- The bottom nav bar, used for the player for the active track -->
+    <nav class="navbar is-fixed-bottom" role="form">
+        <section
+            id="media-player"
+            aria-label="media player"
+            class="section has-background-grey-dark"
+        ></section>
+    </nav>
+
+    <!-- The ad is only used for print outputs, to allow a printout recipient to explore the app. -->
+    <ReplayerAd class="is-print-only is-together-print is-scaled-50" />
+
+    <!-- A placeholder that invisibly extends the bottom for the experimental content in the fixed bottom bar -->
+    <Experimental>
+        <div style="height: 224px"></div>
+    </Experimental>
 </template>
 
 <script lang="ts">
@@ -124,4 +141,17 @@ export default defineComponent({
 .media-loader {
     margin-top: 1.5rem;
 }
+
+/* Handling the fixed bottom navbar for this view specifically */
+
+/** On mobile, consider the stacked level items */
+.has-navbar-fixed-bottom {
+    padding-bottom: calc(8rem + 68px);
+}
+/** From tablet, consider the spread out level items */
+/* @media screen and (min-width: 769px), print {
+    .has-navbar-fixed-bottom {
+        padding-bottom: calc(8rem  );
+    }
+} */
 </style>
