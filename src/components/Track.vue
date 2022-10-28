@@ -180,6 +180,11 @@
                                     <BaseIcon name="fast-forward-5" />
                                 </button>
 
+                                <PlaybackModeButton
+                                    :modelValue="track.PlaybackMode"
+                                    @update:modelValue="updatedPlaybackMode"
+                                />
+
                                 <Knob
                                     title="Drag, scroll or use the arrow keys to change volume"
                                     class="button"
@@ -273,6 +278,7 @@ import TrackHeaderEdit from '@/components/TrackHeaderEdit.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
+import PlaybackModeButton from '@/components/buttons/PlaybackModeButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import Knob from '@/components/buttons/Knob.vue';
 import CompilationHandler from '@/store/compilation-handler';
@@ -301,6 +307,7 @@ export default defineComponent({
         TrackHeader,
         TrackHeaderEdit,
         PlayPauseButton,
+        PlaybackModeButton,
         BaseIcon,
         TimeDisplay,
         Hotkey,
