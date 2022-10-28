@@ -1,5 +1,5 @@
 <template>
-    <span v-if="track.Name" class="has-text-weight-light is-single-line">
+    <span v-if="track.Name" class="has-text-weight-light">
         <LinkableText :text="track.Name"></LinkableText>
     </span>
 </template>
