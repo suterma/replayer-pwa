@@ -359,7 +359,7 @@
                     >
                         bulma-slider</a
                     >, Bulma's extension to display sliders. (Released under the
-                    MIT License, by Wikiki).
+                    MIT License, by Wikiki. Adapted by Marcel Suter).
                 </li>
                 <li>
                     Music from the Album "Not For Sale" by Lidija Roos (Released
