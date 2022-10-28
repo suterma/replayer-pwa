@@ -1,5 +1,5 @@
 <template>
-    <PlayerChrome
+    <!-- <PlayerChrome
         :title="title"
         :loaded="hasLoadedData"
         :isFading="isFading"
@@ -21,9 +21,8 @@
         :sourceDescription="sourceDescription"
         :error="mediaError"
         :showTransportControls="showTransportControls"
-    >
-        <slot></slot>
-    </PlayerChrome>
+    > -->
+    <slot></slot>
     <Experimental>
         <TrackAudioPeaks
             v-if="audioElement && mediaUrl && hasLoadedData"
@@ -36,7 +35,6 @@
 <script lang="ts">
 import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent, PropType } from 'vue';
-import PlayerChrome from '@/components/PlayerChrome.vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
@@ -51,7 +49,6 @@ import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
 export default defineComponent({
     name: 'TrackAudioApiPlayer',
     components: {
-        PlayerChrome,
         TrackAudioPeaks,
     },
     mixins: [settingsMixin],
