@@ -11,16 +11,18 @@
             </div>
         </div>
         <div class="level-item mr-0">
-            <input
-                class="slider is-fullwidth is-small is-circle"
-                step="stepSize"
-                min="0"
-                :max="track.Duration ?? 0"
-                :value="modelValue"
-                @change="onValueChange"
-                @input="onValueChange"
-                type="range"
-            />
+            <div>
+                <input
+                    class="slider is-fullwidth is-small is-slim is-circle"
+                    step="stepSize"
+                    min="0"
+                    :max="track.Duration ?? 0"
+                    :value="modelValue"
+                    @change="onValueChange"
+                    @input="onValueChange"
+                    type="range"
+                />
+            </div>
         </div>
         <!-- Right side -->
         <div class="level-right">

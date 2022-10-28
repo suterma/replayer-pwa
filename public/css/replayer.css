@@ -11160,6 +11160,9 @@ input[type=range].slider.is-fullwidth {
   display: block;
   width: 100%;
 }
+input[type=range].slider.is-slim {
+  margin: 0;
+}
 input[type=range].slider:focus {
   outline: none;
 }

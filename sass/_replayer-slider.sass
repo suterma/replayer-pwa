@@ -1,7 +1,8 @@
 @use "sass:math"
 
 // Taken from bulma-slider (https://github.com/Wikiki/bulma-slider)
-// Only removed the import directive to match the replayer sass structure
+// Removed the import directive to match the replayer sass structure
+// Added a is-slim style 
 
 $slider-radius: $radius !default
 $slider-track-background: $grey-lighter !default
@@ -70,6 +71,9 @@ input[type="range"]
 		&.is-fullwidth
 			display: block
 			width: 100%
+
+		&.is-slim
+			margin: 0
 
 		&:focus
 			outline: none
