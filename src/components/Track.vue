@@ -1,5 +1,5 @@
 <template>
-    <div class="track is-together-print">
+    <div class="track is-together-print has-navbar-fixed-bottom">
         <!-- Handle all relevant events here
     Note: A check for the active track is done in the handler methods. 
     A v-if here would work, but would register the events not in a useful order. -->
@@ -129,23 +129,39 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="level-item">
-                            <PlayheadSlider
-                                class="slider is-fullwidth is-small is-circle"
-                                :class="{
-                                    'is-success': isPlaying,
-                                }"
-                                v-model.number="currentSeconds"
-                                @update:modelValue="
-                                    (position) =>
-                                        trackPlayerInstance?.seekTo(position)
-                                "
-                                :track="track"
-                            ></PlayheadSlider>
-                        </div>
 
                         <!-- Right side -->
                         <div class="level-right">
+                            <div class="level-item">
+                                <div>
+                                    <p>
+                                        <PlayheadSlider
+                                            :class="{
+                                                'is-success': isPlaying,
+                                            }"
+                                            v-model.number="currentSeconds"
+                                            @update:modelValue="
+                                                (position) =>
+                                                    trackPlayerInstance?.seekTo(
+                                                        position,
+                                                    )
+                                            "
+                                            :track="track"
+                                        ></PlayheadSlider>
+                                    </p>
+                                    <p
+                                        class="is-size-7 has-cropped-text"
+                                        style="max-width: 260px"
+                                    >
+                                        <span>
+                                            {{
+                                                playingCue?.Description ??
+                                                '&nbsp;'
+                                            }}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
                             <!-- Stop (do not show on small devices, user still can use play/pause) -->
                             <p class="level-item">
                                 <button
@@ -618,6 +634,19 @@ export default defineComponent({
         },
     },
     computed: {
+        /** Gets the currently playing cue, if available
+         */
+        playingCue(): ICue | null {
+            return (
+                this.track.Cues.filter(
+                    (cue) =>
+                        cue.Time !== null &&
+                        this.currentSeconds >= cue.Time &&
+                        this.currentSeconds < cue.Time + (cue.Duration ?? 0),
+                )[0] ?? null
+            );
+        },
+
         /** Whether this component shows editable inputs for the contained data
          * @devdoc Allows to reuse this component for more than one display mode.
          */
@@ -726,14 +755,13 @@ export default defineComponent({
 // Define an overall width allocation for the playback control level items
 .level {
     .level-left {
-        flex-basis: 45%;
+        flex-basis: calc(100% - 520px);
         .level-item {
             flex-shrink: 1;
         }
     }
-
     .level-right {
-        flex-basis: 160px;
+        flex-basis: 480px;
         .level-item {
             flex-shrink: 0;
         }
