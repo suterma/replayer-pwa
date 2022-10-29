@@ -1,6 +1,38 @@
 <template>
     <div class="buttons is-fullwidth is-flex-wrap-nowrap">
+        <!-- NOTE: For performance reasons, maybe evaluate the use for isMobile() from the TimeDisplay component -->
         <template v-for="cue in track.Cues" :key="cue.Id">
+            <!-- For mobile, use very slim buttons -->
+            <CueButton
+                class="is-flex-grow-1 has-cropped-text is-hidden-tablet"
+                :cue="cue"
+                :currentSeconds="currentSeconds"
+                :isTrackPlaying="isTrackPlaying"
+                :hasAddonsRight="true"
+                :isMinified="true"
+                @click="$emit('click', cue)"
+            >
+                <span class="has-text-weight-semibold foreground is-size-7">{{
+                    cue?.Description
+                }}</span>
+            </CueButton>
+            <!-- Otherwise, use standard buttons -->
+            <CueButton
+                class="is-flex-grow-1 has-cropped-text is-hidden-mobile"
+                :cue="cue"
+                :currentSeconds="currentSeconds"
+                :isTrackPlaying="isTrackPlaying"
+                :hasAddonsRight="true"
+                :isMinified="true"
+                @click="$emit('click', cue)"
+            >
+                <span class="has-text-weight-semibold foreground is-size-7">{{
+                    cue?.Description
+                }}</span>
+            </CueButton>
+        </template>
+
+        <!-- <template v-for="cue in track.Cues" :key="cue.Id">
             <CueButton
                 class="is-flex-grow-1 has-cropped-text"
                 :cue="cue"
@@ -14,7 +46,7 @@
                     cue?.Description
                 }}</span>
             </CueButton>
-        </template>
+        </template> -->
     </div>
 </template>
 
@@ -49,9 +81,32 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="css">
 /** Use a very slim margin between the button in this buttons bar, to save space */
 .buttons .button:not(:last-child):not(.is-fullwidth) {
     margin-right: 2px;
 }
+.player-timeline {
+     min-width: 0; 
+}
+
+/** Optically minimize padding. The used icon already has some visual padding already. */
+.button.cue {
+  /* padding-left: 2px; */
+}
+
+
+/** Define slim style for use specifically on mobile devices */
+.is-hidden-tablet .is-size-7 {
+    font-size: xx-small  !important;
+}
+
+.is-hidden-tablet .icon {
+    display: none;
+}
+
+.is-hidden-tablet.button {
+    line-height: normal !important;
+}
+
 </style>
