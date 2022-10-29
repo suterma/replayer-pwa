@@ -1,5 +1,5 @@
 <template>
-    <div class="buttons is-fullwidth is-flex-wrap-nowrap">
+    <div class="cue-buttons-bar buttons is-fullwidth is-flex-wrap-nowrap">
         <template v-for="cue in track.Cues" :key="cue.Id">
             <CueButton
                 class="is-flex-grow-1 has-cropped-text"
@@ -49,30 +49,32 @@ export default defineComponent({
 });
 </script>
 
-<style lang="css">
-/** Use a very slim margin between the button in this buttons bar, to save space */
-.buttons .button:not(:last-child):not(.is-fullwidth) {
-    margin-right: 2px;
-}
-
-/** Allow for slim buttons in this buttons bar, to save space */
-.buttons .player-timeline {
-    min-width: 0;
-}
-
-/* For mobile, use super slim buttons in this buttons bar, to save space */
-@media screen and (max-width: 768px) {
-    /** Define slim style for use specifically on mobile devices */
-    .buttons .is-size-7 {
-        font-size: xx-small !important;
+<style lang="scss">
+.cue-buttons-bar.buttons {
+    /** Use a very slim margin between the button in this buttons bar, to save space */
+    .button:not(:last-child):not(.is-fullwidth) {
+        margin-right: 2px;
     }
 
-    .buttons .icon {
-        display: none;
+    /** Allow for slim buttons in this buttons bar, to save space */
+    .player-timeline {
+        min-width: 0;
     }
 
-    .buttons .button {
-        line-height: normal !important;
+    /* For mobile, use super slim buttons in this buttons bar, to save space */
+    @media screen and (max-width: 768px) {
+        /** Define slim style for use specifically on mobile devices */
+        .is-size-7 {
+            font-size: xx-small !important;
+        }
+
+        .icon {
+            display: none;
+        }
+
+        .button {
+            line-height: normal !important;
+        }
     }
 }
 </style>
