@@ -102,7 +102,7 @@
                         :track="track"
                     ></CueButtonsBar>
 
-                    <!-- Player controls container -->
+                    <!-- Track playback controls -->
                     <nav class="level">
                         <!-- Left side -->
                         <div class="level-left">
@@ -132,7 +132,7 @@
 
                         <!-- Right side -->
                         <div class="level-right">
-                            <div class="level-item">
+                            <div class="level-item is-unselectable">
                                 <div>
                                     <p>
                                         <PlayheadSlider
@@ -173,6 +173,15 @@
                                 </button>
 
                                 <button
+                                    class="button is-warning is-outlined"
+                                    :disabled="!hasPreviousCue"
+                                    @click="toPreviousCue()"
+                                    title="skip to previous cue"
+                                >
+                                    <BaseIcon name="skip-previous-outline" />
+                                </button>
+
+                                <button
                                     class="button"
                                     @click="seek(-5)"
                                     title="rewind 5 seconds"
@@ -196,6 +205,15 @@
                                     <BaseIcon name="fast-forward-5" />
                                 </button>
 
+                                <button
+                                    class="button is-warning  is-outlined"
+                                    :disabled="!hasNextCue"
+                                    @click="toNextCue()"
+                                    title="skip to next cue"
+                                >
+                                    <BaseIcon name="skip-next-outline" />
+                                </button>
+
                                 <PlaybackModeButton
                                     :modelValue="track.PlaybackMode"
                                     @update:modelValue="updatedPlaybackMode"
@@ -213,7 +231,6 @@
                                 />
                             </p>
                         </div>
-                        <!-- <//TODO add the other controls from the player chrome, including the volumen Control -->
                         <!-- <//TODO maybe replace the cue button bar with a carousel or somethingn similar -->
                     </nav>
                 </div>
@@ -381,6 +398,50 @@ export default defineComponent({
             this.trackPlayerInstance.stop();
             this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, null);
         },
+        toPreviousCue(): Promise<void> {
+            return new Promise((resolve, reject) => {
+                const selectedCueId = this.$store.getters
+                    .selectedCueId as string;
+
+                if (selectedCueId) {
+                    const indexOfSelected =
+                        this.allActiveTrackCueIds.indexOf(selectedCueId);
+                    const prevCueId =
+                        this.allActiveTrackCueIds[indexOfSelected - 1];
+                    const previousCue = this.track.Cues.filter(
+                        (cue) => cue.Id === prevCueId,
+                    )[0];
+                    if (previousCue && previousCue.Time != null) {
+                        this.cueClick(previousCue, false);
+                        resolve();
+                    } else {
+                        reject('No previous cue or no cue time available.');
+                    }
+                }
+            });
+        },
+        toNextCue(): Promise<void> {
+            return new Promise((resolve, reject) => {
+                const selectedCueId = this.$store.getters
+                    .selectedCueId as string;
+
+                if (selectedCueId) {
+                    const indexOfSelected =
+                        this.allActiveTrackCueIds.indexOf(selectedCueId);
+                    const nextCueId =
+                        this.allActiveTrackCueIds[indexOfSelected + 1];
+                    const nextCue = this.track.Cues.filter(
+                        (cue) => cue.Id === nextCueId,
+                    )[0];
+                    if (nextCue && nextCue.Time != null) {
+                        this.cueClick(nextCue, false);
+                        resolve();
+                    } else {
+                        reject('No previous cue or no cue time available.');
+                    }
+                }
+            });
+        },
         /** Skips to this track
          * @remarks If the track is not yet active, tries to activate the track (which will autoplay).
          * If it's the active track, just toggles play/pause
@@ -522,10 +583,12 @@ export default defineComponent({
             });
         },
 
-        /** Handles the click of a cue button, by toggling playback and seeking to it
+        /** Handles the click of a cue button, by seeking to it and, optionally, toggling playback
+         * @param cue The cue to handle
+         * @param togglePlayback Whether to toggle playback. Optional, defaults to true
          * @devdoc Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
          */
-        cueClick(cue: ICue) {
+        cueClick(cue: ICue, togglePlayback = true) {
             console.debug(`Track(${this.track.Name})::cueClick:cue:`, cue);
             if (cue.Time != null) {
                 //Update the selected cue to this cue
@@ -540,11 +603,14 @@ export default defineComponent({
                     `Track(${this.track.Name})::cueClick:isPlaying:`,
                     isPlaying,
                 );
-
-                if (isPlaying === true) {
-                    this.trackPlayerInstance?.pauseAndSeekTo(cue.Time);
+                if (togglePlayback) {
+                    if (isPlaying === true) {
+                        this.trackPlayerInstance?.pauseAndSeekTo(cue.Time);
+                    } else {
+                        this.trackPlayerInstance?.playFrom(cue.Time);
+                    }
                 } else {
-                    this.trackPlayerInstance?.playFrom(cue.Time);
+                    this.trackPlayerInstance?.seekTo(cue.Time);
                 }
                 this.activateWakeLock();
             }
@@ -634,6 +700,22 @@ export default defineComponent({
         },
     },
     computed: {
+        /** Whether the playing cue has a previous cue
+         */
+        hasPreviousCue(): boolean {
+            return this.allActiveTrackCueIds[0] !== this.selectedCue?.Id;
+        },
+        /** Whether the playing cue has a next cue
+         */
+        hasNextCue(): boolean {
+            return (
+                this.allActiveTrackCueIds.slice(-1)[0] !== this.selectedCue?.Id
+            );
+        },
+
+        allActiveTrackCueIds(): string[] {
+            return this.cues?.map((cue) => cue.Id) ?? [];
+        },
         /** Gets the currently playing cue, if available
          */
         playingCue(): ICue | null {
