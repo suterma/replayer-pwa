@@ -841,13 +841,13 @@ export default defineComponent({
 // Define an overall width allocation for the playback control level items
 .level {
     .level-left {
-        flex-basis: calc(100% - 520px);
+        flex-basis: calc(100% - 600px);
         .level-item {
             flex-shrink: 1;
         }
     }
     .level-right {
-        flex-basis: 480px;
+        flex-basis: 560px;
         .level-item {
             flex-shrink: 0;
         }
