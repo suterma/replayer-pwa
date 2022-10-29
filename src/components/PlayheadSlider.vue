@@ -1,6 +1,6 @@
 <template>
     <!-- Slider with time info around it -->
-    <div class="level is-mobile">
+    <div class="level is-mobile is-unselectable">
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
