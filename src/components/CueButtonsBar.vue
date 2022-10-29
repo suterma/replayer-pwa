@@ -2,7 +2,7 @@
     <div class="buttons is-fullwidth is-flex-wrap-nowrap">
         <template v-for="cue in track.Cues" :key="cue.Id">
             <CueButton
-                class="is-flex-grow-1 long-and-truncated"
+                class="is-flex-grow-1 has-cropped-text"
                 :cue="cue"
                 :currentSeconds="currentSeconds"
                 :isTrackPlaying="isTrackPlaying"
@@ -49,15 +49,3 @@ export default defineComponent({
     },
 });
 </script>
-<style lang="scss" scoped>
-/** Taken from https://css-tricks.com/flexbox-truncated-text/#comment-1601483 by Larry Gordon */
-.long-and-truncated {
-    flex: 1;
-    &,
-    & > * {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-}
-</style>
