@@ -163,73 +163,77 @@
                                 </div>
                             </div>
                             <!-- Stop (do not show on small devices, user still can use play/pause) -->
-                            <p class="level-item">
-                                <button
-                                    class="button is-hidden-mobile"
-                                    @click="stop()"
-                                    title="Stop"
-                                >
-                                    <BaseIcon name="stop" />
-                                </button>
+                            <div class="level-item">
+                                <div class="">
+                                    <button
+                                        class="button is-hidden-mobile"
+                                        @click="stop()"
+                                        title="Stop"
+                                    >
+                                        <BaseIcon name="stop" />
+                                    </button>
 
-                                <button
-                                    class="button is-warning is-outlined"
-                                    :disabled="!hasPreviousCue"
-                                    @click="toPreviousCue()"
-                                    title="skip to previous cue"
-                                >
-                                    <BaseIcon name="skip-previous-outline" />
-                                </button>
+                                    <button
+                                        class="button"
+                                        :disabled="!hasPreviousCue"
+                                        @click="toPreviousCue()"
+                                        title="skip to previous cue"
+                                    >
+                                        <BaseIcon
+                                            name="skip-previous-outline"
+                                        />
+                                    </button>
 
-                                <button
-                                    class="button"
-                                    @click="seek(-5)"
-                                    title="rewind 5 seconds"
-                                >
-                                    <BaseIcon name="rewind-5" />
-                                </button>
+                                    <button
+                                        class="button"
+                                        @click="seek(-5)"
+                                        title="rewind 5 seconds"
+                                    >
+                                        <BaseIcon name="rewind-5" />
+                                    </button>
 
-                                <PlayPauseButton
-                                    class="is-success"
-                                    :isPlaying="isPlaying"
-                                    :isLoading="isFading"
-                                    @click="skipToPlayPause()"
-                                    title="play"
-                                />
+                                    <PlayPauseButton
+                                        class="is-success"
+                                        :isPlaying="isPlaying"
+                                        :isLoading="isFading"
+                                        @click="skipToPlayPause()"
+                                        title="play"
+                                    />
 
-                                <button
-                                    class="button"
-                                    @click.prevent="seek(5)"
-                                    title="forward 5 seconds"
-                                >
-                                    <BaseIcon name="fast-forward-5" />
-                                </button>
+                                    <button
+                                        class="button"
+                                        @click.prevent="seek(5)"
+                                        title="forward 5 seconds"
+                                    >
+                                        <BaseIcon name="fast-forward-5" />
+                                    </button>
 
-                                <button
-                                    class="button is-warning  is-outlined"
-                                    :disabled="!hasNextCue"
-                                    @click="toNextCue()"
-                                    title="skip to next cue"
-                                >
-                                    <BaseIcon name="skip-next-outline" />
-                                </button>
+                                    <button
+                                        class="button"
+                                        :disabled="!hasNextCue"
+                                        @click="toNextCue()"
+                                        title="skip to next cue"
+                                    >
+                                        <BaseIcon name="skip-next-outline" />
+                                    </button>
 
-                                <PlaybackModeButton
-                                    :modelValue="track.PlaybackMode"
-                                    @update:modelValue="updatedPlaybackMode"
-                                />
+                                    <PlaybackModeButton
+                                        :modelValue="track.PlaybackMode"
+                                        @update:modelValue="updatedPlaybackMode"
+                                    />
 
-                                <Knob
-                                    title="Drag, scroll or use the arrow keys to change volume"
-                                    class="button"
-                                    :modelValue="track.Volume"
-                                    @update:modelValue="updatedVolume"
-                                    :minValue="0"
-                                    :maxValue="1"
-                                    valueClass="has-text-light"
-                                    rimClass="has-text-grey-light"
-                                />
-                            </p>
+                                    <Knob
+                                        title="Drag, scroll or use the arrow keys to change volume"
+                                        class="button"
+                                        :modelValue="track.Volume"
+                                        @update:modelValue="updatedVolume"
+                                        :minValue="0"
+                                        :maxValue="1"
+                                        valueClass="has-text-light"
+                                        rimClass="has-text-grey-light"
+                                    />
+                                </div>
+                            </div>
                         </div>
                         <!-- <//TODO maybe replace the cue button bar with a carousel or somethingn similar -->
                     </nav>
