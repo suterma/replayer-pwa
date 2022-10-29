@@ -10671,7 +10671,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   border-right-width: 0.3em;
   border-right-style: solid;
   border-right-color: #fafafa;
-  z-index: 1;
+  /* z-index: 1; */
 }
 .player-timeline .player-seeker {
   cursor: pointer;
