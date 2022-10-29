@@ -10,11 +10,10 @@
                 :isMinified="true"
                 @click="$emit('click', cue)"
             >
-                &nbsp;
                 <span class="has-text-weight-semibold foreground is-size-7">{{
                     cue?.Description
-                }}</span></CueButton
-            >
+                }}</span>
+            </CueButton>
         </template>
     </div>
 </template>
@@ -49,3 +48,10 @@ export default defineComponent({
     },
 });
 </script>
+
+<style scoped>
+/** Use a very slim margin between the button in this buttons bar, to save space */
+.buttons .button:not(:last-child):not(.is-fullwidth) {
+    margin-right: 2px;
+}
+</style>
