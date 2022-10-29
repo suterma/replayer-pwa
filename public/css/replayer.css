@@ -11142,11 +11142,13 @@ a[href].clearfix::after {
   grid-template-columns: auto 1fr;
 }
 
-/** This selects the actual children that get their text cropped*/
+/** This selects the actual children that get their text cropped
+* @remarks Currently, only the ellipsis variant is supported on all
+* major browsers. */
 .has-cropped-text * {
   white-space: nowrap;
-  text-overflow: ellipsis;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Slider (from bulma-slider) without border for the thumb*/
