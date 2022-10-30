@@ -1,10 +1,9 @@
 <template>
     <span
-        
         :class="{
             'is-invisible': hidePlaceholder && modelValue === null,
-            'is-minimum-9-characters': !isMobile,
-            'is-minimum-7-characters': isMobile,
+            'is-minimum-9-characters': !isNarrow,
+            'is-minimum-7-characters': isNarrow,
         }"
         >{{ currentDisplayTime }}</span
     >
@@ -36,7 +35,7 @@ export default defineComponent({
          * @remarks Omits the hour part, if not applicable
          */
         currentDisplayTime(): string {
-            if (this.isMobile) {
+            if (this.isNarrow) {
                 if (this.modelValue === null) {
                     return '--:--.-';
                 }
@@ -55,13 +54,14 @@ export default defineComponent({
         /** Whether the viewport width at or below Bulma's mobile breakpoint
          * @remarks Is not reactive, which is a good thing to save CPU cycles
          */
-        isMobile() {
-            // NOTE: this
-            if (document.body.clientWidth <= 768 /* isMobile by Bulma */) {
-                return true;
-            } else {
-                return false;
-            }
+        isNarrow() {
+            return true;
+            //Currently always process as narrow
+            //  if (document.body.clientWidth <= 768 /* isMobile by Bulma */) {
+            //     return true;
+            // } else {
+            //     return false;
+            // }
         },
     },
 });
