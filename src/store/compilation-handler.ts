@@ -73,6 +73,7 @@ export default class CompilationHandler {
     ): number {
         return compilation.Tracks.map((item) => item.Id).indexOf(trackId);
     }
+
     /** Sorts the cues array in place, by time. This method mutates the array and returns a reference to the same array.
      * @param cues - The array of cues to sort.
      * @returns The mutated array.
@@ -89,7 +90,7 @@ export default class CompilationHandler {
     }
     /** Guesses the next useful shortcut, based on the previously existing shortcuts.
      * @remarks Simply tries to parse all existing shortcuts, then increases the number by 1.
-     * @remarks Cues without shortcut mnemonic are trated as having '0' as their shortcut.
+     * @remarks Cues without shortcut mnemonic are treated as having '0' as their shortcut.
      * @param compilation - The compilation to work on.
      */
     static getNextShortcut(compilation: ICompilation): number {
@@ -356,7 +357,7 @@ export default class CompilationHandler {
         );
     }
 
-    /** Gets the the matching track, if any, in the compilation, by it's Id.
+    /** Gets the matching track, if any, in the compilation, by it's Id.
      * @param compilation - The compilation, whose tracks are searched
      * @param trackId - The Id of the track to find
      * */
@@ -381,6 +382,58 @@ export default class CompilationHandler {
         );
 
         return cue ?? null;
+    }
+
+    /** Gets the previous track, if any, in the compilation, by it's Id.
+     * @param compilation - The compilation, whose tracks are searched
+     * @param trackId - The Id of the track to find the previous of
+     * */
+    public static getPreviousTrackById(
+        compilation: ICompilation,
+        trackId: string,
+    ): ITrack | undefined {
+        if (compilation) {
+            const allTrackIds = compilation.Tracks?.map((track) => track.Id);
+            const indexOfSelected = CompilationHandler.getIndexOfTrackById(
+                compilation,
+                trackId,
+            );
+            if (allTrackIds && indexOfSelected !== undefined) {
+                const prevTrackId = allTrackIds[indexOfSelected - 1];
+                if (prevTrackId) {
+                    return CompilationHandler.getTrackById(
+                        compilation,
+                        prevTrackId,
+                    );
+                }
+            }
+        }
+    }
+
+    /** Gets the next track, if any, in the compilation, by it's Id.
+     * @param compilation - The compilation, whose tracks are searched
+     * @param trackId - The Id of the track to find the next of
+     * */
+    public static getNextTrackById(
+        compilation: ICompilation,
+        trackId: string,
+    ): ITrack | undefined {
+        if (compilation) {
+            const allTrackIds = compilation.Tracks?.map((track) => track.Id);
+            const indexOfSelected = CompilationHandler.getIndexOfTrackById(
+                compilation,
+                trackId,
+            );
+            if (allTrackIds && indexOfSelected !== undefined) {
+                const nextTrackId = allTrackIds[indexOfSelected + 1];
+                if (nextTrackId) {
+                    return CompilationHandler.getTrackById(
+                        compilation,
+                        nextTrackId,
+                    );
+                }
+            }
+        }
     }
 
     /** Determines, whether the resource names match

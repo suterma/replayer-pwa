@@ -91,7 +91,8 @@
                         @update:volume="updatedVolume"
                         :volume="track.Volume"
                     ></TrackAudioApiPlayer>
-                    <CueButtonsBar
+                        <!-- <//TODO maybe replace the cue button bar with a carousel or somethingn similar -->
+                        <CueButtonsBar
                         :currentSeconds="currentSeconds"
                         :isTrackPlaying="isPlaying"
                         @click="
@@ -162,81 +163,30 @@
                                     </p>
                                 </div>
                             </div>
-                            <!-- Stop (do not show on small devices, user still can use play/pause) -->
                             <div class="level-item">
-                                <div class="">
-                                    <button
-                                        class="button is-hidden-mobile"
-                                        @click="stop()"
-                                        title="Stop"
-                                    >
-                                        <BaseIcon name="stop" />
-                                    </button>
+                                <MediaControlsBar
+                                    @stop="stop()"
+                                    :hasPreviousTrack="hasPreviousTrack"
+                                    @previousTrack="$emit('previousTrack')"
+                                    :hasPreviousCue="hasPreviousCue"
+                                    @previousCue="toPreviousCue()"
+                                    :hasNextCue="hasNextCue"
+                                    @nextCue="toNextCue()"
+                                    :hasNextTrack="hasNextTrack"
+                                    @nextTrack="$emit('nextTrack')"
+                                    :playbackMode="track.PlaybackMode"
+                                    @update:playbackMode="updatedPlaybackMode"
+                                    :volume="track.Volume"
+                                    @update:volume="updatedVolume"
+                                    @seek="(seconds) => seek(seconds)"
+                                    :isPlaying="isPlaying"
+                                    :isFading="isFading"
+                                    @togglePlaying="skipToPlayPause()"
 
-                                    <button
-                                        class="button"
-                                        :disabled="!hasPreviousCue"
-                                        @click="toPreviousCue()"
-                                        title="skip to previous cue"
-                                    >
-                                        <BaseIcon
-                                            name="skip-previous-outline"
-                                        />
-                                    </button>
-
-                                    <button
-                                        class="button"
-                                        @click="seek(-5)"
-                                        title="rewind 5 seconds"
-                                    >
-                                        <BaseIcon name="rewind-5" />
-                                    </button>
-
-                                    <PlayPauseButton
-                                        class="is-success"
-                                        :isPlaying="isPlaying"
-                                        :isLoading="isFading"
-                                        @click="skipToPlayPause()"
-                                        title="play"
-                                    />
-
-                                    <button
-                                        class="button"
-                                        @click.prevent="seek(5)"
-                                        title="forward 5 seconds"
-                                    >
-                                        <BaseIcon name="fast-forward-5" />
-                                    </button>
-
-                                    <button
-                                        class="button"
-                                        :disabled="!hasNextCue"
-                                        @click="toNextCue()"
-                                        title="skip to next cue"
-                                    >
-                                        <BaseIcon name="skip-next-outline" />
-                                    </button>
-
-                                    <PlaybackModeButton
-                                        :modelValue="track.PlaybackMode"
-                                        @update:modelValue="updatedPlaybackMode"
-                                    />
-
-                                    <Knob
-                                        title="Drag, scroll or use the arrow keys to change volume"
-                                        class="button"
-                                        :modelValue="track.Volume"
-                                        @update:modelValue="updatedVolume"
-                                        :minValue="0"
-                                        :maxValue="1"
-                                        valueClass="has-text-light"
-                                        rimClass="has-text-grey-light"
-                                    />
-                                </div>
-                            </div>
+                                ></MediaControlsBar>
+                            </div>                          
                         </div>
-                        <!-- <//TODO maybe replace the cue button bar with a carousel or somethingn similar -->
-                    </nav>
+                </nav>
                 </div>
             </Teleport>
         </template>
@@ -313,12 +263,11 @@ import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeaderEdit from '@/components/TrackHeaderEdit.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';
+import MediaControlsBar from '@/components/MediaControlsBar.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
-import PlaybackModeButton from '@/components/buttons/PlaybackModeButton.vue';
-import TimeDisplay from '@/components/TimeDisplay.vue';
-import Knob from '@/components/buttons/Knob.vue';
-import CompilationHandler from '@/store/compilation-handler';
+ import TimeDisplay from '@/components/TimeDisplay.vue';
+ import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
@@ -344,16 +293,25 @@ export default defineComponent({
         TrackHeader,
         TrackHeaderEdit,
         PlayPauseButton,
-        PlaybackModeButton,
-        BaseIcon,
+         BaseIcon,
         TimeDisplay,
         Hotkey,
         PlayheadSlider,
         CueButtonsBar,
+        MediaControlsBar,
         TrackTitleName,
-        Knob,
-        ArtistInfo,
+         ArtistInfo,
     },
+    emits: [
+        /** Occurs, when the previous track should be set as the active track
+         * @remarks allows track navigation from within a track.
+         */
+        'previousTrack',
+        /** Occurs, when the next track should be set as the active track
+         * @remarks allows track navigation from within a track.
+         */
+        'nextTrack',
+    ],
     mixins: [settingsMixin],
     props: {
         /** The track to display
@@ -362,6 +320,19 @@ export default defineComponent({
         track: {
             type: Track,
             required: true,
+        },
+
+        /** Whether this track has a previous track
+         */
+        hasPreviousTrack: {
+            type: Boolean,
+            default: false,
+        },
+        /** Whether this track has a next track
+         */
+        hasNextTrack: {
+            type: Boolean,
+            default: false,
         },
 
         /** The display mode of this track.

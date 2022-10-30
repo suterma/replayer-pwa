@@ -12,11 +12,15 @@
             :isEditable="isHeaderEditable"
         />
         <!-- Tracks to work with -->
-        <template v-for="track in tracks" :key="track.Id">
+        <template v-for="(track, index) in tracks" :key="track.Id">
             <Track
                 :track="track"
                 :ref="'track-' + track.Id"
                 :displayMode="tracksDisplayMode"
+                :hasPreviousTrack="index > 0"
+                :hasNextTrack="index < (tracks?.length ?? 0) - 1"
+                @previousTrack="toPreviousTrack(track.Id)"
+                @nextTrack="toNextTrack(track.Id)"
             />
         </template>
     </div>
@@ -35,6 +39,7 @@ import Track from '@/components/Track.vue';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
+import CompilationHandler from '@/store/compilation-handler';
 
 /** Displays the contained list of tracks as tiles
  * @remarks Also handles the common replayer events for compilations
@@ -80,6 +85,44 @@ export default defineComponent({
                     cancelable: false,
                 });
             }
+        },
+
+        toPreviousTrack(trackId: string): void {
+            if (this.compilation) {
+                const prevTrackId = CompilationHandler.getPreviousTrackById(
+                    this.compilation,
+                    trackId,
+                )?.Id;
+                if (prevTrackId) {
+                    this.getTrackInstance(prevTrackId).skipToPlayPause();
+                }
+            }
+        },
+        toNextTrack(trackId: string): void {
+            console.debug('toNextTrack', trackId);
+            if (this.compilation) {
+                const nextTrackId = CompilationHandler.getNextTrackById(
+                    this.compilation,
+                    trackId,
+                )?.Id;
+                if (nextTrackId) {
+                    this.getTrackInstance(nextTrackId).skipToPlayPause();
+                }
+            }
+        },
+
+        /** Gets a reference to the track component instance.
+         * @devdoc $ref's are non-reactive, see https://v3.vuejs.org/api/special-attributes.html#ref
+         * Thus, referencing an instance after it has been removed from the DOM (e.g. by v-if)
+         * does not work, even after it's rendered again later.
+         */
+        getTrackInstance(trackId: string): InstanceType<typeof Track> {
+            const trackRef = 'track-' + trackId;
+            const track = (this.$refs[trackRef] as never)[0] as InstanceType<
+                typeof Track
+            >;
+            console.debug('ref track', track);
+            return track;
         },
 
         /** Selects the first cue of the given track, if any exists and the track is different than the currently active track. */
