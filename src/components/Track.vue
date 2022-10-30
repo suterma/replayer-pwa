@@ -60,6 +60,16 @@
         </TrackHeader>
 
         <!-- The cues as buttons -->
+        <CueButtonsField
+            :currentSeconds="currentSeconds"
+            :isTrackPlaying="isPlaying"
+            @click="
+                (cue) => {
+                    cueClick(cue);
+                }
+            "
+            :track="track"
+        ></CueButtonsField>
 
         <!-- The audio player, but only once the source is available from the store
             Note: The mediaUrl property (the actual src attribute in the underlying media
@@ -91,8 +101,8 @@
                         @update:volume="updatedVolume"
                         :volume="track.Volume"
                     ></TrackAudioApiPlayer>
-                        <!-- <//TODO maybe replace the cue button bar with a carousel or somethingn similar -->
-                        <CueButtonsBar
+                    <!-- <//TODO maybe replace the cue button bar with a carousel or somethingn similar -->
+                    <CueButtonsBar
                         :currentSeconds="currentSeconds"
                         :isTrackPlaying="isPlaying"
                         @click="
@@ -182,11 +192,10 @@
                                     :isPlaying="isPlaying"
                                     :isFading="isFading"
                                     @togglePlaying="skipToPlayPause()"
-
                                 ></MediaControlsBar>
-                            </div>                          
+                            </div>
                         </div>
-                </nav>
+                    </nav>
                 </div>
             </Teleport>
         </template>
@@ -263,11 +272,12 @@ import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeaderEdit from '@/components/TrackHeaderEdit.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';
+import CueButtonsField from '@/components/CueButtonsField.vue';
 import MediaControlsBar from '@/components/MediaControlsBar.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
- import TimeDisplay from '@/components/TimeDisplay.vue';
- import CompilationHandler from '@/store/compilation-handler';
+import TimeDisplay from '@/components/TimeDisplay.vue';
+import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
@@ -293,14 +303,15 @@ export default defineComponent({
         TrackHeader,
         TrackHeaderEdit,
         PlayPauseButton,
-         BaseIcon,
+        BaseIcon,
         TimeDisplay,
         Hotkey,
         PlayheadSlider,
         CueButtonsBar,
+        CueButtonsField,
         MediaControlsBar,
         TrackTitleName,
-         ArtistInfo,
+        ArtistInfo,
     },
     emits: [
         /** Occurs, when the previous track should be set as the active track
@@ -812,13 +823,13 @@ export default defineComponent({
 // Define an overall width allocation for the playback control level items
 .level {
     .level-left {
-        flex-basis: calc(100% - 600px);
+        flex-basis: calc(100% - 620px);
         .level-item {
             flex-shrink: 1;
         }
     }
     .level-right {
-        flex-basis: 560px;
+        flex-basis: 620px;
         .level-item {
             flex-shrink: 0;
         }

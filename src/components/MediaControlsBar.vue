@@ -1,9 +1,10 @@
 <template>
-    <div class="buttons is-grouped">
+    <div class="is-grouped">
         <!-- Stop (do not show on small devices, user still can use play/pause) -->
-        <button class="button is-hidden-mobile" @click="stop()" title="Stop">
+        <!-- Currently not used at all -->
+        <!-- <button class="button is-hidden-mobile" @click="stop()" title="Stop">
             <BaseIcon name="stop" />
-        </button>
+        </button> -->
 
         <button
             class="button"
@@ -111,7 +112,7 @@ export default defineComponent({
         'togglePlaying',
         'update:playbackMode',
         'update:volume',
-         /** Emitted at a seek button click, with the amount of seconds as argument (can also be negative)
+        /** Emitted at a seek button click, with the amount of seconds as argument (can also be negative)
          */
         'seek',
     ],
@@ -194,7 +195,7 @@ export default defineComponent({
         },
 
         togglePlayback() {
-          this.$emit('togglePlaying');
+            this.$emit('togglePlaying');
         },
 
         seek(seconds: number): void {
@@ -218,39 +219,3 @@ export default defineComponent({
     computed: {},
 });
 </script>
-<style lang="scss" scoped>
-.track .buttons {
-    /** The track's cue button have also an additional small margin at their end.
-    This results in a similar space between level, player, cue buttons and the
-    end of the track */
-    margin-bottom: 4px;
-}
-
-.track .levels {
-    /** The track's cue levels have also an additional small margin at their top.
-    This results in a similar space between levels as use within 
-    the environment      */
-    margin-top: 12px;
-
-    /** The track's cue levels have also an additional small margin at their end.
-    This results in a similar space between levels as use within 
-    the environment      */
-    margin-bottom: 12px;
-}
-
-// Define an overall width allocation for the playback control level items
-.level {
-    .level-left {
-        flex-basis: calc(100% - 600px);
-        .level-item {
-            flex-shrink: 1;
-        }
-    }
-    .level-right {
-        flex-basis: 560px;
-        .level-item {
-            flex-shrink: 0;
-        }
-    }
-}
-</style>
