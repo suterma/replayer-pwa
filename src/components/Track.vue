@@ -165,13 +165,10 @@
 
                         <!-- Right side -->
                         <div class="level-right">
-                            <div class="level-item is-unselectable">
+                            <div class="level-item is-unselectable is-hidden-mobile">
                                 <div>
                                     <p>
                                         <PlayheadSlider
-                                            :class="{
-                                                'is-success': isPlaying,
-                                            }"
                                             v-model.number="currentSeconds"
                                             @update:modelValue="
                                                 (position) =>
@@ -229,6 +226,18 @@
                                         <BaseIcon name="fullscreen" />
                                     </button>
                                 </div>
+                            </div>
+                            <div class="level-item is-unselectable is-hidden-tablet">
+                                <PlayheadProgressBar
+                                    v-model.number="currentSeconds"
+                                    @update:modelValue="
+                                        (position) =>
+                                            trackPlayerInstance?.seekTo(
+                                                position,
+                                            )
+                                    "
+                                    :track="track"
+                                ></PlayheadProgressBar>
                             </div>
                         </div>
                     </nav>
@@ -320,6 +329,7 @@ import { ActionTypes } from '@/store/action-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
+import PlayheadProgressBar from '@/components/PlayheadProgressBar.vue';
 import TrackTitleName from './TrackTitleName.vue';
 import ArtistInfo from './ArtistInfo.vue';
 
@@ -343,6 +353,7 @@ export default defineComponent({
         TimeDisplay,
         Hotkey,
         PlayheadSlider,
+        PlayheadProgressBar,
         CueButtonsBar,
         CueButtonsField,
         MediaControlsBar,
