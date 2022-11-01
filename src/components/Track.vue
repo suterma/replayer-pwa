@@ -59,8 +59,10 @@
             </template>
         </TrackHeader>
 
-        <!-- The cues as buttons -->
+        <!-- When only a single track is available in the compilation,
+           always show cues as large buttons, directly below the header -->
         <CueButtonsField
+            v-if="isOnlyTrack"
             :currentSeconds="currentSeconds"
             :isTrackPlaying="isPlaying"
             @click="
@@ -83,7 +85,14 @@
                 variant, because otherwise the track is not correctly loaded
                 after it has become the active track ( gets
                 play-request-was-interrupted) -->
-                <div v-show="isActiveTrack">
+                <div
+                    v-show="isActiveTrack"
+                    :class="{
+                        section: true,
+                        'has-background-grey-dark': true,
+                        'is-fullheight': false /*isMediaplayerFullscreen,*/,
+                    }"
+                >
                     <TrackAudioApiPlayer
                         :isEditable="isEditable"
                         ref="playerReference"
@@ -102,17 +111,30 @@
                         :volume="track.Volume"
                     ></TrackAudioApiPlayer>
                     <!-- <//TODO maybe replace the cue button bar with a carousel or somethingn similar -->
-                    <CueButtonsBar
-                        :currentSeconds="currentSeconds"
-                        :isTrackPlaying="isPlaying"
-                        @click="
-                            (cue) => {
-                                cueClick(cue);
-                            }
-                        "
-                        :track="track"
-                    ></CueButtonsBar>
-
+                    <template v-if="!isOnlyTrack">
+                        <CueButtonsField
+                            v-if="isMediaplayerFullscreen"
+                            :currentSeconds="currentSeconds"
+                            :isTrackPlaying="isPlaying"
+                            @click="
+                                (cue) => {
+                                    cueClick(cue);
+                                }
+                            "
+                            :track="track"
+                        ></CueButtonsField>
+                        <CueButtonsBar
+                            v-else
+                            :currentSeconds="currentSeconds"
+                            :isTrackPlaying="isPlaying"
+                            @click="
+                                (cue) => {
+                                    cueClick(cue);
+                                }
+                            "
+                            :track="track"
+                        ></CueButtonsBar>
+                    </template>
                     <!-- Track playback controls -->
                     <nav class="level">
                         <!-- Left side -->
@@ -174,25 +196,39 @@
                                 </div>
                             </div>
                             <div class="level-item">
-                                <MediaControlsBar
-                                    @stop="stop()"
-                                    :hasPreviousTrack="hasPreviousTrack"
-                                    @previousTrack="$emit('previousTrack')"
-                                    :hasPreviousCue="hasPreviousCue"
-                                    @previousCue="toPreviousCue()"
-                                    :hasNextCue="hasNextCue"
-                                    @nextCue="toNextCue()"
-                                    :hasNextTrack="hasNextTrack"
-                                    @nextTrack="$emit('nextTrack')"
-                                    :playbackMode="track.PlaybackMode"
-                                    @update:playbackMode="updatedPlaybackMode"
-                                    :volume="track.Volume"
-                                    @update:volume="updatedVolume"
-                                    @seek="(seconds) => seek(seconds)"
-                                    :isPlaying="isPlaying"
-                                    :isFading="isFading"
-                                    @togglePlaying="skipToPlayPause()"
-                                ></MediaControlsBar>
+                                <div class="is-grouped">
+                                    <MediaControlsBar
+                                        @stop="stop()"
+                                        :hasPreviousTrack="hasPreviousTrack"
+                                        @previousTrack="$emit('previousTrack')"
+                                        :hasPreviousCue="hasPreviousCue"
+                                        @previousCue="toPreviousCue()"
+                                        :hasNextCue="hasNextCue"
+                                        @nextCue="toNextCue()"
+                                        :hasNextTrack="hasNextTrack"
+                                        @nextTrack="$emit('nextTrack')"
+                                        :playbackMode="track.PlaybackMode"
+                                        @update:playbackMode="
+                                            updatedPlaybackMode
+                                        "
+                                        :volume="track.Volume"
+                                        @update:volume="updatedVolume"
+                                        @seek="(seconds) => seek(seconds)"
+                                        :isPlaying="isPlaying"
+                                        :isFading="isFading"
+                                        @togglePlaying="skipToPlayPause()"
+                                    ></MediaControlsBar>
+                                    <button
+                                        class="button"
+                                        @click="
+                                            isMediaplayerFullscreen =
+                                                !isMediaplayerFullscreen
+                                        "
+                                        title="Full screen"
+                                    >
+                                        <BaseIcon name="fullscreen" />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </nav>
@@ -377,6 +413,9 @@ export default defineComponent({
             noSleep: new NoSleep(),
             /** Readonly flag to indicate whether the player is currently fading */
             isFading: false,
+
+            /** Whether the media player is shown as a minified bottom bar or in full screen, with large cue buttons */
+            isMediaplayerFullscreen: false,
         };
     },
     methods: {
@@ -686,6 +725,10 @@ export default defineComponent({
         },
     },
     computed: {
+        /** Whether this track is the only track in the compilation */
+        isOnlyTrack(): boolean {
+            return !this.hasNextTrack && !this.hasPreviousTrack;
+        },
         /** Whether the playing cue has a previous cue
          */
         hasPreviousCue(): boolean {
@@ -834,5 +877,10 @@ export default defineComponent({
             flex-shrink: 0;
         }
     }
+}
+
+// A full height media player
+.is-fullheight {
+    height: 100vh;
 }
 </style>

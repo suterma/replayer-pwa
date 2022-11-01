@@ -1,82 +1,76 @@
 <template>
-    <div class="is-grouped">
-        <!-- Stop (do not show on small devices, user still can use play/pause) -->
-        <!-- Currently not used at all -->
-        <!-- <button class="button is-hidden-mobile" @click="stop()" title="Stop">
+    <!-- Stop (do not show on small devices, user still can use play/pause) -->
+    <!-- Currently not used at all -->
+    <!-- <button class="button is-hidden-mobile" @click="stop()" title="Stop">
             <BaseIcon name="stop" />
         </button> -->
 
-        <button
-            class="button"
-            :disabled="!hasPreviousTrack"
-            @click="toPreviousTrack()"
-            title="skip to previous track"
-        >
-            <BaseIcon name="skip-previous" />
-        </button>
-        <button
-            class="button"
-            :disabled="!hasPreviousCue"
-            @click="toPreviousCue()"
-            title="skip to previous cue"
-        >
-            <BaseIcon name="skip-previous-outline" />
-        </button>
+    <button
+        class="button"
+        :disabled="!hasPreviousTrack"
+        @click="toPreviousTrack()"
+        title="skip to previous track"
+    >
+        <BaseIcon name="skip-previous" />
+    </button>
+    <button
+        class="button"
+        :disabled="!hasPreviousCue"
+        @click="toPreviousCue()"
+        title="skip to previous cue"
+    >
+        <BaseIcon name="skip-previous-outline" />
+    </button>
 
-        <button class="button" @click="seek(-5)" title="rewind 5 seconds">
-            <BaseIcon name="rewind-5" />
-        </button>
+    <button class="button" @click="seek(-5)" title="rewind 5 seconds">
+        <BaseIcon name="rewind-5" />
+    </button>
 
-        <PlayPauseButton
-            class="is-success"
-            :isPlaying="isPlaying"
-            :isLoading="isFading"
-            @click="togglePlayback()"
-            title="play"
-        />
+    <PlayPauseButton
+        class="is-success"
+        :isPlaying="isPlaying"
+        :isLoading="isFading"
+        @click="togglePlayback()"
+        title="play"
+    />
 
-        <button
-            class="button"
-            @click.prevent="seek(5)"
-            title="forward 5 seconds"
-        >
-            <BaseIcon name="fast-forward-5" />
-        </button>
+    <button class="button" @click.prevent="seek(5)" title="forward 5 seconds">
+        <BaseIcon name="fast-forward-5" />
+    </button>
 
-        <button
-            class="button"
-            :disabled="!hasNextCue"
-            @click="toNextCue()"
-            title="skip to next cue"
-        >
-            <BaseIcon name="skip-next-outline" />
-        </button>
+    <button
+        class="button"
+        :disabled="!hasNextCue"
+        @click="toNextCue()"
+        title="skip to next cue"
+    >
+        <BaseIcon name="skip-next-outline" />
+    </button>
 
-        <button
-            class="button"
-            :disabled="!hasNextTrack"
-            @click="toNextTrack()"
-            title="skip to next track"
-        >
-            <BaseIcon name="skip-next" />
-        </button>
+    <button
+        class="button"
+        :disabled="!hasNextTrack"
+        @click="toNextTrack()"
+        title="skip to next track"
+    >
+        <BaseIcon name="skip-next" />
+    </button>
 
-        <PlaybackModeButton
-            :modelValue="playbackMode"
-            @update:modelValue="updatePlaybackMode"
-        />
+    <PlaybackModeButton
+        :modelValue="playbackMode"
+        @update:modelValue="updatePlaybackMode"
+    />
 
-        <Knob
-            title="Drag, scroll or use the arrow keys to change volume"
-            class="button"
-            :modelValue="volume"
-            @update:modelValue="updateVolume"
-            :minValue="0"
-            :maxValue="1"
-            valueClass="has-text-light"
-            rimClass="has-text-grey-light"
-        />
-    </div>
+    <Knob
+        title="Drag, scroll or use the arrow keys to change volume"
+        class="button"
+        :modelValue="volume"
+        @update:modelValue="updateVolume"
+        :minValue="0"
+        :maxValue="1"
+        valueClass="has-text-light"
+        rimClass="has-text-grey-light"
+    />
 </template>
 
 <script lang="ts">

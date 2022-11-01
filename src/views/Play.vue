@@ -45,13 +45,12 @@
     </Experimental>
 
     <!-- The bottom nav bar, used for the player for the active track -->
-    <nav class="navbar is-fixed-bottom" role="form">
-        <section
-            id="media-player"
-            aria-label="media player"
-            class="section has-background-grey-dark"
-        ></section>
-    </nav>
+    <nav
+        class="navbar is-fixed-bottom"
+        role="form"
+        id="media-player"
+        aria-label="media player"
+    ></nav>
 
     <!-- The ad is only used for print outputs, to allow a printout recipient to explore the app. -->
     <ReplayerAd class="is-print-only is-together-print is-scaled-50" />
