@@ -59,20 +59,6 @@
             </template>
         </TrackHeader>
 
-        <!-- When only a single track is available in the compilation,
-           always show cues as large buttons, directly below the header -->
-        <CueButtonsField
-            v-if="isOnlyTrack"
-            :currentSeconds="currentSeconds"
-            :isTrackPlaying="isPlaying"
-            @click="
-                (cue) => {
-                    cueClick(cue);
-                }
-            "
-            :track="track"
-        ></CueButtonsField>
-
         <!-- The audio player, but only once the source is available from the store
             Note: The mediaUrl property (the actual src attribute in the underlying media
             element) is also depending 
@@ -90,7 +76,6 @@
                     :class="{
                         section: true,
                         'has-background-grey-dark': true,
-                        'is-fullheight': false /*isMediaplayerFullscreen,*/,
                     }"
                 >
                     <TrackAudioApiPlayer
@@ -110,31 +95,6 @@
                         @update:volume="updatedVolume"
                         :volume="track.Volume"
                     ></TrackAudioApiPlayer>
-                    <!-- <//TODO maybe replace the cue button bar with a carousel or somethingn similar -->
-                    <template v-if="!isOnlyTrack">
-                        <CueButtonsField
-                            v-if="isMediaplayerFullscreen"
-                            :currentSeconds="currentSeconds"
-                            :isTrackPlaying="isPlaying"
-                            @click="
-                                (cue) => {
-                                    cueClick(cue);
-                                }
-                            "
-                            :track="track"
-                        ></CueButtonsField>
-                        <CueButtonsBar
-                            v-else
-                            :currentSeconds="currentSeconds"
-                            :isTrackPlaying="isPlaying"
-                            @click="
-                                (cue) => {
-                                    cueClick(cue);
-                                }
-                            "
-                            :track="track"
-                        ></CueButtonsBar>
-                    </template>
                     <!-- Track playback controls -->
                     <nav class="level">
                         <!-- Left side -->
@@ -156,8 +116,9 @@
                                     </p>
 
                                     <!-- Artist info (don't show on small devices, keep at end to keep the appearance calm)-->
-                                    <p class="is-size-7">
-                                        <ArtistInfo :track="track" />
+                                    <p class="is-size-7 is-hidden-mobile">
+                                        <ArtistInfo :track="track" />&nbsp;
+                                        <!--nbsp as placeholder to keep layout when no artist info -->
                                     </p>
                                 </div>
                             </div>
@@ -165,7 +126,9 @@
 
                         <!-- Right side -->
                         <div class="level-right">
-                            <div class="level-item is-unselectable is-hidden-mobile">
+                            <div
+                                class="level-item is-unselectable is-hidden-mobile"
+                            >
                                 <div>
                                     <p>
                                         <PlayheadSlider
@@ -215,19 +178,20 @@
                                         :isFading="isFading"
                                         @togglePlaying="skipToPlayPause()"
                                     ></MediaControlsBar>
-                                    <button
-                                        class="button"
-                                        @click="
-                                            isMediaplayerFullscreen =
-                                                !isMediaplayerFullscreen
-                                        "
-                                        title="Full screen"
-                                    >
-                                        <BaseIcon name="fullscreen" />
-                                    </button>
                                 </div>
                             </div>
-                            <div class="level-item is-unselectable is-hidden-tablet">
+                            <div
+                                class="level-item is-justify-content-left has-cropped-text is-unselectable is-hidden-tablet"
+                            >
+                                <p class="is-size-7">
+                                    <span>
+                                        {{
+                                            playingCue?.Description ?? '&nbsp;'
+                                        }}
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="level-item is-unselectable">
                                 <PlayheadProgressBar
                                     v-model.number="currentSeconds"
                                     @update:modelValue="
@@ -241,6 +205,21 @@
                             </div>
                         </div>
                     </nav>
+                    <!-- For performance and layout reasons, only render this when used, on wider screens -->
+                    <IfMedia query="(min-width: 1024px)">
+                        <nav>
+                            <CueButtonsBar
+                                :currentSeconds="currentSeconds"
+                                :isTrackPlaying="isPlaying"
+                                @click="
+                                    (cue) => {
+                                        cueClick(cue);
+                                    }
+                                "
+                                :track="track"
+                            ></CueButtonsBar>
+                        </nav>
+                    </IfMedia>
                 </div>
             </Teleport>
         </template>
@@ -317,7 +296,6 @@ import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeaderEdit from '@/components/TrackHeaderEdit.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';
-import CueButtonsField from '@/components/CueButtonsField.vue';
 import MediaControlsBar from '@/components/MediaControlsBar.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
@@ -332,6 +310,7 @@ import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import PlayheadProgressBar from '@/components/PlayheadProgressBar.vue';
 import TrackTitleName from './TrackTitleName.vue';
 import ArtistInfo from './ArtistInfo.vue';
+import IfMedia from '@/components/IfMedia.vue';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -355,10 +334,10 @@ export default defineComponent({
         PlayheadSlider,
         PlayheadProgressBar,
         CueButtonsBar,
-        CueButtonsField,
         MediaControlsBar,
         TrackTitleName,
         ArtistInfo,
+        IfMedia,
     },
     emits: [
         /** Occurs, when the previous track should be set as the active track
@@ -424,9 +403,6 @@ export default defineComponent({
             noSleep: new NoSleep(),
             /** Readonly flag to indicate whether the player is currently fading */
             isFading: false,
-
-            /** Whether the media player is shown as a minified bottom bar or in full screen, with large cue buttons */
-            isMediaplayerFullscreen: false,
         };
     },
     methods: {
@@ -533,8 +509,6 @@ export default defineComponent({
             }
         },
         seek(seconds: number): void {
-            //console.log(seconds);
-            //stop();
             this.trackPlayerInstance.seekToSeconds(
                 this.currentSeconds + seconds,
             );
@@ -736,10 +710,7 @@ export default defineComponent({
         },
     },
     computed: {
-        /** Whether this track is the only track in the compilation */
-        isOnlyTrack(): boolean {
-            return !this.hasNextTrack && !this.hasPreviousTrack;
-        },
+
         /** Whether the playing cue has a previous cue
          */
         hasPreviousCue(): boolean {
@@ -888,10 +859,5 @@ export default defineComponent({
             flex-shrink: 0;
         }
     }
-}
-
-// A full height media player
-.is-fullheight {
-    height: 100vh;
 }
 </style>
