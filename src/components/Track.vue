@@ -76,6 +76,7 @@
                     :class="{
                         section: true,
                         'has-background-grey-dark': true,
+                        'is-fullscreen': isTrackPlayerFullScreen,
                     }"
                 >
                     <TrackAudioApiPlayer
@@ -177,7 +178,29 @@
                                         :isPlaying="isPlaying"
                                         :isFading="isFading"
                                         @togglePlaying="skipToPlayPause()"
-                                    ></MediaControlsBar>
+                                    >
+                                        <!-- the zoom (Full-Screen) button -->
+                                        <button
+                                            v-if="!isTrackPlayerFullScreen"
+                                            class="button"
+                                            @click="
+                                                toggleTrackPlayerFullScreen()
+                                            "
+                                            title="toggle full-screen mode"
+                                        >
+                                            <BaseIcon name="fullscreen" />
+                                        </button>
+                                        <button
+                                            v-else
+                                            class="button"
+                                            @click="
+                                                toggleTrackPlayerFullScreen()
+                                            "
+                                            title="toggle full-screen mode"
+                                        >
+                                            <BaseIcon name="fullscreen-exit" />
+                                        </button>
+                                    </MediaControlsBar>
                                 </div>
                             </div>
                             <div
@@ -348,6 +371,10 @@ export default defineComponent({
          * @remarks allows track navigation from within a track.
          */
         'nextTrack',
+        /** Occurs, when the next track should be set as the active track
+         * @remarks allows track navigation from within a track.
+         */
+        'update:isTrackPlayerFullScreen',
     ],
     mixins: [settingsMixin],
     props: {
@@ -380,6 +407,11 @@ export default defineComponent({
             type: String as () => TrackDisplayMode,
             default: TrackDisplayMode.Collapsible,
         },
+        /** Whether to show the track player widget in full screen mode */
+        isTrackPlayerFullScreen: {
+            type: Boolean,
+            default: false,
+        },
     },
     unmounted() {
         this.deactivateWakeLock();
@@ -406,6 +438,12 @@ export default defineComponent({
         };
     },
     methods: {
+        toggleTrackPlayerFullScreen(): void {
+            this.$emit(
+                'update:isTrackPlayerFullScreen',
+                !this.isTrackPlayerFullScreen,
+            );
+        },
         stop(): void {
             this.trackPlayerInstance.stop();
             this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, null);
@@ -710,7 +748,6 @@ export default defineComponent({
         },
     },
     computed: {
-
         /** Whether the playing cue has a previous cue
          */
         hasPreviousCue(): boolean {
@@ -859,5 +896,11 @@ export default defineComponent({
             flex-shrink: 0;
         }
     }
+}
+
+/** A div that occupies full screen */
+.is-fullscreen {
+    width: 100vw;
+    height: 100vh;
 }
 </style>

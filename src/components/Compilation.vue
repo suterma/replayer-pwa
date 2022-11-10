@@ -17,6 +17,10 @@
                 :track="track"
                 :ref="'track-' + track.Id"
                 :displayMode="tracksDisplayMode"
+                :isTrackPlayerFullScreen="isTrackPlayerFullScreen"
+                @update:isTrackPlayerFullScreen="
+                    updateIsTrackPlayerFullScreen($event)
+                "
                 :hasPreviousTrack="index > 0"
                 :hasNextTrack="index < (tracks?.length ?? 0) - 1"
                 @previousTrack="toPreviousTrack(track.Id)"
@@ -64,7 +68,12 @@ export default defineComponent({
         },
     },
     data() {
-        return {};
+        return {
+            /** Whether to show the track player widget in full screen mode
+             * @remarks This should apply to all tracks player widgets of a compilation
+             */
+            isTrackPlayerFullScreen: false,
+        };
     },
     methods: {
         /** Visually scrolls to the given track, making it visually at the top of
@@ -85,6 +94,10 @@ export default defineComponent({
                     cancelable: false,
                 });
             }
+        },
+
+        updateIsTrackPlayerFullScreen(isFullScreen: boolean): void {
+            this.isTrackPlayerFullScreen = isFullScreen;
         },
 
         toPreviousTrack(trackId: string): void {

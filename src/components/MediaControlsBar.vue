@@ -71,6 +71,7 @@
         valueClass="has-text-light"
         rimClass="has-text-grey-light"
     />
+    <slot></slot>
 </template>
 
 <script lang="ts">
