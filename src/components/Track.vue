@@ -232,6 +232,7 @@
                     <IfMedia query="(min-width: 1024px)">
                         <nav>
                             <CueButtonsBar
+                                v-if="!isTrackPlayerFullScreen"
                                 :currentSeconds="currentSeconds"
                                 :isTrackPlaying="isPlaying"
                                 @click="
@@ -243,6 +244,20 @@
                             ></CueButtonsBar>
                         </nav>
                     </IfMedia>
+                    <template v-if="isTrackPlayerFullScreen">
+                        <nav>
+                            <CueButtonsField
+                                :currentSeconds="currentSeconds"
+                                :isTrackPlaying="isPlaying"
+                                @click="
+                                    (cue) => {
+                                        cueClick(cue);
+                                    }
+                                "
+                                :track="track"
+                            ></CueButtonsField>
+                        </nav>
+                    </template>
                 </div>
             </Teleport>
         </template>
@@ -319,6 +334,7 @@ import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeaderEdit from '@/components/TrackHeaderEdit.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';
+import CueButtonsField from '@/components/CueButtonsField.vue';
 import MediaControlsBar from '@/components/MediaControlsBar.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
@@ -357,6 +373,7 @@ export default defineComponent({
         PlayheadSlider,
         PlayheadProgressBar,
         CueButtonsBar,
+        CueButtonsField,
         MediaControlsBar,
         TrackTitleName,
         ArtistInfo,
