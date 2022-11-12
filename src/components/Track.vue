@@ -925,7 +925,8 @@ export default defineComponent({
 
 /** A div that occupies full screen */
 .is-fullscreen {
-    width: 100vw;
+    //width is already set on outer container
+    // width: 100vw;
     height: 100vh;
 }
 </style>
