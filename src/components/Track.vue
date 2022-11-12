@@ -148,10 +148,7 @@
                                         style="max-width: 260px"
                                     >
                                         <span>
-                                            {{
-                                                playingCue?.Description ??
-                                                '&nbsp;'
-                                            }}
+                                            {{ playingCueDescription }} &nbsp;
                                         </span>
                                     </p>
                                 </div>
@@ -208,9 +205,7 @@
                             >
                                 <p class="is-size-7">
                                     <span>
-                                        {{
-                                            playingCue?.Description ?? '&nbsp;'
-                                        }}
+                                        {{ playingCueDescription }}&nbsp;
                                     </span>
                                 </p>
                             </div>
@@ -765,6 +760,19 @@ export default defineComponent({
         },
     },
     computed: {
+        /** The description of the currently playing cue
+         * @remarks The implementation makes sure that at least always an empty string is returned.
+         * Combined with an &nbsp;, this avoids layout flicker.
+         */
+        playingCueDescription(): string {
+            const description = this.playingCue?.Description;
+
+            if (description) {
+                return description;
+            }
+            return '';
+        },
+
         /** Whether the playing cue has a previous cue
          */
         hasPreviousCue(): boolean {
