@@ -92,3 +92,9 @@ nav .button:hover {
     }
   } 
 }
+
+/* The navbar does not have a minimum height, effectively hiding it, 
+when no content is shown */
+ .navbar {
+  min-height: 0;
+}
