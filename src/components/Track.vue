@@ -209,8 +209,10 @@
                                     </span>
                                 </p>
                             </div>
-                            <div class="level-item is-unselectable">
-                                <PlayheadProgressBar
+                            <div
+                                class="level-item is-fullwidth is-unselectable is-hidden-tablet"
+                            >
+                                <PlayheadSlider
                                     v-model.number="currentSeconds"
                                     @update:modelValue="
                                         (position) =>
@@ -219,7 +221,9 @@
                                             )
                                     "
                                     :track="track"
-                                ></PlayheadProgressBar>
+                                    :showDuration="false"
+                                    :showPosition="false"
+                                ></PlayheadSlider>
                             </div>
                         </div>
                     </nav>
@@ -341,7 +345,6 @@ import { ActionTypes } from '@/store/action-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
-import PlayheadProgressBar from '@/components/PlayheadProgressBar.vue';
 import TrackTitleName from './TrackTitleName.vue';
 import ArtistInfo from './ArtistInfo.vue';
 import IfMedia from '@/components/IfMedia.vue';
@@ -366,7 +369,6 @@ export default defineComponent({
         TimeDisplay,
         Hotkey,
         PlayheadSlider,
-        PlayheadProgressBar,
         CueButtonsBar,
         CueButtonsField,
         MediaControlsBar,
