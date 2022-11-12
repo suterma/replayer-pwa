@@ -5,7 +5,7 @@
         <div class="level-left">
             <div class="level-item">
                 <TimeDisplay
-                    class="is-size-7"
+                    class="is-size-7 has-text-warning"
                     :modelValue="modelValue"
                 ></TimeDisplay>
             </div>
@@ -13,7 +13,7 @@
         <div class="level-item mr-0">
             <div>
                 <input
-                    class="slider is-fullwidth is-small is-slim is-circle"
+                    class="slider is-fullwidth is-small is-slim is-circle is-warning"
                     step="stepSize"
                     min="0"
                     :max="track.Duration ?? 0"
@@ -28,7 +28,7 @@
         <div class="level-right">
             <div class="level-item">
                 <TimeDisplay
-                    class="has-text-right is-size-7"
+                    class="has-text-right is-size-7 has-text-warning"
                     :modelValue="track.Duration"
                 ></TimeDisplay>
             </div>

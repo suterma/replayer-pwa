@@ -50,6 +50,6 @@ export default defineComponent({
 </script>
 <style lang="css" scoped>
 .progress.is-slim {
-    height: 1px;
+    height: 2px;
 }
 </style>

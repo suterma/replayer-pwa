@@ -144,7 +144,7 @@
                                         ></PlayheadSlider>
                                     </p>
                                     <p
-                                        class="is-size-7 has-cropped-text"
+                                        class="is-size-7 has-cropped-text has-text-warning"
                                         style="max-width: 260px"
                                     >
                                         <span>
@@ -203,7 +203,7 @@
                             <div
                                 class="level-item is-justify-content-left has-cropped-text is-unselectable is-hidden-tablet"
                             >
-                                <p class="is-size-7">
+                                <p class="is-size-7 has-text-warning">
                                     <span>
                                         {{ playingCueDescription }}&nbsp;
                                     </span>
