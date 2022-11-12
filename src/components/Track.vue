@@ -201,29 +201,36 @@
                                 </div>
                             </div>
                             <div
-                                class="level-item is-justify-content-left has-cropped-text is-unselectable is-hidden-tablet"
+                                class="level-item is-unselectable is-hidden-tablet"
                             >
-                                <p class="is-size-7 has-text-warning">
-                                    <span>
-                                        {{ playingCueDescription }}&nbsp;
-                                    </span>
-                                </p>
-                            </div>
-                            <div
-                                class="level-item is-fullwidth is-unselectable is-hidden-tablet"
-                            >
-                                <PlayheadSlider
-                                    v-model.number="currentSeconds"
-                                    @update:modelValue="
-                                        (position) =>
-                                            trackPlayerInstance?.seekTo(
-                                                position,
-                                            )
+                                <div
+                                    style="
+                                        flex: 0 0 100%; /* Let it fill the entire space horizontally */
                                     "
-                                    :track="track"
-                                    :showDuration="false"
-                                    :showPosition="false"
-                                ></PlayheadSlider>
+                                >
+                                    <p
+                                        class="is-size-7 has-cropped-text has-text-warning"
+                                        style="max-width: 260px"
+                                    >
+                                        <span>
+                                            {{ playingCueDescription }} &nbsp;
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <PlayheadSlider
+                                            v-model.number="currentSeconds"
+                                            @update:modelValue="
+                                                (position) =>
+                                                    trackPlayerInstance?.seekTo(
+                                                        position,
+                                                    )
+                                            "
+                                            :track="track"
+                                            :showDuration="false"
+                                            :showPosition="false"
+                                        ></PlayheadSlider>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </nav>
