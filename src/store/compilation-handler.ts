@@ -409,12 +409,15 @@ export default class CompilationHandler {
     }
 
     /** Gets the next track, if any, in the compilation, by it's Id.
+     * @remarks Optionally supports looping back to the beginning, if the end was reached.
      * @param compilation - The compilation, whose tracks are searched
      * @param trackId - The Id of the track to find the next of
+     * @param loop - When true, and the next track is not defined, the first track is returned.
      * */
     public static getNextTrackById(
         compilation: ICompilation,
         trackId: string,
+        loop = false,
     ): ITrack | undefined {
         if (compilation) {
             const allTrackIds = compilation.Tracks?.map((track) => track.Id);
@@ -429,6 +432,14 @@ export default class CompilationHandler {
                         compilation,
                         nextTrackId,
                     );
+                } else if (loop) {
+                    const firstTrackId = allTrackIds[0];
+                    if (firstTrackId) {
+                        return CompilationHandler.getTrackById(
+                            compilation,
+                            firstTrackId,
+                        );
+                    }
                 }
             }
         }

@@ -113,6 +113,9 @@ export default defineComponent({
             });
         },
 
+        /** Moves playback to the previous track
+         * @param trackId - The Id of the track to use the previous of
+         */
         toPreviousTrack(trackId: string): void {
             if (this.compilation) {
                 const prevTrackId = CompilationHandler.getPreviousTrackById(
@@ -124,15 +127,42 @@ export default defineComponent({
                 }
             }
         },
-        toNextTrack(trackId: string): void {
+        /** Moves playback to the next track
+         * @remarks Optionally supports looping back to the beginning, if the end was reached.
+         * @param trackId - The Id of the track to use the next of
+         * @param loop - When true, and the next track is not defined, the first track is used.
+         */
+        toNextTrack(trackId: string, loop = false): void {
             console.debug('toNextTrack', trackId);
             if (this.compilation) {
                 const nextTrackId = CompilationHandler.getNextTrackById(
                     this.compilation,
                     trackId,
+                    loop,
                 )?.Id;
                 if (nextTrackId) {
                     this.getTrackInstance(nextTrackId).skipToPlayPause();
+                }
+            }
+        },
+
+        /** Moves playback to a shuffled track
+         * @remarks Optionally supports looping back to the beginning, if the end was reached.
+         * @param trackId - The Id of the track to use the next of
+         * @param loop - When true, and the next track is not defined, the first track is used.
+         */
+        toShuffledTrack(trackId: string): void {
+            console.debug('toShuffledTrack', trackId);
+            if (this.compilation) {
+                const allTrackIds = this.compilation.Tracks?.map(
+                    (track) => track.Id,
+                );
+
+                //TODO later implement a real shuffle mode instead of a random mode
+                const randomTrackId =
+                    allTrackIds[Math.floor(Math.random() * allTrackIds.length)];
+                if (randomTrackId) {
+                    this.getTrackInstance(randomTrackId).skipToPlayPause();
                 }
             }
         },
@@ -146,14 +176,14 @@ export default defineComponent({
                     this.compilation.PlaybackMode ==
                     PlaybackMode.LoopCompilation
                 ) {
-                    this.toNextTrack(trackId);
+                    this.toNextTrack(trackId, true);
                 }
                 if (
                     this.compilation.PlaybackMode ==
                     PlaybackMode.ShuffleCompilation
                 ) {
-                  //TODO fix to real shuffle mode
-                    this.toPreviousTrack(trackId);
+                    //TODO fix to real shuffle mode
+                    this.toShuffledTrack(trackId);
                 }
             }
         },
