@@ -89,7 +89,7 @@
                         v-model:isPlaying="isPlaying"
                         @update:isFading="updateFading"
                         @update:playbackMode="updatedPlaybackMode"
-                        :playbackMode="track.PlaybackMode"
+                        :playbackMode="playbackMode"
                         :loopStart="selectedCue?.Time"
                         :loopEnd="selectedCue?.Time + selectedCue?.Duration"
                         :sourceDescription="track?.Url"
@@ -165,7 +165,7 @@
                                         @nextCue="toNextCue()"
                                         :hasNextTrack="hasNextTrack"
                                         @nextTrack="$emit('nextTrack')"
-                                        :playbackMode="track.PlaybackMode"
+                                        :playbackMode="playbackMode"
                                         @update:playbackMode="
                                             updatedPlaybackMode
                                         "
@@ -396,6 +396,9 @@ export default defineComponent({
          * @remarks allows track navigation from within a track.
          */
         'update:isTrackPlayerFullScreen',
+
+        /** Occurs, when the user toggles the playback mode */
+        'update:playbackMode',
     ],
     mixins: [settingsMixin],
     props: {
@@ -432,6 +435,12 @@ export default defineComponent({
         isTrackPlayerFullScreen: {
             type: Boolean,
             default: false,
+        },
+        /** The playback mode */
+        playbackMode: {
+            type: String as () => PlaybackMode,
+            required: true,
+            default: PlaybackMode.PlayTrack,
         },
     },
     unmounted() {
@@ -624,19 +633,9 @@ export default defineComponent({
             }
         },
         /** Handle playback mode updates
-         * @devdoc Handled here as part of the track because the playback mode is
-         * essentially a property of the track, not of the player or the player chrome.
          */
         updatedPlaybackMode(playbackMode: PlaybackMode): void {
-            console.debug(
-                `Track(${this.track.Name})::updatedPlaybackMode:${playbackMode}`,
-            );
-
-            const trackId = this.track.Id;
-            this.$store.commit(MutationTypes.UPDATE_TRACK_PLAYBACK_MODE, {
-                trackId,
-                playbackMode,
-            });
+            this.$emit('update:playbackMode', playbackMode);
         },
         /** Handle track volume updates
          * @devdoc Handled here as part of the track because the track volume is
