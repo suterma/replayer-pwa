@@ -95,6 +95,7 @@
                         :sourceDescription="track?.Url"
                         @update:volume="updatedVolume"
                         :volume="track.Volume"
+                        @ended="$emit('trackEnded')"
                     ></TrackAudioApiPlayer>
                     <!-- Track playback controls -->
                     <nav class="level">
@@ -399,6 +400,11 @@ export default defineComponent({
 
         /** Occurs, when the user toggles the playback mode */
         'update:playbackMode',
+        /** Occurs, when the end of the track has been reached and playback has ended.
+         * @remarks This is not triggered when the track or one of it's cue is looping.
+         * @remarks Allows to select the next track in "play all" and "shuffle" mode.
+         */
+        'trackEnded',
     ],
     mixins: [settingsMixin],
     props: {

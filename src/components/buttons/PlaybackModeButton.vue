@@ -27,6 +27,16 @@
                 v-if="isPlaybackLoopCue"
                 name="track-repeat-once"
                 title="Loop cue (click to toggle)"
+            />
+            <BaseIcon
+                v-if="isPlaybackLoopCompilation"
+                name="repeat-variant"
+                title="Loop compilation (click to toggle)"
+            />
+            <BaseIcon
+                v-if="isPlaybackShuffleCompilation"
+                name="shuffle-variant"
+                title="Shuffle compilation (click to toggle)"
             /></button
     ></Hotkey>
 </template>
@@ -67,6 +77,12 @@ export default defineComponent({
         isPlaybackLoopCue(): boolean {
             return this.modelValue === PlaybackMode.LoopCue;
         },
+        isPlaybackLoopCompilation(): boolean {
+            return this.modelValue === PlaybackMode.LoopCompilation;
+        },
+        isPlaybackShuffleCompilation(): boolean {
+            return this.modelValue === PlaybackMode.ShuffleCompilation;
+        },
     },
     methods: {
         togglePlaybackMode() {
@@ -87,6 +103,12 @@ export default defineComponent({
                     nextPlaybackMode = PlaybackMode.LoopCue;
                     break;
                 case PlaybackMode.LoopCue:
+                    nextPlaybackMode = PlaybackMode.LoopCompilation;
+                    break;
+                case PlaybackMode.LoopCompilation:
+                    nextPlaybackMode = PlaybackMode.ShuffleCompilation;
+                    break;
+                case PlaybackMode.ShuffleCompilation:
                     nextPlaybackMode = PlaybackMode.PlayTrack;
                     break;
                 default:

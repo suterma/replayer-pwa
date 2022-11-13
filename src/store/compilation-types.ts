@@ -26,6 +26,10 @@ export enum PlaybackMode {
     PlayCue = 'PlayCue',
     /** Plays the cue in a loop */
     LoopCue = 'LoopCue',
+    /** Plays all tracks of the compilation in a loop */
+    LoopCompilation = 'LoopCompilation',
+    /** Plays all tracks of the compilation in random order */
+    ShuffleCompilation = 'ShuffleCompilation',
 }
 
 /** @interface Defines a Replayer Compilation, consisting of a set of tracks with their cuepoints.

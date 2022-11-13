@@ -27,6 +27,7 @@
                 :hasNextTrack="index < (tracks?.length ?? 0) - 1"
                 @previousTrack="toPreviousTrack(track.Id)"
                 @nextTrack="toNextTrack(track.Id)"
+                @trackEnded="continueAfterTrack(track.Id)"
             />
         </template>
     </div>
@@ -132,6 +133,27 @@ export default defineComponent({
                 )?.Id;
                 if (nextTrackId) {
                     this.getTrackInstance(nextTrackId).skipToPlayPause();
+                }
+            }
+        },
+
+        /** Handles the playback mode after a track has ended. Implement the compilation loop and shuffle modes.
+         */
+        continueAfterTrack(trackId: string): void {
+            console.debug('continueAfterTrack', trackId);
+            if (this.compilation) {
+                if (
+                    this.compilation.PlaybackMode ==
+                    PlaybackMode.LoopCompilation
+                ) {
+                    this.toNextTrack(trackId);
+                }
+                if (
+                    this.compilation.PlaybackMode ==
+                    PlaybackMode.ShuffleCompilation
+                ) {
+                  //TODO fix to real shuffle mode
+                    this.toPreviousTrack(trackId);
                 }
             }
         },
