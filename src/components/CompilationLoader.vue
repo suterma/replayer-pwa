@@ -25,7 +25,7 @@ export default defineComponent({
         //Handle a Track API Request (mandatory media is available)
         if (query && query['media'] !== undefined) {
             console.debug(
-                'CompilationLoader::mounted:handeling Track API request for media:',
+                'CompilationLoader::mounted:handling Track API request for media:',
                 query['media'],
             );
             const track = CompilationParser.parseFromUrlQuery(query);

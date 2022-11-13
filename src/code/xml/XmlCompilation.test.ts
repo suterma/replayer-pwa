@@ -1,4 +1,4 @@
-import { Compilation, ITrack } from '@/store/compilation-types';
+import { Compilation, ITrack, PlaybackMode } from '@/store/compilation-types';
 import { XmlCompilation } from './XmlCompilation';
 
 describe('the XML mapping', function () {
@@ -10,6 +10,7 @@ describe('the XML mapping', function () {
             'https://test.example.com/music',
             'compilationId',
             new Array<ITrack>(),
+            PlaybackMode.LoopTrack,
         );
 
         //Act
@@ -20,5 +21,6 @@ describe('the XML mapping', function () {
         expect(target.MediaPath).toBe(compilation.MediaPath);
         expect(target.Title).toBe(compilation.Title);
         expect(target.Tracks.Track).toHaveLength(0);
+        expect(target.PlaybackMode).toBe(PlaybackMode.LoopTrack);
     });
 });
