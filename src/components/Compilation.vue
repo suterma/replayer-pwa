@@ -1,5 +1,5 @@
 <template>
-    <div class="compilation">
+    <div class="compilation" v-if="compilation">
         <!-- Handle all relevant Replayer events for the compilation level -->
         <ReplayerEventHandler
             @tonextcue="toNextCue"
@@ -21,6 +21,8 @@
                 @update:isTrackPlayerFullScreen="
                     updateIsTrackPlayerFullScreen($event)
                 "
+                :playbackMode="compilation.PlaybackMode"
+                @update:playbackMode="updatePlaybackMode($event)"
                 :hasPreviousTrack="index > 0"
                 :hasNextTrack="index < (tracks?.length ?? 0) - 1"
                 @previousTrack="toPreviousTrack(track.Id)"
@@ -38,6 +40,7 @@ import {
     ITrack,
     ICue,
     TrackDisplayMode,
+    PlaybackMode,
 } from '@/store/compilation-types';
 import Track from '@/components/Track.vue';
 import { MutationTypes } from '@/store/mutation-types';
@@ -73,6 +76,9 @@ export default defineComponent({
              * @remarks This should apply to all tracks player widgets of a compilation
              */
             isTrackPlayerFullScreen: false,
+
+            /** The playback mode for this compilation */
+            // playbackMode: PlaybackMode.PlayTrack,
         };
     },
     methods: {
@@ -98,6 +104,12 @@ export default defineComponent({
 
         updateIsTrackPlayerFullScreen(isFullScreen: boolean): void {
             this.isTrackPlayerFullScreen = isFullScreen;
+        },
+
+        updatePlaybackMode(playbackMode: PlaybackMode): void {
+            this.$store.commit(MutationTypes.UPDATE_PLAYBACK_MODE, {
+                playbackMode,
+            });
         },
 
         toPreviousTrack(trackId: string): void {

@@ -1,4 +1,4 @@
-import { Compilation } from '@/store/compilation-types';
+import { Compilation, PlaybackMode } from '@/store/compilation-types';
 import { XmlTracks } from './XmlTracks';
 
 /** @class Implements an XML-Representation of a Compilation
@@ -14,6 +14,8 @@ export class XmlCompilation {
             this.MediaPath = compilation.MediaPath;
             this.Title = compilation.Title;
             this.Tracks = new XmlTracks(compilation.Tracks);
+            this.PlaybackMode = compilation.PlaybackMode;
+
         }
     }
     // for the $: any, because this is per the docs of the XML library
@@ -26,4 +28,5 @@ export class XmlCompilation {
     MediaPath = '';
     Title = '';
     Tracks: XmlTracks = new XmlTracks(undefined);
+    PlaybackMode: PlaybackMode = PlaybackMode.PlayTrack;
 }

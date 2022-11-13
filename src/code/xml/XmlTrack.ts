@@ -1,4 +1,4 @@
-import { PlaybackMode, Track } from '@/store/compilation-types';
+import { Track } from '@/store/compilation-types';
 import { XmlCues } from './XmlCues';
 
 /** @class Implements an XML-Representation of a Track
@@ -14,7 +14,6 @@ export class XmlTrack {
         this.Album = track.Album;
         this.Measure = track.Measure;
         this.Url = track.Url;
-        this.PlaybackMode = track.PlaybackMode;
         this.Volume = track.Volume;
         this.Cues = new XmlCues(track.Cues);
     }
@@ -25,7 +24,6 @@ export class XmlTrack {
     Album: string;
     Measure: number | null;
     Url: string;
-    PlaybackMode: PlaybackMode;
     Volume: number;
     Cues: XmlCues;
 }

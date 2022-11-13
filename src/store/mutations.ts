@@ -61,10 +61,9 @@ export type Mutations<S = State> = {
             album: string;
         },
     ): void;
-    [MutationTypes.UPDATE_TRACK_PLAYBACK_MODE](
+    [MutationTypes.UPDATE_PLAYBACK_MODE](
         state: State,
         payload: {
-            trackId: string;
             playbackMode: PlaybackMode;
         },
     ): void;
@@ -221,8 +220,8 @@ export const mutations: MutationTree<State> & Mutations = {
         compilation: ICompilation,
     ) {
         console.debug(
-            'mutations::REPLACE_COMPILATION:compilation',
-            compilation,
+            'mutations::REPLACE_COMPILATION:compilation.PlaybackMode',
+            compilation.PlaybackMode,
         );
 
         state.compilation = compilation;
@@ -440,19 +439,14 @@ export const mutations: MutationTree<State> & Mutations = {
             track.Album = payload.album;
         }
     },
-    [MutationTypes.UPDATE_TRACK_PLAYBACK_MODE](
+    [MutationTypes.UPDATE_PLAYBACK_MODE](
         state: State,
         payload: {
-            trackId: string;
             playbackMode: PlaybackMode;
         },
     ): void {
-        const track = CompilationHandler.getTrackById(
-            state.compilation,
-            payload.trackId,
-        );
-        if (track) {
-            track.PlaybackMode = payload.playbackMode;
+        if (state.compilation) {
+            state.compilation.PlaybackMode = payload.playbackMode;
         }
     },
     [MutationTypes.UPDATE_TRACK_VOLUME](

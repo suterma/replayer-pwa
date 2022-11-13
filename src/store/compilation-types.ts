@@ -55,16 +55,17 @@ export interface ICompilation {
 
     /** The set of tracks */
     Tracks: Array<ITrack>;
+
+    /** The playback mode.
+     * @remarks This can be set by the user, and is persisted.
+     */
+    PlaybackMode: PlaybackMode;
+    //TODO warum wird der Playback mode nicht korrekt vom store eingelesen???
 }
 /** @interface Defines a Replayer track */
 export interface ITrack {
     /** The cues */
     Cues: Array<ICue>;
-
-    /** The playback mode for this track.
-     * @remarks This can be set by the user, and is persisted.
-     */
-    PlaybackMode: PlaybackMode;
 
     /** The playback volume for this track.
      * @remarks This can be set by the user, and is persisted.
@@ -130,8 +131,10 @@ export class Compilation implements ICompilation {
     Url = '';
     Id = '';
     Tracks: Array<ITrack> = new Array<ITrack>();
+    PlaybackMode: PlaybackMode = PlaybackMode.PlayTrack;
 
     /** Creates a new compilation
+     * @param playbackMode {playbackMode} - Playback mode. This is persisted in the application state for user convenience.
      */
     constructor(
         mediaPath: string,
@@ -139,12 +142,14 @@ export class Compilation implements ICompilation {
         url: string,
         id: string,
         tracks: Array<ITrack>,
+        playbackMode: PlaybackMode,
     ) {
         this.MediaPath = mediaPath;
         this.Title = title;
         this.Url = url;
         this.Id = id;
         this.Tracks = tracks;
+        this.PlaybackMode = playbackMode;
     }
 
     /** Parses the JSON and returns new instance of this class.
@@ -177,10 +182,10 @@ export class Compilation implements ICompilation {
                         );
                     }),
                     track.Duration,
-                    track.PlaybackMode ?? PlaybackMode.PlayTrack /** default */,
                     track.Volume ?? DefaultTrackVolume,
                 );
             }),
+            obj.PlaybackMode ?? PlaybackMode.PlayTrack /** default */,
         );
         return compilation;
     }
@@ -188,7 +193,14 @@ export class Compilation implements ICompilation {
     /** Returns a new, empty compilation
      */
     static empty(): Compilation {
-        return new Compilation('', '', '', uuidv4(), new Array<ITrack>());
+        return new Compilation(
+            '',
+            '',
+            '',
+            uuidv4(),
+            new Array<ITrack>(),
+            PlaybackMode.PlayTrack,
+        );
     }
 }
 
@@ -207,8 +219,6 @@ export class Track implements ITrack {
     Cues: Array<ICue> = new Array<ICue>();
     /**   @inheritdoc */
     Duration: number | null = null;
-    /**   @inheritdoc */
-    PlaybackMode: PlaybackMode;
     Volume: number;
 
     /** Creates a new track
@@ -217,7 +227,6 @@ export class Track implements ITrack {
      * @param artist {string} - The artist name, if any.
      * @param url {string} - The online URL (starting with http(s)) or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
      * @param duration {number | null} - Duration of the media associated with the track. This is not persisted, but set to a specific value once after a matching track has been loaded.
-     * @param playbackMode {playbackMode} - Playback mode. This is persisted in the application state for user convenience.
      * @param volume {volume} - Track volume. This is persisted in the application state for user convenience.
      */
     constructor(
@@ -229,7 +238,6 @@ export class Track implements ITrack {
         id: string,
         cues: Array<ICue>,
         duration: number | null,
-        playbackMode: PlaybackMode,
         volume: number,
     ) {
         this.Name = name;
@@ -240,7 +248,6 @@ export class Track implements ITrack {
         this.Id = id;
         this.Cues = cues;
         this.Duration = duration;
-        this.PlaybackMode = playbackMode;
         this.Volume = volume;
     }
 
@@ -260,7 +267,6 @@ export class Track implements ITrack {
             obj.Id,
             obj.Cues,
             null,
-            obj.PlaybackMode ?? PlaybackMode.PlayTrack /** as a default */,
             obj.Volume ?? DefaultTrackVolume,
         );
         console.debug('Track::fromJson:'), track;

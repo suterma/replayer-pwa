@@ -4,7 +4,6 @@ import {
     ICompilation,
     ICue,
     ITrack,
-    PlaybackMode,
     Track,
 } from './compilation-types';
 import FileHandler from './filehandler';
@@ -61,7 +60,6 @@ export default class CompilationHandler {
             trackId,
             new Array<ICue>(),
             null,
-            PlaybackMode.PlayTrack /** default mode */,
             DefaultTrackVolume,
         );
         return newTrack;

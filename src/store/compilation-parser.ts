@@ -36,6 +36,9 @@ export default class CompilationParser {
             CompilationParser.parseFromXmlTracks(
                 xmlCompilation.Tracks[0].Track,
             ),
+            (<any>PlaybackMode)[
+                CompilationParser.FirstStringOf(xmlCompilation.PlaybackMode)
+            ],
         );
     }
 
@@ -63,6 +66,7 @@ export default class CompilationParser {
             ''.normalize(),
             uuidv4(),
             CompilationParser.parseFromPlistTracks(plistCompilation),
+            PlaybackMode.PlayTrack /* default */,
         );
     }
 
@@ -95,16 +99,9 @@ export default class CompilationParser {
                 CompilationParser.FirstStringOf(xmlTrack.Id),
                 CompilationParser.parseFromXmlCues(xmlTrack.Cues[0].Cue),
                 null,
-                (<any>PlaybackMode)[
-                    CompilationParser.FirstStringOf(xmlTrack.PlaybackMode)
-                ],
                 CompilationParser.FirstNumberOf(xmlTrack.Volume),
             );
 
-            // Set defaults
-            if (!track.PlaybackMode) {
-                track.PlaybackMode = PlaybackMode.PlayTrack;
-            }
             if (!track.Volume) {
                 track.Volume = DefaultTrackVolume;
             }
@@ -132,7 +129,6 @@ export default class CompilationParser {
                     uuidv4(),
                     CompilationParser.parseFromPlistCues(plistTrack.Markers),
                     null,
-                    PlaybackMode.PlayTrack /** as a default */,
                     DefaultTrackVolume,
                 );
                 tracks.push(track);
@@ -267,7 +263,6 @@ export default class CompilationParser {
                 trackId,
                 cues,
                 null,
-                PlaybackMode.PlayTrack /** as a default */,
                 DefaultTrackVolume,
             );
             return newTrack;
