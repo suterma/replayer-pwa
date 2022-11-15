@@ -4,7 +4,6 @@ import { useTitle } from '@vueuse/core';
 import { store } from '@/store/store';
 import { computed } from 'vue';
 
-//import TrackPlayer from '../views/TrackPlayer.vue';
 //import List from '../views/List.vue';
 
 const routes: Array<RouteRecordRaw> = [
@@ -48,19 +47,6 @@ const routes: Array<RouteRecordRaw> = [
         // which is lazy-loaded when the route is visited.
         component: () =>
             import(/* webpackChunkName: "setlist" */ '../views/Setlist.vue'),
-    },
-    {
-        //HINT: The track player is not accessible from the menu
-        path: '/track-player/:id*',
-        name: 'Track-Player',
-
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-            import(
-                /* webpackChunkName: "/track-player/:id*" */ '../views/TrackPlayer.vue'
-            ),
     },
     {
         path: '/settings',
