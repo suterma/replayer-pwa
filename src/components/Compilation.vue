@@ -149,7 +149,6 @@ export default defineComponent({
         /** Moves playback to a shuffled track
          * @remarks Optionally supports looping back to the beginning, if the end was reached.
          * @param trackId - The Id of the track to use the next of
-         * @param loop - When true, and the next track is not defined, the first track is used.
          */
         toShuffledTrack(trackId: string): void {
             console.debug('toShuffledTrack', trackId);
