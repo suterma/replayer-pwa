@@ -169,7 +169,7 @@ export const mutations: MutationTree<State> & Mutations = {
     ) {
         console.debug('mutations::ADD_CUE:', payload.trackId);
         const matchingTrack = CompilationHandler.getTrackById(
-            state.compilation,
+            state.compilation.Tracks,
             payload.trackId,
         );
         if (matchingTrack) {
@@ -270,7 +270,7 @@ export const mutations: MutationTree<State> & Mutations = {
     ): void {
         const trackDuration = payload.trackDurationSeconds;
         const track = CompilationHandler.getTrackById(
-            state.compilation,
+            state.compilation.Tracks,
             payload.trackId,
         );
 
@@ -282,7 +282,7 @@ export const mutations: MutationTree<State> & Mutations = {
 
     [MutationTypes.REMOVE_TRACK](state: State, trackId: string) {
         const trackToRemove = CompilationHandler.getTrackById(
-            state.compilation,
+            state.compilation.Tracks,
             trackId,
         );
         const currentlySelectedCueId = state.selectedCueId;
@@ -301,7 +301,7 @@ export const mutations: MutationTree<State> & Mutations = {
 
     [MutationTypes.CLONE_TRACK](state: State, trackId: string) {
         const sourceTrack = CompilationHandler.getTrackById(
-            state.compilation,
+            state.compilation.Tracks,
             trackId,
         );
 
@@ -337,7 +337,7 @@ export const mutations: MutationTree<State> & Mutations = {
         console.debug('mutations::REASSIGN_CUE_SHORTCUTS:trackId', trackId);
 
         const track = CompilationHandler.getTrackById(
-            state.compilation,
+            state.compilation.Tracks,
             trackId,
         );
 
@@ -352,7 +352,7 @@ export const mutations: MutationTree<State> & Mutations = {
     },
     [MutationTypes.MOVE_TRACK_UP](state: State, trackId: string) {
         const moveIndex = CompilationHandler.getIndexOfTrackById(
-            state.compilation,
+            state.compilation.Tracks,
             trackId,
         );
 
@@ -369,7 +369,7 @@ export const mutations: MutationTree<State> & Mutations = {
 
     [MutationTypes.MOVE_TRACK_DOWN](state: State, trackId: string) {
         const moveIndex = CompilationHandler.getIndexOfTrackById(
-            state.compilation,
+            state.compilation.Tracks,
             trackId,
         );
 
@@ -430,7 +430,7 @@ export const mutations: MutationTree<State> & Mutations = {
         },
     ): void {
         const track = CompilationHandler.getTrackById(
-            state.compilation,
+            state.compilation.Tracks,
             payload.trackId,
         );
         if (track) {
@@ -457,7 +457,7 @@ export const mutations: MutationTree<State> & Mutations = {
         },
     ): void {
         const track = CompilationHandler.getTrackById(
-            state.compilation,
+            state.compilation.Tracks,
             payload.trackId,
         );
         if (track) {
@@ -472,7 +472,7 @@ export const mutations: MutationTree<State> & Mutations = {
         },
     ): void {
         const track = CompilationHandler.getTrackById(
-            state.compilation,
+            state.compilation.Tracks,
             payload.trackId,
         );
         if (track) {

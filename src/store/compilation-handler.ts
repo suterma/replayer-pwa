@@ -65,11 +65,8 @@ export default class CompilationHandler {
         return newTrack;
     }
     /** Return the index of the track in the given compilation */
-    static getIndexOfTrackById(
-        compilation: ICompilation,
-        trackId: string,
-    ): number {
-        return compilation.Tracks.map((item) => item.Id).indexOf(trackId);
+    static getIndexOfTrackById(tracks: ITrack[], trackId: string): number {
+        return tracks.map((item) => item.Id).indexOf(trackId);
     }
 
     /** Sorts the cues array in place, by time. This method mutates the array and returns a reference to the same array.
@@ -356,14 +353,14 @@ export default class CompilationHandler {
     }
 
     /** Gets the matching track, if any, in the compilation, by it's Id.
-     * @param compilation - The compilation, whose tracks are searched
+     * @param tracks - The tracks that are searched
      * @param trackId - The Id of the track to find
      * */
     public static getTrackById(
-        compilation: ICompilation,
+        tracks: ITrack[],
         trackId: string,
     ): ITrack | undefined {
-        return compilation.Tracks.find((t) => t.Id === trackId);
+        return tracks.find((t) => t.Id === trackId);
     }
 
     /** Gets the the matching cue, if any, in the compilation, by it's Id.
@@ -383,26 +380,23 @@ export default class CompilationHandler {
     }
 
     /** Gets the previous track, if any, in the compilation, by it's Id.
-     * @param compilation - The compilation, whose tracks are searched
+     * @param tracks - The tracks that are searched
      * @param trackId - The Id of the track to find the previous of
      * */
     public static getPreviousTrackById(
-        compilation: ICompilation,
+        tracks: ITrack[],
         trackId: string,
     ): ITrack | undefined {
-        if (compilation) {
-            const allTrackIds = compilation.Tracks?.map((track) => track.Id);
+        if (tracks) {
+            const allTrackIds = tracks?.map((track) => track.Id);
             const indexOfSelected = CompilationHandler.getIndexOfTrackById(
-                compilation,
+                tracks,
                 trackId,
             );
             if (allTrackIds && indexOfSelected !== undefined) {
                 const prevTrackId = allTrackIds[indexOfSelected - 1];
                 if (prevTrackId) {
-                    return CompilationHandler.getTrackById(
-                        compilation,
-                        prevTrackId,
-                    );
+                    return CompilationHandler.getTrackById(tracks, prevTrackId);
                 }
             }
         }
@@ -410,33 +404,30 @@ export default class CompilationHandler {
 
     /** Gets the next track, if any, in the compilation, by it's Id.
      * @remarks Optionally supports looping back to the beginning, if the end was reached.
-     * @param compilation - The compilation, whose tracks are searched
+     * @param tracks - The tracks that are searched
      * @param trackId - The Id of the track to find the next of
      * @param loop - When true, and the next track is not defined, the first track is returned.
      * */
     public static getNextTrackById(
-        compilation: ICompilation,
+        tracks: ITrack[],
         trackId: string,
         loop = false,
     ): ITrack | undefined {
-        if (compilation) {
-            const allTrackIds = compilation.Tracks?.map((track) => track.Id);
+        if (tracks) {
+            const allTrackIds = tracks?.map((track) => track.Id);
             const indexOfSelected = CompilationHandler.getIndexOfTrackById(
-                compilation,
+                tracks,
                 trackId,
             );
             if (allTrackIds && indexOfSelected !== undefined) {
                 const nextTrackId = allTrackIds[indexOfSelected + 1];
                 if (nextTrackId) {
-                    return CompilationHandler.getTrackById(
-                        compilation,
-                        nextTrackId,
-                    );
+                    return CompilationHandler.getTrackById(tracks, nextTrackId);
                 } else if (loop) {
                     const firstTrackId = allTrackIds[0];
                     if (firstTrackId) {
                         return CompilationHandler.getTrackById(
-                            compilation,
+                            tracks,
                             firstTrackId,
                         );
                     }

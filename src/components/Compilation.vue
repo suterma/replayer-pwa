@@ -49,8 +49,9 @@ import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
 
-/** Displays the contained list of tracks as tiles
+/** Displays the contained list of tracks in a list, ready to play.
  * @remarks Also handles the common replayer events for compilations
+ * @remarks Also supports shuffling of tracks
  */
 export default defineComponent({
     name: 'Compilation',
@@ -117,9 +118,9 @@ export default defineComponent({
          * @param trackId - The Id of the track to use the previous of
          */
         toPreviousTrack(trackId: string): void {
-            if (this.compilation) {
+            if (this.tracks) {
                 const prevTrackId = CompilationHandler.getPreviousTrackById(
-                    this.compilation,
+                    this.tracks,
                     trackId,
                 )?.Id;
                 if (prevTrackId) {
@@ -134,34 +135,14 @@ export default defineComponent({
          */
         toNextTrack(trackId: string, loop = false): void {
             console.debug('toNextTrack', trackId);
-            if (this.compilation) {
+            if (this.tracks) {
                 const nextTrackId = CompilationHandler.getNextTrackById(
-                    this.compilation,
+                    this.tracks,
                     trackId,
                     loop,
                 )?.Id;
                 if (nextTrackId) {
                     this.getTrackInstance(nextTrackId).skipToPlayPause();
-                }
-            }
-        },
-
-        /** Moves playback to a shuffled track
-         * @remarks Optionally supports looping back to the beginning, if the end was reached.
-         * @param trackId - The Id of the track to use the next of
-         */
-        toShuffledTrack(trackId: string): void {
-            console.debug('toShuffledTrack', trackId);
-            if (this.compilation) {
-                const allTrackIds = this.compilation.Tracks?.map(
-                    (track) => track.Id,
-                );
-
-                //TODO later implement a real shuffle mode instead of a random mode
-                const randomTrackId =
-                    allTrackIds[Math.floor(Math.random() * allTrackIds.length)];
-                if (randomTrackId) {
-                    this.getTrackInstance(randomTrackId).skipToPlayPause();
                 }
             }
         },
@@ -181,8 +162,7 @@ export default defineComponent({
                     this.compilation.PlaybackMode ==
                     PlaybackMode.ShuffleCompilation
                 ) {
-                    //TODO fix to real shuffle mode
-                    this.toShuffledTrack(trackId);
+                    this.toNextTrack(trackId);
                 }
             }
         },
@@ -259,6 +239,8 @@ export default defineComponent({
                 this.scrollToTrack(track);
             }
         },
+
+        //TODO add a watch for the shuffle mode, then add a random seed to the shuffle function
     },
     computed: {
         /** Whether the header component shows editable inputs for the contained data
@@ -269,7 +251,23 @@ export default defineComponent({
             return this.tracksDisplayMode === TrackDisplayMode.Edit;
         },
         tracks(): Array<ITrack> | undefined {
-            return this.$store.getters.tracks as Array<ITrack> | undefined;
+            const tracks = this.$store.getters.tracks as
+                | Array<ITrack>
+                | undefined;
+            //Deterministically shuffle if required
+            if (
+                tracks &&
+                this.compilation?.PlaybackMode ==
+                    PlaybackMode.ShuffleCompilation
+            ) {
+                const shuffledTracks = tracks
+                    .map((value) => ({ value, sort: value.Id.charCodeAt(0) }))
+                    .sort((a, b) => a.sort - b.sort)
+                    .map(({ value }) => value);
+                console.debug('shuffledTracks', JSON.stringify(shuffledTracks));
+                return shuffledTracks;
+            }
+            return tracks;
         },
         selectedCueId(): string {
             return this.$store.getters.selectedCueId as string;
