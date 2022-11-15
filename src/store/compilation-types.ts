@@ -64,7 +64,6 @@ export interface ICompilation {
      * @remarks This can be set by the user, and is persisted.
      */
     PlaybackMode: PlaybackMode;
-    //TODO warum wird der Playback mode nicht korrekt vom store eingelesen???
 }
 /** @interface Defines a Replayer track */
 export interface ITrack {
