@@ -435,7 +435,7 @@ export default defineComponent({
          */
         displayMode: {
             type: String as () => TrackDisplayMode,
-            default: TrackDisplayMode.Collapsible,
+            default: TrackDisplayMode.Play,
         },
         /** Whether to show the track player widget in full screen mode */
         isTrackPlayerFullScreen: {

@@ -68,7 +68,7 @@ export default defineComponent({
          */
         tracksDisplayMode: {
             type: String as () => TrackDisplayMode,
-            default: TrackDisplayMode.Collapsible,
+            default: TrackDisplayMode.Play,
             required: false,
         },
     },

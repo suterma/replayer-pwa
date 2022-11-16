@@ -126,7 +126,7 @@ export default defineComponent({
             if (this.isEditMode) {
                 return TrackDisplayMode.Edit;
             }
-            return TrackDisplayMode.Collapsible;
+            return TrackDisplayMode.Play;
         },
         /** Whether the compilation is shown as editable */
         isEditMode(): boolean {

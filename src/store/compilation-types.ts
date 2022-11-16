@@ -7,13 +7,10 @@ export enum CompilationType {
 
 /** A display mode for tracks. Specifying this mode makes the track component reusable for different display modes. */
 export enum TrackDisplayMode {
-    /** Shown as fully expanded, not collapsible, and with editable inputs for the contained data */
+    /** Shown with editable inputs for the contained data */
     Edit = 'edit',
-    /** Shown as fully expanded, not collapsible, optimized for playback */
+    /** Shown optimized for playback */
     Play = 'play',
-    /** Show initially as fully expanded, but supporting expand/collapse (using a button) */
-    //TODO later remove
-    Collapsible = 'collapsible',
 }
 
 /** A playback mode for tracks and cues. */
