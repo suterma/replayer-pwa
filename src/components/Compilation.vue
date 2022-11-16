@@ -23,10 +23,14 @@
                 "
                 :playbackMode="compilation.PlaybackMode"
                 @update:playbackMode="updatePlaybackMode($event)"
-                :hasPreviousTrack="index > 0"
-                :hasNextTrack="index < (tracks?.length ?? 0) - 1"
-                @previousTrack="toPreviousTrack(track.Id)"
-                @nextTrack="toNextTrack(track.Id)"
+                :hasPreviousTrack="index > 0 || isLoopingPlaybackMode"
+                :hasNextTrack="
+                    index < (tracks?.length ?? 0) - 1 || isLoopingPlaybackMode
+                "
+                @previousTrack="
+                    toPreviousTrack(track.Id, isLoopingPlaybackMode)
+                "
+                @nextTrack="toNextTrack(track.Id, isLoopingPlaybackMode)"
                 @trackEnded="continueAfterTrack(track.Id)"
             />
         </template>
@@ -119,12 +123,14 @@ export default defineComponent({
 
         /** Moves playback to the previous track
          * @param trackId - The Id of the track to use the previous of
+         * @param loop - When true, and the previous track is not defined, the last track is used.
          */
-        toPreviousTrack(trackId: string): void {
+        toPreviousTrack(trackId: string, loop = false): void {
             if (this.tracks) {
                 const prevTrackId = CompilationHandler.getPreviousTrackById(
                     this.tracks,
                     trackId,
+                    loop,
                 )?.Id;
                 if (prevTrackId) {
                     this.getTrackInstance(prevTrackId).skipToPlayPause();
@@ -260,6 +266,18 @@ export default defineComponent({
             return (
                 this.compilation?.PlaybackMode ==
                 PlaybackMode.ShuffleCompilation
+            );
+        },
+        /** Whether the PlaybackMode is looping the tracks
+         * in the compilation.
+         * @remarks These are PlaybackMode.ShuffleCompilation
+         * and PlaybackMode.ShuffleCompilation
+         */
+        isLoopingPlaybackMode(): boolean {
+            return (
+                this.compilation?.PlaybackMode ==
+                    PlaybackMode.ShuffleCompilation ||
+                this.compilation?.PlaybackMode == PlaybackMode.LoopCompilation
             );
         },
 

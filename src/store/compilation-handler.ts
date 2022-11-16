@@ -413,10 +413,12 @@ export default class CompilationHandler {
     /** Gets the previous track, if any, in the compilation, by it's Id.
      * @param tracks - The tracks that are searched
      * @param trackId - The Id of the track to find the previous of
+     * @param loop - When true, and the previous track is not defined, the last track is returned.
      * */
     public static getPreviousTrackById(
         tracks: ITrack[],
         trackId: string,
+        loop = false,
     ): ITrack | undefined {
         if (tracks) {
             const allTrackIds = tracks?.map((track) => track.Id);
@@ -428,6 +430,14 @@ export default class CompilationHandler {
                 const prevTrackId = allTrackIds[indexOfSelected - 1];
                 if (prevTrackId) {
                     return CompilationHandler.getTrackById(tracks, prevTrackId);
+                } else if (loop) {
+                    const lastTrackId = allTrackIds[allTrackIds.length - 1];
+                    if (lastTrackId) {
+                        return CompilationHandler.getTrackById(
+                            tracks,
+                            lastTrackId,
+                        );
+                    }
                 }
             }
         }
