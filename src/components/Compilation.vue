@@ -79,8 +79,11 @@ export default defineComponent({
              */
             isTrackPlayerFullScreen: false,
 
-            /** The playback mode for this compilation */
-            // playbackMode: PlaybackMode.PlayTrack,
+            /** A seed for the deterministic shuffling (until next shuffling is requested)
+             * @remarks Reshuffling occurs when the PlaybackMode is toggled to ShuffleCompilation.
+             * @devdoc This allows to keep the shuffled order.
+             */
+            shuffleSeed: 1,
         };
     },
     methods: {
@@ -154,15 +157,11 @@ export default defineComponent({
             if (this.compilation) {
                 if (
                     this.compilation.PlaybackMode ==
-                    PlaybackMode.LoopCompilation
+                        PlaybackMode.LoopCompilation ||
+                    this.compilation.PlaybackMode ==
+                        PlaybackMode.ShuffleCompilation
                 ) {
                     this.toNextTrack(trackId, true);
-                }
-                if (
-                    this.compilation.PlaybackMode ==
-                    PlaybackMode.ShuffleCompilation
-                ) {
-                    this.toNextTrack(trackId);
                 }
             }
         },
@@ -240,9 +239,30 @@ export default defineComponent({
             }
         },
 
+        /** Updates the shuffle seed if required by a playback mode change.
+         */
+        isTracksShuffled(isShuffled: boolean) {
+            if (isShuffled) {
+                this.shuffleSeed = ++this.shuffleSeed;
+                console.debug(
+                    'Compilation::playbackMode:shuffleSeed',
+                    this.shuffleSeed,
+                );
+            }
+        },
+
         //TODO add a watch for the shuffle mode, then add a random seed to the shuffle function
     },
     computed: {
+        /** Whether the tracks are currently in a shuffled order.
+         */
+        isTracksShuffled(): boolean {
+            return (
+                this.compilation?.PlaybackMode ==
+                PlaybackMode.ShuffleCompilation
+            );
+        },
+
         /** Whether the header component shows editable inputs for the contained data
          * @remarks For simplicity, the header is shown as editable, as long as the tracks are editable, too.
          * @devdoc Allows to reuse this component for more than one display mode.
@@ -250,22 +270,17 @@ export default defineComponent({
         isHeaderEditable(): boolean {
             return this.tracksDisplayMode === TrackDisplayMode.Edit;
         },
+
+        /** The currently available tracks in the compilation
+         * @remarks The order may also be shuffled, depending on the PlaybackMode
+         */
         tracks(): Array<ITrack> | undefined {
             const tracks = this.$store.getters.tracks as
                 | Array<ITrack>
                 | undefined;
             //Deterministically shuffle if required
-            if (
-                tracks &&
-                this.compilation?.PlaybackMode ==
-                    PlaybackMode.ShuffleCompilation
-            ) {
-                const shuffledTracks = tracks
-                    .map((value) => ({ value, sort: value.Id.charCodeAt(0) }))
-                    .sort((a, b) => a.sort - b.sort)
-                    .map(({ value }) => value);
-                console.debug('shuffledTracks', JSON.stringify(shuffledTracks));
-                return shuffledTracks;
+            if (tracks && this.isTracksShuffled) {
+                return CompilationHandler.shuffle(tracks, this.shuffleSeed);
             }
             return tracks;
         },

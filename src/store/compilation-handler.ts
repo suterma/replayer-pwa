@@ -14,6 +14,37 @@ import { v4 as uuidv4 } from 'uuid';
  * Provides handling methods for compilation manipulation.
  */
 export default class CompilationHandler {
+    /** Shuffles and returns the given tracks, using a deterministic method, based on the given seed */
+    static shuffle(
+        tracks: ITrack[],
+        shuffleSeed: number,
+    ): ITrack[] | undefined {
+        const shuffledTracks = tracks
+            .map((value) => ({
+                value,
+                sort: CompilationHandler.shuffleOrder(value.Id, shuffleSeed),
+            }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({ value }) => value);
+        //console.debug('shuffledTracks', JSON.stringify(shuffledTracks));
+        return shuffledTracks;
+    }
+
+    /** Gets a pseudo-random order, by using the given Id and a shuffle seed
+     * @devdoc The implementation assumes a GUID as an Id. Currently
+     * the outcome is deemed random enough for the purpose, avoiding
+     * a dependency on a more sophisticated PRNG.
+     * Two different char codes are used to work around the dashes in the GUID.
+     */
+    private static shuffleOrder(id: string, seed: number): number {
+        const inputLength = id.length;
+        const order =
+            id.charCodeAt(seed % inputLength) +
+            id.charCodeAt(inputLength - (seed % inputLength));
+        console.debug('shuffleOrder', id, order);
+        return order;
+    }
+
     /** Creates a new cue, with default values */
     static createDefaultCue(compilation: ICompilation): ICue {
         const nextShortcut = CompilationHandler.getNextShortcut(compilation);
