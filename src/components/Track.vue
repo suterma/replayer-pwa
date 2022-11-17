@@ -772,6 +772,18 @@ export default defineComponent({
                 this.activateWakeLock();
             }
         },
+        /** Handles changes of the full screen state
+         * @devdoc This hides the scroll bars in the (full screen div's) underlying content
+         */
+        isTrackPlayerFullScreen(isFullScreen: boolean): void {
+            console.debug(
+                `Track(${this.track.Name})::isTrackPlayerFullScreen:isFullScreen:`,
+                isFullScreen,
+            );
+            document.documentElement.style.overflowY = isFullScreen
+                ? 'clip'
+                : 'auto';
+        },
     },
     computed: {
         /** The description of the currently playing cue
@@ -939,8 +951,11 @@ export default defineComponent({
 
 /** A div that occupies full screen */
 .is-fullscreen {
-    //width is already set on outer container
-    // width: 100vw;
-    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: auto;
 }
 </style>
