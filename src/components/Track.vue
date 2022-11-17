@@ -186,7 +186,7 @@
                                             "
                                             title="toggle full-screen mode"
                                         >
-                                            <BaseIcon name="fullscreen" />
+                                            <BaseIcon name="arrow-expand" />
                                         </button>
                                         <button
                                             v-else
@@ -196,7 +196,7 @@
                                             "
                                             title="toggle full-screen mode"
                                         >
-                                            <BaseIcon name="fullscreen-exit" />
+                                            <BaseIcon name="arrow-collapse" />
                                         </button>
                                     </MediaControlsBar>
                                 </div>
