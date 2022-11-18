@@ -1,27 +1,4 @@
 <template>
-    <!-- <PlayerChrome
-        :title="title"
-        :loaded="hasLoadedData"
-        :isFading="isFading"
-        :playing="playing"
-        @stop="stop"
-        @pause="pause"
-        @play="play"
-        :isPlayingRequestOutstanding="isPlayingRequestOutstanding"
-        v-model:currentSeconds="currentSeconds"
-        :playbackMode="playbackMode"
-        @update:playbackMode="updatePlaybackMode"
-        :volume="volume"
-        @update:volume="updateVolume"
-        :muted="muted"
-        @mute="mute"
-        @seek="seekToSeconds"
-        :durationSeconds="durationSeconds"
-        @download="download"
-        :sourceDescription="sourceDescription"
-        :error="mediaError"
-        :showTransportControls="showTransportControls"
-    > -->
     <slot></slot>
     <Experimental>
         <TrackAudioPeaks
@@ -40,8 +17,10 @@ import { settingsMixin } from '@/mixins/settingsMixin';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
 
-/** A simple vue audio player, for a single track, using the Web Audio API.
+/** A simple vue audio player, for a single track, using the Audio Element and it's API.
+ *  (intentionally, the memory-consuming buffers from the Web Audio API are not used.)
  * @devdoc Internally maintains it's state, updating the enclosed audio element accordingly.
+ * @remarks Internally handles cue loops, when in the LoopCue playback mode.
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playing
  * @remarks Emits 'durationChanged' with the track duration in seconds, once after successful load of the metadata of the track's media file
  * @devdoc Autoplay after load is intentionally not supported, as this is of no use for the Replayer app.
@@ -77,13 +56,6 @@ export default defineComponent({
             default: '',
             required: false,
         },
-        /** Whether this component shows editable inputs for the contained data
-         * @devdoc Allows to reuse this component for more than one DisplayMode.
-         */
-        isEditable: {
-            type: Boolean,
-            default: false,
-        },
         /** The start time of the selected cue. Used in conjunction with the playbackMode, when in cue loop mode or track play mode.
          * @devdoc This is used to emulate the buffer looping for the enclosed audio element.
          * See https://www.w3.org/TR/webaudio/#looping-AudioBufferSourceNode for information about looping.
@@ -113,7 +85,6 @@ export default defineComponent({
             type: String,
             default: '',
         },
-
         /** The playback mode
          * @remarks Implements a two-way binding
          * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
@@ -130,15 +101,6 @@ export default defineComponent({
             type: Boolean,
             required: true,
             default: false,
-        },
-        /** Whether to show the transport controls (Play/Pause, Stop, PlaybackMode)
-         * @remarks Visibility does not affect functionality. All functions
-         * can still be invoked programmatically.
-         */
-        showTransportControls: {
-            type: Boolean,
-            required: false,
-            default: true,
         },
         /** Whether to automatically start playback after the media is loaded.
          */
@@ -181,7 +143,6 @@ export default defineComponent({
             isFading: false,
             /** Whether playback is currently ongoing */
             playing: false,
-            showVolume: false,
             audioElement: document.createElement('audio'),
             /** Flags, whether a playing request is currently outstanding. This is true after a play request was received, for as long
              * as playback has not yet started.
@@ -389,7 +350,7 @@ export default defineComponent({
         /** Set the playback mode to a new value */
         updatePlaybackMode(playbackMode: PlaybackMode): void {
             //HINT: For the cue loop, a dedicated looping implementation is required,
-            //because automatic looping is not supported with the used HTMLAudioElement.
+            //because automatic partial looping is not supported with the used HTMLAudioElement.
             //This is solved in this component by observing the recurring time updates.
             this.audioElement.loop = playbackMode === PlaybackMode.LoopTrack;
             this.$emit('update:playbackMode', playbackMode);
@@ -451,11 +412,6 @@ export default defineComponent({
                     this.audioElement.play();
                 }
             }
-        },
-        download() {
-            this.debugLog(`download`);
-            this.stop();
-            window.open(this.mediaUrl, 'download');
         },
         handleLoadedMetadata(): void {
             const readyState = this.audioElement.readyState;
@@ -526,16 +482,6 @@ export default defineComponent({
             this.debugLog(`mute`);
             this.isMuted = !this.isMuted;
             this.audioElement.muted = this.isMuted;
-        },
-        seekByClick(e: MouseEvent) {
-            this.debugLog(`seekByClick`, e);
-            if (!this.hasLoadedMetadata) return;
-
-            const bounds = (e.target as HTMLDivElement).getBoundingClientRect();
-            const seekPos = (e.clientX - bounds.left) / bounds.width;
-
-            this.audioElement.currentTime =
-                this.audioElement.duration * seekPos;
         },
         seekToSeconds(seconds: number) {
             this.debugLog(`seekToSeconds`, seconds);
