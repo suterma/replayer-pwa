@@ -31,7 +31,12 @@
         :isPlaying="isPlaying"
         :isLoading="isFading"
         @click="togglePlayback()"
-        title="play"
+        title="Play from current position"
+    />
+
+    <PlaybackModeButton
+        :modelValue="playbackMode"
+        @update:modelValue="updatePlaybackMode"
     />
 
     <button class="button" @click.prevent="seek(5)" title="forward 5 seconds">
@@ -55,11 +60,6 @@
     >
         <BaseIcon name="skip-next" />
     </button>
-
-    <PlaybackModeButton
-        :modelValue="playbackMode"
-        @update:modelValue="updatePlaybackMode"
-    />
 
     <Knob
         title="Drag, scroll or use the arrow keys to change volume"

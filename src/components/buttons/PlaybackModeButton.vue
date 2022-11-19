@@ -1,58 +1,31 @@
 <template>
-    <Hotkey :keys="['ctrl', 'r']" v-slot="{ clickRef }">
-        <button
-            :class="{
-                button: true,
-            }"
-            :ref="clickRef"
-            @click="togglePlaybackMode()"
-            title="click to toggle"
-        >
-            <BaseIcon
-                v-if="isPlaybackTrack"
-                name="track-play"
-                title="Play track (click to toggle)"
-            />
-            <BaseIcon
-                v-if="isPlaybackLoopTrack"
-                name="track-repeat"
-                title="Loop track (click to toggle)"
-            />
-            <BaseIcon
-                v-if="isPlaybackCue"
-                name="track-play-once"
-                title="Play cue (click to toggle)"
-            />
-            <BaseIcon
-                v-if="isPlaybackLoopCue"
-                name="track-repeat-once"
-                title="Loop cue (click to toggle)"
-            />
-            <BaseIcon
-                v-if="isPlaybackLoopCompilation"
-                name="repeat-variant"
-                title="Loop compilation (click to toggle)"
-            />
-            <BaseIcon
-                v-if="isPlaybackShuffleCompilation"
-                name="shuffle-variant"
-                title="Shuffle compilation (click to toggle)"
-            /></button
-    ></Hotkey>
+    <button
+        :class="{
+            button: true,
+        }"
+        @click="togglePlaybackMode()"
+        :title="modeTitle"
+    >
+        <BaseIcon v-if="isPlaybackTrack" name="track-play" />
+        <BaseIcon v-if="isPlaybackLoopTrack" name="track-repeat" />
+        <BaseIcon v-if="isPlaybackCue" name="track-play-once" />
+        <BaseIcon v-if="isPlaybackLoopCue" name="track-repeat-once" />
+        <BaseIcon v-if="isPlaybackLoopCompilation" name="repeat-variant" />
+        <BaseIcon v-if="isPlaybackShuffleCompilation" name="shuffle-variant" />
+    </button>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { PlaybackMode } from '@/store/compilation-types';
-import { Hotkey } from '@simolation/vue-hotkey';
 
 /** A toggle switch for the playback mode
  * @remarks Handles and emits various states and event for playback control.
  */
 export default defineComponent({
     name: 'PlaybackModeButton',
-    components: { BaseIcon, Hotkey },
+    components: { BaseIcon },
     emits: ['update:modelValue'],
     props: {
         /** The playback mode
@@ -82,6 +55,33 @@ export default defineComponent({
         },
         isPlaybackShuffleCompilation(): boolean {
             return this.modelValue === PlaybackMode.ShuffleCompilation;
+        },
+        modeTitle(): string {
+            const playbackMode = this.modelValue;
+            let title = 'Current mode: ';
+            switch (playbackMode) {
+                case PlaybackMode.PlayTrack:
+                    title += 'Play track';
+                    break;
+                case PlaybackMode.LoopTrack:
+                    title += 'Loop track';
+                    break;
+                case PlaybackMode.PlayCue:
+                    title += 'Play cue';
+                    break;
+                case PlaybackMode.LoopCue:
+                    title += 'Loop cue';
+                    break;
+                case PlaybackMode.LoopCompilation:
+                    title += 'Loop compilation';
+                    break;
+                case PlaybackMode.ShuffleCompilation:
+                    title += 'Shuffle compilation';
+                    break;
+                default:
+                    break;
+            }
+            return (title += ' (click to toggle)');
         },
     },
     methods: {
