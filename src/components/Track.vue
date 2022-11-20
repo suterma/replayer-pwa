@@ -80,8 +80,7 @@
                     }"
                 >
                     <TrackAudioApiPlayer
-                        :isEditable="isEditable"
-                        ref="playerReference"
+                         ref="playerReference"
                         :title="track?.Name"
                         :mediaUrl="mediaUrl"
                         @timeupdate="updateTime"
