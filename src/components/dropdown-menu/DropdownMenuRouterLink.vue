@@ -4,6 +4,7 @@
             @click="navigate"
             @keypress.enter="navigate"
             role="link"
+            :ref="clickRef"
             :title="title"
             :subTitle="subTitle"
             :iconName="iconName"
@@ -26,6 +27,11 @@ export default defineComponent({
             required: true,
         },
 
+        /** set a reference to the clickable button for the link*/
+        clickRef: {
+            type: Object,
+            required: false,
+        },
         subTitle: {
             type: String,
             default: '',

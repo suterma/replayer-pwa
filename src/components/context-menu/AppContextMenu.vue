@@ -5,19 +5,19 @@
         iconName="hamburger-menu"
         style="z-index: 3"
     >
-        <Hotkey :keys="['ctrl', 'p']" v-slot="{ clickRef }">
+        <Hotkey :keys="['f3']" v-slot="{ clickRef }">
             <DropdownMenuRouterLink
                 to="/play"
-                title="Play [CTRL+P]"
-                :ref="clickRef"
+                title="Play [F3"
+                :clickRef="clickRef"
                 iconName="play"
             />
         </Hotkey>
-        <Hotkey :keys="['ctrl', 'e']" v-slot="{ clickRef }">
+        <Hotkey :keys="['f2']" v-slot="{ clickRef }">
             <DropdownMenuRouterLink
                 to="/edit"
-                title="Edit [CTRL+E]"
-                :ref="clickRef"
+                title="Edit [F2]"
+                :clickRef="clickRef"
                 iconName="pencil"
             />
         </Hotkey>
@@ -61,7 +61,12 @@ import { Hotkey } from '@simolation/vue-hotkey';
  */
 export default defineComponent({
     name: 'AppContextMenu',
-    components: { DropdownMenu, DropdownMenuRouterLink, Hotkey },
+    components: {
+        DropdownMenu,
+        DropdownMenuRouterLink,
+          
+        Hotkey,
+    },
     methods: {},
 });
 </script>
