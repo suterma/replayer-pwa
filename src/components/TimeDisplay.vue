@@ -1,7 +1,7 @@
 <template>
     <span
         :class="{
-            'is-invisible': hidePlaceholder && modelValue === null,
+            'is-invisible': hidePlaceholder && !hasValue,
             'is-minimum-9-characters': !isNarrow,
             'is-minimum-7-characters': isNarrow,
         }"
@@ -36,7 +36,7 @@ export default defineComponent({
          */
         currentDisplayTime(): string {
             if (this.isNarrow) {
-                if (this.modelValue === null) {
+                if (!this.hasValue) {
                     return '--:--.-';
                 }
                 return CompilationHandler.convertToDisplayTime(
@@ -44,12 +44,18 @@ export default defineComponent({
                     1,
                 );
             } else {
-                if (this.modelValue === null) {
+                if (!this.hasValue) {
                     return '--:--.---';
                 }
 
                 return CompilationHandler.convertToDisplayTime(this.modelValue);
             }
+        },
+        /** Whether a time value is available for display.
+         * @remarks null, undefined and other non finite values return false.
+         */
+        hasValue(): boolean {
+            return Number.isFinite(this.modelValue);
         },
         /** Whether the viewport width at or below Bulma's mobile breakpoint
          * @remarks Is not reactive, which is a good thing to save CPU cycles
