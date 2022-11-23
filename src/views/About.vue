@@ -329,12 +329,21 @@
                 </li>
                 <li>
                     <a
+                        href="https://github.com/lodash/lodash/tree/4.0.8-npm-packages/lodash.debounce"
+                        target="_blank"
+                    >
+                        lodash.debounce</a
+                    >, rhe lodash method _.debounce exported as a Node.js
+                    module. (Released under the MIT License, by the Lodash team)
+                </li>
+                <li>
+                    <a
                         href="https://github.com/focus-trap/focus-trap"
                         target="_blank"
                     >
-                        VueUse</a
-                    >, a Collection of essential Vue Composition Utilities
-                    (Released under the MIT License, by the VueUse team)
+                        focus-trap</a
+                    >, trap focus within a DOM node. (Released under the MIT
+                    License, by Stefan Cameron)
                 </li>
                 <li>
                     <a
