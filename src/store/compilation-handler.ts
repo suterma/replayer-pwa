@@ -201,7 +201,7 @@ export default class CompilationHandler {
         seconds: number | null,
         subsecondDigits = 3,
     ): string {
-        if (seconds != null) {
+        if (seconds != null && Number.isFinite(seconds)) {
             //Uses the hour, minute, seconds, and 3 digits of the milliseconds part
             const hhmmss = new Date(seconds * 1000)
                 .toISOString()

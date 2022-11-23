@@ -132,7 +132,9 @@ export default defineComponent({
                 if (
                     this.cue &&
                     this.cue.Time !== null &&
-                    this.cue.Duration !== null
+                    Number.isFinite(this.cue.Time) &&
+                    this.cue.Duration !== null &&
+                    Number.isFinite(this.cue.Duration)
                 ) {
                     return (
                         (100 / this.cue.Duration) *
@@ -187,7 +189,9 @@ export default defineComponent({
                 if (
                     this.cue &&
                     this.cue.Time !== null &&
-                    this.cue.Duration !== null
+                    Number.isFinite(this.cue.Time) &&
+                    this.cue.Duration !== null &&
+                    Number.isFinite(this.cue.Duration)
                 ) {
                     return (
                         this.cue.Time + this.cue.Duration <= this.currentSeconds
@@ -202,7 +206,9 @@ export default defineComponent({
                 if (
                     this.cue &&
                     this.cue.Time !== null &&
-                    this.cue.Duration !== null
+                    Number.isFinite(this.cue.Time) &&
+                    this.cue.Duration !== null &&
+                    Number.isFinite(this.cue.Duration)
                 ) {
                     return this.currentSeconds < this.cue.Time;
                 }

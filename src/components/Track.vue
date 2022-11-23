@@ -80,7 +80,7 @@
                     }"
                 >
                     <TrackAudioApiPlayer
-                         ref="playerReference"
+                        ref="playerReference"
                         :title="track?.Name"
                         :mediaUrl="mediaUrl"
                         @timeupdate="updateTime"
@@ -310,7 +310,7 @@
             <ul class="levels">
                 <template v-for="cue in cues" :key="cue.Id">
                     <li>
-                        <CueLevel
+                        <CueLevelEditor
                             :disabled="!mediaUrl || !isTrackLoaded"
                             :cue="cue"
                             :isTrackPlaying="isPlaying"
@@ -333,7 +333,7 @@ import {
     TrackDisplayMode,
     PlaybackMode,
 } from '@/store/compilation-types';
-import CueLevel from '@/components/CueLevel.vue';
+import CueLevelEditor from '@/components/CueLevelEditor.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
 import { MediaUrl } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
@@ -366,7 +366,7 @@ import IfMedia from '@/components/IfMedia.vue';
 export default defineComponent({
     name: 'Track',
     components: {
-        CueLevel,
+        CueLevelEditor,
         TrackAudioApiPlayer,
         ReplayerEventHandler,
         TrackHeader,
@@ -496,7 +496,12 @@ export default defineComponent({
                     const previousCue = this.track.Cues.filter(
                         (cue) => cue.Id === prevCueId,
                     )[0];
-                    if (previousCue && previousCue.Time != null) {
+
+                    if (
+                        previousCue &&
+                        previousCue.Time != null &&
+                        Number.isFinite(previousCue.Time)
+                    ) {
                         this.cueClick(previousCue, false);
                         resolve();
                     } else {
@@ -518,7 +523,11 @@ export default defineComponent({
                     const nextCue = this.track.Cues.filter(
                         (cue) => cue.Id === nextCueId,
                     )[0];
-                    if (nextCue && nextCue.Time != null) {
+                    if (
+                        nextCue &&
+                        nextCue.Time != null &&
+                        Number.isFinite(nextCue.Time)
+                    ) {
                         this.cueClick(nextCue, false);
                         resolve();
                     } else {
@@ -663,7 +672,7 @@ export default defineComponent({
          */
         cueClick(cue: ICue, togglePlayback = true) {
             console.debug(`Track(${this.track.Name})::cueClick:cue:`, cue);
-            if (cue.Time != null) {
+            if (cue.Time != null && Number.isFinite(cue.Time)) {
                 //Update the selected cue to this cue
                 this.$store.commit(
                     MutationTypes.UPDATE_SELECTED_CUE_ID,
@@ -693,7 +702,7 @@ export default defineComponent({
          */
         cuePlay(cue: ICue) {
             console.debug(`Track(${this.track.Name})::cueClick:cue:`, cue);
-            if (cue.Time != null) {
+            if (cue.Time != null && Number.isFinite(cue.Time)) {
                 //Update the selected cue to this cue
                 this.$store.commit(
                     MutationTypes.UPDATE_SELECTED_CUE_ID,
@@ -821,6 +830,9 @@ export default defineComponent({
                 this.track.Cues.filter(
                     (cue) =>
                         cue.Time !== null &&
+                        Number.isFinite(cue.Time) && 
+                        cue.Duration !== null &&
+                        Number.isFinite(cue.Duration) && 
                         this.currentSeconds >= cue.Time &&
                         this.currentSeconds < cue.Time + (cue.Duration ?? 0),
                 )[0] ?? null

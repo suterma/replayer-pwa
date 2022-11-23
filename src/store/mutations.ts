@@ -84,7 +84,7 @@ export type Mutations<S = State> = {
             cueId: string;
             description: string;
             shortcut: string;
-            time: number;
+            time: number | null;
         },
     ): void;
 };
@@ -487,7 +487,7 @@ export const mutations: MutationTree<State> & Mutations = {
             cueId: string;
             description: string;
             shortcut: string;
-            time: number;
+            time: number | null;
         },
     ): void {
         const cue = CompilationHandler.getCueById(

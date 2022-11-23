@@ -273,7 +273,10 @@ export default defineComponent({
             return (
                 this.activeTrack?.Cues.filter(
                     (cue) =>
-                        cue.Time !== null &&
+                    cue.Time !== null &&
+                    Number.isFinite(cue.Time) &&
+                    cue.Duration !== null &&
+                    Number.isFinite(cue.Duration) &&
                         this.currentSeconds >= cue.Time &&
                         this.currentSeconds < cue.Time + (cue.Duration ?? 0),
                 )[0] ?? null
@@ -460,7 +463,11 @@ export default defineComponent({
                     const previousCue = this.activeTrack.Cues.filter(
                         (cue) => cue.Id === prevCueId,
                     )[0];
-                    if (previousCue && previousCue.Time != null) {
+                    if (
+                        previousCue &&
+                        previousCue.Time != null &&
+                        Number.isFinite(previousCue.Time)
+                    ) {
                         this.trackPlayerInstance.seekTo(previousCue.Time);
                         resolve();
                     } else {
@@ -481,7 +488,11 @@ export default defineComponent({
                     const nextCue = this.activeTrack.Cues.filter(
                         (cue) => cue.Id === nextCueId,
                     )[0];
-                    if (nextCue && nextCue.Time != null) {
+                    if (
+                        nextCue &&
+                        nextCue.Time != null &&
+                        Number.isFinite(nextCue.Time)
+                    ) {
                         this.trackPlayerInstance.seekTo(nextCue.Time);
                         resolve();
                     } else {

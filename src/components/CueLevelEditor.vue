@@ -12,6 +12,7 @@
                                 :cue="cue"
                                 :isTrackPlaying="isTrackPlaying"
                                 :currentSeconds="currentSeconds"
+                                :disabled="!Number.isFinite(cue.Time)"
                                 @click="cueClick()"
                                 :isMinified="true"
                                 :hasAddonsRight="true"
@@ -48,15 +49,10 @@
                 <div class="level-item is-flex-shrink-1 is-hidden-tablet">
                     <div class="field">
                         <p class="control">
-                            <input
+                            <TimeInput
                                 class="input"
-                                type="number"
-                                inputmode="decimal"
-                                step="0.1"
-                                :value="cue.Time"
-                                @change="updateTime($event)"
-                                @input="updateTime($event)"
-                                placeholder="time [seconds]"
+                                :modelValue="cue.Time"
+                                @change="updateCueTime"
                                 size="5"
                             />
                         </p>
@@ -66,15 +62,10 @@
                 <div class="level-item is-flex-shrink-1 is-hidden-mobile">
                     <div class="field has-addons">
                         <p class="control">
-                            <input
+                            <TimeInput
                                 class="input"
-                                type="number"
-                                inputmode="decimal"
-                                step="0.1"
-                                :value="cue.Time"
-                                @change="updateTime($event)"
-                                @input="updateTime($event)"
-                                placeholder="time [seconds]"
+                                :modelValue="cue.Time"
+                                @change="updateCueTime"
                                 size="8"
                             />
                         </p>
@@ -147,6 +138,7 @@ import CompilationHandler from '@/store/compilation-handler';
 import CueButton from '@/components/buttons/CueButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from './TimeDisplay.vue';
+import TimeInput from '@/components/TimeInput.vue';
 
 /** An Editor for for a single cue
  * @remarks Shows a cue button with an inline progress bar, plus input fields for all properties
@@ -157,8 +149,8 @@ import TimeDisplay from './TimeDisplay.vue';
  * in the track's dropdown menu.
  */
 export default defineComponent({
-    name: 'CueLevel',
-    components: { CueButton, BaseIcon, TimeDisplay },
+    name: 'CueLevelEditor',
+    components: { CueButton, BaseIcon, TimeDisplay, TimeInput },
     emits: ['click', 'play'],
     props: {
         cue: {
@@ -213,13 +205,11 @@ export default defineComponent({
             this.$store.dispatch(ActionTypes.DELETE_CUE, cueId);
         },
         /** Updates the set cue time */
-        updateTime(event: Event) {
+        updateCueTime(time: number | null) {
             const cueId = this.cue.Id;
             const shortcut = this.cueData.Shortcut;
             const description = this.cueData.Description;
-            const time = CompilationHandler.roundTime(
-                parseFloat((event.target as HTMLInputElement).value),
-            );
+
             this.cueData.Time = time;
             this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
                 cueId,
@@ -230,11 +220,16 @@ export default defineComponent({
 
             //Also , for user convenience, to simplify adjusting cues, play at change
             //(while keeping the focus at the number spinner)
-            this.$emit('play');
+            if (Number.isFinite(time)) {
+                this.$emit('play');
+            }
         },
         /** Adjusts the time of the cue to the current playback time */
         adjustTime() {
-            if (this.currentSeconds !== undefined) {
+            if (
+                this.currentSeconds !== undefined &&
+                Number.isFinite(this.currentSeconds)
+            ) {
                 const time = CompilationHandler.roundTime(this.currentSeconds);
                 const cueId = this.cue.Id;
                 const shortcut = this.cueData.Shortcut;

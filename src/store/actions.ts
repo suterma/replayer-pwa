@@ -67,7 +67,7 @@ export interface Actions {
             cueId: string;
             description: string;
             shortcut: string;
-            time: number;
+            time: number | null;
         },
     ): void;
     [ActionTypes.ADD_CUE](
@@ -562,10 +562,12 @@ export const actions: ActionTree<State, State> & Actions = {
             cueId: string;
             description: string;
             shortcut: string;
-            time: number;
+            time: number | null;
         },
     ): void {
-        payload.time = CompilationHandler.roundTime(payload.time);
+        if (payload.time != null && Number.isFinite(payload.time)) {
+            payload.time = CompilationHandler.roundTime(payload.time);
+        }
         commit(MutationTypes.UPDATE_CUE_DATA, payload);
     },
     [ActionTypes.ADD_CUE](
