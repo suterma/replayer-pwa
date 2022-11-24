@@ -4,7 +4,8 @@
         inputmode="decimal"
         step="0.1"
         :value="modelValue"
-        @change="debouncedHandler($event)"
+        @change="immediatelyUpdateTime($event)"
+        @paste="immediatelyUpdateTime($event)"
         @input="debouncedHandler($event)"
         placeholder="time [seconds]"
         size="5"
@@ -17,7 +18,7 @@ import CompilationHandler from '@/store/compilation-handler';
 import debounce from 'lodash.debounce';
 
 /** An input for a time value in [seconds]
- * @remarks Debounces on user input
+ * @remarks Debounces on typed user input (not debouncing when using the spinner buttons)
  */
 export default defineComponent({
     name: 'TimeInput',
@@ -31,7 +32,6 @@ export default defineComponent({
 
     setup() {
         const debouncedHandler = null as any;
-
         return {
             debouncedHandler,
         };
@@ -39,34 +39,36 @@ export default defineComponent({
 
     created() {
         this.debouncedHandler = debounce((event: Event): void => {
-            console.debug('TimeInput::New value:', event.target);
             this.updateTime(event);
-        }, 300);
+        }, 600);
     },
     beforeUnmount() {
         this.debouncedHandler.cancel();
     },
     methods: {
+        /** Updates the set cue time immediately, canceling any running debounce */
+        immediatelyUpdateTime(event: Event) {
+            this.debouncedHandler.cancel();
+            this.updateTime(event);
+        },
+
         /** Updates the set cue time after debouncing */
         debouncedUpdateTime(event: Event) {
-            console.debug('TimeInput::debouncing...', event);
-
-            debounce(() => {
+            this.debouncedHandler = debounce(() => {
                 this.updateTime(event);
-            }, 300);
+            }, 600);
         },
         /** Updates the set cue time */
         updateTime(event: Event) {
             const time = CompilationHandler.roundTime(
                 parseFloat((event.target as HTMLInputElement).value),
             );
-
-            if (!Number.isFinite(time)) {
-                console.debug('TimeInput::change', null);
-                this.$emit('change', null);
-            } else {
-                console.debug('TimeInput::change', time);
-                this.$emit('change', time);
+            if (this.modelValue != time) {
+                if (!Number.isFinite(time)) {
+                    this.$emit('change', null);
+                } else {
+                    this.$emit('change', time);
+                }
             }
         },
     },
