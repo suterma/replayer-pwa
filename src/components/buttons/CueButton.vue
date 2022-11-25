@@ -32,13 +32,27 @@
             <slot></slot>
 
             <template v-if="!isMinified">
-                &nbsp;
-                <span class="has-text-weight-semibold foreground">{{
+                <span class="ml-2 has-text-weight-semibold foreground">{{
                     cue?.Description
-                }}</span>
+                }}</span></template
+            >
+            <template v-if="isCueLooping || isCuePlay">
+                <BaseIcon
+                    name="track-repeat-once"
+                    v-if="isCueLooping"
+                    class="ml-2 mr-2 foreground"
+                />
+                <BaseIcon
+                    name="track-play-once"
+                    v-if="isCuePlay"
+                    class="ml-2 mr-2 foreground"
+                />
+            </template>
+            <BaseIcon name="none" v-else class="ml-2 mr-2 foreground" />
 
+            <!-- second line, if not minified (use a horizontal level also on mobile)-->
+            <template v-if="!isMinified">
                 <br />
-                <!-- second line (use a horizontal level also on mobile)-->
                 <span class="level is-mobile">
                     <!-- Left side -->
                     <div class="level-left">
@@ -75,7 +89,7 @@
 
 <script lang="ts">
 import { defineComponent, StyleValue } from 'vue';
-import { Cue } from '@/store/compilation-types';
+import { Cue, PlaybackMode } from '@/store/compilation-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from '../TimeDisplay.vue';
 
@@ -100,6 +114,14 @@ export default defineComponent({
          * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
          */
         isTrackPlaying: Boolean,
+        /** The playback mode
+         * @remarks This is used to indicate this behavior to the user
+         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+         */
+        playbackMode: {
+            type: String as () => PlaybackMode,
+            required: true,
+        },
         /** Whether the button is shown in a minified, single-line, icon only, variant.
          * @remarks This is currently used for the edit mode.
          */
@@ -183,6 +205,20 @@ export default defineComponent({
         isCueSelected(): boolean {
             return this.$store.getters.selectedCueId == this.cue?.Id;
         },
+
+        /** Determines whether this cue is currently selected and is looping */
+        isCueLooping(): boolean {
+            return (
+                this.isCueSelected && this.playbackMode === PlaybackMode.LoopCue
+            );
+        },
+        /** Determines whether this cue is currently selected and is playing to cue end only */
+        isCuePlay(): boolean {
+            return (
+                this.isCueSelected && this.playbackMode === PlaybackMode.PlayCue
+            );
+        },
+
         /* Determines whether playback of this cue has already passed */
         hasCuePassed(): boolean {
             if (this.currentSeconds !== undefined) {

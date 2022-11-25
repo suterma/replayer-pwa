@@ -6,6 +6,7 @@
                 :cue="cue"
                 :currentSeconds="currentSeconds"
                 :isTrackPlaying="isTrackPlaying"
+                :playbackMode="playbackMode"
                 :hasAddonsRight="true"
                 :isMinified="true"
                 @click="$emit('click', cue)"
@@ -20,7 +21,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Track } from '@/store/compilation-types';
+import { PlaybackMode, Track } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
 
 /** A single line bar with simple cue buttons for a track
@@ -45,6 +46,13 @@ export default defineComponent({
          * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
          */
         isTrackPlaying: Boolean,
+        /** The playback mode
+         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+         */
+        playbackMode: {
+            type: String as () => PlaybackMode,
+            required: true,
+        },
     },
 });
 </script>

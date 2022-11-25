@@ -241,6 +241,7 @@
                                 v-if="!isTrackPlayerFullScreen"
                                 :currentSeconds="currentSeconds"
                                 :isTrackPlaying="isPlaying"
+                                :playbackMode="playbackMode"
                                 @click="
                                     (cue) => {
                                         cueClick(cue);
@@ -255,6 +256,7 @@
                             <CueButtonsField
                                 :currentSeconds="currentSeconds"
                                 :isTrackPlaying="isPlaying"
+                                :playbackMode="playbackMode"
                                 @click="
                                     (cue) => {
                                         cueClick(cue);
@@ -830,9 +832,9 @@ export default defineComponent({
                 this.track.Cues.filter(
                     (cue) =>
                         cue.Time !== null &&
-                        Number.isFinite(cue.Time) && 
+                        Number.isFinite(cue.Time) &&
                         cue.Duration !== null &&
-                        Number.isFinite(cue.Duration) && 
+                        Number.isFinite(cue.Duration) &&
                         this.currentSeconds >= cue.Time &&
                         this.currentSeconds < cue.Time + (cue.Duration ?? 0),
                 )[0] ?? null
