@@ -316,6 +316,7 @@
                             :disabled="!mediaUrl || !isTrackLoaded"
                             :cue="cue"
                             :isTrackPlaying="isPlaying"
+                            :playbackMode="playbackMode"
                             :currentSeconds="currentSeconds"
                             @click="cueClick(cue)"
                             @play="cuePlay(cue)"

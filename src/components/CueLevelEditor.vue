@@ -11,6 +11,7 @@
                             <CueButton
                                 :cue="cue"
                                 :isTrackPlaying="isTrackPlaying"
+                                :playbackMode="playbackMode"
                                 :currentSeconds="currentSeconds"
                                 :disabled="!Number.isFinite(cue.Time)"
                                 @click="cueClick()"
@@ -132,7 +133,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Cue } from '@/store/compilation-types';
+import { Cue, PlaybackMode } from '@/store/compilation-types';
 import { ActionTypes } from '@/store/action-types';
 import CompilationHandler from '@/store/compilation-handler';
 import CueButton from '@/components/buttons/CueButton.vue';
@@ -172,6 +173,13 @@ export default defineComponent({
          * While playing, this is pause, and vice versa.
          */
         isTrackPlaying: Boolean,
+        /** The playback mode
+         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+         */
+        playbackMode: {
+            type: String as () => PlaybackMode,
+            required: true,
+        },
     },
     data() {
         return {
