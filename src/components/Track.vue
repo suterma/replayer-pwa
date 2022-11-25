@@ -131,6 +131,14 @@
                                 class="level-item is-unselectable is-hidden-mobile"
                             >
                                 <div>
+                                    <p
+                                        class="is-size-7 has-cropped-text has-text-warning"
+                                        style="max-width: 260px"
+                                    >
+                                        <span>
+                                            {{ playingCueDescription }} &nbsp;
+                                        </span>
+                                    </p>
                                     <p>
                                         <PlayheadSlider
                                             v-model.number="currentSeconds"
@@ -142,14 +150,6 @@
                                             "
                                             :track="track"
                                         ></PlayheadSlider>
-                                    </p>
-                                    <p
-                                        class="is-size-7 has-cropped-text has-text-warning"
-                                        style="max-width: 260px"
-                                    >
-                                        <span>
-                                            {{ playingCueDescription }} &nbsp;
-                                        </span>
                                     </p>
                                 </div>
                             </div>
