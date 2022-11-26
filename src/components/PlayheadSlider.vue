@@ -1,8 +1,7 @@
 <template>
     <!-- Slider without time info around it, as a single control -->
     <div>
-        <input
-            v-if="!showPosition && !showDuration"
+        <!-- <input
             class="slider is-fullwidth is-small is-slim is-circle is-warning"
             step="stepSize"
             min="0"
@@ -11,19 +10,19 @@
             @change="onValueChange"
             @input="onValueChange"
             type="range"
-        />
+        /> -->
 
         <!-- Slider with time info around it -->
-        <div v-else class="level is-mobile is-unselectable">
+        <div class="level is-mobile is-unselectable">
             <!-- Left side -->
-            <div class="level-left" v-if="showPosition">
+            <div class="level-left">
                 <div class="level-item">
                     <button
-                        class="button is-outlined is-inverted"
+                        class="button is-outlined is-inverted pr-1"
                         @click="seek(-5)"
                         title="Current time: click to rewind"
                     >
-                        <BaseIcon class="has-text-warning" name="rewind-5" />
+                        <BaseIcon class="has-text-warning" name="rewind" />
                         <TimeDisplay
                             class="is-size-7 has-text-warning"
                             :modelValue="modelValue"
@@ -33,7 +32,7 @@
             </div>
             <div class="level-item mr-0">
                 <div>
-                    <p><slot></slot></p>
+                    <slot></slot>
                     <input
                         class="slider is-fullwidth is-small is-slim is-circle is-warning"
                         step="stepSize"
@@ -47,10 +46,10 @@
                 </div>
             </div>
             <!-- Right side -->
-            <div class="level-right" v-if="showDuration">
+            <div class="level-right">
                 <div class="level-item">
                     <button
-                        class="button is-outlined is-inverted"
+                        class="button is-outlined is-inverted pl-1"
                         @click="seek(+5)"
                         title="Current time: click to forward"
                     >
@@ -60,7 +59,7 @@
                         ></TimeDisplay>
                         <BaseIcon
                             class="has-text-warning"
-                            name="fast-forward-5"
+                            name="fast-forward"
                         />
                     </button>
                 </div>

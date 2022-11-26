@@ -138,6 +138,8 @@ export default defineComponent({
                     'M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z',
                 'arrow-collapse':
                     'M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z',
+                'fast-forward': 'M13,6V18L21.5,12M4,18L12.5,12L4,6V18Z',
+                rewind: 'M11.5,12L20,18V6M11,18V6L2.5,12L11,18Z',
             };
 
             const icon = (name: string) => ICON_MAP[name] || '';
