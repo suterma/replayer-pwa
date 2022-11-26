@@ -293,6 +293,7 @@
             </ul>
             <CreateCueButton
                 :isActiveTrack="isActiveTrack"
+                :currentSeconds="currentSeconds"
                 @createNewCue="createNewCue()"
             ></CreateCueButton>
         </template>

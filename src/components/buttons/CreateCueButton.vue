@@ -11,34 +11,33 @@
         v-slot="{ clickRef }"
     >
         <button
-            :class="{
-                button: true,
-                'is-warning': true,
-            }"
+            class="button is-warning is-outlined"
             @click="$emit('createNewCue')"
             :ref="clickRef"
             title="Create a cue now (at the current playback time)!"
         >
             <BaseIcon name="plus" />
-            <span>Create Cue! [INSERT]</span>
+            <span>Cue! [INSERT]</span>
+            <span class="has-opacity-half">&nbsp;at&nbsp;</span>
+            <TimeDisplay :modelValue="currentSeconds"></TimeDisplay>
         </button>
     </Hotkey>
     <button
         v-else
-        :class="{
-            button: true,
-            'is-warning': true,
-        }"
+        class="button is-warning is-outlined"
         @click="$emit('createNewCue')"
         title="Create a cue now (at the current playback time)!"
     >
         <BaseIcon name="plus" />
-        <span>Create Cue!</span>
+        <span>Cue!</span>
+        <span class="has-opacity-half">&nbsp;at&nbsp;</span>
+        <TimeDisplay :modelValue="currentSeconds"></TimeDisplay>
     </button>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import TimeDisplay from '@/components/TimeDisplay.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
 /** A toggle switch for the playback mode
@@ -46,7 +45,7 @@ import { Hotkey } from '@simolation/vue-hotkey';
  */
 export default defineComponent({
     name: 'CreateCueButton',
-    components: { BaseIcon, Hotkey },
+    components: { BaseIcon, TimeDisplay, Hotkey },
     emits: [
         /** Occurs, when a new cue should get created at the current playhead position.
          */
@@ -58,6 +57,9 @@ export default defineComponent({
             type: Boolean,
             required: true,
         },
+        /** The playback progress in the current track, in [seconds]
+         */
+        currentSeconds: Number,
     },
     computed: {},
     methods: {},
