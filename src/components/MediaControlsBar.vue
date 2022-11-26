@@ -1,10 +1,4 @@
 <template>
-    <!-- Stop (do not show on small devices, user still can use play/pause) -->
-    <!-- Currently not used at all -->
-    <!-- <button class="button is-hidden-mobile" @click="stop()" title="Stop">
-            <BaseIcon name="stop" />
-        </button> -->
-
     <button
         class="button"
         :disabled="!hasPreviousTrack"
@@ -24,6 +18,11 @@
 
     <button class="button" @click="seek(-5)" title="rewind 5 seconds">
         <BaseIcon name="rewind-5" />
+    </button>
+
+    <!-- Stop (do not show on small devices, user still can use play/pause) -->
+    <button class="button is-hidden-mobile" @click="stop()" title="Stop">
+        <BaseIcon name="stop" />
     </button>
 
     <PlayPauseButton
