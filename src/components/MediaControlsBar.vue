@@ -16,9 +16,9 @@
         <BaseIcon name="skip-previous-outline" />
     </button>
 
-    <button class="button" @click="seek(-5)" title="rewind 5 seconds">
+    <!-- <button class="button" @click="seek(-5)" title="rewind 5 seconds">
         <BaseIcon name="rewind-5" />
-    </button>
+    </button> -->
 
     <!-- Stop (do not show on small devices, user still can use play/pause) -->
     <button class="button is-hidden-mobile" @click="stop()" title="Stop">
@@ -38,9 +38,9 @@
         @update:modelValue="updatePlaybackMode"
     />
 
-    <button class="button" @click.prevent="seek(5)" title="forward 5 seconds">
+    <!-- <button class="button" @click.prevent="seek(5)" title="forward 5 seconds">
         <BaseIcon name="fast-forward-5" />
-    </button>
+    </button> -->
 
     <button
         class="button"
