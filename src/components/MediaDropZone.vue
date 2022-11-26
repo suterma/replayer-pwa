@@ -57,7 +57,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                 <!-- expanded-trigger -->
                 <button
                     class="button is-nav"
-                    title="Expand media drop zone"
+                    title="Add media / expand drop zone"
                     @click="expand"
                 >
                     <BaseIcon name="plus" />
