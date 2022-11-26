@@ -223,7 +223,7 @@
                                         @seek="(seconds) => seek(seconds)"
                                         :track="track"
                                     >
-                                    <p
+                                        <p
                                             class="is-size-7 has-cropped-text has-text-warning"
                                             style="max-width: 129px"
                                         >
@@ -276,43 +276,6 @@
 
         <!-- The cue buttons (in edit mode) -->
         <template v-if="isEditable">
-            <!-- Create Cue (With Hotkey for the active track)
-                Creating a cue should also work when invoked from inside a 
-                textbox, thus explicitly no elements are excluded.
-                NOTE: Using the ":enabled" property on Hotkey does not work
-                See https://github.com/Simolation/vue-hotkey/issues/2 -->
-            <Hotkey
-                v-if="isActiveTrack"
-                :keys="['insert']"
-                :excluded-elements="[]"
-                v-slot="{ clickRef }"
-            >
-                <button
-                    :class="{
-                        button: true,
-                        'is-warning': true,
-                    }"
-                    @click.prevent="createNewCue()"
-                    :ref="clickRef"
-                    title="Create a cue now (at the current playback time)!"
-                >
-                    <BaseIcon name="plus" />
-                    <span>Create Cue! [INSERT]</span>
-                </button>
-            </Hotkey>
-            <button
-                v-else
-                :class="{
-                    button: true,
-                    'is-warning': true,
-                }"
-                @click.prevent="createNewCue()"
-                title="Create a cue now (at the current playback time)!"
-            >
-                <BaseIcon name="plus" />
-                <span>Create Cue!</span>
-            </button>
-
             <ul class="levels">
                 <template v-for="cue in cues" :key="cue.Id">
                     <li>
@@ -328,6 +291,10 @@
                     </li>
                 </template>
             </ul>
+            <CreateCueButton
+                :isActiveTrack="isActiveTrack"
+                @createNewCue="createNewCue()"
+            ></CreateCueButton>
         </template>
     </div>
 </template>
@@ -351,13 +318,13 @@ import CueButtonsField from '@/components/CueButtonsField.vue';
 import MediaControlsBar from '@/components/MediaControlsBar.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
+import CreateCueButton from '@/components/buttons/CreateCueButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { Hotkey } from '@simolation/vue-hotkey';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import TrackTitleName from './TrackTitleName.vue';
 import ArtistInfo from './ArtistInfo.vue';
@@ -381,7 +348,7 @@ export default defineComponent({
         PlayPauseButton,
         BaseIcon,
         TimeDisplay,
-        Hotkey,
+        CreateCueButton,
         PlayheadSlider,
         CueButtonsBar,
         CueButtonsField,
