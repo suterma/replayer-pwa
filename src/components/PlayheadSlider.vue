@@ -18,31 +18,51 @@
             <!-- Left side -->
             <div class="level-left" v-if="showPosition">
                 <div class="level-item">
-                    <TimeDisplay
-                        class="is-size-7 has-text-warning"
-                        :modelValue="modelValue"
-                    ></TimeDisplay>
+                    <button
+                        class="button is-outlined is-inverted"
+                        @click="seek(-5)"
+                        title="Current time: click to rewind"
+                    >
+                        <BaseIcon class="has-text-warning" name="rewind-5" />
+                        <TimeDisplay
+                            class="is-size-7 has-text-warning"
+                            :modelValue="modelValue"
+                        ></TimeDisplay>
+                    </button>
                 </div>
             </div>
             <div class="level-item mr-0">
-                <input
-                    class="slider is-fullwidth is-small is-slim is-circle is-warning"
-                    step="stepSize"
-                    min="0"
-                    :max="track.Duration ?? 0"
-                    :value="modelValue"
-                    @change="onValueChange"
-                    @input="onValueChange"
-                    type="range"
-                />
+                <div>
+                    <p><slot></slot></p>
+                    <input
+                        class="slider is-fullwidth is-small is-slim is-circle is-warning"
+                        step="stepSize"
+                        min="0"
+                        :max="track.Duration ?? 0"
+                        :value="modelValue"
+                        @change="onValueChange"
+                        @input="onValueChange"
+                        type="range"
+                    />
+                </div>
             </div>
             <!-- Right side -->
             <div class="level-right" v-if="showDuration">
                 <div class="level-item">
-                    <TimeDisplay
-                        class="has-text-right is-size-7 has-text-warning"
-                        :modelValue="track.Duration"
-                    ></TimeDisplay>
+                    <button
+                        class="button is-outlined is-inverted"
+                        @click="seek(+5)"
+                        title="Current time: click to forward"
+                    >
+                        <TimeDisplay
+                            class="has-text-right is-size-7 has-text-warning"
+                            :modelValue="remainingTime"
+                        ></TimeDisplay>
+                        <BaseIcon
+                            class="has-text-warning"
+                            name="fast-forward-5"
+                        />
+                    </button>
                 </div>
             </div>
         </div>
@@ -53,13 +73,20 @@
 import { defineComponent } from 'vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import { Track } from '@/store/compilation-types';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 
 /** Slider that represents the playhead position in a track as the modelValue in a ranged input (slider).
  */
 export default defineComponent({
     name: 'PlayheadSlider',
-    emits: ['update:modelValue'],
-    components: { TimeDisplay },
+    emits: [
+        'update:modelValue',
+
+        /** Emitted at a seek button click, with the amount of seconds as argument (can also be negative)
+         */
+        'seek',
+    ],
+    components: { TimeDisplay, BaseIcon },
     props: {
         /** The current time of the slider
          */
@@ -100,6 +127,16 @@ export default defineComponent({
         onValueChange(e: Event): void {
             const position = parseFloat((e.target as HTMLInputElement).value);
             this.$emit('update:modelValue', position);
+        },
+        seek(seconds: number): void {
+            this.$emit('seek', seconds);
+        },
+    },
+    computed: {
+        remainingTime(): number | null {
+            if (this.track.Duration != null) {
+                return -(this.track.Duration - this.modelValue);
+            } else return null;
         },
     },
 });

@@ -131,28 +131,30 @@
                             <div
                                 class="level-item is-unselectable is-hidden-mobile"
                             >
-                                <div>
-                                    <p
-                                        class="is-size-7 has-cropped-text has-text-warning"
-                                        style="max-width: 260px"
+                                <p>
+                                    <PlayheadSlider
+                                        v-model.number="currentSeconds"
+                                        @update:modelValue="
+                                            (position) =>
+                                                trackPlayerInstance?.seekTo(
+                                                    position,
+                                                )
+                                        "
+                                        @seek="(seconds) => seek(seconds)"
+                                        :track="track"
                                     >
-                                        <span>
-                                            {{ playingCueDescription }} &nbsp;
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <PlayheadSlider
-                                            v-model.number="currentSeconds"
-                                            @update:modelValue="
-                                                (position) =>
-                                                    trackPlayerInstance?.seekTo(
-                                                        position,
-                                                    )
-                                            "
-                                            :track="track"
-                                        ></PlayheadSlider>
-                                    </p>
-                                </div>
+                                        <p
+                                            class="is-size-7 has-cropped-text has-text-warning"
+                                            style="max-width: 129px"
+                                        >
+                                            <span>
+                                                {{ playingCueDescription }}
+                                                &nbsp;
+                                            </span>
+                                        </p>
+                                    </PlayheadSlider>
+                                </p>
+                                <!-- </div> -->
                             </div>
                             <div class="level-item">
                                 <div class="is-grouped">
