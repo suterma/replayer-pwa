@@ -67,7 +67,7 @@
             on the track state as a performance optimizations
             -->
         <template v-if="mediaUrl">
-            <Teleport to="#media-player">
+            <Teleport to="#media-player" :disabled="false">
                 <!-- The audio player is only hidden via v-show (not removed via v-if) 
                      when this track is not the active track, to keep the reference alive. 
                      Also, fade-out would otherwise be interrupted. -->
@@ -241,37 +241,40 @@
                             </div>
                         </div>
                     </nav>
-                    <!-- For performance and layout reasons, only render this when used, on wider screens -->
-                    <IfMedia query="(min-width: 1024px)">
-                        <nav>
-                            <CueButtonsBar
-                                v-if="!isTrackPlayerFullScreen"
-                                :currentSeconds="currentSeconds"
-                                :isTrackPlaying="isPlaying"
-                                :playbackMode="playbackMode"
-                                @click="
-                                    (cue) => {
-                                        cueClick(cue);
-                                    }
-                                "
-                                :track="track"
-                            ></CueButtonsBar>
-                        </nav>
-                    </IfMedia>
-                    <template v-if="isTrackPlayerFullScreen">
-                        <nav>
-                            <CueButtonsField
-                                :currentSeconds="currentSeconds"
-                                :isTrackPlaying="isPlaying"
-                                :playbackMode="playbackMode"
-                                @click="
-                                    (cue) => {
-                                        cueClick(cue);
-                                    }
-                                "
-                                :track="track"
-                            ></CueButtonsField>
-                        </nav>
+                    <!-- When playing back, offer the cue buttons in two sizes. In edit mode, the cue levels have their own cue buttons -->
+                    <template v-if="!isEditable">
+                        <!-- For performance and layout reasons, only render this when used, on wider screens -->
+                        <IfMedia query="(min-width: 1024px)">
+                            <nav>
+                                <CueButtonsBar
+                                    v-if="!isTrackPlayerFullScreen"
+                                    :currentSeconds="currentSeconds"
+                                    :isTrackPlaying="isPlaying"
+                                    :playbackMode="playbackMode"
+                                    @click="
+                                        (cue) => {
+                                            cueClick(cue);
+                                        }
+                                    "
+                                    :track="track"
+                                ></CueButtonsBar>
+                            </nav>
+                        </IfMedia>
+                        <template v-if="isTrackPlayerFullScreen">
+                            <nav>
+                                <CueButtonsField
+                                    :currentSeconds="currentSeconds"
+                                    :isTrackPlaying="isPlaying"
+                                    :playbackMode="playbackMode"
+                                    @click="
+                                        (cue) => {
+                                            cueClick(cue);
+                                        }
+                                    "
+                                    :track="track"
+                                ></CueButtonsField>
+                            </nav>
+                        </template>
                     </template>
                 </div>
             </Teleport>
