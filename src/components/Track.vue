@@ -39,6 +39,7 @@
             :isPlaying="isPlaying"
             :isTrackLoaded="true"
             :isActive="isActiveTrack"
+            @titleClick="skipToPlayPause()"
         >
             <template v-slot:left-start>
                 <div class="level-item is-narrow">

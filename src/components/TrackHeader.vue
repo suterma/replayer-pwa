@@ -30,7 +30,10 @@
 
             <!-- Title -->
             <!-- The title is the only header element that should shrink (break on words) if necessary -->
-            <div class="level-item is-narrow is-flex-shrink-1">
+            <div
+                class="level-item is-narrow is-flex-shrink-1"
+                @click="$emit('titleClick')"
+            >
                 <p class="title is-4" :class="{ 'has-text-success': isActive }">
                     <TrackTitleName :track="track"></TrackTitleName>
                 </p>
@@ -70,7 +73,6 @@ import ArtistInfo from '@/components/ArtistInfo.vue';
 import { ActionTypes } from '@/store/action-types';
 import TrackTitleName from './TrackTitleName.vue';
 
-
 /** Displays a track header with a title.
  * @remarks Also handles the common replayer events for tracks
  */
@@ -82,6 +84,7 @@ export default defineComponent({
         TrackTitleName,
         ArtistInfo,
     },
+    emits: ['titleClick', 'update:modelValue'],
     props: {
         track: {
             type: Track,
@@ -128,7 +131,6 @@ export default defineComponent({
             required: false,
         },
     },
-    emits: ['update:modelValue'],
     data() {
         return {
             currentSeconds: 0,
