@@ -18,7 +18,7 @@
                         @update:modelValue="toggleExpanded"
                         title="Track"
                         collapsedText="Expand to edit"
-                     />
+                    />
 
                     <div class="field">
                         <p class="control">
@@ -33,7 +33,7 @@
                         </p>
                     </div>
                 </div>
-                 <!-- Only for wide screens, edit the media edit in the level -->
+                <!-- Only for wide screens, edit the media edit in the level -->
                 <div
                     class="level-item is-hidden-widescreen-only is-hidden-desktop-only is-hidden-touch is-justify-content-flex-start"
                 >
@@ -327,7 +327,15 @@ export default defineComponent({
             });
         },
     },
-    watch: {},
+    watch: {
+        /** Updates the expanded state according to the active state. */
+        isActive: {
+            handler(isActive: boolean) {
+                if (isActive) this.$emit('update:isExpanded', isActive);
+            },
+            immediate: true,
+        },
+    },
     computed: {
         isFirstTrack(): boolean {
             return this.tracks[0]?.Id === this.track.Id;
