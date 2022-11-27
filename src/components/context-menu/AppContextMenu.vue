@@ -5,15 +5,15 @@
         iconName="hamburger-menu"
         style="z-index: 3"
     >
-        <Hotkey :keys="['f3']" v-slot="{ clickRef }">
+        <Hotkey :keys="['f5']" :excluded-elements="[]" v-slot="{ clickRef }">
             <DropdownMenuRouterLink
                 to="/play"
-                title="Play [F3"
+                title="Play [F5]"
                 :clickRef="clickRef"
                 iconName="play"
             />
         </Hotkey>
-        <Hotkey :keys="['f2']" v-slot="{ clickRef }">
+        <Hotkey :keys="['f2']" :excluded-elements="[]" v-slot="{ clickRef }">
             <DropdownMenuRouterLink
                 to="/edit"
                 title="Edit [F2]"
@@ -64,7 +64,7 @@ export default defineComponent({
     components: {
         DropdownMenu,
         DropdownMenuRouterLink,
-          
+
         Hotkey,
     },
     methods: {},
