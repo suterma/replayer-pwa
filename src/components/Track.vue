@@ -67,7 +67,9 @@
             -->
         <template v-if="mediaUrl">
             <Teleport to="#media-player">
-                <!-- This player is only hidden via v-show (not removed via v-if) when this track is not the active track, to keep the reference alive -->
+                <!-- The audio player is only hidden via v-show (not removed via v-if) 
+                     when this track is not the active track, to keep the reference alive. 
+                     Also, fade-out would otherwise be interrupted. -->
                 <!-- //TODO currently the mediaUrl is not using the optimized
                 variant, because otherwise the track is not correctly loaded
                 after it has become the active track ( gets
