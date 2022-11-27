@@ -13,26 +13,29 @@
         />
         <!-- Tracks to work with -->
         <template v-for="(track, index) in tracks" :key="track.Id">
-            <Track
-                :track="track"
-                :ref="'track-' + track.Id"
-                :displayMode="tracksDisplayMode"
-                :isTrackPlayerFullScreen="isTrackPlayerFullScreen"
-                @update:isTrackPlayerFullScreen="
-                    updateIsTrackPlayerFullScreen($event)
-                "
-                :playbackMode="compilation.PlaybackMode"
-                @update:playbackMode="updatePlaybackMode($event)"
-                :hasPreviousTrack="index > 0 || isLoopingPlaybackMode"
-                :hasNextTrack="
-                    index < (tracks?.length ?? 0) - 1 || isLoopingPlaybackMode
-                "
-                @previousTrack="
-                    toPreviousTrack(track.Id, isLoopingPlaybackMode)
-                "
-                @nextTrack="toNextTrack(track.Id, isLoopingPlaybackMode)"
-                @trackEnded="continueAfterTrack(track.Id)"
-            />
+            <div :class="{ block: isHeaderEditable }">
+                <Track
+                    :track="track"
+                    :ref="'track-' + track.Id"
+                    :displayMode="tracksDisplayMode"
+                    :isTrackPlayerFullScreen="isTrackPlayerFullScreen"
+                    @update:isTrackPlayerFullScreen="
+                        updateIsTrackPlayerFullScreen($event)
+                    "
+                    :playbackMode="compilation.PlaybackMode"
+                    @update:playbackMode="updatePlaybackMode($event)"
+                    :hasPreviousTrack="index > 0 || isLoopingPlaybackMode"
+                    :hasNextTrack="
+                        index < (tracks?.length ?? 0) - 1 ||
+                        isLoopingPlaybackMode
+                    "
+                    @previousTrack="
+                        toPreviousTrack(track.Id, isLoopingPlaybackMode)
+                    "
+                    @nextTrack="toNextTrack(track.Id, isLoopingPlaybackMode)"
+                    @trackEnded="continueAfterTrack(track.Id)"
+                />
+            </div>
         </template>
     </div>
 </template>

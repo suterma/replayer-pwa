@@ -10639,6 +10639,21 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
     padding: 0.5rem 0.5rem;
   }
 }
+/* A custom block (usable instead of a section, when only vertical spacing is necessary */
+.block:not(:last-child) {
+  margin-bottom: 3rem;
+}
+
+@media screen and (max-width: 1024px) {
+  .block:not(:last-child) {
+    margin-bottom: 1.5rem;
+  }
+}
+@media screen and (max-width: 769px) {
+  .block:not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+}
 /*************************************************************
  * Player styles (to be used for the audio player)
  * These styles are based on the slate bulmaswatch theme and borrow variables from there
