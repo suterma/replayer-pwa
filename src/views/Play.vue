@@ -20,18 +20,16 @@
             playback music.
         </p>
     </div>
-    <div class="section pl-0 pr-0">
+    <div class="section pl-0 pr-0" v-show="isEditMode || !hasCompilation">
         <!-- v-click-outside seems not to work well with v-if -->
         <!-- Additionally, v-show seems not to work properly when used directly on the MediaDropZone-Element, thus it's applied to an extra div -->
-        <div v-show="isEditMode || !hasCompilation">
-            <div class="media-loader">
-                <!-- Offer the demo only when no compilation/track is shown -->
-                <MediaDropZone
-                    v-model:isExpanded="isMediaDropZoneExpanded"
-                    v-click-outside="clickedOutside"
-                    :offerDemo="!hasCompilation"
-                />
-            </div>
+        <div class="media-loader">
+            <!-- Offer the demo only when no compilation/track is shown -->
+            <MediaDropZone
+                v-model:isExpanded="isMediaDropZoneExpanded"
+                v-click-outside="clickedOutside"
+                :offerDemo="!hasCompilation"
+            />
         </div>
     </div>
     <div class="section pl-0 pr-0" v-if="!hasCompilation">
@@ -44,7 +42,7 @@
         <MediaList />
     </Experimental>
 
-    <!-- The bottom nav bar, used for the player for the active track -->
+    <!-- The bottom nav bar, used for the media player widget for the active track -->
     <nav
         class="navbar is-fixed-bottom"
         role="form"
@@ -56,6 +54,13 @@
     <Experimental>
         <div style="height: 224px"></div>
     </Experimental>
+    <!-- A placeholder that invisibly extends the track list bottom,
+      taking into account the player widget 
+      Note: this extension is intentionally not set on the body or html, because
+      the corresponding navbar is only shown in this view, not generally
+      for the whole application.
+    -->
+    <div class="has-navbar-fixed-bottom"></div>
 </template>
 
 <script lang="ts">
@@ -132,22 +137,29 @@ export default defineComponent({
     },
 });
 </script>
-<style lang="css" scoped>
+<style lang="scss" scoped>
 /** Add a margin at the top of the media loader level, to have a space between the tracks and the loader */
 .media-loader {
     margin-top: 1.5rem;
 }
 
 /* Handling the fixed bottom navbar for this view specifically */
-
-/** On mobile, consider the stacked level items */
-.has-navbar-fixed-bottom {
-    padding-bottom: calc(8rem + 68px);
+/* Depending on the screen size, consider the stacked level items of the fixed bottom nav bar */
+/* Note: Pixel counts are taken from the player widget section section, by manual evaluation
+   plus 1em grace space */
+div.has-navbar-fixed-bottom {
+    padding-bottom: calc(168px + 1em);
 }
-/** From tablet, consider the spread out level items */
-/* @media screen and (min-width: 769px), print {
-    .has-navbar-fixed-bottom {
-        padding-bottom: calc(8rem  );
+
+@media screen and (min-width: 769px /* tablet */) {
+    div.has-navbar-fixed-bottom {
+        padding-bottom: calc(105px + 1em);
     }
-} */
+}
+@media screen and (min-width: 1024px) {
+    div.has-navbar-fixed-bottom {
+        padding-bottom: calc(216px + 1em);
+    }
+}
+
 </style>
