@@ -1,24 +1,15 @@
 <template>
     <!-- @remarks The id is used to scroll to this item when it's becoming the active track -->
     <div v-bind:id="'track-' + track.Id">
-        <!-- Extra level for the media edit, except on very large screens -->
-        <div class="level is-hidden-fullhd">
-            <div class="level-left">
-                <div class="level-item">
-                    <div class="field">
-                        <p class="control">
-                            <MediaEdit :track="track" />
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
         <!-- Level, also on mobile -->
         <div class="level">
             <!-- Left side -->
             <div class="level-left">
-                <!-- Expander (on mobile, display with other right-hand items)-->
-                <div class="level-item is-narrow is-hidden-mobile">
+                <!-- Expander with title -->
+                <!-- The title is the only header element that should shrink (break on words) if necessary -->
+                <div
+                    class="level-item is-narrow is-justify-content-flex-start is-flex-shrink-1"
+                >
                     <CollapsibleButton
                         :class="{
                             'is-nav': true,
@@ -28,10 +19,7 @@
                         collapsedText="Expand to edit"
                         @click="toggleExpanded()"
                     />
-                </div>
-                <!-- Title -->
-                <!-- The title is the only header element that should shrink (break on words) if necessary -->
-                <div class="level-item is-narrow is-flex-shrink-1">
+
                     <div class="field">
                         <p class="control">
                             <EditableInput
@@ -45,9 +33,9 @@
                         </p>
                     </div>
                 </div>
-                <!-- Only for wide screens, edit the media edit in the level -->
+                 <!-- Only for wide screens, edit the media edit in the level -->
                 <div
-                    class="level-item is-hidden-widescreen-only is-hidden-desktop-only is-hidden-touch"
+                    class="level-item is-hidden-widescreen-only is-hidden-desktop-only is-hidden-touch is-justify-content-flex-start"
                 >
                     <div class="field">
                         <p class="control">
@@ -105,15 +93,7 @@
 
             <!-- Right side -->
             <div class="level-right">
-                <div class="level-item">
-                    <!-- Expander (on mobile, display with other right-hand items)-->
-                    <CollapsibleButton
-                        class="is-hidden-tablet"
-                        :modelValue="modelValue"
-                        title="Track"
-                        collapsedText="Expand to edit"
-                        @click="toggleExpanded()"
-                    />
+                <div class="level-item is-justify-content-flex-end">
                     <PlaybackIndicator
                         :is-ready="!isPlaying && isTrackLoaded"
                         :is-playing="isPlaying"
@@ -164,6 +144,18 @@
                             iconName="trash"
                         />
                     </DropdownMenu>
+                </div>
+            </div>
+        </div>
+        <!-- Extra level for the media edit, except on very large screens -->
+        <div class="level is-hidden-fullhd">
+            <div class="level-left">
+                <div class="level-item is-justify-content-flex-start">
+                    <div class="field">
+                        <p class="control">
+                            <MediaEdit :track="track" />
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
