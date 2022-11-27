@@ -19,6 +19,8 @@
         <!-- Track header, including artist info, expansion-toggler and adaptive spacing -->
         <TrackHeaderEdit
             v-if="isEditable"
+            :isExpanded="isExpanded"
+            @update:isExpanded="updateIsExpanded"
             :track="track"
             :isPlaying="isPlaying"
             :isTrackLoaded="isTrackLoaded"
@@ -281,7 +283,7 @@
         </template>
 
         <!-- The cue buttons (in edit mode) -->
-        <template v-if="isEditable">
+        <template v-if="isEditable && isExpanded">
             <ul class="levels">
                 <template v-for="cue in cues" :key="cue.Id">
                     <li>
@@ -451,6 +453,8 @@ export default defineComponent({
             noSleep: new NoSleep(),
             /** Readonly flag to indicate whether the player is currently fading */
             isFading: false,
+            /** Whether the cues are currently expanded for editing */
+            isExpanded: false,
         };
     },
     methods: {
@@ -631,6 +635,14 @@ export default defineComponent({
          */
         updatedPlaybackMode(playbackMode: PlaybackMode): void {
             this.$emit('update:playbackMode', playbackMode);
+        },
+        /** Handle isExpended update
+         */
+        updateIsExpanded(isExpanded: boolean): void {
+            this.isExpanded = isExpanded;
+            console.debug(
+                `Track(${this.track.Name})::updateIsExpanded:${isExpanded}`,
+            );
         },
         /** Handle track volume updates
          * @devdoc Handled here as part of the track because the track volume is

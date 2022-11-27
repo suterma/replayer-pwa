@@ -39,18 +39,14 @@ export default defineComponent({
             default: '',
         },
     },
-    data() {
-        return {
-            requestedModelValue: this.modelValue,
-        };
-    },
+
     methods: {
         toggleExpanded() {
-            this.requestedModelValue = !this.modelValue;
+            const requestedModelValue = !this.modelValue;
             console.debug(
-                `CollapsibleButton::toggleExpanded:requestedModelValue:${this.requestedModelValue}`,
+                `CollapsibleButton::toggleExpanded:requestedModelValue:${requestedModelValue}`,
             );
-            this.$emit('update:modelValue', this.requestedModelValue);
+            this.$emit('update:modelValue', requestedModelValue);
         },
     },
     computed: {

@@ -14,11 +14,11 @@
                         :class="{
                             'is-nav': true,
                         }"
-                        :modelValue="modelValue"
+                        :modelValue="isExpanded"
+                        @update:modelValue="toggleExpanded"
                         title="Track"
                         collapsedText="Expand to edit"
-                        @click="toggleExpanded()"
-                    />
+                     />
 
                     <div class="field">
                         <p class="control">
@@ -193,7 +193,7 @@ export default defineComponent({
         DropdownMenuButton,
         // TrackSharingDialog,
     },
-    emits: ['update:modelValue'],
+    emits: ['update:isExpanded'],
     props: {
         track: {
             type: Track,
@@ -206,7 +206,7 @@ export default defineComponent({
             default: false,
         },
         /** Whether this track is expanded */
-        modelValue: {
+        isExpanded: {
             type: Boolean,
             default: false,
         },
@@ -245,9 +245,9 @@ export default defineComponent({
         /** Toggles the expansion state
          */
         toggleExpanded() {
-            const expanded = !this.modelValue;
+            const expanded = !this.isExpanded;
             console.debug(`TrackHeader::toggleExpanded:expanded:${expanded}`);
-            this.$emit('update:modelValue', expanded);
+            this.$emit('update:isExpanded', expanded);
         },
 
         /** Removes the track from the compilation
