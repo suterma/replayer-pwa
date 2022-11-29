@@ -21,8 +21,8 @@ export default defineComponent({
         Replayer.TO_PREV_CUE,
         Replayer.TO_MNEMONIC_CUE,
         Replayer.TOGGLE_PLAYBACK,
-        Replayer.RWD_1SEC,
-        Replayer.FWD_1SEC,
+        Replayer.REWIND,
+        Replayer.FORWARD,
         Replayer.VOLUME_DOWN,
         Replayer.VOLUME_UP,
     ],
@@ -36,8 +36,8 @@ export default defineComponent({
             Replayer.TOGGLE_PLAYBACK,
             this.togglePlayback,
         );
-        document.addEventListener(Replayer.RWD_1SEC, this.rewindOneSecond);
-        document.addEventListener(Replayer.FWD_1SEC, this.forwardOneSecond);
+        document.addEventListener(Replayer.REWIND, this.rewindOneSecond);
+        document.addEventListener(Replayer.FORWARD, this.forwardOneSecond);
         document.addEventListener(Replayer.VOLUME_DOWN, this.volumeDown);
         document.addEventListener(Replayer.VOLUME_UP, this.volumeUp);
     },
@@ -54,8 +54,8 @@ export default defineComponent({
             Replayer.TOGGLE_PLAYBACK,
             this.togglePlayback,
         );
-        document.removeEventListener(Replayer.RWD_1SEC, this.rewindOneSecond);
-        document.removeEventListener(Replayer.FWD_1SEC, this.forwardOneSecond);
+        document.removeEventListener(Replayer.REWIND, this.rewindOneSecond);
+        document.removeEventListener(Replayer.FORWARD, this.forwardOneSecond);
         document.removeEventListener(Replayer.VOLUME_DOWN, this.volumeDown);
         document.removeEventListener(Replayer.VOLUME_UP, this.volumeUp);
     },
@@ -65,10 +65,10 @@ export default defineComponent({
             this.$emit(Replayer.TOGGLE_PLAYBACK, event);
         },
         rewindOneSecond(event: Event) {
-            this.$emit(Replayer.RWD_1SEC, event);
+            this.$emit(Replayer.REWIND, event);
         },
         forwardOneSecond() {
-            this.$emit(Replayer.FWD_1SEC, event);
+            this.$emit(Replayer.FORWARD, event);
         },
         volumeDown(event: Event) {
             this.$emit(Replayer.VOLUME_DOWN, event);

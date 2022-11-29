@@ -39,8 +39,8 @@ export enum Replayer {
     TO_PREV_CUE = 'topreviouscue',
     TO_MNEMONIC_CUE = 'tomnemoniccue',
     TOGGLE_PLAYBACK = 'toggleplayback',
-    RWD_1SEC = 'rewind1sec',
-    FWD_1SEC = 'forward1sec',
+    REWIND = 'rewind',
+    FORWARD = 'forward',
     VOLUME_DOWN = 'volumedown',
     VOLUME_UP = 'volumeup',
 }
@@ -185,15 +185,15 @@ export default defineComponent({
          * @remarks This handler does accept repetitive events
          */
         rewind(event: KeyboardEvent) {
-            this.DisplayKeyAndAction(event, 'rewind 1 sec');
-            document.dispatchEvent(new Event(Replayer.RWD_1SEC));
+            this.DisplayKeyAndAction(event, 'rewind 5 sec');
+            document.dispatchEvent(new Event(Replayer.REWIND));
         },
         /** Forwards 1 second
          * @remarks This handler does accept repetitive events
          */
         forward(event: KeyboardEvent) {
-            this.DisplayKeyAndAction(event, 'forward 1 sec');
-            document.dispatchEvent(new Event(Replayer.FWD_1SEC));
+            this.DisplayKeyAndAction(event, 'forward 5 sec');
+            document.dispatchEvent(new Event(Replayer.FORWARD));
         },
         /** Decreases the playback volume
          * @remarks This handler does accept repetitive events

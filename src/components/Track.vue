@@ -9,8 +9,8 @@
             @topreviouscue="goToSelectedCue"
             @tomnemoniccue="goToSelectedCue"
             @toggleplayback="togglePlayback"
-            @rewind1sec="rewindOneSecond"
-            @forward1sec="forwardOneSecond"
+            @rewind="rewind"
+            @forward="forward"
             @volumedown="volumeDown"
             @volumeup="volumeUp"
         />
@@ -563,16 +563,14 @@ export default defineComponent({
                 this.activateWakeLock();
             }
         },
-        rewindOneSecond() {
+        rewind() {
             if (this.isActiveTrack) {
-                this.trackPlayerInstance?.rewindOneSecond();
-                this.activateWakeLock();
+                this.seek(-5);
             }
         },
-        forwardOneSecond() {
+        forward() {
             if (this.isActiveTrack) {
-                this.trackPlayerInstance?.forwardOneSecond();
-                this.activateWakeLock();
+                this.seek(+5);
             }
         },
         seek(seconds: number): void {
