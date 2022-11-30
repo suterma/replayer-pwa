@@ -128,6 +128,10 @@ export default class AudioFader {
             Math.max(AudioFader.audioVolumeMin, volume),
         );
         this.audio.volume = limitedVolume;
+        console.debug(
+            'AudioFader::setAudioVolume:limitedVolume:',
+            limitedVolume,
+        );
     }
 
     /** Gets the master audio volume
@@ -212,7 +216,7 @@ export default class AudioFader {
     /** Returns a linear fade promise for the currently playing track
      * @devdoc This currently only supports linear fade operations
      */
-    fade(from: number, to: number, duration: number): Promise<void> {
+    private fade(from: number, to: number, duration: number): Promise<void> {
         if (duration) {
             return new Promise((resolve, reject) => {
                 try {
