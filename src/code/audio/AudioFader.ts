@@ -20,7 +20,7 @@ export default class AudioFader {
 
     /** Allows an ongoing fading operation to determine whether it has been superseded
      * by a subsequent operation. This allows the first operation to reject the promise
-     * while abandoning the fade operation.
+     * and abandon the fade operation.
      */
     operationToken = '';
 
@@ -128,9 +128,6 @@ export default class AudioFader {
             Math.max(AudioFader.audioVolumeMin, volume),
         );
         this.audio.volume = limitedVolume;
-        // console.debug(
-        //     `AudioFader::setAudioVolume:limitedVolume:${limitedVolume}`,
-        // );
     }
 
     /** Gets the master audio volume
@@ -142,7 +139,7 @@ export default class AudioFader {
 
     /** Sets the master audio volume
      * @remarks The value is applied immediately, without any fading
-     * @param volume -  A value between 0 (zero) and 1 (representing full scale)
+     * @param {number} volume - A value between 0 (zero) and 1 (representing full scale)
      */
     public setMasterAudioVolume(volume: number): void {
         const fadingRatio = this.getCurrentAudioVolume() / this.masterVolume;
@@ -155,9 +152,6 @@ export default class AudioFader {
      * If not valid, an average level is returned as a compromise. */
     private getCurrentAudioVolume(): number {
         let currentVolume = this.audio.volume;
-        // console.debug(
-        //     `AudioFader::getCurrentAudioVolume:currentVolume:${currentVolume}`,
-        // );
 
         if (
             currentVolume < AudioFader.audioVolumeMin ||
@@ -175,8 +169,7 @@ export default class AudioFader {
      * A pre-fade offset is applied, when configured
      * An actual fade operation is only started when
      * - the duration is non-zero and
-     * - the current volume is also already at the target level
-     *
+     * - the current volume is below the target level
      * otherwise
      * - the promise is immediately resolved.
      */
@@ -279,8 +272,7 @@ export default class AudioFader {
      * @remarks The sound is faded to the minimum audio level.
      * An actual fade operation is only started when
      * - the duration is non-zero and
-     * - the current volume is also non-minimum
-     *
+     * - the current volume is above the minimum
      * otherwise
      * - a fade with duration zero is started and the promise is immediately resolved.
      */
