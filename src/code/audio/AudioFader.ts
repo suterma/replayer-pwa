@@ -14,9 +14,9 @@ import { v4 as uuidv4 } from 'uuid';
  */
 export default class AudioFader {
     /** This is set to a fixed value, as a tradeoff between call frequency and smoothness
-     * @devdoc currently set to 30 milliseconds which is barely audible
+     * @devdoc This should be set to a value that produces small volume changes, that are barely audible
      */
-    stepDuration = 30;
+    stepDuration = 16;
 
     /** Allows an ongoing fading operation to determine whether it has been superseded
      * by a subsequent operation. This allows the first operation to reject the promise
