@@ -10,9 +10,9 @@
                         <p class="control">
                             <CueButton
                                 :cue="cue"
+                                :disabled="!Number.isFinite(cue.Time)"
                                 :isTrackPlaying="isTrackPlaying"
                                 :playbackMode="playbackMode"
-                                :disabled="!Number.isFinite(cue.Time)"
                                 @click="cueClick()"
                                 :isMinified="true"
                                 :isCueSelected="isCueSelected"
@@ -330,7 +330,7 @@ export default defineComponent({
             return false;
         },
         /** The playback progress within this cue, in [percent], or zero if not applicable */
-        percentComplete(): number {
+        percentComplete(): number | null {
             if (this.currentSeconds !== undefined) {
                 if (
                     this.cue &&
@@ -346,8 +346,9 @@ export default defineComponent({
                         (this.currentSeconds - this.cue.Time)
                     );
                 }
+                return null;
             }
-            return 0;
+            return null;
         },
 
         /** Gets a cue placeholder denoting the cue's position */

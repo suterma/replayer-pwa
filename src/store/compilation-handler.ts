@@ -198,7 +198,7 @@ export default class CompilationHandler {
      * @return The display representation or the empty string.
      */
     static convertToDisplayTime(
-        seconds: number | null,
+        seconds: number | null | undefined,
         subsecondDigits = 3,
     ): string {
         if (seconds != null && Number.isFinite(seconds)) {

@@ -15,8 +15,8 @@
         <span class="player-timeline is-fullwidth">
             <!-- Progress -->
             <span
+                class="player-progress"
                 :class="{
-                    'player-progress': true,
                     'player-progress-full': hasCuePassed,
                     'has-addons-right': hasAddonsRight,
                     'player-progress-none': isCueAhead,
@@ -112,11 +112,7 @@ export default defineComponent({
         /** The playback progress within this cue, in [percent], or null if not applicable
          * @remarks This value is only used when both the cue is not ahead nor has passed.
          */
-        percentComplete: {
-            type: Number,
-            required: false,
-            default: null,
-        },
+        percentComplete: Number,
 
         /** Whether this cue is currently selected
          * @remarks Note: only one cue in a compilation may be selected */
@@ -167,7 +163,7 @@ export default defineComponent({
          */
         progressBarWidthOffset(): number {
             return (
-                ((100 - this.percentComplete) / 100) *
+                ((100 - (this.percentComplete ?? 0)) / 100) *
                 0.3 /* value in [em], as defined in CSS */
             );
         },
@@ -177,7 +173,16 @@ export default defineComponent({
          * For performance reasons, the style is only effectively calculated when the cue is currently played
          */
         progressStyle(): StyleValue {
-            if (!this.hasCuePassed && !this.isCueAhead) {
+            if (!Number.isFinite(this.cue.Time)) {
+                return {
+                    display: 'none',
+                };
+            }
+            if (
+                !this.hasCuePassed &&
+                !this.isCueAhead &&
+                this.percentComplete != null
+            ) {
                 //show the progress according to the percentage available
                 return {
                     width: `calc(${this.percentComplete}% +

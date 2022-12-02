@@ -4,6 +4,7 @@
             <CueButton
                 class="is-flex-grow-1 has-cropped-text"
                 :cue="cue"
+                :disabled="!Number.isFinite(cue.Time)"
                 :isTrackPlaying="isTrackPlaying"
                 :playbackMode="playbackMode"
                 :hasAddonsRight="true"
@@ -87,8 +88,10 @@ export default defineComponent({
             }
             return false;
         },
-        /** The playback progress within this cue, in [percent], or zero if not applicable */
-        percentComplete(cue: ICue): number {
+        /** The playback progress within this cue, in [percent], or null if not applicable
+         * @devdoc //TODO move all those calculation methods, from 3 components,  for the cues to a central class
+         */
+        percentComplete(cue: ICue): number | null {
             if (this.currentSeconds !== undefined) {
                 if (
                     cue &&
@@ -103,8 +106,9 @@ export default defineComponent({
                         (100 / cue.Duration) * (this.currentSeconds - cue.Time)
                     );
                 }
+                return null;
             }
-            return 0;
+            return null;
         },
     },
 });
