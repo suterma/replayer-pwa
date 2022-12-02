@@ -1,10 +1,8 @@
 <template>
     <button
+        class="button cue has-text-left"
         :class="{
-            button: true,
-            cue: true,
             'is-multiline': !isMinified,
-            'has-text-left': 'true',
             'is-warning': !isCueSelected,
             'is-success': isCueSelected,
         }"
@@ -147,20 +145,12 @@ export default defineComponent({
         /** Whether the button is shown in a minified, single-line, icon only, variant.
          * @remarks This is currently used for the edit mode.
          */
-        isMinified: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
+        isMinified: Boolean,
         /** Whether the button has addons at it's right side. This determines progress bar styling.
          * @remarks This can be used when the button is part of a button group.
          * @remarks The progress bar radius at the right side must be removed for fully progressed cues.
          */
-        hasAddonsRight: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
+        hasAddonsRight: Boolean,
     },
     computed: {
         /** Gets a displayable title for the cue */
