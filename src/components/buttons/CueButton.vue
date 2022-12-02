@@ -182,7 +182,7 @@ export default defineComponent({
          * @devdoc max-width makes sure, the progress bar never overflows the given space.
          */
         progressStyle(): StyleValue {
-            if (this.percentComplete !== null) {
+            if (this.cue.Time !== null && this.cue.Duration != null) {
                 if (this.percentComplete >= 0 && this.percentComplete <= 100) {
                     //show the progress according to the percentage available
                     return {
