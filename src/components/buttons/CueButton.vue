@@ -148,14 +148,14 @@ export default defineComponent({
             }
             return `Play from here`;
         },
-        /** The playback progress within this cue, in [percent], or null if not applicable */
+        /** The playback progress within this cue, in [percent], or zero if not applicable */
         percentComplete(): number {
             if (this.currentSeconds !== undefined) {
                 if (
                     this.cue &&
                     this.cue.Time !== null &&
-                    Number.isFinite(this.cue.Time) &&
                     this.cue.Duration !== null &&
+                    Number.isFinite(this.cue.Time) &&
                     Number.isFinite(this.cue.Duration)
                 ) {
                     return (
@@ -225,8 +225,8 @@ export default defineComponent({
                 if (
                     this.cue &&
                     this.cue.Time !== null &&
-                    Number.isFinite(this.cue.Time) &&
                     this.cue.Duration !== null &&
+                    Number.isFinite(this.cue.Time) &&
                     Number.isFinite(this.cue.Duration)
                 ) {
                     return (
@@ -242,9 +242,7 @@ export default defineComponent({
                 if (
                     this.cue &&
                     this.cue.Time !== null &&
-                    Number.isFinite(this.cue.Time) &&
-                    this.cue.Duration !== null &&
-                    Number.isFinite(this.cue.Duration)
+                    Number.isFinite(this.cue.Time)
                 ) {
                     return this.currentSeconds < this.cue.Time;
                 }
