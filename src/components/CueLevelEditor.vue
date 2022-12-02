@@ -12,10 +12,13 @@
                                 :cue="cue"
                                 :isTrackPlaying="isTrackPlaying"
                                 :playbackMode="playbackMode"
-                                :currentSeconds="currentSeconds"
                                 :disabled="!Number.isFinite(cue.Time)"
                                 @click="cueClick()"
                                 :isMinified="true"
+                                :isCueSelected="isCueSelected"
+                                :hasCuePassed="hasCuePassed"
+                                :isCueAhead="isCueAhead"
+                                :percentComplete="percentComplete"
                                 :hasAddonsRight="true"
                             />
                         </p>
@@ -294,6 +297,57 @@ export default defineComponent({
          * @remarks Note: only one cue in a compilation may be selected */
         isCueSelected(): boolean {
             return this.$store.getters.selectedCueId == this.cue?.Id;
+        },
+
+        /* Determines whether playback of this cue has already passed */
+        hasCuePassed(): boolean {
+            if (this.currentSeconds !== undefined) {
+                if (
+                    this.cue &&
+                    this.cue.Time !== null &&
+                    this.cue.Duration !== null &&
+                    Number.isFinite(this.cue.Time) &&
+                    Number.isFinite(this.cue.Duration)
+                ) {
+                    return (
+                        this.cue.Time + this.cue.Duration <= this.currentSeconds
+                    );
+                }
+            }
+            return false;
+        },
+        /* Determines whether playback of this cue has not yet started */
+        isCueAhead(): boolean {
+            if (this.currentSeconds !== undefined) {
+                if (
+                    this.cue &&
+                    this.cue.Time !== null &&
+                    Number.isFinite(this.cue.Time)
+                ) {
+                    return this.currentSeconds < this.cue.Time;
+                }
+            }
+            return false;
+        },
+        /** The playback progress within this cue, in [percent], or zero if not applicable */
+        percentComplete(): number {
+            if (this.currentSeconds !== undefined) {
+                if (
+                    this.cue &&
+                    this.cue.Time !== null &&
+                    this.cue.Duration !== null &&
+                    Number.isFinite(this.cue.Time) &&
+                    Number.isFinite(this.cue.Duration) &&
+                    !this.isCueAhead &&
+                    !this.hasCuePassed
+                ) {
+                    return (
+                        (100 / this.cue.Duration) *
+                        (this.currentSeconds - this.cue.Time)
+                    );
+                }
+            }
+            return 0;
         },
 
         /** Gets a cue placeholder denoting the cue's position */
