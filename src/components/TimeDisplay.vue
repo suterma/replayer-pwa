@@ -17,7 +17,7 @@ import { defineComponent, PropType } from 'vue';
  * @remarks Adapts the milliseconds precision according to the viewport width
  */
 export default defineComponent({
-    name: 'PlayerTime',
+    name: 'TimeDisplay',
     props: {
         modelValue: {
             type: null as unknown as PropType<number | null>,
