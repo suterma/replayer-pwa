@@ -50,74 +50,87 @@
                     </p>
                 </div>
                 <!-- A rather slim input for the time, only on mobiles-->
-                <div class="level-item is-flex-shrink-1 is-hidden-tablet">
-                    <div class="field">
-                        <p class="control">
-                            <TimeInput
-                                class="input"
-                                :modelValue="cue.Time"
-                                @change="updateCueTime"
-                                size="5"
-                            />
-                        </p>
-                    </div>
-                </div>
+                <!-- For performance and layout reasons, only render this when used (emulating is-hidden-tablet) -->
+                <IfMedia query="(max-width: 768px)">
+                    <div class="level-item is-flex-shrink-1">
+                        <div class="field">
+                            <p class="control">
+                                <TimeInput
+                                    class="input"
+                                    :modelValue="cueTime"
+                                    @change="updateCueTime"
+                                    size="5"
+                                />
+                            </p>
+                        </div></div
+                ></IfMedia>
                 <!-- A normal input for the time, with an adjustment add-on, for larger than mobile-->
-                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
-                    <div class="field has-addons">
-                        <p class="control">
-                            <TimeInput
-                                class="input"
-                                :modelValue="cue.Time"
-                                @change="updateCueTime"
-                                size="8"
-                            />
-                        </p>
-                        <div class="control">
-                            <button
-                                class="button"
-                                title="Adjusts the cue time to the current playback time"
-                                @click="adjustTime()"
-                            >
-                                <BaseIcon name="timer-sync-outline" />
-                                <span class="is-hidden-touch has-opacity-half"
-                                    >Adjust</span
+                <!-- For performance and layout reasons, only render this when used (emulating is-hidden-mobile) -->
+                <IfMedia query="(min-width: 769px)">
+                    <div class="level-item is-flex-shrink-1">
+                        <div class="field has-addons">
+                            <p class="control">
+                                <TimeInput
+                                    class="input"
+                                    :modelValue="cueTime"
+                                    @change="updateCueTime"
+                                    size="8"
+                                />
+                            </p>
+                            <div class="control">
+                                <button
+                                    class="button"
+                                    title="Adjusts the cue time to the current playback time"
+                                    @click="adjustTime()"
                                 >
-                            </button>
+                                    <BaseIcon name="timer-sync-outline" />
+                                    <!-- On large screens also show an indicative text -->
+                                    <span
+                                        class="is-hidden-touch has-opacity-half"
+                                        >Adjust</span
+                                    >
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    </div></IfMedia
+                >
 
                 <!-- Duration (keep small and hide on touch)-->
-                <div class="level-item is-flex-shrink-1 is-hidden-touch">
-                    <p class="is-single-line" title="Duration (until next cue)">
-                        <TimeDisplay
-                            class="has-opacity-half"
-                            :modelValue="cue.Duration"
-                        >
-                        </TimeDisplay>
-                    </p>
-                </div>
-                <!-- A rather slim input for the shortcut (a short mnemonic) -->
-                <div class="level-item is-flex-shrink-1 is-hidden-touch">
-                    <div class="field">
+                <!-- For performance and layout reasons, only render this when used (emulating is-hidden-touch) -->
+                <IfMedia query="(min-width: 1024px)">
+                    <div class="level-item is-flex-shrink-1">
                         <p
-                            class="control"
-                            title="Mnemonic (as keyboard shortcut)"
+                            class="is-single-line"
+                            title="Duration (until next cue)"
                         >
-                            <input
-                                class="input"
-                                type="text"
-                                inputmode="numeric"
-                                :value="cue.Shortcut"
-                                @change="updateShortcut($event)"
-                                @input="updateShortcut($event)"
-                                placeholder="shortcut"
-                                size="8"
-                            />
+                            <TimeDisplay
+                                class="has-opacity-half"
+                                :modelValue="cue.Duration"
+                            >
+                            </TimeDisplay>
                         </p>
                     </div>
-                </div>
+                    <!-- A rather slim input for the shortcut (a short mnemonic) -->
+                    <div class="level-item is-flex-shrink-1">
+                        <div class="field">
+                            <p
+                                class="control"
+                                title="Mnemonic (as keyboard shortcut)"
+                            >
+                                <input
+                                    class="input"
+                                    type="text"
+                                    inputmode="numeric"
+                                    :value="cue.Shortcut"
+                                    @change="updateShortcut($event)"
+                                    @input="updateShortcut($event)"
+                                    placeholder="shortcut"
+                                    size="8"
+                                />
+                            </p>
+                        </div>
+                    </div>
+                </IfMedia>
             </div>
 
             <!-- Right side -->
@@ -143,6 +156,7 @@ import CueButton from '@/components/buttons/CueButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from './TimeDisplay.vue';
 import TimeInput from '@/components/TimeInput.vue';
+import IfMedia from '@/components/IfMedia.vue';
 
 /** An Editor for for a single cue
  * @remarks Shows a cue button with an inline progress bar, plus input fields for all properties
@@ -154,7 +168,7 @@ import TimeInput from '@/components/TimeInput.vue';
  */
 export default defineComponent({
     name: 'CueLevelEditor',
-    components: { CueButton, BaseIcon, TimeDisplay, TimeInput },
+    components: { CueButton, BaseIcon, TimeDisplay, TimeInput, IfMedia },
     emits: ['click', 'play'],
     props: {
         cue: {
@@ -304,13 +318,13 @@ export default defineComponent({
             if (this.currentSeconds !== undefined) {
                 if (
                     this.cue &&
-                    this.cue.Time !== null &&
+                    this.cueTime !== null &&
                     this.cue.Duration !== null &&
-                    Number.isFinite(this.cue.Time) &&
+                    Number.isFinite(this.cueTime) &&
                     Number.isFinite(this.cue.Duration)
                 ) {
                     return (
-                        this.cue.Time + this.cue.Duration <= this.currentSeconds
+                        this.cueTime + this.cue.Duration <= this.currentSeconds
                     );
                 }
             }
@@ -321,10 +335,10 @@ export default defineComponent({
             if (this.currentSeconds !== undefined) {
                 if (
                     this.cue &&
-                    this.cue.Time !== null &&
-                    Number.isFinite(this.cue.Time)
+                    this.cueTime !== null &&
+                    Number.isFinite(this.cueTime)
                 ) {
-                    return this.currentSeconds < this.cue.Time;
+                    return this.currentSeconds < this.cueTime;
                 }
             }
             return false;
@@ -334,16 +348,16 @@ export default defineComponent({
             if (this.currentSeconds !== undefined) {
                 if (
                     this.cue &&
-                    this.cue.Time !== null &&
+                    this.cueTime !== null &&
                     this.cue.Duration !== null &&
-                    Number.isFinite(this.cue.Time) &&
+                    Number.isFinite(this.cueTime) &&
                     Number.isFinite(this.cue.Duration) &&
                     !this.isCueAhead &&
                     !this.hasCuePassed
                 ) {
                     return (
                         (100 / this.cue.Duration) *
-                        (this.currentSeconds - this.cue.Time)
+                        (this.currentSeconds - this.cueTime)
                     );
                 }
                 return null;
@@ -354,8 +368,14 @@ export default defineComponent({
         /** Gets a cue placeholder denoting the cue's position */
         cuePlaceholder(): string {
             return `Cue at ${CompilationHandler.convertToDisplayTime(
-                this.cue.Time,
+                this.cueTime,
             )}`;
+        },
+        /** Gets the cue's time
+         * @devdoc provided as performance optimization, to allow render checks directly on this value, not via the cue object
+         */
+        cueTime(): number | null {
+            return this.cue.Time;
         },
     },
 });
