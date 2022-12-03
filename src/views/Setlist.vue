@@ -9,7 +9,7 @@
                         class="button is-success is-pulled-right"
                         @click="printWindow()"
                     >
-                        <BaseIcon name="printer-outline" />
+                        <BaseIcon v-once name="printer-outline" />
                         <span> Print (b/w)</span>
                     </button>
                 </div>

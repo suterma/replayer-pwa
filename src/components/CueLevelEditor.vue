@@ -83,7 +83,7 @@
                                     title="Adjusts the cue time to the current playback time"
                                     @click="adjustTime()"
                                 >
-                                    <BaseIcon name="timer-sync-outline" />
+                                    <BaseIcon v-once name="timer-sync-outline" />
                                     <!-- On large screens also show an indicative text -->
                                     <span
                                         class="is-hidden-touch has-opacity-half"
@@ -138,7 +138,7 @@
                 <div class="field">
                     <p class="control" title="Trash this cue">
                         <button class="button" @click="deleteCue()">
-                            <BaseIcon name="trash" />
+                            <BaseIcon v-once name="trash" />
                         </button>
                     </p>
                 </div>

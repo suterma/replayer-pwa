@@ -19,8 +19,8 @@
                 :style="progressStyle"
             ></span>
             <!-- first line (Do not use a level here, this has only complicated things for smaller widths so far)-->
-            <BaseIcon name="play" v-if="!isTrackPlaying" class="foreground" />
-            <BaseIcon name="skip-next" v-else class="foreground" />
+            <BaseIcon v-once name="play" v-if="!isTrackPlaying" class="foreground" />
+            <BaseIcon v-once name="skip-next" v-else class="foreground" />
 
             <template v-if="!isMinified">
                 &nbsp;

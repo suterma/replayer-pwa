@@ -130,10 +130,10 @@
         ></iframe>
 
         <h1 class="title has-text-danger">Icons test</h1>
-        <BaseIcon name="track-repeat-once" title="track-repeat-once" />
-        <BaseIcon name="track-repeat" title="track-repeat" />
-        <BaseIcon name="track-play" title="track-play" />
-        <BaseIcon name="track-play-once" title="track-play-once" />
+        <BaseIcon v-once name="track-repeat-once" title="track-repeat-once" />
+        <BaseIcon v-once name="track-repeat" title="track-repeat" />
+        <BaseIcon v-once name="track-play" title="track-play" />
+        <BaseIcon v-once name="track-play-once" title="track-play-once" />
         <NavButton iconName="pencil" title="some test title" />
         <CollapsibleButton
             v-model="isExpanded"

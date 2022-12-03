@@ -50,7 +50,7 @@
                                         @click="toPreviousTrack()"
                                         title="skip to previous track"
                                     >
-                                        <BaseIcon name="skip-previous" />
+                                        <BaseIcon v-once name="skip-previous" />
                                     </button>
 
                                     <button class="button is-indicator">
@@ -74,7 +74,7 @@
                                         @click="toNextTrack()"
                                         title="skip to next track"
                                     >
-                                        <BaseIcon name="skip-next" />
+                                        <BaseIcon v-once name="skip-next" />
                                     </button>
                                 </div>
                             </div>
@@ -95,7 +95,7 @@
                                     @click="toPreviousCue()"
                                     title="skip to previous cue"
                                 >
-                                    <BaseIcon name="skip-previous-outline" />
+                                    <BaseIcon v-once name="skip-previous-outline" />
                                 </button>
                                 <button class="button is-indicator">
                                     <template v-if="playingCue">
@@ -116,7 +116,7 @@
                                     @click="toNextCue()"
                                     title="skip to next cue"
                                 >
-                                    <BaseIcon name="skip-next-outline" />
+                                    <BaseIcon v-once name="skip-next-outline" />
                                 </button>
                             </div>
                         </div>
@@ -133,14 +133,14 @@
                                         @click="stop()"
                                         title="Stop"
                                     >
-                                        <BaseIcon name="stop" />
+                                        <BaseIcon v-once name="stop" />
                                     </button>
                                     <button
                                         class="button"
                                         @click="seek(-5)"
                                         title="rewind 5 seconds"
                                     >
-                                        <BaseIcon name="rewind-5" />
+                                        <BaseIcon v-once name="rewind-5" />
                                     </button>
                                     <PlayPauseButton
                                         class="is-success"
@@ -154,7 +154,7 @@
                                         @click.prevent="seek(5)"
                                         title="forward 5 seconds"
                                     >
-                                        <BaseIcon name="fast-forward-5" />
+                                        <BaseIcon v-once name="fast-forward-5" />
                                     </button>
                                     <p
                                         class="control"

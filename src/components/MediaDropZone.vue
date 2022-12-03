@@ -38,11 +38,11 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     :accept="acceptedFiles"
                 />
                 <template v-if="isReplacementMode">
-                    <BaseIcon name="swap-horizontal" />
+                    <BaseIcon v-once name="swap-horizontal" />
                     <span>Click / drop to replace file</span>
                 </template>
                 <template v-else>
-                    <BaseIcon name="plus" />
+                    <BaseIcon v-once name="plus" />
                     <span class="is-hidden-desktop">Load file(s)</span>
                     <span class="is-hidden-touch"
                         >Click / drop to load file(s)</span
@@ -60,7 +60,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     title="Add media / expand drop zone"
                     @click="expand"
                 >
-                    <BaseIcon name="plus" />
+                    <BaseIcon v-once name="plus" />
                 </button>
             </div>
         </div>
@@ -111,11 +111,11 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                         @click="useMediaUrl"
                     >
                         <template v-if="isReplacementMode">
-                            <BaseIcon name="swap-horizontal" />
+                            <BaseIcon v-once name="swap-horizontal" />
                             <span>Replace</span>
                         </template>
                         <template v-else>
-                            <BaseIcon name="plus" />
+                            <BaseIcon v-once name="plus" />
                             <span>Use</span>
                         </template>
                     </button>

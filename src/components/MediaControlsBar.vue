@@ -5,7 +5,7 @@
         @click="toPreviousTrack()"
         title="skip to previous track"
     >
-        <BaseIcon name="skip-previous" />
+        <BaseIcon v-once name="skip-previous" />
     </button>
     <button
         class="button"
@@ -13,16 +13,12 @@
         @click="toPreviousCue()"
         title="skip to previous cue"
     >
-        <BaseIcon name="skip-previous-outline" />
+        <BaseIcon v-once name="skip-previous-outline" />
     </button>
-
-    <!-- <button class="button" @click="seek(-5)" title="rewind 5 seconds">
-        <BaseIcon name="rewind-5" />
-    </button> -->
 
     <!-- Stop (do not show on small devices, user still can use play/pause) -->
     <button class="button is-hidden-mobile" @click="stop()" title="Stop">
-        <BaseIcon name="stop" />
+        <BaseIcon v-once name="stop" />
     </button>
 
     <PlayPauseButton
@@ -38,17 +34,13 @@
         @update:modelValue="updatePlaybackMode"
     />
 
-    <!-- <button class="button" @click.prevent="seek(5)" title="forward 5 seconds">
-        <BaseIcon name="fast-forward-5" />
-    </button> -->
-
     <button
         class="button"
         :disabled="!hasNextCue"
         @click="toNextCue()"
         title="skip to next cue"
     >
-        <BaseIcon name="skip-next-outline" />
+        <BaseIcon v-once name="skip-next-outline" />
     </button>
 
     <button
@@ -57,7 +49,7 @@
         @click="toNextTrack()"
         title="skip to next track"
     >
-        <BaseIcon name="skip-next" />
+        <BaseIcon v-once name="skip-next" />
     </button>
 
     <Knob
@@ -90,7 +82,6 @@ export default defineComponent({
         PlayPauseButton,
         PlaybackModeButton,
         BaseIcon,
-
         Knob,
     },
     emits: [

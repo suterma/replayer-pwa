@@ -16,7 +16,7 @@
             :ref="clickRef"
             title="Create a cue now (at the current playback time)!"
         >
-            <BaseIcon name="plus" />
+            <BaseIcon v-once name="plus" />
             <span>Cue! [INSERT]</span>
             <span class="has-opacity-half">&nbsp;at&nbsp;</span>
             <TimeDisplay :modelValue="currentSeconds"></TimeDisplay>
@@ -28,7 +28,7 @@
         @click="$emit('createNewCue')"
         title="Create a cue now (at the current playback time)!"
     >
-        <BaseIcon name="plus" />
+        <BaseIcon v-once name="plus" />
         <span>Cue!</span>
         <span class="has-opacity-half">&nbsp;at&nbsp;</span>
         <TimeDisplay :modelValue="currentSeconds"></TimeDisplay>
