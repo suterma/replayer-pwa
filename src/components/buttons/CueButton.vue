@@ -64,13 +64,16 @@
 
                     <!-- Right side -->
                     <div class="level-right">
-                        <p class="level-item is-hidden-touch mr-3">
-                            <!-- Use a right position for Durations, to keep them as much out of visibility as possible -->
-                            <TimeDisplay
-                                class="has-opacity-half foreground"
-                                :modelValue="cue.Duration"
-                            ></TimeDisplay>
-                        </p>
+                        <!-- For performance and layout reasons, only render this when used, on desktop and larger screens -->
+                        <IfMedia query="(min-width: 1024px)">
+                            <p class="level-item mr-3">
+                                <!-- Use a right position for Durations, to keep them as much out of visibility as possible -->
+                                <TimeDisplay
+                                    class="has-opacity-half foreground"
+                                    :modelValue="cue.Duration"
+                                ></TimeDisplay>
+                            </p>
+                        </IfMedia>
                         <p class="level-item" v-if="cue?.Shortcut">
                             <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibility as possible -->
                             <span
@@ -90,6 +93,7 @@ import { defineComponent, StyleValue } from 'vue';
 import { Cue, PlaybackMode } from '@/store/compilation-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from '../TimeDisplay.vue';
+import IfMedia from '@/components/IfMedia.vue';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
@@ -103,7 +107,7 @@ import TimeDisplay from '../TimeDisplay.vue';
  */
 export default defineComponent({
     name: 'CueButton',
-    components: { BaseIcon, TimeDisplay },
+    components: { BaseIcon, TimeDisplay, IfMedia },
     props: {
         cue: {
             type: Cue,
