@@ -227,7 +227,6 @@ export default defineComponent({
     },
     data() {
         return {
-            currentSeconds: 0,
             trackData: { ...this.track }, // clone the object
             /** Flag to indicate whether the track is currently shared via the dialog.
              */
