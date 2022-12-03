@@ -1,14 +1,5 @@
 <template>
-    <DropdownMenu title="Compilation context menu">
-        <DropdownMenuButton
-            title="Prevent screen timeout"
-            subTitle="(while this compilation is open)"
-            :class="{
-                'is-active': isPreventingScreenTimeoutNow,
-            }"
-            @click="togglePreventScreenTimeoutNow"
-            iconName="television-ambient-light"
-        />
+    <DropdownMenu v-once title="Compilation context menu">
         <Hotkey :keys="['ctrl', 's']" v-slot="{ clickRef }">
             <DropdownMenuButton
                 title="Download... [CTRL+S]"
@@ -33,7 +24,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
 import { Compilation } from '@/store/compilation-types';
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
@@ -51,12 +41,6 @@ export default defineComponent({
             type: Compilation,
             required: true,
         },
-    },
-    data() {
-        return {
-            /** The wake lock fill-in that can prevent screen timeout, while a compilation is in use */
-            noSleep: new NoSleep(),
-        };
     },
     methods: {
         /** Closes the compilation
@@ -77,21 +61,6 @@ export default defineComponent({
                     console.debug(`CompilationContextMenu::download done`);
                 }
             });
-        },
-        togglePreventScreenTimeoutNow() {
-            if (this.isPreventingScreenTimeoutNow) {
-                this.noSleep.disable();
-            } else {
-                this.noSleep.enable();
-            }
-        },
-    },
-    unmounted() {
-        this.noSleep.disable();
-    },
-    computed: {
-        isPreventingScreenTimeoutNow(): boolean {
-            return this.noSleep.isEnabled;
         },
     },
 });
