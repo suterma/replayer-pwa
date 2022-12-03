@@ -1,5 +1,6 @@
 <template>
     <DropdownMenu
+        v-once
         ref="dropdownMenu"
         title="App menu"
         iconName="hamburger-menu"
@@ -67,6 +68,5 @@ export default defineComponent({
 
         Hotkey,
     },
-    methods: {},
 });
 </script>

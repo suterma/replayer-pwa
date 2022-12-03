@@ -1,9 +1,10 @@
 <template>
-    <button class="dropdown-item">
+    <button class="dropdown-item" :disabled="disabled">
         <MenuItemContent
             :title="title"
             :subTitle="subTitle"
             :iconName="iconName"
+            :disabled="disabled"
         >
         </MenuItemContent>
     </button>
@@ -21,6 +22,12 @@ export default defineComponent({
         title: {
             type: String,
             required: true,
+        },
+
+        disabled: {
+            type: Boolean,
+            required: false,
+            default: false,
         },
 
         subTitle: {

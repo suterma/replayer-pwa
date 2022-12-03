@@ -102,20 +102,20 @@
 
                     <DropdownMenu title="Track context menu">
                         <DropdownMenuButton
-                            v-if="!isFirstTrack"
+                            :disabled="isFirstTrack"
                             title="Move up"
                             subTitle="(to an earlier position)"
                             @click="moveUp()"
                             iconName="transfer-up"
                         />
                         <DropdownMenuButton
-                            v-if="!isLastTrack"
+                            :disabled="isLastTrack"
                             title="Move down"
                             subTitle="(to a later position)"
                             @click="moveDown()"
                             iconName="transfer-down"
                         />
-                        <Experimental>
+                        <Experimental v-once>
                             <DropdownMenuButton
                                 title="Share..."
                                 subTitle="(allows to share a track)"
@@ -124,12 +124,14 @@
                         </Experimental>
 
                         <DropdownMenuButton
+                            v-once
                             title="Clone"
                             subTitle="(with cues and media)"
                             @click="cloneTrack()"
                             iconName="content-duplicate"
                         />
                         <DropdownMenuButton
+                            v-once
                             title="Reassign cue shortcuts"
                             subTitle="(first as seed, then incrementing)"
                             @click="reassignCueShortcuts()"
@@ -137,6 +139,7 @@
                         />
                         <hr class="dropdown-divider" />
                         <DropdownMenuButton
+                            v-once
                             title="Remove"
                             subTitle="(remove
                             the track from the compilation)"
