@@ -2,7 +2,8 @@
 
 /*************************************************************
  * Dropdown stylings
- * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
+ * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there,
+ * creating a matching visual experience for these dropdowns
 **************************************************************
 */
 
@@ -17,15 +18,14 @@
     min-width: 15rem;
 }
 
-/** Unset default button styles for dropdown menu items. 
+/** Button styles for dropdown menu items. 
  *  This makes buttons usable as dropdown items, 
  *  supporting proper accessibility,
  *  without visual interference of typical button styling
  */
 button.dropdown-item {
-    border: unset;
-    color: unset;
-    background-color: unset;
+    border: none;
+    background-color: $background; 
     cursor: pointer;
 }
 
@@ -98,3 +98,13 @@ button.dropdown-item.is-active {
 .router-link-active:focus-within .dropdown-item {
     background-color: $body-background-color;
 }
+
+/* Disabled items should be dimmed. Hovering should not be visible */
+button.dropdown-item:disabled {
+  opacity: 50%;
+  cursor: not-allowed;
+}
+button.dropdown-item:disabled:hover {
+  background-color: $background; 
+}
+
