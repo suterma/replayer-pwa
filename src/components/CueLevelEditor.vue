@@ -83,7 +83,10 @@
                                     title="Adjusts the cue time to the current playback time"
                                     @click="adjustTime()"
                                 >
-                                    <BaseIcon v-once name="timer-sync-outline" />
+                                    <BaseIcon
+                                        v-once
+                                        name="timer-sync-outline"
+                                    />
                                     <!-- On large screens also show an indicative text -->
                                     <span
                                         class="is-hidden-touch has-opacity-half"

@@ -185,7 +185,10 @@
                                             "
                                             title="toggle full-screen mode"
                                         >
-                                            <BaseIcon v-once name="arrow-expand" />
+                                            <BaseIcon
+                                                v-once
+                                                name="arrow-expand"
+                                            />
                                         </button>
                                         <button
                                             v-else
@@ -195,7 +198,10 @@
                                             "
                                             title="toggle full-screen mode"
                                         >
-                                            <BaseIcon v-once name="arrow-collapse" />
+                                            <BaseIcon
+                                                v-once
+                                                name="arrow-collapse"
+                                            />
                                         </button>
                                     </MediaControlsBar>
                                 </div>
@@ -275,29 +281,31 @@
             </Teleport>
         </template>
 
-        <!-- The cue buttons (in edit mode) -->
-        <template v-if="isEditable && isExpanded">
-            <ul class="levels">
-                <template v-for="cue in cues" :key="cue.Id">
-                    <li>
-                        <CueLevelEditor
-                            :disabled="!mediaUrl || !isTrackLoaded"
-                            :cue="cue"
-                            :isTrackPlaying="isPlaying"
-                            :playbackMode="playbackMode"
-                            :currentSeconds="currentSeconds"
-                            @click="cueClick(cue)"
-                            @play="cuePlay(cue)"
-                        />
-                    </li>
-                </template>
-            </ul>
-            <CreateCueButton
-                :isActiveTrack="isActiveTrack"
-                :currentSeconds="currentSeconds"
-                @createNewCue="createNewCue()"
-            ></CreateCueButton>
-        </template>
+        <!-- The cue buttons / level editors (in edit mode) -->
+        <Transition name="item">
+            <div v-if="isEditable && isExpanded">
+                <ul class="levels">
+                    <TransitionGroup name="list">
+                        <li v-for="cue in cues" :key="cue.Id">
+                            <CueLevelEditor
+                                :disabled="!mediaUrl || !isTrackLoaded"
+                                :cue="cue"
+                                :isTrackPlaying="isPlaying"
+                                :playbackMode="playbackMode"
+                                :currentSeconds="currentSeconds"
+                                @click="cueClick(cue)"
+                                @play="cuePlay(cue)"
+                            />
+                        </li>
+                    </TransitionGroup>
+                </ul>
+                <CreateCueButton
+                    :isActiveTrack="isActiveTrack"
+                    :currentSeconds="currentSeconds"
+                    @createNewCue="createNewCue()"
+                ></CreateCueButton>
+            </div>
+        </Transition>
     </div>
 </template>
 
@@ -909,6 +917,36 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+/* transitions for the editors as a whole */
+.item-enter-active,
+.item-leave-active {
+    transition: all 0.3s ease;
+}
+
+.item-enter-from,
+.item-leave-to {
+    opacity: 0;
+    transform-origin: top;
+    transform: scaleY(0);
+}
+
+/* transitions for a list of cue level editors */
+.list-move, /* apply transition to moving elements */
+.list-enter-active,
+.list-leave-active {
+    transition: all 0.3s ease;
+}
+.list-enter-from {
+    opacity: 0;
+    transform: translateX(-32px);
+}
+.list-leave-to {
+    opacity: 0;
+    transform: translateX(32px);
+}
+
+// Track item styles
+
 .track .buttons {
     /** The track's cue button have also an additional small margin at their end.
     This results in a similar space between level, player, cue buttons and the
