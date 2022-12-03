@@ -37,7 +37,7 @@
                         class="slider is-fullwidth is-small is-slim is-circle is-warning"
                         step="stepSize"
                         min="0"
-                        :max="track.Duration ?? 0"
+                        :max="trackDuration ?? 0"
                         :value="modelValue"
                         @change="onValueChange"
                         @input="onValueChange"
@@ -71,7 +71,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
-import { Track } from '@/store/compilation-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 
 /** Slider that represents the playhead position in a track as the modelValue in a ranged input (slider).
@@ -94,11 +93,12 @@ export default defineComponent({
             required: false,
             default: 0,
         },
-        /** The track to represent the playhead position for
+        /** The duration of the track to represent the playhead position for
          */
-        track: {
-            type: Track,
-            required: true,
+        trackDuration: {
+            type: Number as () => number | null,
+            required: false,
+            default: null,
         },
         /** The playhead step size in [seconds]
          */
@@ -133,8 +133,8 @@ export default defineComponent({
     },
     computed: {
         remainingTime(): number | null {
-            if (this.track.Duration != null) {
-                return -(this.track.Duration - this.modelValue);
+            if (this.trackDuration != null) {
+                return -(this.trackDuration - this.modelValue);
             } else return null;
         },
     },

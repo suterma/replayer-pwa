@@ -26,14 +26,6 @@
             :isTrackLoaded="isTrackLoaded"
             :isActive="isActiveTrack"
         />
-        <!-- <TrackHeader
-            v-else
-            :track="track"
-            :isPlaying="isPlaying"
-            :isTrackLoaded="isTrackLoaded"
-            :isEditable="isEditable"
-            :isActive="isActiveTrack"
-        /> -->
         <TrackHeader
             v-else
             :track="track"
@@ -133,34 +125,34 @@
 
                         <!-- Right side -->
                         <div class="level-right">
-                            <div
-                                class="level-item is-unselectable is-hidden-mobile"
-                            >
-                                <p>
-                                    <PlayheadSlider
-                                        v-model.number="currentSeconds"
-                                        @update:modelValue="
-                                            (position) =>
-                                                trackPlayerInstance?.seekTo(
-                                                    position,
-                                                )
-                                        "
-                                        @seek="(seconds) => seek(seconds)"
-                                        :track="track"
-                                    >
-                                        <p
-                                            class="is-size-7 has-cropped-text has-text-warning"
-                                            style="max-width: 129px"
+                            <!-- For performance and layout reasons, only render this when used (emulating is-hidden-mobile) -->
+                            <IfMedia query="(min-width: 769px)">
+                                <div class="level-item is-unselectable">
+                                    <p>
+                                        <PlayheadSlider
+                                            v-model.number="currentSeconds"
+                                            @update:modelValue="
+                                                (position) =>
+                                                    trackPlayerInstance?.seekTo(
+                                                        position,
+                                                    )
+                                            "
+                                            @seek="(seconds) => seek(seconds)"
+                                            :trackDuration="track.Duration"
                                         >
-                                            <span>
-                                                {{ playingCueDescription }}
-                                                &nbsp;
-                                            </span>
-                                        </p>
-                                    </PlayheadSlider>
-                                </p>
-                                <!-- </div> -->
-                            </div>
+                                            <p
+                                                class="is-size-7 has-cropped-text has-text-warning"
+                                                style="max-width: 129px"
+                                            >
+                                                <span>
+                                                    {{ playingCueDescription }}
+                                                    &nbsp;
+                                                </span>
+                                            </p>
+                                        </PlayheadSlider>
+                                    </p>
+                                </div>
+                            </IfMedia>
                             <div class="level-item">
                                 <div class="is-grouped">
                                     <MediaControlsBar
@@ -208,44 +200,45 @@
                                     </MediaControlsBar>
                                 </div>
                             </div>
-                            <div
-                                class="level-item is-unselectable is-hidden-tablet"
-                            >
-                                <!-- <div
+
+                            <!-- For performance and layout reasons, only render this when used (emulating is-hidden-tablet) -->
+                            <IfMedia query="(max-width: 768px)">
+                                <div class="level-item is-unselectable">
+                                    <!-- <div
                                     style="
                                         flex: 0 0 100%; /* Let this item fill the entire space horizontally */
                                     "
                                 > -->
-                                <p>
-                                    <PlayheadSlider
-                                        v-model.number="currentSeconds"
-                                        @update:modelValue="
-                                            (position) =>
-                                                trackPlayerInstance?.seekTo(
-                                                    position,
-                                                )
-                                        "
-                                        @seek="(seconds) => seek(seconds)"
-                                        :track="track"
-                                    >
-                                        <p
-                                            class="is-size-7 has-cropped-text has-text-warning"
-                                            style="max-width: 129px"
+                                    <p>
+                                        <PlayheadSlider
+                                            v-model.number="currentSeconds"
+                                            @update:modelValue="
+                                                (position) =>
+                                                    trackPlayerInstance?.seekTo(
+                                                        position,
+                                                    )
+                                            "
+                                            @seek="(seconds) => seek(seconds)"
+                                            :trackDuration="track.Duration"
                                         >
-                                            <span>
-                                                {{ playingCueDescription }}
-                                                &nbsp;
-                                            </span>
-                                        </p>
-                                    </PlayheadSlider>
-                                </p>
-                                <!-- </div> -->
-                            </div>
+                                            <p
+                                                class="is-size-7 has-cropped-text has-text-warning"
+                                                style="max-width: 129px"
+                                            >
+                                                <span>
+                                                    {{ playingCueDescription }}
+                                                    &nbsp;
+                                                </span>
+                                            </p>
+                                        </PlayheadSlider>
+                                    </p>
+                                </div>
+                            </IfMedia>
                         </div>
                     </nav>
                     <!-- When playing back, offer the cue buttons in two sizes. In edit mode, the cue levels have their own cue buttons -->
                     <template v-if="!isEditable">
-                        <!-- For performance and layout reasons, only render this when used, on wider screens -->
+                        <!-- For performance and layout reasons, only render this when used, on desktop and larger screens -->
                         <IfMedia query="(min-width: 1024px)">
                             <nav>
                                 <CueButtonsBar
