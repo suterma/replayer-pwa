@@ -250,6 +250,12 @@ while also keeping the original with.
     color: $text;
 }
 
+/* Serves as a placeholder for a minimum set of characters
+@remarks currently used in the TimeDisplay.vue component
+ */
+.is-minimum-7-characters {
+  min-width: 7ch;
+}
 /*************************************************************
  * Hyperlinks
 **************************************************************

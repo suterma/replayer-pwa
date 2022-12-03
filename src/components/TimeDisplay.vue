@@ -1,9 +1,8 @@
 <template>
     <span
+        class="is-minimum-7-characters"
         :class="{
             'is-invisible': hidePlaceholder && !hasValue,
-            'is-minimum-9-characters': !isNarrow,
-            'is-minimum-7-characters': isNarrow,
         }"
         >{{ currentDisplayTime }}</span
     >
@@ -13,8 +12,7 @@
 import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent, PropType } from 'vue';
 
-/** A display for a time value in the h:mm:ss.zzz format
- * @remarks Adapts the milliseconds precision according to the viewport width
+/** A display for a time value in the h:mm:ss.z format
  */
 export default defineComponent({
     name: 'TimeDisplay',
@@ -35,21 +33,10 @@ export default defineComponent({
          * @remarks Omits the hour part, if not applicable
          */
         currentDisplayTime(): string {
-            if (this.isNarrow) {
-                if (!this.hasValue) {
-                    return '--:--.-';
-                }
-                return CompilationHandler.convertToDisplayTime(
-                    this.modelValue,
-                    1,
-                );
-            } else {
-                if (!this.hasValue) {
-                    return '--:--.---';
-                }
-
-                return CompilationHandler.convertToDisplayTime(this.modelValue);
+            if (!this.hasValue) {
+                return '--:--.-';
             }
+            return CompilationHandler.convertToDisplayTime(this.modelValue, 1);
         },
         /** Whether a time value is available for display.
          * @remarks null, undefined and other non finite values return false.
@@ -57,26 +44,6 @@ export default defineComponent({
         hasValue(): boolean {
             return Number.isFinite(this.modelValue);
         },
-        /** Whether the viewport width at or below Bulma's mobile breakpoint
-         * @remarks Is not reactive, which is a good thing to save CPU cycles
-         */
-        isNarrow() {
-            return true;
-            //Currently always process as narrow
-            //  if (document.body.clientWidth <= 768 /* isMobile by Bulma */) {
-            //     return true;
-            // } else {
-            //     return false;
-            // }
-        },
     },
 });
 </script>
-<style scoped>
-.is-minimum-9-characters {
-    min-width: 9ch;
-}
-.is-minimum-7-characters {
-    min-width: 7ch;
-}
-</style>
