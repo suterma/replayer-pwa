@@ -56,7 +56,7 @@
                         <div class="field">
                             <p class="control">
                                 <TimeInput
-                                    class="input"
+                                    class="input has-text-right"
                                     :modelValue="cueTime"
                                     @change="updateCueTime"
                                     size="5"
@@ -71,7 +71,7 @@
                         <div class="field has-addons">
                             <p class="control">
                                 <TimeInput
-                                    class="input"
+                                    class="input has-text-right"
                                     :modelValue="cueTime"
                                     @change="updateCueTime"
                                     size="8"
