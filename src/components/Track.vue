@@ -81,7 +81,8 @@
                             section: !isEditable,
                             'has-background-grey-dark': !isEditable,
                             'is-fullscreen': isTrackPlayerFullScreen,
-                            'transition-in-place': !isEditable /* because in playback view, the players are replaced in place, not expanded */,
+                            'transition-in-place':
+                                !isEditable /* because in playback view, the players are replaced in place, not expanded */,
                         }"
                     >
                         <TrackAudioApiPlayer
@@ -191,33 +192,37 @@
                                             :isFading="isFading"
                                             @togglePlaying="skipToPlayPause()"
                                         >
-                                            <!-- the zoom (Full-Screen) button -->
-                                            <button
-                                                v-if="!isTrackPlayerFullScreen"
-                                                class="button"
-                                                @click="
-                                                    toggleTrackPlayerFullScreen()
-                                                "
-                                                title="toggle full-screen mode"
-                                            >
-                                                <BaseIcon
-                                                    v-once
-                                                    name="arrow-expand"
-                                                />
-                                            </button>
-                                            <button
-                                                v-else
-                                                class="button"
-                                                @click="
-                                                    toggleTrackPlayerFullScreen()
-                                                "
-                                                title="toggle full-screen mode"
-                                            >
-                                                <BaseIcon
-                                                    v-once
-                                                    name="arrow-collapse"
-                                                />
-                                            </button>
+                                            <!-- the zoom (Full-Screen) button, only in playback mode -->
+                                            <template v-if="!isEditable">
+                                                <button
+                                                    v-if="
+                                                        !isTrackPlayerFullScreen
+                                                    "
+                                                    class="button"
+                                                    @click="
+                                                        toggleTrackPlayerFullScreen()
+                                                    "
+                                                    title="toggle full-screen mode"
+                                                >
+                                                    <BaseIcon
+                                                        v-once
+                                                        name="arrow-expand"
+                                                    />
+                                                </button>
+                                                <button
+                                                    v-else
+                                                    class="button"
+                                                    @click="
+                                                        toggleTrackPlayerFullScreen()
+                                                    "
+                                                    title="toggle full-screen mode"
+                                                >
+                                                    <BaseIcon
+                                                        v-once
+                                                        name="arrow-collapse"
+                                                    />
+                                                </button>
+                                            </template>
                                         </MediaControlsBar>
                                     </div>
                                 </div>
