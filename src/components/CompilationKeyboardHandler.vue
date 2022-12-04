@@ -1,7 +1,7 @@
 <template>
     <template v-if="hasCompilation">
         <!-- Note: Enter (when not terminating a mnemonic, also toggles playback, via "handleKey") -->
-        <!-- Note: "/"" and "*"" are also handled via "handleKey" -->
+        <!-- Note: '/' and '*' for cue selection are also handled via "handleKey" -->
         <GlobalEvents
             v-if="requireCtrlModifier"
             @keydown.ctrl="handleKey"
@@ -9,6 +9,8 @@
             @keydown.ctrl.prevent.+="volumeUp"
             @keydown.ctrl.prevent.left="rewind"
             @keydown.ctrl.prevent.right="forward"
+            @keydown.ctrl.prevent.up="previousCue"
+            @keydown.ctrl.prevent.down="nextCue"
         />
         <GlobalEvents
             v-else
@@ -17,6 +19,8 @@
             @keydown.prevent.+="volumeUp"
             @keydown.prevent.left="rewind"
             @keydown.prevent.right="forward"
+            @keydown.prevent.up="previousCue"
+            @keydown.prevent.down="nextCue"
         />
     </template>
     <KeyResponseOverlay
@@ -121,17 +125,13 @@ export default defineComponent({
             }
             //Next cue?
             else if (event.key === '*') {
-                event.preventDefault();
-                this.DisplayKeyAndAction(event, 'to next cue');
-                document.dispatchEvent(new Event(Replayer.TO_NEXT_CUE));
+                this.nextCue(event);
             }
             //Previous cue?
             else if (event.key === '/') {
-                event.preventDefault();
-                this.DisplayKeyAndAction(event, 'to previous cue');
-                document.dispatchEvent(new Event(Replayer.TO_PREV_CUE));
+                this.previousCue(event);
             }
-            //Mnemonic termination / play/pause-toggeling?
+            //Mnemonic termination / play/pause-toggling?
             else if (event.key === 'Enter') {
                 event.preventDefault();
                 if (this.mnemonic) {
@@ -181,20 +181,38 @@ export default defineComponent({
             this.DisplayKeyAndAction(event, 'play/pause');
             document.dispatchEvent(new Event(Replayer.TOGGLE_PLAYBACK));
         },
-        /** Rewinds 1 second
+        /** Rewinds 5 seconds
          * @remarks This handler does accept repetitive events
          */
         rewind(event: KeyboardEvent) {
             this.DisplayKeyAndAction(event, 'rewind 5 sec');
             document.dispatchEvent(new Event(Replayer.REWIND));
         },
-        /** Forwards 1 second
+        /** Forwards 5 seconds
          * @remarks This handler does accept repetitive events
          */
         forward(event: KeyboardEvent) {
             this.DisplayKeyAndAction(event, 'forward 5 sec');
             document.dispatchEvent(new Event(Replayer.FORWARD));
         },
+
+        /** Selects the previous cue
+         * @remarks This handler does accept repetitive events
+         */
+        previousCue(event: KeyboardEvent) {
+            event.preventDefault();
+            this.DisplayKeyAndAction(event, 'to previous cue');
+            document.dispatchEvent(new Event(Replayer.TO_PREV_CUE));
+        },
+        /** Selects the next cue
+         * @remarks This handler does accept repetitive events
+         */
+        nextCue(event: KeyboardEvent) {
+            event.preventDefault();
+            this.DisplayKeyAndAction(event, 'to next cue');
+            document.dispatchEvent(new Event(Replayer.TO_NEXT_CUE));
+        },
+
         /** Decreases the playback volume
          * @remarks This handler does accept repetitive events
          */
