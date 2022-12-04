@@ -6,9 +6,9 @@
             <!-- Left side -->
             <div class="level-left">
                 <!-- Expander with title -->
-                <!-- The title is the only header element that should shrink (break on words) if necessary -->
+                <!-- This should shrink (break on words) if necessary (is-narrow is-flex-shrink-1) -->
                 <div
-                    class="level-item is-narrow is-justify-content-flex-start is-flex-shrink-1"
+                    class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
                 >
                     <CollapsibleButton
                         :class="{
@@ -35,7 +35,7 @@
                 </div>
                 <!-- Only for wide screens, edit the media edit in the level -->
                 <div
-                    class="level-item is-hidden-widescreen-only is-hidden-desktop-only is-hidden-touch is-justify-content-flex-start"
+                    class="level-item is-narrow is-flex-shrink-2 is-hidden-widescreen-only is-hidden-desktop-only is-hidden-touch is-justify-content-flex-start"
                 >
                     <div class="field">
                         <p class="control">
