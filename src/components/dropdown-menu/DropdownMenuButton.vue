@@ -5,7 +5,7 @@
             :subTitle="subTitle"
             :shortcut="shortcut"
             :iconName="iconName"
-            :disabled="disabled"            
+            :disabled="disabled"
         >
         </MenuItemContent>
     </button>
@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import MenuItemContent from '@/components/MenuItemContent.vue';
+import MenuItemContent from '@/components/dropdown-menu/MenuItemContent.vue';
 /** An item for a Dropdown menu
  */
 export default defineComponent({
