@@ -49,9 +49,8 @@
                         <span class="has-opacity-half">at</span>
                     </p>
                 </div>
-                <!-- A rather slim input for the time, only on mobiles-->
-                <!-- For performance and layout reasons, only render this when used (emulating is-hidden-tablet) -->
-                <IfMedia query="(max-width: 768px)">
+                <!-- A rather slim input for the time, only on narrow mobiles-->
+                <IfMedia query="(max-width: 530px)">
                     <div class="level-item is-flex-shrink-1">
                         <div class="field">
                             <p class="control">
@@ -64,9 +63,8 @@
                             </p>
                         </div></div
                 ></IfMedia>
-                <!-- A normal input for the time, with an adjustment add-on, for larger than mobile-->
-                <!-- For performance and layout reasons, only render this when used (emulating is-hidden-mobile) -->
-                <IfMedia query="(min-width: 769px)">
+                <!-- A normal input for the time, with an adjustment add-on, from a bit wider screens-->
+                <IfMedia query="(min-width: 531px)">
                     <div class="level-item is-flex-shrink-1">
                         <div class="field has-addons">
                             <p class="control">

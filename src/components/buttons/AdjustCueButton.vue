@@ -16,11 +16,12 @@
             @click="$emit('adjustCue')"
             :ref="clickRef"
         >
-            <BaseIcon v-once name="timer-sync-outline" />
+            <BaseIcon v-once name="timer-marker" />
             <!-- On large screens also show an indicative text -->
             <span class="is-hidden-touch has-opacity-half">Adjust</span>
-            <ShortcutDisplay v-once
-            class=" is-hidden-touch is-hidden-desktop-only"
+            <ShortcutDisplay
+                v-once
+                class="is-hidden-touch is-hidden-desktop-only"
                 ><svg
                     class="mr-1"
                     style="width: 18px; height: 18px"
@@ -40,13 +41,14 @@
         title="Adjusts the cue time to the current playback time"
         @click="$emit('adjustCue')"
     >
-        <BaseIcon v-once name="timer-sync-outline" />
+        <BaseIcon v-once name="timer-marker-outline" />
         <!-- On large screens also show an indicative text -->
         <span class="is-hidden-touch has-opacity-half">Adjust</span>
         <!-- Show the inert shortcut as a placeholder, to keep the layout unchanged
         on cue selection changes -->
-        <ShortcutDisplay v-once class="is-invisible        is-hidden-touch is-hidden-desktop-only"
-
+        <ShortcutDisplay
+            v-once
+            class="is-invisible is-hidden-touch is-hidden-desktop-only"
             ><svg
                 class="mr-1"
                 style="width: 18px; height: 18px"
