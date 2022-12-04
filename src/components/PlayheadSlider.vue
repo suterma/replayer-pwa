@@ -55,7 +55,7 @@
                 <button
                     class="button is-outlined is-inverted p-0 pl-2 is-multiline"
                     @click="seek(+5)"
-                    title="Current time: click to forward"
+                    title="Remaining time: click to forward"
                 >
                     <TimeDisplay
                         class="has-text-right is-size-7 has-text-warning"
