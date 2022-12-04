@@ -1,7 +1,7 @@
 <template>
     <!-- Slider without time info around it, as a single control -->
-    <div>
-        <!-- <input
+
+    <!-- <input
             class="slider is-fullwidth is-small is-slim is-circle is-warning"
             step="stepSize"
             min="0"
@@ -12,57 +12,61 @@
             type="range"
         /> -->
 
-        <!-- Slider with time info around it -->
-        <div class="level is-mobile is-unselectable">
-            <!-- Left side -->
-            <div class="level-left">
-                <div class="level-item">
-                    <button
-                        class="button is-outlined is-inverted pr-1"
-                        @click="seek(-5)"
-                        title="Current time: click to rewind"
-                    >
-                        <BaseIcon class="has-text-warning" name="rewind" />
-                        <TimeDisplay
-                            class="is-size-7 has-text-warning"
-                            :modelValue="modelValue"
-                        ></TimeDisplay>
-                    </button>
-                </div>
-            </div>
-            <div class="level-item mr-0">
-                <div>
-                    <slot></slot>
-                    <input
-                        class="slider is-fullwidth is-small is-slim is-circle is-warning"
-                        step="stepSize"
-                        min="0"
-                        :max="trackDuration ?? 0"
-                        :value="modelValue"
-                        @change="onValueChange"
-                        @input="onValueChange"
-                        type="range"
+    <!-- Slider with time info around it -->
+    <div class="playhead-slider level is-mobile is-unselectable">
+        <!-- Left side -->
+        <div class="level-left">
+            <div class="level-item">
+                <button
+                    class="button is-outlined is-inverted p-0 pr-2 is-multiline"
+                    @click="seek(-5)"
+                    title="Current time: click to rewind"
+                >
+                    <TimeDisplay
+                        class="has-text-left is-size-7 has-text-warning"
+                        :modelValue="modelValue"
+                    ></TimeDisplay>
+                    <BaseIcon
+                        v-once
+                        name="rewind"
+                        class="has-text-warning is-align-self-flex-start"
                     />
-                </div>
+                </button>
             </div>
-            <!-- Right side -->
-            <div class="level-right">
-                <div class="level-item">
-                    <button
-                        class="button is-outlined is-inverted pl-1"
-                        @click="seek(+5)"
-                        title="Current time: click to forward"
-                    >
-                        <TimeDisplay
-                            class="has-text-right is-size-7 has-text-warning"
-                            :modelValue="remainingTime"
-                        ></TimeDisplay>
-                        <BaseIcon
-                            class="has-text-warning"
-                            name="fast-forward"
-                        />
-                    </button>
-                </div>
+        </div>
+        <div class="level-item mr-0">
+            <div>
+                <slot></slot>
+                <input
+                    class="slider is-fullwidth is-small is-slim is-circle is-warning"
+                    step="stepSize"
+                    min="0"
+                    :max="trackDuration ?? 0"
+                    :value="modelValue"
+                    @change="onValueChange"
+                    @input="onValueChange"
+                    type="range"
+                />
+            </div>
+        </div>
+        <!-- Right side -->
+        <div class="level-right">
+            <div class="level-item">
+                <button
+                    class="button is-outlined is-inverted p-0 pl-2 is-multiline"
+                    @click="seek(+5)"
+                    title="Current time: click to forward"
+                >
+                    <TimeDisplay
+                        class="has-text-right is-size-7 has-text-warning"
+                        :modelValue="remainingTime"
+                    ></TimeDisplay>
+                    <BaseIcon
+                        v-once
+                        name="fast-forward"
+                        class="has-text-warning is-align-self-flex-end"
+                    />
+                </button>
             </div>
         </div>
     </div>
@@ -140,3 +144,22 @@ export default defineComponent({
     },
 });
 </script>
+<style>
+.playhead-slider svg {
+    height: 20px !important;
+}
+.playhead-slider .button {
+    max-height: 40px;
+}
+
+.playhead-slider .button .icon:last-child:not(:first-child) {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/** Use a really small font for the time display */
+.playhead-slider .is-size-7.is-family-monospace {
+    padding-top: 0.4rem;
+    font-size: 0.65rem !important;
+}
+</style>

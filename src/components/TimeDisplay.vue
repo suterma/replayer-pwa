@@ -1,6 +1,6 @@
 <template>
     <span
-        class="is-minimum-7-characters"
+        class="is-minimum-7-characters is-family-monospace"
         :class="{
             'is-invisible': hidePlaceholder && !hasValue,
         }"
