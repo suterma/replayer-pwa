@@ -3,7 +3,10 @@
         <div class="level-left">
             <div class="level-item">
                 <div>
-                    <span class="">{{ title }}</span>
+                    <span class=""
+                        >{{ title }}
+                        <ShortcutDisplay :shortcut="shortcut"> </ShortcutDisplay
+                    ></span>
                     <br />
                     <span class="has-opacity-half is-size-7">{{
                         subTitle
@@ -25,10 +28,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
+import ShortcutDisplay from '@/components/ShortcutDisplay.vue';
 /** A content for a menu item */
 export default defineComponent({
     name: 'MenuItemContent',
-    components: { BaseIcon },
+    components: { BaseIcon, ShortcutDisplay },
     props: {
         title: {
             type: String,
@@ -43,6 +47,10 @@ export default defineComponent({
         iconName: {
             type: String,
             default: '',
+            required: false,
+        },
+        shortcut: {
+            type: String,
             required: false,
         },
     },

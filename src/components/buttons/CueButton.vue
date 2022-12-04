@@ -76,10 +76,11 @@
                         </IfMedia>
                         <p class="level-item" v-if="cue?.Shortcut">
                             <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibility as possible -->
-                            <span
-                                class="tag is-warning is-light is-outlined foreground has-opacity-third is-family-monospace"
-                                >{{ cue?.Shortcut }}</span
+                            <ShortcutDisplay
+                                class="foreground"
+                                :shortcut="cue?.Shortcut"
                             >
+                            </ShortcutDisplay>
                         </p>
                     </div>
                 </span>
@@ -93,6 +94,7 @@ import { defineComponent, StyleValue } from 'vue';
 import { Cue, PlaybackMode } from '@/store/compilation-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from '../TimeDisplay.vue';
+import ShortcutDisplay from '../ShortcutDisplay.vue';
 import IfMedia from '@/components/IfMedia.vue';
 
 /** A button for displaying and invoking a cue
@@ -107,7 +109,7 @@ import IfMedia from '@/components/IfMedia.vue';
  */
 export default defineComponent({
     name: 'CueButton',
-    components: { BaseIcon, TimeDisplay, IfMedia },
+    components: { BaseIcon, TimeDisplay, ShortcutDisplay, IfMedia },
     props: {
         cue: {
             type: Cue,

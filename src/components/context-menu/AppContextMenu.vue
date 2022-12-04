@@ -9,7 +9,8 @@
         <Hotkey :keys="['f5']" :excluded-elements="[]" v-slot="{ clickRef }">
             <DropdownMenuRouterLink
                 to="/play"
-                title="Play [F5]"
+                title="Play"
+                shortcut="F5"
                 :clickRef="clickRef"
                 iconName="play"
             />
@@ -17,7 +18,8 @@
         <Hotkey :keys="['f2']" :excluded-elements="[]" v-slot="{ clickRef }">
             <DropdownMenuRouterLink
                 to="/edit"
-                title="Edit [F2]"
+                title="Edit"
+                shortcut="F2"
                 :clickRef="clickRef"
                 iconName="pencil"
             />
@@ -37,11 +39,15 @@
             title="Settings"
             iconName="cog-outline"
         />
-        <DropdownMenuRouterLink
-            to="/about"
-            title="About"
-            iconName="information-outline"
-        />
+        <Hotkey :keys="['f1']" :excluded-elements="[]" v-slot="{ clickRef }">
+            <DropdownMenuRouterLink
+                to="/about"
+                title="About"
+                shortcut="F1"
+                :clickRef="clickRef"
+                iconName="information-outline"
+            />
+        </Hotkey>
         <Experimental>
             <DropdownMenuRouterLink
                 to="/development"

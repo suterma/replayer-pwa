@@ -8,6 +8,7 @@
             :title="title"
             :subTitle="subTitle"
             :iconName="iconName"
+            :shortcut="shortcut"
         >
         </DropdownMenuButton>
     </router-link>
@@ -26,7 +27,10 @@ export default defineComponent({
             type: String,
             required: true,
         },
-
+        shortcut: {
+            type: String,
+            required: false,
+        },
         /** set a reference to the clickable button for the link*/
         clickRef: {
             type: Object,

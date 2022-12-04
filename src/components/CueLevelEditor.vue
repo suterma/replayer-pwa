@@ -78,25 +78,13 @@
                                 />
                             </p>
                             <div class="control">
-                                <button
-                                    class="button"
-                                    title="Adjusts the cue time to the current playback time"
-                                    @click="adjustTime()"
-                                >
-                                    <BaseIcon
-                                        v-once
-                                        name="timer-sync-outline"
-                                    />
-                                    <!-- On large screens also show an indicative text -->
-                                    <span
-                                        class="is-hidden-touch has-opacity-half"
-                                        >Adjust</span
-                                    >
-                                </button>
+                                <AdjustCueButton
+                                    @adjustCue="adjustTime()"
+                                    :isSelectedCue="isCueSelected"
+                                ></AdjustCueButton>
                             </div>
-                        </div>
-                    </div></IfMedia
-                >
+                        </div></div
+                ></IfMedia>
 
                 <!-- Duration (keep small and hide on touch)-->
                 <!-- For performance and layout reasons, only render this when used (emulating is-hidden-touch) -->
@@ -156,6 +144,7 @@ import { Cue, PlaybackMode } from '@/store/compilation-types';
 import { ActionTypes } from '@/store/action-types';
 import CompilationHandler from '@/store/compilation-handler';
 import CueButton from '@/components/buttons/CueButton.vue';
+import AdjustCueButton from '@/components/buttons/AdjustCueButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from './TimeDisplay.vue';
 import TimeInput from '@/components/TimeInput.vue';
@@ -171,7 +160,14 @@ import IfMedia from '@/components/IfMedia.vue';
  */
 export default defineComponent({
     name: 'CueLevelEditor',
-    components: { CueButton, BaseIcon, TimeDisplay, TimeInput, IfMedia },
+    components: {
+        CueButton,
+        AdjustCueButton,
+        BaseIcon,
+        TimeDisplay,
+        TimeInput,
+        IfMedia,
+    },
     emits: ['click', 'play'],
     props: {
         cue: {

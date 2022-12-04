@@ -17,9 +17,10 @@
             title="Create a cue now (at the current playback time)!"
         >
             <BaseIcon v-once name="plus" />
-            <span>Cue! [INSERT]</span>
+            <span>Cue! </span>
             <span class="has-opacity-half">&nbsp;at&nbsp;</span>
             <TimeDisplay :modelValue="currentSeconds"></TimeDisplay>
+            <ShortcutDisplay v-once shortcut="INSERT"></ShortcutDisplay>
         </button>
     </Hotkey>
     <button
@@ -38,6 +39,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
+import ShortcutDisplay from '@/components/ShortcutDisplay.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
 /** A toggle switch for the playback mode
@@ -45,7 +47,7 @@ import { Hotkey } from '@simolation/vue-hotkey';
  */
 export default defineComponent({
     name: 'CreateCueButton',
-    components: { BaseIcon, TimeDisplay, Hotkey },
+    components: { BaseIcon, TimeDisplay, ShortcutDisplay, Hotkey },
     emits: [
         /** Occurs, when a new cue should get created at the current playhead position.
          */
@@ -61,7 +63,5 @@ export default defineComponent({
          */
         currentSeconds: Number,
     },
-    computed: {},
-    methods: {},
 });
 </script>

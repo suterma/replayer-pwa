@@ -3,8 +3,9 @@
         <MenuItemContent
             :title="title"
             :subTitle="subTitle"
+            :shortcut="shortcut"
             :iconName="iconName"
-            :disabled="disabled"
+            :disabled="disabled"            
         >
         </MenuItemContent>
     </button>
@@ -23,7 +24,10 @@ export default defineComponent({
             type: String,
             required: true,
         },
-
+        shortcut: {
+            type: String,
+            required: false,
+        },
         disabled: {
             type: Boolean,
             required: false,
