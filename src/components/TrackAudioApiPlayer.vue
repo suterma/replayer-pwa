@@ -250,7 +250,6 @@ export default defineComponent({
                 });
         };
 
-        this.updatePlaybackMode(this.playbackMode);
         this.updateVolume(this.volume);
 
         this.fader = new AudioFader(
@@ -263,12 +262,9 @@ export default defineComponent({
 
         //NOTE: Not using CORS, property crossOrigin is not set, not asking for permission
 
-        this.audioElement.loop = false; //according to the above default playbackMode
-
         //Last, update the source, if already available
         this.audioElement.preload = 'auto';
         this.audioElement.autoplay = this.autoplay;
-        //this.audioElement.preload = 'metadata';
         this.updateMediaSource(this.mediaUrl);
     },
     /** Handles the teardown of the audio graph outside the mounted lifespan.
@@ -345,17 +341,21 @@ export default defineComponent({
         volume(): void {
             this.updateVolume(this.volume);
         },
+
+        /** Watch the playback mode and update the loop property accordingly
+         * @remarks This handles the PlaybackMode.LoopTrack mode, but not other loop modes.
+         * @devdoc Handle the value also immediately at mount time
+         */
+        playbackMode: {
+            handler(playbackMode: PlaybackMode) {
+                this.debugLog(`watch playbackMode:${playbackMode}`);
+                this.audioElement.loop =
+                    playbackMode === PlaybackMode.LoopTrack;
+            },
+            immediate: true,
+        },
     },
     methods: {
-        /** Set the playback mode to a new value */
-        updatePlaybackMode(playbackMode: PlaybackMode): void {
-            //HINT: For the cue loop, a dedicated looping implementation is required,
-            //because automatic partial looping is not supported with the used HTMLAudioElement.
-            //This is solved in this component by observing the recurring time updates.
-            this.audioElement.loop = playbackMode === PlaybackMode.LoopTrack;
-            this.$emit('update:playbackMode', playbackMode);
-        },
-
         /** Set the track volume to a new value
          *  @remarks Limits the minimum level at -90dB Full Scale
          */
@@ -590,6 +590,11 @@ export default defineComponent({
             this.handleCueLoop();
         },
         /** Handles looping for a single cue, if requested
+         * @remarks Cue looping is solved here by observing and handling the recurring time updates.
+         * NOTE: Partial looping is not natively supported with the used HTMLAudioElement.
+         * For performance reasons, I do not want a buffered audio source,
+         * which however would natively support partial loops.
+         * @remarks Track looping is handled elsewhere.
          */
         handleCueLoop(): void {
             switch (this.playbackMode) {
