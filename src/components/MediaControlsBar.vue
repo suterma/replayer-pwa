@@ -1,5 +1,6 @@
 <template>
     <button
+        v-if="hasSecondTrack"
         class="button"
         :disabled="!hasPreviousTrack"
         @click="toPreviousTrack()"
@@ -44,6 +45,7 @@
     </button>
 
     <button
+        v-if="hasSecondTrack"
         class="button"
         :disabled="!hasNextTrack"
         @click="toNextTrack()"
@@ -201,6 +203,13 @@ export default defineComponent({
     },
 
     watch: {},
-    computed: {},
+    computed: {
+        /** Whether the compilation has a second track at all
+         * @remarks If there is just one track, next and previous track buttons can be omitted
+         */
+        hasSecondTrack(): boolean {
+            return this.hasPreviousTrack || this.hasNextTrack;
+        },
+    },
 });
 </script>
