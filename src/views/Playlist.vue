@@ -1,5 +1,5 @@
 <template>
-    <div class="has-navbar-fixed-bottom">
+    <div class="has-player-navbar-fixed-bottom">
         <CompilationHeader :compilation="compilation" />
         <template v-for="track in tracks" :key="track.Id">
             <TrackHeader
@@ -554,12 +554,12 @@ export default defineComponent({
 
 <style scoped>
 /** On mobile, consider the stacked level items */
-.has-navbar-fixed-bottom {
+.has-player-navbar-fixed-bottom {
     padding-bottom: calc(8rem + 68px);
 }
 /** From tablet, consider the spread out level items */
 @media screen and (min-width: 769px), print {
-    .has-navbar-fixed-bottom {
+    .has-player-navbar-fixed-bottom {
         padding-bottom: 8rem;
     }
 }

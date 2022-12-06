@@ -1,5 +1,5 @@
 <template>
-    <div class="track is-together-print has-navbar-fixed-bottom">
+    <div class="track is-together-print">
         <!-- Handle all relevant events here
     Note: A check for the active track is done in the handler methods. 
     A v-if here would work, but would register the events not in a useful order. -->
@@ -81,6 +81,7 @@
                             section: !isEditable,
                             'has-background-grey-dark': !isEditable,
                             'is-fullscreen': isTrackPlayerFullScreen,
+                            'has-player-navbar-fixed-top' : isTrackPlayerFullScreen,
                             'transition-in-place':
                                 !isEditable /* because in playback view, the players are replaced in place, not expanded */,
                         }"
@@ -102,8 +103,15 @@
                             :volume="track.Volume"
                             @ended="$emit('trackEnded')"
                         ></TrackAudioApiPlayer>
-                        <!-- Track playback controls -->
-                        <nav class="level">
+                        <!-- Track title and playback controls -->
+                        <!-- In full screen, these are at the top, and not visually separated from the cues -->
+                        <nav
+                            class="level"
+                            :class="{
+                                'section navbar is-fixed-top has-background-grey-dark is-shadowless is-borderless':
+                                    isTrackPlayerFullScreen,
+                            }"
+                        >
                             <!-- Left side -->
                             <div class="level-left">
                                 <!-- Title and Artist of the currently playing track-->

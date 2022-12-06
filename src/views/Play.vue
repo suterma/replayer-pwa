@@ -58,7 +58,7 @@
       the corresponding navbar is only shown in this view, not generally
       for the whole application.
     -->
-    <div class="has-navbar-fixed-bottom"></div>
+    <div class="has-player-navbar-fixed-bottom"></div>
 </template>
 
 <script lang="ts">
@@ -135,23 +135,3 @@ export default defineComponent({
     },
 });
 </script>
-<style lang="scss" scoped>
-/* Handling the fixed bottom navbar for this view specifically */
-/* Depending on the screen size, consider the stacked level items of the fixed bottom nav bar */
-/* Note: Pixel counts are taken from the player widget section section, by manual evaluation
-   plus 1em grace space */
-div.has-navbar-fixed-bottom {
-    padding-bottom: calc(168px + 1em);
-}
-
-@media screen and (min-width: 769px /* tablet */) {
-    div.has-navbar-fixed-bottom {
-        padding-bottom: calc(105px + 1em);
-    }
-}
-@media screen and (min-width: 1024px) {
-    div.has-navbar-fixed-bottom {
-        padding-bottom: calc(216px + 1em);
-    }
-}
-</style>

@@ -10655,9 +10655,56 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   }
 }
 /*************************************************************
+ * Player widget layout (to be used for the widget audio player)
+**************************************************************
+*/
+/* Handling the fixed navbar for a view with a (widget) player specifically */
+/* Depending on the screen size, consider the stacked level items of the widget player */
+/* Note: Pixel counts are taken from the player widget section, by manual evaluation
+   plus 1em grace space */
+.has-player-navbar-fixed-bottom {
+  padding-bottom: calc(200px + 1em);
+}
+
+@media screen and (min-width: 340px) {
+  .has-player-navbar-fixed-bottom {
+    padding-bottom: calc(160px + 1em);
+  }
+}
+@media screen and (min-width: 769px) {
+  .has-player-navbar-fixed-bottom {
+    padding-bottom: calc(105px + 1em);
+  }
+}
+@media screen and (min-width: 1024px) {
+  .has-player-navbar-fixed-bottom {
+    padding-bottom: calc(152px + 1em);
+  }
+}
+.has-player-navbar-fixed-top {
+  padding-top: calc(200px + 1em);
+}
+
+@media screen and (min-width: 340px) {
+  .has-player-navbar-fixed-top {
+    padding-top: calc(160px + 1em);
+  }
+}
+@media screen and (min-width: 769px) {
+  .has-player-navbar-fixed-top {
+    padding-top: calc(105px + 1em);
+  }
+}
+@media screen and (min-width: 1024px) {
+  .has-player-navbar-fixed-top {
+    padding-top: calc(152px + 1em);
+  }
+}
+/*************************************************************
  * Player styles (to be used for the audio player)
  * These styles are based on the slate bulmaswatch theme and borrow variables from there
 **************************************************************
+//TODO check which of these are actually still used
 */
 /* The playing color should be non-distracting, but be strong enough to visually indicate the playing state*/
 .player {
