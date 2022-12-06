@@ -14,25 +14,23 @@
         :tracksDisplayMode="tracksDisplayMode"
     />
 
-    <div v-else class="section pl-0 pr-0">
+    <div v-else class="section pl-0 pr-0 block">
         <p class="has-text-centered">
             Replayer is a free, cue-based media player for rehearsals with
             playback music.
         </p>
     </div>
-    <div class="section pl-0 pr-0" v-show="isEditMode || !hasCompilation">
+    <div class="section pl-0 pr-0 block" v-show="isEditMode || !hasCompilation">
         <!-- v-click-outside seems not to work well with v-if -->
         <!-- Additionally, v-show seems not to work properly when used directly on the MediaDropZone-Element, thus it's applied to an extra div -->
-        <div class="media-loader">
-            <!-- Offer the demo only when no compilation/track is shown -->
-            <MediaDropZone
-                v-model:isExpanded="isMediaDropZoneExpanded"
-                v-click-outside="clickedOutside"
-                :offerDemo="!hasCompilation"
-            />
-        </div>
+        <!-- Offer the demo only when no compilation/track is shown -->
+        <MediaDropZone
+            v-model:isExpanded="isMediaDropZoneExpanded"
+            v-click-outside="clickedOutside"
+            :offerDemo="!hasCompilation"
+        />
     </div>
-    <div class="section pl-0 pr-0" v-if="!hasCompilation">
+    <div class="section pl-0 pr-0 block" v-if="!hasCompilation">
         <div class="content box">
             <WelcomeText />
         </div>
@@ -138,11 +136,6 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-/** Add a margin at the top of the media loader level, to have a space between the tracks and the loader */
-.media-loader {
-    margin-top: 1.5rem;
-}
-
 /* Handling the fixed bottom navbar for this view specifically */
 /* Depending on the screen size, consider the stacked level items of the fixed bottom nav bar */
 /* Note: Pixel counts are taken from the player widget section section, by manual evaluation
@@ -161,5 +154,4 @@ div.has-navbar-fixed-bottom {
         padding-bottom: calc(216px + 1em);
     }
 }
-
 </style>
