@@ -11761,23 +11761,6 @@ html {
   opacity: 33%;
 }
 
-/* To explicitly require a radius for elements that are not the outermost child in add-on fields
-This is useful to fix situations when the outermost child temporarily is hidden by a toggling value
- */
-.field.has-addons .control:not(:first-child):not(:last-child) .button.has-left-radius,
-.field.has-addons .control:not(:first-child):not(:last-child) .input.has-left-radius,
-.field.has-addons .control:not(:first-child):not(:last-child) .select select.has-left-radius {
-  border-bottom-left-radius: 4px;
-  border-top-left-radius: 4px;
-}
-
-.field.has-addons .control:not(:first-child):not(:last-child) .button.has-right-radius,
-.field.has-addons .control:not(:first-child):not(:last-child) .input.has-right-radius,
-.field.has-addons .control:not(:first-child):not(:last-child) .select select.has-right-radius {
-  border-bottom-right-radius: 4px;
-  border-top-right-radius: 4px;
-}
-
 /* Improve text legibility */
 #app {
   -webkit-font-smoothing: antialiased;

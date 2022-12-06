@@ -78,37 +78,6 @@ html {
 .has-opacity-third {
     opacity: 33%;
 }
-/* To explicitly require a radius for elements that are not the outermost child in add-on fields
-This is useful to fix situations when the outermost child temporarily is hidden by a toggling value
- */
-
-.field.has-addons
-    .control:not(:first-child):not(:last-child)
-    .button.has-left-radius,
-.field.has-addons
-    .control:not(:first-child):not(:last-child)
-    .input.has-left-radius,
-.field.has-addons
-    .control:not(:first-child):not(:last-child)
-    .select
-    select.has-left-radius {
-    border-bottom-left-radius: $radius;
-    border-top-left-radius: $radius;
-}
-
-.field.has-addons
-    .control:not(:first-child):not(:last-child)
-    .button.has-right-radius,
-.field.has-addons
-    .control:not(:first-child):not(:last-child)
-    .input.has-right-radius,
-.field.has-addons
-    .control:not(:first-child):not(:last-child)
-    .select
-    select.has-right-radius {
-    border-bottom-right-radius: $radius;
-    border-top-right-radius: $radius;
-}
 
 /* Improve text legibility */
 #app {
