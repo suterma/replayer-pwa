@@ -19,6 +19,7 @@
 @import '_replayer-player-styles.scss';
 @import '_replayer-nav-styles.scss';
 @import '_replayer-flexbox-helpers.scss';
+@import '_replayer-button.scss';
 
 @import '_replayer-dropdown.scss';
 @import '_replayer-input.scss';
@@ -102,33 +103,6 @@ html {
     position: relative;
     top: -0.05em;
     vertical-align: middle;
-}
-
-/*************************************************************
- * (Track) Button layout
-**************************************************************
-*/
-
-/* Multiline buttons (use <br/> in a button text to force multiline) */
-.button.is-multiline {
-    min-height: 2.25em;
-    white-space: unset;
-    height: auto;
-    flex-direction: column;
-}
-
-/* Create a "block text" like layout for the cue buttons in a track */
-.track .buttons .cue.button {
-    flex-grow: 1;
-}
-
-/* Hack-fix the margin for the cue buttons (have equal space around all,
-but not at the "end/right" container's border */
-.track .buttons {
-    margin-right: -0.5rem;
-}
-.track .buttons .cue.button {
-    margin-right: 0.5rem;
 }
 
 /*************************************************************

@@ -10848,6 +10848,51 @@ when no content is shown */
 }
 
 /*************************************************************
+ * Styles for specific buttons usage
+ * These styles are based on the slate bulmaswatch theme and borrow variables from there
+**************************************************************
+*/
+/*************************************************************
+ * (Track) Button layout
+**************************************************************
+*/
+/* Multiline buttons (use <br/> in a button text to force multiline) */
+.button.is-multiline {
+  min-height: 2.25em;
+  white-space: unset;
+  height: auto;
+  flex-direction: column;
+}
+
+/*************************************************************
+ * Support for button block layout (use by adding "has-gap")
+ * Aligns all the buttons nicely when placed within a "block" 
+ * layout with flex-grow (e.g. the cues button field)
+ * Fixes the otherwise unequal gaps of right-edge buttons in a group.
+**************************************************************
+*/
+/* First, for a gapped buttons group,  
+ * remove the original bulma margin from the grouped buttons */
+.buttons.has-gap .button {
+  margin-bottom: 0;
+}
+
+.buttons.has-gap .button:not(:last-child):not(.is-fullwidth) {
+  margin-right: 0;
+}
+
+.buttons.has-gap:last-child {
+  margin-bottom: 0;
+}
+
+/* Then, instead of the margin, add a consistent gap 
+ * of the same size between the grouped buttons
+     */
+.buttons.buttons.has-gap {
+  gap: 0.5rem;
+}
+
+/*************************************************************
  * Dropdown stylings
  * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there,
  * creating a matching visual experience for these dropdowns
@@ -11783,33 +11828,6 @@ html {
   position: relative;
   top: -0.05em;
   vertical-align: middle;
-}
-
-/*************************************************************
- * (Track) Button layout
-**************************************************************
-*/
-/* Multiline buttons (use <br/> in a button text to force multiline) */
-.button.is-multiline {
-  min-height: 2.25em;
-  white-space: unset;
-  height: auto;
-  flex-direction: column;
-}
-
-/* Create a "block text" like layout for the cue buttons in a track */
-.track .buttons .cue.button {
-  flex-grow: 1;
-}
-
-/* Hack-fix the margin for the cue buttons (have equal space around all,
-but not at the "end/right" container's border */
-.track .buttons {
-  margin-right: -0.5rem;
-}
-
-.track .buttons .cue.button {
-  margin-right: 0.5rem;
 }
 
 /*************************************************************

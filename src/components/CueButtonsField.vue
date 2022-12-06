@@ -1,5 +1,5 @@
 <template>
-    <div class="cue-buttons-field buttons is-fullwidth">
+    <div class="buttons has-gap is-fullwidth">
         <template v-for="cue in track.Cues" :key="cue.Id">
             <CueButton
                 class="is-flex-grow-1"
@@ -109,17 +109,3 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-/* Align all the buttons within a nice rectangular area */
-.cue-buttons-field.buttons {
-    margin-right: -0.5rem;
-}
-
-.cue-buttons-field.buttons button {
-    margin-right: 0.5rem;
-}
-
-.cue-buttons-field.buttons:last-child {
-    /* margin-bottom: -0.5rem; */
-}
-</style>
