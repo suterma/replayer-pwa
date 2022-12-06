@@ -255,7 +255,12 @@ export default defineComponent({
     padding-right: 8px;
 }
 
-/* The content of a cue button should be full width */
+/** Visually better align the left edge of the icon image content with the buttons padding */
+.cue.button .icon {
+    margin-left: -4px;
+}
+
+/* The content inside of a cue button should be full width of the button */
 .cue.button .is-fullwidth {
     width: 100%;
 }
