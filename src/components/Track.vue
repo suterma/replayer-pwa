@@ -81,7 +81,8 @@
                             section: !isEditable,
                             'has-background-grey-dark': !isEditable,
                             'is-fullscreen': isTrackPlayerFullScreen,
-                            'has-player-navbar-fixed-top' : isTrackPlayerFullScreen,
+                            'has-player-navbar-fixed-top':
+                                isTrackPlayerFullScreen,
                             'transition-in-place':
                                 !isEditable /* because in playback view, the players are replaced in place, not expanded */,
                         }"
@@ -214,7 +215,7 @@
                                                 >
                                                     <BaseIcon
                                                         v-once
-                                                        name="arrow-expand"
+                                                        :path="mdiChevronUp"
                                                     />
                                                 </button>
                                                 <button
@@ -227,7 +228,7 @@
                                                 >
                                                     <BaseIcon
                                                         v-once
-                                                        name="arrow-collapse"
+                                                        :path="mdiChevronDown"
                                                     />
                                                 </button>
                                             </template>
@@ -389,6 +390,7 @@ import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import TrackTitleName from './TrackTitleName.vue';
 import ArtistInfo from './ArtistInfo.vue';
 import IfMedia from '@/components/IfMedia.vue';
+import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -506,6 +508,10 @@ export default defineComponent({
             isFading: false,
             /** Whether the cues are currently expanded for editing */
             isExpanded: false,
+
+            /** Icons from @mdi/js */
+            mdiChevronUp: mdiChevronUp,
+            mdiChevronDown: mdiChevronDown,
         };
     },
     methods: {
