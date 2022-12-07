@@ -25,6 +25,7 @@
         "bundle-report": "webpack-bundle-analyzer --port 4200 dist/stats.json"
     },
     "dependencies": {
+        "@mdi/js": "^7.0.96",
         "@simolation/vue-hotkey": "^1.1.10",
         "@slipmatio/control-knob": "^0.1.0",
         "@suterma/nskeyedunarchiver-liveplayback": "^0.1.3",
