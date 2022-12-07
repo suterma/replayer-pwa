@@ -13,7 +13,7 @@
             aria-haspopup="true"
             aria-controls="dropdown-menu"
             :title="title"
-            :iconName="iconName"
+            :iconPath="iconPath"
             @click="toggleDropdownExpanded()"
         />
         <div
@@ -39,6 +39,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import NavButton from '@/components/buttons/NavButton.vue';
+import { mdiDotsVertical } from '@mdi/js';
 
 /** A drop down menu, with a slot for the menu items.
  */
@@ -51,16 +52,20 @@ export default defineComponent({
             type: String,
             default: undefined,
         },
-        iconName: {
+        iconPath: {
             type: String,
-            default: 'dots-menu',
+            default: mdiDotsVertical,
         },
     },
+
     data() {
         return {
             /** Whether the dropdown menu is shown as expanded.
              */
             isDropdownExpanded: false,
+
+            /** Icons from @mdi/js */
+            mdiDotsVertical: mdiDotsVertical,
         };
     },
     methods: {

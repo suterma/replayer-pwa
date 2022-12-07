@@ -29,13 +29,13 @@
         <NavButton
             v-if="editMode"
             @click="toggleEditMode()"
-            iconName="checkmark"
+            :iconPath="mdiCheckmark"
             title="Click to accept"
         />
         <NavButton
             v-else
             @click="toggleEditMode()"
-            iconName="pencil"
+            :iconPath="mdiPencil"
             title="Click to edit"
         />
     </div>
@@ -44,6 +44,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import NavButton from '@/components/buttons/NavButton.vue';
+import { mdiPencil, mdiCheck } from '@mdi/js';
 
 /** A text input, which has a dedicated edit icon.
  */
@@ -71,6 +72,10 @@ export default defineComponent({
 
             /* The previous input text, to reverse an edit */
             previousValue: '' as string | undefined,
+
+            /** Icons from @mdi/js */
+            mdiCheckmark: mdiCheck,
+            mdiPencil: mdiPencil,
         };
     },
     computed: {},

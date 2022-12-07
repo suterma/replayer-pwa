@@ -4,7 +4,7 @@
         aria-haspopup="true"
         aria-controls="dropdown-menu"
         :title="titleText"
-        iconName="chevron-down"
+        :iconPath="mdiChevronDown"
         @click="toggleExpanded()"
     />
 </template>
@@ -12,6 +12,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import NavButton from '@/components/buttons/NavButton.vue';
+import { mdiChevronDown } from '@mdi/js';
 
 /** A button to select the collapsed or expanded state
  */
@@ -38,6 +39,13 @@ export default defineComponent({
             type: String,
             default: '',
         },
+    },
+
+    data() {
+        return {
+            /** Icons from @mdi/js */
+            mdiChevronDown: mdiChevronDown,
+        };
     },
 
     methods: {

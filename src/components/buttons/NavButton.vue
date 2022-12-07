@@ -1,6 +1,6 @@
 <template>
     <button class="button is-nav" :title="title" tabindex="0">
-        <BaseIcon :name="iconName" :class="iconClass" />
+        <BaseIcon :path="iconPath" :class="iconClass" />
     </button>
 </template>
 
@@ -23,8 +23,8 @@ export default defineComponent({
             default: '',
         },
 
-        /** The icon name, if any */
-        iconName: {
+        /** The icon path, if any */
+        iconPath: {
             type: String,
             default: '',
         },

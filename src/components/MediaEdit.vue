@@ -16,13 +16,13 @@
         <NavButton
             v-if="editMode"
             @click="toggleEditMode()"
-            iconName="checkmark"
+            :iconPath="mdiCheck"
             title="Click to finish editing the media source"
         />
         <NavButton
             v-else
             @click="toggleEditMode()"
-            iconName="pencil"
+            :iconPath="mdiPencil"
             title="Click to edit the media source"
         />
     </div>
@@ -34,6 +34,7 @@ import NavButton from '@/components/buttons/NavButton.vue';
 import MediaSourceIndicator from '@/components/MediaSourceIndicator.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import { Track } from '@/store/compilation-types';
+import { mdiPencil, mdiCheck } from '@mdi/js';
 
 /** An editor for a media source for a Track
  */
@@ -50,6 +51,10 @@ export default defineComponent({
         return {
             /** Whether the input is in Edit mode */
             editMode: false,
+
+            /** Icons from @mdi/js */
+            mdiCheck: mdiCheck,
+            mdiPencil: mdiPencil,
         };
     },
     methods: {

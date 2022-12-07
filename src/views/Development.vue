@@ -134,7 +134,7 @@
         <BaseIcon v-once name="track-repeat" title="track-repeat" />
         <BaseIcon v-once name="track-play" title="track-play" />
         <BaseIcon v-once name="track-play-once" title="track-play-once" />
-        <NavButton iconName="pencil" title="some test title" />
+        <NavButton :iconPath="mdiPencil" title="some test title" />
         <CollapsibleButton
             v-model="isExpanded"
             collapsedText="Show 11 somethings"
@@ -187,6 +187,7 @@ import NavButton from '@/components/buttons/NavButton.vue';
 //import ControlKnob from '@slipmatio/control-knob';
 import ControlKnob from '@/components/control-knob';
 import Knob from '@/components/buttons/Knob.vue';
+import { mdiPencil } from '@mdi/js';
 
 export default defineComponent({
     name: 'Development',
@@ -204,6 +205,9 @@ export default defineComponent({
             isOn: false,
             editableInputText: 'some input text',
             knobValue: 0,
+
+            /** Icons from @mdi/js */
+            mdiPencil: mdiPencil,
         };
     },
     methods: {
