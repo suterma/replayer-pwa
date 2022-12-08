@@ -16,7 +16,7 @@
             :ref="clickRef"
             title="Create a cue now (at the current playback time)!"
         >
-            <BaseIcon v-once name="plus" />
+            <BaseIcon v-once :path="mdiPlus" />
             <span>Cue! </span>
             <span class="has-opacity-half">&nbsp;at&nbsp;</span>
             <TimeDisplay :modelValue="currentSeconds"></TimeDisplay>
@@ -29,7 +29,7 @@
         @click="$emit('createNewCue')"
         title="Create a cue now (at the current playback time)!"
     >
-        <BaseIcon v-once name="plus" />
+        <BaseIcon v-once :path="mdiPlus" />
         <span>Cue!</span>
         <span class="has-opacity-half">&nbsp;at&nbsp;</span>
         <TimeDisplay :modelValue="currentSeconds"></TimeDisplay>
@@ -42,6 +42,8 @@ import TimeDisplay from '@/components/TimeDisplay.vue';
 import ShortcutDisplay from '@/components/ShortcutDisplay.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
+import { mdiPlus } from '@mdi/js';
+
 /** A toggle switch for the playback mode
  * @remarks Handles and emits various states and event for playback control.
  */
@@ -62,6 +64,12 @@ export default defineComponent({
         /** The playback progress in the current track, in [seconds]
          */
         currentSeconds: Number,
+    },
+    data() {
+        return {
+            /** Icons from @mdi/js */
+            mdiPlus: mdiPlus,
+        };
     },
 });
 </script>

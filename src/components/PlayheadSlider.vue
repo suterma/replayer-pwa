@@ -28,7 +28,7 @@
                     ></TimeDisplay>
                     <BaseIcon
                         v-once
-                        name="rewind"
+                        :path="mdiRewind"
                         class="has-text-warning is-align-self-flex-start"
                     />
                 </button>
@@ -63,7 +63,7 @@
                     ></TimeDisplay>
                     <BaseIcon
                         v-once
-                        name="fast-forward"
+                        :path="mdiFastForward"
                         class="has-text-warning is-align-self-flex-end"
                     />
                 </button>
@@ -76,6 +76,7 @@
 import { defineComponent } from 'vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
+import { mdiRewind, mdiFastForward } from '@mdi/js';
 
 /** Slider that represents the playhead position in a track as the modelValue in a ranged input (slider).
  */
@@ -125,6 +126,13 @@ export default defineComponent({
             required: false,
             default: true,
         },
+    },
+    data() {
+        return {
+            /** Icons from @mdi/js */
+            mdiRewind: mdiRewind,
+            mdiFastForward: mdiFastForward,
+        };
     },
     methods: {
         onValueChange(e: Event): void {

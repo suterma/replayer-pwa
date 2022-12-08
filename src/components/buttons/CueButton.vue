@@ -24,8 +24,12 @@
                 :style="progressStyle"
             ></span>
             <!-- first line (Do not use a level here, this has only complicated things for smaller widths so far)-->
-            <BaseIcon name="play" v-if="!isTrackPlaying" class="foreground" />
-            <BaseIcon name="pause" v-else class="foreground" />
+            <BaseIcon
+                :path="mdiPlay"
+                v-if="!isTrackPlaying"
+                class="foreground"
+            />
+            <BaseIcon :path="mdiPause" v-else class="foreground" />
 
             <slot></slot>
 
@@ -36,17 +40,17 @@
             >
             <template v-if="isCueLooping || isCuePlay">
                 <BaseIcon
-                    name="track-repeat-once"
+                    :path="mdiRepeatOnce"
                     v-if="isCueLooping"
                     class="ml-2 mr-2 foreground"
                 />
                 <BaseIcon
-                    name="track-play-once"
+                    :path="mdiPlayCircleOutline"
                     v-if="isCuePlay"
                     class="ml-2 mr-2 foreground"
                 />
             </template>
-            <BaseIcon name="none" v-else class="ml-2 mr-2 foreground" />
+            <BaseIcon :path="''" v-else class="ml-2 mr-2 foreground" />
 
             <!-- second line, if not minified (use a horizontal level also on mobile)-->
             <template v-if="!isMinified">
@@ -96,6 +100,12 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from '../TimeDisplay.vue';
 import ShortcutDisplay from '../ShortcutDisplay.vue';
 import IfMedia from '@/components/IfMedia.vue';
+import {
+    mdiPlay,
+    mdiPause,
+    mdiRepeatOnce,
+    mdiPlayCircleOutline,
+} from '@mdi/js';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
@@ -153,6 +163,15 @@ export default defineComponent({
          * @remarks The progress bar radius at the right side must be removed for fully progressed cues.
          */
         hasAddonsRight: Boolean,
+    },
+    data() {
+        return {
+            /** Icons from @mdi/js */
+            mdiPlay: mdiPlay,
+            mdiPause: mdiPause,
+            mdiRepeatOnce: mdiRepeatOnce,
+            mdiPlayCircleOutline: mdiPlayCircleOutline,
+        };
     },
     computed: {
         /** Gets a displayable title for the cue */

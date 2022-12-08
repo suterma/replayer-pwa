@@ -16,22 +16,15 @@
             @click="$emit('adjustCue')"
             :ref="clickRef"
         >
-            <BaseIcon v-once name="timer-marker" />
+            <BaseIcon v-once :path="mdiTimerMarker" />
             <!-- On large screens also show an indicative text -->
             <span class="is-hidden-touch has-opacity-half">Adjust</span>
             <ShortcutDisplay
                 v-once
                 class="is-hidden-touch is-hidden-desktop-only"
-                ><svg
-                    class="mr-1"
-                    style="width: 18px; height: 18px"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        fill="currentColor"
-                        d="M15,18V12H17.17L12,6.83L6.83,12H9V18H15M12,4L22,14H17V20H7V14H2L12,4Z"
-                    /></svg
-                >+ INSERT</ShortcutDisplay
+            >
+                <BaseIcon v-once :path="mdiAppleKeyboardShift" class="mr-1" />
+                + INSERT</ShortcutDisplay
             >
         </button>
     </Hotkey>
@@ -41,7 +34,7 @@
         title="Adjusts the cue time to the current playback time"
         @click="$emit('adjustCue')"
     >
-        <BaseIcon v-once name="timer-marker-outline" />
+        <BaseIcon v-once :path="mdiTimerMarkerOutline" />
         <!-- On large screens also show an indicative text -->
         <span class="is-hidden-touch has-opacity-half">Adjust</span>
         <!-- Show the inert shortcut as a placeholder, to keep the layout unchanged
@@ -49,16 +42,9 @@
         <ShortcutDisplay
             v-once
             class="is-invisible is-hidden-touch is-hidden-desktop-only"
-            ><svg
-                class="mr-1"
-                style="width: 18px; height: 18px"
-                viewBox="0 0 24 24"
-            >
-                <path
-                    fill="currentColor"
-                    d="M15,18V12H17.17L12,6.83L6.83,12H9V18H15M12,4L22,14H17V20H7V14H2L12,4Z"
-                /></svg
-            >+ INSERT</ShortcutDisplay
+        >
+            <BaseIcon v-once :path="mdiAppleKeyboardShift" class="mr-1" />
+            + INSERT</ShortcutDisplay
         >
     </button>
 </template>
@@ -68,6 +54,11 @@ import { defineComponent } from 'vue';
 import ShortcutDisplay from '@/components/ShortcutDisplay.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
+import {
+    mdiTimerMarker,
+    mdiTimerMarkerOutline,
+    mdiAppleKeyboardShift,
+} from '@mdi/js';
 /** A toggle switch for the playback mode
  * @remarks Handles and emits various states and event for playback control.
  */
@@ -85,6 +76,14 @@ export default defineComponent({
             type: Boolean,
             required: true,
         },
+    },
+    data() {
+        return {
+            /** Icons from @mdi/js */
+            mdiTimerMarker: mdiTimerMarker,
+            mdiTimerMarkerOutline: mdiTimerMarkerOutline,
+            mdiAppleKeyboardShift: mdiAppleKeyboardShift,
+        };
     },
 });
 </script>

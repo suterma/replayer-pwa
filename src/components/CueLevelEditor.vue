@@ -127,7 +127,7 @@
                 <div class="field">
                     <p class="control" title="Trash this cue">
                         <button class="button" @click="deleteCue()">
-                            <BaseIcon v-once name="trash" />
+                            <BaseIcon v-once :path="mdiTrashCanOutline" />
                         </button>
                     </p>
                 </div>
@@ -147,6 +147,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from './TimeDisplay.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import IfMedia from '@/components/IfMedia.vue';
+import { mdiTrashCanOutline } from '@mdi/js';
 
 /** An Editor for for a single cue
  * @remarks Shows a cue button with an inline progress bar, plus input fields for all properties
@@ -198,6 +199,9 @@ export default defineComponent({
     data() {
         return {
             cueData: { ...this.cue }, // clone the object
+
+            /** Icons from @mdi/js */
+            mdiTrashCanOutline: mdiTrashCanOutline,
         };
     },
     mounted: function (): void {

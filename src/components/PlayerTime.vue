@@ -32,6 +32,7 @@ import TimeDisplay from '@/components/TimeDisplay.vue';
 /** A UI for playback time and duration
  */
 export default defineComponent({
+  //TODO is this used still?
     name: 'PlayerTime',
     components: { BaseIcon, TimeDisplay },
 

@@ -2,7 +2,7 @@
     <p class="control" :title="indication">
         <span class="button is-indicator">
             <BaseIcon
-                name="indicator"
+                :path="mdiCircle"
                 :class="{
                     'has-text-success': isPlaying,
                     'has-text-grey-dark': isReady,
@@ -16,6 +16,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
+import { mdiCircle } from '@mdi/js';
 
 /** An indicator for the track playback state
  */
@@ -42,6 +43,12 @@ export default defineComponent({
             default: true,
             required: false,
         },
+    },
+    data() {
+        return {
+            /** Icons from @mdi/js */
+            mdiCircle: mdiCircle,
+        };
     },
     computed: {
         indication(): string {

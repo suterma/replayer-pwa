@@ -144,6 +144,7 @@ import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
 import FileHandler from '@/store/filehandler';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
+import { mdiSwapHorizontal, mdiPlus } from '@mdi/js';
 
 /** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
  * @remarks Supports collapsing the control after load, to keep the user more focused
@@ -199,6 +200,10 @@ export default defineComponent({
             isUsingMediaFromUrl: false,
             /** Whether this component is curretly loading data from a file */
             isLoadingFromFile: false,
+
+            /** Icons from @mdi/js */
+            mdiSwapHorizontal: mdiSwapHorizontal,
+            mdiPlus: mdiPlus,
         };
     },
     methods: {

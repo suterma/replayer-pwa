@@ -2,7 +2,7 @@
     <!-- align like a bulma level, vertically centered -->
     <p class="control is-flex is-align-items-center" :title="indication">
         <span class="button is-indicator">
-            <BaseIcon :name="iconName" />
+            <BaseIcon :path="iconPath" />
         </span>
         <span>{{ indication }}</span>
     </p>
@@ -12,6 +12,7 @@
 import { defineComponent } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import FileHandler from '@/store/filehandler';
+import { mdiMusicCircleOutline, mdiMusicNote } from '@mdi/js';
 
 /** An indicator for the track playback state
  */
@@ -26,6 +27,13 @@ export default defineComponent({
             required: false,
         },
     },
+    data() {
+        return {
+            /** Icons from @mdi/js */
+            mdiMusicCircleOutline: mdiMusicCircleOutline,
+            mdiMusicNote: mdiMusicNote,
+        };
+    },
     computed: {
         indication(): string {
             if (this.isUrl) {
@@ -34,12 +42,12 @@ export default defineComponent({
 
             return 'File: ' + this.source;
         },
-        iconName(): string {
+        iconPath(): string {
             if (this.isUrl) {
-                return 'music-circle-outline';
+                return mdiMusicCircleOutline;
             }
 
-            return 'music-note';
+            return mdiMusicNote;
         },
         isUrl() {
             return FileHandler.isValidHttpUrl(this.source);

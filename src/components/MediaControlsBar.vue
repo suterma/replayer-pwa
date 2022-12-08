@@ -6,7 +6,7 @@
         @click="toPreviousTrack()"
         title="skip to previous track"
     >
-        <BaseIcon v-once name="skip-previous" />
+        <BaseIcon v-once :path="mdiSkipPrevious" />
     </button>
     <button
         class="button"
@@ -14,12 +14,12 @@
         @click="toPreviousCue()"
         title="skip to previous cue"
     >
-        <BaseIcon v-once name="skip-previous-outline" />
+        <BaseIcon v-once :path="mdiSkipPreviousOutline" />
     </button>
 
     <!-- Stop (do not show on small devices, user still can use play/pause) -->
     <button class="button is-hidden-mobile" @click="stop()" title="Stop">
-        <BaseIcon v-once name="stop" />
+        <BaseIcon v-once :path="mdiStop" />
     </button>
 
     <PlayPauseButton
@@ -41,7 +41,7 @@
         @click="toNextCue()"
         title="skip to next cue"
     >
-        <BaseIcon v-once name="skip-next-outline" />
+        <BaseIcon v-once :path="mdiSkipNextOutline" />
     </button>
 
     <button
@@ -51,7 +51,7 @@
         @click="toNextTrack()"
         title="skip to next track"
     >
-        <BaseIcon v-once name="skip-next" />
+        <BaseIcon v-once :path="mdiSkipNext" />
     </button>
 
     <Knob
@@ -75,6 +75,13 @@ import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import PlaybackModeButton from '@/components/buttons/PlaybackModeButton.vue';
 import Knob from '@/components/buttons/Knob.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
+import {
+    mdiSkipPrevious,
+    mdiSkipPreviousOutline,
+    mdiStop,
+    mdiSkipNextOutline,
+    mdiSkipNext,
+} from '@mdi/js';
 
 /** A set of media controls, intended for use at the track level. Contains Buttons like previous/next track and cue, playback mode and a volume knob, arranged in a bar-like layout.
  */
@@ -160,9 +167,15 @@ export default defineComponent({
             default: false,
         },
     },
-
     data() {
-        return {};
+        return {
+            /** Icons from @mdi/js */
+            mdiSkipPrevious: mdiSkipPrevious,
+            mdiSkipPreviousOutline: mdiSkipPreviousOutline,
+            mdiStop: mdiStop,
+            mdiSkipNextOutline: mdiSkipNextOutline,
+            mdiSkipNext: mdiSkipNext,
+        };
     },
     methods: {
         stop(): void {
