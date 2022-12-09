@@ -3,9 +3,9 @@
         <div class="level-left">
             <div
                 class="level-item dropdown-item-icon is-borderless has-background-transparent pl-0 pr-0"
-                v-if="iconName"
+                v-if="iconPath"
             >
-                <BaseIcon :name="iconName" />
+                <BaseIcon :path="iconPath" />
             </div>
             <div class="level-item">
                 <div>
@@ -44,7 +44,7 @@ export default defineComponent({
             default: '',
             required: false,
         },
-        iconName: {
+        iconPath: {
             type: String,
             default: '',
             required: false,

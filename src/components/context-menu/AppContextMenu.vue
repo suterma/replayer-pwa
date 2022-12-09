@@ -3,7 +3,7 @@
         v-once
         ref="dropdownMenu"
         title="App menu"
-        iconName="hamburger-menu"
+        :iconPath="mdiMenu"
         style="z-index: 3"
     >
         <Hotkey :keys="['f5']" :excluded-elements="[]" v-slot="{ clickRef }">
@@ -12,7 +12,7 @@
                 title="Play"
                 shortcut="F5"
                 :clickRef="clickRef"
-                iconName="play"
+                :iconPath="mdiPlay"
             />
         </Hotkey>
         <Hotkey :keys="['f2']" :excluded-elements="[]" v-slot="{ clickRef }">
@@ -21,18 +21,18 @@
                 title="Edit"
                 shortcut="F2"
                 :clickRef="clickRef"
-                iconName="pencil"
+                :iconPath="mdiPencil"
             />
         </Hotkey>
         <DropdownMenuRouterLink
             to="/setlist"
             title="Set list"
-            iconName="list-box-outline"
+            :iconPath="mdiListBoxOutline"
         />
         <DropdownMenuRouterLink
             to="/settings"
             title="Settings"
-            iconName="cog-outline"
+            :iconPath="mdiCogOutline"
         />
         <Hotkey :keys="['f1']" :excluded-elements="[]" v-slot="{ clickRef }">
             <DropdownMenuRouterLink
@@ -40,14 +40,14 @@
                 title="About"
                 shortcut="F1"
                 :clickRef="clickRef"
-                iconName="information-outline"
+                :iconPath="mdiInformationOutline"
             />
         </Hotkey>
         <Experimental>
             <DropdownMenuRouterLink
                 to="/development"
                 title="Development"
-                iconName="flask-outline"
+                :iconPath="mdiFlaskOutline"
             />
         </Experimental>
     </DropdownMenu>
@@ -58,6 +58,15 @@ import { defineComponent } from 'vue';
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
 import DropdownMenuRouterLink from '@/components/dropdown-menu/DropdownMenuRouterLink.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
+import {
+    mdiMenu,
+    mdiPlay,
+    mdiPencil,
+    mdiListBoxOutline,
+    mdiCogOutline,
+    mdiInformationOutline,
+    mdiFlaskOutline,
+} from '@mdi/js';
 
 /** A nav bar as header with a menu for a compilation
  */
@@ -66,8 +75,19 @@ export default defineComponent({
     components: {
         DropdownMenu,
         DropdownMenuRouterLink,
-
         Hotkey,
+    },
+    data() {
+        return {
+            /** Icons from @mdi/js */
+            mdiMenu: mdiMenu,
+            mdiPlay: mdiPlay,
+            mdiPencil: mdiPencil,
+            mdiListBoxOutline: mdiListBoxOutline,
+            mdiCogOutline: mdiCogOutline,
+            mdiInformationOutline: mdiInformationOutline,
+            mdiFlaskOutline: mdiFlaskOutline,
+        };
     },
 });
 </script>

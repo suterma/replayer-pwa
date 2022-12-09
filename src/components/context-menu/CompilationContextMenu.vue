@@ -6,7 +6,7 @@
                 subTitle="Save compilation to the device"
                 @click="download"
                 :ref="clickRef"
-                iconName="tray-arrow-down"
+                :iconPath="mdiTrayArrowDown"
             />
         </Hotkey>
         <hr class="dropdown-divider" />
@@ -16,7 +16,7 @@
                 subTitle="(discard the compilation)"
                 @click="close"
                 :ref="clickRef"
-                iconName="close-box-outline"
+                :iconPath="mdiCloseBoxOutline"
             />
         </Hotkey>
     </DropdownMenu>
@@ -30,7 +30,7 @@ import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
 import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
 import { confirm, downloadCompilation } from '@/code/ui/dialogs';
 import { Hotkey } from '@simolation/vue-hotkey';
-
+import { mdiCloseBoxOutline, mdiTrayArrowDown } from '@mdi/js';
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
@@ -41,6 +41,13 @@ export default defineComponent({
             type: Compilation,
             required: true,
         },
+    },
+    data() {
+        return {
+            /** Icons from @mdi/js */
+            mdiCloseBoxOutline: mdiCloseBoxOutline,
+            mdiTrayArrowDown: mdiTrayArrowDown,
+        };
     },
     methods: {
         /** Closes the compilation

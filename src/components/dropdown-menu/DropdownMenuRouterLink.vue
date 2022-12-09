@@ -7,7 +7,7 @@
             :ref="clickRef"
             :title="title"
             :subTitle="subTitle"
-            :iconName="iconName"
+            :iconPath="iconPath"
             :shortcut="shortcut"
         >
         </DropdownMenuButton>
@@ -41,7 +41,7 @@ export default defineComponent({
             default: '',
             required: false,
         },
-        iconName: {
+        iconPath: {
             type: String,
             default: '',
             required: false,

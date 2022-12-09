@@ -9,7 +9,7 @@
                         class="button is-success is-pulled-right"
                         @click="printWindow()"
                     >
-                        <BaseIcon v-once name="printer-outline" />
+                        <BaseIcon v-once :path="mdiPrinterOutline" />
                         <span> Print (b/w)</span>
                     </button>
                 </div>
@@ -143,6 +143,7 @@ import ArtistInfo from '@/components/ArtistInfo.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import TrackTitleName from '@/components/TrackTitleName.vue';
+import { mdiPrinterOutline } from '@mdi/js';
 
 /** A printable display of a complete compilation, with a track and cue listing */
 export default defineComponent({
@@ -163,6 +164,9 @@ export default defineComponent({
             showCues: true,
             /** Whether to show the media source */
             showMediaSource: true,
+
+            /** Icons from @mdi/js */
+            mdiPrinterOutline: mdiPrinterOutline,
         };
     },
     computed: {

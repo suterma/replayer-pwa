@@ -4,7 +4,7 @@
             :title="title"
             :subTitle="subTitle"
             :shortcut="shortcut"
-            :iconName="iconName"
+            :iconPath="iconPath"
             :disabled="disabled"
         >
         </MenuItemContent>
@@ -39,7 +39,7 @@ export default defineComponent({
             default: '',
             required: false,
         },
-        iconName: {
+        iconPath: {
             type: String,
             default: '',
             required: false,
