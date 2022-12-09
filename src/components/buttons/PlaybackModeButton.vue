@@ -6,12 +6,12 @@
         @click="togglePlaybackMode()"
         :title="modeTitle"
     >
-        <BaseIcon v-if="isPlaybackTrack" name="track-play" />
-        <BaseIcon v-if="isPlaybackLoopTrack" name="track-repeat" />
-        <BaseIcon v-if="isPlaybackCue" name="track-play-once" />
-        <BaseIcon v-if="isPlaybackLoopCue" name="track-repeat-once" />
-        <BaseIcon v-if="isPlaybackLoopCompilation" name="repeat-variant" />
-        <BaseIcon v-if="isPlaybackShuffleCompilation" name="shuffle-variant" />
+        <BaseIcon v-if="isPlaybackTrack" :path="rTrackPlay" />
+        <BaseIcon v-if="isPlaybackLoopTrack" :path="rTrackRepeat" />
+        <BaseIcon v-if="isPlaybackCue" :path="rTrackPlayOnce" />
+        <BaseIcon v-if="isPlaybackLoopCue" :path="rTrackRepeatOnce" />
+        <BaseIcon v-if="isPlaybackLoopCompilation" :path="rRepeatVariant" />
+        <BaseIcon v-if="isPlaybackShuffleCompilation" :path="rShuffleVariant" />
     </button>
 </template>
 
@@ -19,6 +19,14 @@
 import { defineComponent } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { PlaybackMode } from '@/store/compilation-types';
+import {
+    rTrackPlay,
+    rTrackRepeat,
+    rRepeatVariant,
+    rShuffleVariant,
+    rTrackPlayOnce,
+    rTrackRepeatOnce,
+} from '@/components/icons/BaseIcon.vue';
 
 /** A toggle switch for the playback mode
  * @remarks Handles and emits various states and event for playback control.
@@ -36,6 +44,17 @@ export default defineComponent({
             type: String as () => PlaybackMode,
             required: true,
         },
+    },
+    data() {
+        return {
+            /** Icons from @mdi/js */
+            rTrackPlay: rTrackPlay,
+            rTrackRepeat: rTrackRepeat,
+            rRepeatVariant: rRepeatVariant,
+            rShuffleVariant: rShuffleVariant,
+            rTrackPlayOnce: rTrackPlayOnce,
+            rTrackRepeatOnce: rTrackRepeatOnce,
+        };
     },
     computed: {
         isPlaybackTrack(): boolean {
@@ -115,10 +134,6 @@ export default defineComponent({
                     nextPlaybackMode = PlaybackMode.PlayTrack;
                     break;
             }
-
-            console.debug(
-                `PlaybackModeButton::togglePlaybackMode:nextPlaybackMode:${nextPlaybackMode}`,
-            );
             this.$emit('update:modelValue', nextPlaybackMode);
         },
     },
