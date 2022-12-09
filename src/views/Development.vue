@@ -130,10 +130,12 @@
         ></iframe>
 
         <h1 class="title has-text-danger">Icons test</h1>
-        <BaseIcon v-once name="track-repeat-once" title="track-repeat-once" />
-        <BaseIcon v-once name="track-repeat" title="track-repeat" />
-        <BaseIcon v-once name="track-play" title="track-play" />
-        <BaseIcon v-once name="track-play-once" title="track-play-once" />
+        <BaseIcon v-once :path="rTrackPlay" />
+        <BaseIcon v-once :path="rTrackRepeat" />
+        <BaseIcon v-once :path="rTrackPlayOnce" />
+        <BaseIcon v-once :path="rTrackRepeatOnce" />
+        <BaseIcon v-once :path="rRepeatVariant" />
+        <BaseIcon v-once :path="rShuffleVariant" />
         <NavButton :iconPath="mdiPencil" title="some test title" />
         <CollapsibleButton
             v-model="isExpanded"
@@ -188,7 +190,14 @@ import NavButton from '@/components/buttons/NavButton.vue';
 import ControlKnob from '@/components/control-knob';
 import Knob from '@/components/buttons/Knob.vue';
 import { mdiPencil } from '@mdi/js';
-
+import {
+    rTrackPlay,
+    rTrackRepeat,
+    rRepeatVariant,
+    rShuffleVariant,
+    rTrackPlayOnce,
+    rTrackRepeatOnce,
+} from '@/components/icons/BaseIcon.vue';
 export default defineComponent({
     name: 'Development',
     components: {
@@ -208,6 +217,12 @@ export default defineComponent({
 
             /** Icons from @mdi/js */
             mdiPencil: mdiPencil,
+            rTrackPlay: rTrackPlay,
+            rTrackRepeat: rTrackRepeat,
+            rRepeatVariant: rRepeatVariant,
+            rShuffleVariant: rShuffleVariant,
+            rTrackPlayOnce: rTrackPlayOnce,
+            rTrackRepeatOnce: rTrackRepeatOnce,
         };
     },
     methods: {

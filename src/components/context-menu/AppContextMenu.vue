@@ -25,11 +25,6 @@
             />
         </Hotkey>
         <DropdownMenuRouterLink
-            to="/playlist"
-            title="Play List"
-            iconName="list-box-outline"
-        />
-        <DropdownMenuRouterLink
             to="/setlist"
             title="Set list"
             iconName="list-box-outline"

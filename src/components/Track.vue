@@ -70,7 +70,7 @@
                 after it has become the active track ( gets
                 play-request-was-interrupted) -->
                 <Transition name="item">
-                    <!-- In the playlist view, the player is only shown for the active track
+                    <!-- In the play view, the player is only shown for the active track
                   In the edit view, the player is shown for all expanded tracks -->
                     <div
                         v-show="

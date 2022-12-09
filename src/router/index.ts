@@ -27,17 +27,6 @@ const routes: Array<RouteRecordRaw> = [
         component: Play,
     },
     {
-        path: '/playlist',
-        name: 'Playlist',
-        //component: Playlist,
-
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-            import(/* webpackChunkName: "playlist" */ '../views/Playlist.vue'),
-    },
-    {
         path: '/setlist',
         name: 'Setlist',
         //component: Setlist,
