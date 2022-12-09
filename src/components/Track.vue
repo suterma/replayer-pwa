@@ -180,6 +180,7 @@
                                     <div class="is-grouped">
                                         <MediaControlsBar
                                             @stop="stop()"
+                                            :hideTrackNavigation="isEditable"
                                             :hasPreviousTrack="hasPreviousTrack"
                                             @previousTrack="
                                                 $emit('previousTrack')

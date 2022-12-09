@@ -1,6 +1,6 @@
 <template>
     <button
-        v-if="hasSecondTrack"
+        v-if="(hasSecondTrack && !hideTrackNavigation)"
         class="button"
         :disabled="!hasPreviousTrack"
         @click="toPreviousTrack()"
@@ -45,7 +45,7 @@
     </button>
 
     <button
-        v-if="hasSecondTrack"
+        v-if="(hasSecondTrack && !hideTrackNavigation)"
         class="button"
         :disabled="!hasNextTrack"
         @click="toNextTrack()"
@@ -144,6 +144,13 @@ export default defineComponent({
         /** Whether the playing cue has a previous cue
          */
         hasPreviousCue: {
+            type: Boolean,
+            default: false,
+        },
+
+        /** Whether to hide the previous/next track buttons
+         */
+        hideTrackNavigation: {
             type: Boolean,
             default: false,
         },

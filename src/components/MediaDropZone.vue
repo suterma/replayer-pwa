@@ -1,6 +1,6 @@
 <template>
-    <!-- This level is designed that the two input methods can grow and shink, filling up the available horizontal space.
-The URL input is wider, because it should be able to easily deal with lenghty input values -->
+    <!-- This level is designed that the two input methods can grow and shrink, filling up the available horizontal space.
+The URL input is wider, because it should be able to easily deal with lengthy input values -->
     <div class="level media-drop-zone">
         <div v-if="isExpanded" class="level-item has-text-centered">
             <!-- This is a combined file load and drop zone -->
@@ -38,11 +38,11 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     :accept="acceptedFiles"
                 />
                 <template v-if="isReplacementMode">
-                    <BaseIcon v-once name="swap-horizontal" />
+                    <BaseIcon v-once :path="mdiSwapHorizontal" />
                     <span>Click / drop to replace file</span>
                 </template>
                 <template v-else>
-                    <BaseIcon v-once name="plus" />
+                    <BaseIcon v-once :path="mdiPlus"  />
                     <span class="is-hidden-desktop">Load file(s)</span>
                     <span class="is-hidden-touch"
                         >Click / drop to load file(s)</span
@@ -60,7 +60,7 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                     title="Add media / expand drop zone"
                     @click="expand"
                 >
-                    <BaseIcon v-once name="plus" />
+                    <BaseIcon v-once :path="mdiPlus"  />
                 </button>
             </div>
         </div>
@@ -111,11 +111,11 @@ The URL input is wider, because it should be able to easily deal with lenghty in
                         @click="useMediaUrl"
                     >
                         <template v-if="isReplacementMode">
-                            <BaseIcon v-once name="swap-horizontal" />
+                            <BaseIcon v-once :path="mdiSwapHorizontal" />
                             <span>Replace</span>
                         </template>
                         <template v-else>
-                            <BaseIcon v-once name="plus" />
+                            <BaseIcon v-once :path="mdiPlus" />
                             <span>Use</span>
                         </template>
                     </button>
