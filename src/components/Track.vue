@@ -135,26 +135,32 @@
                                     ></span>
 
                                     <div class="is-fullwidth">
-                                        <p
-                                            class="is-size-5"
-                                            :class="{
-                                                'has-text-success':
-                                                    isActiveTrack,
-                                            }"
-                                        >
-                                            <TrackTitleName
-                                                :track="track"
-                                            ></TrackTitleName>
-                                        </p>
-
-                                        <!-- Artist info (don't show on small devices, keep at end to keep the appearance calm)-->
-                                        <p class="is-size-7 is-hidden-mobile">
-                                            <ArtistInfo :track="track" />&nbsp;
-                                            <!--nbsp as placeholder to keep layout when no artist info -->
+                                        <p>
+                                            <!-- Use smaller title in collapsed state, use regular size (4) when full screen -->
+                                            <span
+                                                :class="{
+                                                    'has-text-success':
+                                                        isActiveTrack,
+                                                    'is-size-4':
+                                                        isTrackPlayerFullScreen,
+                                                    'is-size-5':
+                                                        !isTrackPlayerFullScreen,
+                                                }"
+                                            >
+                                                <TrackTitleName
+                                                    :track="track"
+                                                ></TrackTitleName>
+                                            </span>
+                                            <!-- Artist info (don't show on small devices)-->
+                                            <span
+                                                class="is-size-7 is-hidden-mobile"
+                                                >&nbsp;
+                                                <!--nbsp as placeholder to keep layout when no artist info -->
+                                                <ArtistInfo :track="track" />
+                                            </span>
                                         </p>
                                     </div>
                                 </div>
-                                <!-- <div class="level-item"></div> -->
                             </div>
 
                             <!-- Right side -->
