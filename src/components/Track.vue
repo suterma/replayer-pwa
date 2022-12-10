@@ -135,7 +135,12 @@
                                     ></span>
 
                                     <div class="is-fullwidth">
-                                        <p>
+                                        <p
+                                            @click="
+                                                toggleTrackPlayerFullScreen()
+                                            "
+                                            title="toggle full-screen mode"
+                                        >
                                             <!-- Use smaller title in collapsed state, use regular size (4) when full screen -->
                                             <span
                                                 :class="{
