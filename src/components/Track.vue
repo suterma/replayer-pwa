@@ -136,7 +136,7 @@
 
                                     <div class="is-fullwidth">
                                         <p
-                                            class="is-size-4"
+                                            class="is-size-5"
                                             :class="{
                                                 'has-text-success':
                                                     isActiveTrack,
