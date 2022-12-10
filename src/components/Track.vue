@@ -120,6 +120,20 @@
                                     v-if="!isEditable"
                                     class="level-item is-justify-content-left has-cropped-text"
                                 >
+                                    <span>
+                                        <CollapsibleButton
+                                            v-if="!isEditable"
+                                            :modelValue="
+                                                isTrackPlayerFullScreen
+                                            "
+                                            @click="
+                                                toggleTrackPlayerFullScreen()
+                                            "
+                                            title="toggle full-screen mode"
+                                            collapsedChevronDirection="up"
+                                        ></CollapsibleButton
+                                    ></span>
+
                                     <div class="is-fullwidth">
                                         <p
                                             class="is-size-4"
@@ -203,17 +217,6 @@
                                             :isFading="isFading"
                                             @togglePlaying="skipToPlayPause()"
                                         >
-                                            <CollapsibleButton
-                                                v-if="!isEditable"
-                                                :modelValue="
-                                                    isTrackPlayerFullScreen
-                                                "
-                                                @click="
-                                                    toggleTrackPlayerFullScreen()
-                                                "
-                                                title="toggle full-screen mode"
-                                                collapsedChevronDirection="up"
-                                            ></CollapsibleButton>
                                         </MediaControlsBar>
                                     </div>
                                 </div>
