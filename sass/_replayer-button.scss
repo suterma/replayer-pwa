@@ -30,13 +30,13 @@
 /* First, for a gapped buttons group,  
  * remove the original bulma margin from the grouped buttons */
 .buttons.has-gap .button {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 .buttons.has-gap .button:not(:last-child):not(.is-fullwidth) {
-  margin-right: 0;
+    margin-right: 0;
 }
 .buttons.has-gap:last-child {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 /* Then, instead of the margin, add a consistent gap 
@@ -44,4 +44,36 @@
      */
 .buttons.buttons.has-gap {
     gap: 0.5rem;
+}
+
+/*************************************************************
+ * Support for button icon rotations
+ **************************************************************
+*/
+
+.button .icon.rotate {
+    -moz-transition: all 0.3s linear;
+    -webkit-transition: all 0.3s linear;
+    transition: all 0.3s linear;
+
+    &.right {
+        -ms-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+    }
+
+    &.up {
+        -ms-transform: rotate(-180deg);
+        -moz-transform: rotate(-180deg);
+        -webkit-transform: rotate(-180deg);
+        transform: rotate(-180deg);
+    }
+
+    &.down {
+        -ms-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
 }

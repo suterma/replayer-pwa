@@ -120,7 +120,7 @@
                                     v-if="!isEditable"
                                     class="level-item is-justify-content-left has-cropped-text"
                                 >
-                                    <div>
+                                    <div class="is-fullwidth">
                                         <p
                                             class="is-size-4"
                                             :class="{
@@ -140,6 +140,7 @@
                                         </p>
                                     </div>
                                 </div>
+                                <!-- <div class="level-item"></div> -->
                             </div>
 
                             <!-- Right side -->
@@ -202,37 +203,17 @@
                                             :isFading="isFading"
                                             @togglePlaying="skipToPlayPause()"
                                         >
-                                            <!-- the zoom (Full-Screen) button, only in playback mode -->
-                                            <template v-if="!isEditable">
-                                                <button
-                                                    v-if="
-                                                        !isTrackPlayerFullScreen
-                                                    "
-                                                    class="button"
-                                                    @click="
-                                                        toggleTrackPlayerFullScreen()
-                                                    "
-                                                    title="toggle full-screen mode"
-                                                >
-                                                    <BaseIcon
-                                                        v-once
-                                                        :path="mdiChevronUp"
-                                                    />
-                                                </button>
-                                                <button
-                                                    v-else
-                                                    class="button"
-                                                    @click="
-                                                        toggleTrackPlayerFullScreen()
-                                                    "
-                                                    title="toggle full-screen mode"
-                                                >
-                                                    <BaseIcon
-                                                        v-once
-                                                        :path="mdiChevronDown"
-                                                    />
-                                                </button>
-                                            </template>
+                                            <CollapsibleButton
+                                                v-if="!isEditable"
+                                                :modelValue="
+                                                    isTrackPlayerFullScreen
+                                                "
+                                                @click="
+                                                    toggleTrackPlayerFullScreen()
+                                                "
+                                                title="toggle full-screen mode"
+                                                collapsedChevronDirection="up"
+                                            ></CollapsibleButton>
                                         </MediaControlsBar>
                                     </div>
                                 </div>
@@ -381,12 +362,12 @@ import MediaControlsBar from '@/components/MediaControlsBar.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import CreateCueButton from '@/components/buttons/CreateCueButton.vue';
+import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
-import BaseIcon from '@/components/icons/BaseIcon.vue';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import TrackTitleName from './TrackTitleName.vue';
 import ArtistInfo from './ArtistInfo.vue';
@@ -409,9 +390,9 @@ export default defineComponent({
         TrackHeader,
         TrackHeaderEdit,
         PlayPauseButton,
-        BaseIcon,
         TimeDisplay,
         CreateCueButton,
+        CollapsibleButton,
         PlayheadSlider,
         CueButtonsBar,
         CueButtonsField,

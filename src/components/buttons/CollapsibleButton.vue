@@ -14,7 +14,8 @@ import { defineComponent } from 'vue';
 import NavButton from '@/components/buttons/NavButton.vue';
 import { mdiChevronDown } from '@mdi/js';
 
-/** A button to select the collapsed or expanded state
+/** A button to display and toggle a collapsed or expanded state, using a directed chevron icon.
+ * @remarks The default (expanded) chevron direction is down.
  */
 export default defineComponent({
     name: 'CollapsibleButton',
@@ -33,6 +34,12 @@ export default defineComponent({
         collapsedText: {
             type: String,
             default: '',
+        },
+        /** The direction of the chevron for the collapsed state: either 'right' (default) or 'up' */
+        collapsedChevronDirection: {
+            required: false,
+            type: String,
+            default: 'right',
         },
         /* The title*/
         title: {
@@ -68,26 +75,13 @@ export default defineComponent({
         },
         /** The dynamic class for the rotating expander button icon */
         navIconClass(): string {
-            return 'rotate ' + (this.modelValue == true ? 'down' : '');
+            return (
+                'rotate ' +
+                (this.modelValue == true
+                    ? 'down'
+                    : this.collapsedChevronDirection)
+            );
         },
     },
 });
 </script>
-<style>
-.rotate {
-    -moz-transition: all 0.3s linear;
-    -webkit-transition: all 0.3s linear;
-    transition: all 0.3s linear;
-    -ms-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);
-    -webkit-transform: rotate(-90deg);
-    transform: rotate(-90deg);
-}
-
-.rotate.down {
-    -ms-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-}
-</style>

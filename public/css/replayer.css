@@ -10940,6 +10940,34 @@ when no content is shown */
 }
 
 /*************************************************************
+ * Support for button icon rotations
+ **************************************************************
+*/
+.button .icon.rotate {
+  -moz-transition: all 0.3s linear;
+  -webkit-transition: all 0.3s linear;
+  transition: all 0.3s linear;
+}
+.button .icon.rotate.right {
+  -ms-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+}
+.button .icon.rotate.up {
+  -ms-transform: rotate(-180deg);
+  -moz-transform: rotate(-180deg);
+  -webkit-transform: rotate(-180deg);
+  transform: rotate(-180deg);
+}
+.button .icon.rotate.down {
+  -ms-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
+/*************************************************************
  * Dropdown stylings
  * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there,
  * creating a matching visual experience for these dropdowns
