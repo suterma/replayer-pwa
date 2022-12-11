@@ -1,5 +1,9 @@
 <template>
-    <div class="track is-together-print" :class="{ 'mb-5': isEditable && isExpanded }">
+    <!-- Have some more margin to keep the editing track separate from the other, listed tracks -->
+    <div
+        class="track is-together-print"
+        :class="{ 'mb-5': isEditable && isExpanded }"
+    >
         <!-- Handle all relevant events here
     Note: A check for the active track is done in the handler methods. 
     A v-if here would work, but would register the events not in a useful order. -->

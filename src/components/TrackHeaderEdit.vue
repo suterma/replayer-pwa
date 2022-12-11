@@ -17,7 +17,8 @@
                         :modelValue="isExpanded"
                         @update:modelValue="toggleExpanded"
                         title="Track"
-                        collapsedText="Expand to edit"
+                        collapsedText="Click to expand / edit cues"
+                        expandedText="Click to collapse"
                     />
 
                     <div class="field">

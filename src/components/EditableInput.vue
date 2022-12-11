@@ -3,7 +3,7 @@
     <div class="is-flex is-align-items-center" v-click-outside="acceptValue">
         <template v-if="editMode">
             <!-- Use ENTER as hotkey to accept the value -->
-            <!-- Use ESC as hotkey to rever the value -->
+            <!-- Use ESC as hotkey to revert the value -->
             <input
                 v-if="editMode"
                 v-focus
@@ -18,33 +18,40 @@
                 :placeholder="placeholder"
                 tabindex="0"
             />
+            <!-- Edit -->
+            <NavButton
+                v-if="editMode"
+                @click="toggleEditMode()"
+                :iconPath="mdiCheckBold"
+                title="Click to accept"
+            />
         </template>
-        <span v-else @click="toggleEditMode()">
+        <span
+            v-else
+            @click="toggleEditMode()"
+            title="Click to edit"
+            class="is-relative mr-40px"
+        >
             <span v-if="!modelValue" class="is-placeholder"
                 >{{ placeholder }}
             </span>
             {{ modelValue }}
+            <!-- Edit -->
+            <!-- To not disturb the original layout by the edit button, just position it absolutely,
+            and introduce a margin on the original text. -->
+            <NavButton
+                class="is-absolute"
+                :iconPath="mdiPencilOutline"
+                title="Click to edit"
+            />
         </span>
-        <!-- Edit -->
-        <NavButton
-            v-if="editMode"
-            @click="toggleEditMode()"
-            :iconPath="mdiCheckmark"
-            title="Click to accept"
-        />
-        <NavButton
-            v-else
-            @click="toggleEditMode()"
-            :iconPath="mdiPencil"
-            title="Click to edit"
-        />
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import NavButton from '@/components/buttons/NavButton.vue';
-import { mdiPencil, mdiCheck } from '@mdi/js';
+import { mdiPencilOutline, mdiCheckBold } from '@mdi/js';
 
 /** A text input, which has a dedicated edit icon.
  */
@@ -74,8 +81,8 @@ export default defineComponent({
             previousValue: '' as string | undefined,
 
             /** Icons from @mdi/js */
-            mdiCheckmark: mdiCheck,
-            mdiPencil: mdiPencil,
+            mdiCheckBold: mdiCheckBold,
+            mdiPencilOutline: mdiPencilOutline,
         };
     },
     computed: {},
@@ -110,3 +117,13 @@ export default defineComponent({
     },
 });
 </script>
+<style scoped>
+.mr-40px {
+    margin-right: 40px;
+}
+
+.is-absolute {
+    bottom: -8px;
+    margin: auto 0;
+}
+</style>
