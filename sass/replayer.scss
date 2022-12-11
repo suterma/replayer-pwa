@@ -109,6 +109,11 @@ html {
  * Layout helpers
 **************************************************************
 */
+/** A complement to the is-relative class
+*/
+.is-absolute {
+  position: absolute !important;
+}
 
 /** Like with columns, 
 * if you want to remove the space to a subsequent item, 
