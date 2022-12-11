@@ -1,5 +1,5 @@
 <template>
-    <div class="track is-together-print">
+    <div class="track is-together-print" :class="{ 'mb-5': isEditable && isExpanded }">
         <!-- Handle all relevant events here
     Note: A check for the active track is done in the handler methods. 
     A v-if here would work, but would register the events not in a useful order. -->
@@ -136,10 +136,7 @@
                         >
                             <!-- Left side -->
                             <div class="level-left">
-                                <div
-                                    v-if="isEditable"
-                                    class="level-item"
-                                >
+                                <div v-if="isEditable" class="level-item">
                                     <CreateCueButton
                                         :isActiveTrack="isActiveTrack"
                                         :currentSeconds="currentSeconds"
