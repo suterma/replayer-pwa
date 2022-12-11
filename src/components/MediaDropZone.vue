@@ -42,7 +42,7 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                     <span>Click / drop to replace file</span>
                 </template>
                 <template v-else>
-                    <BaseIcon v-once :path="mdiPlus"  />
+                    <BaseIcon v-once :path="mdiMusicNotePlus"  />
                     <span class="is-hidden-desktop">Load file(s)</span>
                     <span class="is-hidden-touch"
                         >Click / drop to load file(s)</span
@@ -60,7 +60,7 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                     title="Add media / expand drop zone"
                     @click="expand"
                 >
-                    <BaseIcon v-once :path="mdiPlus"  />
+                    <BaseIcon v-once :path="mdiMusicNotePlus"  />
                 </button>
             </div>
         </div>
@@ -115,7 +115,7 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                             <span>Replace</span>
                         </template>
                         <template v-else>
-                            <BaseIcon v-once :path="mdiPlus" />
+                            <BaseIcon v-once :path="mdiMusicNotePlus" />
                             <span>Use</span>
                         </template>
                     </button>
@@ -144,7 +144,7 @@ import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
 import FileHandler from '@/store/filehandler';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { mdiSwapHorizontal, mdiPlus } from '@mdi/js';
+import { mdiSwapHorizontal, mdiMusicNotePlus } from '@mdi/js';
 
 /** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
  * @remarks Supports collapsing the control after load, to keep the user more focused
@@ -203,7 +203,7 @@ export default defineComponent({
 
             /** Icons from @mdi/js */
             mdiSwapHorizontal: mdiSwapHorizontal,
-            mdiPlus: mdiPlus,
+            mdiMusicNotePlus: mdiMusicNotePlus,
         };
     },
     methods: {
