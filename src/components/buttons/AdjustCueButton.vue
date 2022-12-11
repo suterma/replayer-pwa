@@ -16,7 +16,7 @@
             @click="$emit('adjustCue')"
             :ref="clickRef"
         >
-            <BaseIcon v-once :path="mdiTimerMarker" />
+            <BaseIcon v-once :path="mdiTimerPlay" />
             <!-- On large screens also show an indicative text -->
             <span class="is-hidden-touch has-opacity-half">Adjust</span>
             <ShortcutDisplay
@@ -34,7 +34,7 @@
         title="Adjusts the cue time to the current playback time"
         @click="$emit('adjustCue')"
     >
-        <BaseIcon v-once :path="mdiTimerMarkerOutline" />
+        <BaseIcon v-once :path="mdiTimerPlayOutline" />
         <!-- On large screens also show an indicative text -->
         <span class="is-hidden-touch has-opacity-half">Adjust</span>
         <!-- Show the inert shortcut as a placeholder, to keep the layout unchanged
@@ -55,8 +55,8 @@ import ShortcutDisplay from '@/components/ShortcutDisplay.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
 import {
-    mdiTimerMarker,
-    mdiTimerMarkerOutline,
+    mdiTimerPlay,
+    mdiTimerPlayOutline,
     mdiAppleKeyboardShift,
 } from '@mdi/js';
 /** A toggle switch for the playback mode
@@ -80,8 +80,8 @@ export default defineComponent({
     data() {
         return {
             /** Icons from @mdi/js */
-            mdiTimerMarker: mdiTimerMarker,
-            mdiTimerMarkerOutline: mdiTimerMarkerOutline,
+            mdiTimerPlay: mdiTimerPlay,
+            mdiTimerPlayOutline: mdiTimerPlayOutline,
             mdiAppleKeyboardShift: mdiAppleKeyboardShift,
         };
     },

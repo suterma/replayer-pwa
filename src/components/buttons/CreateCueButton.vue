@@ -14,10 +14,10 @@
             class="button is-warning is-outlined"
             @click="$emit('createNewCue')"
             :ref="clickRef"
-            title="Create a cue now (at the current playback time)!"
+            title="Add a cue now (at the current playback time)!"
         >
             <BaseIcon v-once :path="mdiPlus" />
-            <span>Cue! </span>
+            <span>Cue</span>
             <span class="has-opacity-half">&nbsp;at&nbsp;</span>
             <TimeDisplay :modelValue="currentSeconds"></TimeDisplay>
             <ShortcutDisplay v-once shortcut="INSERT"></ShortcutDisplay>
@@ -27,10 +27,10 @@
         v-else
         class="button is-warning is-outlined"
         @click="$emit('createNewCue')"
-        title="Create a cue now (at the current playback time)!"
+        title="Add a cue now (at the current playback time)!"
     >
         <BaseIcon v-once :path="mdiPlus" />
-        <span>Cue!</span>
+        <span>Cue</span>
         <span class="has-opacity-half">&nbsp;at&nbsp;</span>
         <TimeDisplay :modelValue="currentSeconds"></TimeDisplay>
     </button>
