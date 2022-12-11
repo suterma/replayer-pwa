@@ -19,10 +19,7 @@
             <BaseIcon v-once :path="mdiTimerPlay" />
             <!-- On large screens also show an indicative text -->
             <span class="is-hidden-touch has-opacity-half">Adjust</span>
-            <ShortcutDisplay
-                v-once
-                class="is-hidden-touch is-hidden-desktop-only"
-            >
+            <ShortcutDisplay v-once>
                 <BaseIcon v-once :path="mdiAppleKeyboardShift" class="mr-1" />
                 + INSERT</ShortcutDisplay
             >
@@ -39,10 +36,7 @@
         <span class="is-hidden-touch has-opacity-half">Adjust</span>
         <!-- Show the inert shortcut as a placeholder, to keep the layout unchanged
         on cue selection changes -->
-        <ShortcutDisplay
-            v-once
-            class="is-invisible is-hidden-touch is-hidden-desktop-only"
-        >
+        <ShortcutDisplay v-once class="is-invisible">
             <BaseIcon v-once :path="mdiAppleKeyboardShift" class="mr-1" />
             + INSERT</ShortcutDisplay
         >

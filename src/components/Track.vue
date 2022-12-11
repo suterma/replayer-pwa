@@ -55,6 +55,27 @@
             </template>
         </TrackHeader>
 
+        <!-- The cue buttons / level editors (in edit mode) -->
+        <Transition name="item">
+            <div v-if="isEditable && isExpanded">
+                <div class="levels">
+                    <TransitionGroup name="list">
+                        <div v-for="cue in cues" :key="cue.Id">
+                            <CueLevelEditor
+                                :disabled="!mediaUrl || !isTrackLoaded"
+                                :cue="cue"
+                                :isTrackPlaying="isPlaying"
+                                :playbackMode="playbackMode"
+                                :currentSeconds="currentSeconds"
+                                @click="cueClick(cue)"
+                                @play="cuePlay(cue)"
+                            />
+                        </div>
+                    </TransitionGroup>
+                </div>
+            </div>
+        </Transition>
+
         <!-- The audio player widget (with controls) but only once the source is available from the store
             Note: The mediaUrl property (the actual src attribute in the underlying media
             element) is also depending 
@@ -115,9 +136,19 @@
                         >
                             <!-- Left side -->
                             <div class="level-left">
+                                <div
+                                    v-if="isEditable"
+                                    class="level-item"
+                                >
+                                    <CreateCueButton
+                                        :isActiveTrack="isActiveTrack"
+                                        :currentSeconds="currentSeconds"
+                                        @createNewCue="createNewCue()"
+                                    ></CreateCueButton>
+                                </div>
                                 <!-- Title and Artist of the currently playing track-->
                                 <div
-                                    v-if="!isEditable"
+                                    v-else
                                     class="level-item is-justify-content-left has-cropped-text"
                                 >
                                     <span>
@@ -310,49 +341,6 @@
                 </Transition>
             </Teleport>
         </template>
-
-        <!-- The cue buttons / level editors (in edit mode) -->
-        <Transition name="item">
-            <div v-if="isEditable && isExpanded">
-                <div class="levels">
-                    <TransitionGroup name="list">
-                        <div v-for="cue in cues" :key="cue.Id">
-                            <CueLevelEditor
-                                :disabled="!mediaUrl || !isTrackLoaded"
-                                :cue="cue"
-                                :isTrackPlaying="isPlaying"
-                                :playbackMode="playbackMode"
-                                :currentSeconds="currentSeconds"
-                                @click="cueClick(cue)"
-                                @play="cuePlay(cue)"
-                            />
-                        </div>
-                        <div
-                            :key="'create-cue-button-' + track.Id"
-                            class="mt-3"
-                        >
-                            <div class="level">
-                                <!-- Left side -->
-                                <div class="level-left">
-                                    <div class="level-item">
-                                        <CreateCueButton
-                                            :isActiveTrack="isActiveTrack"
-                                            :currentSeconds="currentSeconds"
-                                            @createNewCue="createNewCue()"
-                                        ></CreateCueButton>
-                                    </div>
-                                </div>
-
-                                <!-- Right side -->
-                                <div class="level-right">
-                                    <p class="level-item"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </TransitionGroup>
-                </div>
-            </div>
-        </Transition>
     </div>
 </template>
 
@@ -1029,13 +1017,13 @@ export default defineComponent({
 // Define an overall width allocation for the playback control level items
 .level {
     .level-left {
-        flex-basis: calc(100% - 620px);
+        flex-basis: calc(100% - 580px);
         .level-item {
             flex-shrink: 1;
         }
     }
     .level-right {
-        flex-basis: 620px;
+        flex-basis: 580px;
         .level-item {
             flex-shrink: 0;
         }

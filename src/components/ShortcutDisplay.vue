@@ -1,7 +1,7 @@
 <template>
     <span
-        v-if="(shortcut || hasSlot)"
-        class="ml-2 tag is-light is-outlined has-opacity-third is-family-monospace"
+        v-if="shortcut || hasSlot"
+        class="is-hidden-touch is-hidden-desktop-only ml-2 tag is-light is-outlined has-opacity-third is-family-monospace"
         >{{ shortcut }}<slot></slot
     ></span>
 </template>
@@ -10,6 +10,7 @@
 import { defineComponent } from 'vue';
 
 /** A display for a keyboard shortcut
+ * @remarks Shortcuts hidden below desktop width
  */
 export default defineComponent({
     name: 'ShortcutDisplay',
@@ -19,10 +20,10 @@ export default defineComponent({
             default: null,
         },
     },
-    computed:{
-      hasSlot() {
-  return !!this.$slots.default;
-}
-    }
+    computed: {
+        hasSlot() {
+            return !!this.$slots.default;
+        },
+    },
 });
 </script>
