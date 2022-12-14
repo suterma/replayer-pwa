@@ -1,6 +1,5 @@
 <template>
-    <!-- align like a bulma level, vertically centered -->
-    <div class="is-flex is-align-items-center" v-click-outside="acceptValue">
+    <div v-click-outside="acceptValue">
         <template v-if="!editMode">
             <MediaSourceIndicator :source="track.Url" @click="toggleEditMode()">
                 <!-- Edit -->
