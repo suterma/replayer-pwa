@@ -42,7 +42,7 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                     <span>Click / drop to replace file</span>
                 </template>
                 <template v-else>
-                    <BaseIcon v-once :path="mdiMusicNotePlus"  />
+                    <BaseIcon v-once :path="mdiMusicNotePlus" />
                     <span class="is-hidden-desktop">Load file(s)</span>
                     <span class="is-hidden-touch"
                         >Click / drop to load file(s)</span
@@ -60,13 +60,12 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                     title="Add media / expand drop zone"
                     @click="expand"
                 >
-                    <BaseIcon v-once :path="mdiMusicNotePlus"  />
+                    <BaseIcon v-once :path="mdiMusicNotePlus" />
                 </button>
             </div>
         </div>
 
         <!-- The URL loading part -->
-
         <div v-if="isExpanded" class="level-item has-text-centered">
             <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
         </div>
@@ -135,6 +134,11 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                 >
             </div>
         </template>
+
+        <!-- A slot for an adornment -->
+        <div class="level-item">
+            <slot></slot>
+        </div>
     </div>
 </template>
 
@@ -150,6 +154,8 @@ import { mdiSwapHorizontal, mdiMusicNotePlus } from '@mdi/js';
  * @remarks Supports collapsing the control after load, to keep the user more focused
  * @remarks Supports two modes: "replace", intended to replace an existing source for a single track,
  *  or "add", to add a new source, possibly producing multiple new tracks.
+ * @remarks Includes a slot at the end of the indicative text, for an adornment icon
+ * of size 40px
  */
 export default defineComponent({
     name: 'MediaDropZone',

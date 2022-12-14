@@ -110,16 +110,8 @@
             </div>
         </div>
         <!-- Extra level for the media edit, except on very large screens -->
-        <div class="level is-hidden-fullhd">
-            <div class="level-left">
-                <div class="level-item is-justify-content-flex-start">
-                    <div class="field">
-                        <p class="control">
-                            <MediaEdit :track="track" />
-                        </p>
-                    </div>
-                </div>
-            </div>
+        <div class="is-hidden-fullhd">
+            <MediaEdit :track="track" />
         </div>
     </div>
     <!-- <TrackSharingDialog v-if="this.isSharing"></TrackSharingDialog> -->

@@ -19,12 +19,13 @@
                 :replaceUrl="track.Url"
                 :trackId="track.Id"
                 ref="mediaDropZone"
-            />
-            <NavButton
-                @click="toggleEditMode()"
-                :iconPath="mdiCheckBold"
-                title="Click to finish editing the media source"
-            />
+            >
+                <NavButton
+                    @click="toggleEditMode()"
+                    :iconPath="mdiCheckBold"
+                    title="Click to finish editing the media source"
+                />
+            </MediaDropZone>
         </template>
     </div>
 </template>
