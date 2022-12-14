@@ -2,7 +2,7 @@
     <!-- @remarks The id is used to scroll to this item when it's becoming the active track -->
     <div v-bind:id="'track-' + track.Id">
         <!-- Level, also on mobile -->
-        <div class="level">
+        <div class="level is-mobile">
             <!-- Left side -->
             <div class="level-left">
                 <!-- Expander with title -->
