@@ -10837,7 +10837,7 @@ nav .button:focus-visible {
 /* Indicate an actionable item */
 .button.is-nav:hover,
 nav .button:hover {
-  background: #3a3f44;
+  background: rgba(122, 130, 136, 0.2);
 }
 
 /*************************************************************

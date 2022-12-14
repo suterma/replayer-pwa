@@ -43,8 +43,8 @@ nav .button:focus-visible {
 
 /* Indicate an actionable item */
 .button.is-nav:hover,
-nav .button:hover {
-    background: $grey-dark;
+nav .button:hover { 
+    background: rgba($grey-light, .2)   
 }
 
 /*************************************************************
