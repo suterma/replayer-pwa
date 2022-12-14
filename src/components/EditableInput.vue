@@ -118,10 +118,6 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-.mr-40px {
-    margin-right: 40px;
-}
-
 .is-absolute {
     bottom: -8px;
     margin: auto 0;

@@ -109,10 +109,17 @@ html {
  * Layout helpers
 **************************************************************
 */
+
 /** A complement to the is-relative class
 */
 .is-absolute {
   position: absolute !important;
+}
+
+/** A specific margin, as complement to the documented bulma
+* spacing helpers https://bulma.io/documentation/helpers/spacing-helpers/*/
+.mr-40px {
+  margin-right: 40px;
 }
 
 /** Like with columns, 

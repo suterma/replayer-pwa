@@ -11915,6 +11915,12 @@ html {
   position: absolute !important;
 }
 
+/** A specific margin, as complement to the documented bulma
+* spacing helpers https://bulma.io/documentation/helpers/spacing-helpers/*/
+.mr-40px {
+  margin-right: 40px;
+}
+
 /** Like with columns, 
 * if you want to remove the space to a subsequent item, 
 * add the is-gapless modifier on the level:
