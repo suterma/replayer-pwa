@@ -1,30 +1,31 @@
 <template>
     <!-- align like a bulma level, vertically centered -->
     <div class="is-flex is-align-items-center" v-click-outside="acceptValue">
-        <MediaSourceIndicator
-            v-if="!editMode"
-            :source="track.Url"
-            @click="toggleEditMode()"
-        />
-        <MediaDropZone
-            v-else
-            :isExpanded="true"
-            :replaceUrl="track.Url"
-            :trackId="track.Id"
-            ref="mediaDropZone"
-        />
-        <NavButton
-            v-if="editMode"
-            @click="toggleEditMode()"
-            :iconPath="mdiCheck"
-            title="Click to finish editing the media source"
-        />
-        <NavButton
-            v-else
-            @click="toggleEditMode()"
-            :iconPath="mdiPencil"
-            title="Click to edit the media source"
-        />
+        <template v-if="!editMode">
+            <MediaSourceIndicator :source="track.Url" @click="toggleEditMode()">
+                <!-- Edit -->
+                <!-- To not disturb the original layout by the edit button, just position it absolutely,
+            and introduce a margin on the original text. -->
+                <NavButton
+                    class="is-absolute"
+                    :iconPath="mdiPencilOutline"
+                    title="Click to edit the media source"
+                />
+            </MediaSourceIndicator>
+        </template>
+        <template v-else>
+            <MediaDropZone
+                :isExpanded="true"
+                :replaceUrl="track.Url"
+                :trackId="track.Id"
+                ref="mediaDropZone"
+            />
+            <NavButton
+                @click="toggleEditMode()"
+                :iconPath="mdiCheckBold"
+                title="Click to finish editing the media source"
+            />
+        </template>
     </div>
 </template>
 
@@ -34,7 +35,7 @@ import NavButton from '@/components/buttons/NavButton.vue';
 import MediaSourceIndicator from '@/components/MediaSourceIndicator.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import { Track } from '@/store/compilation-types';
-import { mdiPencil, mdiCheck } from '@mdi/js';
+import { mdiPencilOutline, mdiCheckBold } from '@mdi/js';
 
 /** An editor for a media source for a Track
  */
@@ -53,8 +54,8 @@ export default defineComponent({
             editMode: false,
 
             /** Icons from @mdi/js */
-            mdiCheck: mdiCheck,
-            mdiPencil: mdiPencil,
+            mdiCheckBold: mdiCheckBold,
+            mdiPencilOutline: mdiPencilOutline,
         };
     },
     methods: {
@@ -69,3 +70,13 @@ export default defineComponent({
     computed: {},
 });
 </script>
+<style scoped>
+.mr-40px {
+    margin-right: 40px;
+}
+
+.is-absolute {
+    bottom: -8px;
+    margin: auto 0;
+}
+</style>

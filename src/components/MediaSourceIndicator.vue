@@ -4,7 +4,11 @@
         <span class="button is-indicator">
             <BaseIcon :path="iconPath" />
         </span>
-        <span>{{ indication }}</span>
+        <span class="is-relative mr-40px"
+            >{{ indication }}
+            <!-- A slot for an adornment -->
+            <slot></slot>
+        </span>
     </p>
 </template>
 
@@ -14,7 +18,9 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import FileHandler from '@/store/filehandler';
 import { mdiMusicCircleOutline, mdiMusicNote } from '@mdi/js';
 
-/** An indicator for the track playback state
+/** A display for the media source of a track
+ * @remarks Includes a slot at the end of the indicative text, for an adornment icon
+ * of size 40px
  */
 export default defineComponent({
     name: 'MediaSourceIndicator',
