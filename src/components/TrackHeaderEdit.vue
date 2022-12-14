@@ -46,14 +46,6 @@
                 </div>
                 <!-- Artist Info (completely hidden on mobile, thus not editable there. 
                 NOTE: It's also not shown in the play view on mobile anyways) -->
-                <!-- by (keep as small as possible)-->
-                <div
-                    class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
-                >
-                    <p class="is-single-line">
-                        <span class="has-opacity-half">by</span>
-                    </p>
-                </div>
                 <!-- Artist -->
                 <div class="level-item is-flex-shrink-1 is-hidden-mobile">
                     <div class="field">
@@ -64,18 +56,16 @@
                                 @change="updateArtist($event.target.value)"
                                 type="text"
                                 placeholder="Artist"
-                            />
+                            >
+                                <span
+                                    class="has-opacity-half mr-2 is-single-line"
+                                    >by</span
+                                ></EditableInput
+                            >
                         </p>
                     </div>
                 </div>
-                <!-- on (keep as small as possible)-->
-                <div
-                    class="level-item is-flex-shrink-1 is-flex-grow-0 is-hidden-mobile"
-                >
-                    <p class="is-single-line">
-                        <span class="has-opacity-half">on</span>
-                    </p>
-                </div>
+
                 <!-- Album -->
                 <div class="level-item is-flex-shrink-1 is-hidden-mobile">
                     <div class="field">
@@ -86,7 +76,12 @@
                                 @change="updateAlbum($event.target.value)"
                                 type="text"
                                 placeholder="Album"
-                            />
+                            >
+                                <span
+                                    class="has-opacity-half mr-2 is-single-line"
+                                    >on</span
+                                ></EditableInput
+                            >
                         </p>
                     </div>
                 </div>

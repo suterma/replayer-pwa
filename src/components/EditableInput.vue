@@ -1,6 +1,7 @@
 <template>
     <!-- align like a bulma level, vertically centered -->
     <div class="is-flex is-align-items-center" v-click-outside="acceptValue">
+        <slot></slot>
         <template v-if="editMode">
             <!-- Use ENTER as hotkey to accept the value -->
             <!-- Use ESC as hotkey to revert the value -->
@@ -54,6 +55,7 @@ import NavButton from '@/components/buttons/NavButton.vue';
 import { mdiPencilOutline, mdiCheckBold } from '@mdi/js';
 
 /** A text input, which has a dedicated edit icon.
+ * @remarks Provides a slot for a prefix content
  */
 export default defineComponent({
     name: 'EditableInput',
