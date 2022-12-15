@@ -3,6 +3,7 @@
 // Taken from bulma-slider (https://github.com/Wikiki/bulma-slider)
 // Removed the import directive to match the replayer sass structure
 // Added a is-slim style 
+// Removed vertical slider, to get rid of an unnecessary warning
 
 $slider-radius: $radius !default
 $slider-track-background: $grey-lighter !default
@@ -124,16 +125,18 @@ input[type="range"]
 					left: 0
 					top: -0.1rem
 
-		&[orient="vertical"]
-			appearance: slider-vertical
-			writing-mode: bt-lr
-
-			&::-webkit-slider-runnable-track
-				height: 100%
-			&::-moz-range-track
-				height: 100%
-			&::-ms-track
-				height: 100%
+//     NOTE: Vertical sliders are currently not used by Replayer
+//    To get rid of an unnecessary warning, these are commented out
+//		&[orient="vertical"]
+//			appearance: slider-vertical
+//			writing-mode: bt-lr
+//
+//			&::-webkit-slider-runnable-track
+//				height: 100%
+//			&::-moz-range-track
+//				height: 100%
+//			&::-ms-track
+//				height: 100%
 
 		&::-webkit-slider-runnable-track
 			cursor: pointer
