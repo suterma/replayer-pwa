@@ -13,7 +13,6 @@
         />
         <!-- Tracks to work with -->
         <template v-for="(track, index) in tracks" :key="track.Id">
-            <!-- <div :class="{ block: isHeaderEditable }"> -->
             <Track
                 :track="track"
                 :ref="'track-' + track.Id"
@@ -34,7 +33,6 @@
                 @nextTrack="toNextTrack(track.Id, isLoopingPlaybackMode)"
                 @trackEnded="continueAfterTrack(track.Id)"
             />
-            <!-- </div> -->
         </template>
     </div>
 </template>
