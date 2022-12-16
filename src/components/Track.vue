@@ -940,19 +940,10 @@ export default defineComponent({
             );
             return mediaUrl;
         },
-        /** Determines whether this is the active track (i.e. the globally selected cue is from this track ) */
+        /** Determines whether this is the active track */
         isActiveTrack(): boolean {
-            const selectedCueId = this.$store.getters.selectedCueId as string;
-            if (!selectedCueId) {
-                //if none selected, this track is not active anyway
-                return false;
-            }
-
-            //Check for matching Ids
-            return (
-                (this.cues?.filter((c) => c.Id === selectedCueId).length ?? 0) >
-                0
-            );
+            const activeTrackId = this.$store.getters.activeTrack?.Id as string;
+            return this.track.Id === activeTrackId;
         },
     },
 });

@@ -8,7 +8,7 @@ import { MediaUrl } from './state-types';
 /** A plugin that handles persistence, to keep the settings, the compilation and
  * the selected cue over app restarts.
  *  */
-export const persistencePlugin = (store: Store):void => {
+export const persistencePlugin = (store: Store): void => {
     retrieveState(store);
 
     /** Subscribes to mutations of the state and persists the updated state.
@@ -52,14 +52,15 @@ function retrieveState(store: Store) {
             //(which should actually be the matching media blobs for the afore-loaded compilation)
             PersistentStorage.retrieveAllMediaBlobs()
                 .then((mediaBlobs) => {
-                    //Sort to the active track first (the one, that contains the selected cue)
-                    const activeTrack = CompilationHandler.getTrackByCueId(
+                    //Sort to the most recently used track first, by cue.
+                    //(NOTE: only the possibly selected cue is considered here, for simplicity, not a track)
+                    const mostRecentTrack = CompilationHandler.getTrackByCueId(
                         compilation,
                         cueId,
                     );
                     const sortedBlobs = CompilationHandler.sortByFirstFileName(
                         mediaBlobs,
-                        activeTrack?.Url,
+                        mostRecentTrack?.Url,
                     );
 
                     sortedBlobs.forEach((mediaBlob, index) => {

@@ -315,21 +315,7 @@ export default defineComponent({
         },
         /** Determines the active track (the one that contains the selected cue ) */
         activeTrack(): ITrack | null {
-            const selectedCueId = this.selectedCueId;
-            if (!selectedCueId) {
-                //if none selected, this track is not active anyway
-                return null;
-            }
-
-            //Check for matching Ids
-            const track = this.tracks?.find((t) =>
-                t.Cues.find((c) => c.Id === selectedCueId),
-            );
-
-            if (track) {
-                return track as ITrack;
-            }
-            return null;
+            return this.$store.getters.activeTrack;
         },
     },
 });

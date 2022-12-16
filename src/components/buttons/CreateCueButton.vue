@@ -57,7 +57,7 @@ export default defineComponent({
         'createNewCue',
     ],
     props: {
-        /** Whether whether this is the active track (i.e. the globally selected cue is from this track ) */
+        /** Whether this is the active track */
         isActiveTrack: {
             type: Boolean,
             required: true,

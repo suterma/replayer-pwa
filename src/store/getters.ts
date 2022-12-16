@@ -32,8 +32,13 @@ export type Getters = {
     /** Gets the application settings
      */
     settings(state: State): Settings;
-    /** Gets the active track (i.e. the globally selected cue is from this track ) */
-    activeTrack(state: State): ITrack | undefined;
+
+    /** Gets the active track
+     * @remarks The active track is either:
+     * - the track that contains the currently selected cue, if any
+     * - //TODO otherwise an explicitly selected track, if any
+     */
+    activeTrack(state: State): ITrack | null;
 
     /** Gets the set of tracks */
     tracks(state: State): Array<ITrack> | undefined;
@@ -87,17 +92,20 @@ export const getters: GetterTree<State, State> & Getters = {
         return state.settings;
     },
     /** @inheritdoc */
-    activeTrack: (state): ITrack | undefined => {
+    activeTrack: (state): ITrack | null => {
         const selectedCueId = state.selectedCueId as string;
         if (selectedCueId) {
             //Check for matching Ids
-            return CompilationHandler.getTrackByCueId(
-                state.compilation,
-                selectedCueId,
+            return (
+                CompilationHandler.getTrackByCueId(
+                    state.compilation,
+                    selectedCueId,
+                ) ?? null
             );
         }
         //if none selected, no track is active anyway
-        return undefined;
+        //TODO implement an active track without cue selection
+        return null;
     },
     /** @inheritdoc */
     tracks: (state): Array<ITrack> | undefined => {
