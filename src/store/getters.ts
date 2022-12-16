@@ -36,7 +36,7 @@ export type Getters = {
     /** Gets the active track
      * @remarks The active track is either:
      * - the track that contains the currently selected cue, if any
-     * - //TODO otherwise an explicitly selected track, if any
+     * - otherwise an explicitly selected track, if any
      */
     activeTrack(state: State): ITrack | null;
 
@@ -95,7 +95,6 @@ export const getters: GetterTree<State, State> & Getters = {
     activeTrack: (state): ITrack | null => {
         const selectedCueId = state.selectedCueId as string;
         if (selectedCueId) {
-            //Check for matching Ids
             return (
                 CompilationHandler.getTrackByCueId(
                     state.compilation,
@@ -103,8 +102,16 @@ export const getters: GetterTree<State, State> & Getters = {
                 ) ?? null
             );
         }
-        //if none selected, no track is active anyway
-        //TODO implement an active track without cue selection
+        //if no cue is selected, try the track
+        const selectedTrackId = state.selectedTrackId as string;
+        if (selectedTrackId) {
+            return (
+                CompilationHandler.getTrackById(
+                    state.compilation.Tracks,
+                    selectedTrackId,
+                ) ?? null
+            );
+        }
         return null;
     },
     /** @inheritdoc */

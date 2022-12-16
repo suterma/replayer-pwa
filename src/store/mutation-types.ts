@@ -41,12 +41,20 @@ export enum MutationTypes {
      * @remarks Removes all data from the previous compilation, including media URL's.
      * @remarks Also immediately updates the media URL storage with the contained online (http|https) URL's from the compilation.
      */
+    //TODO remove
     REPLACE_COMPILATION_AND_SELECT_FIRST_CUE = 'REPLACE_COMPILATION_AND_SELECT_FIRST_CUE',
 
     /** Updates the currently selected cue Id, for application-wide handling
      * @remarks This does not control the playback itself. It is intended for display and handling purposes.
+     * @remarks Removes any track id selection.
      */
     UPDATE_SELECTED_CUE_ID = 'UPDATE_SELECTED_CUE_ID',
+
+    /** Updates the currently selected track Id, for application-wide handling
+     * @remarks This does not control the playback itself. It is intended for display and handling purposes.
+     * @remarks Removes any cue id selection.
+     */
+    UPDATE_SELECTED_TRACK_ID = 'UPDATE_SELECTED_TRACK_ID',
 
     /** Sets the track duration. Using the track duration and the existing cues,
      * calculates the durations of all cues, including the last one.
@@ -104,7 +112,7 @@ export enum MutationTypes {
     /** Updates the playback mode
      * @remarks Also updates the persistent store of the compilation
      */
-     UPDATE_PLAYBACK_MODE = 'UPDATE_PLAYBACK_MODE',
+    UPDATE_PLAYBACK_MODE = 'UPDATE_PLAYBACK_MODE',
 
     /** Updates the track volume mode
      * @remarks Also updates the persistent store of the compilation

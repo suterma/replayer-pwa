@@ -186,26 +186,6 @@ export default defineComponent({
             return track;
         },
 
-        /** Selects the first cue of the given track, if any exists and the track is different than the currently active track. */
-        selectFirstCueOfTrack(trackId: string) {
-            if (trackId) {
-                if (this.activeTrack?.Id != trackId) {
-                    const matchingTrack = this.tracks?.filter(
-                        (t) => t.Id == trackId,
-                    );
-                    if (matchingTrack && matchingTrack[0]) {
-                        const firstMatchingCue = matchingTrack[0].Cues[0];
-                        if (firstMatchingCue) {
-                            this.$store.commit(
-                                MutationTypes.UPDATE_SELECTED_CUE_ID,
-                                firstMatchingCue.Id,
-                            );
-                        }
-                    }
-                }
-            }
-        },
-
         toPreviousCue() {
             const allCueIds = this.allCues.map((cue) => cue.Id);
             const indexOfSelected = allCueIds.indexOf(this.selectedCueId);

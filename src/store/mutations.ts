@@ -41,6 +41,7 @@ export type Mutations<S = State> = {
         compilation: ICompilation,
     ): void;
     [MutationTypes.UPDATE_SELECTED_CUE_ID](state: S, cueId: string): void;
+    [MutationTypes.UPDATE_SELECTED_TRACK_ID](state: S, trackId: string): void;
     [MutationTypes.UPDATE_DURATIONS](
         state: S,
         payload: { trackId: string; trackDurationSeconds: number },
@@ -261,7 +262,12 @@ export const mutations: MutationTree<State> & Mutations = {
         });
     },
     [MutationTypes.UPDATE_SELECTED_CUE_ID](state: State, cueId: string) {
+        state.selectedTrackId = null;
         state.selectedCueId = cueId;
+    },
+    [MutationTypes.UPDATE_SELECTED_TRACK_ID](state: State, trackId: string) {
+        state.selectedCueId = null;
+        state.selectedTrackId = trackId;
     },
 
     [MutationTypes.UPDATE_DURATIONS](
@@ -289,10 +295,15 @@ export const mutations: MutationTree<State> & Mutations = {
         trackToRemove?.Cues.forEach((cue) => {
             if (currentlySelectedCueId === cue.Id) {
                 /* unselect cue, this track is no longer the active track */
-                const noSelectedCueId = '';
-                state.selectedCueId = noSelectedCueId;
+                state.selectedCueId = CompilationHandler.EmptyId;
             }
         });
+
+        const currentlySelectedTrackId = state.selectedTrackId;
+        if (trackToRemove?.Id === currentlySelectedTrackId) {
+            /* unselect track, this track is no longer the active track */
+            state.selectedTrackId = CompilationHandler.EmptyId;
+        }
 
         state.compilation.Tracks = state.compilation.Tracks.filter(
             (track) => track.Id !== trackId,
@@ -388,9 +399,9 @@ export const mutations: MutationTree<State> & Mutations = {
         PersistentStorage.clearCompilation();
         state.compilation = Compilation.empty();
 
-        /* unselect cue, none is selected anymore */
-        const noSelectedCueId = '';
-        state.selectedCueId = noSelectedCueId;
+        /* unselect cue/track, none is selected anymore */
+        state.selectedCueId = CompilationHandler.EmptyId;
+        state.selectedTrackId = CompilationHandler.EmptyId;
 
         state.mediaUrls.forEach((mediaUrl) => {
             ObjectUrlHandler.revokeObjectURL(mediaUrl.url);

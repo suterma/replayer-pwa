@@ -2,6 +2,7 @@
 enum StorageKeys {
     COMPILATION = 'COMPILATION',
     SELECTED_CUE_ID = 'SELECTED_CUE_ID',
+    SELECTED_TRACK_ID = 'SELECTED_TRACK_ID',
     MEDIA_BLOB = 'MEDIA_BLOB',
     SETTINGS = 'SETTINGS',
 }
@@ -128,6 +129,7 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
     static clearCompilation(): void {
         localStorage.removeItem(StorageKeys.COMPILATION);
         localStorage.removeItem(StorageKeys.SELECTED_CUE_ID);
+        localStorage.removeItem(StorageKeys.SELECTED_TRACK_ID);
         clear(); // the media blobs
     }
     /** Persistently stores the selected cue Id for later retrieval
@@ -139,6 +141,15 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
     static storeSelectedCueId(cueId: string | null): void {
         localStorage.setItem(StorageKeys.SELECTED_CUE_ID, cueId ?? '');
     }
+    /** Persistently stores the selected track Id for later retrieval
+     * @devdoc The local storage is used for performance reasons here. No need to use the Indexed Db for small data
+     * @param trackId - The track's identifier. Set to null, when no track should be considered selected.
+     * @devdoc null values are simply stored as empty string, since null values are considered as not existing. Removing the key entirely
+     * would not improve the meaning in the context of the cue storage.
+     */
+    static storeSelectedTrackId(trackId: string | null): void {
+        localStorage.setItem(StorageKeys.SELECTED_TRACK_ID, trackId ?? '');
+    }
     /** Retrieves the selected cue Id from the persistent store.
      * @devdoc null values are simply stored as empty string, since null values are considered as not existing. Removing the key entirely
      * would not improve the meaning in the context of the cue storage.
@@ -149,6 +160,21 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
             const cueId = localStorage.getItem(StorageKeys.SELECTED_CUE_ID);
             if (cueId) {
                 return cueId;
+            }
+            return null;
+        }, null);
+    }
+
+    /** Retrieves the selected track Id from the persistent store.
+     * @devdoc null values are simply stored as empty string, since null values are considered as not existing. Removing the key entirely
+     * would not improve the meaning in the context of the cue storage.
+     * @remarks Returns the identifier or null if there was none or an empty one.
+     * */
+    static async retrieveSelectedTrackId(): Promise<string> {
+        return createPromise(() => {
+            const trackId = localStorage.getItem(StorageKeys.SELECTED_TRACK_ID);
+            if (trackId) {
+                return trackId;
             }
             return null;
         }, null);

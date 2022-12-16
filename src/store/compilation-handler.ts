@@ -500,4 +500,7 @@ export default class CompilationHandler {
     ): boolean {
         return first.endsWith(second) || second.endsWith(first);
     }
+
+    /** An empty Id, usable for a reset. */
+    public static EmptyId = '';
 }

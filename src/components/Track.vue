@@ -569,11 +569,7 @@ export default defineComponent({
          */
         skipToPlayPause(): void {
             if (!this.isActiveTrack) {
-                //TODO make this the active track without using a cue (include an active track in the store, without the need of a selected cue)
-                const firstCue = this.track.Cues[0];
-                if (firstCue) {
-                    this.cuePlay(firstCue);
-                }
+                this.trackPlay();
             } else {
                 this.trackPlayerInstance.togglePlayback();
             }
@@ -731,10 +727,10 @@ export default defineComponent({
             }
         },
         /** Handles the play event of a cue button, by immediately restarting playback at the cue (instead of toggling)
-         * @devdoc Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
+         * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
          */
         cuePlay(cue: ICue) {
-            console.debug(`Track(${this.track.Name})::cueClick:cue:`, cue);
+            console.debug(`Track(${this.track.Name})::cuePlay:cue:`, cue);
             if (cue.Time != null && Number.isFinite(cue.Time)) {
                 //Update the selected cue to this cue
                 this.$store.commit(
@@ -750,6 +746,26 @@ export default defineComponent({
                 }
                 this.activateWakeLock();
             }
+        },
+        /** Handles the play event of a button, by immediately restarting playback at the beginning of the track (instead of toggling)
+         * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
+         */
+        trackPlay() {
+            console.debug(`Track(${this.track.Name})::trackPlay`);
+
+            //Update the selected cue to this cue
+            this.$store.commit(
+                MutationTypes.UPDATE_SELECTED_TRACK_ID,
+                this.track.Id,
+            );
+
+            //Set the position to the beginning and handle playback
+            if (this.trackPlayerInstance?.playing === true) {
+                this.trackPlayerInstance?.seekTo(0); //keep playing
+            } else {
+                this.trackPlayerInstance?.playFrom(0);
+            }
+            this.activateWakeLock();
         },
         /** Handles the request for a new cue by creating one for the current time
          */
