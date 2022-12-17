@@ -120,9 +120,11 @@ export const actions: ActionTree<State, State> & Actions = {
     ): Promise<string> {
         return new Promise((resolve, reject) => {
             if (!FileHandler.isValidHttpUrl(url)) {
-                commit(MutationTypes.POP_PROGRESS, undefined);
-                reject(`Provided input is not a valid URL: '${url}'`);
-                return; //to avoid running the code below
+                return abort(
+                    commit,
+                    reject,
+                    `Provided input is not a valid URL: '${url}'`,
+                );
             }
 
             progress(commit, `Loading URL '${url}'...`);
@@ -146,12 +148,11 @@ export const actions: ActionTree<State, State> & Actions = {
                     }
 
                     if (!response.ok) {
-                        reject(
+                        return abort(
+                            commit,
+                            reject,
                             `Network response while fetching URL '${url}' was not OK`,
                         );
-                        //The action is done, so terminate the progress
-                        commit(MutationTypes.POP_PROGRESS, undefined);
-                        return;
                     }
 
                     response.blob().then((blob) => {
@@ -162,13 +163,11 @@ export const actions: ActionTree<State, State> & Actions = {
 
                         //Check whether MIME Type is supported
                         if (!FileHandler.isSupportedMimeType(mimeType)) {
-                            commit(MutationTypes.POP_PROGRESS, undefined);
-                            reject(
+                            return abort(
+                                commit,
+                                reject,
                                 `Content MIME type '${mimeType}' is not supported`,
                             );
-                            //The action is done, so terminate the progress
-                            commit(MutationTypes.POP_PROGRESS, undefined);
-                            return;
                         }
                         const localResourceName =
                             FileHandler.getLocalResourceName(finalUrl);
@@ -187,22 +186,20 @@ export const actions: ActionTree<State, State> & Actions = {
                                 commit(MutationTypes.POP_PROGRESS, undefined);
                             })
                             .catch((errorMessage: string) => {
-                                reject(
+                                return abort(
+                                    commit,
+                                    reject,
                                     `Loading from the received resource file has failed for URL: '${url}' with the message: '${errorMessage}'`,
                                 );
-                                //The action is done, so terminate the progress
-                                commit(MutationTypes.POP_PROGRESS, undefined);
-                                return;
                             });
                     });
                 })
                 .catch((errorMessage: string) => {
-                    reject(
+                    return abort(
+                        commit,
+                        reject,
                         `Fetch has failed for URL: '${url}' with the message: '${errorMessage}'`,
                     );
-                    //The action is done, so terminate the progress
-                    commit(MutationTypes.POP_PROGRESS, undefined);
-                    return;
                 });
         });
     },
@@ -213,9 +210,11 @@ export const actions: ActionTree<State, State> & Actions = {
     ): Promise<string> {
         return new Promise((resolve, reject) => {
             if (!FileHandler.isValidHttpUrl(url)) {
-                commit(MutationTypes.POP_PROGRESS, undefined);
-                reject(`Provided input is not a valid URL: '${url}'`);
-                return; //to avoid running the code below
+                return abort(
+                    commit,
+                    reject,
+                    `Provided input is not a valid URL: '${url}'`,
+                );
             }
 
             progress(commit, `Using URL '${url}'...`);
@@ -482,8 +481,9 @@ export const actions: ActionTree<State, State> & Actions = {
                 };
                 reader.readAsArrayBuffer(file);
             } else {
-                commit(MutationTypes.POP_PROGRESS, undefined);
-                reject(
+                return abort(
+                    commit,
+                    reject,
                     `Unsupported content type for file '${file.name}', content was not processed.`,
                 );
             }
@@ -631,4 +631,22 @@ function progress(
     message: string,
 ) {
     commit(MutationTypes.PUSH_PROGRESS, message);
+}
+
+/** Aborts the progress and rejects the promise with the given information
+ * @remarks This is a shorthand for not needing to use the pop progress key and
+ * rejecting in two distinct statements.
+ * @devdoc directly return after this function call to avoid running further code after the promise rejection
+
+ */
+function abort(
+    commit: <K extends keyof Mutations<State>>(
+        key: K,
+        payload: Parameters<Mutations<State>[K]>[1],
+    ) => ReturnType<Mutations<State>[K]>,
+    reject: (reason: string) => void,
+    message: string,
+): void {
+    commit(MutationTypes.POP_PROGRESS, undefined);
+    reject(message);
 }
