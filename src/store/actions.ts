@@ -125,7 +125,10 @@ export const actions: ActionTree<State, State> & Actions = {
                 return; //to avoid running the code below
             }
 
-            commit(MutationTypes.PUSH_PROGRESS, `Loading URL '${url}'...`);
+            progress(commit, `Loading URL '${url}'...`);
+            //TODO first get the mime type
+            //If it's a package, then try to actually fetch and fully load it
+            //If it's a media file, then just use the URL for a new track
             fetch(url, {
                 mode: 'no-cors', // to allow any accessible resource
                 method: 'GET',
@@ -215,7 +218,7 @@ export const actions: ActionTree<State, State> & Actions = {
                 return; //to avoid running the code below
             }
 
-            commit(MutationTypes.PUSH_PROGRESS, `Using URL '${url}'...`);
+            progress(commit, `Using URL '${url}'...`);
             const finalUrl = new URL(url);
             const localResourceName =
                 FileHandler.getLocalResourceName(finalUrl);
@@ -237,8 +240,8 @@ export const actions: ActionTree<State, State> & Actions = {
         file: File,
     ): Promise<void> {
         return new Promise((resolve, reject) => {
-            commit(
-                MutationTypes.PUSH_PROGRESS,
+            progress(
+                commit,
                 `Loading file '${file.name}' '${file.type}' (${
                     file.size / 1000000
                 }MB)`,
@@ -283,9 +286,9 @@ export const actions: ActionTree<State, State> & Actions = {
 
                             processables.forEach(
                                 (zipEntry: JSZip.JSZipObject): void => {
-                                    commit(
-                                        //Set the progress message, before using any of the async functions
-                                        MutationTypes.PUSH_PROGRESS,
+                                    //Set the progress message, before using any of the async functions
+                                    progress(
+                                        commit,
                                         `Processing ZIP entry: ${zipEntry.name}`,
                                     );
                                     zipEntry
@@ -294,8 +297,8 @@ export const actions: ActionTree<State, State> & Actions = {
                                             //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
                                             const zipEntryName =
                                                 zipEntry.name.normalize();
-                                            commit(
-                                                MutationTypes.PUSH_PROGRESS,
+                                            progress(
+                                                commit,
                                                 `Processing content for ZIP entry '${zipEntryName}'...`,
                                             );
 
@@ -490,7 +493,7 @@ export const actions: ActionTree<State, State> & Actions = {
         commit,
         getters,
     }: AugmentedActionContext): void {
-        commit(MutationTypes.PUSH_PROGRESS, `Downloading REX file...`);
+        progress(commit, `Downloading REX file...`);
 
         const compilation = getters.compilation;
         const xml = CompilationParser.convertToXml(compilation);
@@ -505,7 +508,7 @@ export const actions: ActionTree<State, State> & Actions = {
         commit,
         getters,
     }: AugmentedActionContext): void {
-        commit(MutationTypes.PUSH_PROGRESS, `Downloading REZ file...`);
+        progress(commit, `Downloading REZ file...`);
 
         //Get the XML first
         const compilation = getters.compilation;
@@ -615,4 +618,17 @@ function withProgress(
     commit(MutationTypes.PUSH_PROGRESS, message);
     callee();
     commit(MutationTypes.POP_PROGRESS, undefined);
+}
+
+/** Commits the given progress information
+ * @remarks This is a shorthand for not needing to use the push progress key
+ */
+function progress(
+    commit: <K extends keyof Mutations<State>>(
+        key: K,
+        payload: Parameters<Mutations<State>[K]>[1],
+    ) => ReturnType<Mutations<State>[K]>,
+    message: string,
+) {
+    commit(MutationTypes.PUSH_PROGRESS, message);
 }
