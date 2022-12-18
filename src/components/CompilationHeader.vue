@@ -2,7 +2,10 @@
     <!-- Level, also on mobile -->
     <nav class="level is-mobile">
         <div>
-            <div class="level-item is-narrow">
+            <template
+                v-if="compilation.Title || compilation.Tracks.length > 1"
+                class="level-item is-narrow"
+            >
                 <EditableInput
                     v-if="isEditable"
                     class="title is-3"
@@ -11,7 +14,9 @@
                     placeholder="Compilation title"
                 />
                 <p v-else class="title is-3">{{ compilation.Title }}</p>
-            </div>
+
+            </template>
+            <p v-else class="title is-3">&nbsp;</p>
         </div>
         <!-- Context menu on the right side -->
         <div class="level-right">
