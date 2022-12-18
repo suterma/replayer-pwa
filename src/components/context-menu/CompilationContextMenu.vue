@@ -55,8 +55,8 @@ export default defineComponent({
          */
         close(): void {
             confirm(
-                'Closing compilation',
-                `Do you want to close (and discard any changes to) compilation '${this.compilation.Title}'? Hint: to keep changes for later use, download a copy first.`,
+                'Discarding compilation',
+                `Do you want to discard (and loose any changes to) compilation '${this.compilation.Title}'? Hint: to keep changes for later use, download a copy first.`,
             ).then((ok) => {
                 if (ok) {
                     this.$store.dispatch(ActionTypes.DISCARD_COMPILATION);
