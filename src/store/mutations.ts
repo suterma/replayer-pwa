@@ -138,26 +138,16 @@ export const mutations: MutationTree<State> & Mutations = {
     [MutationTypes.ADD_DEFAULT_TRACK](state: State, resourceName: string) {
         console.debug('mutations::ADD_DEFAULT_TRACK:', resourceName);
         const track = CompilationHandler.createDefaultTrack(resourceName);
-        const cue = CompilationHandler.createDefaultCue(state.compilation);
-        track.Cues.push(cue);
+        state.selectedCueId = null;
+        state.selectedTrackId = track.Id;
         state.compilation.Tracks.push(track);
-        state.selectedCueId = cue.Id;
     },
 
     [MutationTypes.ADD_TRACK](state: State, track: ITrack) {
         console.debug('mutations::ADD_TRACK:', track);
-
-        //Use the first cue, if it exists (and has an Id)
-        let firstCueId = track.Cues[0]?.Id;
-
-        if (!firstCueId) {
-            const cue = CompilationHandler.createDefaultCue(state.compilation);
-            track.Cues.push(cue);
-            firstCueId = cue.Id;
-        }
-        //Use the track, plus the cue as the selected cue
         state.compilation.Tracks.push(track);
-        state.selectedCueId = firstCueId;
+        state.selectedCueId = null;
+        state.selectedTrackId = track.Id;
     },
 
     [MutationTypes.ADD_CUE](

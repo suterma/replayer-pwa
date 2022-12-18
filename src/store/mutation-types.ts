@@ -15,12 +15,14 @@ export enum MutationTypes {
      */
     ADD_MEDIA_URL = 'ADD_MEDIA_URL',
     /** Adds a new default track for the given file name or media URL to the compilation.
-     * @remarks No media URL is added, it must get handled elsewhere.
+     * @remarks Track properties are derived from the given file name or url
+     * @remarks The new track is made the selected track
+     * @remarks No media data is added, it must get handled elsewhere.
      */
     ADD_DEFAULT_TRACK = 'ADD_DEFAULT_TRACK',
-    /** Adds a new track for the given media URL to the compilation.
-     * @remarks No media URL is added, it must get handled elsewhere.
-     * @remarks If no cue is provided, this also adds a first cue for this track. The first cue is used as the selected cue.
+    /** Adds a provided track to the compilation.
+     * @remarks The new track is made the selected track
+     * @remarks No media data is added, it must get handled elsewhere.
      */
     ADD_TRACK = 'ADD_TRACK',
     /** Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.
