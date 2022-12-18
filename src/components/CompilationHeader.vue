@@ -2,21 +2,17 @@
     <!-- Level, also on mobile -->
     <nav class="level is-mobile">
         <div>
-            <template
-                v-if="compilation.Title || compilation.Tracks.length > 1"
-                class="level-item is-narrow"
-            >
-                <EditableInput
-                    v-if="isEditable"
-                    class="title is-3"
-                    v-model="title"
-                    @change="updateTitle($event.target.value)"
-                    placeholder="Compilation title"
-                />
-                <p v-else class="title is-3">{{ compilation.Title }}</p>
-
-            </template>
-            <p v-else class="title is-3">&nbsp;</p>
+            <EditableInput
+                v-if="isEditable && (title || compilation.Tracks.length > 1)"
+                class="title is-3"
+                v-model="title"
+                @change="updateTitle($event.target.value)"
+                placeholder="Compilation title"
+            />
+            <p v-else class="title is-3">
+                {{ title }} &nbsp;
+                <!-- add placeholder for layout consistency -->
+            </p>
         </div>
         <!-- Context menu on the right side -->
         <div class="level-right">
