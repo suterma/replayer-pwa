@@ -1,22 +1,21 @@
 <template>
     <!-- Level, also on mobile -->
     <nav class="level is-mobile">
-        <!-- Left side -->
-        <div class="level-left">
-            <div class="level-item">
+        <div>
+            <div class="level-item is-narrow">
                 <EditableInput
                     v-if="isEditable"
                     class="title is-3"
                     v-model="title"
                     @change="updateTitle($event.target.value)"
-                    placeholder="Add compilation title"
+                    placeholder="Compilation title"
                 />
                 <p v-else class="title is-3">{{ compilation.Title }}</p>
             </div>
         </div>
-        <!-- Right side -->
+        <!-- Context menu on the right side -->
         <div class="level-right">
-            <div class="level-item">
+            <div class="level-item is-narrow">
                 <span class="is-pulled-right ml-3">
                     <CompilationContextMenu :compilation="compilation" />
                 </span>

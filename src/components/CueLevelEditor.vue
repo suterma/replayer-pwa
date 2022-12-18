@@ -368,7 +368,7 @@ export default defineComponent({
 
         /** Gets a cue placeholder denoting the cue's position */
         cuePlaceholder(): string {
-            return `Add cue description`;
+            return `Cue description`;
         },
         /** Gets the cue's time
          * @devdoc provided as performance optimization, to allow render checks directly on this value, not via the cue object
