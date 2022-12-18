@@ -1,22 +1,17 @@
 <template>
     <DropdownMenu
-        v-once
         ref="dropdownMenu"
         title="App menu"
         :iconPath="mdiMenu"
         style="z-index: 3"
     >
         <div id="appContextMenuTop"></div>
-        <Hotkey :keys="['f5']" :excluded-elements="[]" v-slot="{ clickRef }">
-            <DropdownMenuRouterLink
-                to="/play"
-                title="Play"
-                shortcut="F5"
-                :clickRef="clickRef"
-                :iconPath="mdiPlay"
-            />
-        </Hotkey>
-        <Hotkey :keys="['f2']" :excluded-elements="[]" v-slot="{ clickRef }">
+        <Hotkey
+            v-once
+            :keys="['f2']"
+            :excluded-elements="[]"
+            v-slot="{ clickRef }"
+        >
             <DropdownMenuRouterLink
                 to="/edit"
                 title="Edit"
@@ -25,17 +20,47 @@
                 :iconPath="mdiPencil"
             />
         </Hotkey>
+        <Hotkey
+            v-once
+            :keys="['f3']"
+            :excluded-elements="[]"
+            v-slot="{ clickRef }"
+        >
+            <DropdownMenuRouterLink
+                to="/play"
+                title="Play"
+                shortcut="F3"
+                :clickRef="clickRef"
+                :iconPath="mdiPlay"
+            />
+        </Hotkey>
+        <Hotkey
+            v-once
+            :keys="['f4']"
+            :excluded-elements="[]"
+            v-slot="{ clickRef }"
+        >
+            <DropdownMenuRouterLink
+                v-once
+                to="/setlist"
+                title="Set list"
+                shortcut="F4"
+                :clickRef="clickRef"
+                :iconPath="mdiListBoxOutline"
+            />
+        </Hotkey>
         <DropdownMenuRouterLink
-            to="/setlist"
-            title="Set list"
-            :iconPath="mdiListBoxOutline"
-        />
-        <DropdownMenuRouterLink
+            v-once
             to="/settings"
             title="Settings"
             :iconPath="mdiCogOutline"
         />
-        <Hotkey :keys="['f1']" :excluded-elements="[]" v-slot="{ clickRef }">
+        <Hotkey
+            v-once
+            :keys="['f1']"
+            :excluded-elements="[]"
+            v-slot="{ clickRef }"
+        >
             <DropdownMenuRouterLink
                 to="/about"
                 title="About"
@@ -46,11 +71,13 @@
         </Hotkey>
         <Experimental>
             <DropdownMenuRouterLink
+                v-once
                 to="/development"
                 title="Development"
                 :iconPath="mdiFlaskOutline"
             />
         </Experimental>
+        <div id="appContextMenuBottom"></div>
     </DropdownMenu>
 </template>
 
