@@ -860,12 +860,16 @@ export default defineComponent({
         /** Whether the playing cue has a previous cue
          */
         hasPreviousCue(): boolean {
-            return this.allActiveTrackCueIds[0] !== this.selectedCue?.Id;
+            return (
+                this.selectedCue &&
+                this.allActiveTrackCueIds[0] !== this.selectedCue?.Id
+            );
         },
         /** Whether the playing cue has a next cue
          */
         hasNextCue(): boolean {
             return (
+                this.selectedCue &&
                 this.allActiveTrackCueIds.slice(-1)[0] !== this.selectedCue?.Id
             );
         },
