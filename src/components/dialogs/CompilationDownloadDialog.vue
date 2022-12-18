@@ -6,11 +6,46 @@
             <div class="modal-card">
                 <header class="modal-card-head">
                     <h1 class="modal-card-title title is-flex-shrink-1">
-                        Download compilation '{{ compilation?.Title }}' as...
+                        Download compilation as...
                     </h1>
                 </header>
                 <section class="modal-card-body">
                     <form>
+                        <div class="field">
+                            <label class="label">Compilation title*</label>
+                            <div class="control has-icons-right">
+                                <input
+                                    class="input"
+                                    :class="{ 'is-danger': !compilationTitle }"
+                                    type="text"
+                                    v-focus
+                                    placeholder="Compilation title"
+                                    :value="compilationTitle"
+                                    @change="
+                                        updateCompilationTitle(
+                                            $event.target.value,
+                                        )
+                                    "
+                                    @input="
+                                        updateCompilationTitle(
+                                            $event.target.value,
+                                        )
+                                    "
+                                />
+                                <span
+                                    class="icon is-small is-right"
+                                    v-show="!compilationTitle"
+                                >
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </span>
+                            </div>
+                            <p
+                                v-show="!compilationTitle"
+                                class="help is-danger"
+                            >
+                                The compilation title is required
+                            </p>
+                        </div>
                         <div class="field">
                             <div class="control">
                                 <label class="radio">
@@ -27,7 +62,7 @@
                                     >
                                     <span class="has-opacity-half is-size-7">
                                         (<span class="is-family-monospace"
-                                            >.rez</span
+                                            >{{ proposedFileName }}.rez</span
                                         >), including provided media files
                                     </span>
                                 </label>
@@ -48,7 +83,7 @@
                                     >
                                     <span class="has-opacity-half is-size-7">
                                         (<span class="is-family-monospace"
-                                            >.rex</span
+                                            >{{ proposedFileName }}.rex</span
                                         >), using media file names / URLs only
                                     </span>
                                 </label>
@@ -71,8 +106,9 @@
                         </p>
                         <p class="control">
                             <button
-                                v-focus
+                                type="submit"
                                 class="button is-success"
+                                :disabled="!compilationTitle"
                                 @click="
                                     download().then(() => {
                                         $close(this);
@@ -95,6 +131,7 @@ import { Compilation } from '@/store/compilation-types';
 import { defineComponent, ref } from 'vue';
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
 import { Hotkey } from '@simolation/vue-hotkey';
+import CompilationHandler from '@/store/compilation-handler';
 
 export default defineComponent({
     name: 'CompilationDownloadDialog',
@@ -117,6 +154,10 @@ export default defineComponent({
     },
 
     methods: {
+        /** Updates the compilation title */
+        updateCompilationTitle(title: string) {
+            this.$store.dispatch(ActionTypes.UPDATE_COMPILATION_TITLE, title);
+        },
         /** Initiates the download of the current compilation with the chosen target type
          */
         async download(): Promise<void> {
@@ -139,6 +180,16 @@ export default defineComponent({
         },
     },
 
-    computed: {},
+    computed: {
+        compilationTitle(): string {
+            return this.compilation?.Title ?? '';
+        },
+
+        proposedFileName(): string {
+            return CompilationHandler.getCompilationFileName(
+                this.compilation?.Title,
+            );
+        },
+    },
 });
 </script>

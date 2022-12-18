@@ -1,8 +1,8 @@
 import { Compilation, Track } from '@/store/compilation-types';
 import { openDialog } from 'vue3-promise-dialog';
-import ConfirmDialog from '../../components/ConfirmDialog.vue';
-import TrackSharingDialog from '../../components/TrackSharingDialog.vue';
-import CompilationDownloadDialog from '../../components/CompilationDownloadDialog.vue';
+import ConfirmDialog from '../../components/dialogs/ConfirmDialog.vue';
+import TrackSharingDialog from '../../components/dialogs/TrackSharingDialog.vue';
+import CompilationDownloadDialog from '../../components/dialogs/CompilationDownloadDialog.vue';
 
 /** A simple confirmation function that uses the ConfirmDialog.vue component
  * @param header - What the question is about, shown in the header part of the dialog

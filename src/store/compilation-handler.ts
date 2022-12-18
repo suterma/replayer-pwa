@@ -501,6 +501,16 @@ export default class CompilationHandler {
         return first.endsWith(second) || second.endsWith(first);
     }
 
+    /** Gets a usable file name (without extension), for a download operation,
+     * from a compilation title
+     * @param compilationTitle - the compilation title to derive a file name from
+     */
+    public static getCompilationFileName(
+        compilationTitle: string | null | undefined,
+    ): string {
+        return compilationTitle?.trim() ?? '';
+    }
+
     /** An empty Id, usable for a reset. */
     public static EmptyId = '';
 }
