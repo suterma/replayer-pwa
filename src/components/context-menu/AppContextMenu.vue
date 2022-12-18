@@ -6,6 +6,7 @@
         :iconPath="mdiMenu"
         style="z-index: 3"
     >
+        <div id="appContextMenuTop"></div>
         <Hotkey :keys="['f5']" :excluded-elements="[]" v-slot="{ clickRef }">
             <DropdownMenuRouterLink
                 to="/play"

@@ -1,41 +1,42 @@
 <template>
-    <DropdownMenu v-once title="Compilation context menu">
+    <Teleport to="#appContextMenuTop">
+        <!-- <DropdownMenu v-once title="Compilation menu"> -->
         <Hotkey :keys="['ctrl', 's']" v-slot="{ clickRef }">
             <DropdownMenuButton
                 title="Download... [CTRL+S]"
-                subTitle="Save compilation to the device"
+                subTitle="Save current compilation"
                 @click="download"
                 :ref="clickRef"
                 :iconPath="mdiTrayArrowDown"
             />
         </Hotkey>
-        <hr class="dropdown-divider" />
         <Hotkey :keys="['ctrl', 'x']" v-slot="{ clickRef }">
             <DropdownMenuButton
-                title="Close [CTRL+X]"
-                subTitle="(discard the compilation)"
+                title="Discard... [CTRL+X]"
+                subTitle="Discard current compilation"
                 @click="close"
                 :ref="clickRef"
-                :iconPath="mdiCloseBoxOutline"
+                :iconPath="mdiTrashCanOutline"
             />
         </Hotkey>
-    </DropdownMenu>
+        <hr class="dropdown-divider" />
+        <!-- </DropdownMenu> -->
+    </Teleport>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
 import { Compilation } from '@/store/compilation-types';
-import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
 import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
 import { confirm, downloadCompilation } from '@/code/ui/dialogs';
 import { Hotkey } from '@simolation/vue-hotkey';
-import { mdiCloseBoxOutline, mdiTrayArrowDown } from '@mdi/js';
+import { mdiTrashCanOutline, mdiTrayArrowDown } from '@mdi/js';
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
     name: 'CompilationContextMenu',
-    components: { DropdownMenu, DropdownMenuButton, Hotkey },
+    components: {  DropdownMenuButton, Hotkey },
     props: {
         compilation: {
             type: Compilation,
@@ -45,7 +46,7 @@ export default defineComponent({
     data() {
         return {
             /** Icons from @mdi/js */
-            mdiCloseBoxOutline: mdiCloseBoxOutline,
+            mdiTrashCanOutline: mdiTrashCanOutline,
             mdiTrayArrowDown: mdiTrayArrowDown,
         };
     },
