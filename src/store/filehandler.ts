@@ -45,6 +45,17 @@ export default class FileHandler {
         return FileHandler.removeExtension(decodedFileName);
     }
 
+    /** Tries to infer a useful track name from the file name.
+     * @remarks can be used to get a human readable name for a Track, which originates from a file name
+     */
+    static extractTrackNameFromFileName(fileName: string): string {
+        const simpleFilename = FileHandler.removeExtension(fileName);
+        const cleanedFileName = simpleFilename
+            .replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>]/gi, ' ')
+            .replace(/\s{2,}/g, ' ');
+        return FileHandler.removeExtension(cleanedFileName);
+    }
+
     /** Tries to infer a useful artist name from the URL, by using the second level domain name, if possible.
      * @remarks can be used to get a human readable artist name for a Track, which originates from an URL
      * @returns A guess for an artist name or the empty string.

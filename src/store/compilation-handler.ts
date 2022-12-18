@@ -78,7 +78,7 @@ export default class CompilationHandler {
             artist = FileHandler.extractArtistNameFromUrl(url);
             album = FileHandler.extractAlbumNameFromUrl(url);
         } else {
-            name = resourceName;
+            name = FileHandler.extractTrackNameFromFileName(resourceName);
         }
 
         const trackId = uuidv4();
