@@ -11,6 +11,7 @@
                     class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
                 >
                     <CollapsibleButton
+                        v-if="canCollapse"
                         :class="{
                             'is-nav': true,
                         }"
@@ -151,6 +152,17 @@ export default defineComponent({
             default: false,
         },
 
+        /** Whether this track can collapse
+         * @remarks If set to false, this prevents collapsing
+         * and also hides the collapsing toggler completely
+         * This is useful for single-track compilations where
+         * collapsing is not useful
+         */
+        canCollapse: {
+            type: Boolean,
+            default: true,
+        },
+
         /** Flag to indicate whether the player is currently playing
          */
         isPlaying: {
@@ -173,13 +185,23 @@ export default defineComponent({
             isSharing: false,
         };
     },
+    /** Make sure for non-collapsible headers, they are reported initially as expanded once   */
+    beforeMount() {
+        if (!this.canCollapse) {
+            this.$emit('update:isExpanded', true);
+        }
+    },
     methods: {
         /** Toggles the expansion state
          */
         toggleExpanded() {
-            const expanded = !this.isExpanded;
-            console.debug(`TrackHeader::toggleExpanded:expanded:${expanded}`);
-            this.$emit('update:isExpanded', expanded);
+            if (this.canCollapse) {
+                const expanded = !this.isExpanded;
+                console.debug(
+                    `TrackHeader::toggleExpanded:expanded:${expanded}`,
+                );
+                this.$emit('update:isExpanded', expanded);
+            }
         },
 
         /** Updates the track name */

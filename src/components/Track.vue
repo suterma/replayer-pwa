@@ -25,6 +25,7 @@
             v-if="isEditable"
             :isExpanded="isExpanded"
             @update:isExpanded="updateIsExpanded"
+            :canCollapse="!isOnlyTrack"
             :track="track"
             :isPlaying="isPlaying"
             :isTrackLoaded="isTrackLoaded"
@@ -960,6 +961,12 @@ export default defineComponent({
         isActiveTrack(): boolean {
             const activeTrackId = this.$store.getters.activeTrack?.Id as string;
             return this.track.Id === activeTrackId;
+        },
+        /** Determines whether this is the only track in the compilation
+         * @remarks Is used to visually omit some unnecessary items for a compilation with just a single track
+         */
+        isOnlyTrack(): boolean {
+            return !this.hasNextTrack && !this.hasPreviousTrack;
         },
     },
 });
