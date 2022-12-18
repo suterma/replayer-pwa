@@ -1,6 +1,7 @@
 <template>
-    <Teleport to="#appContextMenuTop">
+    <Teleport to="#appContextMenuBottom">
         <!-- <DropdownMenu v-once title="Compilation menu"> -->
+        <hr class="dropdown-divider" />
         <Hotkey :keys="['ctrl', 's']" v-slot="{ clickRef }">
             <DropdownMenuButton
                 title="Download... [CTRL+S]"
@@ -19,7 +20,6 @@
                 :iconPath="mdiTrashCanOutline"
             />
         </Hotkey>
-        <hr class="dropdown-divider" />
         <!-- </DropdownMenu> -->
     </Teleport>
 </template>
@@ -36,7 +36,7 @@ import { mdiTrashCanOutline, mdiTrayArrowDown } from '@mdi/js';
  */
 export default defineComponent({
     name: 'CompilationContextMenu',
-    components: {  DropdownMenuButton, Hotkey },
+    components: { DropdownMenuButton, Hotkey },
     props: {
         compilation: {
             type: Compilation,
