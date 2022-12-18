@@ -36,10 +36,6 @@ export type Mutations<S = State> = {
         state: S,
         compilation: ICompilation,
     ): void;
-    [MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE](
-        state: S,
-        compilation: ICompilation,
-    ): void;
     [MutationTypes.UPDATE_SELECTED_CUE_ID](state: S, cueId: string): void;
     [MutationTypes.UPDATE_SELECTED_TRACK_ID](state: S, trackId: string): void;
     [MutationTypes.UPDATE_DURATIONS](
@@ -224,33 +220,6 @@ export const mutations: MutationTree<State> & Mutations = {
             'mutations::REPLACE_COMPILATION:compilation.PlaybackMode',
             compilation.PlaybackMode,
         );
-
-        state.compilation = compilation;
-
-        //Add the (non-blob) media URL's from the compilation to the media storage
-        const onlineMediaUrls =
-            CompilationHandler.getOnlineMediaUrls(compilation);
-        onlineMediaUrls.forEach((mediaUrl) => {
-            state.mediaUrls.set(mediaUrl.resourceName, mediaUrl);
-        });
-    },
-    [MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE](
-        state: State,
-        compilation: ICompilation,
-    ) {
-        console.debug(
-            'mutations::REPLACE_COMPILATION_AND_SELECT_FIRST_CUE:compilation',
-            compilation,
-        );
-
-        //find and commit the first cue
-        if (compilation) {
-            const tracks = compilation.Tracks;
-            const cues = tracks.flatMap((track) => track.Cues);
-            const firstCueId = cues[0]?.Id ?? null;
-
-            state.selectedCueId = firstCueId;
-        }
 
         state.compilation = compilation;
 

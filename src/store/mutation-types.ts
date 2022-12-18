@@ -35,14 +35,6 @@ export enum MutationTypes {
      * @remarks Also immediately updates the media URL storage with the contained online (http|https) URL's from the compilation.
      */
     REPLACE_COMPILATION = 'REPLACE_COMPILATION',
-    /** Replaces the current compilation with a new one, and selects the first cue
-     * @remarks This can be used to make sure that any a cue is selected for the new compilation,
-     * in order to present the user with an immediately dispatchable play action
-     * @remarks Removes all data from the previous compilation, including media URL's.
-     * @remarks Also immediately updates the media URL storage with the contained online (http|https) URL's from the compilation.
-     */
-    //TODO remove
-    REPLACE_COMPILATION_AND_SELECT_FIRST_CUE = 'REPLACE_COMPILATION_AND_SELECT_FIRST_CUE',
 
     /** Updates the currently selected cue Id, for application-wide handling
      * @remarks This does not control the playback itself. It is intended for display and handling purposes.

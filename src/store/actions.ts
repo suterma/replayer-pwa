@@ -313,7 +313,7 @@ export const actions: ActionTree<State, State> & Actions = {
                                                         compilation.Url =
                                                             file.name;
                                                         commit(
-                                                            MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
+                                                            MutationTypes.REPLACE_COMPILATION,
                                                             compilation,
                                                         );
                                                     })
@@ -361,7 +361,7 @@ export const actions: ActionTree<State, State> & Actions = {
                                                 )
                                                     .then((compilation) => {
                                                         commit(
-                                                            MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
+                                                            MutationTypes.REPLACE_COMPILATION,
                                                             compilation,
                                                         );
                                                     })
@@ -426,7 +426,7 @@ export const actions: ActionTree<State, State> & Actions = {
                         .then((compilation) => {
                             compilation.Url = file.name;
                             commit(
-                                MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
+                                MutationTypes.REPLACE_COMPILATION,
                                 compilation,
                             );
                         })
@@ -461,7 +461,7 @@ export const actions: ActionTree<State, State> & Actions = {
                     CompilationParser.handleAsLivePlaybackPlaylist(content)
                         .then((compilation) => {
                             commit(
-                                MutationTypes.REPLACE_COMPILATION_AND_SELECT_FIRST_CUE,
+                                MutationTypes.REPLACE_COMPILATION,
                                 compilation,
                             );
                         })
