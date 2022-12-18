@@ -10940,6 +10940,17 @@ when no content is shown */
 }
 
 /*************************************************************
+ * Disabled buttons should have no background or border
+ **************************************************************
+*/
+.button[disabled], fieldset[disabled] .button,
+.button[disabled]:hover, fieldset[disabled] .button:hover {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/*************************************************************
  * Support for button icon rotations
  **************************************************************
 */
