@@ -9,7 +9,7 @@
                     class="title is-3"
                     v-model="title"
                     @change="updateTitle($event.target.value)"
-                    placeholder="Compilation title"
+                    placeholder="Add compilation title"
                 />
                 <p v-else class="title is-3">{{ compilation.Title }}</p>
             </div>
