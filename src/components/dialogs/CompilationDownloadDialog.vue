@@ -39,11 +39,11 @@
                                     <i class="fas fa-exclamation-triangle"></i>
                                 </span>
                             </div>
-                            <p
-                                v-show="!compilationTitle"
-                                class="help is-danger"
-                            >
+                            <p v-if="!compilationTitle" class="help is-danger">
                                 The compilation title is required
+                            </p>
+                            <p v-else class="help">
+                                The compilation title is used as file name
                             </p>
                         </div>
                         <div class="field">
