@@ -1,6 +1,6 @@
 <template>
     <button
-        v-if="(hasSecondTrack && !hideTrackNavigation)"
+        v-if="hasSecondTrack && !hideTrackNavigation"
         class="button"
         :disabled="!hasPreviousTrack"
         @click="toPreviousTrack()"
@@ -18,21 +18,22 @@
     </button>
 
     <!-- Stop (do not show on small devices, user still can use play/pause) -->
-    <button class="button is-hidden-mobile" @click="stop()" title="Stop">
+    <button
+        v-if="!hideStopButton"
+        class="button is-hidden-mobile"
+        @click="stop()"
+        title="Stop"
+    >
         <BaseIcon v-once :path="mdiStop" />
     </button>
 
     <PlayPauseButton
+        v-if="!hidePlayPauseButton"
         class="is-success"
         :isPlaying="isPlaying"
         :isLoading="isFading"
         @click="togglePlayback()"
         title="Play from current position"
-    />
-
-    <PlaybackModeButton
-        :modelValue="playbackMode"
-        @update:modelValue="updatePlaybackMode"
     />
 
     <button
@@ -45,7 +46,7 @@
     </button>
 
     <button
-        v-if="(hasSecondTrack && !hideTrackNavigation)"
+        v-if="hasSecondTrack && !hideTrackNavigation"
         class="button"
         :disabled="!hasNextTrack"
         @click="toNextTrack()"
@@ -53,6 +54,11 @@
     >
         <BaseIcon v-once :path="mdiSkipNext" />
     </button>
+
+    <PlaybackModeButton
+        :modelValue="playbackMode"
+        @update:modelValue="updatePlaybackMode"
+    />
 
     <Knob
         title="Drag, scroll or use the arrow keys to change volume"
@@ -151,6 +157,18 @@ export default defineComponent({
         /** Whether to hide the previous/next track buttons
          */
         hideTrackNavigation: {
+            type: Boolean,
+            default: false,
+        },
+        /** Whether to hide the play/pause button
+         */
+        hidePlayPauseButton: {
+            type: Boolean,
+            default: false,
+        },
+        /** Whether to hide the stop button
+         */
+        hideStopButton: {
             type: Boolean,
             default: false,
         },

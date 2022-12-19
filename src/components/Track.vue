@@ -47,7 +47,6 @@
                         :isPlaying="isPlaying"
                         :isLoading="isFading"
                         @click="skipToPlayPause()"
-                       
                     />
                 </div>
             </template>
@@ -137,6 +136,7 @@
                             :class="{
                                 'section navbar is-fixed-top has-background-grey-dark is-shadowless is-borderless':
                                     isTrackPlayerFullScreen,
+                                'is-editable': isEditable,
                             }"
                         >
                             <!-- Left side -->
@@ -215,6 +215,15 @@
                             <div class="level-right">
                                 <!-- For performance and layout reasons, only render this when used (emulating is-hidden-mobile) -->
                                 <IfMedia query="(min-width: 769px)">
+                                    <div v-if="!isEditable" class="level-item">
+                                        <PlayPauseButton
+                                            class="is-success mb-0"
+                                            :isPlaying="isPlaying"
+                                            :isLoading="isFading"
+                                            @click="skipToPlayPause()"
+                                            title="Play from current position"
+                                        />
+                                    </div>
                                     <div class="level-item is-unselectable">
                                         <p>
                                             <PlayheadSlider
@@ -270,6 +279,10 @@
                                             :isPlaying="isPlaying"
                                             :isFading="isFading"
                                             @togglePlaying="skipToPlayPause()"
+                                            :hidePlayPauseButton="
+                                                !isMobile || isEditable
+                                            "
+                                            :hideStopButton="true"
                                         >
                                         </MediaControlsBar>
                                     </div>
@@ -387,6 +400,7 @@ import TrackTitleName from './TrackTitleName.vue';
 import ArtistInfo from './ArtistInfo.vue';
 import IfMedia from '@/components/IfMedia.vue';
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
+import { useMediaQuery } from '@vueuse/core';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -854,6 +868,9 @@ export default defineComponent({
         },
     },
     computed: {
+        isMobile(): boolean {
+            return useMediaQuery('(max-width: 768px)').value;
+        },
         /** The description of the currently playing cue
          * @remarks The implementation makes sure that at least always an empty string is returned.
          * Combined with an &nbsp;, this avoids layout flicker.
@@ -1043,19 +1060,28 @@ export default defineComponent({
     margin-bottom: 12px;
 }
 
-// Define an overall width allocation for the playback control level items
+// Define an overall width allocation for fixed right-hand side of the playback control level items
 .level {
     .level-left {
-        flex-basis: calc(100% - 580px);
+        flex-basis: calc(100% - 560px);
         .level-item {
             flex-shrink: 1;
         }
     }
     .level-right {
-        flex-basis: 580px;
+        flex-basis: 560px;
         .level-item {
-            flex-shrink: 0;
+            flex-shrink: 1;
         }
+    }
+}
+// Note: The used width is smaller in edit mode, since there are less buttons on the right side (no track skip, no play/pause)
+.level.is-editable {
+    .level-left {
+        flex-basis: calc(100% - 480px);
+    }
+    .level-right {
+        flex-basis: 480px;
     }
 }
 

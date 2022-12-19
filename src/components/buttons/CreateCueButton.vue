@@ -33,7 +33,8 @@
         title="Add a cue now (at the current playback time)!"
     >
         <BaseIcon v-once :path="mdiPlus" />
-        <span>Cue</span>
+        <!-- On large screens also show an indicative text -->
+        <span class="is-hidden-touch">Cue</span>
         <span class="has-opacity-half">&nbsp;at&nbsp;</span>
         <TimeDisplay :modelValue="currentSeconds"></TimeDisplay>
     </button>
