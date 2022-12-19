@@ -12,6 +12,7 @@
     >
         <button
             class="button is-warning is-outlined"
+            :class="$attrs.class"
             @click="$emit('createNewCue')"
             :ref="clickRef"
             title="Add a cue now (at the current playback time)!"
@@ -27,6 +28,7 @@
     <button
         v-else
         class="button is-warning is-outlined"
+        :class="$attrs.class"
         @click="$emit('createNewCue')"
         title="Add a cue now (at the current playback time)!"
     >

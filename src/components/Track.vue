@@ -47,7 +47,7 @@
                         :isPlaying="isPlaying"
                         :isLoading="isFading"
                         @click="skipToPlayPause()"
-                        title="play"
+                       
                     />
                 </div>
             </template>
@@ -142,11 +142,21 @@
                             <!-- Left side -->
                             <div class="level-left">
                                 <div v-if="isEditable" class="level-item">
-                                    <CreateCueButton
-                                        :isActiveTrack="isActiveTrack"
-                                        :currentSeconds="currentSeconds"
-                                        @createNewCue="createNewCue()"
-                                    ></CreateCueButton>
+                                    <div class="buttons has-addons mb-0">
+                                        <PlayPauseButton
+                                            class="is-success mb-0"
+                                            :isPlaying="isPlaying"
+                                            :isLoading="isFading"
+                                            @click="skipToPlayPause()"
+                                            title="Play from current position"
+                                        />
+                                        <CreateCueButton
+                                            class="mb-0"
+                                            :isActiveTrack="isActiveTrack"
+                                            :currentSeconds="currentSeconds"
+                                            @createNewCue="createNewCue()"
+                                        ></CreateCueButton>
+                                    </div>
                                 </div>
                                 <!-- Title and Artist of the currently playing track-->
                                 <div
