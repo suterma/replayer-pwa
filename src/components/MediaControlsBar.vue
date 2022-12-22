@@ -9,6 +9,7 @@
         <BaseIcon v-once :path="mdiSkipPrevious" />
     </button>
     <button
+        v-if="!hideCueNavigation"
         class="button"
         :disabled="!hasPreviousCue"
         @click="toPreviousCue()"
@@ -37,6 +38,7 @@
     />
 
     <button
+        v-if="!hideCueNavigation"
         class="button"
         :disabled="!hasNextCue"
         @click="toNextCue()"
@@ -160,6 +162,14 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
+
+        /** Whether to hide the previous/next cue buttons
+         */
+        hideCueNavigation: {
+            type: Boolean,
+            default: false,
+        },
+
         /** Whether to hide the play/pause button
          */
         hidePlayPauseButton: {
