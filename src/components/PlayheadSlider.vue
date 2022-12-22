@@ -1,17 +1,4 @@
 <template>
-    <!-- Slider without time info around it, as a single control -->
-
-    <!-- <input
-            class="slider is-fullwidth is-small is-slim is-circle is-warning"
-            step="stepSize"
-            min="0"
-            :max="track.Duration ?? 0"
-            :value="modelValue"
-            @change="onValueChange"
-            @input="onValueChange"
-            type="range"
-        /> -->
-
     <!-- Slider with time info around it -->
     <div class="playhead-slider level is-mobile is-unselectable">
         <!-- Left side -->
@@ -35,7 +22,7 @@
             </div>
         </div>
         <div class="level-item mr-0">
-            <div>
+            <div style="width: 100%">
                 <slot></slot>
                 <input
                     class="slider is-fullwidth is-small is-slim is-circle is-warning"
@@ -110,7 +97,7 @@ export default defineComponent({
         stepSize: {
             type: Number,
             required: false,
-            default: 0.5,
+            default: 0.1,
         },
         /** Whether to show the playhead position in [seconds]
          */
