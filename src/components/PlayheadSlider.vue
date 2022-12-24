@@ -9,15 +9,15 @@
                     @click="seek(-5)"
                     title="Current time: click to rewind"
                 >
-                    <TimeDisplay
-                        class="has-text-left is-size-7 has-text-warning"
-                        :modelValue="modelValue"
-                    ></TimeDisplay>
                     <BaseIcon
                         v-once
                         :path="mdiRewind"
                         class="has-text-warning is-align-self-flex-start"
                     />
+                    <TimeDisplay
+                        class="has-text-left is-size-7 has-text-warning"
+                        :modelValue="modelValue"
+                    ></TimeDisplay>
                 </button>
             </div>
         </div>
@@ -44,15 +44,15 @@
                     @click="seek(+5)"
                     title="Remaining time: click to forward"
                 >
+                    <BaseIcon
+                        v-once
+                        :path="mdiFastForward"
+                        class="has-text-warning is-align-self-flex-end mr-0"
+                    />
                     <TimeDisplay
                         class="has-text-right is-size-7 has-text-warning"
                         :modelValue="remainingTime"
                     ></TimeDisplay>
-                    <BaseIcon
-                        v-once
-                        :path="mdiFastForward"
-                        class="has-text-warning is-align-self-flex-end"
-                    />
                 </button>
             </div>
         </div>
@@ -154,7 +154,18 @@ export default defineComponent({
 
 /** Use a really small font for the time display */
 .playhead-slider .is-size-7.is-family-monospace {
-    padding-top: 0.4rem;
+    padding-top: -0.4rem;
     font-size: 0.65rem !important;
+}
+
+/** left seeker icon in line with the time text */
+.playhead-slider .level-right .icon svg {
+    padding-right: 0;
+    margin-right: -7px;
+}
+/** right seeker icon in line with the time text */
+.playhead-slider .level-left .icon svg {
+    padding-left: 0;
+    margin-left: +7px;
 }
 </style>
