@@ -9,7 +9,7 @@
 
         <CompilationHeader
             :compilation="compilation"
-            :isEditable="isHeaderEditable"
+            :isEditable="isEditable"
         />
         <!-- Tracks to work with -->
         <template v-for="(track, index) in tracks" :key="track.Id">
@@ -17,7 +17,9 @@
                 :track="track"
                 :ref="'track-' + track.Id"
                 :displayMode="tracksDisplayMode"
-                :isTrackPlayerFullScreen="isTrackPlayerFullScreen"
+                :isTrackPlayerFullScreen="
+                    isTrackPlayerFullScreen && !isEditable
+                "
                 @update:isTrackPlayerFullScreen="
                     updateIsTrackPlayerFullScreen($event)
                 "
@@ -80,6 +82,8 @@ export default defineComponent({
         return {
             /** Whether to show the track player widget in full screen mode
              * @remarks This should apply to all tracks player widgets of a compilation
+             * @remarks For layout reasons, a track should not be displayed in full screen,
+             * when it's in editing mode.
              */
             isTrackPlayerFullScreen: false,
 
@@ -261,11 +265,10 @@ export default defineComponent({
             );
         },
 
-        /** Whether the header component shows editable inputs for the contained data
+        /** Whether the edit mode is active
          * @remarks For simplicity, the header is shown as editable, as long as the tracks are editable, too.
-         * @devdoc Allows to reuse this component for more than one display mode.
          */
-        isHeaderEditable(): boolean {
+        isEditable(): boolean {
             return this.tracksDisplayMode === TrackDisplayMode.Edit;
         },
 
@@ -293,7 +296,7 @@ export default defineComponent({
         hasCompilation(): boolean {
             return this.$store.getters.hasCompilation;
         },
-        /** Determines the active track (the one that contains the selected cue ) */
+        /** Determines the active track */
         activeTrack(): ITrack | null {
             return this.$store.getters.activeTrack;
         },
