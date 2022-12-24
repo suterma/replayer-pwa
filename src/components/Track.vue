@@ -333,7 +333,9 @@
                         <IfMedia query="(min-width: 1024px)">
                             <nav>
                                 <CueButtonsBar
-                                    v-if="!isTrackPlayerFullScreen"
+                                    v-if="
+                                        !isTrackPlayerFullScreen && isPlayable
+                                    "
                                     :currentSeconds="currentSeconds"
                                     :isTrackPlaying="isPlaying"
                                     :playbackMode="playbackMode"
