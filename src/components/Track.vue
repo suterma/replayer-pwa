@@ -59,7 +59,7 @@
             </template>
         </TrackHeader>
 
-        <!-- The level editors (in edit mode) -->
+        <!-- The level editors (in edit mode for an expanded track) -->
         <Transition name="item">
             <div v-if="isEditable && isExpanded">
                 <div class="levels">
@@ -80,6 +80,25 @@
             </div>
         </Transition>
 
+        <!-- The buttons field (for a single track in play mode) -->
+        <Transition name="item">
+            <div v-if="isPlayable && isOnlyTrack">
+                <div class="levels">
+                    <CueButtonsField
+                        :currentSeconds="currentSeconds"
+                        :isTrackPlaying="isPlaying"
+                        :playbackMode="playbackMode"
+                        @click="
+                            (cue) => {
+                                cueClick(cue);
+                            }
+                        "
+                        :track="track"
+                    ></CueButtonsField>
+                </div>
+            </div>
+        </Transition>
+
         <!-- The audio player widget (with controls) but only once the source is available from the store
             Note: The mediaUrl property (the actual src attribute in the underlying media
             element) is also depending 
@@ -95,8 +114,8 @@
                 after it has become the active track ( gets
                 play-request-was-interrupted) -->
                 <Transition name="item">
-                    <!-- In the play view, the player is only shown for the active track
-                  In the edit view, the player is shown for all expanded tracks -->
+                    <!-- In the play view, the player widget is only shown for the active track
+                  In the edit view, the player widget are shown for all expanded tracks -->
                     <div
                         v-show="
                             (!isEditable && isActiveTrack) ||
@@ -141,7 +160,9 @@
                         >
                             <!-- Left side -->
                             <div class="level-left">
-                                <div class="level-item">
+                                <div
+                                    class="level-item is-justify-content-flex-start"
+                                >
                                     <div class="buttons has-addons mb-0">
                                         <PlayPauseButton
                                             class="is-success mb-0"
@@ -161,7 +182,10 @@
                             </div>
                             <div class="level-item">
                                 <PlayheadSlider
-                                    class="ml-4 mr-4 is-fullwidth"
+                                    :class="{
+                                        'ml-4 mr-4': !isMobile,
+                                    }"
+                                    class="is-fullwidth"
                                     v-model.number="currentSeconds"
                                     @update:modelValue="
                                         (position) =>
@@ -183,7 +207,9 @@
                                 </PlayheadSlider>
                             </div>
                             <div class="level-right">
-                                <div class="level-item">
+                                <div
+                                    class="level-item is-justify-content-flex-end"
+                                >
                                     <div class="is-grouped">
                                         <MediaControlsBar
                                             :hideStopButton="true"
@@ -204,7 +230,7 @@
                         </nav>
 
                         <!-- Track playback bar (In play mode, this contains:
-                            - a slot for the expander icon
+                            - a slot for the expander icon (if not the only track)
                             - The title (with artist info)
                             - the play/pause button
                             - a smaller slider
@@ -226,7 +252,9 @@
                                 <div
                                     class="level-item is-justify-content-left has-cropped-text"
                                 >
+                                    <!-- Offer the full screen, but not for a single track  -->
                                     <CollapsibleButton
+                                        v-if="!isOnlyTrack"
                                         :modelValue="isTrackPlayerFullScreen"
                                         @click="toggleTrackPlayerFullScreen()"
                                         title="toggle full-screen mode"
@@ -294,7 +322,9 @@
                                     </PlayheadSlider>
                                 </div>
 
-                                <div class="level-item">
+                                <div
+                                    class="level-item is-justify-content-flex-end"
+                                >
                                     <div class="is-grouped">
                                         <MediaControlsBar
                                             :hideStopButton="true"
@@ -328,9 +358,13 @@
                             </div>
                         </nav>
 
-                        <!-- When playing back, offer the cue buttons in two sizes. -->
+                        <!-- When playing back, on the player widget, offer the cue buttons depending on the situation.
+                         -->
                         <!-- For performance and layout reasons, only render this when used, on desktop and larger screens -->
-                        <IfMedia query="(min-width: 1024px)">
+                        <IfMedia
+                            query="(min-width: 1024px)"
+                            v-if="!isOnlyTrack"
+                        >
                             <nav>
                                 <CueButtonsBar
                                     v-if="
@@ -869,6 +903,19 @@ export default defineComponent({
                 ? 'clip'
                 : 'auto';
         },
+        /** Handles changes on whether there is only a single track
+         * @remarks For single tracks, expanded full screen display is not offered since the cue buttons field is
+         * shown anyway.
+         */
+        // isOnlyTrack(isOnlyTrack: boolean): void {
+        //     console.debug(
+        //         `Track(${this.track.Name})::isOnlyTrack:isOnlyTrack:`,
+        //         isOnlyTrack,
+        //     );
+        //     if (isOnlyTrack) {
+        //         this.$emit('update:isTrackPlayerFullScreen', false);
+        //     }
+        // },
     },
     computed: {
         isMobile(): boolean {
