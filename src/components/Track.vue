@@ -246,15 +246,17 @@
                                     isTrackPlayerFullScreen,
                             }"
                         >
-                            <!-- Left side -->
-                            <div class="level-left">
+                            <!-- Left side (with expander, title and artist of the currently playing track; not shown for a single track) -->
+                            <div v-if="isOnlyTrack" class="level-left">
+                                <!-- empty placeholder -->
+                            </div>
+                            <div v-else class="level-left">
                                 <!-- Title and Artist of the currently playing track-->
                                 <div
                                     class="level-item is-justify-content-left has-cropped-text"
                                 >
                                     <!-- Offer the full screen, but not for a single track  -->
                                     <CollapsibleButton
-                                        v-if="!isOnlyTrack"
                                         :modelValue="isTrackPlayerFullScreen"
                                         @click="toggleTrackPlayerFullScreen()"
                                         title="toggle full-screen mode"
@@ -299,7 +301,7 @@
                             <div class="level-right">
                                 <div class="level-item">
                                     <PlayheadSlider
-                                        style="width: 100%"
+                                        class="is-fullwidth"
                                         v-model.number="currentSeconds"
                                         @update:modelValue="
                                             (position) =>
@@ -312,7 +314,6 @@
                                     >
                                         <p
                                             class="is-size-7 has-cropped-text has-text-warning"
-                                            style="max-width: 129px"
                                         >
                                             <span>
                                                 {{ playingCueDescription }}
