@@ -180,7 +180,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="level-item">
+                            <!-- A central level item. Margins are set to provide nice-looking spacing at all widths -->
+                            <div
+                                class="level-item"
+                                :class="{
+                                    'mt-4': isMobile,
+                                }"
+                            >
                                 <PlayheadSlider
                                     :class="{
                                         'ml-4 mr-4': !isMobile,
@@ -196,8 +202,15 @@
                                     @seek="(seconds) => seek(seconds)"
                                     :trackDuration="track.Duration"
                                 >
+                                    <!-- On mobile, the text is cropped at full width minus seek buttons, because of the level's automatic stacking,
+                                    on lager viewports the text is cropped to not exceed the dynamic playhead slider -->
                                     <p
                                         class="is-size-7 has-cropped-text has-text-warning"
+                                        :style="
+                                            isMobile
+                                                ? 'max-width: calc(100vw - 140px)'
+                                                : 'max-width: calc(100vw - 620px)'
+                                        "
                                     >
                                         <span>
                                             {{ playingCueDescription }}
@@ -312,8 +325,15 @@
                                         @seek="(seconds) => seek(seconds)"
                                         :trackDuration="track.Duration"
                                     >
+                                        <!-- On mobile, the text is cropped at full width minus seek buttons, because of the level's automatic stacking,
+                                    on lager viewports the text is strictly cropped to 129px -->
                                         <p
                                             class="is-size-7 has-cropped-text has-text-warning"
+                                            :style="
+                                                isMobile
+                                                    ? 'max-width: calc(100vw - 140px)'
+                                                    : 'max-width: 129px'
+                                            "
                                         >
                                             <span>
                                                 {{ playingCueDescription }}
