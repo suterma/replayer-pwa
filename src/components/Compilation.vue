@@ -219,12 +219,12 @@ export default defineComponent({
     },
     watch: {
         /** Handle scrolling to the active track.
-         * @remarks This is intentionally only invoked on when the active track changes. If a user scrolls to a
-         * certain cue within the same track, no scrolling should occur, to keep the UI calm.
+         * @remarks This is intentionally only invoked on when the active track changes (and it's not the only track).
+         * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
          */
         activeTrack(track: ITrack | null) {
-            console.debug('scrolling to track ', track?.Name);
-            if (track) {
+            if (track && !this.isSingleTrack) {
+                console.debug('scrolling to track ', track?.Name);
                 this.scrollToTrack(track);
             }
         },
@@ -244,6 +244,14 @@ export default defineComponent({
         //TODO add a watch for the shuffle mode, then add a random seed to the shuffle function
     },
     computed: {
+        /** Whether this compilation only has no or only a single track.
+         */
+        isSingleTrack(): boolean {
+            if (this.tracks && this.tracks.length > 1) {
+                return false;
+            }
+            return true;
+        },
         /** Whether the tracks are currently in a shuffled order.
          */
         isTracksShuffled(): boolean {
