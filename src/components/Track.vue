@@ -1135,27 +1135,24 @@ export default defineComponent({
 * Specific width for track sliders depending on breakpoints
 * @remarks This allows the use of cropped text for the 
 * cue description with dynamic width */
-
-.track {
-    @media screen and (max-width: 768px) {
-        /** in Play mode */
-        .playhead-slider .has-cropped-text {
-            max-width: calc(100vw - 150px);
-        }
-
-        .is-editable .playhead-slider .has-cropped-text {
-            max-width: calc(100vw - 150px);
-        }
+@media screen and (max-width: 768px) {
+    /** in Play mode */
+    .playhead-slider .has-cropped-text {
+        max-width: calc(100vw - 150px);
     }
 
-    @media screen and (min-width: 769px) {
-        /** in Play mode */
-        .playhead-slider .has-cropped-text {
-            max-width: 129px;
-        }
-        .is-editable .playhead-slider .has-cropped-text {
-            max-width: calc(100vw - 640px);
-        }
+    .is-editable .playhead-slider .has-cropped-text {
+        max-width: calc(100vw - 150px);
+    }
+}
+
+@media screen and (min-width: 769px) {
+    /** in Play mode */
+    .playhead-slider .has-cropped-text {
+        max-width: 129px;
+    }
+    .is-editable .playhead-slider .has-cropped-text {
+        max-width: calc(100vw - 640px);
     }
 }
 </style>
