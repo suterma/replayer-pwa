@@ -9,9 +9,9 @@
     <section class="section">
         <!-- To keep the audio within the media player component running, 
             simply keep this component alive over route changes -->
-        <router-view v-slot="{ Component, id }">
+        <router-view v-slot="{ Component }">
             <keep-alive include="Play">
-                <component :is="Component" :key="id" />
+                <component :is="Component" />
             </keep-alive>
         </router-view>
         <ProgressOverlay />
@@ -21,7 +21,6 @@
 
     <!-- The ad is only used for print outputs, to allow a printout recipient to explore the app. -->
     <ReplayerAd class="is-print-only is-together-print is-scaled-50" />
-
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
@@ -47,7 +46,7 @@ export default defineComponent({
     /** Register a handler to handle page reloads and tab/browser exits
      * @devdoc Using the "unmounted" lifecycle event proved to be unreliable: Page reload in the Browser did not trigger "unmounted"
      * Using the window's onbeforeunload causes the cleanup to get reliably triggered at page reload
- */
+     */
     beforeMount() {
         window.onbeforeunload = this.cleanUp;
     },
@@ -62,4 +61,3 @@ export default defineComponent({
     },
 });
 </script>
-
