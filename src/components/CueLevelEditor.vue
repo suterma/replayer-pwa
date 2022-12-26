@@ -11,9 +11,7 @@
                             <CueButton
                                 :time="cue.Time"
                                 :shortcut="cue.Shortcut"
-                                :duration="cue.Duration"
-                                :description="cue.Description"
-                                :disabled="!Number.isFinite(cue.Time)"
+                                :duration="cue.Duration"                               
                                 :isTrackPlaying="isTrackPlaying"
                                 :playbackMode="playbackMode"
                                 @click="cueClick()"
