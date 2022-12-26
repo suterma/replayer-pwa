@@ -219,14 +219,28 @@ export default defineComponent({
         },
     },
     watch: {
-        /** Handle scrolling to the active track.
+        /** Handle scrolling to the changed active track.
          * @remarks This is intentionally only invoked on when the active track changes (and it's not the only track).
          * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
          */
         activeTrack(track: ITrack | null) {
             if (track && !this.isSingleTrack) {
-                console.debug('scrolling to track ', track?.Name);
-                this.scrollToTrack(track);
+                console.debug('scrolling to activated track ', track.Name);
+                this.$nextTick(() => {
+                    this.scrollToTrack(track);
+                });
+            }
+        },
+        /** Handle scrolling to the active track, when the display mode changes.
+         * @remarks This is intentionally only invoked on when the display mode changes (and it's not the only track).
+         */
+        isEditable() {
+            const track = this.activeTrack;
+            if (track && !this.isSingleTrack) {
+                console.debug('scrolling to mode-changed track ', track.Name);
+                this.$nextTick(() => {
+                    this.scrollToTrack(track);
+                });
             }
         },
 
