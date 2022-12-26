@@ -7,8 +7,8 @@
                 :disabled="!Number.isFinite(cue.Time)"
                 :isTrackPlaying="isTrackPlaying"
                 :playbackMode="playbackMode"
-                :hasAddonsRight="true"
-                :isMinified="true"
+                hasAddonsRight
+                 minified
                 :isCueSelected="isCueSelected(cue)"
                 :hasCuePassed="hasCuePassed(cue)"
                 :isCueAhead="isCueAhead(cue)"

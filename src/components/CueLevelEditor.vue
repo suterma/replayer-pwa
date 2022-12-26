@@ -14,12 +14,12 @@
                                 :isTrackPlaying="isTrackPlaying"
                                 :playbackMode="playbackMode"
                                 @click="cueClick()"
-                                :isMinified="true"
+                                minified
                                 :isCueSelected="isCueSelected"
                                 :hasCuePassed="hasCuePassed"
                                 :isCueAhead="isCueAhead"
                                 :percentComplete="percentComplete"
-                                :hasAddonsRight="true"
+                                hasAddonsRight
                             />
                         </p>
                         <!-- Cue Description -->
@@ -49,40 +49,25 @@
                         <span class="has-opacity-half">at</span>
                     </p>
                 </div>
-                <!-- A rather slim input for the time, only on narrow mobiles-->
-                <IfMedia query="(max-width: 530px)">
-                    <div class="level-item is-flex-shrink-1">
-                        <div class="field">
-                            <p class="control">
-                                <TimeInput
-                                    class="input has-text-right"
-                                    :modelValue="cueTime"
-                                    @change="updateCueTime"
-                                    size="5"
-                                />
-                            </p>
-                        </div></div
-                ></IfMedia>
-                <!-- A normal input for the time, with an adjustment add-on, from a bit wider screens-->
-                <IfMedia query="(min-width: 531px)">
-                    <div class="level-item is-flex-shrink-1">
-                        <div class="field has-addons">
-                            <p class="control">
-                                <TimeInput
-                                    class="input has-text-right"
-                                    :modelValue="cueTime"
-                                    @change="updateCueTime"
-                                    size="8"
-                                />
-                            </p>
-                            <div class="control">
-                                <AdjustCueButton
-                                    @adjustCue="adjustTime()"
-                                    :isSelectedCue="isCueSelected"
-                                ></AdjustCueButton>
-                            </div>
-                        </div></div
-                ></IfMedia>
+                <!-- A normal input for the time, with an adjustment add-on (from a bit wider screens)-->
+                <div class="level-item is-flex-shrink-1">
+                    <div class="field has-addons has-addons-except-mobile">
+                        <p class="control">
+                            <TimeInput
+                                class="input has-text-right"
+                                :modelValue="cueTime"
+                                @change="updateCueTime"
+                                size="8"
+                            />
+                        </p>
+                        <div class="control is-hidden-mobile">
+                            <AdjustCueButton
+                                @adjustCue="adjustTime()"
+                                :isSelectedCue="isCueSelected"
+                            ></AdjustCueButton>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Duration (keep small and hide on touch)-->
                 <!-- For performance and layout reasons, only render this when used (emulating is-hidden-touch) -->
@@ -411,6 +396,21 @@ export default defineComponent({
         padding-left: 4rem;
         padding-right: 4rem;
     }
+}
+
+/** Modifies a component with addons, when the addons are hidden on mobile viewport width (using .has-addons-except-mobile) */
+.field.has-addons.has-addons-except-mobile
+    .control:first-child:not(:only-child)
+    .button,
+.field.has-addons.has-addons-except-mobile
+    .control:first-child:not(:only-child)
+    .input,
+.field.has-addons.has-addons-except-mobile
+    .control:first-child:not(:only-child)
+    .select
+    select {
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
 }
 
 /** Custom modification for the cue level.

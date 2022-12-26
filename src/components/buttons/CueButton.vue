@@ -2,7 +2,7 @@
     <button
         class="button cue has-text-left"
         :class="{
-            'is-multiline': !isMinified,
+            'is-multiline': !minified,
             'is-warning': !isCueSelected,
             'is-success': isCueSelected,
         }"
@@ -33,7 +33,7 @@
 
             <slot></slot>
 
-            <template v-if="!isMinified">
+            <template v-if="!minified">
                 <span class="ml-2 has-text-weight-semibold foreground">{{
                     cue?.Description
                 }}</span></template
@@ -53,7 +53,7 @@
             <BaseIcon :path="''" v-else class="ml-2 mr-2 foreground" />
 
             <!-- second line, if not minified (use a horizontal level also on mobile)-->
-            <template v-if="!isMinified">
+            <template v-if="!minified">
                 <br />
                 <span class="level is-mobile">
                     <!-- Left side -->
@@ -157,7 +157,7 @@ export default defineComponent({
         /** Whether the button is shown in a minified, single-line, icon only, variant.
          * @remarks This is currently used for the edit mode.
          */
-        isMinified: Boolean,
+        minified: Boolean,
         /** Whether the button has addons at it's right side. This determines progress bar styling.
          * @remarks This can be used when the button is part of a button group.
          * @remarks The progress bar radius at the right side must be removed for fully progressed cues.

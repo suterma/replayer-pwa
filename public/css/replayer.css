@@ -11096,7 +11096,7 @@ button.dropdown-item:disabled:hover {
 .input {
   background-color: #151719;
   border-color: #151719;
-  border-radius: 4px px;
+  border-radius: 4px;
   color: hsl(0deg, 0%, 98%);
   box-shadow: none;
 }
