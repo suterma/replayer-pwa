@@ -9,7 +9,10 @@
                     <div class="field has-addons">
                         <p class="control">
                             <CueButton
-                                :cue="cue"
+                                :time="cue.Time"
+                                :shortcut="cue.Shortcut"
+                                :duration="cue.Duration"
+                                :description="cue.Description"
                                 :disabled="!Number.isFinite(cue.Time)"
                                 :isTrackPlaying="isTrackPlaying"
                                 :playbackMode="playbackMode"

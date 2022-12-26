@@ -66,7 +66,7 @@
                     <div v-for="cue in cues" :key="cue.Id">
                         <CueLevelEditor
                             :disabled="!mediaUrl || !isTrackLoaded"
-                            :cue="cue"
+                            :cue="cue"                            
                             :isTrackPlaying="isPlaying"
                             :playbackMode="playbackMode"
                             :currentSeconds="currentSeconds"
