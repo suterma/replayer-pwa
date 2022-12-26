@@ -1,8 +1,7 @@
 <template>
     <Teleport to="#appContextMenuBottom">
-        <!-- <DropdownMenu v-once title="Compilation menu"> -->
-        <hr class="dropdown-divider" />
-        <Hotkey :keys="['ctrl', 's']" v-slot="{ clickRef }">
+        <hr v-once class="dropdown-divider" />
+        <Hotkey v-once :keys="['ctrl', 's']" v-slot="{ clickRef }">
             <DropdownMenuButton
                 title="Download... [CTRL+S]"
                 subTitle="Save current compilation"
@@ -11,7 +10,7 @@
                 :iconPath="mdiTrayArrowDown"
             />
         </Hotkey>
-        <Hotkey :keys="['ctrl', 'x']" v-slot="{ clickRef }">
+        <Hotkey v-once :keys="['ctrl', 'x']" v-slot="{ clickRef }">
             <DropdownMenuButton
                 title="Discard... [CTRL+X]"
                 subTitle="Discard current compilation"
@@ -20,7 +19,6 @@
                 :iconPath="mdiTrashCanOutline"
             />
         </Hotkey>
-        <!-- </DropdownMenu> -->
     </Teleport>
 </template>
 
