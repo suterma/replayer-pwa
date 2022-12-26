@@ -37,19 +37,16 @@
                     description
                 }}</span></template
             >
-            <template v-if="isCueLooping || isCuePlay">
+            <template v-if="isCueLooping">
                 <BaseIcon
-                    :path="mdiRepeatOnce"
-                    v-if="isCueLooping"
-                    class="ml-2 mr-2 foreground"
-                />
-                <BaseIcon
-                    :path="mdiPlayCircleOutline"
-                    v-if="isCuePlay"
+                    :path="rTrackRepeatOnce"
                     class="ml-2 mr-2 foreground"
                 />
             </template>
-            <BaseIcon :path="''" v-else class="ml-2 mr-2 foreground" />
+            <template v-else-if="isCuePlay">
+                <BaseIcon :path="rTrackPlayOnce" class="ml-2 mr-2 foreground" />
+            </template>
+            <BaseIcon v-else v-once path="" class="ml-2 mr-2 foreground" />
 
             <!-- second line, if not minified (use a horizontal level also on mobile)-->
             <template v-if="!minified">
@@ -98,12 +95,11 @@ import { PlaybackMode } from '@/store/compilation-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from '../TimeDisplay.vue';
 import ShortcutDisplay from '../ShortcutDisplay.vue';
+import { mdiPlay, mdiPause } from '@mdi/js';
 import {
-    mdiPlay,
-    mdiPause,
-    mdiRepeatOnce,
-    mdiPlayCircleOutline,
-} from '@mdi/js';
+    rTrackPlayOnce,
+    rTrackRepeatOnce,
+} from '@/components/icons/BaseIcon.vue';
 import CompilationHandler from '@/store/compilation-handler';
 
 /** A button for displaying and invoking a cue
@@ -182,8 +178,10 @@ export default defineComponent({
             /** Icons from @mdi/js */
             mdiPlay: mdiPlay,
             mdiPause: mdiPause,
-            mdiRepeatOnce: mdiRepeatOnce,
-            mdiPlayCircleOutline: mdiPlayCircleOutline,
+
+            /** Icons from BaseIcon.vue */
+            rTrackPlayOnce: rTrackPlayOnce,
+            rTrackRepeatOnce: rTrackRepeatOnce,
         };
     },
     computed: {

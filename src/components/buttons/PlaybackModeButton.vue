@@ -47,7 +47,7 @@ export default defineComponent({
     },
     data() {
         return {
-            /** Icons from @mdi/js */
+            /** Icons from BaseIcon.vue */
             rTrackPlay: rTrackPlay,
             rTrackRepeat: rTrackRepeat,
             rRepeatVariant: rRepeatVariant,
