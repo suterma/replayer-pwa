@@ -8,6 +8,7 @@
     Note: A check for the active track is done in the handler methods. 
     A v-if here would work, but would register the events not in a useful order. -->
         <ReplayerEventHandler
+            v-if="isActiveTrack"
             @backtocue="goToSelectedCue"
             @tonextcue="goToSelectedCue"
             @topreviouscue="goToSelectedCue"
@@ -66,7 +67,7 @@
                     <div v-for="cue in cues" :key="cue.Id">
                         <CueLevelEditor
                             :disabled="!mediaUrl || !isTrackLoaded"
-                            :cue="cue"                            
+                            :cue="cue"
                             :isTrackPlaying="isPlaying"
                             :playbackMode="playbackMode"
                             :currentSeconds="currentSeconds"
@@ -101,50 +102,50 @@
             on the track state as a performance optimizations
             -->
         <template v-if="mediaUrl">
+            <!-- //TODO currently the mediaUrl is not using the optimized
+                variant, because otherwise the track is not correctly loaded
+                after it has become the active track ( gets
+                play-request-was-interrupted) -->
+            <TrackAudioApiPlayer
+                ref="playerReference"
+                :title="track?.Name"
+                :mediaUrl="mediaUrl"
+                @timeupdate="updateTime"
+                @durationChanged="calculateCueDurations"
+                v-model:isPlaying="isPlaying"
+                @update:isFading="updateFading"
+                @update:playbackMode="updatedPlaybackMode"
+                :playbackMode="playbackMode"
+                :loopStart="selectedCue?.Time"
+                :loopEnd="selectedCue?.Time + selectedCue?.Duration"
+                :sourceDescription="track?.Url"
+                @update:volume="updatedVolume"
+                :volume="track.Volume"
+                @ended="$emit('trackEnded')"
+            ></TrackAudioApiPlayer>
             <Teleport to="#media-player" :disabled="isEditable">
                 <!-- The audio player is only hidden via v-show (not removed via v-if) 
                      when this track is not the active track, to keep the reference alive. 
                      Also, fade-out would otherwise be interrupted. -->
-                <!-- //TODO currently the mediaUrl is not using the optimized
-                variant, because otherwise the track is not correctly loaded
-                after it has become the active track ( gets
-                play-request-was-interrupted) -->
+
                 <Transition name="item">
                     <!-- In the play view, the player widget is only shown for the active track
-                  In the edit view, the player widget are shown for all expanded tracks -->
+                  In the edit view, the player widgets are shown for all expanded tracks -->
                     <div
-                        v-show="
-                            (!isEditable && isActiveTrack) ||
+                        v-if="
+                            (isPlayable && isActiveTrack) ||
                             (isEditable && isExpanded)
                         "
                         :class="{
-                            section: !isEditable,
-                            'has-background-grey-dark': !isEditable,
+                            section: isPlayable,
+                            'has-background-grey-dark': isPlayable,
                             'is-fullscreen': isTrackPlayerFullScreen,
                             'has-player-navbar-fixed-top':
                                 isTrackPlayerFullScreen,
                             'transition-in-place':
-                                !isEditable /* because in playback view, the players are replaced in place, not expanded */,
+                                isPlayable /* because in playback view, the players are replaced in place, not expanded */,
                         }"
                     >
-                        <TrackAudioApiPlayer
-                            ref="playerReference"
-                            :title="track?.Name"
-                            :mediaUrl="mediaUrl"
-                            @timeupdate="updateTime"
-                            @durationChanged="calculateCueDurations"
-                            v-model:isPlaying="isPlaying"
-                            @update:isFading="updateFading"
-                            @update:playbackMode="updatedPlaybackMode"
-                            :playbackMode="playbackMode"
-                            :loopStart="selectedCue?.Time"
-                            :loopEnd="selectedCue?.Time + selectedCue?.Duration"
-                            :sourceDescription="track?.Url"
-                            @update:volume="updatedVolume"
-                            :volume="track.Volume"
-                            @ended="$emit('trackEnded')"
-                        ></TrackAudioApiPlayer>
-
                         <!-- Track playback bar (In edit mode, this contains:
                             - the play/pause-add-cue button combo
                             - a wide slider
