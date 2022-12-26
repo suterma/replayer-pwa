@@ -1,8 +1,6 @@
 <template>
     <!-- Level, also on mobile 
-     The id is used to scroll to this item when it's becoming the active track
-    -->
-    <!-- NOTE: The 100% width is necessary to keep the level's right items fully a the end of the available space. -->
+    NOTE: The 100% width is necessary to keep the level's right items fully a the end of the available space. -->
     <div
         style="width: 100%"
         :class="{
@@ -10,7 +8,6 @@
             'is-mobile': true,
             'is-clickable': isCollapsible,
         }"
-        v-bind:id="'track-' + track.Id"
         @click="
             if (isCollapsible) {
                 toggleExpanded();

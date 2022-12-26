@@ -16,6 +16,7 @@
             <Track
                 :track="track"
                 :ref="'track-' + track.Id"
+                :id="'track-' + track.Id"
                 :displayMode="tracksDisplayMode"
                 :isTrackPlayerFullScreen="
                     isTrackPlayerFullScreen && !isEditable

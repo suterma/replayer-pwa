@@ -1,114 +1,109 @@
 <template>
-    <!-- @remarks The id is used to scroll to this item when it's becoming the active track -->
-    <div v-bind:id="'track-' + track.Id">
-        <!-- Level, also on mobile -->
-        <div class="level is-mobile">
-            <!-- Left side -->
-            <div class="level-left">
-                <!-- Expander with title -->
-                <!-- This should shrink (break on words) if necessary (is-narrow is-flex-shrink-1) -->
-                <div
-                    class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
-                >
-                    <CollapsibleButton
-                        v-if="canCollapse"
-                        :class="{
-                            'is-nav': true,
-                        }"
-                        :modelValue="isExpanded"
-                        @update:modelValue="toggleExpanded"
-                        title="Track"
-                        collapsedText="Click to expand / edit cues"
-                        expandedText="Click to collapse"
-                    />
+    <!-- Level, also on mobile -->
+    <div class="level is-mobile">
+        <!-- Left side -->
+        <div class="level-left">
+            <!-- Expander with title -->
+            <!-- This should shrink (break on words) if necessary (is-narrow is-flex-shrink-1) -->
+            <div
+                class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
+            >
+                <CollapsibleButton
+                    v-if="canCollapse"
+                    :class="{
+                        'is-nav': true,
+                    }"
+                    :modelValue="isExpanded"
+                    @update:modelValue="toggleExpanded"
+                    title="Track"
+                    collapsedText="Click to expand / edit cues"
+                    expandedText="Click to collapse"
+                />
 
-                    <div class="field">
-                        <p class="control">
-                            <EditableInput
-                                class="title has-text-weight-light is-4"
-                                :class="{ 'has-text-success': isActive }"
-                                v-model="trackData.Name"
-                                @change="updateName($event.target.value)"
-                                type="text"
-                                placeholder="Track name"
-                            />
-                        </p>
-                    </div>
+                <div class="field">
+                    <p class="control">
+                        <EditableInput
+                            class="title has-text-weight-light is-4"
+                            :class="{ 'has-text-success': isActive }"
+                            v-model="trackData.Name"
+                            @change="updateName($event.target.value)"
+                            type="text"
+                            placeholder="Track name"
+                        />
+                    </p>
                 </div>
-                <!-- Only for wide screens, edit the media edit in the level -->
-                <div
-                    class="level-item is-narrow is-flex-shrink-2 is-hidden-widescreen-only is-hidden-desktop-only is-hidden-touch is-justify-content-flex-start"
-                >
-                    <div class="field">
-                        <p class="control">
-                            <MediaEdit :track="track" />
-                        </p>
-                    </div>
+            </div>
+            <!-- Only for wide screens, edit the media edit in the level -->
+            <div
+                class="level-item is-narrow is-flex-shrink-2 is-hidden-widescreen-only is-hidden-desktop-only is-hidden-touch is-justify-content-flex-start"
+            >
+                <div class="field">
+                    <p class="control">
+                        <MediaEdit :track="track" />
+                    </p>
                 </div>
-                <!-- Artist Info (completely hidden on mobile, thus not editable there. 
+            </div>
+            <!-- Artist Info (completely hidden on mobile, thus not editable there. 
                 NOTE: It's also not shown in the play view on mobile anyways) -->
-                <!-- Artist -->
-                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
-                    <div class="field">
-                        <p class="control">
-                            <EditableInput
-                                class="is-italic"
-                                v-model="trackData.Artist"
-                                @change="updateArtist($event.target.value)"
-                                type="text"
-                                placeholder="Artist"
-                            >
-                                <span
-                                    class="has-opacity-half mr-2 is-single-line"
-                                    >by</span
-                                ></EditableInput
-                            >
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Album -->
-                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
-                    <div class="field">
-                        <p class="control">
-                            <EditableInput
-                                class="is-italic"
-                                v-model="trackData.Album"
-                                @change="updateAlbum($event.target.value)"
-                                type="text"
-                                placeholder="Album"
-                            >
-                                <span
-                                    class="has-opacity-half mr-2 is-single-line"
-                                    >on</span
-                                ></EditableInput
-                            >
-                        </p>
-                    </div>
+            <!-- Artist -->
+            <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                <div class="field">
+                    <p class="control">
+                        <EditableInput
+                            class="is-italic"
+                            v-model="trackData.Artist"
+                            @change="updateArtist($event.target.value)"
+                            type="text"
+                            placeholder="Artist"
+                        >
+                            <span class="has-opacity-half mr-2 is-single-line"
+                                >by</span
+                            ></EditableInput
+                        >
+                    </p>
                 </div>
             </div>
 
-            <!-- Right side -->
-            <div class="level-right">
-                <div class="level-item is-justify-content-flex-end">
-                    <PlaybackIndicator
-                        :is-ready="!isPlaying && isTrackLoaded"
-                        :is-playing="isPlaying"
-                        :is-unloaded="!isTrackLoaded"
-                    />
-
-                    <TrackContextMenu
-                        :isFirstTrack="isFirstTrack"
-                        :isLastTrack="isLastTrack"
-                        :track="track"
-                    ></TrackContextMenu>
+            <!-- Album -->
+            <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                <div class="field">
+                    <p class="control">
+                        <EditableInput
+                            class="is-italic"
+                            v-model="trackData.Album"
+                            @change="updateAlbum($event.target.value)"
+                            type="text"
+                            placeholder="Album"
+                        >
+                            <span class="has-opacity-half mr-2 is-single-line"
+                                >on</span
+                            ></EditableInput
+                        >
+                    </p>
                 </div>
             </div>
         </div>
-        <!-- Extra level for the media edit, except on very large screens -->
-        <div class="is-hidden-fullhd">
-            <MediaEdit :track="track" />
+
+        <!-- Right side -->
+        <div class="level-right">
+            <div class="level-item is-justify-content-flex-end">
+                <PlaybackIndicator
+                    :is-ready="!isPlaying && isTrackLoaded"
+                    :is-playing="isPlaying"
+                    :is-unloaded="!isTrackLoaded"
+                />
+
+                <TrackContextMenu
+                    :isFirstTrack="isFirstTrack"
+                    :isLastTrack="isLastTrack"
+                    :track="track"
+                ></TrackContextMenu>
+            </div>
         </div>
+    </div>
+    <!-- Extra level for the media edit, except on very large screens -->
+    <div class="is-hidden-fullhd">
+        <MediaEdit :track="track" />
     </div>
     <!-- <TrackSharingDialog v-if="this.isSharing"></TrackSharingDialog> -->
 </template>
