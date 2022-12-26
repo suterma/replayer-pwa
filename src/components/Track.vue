@@ -61,41 +61,37 @@
 
         <!-- The level editors (in edit mode for an expanded track) -->
         <Transition name="item">
-            <div v-if="isEditable && isExpanded">
-                <div class="levels">
-                    <TransitionGroup name="list">
-                        <div v-for="cue in cues" :key="cue.Id">
-                            <CueLevelEditor
-                                :disabled="!mediaUrl || !isTrackLoaded"
-                                :cue="cue"
-                                :isTrackPlaying="isPlaying"
-                                :playbackMode="playbackMode"
-                                :currentSeconds="currentSeconds"
-                                @click="cueClick(cue)"
-                                @play="cuePlay(cue)"
-                            />
-                        </div>
-                    </TransitionGroup>
-                </div>
+            <div v-if="isEditable && isExpanded" class="levels">
+                <TransitionGroup name="list">
+                    <div v-for="cue in cues" :key="cue.Id">
+                        <CueLevelEditor
+                            :disabled="!mediaUrl || !isTrackLoaded"
+                            :cue="cue"
+                            :isTrackPlaying="isPlaying"
+                            :playbackMode="playbackMode"
+                            :currentSeconds="currentSeconds"
+                            @click="cueClick(cue)"
+                            @play="cuePlay(cue)"
+                        />
+                    </div>
+                </TransitionGroup>
             </div>
         </Transition>
 
         <!-- The buttons field (for a single track in play mode) -->
         <Transition name="item">
-            <div v-if="isPlayable && isOnlyTrack">
-                <div class="levels">
-                    <CueButtonsField
-                        :currentSeconds="currentSeconds"
-                        :isTrackPlaying="isPlaying"
-                        :playbackMode="playbackMode"
-                        @click="
-                            (cue) => {
-                                cueClick(cue);
-                            }
-                        "
-                        :track="track"
-                    ></CueButtonsField>
-                </div>
+            <div v-if="isPlayable && isOnlyTrack" class="levels">
+                <CueButtonsField
+                    :currentSeconds="currentSeconds"
+                    :isTrackPlaying="isPlaying"
+                    :playbackMode="playbackMode"
+                    @click="
+                        (cue) => {
+                            cueClick(cue);
+                        }
+                    "
+                    :track="track"
+                ></CueButtonsField>
             </div>
         </Transition>
 
@@ -181,17 +177,9 @@
                                 </div>
                             </div>
                             <!-- A central level item. Margins are set to provide nice-looking spacing at all widths -->
-                            <div
-                                class="level-item"
-                                :class="{
-                                    'mt-4': isMobile,
-                                }"
-                            >
+                            <div class="level-item mt-4-mobile">
                                 <PlayheadSlider
-                                    :class="{
-                                        'ml-4 mr-4': !isMobile,
-                                    }"
-                                    class="is-fullwidth"
+                                    class="is-fullwidth ml-4-tablet mr-4-tablet"
                                     v-model.number="currentSeconds"
                                     @update:modelValue="
                                         (position) =>
@@ -206,11 +194,6 @@
                                     on lager viewports the text is cropped to not exceed the dynamic playhead slider -->
                                     <p
                                         class="is-size-7 has-cropped-text has-text-warning"
-                                        :style="
-                                            isMobile
-                                                ? 'max-width: calc(100vw - 140px)'
-                                                : 'max-width: calc(100vw - 620px)'
-                                        "
                                     >
                                         <span>
                                             {{ playingCueDescription }}
@@ -329,11 +312,6 @@
                                     on lager viewports the text is strictly cropped to 129px -->
                                         <p
                                             class="is-size-7 has-cropped-text has-text-warning"
-                                            :style="
-                                                isMobile
-                                                    ? 'max-width: calc(100vw - 140px)'
-                                                    : 'max-width: 129px'
-                                            "
                                         >
                                             <span>
                                                 {{ playingCueDescription }}
@@ -456,7 +434,6 @@ import TrackTitleName from './TrackTitleName.vue';
 import ArtistInfo from './ArtistInfo.vue';
 import IfMedia from '@/components/IfMedia.vue';
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
-import { useMediaQuery } from '@vueuse/core';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -924,24 +901,8 @@ export default defineComponent({
                 ? 'clip'
                 : 'auto';
         },
-        /** Handles changes on whether there is only a single track
-         * @remarks For single tracks, expanded full screen display is not offered since the cue buttons field is
-         * shown anyway.
-         */
-        // isOnlyTrack(isOnlyTrack: boolean): void {
-        //     console.debug(
-        //         `Track(${this.track.Name})::isOnlyTrack:isOnlyTrack:`,
-        //         isOnlyTrack,
-        //     );
-        //     if (isOnlyTrack) {
-        //         this.$emit('update:isTrackPlayerFullScreen', false);
-        //     }
-        // },
     },
     computed: {
-        isMobile(): boolean {
-            return useMediaQuery('(max-width: 768px)').value;
-        },
         /** The description of the currently playing cue
          * @remarks The implementation makes sure that at least always an empty string is returned.
          * Combined with an &nbsp;, this avoids layout flicker.
@@ -1168,5 +1129,33 @@ export default defineComponent({
 
 .is-fullwidth {
     width: 100%;
+}
+
+/** 
+* Specific width for track sliders depending on breakpoints
+* @remarks This allows the use of cropped text for the 
+* cue description with dynamic width */
+
+.track {
+    @media screen and (max-width: 768px) {
+        /** in Play mode */
+        .playhead-slider .has-cropped-text {
+            max-width: calc(100vw - 150px);
+        }
+
+        .is-editable .playhead-slider .has-cropped-text {
+            max-width: calc(100vw - 150px);
+        }
+    }
+
+    @media screen and (min-width: 769px) {
+        /** in Play mode */
+        .playhead-slider .has-cropped-text {
+            max-width: 129px;
+        }
+        .is-editable .playhead-slider .has-cropped-text {
+            max-width: calc(100vw - 640px);
+        }
+    }
 }
 </style>

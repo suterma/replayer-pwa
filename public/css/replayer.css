@@ -11313,6 +11313,62 @@ button.dropdown-item:disabled:hover {
   text-overflow: ellipsis;
 }
 
+/************************************************************** 
+ * Specific spacing for all viewport widths
+ * @remarks The naming scheme is taken from Bulma's visibility helpers
+ * @devdoc To avoid taking another dependency like bulma-helper-spacing
+ * or bulma-helpers, I decide to provide the few currently used 
+ * additional spacing helpers on my own here. 
+ **************************************************************/
+/** A specific margin, as complement to the documented bulma
+* spacing helpers https://bulma.io/documentation/helpers/spacing-helpers/*/
+.mr-40px {
+  margin-right: 40px;
+}
+
+/** Like with columns, 
+* if you want to remove the space to a subsequent item, 
+* add the is-gapless modifier on the level:
+*/
+.level:not(:last-child).is-gapless {
+  margin-bottom: inherit;
+}
+
+/************************************************************** 
+ * Specific spacing depending on breakpoints
+ * @remarks The naming scheme is taken from Bulma's visibility helpers
+ * @devdoc To avoid taking another dependency like bulma-helper-spacing
+ * or bulma-helpers, I decide to provide the few currently used 
+ * additional spacing helpers on my own here. 
+ **************************************************************/
+@media screen and (max-width: 768px) {
+  .mt-4-mobile {
+    margin-top: 1rem !important;
+  }
+  .ml-4-mobile {
+    margin-left: 1rem !important;
+  }
+  .mr-4-mobile {
+    margin-right: 1rem !important;
+  }
+  .mb-4-mobile {
+    margin-bottom: 1rem !important;
+  }
+}
+@media screen and (min-width: 769px) {
+  .mt-4-tablet {
+    margin-top: 1rem !important;
+  }
+  .ml-4-tablet {
+    margin-left: 1rem !important;
+  }
+  .mr-4-tablet {
+    margin-right: 1rem !important;
+  }
+  .mb-4-tablet {
+    margin-bottom: 1rem !important;
+  }
+}
 /* Slider (from bulma-slider) without border for the thumb*/
 input[type=range].slider {
   appearance: none;
@@ -11911,20 +11967,6 @@ html {
 */
 .is-absolute {
   position: absolute !important;
-}
-
-/** A specific margin, as complement to the documented bulma
-* spacing helpers https://bulma.io/documentation/helpers/spacing-helpers/*/
-.mr-40px {
-  margin-right: 40px;
-}
-
-/** Like with columns, 
-* if you want to remove the space to a subsequent item, 
-* add the is-gapless modifier on the level:
-*/
-.level:not(:last-child).is-gapless {
-  margin-bottom: inherit;
 }
 
 /** Adds an overflow-ellipsis 
