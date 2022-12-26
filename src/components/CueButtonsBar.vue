@@ -3,7 +3,10 @@
         <template v-for="cue in track.Cues" :key="cue.Id">
             <CueButton
                 class="is-flex-grow-1 has-cropped-text"
-                :cue="cue"
+                :time="cue.Time"
+                :shortcut="cue.Shortcut"
+                :duration="cue.Duration"
+                :description="cue.Description"
                 :disabled="!Number.isFinite(cue.Time)"
                 :isTrackPlaying="isTrackPlaying"
                 :playbackMode="playbackMode"

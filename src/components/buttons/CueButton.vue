@@ -6,7 +6,6 @@
             'is-warning': !isCueSelected,
             'is-success': isCueSelected,
         }"
-        :id="'cue-' + cue.Id"
         :title="cueTitle"
     >
         <!-- Use the full width of the button for the inside content
@@ -35,7 +34,7 @@
 
             <template v-if="!minified">
                 <span class="ml-2 has-text-weight-semibold foreground">{{
-                    cue?.Description
+                    description
                 }}</span></template
             >
             <template v-if="isCueLooping || isCuePlay">
@@ -61,28 +60,28 @@
                         <div class="level-item mr-3">
                             <TimeDisplay
                                 class="has-opacity-half foreground"
-                                :modelValue="cue.Time"
+                                :modelValue="time"
                             ></TimeDisplay>
                         </div>
                     </div>
 
                     <!-- Right side -->
                     <div class="level-right">
-                        <!-- For performance and layout reasons, only render this when used, on desktop and larger screens -->
-                        <IfMedia query="(min-width: 1024px)">
-                            <p class="level-item mr-3">
-                                <!-- Use a right position for Durations, to keep them as much out of visibility as possible -->
-                                <TimeDisplay
-                                    class="has-opacity-half foreground"
-                                    :modelValue="cue.Duration"
-                                ></TimeDisplay>
-                            </p>
-                        </IfMedia>
-                        <p class="level-item" v-if="cue?.Shortcut">
+                        <!-- For layout reasons, only render this when used, on desktop and larger screens -->
+
+                        <p class="level-item mr-3 is-hidden-touch">
+                            <!-- Use a right position for Durations, to keep them as much out of visibility as possible -->
+                            <TimeDisplay
+                                class="has-opacity-half foreground"
+                                :modelValue="duration"
+                            ></TimeDisplay>
+                        </p>
+
+                        <p class="level-item" v-if="shortcut">
                             <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibility as possible -->
                             <ShortcutDisplay
                                 class="foreground"
-                                :shortcut="cue?.Shortcut"
+                                :shortcut="shortcut"
                             >
                             </ShortcutDisplay>
                         </p>
@@ -94,18 +93,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, StyleValue } from 'vue';
-import { Cue, PlaybackMode } from '@/store/compilation-types';
+import { defineComponent, PropType, StyleValue } from 'vue';
+import { PlaybackMode } from '@/store/compilation-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from '../TimeDisplay.vue';
 import ShortcutDisplay from '../ShortcutDisplay.vue';
-import IfMedia from '@/components/IfMedia.vue';
 import {
     mdiPlay,
     mdiPause,
     mdiRepeatOnce,
     mdiPlayCircleOutline,
 } from '@mdi/js';
+import CompilationHandler from '@/store/compilation-handler';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
@@ -119,17 +118,31 @@ import {
  */
 export default defineComponent({
     name: 'CueButton',
-    components: { BaseIcon, TimeDisplay, ShortcutDisplay, IfMedia },
+    components: { BaseIcon, TimeDisplay, ShortcutDisplay },
     props: {
-        cue: {
-            type: Cue,
-            required: true,
+        time: {
+            type: null as unknown as PropType<number | null>,
+            required: false,
+        },
+        duration: {
+            type: null as unknown as PropType<number | null>,
+            required: false,
+        },
+        description: {
+            type: String,
+            required: false,
+        },
+        shortcut: {
+            type: null as unknown as PropType<string | null>,
+            required: false,
         },
         /** The playback progress within this cue, in [percent], or null if not applicable
          * @remarks This value is only used when both the cue is not ahead nor has passed.
          */
-        percentComplete: Number,
-
+        percentComplete: {
+            type: null as unknown as PropType<number | null>,
+            required: false,
+        },
         /** Whether this cue is currently selected
          * @remarks Note: only one cue in a compilation may be selected */
         isCueSelected: Boolean,
@@ -174,11 +187,19 @@ export default defineComponent({
         };
     },
     computed: {
-        /** Gets a displayable title for the cue */
+        /** The title for this cue, usable as tooltip
+         * @devdoc This is set from outside the button to keep the button interface flat, for performance reasons
+         */
         cueTitle(): string {
-            if (this.cue.Description) {
-                return `Play from ${this.cue.Description}`;
+            if (this.description) {
+                return `Play from ${this.description}`;
+            } else if (this.time != undefined) {
+                return `Play from ${CompilationHandler.convertToDisplayTime(
+                    this.time,
+                    1,
+                )}`;
             }
+
             return `Play from here`;
         },
 
@@ -198,7 +219,7 @@ export default defineComponent({
          * For performance reasons, the style is only effectively calculated when the cue is currently played
          */
         progressStyle(): StyleValue {
-            if (!Number.isFinite(this.cue.Time)) {
+            if (!Number.isFinite(this.time)) {
                 return {
                     display: 'none',
                 };
