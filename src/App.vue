@@ -43,10 +43,12 @@ export default defineComponent({
         ReplayerAd,
         Experimental,
     },
+
+    /** Register a handler to handle page reloads and tab/browser exits
+     * @devdoc Using the "unmounted" lifecycle event proved to be unreliable: Page reload in the Browser did not trigger "unmounted"
+     * Using the window's onbeforeunload causes the cleanup to get reliably triggered at page reload
+ */
     beforeMount() {
-        //Handle reloads and tab/browser exits
-        //Using the "unmounted" lifecycle event proved to be unreliable: Page reload in the Browser did not trigger "unmounted"
-        //Using the onbeforeunload causes the cleanup to get reliably triggered at page reload
         window.onbeforeunload = this.cleanUp;
     },
 
