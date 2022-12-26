@@ -22,7 +22,7 @@ export default defineComponent({
     },
     computed: {
         hasSlot() {
-            return !!this.$slots.default;
+            return this.$slots.default;
         },
     },
 });
