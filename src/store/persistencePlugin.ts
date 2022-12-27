@@ -44,21 +44,27 @@ function retrieveState(store: Store) {
     store.commit(MutationTypes.PUSH_PROGRESS, 'Retrieving last compilation...');
 
     PersistentStorage.retrieveCompilation().then((compilation) => {
-            PersistentStorage.retrieveSelectedCueId().then((cueId) => {
-              PersistentStorage.retrieveSelectedTrackId().then((trackId) => {
-                console.debug(`retrieved Selected trackId:${trackId}; selected cueId:${cueId}`);
+        PersistentStorage.retrieveSelectedCueId().then((cueId) => {
+            PersistentStorage.retrieveSelectedTrackId().then((trackId) => {
+                console.debug(
+                    `retrieved Selected trackId:${trackId}; selected cueId:${cueId}`,
+                );
                 //Commit the compilation and selected cue only after both have been retrieved,
                 //to make sure, committing one does not overwrite the other
                 store.commit(MutationTypes.REPLACE_COMPILATION, compilation);
 
-                console.debug(`replace-retrieved Selected trackId:${trackId}; selected cueId:${cueId}`);
+                console.debug(
+                    `replace-retrieved Selected trackId:${trackId}; selected cueId:${cueId}`,
+                );
 
                 //retrieve all available blobs into object urls
                 //(which should actually be the matching media blobs for the afore-loaded compilation)
                 PersistentStorage.retrieveAllMediaBlobs()
                     .then((mediaBlobs) => {
                         //Sort to the most recently used track first, by cue.
-                        console.debug(`retrieveAllMediaBlobs Selected trackId:${trackId}; selected cueId:${cueId}`);
+                        console.debug(
+                            `retrieveAllMediaBlobs Selected trackId:${trackId}; selected cueId:${cueId}`,
+                        );
 
                         let mostRecentTrack = null;
                         if (trackId) {
@@ -110,11 +116,11 @@ function retrieveState(store: Store) {
                         //scrolled to, would still be in the collapsed state. This would
                         //lead to an undesired offset, when the track is at the end of the visible area.
                         if (trackId) {
-                          store.commit(
-                              MutationTypes.UPDATE_SELECTED_TRACK_ID,
-                              trackId,
-                          );
-                      }                        
+                            store.commit(
+                                MutationTypes.UPDATE_SELECTED_TRACK_ID,
+                                trackId,
+                            );
+                        }
                         if (cueId) {
                             store.commit(
                                 MutationTypes.UPDATE_SELECTED_CUE_ID,

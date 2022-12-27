@@ -58,6 +58,12 @@ export type Mutations<S = State> = {
             album: string;
         },
     ): void;
+    [MutationTypes.UPDATE_TRACK_ORDER](
+        state: State,
+        payload: {
+            orderedTrackIds: string[];
+        },
+    ): void;
     [MutationTypes.UPDATE_PLAYBACK_MODE](
         state: State,
         payload: {
@@ -408,6 +414,22 @@ export const mutations: MutationTree<State> & Mutations = {
             track.Artist = payload.artist;
             track.Album = payload.album;
         }
+    },
+    [MutationTypes.UPDATE_TRACK_ORDER](
+        state: State,
+        payload: {
+            orderedTrackIds: string[];
+        },
+    ): void {
+        // Just apply the new sorting, not using the payload objects
+        // See https://stackoverflow.com/a/44063445/79485
+        console.debug('UPDATE_TRACK_ORDER::orderedTrackIds', payload.orderedTrackIds);
+
+        state.compilation.Tracks.sort(
+            (a, b) =>
+                payload.orderedTrackIds.indexOf(a.Id) -
+                payload.orderedTrackIds.indexOf(b.Id),
+        );
     },
     [MutationTypes.UPDATE_PLAYBACK_MODE](
         state: State,

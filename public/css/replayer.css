@@ -12058,6 +12058,16 @@ while also keeping the original with.
 }
 
 /*************************************************************
+ * Color enhancements
+**************************************************************
+*/
+/* Text color is also applied to titles
+* @remarks By default, titles only have a default color, not affected by the text color helper */
+.has-text-success .title {
+  color: #62c462;
+}
+
+/*************************************************************
  * Hyperlinks
 **************************************************************
 */

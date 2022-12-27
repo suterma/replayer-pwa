@@ -103,6 +103,11 @@ export enum MutationTypes {
      */
     UPDATE_TRACK_DATA = 'UPDATE_TRACK_DATA',
 
+    /** Updates the order of all the tracks of a compilation
+     * @remarks Also updates the persistent store of the compilation
+     */
+    UPDATE_TRACK_ORDER = 'UPDATE_TRACK_ORDER',
+
     /** Updates the playback mode
      * @remarks Also updates the persistent store of the compilation
      */

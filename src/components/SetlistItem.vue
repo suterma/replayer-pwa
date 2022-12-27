@@ -1,11 +1,33 @@
 <template>
-    <h2 class="title is-4">
-        <TrackTitleName :track="track"></TrackTitleName>
-        <slot></slot>
-        <span v-if="track.Artist || track.Album" class="is-size-7 ml-2">
-            <ArtistInfo :track="track" />
-        </span>
-    </h2>
+    <nav class="level">
+        <!-- Left side -->
+        <div class="level-left">
+            <div class="level-item">
+                <span class="tag is-outlined has-border is-family-monospace"
+                    ><slot></slot
+                ></span>
+            </div>
+            <div class="level-item">
+                <h2 class="title is-4">
+                    <TrackTitleName :track="track"></TrackTitleName>
+                </h2>
+            </div>
+        </div>
+
+        <!-- Right side -->
+        <div class="level-right">
+            <div class="level-item">
+                <span v-if="track.Artist || track.Album" class="is-size-7 ml-2">
+                    <ArtistInfo :track="track" />
+                </span>
+            </div>
+
+            <div class="level-item">
+                <slot name="title-end"> </slot>
+            </div>
+        </div>
+    </nav>
+
     <h3 v-if="showMediaSource" class="subtitle">
         <span class="is-size-7">
             {{ track.Url }}
@@ -34,10 +56,10 @@
                         {{ cue.Shortcut }}
                     </p>
                 </td>
-                <td  >
+                <td>
                     {{ cue.Description }}
                 </td>
-                <td  >
+                <td>
                     <TimeDisplay :modelValue="cue.Time"></TimeDisplay>
                 </td>
             </tr>

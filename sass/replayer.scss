@@ -36,7 +36,6 @@ $slider-thumb-border: none !default;
 $slider-track-background: $border !default;
 @import '_replayer-slider.sass';
 
-
 /* Below: general application-specific add-ons/modifications to the Bulma CSS */
 
 /*************************************************************
@@ -114,7 +113,7 @@ html {
 /** A complement to the is-relative class
 */
 .is-absolute {
-  position: absolute !important;
+    position: absolute !important;
 }
 
 /** Adds an overflow-ellipsis 
@@ -136,7 +135,7 @@ html {
 
 /* Allows text to break at words */
 .has-text-break-word {
-  word-break: break-word;
+    word-break: break-word;
 }
 
 /** Scales down the element to 50% of the size, maintaining the inner component's aspect ratio,
@@ -201,8 +200,20 @@ while also keeping the original with.
 @remarks currently used in the TimeDisplay.vue component
  */
 .is-minimum-7-characters {
-  min-width: 7ch;
+    min-width: 7ch;
 }
+
+/*************************************************************
+ * Color enhancements
+**************************************************************
+*/
+
+/* Text color is also applied to titles
+* @remarks By default, titles only have a default color, not affected by the text color helper */
+.has-text-success .title {
+    color: $success;
+}
+
 /*************************************************************
  * Hyperlinks
 **************************************************************

@@ -371,6 +371,16 @@
                     MIT License, by Wikiki. Adapted by Marcel Suter).
                 </li>
                 <li>
+                    <a
+                        href="https://github.com/SortableJS/vue.draggable.next"
+                        target="_blank"
+                    >
+                        vue.draggable.next</a
+                    >, Vue component allowing drag-and-drop and synchronization
+                    with a view model array. (Released under the MIT License, by
+                    the sortable.js team).
+                </li>
+                <li>
                     Music from the Album "Not For Sale" by Lidija Roos (Released
                     to the public, by Lidija Roos)
                 </li>
