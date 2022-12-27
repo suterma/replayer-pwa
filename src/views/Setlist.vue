@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h1 class="title">Set list</h1>
+        <h1 class="title  is-hidden-print">Set list</h1>
 
         <div class="box is-hidden-print">
             <div class="field">
@@ -52,7 +52,7 @@
         </h1>
 
         <template v-for="(track, index) in compilation.Tracks" :key="track.Id">
-            <div class="block is-together-print">
+            <div class="is-together-print">
                 <!-- When each track is on a new page, also show the compilation each time -->
                 <h1 class="title is-3" v-if="printTracksOnNewPage">
                     <span> {{ compilation.Title }}</span>
