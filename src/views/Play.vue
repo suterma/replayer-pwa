@@ -20,7 +20,10 @@
             playback music.
         </p>
     </div>
-    <div class="section pl-0 pr-0 block" v-show="isEditMode || !hasCompilation">
+    <div
+        class="section pt-6 pl-0 pr-0 block"
+        v-show="isEditMode || !hasCompilation"
+    >
         <!-- v-click-outside seems not to work well with v-if -->
         <!-- Additionally, v-show seems not to work properly when used directly on the MediaDropZone-Element, thus it's applied to an extra div -->
         <!-- Offer the demo only when no compilation/track is shown -->

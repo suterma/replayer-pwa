@@ -136,7 +136,7 @@ The URL input is wider, because it should be able to easily deal with lengthy in
         </template>
 
         <!-- A slot for an adornment -->
-        <div class="level-item">
+        <div v-if="$slots.default" class="level-item">
             <slot></slot>
         </div>
     </div>
