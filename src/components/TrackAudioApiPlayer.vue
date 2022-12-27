@@ -667,7 +667,7 @@ export default defineComponent({
                     this.audioElement.buffered.length === 0
                 ) {
                     this.debugLog(`loadAfterClick:load-with-handler`);
-                    //Trigger and observe further loading
+                    //Trigger and observe further loading (only once, no event listener removal required)
                     this.audioElement.addEventListener(
                         'canplay',
                         (event) => {

@@ -106,6 +106,10 @@
                 variant, because otherwise the track is not correctly loaded
                 after it has become the active track ( gets
                 play-request-was-interrupted) -->
+            <!-- 
+                NOTE: The audio player is not removed via v-if
+                when this track is not the active track, to keep the reference alive. 
+                Also, fade-out would otherwise be interrupted. -->
             <TrackAudioApiPlayer
                 ref="playerReference"
                 :title="track?.Name"
@@ -124,13 +128,10 @@
                 @ended="$emit('trackEnded')"
             ></TrackAudioApiPlayer>
             <Teleport to="#media-player" :disabled="isEditable">
-                <!-- The audio player is only hidden via v-show (not removed via v-if) 
-                     when this track is not the active track, to keep the reference alive. 
-                     Also, fade-out would otherwise be interrupted. -->
-
                 <Transition name="item">
-                    <!-- In the play view, the player widget is only shown for the active track
-                  In the edit view, the player widgets are shown for all expanded tracks -->
+                    <!-- 
+                    In the play view, the player widget is only shown for the active track
+                    In the edit view, the player widgets are shown for all expanded tracks -->
                     <div
                         v-if="
                             (isPlayable && isActiveTrack) ||
@@ -146,10 +147,11 @@
                                 isPlayable /* because in playback view, the players are replaced in place, not expanded */,
                         }"
                     >
-                        <!-- Track playback bar (In edit mode, this contains:
-                            - the play/pause-add-cue button combo
-                            - a wide slider
-                            - a very limited set of transport controls (no skip buttons)
+                        <!-- 
+                        Track playback bar (In edit mode, this contains:
+                        - the play/pause-add-cue button combo
+                        - a wide slider
+                        - a very limited set of transport controls (no skip buttons)
                          -->
                         <nav
                             v-if="isEditable"
@@ -226,15 +228,16 @@
                             </div>
                         </nav>
 
-                        <!-- Track playback bar (In play mode, this contains:
-                            - a slot for the expander icon (if not the only track)
-                            - The title (with artist info)
-                            - the play/pause button
-                            - a smaller slider
-                            - a standard set of transport controls, including cue and track skipping
+                        <!-- 
+                        Track playback bar (In play mode, this contains:
+                        - a slot for the expander icon (if not the only track)
+                        - The title (with artist info)
+                        - the play/pause button
+                        - a smaller slider
+                        - a standard set of transport controls, including cue and track skipping
                          -->
-
-                        <!-- In full screen, this level is at the top, and not visually separated from the cues -->
+                        <!-- 
+                        In full screen, this level is at the top, and not visually separated from the cues -->
                         <nav
                             v-else
                             class="level"
