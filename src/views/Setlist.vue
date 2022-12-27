@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h1 class="title  is-hidden-print">Set list</h1>
+        <h1 class="title is-hidden-print">Set list</h1>
 
         <div class="box is-hidden-print">
             <div class="field">
@@ -51,68 +51,32 @@
             {{ compilation.Title }}
         </h1>
 
-        <template v-for="(track, index) in compilation.Tracks" :key="track.Id">
-            <div class="is-together-print">
-                <!-- When each track is on a new page, also show the compilation each time -->
-                <h1 class="title is-3" v-if="printTracksOnNewPage">
-                    <span> {{ compilation.Title }}</span>
-                </h1>
-                <h2 class="title is-4">
-                    <TrackTitleName :track="track"></TrackTitleName>
-                    <span class="ml-2 is-size-7"
-                        >({{ index + 1 }}/{{ compilation.Tracks.length }})</span
-                    >
-                    <span
-                        v-if="track.Artist || track.Album"
-                        class="is-size-7 ml-2"
-                    >
-                        <ArtistInfo :track="track" />
-                    </span>
-                </h2>
-                <h3 v-if="showMediaSource" class="subtitle">
-                    <span class="is-size-7">
-                        {{ track.Url }}
-                    </span>
-                    <span v-if="track.Duration !== null" class="is-size-7">
-                        (<TimeDisplay
-                            class="is-size-7"
-                            :modelValue="track.Duration"
-                        ></TimeDisplay
-                        >)
-                    </span>
-                </h3>
+        <div
+            v-for="(track, index) in compilation.Tracks"
+            :key="track.Id"
+            class="is-together-print"
+        >
+            <!-- When each track is on a new page, also show the compilation each time -->
+            <h1 class="title is-3" v-if="printTracksOnNewPage">
+                <span> {{ compilation.Title }}</span>
+            </h1>
+            <SetlistItem
+                :track="track"
+                :showCues="showCues"
+                :showMediaSource="showMediaSource"
+            >
+                <!-- The track index (as part of the title) -->
+                <span class="ml-2 is-size-7"
+                    >(Track {{ index + 1 }}/{{
+                        compilation.Tracks.length
+                    }})</span
+                >
+            </SetlistItem>
 
-                <table v-if="showCues" class="table is-narrow">
-                    <thead>
-                        <tr>
-                            <th class="is-size-7">Shortcut</th>
-                            <th class="is-size-7">Description</th>
-                            <th class="is-size-7">Time</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="cue in track.Cues" :key="cue.Id">
-                            <td>
-                                <p class="tag has-border is-family-monospace">
-                                    {{ cue.Shortcut }}
-                                </p>
-                            </td>
-                            <td class="">
-                                {{ cue.Description }}
-                            </td>
-                            <td class="">
-                                <TimeDisplay
-                                    :modelValue="cue.Time"
-                                ></TimeDisplay>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <hr />
+            <hr />
+            <template v-if="printTracksOnNewPage">
                 <!-- Page break indicator (shown on screen, but not visually printed) -->
                 <span
-                    v-if="printTracksOnNewPage"
                     class="has-text-centered is-size-7 is-unselectable is-hidden-print"
                     style="
                         width: 100%;
@@ -123,36 +87,29 @@
                         >Page break</span
                     ></span
                 >
-            </div>
-            <!-- Page break, if requested, but no on last page -->
-            <div
-                v-if="
-                    printTracksOnNewPage &&
-                    !(index + 1 === compilation.Tracks.length)
-                "
-                class="has-page-break-after"
-            ></div>
-        </template>
+                <!-- Page break, if requested, but no on last page -->
+                <div
+                    v-if="!(index + 1 === compilation.Tracks.length)"
+                    class="has-page-break-after"
+                ></div>
+            </template>
+        </div>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ICompilation } from '@/store/compilation-types';
-import ArtistInfo from '@/components/ArtistInfo.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import TimeDisplay from '@/components/TimeDisplay.vue';
-import TrackTitleName from '@/components/TrackTitleName.vue';
+import SetlistItem from '@/components/SetlistItem.vue';
 import { mdiPrinterOutline } from '@mdi/js';
 
 /** A printable display of a complete compilation, with a track and cue listing */
 export default defineComponent({
     name: 'Setlist',
     components: {
-        ArtistInfo,
         BaseIcon,
-        TrackTitleName,
-        TimeDisplay,
+        SetlistItem,
     },
     data() {
         return {
