@@ -6,7 +6,6 @@
             <!-- Use ENTER as hotkey to accept the value -->
             <!-- Use ESC as hotkey to revert the value -->
             <input
-                v-if="editMode"
                 v-focus
                 :class="{ input: true, 'is-static': !editMode }"
                 :value="modelValue"
@@ -21,7 +20,6 @@
             />
             <!-- Edit -->
             <NavButton
-                v-if="editMode"
                 @click="toggleEditMode()"
                 :iconPath="mdiCheckBold"
                 title="Click to accept"

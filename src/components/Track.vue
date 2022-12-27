@@ -385,21 +385,19 @@
                                 ></CueButtonsBar>
                             </nav>
                         </IfMedia>
-                        <template v-if="isTrackPlayerFullScreen">
-                            <nav>
-                                <CueButtonsField
-                                    :currentSeconds="currentSeconds"
-                                    :isTrackPlaying="isPlaying"
-                                    :playbackMode="playbackMode"
-                                    @click="
-                                        (cue) => {
-                                            cueClick(cue);
-                                        }
-                                    "
-                                    :track="track"
-                                ></CueButtonsField>
-                            </nav>
-                        </template>
+                        <nav v-if="isTrackPlayerFullScreen">
+                            <CueButtonsField
+                                :currentSeconds="currentSeconds"
+                                :isTrackPlaying="isPlaying"
+                                :playbackMode="playbackMode"
+                                @click="
+                                    (cue) => {
+                                        cueClick(cue);
+                                    }
+                                "
+                                :track="track"
+                            ></CueButtonsField>
+                        </nav>
                     </div>
                 </Transition>
             </Teleport>

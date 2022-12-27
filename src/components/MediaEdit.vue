@@ -1,31 +1,32 @@
 <template>
     <div v-click-outside="acceptValue">
-        <template v-if="!editMode">
-            <MediaSourceIndicator :source="track.Url" @click="toggleEditMode()">
-                <!-- Edit -->
-                <!-- To not disturb the original layout by the edit button, just position it absolutely,
+        <MediaSourceIndicator
+            v-if="!editMode"
+            :source="track.Url"
+            @click="toggleEditMode()"
+        >
+            <!-- Edit -->
+            <!-- To not disturb the original layout by the edit button, just position it absolutely,
             and introduce a margin on the original text. -->
-                <NavButton
-                    class="is-absolute"
-                    :iconPath="mdiPencilOutline"
-                    title="Click to edit the media source"
-                />
-            </MediaSourceIndicator>
-        </template>
-        <template v-else>
-            <MediaDropZone
-                :isExpanded="true"
-                :replaceUrl="track.Url"
-                :trackId="track.Id"
-                ref="mediaDropZone"
-            >
-                <NavButton
-                    @click="toggleEditMode()"
-                    :iconPath="mdiCheckBold"
-                    title="Click to finish editing the media source"
-                />
-            </MediaDropZone>
-        </template>
+            <NavButton
+                class="is-absolute"
+                :iconPath="mdiPencilOutline"
+                title="Click to edit the media source"
+            />
+        </MediaSourceIndicator>
+        <MediaDropZone
+            v-else
+            :isExpanded="true"
+            :replaceUrl="track.Url"
+            :trackId="track.Id"
+            ref="mediaDropZone"
+        >
+            <NavButton
+                @click="toggleEditMode()"
+                :iconPath="mdiCheckBold"
+                title="Click to finish editing the media source"
+            />
+        </MediaDropZone>
     </div>
 </template>
 

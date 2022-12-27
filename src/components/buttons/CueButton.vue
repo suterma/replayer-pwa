@@ -24,29 +24,30 @@
             ></span>
             <!-- first line (Do not use a level here, this has only complicated things for smaller widths so far)-->
             <BaseIcon
-                :path="mdiPlay"
                 v-if="!isTrackPlaying"
+                :path="mdiPlay"
                 class="foreground"
             />
-            <BaseIcon :path="mdiPause" v-else class="foreground" />
+            <BaseIcon v-else :path="mdiPause" class="foreground" />
 
             <slot></slot>
 
-            <template v-if="!minified">
-                <span class="ml-2 has-text-weight-semibold foreground">{{
-                    description
-                }}</span></template
+            <span
+                v-if="!minified"
+                class="ml-2 has-text-weight-semibold foreground"
+                >{{ description }}</span
             >
-            <template v-if="isCueLooping">
-                <BaseIcon
-                    :path="rTrackRepeatOnce"
-                    class="ml-2 mr-2 foreground"
-                />
-            </template>
-            <template v-else-if="isCuePlay">
-                <BaseIcon :path="rTrackPlayOnce" class="ml-2 mr-2 foreground" />
-            </template>
-            <BaseIcon v-else v-once path="" class="ml-2 mr-2 foreground" />
+            <BaseIcon
+                v-if="isCueLooping"
+                :path="rTrackRepeatOnce"
+                class="ml-2 mr-2 foreground"
+            />
+            <BaseIcon
+                v-else-if="isCuePlay"
+                :path="rTrackPlayOnce"
+                class="ml-2 mr-2 foreground"
+            />
+            <BaseIcon v-else path="" class="ml-2 mr-2 foreground" />
 
             <!-- second line, if not minified (use a horizontal level also on mobile)-->
             <template v-if="!minified">

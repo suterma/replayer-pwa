@@ -1,9 +1,11 @@
 <template>
-    <template v-if="isLinkText">
-        <a :href="text" alt="Link to the displayed text" target="_blank">{{
-            text
-        }}</a>
-    </template>
+    <a
+        v-if="isLinkText"
+        :href="text"
+        alt="Link to the displayed text"
+        target="_blank"
+        >{{ text }}</a
+    >
     <template v-else>
         {{ text }}
     </template>
