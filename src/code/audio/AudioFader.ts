@@ -128,10 +128,6 @@ export default class AudioFader {
             Math.max(AudioFader.audioVolumeMin, volume),
         );
         this.audio.volume = limitedVolume;
-        console.debug(
-            'AudioFader::setAudioVolume:limitedVolume:',
-            limitedVolume,
-        );
     }
 
     /** Gets the master audio volume
