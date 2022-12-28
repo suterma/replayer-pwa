@@ -68,6 +68,12 @@
             ghost-class="has-outline-dashed-success"
             drag-class="has-text-success"
             item-key="Id"
+            :animation="200"
+            :component-data="{
+                tag: 'div',
+                type: 'transition-group',
+                name: !drag ? 'flip-list' : null,
+            }"
         >
             <template #item="{ element, index }">
                 <div class="is-together-print">
@@ -182,18 +188,3 @@ export default defineComponent({
     },
 });
 </script>
-<style scoped>
-.grabbable {
-    cursor: move; /* fallback if grab cursor is unsupported */
-    cursor: grab;
-    cursor: -moz-grab;
-    cursor: -webkit-grab;
-}
-
-/* (Optional) Apply a "closed-hand" cursor during drag operation. */
-.grabbable:active {
-    cursor: grabbing;
-    cursor: -moz-grabbing;
-    cursor: -webkit-grabbing;
-}
-</style>
