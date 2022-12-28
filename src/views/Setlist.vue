@@ -3,8 +3,7 @@
         <h1 class="title is-hidden-print">Set list</h1>
 
         <!-- 
-            //TODO add green ghost color 
-            //TODO add transition group, see example https://sortablejs.github.io/vue.draggable.next/#/transition-example-2
+             //TODO add transition group, see example https://sortablejs.github.io/vue.draggable.next/#/transition-example-2
         -->
         <div class="box is-hidden-print">
             <div class="field">
@@ -67,6 +66,7 @@
             @end="drag = false"
             handle=".handle"
             ghost-class="has-outline-dashed-success"
+            drag-class="has-text-success"
             item-key="Id"
         >
             <template #item="{ element, index }">
