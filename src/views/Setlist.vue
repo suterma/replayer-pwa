@@ -66,7 +66,7 @@
             @start="drag = true"
             @end="drag = false"
             handle=".handle"
-            ghost-class="has-text-success"
+            ghost-class="has-outline-dashed-success"
             item-key="Id"
         >
             <template #item="{ element, index }">

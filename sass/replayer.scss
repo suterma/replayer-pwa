@@ -147,6 +147,17 @@ while also keeping the original with.
 }
 
 /** **********************************************************
+ * Outlines
+**************************************************************
+*/
+
+.has-outline-dashed-success {
+    outline: dashed $success;
+    border-radius: $radius;
+    outline-offset: $radius;
+}
+
+/** **********************************************************
  * Additional adornments
 **************************************************************
 */
