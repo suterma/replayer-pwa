@@ -1,18 +1,21 @@
 <template>
-    <nav class="level">
+    <nav class="level is-mobile">
         <!-- Left side -->
         <div class="level-left">
-            <div class="level-item">
+            <div
+                class="level-item has-cropped-text"
+                style="max-width: calc(100vw - 60px)"
+            >
                 <h2 class="title is-4">
                     <slot v-if="$slots.default"></slot>
-                    <TrackTitleName :track="track"></TrackTitleName>
+                    <TrackTitleName class=" " :track="track"></TrackTitleName>
                 </h2>
             </div>
         </div>
 
         <!-- Right side -->
         <div class="level-right">
-            <div class="level-item">
+            <div class="level-item is-hidden-mobile">
                 <span v-if="track.Artist || track.Album" class="is-size-7 ml-2">
                     <ArtistInfo :track="track" />
                 </span>
