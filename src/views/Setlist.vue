@@ -2,6 +2,10 @@
     <div class="container">
         <h1 class="title is-hidden-print">Set list</h1>
 
+        <!-- 
+            //TODO add green ghost color 
+            //TODO add transition group, see example https://sortablejs.github.io/vue.draggable.next/#/transition-example-2
+        -->
         <div class="box is-hidden-print">
             <div class="field">
                 <div class="control">
@@ -21,6 +25,13 @@
                 <div class="field-body">
                     <div class="field is-narrow">
                         <div class="control">
+                            <label class="checkbox mr-4">
+                                <input
+                                    type="checkbox"
+                                    v-model="showNumbering"
+                                />
+                                show numbering
+                            </label>
                             <label class="checkbox mr-4">
                                 <input type="checkbox" v-model="showCues" />
                                 show cues
@@ -71,10 +82,10 @@
                         :showMediaSource="showMediaSource"
                     >
                         <!-- The track index (as part of the title) -->
-                        <span>{{ index + 1 }}</span>
+                        <span v-if="showNumbering">{{ index + 1 }})&nbsp;</span>
                         <template #title-end
                             ><BaseIcon
-                                class="handle grabbable"
+                                class="handle grabbable is-hidden-print"
                                 v-once
                                 :path="mdiDrag"
                                 title="Drag and drop to reorder"
@@ -137,7 +148,8 @@ export default defineComponent({
             showCues: false,
             /** Whether to show the media source */
             showMediaSource: false,
-
+            /** Whether to show the media source */
+            showNumbering: true,
             /** Icons from @mdi/js */
             mdiDrag: mdiDrag,
             mdiPrinterOutline: mdiPrinterOutline,

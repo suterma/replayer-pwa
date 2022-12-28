@@ -3,12 +3,8 @@
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
-                <span class="tag is-outlined has-border is-family-monospace"
-                    ><slot></slot
-                ></span>
-            </div>
-            <div class="level-item">
                 <h2 class="title is-4">
+                    <slot v-if="$slots.default"></slot>
                     <TrackTitleName :track="track"></TrackTitleName>
                 </h2>
             </div>
