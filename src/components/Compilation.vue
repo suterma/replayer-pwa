@@ -191,18 +191,42 @@ export default defineComponent({
             return track;
         },
 
+        /** Selects the previous cue, if any. Otherwise, loop to the last cue */
         toPreviousCue() {
             const allCueIds = this.allCues.map((cue) => cue.Id);
             const indexOfSelected = allCueIds.indexOf(this.selectedCueId);
-            const prevCueId = allCueIds[indexOfSelected - 1];
-            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, prevCueId);
+            if (indexOfSelected > 0) {
+                const prevCueId = allCueIds[indexOfSelected - 1];
+                this.$store.commit(
+                    MutationTypes.UPDATE_SELECTED_CUE_ID,
+                    prevCueId,
+                );
+            } else {
+                //loop to last
+                this.$store.commit(
+                    MutationTypes.UPDATE_SELECTED_CUE_ID,
+                    allCueIds.at(-1),
+                );
+            }
         },
 
+        /** Selects the next cue, if any. Otherwise, loop to the first cue */
         toNextCue() {
             const allCueIds = this.allCues.map((cue) => cue.Id);
             const indexOfSelected = allCueIds.indexOf(this.selectedCueId);
-            const nextCueId = allCueIds[indexOfSelected + 1];
-            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, nextCueId);
+            if (indexOfSelected < allCueIds.length - 1) {
+                const nextCueId = allCueIds[indexOfSelected + 1];
+                this.$store.commit(
+                    MutationTypes.UPDATE_SELECTED_CUE_ID,
+                    nextCueId,
+                );
+            } else {
+                //loop to first
+                this.$store.commit(
+                    MutationTypes.UPDATE_SELECTED_CUE_ID,
+                    allCueIds.at(0),
+                );
+            }
         },
 
         toMnemonicCue(event: Event) {

@@ -436,6 +436,7 @@ import TrackTitleName from './TrackTitleName.vue';
 import ArtistInfo from './ArtistInfo.vue';
 import IfMedia from '@/components/IfMedia.vue';
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
+import { Replayer } from './CompilationKeyboardHandler.vue';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -572,58 +573,11 @@ export default defineComponent({
             this.trackPlayerInstance.stop();
             this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, null);
         },
-        toPreviousCue(): Promise<void> {
-            return new Promise((resolve, reject) => {
-                const selectedCueId = this.$store.getters
-                    .selectedCueId as string;
-
-                if (selectedCueId) {
-                    const indexOfSelected =
-                        this.allActiveTrackCueIds.indexOf(selectedCueId);
-                    const prevCueId =
-                        this.allActiveTrackCueIds[indexOfSelected - 1];
-                    const previousCue = this.track.Cues.filter(
-                        (cue) => cue.Id === prevCueId,
-                    )[0];
-
-                    if (
-                        previousCue &&
-                        previousCue.Time != null &&
-                        Number.isFinite(previousCue.Time)
-                    ) {
-                        this.cueClick(previousCue, false);
-                        resolve();
-                    } else {
-                        reject('No previous cue or no cue time available.');
-                    }
-                }
-            });
+        toPreviousCue() {
+            document.dispatchEvent(new Event(Replayer.TO_PREV_CUE));
         },
-        toNextCue(): Promise<void> {
-            return new Promise((resolve, reject) => {
-                const selectedCueId = this.$store.getters
-                    .selectedCueId as string;
-
-                if (selectedCueId) {
-                    const indexOfSelected =
-                        this.allActiveTrackCueIds.indexOf(selectedCueId);
-                    const nextCueId =
-                        this.allActiveTrackCueIds[indexOfSelected + 1];
-                    const nextCue = this.track.Cues.filter(
-                        (cue) => cue.Id === nextCueId,
-                    )[0];
-                    if (
-                        nextCue &&
-                        nextCue.Time != null &&
-                        Number.isFinite(nextCue.Time)
-                    ) {
-                        this.cueClick(nextCue, false);
-                        resolve();
-                    } else {
-                        reject('No previous cue or no cue time available.');
-                    }
-                }
-            });
+        toNextCue() {
+            document.dispatchEvent(new Event(Replayer.TO_NEXT_CUE));
         },
         /** Skips to this track
          * @remarks If the track is not yet active, tries to activate the track (which will autoplay).
