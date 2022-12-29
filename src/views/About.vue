@@ -9,6 +9,15 @@
                 times in the audio file.
             </p>
             <WelcomeText />
+
+            <p class="">
+                <a
+                    href="https://replayer.app/en/documentation/keyboard-shortcuts"
+                    alt="Link to the Replayer app keyboard shortcuts"
+                    target="_blank"
+                    >Keyboard shortcuts...</a
+                >.
+            </p>
             <p
                 title="App info"
                 class="has-text-right is-italic has-opacity-half"
