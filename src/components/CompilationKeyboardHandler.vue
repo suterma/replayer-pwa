@@ -120,20 +120,26 @@ export default defineComponent({
             //Back to cue (dot)?
             if (event.code === 'NumpadDecimal' || event.code === 'Period') {
                 event.preventDefault();
+                event.stopPropagation();
                 this.DisplayKeyAndAction(event, 'back to cue');
                 document.dispatchEvent(new Event(Replayer.BACK_TO_CUE));
             }
             //Next cue?
             else if (event.key === '*') {
+                event.preventDefault();
+                event.stopPropagation();
                 this.nextCue(event);
             }
             //Previous cue?
             else if (event.key === '/') {
+                event.preventDefault();
+                event.stopPropagation();
                 this.previousCue(event);
             }
             //Mnemonic termination / play/pause-toggling?
             else if (event.key === 'Enter') {
                 event.preventDefault();
+                event.stopPropagation();
                 if (this.mnemonic) {
                     this.DisplayDataAndAction(
                         this.mnemonic,
@@ -157,6 +163,7 @@ export default defineComponent({
             //(any one numeric character)
             else if (event.key.match(/^[0-9]{1}$/g)) {
                 event.preventDefault();
+                event.stopPropagation();
                 this.mnemonic = this.mnemonic + event.key;
                 this.DisplayDataAndAction(this.mnemonic, ' + [ENTER]');
 
@@ -166,7 +173,7 @@ export default defineComponent({
                     this.mnemonic = '';
                 }, this.keyboardShortcutTimeout);
             }
-            //HINT: if it's not handle, do not prevent the default action, like F12, CTRL-V etc...
+            //HINT: if it's not handled, do not prevent the default action, like F12, CTRL-V etc...
         },
 
         /** Toggles playback
