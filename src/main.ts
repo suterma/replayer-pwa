@@ -24,3 +24,12 @@ createApp(App)
         mounted: (el) => el.focus(),
     })
     .mount('#app');
+
+// Show general errors (including unhandled promises) within the app's notification system
+import { MutationTypes } from './store/mutation-types';
+onerror = (_event, _source, _lineno, _colno, error) => {
+    store.commit(MutationTypes.PUSH_ERROR, `${error?.name}: ${error?.message}`);
+};
+window.addEventListener('unhandledrejection', function (event) {
+    store.commit(MutationTypes.PUSH_ERROR, `${event.reason}`);
+});

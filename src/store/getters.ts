@@ -18,6 +18,10 @@ export type Getters = {
     progressMessage(state: State): string | null;
     /** Gets the latest (newest) error message from the stack */
     errorMessage(state: State): string | null;
+
+    /** Gets the error messages from the stack */
+    errorMessages(state: State): string[];
+
     /** Gets the currently selected cue id
      * @remarks Only one cue may be selected at any time, within one compilation / application instance.
      * @returns The cue identifier; or null, if no cue is selected.
@@ -77,6 +81,12 @@ export const getters: GetterTree<State, State> & Getters = {
             state.errorMessageStack[state.errorMessageStack.length - 1];
         return errorMessage ?? null;
     },
+
+    /** @inheritdoc */
+    errorMessages: (state) => {
+        return state.errorMessageStack;
+    },
+
     /** @inheritdoc */
     selectedCueId: (state) => {
         return state.selectedCueId;
