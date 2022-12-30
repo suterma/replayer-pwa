@@ -176,23 +176,23 @@ export default class AudioFader {
     fadeIn(): Promise<void> {
         this.cancel();
         if (this.fadeInDuration) {
-            return new Promise((resolve, reject) => {
-                try {
-                    const currentVolume = this.getCurrentAudioVolume();
-                    if (currentVolume < this.masterVolume) {
-                        return this.fade(
-                            currentVolume,
-                            this.masterVolume,
-                            this.fadeInDuration,
-                        ).then(() => {
+            return new Promise((resolve) => {
+                const currentVolume = this.getCurrentAudioVolume();
+                if (currentVolume < this.masterVolume) {
+                    return this.fade(
+                        currentVolume,
+                        this.masterVolume,
+                        this.fadeInDuration,
+                    )
+                        .catch(() => {
+                            console.debug(`AudioFader::fadeOut:linear:aborted`);
+                        })
+                        .then(() => {
                             console.debug(`AudioFader::fadeIn:linear:ended`);
                             resolve();
                         });
-                    } else {
-                        resolve(); //immediately
-                    }
-                } catch (err) {
-                    reject('Fade-in failed.');
+                } else {
+                    resolve(); //immediately
                 }
             });
         } else {
@@ -264,26 +264,24 @@ export default class AudioFader {
     fadeOut(): Promise<void> {
         this.cancel();
         if (this.fadeOutDuration) {
-            return new Promise((resolve, reject) => {
-                try {
-                    const currentVolume = this.getCurrentAudioVolume();
-                    console.debug(
-                        `AudioFader::fadeOut:volume:${currentVolume}`,
-                    );
-                    if (currentVolume > AudioFader.audioVolumeMin) {
-                        return this.fade(
-                            currentVolume,
-                            AudioFader.audioVolumeMin,
-                            this.fadeOutDuration,
-                        ).then(() => {
+            return new Promise((resolve) => {
+                const currentVolume = this.getCurrentAudioVolume();
+                console.debug(`AudioFader::fadeOut:volume:${currentVolume}`);
+                if (currentVolume > AudioFader.audioVolumeMin) {
+                    return this.fade(
+                        currentVolume,
+                        AudioFader.audioVolumeMin,
+                        this.fadeOutDuration,
+                    )
+                        .catch(() => {
+                            console.debug(`AudioFader::fadeOut:linear:aborted`);
+                        })
+                        .then(() => {
                             console.debug(`AudioFader::fadeOut:linear:ended`);
                             resolve();
                         });
-                    } else {
-                        resolve(); //immediately
-                    }
-                } catch (err) {
-                    reject('Fade-out failed.');
+                } else {
+                    resolve(); //immediately
                 }
             });
         } else {
