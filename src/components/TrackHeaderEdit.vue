@@ -44,8 +44,8 @@
                                 v-if="!isTrackMediaAvailable"
                                 class="has-text-danger"
                             >
-                                <BaseIcon v-once :path="mdiAlert" />Media not
-                                available</span
+                                <BaseIcon v-once :path="mdiAlert" />Media
+                                unavailable</span
                             >
                         </MediaEdit>
                     </p>
@@ -114,7 +114,7 @@
     <div class="is-hidden-fullhd">
         <MediaEdit :track="track">
             <span v-if="!isTrackMediaAvailable" class="has-text-danger">
-                <BaseIcon v-once :path="mdiAlert" />Media not available</span
+                <BaseIcon v-once :path="mdiAlert" />Media unavailable</span
             ></MediaEdit
         >
     </div>

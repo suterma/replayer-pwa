@@ -5,9 +5,9 @@
                 :path="isUnavailable ? mdiAlert : mdiCircle"
                 :class="{
                     'has-text-danger': isUnavailable,
-                    'has-text-success': isPlaying,
+                    'has-text-success': isPlaying && !isUnavailable,
                     'has-text-grey-dark': isReady && !isUnavailable,
-                    'is-invisible': isUnloaded,
+                    'is-invisible': isUnloaded && !isUnavailable,
                 }"
             />
         </span>
