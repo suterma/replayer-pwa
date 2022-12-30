@@ -196,7 +196,13 @@
                                     <!-- On mobile, the text is cropped at full width minus seek buttons, because of the level's automatic stacking,
                                     on lager viewports the text is cropped to not exceed the dynamic playhead slider -->
                                     <p
-                                        class="is-size-7 has-cropped-text has-text-warning"
+                                        class="is-size-7 has-cropped-text"
+                                        :class="{
+                                            'has-text-success':
+                                                playingCueIsSelected,
+                                            'has-text-warning':
+                                                !playingCueIsSelected,
+                                        }"
                                     >
                                         <span>
                                             {{ playingCueDescription }}
@@ -315,7 +321,13 @@
                                         <!-- On mobile, the text is cropped at full width minus seek buttons, because of the level's automatic stacking,
                                     on lager viewports the text is strictly cropped to 129px -->
                                         <p
-                                            class="is-size-7 has-cropped-text has-text-warning"
+                                            class="is-size-7 has-cropped-text"
+                                            :class="{
+                                                'has-text-success':
+                                                    playingCueIsSelected,
+                                                'has-text-warning':
+                                                    !playingCueIsSelected,
+                                            }"
                                         >
                                             <span>
                                                 {{ playingCueDescription }}
@@ -870,6 +882,17 @@ export default defineComponent({
                 return description;
             }
             return '';
+        },
+
+        /** Whether the currently playing cue is the selected cue
+         */
+        playingCueIsSelected(): boolean {
+            const playingCueId = this.playingCue?.Id;
+
+            if (this.selectedCue.Id === playingCueId) {
+                return true;
+            }
+            return false;
         },
 
         /** Whether the playing cue has a previous cue
