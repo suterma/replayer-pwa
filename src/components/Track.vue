@@ -769,7 +769,7 @@ export default defineComponent({
         trackPlay() {
             console.debug(`Track(${this.track.Name})::trackPlay`);
 
-            //Update the selected cue to this cue
+            //Update the track cue to this track
             this.$store.commit(
                 MutationTypes.UPDATE_SELECTED_TRACK_ID,
                 this.track.Id,

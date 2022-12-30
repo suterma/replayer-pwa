@@ -233,6 +233,15 @@ export const mutations: MutationTree<State> & Mutations = {
     [MutationTypes.UPDATE_SELECTED_TRACK_ID](state: State, trackId: string) {
         state.selectedCueId = null;
         state.selectedTrackId = trackId;
+
+        const track = CompilationHandler.getTrackById(
+            state.compilation.Tracks,
+            trackId,
+        );
+        const firstCue = track?.Cues[0];
+        if (firstCue) {
+            state.selectedCueId = firstCue.Id;
+        }
     },
 
     [MutationTypes.UPDATE_DURATIONS](
@@ -423,7 +432,10 @@ export const mutations: MutationTree<State> & Mutations = {
     ): void {
         // Just apply the new sorting, not using the payload objects
         // See https://stackoverflow.com/a/44063445/79485
-        console.debug('UPDATE_TRACK_ORDER::orderedTrackIds', payload.orderedTrackIds);
+        console.debug(
+            'UPDATE_TRACK_ORDER::orderedTrackIds',
+            payload.orderedTrackIds,
+        );
 
         state.compilation.Tracks.sort(
             (a, b) =>
