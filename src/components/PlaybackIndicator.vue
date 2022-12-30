@@ -2,10 +2,11 @@
     <p class="control" :title="indication">
         <span class="button is-indicator">
             <BaseIcon
-                :path="mdiCircle"
+                :path="isUnavailable ? mdiAlert : mdiCircle"
                 :class="{
+                    'has-text-danger': isUnavailable,
                     'has-text-success': isPlaying,
-                    'has-text-grey-dark': isReady,
+                    'has-text-grey-dark': isReady && !isUnavailable,
                     'is-invisible': isUnloaded,
                 }"
             />
@@ -16,7 +17,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { mdiCircle } from '@mdi/js';
+import { mdiAlert, mdiCircle } from '@mdi/js';
 
 /** An indicator for the track playback state
  */
@@ -43,21 +44,32 @@ export default defineComponent({
             default: true,
             required: false,
         },
+        /** Whether the indicator should convey the unavailable state */
+        isUnavailable: {
+            type: Boolean,
+            default: false,
+            required: false,
+        },
     },
     data() {
         return {
             /** Icons from @mdi/js */
             mdiCircle: mdiCircle,
+            mdiAlert: mdiAlert,
         };
     },
     computed: {
         indication(): string {
-            if (this.isPlaying) {
+            if (this.isUnavailable) {
+                return 'Track media is unavailable';
+            } else if (this.isPlaying) {
                 return 'Track is playing';
             }
             if (this.isReady) {
                 return 'Track is loaded and ready to play';
-            } else return 'Track is not yet loaded';
+            }
+
+            return 'Track is not yet loaded';
         },
     },
 });

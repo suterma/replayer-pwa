@@ -5,6 +5,7 @@
             :source="track.Url"
             @click="toggleEditMode()"
         >
+            <slot></slot>
             <!-- Edit -->
             <!-- To not disturb the original layout by the edit button, just position it absolutely,
             and introduce a margin on the original text. -->

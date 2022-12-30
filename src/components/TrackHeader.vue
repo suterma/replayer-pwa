@@ -56,6 +56,7 @@
                     :is-ready="!isPlaying && isTrackLoaded"
                     :is-playing="isPlaying"
                     :is-unloaded="!isTrackLoaded"
+                    :is-unavailable="!isTrackMediaAvailable"
                 />
             </nav>
             <!-- Slot for additional level items -->
@@ -110,6 +111,15 @@ export default defineComponent({
         /** Flag to indicate whether the player has it's track loaded.
          */
         isTrackLoaded: {
+            type: Boolean,
+            default: false,
+        },
+
+        /** Whether the media source is available
+         * @remarks For a file: whether the resource is in the media store
+         * @remarks For an URL: //TODO implement
+         */
+        isTrackMediaAvailable: {
             type: Boolean,
             default: false,
         },

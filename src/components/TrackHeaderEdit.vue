@@ -39,7 +39,15 @@
             >
                 <div class="field">
                     <p class="control">
-                        <MediaEdit :track="track" />
+                        <MediaEdit :track="track">
+                            <span
+                                v-if="!isTrackMediaAvailable"
+                                class="has-text-danger"
+                            >
+                                <BaseIcon v-once :path="mdiAlert" />Media not
+                                available</span
+                            >
+                        </MediaEdit>
                     </p>
                 </div>
             </div>
@@ -91,6 +99,7 @@
                     :is-ready="!isPlaying && isTrackLoaded"
                     :is-playing="isPlaying"
                     :is-unloaded="!isTrackLoaded"
+                    :is-unavailable="!isTrackMediaAvailable"
                 />
 
                 <TrackContextMenu
@@ -103,7 +112,11 @@
     </div>
     <!-- Extra level for the media edit, except on very large screens -->
     <div class="is-hidden-fullhd">
-        <MediaEdit :track="track" />
+        <MediaEdit :track="track">
+            <span v-if="!isTrackMediaAvailable" class="has-text-danger">
+                <BaseIcon v-once :path="mdiAlert" />Media not available</span
+            ></MediaEdit
+        >
     </div>
     <!-- <TrackSharingDialog v-if="this.isSharing"></TrackSharingDialog> -->
 </template>
@@ -117,6 +130,8 @@ import EditableInput from '@/components/EditableInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
+import { mdiAlert } from '@mdi/js';
 
 /** A header for editing track metadata
  */
@@ -128,6 +143,7 @@ export default defineComponent({
         EditableInput,
         CollapsibleButton,
         TrackContextMenu,
+        BaseIcon,
     },
     emits: ['update:isExpanded'],
     props: {
@@ -171,6 +187,15 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
+
+        /** Whether the media source is available
+         * @remarks For a file: whether the resource is in the media store
+         * @remarks For an URL: //TODO implement
+         */
+        isTrackMediaAvailable: {
+            type: Boolean,
+            default: false,
+        },
     },
     data() {
         return {
@@ -178,6 +203,9 @@ export default defineComponent({
             /** Flag to indicate whether the track is currently shared via the dialog.
              */
             isSharing: false,
+
+            /** Icons from @mdi/js */
+            mdiAlert: mdiAlert,
         };
     },
     /** Make sure for non-collapsible headers, they are reported initially as expanded once   */

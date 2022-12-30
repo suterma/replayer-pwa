@@ -30,6 +30,7 @@
             :track="track"
             :isPlaying="isPlaying"
             :isTrackLoaded="isTrackLoaded"
+            :isTrackMediaAvailable="isMediaAvailable"
             :isActive="isActiveTrack"
         />
         <TrackHeader
@@ -38,6 +39,7 @@
             :isCollapsible="false"
             :isPlaying="isPlaying"
             :isTrackLoaded="true"
+            :isTrackMediaAvailable="isMediaAvailable"
             :isActive="isActiveTrack"
             @titleClick="skipToPlayPause()"
         >
@@ -889,7 +891,10 @@ export default defineComponent({
         playingCueIsSelected(): boolean {
             const playingCueId = this.playingCue?.Id;
 
-            if (this.selectedCue.Id === playingCueId) {
+            if (
+                playingCueId != undefined &&
+                this.selectedCue?.Id === playingCueId
+            ) {
                 return true;
             }
             return false;
@@ -958,6 +963,16 @@ export default defineComponent({
 
         selectedCue(): ICue {
             return this.$store.getters.selectedCue as ICue;
+        },
+
+        /** Whether the playback media is available
+         * @devdoc This is only working for local file paths, not for online URL's, because these are directly fetched from the media element.
+         */
+        isMediaAvailable(): boolean {
+            if (this.mediaUrl) {
+                return true;
+            }
+            return false;
         },
         /** Gets the media object URL, if available
          */
