@@ -6,34 +6,16 @@
         :class="{
             level: true,
             'is-mobile': true,
-            'is-clickable': isCollapsible,
-        }"
-        @click="
-            if (isCollapsible) {
-                toggleExpanded();
-            }
-        "
+         }"
     >
         <!-- Left side -->
         <div class="level-left">
             <!-- Slot for additional level items -->
             <slot name="left-start"></slot>
-            <!-- Expander -->
-            <div v-if="isCollapsible" class="level-item is-narrow">
-                <CollapsibleButton
-                    :modelValue="modelValue"
-                    title="Track"
-                    collapsedText="Expand to play"
-                    class="is-nav"
-                />
-            </div>
 
             <!-- Title -->
             <!-- The title is the only header element that should shrink (break on words) if necessary -->
-            <div
-                class="level-item is-narrow is-flex-shrink-1"
-                @click="$emit('titleClick')"
-            >
+            <div class="level-item is-narrow is-flex-shrink-1">
                 <p class="title is-4" :class="{ 'has-text-success': isActive }">
                     <TrackTitleName :track="track"></TrackTitleName>
                 </p>
@@ -69,7 +51,6 @@
 import { defineComponent } from 'vue';
 import { Track } from '@/store/compilation-types';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
-import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import { ActionTypes } from '@/store/action-types';
 import TrackTitleName from './TrackTitleName.vue';
@@ -80,12 +61,10 @@ import TrackTitleName from './TrackTitleName.vue';
 export default defineComponent({
     name: 'TrackHeader',
     components: {
-        CollapsibleButton,
         PlaybackIndicator,
         TrackTitleName,
         ArtistInfo,
     },
-    emits: ['titleClick', 'update:modelValue'],
     props: {
         track: {
             type: Track,
@@ -131,15 +110,6 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
-        /** Whether this component shows supports expand/collapse (using a button)
-         * If set to false, the component is always shown in the expanded state, without the toggling button.
-         * @devdoc Allows to reuse this component for more than one display mode.
-         */
-        isCollapsible: {
-            type: Boolean,
-            default: true,
-            required: false,
-        },
     },
     data() {
         return {
@@ -148,14 +118,6 @@ export default defineComponent({
         };
     },
     methods: {
-        /** Toggles the expansion state
-         * @devdoc To prevent toggling with the input fields, use "$event.stopPropagation()" on the respective input controls
-         */
-        toggleExpanded() {
-            const expanded = !this.modelValue;
-            console.debug(`TrackHeader::toggleExpanded:expanded:${expanded}`);
-            this.$emit('update:modelValue', expanded);
-        },
         /** Updates the track name */
         updateName(name: string) {
             const trackId = this.track.Id;

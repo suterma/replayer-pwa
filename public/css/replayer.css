@@ -12012,6 +12012,15 @@ while also keeping the original with.
 }
 
 /** **********************************************************
+ * Explicit cursors
+**************************************************************
+*/
+/* Disabled items should be dimmed. Hovering should not be visible */
+.has-cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+/** **********************************************************
  * Cursors for dragging/sorting
 **************************************************************
 */

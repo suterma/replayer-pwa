@@ -36,20 +36,25 @@
         <TrackHeader
             v-else
             :track="track"
-            :isCollapsible="false"
             :isPlaying="isPlaying"
-            :isTrackLoaded="true"
+            :isTrackLoaded="isTrackLoaded"
             :isTrackMediaAvailable="isMediaAvailable"
             :isActive="isActiveTrack"
-            @titleClick="skipToPlayPause()"
+            :class="{
+                'is-clickable': isTrackLoaded,
+                'has-cursor-not-allowed': !isTrackLoaded,
+            }"
+            v-on="isTrackLoaded ? { click: skipToPlayPause } : null"
         >
             <template v-slot:left-start>
                 <div class="level-item is-narrow">
+                    <!-- NOTE: Click handling is already handled at the outer TrackHeader component, thus no (additional)
+                    click handler is defined for this button -->
                     <PlayPauseButton
+                        :disabled="!isTrackLoaded"
                         :class="{ 'is-success': isActiveTrack }"
                         :isPlaying="isPlaying"
                         :isLoading="isFading"
-                        @click="skipToPlayPause()"
                     />
                 </div>
             </template>
