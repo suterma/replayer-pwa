@@ -601,7 +601,7 @@ export default defineComponent({
             if (!this.isActiveTrack) {
                 this.trackPlay();
             } else {
-                this.trackPlayerInstance.togglePlayback();
+                this.togglePlayback();
             }
         },
         /** Activates the wake lock (if enabled in settings)
