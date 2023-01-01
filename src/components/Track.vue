@@ -517,14 +517,24 @@ export default defineComponent({
         },
 
         /** Whether this track has a previous track
+         * @remarks Skipping can also just loop
          */
         hasPreviousTrack: {
             type: Boolean,
             default: false,
         },
-        /** Whether this track has a next track
+        /** Whether this track has a next track to skip to
+         * @remarks Skipping can also just loop
          */
         hasNextTrack: {
+            type: Boolean,
+            default: false,
+        },
+
+        /** Whether this is the only track in the compilation
+         * @remarks Is used to visually omit some unnecessary items for a compilation with just a single track
+         */
+        isOnlyTrack: {
             type: Boolean,
             default: false,
         },
@@ -1023,12 +1033,6 @@ export default defineComponent({
         isActiveTrack(): boolean {
             const activeTrackId = this.$store.getters.activeTrack?.Id as string;
             return this.track.Id === activeTrackId;
-        },
-        /** Determines whether this is the only track in the compilation
-         * @remarks Is used to visually omit some unnecessary items for a compilation with just a single track
-         */
-        isOnlyTrack(): boolean {
-            return !this.hasNextTrack && !this.hasPreviousTrack;
         },
     },
 });

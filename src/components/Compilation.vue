@@ -30,6 +30,7 @@
                 :hasNextTrack="
                     index < (tracks?.length ?? 0) - 1 || isLoopingPlaybackMode
                 "
+                :isOnlyTrack="isSingleTrack"
                 @previousTrack="
                     toPreviousTrack(track.Id, isLoopingPlaybackMode)
                 "
@@ -121,6 +122,16 @@ export default defineComponent({
         },
 
         updatePlaybackMode(playbackMode: PlaybackMode): void {
+            //omit the modes that affect more than one track
+            if (this.isSingleTrack) {
+                if (
+                    playbackMode === PlaybackMode.LoopCompilation ||
+                    playbackMode === PlaybackMode.ShuffleCompilation
+                ) {
+                    playbackMode = PlaybackMode.PlayTrack;
+                }
+            }
+
             this.$store.commit(MutationTypes.UPDATE_PLAYBACK_MODE, {
                 playbackMode,
             });
