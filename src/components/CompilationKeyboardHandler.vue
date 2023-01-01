@@ -1,5 +1,5 @@
 <template>
-    <template v-if="hasCompilation">
+    <template v-if="hasCompilation && useAppShortcuts">
         <!-- Note: Enter (when not terminating a mnemonic, also toggles playback, via "handleKey") -->
         <!-- Note: '/' and '*' for cue selection are also handled via "handleKey" -->
         <GlobalEvents
@@ -98,6 +98,9 @@ export default defineComponent({
     computed: {
         hasCompilation(): boolean {
             return this.$store.getters.hasCompilation;
+        },
+        useAppShortcuts(): boolean {
+            return this.$store.getters.useAppShortcuts;
         },
         /** A timeout duration, used for the mnemonic build-up as well as the keyboard shortcut display timeout
          */

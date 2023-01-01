@@ -7,6 +7,10 @@ export enum MutationTypes {
     PUSH_ERROR = 'PUSH_ERROR',
     /** Ends the display of a previous error message, by popping the message from the stack of error messages */
     POP_ERROR = 'POP_ERROR',
+    /** Controls the use application-wide shortcuts
+     * @remarks Usage should be paused during the display of global messages like notifications or modal dialogs.
+     */
+    USE_APP_SHORTCUTS = 'USE_APP_SHORTCUTS',
     /** Ends the display any previous progress message, by clearing all messages from the stack of progress messages */
     FINISH_PROGRESS = 'FINISH_PROGRESS',
     /** Adds a media blob URL to the store.

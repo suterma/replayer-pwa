@@ -21,6 +21,7 @@ export type Mutations<S = State> = {
     [MutationTypes.POP_PROGRESS](state: S): void;
     [MutationTypes.PUSH_ERROR](state: S, payload: string): void;
     [MutationTypes.POP_ERROR](state: S): void;
+    [MutationTypes.USE_APP_SHORTCUTS](state: State, usage: boolean): void;
     [MutationTypes.FINISH_PROGRESS](state: State): void;
     [MutationTypes.ADD_MEDIA_URL](state: S, mediaUrl: MediaUrl): void;
     [MutationTypes.ADD_DEFAULT_TRACK](state: S, resourceName: string): void;
@@ -108,6 +109,10 @@ export const mutations: MutationTree<State> & Mutations = {
     [MutationTypes.POP_ERROR](state: State) {
         const message = state.errorMessageStack.pop();
         console.debug('POP_ERROR: ' + message);
+    },
+    [MutationTypes.USE_APP_SHORTCUTS](state: State, usage: boolean){
+        state.useAppShortcuts = usage;
+        console.debug('USE_APP_SHORTCUTS', usage);
     },
     [MutationTypes.FINISH_PROGRESS](state: State) {
         state.progressMessageStack.length = 0;

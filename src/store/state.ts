@@ -39,6 +39,12 @@ interface IState {
      */
     errorMessageStack: Array<string>;
 
+    /** Whether to use global app shortcuts
+     * @remarks This can be used to temporarily pause global app shortcuts
+     * in favor of use within modal or other dialogs.
+     */
+    useAppShortcuts: boolean;
+
     settings: Settings;
 }
 
@@ -58,6 +64,8 @@ export const state: IState = {
     progressMessageStack: new Array<string>(),
 
     errorMessageStack: new Array<string>(),
+
+    useAppShortcuts: true,
 
     settings: Settings.default(),
 };

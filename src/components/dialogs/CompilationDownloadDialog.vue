@@ -4,13 +4,13 @@
             <div class="modal-background"></div>
 
             <div class="modal-card">
-                <header class="modal-card-head">
-                    <h1 class="modal-card-title title is-flex-shrink-1">
-                        Download compilation as...
-                    </h1>
-                </header>
-                <section class="modal-card-body">
-                    <form>
+                <form>
+                    <header class="modal-card-head">
+                        <h1 class="modal-card-title title is-flex-shrink-1">
+                            Download compilation as...
+                        </h1>
+                    </header>
+                    <section class="modal-card-body">
                         <div class="field">
                             <label class="label">Compilation title*</label>
                             <div class="control has-icons-right">
@@ -23,12 +23,14 @@
                                     :value="compilationTitle"
                                     @change="
                                         updateCompilationTitle(
-                                            $event.target.value,
+                                            ($event.target as HTMLInputElement)
+                                                .value,
                                         )
                                     "
                                     @input="
                                         updateCompilationTitle(
-                                            $event.target.value,
+                                            ($event.target as HTMLInputElement)
+                                                .value,
                                         )
                                     "
                                 />
@@ -89,37 +91,48 @@
                                 </label>
                             </div>
                         </div>
-                    </form>
-                </section>
-                <footer class="modal-card-foot is-justify-content-flex-end">
-                    <div class="field is-grouped">
-                        <p class="control">
-                            <Hotkey :keys="['esc']" v-slot="{ clickRef }">
-                                <button
-                                    class="button"
-                                    :ref="clickRef"
-                                    @click="$close(this, false)"
+                    </section>
+                    <footer class="modal-card-foot is-justify-content-flex-end">
+                        <div class="field is-grouped">
+                            <p class="control">
+                                <Hotkey
+                                    :keys="['esc']"
+                                    :excluded-elements="[]"
+                                    v-slot="{ clickRef }"
                                 >
-                                    Cancel
-                                </button>
-                            </Hotkey>
-                        </p>
-                        <p class="control">
-                            <button
-                                type="submit"
-                                class="button is-success"
-                                :disabled="!compilationTitle"
-                                @click="
-                                    download().then(() => {
-                                        $close(this);
-                                    })
-                                "
-                            >
-                                Download
-                            </button>
-                        </p>
-                    </div>
-                </footer>
+                                    <button
+                                        class="button"
+                                        :ref="clickRef"
+                                        @click="$close(this, false)"
+                                    >
+                                        Cancel
+                                    </button>
+                                </Hotkey>
+                            </p>
+                            <p class="control">
+                                <Hotkey
+                                    :keys="['enter']"
+                                    :excluded-elements="[]"
+                                    v-slot="{ clickRef }"
+                                >
+                                    <button
+                                        type="submit"
+                                        class="button is-success"
+                                        :ref="clickRef"
+                                        :disabled="!compilationTitle"
+                                        @click="
+                                            download().then(() => {
+                                                $close(this);
+                                            })
+                                        "
+                                    >
+                                        Download
+                                    </button></Hotkey
+                                >
+                            </p>
+                        </div>
+                    </footer>
+                </form>
             </div>
         </div>
     </UseFocusTrap>
@@ -132,6 +145,9 @@ import { defineComponent, ref } from 'vue';
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
 import { Hotkey } from '@simolation/vue-hotkey';
 import CompilationHandler from '@/store/compilation-handler';
+import { onMounted, onUnmounted } from 'vue';
+import { useStore } from 'vuex';
+import { MutationTypes } from '@/store/mutation-types';
 
 export default defineComponent({
     name: 'CompilationDownloadDialog',
@@ -143,6 +159,17 @@ export default defineComponent({
         compilation: Compilation,
     },
     setup() {
+        /** Temporarily pause the use of the global app shortcuts in favor of typical
+         * key event handling within this dialog. */
+        const store = useStore();
+        onMounted(() => {
+            store.commit(MutationTypes.USE_APP_SHORTCUTS, false);
+        });
+        onUnmounted(() => {
+            store.commit(MutationTypes.USE_APP_SHORTCUTS, true);
+        });
+
+        /** NOTE: Returning the returnValue function is required by vue3-promise-dialog */
         function returnValue() {
             return true;
         }

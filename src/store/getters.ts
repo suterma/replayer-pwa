@@ -11,7 +11,15 @@ export type Getters = {
     /** Defines the function to determine whether a compilation is availabe (created or loaded) */
     hasCompilation(state: State): boolean;
     /** Defines the function to determine whether a compilation is availabe to retrieve from the persistent storage */
+
     hasRetrievableCompilation(): boolean;
+
+    /** Returns whether to use global app shortcuts
+     * @remarks This can be used to temporarily pause global app shortcuts
+     * in favor of use within modal or other dialogs.
+     */
+    useAppShortcuts(state: State): boolean;
+
     /** The set of available Media URL's */
     mediaUrls(state: State): Map<string, MediaUrl>;
     /** Gets the latest (newest) progress message from the stack */
@@ -60,6 +68,10 @@ export const getters: GetterTree<State, State> & Getters = {
             return true;
         }
         return false;
+    },
+    /** @inheritdoc */
+    useAppShortcuts: (state) => {
+        return state.useAppShortcuts;
     },
     /** @inheritdoc */
     hasRetrievableCompilation: () => {
