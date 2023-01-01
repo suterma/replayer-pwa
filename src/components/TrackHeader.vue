@@ -6,7 +6,7 @@
         :class="{
             level: true,
             'is-mobile': true,
-         }"
+        }"
     >
         <!-- Left side -->
         <div class="level-left">

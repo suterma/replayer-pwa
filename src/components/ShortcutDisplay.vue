@@ -1,7 +1,7 @@
 <template>
     <span
         v-if="shortcut || hasSlot"
-        class="is-hidden-touch is-hidden-desktop-only ml-2 tag is-light is-outlined has-opacity-third is-family-monospace"
+        class="is-hidden-mobile ml-2 tag is-light is-outlined has-opacity-third is-family-monospace"
         >{{ shortcut }}<slot></slot
     ></span>
 </template>
