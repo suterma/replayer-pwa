@@ -4,10 +4,10 @@
             <BaseIcon
                 :path="isUnavailable ? mdiAlert : mdiCircle"
                 :class="{
-                    'has-text-danger': isUnavailable,
+                    'has-text-warning': isUnavailable,
+                    'has-text-dark': isUnloaded,
                     'has-text-success': isPlaying && !isUnavailable,
                     'has-text-grey-dark': isReady && !isUnavailable,
-                    'is-invisible': isUnloaded && !isUnavailable,
                 }"
             />
         </span>
@@ -64,13 +64,17 @@ export default defineComponent({
                 return 'Track media is unavailable';
             } else if (this.isPlaying) {
                 return 'Track is playing';
-            }
-            if (this.isReady) {
+            } else if (this.isReady) {
                 return 'Track is loaded and ready to play';
+            } else if (this.isUnloaded) {
+                return 'Track not loaded';
             }
 
-            return 'Track is not yet loaded';
+            return 'Track is in an unknown state';
         },
+        // isLoading(): boolean {
+        //     return !this.isUnavailable && !this.isPlaying && !this.isReady;
+        // },
     },
 });
 </script>
