@@ -89,14 +89,6 @@
             </ul>
         </div>
 
-        <h2 class="subtitle has-text-danger">Editable input</h2>
-        <div class="">
-            <EditableInput
-                placeholder="Add text..."
-                v-model="editableInputText"
-            />
-        </div>
-
         <h2 class="subtitle has-text-danger">Log test buttons</h2>
         <div class="buttons">
             <button class="button is-success" @click="writeDebug">
@@ -183,7 +175,6 @@
 import { defineComponent } from 'vue';
 import { ICompilation } from '@/store/compilation-types';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
-import EditableInput from '@/components/EditableInput.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import NavButton from '@/components/buttons/NavButton.vue';
 //import ControlKnob from '@slipmatio/control-knob';
@@ -202,7 +193,6 @@ export default defineComponent({
     name: 'Development',
     components: {
         CollapsibleButton,
-        EditableInput,
         BaseIcon,
         NavButton,
         ControlKnob,
@@ -212,7 +202,6 @@ export default defineComponent({
         return {
             isExpanded: false,
             isOn: false,
-            editableInputText: 'some input text',
             knobValue: 0,
 
             /** Icons from @mdi/js */
