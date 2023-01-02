@@ -2,6 +2,7 @@
     <div v-click-outside="acceptValue">
         <MediaSourceIndicator
             v-if="!editMode"
+            class="is-flex is-align-items-center"
             :source="track.Url"
             @click="toggleEditMode()"
         >
@@ -10,7 +11,6 @@
             <!-- To not disturb the original layout by the edit button, just position it absolutely,
             and introduce a margin on the original text. -->
             <NavButton
-                class="is-absolute"
                 :iconPath="mdiPencilOutline"
                 title="Click to edit the media source"
             />

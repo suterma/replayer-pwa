@@ -4,8 +4,8 @@
         <span class="button is-indicator">
             <BaseIcon :path="iconPath" />
         </span>
-        <span class="is-relative has-text-break-word mr-40px"
-            >{{ indication }}
+        <span class="has-text-break-word">{{ indication }} </span>
+        <span class="has-text-break-word">
             <!-- A slot for an adornment -->
             <slot></slot>
         </span>
