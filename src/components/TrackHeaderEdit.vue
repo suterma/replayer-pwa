@@ -22,13 +22,14 @@
 
                 <div class="field">
                     <p class="control">
-                        <EditableInput
-                            class="title has-text-weight-light is-4"
+                        <StyledInput
+                            class="input title has-text-weight-light is-4"
                             :class="{ 'has-text-success': isActive }"
                             v-model="trackData.Name"
                             @change="updateName($event.target.value)"
                             type="text"
                             placeholder="Track name"
+                            title="Track name"
                         />
                     </p>
                 </div>
@@ -57,16 +58,17 @@
             <div class="level-item is-flex-shrink-1 is-hidden-mobile">
                 <div class="field">
                     <p class="control">
-                        <EditableInput
-                            class="is-italic"
+                        <StyledInput
+                            class="input is-italic"
                             v-model="trackData.Artist"
                             @change="updateArtist($event.target.value)"
                             type="text"
                             placeholder="Artist"
+                            title="Artist"
                         >
                             <span class="has-opacity-half mr-2 is-single-line"
                                 >by</span
-                            ></EditableInput
+                            ></StyledInput
                         >
                     </p>
                 </div>
@@ -76,16 +78,17 @@
             <div class="level-item is-flex-shrink-1 is-hidden-mobile">
                 <div class="field">
                     <p class="control">
-                        <EditableInput
-                            class="is-italic"
+                        <StyledInput
+                            class="input is-italic"
                             v-model="trackData.Album"
                             @change="updateAlbum($event.target.value)"
                             type="text"
                             placeholder="Album"
+                            title="Album"
                         >
                             <span class="has-opacity-half mr-2 is-single-line"
                                 >on</span
-                            ></EditableInput
+                            ></StyledInput
                         >
                     </p>
                 </div>
@@ -126,7 +129,7 @@ import { defineComponent } from 'vue';
 import { ITrack, Track } from '@/store/compilation-types';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
-import EditableInput from '@/components/EditableInput.vue';
+ import StyledInput from '@/components/StyledInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
@@ -140,7 +143,7 @@ export default defineComponent({
     components: {
         MediaEdit,
         PlaybackIndicator,
-        EditableInput,
+         StyledInput,
         CollapsibleButton,
         TrackContextMenu,
         BaseIcon,

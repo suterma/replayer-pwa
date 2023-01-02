@@ -1,18 +1,28 @@
 <template>
     <!-- Level, also on mobile -->
     <nav class="level is-mobile">
-        <div>
-            <EditableInput
-                v-if="isEditable && (title || compilation.Tracks.length > 1)"
-                class="title is-3"
-                v-model="title"
-                @change="updateTitle($event.target.value)"
-                placeholder="Compilation title"
-            />
-            <p v-else class="title is-3">
-                {{ title }} &nbsp;
-                <!-- add placeholder for layout consistency -->
-            </p>
+        <div class="level-left">
+            <div class="level-item">
+                <div class="field is-fullwidth">
+                    <p class="control is-expanded">
+                        <StyledInput
+                            v-if="
+                                isEditable &&
+                                (title || compilation.Tracks.length > 1)
+                            "
+                            class="input title is-3"
+                            v-model="title"
+                            @change="updateTitle($event.target.value)"
+                            placeholder="Compilation title"
+                            title="Compilation title"
+                        />
+                        <span v-else class="title is-3">
+                            {{ title }} &nbsp;
+                            <!-- add placeholder for layout consistency -->
+                        </span>
+                    </p>
+                </div>
+            </div>
         </div>
         <!-- Context menu on the right side -->
         <div class="level-right">
@@ -29,14 +39,14 @@
 import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
 import { Compilation, ICompilation } from '@/store/compilation-types';
-import EditableInput from '@/components/EditableInput.vue';
+import StyledInput from '@/components/StyledInput.vue';
 import CompilationContextMenu from '@/components/context-menu/CompilationContextMenu.vue';
 
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
     name: 'CompilationHeader',
-    components: { EditableInput, CompilationContextMenu },
+    components: { StyledInput, CompilationContextMenu },
     props: {
         compilation: {
             type: Compilation,
@@ -71,14 +81,16 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+.is-fullwidth {
+    width: 100%;
+}
 /** Custom modification for the level in the context of a compilation.
 * @remarks Allow the title text (on the left) to break between words, 
 * and keep the context items (on the right) as close as reasonably possible */
 .level {
     .level-left {
         word-break: break-word;
-        /* This basis is set empirically to fit for two elements on the right */
-        flex-basis: calc(100% - 80px);
+        flex-basis: calc(100%);
 
         /* These items should grow, and shrink */
         .level-item {
