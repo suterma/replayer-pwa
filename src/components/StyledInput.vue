@@ -1,22 +1,21 @@
 <template>
-        <slot></slot>
-        <!-- Let the attributes fall through the input element: -->
-        <input
-            v-bind="$attrs"
-            v-focus
-         
-            :value="modelValue"
-            @input="
-                $emit(
-                    'update:modelValue',
-                    ($event.target as HTMLInputElement).value,
-                )
-            "
-            type="text"
-            inputmode="text"
-            :placeholder="placeholder"
-            tabindex="0"
-        />
+    <slot></slot>
+    <!-- Let the attributes fall through the input element: -->
+    <input
+        v-bind="$attrs"
+        :value="modelValue"
+        ref="styled-input"
+        @input="
+            $emit(
+                'update:modelValue',
+                ($event.target as HTMLInputElement).value,
+            )
+        "
+        type="text"
+        inputmode="text"
+        :placeholder="placeholder"
+        tabindex="0"
+    />
 </template>
 
 <script lang="ts">
@@ -41,18 +40,20 @@ export default defineComponent({
             type: String,
             default: undefined,
         },
-    },
-    data() {
-        return {};
-    },
-    computed: {},
-    methods: {
-        updateValue() {
-            // this.$emit('update:modelValue', this.modelValue);
-            //this.$emit('update:modelValue', event);
+
+        /** Whether this input should get focus when mounted
+         * @devdoc v-focus does not work since the directive does not fall through
+         */
+        focus: {
+            type: Boolean,
+            default: false,
         },
     },
-    watch: {},
+    mounted: function (): void {
+        if (this.focus) {
+            (this.$refs['styled-input'] as HTMLInputElement).focus();
+        }
+    },
 });
 </script>
 <style scoped></style>

@@ -24,7 +24,6 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                 @dragleave="dragleave"
                 @drop="drop"
                 @keydown.enter="openFile()"
-                v-focus
             >
                 <input
                     v-focus

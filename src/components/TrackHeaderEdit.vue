@@ -30,6 +30,7 @@
                             type="text"
                             placeholder="Track name"
                             title="Track name"
+                            focus
                         />
                     </p>
                 </div>
@@ -129,7 +130,7 @@ import { defineComponent } from 'vue';
 import { ITrack, Track } from '@/store/compilation-types';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
- import StyledInput from '@/components/StyledInput.vue';
+import StyledInput from '@/components/StyledInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
@@ -143,7 +144,7 @@ export default defineComponent({
     components: {
         MediaEdit,
         PlaybackIndicator,
-         StyledInput,
+        StyledInput,
         CollapsibleButton,
         TrackContextMenu,
         BaseIcon,
