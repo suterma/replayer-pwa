@@ -142,24 +142,31 @@ export default class CompilationParser {
     private static parseFromXmlCues(xmlCues: any): ICue[] {
         const cues = new Array<ICue>();
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        xmlCues.forEach((xmlCue: any): void => {
-            //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
-            const cue = new Cue(
-                CompilationParser.FirstStringOf(xmlCue.Description).normalize(),
-                CompilationParser.FirstStringOf(xmlCue.Shortcut).normalize(),
-                CompilationParser.FirstNumberOf(xmlCue.Time),
-                null,
-                CompilationParser.FirstStringOf(xmlCue.Id),
-            );
-            cues.push(cue);
-        });
+        if (xmlCues) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            xmlCues.forEach((xmlCue: any): void => {
+                //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
+                const cue = new Cue(
+                    CompilationParser.FirstStringOf(
+                        xmlCue.Description,
+                    ).normalize(),
+                    CompilationParser.FirstStringOf(
+                        xmlCue.Shortcut,
+                    ).normalize(),
+                    CompilationParser.FirstNumberOf(xmlCue.Time),
+                    null,
+                    CompilationParser.FirstStringOf(xmlCue.Id),
+                );
+                cues.push(cue);
+            });
+        }
         return cues;
     }
 
     private static parseFromPlistCues(plistCues: any[]): ICue[] {
         const cues = new Array<ICue>();
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         plistCues.forEach((plistCue: any) => {
             //NOTE: the plist compilation type does not have all data corresponding to a Replayer compilation. Thus some of the information like the GUID, is just made up    .
             const cue = new Cue(
@@ -180,14 +187,17 @@ export default class CompilationParser {
         content: Buffer,
     ): Promise<ICompilation> {
         console.debug('CompilationParser::handleAsXmlCompilation');
-        return xml2js
-            .parseStringPromise(content /*, options */)
-            .then((result: any) => {
-                console.debug('Parsed XML compilation: ', result);
-                return CompilationParser.parseFromXmlCompilation(
-                    result.XmlCompilation,
-                );
-            });
+        return (
+            xml2js
+                .parseStringPromise(content /*, options */)
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .then((result: any) => {
+                    console.debug('Parsed XML compilation: ', result);
+                    return CompilationParser.parseFromXmlCompilation(
+                        result.XmlCompilation,
+                    );
+                })
+        );
     }
 
     /** Handles the given Buffer as having plist content and parses it into the compilation meta data
