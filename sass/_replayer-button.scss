@@ -24,37 +24,45 @@
  * Aligns all the buttons nicely when placed within a "block" 
  * layout with flex-grow (e.g. the cues button field)
  * Fixes the otherwise unequal gaps of right-edge buttons in a group.
+ * 
+ * Note: the gap CSS feature is not supported on all devices,
+ * notably not on older iOS devices with Safari below 14.1
+ * Thus, the gap feature is tested beforehand
 **************************************************************
 */
 
-/* First, for a gapped buttons group,  
- * remove the original bulma margin from the grouped buttons */
-.buttons.has-gap .button {
-    margin-bottom: 0;
-}
-.buttons.has-gap .button:not(:last-child):not(.is-fullwidth) {
-    margin-right: 0;
-}
-.buttons.has-gap:last-child {
-    margin-bottom: 0;
-}
+@supports ((gap: 10px) and (display: flex)) {
+    /* First, for a gapped buttons group,  
+     * remove the original bulma margin from the grouped buttons */
+    .buttons.has-gap .button {
+        margin-bottom: 0;
+    }
+    .buttons.has-gap .button:not(:last-child):not(.is-fullwidth) {
+        margin-right: 0;
+    }
+    .buttons.has-gap:last-child {
+        margin-bottom: 0;
+    }
 
-/* Then, instead of the margin, add a consistent gap 
- * of the same size between the grouped buttons
+    /* Then, instead of the margin, add a consistent gap 
+     * of the same size between the grouped buttons
      */
-.buttons.buttons.has-gap {
-    gap: 0.5rem;
+    .buttons.buttons.has-gap {
+        gap: 0.5rem;
+    }
 }
 
 /*************************************************************
  * Disabled buttons should have no background or border
  **************************************************************
 */
-.button[disabled], fieldset[disabled] .button,
-.button[disabled]:hover, fieldset[disabled] .button:hover  {
-  background-color: transparent;
-  border-color: transparent;
-  box-shadow: none;
+.button[disabled],
+fieldset[disabled] .button,
+.button[disabled]:hover,
+fieldset[disabled] .button:hover {
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
 }
 
 /*************************************************************
