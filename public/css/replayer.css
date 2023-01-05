@@ -10922,7 +10922,7 @@ when no content is shown */
  * Thus, the gap feature is tested beforehand
 **************************************************************
 */
-@supports (gap: 10px) and (display: flex) {
+@supports not ((-webkit-touch-callout: none) and (not (translate: none))) {
   /* First, for a gapped buttons group,  
    * remove the original bulma margin from the grouped buttons */
   .buttons.has-gap .button {

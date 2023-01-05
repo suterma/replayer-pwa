@@ -31,7 +31,11 @@
 **************************************************************
 */
 
-@supports ((gap: 10px) and (display: flex)) {
+// NOTE: @supports ((gap: 10px) and (display: flex)) seems not to work as 
+// the gap for flex and the gap for grid are not distinguishable from their name
+// See: https://ppuzio.medium.com/flexbox-gap-workaround-for-safari-on-ios-14-13-and-lower-ffcae589eb69
+@supports not ((-webkit-touch-callout: none) and (not (translate: none)))
+ {
     /* First, for a gapped buttons group,  
      * remove the original bulma margin from the grouped buttons */
     .buttons.has-gap .button {
