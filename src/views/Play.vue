@@ -33,15 +33,29 @@
             :offerDemo="!hasCompilation"
         />
     </div>
+    <div v-if="isEditMode && hasAvailableMedia">
+        <div class="has-text-centered block">
+            <CollapsibleButton
+                :class="{
+                    'is-nav': true,
+                }"
+                v-model="isMediaListExpanded"
+                title="Media List"
+                collapsedText="Click to expand / list media"
+                expandedText="Click to collapse"
+                ><span> Available media</span></CollapsibleButton
+            >
+        </div>
+
+        <div class="block" v-if="isMediaListExpanded">
+            <MediaList></MediaList>
+        </div>
+    </div>
     <div class="section pl-0 pr-0 block" v-if="!hasCompilation">
         <div class="content box">
             <WelcomeText />
         </div>
     </div>
-    <Experimental>
-        <hr />
-        <MediaList />
-    </Experimental>
 
     <!-- The bottom nav bar, used for the media player widget for the active track -->
     <nav
@@ -71,8 +85,10 @@ import { ICompilation, TrackDisplayMode } from '@/store/compilation-types';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import WelcomeText from '@/components/WelcomeText.vue';
 import CompilationLoader from '@/components/CompilationLoader.vue';
+import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
+import { MediaUrl } from '@/store/state-types';
 
 /** A view for playing an existing compilation */
 export default defineComponent({
@@ -84,12 +100,16 @@ export default defineComponent({
         MediaDropZone,
         CompilationLoader,
         WelcomeText,
+        CollapsibleButton,
         MediaList,
     },
     data() {
         return {
             /** Whether the media drop zone is displayed in the expanded state */
             isMediaDropZoneExpanded: false,
+
+            /** Whether the media list is displayed in the expanded state */
+            isMediaListExpanded: false,
         };
     },
     beforeMount() {
@@ -134,6 +154,15 @@ export default defineComponent({
         /** Whether the compilation is shown as editable */
         isEditMode(): boolean {
             return this.$route.name === 'Edit';
+        },
+        hasAvailableMedia(): boolean {
+            return this.mediaUrls.size > 0;
+        },
+        /** A dictionary of media URLs, representing playable media files
+         * @remarks the media file path is used as key, preventing duplicate files for the same content.
+         */
+        mediaUrls(): Map<string, MediaUrl> {
+            return this.$store.getters.mediaUrls as Map<string, MediaUrl>;
         },
     },
 });
