@@ -8,7 +8,7 @@ enum StorageKeys {
 }
 
 import { Compilation, ICompilation } from './compilation-types';
-import { get, set, clear, entries } from 'idb-keyval';
+import { get, set, clear, entries, del } from 'idb-keyval';
 import { MediaBlob, Settings } from './state-types';
 
 /** @devdoc Taken from
@@ -89,6 +89,14 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
             },
         );
     }
+
+    /** Removes the given media blob data from the persistent store
+     * @devdoc The indexed db is used for blob data, as recommended.
+     */
+    static removeMediaBlob(fileName: string): Promise<void> {
+        return del(StorageKeys.MEDIA_BLOB + fileName);
+    }
+
     /** Retrieves the compilation from the persistent store
      * @returns a properly typed Compilation object
      * */

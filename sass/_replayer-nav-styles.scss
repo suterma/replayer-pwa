@@ -63,10 +63,15 @@ nav .button:hover {
 }
 
 /*************************************************************
- * Specific styles for indicator buttons (similar to is-static)
+ * Specific styles for indicators / indicator buttons (similar to is-static)
  * These buttons are placeholders,
  * without action, to display a certain state
 **************************************************************/
+
+/* Indicator foreground color should be like normal text */
+.is-indicator {
+    color: $text;
+}
 
 /* Indicator buttons should have no border and no background */
 /* Their foreground color should be like normal text */

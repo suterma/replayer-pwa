@@ -24,6 +24,7 @@ export type Mutations<S = State> = {
     [MutationTypes.USE_APP_SHORTCUTS](state: State, usage: boolean): void;
     [MutationTypes.FINISH_PROGRESS](state: State): void;
     [MutationTypes.ADD_MEDIA_URL](state: S, mediaUrl: MediaUrl): void;
+    [MutationTypes.DISCARD_MEDIA_URL](state: S, mediaUrl: MediaUrl): void;
     [MutationTypes.ADD_DEFAULT_TRACK](state: S, resourceName: string): void;
     [MutationTypes.ADD_TRACK](state: S, track: ITrack): void;
     [MutationTypes.ADD_CUE](
@@ -110,7 +111,7 @@ export const mutations: MutationTree<State> & Mutations = {
         const message = state.errorMessageStack.pop();
         console.debug('POP_ERROR: ' + message);
     },
-    [MutationTypes.USE_APP_SHORTCUTS](state: State, usage: boolean){
+    [MutationTypes.USE_APP_SHORTCUTS](state: State, usage: boolean) {
         state.useAppShortcuts = usage;
         console.debug('USE_APP_SHORTCUTS', usage);
     },
@@ -144,6 +145,38 @@ export const mutations: MutationTree<State> & Mutations = {
         if (matchingTrack) {
             matchingTrack.Duration = null;
         }
+    },
+
+    [MutationTypes.DISCARD_MEDIA_URL](state: State, mediaUrl: MediaUrl): void {
+        console.debug('mutations::DISCARD_MEDIA_URL:mediaUrl', mediaUrl);
+
+        const matchingFile = state.mediaUrls.get(mediaUrl.resourceName);
+        if (matchingFile) {
+            console.debug(
+                `mutations::DISCARD_MEDIA_URL:removing matching item for key:${
+                    mediaUrl.resourceName
+                }, normalized: ${mediaUrl.resourceName.normalize()}`,
+            );
+            ObjectUrlHandler.revokeObjectURL(matchingFile.url);
+
+            console.debug(
+                `mutations::DISCARD_MEDIA_URL:localResourceName`,
+                mediaUrl.resourceName,
+            );
+            state.mediaUrls.delete(mediaUrl.resourceName);
+
+            //Discard the stored blob
+            PersistentStorage.removeMediaBlob(mediaUrl.resourceName);
+        }
+
+        //If any track used this media, remove the now stale duration for this track
+        const matchingTracks = state.compilation.Tracks.filter((t) =>
+            CompilationHandler.isMatchingResourceName(
+                t.Url,
+                mediaUrl.resourceName,
+            ),
+        );
+        matchingTracks.forEach((t) => (t.Duration = null));
     },
 
     [MutationTypes.ADD_DEFAULT_TRACK](state: State, resourceName: string) {

@@ -18,6 +18,10 @@ export enum MutationTypes {
      * @param url - The MediaUrl to use
      */
     ADD_MEDIA_URL = 'ADD_MEDIA_URL',
+    /** Discards a media blob URL from the store.
+     * @param url - The MediaUrl to use
+     */
+    DISCARD_MEDIA_URL = 'DISCARD_MEDIA_URL',
     /** Adds a new default track for the given file name or media URL to the compilation.
      * @remarks Track properties are derived from the given file name or url
      * @remarks The new track is made the selected track

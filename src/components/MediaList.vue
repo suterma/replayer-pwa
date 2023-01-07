@@ -56,9 +56,8 @@ export default defineComponent({
             this.$store.commit(MutationTypes.ADD_DEFAULT_TRACK, source);
         },
         discard(mediaUrl: MediaUrl): void {
-            const source = mediaUrl.source;
-            console.debug('MediaList::discard:source', source);
-            this.$store.commit(MutationTypes.DISCARD_MEDIA_URL, source);
+            console.debug('MediaList::discard:source', mediaUrl);
+            this.$store.commit(MutationTypes.DISCARD_MEDIA_URL, mediaUrl);
         },
     },
     computed: {
