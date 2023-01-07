@@ -44,7 +44,7 @@
                 'is-clickable': isTrackLoaded,
                 'has-cursor-not-allowed': !isTrackLoaded,
             }"
-            v-on="isTrackLoaded ? { click: skipToPlayPause } : null"
+            @click="skipToPlayPause"
         >
             <template v-slot:left-start>
                 <div class="level-item is-narrow">
@@ -608,15 +608,19 @@ export default defineComponent({
         toNextCue() {
             document.dispatchEvent(new Event(Replayer.TO_NEXT_CUE));
         },
-        /** Skips to this track
-         * @remarks If the track is not yet active, tries to activate the track (which will autoplay).
+        /** Skips to this track (if loaded)
+         * @remarks If the track is not loaded, does nothing.
+         * If the track is not yet the active track, tries to activate the track (which will autoplay).
          * If it's the active track, just toggles play/pause
+         * @devdoc Conditional event registration inside the template did not work.
          */
         skipToPlayPause(): void {
-            if (!this.isActiveTrack) {
-                this.trackPlay();
-            } else {
-                this.togglePlayback();
+            if (this.isTrackLoaded) {
+                if (!this.isActiveTrack) {
+                    this.trackPlay();
+                } else {
+                    this.togglePlayback();
+                }
             }
         },
         /** Activates the wake lock (if enabled in settings)
