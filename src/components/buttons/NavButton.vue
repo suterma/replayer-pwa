@@ -1,6 +1,7 @@
 <template>
     <button class="button is-nav" :title="title" tabindex="0">
         <BaseIcon :path="iconPath" :class="iconClass" />
+        <slot></slot>
     </button>
 </template>
 

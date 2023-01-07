@@ -6,7 +6,8 @@
         :title="titleText"
         :iconPath="mdiChevronDown"
         @click="toggleExpanded()"
-    />
+        ><slot></slot
+    ></NavButton>
 </template>
 
 <script lang="ts">
