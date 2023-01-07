@@ -133,6 +133,16 @@ export class MediaUrl {
     resourceName: string;
     /** The online URL, or an object URL representing the playable blob */
     url: string;
+
+    /** Gets the source of the media.
+     * For online URL's: the full URL (from the url property);
+     * For files: the full name (from the resourceName property) */
+    public get source(): string {
+        if (FileHandler.isValidHttpUrl(this.url)) {
+            return this.url;
+        }
+        return this.resourceName;
+    }
 }
 
 /** @class Implements a named media blob
