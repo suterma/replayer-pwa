@@ -1,11 +1,17 @@
 <template>
     <!-- align like a bulma level, vertically centered -->
-    <p class="control is-flex is-align-items-center" :title="indication">
+    <p class="control is-flex is-align-items-center" :title="mediaSource">
         <span class="button is-indicator">
             <BaseIcon :path="iconPath" />
         </span>
-        <span class="has-text-break-word">{{ indication }} </span>
-        <span class="has-text-break-word">
+        <span class="is-indicator is-hidden-mobile"
+            >{{ typeText }}:&nbsp;
+        </span>
+        <span class="media-source has-text-break-word is-indicator"
+            >{{ mediaSource }}
+        </span>
+
+        <span class="has-text-break-word is-indicator">
             <!-- A slot for an adornment -->
             <slot></slot>
         </span>
@@ -17,6 +23,7 @@ import { defineComponent } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import FileHandler from '@/store/filehandler';
 import { mdiMusicCircleOutline, mdiMusicNote } from '@mdi/js';
+import { MediaUrl } from '@/store/state-types';
 
 /** A display for the media source of a track
  * @remarks Includes a slot at the end of the indicative text, for an adornment icon
@@ -26,10 +33,21 @@ export default defineComponent({
     name: 'MediaSourceIndicator',
     components: { BaseIcon },
     props: {
-        /** The source of the media. A file or an URL */
+        /** The source of the media. A path to a file or an URL
+         * @remarks Alternatively, the mediaUrl property may be used
+         */
         source: {
             type: String,
             default: '',
+            required: false,
+        },
+
+        /** The media URL
+         * @remarks Alternatively, the source property may be used
+         */
+        mediaUrl: {
+            type: MediaUrl,
+            default: null,
             required: false,
         },
     },
@@ -41,12 +59,12 @@ export default defineComponent({
         };
     },
     computed: {
-        indication(): string {
+        typeText(): string {
             if (this.isUrl) {
-                return 'URL: ' + this.source;
+                return 'URL';
             }
 
-            return 'File: ' + this.source;
+            return 'File';
         },
         iconPath(): string {
             if (this.isUrl) {
@@ -56,7 +74,15 @@ export default defineComponent({
             return mdiMusicNote;
         },
         isUrl() {
-            return FileHandler.isValidHttpUrl(this.source);
+            return FileHandler.isValidHttpUrl(this.mediaSource);
+        },
+        /** Arbitration of the source provided */
+        mediaSource(): string {
+            if (this.source) {
+                return this.source;
+            } else {
+                return this.mediaUrl?.source;
+            }
         },
     },
 });
