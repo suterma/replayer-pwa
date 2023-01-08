@@ -96,10 +96,15 @@ export const actions: ActionTree<State, State> & Actions = {
                     mediaBlob.fileName,
                 );
                 const blobSize = mediaBlob.blob.size;
-                const mediaType = mediaBlob.blob.type;                
+                const mediaType = mediaBlob.blob.type;
                 commit(
                     MutationTypes.ADD_MEDIA_URL,
-                    new MediaUrl(mediaBlob.fileName, objectUrl, blobSize, mediaType),
+                    new MediaUrl(
+                        mediaBlob.fileName,
+                        objectUrl,
+                        blobSize,
+                        mediaType,
+                    ),
                 );
                 //Store persistently, but after committing, to keep the process faster
                 PersistentStorage.storeMediaBlob(mediaBlob);
@@ -133,8 +138,10 @@ export const actions: ActionTree<State, State> & Actions = {
             //TODO first get the mime type
             //If it's a package, then try to actually fetch and fully load it
             //If it's a media file, then just use the URL for a new track
+            // HINT: If the origin server doesn’t include the
+            // Access-Control-Allow-Origin response header, the request will fail
             fetch(url, {
-                mode: 'no-cors', // to allow any accessible resource
+                mode: 'no-cors', // to allow CORS handling via an opaque response
                 method: 'GET',
             })
                 .then((response) => {
@@ -149,11 +156,18 @@ export const actions: ActionTree<State, State> & Actions = {
                         finalUrl = new URL(url);
                     }
 
-                    if (!response.ok) {
+                    //console.debug('response: ', response);
+                    if (response.status === 0 /* opaque */) {
                         return abort(
                             commit,
                             reject,
-                            `Network response while fetching URL '${url}' was not OK`,
+                            `Fetch has failed for URL: '${url}' due to disallowed CORS by the server. Please manually download the resource and load it from the file system.`,
+                        );
+                    } else if (!response.ok) {
+                        return abort(
+                            commit,
+                            reject,
+                            `Network response while fetching URL '${url}' was not 200 OK, but: '${response.status} ${response.statusText}'`,
                         );
                     }
 
@@ -200,7 +214,7 @@ export const actions: ActionTree<State, State> & Actions = {
                     return abort(
                         commit,
                         reject,
-                        `Fetch has failed for URL: '${url}' with the message: '${errorMessage}'`,
+                        `Fetch has failed for URL: '${url}' with the message: '${errorMessage}'. Probably the server does not allow CORS. If this is the case, manually download the resource and load it from the file system.`,
                     );
                 });
         });
@@ -243,10 +257,9 @@ export const actions: ActionTree<State, State> & Actions = {
         return new Promise((resolve, reject) => {
             progress(
                 commit,
-                `Loading file '${file.name}' '${file.type}' (${
-                    FileHandler.AsMegabytes(
-                    file.size)
-                }MB)`,
+                `Loading file '${file.name}' '${
+                    file.type
+                }' (${FileHandler.AsMegabytes(file.size)}MB)`,
             );
             if (FileHandler.isSupportedPackageFile(file)) {
                 // 1) read the Blob

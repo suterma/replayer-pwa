@@ -21,12 +21,19 @@ export default defineComponent({
 
     methods: {
         loadDemo() {
-            const url =
-                location.protocol +
-                '//' +
-                location.host +
-                location.pathname +
-                'demo-compilation-featuring-lidija-roos.rez';
+            // const url =
+            //     location.protocol +
+            //     '//' +
+            //     location.host +
+            //     location.pathname +
+            //     'demo-compilation-featuring-lidija-roos.rez';
+            // console.debug('loadDemo:', url);
+
+            // const url =
+            //     'https://web-devel.replayer.app/demo-compilation-featuring-lidija-roos.rez';
+
+            // https://web-devel.replayer.app/#/play?package=https://web-devel.replayer.app/music/large.rez
+            const url = 'https://web-devel.replayer.app/music/large.rez';
             console.debug('loadDemo:', url);
 
             this.$store.dispatch(ActionTypes.LOAD_FROM_URL, url);
