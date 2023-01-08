@@ -16,7 +16,7 @@
                     (showType && mediaUrl?.mediaType)
                 "
             >
-                <span class="has-opacity-half is-size-7">
+                <span class="has-opacity-half is-size-7 is-hidden-mobile">
                     <span class="is-family-monospace">
                         <span>(</span>
                         <span v-if="mediaUrlSizeInMegaByte"
