@@ -29,7 +29,7 @@
             </p>
             <hr />
         </div>
-        <CollapsiblePanel placeholderText="API demos">
+        <CollapsiblePanel>
             <template #caption><h1 class="title is-3">API Demos</h1></template>
             <div class="contentx">
                 <div class="block">
@@ -124,7 +124,7 @@
         </CollapsiblePanel>
         <hr />
 
-        <CollapsiblePanel placeholderText="API demos">
+        <CollapsiblePanel>
             <template #caption><h1 class="title">Credits</h1></template>
             <div class="content">
                 <ul>

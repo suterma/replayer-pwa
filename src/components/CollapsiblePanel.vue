@@ -1,16 +1,12 @@
 <template>
     <CollapsibleButton
-        :class="{
-            'is-nav': true,
-        }"
+        class="is-nav"
         v-model="isExpanded"
-        title=" "
         collapsedText="Click to expand "
         expandedText="Click to collapse"
         ><span><slot name="caption"></slot></span
     ></CollapsibleButton>
-
-    <template v-if="isExpanded"> <slot></slot></template>
+    <template v-if="isExpanded"><slot></slot></template>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
@@ -29,6 +25,5 @@ export default defineComponent({
             isExpanded: false,
         };
     },
-    computed: {},
 });
 </script>

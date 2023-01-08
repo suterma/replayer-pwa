@@ -33,24 +33,19 @@
             :offerDemo="!hasCompilation"
         />
     </div>
-    <div v-if="isEditMode && hasAvailableMedia">
+    <template v-if="isEditMode && hasAvailableMedia">
         <div class="has-text-centered block">
-            <CollapsibleButton
-                :class="{
-                    'is-nav': true,
-                }"
-                v-model="isMediaListExpanded"
-                title="Media List"
-                collapsedText="Click to expand / list media"
-                expandedText="Click to collapse"
-                ><span> Available media</span></CollapsibleButton
-            >
-        </div>
+            <CollapsiblePanel>
+                <template #caption>
+                    <span>Available media</span>
+                </template>
 
-        <div class="block" v-if="isMediaListExpanded">
-            <MediaList></MediaList>
+                <div class="block mt-5">
+                    <MediaList></MediaList>
+                </div>
+            </CollapsiblePanel>
         </div>
-    </div>
+    </template>
     <div class="section pl-0 pr-0 block" v-if="!hasCompilation">
         <div class="content box">
             <WelcomeText />
@@ -85,7 +80,7 @@ import { ICompilation, TrackDisplayMode } from '@/store/compilation-types';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import WelcomeText from '@/components/WelcomeText.vue';
 import CompilationLoader from '@/components/CompilationLoader.vue';
-import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
+import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
 import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
 import { MediaUrl } from '@/store/state-types';
@@ -100,16 +95,13 @@ export default defineComponent({
         MediaDropZone,
         CompilationLoader,
         WelcomeText,
-        CollapsibleButton,
+        CollapsiblePanel,
         MediaList,
     },
     data() {
         return {
             /** Whether the media drop zone is displayed in the expanded state */
             isMediaDropZoneExpanded: false,
-
-            /** Whether the media list is displayed in the expanded state */
-            isMediaListExpanded: false,
         };
     },
     beforeMount() {
