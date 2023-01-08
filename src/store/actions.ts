@@ -95,9 +95,11 @@ export const actions: ActionTree<State, State> & Actions = {
                     mediaBlob.blob,
                     mediaBlob.fileName,
                 );
+                const blobSize = mediaBlob.blob.size;
+                const mediaType = mediaBlob.blob.type;                
                 commit(
                     MutationTypes.ADD_MEDIA_URL,
-                    new MediaUrl(mediaBlob.fileName, objectUrl),
+                    new MediaUrl(mediaBlob.fileName, objectUrl, blobSize, mediaType),
                 );
                 //Store persistently, but after committing, to keep the process faster
                 PersistentStorage.storeMediaBlob(mediaBlob);
@@ -224,7 +226,7 @@ export const actions: ActionTree<State, State> & Actions = {
 
             commit(
                 MutationTypes.ADD_MEDIA_URL,
-                new MediaUrl(localResourceName, url),
+                new MediaUrl(localResourceName, url, null, null),
             );
             resolve(localResourceName);
 
@@ -242,7 +244,8 @@ export const actions: ActionTree<State, State> & Actions = {
             progress(
                 commit,
                 `Loading file '${file.name}' '${file.type}' (${
-                    file.size / 1000000
+                    FileHandler.AsMegabytes(
+                    file.size)
                 }MB)`,
             );
             if (FileHandler.isSupportedPackageFile(file)) {

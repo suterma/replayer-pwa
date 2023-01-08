@@ -5,6 +5,16 @@ import { RezMimeTypes } from './state-types';
  * originating both from the local file system or an online resource.
  */
 export default class FileHandler {
+    /** Get the size in MB, rounded to one decimal place */
+    static AsMegabytes(sizeInBytes: number | null): number | null {
+        if (sizeInBytes === 0) {
+            return sizeInBytes;
+        } else if (sizeInBytes) {
+            const size = sizeInBytes / FileHandler.BytesPerMegaByte;
+            return Math.round(size * 10) / 10;
+        }
+        return null;
+    }
     static acceptedFileList =
         '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.bplist';
 
@@ -395,4 +405,6 @@ export default class FileHandler {
             parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:'
         );
     }
+
+    public static BytesPerMegaByte = 1024 * 1024;
 }

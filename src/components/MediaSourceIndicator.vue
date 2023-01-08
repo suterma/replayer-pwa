@@ -9,8 +9,32 @@
         </span>
         <span class="media-source has-text-break-word is-indicator"
             >{{ mediaSource }}
-        </span>
 
+            <template
+                v-if="
+                    (showSize && mediaUrlSizeInMegaByte) ||
+                    (showType && mediaUrl?.mediaType)
+                "
+            >
+                <span class="has-opacity-half is-size-7">
+                    <span class="is-family-monospace">
+                        <span>(</span>
+                        <span v-if="mediaUrlSizeInMegaByte"
+                            >{{ mediaUrlSizeInMegaByte }}
+                        </span>
+                        <span>&nbsp;MB</span>
+                        <span
+                            v-if="mediaUrlSizeInMegaByte && mediaUrl?.mediaType"
+                            >,&nbsp;</span
+                        >
+                        <span v-if="mediaUrl?.mediaType"
+                            >{{ mediaUrl?.mediaType }}
+                        </span>
+                        <span>)</span>
+                    </span>
+                </span>
+            </template>
+        </span>
         <span class="has-text-break-word is-indicator">
             <!-- A slot for an adornment -->
             <slot></slot>
@@ -50,6 +74,16 @@ export default defineComponent({
             default: null,
             required: false,
         },
+        showSize: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+        showType: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
     },
     data() {
         return {
@@ -83,6 +117,10 @@ export default defineComponent({
             } else {
                 return this.mediaUrl?.source;
             }
+        },
+        /** Get the content size in MB, rounded to one decimal place */
+        mediaUrlSizeInMegaByte(): number | null {
+            return FileHandler.AsMegabytes(this.mediaUrl?.size);
         },
     },
 });

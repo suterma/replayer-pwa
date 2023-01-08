@@ -12,7 +12,7 @@
             >
                 <!-- <BaseIcon v-once :path="mdiMusicNotePlus" /> -->
                 <span>Use</span>
-                <MediaSourceIndicator :mediaUrl="mediaUrl">
+                <MediaSourceIndicator :mediaUrl="mediaUrl" show-size show-type>
                 </MediaSourceIndicator>
             </button>
         </p>
@@ -62,8 +62,9 @@ export default defineComponent({
     },
     computed: {
         /** A dictionary of media URLs, representing playable media files
-         * @remarks the media file path is used as key, preventing duplicate files for the same content.
-         */
+         * @remarks A name for the resource is used as key, preventing duplicate files for the same content.
+         * For online URL's: a simplified resource name, derived from the URL;
+         * For files: the full name (including a possible path) of the original media file (from the disk or from within a REZ/ZIP-file) */
         mediaUrls(): Map<string, MediaUrl> {
             return this.$store.getters.mediaUrls as Map<string, MediaUrl>;
         },

@@ -7,9 +7,10 @@ interface IState {
      */
     compilation: ICompilation;
 
-    /** A dictionary of media URLs, representing playable media files
-     * @remarks the media file path is used as key, preventing duplicate files for the same content.
-     */
+    /** A dictionary of media URLs, representing playable media content
+     * @remarks A name for the resource is used as key, preventing duplicate files for the same content.
+     * For online URL's: a simplified resource name, derived from the URL;
+     * For files: the full name (including a possible path) of the original media file (from the disk or from within a REZ/ZIP-file) */
     mediaUrls: Map<string, MediaUrl>;
 
     /** The currently selected cue Id, if any. This is also used to determine the currently active track.

@@ -115,7 +115,7 @@ export class MediaUrl {
     static FromOnlineUrl(url: string): MediaUrl {
         const finalUrl = new URL(url);
         const localResourceName = FileHandler.getLocalResourceName(finalUrl);
-        return new MediaUrl(localResourceName, url);
+        return new MediaUrl(localResourceName, url, null, null);
     }
     /** @constructor
      * @param {string} resourceName - A name for the resource.
@@ -123,9 +123,16 @@ export class MediaUrl {
      * For files: the full name (including a possible path) of the original media file (from the disk or from within a REZ/ZIP-file)
      * @param {string} url - The online URL, or an object URL representing the playable blob
      */
-    constructor(resourceName: string, url: string) {
+    constructor(
+        resourceName: string,
+        url: string,
+        size: number | null,
+        mediaType: string | null,
+    ) {
         this.resourceName = resourceName;
         this.url = url;
+        this.size = size;
+        this.mediaType = mediaType;
     }
     /** A name for the resource.
      * For online URL's: a simplified resource name, derived from the URL;
@@ -133,6 +140,16 @@ export class MediaUrl {
     resourceName: string;
     /** The online URL, or an object URL representing the playable blob */
     url: string;
+
+    /** The size of the content in bytes
+     * @remarks This is typically only used for media files from the disk or from within a REZ/ZIP-file.
+     */
+    size: number | null;
+
+    /** The MIME type of the content
+     * @remarks This is typically only used for media files from the disk or from within a REZ/ZIP-file.
+     */
+    mediaType: string | null;
 
     /** Gets the source of the media.
      * For online URL's: the full URL (from the url property);

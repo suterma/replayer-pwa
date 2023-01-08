@@ -105,7 +105,12 @@ function retrieveState(store: Store) {
                                     );
                                 store.commit(
                                     MutationTypes.ADD_MEDIA_URL,
-                                    new MediaUrl(mediaBlob.fileName, objectUrl),
+                                    new MediaUrl(
+                                        mediaBlob.fileName,
+                                        objectUrl,
+                                        mediaBlob.blob.size,
+                                        mediaBlob.blob.type,
+                                    ),
                                 );
                             }, (index + 1) * 150);
                         });
