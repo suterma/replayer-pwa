@@ -183,9 +183,7 @@ export default defineComponent({
         },
     },
     data() {
-        return {
-            cueData: { ...this.cue }, // clone the object
-
+        return {         
             /** Icons from @mdi/js */
             mdiTrashCanOutline: mdiTrashCanOutline,
         };
@@ -200,10 +198,9 @@ export default defineComponent({
         /** Updates the set cue description */
         updateDescription(event: Event) {
             const cueId = this.cue.Id;
-            const shortcut = this.cueData.Shortcut;
-            const time = this.cueData.Time;
+            const shortcut = this.cue.Shortcut;
+            const time = this.cue.Time;
             const description = (event.target as HTMLInputElement).value;
-            this.cueData.Description = description;
             this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
                 cueId,
                 description,
@@ -219,10 +216,8 @@ export default defineComponent({
         /** Updates the set cue time */
         updateCueTime(time: number | null) {
             const cueId = this.cue.Id;
-            const shortcut = this.cueData.Shortcut;
-            const description = this.cueData.Description;
-
-            this.cueData.Time = time;
+            const shortcut = this.cue.Shortcut;
+            const description = this.cue.Description;
             this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
                 cueId,
                 description,
@@ -244,9 +239,8 @@ export default defineComponent({
             ) {
                 const time = CompilationHandler.roundTime(this.currentSeconds);
                 const cueId = this.cue.Id;
-                const shortcut = this.cueData.Shortcut;
-                const description = this.cueData.Description;
-                this.cueData.Time = time;
+                const shortcut = this.cue.Shortcut;
+                const description = this.cue.Description;
                 this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
                     cueId,
                     description,
@@ -258,10 +252,9 @@ export default defineComponent({
         /** Updates the set cue shortcut */
         updateShortcut(event: Event) {
             const cueId = this.cue.Id;
-            const description = this.cueData.Description;
-            const time = this.cueData.Time;
+            const description = this.cue.Description;
+            const time = this.cue.Time;
             const shortcut = (event.target as HTMLInputElement).value;
-            this.cueData.Shortcut = shortcut;
             this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
                 cueId,
                 description,

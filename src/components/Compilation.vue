@@ -346,10 +346,9 @@ export default defineComponent({
         selectedCueId(): string {
             return this.$store.getters.selectedCueId as string;
         },
+        /** Returns all cues from all tracks in the current compilation */
         allCues(): Array<ICue> {
-            const cues = new Array<ICue>();
-            this.tracks?.forEach((track) => cues.push(...track.Cues));
-            return cues;
+            return CompilationHandler.getAllCues(this.tracks);
         },
         hasCompilation(): boolean {
             return this.$store.getters.hasCompilation;

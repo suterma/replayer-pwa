@@ -137,6 +137,19 @@ export default class CompilationHandler {
         return 1;
     }
 
+    /** Gets all cues of the given tracks in a flat array, or an empty array if there are none
+     * @param tracks - The tracks to work on.
+     */
+    static getAllCues(tracks: ITrack[] | undefined): ICue[] {
+        const cues = new Array<ICue>();
+        if (tracks) {
+            tracks.forEach((track) =>
+                track.Cues.forEach((cue) => cues.push(cue)),
+            );
+        }
+        return cues;
+    }
+
     /** Rounds the given time to the Replayer default precision.
      * @remarks The time will be rounded to two decimal digits after the point (1/100th of a second)
      */
@@ -162,7 +175,7 @@ export default class CompilationHandler {
     }
 
     /** Updates (recalculates) the durations of the given cues, by using the track duration for the last cue.
-     * @remarks Not the following:
+     * @remarks Note the following:
      * - the cues with a null time are not used
      * - the track duration is larger than largest cue time
      */
@@ -177,9 +190,8 @@ export default class CompilationHandler {
         });
         if (originalCues && originalCues.length > 0) {
             //Create a shallow, backward sorted copy of the cue list, to iterate through, and setting the duration of the cue objects
-            const sortedBackwards = CompilationHandler.sort([
-                ...originalCues,
-            ]).reverse();
+            const sortedBackwards =
+                CompilationHandler.sort(originalCues).reverse();
 
             let lastTime: number | null = trackDuration;
 
@@ -344,24 +356,29 @@ export default class CompilationHandler {
         sortFileName: string | undefined,
     ): MediaBlob[] {
         if (sortFileName) {
-            const sortedArray = [
+            const sortedArray =
                 /* the first */
-                ...mediaBlobs.filter(({ fileName }) =>
-                    CompilationHandler.isMatchingResourceName(
-                        CompilationHandler.getLazyFileName(fileName),
-                        CompilationHandler.getLazyFileName(sortFileName),
-                    ),
-                ),
-                /* the rest */
-                ...mediaBlobs.filter(
-                    ({ fileName }) =>
-                        !CompilationHandler.isMatchingResourceName(
+                mediaBlobs
+                    .filter(({ fileName }) =>
+                        CompilationHandler.isMatchingResourceName(
                             CompilationHandler.getLazyFileName(fileName),
                             CompilationHandler.getLazyFileName(sortFileName),
                         ),
-                ),
-            ];
-
+                    )
+                    .concat(
+                        /* the rest */
+                        mediaBlobs.filter(
+                            ({ fileName }) =>
+                                !CompilationHandler.isMatchingResourceName(
+                                    CompilationHandler.getLazyFileName(
+                                        fileName,
+                                    ),
+                                    CompilationHandler.getLazyFileName(
+                                        sortFileName,
+                                    ),
+                                ),
+                        ),
+                    );
             return sortedArray;
         }
         return mediaBlobs;

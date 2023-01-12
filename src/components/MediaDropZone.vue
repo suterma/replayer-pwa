@@ -217,10 +217,8 @@ export default defineComponent({
             (this.$refs.file as HTMLInputElement).click();
         },
         onChange() {
-            this.filelist = [
-                ...((this.$refs.file as HTMLInputElement)
-                    .files as unknown as File[]),
-            ];
+            this.filelist = (this.$refs.file as HTMLInputElement)
+                .files as unknown as File[];
 
             this.loadMediaFiles();
         },
