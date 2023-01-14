@@ -9,11 +9,8 @@ The URL input is wider, because it should be able to easily deal with lengthy in
             <!-- @keydown.enter handler to have it working with the enter key, too -->
             <label
                 for="assetsFieldHandle"
-                class="is-clickable"
+                class="is-clickable box button"
                 :class="{
-                    box: true,
-                    button: true,
-
                     'has-background-info-dark': isDraggingOver,
                     'has-border-info': isDraggingOver,
                     'is-loading': isLoadingFromFile,
@@ -85,9 +82,8 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                 </p>
                 <Experimental class="control">
                     <button
+                        class="button is-primary"
                         :class="{
-                            button: true,
-                            'is-primary': true,
                             'is-loading': isLoadingFromUrl,
                         }"
                         @click="fetchUrl"
@@ -98,9 +94,8 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                 <div class="control">
                     <button
                         :disabled="!url"
+                        class="button is-primary"
                         :class="{
-                            button: true,
-                            'is-primary': true,
                             'is-loading': isUsingMediaFromUrl,
                         }"
                         :title="replaceInfo"
@@ -185,23 +180,19 @@ export default defineComponent({
         },
     },
     emits: ['update:is-expanded'],
-    delimiters: ['${', '}'], // Avoid Twig conflicts
     data() {
         return {
-            /** Store our uploaded files
-             */
-            filelist: new Array<File>(),
             /** Indicates whether there is currently a dragging operation ongoing */
             isDraggingOver: false,
 
-            /** The URL from whitch the media can be fetched from */
+            /** The URL from which the media can be fetched from */
             url: '',
 
-            /** Whether this component is curretly loading data from an URL */
+            /** Whether this component is currently loading data from an URL */
             isLoadingFromUrl: false,
-            /** Whether this component is curretly using media data from an URL */
+            /** Whether this component is currently using media data from an URL */
             isUsingMediaFromUrl: false,
-            /** Whether this component is curretly loading data from a file */
+            /** Whether this component is currently loading data from a file */
             isLoadingFromFile: false,
 
             /** Icons from @mdi/js */
@@ -215,17 +206,14 @@ export default defineComponent({
             (this.$refs.file as HTMLInputElement).click();
         },
         onChange() {
-            this.filelist = (this.$refs.file as HTMLInputElement)
+            const files = (this.$refs.file as HTMLInputElement)
                 .files as unknown as File[];
-
-            this.loadMediaFiles();
+            this.loadMediaFiles(files);
         },
         expand() {
-            console.debug('MediaDropZone::expand');
             this.$emit('update:is-expanded', true);
         },
         collapse() {
-            console.debug('MediaDropZone::collapse');
             this.$emit('update:is-expanded', false);
         },
         /** Checks whether a file is supported by examining mime type and/or ending */
@@ -239,17 +227,16 @@ export default defineComponent({
 
         /** Immediately loads all available media files by loading their content
          */
-        async loadMediaFiles(): Promise<void> {
+        async loadMediaFiles(files: File[]): Promise<void> {
             console.debug('MediaDropZone::loadMediaFiles');
-
-            const files = Array.from(this.filelist);
-            files.forEach((file) => {
+            // Array is required to use the forEach and other functions
+            const filesArray = Array.from(files);
+            filesArray.forEach((file) => {
                 this.loadMediaFile(file);
-                this.filelist.pop();
             });
 
             console.table(
-                files.map(function (file) {
+                filesArray.map(function (file) {
                     return {
                         name: file.name,
                         size: file.size,
@@ -258,12 +245,14 @@ export default defineComponent({
                 }),
             );
 
-            //If a single package or complilation has been loaded, the intention was most likely to play it
+            //If a single package or compilation has been loaded, the intention was most likely to play it
             if (
-                files.length === 1 &&
-                files[0] &&
-                (FileHandler.isSupportedPackageFile(files[0]) ||
-                    FileHandler.isSupportedCompilationFileName(files[0].name))
+                filesArray.length === 1 &&
+                filesArray[0] &&
+                (FileHandler.isSupportedPackageFile(filesArray[0]) ||
+                    FileHandler.isSupportedCompilationFileName(
+                        filesArray[0].name,
+                    ))
             ) {
                 this.$router.push('play');
             } else {
@@ -273,7 +262,7 @@ export default defineComponent({
         },
 
         /** Loads a single media file by loading it's content
-         * @param {file} - Any supported file (package, compilation or media)
+         * @param {File} file - Any supported file (package, compilation or media)
          */
         async loadMediaFile(file: File): Promise<void> {
             console.debug('MediaDropZone::loadMediaFile:file.name', file.name);
@@ -303,10 +292,6 @@ export default defineComponent({
                     this.isLoadingFromFile = false;
                     this.collapse(); //This component
                 });
-        },
-
-        remove(i: number) {
-            this.filelist.splice(i, 1);
         },
         dragover(event: DragEvent) {
             event.preventDefault();
