@@ -53,7 +53,6 @@
                                         v-slot="{ clickRef }"
                                     >
                                         <button
-                                            type="submit"
                                             v-focus
                                             class="button is-success"
                                             :ref="clickRef"

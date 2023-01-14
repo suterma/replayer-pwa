@@ -116,7 +116,6 @@
                                     v-slot="{ clickRef }"
                                 >
                                     <button
-                                        type="submit"
                                         class="button is-success"
                                         :ref="clickRef"
                                         :disabled="!compilationTitle"

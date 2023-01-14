@@ -96,7 +96,6 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                     </button>
                 </Experimental>
                 <div class="control">
-                    <!-- Use as default, thus set as the submit button -->
                     <button
                         :disabled="!url"
                         :class="{
@@ -105,7 +104,6 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                             'is-loading': isUsingMediaFromUrl,
                         }"
                         :title="replaceInfo"
-                        type="submit"
                         @click="useMediaUrl"
                     >
                         <template v-if="isReplacementMode">
