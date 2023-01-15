@@ -166,3 +166,19 @@ $player-playing-color: $success;
     //background-color: $player-playing-color;
     color: $player-playing-color;
 }
+
+
+/*************************************************************
+ * Track styles 
+ * These styles are based on the slate bulmaswatch theme and borrow variables from there
+**************************************************************
+
+/** Specific styles for active tracks, to have them more visually outstanding
+ * The active track should look like the bottom nav player widget
+ * Because outlines can not have a radius, a hard shadow is used 
+ */
+.track.is-active-track {
+    background-color: $button-background-color !important; /* similar to has-background-grey-dark */
+    box-shadow: 0 0 0 0.5em $button-background-color;
+    border-radius: $radius;    
+    }

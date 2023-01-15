@@ -51,26 +51,6 @@
             <WelcomeText />
         </div>
     </div>
-
-    <!-- The bottom nav bar, used for the media player widget for the active track -->
-    <nav
-        class="navbar is-fixed-bottom"
-        role="form"
-        id="media-player"
-        aria-label="media player"
-    ></nav>
-
-    <!-- A placeholder that invisibly extends the bottom for the experimental content in the fixed bottom bar -->
-    <Experimental>
-        <div style="height: 224px"></div>
-    </Experimental>
-    <!-- A placeholder that invisibly extends the track list bottom,
-      taking into account the player widget 
-      Note: this extension is intentionally not set on the body or html, because
-      the corresponding navbar is only shown in this view, not generally
-      for the whole application.
-    -->
-    <div class="has-player-navbar-fixed-bottom"></div>
 </template>
 
 <script lang="ts">

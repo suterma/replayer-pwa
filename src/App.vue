@@ -19,6 +19,23 @@
         <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
     </section>
 
+    <!-- The bottom nav bar, used for the media player widget for the active track -->
+    <nav
+        class="navbar is-fixed-bottom"
+        role="form"
+        id="media-player"
+        aria-label="media player"
+    ></nav>
+
+    <!-- A placeholder that invisibly extends the view bottom,
+      taking into account the player widget 
+    -->
+    <div class="has-player-navbar-fixed-bottom"></div>
+    <!-- A placeholder that invisibly extends the bottom for the experimental content in the fixed bottom bar -->
+    <Experimental>
+        <div style="height: 224px"></div>
+    </Experimental>
+
     <!-- The ad is only used for print outputs, to allow a printout recipient to explore the app. -->
     <ReplayerAd class="is-print-only is-together-print is-scaled-50" />
 </template>

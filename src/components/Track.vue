@@ -2,7 +2,11 @@
     <!-- Have some more margin to keep the editing track separate from the other, listed tracks -->
     <div
         class="track is-together-print"
-        :class="{ 'mb-5': isEditable && isExpanded }"
+        :class="{
+            'mb-5': isEditable && isExpanded,
+            'is-active-track': isActiveTrack,
+            'is-editable': isEditable,
+        }"
     >
         <!-- Handle all relevant events here
     Note: A check for the active track is done in the handler methods. 
@@ -88,7 +92,7 @@
 
         <!-- The buttons field (for a single track in play mode) -->
         <Transition name="item">
-            <div v-if="isPlayable && isOnlyTrack" class="levels">
+            <div v-if="isPlayable && isOnlyTrack && hasCues" class="levels">
                 <CueButtonsField
                     :currentSeconds="currentSeconds"
                     :isTrackPlaying="isPlaying"
@@ -938,6 +942,15 @@ export default defineComponent({
 
         allActiveTrackCueIds(): string[] {
             return this.cues?.map((cue) => cue.Id) ?? [];
+        },
+
+        /** Whether this track has any cue at all */
+        hasCues(): boolean {
+            return (
+                this.cues !== undefined &&
+                this.cues.length !== undefined &&
+                this.cues.length > 0
+            );
         },
         /** Gets the currently playing cue, regardless whether it is selected, if available
          */

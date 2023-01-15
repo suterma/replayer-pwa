@@ -10795,6 +10795,21 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 
 /*************************************************************
+ * Track styles 
+ * These styles are based on the slate bulmaswatch theme and borrow variables from there
+**************************************************************
+
+/** Specific styles for active tracks, to have them more visually outstanding
+ * The active track should look like the bottom nav player widget
+ * Because outlines can not have a radius, a hard shadow is used 
+ */
+.track.is-active-track {
+  background-color: #3a3f44 !important; /* similar to has-background-grey-dark */
+  box-shadow: 0 0 0 0.5em #3a3f44;
+  border-radius: 4px;
+}
+
+/*************************************************************
  * Specific styles for nav buttons (inside a nav element or with the is-nav class)
  * These nav buttons do not have an immediate function, but rather serve
  * a navigational purpose
