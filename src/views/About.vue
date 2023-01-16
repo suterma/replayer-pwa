@@ -38,7 +38,7 @@
                         <ul>
                             <li>
                                 <a
-                                    href="./#/play?media=https://web.replayer.app/music/your-light-by-lidija-roos.mp3&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&0.0=Intro&17.2=Verse+1&33.98=Verse+1b&49.21=Refrain&64.87=Verse+2&82.4=Verse+2b&100.89=Refrain&112.88=Refrain+Repeat&129.65=Brigde+%2B+Solo&149.86=Refrain+Reprise&161.86=Verse+3b&178.46=Refrain+Variations&224.51=Fade+Out"
+                                    href="./#/play?media=https://lib.replayer.app/your-light-by-lidija-roos.mp3&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&0.0=Intro&17.2=Verse+1&33.98=Verse+1b&49.21=Refrain&64.87=Verse+2&82.4=Verse+2b&100.89=Refrain&112.88=Refrain+Repeat&129.65=Brigde+%2B+Solo&149.86=Refrain+Reprise&161.86=Verse+3b&178.46=Refrain+Variations&224.51=Fade+Out"
                                     target="_blank"
                                 >
                                     MP3 media, Your Light by Lidija Roos</a
@@ -46,7 +46,7 @@
                             </li>
                             <li>
                                 <a
-                                    href="./#/edit?media=https://web.replayer.app/music/your-light-by-lidija-roos.mp3&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&0.0=Intro&17.2=Verse+1&33.98=Verse+1b&49.21=Refrain&64.87=Verse+2&82.4=Verse+2b&100.89=Refrain&112.88=Refrain+Repeat&129.65=Brigde+%2B+Solo&149.86=Refrain+Reprise&161.86=Verse+3b&178.46=Refrain+Variations&224.51=Fade+Out"
+                                    href="./#/edit?media=https://lib.replayer.app/your-light-by-lidija-roos.mp3&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&0.0=Intro&17.2=Verse+1&33.98=Verse+1b&49.21=Refrain&64.87=Verse+2&82.4=Verse+2b&100.89=Refrain&112.88=Refrain+Repeat&129.65=Brigde+%2B+Solo&149.86=Refrain+Reprise&161.86=Verse+3b&178.46=Refrain+Variations&224.51=Fade+Out"
                                     target="_blank"
                                 >
                                     MP3 media, Your Light by Lidija Roos (Edit
@@ -55,7 +55,7 @@
                             </li>
                             <li>
                                 <a
-                                    href="./#/play?media=https://web.replayer.app/music/as-a-child-by-lidja-roos.aiff&title=As+A+Child+(AIFF)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
+                                    href="./#/play?media=https://lib.replayer.app/as-a-child-by-lidja-roos.aiff&title=As+A+Child+(AIFF)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
                                     target="_blank"
                                 >
                                     AIFF media, with only 1 cue</a
@@ -63,7 +63,7 @@
                             </li>
                             <li>
                                 <a
-                                    href="./#/play?media=https://web.replayer.app/music/decisions-by-lidija-roos.ogg"
+                                    href="./#/play?media=https://lib.replayer.app/decisions-by-lidija-roos.ogg"
                                     target="_blank"
                                 >
                                     OGG Vorbis media, without metadata</a
@@ -71,7 +71,7 @@
                             </li>
                             <li>
                                 <a
-                                    href="./#/play?media=https://web.replayer.app/music/eyes-have-not-seen-by-lidija-roos.flac&title=Eyes+Have+Not+Seen&album=Not+For+Sale&artist=Lidija+Roos&0.0="
+                                    href="./#/play?media=https://lib.replayer.app/eyes-have-not-seen-by-lidija-roos.flac&title=Eyes+Have+Not+Seen&album=Not+For+Sale&artist=Lidija+Roos&0.0="
                                     target="_blank"
                                 >
                                     FLAC media</a
@@ -79,7 +79,7 @@
                             </li>
                             <li>
                                 <a
-                                    href="./#/play?media=https://web.replayer.app/music/psalm-4-38-by-lidija-roos.wav&title=Psalm+4.38+(WAV)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
+                                    href="./#/play?media=https://lib.replayer.app/psalm-4-38-by-lidija-roos.wav&title=Psalm+4.38+(WAV)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
                                     target="_blank"
                                 >
                                     WAV media</a
@@ -87,7 +87,7 @@
                             </li>
                             <li>
                                 <a
-                                    href="./#/play?media=https://web.replayer.app/music/the-gift-by-lidija-roos.m4a&title=The+Gift+(AAC)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
+                                    href="./#/play?media=https://lib.replayer.app/the-gift-by-lidija-roos.m4a&title=The+Gift+(AAC)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
                                     target="_blank"
                                 >
                                     AAC media</a
@@ -102,7 +102,7 @@
                         <ul>
                             <li>
                                 <a
-                                    href="./#/play?package=https://web.replayer.app/demo-compilation-featuring-lidija-roos.rez"
+                                    href="./#/play?package=https://lib.replayer.app/demo-compilation-featuring-lidija-roos.rez"
                                     target="_blank"
                                 >
                                     ZIP (.rez) compressed package, with 1
@@ -111,10 +111,18 @@
                             </li>
                             <li>
                                 <a
-                                    href="./#/play?package=https://web.replayer.app/demo-compilation-with-online-resources-of-multiple-types.rex"
+                                    href="./#/play?package=https://lib.replayer.app/Demo%20Compilation%20featuring%20Lidija%20Roos%20%28online%20resources%20of%20multiple%20types%29.rex"
                                     target="_blank"
                                 >
-                                    XML (.rex) package, with 5 tracks</a
+                                    XML (.rex) package, with 5 online tracks</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    href="./#/play?package=https://lib.replayer.app/Test-Compilation%20featuring%20Lidija%20Roos%20%28WAV%20files%20in%20various%20sizes%29.rez"
+                                    target="_blank"
+                                >
+                                    Large ZIP (.rez) package (115MB), with WAV files of various sizes</a
                                 >
                             </li>
                         </ul>
