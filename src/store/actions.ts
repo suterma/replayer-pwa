@@ -135,13 +135,15 @@ export const actions: ActionTree<State, State> & Actions = {
             }
 
             progress(commit, `Loading URL '${url}'...`);
-            //TODO first get the mime type
-            //If it's a package, then try to actually fetch and fully load it
-            //If it's a media file, then just use the URL for a new track
-            // HINT: If the origin server doesn’t include the
+            // HINT: Replayer expects CORS to be allowed (no no-cors).
+            // If the origin server doesn’t include the suitable
             // Access-Control-Allow-Origin response header, the request will fail
+            //TODO first get the mime type
+            // If it's a package, then try to actually fetch and fully load it
+            // If it's a media file, then just use the URL for a new track
+            // For media files, no-cors might be an options since media elements accept media sources from an URL
+            // without a CORS response header set.
             fetch(url, {
-                mode: 'no-cors', // to allow CORS handling via an opaque response
                 method: 'GET',
             })
                 .then((response) => {
@@ -156,8 +158,10 @@ export const actions: ActionTree<State, State> & Actions = {
                         finalUrl = new URL(url);
                     }
 
-                    //console.debug('response: ', response);
-                    if (response.status === 0 /* opaque */) {
+                    if (
+                        response.status ===
+                        0 /* opaque response, in case no-cors would have been used */
+                    ) {
                         return abort(
                             commit,
                             reject,
@@ -214,7 +218,7 @@ export const actions: ActionTree<State, State> & Actions = {
                     return abort(
                         commit,
                         reject,
-                        `Fetch has failed for URL: '${url}' with the message: '${errorMessage}'. Probably the server does not allow CORS. If this is the case, manually download the resource and load it from the file system.`,
+                        `Fetch has failed for URL: '${url}' with the message: '${errorMessage}'. Maybe the file is too large or the server does not allow CORS. If any of this is the case, manually download the resource and load it from the file system.`,
                     );
                 });
         });
