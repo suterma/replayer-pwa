@@ -125,7 +125,8 @@ export default defineComponent({
             //supporting storage and retrieval with the track persistence
             currentSeconds: 0,
             /** Gets the duration of the current track, in [seconds]
-             * @remarks This is only available after successful load of the media metadata
+             * @remarks This is only available after successful load of the media metadata.
+             * Could be NaN or infinity, depending on the source
              */
             durationSeconds: 0,
             isMuted: false,
@@ -432,6 +433,7 @@ export default defineComponent({
         },
 
         /** If changed, updates the internal duration and emits the durationChanged event
+         * @param {number} duration - could be NaN or infinity, depending on the source
          */
         updateDuration(duration: number): void {
             if (this.durationSeconds !== duration) {

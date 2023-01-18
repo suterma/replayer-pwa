@@ -177,7 +177,8 @@ export default class CompilationHandler {
     /** Updates (recalculates) the durations of the given cues, by using the track duration for the last cue.
      * @remarks Note the following:
      * - the cues with a null time are not used
-     * - the track duration is larger than largest cue time
+     * - the track duration is larger than largest cue tim
+     * @param {number} trackDuration - could be NaN or infinity, depending on the source
      */
     static updateCueDurations(cues: ICue[], trackDuration: number): void {
         console.debug(
@@ -193,13 +194,15 @@ export default class CompilationHandler {
             const sortedBackwards =
                 CompilationHandler.sort(originalCues).reverse();
 
-            let lastTime: number | null = trackDuration;
+            let lastTime: number | null = Number.isFinite(trackDuration)
+                ? trackDuration
+                : null;
 
-            sortedBackwards.forEach((element) => {
-                if (lastTime && element.Time !== null) {
-                    element.Duration = lastTime - element.Time;
+            sortedBackwards.forEach((cue) => {
+                if (lastTime && cue.Time !== null) {
+                    cue.Duration = lastTime - cue.Time;
                 }
-                lastTime = element.Time;
+                lastTime = cue.Time;
             });
         }
     }

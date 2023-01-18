@@ -62,6 +62,7 @@ export enum MutationTypes {
      * calculates the durations of all cues, including the last one.
      * @remarks No ordering is done with this operation
      * @remarks The calculated durations are only valid as long as the cues, their times, and the track does not change
+     * @param {number} trackDurationSeconds - could be NaN or infinity, depending on the source
      */
     UPDATE_DURATIONS = 'UPDATE_DURATIONS',
 

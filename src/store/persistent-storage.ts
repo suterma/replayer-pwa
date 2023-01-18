@@ -16,14 +16,18 @@ import { MediaBlob, Settings } from './state-types';
  * https://github.com/createnextapp/async-local-storage/blob/master/src/index.ts
  */
 const createPromise = (getValue: any, callback: any): Promise<any> => {
+    console.debug('PersistentStorage::createPromise');
     return new Promise((resolve, reject) => {
         try {
             const value = getValue();
+            console.debug('PersistentStorage::resolved:value', value);
+
             if (callback) {
                 callback(null, value);
             }
             resolve(value);
         } catch (err) {
+            console.debug('PersistentStorage::catch:err', err);
             if (callback) {
                 callback(err);
             }
