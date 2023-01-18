@@ -152,10 +152,10 @@ export default defineComponent({
              */
             isPlayingRequestOutstanding: false,
 
-            /** Flags, whether deferred loading (until a user play click event is handeled)
+            /** Flags, whether deferred loading (until a user play click event is handled)
              * is required to further load the track media file data. The flag may be set once after the metadata was successfully loaded.
              * @remarks When true, handling of a subsequent play action must first invoke a user-triggered load operation.
-             * @remarks This specific handling is currenlty required on (some?) iOS devices,
+             * @remarks This specific handling is currently required on (some?) iOS devices,
              * because they only load data upon explicit user interaction.
              */
             isClickToLoadRequired: false,
@@ -231,9 +231,12 @@ export default defineComponent({
             this.updateDuration(this.audioElement.duration);
         };
         this.audioElement.onpause = () => {
+            this.debugLog(`onpause`);
             this.playing = false;
         };
         this.audioElement.onplay = () => {
+            this.debugLog(`onplay`);
+
             this.playing = true;
 
             //NOTE: Having the fade-in operation to start here, instead of after the thenable play action
@@ -328,6 +331,7 @@ export default defineComponent({
         },
         /** Watch the playback state, and then update the audio element accordingly  */
         isPlaying(value: boolean): void {
+            this.debugLog(`isPlaying:${value}`);
             if (value) {
                 this.play();
             } else {
@@ -336,6 +340,7 @@ export default defineComponent({
         },
         /** Watch the autoplay state, and then update the audio element accordingly  */
         autoplay(value: boolean): void {
+            this.debugLog(`autoplay:${value}`);
             this.audioElement.autoplay = value;
         },
         /** Watch the volume prop to update according externals changes  */
@@ -415,7 +420,7 @@ export default defineComponent({
             }
         },
         handleLoadedMetadata(): void {
-            const readyState = this.audioElement.readyState;
+            const readyState = this.audioElement?.readyState;
             this.debugLog(`handleLoadedMetadata:readyState:${readyState}`);
 
             this.handleReadyState(readyState);
@@ -426,7 +431,7 @@ export default defineComponent({
          */
         handleLoadedData(): void {
             this.isClickToLoadRequired = false;
-            const readyState = this.audioElement.readyState;
+            const readyState = this.audioElement?.readyState;
 
             this.debugLog(`handleLoadedData:readyState:${readyState}`);
             this.handleReadyState(readyState);
@@ -583,10 +588,11 @@ export default defineComponent({
         },
         /** Updates the current seconds display and emits an event with the temporal position of the player
          * @devdoc This must get only privately called from the audio player
-         * @devdoc This is known to result in setTimout violations on slower systems
+         * @devdoc This is known to result in setTimeout violations on slower systems
          */
         updateTime(/*event: Event*/) {
-            this.currentSeconds = this.audioElement.currentTime;
+            this.currentSeconds = this.audioElement?.currentTime;
+            this.debugLog(`updateTime`, this.currentSeconds);
             this.$emit('timeupdate', this.currentSeconds);
 
             this.handleCueLoop();
@@ -666,6 +672,8 @@ export default defineComponent({
                     readyState < HTMLMediaElement.HAVE_CURRENT_DATA &&
                     //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
                     //most probably due to load restriction on an iOS device.
+                    this.audioElement &&
+                    this.audioElement.buffered &&
                     this.audioElement.buffered.length === 0
                 ) {
                     this.debugLog(`loadAfterClick:load-with-handler`);
@@ -681,7 +689,6 @@ export default defineComponent({
                     this.audioElement.load();
                 } else {
                     this.debugLog(`loadAfterClick:resolve-immediately`);
-
                     resolve(); //immediately because there is nothing required to load
                 }
             });
