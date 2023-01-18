@@ -87,29 +87,18 @@ export const actions: ActionTree<State, State> & Actions = {
         });
     },
     [ActionTypes.ADD_MEDIA_BLOB]({ commit }, mediaBlob: MediaBlob) {
-        withProgress(
-            `Adding media blob ${mediaBlob.fileName}...`,
-            commit,
-            () => {
-                const objectUrl = ObjectUrlHandler.createObjectURL(
-                    mediaBlob.blob,
-                    mediaBlob.fileName,
-                );
-                const blobSize = mediaBlob.blob.size;
-                const mediaType = mediaBlob.blob.type;
-                commit(
-                    MutationTypes.ADD_MEDIA_URL,
-                    new MediaUrl(
-                        mediaBlob.fileName,
-                        objectUrl,
-                        blobSize,
-                        mediaType,
-                    ),
-                );
-                //Store persistently, but after committing, to keep the process faster
-                PersistentStorage.storeMediaBlob(mediaBlob);
-            },
+        const objectUrl = ObjectUrlHandler.createObjectURL(
+            mediaBlob.blob,
+            mediaBlob.fileName,
         );
+        const blobSize = mediaBlob.blob.size;
+        const mediaType = mediaBlob.blob.type;
+        commit(
+            MutationTypes.ADD_MEDIA_URL,
+            new MediaUrl(mediaBlob.fileName, objectUrl, blobSize, mediaType),
+        );
+        //Store persistently, but after committing, to keep the process faster
+        PersistentStorage.storeMediaBlob(mediaBlob);
     },
     [ActionTypes.REMOVE_TRACK]({ commit }, trackId: string) {
         withProgress(`Removing track...`, commit, () => {

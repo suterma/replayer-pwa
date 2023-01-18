@@ -47,6 +47,10 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
      * @devdoc The indexed db is used for blob data, as recommended for large data.
      */
     static storeMediaBlob(data: { fileName: string; blob: Blob }): void {
+        console.debug(
+            'PersistentStorage::storeMediaBlob:fileName',
+            data.fileName,
+        );
         set(StorageKeys.MEDIA_BLOB + data.fileName, data.blob);
     }
     /** Persistently stores the compilation for later retrieval
