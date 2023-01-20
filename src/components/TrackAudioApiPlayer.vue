@@ -592,7 +592,6 @@ export default defineComponent({
          */
         updateTime(/*event: Event*/) {
             this.currentSeconds = this.audioElement?.currentTime;
-            this.debugLog(`updateTime`, this.currentSeconds);
             this.$emit('timeupdate', this.currentSeconds);
 
             this.handleCueLoop();
