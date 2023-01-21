@@ -3,7 +3,7 @@
         <MediaSourceIndicator
             v-if="!editMode"
             class="is-flex is-align-items-center"
-            :source="track.Url"
+            :source="trackUrl"
             @click="toggleEditMode()"
         >
             <slot></slot>
@@ -18,8 +18,8 @@
         <MediaDropZone
             v-else
             :isExpanded="true"
-            :replaceUrl="track.Url"
-            :trackId="track.Id"
+            :replaceUrl="trackUrl"
+            :trackId="trackId"
             ref="mediaDropZone"
         >
             <NavButton
@@ -36,8 +36,7 @@ import { defineComponent } from 'vue';
 import NavButton from '@/components/buttons/NavButton.vue';
 import MediaSourceIndicator from '@/components/MediaSourceIndicator.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
-import { Track } from '@/store/compilation-types';
-import { mdiPencilOutline, mdiCheckBold } from '@mdi/js';
+ import { mdiPencilOutline, mdiCheckBold } from '@mdi/js';
 
 /** An editor for a media source for a Track
  */
@@ -45,8 +44,12 @@ export default defineComponent({
     name: 'MediaEdit',
     components: { NavButton, MediaDropZone, MediaSourceIndicator },
     props: {
-        track: {
-            type: Track,
+        trackId: {
+            type: String,
+            required: true,
+        },
+        trackUrl: {
+            type: String,
             required: true,
         },
     },

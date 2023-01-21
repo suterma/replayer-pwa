@@ -61,9 +61,8 @@ import {
 } from '@mdi/js';
 import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
-import { confirm, shareTrack } from '@/code/ui/dialogs';
-import { Track } from '@/store/compilation-types';
-/** A nav bar as header with a menu for a compilation
+import { confirm /*, shareTrack */ } from '@/code/ui/dialogs';
+ /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
     name: 'TrackContextMenu',
@@ -77,11 +76,14 @@ export default defineComponent({
             type: Boolean,
             required: true,
         },
-        track: {
-            type: Track,
+        trackName: {
+            type: String,
             required: true,
         },
- 
+        trackId: {
+            type: String,
+            required: true,
+        },
     },
     data() {
         return {
@@ -94,25 +96,25 @@ export default defineComponent({
         };
     },
     methods: {
-
-      share() {
-            shareTrack(this.track).then((ok) => {
-                if (ok) {
-                    console.debug(`TrackHeader::sharing done`);
-                }
-            });
+        share() {
+            //TODO enable with a store getter
+            // shareTrack(this.track).then((ok) => {
+            //     if (ok) {
+            //         console.debug(`TrackHeader::sharing done`);
+            //     }
+            // });
         },
         /** Removes the track from the compilation
          */
         removeTrack() {
             confirm(
                 'Removing track',
-                `Do you want to remove track "${this.track.Name}"?`,
+                `Do you want to remove track "${this.trackName}"?`,
             ).then((ok) => {
                 if (ok) {
                     this.$store.dispatch(
                         ActionTypes.REMOVE_TRACK,
-                        this.track.Id,
+                        this.trackId,
                     );
                 }
             });
@@ -120,13 +122,13 @@ export default defineComponent({
         /** Clones the track by creating a deep copy
          */
         cloneTrack() {
-            this.$store.dispatch(ActionTypes.CLONE_TRACK, this.track.Id);
+            this.$store.dispatch(ActionTypes.CLONE_TRACK, this.trackId);
         },
         moveUp() {
-            this.$store.commit(MutationTypes.MOVE_TRACK_UP, this.track.Id);
+            this.$store.commit(MutationTypes.MOVE_TRACK_UP, this.trackId);
         },
         moveDown() {
-            this.$store.commit(MutationTypes.MOVE_TRACK_DOWN, this.track.Id);
+            this.$store.commit(MutationTypes.MOVE_TRACK_DOWN, this.trackId);
         },
 
         /** Reassign shortcut
@@ -134,12 +136,12 @@ export default defineComponent({
          */
         reassignCueShortcuts() {
             console.debug(
-                `TrackContextMenu::reassignCueShortcuts:trackId:${this.track.Id}`,
+                `TrackContextMenu::reassignCueShortcuts:trackId:${this.trackId}`,
             );
 
             this.$store.commit(
                 MutationTypes.REASSIGN_CUE_SHORTCUTS,
-                this.track.Id,
+                this.trackId,
             );
         },
     },

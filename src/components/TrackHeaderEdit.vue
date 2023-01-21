@@ -10,9 +10,7 @@
             >
                 <CollapsibleButton
                     v-if="canCollapse"
-                    :class="{
-                        'is-nav': true,
-                    }"
+                    class="is-nav"
                     :modelValue="isExpanded"
                     @update:modelValue="toggleExpanded"
                     title="Track"
@@ -25,7 +23,7 @@
                         <StyledInput
                             class="input title has-text-weight-light is-4"
                             :class="{ 'has-text-success': isActive }"
-                            v-model="trackData.Name"
+                            :modelValue="trackName"
                             @change="updateName($event.target.value)"
                             type="text"
                             placeholder="Track name"
@@ -41,7 +39,7 @@
             >
                 <div class="field">
                     <p class="control">
-                        <MediaEdit :track="track">
+                        <MediaEdit :trackId="trackId" :trackUrl="trackUrl">
                             <span
                                 v-if="!isTrackMediaAvailable"
                                 class="has-text-warning"
@@ -61,7 +59,7 @@
                     <p class="control">
                         <StyledInput
                             class="input is-italic"
-                            v-model="trackData.Artist"
+                            :modelValue="trackArtist"
                             @change="updateArtist($event.target.value)"
                             type="text"
                             placeholder="Artist"
@@ -81,7 +79,7 @@
                     <p class="control">
                         <StyledInput
                             class="input is-italic"
-                            v-model="trackData.Album"
+                            :modelValue="trackAlbum"
                             @change="updateAlbum($event.target.value)"
                             type="text"
                             placeholder="Album"
@@ -107,16 +105,17 @@
                 />
 
                 <TrackContextMenu
-                    :isFirstTrack="isFirstTrack"
-                    :isLastTrack="isLastTrack"
-                    :track="track"
+                    :isFirstTrack="isFirst"
+                    :isLastTrack="isLast"
+                    :trackId="trackId"
+                    :trackName="trackName"
                 ></TrackContextMenu>
             </div>
         </div>
     </div>
     <!-- Extra level for the media edit, except on very large screens -->
     <div class="is-hidden-fullhd">
-        <MediaEdit :track="track">
+        <MediaEdit :trackId="trackId" :trackUrl="trackUrl">
             <span v-if="!isTrackMediaAvailable" class="has-text-warning">
                 <BaseIcon v-once :path="mdiAlert" />Media unavailable</span
             ></MediaEdit
@@ -127,7 +126,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ITrack, Track } from '@/store/compilation-types';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
 import StyledInput from '@/components/StyledInput.vue';
@@ -151,12 +149,40 @@ export default defineComponent({
     },
     emits: ['update:isExpanded'],
     props: {
-        track: {
-            type: Track,
+        trackName: {
+            type: String,
+            required: true,
+        },
+        trackArtist: {
+            type: String,
+            required: true,
+        },
+        trackAlbum: {
+            type: String,
+            required: true,
+        },
+        trackId: {
+            type: String,
+            required: true,
+        },
+        trackUrl: {
+            type: String,
             required: true,
         },
         /** Whether this track is to be considered as the active track */
         isActive: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+        /** Whether this track is the first track in the set of tracks */
+        isFirst: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+        /** Whether this track is the last track in the set of tracks */
+        isLast: {
             type: Boolean,
             required: false,
             default: false,
@@ -203,7 +229,6 @@ export default defineComponent({
     },
     data() {
         return {
-            trackData: { ...this.track }, // clone the object
             /** Flag to indicate whether the track is currently shared via the dialog.
              */
             isSharing: false,
@@ -233,9 +258,9 @@ export default defineComponent({
 
         /** Updates the track name */
         updateName(name: string) {
-            const trackId = this.track.Id;
-            const artist = this.trackData.Artist;
-            const album = this.trackData.Album;
+            const trackId = this.trackId;
+            const artist = this.trackArtist;
+            const album = this.trackAlbum;
             this.$store.dispatch(ActionTypes.UPDATE_TRACK_DATA, {
                 trackId,
                 name,
@@ -245,9 +270,9 @@ export default defineComponent({
         },
         /** Updates the track artist */
         updateArtist(artist: string) {
-            const trackId = this.track.Id;
-            const name = this.trackData.Name;
-            const album = this.trackData.Album;
+            const trackId = this.trackId;
+            const name = this.trackName;
+            const album = this.trackAlbum;
             this.$store.dispatch(ActionTypes.UPDATE_TRACK_DATA, {
                 trackId,
                 name,
@@ -257,9 +282,9 @@ export default defineComponent({
         },
         /** Updates the track album */
         updateAlbum(album: string) {
-            const trackId = this.track.Id;
-            const name = this.trackData.Name;
-            const artist = this.trackData.Artist;
+            const trackId = this.trackId;
+            const name = this.trackName;
+            const artist = this.trackArtist;
             this.$store.dispatch(ActionTypes.UPDATE_TRACK_DATA, {
                 trackId,
                 name,
@@ -277,17 +302,7 @@ export default defineComponent({
             immediate: true,
         },
     },
-    computed: {
-        isFirstTrack(): boolean {
-            return this.tracks[0]?.Id === this.track.Id;
-        },
-        isLastTrack(): boolean {
-            return this.tracks[this.tracks.length - 1]?.Id === this.track.Id;
-        },
-        tracks(): ITrack[] {
-            return this.$store.getters.compilation.Tracks as ITrack[];
-        },
-    },
+
 });
 </script>
 <style lang="scss" scoped>

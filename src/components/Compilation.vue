@@ -31,6 +31,8 @@
                     index < (tracks?.length ?? 0) - 1 || isLoopingPlaybackMode
                 "
                 :isOnlyTrack="isSingleTrack"
+                :isFirst="isFirstTrack(track.Id)"
+                :isLast="isLastTrack(track.Id)"
                 @previousTrack="
                     toPreviousTrack(track.Id, isLoopingPlaybackMode)
                 "
@@ -252,6 +254,21 @@ export default defineComponent({
                 );
             }
         },
+
+        /** Whether this track is the first track in the set of tracks */
+        isFirstTrack(trackId: string): boolean {
+            if (this.tracks != undefined) {
+                return this.tracks[0]?.Id === trackId;
+            }
+            return false;
+        },
+        /** Whether this track is the last track in the set of tracks */
+        isLastTrack(trackId: string): boolean {
+            if (this.tracks != undefined) {
+                return this.tracks[this.tracks.length - 1]?.Id === trackId;
+            }
+            return false;
+        },
     },
     watch: {
         /** Handle scrolling to the changed active track.
@@ -294,7 +311,7 @@ export default defineComponent({
         //TODO add a watch for the shuffle mode, then add a random seed to the shuffle function
     },
     computed: {
-        /** Whether this compilation only has no or only a single track.
+        /** Whether this compilation has no more than single track.
          */
         isSingleTrack(): boolean {
             if (this.tracks && this.tracks.length > 1) {
@@ -302,6 +319,16 @@ export default defineComponent({
             }
             return true;
         },
+
+        /** Whether this compilation has any tracks.
+         */
+        hasTracks(): boolean {
+            if (this.tracks && this.tracks.length > 0) {
+                return true;
+            }
+            return false;
+        },
+
         /** Whether the tracks are currently in a shuffled order.
          */
         isTracksShuffled(): boolean {
