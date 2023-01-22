@@ -11,26 +11,25 @@
 
 // Fixed at bottom
 .has-player-navbar-fixed-bottom {
-  padding-bottom: calc(200px + 1em);
+    padding-bottom: calc(200px + 1em);
 }
 
 @media screen and (min-width: 340px /* mobile */) {
-  .has-player-navbar-fixed-bottom {
-      padding-bottom: calc(160px + 1em);
-  }
+    .has-player-navbar-fixed-bottom {
+        padding-bottom: calc(160px + 1em);
+    }
 }
 
 @media screen and (min-width: 769px /* tablet */) {
-  .has-player-navbar-fixed-bottom {
-      padding-bottom: calc(105px + 1em);
-  }
+    .has-player-navbar-fixed-bottom {
+        padding-bottom: calc(105px + 1em);
+    }
 }
 @media screen and (min-width: 1024px) {
-  .has-player-navbar-fixed-bottom {
-      padding-bottom: calc(152px + 1em);
-  }
+    .has-player-navbar-fixed-bottom {
+        padding-bottom: calc(152px + 1em);
+    }
 }
-
 
 // Fixed at top
 .has-player-navbar-fixed-top {
@@ -55,7 +54,7 @@
 }
 
 /*************************************************************
- * Player styles (to be used for the audio player)
+ * Cue playback / player styles
  * These styles are based on the slate bulmaswatch theme and borrow variables from there
 **************************************************************
 */
@@ -85,6 +84,17 @@
     }
 }
 
+/* Make the selected cue visually outstanding besides the color,
+ * to better help people with Achromatopsia$
+ * This variant uses the existing button shadow, making it permanent. 
+ * It is used to visually extend the button, making it to
+ * appear a bit bigger and more brightly bordered.
+ */
+.cue.button.is-success {
+     box-shadow: 0 0 0 0.125em $success !important ;
+     border-color: $button-color !important;
+
+ }
 
 /** Allows to show elements in front of the player-progress background span
    * @devdoc Otherwise, due to unknown reasons, these elements would be shown behind the progress shade, regardless of that they are defined after the progress shade.
@@ -108,5 +118,5 @@
 .track.is-active-track {
     background-color: $button-background-color !important; /* similar to has-background-grey-dark */
     box-shadow: 0 0 0 0.5em $button-background-color;
-    border-radius: $radius;    
-    }
+    border-radius: $radius;
+}
