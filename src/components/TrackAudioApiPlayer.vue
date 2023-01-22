@@ -233,6 +233,7 @@ export default defineComponent({
         this.audioElement.onpause = () => {
             this.debugLog(`onpause`);
             this.playing = false;
+            this.$emit('update:isPlaying', false);
         };
         this.audioElement.onplay = () => {
             this.debugLog(`onplay`);
