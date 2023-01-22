@@ -625,7 +625,11 @@ export default defineComponent({
         activateWakeLock(): void {
             if (this.getSettings.preventScreenTimeout) {
                 if (!this.noSleep.isEnabled) {
-                    this.noSleep.enable();
+                    this.noSleep.enable().catch((error) => {
+                        console.warn(
+                            `Swallowed error for failed WakeLock promise: ${error.name}, ${error.message}`,
+                        );
+                    });
                 }
             }
         },

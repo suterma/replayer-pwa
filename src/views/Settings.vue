@@ -13,8 +13,7 @@
                             :checked="getSettings.preventScreenTimeout"
                             @change="preventScreenTimeoutChanged"
                         />
-                        Always prevent screen timeout while any track is in use
-                        (is expanded and was played)
+                        Prevent screen timeout when in use
                         <span class="has-opacity-half is-size-7">
                             (Uses more energy)</span
                         >
