@@ -58,23 +58,7 @@
  * Player styles (to be used for the audio player)
  * These styles are based on the slate bulmaswatch theme and borrow variables from there
 **************************************************************
-//TODO check which of these are actually still used
 */
-
-$player-progress-color: $green; //from BULMA-Swatch theme
-$player-timeline-color: $button-background-color; //from BULMA-Swatch theme: same as other button's background, to get a consistent "player bar"
-/* The playing color should be non-distracting, but be strong enough to visually indicate the playing state*/
-$player-playing-color: $success;
-//$player-playing-color: darken($green, 35%);
-// $player-playing-color: lighten($green, 35%);
-// $player-playing-color: $green;
-
-.player {
-    background-color: $button-background-color; //from BULMA-Swatch theme
-    display: inline-block;
-    line-height: 1.5625;
-    position: relative;
-}
 
 .player-timeline {
     height: 100%;
@@ -99,31 +83,8 @@ $player-playing-color: $success;
         border-right-color: $button-color;
         z-index: 1;
     }
-
-    .player-seeker {
-        cursor: pointer;
-        width: 100%;
-        z-index: 2;
-    }
 }
 
-.player-time {
-    display: flex;
-    justify-content: space-between;
-    color: $text;
-
-    /* Keep some distance from the edge, to better show the times, for height according to standard buttons */
-    padding: 0.5em;
-
-    .player-time-current {
-        padding-left: 0.75em;
-    }
-
-    .player-time-total {
-        opacity: 0.5;
-        padding-right: 0.75em;
-    }
-}
 
 /** Allows to show elements in front of the player-progress background span
    * @devdoc Otherwise, due to unknown reasons, these elements would be shown behind the progress shade, regardless of that they are defined after the progress shade.
@@ -134,39 +95,6 @@ $player-playing-color: $success;
     // However in the foreground, these display elements should not capture click events
     pointer-events: none;
 }
-
-.player-volume {
-    display: inline-block;
-    height: 1.1rem;
-    margin: 0 0 0 2px;
-    width: 6rem;
-}
-
-/* The player should take full witdth */
-.player-panel {
-    width: 100%;
-}
-
-/** The seekbar. It should always be visible, taking up what's available, however small on small devices */
-.player-seekbar {
-    /* Width takes max available space among siblings */
-    width: inherit;
-    /* Height similar to the used standard buttons */
-    height: 40px;
-
-    background-color: $player-timeline-color;
-
-    /* outline more like a button, with border (However, no rounded corners, and with other text alignment) */
-    border: $button-border-width solid $button-border-color;
-    margin-right: -1px;
-}
-
-/* When playing, indicate by this changing style */
-.player-playing-indication {
-    //background-color: $player-playing-color;
-    color: $player-playing-color;
-}
-
 
 /*************************************************************
  * Track styles 

@@ -10704,16 +10704,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
  * Player styles (to be used for the audio player)
  * These styles are based on the slate bulmaswatch theme and borrow variables from there
 **************************************************************
-//TODO check which of these are actually still used
 */
-/* The playing color should be non-distracting, but be strong enough to visually indicate the playing state*/
-.player {
-  background-color: #3a3f44;
-  display: inline-block;
-  line-height: 1.5625;
-  position: relative;
-}
-
 .player-timeline {
   height: 100%;
   min-width: 2em;
@@ -10735,26 +10726,6 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   border-right-color: #fafafa;
   z-index: 1;
 }
-.player-timeline .player-seeker {
-  cursor: pointer;
-  width: 100%;
-  z-index: 2;
-}
-
-.player-time {
-  display: flex;
-  justify-content: space-between;
-  color: #aaa;
-  /* Keep some distance from the edge, to better show the times, for height according to standard buttons */
-  padding: 0.5em;
-}
-.player-time .player-time-current {
-  padding-left: 0.75em;
-}
-.player-time .player-time-total {
-  opacity: 0.5;
-  padding-right: 0.75em;
-}
 
 /** Allows to show elements in front of the player-progress background span
    * @devdoc Otherwise, due to unknown reasons, these elements would be shown behind the progress shade, regardless of that they are defined after the progress shade.
@@ -10763,35 +10734,6 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   position: relative;
   z-index: 2;
   pointer-events: none;
-}
-
-.player-volume {
-  display: inline-block;
-  height: 1.1rem;
-  margin: 0 0 0 2px;
-  width: 6rem;
-}
-
-/* The player should take full witdth */
-.player-panel {
-  width: 100%;
-}
-
-/** The seekbar. It should always be visible, taking up what's available, however small on small devices */
-.player-seekbar {
-  /* Width takes max available space among siblings */
-  width: inherit;
-  /* Height similar to the used standard buttons */
-  height: 40px;
-  background-color: #3a3f44;
-  /* outline more like a button, with border (However, no rounded corners, and with other text alignment) */
-  border: 1px solid #5d656d;
-  margin-right: -1px;
-}
-
-/* When playing, indicate by this changing style */
-.player-playing-indication {
-  color: #62c462;
 }
 
 /*************************************************************
