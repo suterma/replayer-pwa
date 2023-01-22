@@ -274,35 +274,31 @@
                                     title="toggle full-screen mode"
                                     collapsedChevronDirection="up"
                                 ></CollapsibleButton>
-
-                                <div class="is-fullwidth">
-                                    <p
-                                        @click="toggleTrackPlayerFullScreen()"
-                                        title="toggle full-screen mode"
+                                <p
+                                    @click="toggleTrackPlayerFullScreen()"
+                                    title="toggle full-screen mode"
+                                >
+                                    <!-- Use smaller title in collapsed state, use regular size (4) when full screen -->
+                                    <span
+                                        :class="{
+                                            'has-text-success': isActiveTrack,
+                                            'is-size-4':
+                                                isTrackPlayerFullScreen,
+                                            'is-size-5':
+                                                !isTrackPlayerFullScreen,
+                                        }"
                                     >
-                                        <!-- Use smaller title in collapsed state, use regular size (4) when full screen -->
-                                        <span
-                                            :class="{
-                                                'has-text-success':
-                                                    isActiveTrack,
-                                                'is-size-4':
-                                                    isTrackPlayerFullScreen,
-                                                'is-size-5':
-                                                    !isTrackPlayerFullScreen,
-                                            }"
-                                        >
-                                            <TrackTitleName
-                                                :track="track"
-                                            ></TrackTitleName>
-                                        </span>
-                                        <!-- Artist info (don't show on small devices)-->
-                                        <span class="is-size-7 is-hidden-mobile"
-                                            >&nbsp;
-                                            <!--nbsp as placeholder to keep layout when no artist info -->
-                                            <ArtistInfo :track="track" />
-                                        </span>
-                                    </p>
-                                </div>
+                                        <TrackTitleName
+                                            :track="track"
+                                        ></TrackTitleName>
+                                    </span>
+                                    <!-- Artist info (don't show on small devices)-->
+                                    <span class="is-size-7 is-hidden-mobile"
+                                        >&nbsp;
+                                        <!--nbsp as placeholder to keep layout when no artist info -->
+                                        <ArtistInfo :track="track" />
+                                    </span>
+                                </p>
                             </div>
                         </div>
 
@@ -366,6 +362,14 @@
                                         @togglePlaying="skipToPlayPause()"
                                         :hidePlayPauseButton="false"
                                     >
+                                        <PlaybackIndicator
+                                            :isReady="
+                                                !isPlaying && isTrackLoaded
+                                            "
+                                            :isPlaying="isPlaying"
+                                            :isUnloaded="!isTrackLoaded"
+                                            :isUnavailable="!isMediaAvailable"
+                                        />
                                     </MediaControlsBar>
                                 </div>
                             </div>
@@ -437,6 +441,7 @@ import { settingsMixin } from '@/mixins/settingsMixin';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
+import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import TrackTitleName from './TrackTitleName.vue';
 import ArtistInfo from './ArtistInfo.vue';
 import IfMedia from '@/components/IfMedia.vue';
@@ -469,6 +474,7 @@ export default defineComponent({
         TrackTitleName,
         ArtistInfo,
         IfMedia,
+        PlaybackIndicator,
     },
     emits: [
         /** Occurs, when the previous track should be set as the active track
@@ -1103,13 +1109,13 @@ export default defineComponent({
 // Define an overall width allocation for fixed right-hand side of the playback control level items
 .level {
     .level-left {
-        flex-basis: calc(100% - 560px);
+        flex-basis: calc(100% - 600px);
         .level-item {
             flex-shrink: 1;
         }
     }
     .level-right {
-        flex-basis: 560px;
+        flex-basis: 600px;
         .level-item {
             flex-shrink: 1;
         }

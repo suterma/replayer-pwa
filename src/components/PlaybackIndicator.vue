@@ -1,17 +1,16 @@
 <template>
-    <p class="control" :title="indication">
-        <span class="button is-indicator">
-            <BaseIcon
-                :path="isUnavailable ? mdiAlert : mdiCircle"
-                :class="{
-                    'has-text-warning': isUnavailable,
-                    'has-text-dark': isUnloaded,
-                    'has-text-success': isPlaying && !isUnavailable,
-                    'has-text-grey-dark': isReady && !isUnavailable,
-                }"
-            />
-        </span>
-    </p>
+    <button class="button is-indicator" :title="indication">
+        <BaseIcon
+            :path="isUnavailable ? mdiAlert : mdiCircle"
+            :class="{
+                'has-text-warning': isUnavailable,
+                'has-text-dark': isUnloaded,
+                'has-text-success': isPlaying && !isUnavailable,
+                'has-text-grey-dark': isReady && isUnavailable,
+                'has-text-grey': isReady && !isUnavailable,
+            }"
+        />
+    </button>
 </template>
 
 <script lang="ts">
