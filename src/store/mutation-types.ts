@@ -40,7 +40,8 @@ export enum MutationTypes {
      */
     DELETE_CUE = 'DELETE_CUE',
     /** Replaces the current compilation with a new one
-     * @remarks Does not set the selected cue
+     * @remarks If there is only a single track, this track becomes the active track.
+     * For single-track compilations this causes the widget player to be shown immediately. Does not set the selected cue.
      * @remarks Removes all data from the previous compilation, including media URL's.
      * @remarks Also immediately updates the media URL storage with the contained online (http|https) URL's from the compilation.
      */
