@@ -263,6 +263,13 @@ export const mutations: MutationTree<State> & Mutations = {
         onlineMediaUrls.forEach((mediaUrl) => {
             state.mediaUrls.set(mediaUrl.resourceName, mediaUrl);
         });
+
+        /* Set active track (if just one is available), like in MutationTypes.UPDATE_SELECTED_TRACK_ID */
+        state.selectedCueId = null;
+        state.selectedTrackId =
+            compilation.Tracks.length == 1
+                ? compilation.Tracks[0]?.Id ?? null
+                : null;
     },
     [MutationTypes.UPDATE_SELECTED_CUE_ID](state: State, cueId: string) {
         state.selectedTrackId = null;
