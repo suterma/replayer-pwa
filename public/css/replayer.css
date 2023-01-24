@@ -10728,7 +10728,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 
 /* Make the selected cue visually outstanding besides the color,
- * to better help people with Achromatopsia$
+ * to better help people with Achromatopsia
  * This variant uses the existing button shadow, making it permanent. 
  * It is used to visually extend the button, making it to
  * appear a bit bigger and more brightly bordered.
@@ -11344,6 +11344,13 @@ button.dropdown-item:disabled:hover {
  * Transitions for the Replayer
 **************************************************************
 */
+.slide-left-leave-active.transition-in-place,
+.slide-right-leave-active.transition-in-place,
+.item-expand-leave-active.transition-in-place,
+.list-leave-active.transition-in-place {
+  position: absolute;
+}
+
 /** **********************************************************
  * Transition for expanding a single item
 **************************************************************
@@ -11358,6 +11365,40 @@ button.dropdown-item:disabled:hover {
   opacity: 0;
   transform-origin: top;
   transform: scaleY(0) translateY(-50%);
+}
+
+/** **********************************************************
+ * Transition for sliding left a single item
+**************************************************************
+*/
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: all 3.3s ease;
+}
+
+.slide-left-leave-to {
+  transform: translateX(-100vw);
+}
+
+.slide-left-enter-from {
+  transform: translateX(100vw);
+}
+
+/** **********************************************************
+ * Transition for sliding right a single item
+**************************************************************
+*/
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: all 3.3s ease;
+}
+
+.slide-right-leave-to {
+  transform: translateX(100vw);
+}
+
+.slide-right-enter-from {
+  transform: translateX(-100vw);
 }
 
 /** **********************************************************
