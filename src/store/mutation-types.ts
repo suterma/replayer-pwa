@@ -49,7 +49,7 @@ export enum MutationTypes {
 
     /** Updates the currently selected cue Id, for application-wide handling
      * @remarks This does not control the playback itself. It is intended for display and handling purposes.
-     * @remarks Removes any track id selection.
+     * @remarks Removes any explicit track id selection.
      */
     UPDATE_SELECTED_CUE_ID = 'UPDATE_SELECTED_CUE_ID',
 

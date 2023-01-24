@@ -13,22 +13,24 @@ interface IState {
      * For files: the full name (including a possible path) of the original media file (from the disk or from within a REZ/ZIP-file) */
     mediaUrls: Map<string, MediaUrl>;
 
-    /** The currently selected cue Id, if any. This is also used to determine the currently active track.
+    /** The currently selected cue Id, if any, otherwise CompilationHandler.EmptyId.
+     * This is also used to determine the currently active track.
      * @remarks This does not control the playback itself. It is intended for display purposes.
-     * @remarks Set to null, when no cue should be considered selected.
+     * @remarks Set to CompilationHandler.EmptyId, when no cue should be considered selected.
      * @remarks To determine which track is active, when a cue is selected, it always takes precedence
      * over a possibly selected track
-     * (selectedTrackId should be null in this case anyway.)
+     * (selectedTrackId should be CompilationHandler.EmptyId in this case anyway.)
      * If no cue is selected, selectedTrackId is used to determine the active track.
      */
-    selectedCueId: string | null;
+    selectedCueId: string;
 
-    /** The currently selected track Id, if any. This is also used to determine the currently active track.
+    /** The currently selected track Id, if any, otherwise CompilationHandler.EmptyId.
+     * This is also used to determine the currently active track.
      * This serves as alternative when no selected cue Id is set.
      * @remarks This does not control the playback itself. It is intended for display purposes.
-     * @remarks Set to null, when no track should be considered selected.
+     * @remarks Set to CompilationHandler.EmptyId, when no track should be considered selected.
      */
-    selectedTrackId: string | null;
+    selectedTrackId: string;
 
     /** An application work message stack, used for progress indication
      * @remarks during ongoing work, the stack is non-empty

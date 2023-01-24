@@ -182,7 +182,7 @@ export const mutations: MutationTree<State> & Mutations = {
     [MutationTypes.ADD_DEFAULT_TRACK](state: State, resourceName: string) {
         console.debug('mutations::ADD_DEFAULT_TRACK:', resourceName);
         const track = CompilationHandler.createDefaultTrack(resourceName);
-        state.selectedCueId = null;
+        state.selectedCueId = CompilationHandler.EmptyId;
         state.selectedTrackId = track.Id;
         state.compilation.Tracks.push(track);
     },
@@ -190,7 +190,7 @@ export const mutations: MutationTree<State> & Mutations = {
     [MutationTypes.ADD_TRACK](state: State, track: ITrack) {
         console.debug('mutations::ADD_TRACK:', track);
         state.compilation.Tracks.push(track);
-        state.selectedCueId = null;
+        state.selectedCueId = CompilationHandler.EmptyId;
         state.selectedTrackId = track.Id;
     },
 
@@ -265,18 +265,18 @@ export const mutations: MutationTree<State> & Mutations = {
         });
 
         /* Set active track (if just one is available), like in MutationTypes.UPDATE_SELECTED_TRACK_ID */
-        state.selectedCueId = null;
+        state.selectedCueId = CompilationHandler.EmptyId;
         state.selectedTrackId =
             compilation.Tracks.length == 1
-                ? compilation.Tracks[0]?.Id ?? null
-                : null;
+                ? compilation.Tracks[0]?.Id ?? CompilationHandler.EmptyId
+                : CompilationHandler.EmptyId;
     },
     [MutationTypes.UPDATE_SELECTED_CUE_ID](state: State, cueId: string) {
-        state.selectedTrackId = null;
+        state.selectedTrackId = CompilationHandler.EmptyId;
         state.selectedCueId = cueId;
     },
     [MutationTypes.UPDATE_SELECTED_TRACK_ID](state: State, trackId: string) {
-        state.selectedCueId = null;
+        state.selectedCueId = CompilationHandler.EmptyId;
         state.selectedTrackId = trackId;
 
         const track = CompilationHandler.getTrackById(

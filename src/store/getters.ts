@@ -126,7 +126,7 @@ export const getters: GetterTree<State, State> & Getters = {
         }
         //if no cue is selected, try the track
         const selectedTrackId = state.selectedTrackId as string;
-        if (selectedTrackId) {
+        if (selectedTrackId !== CompilationHandler.EmptyId) {
             return (
                 CompilationHandler.getTrackById(
                     state.compilation.Tracks,
