@@ -1060,33 +1060,6 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-/* transitions for a single item */
-.item-expand-enter-active,
-.item-expand-leave-active {
-    transition: all 0.3s ease;
-}
-
-.item-expand-enter-from,
-.item-expand-leave-to {
-    opacity: 0;
-    transform-origin: top;
-    transform: scaleY(0) translateY(-50%);
-}
-
-/* transitions for a list of items */
-.list-move, /* apply transition to moving elements */
-.list-enter-active,
-.list-leave-active {
-    transition: all 0.3s ease;
-}
-.list-enter-from {
-    opacity: 0;
-    transform: translateX(-32px);
-}
-.list-leave-to {
-    opacity: 0;
-    transform: translateX(32px);
-}
 
 // Track item styles
 
