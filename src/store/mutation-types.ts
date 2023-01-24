@@ -1,44 +1,55 @@
 export enum MutationTypes {
     /** Initiates the display of a progress message by pushing the message onto the stack of progress messages */
     PUSH_PROGRESS = 'PUSH_PROGRESS',
+
     /** Ends the display of a previous progress message, by popping the message from the stack of progress messages */
     POP_PROGRESS = 'POP_PROGRESS',
+
     /** Initiates the display of an error message by pushing the message onto the stack of error messages */
     PUSH_ERROR = 'PUSH_ERROR',
+
     /** Ends the display of a previous error message, by popping the message from the stack of error messages */
     POP_ERROR = 'POP_ERROR',
+
     /** Controls the use application-wide shortcuts
      * @remarks Usage should be paused during the display of global messages like notifications or modal dialogs.
      */
     USE_APP_SHORTCUTS = 'USE_APP_SHORTCUTS',
     /** Ends the display any previous progress message, by clearing all messages from the stack of progress messages */
+
     FINISH_PROGRESS = 'FINISH_PROGRESS',
     /** Adds a media blob URL to the store.
      * @remarks A new blob URL replaces any existing with an exact same path.
      * @param url - The MediaUrl to use
      */
     ADD_MEDIA_URL = 'ADD_MEDIA_URL',
+
     /** Discards a media blob URL from the store.
      * @param url - The MediaUrl to use
      */
     DISCARD_MEDIA_URL = 'DISCARD_MEDIA_URL',
+
     /** Adds a new default track for the given file name or media URL to the compilation.
      * @remarks Track properties are derived from the given file name or url
      * @remarks The new track is made the selected track
      * @remarks No media data is added, it must get handled elsewhere.
      */
     ADD_DEFAULT_TRACK = 'ADD_DEFAULT_TRACK',
+
     /** Adds a provided track to the compilation.
      * @remarks The new track is made the selected track
      * @remarks No media data is added, it must get handled elsewhere.
      */
     ADD_TRACK = 'ADD_TRACK',
+
     /** Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.
      */
     ADD_CUE = 'ADD_CUE',
+
     /** Deletes the given cue from the matching track in the compilation
      */
     DELETE_CUE = 'DELETE_CUE',
+
     /** Replaces the current compilation with a new one
      * @remarks If there is only a single track, this track becomes the active track.
      * For single-track compilations this causes the widget player to be shown immediately. Does not set the selected cue.
