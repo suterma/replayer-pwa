@@ -115,26 +115,24 @@ export const getters: GetterTree<State, State> & Getters = {
     },
     /** @inheritdoc */
     activeTrack: (state): ITrack | null => {
-        const selectedCueId = state.selectedCueId as string;
-        if (selectedCueId) {
-            return (
-                CompilationHandler.getTrackByCueId(
-                    state.compilation,
-                    selectedCueId,
-                ) ?? null
+        const selectedCueId = state.selectedCueId;
+
+        let selectedTrack = CompilationHandler.getTrackByCueId(
+            state.compilation,
+            selectedCueId,
+        );
+
+        //if no cue is applicable, try the track
+        if (!selectedTrack) {
+            const selectedTrackId = state.selectedTrackId;
+
+            selectedTrack = CompilationHandler.getTrackById(
+                state.compilation.Tracks,
+                selectedTrackId,
             );
         }
-        //if no cue is selected, try the track
-        const selectedTrackId = state.selectedTrackId as string;
-        if (selectedTrackId !== CompilationHandler.EmptyId) {
-            return (
-                CompilationHandler.getTrackById(
-                    state.compilation.Tracks,
-                    selectedTrackId,
-                ) ?? null
-            );
-        }
-        return null;
+
+        return selectedTrack ?? null;
     },
     /** @inheritdoc */
     tracks: (state): Array<ITrack> | undefined => {

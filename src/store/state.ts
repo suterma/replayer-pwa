@@ -1,5 +1,6 @@
 import { MediaUrl, Settings } from './state-types';
 import { Compilation, ICompilation } from './compilation-types';
+import CompilationHandler from './compilation-handler';
 
 /** Defines the state of this application */
 interface IState {
@@ -56,11 +57,11 @@ export const state: IState = {
     compilation: Compilation.empty(),
 
     /** @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
-    selectedCueId: '',
+    selectedCueId: CompilationHandler.EmptyId,
 
     /** @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
 
-    selectedTrackId: '',
+    selectedTrackId: CompilationHandler.EmptyId,
 
     mediaUrls: new Map<string, MediaUrl>(),
 

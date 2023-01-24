@@ -206,6 +206,7 @@ export default defineComponent({
 
         /** Selects the previous cue, if any. Otherwise, loop to the last cue */
         toPreviousCue() {
+            console.debug('Compilation::toPreviousCue');
             const allCueIds = this.allCues.map((cue) => cue.Id);
             const indexOfSelected = allCueIds.indexOf(this.selectedCueId);
             if (indexOfSelected > 0) {
@@ -225,6 +226,7 @@ export default defineComponent({
 
         /** Selects the next cue, if any. Otherwise, loop to the first cue */
         toNextCue() {
+            console.debug('Compilation::toNextCue');
             const allCueIds = this.allCues.map((cue) => cue.Id);
             const indexOfSelected = allCueIds.indexOf(this.selectedCueId);
             if (indexOfSelected < allCueIds.length - 1) {
@@ -243,6 +245,7 @@ export default defineComponent({
         },
 
         toMnemonicCue(event: Event) {
+            console.debug('Compilation::toMnemonicCue');
             const allCues = this.allCues;
             const matchingCue = allCues.find(
                 (cue) => cue.Shortcut == (event as CustomEvent).detail,

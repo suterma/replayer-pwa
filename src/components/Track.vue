@@ -12,7 +12,6 @@
     Note: A check for the active track is done in the handler methods. 
     A v-if here would work, but would register the events not in a useful order. -->
         <ReplayerEventHandler
-            v-if="isActiveTrack"
             @backtocue="goToSelectedCue"
             @tonextcue="goToSelectedCue"
             @topreviouscue="goToSelectedCue"
@@ -215,7 +214,9 @@
                 @update:playbackMode="updatedPlaybackMode"
                 :playbackMode="playbackMode"
                 :loopStart="selectedCue?.Time"
-                :loopEnd="selectedCue?.Time + selectedCue?.Duration"
+                :loopEnd="
+                    (selectedCue?.Time ?? 0) + (selectedCue?.Duration ?? 0)
+                "
                 :sourceDescription="track?.Url"
                 @update:volume="updatedVolume"
                 :volume="track.Volume"
@@ -697,6 +698,8 @@ export default defineComponent({
             /*Check for the active track here (again), because otherwise some event handling
             sequences might cause actions on non-active tracks too.*/
             if (this.isActiveTrack) {
+                console.debug('Track::goToSelectedCue of selected track');
+
                 const selectedCueId = this.$store.getters
                     .selectedCueId as string;
                 if (selectedCueId) {
