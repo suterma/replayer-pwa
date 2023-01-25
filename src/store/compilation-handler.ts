@@ -442,6 +442,7 @@ export default class CompilationHandler {
     }
 
     /** Gets the previous track, if any, in the compilation, by it's Id.
+     * @remarks Optionally supports looping back to the end of the compilation, if the end was reached.
      * @param tracks - The tracks that are searched
      * @param trackId - The Id of the track to find the previous of
      * @param loop - When true, and the previous track is not defined, the last track is returned.
@@ -475,7 +476,7 @@ export default class CompilationHandler {
     }
 
     /** Gets the next track, if any, in the compilation, by it's Id.
-     * @remarks Optionally supports looping back to the beginning, if the end was reached.
+     * @remarks Optionally supports looping back to the beginning of the compilation, if the end was reached.
      * @param tracks - The tracks that are searched
      * @param trackId - The Id of the track to find the next of
      * @param loop - When true, and the next track is not defined, the first track is returned.

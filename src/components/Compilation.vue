@@ -200,7 +200,6 @@ export default defineComponent({
             const track = (this.$refs[trackRef] as never)[0] as InstanceType<
                 typeof Track
             >;
-            console.debug('ref track', track);
             return track;
         },
 

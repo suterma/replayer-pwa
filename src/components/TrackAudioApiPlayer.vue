@@ -740,14 +740,13 @@ export default defineComponent({
             }
         },
 
-        /** Applies an offset to compensate fade-in durations */
+        /** Applies an offset to compensate fade-in durations
+         * @remarks At the beginning of tracks, the offset is cut off at zero.
+         */
         applyPreFadeInOffset(): void {
             const time = this.audioElement.currentTime;
             const offset = this.settings.fadeInDuration / 1000;
-            const target = time - offset;
-            this.debugLog(
-                `applyPreFadeInOffset:by:${this.fadeInDuration};from time:${time}; to target:${target}`,
-            );
+            const target = Math.max(0, time - offset);
             this.audioElement.currentTime = target;
         },
 
