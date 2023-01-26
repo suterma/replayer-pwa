@@ -436,6 +436,8 @@ import {
     ICue,
     TrackDisplayMode,
     PlaybackMode,
+    ITrack,
+    ICompilation,
 } from '@/store/compilation-types';
 import CueLevelEditor from '@/components/CueLevelEditor.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
@@ -628,6 +630,7 @@ export default defineComponent({
         toNextCue() {
             document.dispatchEvent(new Event(Replayer.TO_NEXT_CUE));
         },
+
         /** Skips to this track (if loaded)
          * @remarks If the track is not loaded, does nothing.
          * If the track is not yet the active track, tries to activate the track (which will autoplay).
@@ -643,6 +646,13 @@ export default defineComponent({
                 }
             }
         },
+
+        /** Sets the visual transition for the player widget's track change
+         */
+        setWidgetTransit(transition: string): void {
+            this.skipTransitionName = transition;
+        },
+
         /** Activates the wake lock (if enabled in settings)
          * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
          */
@@ -899,6 +909,46 @@ export default defineComponent({
                 this.activateWakeLock();
             }
         },
+        /** Handles active track changes.
+         * @remarks Used to determine the requested player widget transition.
+         */
+        activeTrack(active: ITrack, previous: ITrack) {
+            console.debug(
+                `Track(${this.track.Name})::activeTrack:active:`,
+                active,
+                'prev:',
+                previous,
+            );
+
+            const indexOfActive = CompilationHandler.getIndexOfTrackById(
+                this.compilation.Tracks,
+                active?.Id,
+            );
+
+            const indexOfPrevious = CompilationHandler.getIndexOfTrackById(
+                this.compilation.Tracks,
+                previous?.Id,
+            );
+
+            if (indexOfActive == indexOfPrevious + 1) {
+                // exactly next
+                this.skipTransitionName = 'slide-left';
+            } else if (indexOfActive == indexOfPrevious - 1) {
+                // exactly previous
+                this.skipTransitionName = 'slide-right';
+            } else if (indexOfActive > indexOfPrevious) {
+                // later than next
+                this.skipTransitionName = 'slide-fade-left';
+            } else if (indexOfActive < indexOfPrevious) {
+                // earlier than previous
+                this.skipTransitionName = 'slide-fade-right';
+            }
+            //TODO do loop around
+            console.debug(
+                `Track(${this.track.Name})::skipTransitionName:`,
+                this.skipTransitionName,
+            );
+        },
         /** Handles changes in whether this track is playing.
          * @remarks This activates the wake lock, when playing starts.
          */
@@ -1072,9 +1122,20 @@ export default defineComponent({
             );
             return mediaUrl;
         },
+
+        /** Determines the active track */
+        activeTrack(): ITrack {
+            return this.$store.getters.activeTrack;
+        },
+
+        /** Determines the active track */
+        compilation(): ICompilation {
+            return this.$store.getters.compilation;
+        },
+
         /** Determines whether this is the active track */
         isActiveTrack(): boolean {
-            const activeTrackId = this.$store.getters.activeTrack?.Id as string;
+            const activeTrackId = this.activeTrack?.Id as string;
             return this.track.Id === activeTrackId;
         },
     },

@@ -21,7 +21,7 @@
 
     <!-- The bottom nav bar, used for the media player widget for the active track -->
     <nav
-        class="navbar is-fixed-bottom is-hidden-print"
+        class="navbar is-fixed-bottom has-background-grey-dark is-hidden-print"
         role="form"
         id="media-player"
         aria-label="media player"

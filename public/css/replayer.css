@@ -10728,7 +10728,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 
 /* Make the selected cue visually outstanding besides the color,
- * to better help people with Achromatopsia
+ * to better help people with Achromatopsia$
  * This variant uses the existing button shadow, making it permanent. 
  * It is used to visually extend the button, making it to
  * appear a bit bigger and more brightly bordered.
@@ -11344,22 +11344,69 @@ button.dropdown-item:disabled:hover {
  * Transitions for the Replayer
 **************************************************************
 */
+/* Leaving items should be behind entering items,
+ * let them animate over the leaving items
+  */
+.slide-left-leave-active,
+.slide-right-leave-active,
+.slide-fade-left-leave-active,
+.slide-fade-right-leave-active,
+.fade-leave-active,
+.item-expand-leave-active,
+.list-leave-active {
+  z-index: -1;
+}
+
+/* Leaving is done "out of layout" to not disturb the 
+ * layout by having 2 items in the same place while 
+ * the transition is active  */
 .slide-left-leave-active.transition-in-place,
 .slide-right-leave-active.transition-in-place,
+.slide-fade-left-leave-active.transition-in-place,
+.slide-fade-right-leave-active.transition-in-place,
+.fade-leave-active.transition-in-place,
 .item-expand-leave-active.transition-in-place,
 .list-leave-active.transition-in-place {
   position: absolute;
+}
+
+/* Transitioning items leaving in the bottom navbar should be kept tied to the
+ * bottom. Otherwise items later in the DOM might get pushed out
+ * of the visible area
+ */
+.navbar.is-fixed-bottom .slide-left-leave-active.transition-in-place,
+.navbar.is-fixed-bottom .slide-right-leave-active.transition-in-place,
+.navbar.is-fixed-bottom .slide-fade-left-leave-active.transition-in-place,
+.navbar.is-fixed-bottom .slide-fade-right-leave-active.transition-in-place,
+.navbar.is-fixed-bottom .fade-leave-active.transition-in-place,
+.navbar.is-fixed-bottom .item-expand-leave-active.transition-in-place,
+.navbar.is-fixed-bottom .list-leave-active.transition-in-place {
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+/* All transitions should have the same timing */
+.item-expand-enter-active,
+.item-expand-leave-active,
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active,
+.slide-fade-left-enter-active,
+.slide-fade-left-leave-active,
+.slide-fade-right-enter-active,
+.slide-fade-right-leave-active,
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s ease;
 }
 
 /** **********************************************************
  * Transition for expanding a single item
 **************************************************************
 */
-.item-expand-enter-active,
-.item-expand-leave-active {
-  transition: all 0.3s ease;
-}
-
 .item-expand-enter-from,
 .item-expand-leave-to {
   opacity: 0;
@@ -11371,11 +11418,6 @@ button.dropdown-item:disabled:hover {
  * Transition for sliding left a single item
 **************************************************************
 */
-.slide-left-enter-active,
-.slide-left-leave-active {
-  transition: all 3.3s ease;
-}
-
 .slide-left-leave-to {
   transform: translateX(-100vw);
 }
@@ -11388,11 +11430,6 @@ button.dropdown-item:disabled:hover {
  * Transition for sliding right a single item
 **************************************************************
 */
-.slide-right-enter-active,
-.slide-right-leave-active {
-  transition: all 3.3s ease;
-}
-
 .slide-right-leave-to {
   transform: translateX(100vw);
 }
@@ -11402,15 +11439,43 @@ button.dropdown-item:disabled:hover {
 }
 
 /** **********************************************************
- * Transition for handling list items
+ * Transition for (slide-left) fading a single item
 **************************************************************
 */
-.list-move,
-.list-enter-active,
-.list-leave-active {
+/* fading is actually done on the direct children (nav's in this case),
+ to keep the background non-fading */
+.slide-fade-left-leave-to nav {
+  opacity: 0;
   transition: all 0.3s ease;
 }
 
+.slide-fade-left-enter-from {
+  opacity: 1;
+  transform: translateX(100vw);
+}
+
+/** **********************************************************
+ * Transition for (slide-right) fading a single item
+ * This is currently only used for player widget transitions
+ * when the new item is not directly previous/next to the outgoing item.
+**************************************************************
+*/
+/* fading is actually done on the direct children (nav's in this case),
+ to keep the background non-fading */
+.slide-fade-right-leave-to nav {
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.slide-fade-right-enter-from {
+  opacity: 1;
+  transform: translateX(-100vw);
+}
+
+/** **********************************************************
+ * Transition for handling list items
+**************************************************************
+*/
 .list-enter-from {
   opacity: 0;
   transform: translateX(-32px);
