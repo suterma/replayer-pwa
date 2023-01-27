@@ -24,16 +24,19 @@
         <div class="level-item mr-0">
             <div style="width: 100%">
                 <slot></slot>
-                <input
-                    class="slider is-fullwidth is-small is-slim is-circle is-warning"
-                    step="stepSize"
-                    min="0"
-                    :max="trackDuration ?? 0"
-                    :value="modelValue"
-                    @change="onValueChange"
-                    @input="onValueChange"
-                    type="range"
-                />
+                <label
+                    ><span class="is-sr-only">Time slider</span>
+                    <input
+                        class="slider is-fullwidth is-small is-slim is-circle is-warning"
+                        step="stepSize"
+                        min="0"
+                        id=""
+                        :max="trackDuration ?? 0"
+                        :value="modelValue"
+                        @change="onValueChange"
+                        @input="onValueChange"
+                        type="range"
+                /></label>
             </div>
         </div>
         <!-- Right side -->
