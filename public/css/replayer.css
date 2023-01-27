@@ -10858,6 +10858,12 @@ when no content is shown */
   min-height: 0;
 }
 
+/* Nav-Bars should be below a dropdown menu */
+.navbar.is-fixed-bottom,
+.navbar.is-fixed-top {
+  z-index: 2;
+}
+
 /*************************************************************
  * Additional flexbox helpers
  * These styles are based on and extending the bulma flexbox helpers

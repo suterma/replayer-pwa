@@ -43,8 +43,8 @@ nav .button:focus-visible {
 
 /* Indicate an actionable item */
 .button.is-nav:hover,
-nav .button:hover { 
-    background: rgba($grey-light, .2)   
+nav .button:hover {
+    background: rgba($grey-light, 0.2);
 }
 
 /*************************************************************
@@ -89,17 +89,23 @@ nav .button:hover {
 
 /* On the navbar, remove the hover effect, since the navbar items themselves
  * represent no action (currently only relevant on the bottom player navbar) */
- .navbar {
-  .navbar-item,
-  .navbar-link {
-    &:hover {
-      background-color: inherit;  
+.navbar {
+    .navbar-item,
+    .navbar-link {
+        &:hover {
+            background-color: inherit;
+        }
     }
-  } 
 }
 
 /* The navbar does not have a minimum height, effectively hiding it, 
 when no content is shown */
- .navbar {
-  min-height: 0;
+.navbar {
+    min-height: 0;
+}
+
+/* Nav-Bars should be below a dropdown menu */
+.navbar.is-fixed-bottom,
+.navbar.is-fixed-top {
+    z-index: 2;
 }
