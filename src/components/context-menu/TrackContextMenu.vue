@@ -62,7 +62,7 @@ import {
 import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
 import { confirm /*, shareTrack */ } from '@/code/ui/dialogs';
- /** A nav bar as header with a menu for a compilation
+/** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
     name: 'TrackContextMenu',

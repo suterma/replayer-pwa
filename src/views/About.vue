@@ -122,7 +122,8 @@
                                     href="./#/play?package=https://lib.replayer.app/Test-Compilation%20featuring%20Lidija%20Roos%20%28WAV%20files%20in%20various%20sizes%29.rez"
                                     target="_blank"
                                 >
-                                    Large ZIP (.rez) package (115MB), with WAV files of various sizes</a
+                                    Large ZIP (.rez) package (115MB), with WAV
+                                    files of various sizes</a
                                 >
                             </li>
                         </ul>
