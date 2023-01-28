@@ -19,7 +19,10 @@ module.exports = {
         sourceType: 'module',
     },
     rules: {
-        'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+        // The console is currently used for debugging even on production code
+        // since dev, test, and prod environments get the same code all along
+        // 'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+        'no-console': 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
         'jest/no-disabled-tests': 'warn',
         'jest/no-focused-tests': 'error',
