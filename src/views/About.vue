@@ -417,6 +417,25 @@
                         the MIT License, by the sortable.js team).
                     </li>
                     <li>
+                        Replayer has been granted a free agent for an
+                        <a
+                            href="https://azure.microsoft.com/en-us/products/devops/pipelines"
+                            target="_blank"
+                        >
+                            Azure pipeline</a
+                        >, to automatically build and deploy the application.
+                        (Provided for free by the Microsoft Azure team). Read
+                        more on my
+                        <a
+                            href="https://qrys.ch/how-to-build-and-deploy-a-vue3-app-from-a-github-repo-to-a-domain-using-azure-pipelines/"
+                            target="_blank"
+                        >
+                            Blog about how to continuously build and deploy a
+                            vue3 app, from a GitHub repo, using Azure
+                            Pipelines</a
+                        >.
+                    </li>
+                    <li>
                         Music from the Album "Not For Sale" by Lidija Roos
                         (Released to the public, by Lidija Roos)
                     </li>
