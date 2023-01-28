@@ -1,11 +1,18 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Play from '../views/Play.vue';
+import Setlist from '../views/Setlist.vue';
+import Settings from '../views/Settings.vue';
+import About from '../views/About.vue';
+import Demo from '../views/Demo.vue';
+import Development from '../views/Development.vue';
 import { useTitle } from '@vueuse/core';
 import { store } from '@/store/store';
 import { computed } from 'vue';
 
-//import List from '../views/List.vue';
-
+/** The app routes
+ * @devdoc route level code-splitting is not used, because it is not supported with ES6/2015
+ * Also, the views in Replayer are rather small (especially those rarely used) and would not profit from this anyway.
+ */
 const routes: Array<RouteRecordRaw> = [
     { path: '/', redirect: { name: 'Play' } },
     {
@@ -29,51 +36,27 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/setlist',
         name: 'Setlist',
-        //component: Setlist,
-
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-            import(/* webpackChunkName: "setlist" */ '../views/Setlist.vue'),
+        component: Setlist,
     },
     {
         path: '/settings',
         name: 'Settings',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this routeF
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-            import(/* webpackChunkName: "settings" */ '../views/Settings.vue'),
+        component: Settings,
     },
     {
         path: '/about',
         name: 'About',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-            import(/* webpackChunkName: "about" */ '../views/About.vue'),
+        component: About,
     },
     {
         path: '/demo',
         name: 'Demo',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-            import(/* webpackChunkName: "demo" */ '../views/Demo.vue'),
+        component: Demo,
     },
     {
         path: '/development',
         name: 'Development',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-            import(
-                /* webpackChunkName: "development" */ '../views/Development.vue'
-            ),
+        component: Development,
     },
 ];
 
@@ -82,7 +65,7 @@ const router = createRouter({
     routes,
 });
 
-/** Use the current route and complilation as the title for the document */
+/** Use the current route and compilation as the title for the document */
 const title = computed(() => {
     let compilationInfo = '';
     const compilationTitle = store.getters.compilation.Title;

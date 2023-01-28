@@ -4,7 +4,7 @@
         "target": "es2015",
         // downlevelIteration provides iteration support for es5 and below
         "downlevelIteration": true,
-        "module": "commonjs",
+        "module": "ES6" /*ES6 is a.k.a ES2015*/,
         "strict": true,
         "declaration": true,
         "jsx": "preserve",
