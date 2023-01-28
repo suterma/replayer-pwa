@@ -5,7 +5,11 @@
     "description": "Replayer is a free, cue-based media player for rehearsals with playback music. By the click of a button, Replayer starts to play at predefined times in the audio file.",
     "theme_color": "#f89406",
     "background_color": "#272b30",
-    "categories": ["entertainment", "music", "productivity"],
+    "categories": [
+        "entertainment",
+        "music",
+        "productivity"
+    ],
     "icons": [
         {
             "src": "img/icons/android-chrome-192x192.png",
@@ -51,49 +55,49 @@
             "label": "A screenshot of the playback view of Replayer",
             "src": "/img/screenshot/Replayer-featured-graphic.png",
             "type": "image/png",
-            "sizes": "1024x500",
+            "sizes": "2048x1040",
             "platform": "narrow"
         },
         {
             "label": "A device showing the playback view of Replayer",
-            "src": "/img/screenshot/Phone-screenshot1-iphone678plus.png",
+            "src": "/img/screenshot/Phone-Screenshot1-iphone678plus.png",
             "type": "image/png",
             "sizes": "1410x2862",
             "platform": "narrow"
         },
         {
             "label": "A device showing the settings view of Replayer",
-            "src": "/img/screenshot/Phone-screenshot2-iphone678plus.png",
+            "src": "/img/screenshot/Phone-Screenshot2-iphone678plus.png",
             "type": "image/png",
-            "sizes": "534x958",
+            "sizes": "1410x2862",
             "platform": "narrow"
         },
         {
             "label": "A device showing the playback view of Replayer",
             "src": "/img/screenshot/Phone-Screenshot1-iphone5se.png",
             "type": "image/png",
-            "sizes": "440x788",
+            "sizes": "748x1568",
             "platform": "narrow"
         },
         {
             "label": "A device showing the settings view of Replayer",
             "src": "/img/screenshot/Phone-Screenshot2-iphone5se.png",
             "type": "image/png",
-            "sizes": "445x794",
+            "sizes": "748x1568",
             "platform": "narrow"
         },
         {
             "label": "A device showing the settings view of Replayer",
             "src": "/img/screenshot/Tablet-screenshot1-ipad.png",
             "type": "image/png",
-            "sizes": "1372x880",
+            "sizes": "2504x1752",
             "platform": "wide"
         },
         {
             "label": "A device showing the playback view of Replayer",
             "src": "/img/screenshot/Tablet-screenshot2-ipad.png",
             "type": "image/png",
-            "sizes": "1372x880",
+            "sizes": "2504x1752",
             "platform": "wide"
         }
     ],
@@ -103,7 +107,15 @@
             "name": "Play tracks from a compilation",
             "short_name": "Play",
             "url": "/#/play",
-            "description": "Allows to open a compilation and play tracks from it"
+            "description": "Allows to open a compilation and play tracks from it",
+            "icons": [
+                {
+                    "src": "/img/icons/shortcut-play-icon-96x96.webp",
+                    "sizes": "96x96",
+                    "type": "image/png",
+                    "purpose": "any"
+                }
+            ]
         }
     ]
 }
