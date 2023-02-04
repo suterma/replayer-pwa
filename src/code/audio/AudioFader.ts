@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
  * The goal is to free the actual player from fading handling.
  * Using this promise-based approach especially frees the using code from
  * using timers for calling delayed stop or pause operations after a fade operation.
+ * @remarks Newly attempted fade operations are prevented during already ongoing fade operations. The ongoing
+ * fade operation is however cancelled (and subsequently fades to min).
  * @remarks Also supports a master volume that is applied on top of the fading volume changes.
  * @remarks Currently only supports a linear fade, with a constant gradient,
  * only determined by the predefined durations for a full-scale fade.
@@ -18,7 +20,8 @@ export default class AudioFader {
      */
     stepDuration = 16;
 
-    /** Allows an ongoing fading operation to determine whether it has been superseded
+    /** Token for the currently running fade operation.
+     * @remarks Allows an ongoing fading operation to determine whether it has been superseded
      * by a subsequent operation. This allows the first operation to reject the promise
      * and abandon the fade operation.
      */
@@ -99,11 +102,22 @@ export default class AudioFader {
     /** The maximum audio volume level */
     public static audioVolumeMax = 1;
 
-    /** Token for the currently running fade operation.
+    /** Resets the token for the currently running fade operation.
      * @remarks Allows operations to cancel themselves in favor of a subsequent operation.
      */
     cancel(): void {
         this.operationToken = '';
+    }
+
+    /** If there is a currently running fade operation, reset the token.
+     * @returns Whether an operation was ongoing
+     */
+    hadToCancel(): boolean {
+        if (this.operationToken) {
+            this.cancel();
+            return true;
+        }
+        return false;
     }
 
     /** Sets the volume to the initial value.
@@ -156,7 +170,7 @@ export default class AudioFader {
         if (
             currentVolume < AudioFader.audioVolumeMin ||
             currentVolume > AudioFader.audioVolumeMax ||
-            isNaN(currentVolume)
+            !isFinite(currentVolume)
         ) {
             currentVolume =
                 (AudioFader.audioVolumeMin + AudioFader.audioVolumeMax) / 2;
@@ -170,87 +184,101 @@ export default class AudioFader {
      * An actual fade operation is only started when
      * - the duration is non-zero and
      * - the current volume is below the target level
+     * - no previous fade operation is ongoing
      * otherwise
      * - the promise is immediately resolved.
      */
     fadeIn(): Promise<void> {
-        this.cancel();
-        if (this.fadeInDuration) {
-            return new Promise((resolve) => {
-                const currentVolume = this.getCurrentAudioVolume();
-                if (currentVolume < this.masterVolume) {
-                    return this.fade(
-                        currentVolume,
-                        this.masterVolume,
-                        this.fadeInDuration,
-                    )
-                        .catch(() => {
-                            console.debug(`AudioFader::fadeOut:linear:aborted`);
-                        })
-                        .then(() => {
-                            console.debug(`AudioFader::fadeIn:linear:ended`);
-                            resolve();
-                        });
-                } else {
-                    resolve(); //immediately
-                }
-            });
-        } else {
-            //nothing to fade
-            this.setAudioVolume(this.masterVolume);
+        if (this.hadToCancel()) {
             return Promise.resolve();
+        } else {
+            if (this.fadeInDuration) {
+                return new Promise((resolve) => {
+                    const currentVolume = this.getCurrentAudioVolume();
+                    if (currentVolume < this.masterVolume) {
+                        return this.fade(
+                            currentVolume,
+                            this.masterVolume,
+                            this.fadeInDuration,
+                        )
+                            .catch(() => {
+                                console.debug(
+                                    `AudioFader::fadeIn:linear:aborted`,
+                                );
+                            })
+                            .then(() => {
+                                console.debug(
+                                    `AudioFader::fadeIn:linear:ended`,
+                                );
+                            })
+                            .finally(() => {
+                                resolve();
+                            });
+                    } else {
+                        resolve(); //immediately
+                    }
+                });
+            } else {
+                //nothing to fade
+                this.setAudioVolume(this.masterVolume);
+                return Promise.resolve();
+            }
         }
     }
 
     /** Returns a linear fade promise for the currently playing track
+     * @param duration {number} - A non-zero duration for the fading operation
      * @devdoc This currently only supports linear fade operations
      */
     private fade(from: number, to: number, duration: number): Promise<void> {
-        if (duration) {
-            return new Promise((resolve, reject) => {
-                console.debug(
-                    `AudioFader::fading for:${this.fadeInDuration}ms from:${from} to:${to}`,
-                );
-                //Set exactly to the expected begin volume
-                this.setAudioVolume(from);
+        return new Promise((resolve, reject) => {
+            console.debug(
+                `AudioFader::fading for:${duration}ms from:${from} to:${to}`,
+            );
+            //Set exactly to the expected begin volume
+            this.setAudioVolume(from);
 
-                //Start a repeated call sequence to gradually adjust the volume
-                const stepSize = to - from;
-                const endTime = new Date().getTime() + duration;
-                const currentOperationToken = uuidv4();
-                this.operationToken = currentOperationToken;
-                const clearIntervalId = setInterval(() => {
-                    const now = new Date().getTime();
-                    //Check whether it's time to end the fade
-                    //(By a subsequent operation)
-                    if (this.operationToken != currentOperationToken) {
-                        clearInterval(clearIntervalId);
-                        reject(
-                            'AudioFader::Linear fade aborted due to cancelling or a subsequent fade operation.',
-                        );
-                        return;
-                    }
+            //Start a repeated call sequence to gradually adjust the volume
+            const stepSize = to - from;
+            const endTime = new Date().getTime() + duration;
+            const currentOperationToken = uuidv4();
+            this.operationToken = currentOperationToken;
+            const clearIntervalId = setInterval(() => {
+                const now = new Date().getTime();
+                //Check whether it's time to end the fade
+                //(By a subsequent operation)
+                if (this.operationToken != currentOperationToken) {
+                    clearInterval(clearIntervalId);
+                    this.cancel();
+                    const message =
+                        'AudioFader::Linear fade aborted due to cancelling or a subsequent fade operation.';
+                    console.warn(message);
+                    //Set exactly to the expected end volume, starting from there for the next fade
+                    this.setAudioVolume(to);
+                    reject(message);
+                    return;
+                }
 
-                    //(by target reached or time is up)
-                    if (this.getCurrentAudioVolume() === to || now >= endTime) {
-                        clearInterval(clearIntervalId);
-                        //Set exactly to the expected end volume, in case it was missed slightly
-                        this.setAudioVolume(to);
-                        resolve();
-                        return;
-                    }
+                //(by target reached or time is up)
+                if (this.getCurrentAudioVolume() === to || now >= endTime) {
+                    clearInterval(clearIntervalId);
+                    this.cancel();
+                    //Set exactly to the expected end volume, in case it was missed slightly
+                    this.setAudioVolume(to);
+                    resolve();
+                    return;
+                }
 
-                    //continue fading
-                    const remainingTime = endTime - now;
-                    const passedTime = duration - remainingTime;
-                    const newTarget = from + (stepSize / duration) * passedTime;
-                    this.setAudioVolume(newTarget);
-                }, this.stepDuration);
-            });
-        } else {
-            //nothing to fade
-            return Promise.resolve();
-        }
+                //continue fading
+                const remainingTime = endTime - now;
+                const passedTime = duration - remainingTime;
+                const stepTarget = from + (stepSize / duration) * passedTime;
+                // console.debug(
+                //     `AudioFader::Continue for ${remainingTime}, stepTarget: ${stepTarget}`,
+                // );
+                this.setAudioVolume(stepTarget);
+            }, this.stepDuration);
+        });
     }
 
     /** Returns a linear fade-out promise for the currently playing track
@@ -258,35 +286,48 @@ export default class AudioFader {
      * An actual fade operation is only started when
      * - the duration is non-zero and
      * - the current volume is above the minimum
+     * - no previous fade operation is ongoing
      * otherwise
      * - a fade with duration zero is started and the promise is immediately resolved.
      */
     fadeOut(): Promise<void> {
-        this.cancel();
-        if (this.fadeOutDuration) {
-            return new Promise((resolve) => {
-                const currentVolume = this.getCurrentAudioVolume();
-                console.debug(`AudioFader::fadeOut:volume:${currentVolume}`);
-                if (currentVolume > AudioFader.audioVolumeMin) {
-                    return this.fade(
-                        currentVolume,
-                        AudioFader.audioVolumeMin,
-                        this.fadeOutDuration,
-                    )
-                        .catch(() => {
-                            console.debug(`AudioFader::fadeOut:linear:aborted`);
-                        })
-                        .then(() => {
-                            console.debug(`AudioFader::fadeOut:linear:ended`);
-                            resolve();
-                        });
-                } else {
-                    resolve(); //immediately
-                }
-            });
-        } else {
-            this.setAudioVolume(AudioFader.audioVolumeMin);
+        if (this.hadToCancel()) {
             return Promise.resolve();
+        } else {
+            if (this.fadeOutDuration) {
+                return new Promise((resolve) => {
+                    const currentVolume = this.getCurrentAudioVolume();
+                    console.debug(
+                        `AudioFader::fadeOut:volume:${currentVolume}`,
+                    );
+                    if (currentVolume > AudioFader.audioVolumeMin) {
+                        return this.fade(
+                            currentVolume,
+                            AudioFader.audioVolumeMin,
+                            this.fadeOutDuration,
+                        )
+                            .catch(() => {
+                                console.debug(
+                                    `AudioFader::fadeOut:linear:aborted`,
+                                );
+                            })
+                            .then(() => {
+                                console.debug(
+                                    `AudioFader::fadeOut:linear:ended`,
+                                );
+                            })
+                            .finally(() => {
+                                resolve();
+                            });
+                    } else {
+                        resolve(); //immediately
+                    }
+                });
+            } else {
+                //nothing to fade
+                this.setAudioVolume(AudioFader.audioVolumeMin);
+                return Promise.resolve();
+            }
         }
     }
 }
