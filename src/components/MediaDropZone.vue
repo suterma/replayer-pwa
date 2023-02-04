@@ -380,6 +380,9 @@ export default defineComponent({
                         this.url = ''; //remove the now loaded url
                         this.collapse();
                     });
+
+                //If a single new media file has been loaded, the intention was most likely to edit it
+                this.$router.push('edit');
             }
         },
 
