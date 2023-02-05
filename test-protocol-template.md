@@ -1,4 +1,4 @@
-# Release x.y.x test protocol
+# Template for: Release x.y.x test protocol
 
 The following items have been tested:
 
