@@ -181,12 +181,23 @@ export default defineComponent({
         this.audioElement.onerror = () => {
             this.mediaError = this.audioElement?.error;
             console.debug(
-                `TrackAudioApiPlayer(${this.title})::onerror:mediaError:${this.mediaError}`,
+                `TrackAudioApiPlayer(${this.title})::onerror:mediaError:`,
                 this.mediaError,
             );
+
+            // Use the message and add a descriptive remark.
+            let message = this.mediaError?.message;
+            if (
+                this.mediaError?.code == MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED
+            ) {
+                message =
+                    (message ? message + '. ' : '') +
+                    'The associated resource is not supported. Use an URL to a resource of one of the supported media types.';
+            }
+
             this.$store.commit(
                 MutationTypes.PUSH_ERROR,
-                `Error while retrieving media source for title '${this.title}'. Message: '${this.mediaError?.message}'`,
+                `Error while retrieving media source for title '${this.title}'. Message: '${message}'`,
             );
         };
         this.audioElement.onabort = () => {

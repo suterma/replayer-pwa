@@ -4,8 +4,8 @@ The following items have been tested:
 
 ## Regression test items
 
-- [ ] https://github.com/suterma/replayer-pwa/issues/84
-- [ ] https://github.com/suterma/replayer-pwa/issues/83
+- [x] https://github.com/suterma/replayer-pwa/issues/84
+- [ ] https://github.com/suterma/replayer-pwa/issues/83 :x: Fails, adds unexpected track
 - [ ] https://github.com/suterma/replayer-pwa/issues/82
 - [ ] https://github.com/suterma/replayer-pwa/issues/81
 - [ ] https://github.com/suterma/replayer-pwa/issues/80
