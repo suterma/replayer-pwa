@@ -1,10 +1,5 @@
 <template>
-    <DropdownMenu
-        ref="dropdownMenu"
-        title="App menu"
-        :iconPath="mdiMenu"
-        style="z-index: 3"
-    >
+    <DropdownMenu ref="dropdownMenu" title="App menu" :iconPath="mdiMenu">
         <div id="appContextMenuTop"></div>
         <Hotkey
             v-once
