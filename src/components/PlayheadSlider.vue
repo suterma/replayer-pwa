@@ -5,6 +5,7 @@
         <div class="level-left">
             <div class="level-item">
                 <button
+                    :disabled="disabled"
                     class="button is-outlined is-inverted p-0 pr-2 is-multiline"
                     @click="seek(-5)"
                     title="Current time: click to rewind"
@@ -27,6 +28,7 @@
                 <label
                     ><span class="is-sr-only">Time slider</span>
                     <input
+                        :disabled="disabled"
                         class="slider is-fullwidth is-small is-slim is-circle is-warning"
                         step="stepSize"
                         min="0"
@@ -43,6 +45,7 @@
         <div class="level-right">
             <div class="level-item">
                 <button
+                    :disabled="disabled"
                     class="button is-outlined is-inverted p-0 pl-2 is-multiline"
                     @click="seek(+5)"
                     title="Remaining time: click to forward"
@@ -81,6 +84,10 @@ export default defineComponent({
     ],
     components: { TimeDisplay, BaseIcon },
     props: {
+        /** Whether to show the component in a disabled state
+         * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+         */
+        disabled: Boolean,
         /** The current time of the slider
          */
         modelValue: {

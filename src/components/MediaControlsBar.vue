@@ -2,7 +2,7 @@
     <button
         v-if="hasSecondTrack && !hideTrackNavigation"
         class="button"
-        :disabled="!hasPreviousTrack"
+        :disabled="!hasPreviousTrack || disabled"
         @click="toPreviousTrack()"
         title="skip to previous track"
     >
@@ -11,7 +11,7 @@
     <button
         v-if="!hideCueNavigation"
         class="button"
-        :disabled="!hasPreviousCue"
+        :disabled="!hasPreviousCue || disabled"
         @click="toPreviousCue()"
         title="skip to previous cue"
     >
@@ -22,6 +22,7 @@
     <button
         v-if="!hideStopButton"
         class="button is-hidden-mobile"
+        :disabled="disabled"
         @click="stop()"
         title="Stop"
     >
@@ -31,6 +32,7 @@
     <PlayPauseButton
         v-if="!hidePlayPauseButton"
         class="is-success"
+        :disabled="disabled"
         :isPlaying="isPlaying"
         :isLoading="isFading"
         @click="togglePlayback()"
@@ -40,7 +42,7 @@
     <button
         v-if="!hideCueNavigation"
         class="button"
-        :disabled="!hasNextCue"
+        :disabled="!hasNextCue || disabled"
         @click="toNextCue()"
         title="skip to next cue"
     >
@@ -50,7 +52,7 @@
     <button
         v-if="hasSecondTrack && !hideTrackNavigation"
         class="button"
-        :disabled="!hasNextTrack"
+        :disabled="!hasNextTrack || disabled"
         @click="toNextTrack()"
         title="skip to next track"
     >
@@ -139,6 +141,11 @@ export default defineComponent({
             type: Number,
             default: DefaultTrackVolume,
         },
+
+        /** Whether to show the component in a disabled state
+         * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+         */
+        disabled: Boolean,
 
         /** The playback mode
          * @remarks Implements a two-way binding

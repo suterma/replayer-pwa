@@ -60,7 +60,7 @@
                     <!-- NOTE: Click handling is already handled at the outer TrackHeader component, thus no (additional)
                     click handler is defined for this button -->
                     <PlayPauseButton
-                        :disabled="!isTrackLoaded"
+                        :disabled="!canPlay"
                         :class="{ 'is-success': isActiveTrack }"
                         :isPlaying="isPlaying"
                         :isLoading="isFading"
@@ -83,6 +83,7 @@
             :key="track.Id"
         >
             <CueButtonsField
+                :disabled="!canPlay"
                 :currentSeconds="currentSeconds"
                 :isTrackPlaying="isPlaying"
                 :playbackMode="playbackMode"
@@ -102,7 +103,7 @@
                     <TransitionGroup name="list">
                         <div v-for="cue in cues" :key="cue.Id">
                             <CueLevelEditor
-                                :disabled="!mediaUrl || !isTrackLoaded"
+                                :disabled="!canPlay"
                                 :cue="cue"
                                 :isTrackPlaying="isPlaying"
                                 :playbackMode="playbackMode"
@@ -125,6 +126,7 @@
                         <div class="level-item is-justify-content-flex-start">
                             <div class="buttons has-addons mb-0">
                                 <PlayPauseButton
+                                    :disabled="!canPlay"
                                     class="is-success mb-0"
                                     :isPlaying="isPlaying"
                                     :isLoading="isFading"
@@ -132,6 +134,7 @@
                                     title="Play from current position"
                                 />
                                 <CreateCueButton
+                                    :disabled="!canPlay"
                                     class="mb-0"
                                     :isActiveTrack="isActiveTrack"
                                     :currentSeconds="currentSeconds"
@@ -143,6 +146,7 @@
                     <!-- A central level item. Margins are set to provide nice-looking spacing at all widths -->
                     <div class="level-item mt-4-mobile">
                         <PlayheadSlider
+                            :disabled="!canPlay"
                             class="is-fullwidth ml-4-tablet mr-4-tablet"
                             v-model.number="currentSeconds"
                             @update:modelValue="
@@ -157,6 +161,7 @@
                             <p
                                 class="is-size-7 has-cropped-text"
                                 :class="{
+                                    'has-opacity-half': !canPlay,
                                     'has-text-success': playingCueIsSelected,
                                     'has-text-warning': !playingCueIsSelected,
                                 }"
@@ -172,6 +177,7 @@
                         <div class="level-item is-justify-content-flex-end">
                             <div class="is-grouped">
                                 <MediaControlsBar
+                                    :disabled="disabled"
                                     :hideStopButton="true"
                                     :hideTrackNavigation="true"
                                     :hideCueNavigation="true"
@@ -983,6 +989,11 @@ export default defineComponent({
                 return description;
             }
             return '';
+        },
+
+        /** Whether the current track can play, i.e. the mediaUrl is set and the track media is loaded */
+        canPlay(): boolean {
+            return (this.mediaUrl ?? '').length > 0 && this.isTrackLoaded;
         },
 
         /** Whether the currently playing cue is the selected cue
