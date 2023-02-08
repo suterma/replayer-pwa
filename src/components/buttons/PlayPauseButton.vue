@@ -4,7 +4,6 @@
             button: true,
             'is-loading': isLoading,
         }"
-        :disabled="isDisabled"
         :title="isPlaying ? 'Pause' : 'Play'"
     >
         <BaseIcon v-if="isPlaying" :path="mdiPause" />
@@ -23,11 +22,6 @@ export default defineComponent({
     name: 'PlayPauseButton',
     components: { BaseIcon },
     props: {
-        isDisabled: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
         /** Flag to indicated the loading state */
         isLoading: {
             type: Boolean,

@@ -3,11 +3,11 @@
         <template v-for="cue in track.Cues" :key="cue.Id">
             <CueButton
                 class="is-flex-grow-1"
+                :disabled="disabled || !Number.isFinite(cue.Time)"
                 :time="cue.Time"
                 :shortcut="cue.Shortcut"
                 :duration="cue.Duration"
                 :description="cue.Description"
-                :disabled="!Number.isFinite(cue.Time)"
                 :isTrackPlaying="isTrackPlaying"
                 :playbackMode="playbackMode"
                 hasAddonsRight
@@ -49,6 +49,10 @@ export default defineComponent({
          * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
          */
         isTrackPlaying: Boolean,
+        /** Whether to show the component in a disabled state
+         * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+         */
+        disabled: Boolean,
         /** The playback mode
          * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
          */

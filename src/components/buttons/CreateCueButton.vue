@@ -5,7 +5,7 @@
                 NOTE: Using the ":enabled" property on Hotkey does not work
                 See https://github.com/Simolation/vue-hotkey/issues/2 -->
     <Hotkey
-        v-if="isActiveTrack"
+        v-if="isActiveTrack && !disabled"
         :keys="['insert']"
         :excluded-elements="[]"
         v-slot="{ clickRef }"
@@ -27,6 +27,7 @@
     </Hotkey>
     <button
         v-else
+        :disabled="disabled"
         class="button is-warning is-outlined"
         :class="$attrs.class"
         @click="$emit('createNewCue')"
@@ -65,6 +66,10 @@ export default defineComponent({
             type: Boolean,
             required: true,
         },
+        /** Whether to show the component in a disabled state
+         * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+         */
+        disabled: Boolean,
         /** The playback progress in the current track, in [seconds]
          */
         currentSeconds: Number,
