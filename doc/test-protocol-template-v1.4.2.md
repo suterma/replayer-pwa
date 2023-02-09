@@ -6,19 +6,19 @@ The following items have been tested:
 
 - [x] https://github.com/suterma/replayer-pwa/issues/84
 - [x] https://github.com/suterma/replayer-pwa/issues/83 
-- [ ] https://github.com/suterma/replayer-pwa/issues/82
-- [ ] https://github.com/suterma/replayer-pwa/issues/81
-- [ ] https://github.com/suterma/replayer-pwa/issues/80
-- [ ] https://github.com/suterma/replayer-pwa/issues/73
-- [ ] https://github.com/suterma/replayer-pwa/issues/71
-- [ ] https://github.com/suterma/replayer-pwa/issues/69
-- [ ] https://github.com/suterma/replayer-pwa/issues/67
+- [x] https://github.com/suterma/replayer-pwa/issues/82
+- [ ] https://github.com/suterma/replayer-pwa/issues/81 fails with loading as media file
+- [x] https://github.com/suterma/replayer-pwa/issues/80
+- [x] https://github.com/suterma/replayer-pwa/issues/73
+- [x] https://github.com/suterma/replayer-pwa/issues/71
+- [x] https://github.com/suterma/replayer-pwa/issues/69
+- [x] https://github.com/suterma/replayer-pwa/issues/67
 - [ ] https://github.com/suterma/replayer-pwa/issues/66
-- [ ] https://github.com/suterma/replayer-pwa/issues/60
-- [ ] https://github.com/suterma/replayer-pwa/issues/59
-- [ ] https://github.com/suterma/replayer-pwa/issues/57
-- [ ] https://github.com/suterma/replayer-pwa/issues/56
-- [ ] https://github.com/suterma/replayer-pwa/issues/55
+- [x] https://github.com/suterma/replayer-pwa/issues/60
+- [x] https://github.com/suterma/replayer-pwa/issues/59
+- [x] https://github.com/suterma/replayer-pwa/issues/57
+- [x] https://github.com/suterma/replayer-pwa/issues/56
+- [x] https://github.com/suterma/replayer-pwa/issues/55
 - [ ] https://github.com/suterma/replayer-pwa/issues/52
 - [ ] https://github.com/suterma/replayer-pwa/issues/51
 - [ ] https://github.com/suterma/replayer-pwa/issues/50
