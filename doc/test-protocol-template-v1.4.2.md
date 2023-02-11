@@ -13,20 +13,20 @@ The following items have been tested:
 - [x] https://github.com/suterma/replayer-pwa/issues/71
 - [x] https://github.com/suterma/replayer-pwa/issues/69
 - [x] https://github.com/suterma/replayer-pwa/issues/67
-- [ ] https://github.com/suterma/replayer-pwa/issues/66
+- [ ] https://github.com/suterma/replayer-pwa/issues/66 todo
 - [x] https://github.com/suterma/replayer-pwa/issues/60
 - [x] https://github.com/suterma/replayer-pwa/issues/59
 - [x] https://github.com/suterma/replayer-pwa/issues/57
 - [x] https://github.com/suterma/replayer-pwa/issues/56
 - [x] https://github.com/suterma/replayer-pwa/issues/55
-- [ ] https://github.com/suterma/replayer-pwa/issues/52
-- [ ] https://github.com/suterma/replayer-pwa/issues/51
-- [ ] https://github.com/suterma/replayer-pwa/issues/50
-- [ ] https://github.com/suterma/replayer-pwa/issues/41
-- [ ] https://github.com/suterma/replayer-pwa/issues/38
-- [ ] https://github.com/suterma/replayer-pwa/issues/32
-- [ ] https://github.com/suterma/replayer-pwa/issues/26
-- [ ] https://github.com/suterma/replayer-pwa/issues/25
-- [ ] https://github.com/suterma/replayer-pwa/issues/24
-- [ ] https://github.com/suterma/replayer-pwa/issues/14
-- [ ] https://github.com/suterma/replayer-pwa/issues/11
+- [x] https://github.com/suterma/replayer-pwa/issues/52
+- [x] https://github.com/suterma/replayer-pwa/issues/51
+- [x] https://github.com/suterma/replayer-pwa/issues/50
+- [x] https://github.com/suterma/replayer-pwa/issues/41
+- [x] https://github.com/suterma/replayer-pwa/issues/38
+- [x] https://github.com/suterma/replayer-pwa/issues/32
+- [x] https://github.com/suterma/replayer-pwa/issues/26
+- [ ] https://github.com/suterma/replayer-pwa/issues/25 not tested; no test file available
+- [ ] https://github.com/suterma/replayer-pwa/issues/24 In the track file editor, ESC does not cancel the edit
+- [x] https://github.com/suterma/replayer-pwa/issues/14
+- [x] https://github.com/suterma/replayer-pwa/issues/11
