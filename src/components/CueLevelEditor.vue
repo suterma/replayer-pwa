@@ -11,7 +11,7 @@
                             <CueButton
                                 :time="cue.Time"
                                 :shortcut="cue.Shortcut"
-                                :duration="cue.Duration"                               
+                                :duration="cue.Duration"
                                 :isTrackPlaying="isTrackPlaying"
                                 :playbackMode="playbackMode"
                                 @click="cueClick()"
@@ -37,7 +37,7 @@
                                 @change="updateDescription($event)"
                                 @input="updateDescription($event)"
                                 :placeholder="cuePlaceholder"
-                                size="60"
+                                size="320"
                             />
                         </p>
                     </div>
@@ -183,7 +183,7 @@ export default defineComponent({
         },
     },
     data() {
-        return {         
+        return {
             /** Icons from @mdi/js */
             mdiTrashCanOutline: mdiTrashCanOutline,
         };
@@ -381,14 +381,31 @@ export default defineComponent({
 
 @media screen and (min-width: 769px) {
     .cue.button {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+/** desktop */
+@media screen and (min-width: 1024px) {
+    .cue.button {
         padding-left: 3rem;
         padding-right: 3rem;
     }
 }
-@media screen and (min-width: 1024px) {
+
+/** widescreen */
+@media screen and (min-width: 1216px) {
     .cue.button {
         padding-left: 4rem;
         padding-right: 4rem;
+    }
+}
+
+/* fullhd */
+@media screen and (min-width: 1408px) {
+    .cue.button {
+        padding-left: 5rem;
+        padding-right: 5rem;
     }
 }
 
@@ -405,6 +422,11 @@ export default defineComponent({
     select {
     border-bottom-right-radius: 4px;
     border-top-right-radius: 4px;
+}
+
+/* minimum input width */
+input {
+    min-width: 4rem;
 }
 
 /** Custom modification for the cue level.
