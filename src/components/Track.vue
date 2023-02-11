@@ -177,7 +177,7 @@
                         <div class="level-item is-justify-content-flex-end">
                             <div class="is-grouped">
                                 <MediaControlsBar
-                                    :disabled="disabled"
+                                    :disabled="!canPlay"
                                     :hideStopButton="true"
                                     :hideTrackNavigation="true"
                                     :hideCueNavigation="true"
