@@ -1,7 +1,8 @@
-import { Compilation, Track } from '@/store/compilation-types';
+import { Compilation, ICue, Track } from '@/store/compilation-types';
 import { openDialog } from 'vue3-promise-dialog';
 import ConfirmDialog from '../../components/dialogs/ConfirmDialog.vue';
 import TrackSharingDialog from '../../components/dialogs/TrackSharingDialog.vue';
+import AddTextCuesDialog from '../../components/dialogs/AddTextCuesDialog.vue';
 import CompilationDownloadDialog from '../../components/dialogs/CompilationDownloadDialog.vue';
 
 /** A simple confirmation function that uses the ConfirmDialog.vue component
@@ -19,6 +20,13 @@ export function confirm(header: string, question: string): Promise<boolean> {
  */
 export function shareTrack(track: Track): Promise<boolean> {
     return openDialog(TrackSharingDialog, { track });
+}
+
+/** A text input that creates a cue per line, using the AddTextCuesDialog.vue component
+ * @returns A promise of a set of cues that the user will provide.
+ */
+export function addTextCues(track: Track): Promise<ICue[]> {
+    return openDialog(AddTextCuesDialog, { track });
 }
 
 /** A download action that uses the CompilationDownloadDialog.vue component

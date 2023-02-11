@@ -16,6 +16,13 @@
         />
         <Experimental v-once>
             <DropdownMenuButton
+                v-if="track"
+                title="Add multiple cues..."
+                subTitle="(add cues using text lines)"
+                @click="addMultipleCues()"
+            />
+            <DropdownMenuButton
+                v-if="track"
                 title="Share..."
                 subTitle="(allows to share a track)"
                 @click="share()"
@@ -61,7 +68,9 @@ import {
 } from '@mdi/js';
 import { ActionTypes } from '@/store/action-types';
 import { MutationTypes } from '@/store/mutation-types';
-import { confirm /*, shareTrack */ } from '@/code/ui/dialogs';
+import { addTextCues, confirm, shareTrack } from '@/code/ui/dialogs';
+import { ICue, ITrack } from '@/store/compilation-types';
+import CompilationHandler from '@/store/compilation-handler';
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
@@ -97,12 +106,32 @@ export default defineComponent({
     },
     methods: {
         share() {
-            //TODO enable with a store getter
-            // shareTrack(this.track).then((ok) => {
-            //     if (ok) {
-            //         console.debug(`TrackHeader::sharing done`);
-            //     }
-            // });
+            if (this.track) {
+                shareTrack(this.track).then((ok) => {
+                    if (ok) {
+                        console.debug(`TrackHeader::sharing done`);
+                    }
+                });
+            }
+        },
+        addMultipleCues() {
+            if (this.track) {
+                addTextCues(this.track).then((cues: ICue[]) => {
+                    if (cues) {
+                        const trackId = this.trackId;
+                        cues.forEach((cue) => {
+                            this.$store.commit(MutationTypes.ADD_CUE, {
+                                trackId,
+                                cue,
+                            });
+                        });
+
+                        console.debug(
+                            `TrackHeader::adding multiple cues from text done`,
+                        );
+                    }
+                });
+            }
         },
         /** Removes the track from the compilation
          */
@@ -143,6 +172,29 @@ export default defineComponent({
                 MutationTypes.REASSIGN_CUE_SHORTCUTS,
                 this.trackId,
             );
+        },
+    },
+    computed: {
+        /** The currently available tracks in the compilation
+         */
+        tracks(): Array<ITrack> | undefined {
+            const tracks = this.$store.getters.tracks as
+                | Array<ITrack>
+                | undefined;
+
+            return tracks;
+        },
+
+        /** The track for the context, if any
+         */
+        track(): ITrack | undefined {
+            if (this.tracks && this.trackId) {
+                return CompilationHandler.getTrackById(
+                    this.tracks,
+                    this.trackId,
+                );
+            }
+            return undefined;
         },
     },
 });
