@@ -69,49 +69,58 @@ The URL input is wider, because it should be able to easily deal with lengthy in
             v-if="isExpanded"
             class="level-item has-text-centered is-flex-grow-5 is-flex-shrink-1"
         >
-            <div class="field has-addons is-flex-grow-5 is-flex-shrink-1">
-                <p class="control is-flex-grow-5 is-flex-shrink-1">
-                    <input
-                        class="input"
-                        type="url"
-                        inputmode="url"
-                        :title="replaceInfo"
-                        v-model="url"
-                        :placeholder="replaceUrl ? replaceUrl : 'Paste an URL'"
-                    />
-                </p>
-                <Experimental class="control">
-                    <button
-                        class="button is-primary"
-                        :class="{
-                            'is-loading': isLoadingFromUrl,
-                        }"
-                        @click="fetchUrl"
-                    >
-                        Fetch
-                    </button>
-                </Experimental>
-                <div class="control">
-                    <button
-                        :disabled="!url"
-                        class="button is-primary"
-                        :class="{
-                            'is-loading': isUsingMediaFromUrl,
-                        }"
-                        :title="replaceInfo"
-                        @click="useMediaUrl"
-                    >
-                        <template v-if="isReplacementMode">
-                            <BaseIcon v-once :path="mdiSwapHorizontal" />
-                            <span>Replace</span>
-                        </template>
-                        <template v-else>
-                            <BaseIcon v-once :path="mdiMusicNotePlus" />
-                            <span>Use</span>
-                        </template>
-                    </button>
+            <form @submit.prevent="useMediaUrl">
+                <div class="field has-addons is-flex-grow-5 is-flex-shrink-1">
+                    <p class="control is-flex-grow-5 is-flex-shrink-1">
+                        <input
+                            class="input"
+                            type="url"
+                            size="120"
+                            inputmode="url"
+                            :title="replaceInfo"
+                            v-model="url"
+                            :placeholder="
+                                replaceUrl ? replaceUrl : 'Paste an URL'
+                            "
+                            v-focus
+                        />
+                    </p>
+                    <Experimental class="control">
+                        <button
+                            type="button"
+                            :disabled="!url"
+                            class="button is-primary"
+                            :class="{
+                                'is-loading': isLoadingFromUrl,
+                            }"
+                            @click="fetchUrl"
+                        >
+                            Fetch
+                        </button>
+                    </Experimental>
+                    <div class="control">
+                        <button
+                            type="submit"
+                            :disabled="!url"
+                            class="button is-primary"
+                            :class="{
+                                'is-loading': isUsingMediaFromUrl,
+                            }"
+                            :title="replaceInfo"
+                        >
+                            <!-- @click.prevent="useMediaUrl" -->
+                            <template v-if="isReplacementMode">
+                                <BaseIcon v-once :path="mdiSwapHorizontal" />
+                                <span>Replace</span>
+                            </template>
+                            <template v-else>
+                                <BaseIcon v-once :path="mdiMusicNotePlus" />
+                                <span>Use</span>
+                            </template>
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
 
         <template v-if="offerDemo">

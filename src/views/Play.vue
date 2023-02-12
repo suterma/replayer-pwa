@@ -27,11 +27,18 @@
         <!-- v-click-outside seems not to work well with v-if -->
         <!-- Additionally, v-show seems not to work properly when used directly on the MediaDropZone-Element, thus it's applied to an extra div -->
         <!-- Offer the demo only when no compilation/track is shown -->
-        <MediaDropZone
-            v-model:isExpanded="isMediaDropZoneExpanded"
-            v-click-outside="clickedOutside"
-            :offerDemo="!hasCompilation"
-        />
+        <Hotkey
+            :enabled="isMediaDropZoneExpanded"
+            :keys="['esc']"
+            :excluded-elements="[]"
+            @hotkey="clickedOutside"
+        >
+            <MediaDropZone
+                v-model:isExpanded="isMediaDropZoneExpanded"
+                v-click-outside="clickedOutside"
+                :offerDemo="!hasCompilation"
+            />
+        </Hotkey>
     </div>
     <template v-if="isEditMode && hasAvailableMedia">
         <div class="has-text-centered block">
@@ -64,6 +71,7 @@ import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
 import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
 import { MediaUrl } from '@/store/state-types';
+import { Hotkey } from '@simolation/vue-hotkey';
 
 /** A view for playing an existing compilation */
 export default defineComponent({
@@ -77,6 +85,7 @@ export default defineComponent({
         WelcomeText,
         CollapsiblePanel,
         MediaList,
+        Hotkey,
     },
     data() {
         return {

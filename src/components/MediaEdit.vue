@@ -1,5 +1,5 @@
 <template>
-    <div v-click-outside="acceptValue">
+    <div v-click-outside="exit">
         <MediaSourceIndicator
             v-if="!editMode"
             class="is-flex is-align-items-center"
@@ -15,19 +15,20 @@
                 title="Click to edit the media source"
             />
         </MediaSourceIndicator>
-        <MediaDropZone
-            v-else
-            :isExpanded="true"
-            :replaceUrl="trackUrl"
-            :trackId="trackId"
-            ref="mediaDropZone"
-        >
-            <NavButton
-                @click="toggleEditMode()"
-                :iconPath="mdiCheckBold"
-                title="Click to finish editing the media source"
-            />
-        </MediaDropZone>
+        <Hotkey v-else :keys="['esc']" :excluded-elements="[]" @hotkey="exit">
+            <MediaDropZone
+                :isExpanded="true"
+                :replaceUrl="trackUrl"
+                :trackId="trackId"
+                ref="mediaDropZone"
+            >
+                <NavButton
+                    @click="toggleEditMode()"
+                    :iconPath="mdiCheckBold"
+                    title="Click to finish editing the media source"
+                />
+            </MediaDropZone>
+        </Hotkey>
     </div>
 </template>
 
@@ -36,13 +37,14 @@ import { defineComponent } from 'vue';
 import NavButton from '@/components/buttons/NavButton.vue';
 import MediaSourceIndicator from '@/components/MediaSourceIndicator.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
- import { mdiPencilOutline, mdiCheckBold } from '@mdi/js';
+import { mdiPencilOutline, mdiCheckBold } from '@mdi/js';
+import { Hotkey } from '@simolation/vue-hotkey';
 
 /** An editor for a media source for a Track
  */
 export default defineComponent({
     name: 'MediaEdit',
-    components: { NavButton, MediaDropZone, MediaSourceIndicator },
+    components: { NavButton, MediaDropZone, MediaSourceIndicator, Hotkey },
     props: {
         trackId: {
             type: String,
@@ -67,12 +69,11 @@ export default defineComponent({
         toggleEditMode() {
             this.editMode = !this.editMode;
         },
-        /** Accept the value and end the edit mode */
-        acceptValue() {
+        /** ends the edit mode */
+        exit() {
             this.editMode = false;
         },
     },
-    computed: {},
 });
 </script>
 <style scoped>
