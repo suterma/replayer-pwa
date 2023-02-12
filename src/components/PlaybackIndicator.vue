@@ -1,28 +1,29 @@
 <template>
-    <button class="button is-indicator" :title="indication">
-        <BaseIcon
-            :path="isUnavailable ? mdiAlert : mdiCircle"
-            :class="{
-                'has-text-warning': isUnavailable,
-                'has-text-dark': isUnloaded,
-                'has-text-success': isPlaying && !isUnavailable,
-                'has-text-grey-dark': isReady && isUnavailable,
-                'has-text-grey': isReady && !isUnavailable,
-            }"
-        />
-    </button>
+    <NavButton
+        class="is-indicator"
+        :class="{
+            'has-text-warning': isUnavailable,
+            'has-text-dark': isUnloaded,
+            'has-text-success': isPlaying && !isUnavailable,
+            'has-text-grey-dark': isReady && isUnavailable,
+            'has-text-grey': isReady && !isUnavailable,
+        }"
+        :title="indication"
+        :iconPath="isUnavailable ? mdiAlert : mdiCircle"
+    >
+    </NavButton>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import BaseIcon from '@/components/icons/BaseIcon.vue';
+import NavButton from '@/components/buttons/NavButton.vue';
 import { mdiAlert, mdiCircle } from '@mdi/js';
 
 /** An indicator for the track playback state
  */
 export default defineComponent({
     name: 'PlaybackIndicator',
-    components: { BaseIcon },
+    components: { NavButton },
     props: {
         /** Whether the indicator should convey the playing state */
         isPlaying: {
@@ -71,9 +72,14 @@ export default defineComponent({
 
             return 'Track is in an unknown state';
         },
-        // isLoading(): boolean {
-        //     return !this.isUnavailable && !this.isPlaying && !this.isReady;
-        // },
     },
 });
 </script>
+<style scoped>
+.is-indicator {
+    /** Playback Indicators do not interact, however, for the title tooltip, pointer-events none is not usable */
+    pointer-events: auto !important;
+    cursor: default;
+
+}
+</style>
