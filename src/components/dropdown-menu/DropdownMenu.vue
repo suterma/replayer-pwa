@@ -1,34 +1,31 @@
 <template>
-    <!-- 
+    <div
+        class="dropdown is-right"
+        :class="{
+            'is-active': isDropdownExpanded,
+        }"
+    >
+        <!-- 
     //TODO unfortunately the ESC hotkey does interfere with possibly some other instance
     //for the ESC hotkey, most probably in the media handlers, possibly also on the dialogs. 
+    //The problem only occurs in the edit view
     -->
-    <Hotkey
-        :enabled="false"
-        :keys="['']"
-        :excluded-elements="[]"
-        @hotkey="collapseDropdown"
-    >
-        <div
-            :class="{
-                dropdown: true,
-                'is-right': true,
-                'is-hoverable': false,
-                'is-active': isDropdownExpanded,
-            }"
-            v-click-outside="collapseDropdown"
+        <DismissiblePanel
+            @dismissed="collapseDropdown"
+            :disabled="!isDropdownExpanded"
         >
             <!-- dropdown-trigger -->
-            <!-- z-index must be larger than for h1 (but less then the fixed footer) -->
-            <NavButton
-                style="z-index: 1"
-                aria-haspopup="true"
-                aria-controls="dropdown-menu"
-                :title="title"
-                :iconPath="iconPath"
-                @click="toggleDropdownExpanded()"
-            />
-
+            <div class="dropdown-trigger">
+                <!-- z-index must be larger than for h1 (but less then the fixed footer) -->
+                <NavButton
+                    style="z-index: 1"
+                    aria-haspopup="true"
+                    aria-controls="dropdown-menu"
+                    :title="title"
+                    :iconPath="iconPath"
+                    @click="toggleDropdownExpanded()"
+                />
+            </div>
             <!-- z-index must be larger than the fixed footer -->
             <div
                 style="z-index: 3"
@@ -51,21 +48,21 @@
                     </slot>
                 </div>
             </div>
-        </div>
-    </Hotkey>
+        </DismissiblePanel>
+    </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import NavButton from '@/components/buttons/NavButton.vue';
+import DismissiblePanel from '@/components/DismissiblePanel.vue';
 import { mdiDotsVertical } from '@mdi/js';
-import { Hotkey } from '@simolation/vue-hotkey';
 
 /** A drop down menu, with a slot for the menu items.
  */
 export default defineComponent({
     name: 'DropdownMenu',
-    components: { NavButton, Hotkey },
+    components: { NavButton, DismissiblePanel },
     props: {
         /* The menu title*/
         title: {
@@ -90,12 +87,17 @@ export default defineComponent({
     },
     methods: {
         toggleDropdownExpanded() {
+            console.debug('DropdownMenu::toggleDropdownExpanded');
+
             this.isDropdownExpanded = !this.isDropdownExpanded;
         },
         collapseDropdown() {
+            console.debug('DropdownMenu::collapseDropdown');
             this.isDropdownExpanded = false;
         },
         expandDropdown() {
+            console.debug('DropdownMenu::expandDropdown');
+
             this.isDropdownExpanded = true;
         },
     },

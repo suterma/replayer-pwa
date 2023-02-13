@@ -1,50 +1,53 @@
 <template>
-    <div v-click-outside="exit">
-        <MediaSourceIndicator
-            v-if="!editMode"
-            class="is-flex is-align-items-center"
-            :source="trackUrl"
-            @click="toggleEditMode()"
-        >
-            <slot></slot>
-            <!-- Edit -->
-            <!-- To not disturb the original layout by the edit button, just position it absolutely,
+    <MediaSourceIndicator
+        v-if="!editMode"
+        class="is-flex is-align-items-center"
+        :source="trackUrl"
+        @click="toggleEditMode()"
+    >
+        <slot></slot>
+        <!-- Edit -->
+        <!-- To not disturb the original layout by the edit button, just position it absolutely,
             and introduce a margin on the original text. -->
+        <NavButton
+            :iconPath="mdiPencilOutline"
+            title="Click to edit the media source"
+        />
+    </MediaSourceIndicator>
+    <DismissiblePanel v-else @dismissed="exit">
+        <MediaDropZone
+            :isExpanded="true"
+            :replaceUrl="trackUrl"
+            :trackId="trackId"
+            ref="mediaDropZone"
+        >
             <NavButton
-                :iconPath="mdiPencilOutline"
-                title="Click to edit the media source"
+                @click="toggleEditMode()"
+                :iconPath="mdiCheckBold"
+                title="Click to finish editing the media source"
             />
-        </MediaSourceIndicator>
-        <Hotkey v-else :keys="['esc']" :excluded-elements="[]" @hotkey="exit">
-            <MediaDropZone
-                :isExpanded="true"
-                :replaceUrl="trackUrl"
-                :trackId="trackId"
-                ref="mediaDropZone"
-            >
-                <NavButton
-                    @click="toggleEditMode()"
-                    :iconPath="mdiCheckBold"
-                    title="Click to finish editing the media source"
-                />
-            </MediaDropZone>
-        </Hotkey>
-    </div>
+        </MediaDropZone>
+    </DismissiblePanel>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import NavButton from '@/components/buttons/NavButton.vue';
+import DismissiblePanel from '@/components/DismissiblePanel.vue';
 import MediaSourceIndicator from '@/components/MediaSourceIndicator.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import { mdiPencilOutline, mdiCheckBold } from '@mdi/js';
-import { Hotkey } from '@simolation/vue-hotkey';
 
 /** An editor for a media source for a Track
  */
 export default defineComponent({
     name: 'MediaEdit',
-    components: { NavButton, MediaDropZone, MediaSourceIndicator, Hotkey },
+    components: {
+        NavButton,
+        MediaDropZone,
+        MediaSourceIndicator,
+        DismissiblePanel,
+    },
     props: {
         trackId: {
             type: String,

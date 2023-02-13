@@ -22,23 +22,15 @@
     </div>
     <div
         class="section pt-6 pl-0 pr-0 block"
-        v-show="isEditMode || !hasCompilation"
+        v-if="isEditMode || !hasCompilation"
     >
-        <!-- v-click-outside seems not to work well with v-if -->
-        <!-- Additionally, v-show seems not to work properly when used directly on the MediaDropZone-Element, thus it's applied to an extra div -->
-        <!-- Offer the demo only when no compilation/track is shown -->
-        <Hotkey
-            :enabled="isMediaDropZoneExpanded"
-            :keys="['esc']"
-            :excluded-elements="[]"
-            @hotkey="clickedOutside"
-        >
+        <DismissiblePanel @dismissed="collapseMediaDropZone">
+            <!-- Offer the demo only when no compilation/track is shown -->
             <MediaDropZone
                 v-model:isExpanded="isMediaDropZoneExpanded"
-                v-click-outside="clickedOutside"
                 :offerDemo="!hasCompilation"
             />
-        </Hotkey>
+        </DismissiblePanel>
     </div>
     <template v-if="isEditMode && hasAvailableMedia">
         <div class="has-text-centered block">
@@ -68,10 +60,10 @@ import MediaDropZone from '@/components/MediaDropZone.vue';
 import WelcomeText from '@/components/WelcomeText.vue';
 import CompilationLoader from '@/components/CompilationLoader.vue';
 import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
+import DismissiblePanel from '@/components/DismissiblePanel.vue';
 import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
 import { MediaUrl } from '@/store/state-types';
-import { Hotkey } from '@simolation/vue-hotkey';
 
 /** A view for playing an existing compilation */
 export default defineComponent({
@@ -85,7 +77,7 @@ export default defineComponent({
         WelcomeText,
         CollapsiblePanel,
         MediaList,
-        Hotkey,
+        DismissiblePanel,
     },
     data() {
         return {
@@ -106,9 +98,8 @@ export default defineComponent({
         },
     },
     methods: {
-        clickedOutside(): void {
-            //console.log('Play::v-click-outside:MediaDropZone');
-            this.isMediaDropZoneExpanded = !this.hasCompilation;
+        collapseMediaDropZone(): void {
+             this.isMediaDropZoneExpanded = !this.hasCompilation;
         },
 
         updateMediaDropZoneExpansion(expanded: boolean): void {
