@@ -58,7 +58,7 @@
                                 class="input has-text-right"
                                 :modelValue="cueTime"
                                 @change="updateCueTime"
-                                size="8"
+                                size="9"
                             />
                         </p>
                         <div class="control is-hidden-mobile">
@@ -100,7 +100,7 @@
                                     @change="updateShortcut($event)"
                                     @input="updateShortcut($event)"
                                     placeholder="shortcut"
-                                    size="8"
+                                    size="9"
                                 />
                             </p>
                         </div>
@@ -424,11 +424,6 @@ export default defineComponent({
     border-top-right-radius: 4px;
 }
 
-/* minimum input width */
-input {
-    min-width: 4rem;
-}
-
 /** Custom modification for the cue level.
 */
 .level {
@@ -448,6 +443,32 @@ input {
     .level-right {
         /* Keep the right hand items small */
         flex-basis: 0;
+    }
+}
+
+/*************************************************************
+ * Input width depending on viewport size
+**************************************************************
+*/
+
+/* minimum input width for decimal time */
+input[type='number'][inputmode='decimal'] {
+    min-width: 9ch;
+}
+/* minimum input width for shortcuts */
+input[type='text'] {
+    min-width: 6ch;
+}
+
+/* fullhd */
+@media screen and (min-width: 1408px) {
+    /* minimum input width for decimal time */
+    input[type='number'][inputmode='decimal'] {
+        min-width: 11ch;
+    }
+    /* minimum input width for shortcuts */
+    input[type='text'] {
+        min-width: 8ch;
     }
 }
 </style>
