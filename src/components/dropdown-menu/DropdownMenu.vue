@@ -12,7 +12,7 @@
     -->
         <DismissiblePanel
             @dismissed="collapseDropdown"
-            :disabled="!isDropdownExpanded"
+            :dismissible="isDropdownExpanded"
         >
             <!-- dropdown-trigger -->
             <div class="dropdown-trigger">

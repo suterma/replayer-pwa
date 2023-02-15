@@ -24,7 +24,10 @@
         class="section pt-6 pl-0 pr-0 block"
         v-if="isEditMode || !hasCompilation"
     >
-        <DismissiblePanel @dismissed="collapseMediaDropZone">
+        <DismissiblePanel
+            @dismissed="collapseMediaDropZone"
+            :dismissible="isMediaDropZoneExpanded"
+        >
             <!-- Offer the demo only when no compilation/track is shown -->
             <MediaDropZone
                 v-model:isExpanded="isMediaDropZoneExpanded"
