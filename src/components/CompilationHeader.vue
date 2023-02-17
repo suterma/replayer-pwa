@@ -17,8 +17,7 @@
                             title="Compilation title"
                         />
                         <span v-else class="title is-3">
-                            {{ title }} &nbsp;
-                            <!-- add placeholder for layout consistency -->
+                            {{ title }}
                         </span>
                     </p>
                 </div>
