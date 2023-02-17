@@ -10743,8 +10743,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
    */
 .player-timeline .foreground {
   position: relative;
-  z-index: 2;
-  pointer-events: none;
+  z-index: 1;
 }
 
 /*************************************************************

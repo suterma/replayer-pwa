@@ -101,9 +101,7 @@
    */
 .player-timeline .foreground {
     position: relative;
-    z-index: 2;
-    // However in the foreground, these display elements should not capture click events
-    pointer-events: none;
+    z-index: 1;
 }
 
 /*************************************************************
