@@ -3,7 +3,7 @@
         <!-- The Hotkey needs to be enabled/disabled using v-if, not with it's own enabled property
         See https://github.com/Simolation/vue-hotkey/issues/2  -->
         <Hotkey
-            v-if="dismissible"
+            :disabled="!dismissible"
             :keys="['esc']"
             :excluded-elements="[]"
             @hotkey="dismissed"

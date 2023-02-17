@@ -1,11 +1,9 @@
 <template>
     <!-- Create Cue (With Hotkey for the active track)
                 Creating a cue should also work when invoked from inside a 
-                textbox, thus explicitly no elements are excluded.
-                NOTE: Using the ":enabled" property on Hotkey does not work
-                See https://github.com/Simolation/vue-hotkey/issues/2 -->
+                textbox, thus explicitly no elements are excluded.-->
     <Hotkey
-        v-if="isSelectedCue"
+        :disabled="!isSelectedCue"
         :keys="['shift', 'insert']"
         :excluded-elements="[]"
         v-slot="{ clickRef }"
@@ -16,31 +14,17 @@
             @click="$emit('adjustCue')"
             :ref="clickRef"
         >
-            <BaseIcon v-once :path="mdiTimerPlay" />
+            <BaseIcon
+                :path="isSelectedCue ? mdiTimerPlay : mdiTimerPlayOutline"
+            />
             <!-- On large screens also show an indicative text -->
             <span class="is-hidden-touch has-opacity-half">Adjust</span>
-            <ShortcutDisplay v-once>
+            <ShortcutDisplay :class="{ 'is-invisible': !isSelectedCue }">
                 <BaseIcon v-once :path="mdiAppleKeyboardShift" class="mr-1" />
                 + INSERT</ShortcutDisplay
             >
         </button>
     </Hotkey>
-    <button
-        v-else
-        class="button"
-        title="Adjusts the cue time to the current playback time"
-        @click="$emit('adjustCue')"
-    >
-        <BaseIcon v-once :path="mdiTimerPlayOutline" />
-        <!-- On large screens also show an indicative text -->
-        <span class="is-hidden-touch has-opacity-half">Adjust</span>
-        <!-- Show the inert shortcut as a placeholder, to keep the layout unchanged
-        on cue selection changes -->
-        <ShortcutDisplay v-once class="is-invisible">
-            <BaseIcon v-once :path="mdiAppleKeyboardShift" class="mr-1" />
-            + INSERT</ShortcutDisplay
-        >
-    </button>
 </template>
 
 <script lang="ts">

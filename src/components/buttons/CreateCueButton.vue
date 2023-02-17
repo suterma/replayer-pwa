@@ -1,11 +1,9 @@
 <template>
     <!-- Create Cue (With Hotkey for the active track)
                 Creating a cue should also work when invoked from inside a 
-                textbox, thus explicitly no elements are excluded.
-                NOTE: Using the ":enabled" property on Hotkey does not work
-                See https://github.com/Simolation/vue-hotkey/issues/2 -->
+                textbox, thus explicitly no elements are excluded.-->
     <Hotkey
-        v-if="isActiveTrack && !disabled"
+        :disabled="!useShortcut"
         :keys="['insert']"
         :excluded-elements="[]"
         v-slot="{ clickRef }"
@@ -22,23 +20,12 @@
             <span class="is-hidden-touch">Cue</span>
             <span class="has-opacity-half">&nbsp;at&nbsp;</span>
             <TimeDisplay :modelValue="currentSeconds"></TimeDisplay>
-            <ShortcutDisplay v-once shortcut="INSERT"></ShortcutDisplay>
+            <ShortcutDisplay
+                shortcut="INSERT"
+                :class="{ 'is-invisible': !useShortcut }"
+            ></ShortcutDisplay>
         </button>
     </Hotkey>
-    <button
-        v-else
-        :disabled="disabled"
-        class="button is-warning is-outlined"
-        :class="$attrs.class"
-        @click="$emit('createNewCue')"
-        title="Add a cue now (at the current playback time)!"
-    >
-        <BaseIcon v-once :path="mdiPlus" />
-        <!-- On large screens also show an indicative text -->
-        <span class="is-hidden-touch">Cue</span>
-        <span class="has-opacity-half">&nbsp;at&nbsp;</span>
-        <TimeDisplay :modelValue="currentSeconds"></TimeDisplay>
-    </button>
 </template>
 
 <script lang="ts">
@@ -79,6 +66,11 @@ export default defineComponent({
             /** Icons from @mdi/js */
             mdiPlus: mdiPlus,
         };
+    },
+    computed: {
+        useShortcut(): boolean {
+            return this.isActiveTrack && !this.disabled;
+        },
     },
 });
 </script>
