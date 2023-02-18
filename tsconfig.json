@@ -25,7 +25,7 @@
         "esModuleInterop": true,
         "baseUrl": ".",
         //Note: the "node" types are not included because this project only targets the browser.
-        "types": ["webpack-env", "jest", "cypress"],
+        "types": ["webpack-env", "jest", "cypress", "@4tw/cypress-drag-drop"],
         "paths": {
             "@/*": ["src/*"]
         },
