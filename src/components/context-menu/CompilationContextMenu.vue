@@ -7,7 +7,7 @@
             :excluded-elements="[]"
             v-slot="{ clickRef }"
         >
-            <DropdownMenuButton
+            <DropdownMenuItem
                 title="Download... [CTRL+S]"
                 subTitle="Save current compilation"
                 @click="download"
@@ -21,7 +21,7 @@
             :excluded-elements="[]"
             v-slot="{ clickRef }"
         >
-            <DropdownMenuButton
+            <DropdownMenuItem
                 title="Discard... [CTRL+X]"
                 subTitle="Discard current compilation"
                 @click="close"
@@ -36,7 +36,7 @@
 import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
 import { Compilation } from '@/store/compilation-types';
-import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
+import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
 import { confirm, downloadCompilation } from '@/code/ui/dialogs';
 import { Hotkey } from '@simolation/vue-hotkey';
 import { mdiTrashCanOutline, mdiTrayArrowDown } from '@mdi/js';
@@ -44,7 +44,7 @@ import { mdiTrashCanOutline, mdiTrayArrowDown } from '@mdi/js';
  */
 export default defineComponent({
     name: 'CompilationContextMenu',
-    components: { DropdownMenuButton, Hotkey },
+    components: { DropdownMenuItem, Hotkey },
     props: {
         compilation: {
             type: Compilation,

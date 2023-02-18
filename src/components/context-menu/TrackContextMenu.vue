@@ -1,13 +1,13 @@
 <template>
     <DropdownMenu title="Track context menu">
-        <DropdownMenuButton
+        <DropdownMenuItem
             :disabled="isFirstTrack"
             title="Move up"
             subTitle="(to an earlier position)"
             @click="moveUp()"
             :iconPath="mdiTransferUp"
         />
-        <DropdownMenuButton
+        <DropdownMenuItem
             :disabled="isLastTrack"
             title="Move down"
             subTitle="(to a later position)"
@@ -15,13 +15,13 @@
             :iconPath="mdiTransferDown"
         />
         <Experimental v-once>
-            <DropdownMenuButton
+            <DropdownMenuItem
                 v-if="track"
                 title="Add multiple cues..."
                 subTitle="(add cues using text lines)"
                 @click="addMultipleCues()"
             />
-            <DropdownMenuButton
+            <DropdownMenuItem
                 v-if="track"
                 title="Share..."
                 subTitle="(allows to share a track)"
@@ -29,14 +29,14 @@
             />
         </Experimental>
 
-        <DropdownMenuButton
+        <DropdownMenuItem
             v-once
             title="Clone"
             subTitle="(with cues and media)"
             @click="cloneTrack()"
             :iconPath="mdiContentDuplicate"
         />
-        <DropdownMenuButton
+        <DropdownMenuItem
             v-once
             title="Reassign cue shortcuts"
             subTitle="(first as seed, then incrementing)"
@@ -44,7 +44,7 @@
             :iconPath="mdiOrderNumericAscending"
         />
         <hr class="dropdown-divider" />
-        <DropdownMenuButton
+        <DropdownMenuItem
             v-once
             title="Remove"
             subTitle="(remove
@@ -58,7 +58,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
-import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
+import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
 import {
     mdiTransferUp,
     mdiTransferDown,
@@ -75,7 +75,7 @@ import CompilationHandler from '@/store/compilation-handler';
  */
 export default defineComponent({
     name: 'TrackContextMenu',
-    components: { DropdownMenu, DropdownMenuButton },
+    components: { DropdownMenu, DropdownMenuItem },
     props: {
         isFirstTrack: {
             type: Boolean,

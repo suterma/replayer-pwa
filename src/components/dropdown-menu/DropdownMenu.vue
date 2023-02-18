@@ -24,6 +24,7 @@
                     :title="title"
                     :iconPath="iconPath"
                     @click="toggleDropdownExpanded()"
+                    data-cy="dropdown-menu-trigger"
                 />
             </div>
             <!-- z-index must be larger than the fixed footer -->

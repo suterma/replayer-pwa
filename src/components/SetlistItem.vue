@@ -8,7 +8,7 @@
             >
                 <h2 class="title is-4">
                     <slot v-if="$slots.default"></slot>
-                    <TrackTitleName class=" " :track="track"></TrackTitleName>
+                    <TrackTitleName :track="track"></TrackTitleName>
                 </h2>
             </div>
         </div>

@@ -70,9 +70,10 @@
                 type: 'transition-group',
                 name: !drag ? 'flip-list' : null,
             }"
+            data-cy="track-list"
         >
             <template #item="{ element, index }">
-                <div class="is-together-print">
+                <div class="is-together-print" data-cy="track-list-item">
                     <!-- When each track is on a new page, also show the compilation each time -->
 
                     <h1 class="title is-3" v-if="printTracksOnNewPage">
@@ -91,6 +92,7 @@
                                 v-once
                                 :path="mdiDrag"
                                 title="Drag and drop to reorder"
+                                data-cy="drag-handle"
                         /></template>
                     </SetlistItem>
 

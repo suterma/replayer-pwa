@@ -1,5 +1,5 @@
 <template>
-    <span v-if="track.Name" class="has-text-weight-light">
+    <span v-if="track.Name" class="has-text-weight-light" data-cy="track-name">
         <LinkableText :text="track.Name"></LinkableText>
     </span>
 </template>

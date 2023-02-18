@@ -1,5 +1,9 @@
 <template>
-    <button class="dropdown-item" :disabled="disabled">
+    <button
+        class="dropdown-item"
+        :disabled="disabled"
+        data-cy="dropdown-menu-item"
+    >
         <MenuItemContent
             :title="title"
             :subTitle="subTitle"
@@ -17,7 +21,7 @@ import MenuItemContent from '@/components/dropdown-menu/MenuItemContent.vue';
 /** An item for a Dropdown menu
  */
 export default defineComponent({
-    name: 'DropdownMenuButton',
+    name: 'DropdownMenuItem',
     components: { MenuItemContent },
     props: {
         title: {

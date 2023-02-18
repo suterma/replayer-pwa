@@ -1,6 +1,6 @@
 <template>
     <router-link :to="to" custom v-slot="{ navigate }">
-        <DropdownMenuButton
+        <DropdownMenuItem
             @click="navigate"
             @keypress.enter="navigate"
             role="link"
@@ -10,18 +10,18 @@
             :iconPath="iconPath"
             :shortcut="shortcut"
         >
-        </DropdownMenuButton>
+        </DropdownMenuItem>
     </router-link>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
+import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
 /** An item for a Dropdown menu
  */
 export default defineComponent({
     name: 'DropdownMenuRouterLink',
-    components: { DropdownMenuButton },
+    components: { DropdownMenuItem },
     props: {
         title: {
             type: String,
