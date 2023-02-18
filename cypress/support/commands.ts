@@ -35,3 +35,16 @@
 //     }
 //   }
 // }
+
+// eslint-disable-next-line @typescript-eslint/no-namespace
+declare namespace Cypress {
+    interface Chainable<Subject = any> {
+        loadDemo(): void;
+    }
+}
+
+Cypress.Commands.add('loadDemo', (): void => {
+    cy.visit('http://localhost:8080/');
+    cy.contains('Try the demo').click();
+    cy.hash().should('eq', '#/play');
+});

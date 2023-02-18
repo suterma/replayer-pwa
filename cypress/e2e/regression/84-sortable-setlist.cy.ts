@@ -2,9 +2,7 @@ import '@4tw/cypress-drag-drop';
 /* eslint-disable jest/expect-expect */
 describe('testing the issue "Sortable Setlist #84" for regression', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:8080/');
-        cy.contains('Try the demo').click();
-        cy.url().should('include', '#/play');
+        cy.loadDemo();
     });
 
     it('asserts the fix to the issue', () => {

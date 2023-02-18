@@ -1,9 +1,7 @@
 /* eslint-disable jest/expect-expect */
 describe('interacting with the demo', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:8080/');
-        cy.contains('Try the demo').click();
-        cy.url().should('include', '#/play');
+        cy.loadDemo();
     });
 
     it('loads the demo compilation', () => {
