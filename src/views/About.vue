@@ -439,6 +439,16 @@
                         Music from the Album "Not For Sale" by Lidija Roos
                         (Released to the public, by Lidija Roos)
                     </li>
+                    <li>
+                        <a
+                            href="https://github.com/cypress-io/cypress"
+                            target="_blank"
+                        >
+                            cypress</a
+                        >, fast, easy and reliable testing for anything that
+                        runs in a browser. (Released under the MIT License, by
+                        the cypress-io team).
+                    </li>
                 </ul>
             </div>
         </CollapsiblePanel>
