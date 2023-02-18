@@ -21,12 +21,19 @@ describe('interacting with the demo', () => {
 
     it('loads the cues', () => {
         // ASSERT
-        cy.get('.cue span.has-text-weight-semibold.foreground').should('have.text', 'Intro (with Guitar Solo)Verse 1BridgeRefrain "Not for Sale"Bridge 2Verse 2Refrain "Not for Sale"Rap PartBridge (Guitar Solo)Refrain "Not for Sale" soft styleOutro');
+        cy.get('.cue span.has-text-weight-semibold.foreground').should(
+            'have.text',
+            'Intro (with Guitar Solo)Verse 1BridgeRefrain "Not for Sale"Bridge 2Verse 2Refrain "Not for Sale"Rap PartBridge (Guitar Solo)Refrain "Not for Sale" soft styleOutro',
+        );
     });
 
     it('loads the media file', () => {
         // ASSERT
-        cy.get('.track button.button.is-nav.is-indicator').should('have.attr', 'title', 'Track is loaded and ready to play')
+        cy.get('.track button.button.is-nav.is-indicator').should(
+            'have.attr',
+            'title',
+            'Track is loaded and ready to play',
+        );
     });
 
     it('plays the media file', () => {
@@ -34,6 +41,10 @@ describe('interacting with the demo', () => {
         cy.get('.track button.is-success').click();
 
         // ASSERT
-        cy.get('.track button.button.is-nav.is-indicator').should('have.attr', 'title', 'Track is playing')
+        cy.get('.track button.button.is-nav.is-indicator').should(
+            'have.attr',
+            'title',
+            'Track is playing',
+        );
     });
 });

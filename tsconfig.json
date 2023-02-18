@@ -25,7 +25,7 @@
         "esModuleInterop": true,
         "baseUrl": ".",
         //Note: the "node" types are not included because this project only targets the browser.
-        "types": ["webpack-env", "jest"],
+        "types": ["webpack-env", "jest", "cypress"],
         "paths": {
             "@/*": ["src/*"]
         },
@@ -36,9 +36,11 @@
         "src/**/*.ts",
         "src/**/*.tsx",
         "src/**/*.vue",
+        "src/mixins/settingsMixin.js",
+        // folders for test code
+        "cypress/**/*.ts",
         "tests/**/*.ts",
         "tests/**/*.tsx",
-        "src/mixins/settingsMixin.js"
     ],
     "exclude": ["node_modules"]
 }
