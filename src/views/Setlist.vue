@@ -1,10 +1,6 @@
 <template>
     <div class="container">
         <h1 class="title is-hidden-print">Set list</h1>
-
-        <!-- 
-             //TODO add transition group, see example https://sortablejs.github.io/vue.draggable.next/#/transition-example-2
-        -->
         <div class="box is-hidden-print">
             <div class="field">
                 <div class="control">
