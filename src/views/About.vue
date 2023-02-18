@@ -444,10 +444,20 @@
                             href="https://github.com/cypress-io/cypress"
                             target="_blank"
                         >
-                            cypress</a
+                            Cypress</a
                         >, fast, easy and reliable testing for anything that
                         runs in a browser. (Released under the MIT License, by
                         the cypress-io team).
+                    </li>
+                    <li>
+                        <a
+                            href="https://github.com/4teamwork/cypress-drag-drop"
+                            target="_blank"
+                        >
+                            cypress-drag-drop</a
+                        >, a Cypress child command for drag'n'drop support.
+                        (Released under the GPLv3 License, by Fabasoft 4teamwork
+                        AG).
                     </li>
                 </ul>
             </div>

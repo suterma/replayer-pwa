@@ -16,7 +16,7 @@ describe('testing the issue "Sortable Setlist #84" for regression', () => {
         // ARRANGE (visit the setlist)
         cy.visit('/#/setlist');
 
-        // ARRANGE (drag to change the order)
+        // ACT (drag to change the order)
         cy.get(
             '#app > section:nth-child(2) > div.container > div:nth-child(4) > div:nth-child(1) .handle.grabbable',
         ).drag(
