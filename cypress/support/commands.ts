@@ -40,6 +40,7 @@
 declare namespace Cypress {
     interface Chainable<Subject = any> {
         loadDemo(): void;
+        loadMediaUrl(url: string): void;
         loadEmpty(): void;
     }
 }
@@ -48,6 +49,15 @@ Cypress.Commands.add('loadDemo', (): void => {
     cy.visit('/');
     cy.contains('Try the demo').click();
     cy.hash().should('eq', '#/play');
+});
+
+/** Loads the given media url using the application's dedicated input field */
+Cypress.Commands.add('loadMediaUrl', (url): void => {
+    cy.visit('/');
+    cy.get('input[cy-data="input-url"]')
+        .type(url)
+        .get('button[type="submit"]')
+        .click();
 });
 
 Cypress.Commands.add('loadEmpty', (): void => {

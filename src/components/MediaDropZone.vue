@@ -69,7 +69,7 @@ The URL input is wider, because it should be able to easily deal with lengthy in
             v-if="isExpanded"
             class="level-item has-text-centered is-flex-grow-5 is-flex-shrink-1"
         >
-            <form @submit.prevent="useMediaUrl">
+            <form @submit.prevent="useUrl">
                 <div class="field has-addons is-flex-grow-5 is-flex-shrink-1">
                     <p class="control is-flex-grow-5 is-flex-shrink-1">
                         <!-- The URL is required for form submit -->
@@ -86,7 +86,7 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                                 replaceUrl ? replaceUrl : 'Paste an URL'
                             "
                             v-focus
-                            cy-data="input-media-url"
+                            cy-data="input-url"
                         />
                     </p>
                     <Experimental class="control">
@@ -112,7 +112,6 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                             }"
                             :title="replaceInfo"
                         >
-                            <!-- @click.prevent="useMediaUrl" -->
                             <template v-if="isReplacementMode">
                                 <BaseIcon v-once :path="mdiSwapHorizontal" />
                                 <span>Replace</span>
@@ -361,13 +360,24 @@ export default defineComponent({
             }
         },
 
-        /** Uses a single media URL by applying it to a new track */
-        useMediaUrl(): void {
-            console.debug('MediaDropZone::useMediaUrl:url:', this.url);
+        /** Uses a single URL by applying it to a new track */
+        useUrl(): void {
+            console.debug('MediaDropZone::useUrl:url:', this.url);
             if (this.url) {
                 this.isUsingMediaFromUrl = true;
+
+                // Determine the type of data to load
+                let actionType = ActionTypes.USE_MEDIA_FROM_URL;
+                if (
+                    FileHandler.isSupportedPackageFileName(this.url) ||
+                    FileHandler.isSupportedCompilationFileName(this.url)
+                ) {
+                    actionType = ActionTypes.LOAD_FROM_URL;
+                }
+
+                // Try to load the assumed type
                 this.$store
-                    .dispatch(ActionTypes.USE_MEDIA_FROM_URL, this.url)
+                    .dispatch(actionType, this.url)
                     .then(() => {
                         if (this.isReplacementMode) {
                             if (this.trackId) {
@@ -377,10 +387,18 @@ export default defineComponent({
                                 );
                             }
                         } else {
-                            this.$store.commit(
-                                MutationTypes.ADD_DEFAULT_TRACK,
-                                this.url,
-                            );
+                            // Decide what to do with this new resource:
+                            if (actionType == ActionTypes.LOAD_FROM_URL) {
+                                //If a package has been loaded, the intention was most likely to play it
+                                this.$router.push('play');
+                            } else {
+                                //If a single new media file has been loaded, the intention was most likely to edit it
+                                this.$router.push('edit');
+                                this.$store.commit(
+                                    MutationTypes.ADD_DEFAULT_TRACK,
+                                    this.url,
+                                );
+                            }
                         }
                     })
                     .catch((errorMessage: string) => {
@@ -394,9 +412,6 @@ export default defineComponent({
                         this.url = ''; //remove the now loaded url
                         this.collapse();
                     });
-
-                //If a single new media file has been loaded, the intention was most likely to edit it
-                this.$router.push('edit');
             }
         },
 

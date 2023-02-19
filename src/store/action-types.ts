@@ -17,6 +17,7 @@ export enum ActionTypes {
     /** Loads a single file or package from an URL
      * @remarks The content might be a package or single file of any supported content.
      * @remarks This method can be called multiple times, each resource gets appropriately added to the current compilation
+     * @remarks The resource is expected to support appropriate CORS Headers
      * @param url - The URL to load the file from
      * @return A locally usable name, derived from the URL, which can be used to match the track to the stored media file
      */
@@ -24,6 +25,7 @@ export enum ActionTypes {
     /** Uses a single media resource from an URL, by adding the URL to the set of stored media URLs.
      * @remarks The resource must be a single media file.
      * @remarks This method can be called multiple times, each URL gets appropriately added to the current compilation
+     * @remarks The resource does not need to support any CORS Headers, because it's only used as-is, as a media source
      * @param url - The URL to use
      * @return A locally usable name, derived from the URL, which can be used to match the track to the stored media URL
      */

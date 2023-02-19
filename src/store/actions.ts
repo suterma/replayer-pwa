@@ -124,14 +124,9 @@ export const actions: ActionTree<State, State> & Actions = {
             }
 
             progress(commit, `Loading URL '${url}'...`);
-            // HINT: Replayer expects CORS to be allowed (no no-cors).
+            // HINT: Replayer expects CORS to be allowed here (no no-cors).
             // If the origin server doesn’t include the suitable
             // Access-Control-Allow-Origin response header, the request will fail
-            //TODO first get the mime type
-            // If it's a package, then try to actually fetch and fully load it
-            // If it's a media file, then just use the URL for a new track
-            // For media files, no-cors might be an options since media elements accept media sources from an URL
-            // without a CORS response header set.
             fetch(url, {
                 method: 'GET',
             })
