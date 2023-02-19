@@ -72,9 +72,12 @@ The URL input is wider, because it should be able to easily deal with lengthy in
             <form @submit.prevent="useMediaUrl">
                 <div class="field has-addons is-flex-grow-5 is-flex-shrink-1">
                     <p class="control is-flex-grow-5 is-flex-shrink-1">
+                        <!-- The URL is required for form submit -->
                         <input
                             class="input"
                             type="url"
+                            pattern="^https?://.+$"
+                            required
                             size="120"
                             inputmode="url"
                             :title="replaceInfo"
@@ -83,6 +86,7 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                                 replaceUrl ? replaceUrl : 'Paste an URL'
                             "
                             v-focus
+                            cy-data="input-media-url"
                         />
                     </p>
                     <Experimental class="control">
@@ -279,10 +283,7 @@ export default defineComponent({
             this.isLoadingFromFile = true;
             this.$store
                 .dispatch(ActionTypes.LOAD_FROM_FILE, file)
-                .catch((errorMessage: string) => {
-                    //Do not create a new track
-                    throw new Error(errorMessage);
-                })
+
                 .then(() => {
                     if (FileHandler.isSupportedMediaFile(file)) {
                         if (this.isReplacementMode) {
@@ -296,6 +297,9 @@ export default defineComponent({
                             );
                         }
                     }
+                })
+                .catch((errorMessage: string) => {
+                    this.$store.commit(MutationTypes.PUSH_ERROR, errorMessage);
                 })
                 .finally(() => {
                     this.isLoadingFromFile = false;
@@ -333,17 +337,6 @@ export default defineComponent({
                 this.isLoadingFromUrl = true;
                 this.$store
                     .dispatch(ActionTypes.LOAD_FROM_URL, this.url)
-                    .catch((errorMessage: string) => {
-                        console.debug(
-                            'MediaDropZone::fetchUrl:catch:errorMessage',
-                            errorMessage,
-                        );
-                        this.$store.commit(
-                            MutationTypes.PUSH_ERROR,
-                            errorMessage,
-                        );
-                        throw new Error(errorMessage);
-                    })
                     .then(() => {
                         if (this.isReplacementMode) {
                             if (this.trackId) {
@@ -353,6 +346,12 @@ export default defineComponent({
                                 );
                             }
                         }
+                    })
+                    .catch((errorMessage: string) => {
+                        this.$store.commit(
+                            MutationTypes.PUSH_ERROR,
+                            errorMessage,
+                        );
                     })
                     .finally(() => {
                         this.isLoadingFromUrl = false;
@@ -383,6 +382,12 @@ export default defineComponent({
                                 this.url,
                             );
                         }
+                    })
+                    .catch((errorMessage: string) => {
+                        this.$store.commit(
+                            MutationTypes.PUSH_ERROR,
+                            errorMessage,
+                        );
                     })
                     .finally(() => {
                         this.isUsingMediaFromUrl = false;
@@ -432,8 +437,8 @@ export default defineComponent({
         },
         replaceInfo(): string {
             return this.isReplacementMode
-                ? `Replace: '${this.replaceUrl}'`
-                : ``;
+                ? `Replace: '${this.replaceUrl}'. The URL must begin with http:// or https://`
+                : `The URL must begin with http:// or https://`;
         },
     },
 });

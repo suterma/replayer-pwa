@@ -1,12 +1,5 @@
 /* eslint-disable jest/expect-expect */
 
-function loadMediaUrl(mediaUrl: string) {
-    cy.get('input[type="url"]')
-        .type(mediaUrl)
-        .get('button[type="submit"]')
-        .click();
-}
-
 describe('testing the issue "Invalid Files from an URI (e.g. images) should gracefully fail #83" for regression', () => {
     beforeEach(() => {
         cy.loadEmpty();
@@ -17,6 +10,14 @@ describe('testing the issue "Invalid Files from an URI (e.g. images) should grac
             'Error while retrieving media source',
         );
     });
+
+    /** Loads the given media url using the application's dedicated input field */
+    function loadMediaUrl(mediaUrl: string) {
+        cy.get('input[type="url"]')
+            .type(mediaUrl)
+            .get('button[type="submit"]')
+            .click();
+    }
 
     it('should reject a JPEG image', () => {
         loadMediaUrl(

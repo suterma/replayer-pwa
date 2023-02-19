@@ -222,7 +222,7 @@ export const actions: ActionTree<State, State> & Actions = {
                 return abort(
                     commit,
                     reject,
-                    `Provided input is not a valid URL: '${url}'`,
+                    `Provided input is not a valid media URL: '${url}'`,
                 );
             }
 
