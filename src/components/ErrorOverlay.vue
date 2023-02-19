@@ -3,7 +3,11 @@
         <div class="modal-background"></div>
         <div class="modal-content">
             <div v-for="errorMessage in errorMessages" :key="errorMessage">
-                <div class="notification is-danger" @click="dismiss">
+                <div
+                    class="notification is-danger"
+                    @click="dismiss"
+                    cy-data="notification-danger"
+                >
                     <button
                         class="delete is-large"
                         aria-label="delete"

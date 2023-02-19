@@ -40,11 +40,16 @@
 declare namespace Cypress {
     interface Chainable<Subject = any> {
         loadDemo(): void;
+        loadEmpty(): void;
     }
 }
 
 Cypress.Commands.add('loadDemo', (): void => {
-    cy.visit('http://localhost:8080/');
+    cy.visit('/');
     cy.contains('Try the demo').click();
     cy.hash().should('eq', '#/play');
+});
+
+Cypress.Commands.add('loadEmpty', (): void => {
+    cy.visit('/');
 });
