@@ -1,80 +1,90 @@
 <template>
-    <button
-        v-if="hasSecondTrack && !hideTrackNavigation"
-        class="button"
-        :disabled="!hasPreviousTrack || disabled"
-        @click="toPreviousTrack()"
-        title="skip to previous track"
-    >
-        <BaseIcon v-once :path="mdiSkipPrevious" />
-    </button>
-    <button
-        v-if="!hideCueNavigation"
-        class="button"
-        :disabled="!hasPreviousCue || disabled"
-        @click="toPreviousCue()"
-        title="skip to previous cue"
-    >
-        <BaseIcon v-once :path="mdiSkipPreviousOutline" />
-    </button>
+    <div class="is-grouped" data-cy="media-controls-bar">
+        <button
+            v-if="hasSecondTrack && !hideTrackNavigation"
+            class="button"
+            :disabled="!hasPreviousTrack || disabled"
+            @click="toPreviousTrack()"
+            title="skip to previous track"
+            data-cy="previous-track"
+        >
+            <BaseIcon v-once :path="mdiSkipPrevious" />
+        </button>
+        <button
+            v-if="!hideCueNavigation"
+            class="button"
+            :disabled="!hasPreviousCue || disabled"
+            @click="toPreviousCue()"
+            title="skip to previous cue"
+            data-cy="previous-cue"
+        >
+            <BaseIcon v-once :path="mdiSkipPreviousOutline" />
+        </button>
 
-    <!-- Stop (do not show on small devices, user still can use play/pause) -->
-    <button
-        v-if="!hideStopButton"
-        class="button is-hidden-mobile"
-        :disabled="disabled"
-        @click="stop()"
-        title="Stop"
-    >
-        <BaseIcon v-once :path="mdiStop" />
-    </button>
+        <!-- Stop (do not show on small devices, user still can use play/pause) -->
+        <button
+            v-if="!hideStopButton"
+            class="button is-hidden-mobile"
+            :disabled="disabled"
+            @click="stop()"
+            title="Stop"
+            data-cy="stop"
+        >
+            <BaseIcon v-once :path="mdiStop" />
+        </button>
 
-    <PlayPauseButton
-        v-if="!hidePlayPauseButton"
-        class="is-success"
-        :disabled="disabled"
-        :isPlaying="isPlaying"
-        :isLoading="isFading"
-        @click="togglePlayback()"
-        title="Play from current position"
-    />
+        <PlayPauseButton
+            v-if="!hidePlayPauseButton"
+            class="is-success"
+            :disabled="disabled"
+            :isPlaying="isPlaying"
+            :isLoading="isFading"
+            @click="togglePlayback()"
+            title="Play from current position"
+            data-cy="toggle-playback"
+        />
 
-    <button
-        v-if="!hideCueNavigation"
-        class="button"
-        :disabled="!hasNextCue || disabled"
-        @click="toNextCue()"
-        title="skip to next cue"
-    >
-        <BaseIcon v-once :path="mdiSkipNextOutline" />
-    </button>
+        <button
+            v-if="!hideCueNavigation"
+            class="button"
+            :disabled="!hasNextCue || disabled"
+            @click="toNextCue()"
+            title="skip to next cue"
+            data-cy="next-cue"
+        >
+            <BaseIcon v-once :path="mdiSkipNextOutline" />
+        </button>
 
-    <button
-        v-if="hasSecondTrack && !hideTrackNavigation"
-        class="button"
-        :disabled="!hasNextTrack || disabled"
-        @click="toNextTrack()"
-        title="skip to next track"
-    >
-        <BaseIcon v-once :path="mdiSkipNext" />
-    </button>
+        <button
+            v-if="hasSecondTrack && !hideTrackNavigation"
+            class="button"
+            :disabled="!hasNextTrack || disabled"
+            @click="toNextTrack()"
+            title="skip to next track"
+            data-cy="next-track"
+        >
+            <BaseIcon v-once :path="mdiSkipNext" />
+        </button>
 
-    <PlaybackModeButton
-        :modelValue="playbackMode"
-        @update:modelValue="updatePlaybackMode"
-    />
+        <PlaybackModeButton
+            :modelValue="playbackMode"
+            @update:modelValue="updatePlaybackMode"
+            data-cy="toggle-playback-mode"
+        />
 
-    <Knob
-        title="Drag, scroll or use the arrow keys to change volume"
-        class="button"
-        :modelValue="volume"
-        @update:modelValue="updateVolume"
-        :minValue="0"
-        :maxValue="1"
-        valueClass="has-text-light"
-        rimClass="has-text-grey-light"
-    />
-    <slot></slot>
+        <Knob
+            title="Drag, scroll or use the arrow keys to change volume"
+            class="button"
+            :modelValue="volume"
+            @update:modelValue="updateVolume"
+            :minValue="0"
+            :maxValue="1"
+            valueClass="has-text-light"
+            rimClass="has-text-grey-light"
+            data-cy="volume"
+        />
+        <slot></slot>
+    </div>
 </template>
 
 <script lang="ts">

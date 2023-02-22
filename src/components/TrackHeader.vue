@@ -39,6 +39,7 @@
                     :is-playing="isPlaying"
                     :is-unloaded="!isTrackLoaded"
                     :is-unavailable="!isTrackMediaAvailable"
+                    data-cy="playback-indicator"
                 />
             </nav>
             <!-- Slot for additional level items -->

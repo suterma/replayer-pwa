@@ -86,7 +86,7 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                                 replaceUrl ? replaceUrl : 'Paste an URL'
                             "
                             v-focus
-                            cy-data="input-url"
+                            data-cy="input-url"
                         />
                     </p>
                     <Experimental class="control">

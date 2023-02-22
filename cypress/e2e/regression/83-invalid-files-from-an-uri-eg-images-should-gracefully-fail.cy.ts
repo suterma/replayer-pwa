@@ -2,7 +2,7 @@
 
 describe('testing the issue "Invalid Files from an URI (e.g. images) should gracefully fail #83" for regression', () => {
     afterEach(() => {
-        cy.get('[cy-data="notification-danger"]').contains(
+        cy.get('[data-cy="notification-danger"]').contains(
             'Error while retrieving media source',
         );
     });

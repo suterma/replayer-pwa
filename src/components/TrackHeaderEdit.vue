@@ -102,6 +102,7 @@
                     :is-playing="isPlaying"
                     :is-unloaded="!isTrackLoaded"
                     :is-unavailable="!isTrackMediaAvailable"
+                    data-cy="playback-indicator"
                 />
 
                 <TrackContextMenu
@@ -302,7 +303,6 @@ export default defineComponent({
             immediate: true,
         },
     },
-
 });
 </script>
 <style lang="scss" scoped>

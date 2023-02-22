@@ -175,20 +175,18 @@
                     </div>
                     <div class="level-right">
                         <div class="level-item is-justify-content-flex-end">
-                            <div class="is-grouped">
-                                <MediaControlsBar
-                                    :disabled="!canPlay"
-                                    :hideStopButton="true"
-                                    :hideTrackNavigation="true"
-                                    :hideCueNavigation="true"
-                                    :playbackMode="playbackMode"
-                                    @update:playbackMode="updatedPlaybackMode"
-                                    :volume="track.Volume"
-                                    @update:volume="updatedVolume"
-                                    :hidePlayPauseButton="true"
-                                >
-                                </MediaControlsBar>
-                            </div>
+                            <MediaControlsBar
+                                :disabled="!canPlay"
+                                :hideStopButton="true"
+                                :hideTrackNavigation="true"
+                                :hideCueNavigation="true"
+                                :playbackMode="playbackMode"
+                                @update:playbackMode="updatedPlaybackMode"
+                                :volume="track.Volume"
+                                @update:volume="updatedVolume"
+                                :hidePlayPauseButton="true"
+                            >
+                            </MediaControlsBar>
                         </div>
                     </div>
                 </nav>
@@ -349,45 +347,41 @@
                                 <div
                                     class="level-item is-justify-content-flex-end"
                                 >
-                                    <div class="is-grouped">
-                                        <MediaControlsBar
-                                            :hideStopButton="true"
-                                            @stop="stop()"
-                                            :hideTrackNavigation="false"
-                                            :hasPreviousTrack="hasPreviousTrack"
-                                            @previousTrack="
-                                                $emit('previousTrack')
+                                    <MediaControlsBar
+                                        :hideStopButton="true"
+                                        @stop="stop()"
+                                        :hideTrackNavigation="false"
+                                        :hasPreviousTrack="hasPreviousTrack"
+                                        @previousTrack="$emit('previousTrack')"
+                                        :hasPreviousCue="hasPreviousCue"
+                                        @previousCue="toPreviousCue()"
+                                        :hasNextCue="hasNextCue"
+                                        @nextCue="toNextCue()"
+                                        :hasNextTrack="hasNextTrack"
+                                        @nextTrack="$emit('nextTrack')"
+                                        :playbackMode="playbackMode"
+                                        @update:playbackMode="
+                                            updatedPlaybackMode
+                                        "
+                                        :volume="track.Volume"
+                                        @update:volume="updatedVolume"
+                                        @seek="(seconds) => seek(seconds)"
+                                        :isPlaying="isPlaying"
+                                        :isFading="isFading"
+                                        @togglePlaying="skipToPlayPause()"
+                                        :hidePlayPauseButton="false"
+                                        data-cy="media-controls-bar"
+                                    >
+                                        <PlaybackIndicator
+                                            :isReady="
+                                                !isPlaying && isTrackLoaded
                                             "
-                                            :hasPreviousCue="hasPreviousCue"
-                                            @previousCue="toPreviousCue()"
-                                            :hasNextCue="hasNextCue"
-                                            @nextCue="toNextCue()"
-                                            :hasNextTrack="hasNextTrack"
-                                            @nextTrack="$emit('nextTrack')"
-                                            :playbackMode="playbackMode"
-                                            @update:playbackMode="
-                                                updatedPlaybackMode
-                                            "
-                                            :volume="track.Volume"
-                                            @update:volume="updatedVolume"
-                                            @seek="(seconds) => seek(seconds)"
                                             :isPlaying="isPlaying"
-                                            :isFading="isFading"
-                                            @togglePlaying="skipToPlayPause()"
-                                            :hidePlayPauseButton="false"
-                                        >
-                                            <PlaybackIndicator
-                                                :isReady="
-                                                    !isPlaying && isTrackLoaded
-                                                "
-                                                :isPlaying="isPlaying"
-                                                :isUnloaded="!isTrackLoaded"
-                                                :isUnavailable="
-                                                    !isMediaAvailable
-                                                "
-                                            />
-                                        </MediaControlsBar>
-                                    </div>
+                                            :isUnloaded="!isTrackLoaded"
+                                            :isUnavailable="!isMediaAvailable"
+                                            data-cy="playback-indicator"
+                                        />
+                                    </MediaControlsBar>
                                 </div>
                             </div>
                         </nav>

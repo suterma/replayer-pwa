@@ -6,7 +6,7 @@
                 <div
                     class="notification is-danger"
                     @click="dismiss"
-                    cy-data="notification-danger"
+                    data-cy="notification-danger"
                 >
                     <button
                         class="delete is-large"
