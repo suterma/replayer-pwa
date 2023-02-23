@@ -5,7 +5,7 @@
             'is-loading': isLoading,
         }"
         :title="isPlaying ? 'Pause' : 'Play'"
-    >
+     >
         <BaseIcon v-if="isPlaying" :path="mdiPause" />
         <BaseIcon v-else :path="mdiPlay" />
         <slot></slot>

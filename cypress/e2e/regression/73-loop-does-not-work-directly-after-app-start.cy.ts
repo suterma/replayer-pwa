@@ -1,22 +1,53 @@
 /* eslint-disable jest/expect-expect */
 describe('testing the issue "Loop does not work directly after app start #73" for regression', () => {
-    beforeEach(() => {
-        // cy.visit(
-        //     '/#/play?181=&media=https://lib.replayer.app/decisions-by-lidija-roos.ogg',
-        // );
-    });
-
     it('should loop for the "loop track" play mode', () => {
         // ARRANGE (set loop track play mode)
         cy.visit(
-            '/#/play?181=&media=https://lib.replayer.app/decisions-by-lidija-roos.ogg',
-        );      cy.get('button[data-cy="toggle-playback-mode"]').click();
+            '/#/play?media=https://lib.replayer.app/decisions-by-lidija-roos.ogg',
+        );
+        cy.get('button[data-cy="toggle-playback-mode"]').click();
 
-        // ACT (press the ending cue and wait for a look)
-        cy.get('.track .button.cue').click();
+        // ACT (go to the end and wait for a loop)
+        cy.get('button[data-cy="toggle-playback"]').first().click();
+        cy.get('input[type=range]')
+            .as('range')
+            .invoke('val', 181)
+            .trigger('change');
         cy.wait(4000);
 
-        // ASSERT (that the loop occurred)
+        // ASSERT (that the loop occurred, and track is still playing)
+        cy.get('input[type=range]')
+            .invoke('val') // call the val() method to extract the value
+            .then((val) => +(val ?? '')) // convert it to a number
+            .should('be.lessThan', 5); // also compare it to a number
+        cy.get(
+            '[data-cy="media-controls-bar"] [data-cy="playback-indicator"]',
+        ).should('have.attr', 'title', 'Track is playing');
+    });
+
+    it('should loop for the "loop track" play mode even after an app restart', () => {
+        // ARRANGE (set loop track play mode)
+        cy.visit(
+            '/#/play?media=https://lib.replayer.app/decisions-by-lidija-roos.ogg',
+        );
+        cy.get('button[data-cy="toggle-playback-mode"]').click();
+
+        // ACT restart
+        cy.visit('/');
+
+        // ACT (go to the end and wait for a loop)
+        cy.get('button[data-cy="toggle-playback"]').first().click();
+        cy.get('input[type=range]')
+            .as('range')
+            .invoke('val', 181)
+            .trigger('change');
+        cy.wait(4000);
+
+        // ASSERT (that the loop occurred, and track is still playing)
+        cy.get('input[type=range]')
+            .invoke('val') // call the val() method to extract the value
+            .then((val) => +(val ?? '')) // convert it to a number
+            .should('be.lessThan', 5); // also compare it to a number
         cy.get(
             '[data-cy="media-controls-bar"] [data-cy="playback-indicator"]',
         ).should('have.attr', 'title', 'Track is playing');
@@ -26,12 +57,13 @@ describe('testing the issue "Loop does not work directly after app start #73" fo
         // ARRANGE (set cue track play mode)
         cy.visit(
             '/#/play?181=&media=https://lib.replayer.app/decisions-by-lidija-roos.ogg',
-        );      cy.get('button[data-cy="toggle-playback-mode"]')
+        );
+        cy.get('button[data-cy="toggle-playback-mode"]')
             .click()
             .click()
             .click();
 
-        // ACT (press the ending cue and wait for a look)
+        // ACT (press the ending cue and wait for a loop)
         cy.get('.track .button.cue').click();
         cy.wait(4000);
 
@@ -42,24 +74,30 @@ describe('testing the issue "Loop does not work directly after app start #73" fo
     });
 
     it('should loop for the "loop compilation" play mode', () => {
+        // ARRANGE (load 2-track compilation and start playback)
+        cy.loadFile('cypress/fixtures/2-track-compilation-for-tests.rex');
+        cy.get('button[data-cy="toggle-playback"]')
+            .eq(1 /*second track*/)
+            .click();
         // ARRANGE (set cue track play mode)
-        cy.visit(
-            '/#/play?package=https://lib.replayer.app/Test-Compilation%20featuring%20Lidija%20Roos%20%28WAV%20files%20in%20various%20sizes%29.rez',
-        );
-        cy.get('button[data-cy="toggle-playback-mode"]')
+        cy.get('.button[data-cy="toggle-playback-mode"]')
             .click()
             .click()
             .click()
             .click()
             .click();
 
-        // ACT (press the ending cue and wait for a look)
-        cy.get('.track .button.cue').click();
+        // ACT (go to the ending and wait for a move to the subsequent track)
+        cy.get('input[type=range]')
+            .as('range')
+            .invoke('val', 58)
+            .trigger('change');
         cy.wait(4000);
 
-        // ASSERT (that the loop occurred)
-        cy.get(
-            '[data-cy="media-controls-bar"] [data-cy="playback-indicator"]',
-        ).should('have.attr', 'title', 'Track is playing');
+        // ASSERT (that the first track was selected)
+        cy.get('nav#media-player [data-cy="track-name"]').should(
+            'have.text',
+            'Voice_anechoic_male',
+        );
     });
 });

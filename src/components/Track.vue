@@ -64,6 +64,7 @@
                         :class="{ 'is-success': isActiveTrack }"
                         :isPlaying="isPlaying"
                         :isLoading="isFading"
+                        data-cy="toggle-playback"
                     />
                 </div>
             </template>

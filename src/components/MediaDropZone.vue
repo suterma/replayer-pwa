@@ -32,6 +32,7 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                     @change="onChange"
                     ref="file"
                     :accept="acceptedFiles"
+                    data-cy="input-file"
                 />
                 <template v-if="isReplacementMode">
                     <BaseIcon v-once :path="mdiSwapHorizontal" />
