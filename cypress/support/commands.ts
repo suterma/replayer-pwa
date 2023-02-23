@@ -55,7 +55,7 @@ Cypress.Commands.add('loadDemo', (): void => {
 /** Loads the given media url using the application's dedicated input field */
 Cypress.Commands.add('loadMediaUrl', (url): void => {
     cy.visit('/');
-    cy.get('input[data-cy="input-file"]')
+    cy.get('input[data-cy="input-url"]')
         .type(url)
         .get('button[type="submit"]')
         .click();
