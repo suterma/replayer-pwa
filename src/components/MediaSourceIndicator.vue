@@ -7,7 +7,9 @@
         <span class="is-indicator is-hidden-mobile"
             >{{ typeText }}:&nbsp;
         </span>
-        <span class="media-source has-text-break-word is-indicator"
+        <span
+            class="media-source has-text-break-word is-indicator"
+            data-cy="media-source"
             >{{ mediaSource }}
 
             <template

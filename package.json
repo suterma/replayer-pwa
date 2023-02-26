@@ -23,6 +23,7 @@
         "start": "npm run css-watch",
         "test": "jest --ci --reporters=default --reporters=jest-junit -- --watch",
         "cypress:open": "cypress open",
+        "cypress:run" : "npm run serve & wait-on http://localhost:8080 & npx cypress run",
         "bundle-report": "webpack-bundle-analyzer --port 4200 dist/stats.json"
     },
     "dependencies": {

@@ -7,6 +7,7 @@
             'is-active-track': isActiveTrack,
             'is-editable': isEditable,
         }"
+        data-cy="track"
     >
         <!-- Handle all relevant events here
     Note: A check for the active track is done in the handler methods. 

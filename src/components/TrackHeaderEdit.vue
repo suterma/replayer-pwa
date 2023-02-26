@@ -29,6 +29,7 @@
                             placeholder="Track name"
                             title="Track name"
                             focus
+                            data-cy="track-name"
                         />
                     </p>
                 </div>
@@ -64,6 +65,7 @@
                             type="text"
                             placeholder="Artist"
                             title="Artist"
+                            data-cy="track-artist"
                         >
                             <span class="has-opacity-half mr-2 is-single-line"
                                 >by</span
@@ -84,6 +86,7 @@
                             type="text"
                             placeholder="Album"
                             title="Album"
+                            data-cy="track-album"
                         >
                             <span class="has-opacity-half mr-2 is-single-line"
                                 >on</span

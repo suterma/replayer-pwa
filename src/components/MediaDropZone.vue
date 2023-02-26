@@ -112,6 +112,7 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                                 'is-loading': isUsingMediaFromUrl,
                             }"
                             :title="replaceInfo"
+                            data-cy="submit-source"
                         >
                             <template v-if="isReplacementMode">
                                 <BaseIcon v-once :path="mdiSwapHorizontal" />

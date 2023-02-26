@@ -1,5 +1,5 @@
 <template>
-    <div class="compilation" v-if="compilation">
+    <div class="compilation" v-if="compilation" data-cy="compilation">
         <!-- Handle all relevant Replayer events for the compilation level -->
         <ReplayerEventHandler
             @tonextcue="toNextCue"

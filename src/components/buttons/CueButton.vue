@@ -7,6 +7,8 @@
             'is-success': isCueSelected,
         }"
         :title="cueTitle"
+        data-cy="cue-button"
+
     >
         <!-- Use the full width of the button for the inside content
         This causes the icon and description to start from the left side, 
