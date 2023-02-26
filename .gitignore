@@ -23,3 +23,7 @@ pnpm-debug.log*
 *.sw?
 junit.xml
 *.~lock.store.odg#
+
+# Cypress results
+cypress/screenshots/
+cypress/videos/
