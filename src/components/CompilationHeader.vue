@@ -16,9 +16,17 @@
                             placeholder="Compilation title"
                             title="Compilation title"
                         />
-                        <span v-else class="title is-3">
-                            {{ title }}
-                        </span>
+                        <template v-else>
+                            <span
+                                class="title is-3"
+                                data-cy="compilation-title"
+                            >
+                                {{ title }}
+                            </span>
+                            <span class="title is-3">
+                                <!-- placeholder -->&nbsp;
+                            </span>
+                        </template>
                     </p>
                 </div>
             </div>
