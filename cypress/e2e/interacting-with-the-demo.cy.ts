@@ -6,7 +6,7 @@ describe('interacting with the demo', () => {
 
     it('loads the demo compilation', () => {
         // ASSERT
-        cy.get('.compilation .title.is-3').should(
+        cy.get('[data-cy="compilation-title"]').should(
             'have.text',
             'Demo Compilation (Featuring Lidija Roos)',
         );
@@ -14,11 +14,12 @@ describe('interacting with the demo', () => {
 
     it('loads the track', () => {
         // ASSERT
-        cy.get('.track .title.is-4').should('have.text', 'Not for Sale');
+        cy.get('[data-cy="track-name"]').should('have.text', 'Not for Sale');
     });
 
     it('loads the cues', () => {
         // ASSERT
+        cy.get('[data-cy="cue-button"]').should('have.length', 11);
         cy.get('.cue span.has-text-weight-semibold.foreground').should(
             'have.text',
             'Intro (with Guitar Solo)Verse 1BridgeRefrain "Not for Sale"Bridge 2Verse 2Refrain "Not for Sale"Rap PartBridge (Guitar Solo)Refrain "Not for Sale" soft styleOutro',
