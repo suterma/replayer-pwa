@@ -1,5 +1,26 @@
 <template>
     <div class="cue-buttons-bar buttons is-fullwidth is-flex-wrap-nowrap">
+        <!-- A virtual cue button as prefix, when the first cue is not at the zero position -->
+        <CueButton
+            v-if="prefixCue.Duration ?? 0 > 0"
+            class="is-flex-grow-1 has-cropped-text"
+            :disabled="disabled || !Number.isFinite(prefixCue.Time)"
+            :time="prefixCue.Time"
+            :shortcut="prefixCue.Shortcut"
+            :duration="prefixCue.Duration"
+            :description="prefixCue.Description"
+            :isTrackPlaying="isTrackPlaying"
+            :playbackMode="playbackMode"
+            hasAddonsRight
+            minified
+            virtual
+            :isCueSelected="isCueSelected(prefixCue)"
+            :hasCuePassed="hasCuePassed(prefixCue)"
+            :isCueAhead="isCueAhead(prefixCue)"
+            :percentComplete="percentComplete(prefixCue)"
+            @click="$emit('click', prefixCue)"
+        >
+        </CueButton>
         <template v-for="cue in track.Cues" :key="cue.Id">
             <CueButton
                 class="is-flex-grow-1 has-cropped-text"
@@ -7,11 +28,11 @@
                 :shortcut="cue.Shortcut"
                 :duration="cue.Duration"
                 :description="cue.Description"
-                :disabled="!Number.isFinite(cue.Time)"
+                :disabled="disabled || !Number.isFinite(cue.Time)"
                 :isTrackPlaying="isTrackPlaying"
                 :playbackMode="playbackMode"
                 hasAddonsRight
-                 minified
+                minified
                 :isCueSelected="isCueSelected(cue)"
                 :hasCuePassed="hasCuePassed(cue)"
                 :isCueAhead="isCueAhead(cue)"
@@ -28,9 +49,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ICue, PlaybackMode, Track } from '@/store/compilation-types';
+import { Cue, ICue, PlaybackMode, Track } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
- 
+
 /** A single line bar with simple cue buttons for a track
  */
 export default defineComponent({
@@ -49,6 +70,10 @@ export default defineComponent({
             type: Track,
             required: true,
         },
+        /** Whether to show the component in a disabled state
+         * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+         */
+        disabled: Boolean,
         /** Indicates whether the associated Track is currently playing
          * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
          */
@@ -112,6 +137,11 @@ export default defineComponent({
                 return null;
             }
             return null;
+        },
+    },
+    computed: {
+        prefixCue(): ICue {
+            return new Cue('', '', 0, this.track.Cues[0]?.Time ?? null, '');
         },
     },
 });

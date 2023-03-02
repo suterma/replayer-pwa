@@ -3,12 +3,12 @@
         class="button cue has-text-left"
         :class="{
             'is-multiline': !minified,
+            'is-virtual': virtual,
             'is-warning': !isCueSelected,
             'is-success': isCueSelected,
         }"
         :title="cueTitle"
         data-cy="cue-button"
-
     >
         <!-- Use the full width of the button for the inside content
         This causes the icon and description to start from the left side, 
@@ -85,6 +85,14 @@
                             >
                             </ShortcutDisplay>
                         </p>
+                        <p class="level-item" v-else>
+                            <!-- Just show a placeholder, taking up the usual vertical space -->
+                            <ShortcutDisplay
+                                class="pl-0 pr-0 is-invisible"
+                                shortcut=" "
+                            >
+                            </ShortcutDisplay>
+                        </p>
                     </div>
                 </span>
             </template>
@@ -149,6 +157,9 @@ export default defineComponent({
         /* Whether playback of this cue has already passed
                  (the playhead has completely passed beyond the end of this cue) */
         hasCuePassed: Boolean,
+
+        /* Whether to show this cue as passive, in dimmed style. */
+        virtual: Boolean,
 
         /* Determines whether playback of this cue has not yet started 
         (the playhead has not yet reached the beginning of this cue)*/

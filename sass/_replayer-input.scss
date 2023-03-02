@@ -71,3 +71,17 @@
 .button.is-danger.is-focused:not(:active) {
     box-shadow: 0 0 0 0.125em rgb(250 250 250 / 25%);
 }
+
+/*************************************************************
+ * "Virtual" Buttons for "placeholder-leading cues"
+**************************************************************/
+
+/** A virtual button should also have the default appearance (including similar brightness) except the coloring */
+.button.is-virtual {
+    filter: grayscale(100%) !important;
+}
+
+/* Virtual buttons should take up not unnecessary much space */
+.cue.button.is-virtual {
+    max-width: 16em;
+}

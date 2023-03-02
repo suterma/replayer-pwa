@@ -1,5 +1,25 @@
 <template>
     <div class="buttons has-gap is-fullwidth">
+        <!-- A virtual cue button as prefix, when the first cue is not at the zero position -->
+        <CueButton
+            v-if="prefixCue.Duration ?? 0 > 0"
+            class="is-flex-grow-1"
+            :disabled="disabled || !Number.isFinite(prefixCue.Time)"
+            :time="prefixCue.Time"
+            :shortcut="prefixCue.Shortcut"
+            :duration="prefixCue.Duration"
+            :description="prefixCue.Description"
+            :isTrackPlaying="isTrackPlaying"
+            :playbackMode="playbackMode"
+            hasAddonsRight
+            virtual
+            :isCueSelected="isCueSelected(prefixCue)"
+            :hasCuePassed="hasCuePassed(prefixCue)"
+            :isCueAhead="isCueAhead(prefixCue)"
+            :percentComplete="percentComplete(prefixCue)"
+            @click="$emit('click', prefixCue)"
+        >
+        </CueButton>
         <template v-for="cue in track.Cues" :key="cue.Id">
             <CueButton
                 class="is-flex-grow-1"
@@ -24,7 +44,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ICue, PlaybackMode, Track } from '@/store/compilation-types';
+import { Cue, ICue, PlaybackMode, Track } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
 
 /** A field of large cue buttons for a track
@@ -110,6 +130,11 @@ export default defineComponent({
                 return null;
             }
             return null;
+        },
+    },
+    computed: {
+        prefixCue(): ICue {
+            return new Cue('', '', 0, this.track.Cues[0]?.Time ?? null, '');
         },
     },
 });

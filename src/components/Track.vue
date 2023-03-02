@@ -789,11 +789,13 @@ export default defineComponent({
         cueClick(cue: ICue, togglePlayback = true) {
             console.debug(`Track(${this.track.Name})::cueClick:cue:`, cue);
             if (cue.Time != null && Number.isFinite(cue.Time)) {
-                //Update the selected cue to this cue
-                this.$store.commit(
-                    MutationTypes.UPDATE_SELECTED_CUE_ID,
-                    cue.Id,
-                );
+                if (cue.Id) {
+                    //Update the selected cue to this cue
+                    this.$store.commit(
+                        MutationTypes.UPDATE_SELECTED_CUE_ID,
+                        cue.Id,
+                    );
+                }
 
                 //Set the position to this cue and handle playback
                 const isPlaying = this.trackPlayerInstance?.playing;
