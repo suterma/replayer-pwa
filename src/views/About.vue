@@ -459,6 +459,14 @@
                         (Released under the GPLv3 License, by Fabasoft 4teamwork
                         AG).
                     </li>
+                    <li>
+                        <a
+                            href="https://w3c.github.io/uievents/tools/key-event-viewer.html "
+                            target="_blank"
+                        >
+                            Keyboard Event Viewer</a
+                        >, a simple key event viewer. (Released by W3C).
+                    </li>
                 </ul>
             </div>
         </CollapsiblePanel>
