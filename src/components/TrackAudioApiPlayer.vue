@@ -102,13 +102,6 @@ export default defineComponent({
             required: true,
             default: false,
         },
-        /** Whether to automatically start playback after the media is loaded.
-         */
-        autoplay: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
         /** The track volume in range of [0..1]
          * @remarks Implements a two-way binding
          */
@@ -280,7 +273,6 @@ export default defineComponent({
 
         //Last, update the source, if already available
         this.audioElement.preload = 'auto';
-        this.audioElement.autoplay = this.autoplay;
         this.updateMediaSource(this.mediaUrl);
     },
     /** Handles the teardown of the audio graph outside the mounted lifespan.
@@ -349,11 +341,6 @@ export default defineComponent({
             } else {
                 this.pause();
             }
-        },
-        /** Watch the autoplay state, and then update the audio element accordingly  */
-        autoplay(value: boolean): void {
-            this.debugLog(`autoplay:${value}`);
-            this.audioElement.autoplay = value;
         },
         /** Watch the volume prop to update according externals changes  */
         volume(): void {
