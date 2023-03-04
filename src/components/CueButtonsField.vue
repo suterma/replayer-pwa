@@ -134,7 +134,13 @@ export default defineComponent({
     },
     computed: {
         prefixCue(): ICue {
-            return new Cue('', '', 0, this.track.Cues[0]?.Time ?? null, '');
+            return new Cue(
+                'the Beginning',
+                '',
+                0,
+                this.track.Cues[0]?.Time ?? null,
+                '',
+            );
         },
     },
 });

@@ -1,9 +1,11 @@
 <template>
     <div class="cue-buttons-bar buttons is-fullwidth is-flex-wrap-nowrap">
         <!-- A virtual cue button as prefix, when the first cue is not at the zero position -->
+        <!-- Note: Do not crop the (non-existing) text in virtual cue buttons
+             Also, leave the existing flex-grow, to allow them to fill single lines, but allow to shrink -->
         <CueButton
             v-if="prefixCue.Duration ?? 0 > 0"
-            class="is-flex-grow-1 has-cropped-text"
+            class="is-flex-grow-1 is-flex-shrink-5"
             :disabled="disabled || !Number.isFinite(prefixCue.Time)"
             :time="prefixCue.Time"
             :shortcut="prefixCue.Shortcut"
@@ -141,7 +143,13 @@ export default defineComponent({
     },
     computed: {
         prefixCue(): ICue {
-            return new Cue('', '', 0, this.track.Cues[0]?.Time ?? null, '');
+            return new Cue(
+                'the Beginning',
+                '',
+                0,
+                this.track.Cues[0]?.Time ?? null,
+                '',
+            );
         },
     },
 });
@@ -173,6 +181,13 @@ export default defineComponent({
         .button {
             line-height: normal !important;
         }
+    }
+
+    /* Virtual buttons should take up not unnecessary much space */
+    .cue.button.is-virtual {
+        max-width: 16em;
+        /* do not shrink below the used icon width*/
+        min-width: 34px;
     }
 }
 </style>

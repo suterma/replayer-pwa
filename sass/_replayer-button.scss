@@ -31,11 +31,10 @@
 **************************************************************
 */
 
-// NOTE: @supports ((gap: 10px) and (display: flex)) seems not to work as 
+// NOTE: @supports ((gap: 10px) and (display: flex)) seems not to work as
 // the gap for flex and the gap for grid are not distinguishable from their name
 // See: https://ppuzio.medium.com/flexbox-gap-workaround-for-safari-on-ios-14-13-and-lower-ffcae589eb69
-@supports not ((-webkit-touch-callout: none) and (not (translate: none)))
- {
+@supports not ((-webkit-touch-callout: none) and (not (translate: none))) {
     /* First, for a gapped buttons group,  
      * remove the original bulma margin from the grouped buttons */
     .buttons.has-gap .button {
@@ -100,3 +99,63 @@ fieldset[disabled] .button:hover {
         transform: rotate(0deg);
     }
 }
+
+/*************************************************************
+ * Unfortunately, the existing focus style is different for colored buttons
+   However, for Replayer, colored buttons should have the same 
+   focus styles as all the other buttons.
+   Thus, this style is set here for them all the same   
+**************************************************************/
+
+/* focus */
+.button:focus,
+.button.is-primary:focus,
+.button.is-link:focus,
+.button.is-info:focus,
+.button.is-success:focus,
+.button.is-warning:focus,
+.button.is-danger:focus,
+
+/* is-focused */
+.button.is-focused,
+.button.is-primary.is-focused ,
+.button.is-link.is-focused ,
+.button.is-info.is-focused ,
+.button.is-success.is-focused ,
+.button.is-warning.is-focused ,
+.button.is-danger.is-focused {
+    border-color: $grey-lightest;
+    color: $grey-lightest;
+}
+
+/* focus */
+.button:focus:not(:active),
+.button.is-primary:focus:not(:active),
+.button.is-link:focus:not(:active),
+.button.is-info:focus:not(:active),
+.button.is-success:focus:not(:active),
+.button.is-warning:focus:not(:active),
+.button.is-danger:focus:not(:active),
+
+/* is-focused */
+.button.is-focused:not(:active),
+.button.is-primary.is-focused:not(:active) ,
+.button.is-link.is-focused:not(:active) ,
+.button.is-info.is-focused:not(:active) ,
+.button.is-success.is-focused:not(:active) ,
+.button.is-warning.is-focused:not(:active) ,
+.button.is-danger.is-focused:not(:active) {
+    box-shadow: 0 0 0 0.125em rgb(250 250 250 / 25%);
+}
+
+/*************************************************************
+ * "Virtual" Buttons for "placeholder-leading cues"
+**************************************************************/
+
+/** A virtual button should also have the default appearance (including similar brightness) except the coloring */
+.button.is-virtual {
+    filter: grayscale(100%) !important;
+}
+
+
+ 

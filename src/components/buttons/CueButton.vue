@@ -35,7 +35,7 @@
             <slot></slot>
 
             <span
-                v-if="!minified"
+                v-if="!minified && !virtual"
                 class="ml-2 has-text-weight-semibold foreground"
                 >{{ description }}</span
             >
