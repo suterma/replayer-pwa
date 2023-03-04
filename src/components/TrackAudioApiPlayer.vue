@@ -17,8 +17,11 @@ import { settingsMixin } from '@/mixins/settingsMixin';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
 
+/** A safety margin for detecting the end of a track during playback */
+const trackDurationSafetyMarginSeconds = 0.3;
+
 /** A simple vue audio player, for a single track, using the Audio Element and it's API.
- *  (intentionally, the memory-consuming buffers from the Web Audio API are not used.)
+ * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used. This has some implications for looping.
  * @devdoc Internally maintains it's state, updating the enclosed audio element accordingly.
  * @remarks Internally handles cue loops, when in the LoopCue playback mode.
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playing
@@ -116,12 +119,12 @@ export default defineComponent({
             /** The playback progress in the current track, in [seconds] */
             //TODO later provide the currentSeconds from the track (at least initially), similar to the playback mode
             //supporting storage and retrieval with the track persistence
-            currentSeconds: 0,
+            currentSeconds: null as number | null,
             /** Gets the duration of the current track, in [seconds]
              * @remarks This is only available after successful load of the media metadata.
              * Could be NaN or infinity, depending on the source
              */
-            durationSeconds: 0,
+            durationSeconds: null as number | null,
             isMuted: false,
             /** Whether the media data has loaded (at least enough to start playback)
              * @remarks This implies that metadata also has been loaded already
@@ -458,7 +461,7 @@ export default defineComponent({
                     this.updateDuration(this.audioElement.duration);
 
                     //Apply the currently known position to the player. It could be non-zero already.
-                    this.seekTo(this.currentSeconds);
+                    this.seekTo(this.currentSeconds ?? 0);
                 }
             }
 
@@ -598,7 +601,7 @@ export default defineComponent({
         /** Handles looping for a single cue, if requested
          * @remarks Cue looping is solved here by observing and handling the recurring time updates.
          * NOTE: Partial looping is not natively supported with the used HTMLAudioElement.
-         * For performance reasons, I do not want a buffered audio source,
+         * For memory consumption reasons, a buffered audio source with the Web Audio API is not used,
          * which however would natively support partial loops.
          * @remarks Track looping is handled elsewhere.
          */
@@ -606,33 +609,43 @@ export default defineComponent({
             switch (this.playbackMode) {
                 case PlaybackMode.LoopCue: {
                     //Detect, with a safety margin, whether the possible loop is at track end
-                    const trackDurationSafetyMarginSeconds = 0.3;
-                    const isAtTrackEnd =
-                        this.currentSeconds >=
-                        this.durationSeconds - trackDurationSafetyMarginSeconds;
-
-                    //Is a loop due?
                     if (
-                        this.loopStart !== null &&
-                        this.loopEnd !== null &&
-                        (this.currentSeconds >= this.loopEnd || isAtTrackEnd)
+                        this.currentSeconds !== null &&
+                        this.durationSeconds !== null &&
+                        Number.isFinite(this.currentSeconds) &&
+                        Number.isFinite(this.durationSeconds)
                     ) {
-                        //Back to start
-                        this.seekTo(this.loopStart);
+                        const isAtTrackEnd =
+                            this.currentSeconds >=
+                            this.durationSeconds -
+                                trackDurationSafetyMarginSeconds;
 
-                        if (isAtTrackEnd) {
-                            this.debugLog(
-                                `loopEnd:${this.loopEnd};durationSeconds:${this.durationSeconds}`,
-                            );
-                            //At the end of the track, a seek operation alone would not be enough to continue the loop
-                            //if playback already has ended (when the safety margin from above was too small)
-                            this.$nextTick(() => {
-                                //Directly issue the play command, without any safety net
-                                //(should be working, since play was successful already)
-                                //This handling here has the disadvantage, that a fading operation does take place however,
-                                //if configured and the safety margin was too short.
-                                this.audioElement.play();
-                            });
+                        //Is a loop due?
+                        if (
+                            this.loopStart !== null &&
+                            this.loopEnd !== null &&
+                            Number.isFinite(this.loopStart) &&
+                            Number.isFinite(this.loopEnd) &&
+                            (this.currentSeconds >= this.loopEnd ||
+                                isAtTrackEnd)
+                        ) {
+                            //Back to loop start
+                            this.seekTo(this.loopStart);
+
+                            if (isAtTrackEnd) {
+                                this.debugLog(
+                                    `loopEnd:${this.loopEnd};durationSeconds:${this.durationSeconds}`,
+                                );
+                                //At the end of the track, a seek operation alone would not be enough to continue the loop
+                                //if playback already has ended (when the safety margin from above was too small)
+                                this.$nextTick(() => {
+                                    //Directly issue the play command, without any safety net
+                                    //(should be working, since play was successful already)
+                                    //This handling here has the disadvantage, that a fading operation does take place however,
+                                    //if configured and the safety margin was too short.
+                                    this.audioElement.play();
+                                });
+                            }
                         }
                     }
                     break;
@@ -642,6 +655,10 @@ export default defineComponent({
                     if (
                         this.loopStart !== null &&
                         this.loopEnd !== null &&
+                        this.currentSeconds !== null &&
+                        Number.isFinite(this.loopStart) &&
+                        Number.isFinite(this.loopEnd) &&
+                        Number.isFinite(this.currentSeconds) &&
                         this.currentSeconds >= this.loopEnd &&
                         this.isFading == false
                     ) {
