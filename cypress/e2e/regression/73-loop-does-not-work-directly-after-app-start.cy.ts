@@ -56,7 +56,7 @@ describe('testing the issue "Loop does not work directly after app start #73" fo
     it('should loop for the "loop cue" play mode', () => {
         // ARRANGE (set cue track play mode)
         cy.visit(
-            '/#/play?181=&media=https://lib.replayer.app/decisions-by-lidija-roos.ogg',
+            '/#/play?181=ending-cue&media=https://lib.replayer.app/decisions-by-lidija-roos.ogg',
         );
         cy.get('button[data-cy="toggle-playback-mode"]')
             .click()
@@ -64,7 +64,7 @@ describe('testing the issue "Loop does not work directly after app start #73" fo
             .click();
 
         // ACT (press the ending cue and wait for a loop)
-        cy.get('.track .button.cue').click();
+        cy.get('.track .button.cue').contains('ending-cue').click();
         cy.wait(4000);
 
         // ASSERT (that the loop occurred)
