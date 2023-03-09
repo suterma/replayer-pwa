@@ -5,7 +5,7 @@
             <Experimental>
                 <!-- //TODO later use a css style for the with -->
                 <div class="modal-card" style="width: 100%">
-                    <form>
+                    <form data-cy="modal-form" @submit.prevent="$close(this)">
                         <header class="modal-card-head">
                             <h1 class="modal-card-title title">
                                 Adding cues for '{{ track?.Name }}' from...
@@ -43,7 +43,7 @@
                                         <button
                                             class="button"
                                             :ref="clickRef"
-                                            @click="$close(this, false)"
+                                            @click.prevent="$close(this, false)"
                                         >
                                             Cancel
                                         </button>
@@ -56,10 +56,9 @@
                                         v-slot="{ clickRef }"
                                     >
                                         <button
-                                            v-focus
+                                            type="submit"
                                             class="button is-success"
                                             :ref="clickRef"
-                                            @click="$close(this)"
                                         >
                                             Add
                                         </button>

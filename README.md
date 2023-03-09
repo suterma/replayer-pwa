@@ -33,7 +33,7 @@ The full documentation is available at https://replayer.app/en/documentation
 
 # Tests
 
-- Run the [Cypress End-To-End regression tests](/cypress/e2e/regression/README.md)
+- Run the [Cypress End-To-End regression tests](/cypress/e2e/regression)
 
 # Roadmap
 

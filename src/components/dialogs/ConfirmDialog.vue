@@ -4,7 +4,7 @@
             <div class="modal-background"></div>
 
             <div class="modal-card">
-                <form>
+                <form data-cy="modal-form" @submit.prevent="$close(this)">
                     <header class="modal-card-head">
                         <h1 class="modal-card-title title">{{ header }}</h1>
                     </header>
@@ -22,7 +22,7 @@
                                     <button
                                         class="button"
                                         :ref="clickRef"
-                                        @click="$close(this, false)"
+                                        @click.prevent="$close(this, false)"
                                     >
                                         Cancel
                                     </button>
@@ -36,9 +36,9 @@
                                 >
                                     <button
                                         v-focus
+                                        type="submit"
                                         class="button is-success"
                                         :ref="clickRef"
-                                        @click="$close(this)"
                                     >
                                         Ok
                                     </button>

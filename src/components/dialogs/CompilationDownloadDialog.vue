@@ -4,7 +4,14 @@
             <div class="modal-background"></div>
 
             <div class="modal-card">
-                <form>
+                <form
+                    data-cy="modal-form"
+                    @submit.prevent="
+                        download().then(() => {
+                            $close(this);
+                        })
+                    "
+                >
                     <header class="modal-card-head">
                         <h1 class="modal-card-title title is-flex-shrink-1">
                             Download compilation as...
@@ -58,6 +65,7 @@
                                         v-model="isDownloadZip"
                                         v-bind:value="true"
                                         checked
+                                        data-cy="radio-download-zip"
                                     />
                                     <span class="has-text-weight-bold"
                                         >ZIP</span
@@ -79,6 +87,7 @@
                                         class="mr-1"
                                         v-model="isDownloadZip"
                                         v-bind:value="false"
+                                        data-cy="radio-download-xml"
                                     />
                                     <span class="has-text-weight-bold"
                                         >XML</span
@@ -103,7 +112,8 @@
                                     <button
                                         class="button"
                                         :ref="clickRef"
-                                        @click="$close(this, false)"
+                                        @click.prevent="$close(this, false)"
+                                        data-cy="button-cancel"
                                     >
                                         Cancel
                                     </button>
@@ -117,17 +127,14 @@
                                 >
                                     <button
                                         class="button is-success"
+                                        type="submit"
                                         :ref="clickRef"
                                         :disabled="!compilationTitle"
-                                        @click="
-                                            download().then(() => {
-                                                $close(this);
-                                            })
-                                        "
+                                        data-cy="button-download"
                                     >
                                         Download
-                                    </button></Hotkey
-                                >
+                                    </button>
+                                </Hotkey>
                             </p>
                         </div>
                     </footer>

@@ -4,7 +4,7 @@
             <div class="modal-background"></div>
             <Experimental>
                 <div class="modal-card">
-                    <form>
+                    <form data-cy="modal-form" @submit.prevent="$close(this)">
                         <header class="modal-card-head">
                             <h1 class="modal-card-title title">
                                 Share track '{{ track?.Name }}' via...
@@ -16,10 +16,10 @@
                                     class="textarea has-fixed-size is-size-7"
                                     placeholder="Track link"
                                     readonly
-                                    v-text="this.trackUrl"
+                                    v-text="trackUrl"
                                 ></textarea>
                             </div>
-                            <a :href="this.trackUrl" target="_blank"
+                            <a :href="trackUrl" target="_blank"
                                 >Click to follow</a
                             >
                             <div class="content">
@@ -40,7 +40,7 @@
                                         <button
                                             class="button"
                                             :ref="clickRef"
-                                            @click="$close(this, false)"
+                                            @click.prevent="$close(this, false)"
                                         >
                                             Cancel
                                         </button>
@@ -54,9 +54,9 @@
                                     >
                                         <button
                                             v-focus
+                                            type="submits"
                                             class="button is-success"
                                             :ref="clickRef"
-                                            @click="$close(this)"
                                         >
                                             Ok
                                         </button>
