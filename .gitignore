@@ -27,3 +27,4 @@ junit.xml
 # Cypress results
 cypress/screenshots/
 cypress/videos/
+cypress/downloads/
