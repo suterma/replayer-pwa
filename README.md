@@ -31,6 +31,10 @@ By the click of a button, Replayer starts to play at predefined times in the aud
 
 The full documentation is available at https://replayer.app/en/documentation
 
+# Tests
+
+- Run the [Cypress End-To-End regression tests](/cypress/e2e/regression/README.md)
+
 # Roadmap
 
 See [Trello](https://trello.com/b/UqdfomQI/replayer-20)
