@@ -1,11 +1,28 @@
 <template>
-    <AudioPeaks :options="options" :mediaElement="mediaElement" />
+    <AudioPeaks
+        :options="options"
+        :mediaElement="mediaElement"
+        :key="showZoomView.toString()"
+    >
+        <template #overview>
+            <div style="height: 50px"></div>
+        </template>
+        <template #controls
+            ><template />
+            <!-- Using an empty template on a slot 
+         prevents the default content -->
+        </template>
+        <template #zoomview v-if="!showZoomView"
+            ><template />
+            <!-- Using an empty template on a slot 
+         prevents the default content -->
+        </template>
+    </AudioPeaks>
 </template>
 
 <script lang="ts">
 import AudioPeaks from 'vue-peaks/src/components/AudioPeaks.vue';
 import { defineComponent } from 'vue';
-
 
 /** An audio visualizer, for a single track, using the Web Audio API.
  */
@@ -21,13 +38,21 @@ export default defineComponent({
             type: HTMLMediaElement,
             required: true,
         },
+
+        /** Whether to show the zoom view and allow zooming.
+         */
+        showZoomView: {
+            type: Boolean,
+            default: false,
+            required: false,
+        },
     },
     data() {
         return {
             /** The configuration options
              * @remarks The colors are taken from the Bulma color scheme.
              */
-            options:  {
+            options: {
                 overview: {
                     /* container is provided and handled internally by AudioPeaks */
                     waveformColor: 'hsl(120, 45%, 58%)',

@@ -9,6 +9,8 @@ export enum CompilationType {
 export enum TrackDisplayMode {
     /** Shown with editable inputs for the contained data */
     Edit = 'edit',
+    /** Shown optimized for multi-track/mixer playback */
+    Mix = 'mix',
     /** Shown optimized for playback */
     Play = 'play',
 }

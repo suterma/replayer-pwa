@@ -9,7 +9,7 @@
         }"
         data-cy="track"
     >
-        <!-- Handle all relevant events here
+        <!-- Handle all track-relevant events here
     Note: A check for the active track is done in the handler methods. 
     A v-if here would work, but would register the events not in a useful order. -->
         <ReplayerEventHandler
@@ -218,6 +218,7 @@
                 v-model:isPlaying="isPlaying"
                 @update:isFading="updateFading"
                 @update:playbackMode="updatedPlaybackMode"
+                :displayMode="displayMode"
                 :playbackMode="playbackMode"
                 :loopStart="selectedCue?.Time"
                 :loopEnd="

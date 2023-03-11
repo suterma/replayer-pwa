@@ -25,12 +25,20 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         /** The route to the edit mode
-         * @remarks The /edit route serves as some form of alias, as a flag, and supports the reuse of the playback view for editing, too.
-         * This flag is passed down to components as necessary.
-         * A real alias for the play route is not used to distinguish the menu entries for /play and /edit
+         * @remarks The /edit route serves as some form of alias, and supports the reuse of the playback view for editing, too.
+         * A real routing alias is not used to distinguish the menu entries for these routes
          */
         path: '/edit',
         name: 'Edit',
+        component: Play,
+    },
+    {
+        /** The route to the mix mode
+         * @remarks The /mix route serves as some form of alias, and supports the reuse of the playback view for mixing, too.
+         * A real routing alias is not used to distinguish the menu entries for these routes
+         */
+        path: '/mix',
+        name: 'Mix',
         component: Play,
     },
     {
@@ -74,7 +82,7 @@ const title = computed(() => {
     if (
         compilationTitle &&
         toName &&
-        ['Play', 'Edit', 'Setlist'].includes(toName)
+        ['Play', 'Edit', 'Mix', 'Setlist'].includes(toName)
     ) {
         compilationInfo = ' | ' + compilationTitle;
     }

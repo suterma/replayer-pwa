@@ -40,6 +40,11 @@
                 @trackEnded="continueAfterTrack(track.Id)"
             />
         </template>
+        MULTITRACK CONTROL
+        <MediaControlsBar
+            :playbackMode="compilation.PlaybackMode"
+            @update:playbackMode="updatePlaybackMode($event)"
+        ></MediaControlsBar>
     </div>
 </template>
 
@@ -55,11 +60,12 @@ import {
 } from '@/store/compilation-types';
 import Track from '@/components/Track.vue';
 import { MutationTypes } from '@/store/mutation-types';
+import MediaControlsBar from '@/components/MediaControlsBar.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
 
-/** Displays the contained list of tracks in a list, ready to play.
+/** Displays the contained set of tracks according to the required mode.
  * @remarks Also handles the common replayer events for compilations
  * @remarks Also supports shuffling of tracks
  */
@@ -69,6 +75,7 @@ export default defineComponent({
         Track,
         ReplayerEventHandler,
         CompilationHeader,
+        MediaControlsBar,
     },
     props: {
         compilation: Compilation,
@@ -288,7 +295,7 @@ export default defineComponent({
         /** Handle scrolling to the active track, when the display mode changes.
          * @remarks This is intentionally only invoked on when the display mode changes (and it's not the only track).
          */
-        isEditable() {
+        tracksDisplayMode() {
             const track = this.activeTrack;
             if (track && !this.isSingleTrack) {
                 console.debug('scrolling to mode-changed track ', track.Name);

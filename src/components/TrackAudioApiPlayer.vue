@@ -1,12 +1,13 @@
 <template>
-    <slot></slot>
     <Experimental>
         <TrackAudioPeaks
             v-if="audioElement && mediaUrl && hasLoadedData"
             :mediaElement="audioElement"
             :key="mediaUrl"
+            :showZoomView="isEditable"
         />
     </Experimental>
+    <slot></slot>
 </template>
 
 <script lang="ts">
@@ -14,7 +15,11 @@ import { MutationTypes } from '@/store/mutation-types';
 import { defineComponent, PropType } from 'vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { settingsMixin } from '@/mixins/settingsMixin';
-import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
+import {
+    DefaultTrackVolume,
+    PlaybackMode,
+    TrackDisplayMode,
+} from '@/store/compilation-types';
 import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
 
 /** A safety margin for detecting the end of a track during playback */
@@ -87,6 +92,14 @@ export default defineComponent({
         sourceDescription: {
             type: String,
             default: '',
+        },
+        /** The display mode of this track.
+         * @devdoc Allows to reuse this component for more than one DisplayMode.
+         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+         */
+        displayMode: {
+            type: String as () => TrackDisplayMode,
+            default: TrackDisplayMode.Play,
         },
         /** The playback mode
          * @remarks Implements a two-way binding
@@ -292,6 +305,13 @@ export default defineComponent({
     },
 
     computed: {
+        /** Whether this component shows editable inputs for the contained data
+         * @devdoc Allows to reuse this component for more than one display mode.
+         */
+        isEditable(): boolean {
+            return this.displayMode === TrackDisplayMode.Edit;
+        },
+
         muted(): boolean {
             return this.isMuted;
         },

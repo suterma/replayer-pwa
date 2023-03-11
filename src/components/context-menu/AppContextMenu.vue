@@ -29,6 +29,22 @@
                 :iconPath="mdiPlay"
             />
         </Hotkey>
+        <Experimental>
+            <Hotkey
+                v-once
+                :keys="['f6']"
+                :excluded-elements="[]"
+                v-slot="{ clickRef }"
+            >
+                <DropdownMenuRouterLink
+                    to="/mix"
+                    title="Mix"
+                    shortcut="F6"
+                    :clickRef="clickRef"
+                    :iconPath="mdiTuneVertical"
+                />
+            </Hotkey>
+        </Experimental>
         <Hotkey
             v-once
             :keys="['f4']"
@@ -89,6 +105,7 @@ import {
     mdiCogOutline,
     mdiInformationOutline,
     mdiFlaskOutline,
+    mdiTuneVertical,
 } from '@mdi/js';
 
 /** A nav bar as header with a menu for a compilation
@@ -110,6 +127,7 @@ export default defineComponent({
             mdiCogOutline: mdiCogOutline,
             mdiInformationOutline: mdiInformationOutline,
             mdiFlaskOutline: mdiFlaskOutline,
+            mdiTuneVertical: mdiTuneVertical,
         };
     },
 });

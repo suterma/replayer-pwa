@@ -102,7 +102,7 @@ export default defineComponent({
     },
     methods: {
         collapseMediaDropZone(): void {
-             this.isMediaDropZoneExpanded = !this.hasCompilation;
+            this.isMediaDropZoneExpanded = !this.hasCompilation;
         },
 
         updateMediaDropZoneExpansion(expanded: boolean): void {
@@ -120,15 +120,19 @@ export default defineComponent({
             return hasCompilation;
         },
 
+        /** Gets the track display mode */
         tracksDisplayMode(): TrackDisplayMode {
-            if (this.isEditMode) {
+            if (this.$route.name === 'Edit') {
                 return TrackDisplayMode.Edit;
+            }
+            if (this.$route.name === 'Mix') {
+                return TrackDisplayMode.Mix;
             }
             return TrackDisplayMode.Play;
         },
         /** Whether the compilation is shown as editable */
         isEditMode(): boolean {
-            return this.$route.name === 'Edit';
+            return this.tracksDisplayMode === TrackDisplayMode.Edit;
         },
         hasAvailableMedia(): boolean {
             return this.mediaUrls.size > 0;
