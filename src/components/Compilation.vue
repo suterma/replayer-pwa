@@ -309,8 +309,6 @@ export default defineComponent({
                 );
             }
         },
-
-        //TODO add a watch for the shuffle mode, then add a random seed to the shuffle function
     },
     computed: {
         /** Whether this compilation has no more than single track.
