@@ -25,7 +25,7 @@
         />
 
         <!-- Each track is an item in a list and contains all the cues -->
-        <!-- Track header, including artist info, expansion-toggler and adaptive spacing -->
+        <!-- Track header for editing, including artist info, expansion-toggler and adaptive spacing -->
         <TrackHeaderEdit
             v-if="isEditable"
             :isExpanded="isExpanded"
@@ -43,6 +43,34 @@
             :isFirst="isFirst"
             :isLast="isLast"
         />
+        <!-- Track header for mixing, having additional channel-style controls -->
+        <TrackHeader
+            v-else-if="isMix"
+            :track="track"
+            :isPlaying="isPlaying"
+            :isTrackLoaded="isTrackLoaded"
+            :isTrackMediaAvailable="isMediaAvailable"
+            :isActive="isActiveTrack"
+        >
+            <template v-slot:left-start>
+                <div class="level-item is-narrow">
+                    <MuteButton
+                        :disabled="!canPlay"
+                        :class="{
+                            'is-danger': true,
+                            'is-inactive': !isMuted,
+                        }"
+                        :isMuted="isMuted"
+                        @click="toggleMute"
+                        data-cy="mute"
+                    />
+                </div>
+            </template>
+            <template v-slot:left-end>
+                <!-- //TODO add volume for track -->
+            </template>
+        </TrackHeader>
+        <!-- Track header for single-track playback -->
         <TrackHeader
             v-else
             :track="track"
@@ -455,6 +483,7 @@ import TrackHeader from '@/components/TrackHeader.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import CreateCueButton from '@/components/buttons/CreateCueButton.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
+import MuteButton from '@/components/buttons/MuteButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
@@ -487,6 +516,7 @@ export default defineComponent({
         TimeDisplay,
         CreateCueButton,
         CollapsibleButton,
+        MuteButton,
         PlayheadSlider,
         CueButtonsBar,
         CueButtonsField,
@@ -598,7 +628,9 @@ export default defineComponent({
             /** Flag to indicate whether the player is currently playing
              */
             isPlaying: false,
-
+            /** Flag to indicate whether the audio is currently muted
+             */
+            isMuted: false,
             /** The wake lock fill-in that can prevent screen timeout, while a track is in use */
             noSleep: new NoSleep(),
 
@@ -650,6 +682,15 @@ export default defineComponent({
                 } else {
                     this.togglePlayback();
                 }
+            }
+        },
+
+        /** Toggles the muted state of this track
+         * @remarks If the track is not loaded, does nothing.
+         */
+        toggleMute(): void {
+            if (this.isTrackLoaded) {
+                this.isMuted = this.trackPlayerInstance?.toggleMute();
             }
         },
 
@@ -1066,6 +1107,13 @@ export default defineComponent({
             return this.displayMode === TrackDisplayMode.Edit;
         },
 
+        /** Whether this component shows mixing controls
+         * @devdoc Allows to reuse this component for more than one display mode.
+         */
+        isMix(): boolean {
+            return this.displayMode === TrackDisplayMode.Mix;
+        },
+
         /** Whether this component shows non-collapsible playback buttons
          * @devdoc Allows to reuse this component for more than one display mode.
          */
@@ -1167,12 +1215,12 @@ export default defineComponent({
 
 .track .levels {
     /** The track's cue levels have also an additional small margin at their top.
-    This results in a similar space between levels as use within 
+    This results in a similar space between levels as use within
     the environment */
     margin-top: 12px;
 
     /** The track's cue levels have also an additional small margin at their end.
-    This results in a similar space between levels as use within 
+    This results in a similar space between levels as use within
     the environment */
     margin-bottom: 12px;
 }
@@ -1216,9 +1264,9 @@ export default defineComponent({
     width: 100%;
 }
 
-/** 
+/**
 * Specific width for track sliders depending on breakpoints
-* @remarks This allows the use of cropped text for the 
+* @remarks This allows the use of cropped text for the
 * cue description with dynamic width */
 @media screen and (max-width: 768px) {
     /** in Play mode */
@@ -1239,5 +1287,23 @@ export default defineComponent({
     .is-editable .playhead-slider .has-cropped-text {
         max-width: calc(100vw - 640px);
     }
+}
+
+/** Buttons in inactive state should present themselves as actionable but deactivated */
+.button.is-danger.is-inactive {
+    background-image: none;
+    background-color: transparent;
+    border-color: #ee5f5b;
+    color: white;
+}
+.button.is-danger.is-inactive:hover {
+    background-image: linear-gradient(
+        180deg,
+        rgba(234, 59, 54, 0.25) 0%,
+        rgb(236, 77, 73, 0.25) 40%,
+        rgb(238, 95, 91, 0.25) 100%
+    );
+    filter: none;
+    text-shadow: 1px 1px 1px rgb(10 10 10 / 30%);
 }
 </style>
