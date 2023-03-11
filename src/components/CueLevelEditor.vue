@@ -293,56 +293,30 @@ export default defineComponent({
             return this.$store.getters.selectedCueId == this.cue?.Id;
         },
 
-        /* Determines whether playback of this cue has already passed */
+        /** Determines whether playback of the given cue has already passed
+         * @remarks Is used for visual indication of playback progress
+         * @param cue - the cue to determine the playback progress for
+         */
         hasCuePassed(): boolean {
-            if (this.currentSeconds !== undefined) {
-                if (
-                    this.cue &&
-                    this.cueTime !== null &&
-                    this.cue.Duration !== null &&
-                    Number.isFinite(this.cueTime) &&
-                    Number.isFinite(this.cue.Duration)
-                ) {
-                    return (
-                        this.cueTime + this.cue.Duration <= this.currentSeconds
-                    );
-                }
-            }
-            return false;
+            return CompilationHandler.hasCuePassed(
+                this.cue,
+                this.currentSeconds,
+            );
         },
-        /* Determines whether playback of this cue has not yet started */
+        /** Determines whether playback of this cue has not yet started
+         * @param cue - the cue to determine the playback progress for
+         */
         isCueAhead(): boolean {
-            if (this.currentSeconds !== undefined) {
-                if (
-                    this.cue &&
-                    this.cueTime !== null &&
-                    Number.isFinite(this.cueTime)
-                ) {
-                    return this.currentSeconds < this.cueTime;
-                }
-            }
-            return false;
+            return CompilationHandler.isCueAhead(this.cue, this.currentSeconds);
         },
-        /** The playback progress within this cue, in [percent], or zero if not applicable */
+        /** The playback progress within this cue, in [percent], or null if not applicable
+         * @param cue - the cue to determine the playback progress for
+         */
         percentComplete(): number | null {
-            if (this.currentSeconds !== undefined) {
-                if (
-                    this.cue &&
-                    this.cueTime !== null &&
-                    this.cue.Duration !== null &&
-                    Number.isFinite(this.cueTime) &&
-                    Number.isFinite(this.cue.Duration) &&
-                    !this.isCueAhead &&
-                    !this.hasCuePassed
-                ) {
-                    return (
-                        (100 / this.cue.Duration) *
-                        (this.currentSeconds - this.cueTime)
-                    );
-                }
-                return null;
-            }
-            return null;
+            return CompilationHandler.percentComplete(
+                this.cue,
+                this.currentSeconds,
+            );
         },
 
         /** Gets a cue placeholder denoting the cue's position */

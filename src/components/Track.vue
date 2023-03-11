@@ -947,11 +947,6 @@ export default defineComponent({
                 // earlier than previous
                 this.skipTransitionName = 'slide-fade-right';
             }
-            //TODO do loop around
-            console.debug(
-                `Track(${this.track.Name})::skipTransitionName:`,
-                this.skipTransitionName,
-            );
         },
         /** Handles changes in whether this track is playing.
          * @remarks This activates the wake lock, when playing starts.

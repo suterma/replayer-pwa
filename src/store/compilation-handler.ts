@@ -532,6 +532,70 @@ export default class CompilationHandler {
         return compilationTitle?.trim() ?? '';
     }
 
+    /** Determines whether playback of the given cue has already passed
+     * @remarks Is used for visual indication of playback progress
+     * @param cue - the cue to determine the playback progress for
+     * @param currentSeconds - the number of seconds already passed in the cue's track
+     */
+    public static hasCuePassed(
+        cue: ICue,
+        currentSeconds: number | undefined,
+    ): boolean {
+        if (currentSeconds !== undefined) {
+            if (
+                cue &&
+                cue.Time !== null &&
+                cue.Duration !== null &&
+                Number.isFinite(cue.Time) &&
+                Number.isFinite(cue.Duration)
+            ) {
+                return cue.Time + cue.Duration <= currentSeconds;
+            }
+        }
+        return false;
+    }
+
+    /** Determines whether playback of this cue has not yet started
+     * @param cue - the cue to determine the playback progress for
+     * @param currentSeconds - the number of seconds already passed in the cue's track
+     */
+    public static isCueAhead(
+        cue: ICue,
+        currentSeconds: number | undefined,
+    ): boolean {
+        if (currentSeconds !== undefined) {
+            if (cue && cue.Time !== null && Number.isFinite(cue.Time)) {
+                return currentSeconds < cue.Time;
+            }
+        }
+        return false;
+    }
+
+    /** The playback progress within this cue, in [percent], or null if not applicable
+     * @param cue - the cue to determine the playback progress for
+     * @param currentSeconds - the number of seconds already passed in the cue's track
+     */
+    public static percentComplete(
+        cue: ICue,
+        currentSeconds: number | undefined,
+    ): number | null {
+        if (currentSeconds !== undefined) {
+            if (
+                cue &&
+                cue.Time !== null &&
+                cue.Duration !== null &&
+                Number.isFinite(cue.Time) &&
+                Number.isFinite(cue.Duration) &&
+                !CompilationHandler.isCueAhead(cue, currentSeconds) &&
+                !CompilationHandler.hasCuePassed(cue, currentSeconds)
+            ) {
+                return (100 / cue.Duration) * (currentSeconds - cue.Time);
+            }
+            return null;
+        }
+        return null;
+    }
+
     /** An empty Id, usable for a reset. */
     public static EmptyId = '';
 }
