@@ -40,11 +40,29 @@
                 @trackEnded="continueAfterTrack(track.Id)"
             />
         </template>
-        MULTITRACK CONTROL
-        <MediaControlsBar
-            :playbackMode="compilation.PlaybackMode"
-            @update:playbackMode="updatePlaybackMode($event)"
-        ></MediaControlsBar>
+
+        <Teleport to="#media-player">
+            <div class="section has-background-grey-dark">
+                <MediaControlsBar
+                    :playbackMode="compilation.PlaybackMode"
+                    @update:playbackMode="updatePlaybackMode($event)"
+                    :hasPreviousTrack="false"
+                    :hasNextTrack="false"
+                    :hideStopButton="false"
+                    @stop="stopMix()"
+                    @togglePlaying="skipToPlayPauseMix()"
+                    data-cy="mix-media-controls-bar"
+                >
+                    <PlaybackIndicator
+                        :isReady="!isAllPlaying && isAllTrackLoaded"
+                        :isPlaying="isAllPlaying"
+                        :isUnloaded="!isAllTrackLoaded"
+                        :isUnavailable="!isAllMediaAvailable"
+                        data-cy="playback-indicator"
+                    />
+                </MediaControlsBar>
+            </div>
+        </Teleport>
     </div>
 </template>
 
@@ -61,6 +79,7 @@ import {
 import Track from '@/components/Track.vue';
 import { MutationTypes } from '@/store/mutation-types';
 import MediaControlsBar from '@/components/MediaControlsBar.vue';
+import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
@@ -76,6 +95,7 @@ export default defineComponent({
         ReplayerEventHandler,
         CompilationHeader,
         MediaControlsBar,
+        PlaybackIndicator,
     },
     props: {
         compilation: Compilation,
@@ -103,7 +123,15 @@ export default defineComponent({
              * @devdoc This allows to keep the shuffled order.
              */
             shuffleSeed: 1,
+
+            mounted: false,
         };
+    },
+    mounted() {
+        this.mounted = true;
+    },
+    unmounted() {
+        this.mounted = false;
     },
     methods: {
         /** Visually scrolls to the given track, making it visually at the top of
@@ -278,6 +306,29 @@ export default defineComponent({
             }
             return false;
         },
+
+        stopMix() {
+            const instances = this.tracks?.map((track) => {
+                return this.getTrackInstance(track.Id);
+            });
+
+            if (instances) {
+                instances.forEach((instance) => {
+                    instance.stop();
+                });
+            }
+        },
+        skipToPlayPauseMix() {
+            const instances = this.tracks?.map((track) => {
+                return this.getTrackInstance(track.Id);
+            });
+
+            if (instances) {
+                instances.forEach((instance) => {
+                    instance.play();
+                });
+            }
+        },
     },
     watch: {
         /** Handle scrolling to the changed active track.
@@ -391,6 +442,78 @@ export default defineComponent({
         activeTrack(): ITrack | null {
             return this.$store.getters.activeTrack;
         },
+
+        /** Determines, whether all tracks in the compilation are currently playing (used with the mix mode) */
+        isAllPlaying() {
+            //TODO simplify all these 3 methodes
+            if (this.hasCompilation && this.mounted) {
+                const instances = this.tracks
+                    ?.filter((t) => t.Id)
+                    .map((track) => {
+                        return this.getTrackInstance(track.Id);
+                    });
+
+                if (instances) {
+                    return instances
+                        ?.filter((t) => t)
+                        .map((track) => {
+                            return track.isPlaying;
+                        })
+                        .every((v) => v === true);
+                }
+            }
+            return false;
+        },
+
+        /** Determines, whether all tracks in the compilation are currently loaded (used with the mix mode) */
+        isAllTrackLoaded() {
+            if (this.hasCompilation && this.mounted) {
+                const instances = this.tracks
+                    ?.filter((t) => t.Id)
+                    .map((track) => {
+                        return this.getTrackInstance(track.Id);
+                    });
+
+                if (instances) {
+                    return instances
+                        ?.filter((t) => t)
+                        .map((track) => {
+                            return track.isTrackLoaded;
+                        })
+                        .every((v) => v === true);
+                }
+            }
+
+            return false;
+        },
+
+        /** Determines, whether all tracks in the compilation have their media available (used with the mix mode) */
+        isAllMediaAvailable() {
+            if (this.hasCompilation && this.mounted) {
+                const instances = this.tracks
+                    ?.filter((t) => t.Id)
+                    .map((track) => {
+                        return this.getTrackInstance(track.Id);
+                    });
+
+                if (instances) {
+                    return instances
+                        ?.filter((t) => t)
+                        .map((track) => {
+                            return track.isMediaAvailable;
+                        })
+                        .every((v) => v === true);
+                }
+            }
+            return false;
+        },
     },
 });
 </script>
+<style>
+.compilation {
+    /* transform: rotate(90deg);
+    height: 100vw;
+    width: 100vh; */
+}
+</style>

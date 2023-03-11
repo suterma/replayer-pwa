@@ -507,10 +507,11 @@ export default defineComponent({
             }
         },
 
-        mute() {
-            this.debugLog(`mute`);
+        toggleMute(): boolean {
+            this.debugLog(`toggleMuteTo:${!this.isMuted}` );
             this.isMuted = !this.isMuted;
             this.audioElement.muted = this.isMuted;
+            return this.isMuted;
         },
         seekToSeconds(seconds: number) {
             this.debugLog(`seekToSeconds`, seconds);
