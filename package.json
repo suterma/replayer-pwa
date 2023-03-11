@@ -53,7 +53,7 @@
         "vue-peaks": "^1.0.1",
         "vue-router": "^4.1.5",
         "vue-scrollto": "^2.20.0",
-        "vue3-promise-dialog": "^0.2.6",
+        "vue3-promise-dialog": "^0.3.4",
         "vuedraggable": "^4.1.0",
         "vuex": "^4.0.2",
         "waveform-data": "^4.3.0",
