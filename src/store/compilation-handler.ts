@@ -11,7 +11,7 @@ import { MediaBlob, MediaUrl } from './state-types';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
- * Provides handling methods for compilation manipulation.
+ * Provides compilation handling methods
  */
 export default class CompilationHandler {
     /** Shuffles and returns the given tracks, using a deterministic method, based on the given seed */
@@ -26,7 +26,6 @@ export default class CompilationHandler {
             }))
             .sort((a, b) => a.sort - b.sort)
             .map(({ value }) => value);
-        //console.debug('shuffledTracks', JSON.stringify(shuffledTracks));
         return shuffledTracks;
     }
 
@@ -206,15 +205,16 @@ export default class CompilationHandler {
             });
         }
     }
+
     /** Converts the total seconds into a conveniently displayable hh:mm:ss.zzz format,
      * if a suitable input value is provided.
      * @remarks Omits the hour part, if not applicable
-     * @param subsecondDigits - The number of digits for the sub-second precision. Should be 1, 2, or 3 (default).
+     * @param subSecondDigits - The number of digits for the sub-second precision. Should be 1, 2, or 3 (default).
      * @return The display representation or the empty string.
      */
     static convertToDisplayTime(
         seconds: number | null | undefined,
-        subsecondDigits = 3,
+        subSecondDigits = 3,
     ): string {
         if (seconds != null && Number.isFinite(seconds)) {
             const isNegative = seconds < 0;
@@ -228,7 +228,7 @@ export default class CompilationHandler {
             //Uses the hour, minute, seconds, and 3 digits of the milliseconds part
             const hhmmss = new Date(seconds * 1000)
                 .toISOString()
-                .substring(11, 11 + 9 + subsecondDigits);
+                .substring(11, 11 + 9 + subSecondDigits);
             //skip the hour part, if not used
             return (
                 sign +
