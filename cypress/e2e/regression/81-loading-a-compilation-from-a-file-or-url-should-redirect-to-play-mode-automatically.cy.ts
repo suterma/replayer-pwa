@@ -1,5 +1,10 @@
 /* eslint-disable jest/expect-expect */
 describe('testing the issue "Loading a compilation from a file or URL should redirect to PLAY mode automatically #81" for regression', () => {
+    beforeEach(() => {
+        cy.loadEmpty();
+        cy.visit('#/edit');
+    });
+
     it('should go to play mode after ZIP compilation load', () => {
         // ACT
         cy.loadMediaUrl(
@@ -19,5 +24,11 @@ describe('testing the issue "Loading a compilation from a file or URL should red
         cy.hash().should('eq', '#/play');
     });
 
-    //TODO can I simulate this also with (injected) local files
+    it('should go to play mode after local file ZIP compilation load', () => {
+        // ACT
+        cy.loadFile('cypress/fixtures/your-light-by-lidija-roos.zip');
+
+        // ASSERT
+        cy.hash().should('eq', '#/play');
+    });
 });
