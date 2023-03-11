@@ -3,17 +3,15 @@
         <div class="modal is-active">
             <div class="modal-background"></div>
             <Experimental>
-                <!-- //TODO later use a css style for the with -->
-                <div class="modal-card" style="width: 100%">
+                <div class="modal-card is-wide">
                     <form data-cy="modal-form" @submit.prevent="$close(this)">
-                        <header class="modal-card-head">
+                        <header class="modal-card-head has-cropped-text">
                             <h1 class="modal-card-title title">
                                 Adding cues for '{{ track?.Name }}' from...
                             </h1>
                         </header>
                         <section class="modal-card-body">
                             <div class="control">
-                                <!-- //TODO autofocus seems not to work -->
                                 <textarea
                                     class="textarea is-size-7"
                                     placeholder="Description;Time[seconds];Shortcut"

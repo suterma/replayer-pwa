@@ -5,7 +5,7 @@
 
             <div class="modal-card">
                 <form data-cy="modal-form" @submit.prevent="$close(this)">
-                    <header class="modal-card-head">
+                    <header class="modal-card-head has-cropped-text">
                         <h1 class="modal-card-title title">{{ header }}</h1>
                     </header>
                     <section class="modal-card-body">

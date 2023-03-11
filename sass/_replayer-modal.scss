@@ -9,3 +9,18 @@
 .modal-card {
     box-shadow: $shadow;
 }
+
+.modal-content,
+.modal-card {
+    /* same margin on all sizes, including on small viewports */
+    margin: 0 auto;
+}
+
+/* A wide variant for a modal, taking up more width than usual for wider viewports */ 
+@media screen and (min-width: 769px) {
+    .modal-content.is-wide,
+    .modal-card.is-wide {
+      min-width: 640px;
+      width: 80vw;
+    }
+  }

@@ -11150,6 +11150,20 @@ button.dropdown-item:disabled:hover {
   box-shadow: 0 0.5em 1em -0.125em rgb(10, 10, 10), 0 0 0 1px rgba(10, 10, 10, 0.02);
 }
 
+.modal-content,
+.modal-card {
+  /* same margin on all sizes, including on small viewports */
+  margin: 0 auto;
+}
+
+/* A wide variant for a modal, taking up more width than usual for wider viewports */
+@media screen and (min-width: 769px) {
+  .modal-content.is-wide,
+  .modal-card.is-wide {
+    min-width: 640px;
+    width: 80vw;
+  }
+}
 /**
  * Optional styling classes for printing pages with the Bulma CSS framework.
  * See https://github.com/suterma/bulma-print for documentation
@@ -12097,21 +12111,6 @@ html {
 */
 .is-absolute {
   position: absolute !important;
-}
-
-/** Adds an overflow-ellipsis 
-* @remarks "overflow" value must be different from "visible", e.g. using is-clipped
-*/
-.has-ellipsis {
-  text-overflow: ellipsis;
-}
-
-/** Adds an overflow-ellipsis specifically on the left side 
-* @remarks "overflow" value must be different from "visible", e.g. using is-clipped
-*/
-.has-left-ellipsis {
-  text-overflow: ellipsis;
-  direction: rtl;
 }
 
 .is-single-line {

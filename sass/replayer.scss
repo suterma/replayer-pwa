@@ -117,19 +117,6 @@ html {
     position: absolute !important;
 }
 
-/** Adds an overflow-ellipsis 
-* @remarks "overflow" value must be different from "visible", e.g. using is-clipped
-*/
-.has-ellipsis {
-    text-overflow: ellipsis;
-}
-/** Adds an overflow-ellipsis specifically on the left side 
-* @remarks "overflow" value must be different from "visible", e.g. using is-clipped
-*/
-.has-left-ellipsis {
-    text-overflow: ellipsis;
-    direction: rtl;
-}
 .is-single-line {
     white-space: nowrap;
 }

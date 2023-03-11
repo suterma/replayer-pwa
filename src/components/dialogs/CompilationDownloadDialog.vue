@@ -12,7 +12,7 @@
                         })
                     "
                 >
-                    <header class="modal-card-head">
+                    <header class="modal-card-head has-cropped-text">
                         <h1 class="modal-card-title title is-flex-shrink-1">
                             Download compilation as...
                         </h1>

@@ -5,11 +5,6 @@
             'is-active': isDropdownExpanded,
         }"
     >
-        <!-- 
-    //TODO unfortunately the ESC hotkey does interfere with possibly some other instance
-    //for the ESC hotkey, most probably in the media handlers, possibly also on the dialogs. 
-    //The problem only occurs in the edit view
-    -->
         <DismissiblePanel
             @dismissed="collapseDropdown"
             :dismissible="isDropdownExpanded"
