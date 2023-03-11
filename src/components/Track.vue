@@ -623,6 +623,9 @@ export default defineComponent({
                 !this.isTrackPlayerFullScreen,
             );
         },
+        /** Stops playback and removes any selected cue
+         * @remarks Does not assert whether this is the active track.
+         */
         stop(): void {
             this.trackPlayerInstance.stop();
             this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, null);
@@ -679,6 +682,13 @@ export default defineComponent({
                     this.noSleep.disable();
                 }
             }
+        },
+        /** Starts playback at the current position
+         * @remarks Does not assert whether this is the active track.
+         * @remarks Asserts (and if necessary) resolves the playability of the track media
+         */
+        play() {
+            this.trackPlayerInstance?.play();
         },
 
         togglePlayback() {
