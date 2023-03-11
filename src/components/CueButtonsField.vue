@@ -1,9 +1,9 @@
 <template>
-    <div class="buttons has-gap is-fullwidth">
+    <div class="cue-buttons-field buttons has-gap is-fullwidth">
         <!-- A virtual cue button as prefix, when the first cue is not at the zero position -->
         <CueButton
             v-if="prefixCue.Duration ?? 0 > 0"
-            class="is-flex-grow-1"
+            class="is-flex-grow-1 is-flex-shrink-5"
             :disabled="disabled || !Number.isFinite(prefixCue.Time)"
             :time="prefixCue.Time"
             :shortcut="prefixCue.Shortcut"
@@ -121,3 +121,11 @@ export default defineComponent({
     },
 });
 </script>
+<style lang="scss">
+.cue-buttons-field.buttons {
+    /* Virtual buttons should take up not unnecessary much space */
+    .cue.button.is-virtual {
+        max-width: 14em;
+    }
+}
+</style>

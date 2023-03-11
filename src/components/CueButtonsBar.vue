@@ -159,7 +159,7 @@ export default defineComponent({
 
     /* Virtual buttons should take up not unnecessary much space */
     .cue.button.is-virtual {
-        max-width: 16em;
+        max-width: 14em;
         /* do not shrink below the used icon width*/
         min-width: 34px;
     }
