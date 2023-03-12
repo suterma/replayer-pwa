@@ -73,7 +73,8 @@ export default defineComponent({
             type: null as unknown as PropType<number | null>,
             default: null,
             required: false,
-            validator: (v: any) => typeof v === 'number' || v === null,
+            validator: (v: unknown): boolean =>
+                typeof v === 'number' || v === null,
         },
         /** The end time of the selected cue. Used in conjunction with the playbackMode, when in cue loop mode.
          * @devdoc This is used to emulate the buffer looping for the enclosed audio element.
@@ -84,7 +85,8 @@ export default defineComponent({
             type: null as unknown as PropType<number | null>,
             default: null,
             required: false,
-            validator: (v: any) => typeof v === 'number' || v === null,
+            validator: (v: unknown): boolean =>
+                typeof v === 'number' || v === null,
         },
         /** The track source description
          * @remarks This is a textual indication of the track media source. It's displayed as part of the timing display

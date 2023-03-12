@@ -2,7 +2,7 @@
     <ControlKnob
         class="is-knob is-unselectable"
         v-model="value"
-        :options="knobOptions" 
+        :options="knobOptions"
     >
     </ControlKnob>
 </template>
@@ -52,7 +52,7 @@ export default defineComponent({
                 ariaLabel: 'Knob',
                 svgClass: this.valueClass,
                 valueTextClass: this.valueClass,
-                valueArchClass: this.valueClass,                
+                valueArchClass: this.valueClass,
             };
         },
         value: {
