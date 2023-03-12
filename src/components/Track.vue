@@ -51,6 +51,9 @@
             :isTrackLoaded="isTrackLoaded"
             :isTrackMediaAvailable="isMediaAvailable"
             :isActive="isActiveTrack"
+            :class="{
+                'has-cursor-not-allowed': !isTrackLoaded,
+            }"
         >
             <template v-slot:left-start>
                 <div class="level-item is-narrow">
@@ -74,6 +77,12 @@
                     :subSecondDigits="3"
                 ></TimeDisplay>
                 <!-- //TODO add volume for track -->
+                <VolumeKnob
+                    :disabled="!isTrackLoaded"
+                    :modelValue="track.Volume"
+                    @update:modelValue="updatedVolume"
+                />
+
             </template>
         </TrackHeader>
         <!-- Track header for single-track playback -->
@@ -496,6 +505,7 @@ import { settingsMixin } from '@/mixins/settingsMixin';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
+import VolumeKnob from '@/components/VolumeKnob.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import TrackTitleName from './TrackTitleName.vue';
 import ArtistInfo from './ArtistInfo.vue';
@@ -525,6 +535,7 @@ export default defineComponent({
         MuteButton,
         PlayheadSlider,
         CueButtonsBar,
+        VolumeKnob,
         CueButtonsField,
         MediaControlsBar,
         TrackTitleName,

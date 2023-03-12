@@ -73,16 +73,10 @@
             data-cy="toggle-playback-mode"
         />
 
-        <Knob
-            title="Drag, scroll or use the arrow keys to change volume"
-            class="button"
+        <VolumeKnob
+            :disabled="disabled"
             :modelValue="volume"
             @update:modelValue="updateVolume"
-            :minValue="0"
-            :maxValue="1"
-            valueClass="has-text-light"
-            rimClass="has-text-grey-light"
-            data-cy="volume"
         />
         <slot></slot>
     </div>
@@ -94,7 +88,7 @@ import { PlaybackMode, DefaultTrackVolume } from '@/store/compilation-types';
 
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import PlaybackModeButton from '@/components/buttons/PlaybackModeButton.vue';
-import Knob from '@/components/buttons/Knob.vue';
+import VolumeKnob from '@/components/VolumeKnob.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import {
     mdiSkipPrevious,
@@ -112,7 +106,7 @@ export default defineComponent({
         PlayPauseButton,
         PlaybackModeButton,
         BaseIcon,
-        Knob,
+        VolumeKnob,
     },
     emits: [
         /** Emitted, when the stop button is clicked
