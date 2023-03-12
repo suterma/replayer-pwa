@@ -67,6 +67,12 @@
                 </div>
             </template>
             <template v-slot:left-end>
+                <TimeDisplay
+                    class="level-item is-narrow is-hidden-mobile is-size-7"
+                    :modelValue="currentSeconds"
+                    :hidePlaceholder="true"
+                    :subSecondDigits="3"
+                ></TimeDisplay>
                 <!-- //TODO add volume for track -->
             </template>
         </TrackHeader>
@@ -733,6 +739,13 @@ export default defineComponent({
             this.trackPlayerInstance?.play();
         },
 
+        /** Pauses playback at the current position
+         * @remarks Does not assert whether this is the active track.
+         */
+        pause() {
+            this.trackPlayerInstance?.pause();
+        },
+
         togglePlayback() {
             if (this.isActiveTrack) {
                 this.trackPlayerInstance?.togglePlayback();
@@ -749,10 +762,15 @@ export default defineComponent({
                 this.seek(+5);
             }
         },
+        /** Seeks forward or backward, for the given amount of seconds */
         seek(seconds: number): void {
-            this.trackPlayerInstance.seekToSeconds(
+            this.trackPlayerInstance?.seekToSeconds(
                 this.currentSeconds + seconds,
             );
+        },
+        /** Seeks to the position, in [seconds] */
+        seekToSeconds(seconds: number): void {
+            this.trackPlayerInstance?.seekToSeconds(seconds);
         },
         volumeDown() {
             if (this.isActiveTrack) {

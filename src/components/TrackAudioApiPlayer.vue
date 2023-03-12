@@ -298,6 +298,7 @@ export default defineComponent({
         this.debugLog(`unmounted:`, this.title);
 
         //properly destroy the audio element and the audio context
+        this.fader.cancel();
         this.playing = false;
         this.audioElement.pause();
         this.audioElement.removeAttribute('src'); // empty resource
@@ -742,9 +743,6 @@ export default defineComponent({
          * @remarks Asserts (and if necessary) resolves the playability of the track media
          */
         play(): void {
-            this.debugLog(
-                `play:isClickToLoadRequired:${this.isClickToLoadRequired}`,
-            );
             if (this.isClickToLoadRequired) {
                 this.loadAfterClick().then(() => {
                     this.debugLog(`loadAfterClick-then`);

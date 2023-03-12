@@ -53,6 +53,8 @@
                         :hideStopButton="false"
                         @stop="stopMix()"
                         @togglePlaying="skipToPlayPauseMix()"
+                        :isPlaying="isAllPlaying"
+                        :isFading="isAnyFading"
                         data-cy="mix-media-controls-bar"
                     >
                         <template #after-play>
@@ -67,6 +69,13 @@
                                 data-cy="mute"
                             />
                         </template>
+                        <button class="button is-nav is-indicator">
+                            <TimeDisplay
+                                :modelValue="getAllTrackPosition"
+                                :hidePlaceholder="true"
+                                :subSecondDigits="3"
+                            ></TimeDisplay>
+                        </button>
                         <PlaybackIndicator
                             :isReady="!isAllPlaying && isAllTrackLoaded"
                             :isPlaying="isAllPlaying"
@@ -93,12 +102,14 @@ import {
 } from '@/store/compilation-types';
 import Track from '@/components/Track.vue';
 import { MutationTypes } from '@/store/mutation-types';
+import TimeDisplay from '@/components/TimeDisplay.vue';
 import MediaControlsBar from '@/components/MediaControlsBar.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MuteButton from '@/components/buttons/MuteButton.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
+import MultitrackHandler from '@/code/audio/MultitrackHandler';
 
 /** Displays the contained set of tracks according to the required mode.
  * @remarks Also handles the common replayer events for compilations
@@ -111,6 +122,7 @@ export default defineComponent({
         ReplayerEventHandler,
         CompilationHeader,
         MediaControlsBar,
+        TimeDisplay,
         PlaybackIndicator,
         MuteButton,
     },
@@ -141,14 +153,15 @@ export default defineComponent({
              */
             shuffleSeed: 1,
 
-            mounted: false,
+            /** The multitrack-handler to use */
+            multitrackHandler: undefined as unknown as MultitrackHandler,
         };
     },
     mounted() {
-        this.mounted = true;
-    },
-    unmounted() {
-        this.mounted = false;
+        this.multitrackHandler = new MultitrackHandler(
+            this.$refs as never,
+            this.tracks,
+        );
     },
     methods: {
         /** Visually scrolls to the given track, making it visually at the top of
@@ -336,13 +349,34 @@ export default defineComponent({
             }
         },
         skipToPlayPauseMix() {
+            //TODO create common getTrackInstances method....
+            const instances = this.tracks?.map((track) => {
+                return this.getTrackInstance(track.Id);
+            });
+
+            if (instances) {
+                if (this.isAllPlaying) {
+                    instances.forEach((instance) => {
+                        instance.pause();
+                    });
+                } else {
+                    instances.forEach((instance) => {
+                        instance.play();
+                    });
+                }
+            }
+        },
+        /** Synchronizes all track positions to the average position of them. */
+        synchTracks() {
+            const currentPosition = this.getAllTrackPosition;
+
             const instances = this.tracks?.map((track) => {
                 return this.getTrackInstance(track.Id);
             });
 
             if (instances) {
                 instances.forEach((instance) => {
-                    instance.play();
+                    instance.seekToSeconds(currentPosition);
                 });
             }
         },
@@ -395,6 +429,12 @@ export default defineComponent({
                     this.shuffleSeed,
                 );
             }
+        },
+
+        /* At change of play state (before/after fading down), synch tracks) */
+        isAllPlaying(isAllPlaying: boolean) {
+            console.debug('Compilation::isAllPlaying:', isAllPlaying);
+            this.synchTracks();
         },
     },
     computed: {
@@ -474,54 +514,34 @@ export default defineComponent({
 
         /** Determines, whether all tracks in the compilation are currently playing (used with the mix mode) */
         isAllPlaying() {
-            if (this.hasCompilation && this.mounted) {
-                return this.tracks
-                    ?.filter((t) => t.Id)
-                    .map((track) => {
-                        return this.getTrackInstance(track.Id).isPlaying;
-                    })
-                    .every((v) => v === true);
-            }
-            return false;
+            return this.multitrackHandler?.isAllPlaying() ?? false;
         },
 
         /** Determines, whether all tracks in the compilation are currently loaded (used with the mix mode) */
         isAllTrackLoaded() {
-            if (this.hasCompilation && this.mounted) {
-                return this.tracks
-                    ?.filter((t) => t.Id)
-                    .map((track) => {
-                        return this.getTrackInstance(track.Id).isTrackLoaded;
-                    })
-                    .every((v) => v === true);
-            }
-            return false;
+            return this.multitrackHandler?.isAllTrackLoaded() ?? false;
         },
 
         /** Determines, whether all tracks in the compilation are currently muted (used with the mix mode) */
         isAllTrackMuted() {
-            if (this.hasCompilation && this.mounted) {
-                return this.tracks
-                    ?.filter((t) => t.Id)
-                    .map((track) => {
-                        return this.getTrackInstance(track.Id).isMuted;
-                    })
-                    .every((v) => v === true);
-            }
-            return false;
+            return this.multitrackHandler?.isAllTrackMuted() ?? false;
         },
 
         /** Determines, whether all tracks in the compilation have their media available (used with the mix mode) */
-        isAllMediaAvailable() {
-            if (this.hasCompilation && this.mounted) {
-                return this.tracks
-                    ?.filter((t) => t.Id)
-                    .map((track) => {
-                        return this.getTrackInstance(track.Id).isMediaAvailable;
-                    })
-                    .every((v) => v === true);
-            }
-            return false;
+        isAllMediaAvailable(): boolean {
+            return this.multitrackHandler?.isAllMediaAvailable() ?? false;
+        },
+
+        /** Determines playback progress of all tracks in the compilation, in [seconds] (used with the mix mode).
+         * @returns A single representation for the progress as an average
+         */
+        getAllTrackPosition(): number {
+            return this.multitrackHandler?.getAllTrackPosition() ?? 0;
+        },
+
+        /** Determines, whether any track in the compilation is currently fading (used with the mix mode) */
+        isAnyFading() {
+            return this.multitrackHandler?.isAnyFading() ?? false;
         },
     },
 });
