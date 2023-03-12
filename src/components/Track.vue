@@ -42,7 +42,7 @@
             :isActive="isActiveTrack"
             :isFirst="isFirst"
             :isLast="isLast"
-        />
+        ></TrackHeaderEdit>
         <!-- Track header for mixing, having additional channel-style controls -->
         <TrackHeader
             v-else-if="isMix"
@@ -76,13 +76,11 @@
                     :hidePlaceholder="true"
                     :subSecondDigits="3"
                 ></TimeDisplay>
-                <!-- //TODO add volume for track -->
                 <VolumeKnob
                     :disabled="!isTrackLoaded"
                     :modelValue="track.Volume"
                     @update:modelValue="updatedVolume"
                 />
-
             </template>
         </TrackHeader>
         <!-- Track header for single-track playback -->
@@ -118,6 +116,11 @@
                     :modelValue="track?.Duration"
                     :hidePlaceholder="true"
                 ></TimeDisplay>
+                <VolumeKnob
+                    :disabled="!isTrackLoaded"
+                    :modelValue="track.Volume"
+                    @update:modelValue="updatedVolume"
+                />
             </template>
         </TrackHeader>
 
