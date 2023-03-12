@@ -91,7 +91,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { ComponentPublicInstance, defineComponent } from 'vue';
 import VueScrollTo from 'vue-scrollto';
 import {
     Compilation,
@@ -159,7 +159,9 @@ export default defineComponent({
     },
     mounted() {
         this.multitrackHandler = new MultitrackHandler(
-            this.$refs as never,
+            this.$refs as {
+                [name: string]: Element | ComponentPublicInstance | null;
+            },
             this.tracks,
         );
     },
