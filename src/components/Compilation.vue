@@ -162,7 +162,6 @@ export default defineComponent({
             this.$refs as {
                 [name: string]: Element | ComponentPublicInstance | null;
             },
-            this.tracks,
         );
     },
     methods: {

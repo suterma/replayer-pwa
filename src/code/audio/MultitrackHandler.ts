@@ -1,4 +1,3 @@
-import { ITrack } from '@/store/compilation-types';
 import Track from '@/components/Track.vue';
 import { ComponentPublicInstance } from 'vue';
 
@@ -8,22 +7,17 @@ import { ComponentPublicInstance } from 'vue';
  */
 export default class MultitrackHandler {
     /** @constructor
-     * @param {{ [name: string]: Element | ComponentPublicInstance | null }} refs - refs to the instances of Track components (each subsequently containing a media element to act upon)
+     * @param {{ [name: string]: Element | ComponentPublicInstance | null }} refs - refs to the instances of components (will be filtered to tracks, each subsequently containing a media element to act upon)
      * @devdoc For the refs, the $refs from the compilation component is used. See https://vuejs.org/api/component-instance.html#refs for more information about the type
      */
-    constructor(
-        refs: { [name: string]: Element | ComponentPublicInstance | null },
-        tracks: ITrack[] | undefined,
-    ) {
+    constructor(refs: {
+        [name: string]: Element | ComponentPublicInstance | null;
+    }) {
         this.refs = refs;
-        this.tracks = tracks;
     }
 
     /** The refs to take the instances of TrackAudioApiPlayer from */
     refs: { [name: string]: Element | ComponentPublicInstance | null };
-
-    /** The tracks to handle */
-    tracks: ITrack[] | undefined;
 
     /** Determines, whether all tracks in the compilation are currently playing (used with the mix mode) */
     isAllPlaying(): boolean {
