@@ -474,22 +474,13 @@ export default defineComponent({
 
         /** Determines, whether all tracks in the compilation are currently playing (used with the mix mode) */
         isAllPlaying() {
-            //TODO simplify all these 3 methodes
             if (this.hasCompilation && this.mounted) {
-                const instances = this.tracks
+                return this.tracks
                     ?.filter((t) => t.Id)
                     .map((track) => {
-                        return this.getTrackInstance(track.Id);
-                    });
-
-                if (instances) {
-                    return instances
-                        ?.filter((t) => t)
-                        .map((track) => {
-                            return track.isPlaying;
-                        })
-                        .every((v) => v === true);
-                }
+                        return this.getTrackInstance(track.Id).isPlaying;
+                    })
+                    .every((v) => v === true);
             }
             return false;
         },
@@ -497,64 +488,38 @@ export default defineComponent({
         /** Determines, whether all tracks in the compilation are currently loaded (used with the mix mode) */
         isAllTrackLoaded() {
             if (this.hasCompilation && this.mounted) {
-                const instances = this.tracks
+                return this.tracks
                     ?.filter((t) => t.Id)
                     .map((track) => {
-                        return this.getTrackInstance(track.Id);
-                    });
-
-                if (instances) {
-                    return instances
-                        ?.filter((t) => t)
-                        .map((track) => {
-                            return track.isTrackLoaded;
-                        })
-                        .every((v) => v === true);
-                }
+                        return this.getTrackInstance(track.Id).isTrackLoaded;
+                    })
+                    .every((v) => v === true);
             }
-
             return false;
         },
 
         /** Determines, whether all tracks in the compilation are currently muted (used with the mix mode) */
         isAllTrackMuted() {
             if (this.hasCompilation && this.mounted) {
-                const instances = this.tracks
+                return this.tracks
                     ?.filter((t) => t.Id)
                     .map((track) => {
-                        return this.getTrackInstance(track.Id);
-                    });
-
-                if (instances) {
-                    return instances
-                        ?.filter((t) => t)
-                        .map((track) => {
-                            return track.isMuted;
-                        })
-                        .every((v) => v === true);
-                }
+                        return this.getTrackInstance(track.Id).isMuted;
+                    })
+                    .every((v) => v === true);
             }
-
             return false;
         },
 
         /** Determines, whether all tracks in the compilation have their media available (used with the mix mode) */
         isAllMediaAvailable() {
             if (this.hasCompilation && this.mounted) {
-                const instances = this.tracks
+                return this.tracks
                     ?.filter((t) => t.Id)
                     .map((track) => {
-                        return this.getTrackInstance(track.Id);
-                    });
-
-                if (instances) {
-                    return instances
-                        ?.filter((t) => t)
-                        .map((track) => {
-                            return track.isMediaAvailable;
-                        })
-                        .every((v) => v === true);
-                }
+                        return this.getTrackInstance(track.Id).isMediaAvailable;
+                    })
+                    .every((v) => v === true);
             }
             return false;
         },
