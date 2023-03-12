@@ -506,11 +506,20 @@ export default defineComponent({
                 this.isClickToLoadRequired = true;
             }
         },
-
-        toggleMute(): boolean {
-            this.debugLog(`toggleMuteTo:${!this.isMuted}` );
-            this.isMuted = !this.isMuted;
-            this.audioElement.muted = this.isMuted;
+        /** Toggles the muted state of this track
+         * @remarks If the track is not loaded, does nothing.
+         * @param mute - If null or not given, toggles the muted state. When given, sets to the specified state.
+         */
+        toggleMute(mute: boolean | null = null): boolean {
+            if (mute === null) {
+                this.isMuted = !this.isMuted;
+                this.audioElement.muted = this.isMuted;
+            } else {
+                if (this.isMuted != mute) {
+                    this.isMuted = mute;
+                    this.audioElement.muted = this.isMuted;
+                }
+            }
             return this.isMuted;
         },
         seekToSeconds(seconds: number) {

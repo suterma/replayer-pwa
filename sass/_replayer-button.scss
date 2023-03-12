@@ -157,5 +157,28 @@ fieldset[disabled] .button:hover {
     filter: grayscale(100%) !important;
 }
 
+/*************************************************************
+ * "inactive" Buttons for actionable items
+**************************************************************/
+
+/** Buttons in inactive state should present themselves as actionable but deactivated */
+.button.is-danger.is-inactive:not(.is-outlined):not(.is-inverted) 
+{
+    background-image: none;
+    background-color: transparent;
+    border-color: #ee5f5b;
+    color: $grey-lightest;
+}
+.button.is-danger.is-inactive:not(.is-outlined):not(.is-inverted):hover {
+    background-image: linear-gradient(
+        180deg,
+        rgba(234, 59, 54, 0.25) 0%,
+        rgb(236, 77, 73, 0.25) 40%,
+        rgb(238, 95, 91, 0.25) 100%
+    );
+    filter: none;
+    text-shadow: 1px 1px 1px rgb(10 10 10 / 30%);
+}
+
 
  

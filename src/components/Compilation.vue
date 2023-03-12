@@ -41,28 +41,43 @@
             />
         </template>
 
-        <Teleport to="#media-player">
-            <div class="section has-background-grey-dark">
-                <MediaControlsBar
-                    :playbackMode="compilation.PlaybackMode"
-                    @update:playbackMode="updatePlaybackMode($event)"
-                    :hasPreviousTrack="false"
-                    :hasNextTrack="false"
-                    :hideStopButton="false"
-                    @stop="stopMix()"
-                    @togglePlaying="skipToPlayPauseMix()"
-                    data-cy="mix-media-controls-bar"
-                >
-                    <PlaybackIndicator
-                        :isReady="!isAllPlaying && isAllTrackLoaded"
-                        :isPlaying="isAllPlaying"
-                        :isUnloaded="!isAllTrackLoaded"
-                        :isUnavailable="!isAllMediaAvailable"
-                        data-cy="playback-indicator"
-                    />
-                </MediaControlsBar>
-            </div>
-        </Teleport>
+        <Experimental>
+            <!-- Multi-track-Controller -->
+            <Teleport to="#media-player">
+                <div class="section has-background-grey-dark">
+                    <MediaControlsBar
+                        :playbackMode="compilation.PlaybackMode"
+                        @update:playbackMode="updatePlaybackMode($event)"
+                        :hasPreviousTrack="false"
+                        :hasNextTrack="false"
+                        :hideStopButton="false"
+                        @stop="stopMix()"
+                        @togglePlaying="skipToPlayPauseMix()"
+                        data-cy="mix-media-controls-bar"
+                    >
+                        <template #after-play>
+                            <MuteButton
+                                :disabled="!isAllTrackLoaded"
+                                :class="{
+                                    'is-danger': true,
+                                    'is-inactive': !isAllTrackMuted,
+                                }"
+                                :isMuted="isAllTrackMuted"
+                                @click="toggleMuteMix"
+                                data-cy="mute"
+                            />
+                        </template>
+                        <PlaybackIndicator
+                            :isReady="!isAllPlaying && isAllTrackLoaded"
+                            :isPlaying="isAllPlaying"
+                            :isUnloaded="!isAllTrackLoaded"
+                            :isUnavailable="!isAllMediaAvailable"
+                            data-cy="playback-indicator"
+                        />
+                    </MediaControlsBar>
+                </div>
+            </Teleport>
+        </Experimental>
     </div>
 </template>
 
@@ -80,6 +95,7 @@ import Track from '@/components/Track.vue';
 import { MutationTypes } from '@/store/mutation-types';
 import MediaControlsBar from '@/components/MediaControlsBar.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
+import MuteButton from '@/components/buttons/MuteButton.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
@@ -96,6 +112,7 @@ export default defineComponent({
         CompilationHeader,
         MediaControlsBar,
         PlaybackIndicator,
+        MuteButton,
     },
     props: {
         compilation: Compilation,
@@ -329,6 +346,18 @@ export default defineComponent({
                 });
             }
         },
+        toggleMuteMix() {
+            const allMuted = this.isAllTrackMuted;
+            const instances = this.tracks?.map((track) => {
+                return this.getTrackInstance(track.Id);
+            });
+
+            if (instances) {
+                instances.forEach((instance) => {
+                    instance.toggleMute(!allMuted);
+                });
+            }
+        },
     },
     watch: {
         /** Handle scrolling to the changed active track.
@@ -487,6 +516,28 @@ export default defineComponent({
             return false;
         },
 
+        /** Determines, whether all tracks in the compilation are currently muted (used with the mix mode) */
+        isAllTrackMuted() {
+            if (this.hasCompilation && this.mounted) {
+                const instances = this.tracks
+                    ?.filter((t) => t.Id)
+                    .map((track) => {
+                        return this.getTrackInstance(track.Id);
+                    });
+
+                if (instances) {
+                    return instances
+                        ?.filter((t) => t)
+                        .map((track) => {
+                            return track.isMuted;
+                        })
+                        .every((v) => v === true);
+                }
+            }
+
+            return false;
+        },
+
         /** Determines, whether all tracks in the compilation have their media available (used with the mix mode) */
         isAllMediaAvailable() {
             if (this.hasCompilation && this.mounted) {
@@ -510,10 +561,3 @@ export default defineComponent({
     },
 });
 </script>
-<style>
-.compilation {
-    /* transform: rotate(90deg);
-    height: 100vw;
-    width: 100vh; */
-}
-</style>

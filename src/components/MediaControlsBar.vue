@@ -43,6 +43,7 @@
             title="Play from current position"
             data-cy="toggle-playback"
         />
+        <slot name="after-play"></slot>
 
         <button
             v-if="!hideCueNavigation"

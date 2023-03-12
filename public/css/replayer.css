@@ -11012,6 +11012,23 @@ fieldset[disabled] .button:hover {
 }
 
 /*************************************************************
+ * "inactive" Buttons for actionable items
+**************************************************************/
+/** Buttons in inactive state should present themselves as actionable but deactivated */
+.button.is-danger.is-inactive:not(.is-outlined):not(.is-inverted) {
+  background-image: none;
+  background-color: transparent;
+  border-color: #ee5f5b;
+  color: hsl(0deg, 0%, 93%);
+}
+
+.button.is-danger.is-inactive:not(.is-outlined):not(.is-inverted):hover {
+  background-image: linear-gradient(180deg, rgba(234, 59, 54, 0.25) 0%, rgba(236, 77, 73, 0.25) 40%, rgba(238, 95, 91, 0.25) 100%);
+  filter: none;
+  text-shadow: 1px 1px 1px rgba(10, 10, 10, 0.3);
+}
+
+/*************************************************************
  * Dropdown stylings
  * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there,
  * creating a matching visual experience for these dropdowns

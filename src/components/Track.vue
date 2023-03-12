@@ -61,7 +61,7 @@
                             'is-inactive': !isMuted,
                         }"
                         :isMuted="isMuted"
-                        @click="toggleMute"
+                        @click="toggleMute()"
                         data-cy="mute"
                     />
                 </div>
@@ -687,10 +687,11 @@ export default defineComponent({
 
         /** Toggles the muted state of this track
          * @remarks If the track is not loaded, does nothing.
+         * @param mute - If null or not given, toggles the muted state. When given, sets to the specified state.
          */
-        toggleMute(): void {
+        toggleMute(mute: boolean | null = null): void {
             if (this.isTrackLoaded) {
-                this.isMuted = this.trackPlayerInstance?.toggleMute();
+                this.isMuted = this.trackPlayerInstance?.toggleMute(mute);
             }
         },
 
@@ -1287,23 +1288,5 @@ export default defineComponent({
     .is-editable .playhead-slider .has-cropped-text {
         max-width: calc(100vw - 640px);
     }
-}
-
-/** Buttons in inactive state should present themselves as actionable but deactivated */
-.button.is-danger.is-inactive {
-    background-image: none;
-    background-color: transparent;
-    border-color: #ee5f5b;
-    color: white;
-}
-.button.is-danger.is-inactive:hover {
-    background-image: linear-gradient(
-        180deg,
-        rgba(234, 59, 54, 0.25) 0%,
-        rgb(236, 77, 73, 0.25) 40%,
-        rgb(238, 95, 91, 0.25) 100%
-    );
-    filter: none;
-    text-shadow: 1px 1px 1px rgb(10 10 10 / 30%);
 }
 </style>
