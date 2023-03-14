@@ -1,10 +1,10 @@
 <template>
     <ToggleButton
         class="button"
-        :isEngaged="isMuted"
-        engaged-label="Unmute"
-        disengaged-label="Mute"
-        >M
+        :isEngaged="isSolo"
+        engaged-label="Listen all"
+        disengaged-label="Listen solo"
+        >S
     </ToggleButton>
 </template>
 
@@ -15,11 +15,11 @@ import ToggleButton from '@/components/buttons/ToggleButton.vue';
 /** A toggle button for the mute state
  */
 export default defineComponent({
-    name: 'MuteButton',
+    name: 'SoloButton',
     components: { ToggleButton },
 
     props: {
-        isMuted: {
+        isSolo: {
             type: Boolean,
             required: true,
             default: false,

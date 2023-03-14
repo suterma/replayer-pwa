@@ -46,6 +46,15 @@ export default class MultitrackHandler {
         return false;
     }
 
+    /** Determines, whether all tracks in the compilation are currently solo (used with the mix mode) */
+    isAllTrackSolo(): boolean {
+        const instances = this.getAllTrackInstances();
+        if (instances) {
+            return instances.every((i) => i.isSolo) ?? false;
+        }
+        return false;
+    }
+
     /** Determines, whether all tracks in the compilation have their media available (used with the mix mode) */
     isAllMediaAvailable(): boolean {
         const instances = this.getAllTrackInstances();
@@ -114,6 +123,18 @@ export default class MultitrackHandler {
             });
         }
     }
+
+    /** Toggles the solo state of all tracks, according to whether all tracks are currently solo */
+    toggleSolo(): void {
+        // const allSolo = this.isAllTrackSolo();
+        // const instances = this.getAllTrackInstances();
+        // if (instances) {
+        //     instances.forEach((instance) => {
+        //         instance.toggleSolo(!allSolo);
+        //     });
+        // }
+    }
+
     /** Toggles the play state of all tracks, according to whether all tracks are currently playing */
     togglePlayPause(): void {
         const instances = this.getAllTrackInstances();
@@ -132,7 +153,7 @@ export default class MultitrackHandler {
     }
 
     /** Stops playback for all tracks */
-    stop() {
+    stop(): void {
         const instances = this.getAllTrackInstances();
         if (instances) {
             instances.forEach((instance) => {

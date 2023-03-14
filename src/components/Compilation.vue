@@ -63,7 +63,20 @@
                                         'is-inactive': !isAllTrackMuted,
                                     }"
                                     :isMuted="isAllTrackMuted"
-                                    @click="toggleMuteMix"
+                                    @click="multitrackHandler?.toggleMute()"
+                                    data-cy="mute"
+                                />
+                                <SoloButton
+                                    :disabled="!isAllTrackLoaded"
+                                    :class="{
+                                        'is-warning': true,
+                                        'is-inactive':
+                                            !multitrackHandler?.isAllTrackSolo(),
+                                    }"
+                                    :isSolo="
+                                        multitrackHandler?.isAllTrackSolo()
+                                    "
+                                    @click="multitrackHandler?.toggleSolo()"
                                     data-cy="mute"
                                 />
                             </div>
@@ -98,8 +111,10 @@
                                     :hasPreviousTrack="false"
                                     :hasNextTrack="false"
                                     :hideStopButton="false"
-                                    @stop="stopMix()"
-                                    @togglePlaying="skipToPlayPauseMix()"
+                                    @stop="multitrackHandler?.stop()"
+                                    @togglePlaying="
+                                        multitrackHandler?.togglePlayPause()
+                                    "
                                     :isPlaying="isAllPlaying"
                                     :isFading="isAnyFading"
                                     data-cy="mix-media-controls-bar"
@@ -112,7 +127,9 @@
                                                 'is-inactive': !isAllTrackMuted,
                                             }"
                                             :isMuted="isAllTrackMuted"
-                                            @click="toggleMuteMix"
+                                            @click="
+                                                multitrackHandler?.toggleMute()
+                                            "
                                             data-cy="mute"
                                         />
                                     </template>
@@ -158,6 +175,7 @@ import TimeDisplay from '@/components/TimeDisplay.vue';
 import MediaControlsBar from '@/components/MediaControlsBar.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MuteButton from '@/components/buttons/MuteButton.vue';
+import SoloButton from '@/components/buttons/SoloButton.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
@@ -179,6 +197,7 @@ export default defineComponent({
         TimeDisplay,
         PlaybackIndicator,
         MuteButton,
+        SoloButton,
     },
     props: {
         compilation: Compilation,
@@ -391,19 +410,9 @@ export default defineComponent({
             }
             return false;
         },
-
-        stopMix() {
-            return this.multitrackHandler?.stop();
-        },
-        skipToPlayPauseMix() {
-            return this.multitrackHandler?.togglePlayPause();
-        },
         /** Synchronizes all track positions to the average position of them. */
         synchTracks() {
-            return this.multitrackHandler?.synchTracks();
-        },
-        toggleMuteMix() {
-            return this.multitrackHandler?.toggleMute();
+            this.multitrackHandler?.synchTracks();
         },
     },
     watch: {
