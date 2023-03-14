@@ -645,6 +645,12 @@ export default defineComponent({
              */
             isTrackLoaded: false,
 
+                        /** Gets the duration of the current track, in [seconds]
+             * @remarks This is only available after successful load of the track (i.e. it's media metadata).
+             * Could be NaN or infinity, depending on the source
+             */
+             trackDuration: null as number | null,
+
             /** Flag to indicate whether the player is currently playing
              */
             isPlaying: false,
@@ -967,6 +973,7 @@ export default defineComponent({
         /** Updates the track duration and calculates the cue durations */
         calculateCueDurations(trackDurationSeconds: number) {
             this.isTrackLoaded = true;
+            this.trackDuration = trackDurationSeconds;
             const trackId = this.track.Id;
             this.$store.commit(MutationTypes.UPDATE_DURATIONS, {
                 trackId,

@@ -72,6 +72,28 @@ export default class MultitrackHandler {
         return 0;
     }
 
+    /** Determines the duration of all tracks in the compilation, in [seconds] (used with the mix mode).
+     * @returns A single representation for the duration, which is taken from the largest duration
+     */
+    getAllTrackDuration(): number | null {
+        const instances = this.getAllTrackInstances();
+        if (instances) {
+            const durations = instances.map((track) => {
+                return track.trackDuration;
+            });
+
+            // when all durations are available, take the max duration
+            if (
+                durations &&
+                durations.length > 0 &&
+                durations.every((d) => d !== null)
+            ) {
+                return Math.max(...durations.map((v) => (v === null ? 0 : v)));
+            }
+        }
+        return null;
+    }
+
     /** Determines, whether any track in the compilation is currently fading (used with the mix mode) */
     isAnyFading(): boolean {
         const instances = this.getAllTrackInstances();
@@ -79,6 +101,76 @@ export default class MultitrackHandler {
             return !instances.every((i) => i.isFading !== true) ?? true;
         }
         return false;
+    }
+
+    /** Toggles the mute state of all tracks, according to whether all tracks are currently muted */
+    toggleMute(): void {
+        const allMuted = this.isAllTrackMuted();
+        const instances = this.getAllTrackInstances();
+
+        if (instances) {
+            instances.forEach((instance) => {
+                instance.toggleMute(!allMuted);
+            });
+        }
+    }
+    /** Toggles the play state of all tracks, according to whether all tracks are currently playing */
+    togglePlayPause(): void {
+        const instances = this.getAllTrackInstances();
+
+        if (instances) {
+            if (this.isAllPlaying()) {
+                instances.forEach((instance) => {
+                    instance.pause();
+                });
+            } else {
+                instances.forEach((instance) => {
+                    instance.play();
+                });
+            }
+        }
+    }
+
+    /** Stops playback for all tracks */
+    stop() {
+        const instances = this.getAllTrackInstances();
+        if (instances) {
+            instances.forEach((instance) => {
+                instance.stop();
+            });
+        }
+    }
+
+    /** Seeks to the given position for all tracks */
+    seekTo(position: number): void {
+        const instances = this.getAllTrackInstances();
+        if (instances) {
+            instances.forEach((instance) => {
+                instance.seekToSeconds(position);
+            });
+        }
+    }
+
+    /** Seeks the given amount for all tracks */
+    seek(seconds: number): void {
+        const currentPosition = this.getAllTrackPosition();
+        const instances = this.getAllTrackInstances();
+        if (instances) {
+            instances.forEach((instance) => {
+                instance.seekToSeconds(currentPosition + seconds);
+            });
+        }
+    }
+
+    /** Synchronizes all track positions to the average position of them. */
+    synchTracks(): void {
+        const currentPosition = this.getAllTrackPosition();
+        const instances = this.getAllTrackInstances();
+        if (instances) {
+            instances.forEach((instance) => {
+                instance.seekToSeconds(currentPosition);
+            });
+        }
     }
 
     /** Gets the references to all track component instances.

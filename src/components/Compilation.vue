@@ -41,52 +41,104 @@
             />
         </template>
 
-        <Experimental>
-            <!-- Multi-track-Controller -->
-            <Teleport to="#media-player">
-                <div class="section has-background-grey-dark">
-                    <MediaControlsBar
-                        :playbackMode="compilation.PlaybackMode"
-                        @update:playbackMode="updatePlaybackMode($event)"
-                        :hasPreviousTrack="false"
-                        :hasNextTrack="false"
-                        :hideStopButton="false"
-                        @stop="stopMix()"
-                        @togglePlaying="skipToPlayPauseMix()"
-                        :isPlaying="isAllPlaying"
-                        :isFading="isAnyFading"
-                        data-cy="mix-media-controls-bar"
-                    >
-                        <template #after-play>
-                            <MuteButton
-                                :disabled="!isAllTrackLoaded"
-                                :class="{
-                                    'is-danger': true,
-                                    'is-inactive': !isAllTrackMuted,
-                                }"
-                                :isMuted="isAllTrackMuted"
-                                @click="toggleMuteMix"
-                                data-cy="mute"
-                            />
-                        </template>
-                        <button class="button is-nav is-indicator">
-                            <TimeDisplay
-                                :modelValue="getAllTrackPosition"
-                                :hidePlaceholder="true"
-                                :subSecondDigits="3"
-                            ></TimeDisplay>
-                        </button>
-                        <PlaybackIndicator
-                            :isReady="!isAllPlaying && isAllTrackLoaded"
-                            :isPlaying="isAllPlaying"
-                            :isUnloaded="!isAllTrackLoaded"
-                            :isUnavailable="!isAllMediaAvailable"
-                            data-cy="playback-indicator"
-                        />
-                    </MediaControlsBar>
+        <!-- Multi-track-Controller -->
+        <Teleport to="#media-player">
+            <div class="section has-background-grey-dark" v-if="isMixable">
+                <div>
+                    <!-- 
+                Track playback bar (In mix mode, this contains:
+                - a wide slider
+                - the play/pause/mute/solo combo
+                - a set of transport controls
+                    -->
+                    <nav class="level is-editable is-unselectable">
+                        <div class="level-left">
+                            <div
+                                class="level-item is-justify-content-flex-start"
+                            >
+                                <MuteButton
+                                    :disabled="!isAllTrackLoaded"
+                                    :class="{
+                                        'is-danger': true,
+                                        'is-inactive': !isAllTrackMuted,
+                                    }"
+                                    :isMuted="isAllTrackMuted"
+                                    @click="toggleMuteMix"
+                                    data-cy="mute"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- A central level item. Margins are set to provide nice-looking spacing at all widths -->
+                        <div class="level-item mt-4-mobile">
+                            <PlayheadSlider
+                                class="is-fullwidth"
+                                v-model.number="getAllTrackPosition"
+                                @update:modelValue="
+                                    (position) =>
+                                        multitrackHandler?.seekTo(position)
+                                "
+                                @seek="
+                                    (seconds) =>
+                                        multitrackHandler?.seek(seconds)
+                                "
+                                :trackDuration="
+                                    multitrackHandler?.getAllTrackDuration()
+                                "
+                            >
+                            </PlayheadSlider>
+                        </div>
+                        <div class="level-right">
+                            <div class="level-item is-justify-content-flex-end">
+                                <MediaControlsBar
+                                    :playbackMode="compilation.PlaybackMode"
+                                    @update:playbackMode="
+                                        updatePlaybackMode($event)
+                                    "
+                                    :hasPreviousTrack="false"
+                                    :hasNextTrack="false"
+                                    :hideStopButton="false"
+                                    @stop="stopMix()"
+                                    @togglePlaying="skipToPlayPauseMix()"
+                                    :isPlaying="isAllPlaying"
+                                    :isFading="isAnyFading"
+                                    data-cy="mix-media-controls-bar"
+                                >
+                                    <template #after-play>
+                                        <MuteButton
+                                            :disabled="!isAllTrackLoaded"
+                                            :class="{
+                                                'is-danger': true,
+                                                'is-inactive': !isAllTrackMuted,
+                                            }"
+                                            :isMuted="isAllTrackMuted"
+                                            @click="toggleMuteMix"
+                                            data-cy="mute"
+                                        />
+                                    </template>
+                                    <button class="button is-nav is-indicator">
+                                        <TimeDisplay
+                                            :modelValue="getAllTrackPosition"
+                                            :hidePlaceholder="true"
+                                            :subSecondDigits="3"
+                                        ></TimeDisplay>
+                                    </button>
+                                    <PlaybackIndicator
+                                        :isReady="
+                                            !isAllPlaying && isAllTrackLoaded
+                                        "
+                                        :isPlaying="isAllPlaying"
+                                        :isUnloaded="!isAllTrackLoaded"
+                                        :isUnavailable="!isAllMediaAvailable"
+                                        data-cy="playback-indicator"
+                                    />
+                                </MediaControlsBar>
+                            </div>
+                        </div>
+                    </nav>
                 </div>
-            </Teleport>
-        </Experimental>
+            </div>
+        </Teleport>
     </div>
 </template>
 
@@ -107,6 +159,7 @@ import MediaControlsBar from '@/components/MediaControlsBar.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MuteButton from '@/components/buttons/MuteButton.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
+import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import MultitrackHandler from '@/code/audio/MultitrackHandler';
@@ -121,6 +174,7 @@ export default defineComponent({
         Track,
         ReplayerEventHandler,
         CompilationHeader,
+        PlayheadSlider,
         MediaControlsBar,
         TimeDisplay,
         PlaybackIndicator,
@@ -339,59 +393,17 @@ export default defineComponent({
         },
 
         stopMix() {
-            const instances = this.tracks?.map((track) => {
-                return this.getTrackInstance(track.Id);
-            });
-
-            if (instances) {
-                instances.forEach((instance) => {
-                    instance.stop();
-                });
-            }
+            return this.multitrackHandler?.stop();
         },
         skipToPlayPauseMix() {
-            //TODO create common getTrackInstances method....
-            const instances = this.tracks?.map((track) => {
-                return this.getTrackInstance(track.Id);
-            });
-
-            if (instances) {
-                if (this.isAllPlaying) {
-                    instances.forEach((instance) => {
-                        instance.pause();
-                    });
-                } else {
-                    instances.forEach((instance) => {
-                        instance.play();
-                    });
-                }
-            }
+            return this.multitrackHandler?.togglePlayPause();
         },
         /** Synchronizes all track positions to the average position of them. */
         synchTracks() {
-            const currentPosition = this.getAllTrackPosition;
-
-            const instances = this.tracks?.map((track) => {
-                return this.getTrackInstance(track.Id);
-            });
-
-            if (instances) {
-                instances.forEach((instance) => {
-                    instance.seekToSeconds(currentPosition);
-                });
-            }
+            return this.multitrackHandler?.synchTracks();
         },
         toggleMuteMix() {
-            const allMuted = this.isAllTrackMuted;
-            const instances = this.tracks?.map((track) => {
-                return this.getTrackInstance(track.Id);
-            });
-
-            if (instances) {
-                instances.forEach((instance) => {
-                    instance.toggleMute(!allMuted);
-                });
-            }
+            return this.multitrackHandler?.toggleMute();
         },
     },
     watch: {
@@ -483,6 +495,12 @@ export default defineComponent({
          */
         isEditable(): boolean {
             return this.tracksDisplayMode === TrackDisplayMode.Edit;
+        },
+
+        /** Whether the mix mode is active
+         */
+        isMixable(): boolean {
+            return this.tracksDisplayMode === TrackDisplayMode.Mix;
         },
 
         /** The currently available tracks in the compilation
