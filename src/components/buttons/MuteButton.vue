@@ -1,6 +1,9 @@
 <template>
     <ToggleButton
-        class="button"
+        class="button is-danger"
+        :class="{
+            'is-inactive': !isMuted,
+        }"
         :isEngaged="isMuted"
         engaged-label="Unmute"
         disengaged-label="Mute"

@@ -1,6 +1,9 @@
 <template>
     <ToggleButton
-        class="button"
+        class="button is-warning is-yellow"
+        :class="{
+            'is-inactive': !isSolo,
+        }"
         :isEngaged="isSolo"
         engaged-label="Listen all"
         disengaged-label="Listen solo"
@@ -27,3 +30,9 @@ export default defineComponent({
     },
 });
 </script>
+<style scoped>
+.button.is-warning.is-yellow,
+.button.is-warning:not(.is-outlined):not(.is-inverted).is-yellow {
+    filter: hue-rotate(20deg);
+}
+</style>

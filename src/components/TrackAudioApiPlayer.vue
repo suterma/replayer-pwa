@@ -141,6 +141,7 @@ export default defineComponent({
              */
             durationSeconds: null as number | null,
             isMuted: false,
+            isSoloed: null as boolean | null,
             /** Whether the media data has loaded (at least enough to start playback)
              * @remarks This implies that metadata also has been loaded already
              * @devdoc see HAVE_CURRENT_DATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
@@ -516,14 +517,28 @@ export default defineComponent({
         toggleMute(mute: boolean | null = null): boolean {
             if (mute === null) {
                 this.isMuted = !this.isMuted;
-                this.audioElement.muted = this.isMuted;
+                this.audioElement.muted =
+                    this.isMuted || this.isSoloed === false;
             } else {
                 if (this.isMuted != mute) {
                     this.isMuted = mute;
-                    this.audioElement.muted = this.isMuted;
+                    this.audioElement.muted =
+                        this.isMuted || this.isSoloed === false;
                 }
             }
             return this.isMuted;
+        },
+
+        /** Sets the solo state of this track
+         * @remarks If the track is not loaded, does nothing.
+         * @param solo - If null or not given, this track is kept unmuted (unless it's muted explicitly)
+         * If false, the track is muted to allow another track to solo.
+         * If true, this is not muted (unless it's muted explicitly), to solo this track.
+         */
+        setSolo(solo: boolean | null = null): boolean | null {
+            this.isSoloed = solo;
+            this.audioElement.muted = this.isMuted || this.isSoloed === false;
+            return this.isSoloed;
         },
         seekToSeconds(seconds: number) {
             this.debugLog(`seekToSeconds`, seconds);

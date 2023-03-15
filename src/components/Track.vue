@@ -59,13 +59,15 @@
                 <div class="level-item is-narrow">
                     <MuteButton
                         :disabled="!canPlay"
-                        :class="{
-                            'is-danger': true,
-                            'is-inactive': !isMuted,
-                        }"
                         :isMuted="isMuted"
                         @click="toggleMute()"
                         data-cy="mute"
+                    />
+                    <SoloButton
+                        :disabled="!canPlay"
+                        :isSolo="isSolo"
+                        @click="toggleSolo()"
+                        data-cy="solo"
                     />
                 </div>
             </template>
@@ -645,11 +647,11 @@ export default defineComponent({
              */
             isTrackLoaded: false,
 
-                        /** Gets the duration of the current track, in [seconds]
+            /** Gets the duration of the current track, in [seconds]
              * @remarks This is only available after successful load of the track (i.e. it's media metadata).
              * Could be NaN or infinity, depending on the source
              */
-             trackDuration: null as number | null,
+            trackDuration: null as number | null,
 
             /** Flag to indicate whether the player is currently playing
              */
@@ -657,6 +659,11 @@ export default defineComponent({
             /** Flag to indicate whether the audio is currently muted
              */
             isMuted: false,
+
+            /** Flag to indicate whether the tarck's audio is currently playing solo
+             */
+            isSoloed: null as boolean | null,
+
             /** The wake lock fill-in that can prevent screen timeout, while a track is in use */
             noSleep: new NoSleep(),
 
@@ -721,6 +728,27 @@ export default defineComponent({
             }
         },
 
+        /** Toggles the solo state of this track
+         * @remarks If the track is not loaded, does nothing.
+         */
+        toggleSolo(): void {
+            if (this.isTrackLoaded) {
+                const allSolo;
+                this.isMuted = this.trackPlayerInstance?.toggleMute(mute);
+            }
+        },
+
+        /** Sets the solo state of this track
+         * @remarks If the track is not loaded, does nothing.
+         * @param solo - If null or not given, this track is kept unmuted (unless it's muted explicitly)
+         * If false, the track is muted to allow another track to solo.
+         * If true, this is not muted (unless it's muted explicitly), to solo this track.
+         */
+        setSolo(solo: boolean | null = null): void {
+            if (this.isTrackLoaded) {
+                this.isSoloed = this.trackPlayerInstance?.setSolo(solo);
+            }
+        },
         /** Sets the visual transition for the player widget's track change
          */
         setWidgetTransit(transition: string): void {

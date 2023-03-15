@@ -58,21 +58,12 @@
                             >
                                 <MuteButton
                                     :disabled="!isAllTrackLoaded"
-                                    :class="{
-                                        'is-danger': true,
-                                        'is-inactive': !isAllTrackMuted,
-                                    }"
                                     :isMuted="isAllTrackMuted"
                                     @click="multitrackHandler?.toggleMute()"
                                     data-cy="mute"
                                 />
                                 <SoloButton
                                     :disabled="!isAllTrackLoaded"
-                                    :class="{
-                                        'is-warning': true,
-                                        'is-inactive':
-                                            !multitrackHandler?.isAllTrackSolo(),
-                                    }"
                                     :isSolo="
                                         multitrackHandler?.isAllTrackSolo()
                                     "
@@ -122,10 +113,6 @@
                                     <template #after-play>
                                         <MuteButton
                                             :disabled="!isAllTrackLoaded"
-                                            :class="{
-                                                'is-danger': true,
-                                                'is-inactive': !isAllTrackMuted,
-                                            }"
                                             :isMuted="isAllTrackMuted"
                                             @click="
                                                 multitrackHandler?.toggleMute()
