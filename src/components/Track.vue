@@ -504,6 +504,7 @@ import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import CreateCueButton from '@/components/buttons/CreateCueButton.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import MuteButton from '@/components/buttons/MuteButton.vue';
+import SoloButton from '@/components/buttons/SoloButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
@@ -538,6 +539,7 @@ export default defineComponent({
         CreateCueButton,
         CollapsibleButton,
         MuteButton,
+        SoloButton,
         PlayheadSlider,
         CueButtonsBar,
         VolumeKnob,
@@ -733,8 +735,11 @@ export default defineComponent({
          */
         toggleSolo(): void {
             if (this.isTrackLoaded) {
-                const allSolo;
-                this.isMuted = this.trackPlayerInstance?.toggleMute(mute);
+                if (this.isSoloed === true) {
+                    this.isSoloed = null;
+                } else {
+                    this.isSoloed = true;
+                }
             }
         },
 

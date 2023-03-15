@@ -29,22 +29,20 @@
                 :iconPath="mdiPlay"
             />
         </Hotkey>
-        <Experimental>
-            <Hotkey
-                v-once
-                :keys="['f6']"
-                :excluded-elements="[]"
-                v-slot="{ clickRef }"
-            >
-                <DropdownMenuRouterLink
-                    to="/mix"
-                    title="Mix"
-                    shortcut="F6"
-                    :clickRef="clickRef"
-                    :iconPath="mdiTuneVertical"
-                />
-            </Hotkey>
-        </Experimental>
+        <Hotkey
+            v-once
+            :keys="['f6']"
+            :excluded-elements="[]"
+            v-slot="{ clickRef }"
+        >
+            <DropdownMenuRouterLink
+                to="/mix"
+                title="Mix"
+                shortcut="F6"
+                :clickRef="clickRef"
+                :iconPath="mdiTuneVertical"
+            />
+        </Hotkey>
         <Hotkey
             v-once
             :keys="['f4']"

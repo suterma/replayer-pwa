@@ -25,7 +25,7 @@ export default defineComponent({
         isSolo: {
             type: Boolean,
             required: true,
-            default: false,
+            default: null,
         },
     },
 });

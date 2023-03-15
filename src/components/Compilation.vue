@@ -64,9 +64,7 @@
                                 />
                                 <SoloButton
                                     :disabled="!isAllTrackLoaded"
-                                    :isSolo="
-                                        multitrackHandler?.isAllTrackSolo()
-                                    "
+                                    :isSolo="isAllTrackSoloed"
                                     @click="multitrackHandler?.toggleSolo()"
                                     data-cy="mute"
                                 />
@@ -540,6 +538,11 @@ export default defineComponent({
         /** Determines, whether all tracks in the compilation are currently muted (used with the mix mode) */
         isAllTrackMuted() {
             return this.multitrackHandler?.isAllTrackMuted() ?? false;
+        },
+
+        /** Determines, whether all tracks in the compilation are currently soloed (used with the mix mode) */
+        isAllTrackSoloed() {
+            return this.multitrackHandler?.isAllTrackSoloed() ?? false;
         },
 
         /** Determines, whether all tracks in the compilation have their media available (used with the mix mode) */
