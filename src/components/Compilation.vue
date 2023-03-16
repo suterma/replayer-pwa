@@ -120,8 +120,7 @@
                                     </template>
                                     <button class="button is-nav is-indicator">
                                         <TimeDisplay
-                                            :modelValue="getAllTrackPosition"
-                                            :hidePlaceholder="true"
+                                            :modelValue="getAllTrackPosition"                                          
                                             :subSecondDigits="3"
                                         ></TimeDisplay>
                                     </button>

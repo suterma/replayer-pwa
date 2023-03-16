@@ -74,8 +74,7 @@
             <template v-slot:left-end>
                 <TimeDisplay
                     class="level-item is-narrow is-hidden-mobile is-size-7"
-                    :modelValue="currentSeconds"
-                    :hidePlaceholder="true"
+                    :modelValue="currentSeconds"                   
                     :subSecondDigits="3"
                 ></TimeDisplay>
                 <VolumeKnob
@@ -115,8 +114,7 @@
             <template v-slot:left-end>
                 <TimeDisplay
                     class="level-item is-narrow is-hidden-mobile is-size-7"
-                    :modelValue="track?.Duration"
-                    :hidePlaceholder="true"
+                    :modelValue="track?.Duration"                   
                 ></TimeDisplay>
                 <VolumeKnob
                     :disabled="!isTrackLoaded"
