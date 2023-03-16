@@ -18,8 +18,8 @@ export default class FileHandler {
     static acceptedFileList =
         '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.bplist';
 
-    /** Returns whether the given path represents a Mac OSX resource fork.
-     * @remarks Mac OSX resource forks are not processed by Replayer.
+    /** Returns whether the given path represents a Mac OS X resource fork.
+     * @remarks Mac OS X resource forks are not processed by Replayer.
      */
     static isMacOsxResourceFork(path: string): boolean {
         const macOsxResourceFork = /.*(__MACOSX).*(\._).*/i;
@@ -27,6 +27,13 @@ export default class FileHandler {
             return true;
         }
         return false;
+    }
+
+    /** Returns whether the given file name represents a Mac OS X metadata file.
+     * @remarks Mac OS X metadata files are not processed by Replayer.
+     */
+    static isMacOsxMetadataFile(fileName: string): boolean {
+        return fileName.startsWith('._');
     }
 
     /** Returns whether the given string is a path
@@ -108,8 +115,7 @@ export default class FileHandler {
         return url.hostname;
     }
 
-    /** Returns whether this file is supported by Replayer, either by MIME type or the file name (by it's extension).
-     */
+    /** Returns whether this file is supported by Replayer, either by MIME type or the file name (by prefix/suffix) */
     static isSupportedFile(file: File): boolean {
         if (
             this.isSupportedMimeType(file.type) ||
@@ -152,7 +158,7 @@ export default class FileHandler {
         return false;
     }
 
-    /** Returns whether the given file name (by it's extension) is any of the supported types by Replayer */
+    /** Returns whether the given file name (by prefix/suffix) is any of the supported types by Replayer */
     static isSupportedFileName(fileName: string | undefined): boolean {
         if (
             this.isSupportedPackageFileName(fileName) ||
@@ -195,12 +201,12 @@ export default class FileHandler {
         }
         return false;
     }
-    /** Returns whether the given file name (by it's extension) is a supported media file name by Replayer
+    /** Returns whether the given file name (by prefix/suffix) is a supported media file name by Replayer
      * @remarks Currently, mp3, wav, flac, ogg, aiff, with name variations, are supported
      */
     static isSupportedMediaFileName(fileName: string | undefined): boolean {
         let isSupportedMediaFileName = false;
-        if (fileName) {
+        if (fileName && !FileHandler.isMacOsxMetadataFile(fileName)) {
             const fileExtension = fileName.split('.').pop()?.toLowerCase();
             if (fileExtension) {
                 if (

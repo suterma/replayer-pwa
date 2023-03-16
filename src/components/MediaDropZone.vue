@@ -230,7 +230,7 @@ export default defineComponent({
         collapse() {
             this.$emit('update:is-expanded', false);
         },
-        /** Checks whether a file is supported by examining mime type and/or ending */
+        /** Checks whether a file is supported by examining mime type and/or the file name (by prefix/suffix) */
         isSupported(file: File): boolean {
             console.log('Filename: ' + file.name);
             console.log('Type: ' + file.type);
