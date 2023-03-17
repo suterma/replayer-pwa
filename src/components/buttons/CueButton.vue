@@ -100,9 +100,7 @@
     </button>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, StyleValue } from 'vue';
-import { PlaybackMode } from '@/store/compilation-types';
+<script setup lang="ts">
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from '../TimeDisplay.vue';
 import ShortcutDisplay from '../ShortcutDisplay.vue';
@@ -112,6 +110,8 @@ import {
     rTrackRepeatOnce,
 } from '@/components/icons/BaseIcon.vue';
 import CompilationHandler from '@/store/compilation-handler';
+import { PlaybackMode } from '@/store/compilation-types';
+import { PropType, computed, defineProps } from 'vue';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
@@ -123,148 +123,137 @@ import CompilationHandler from '@/store/compilation-handler';
  * properties of a single cue does not change. Instead, progress for a single button
  * does only change when the playhead position is within it's boundaries.
  */
-export default defineComponent({
-    name: 'CueButton',
-    components: { BaseIcon, TimeDisplay, ShortcutDisplay },
-    props: {
-        time: {
-            type: null as unknown as PropType<number | null>,
-            required: false,
-        },
-        duration: {
-            type: null as unknown as PropType<number | null>,
-            required: false,
-        },
-        description: {
-            type: String,
-            required: false,
-        },
-        shortcut: {
-            type: null as unknown as PropType<string | null>,
-            required: false,
-        },
-        /** The playback progress within this cue, in [percent], or null if not applicable
-         * @remarks This value is only used when both the cue is not ahead nor has passed.
-         */
-        percentComplete: {
-            type: null as unknown as PropType<number | null>,
-            required: false,
-        },
-        /** Whether this cue is currently selected
-         * @remarks Note: only one cue in a compilation may be selected */
-        isCueSelected: Boolean,
 
-        /* Whether playback of this cue has already passed
+const props = defineProps({
+    time: {
+        type: null as unknown as PropType<number | null>,
+        required: false,
+    },
+    duration: {
+        type: null as unknown as PropType<number | null>,
+        required: false,
+    },
+    description: {
+        type: String,
+        required: false,
+    },
+    shortcut: {
+        type: null as unknown as PropType<string | null>,
+        required: false,
+    },
+    /** The playback progress within this cue, in [percent], or null if not applicable
+     * @remarks This value is only used when both the cue is not ahead nor has passed.
+     */
+    percentComplete: {
+        type: null as unknown as PropType<number | null>,
+        required: false,
+    },
+    /** Whether this cue is currently selected
+     * @remarks Note: only one cue in a compilation may be selected */
+    isCueSelected: Boolean,
+
+    /* Whether playback of this cue has already passed
                  (the playhead has completely passed beyond the end of this cue) */
-        hasCuePassed: Boolean,
+    hasCuePassed: Boolean,
 
-        /* Whether to show this cue as passive, in dimmed style. */
-        virtual: Boolean,
+    /* Whether to show this cue as passive, in dimmed style. */
+    virtual: Boolean,
 
-        /* Determines whether playback of this cue has not yet started 
+    /* Determines whether playback of this cue has not yet started
         (the playhead has not yet reached the beginning of this cue)*/
-        isCueAhead: Boolean,
+    isCueAhead: Boolean,
 
-        /** Indicates whether the associated Track is currently playing
-         * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
-         */
-        isTrackPlaying: Boolean,
-        /** The playback mode
-         * @remarks This is used to indicate looping behavior to the user
-         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
-         */
-        playbackMode: {
-            type: String as () => PlaybackMode,
-            required: true,
-        },
-        /** Whether the button is shown in a minified, single-line, icon only, variant.
-         * @remarks This is currently used for the edit mode.
-         */
-        minified: Boolean,
-        /** Whether the button has addons at it's right side. This determines progress bar styling.
-         * @remarks This can be used when the button is part of a button group.
-         * @remarks The progress bar radius at the right side must be removed for fully progressed cues.
-         */
-        hasAddonsRight: Boolean,
+    /** Indicates whether the associated Track is currently playing
+     * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
+     */
+    isTrackPlaying: Boolean,
+    /** The playback mode
+     * @remarks This is used to indicate looping behavior to the user
+     * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+     */
+    playbackMode: {
+        type: String as () => PlaybackMode,
+        required: true,
     },
-    data() {
+    /** Whether the button is shown in a minified, single-line, icon only, variant.
+     * @remarks This is currently used for the edit mode.
+     */
+    minified: Boolean,
+    /** Whether the button has addons at it's right side. This determines progress bar styling.
+     * @remarks This can be used when the button is part of a button group.
+     * @remarks The progress bar radius at the right side must be removed for fully progressed cues.
+     */
+    hasAddonsRight: Boolean,
+});
+
+// /** Icons from @mdi/js */
+// const mdiPlay = ref(mdiPlay);
+
+// mdiPause: mdiPause,
+
+// /** Icons from BaseIcon.vue */
+// rTrackPlayOnce: rTrackPlayOnce,
+// rTrackRepeatOnce: rTrackRepeatOnce,
+
+/** The title for this cue, usable as tooltip
+ * @devdoc This is set from outside the button to keep the button interface flat, for performance reasons
+ */
+const cueTitle = computed(() => {
+    if (props.description) {
+        return `Play from ${props.description}`;
+    } else if (props.time != undefined) {
+        return `Play from ${CompilationHandler.convertToDisplayTime(
+            props.time,
+            1,
+        )}`;
+    }
+    return `Play from here`;
+});
+
+/** The width offset for the progress-bar
+ * @remarks this allows to dynamically offset for the width of the progress bar in [em] during cue completion
+ * @devdoc The width is defined in CSS
+ */
+const progressBarWidthOffset = computed(() => {
+    return (
+        ((100 - (props.percentComplete ?? 0)) / 100) *
+        0.3 /* value in [em], as defined in CSS */
+    );
+});
+
+/** Returns the progress as width style, for use as a css style set, dynamically depending on the actual progress in the cue
+ * @devdoc max-width makes sure, the progress bar never overflows the given space.
+ * For performance reasons, the style is only effectively calculated when the cue is currently played
+ */
+const progressStyle = computed(() => {
+    if (!Number.isFinite(props.time)) {
         return {
-            /** Icons from @mdi/js */
-            mdiPlay: mdiPlay,
-            mdiPause: mdiPause,
-
-            /** Icons from BaseIcon.vue */
-            rTrackPlayOnce: rTrackPlayOnce,
-            rTrackRepeatOnce: rTrackRepeatOnce,
+            display: 'none',
         };
-    },
-    computed: {
-        /** The title for this cue, usable as tooltip
-         * @devdoc This is set from outside the button to keep the button interface flat, for performance reasons
-         */
-        cueTitle(): string {
-            if (this.description) {
-                return `Play from ${this.description}`;
-            } else if (this.time != undefined) {
-                return `Play from ${CompilationHandler.convertToDisplayTime(
-                    this.time,
-                    1,
-                )}`;
-            }
+    }
+    if (
+        !props.hasCuePassed &&
+        !props.isCueAhead &&
+        props.percentComplete != null
+    ) {
+        //show the progress according to the percentage available
+        return {
+            width: `calc(${props.percentComplete}% +
+                     ${progressBarWidthOffset.value}em)`,
+            'max-width': '100%',
+        };
+    } else {
+        return {};
+    }
+});
 
-            return `Play from here`;
-        },
-
-        /** The width offset for the progress-bar
-         * @remarks this allows to dynamically offset for the width of the progress bar in [em] during cue completion
-         * @devdoc The width is defined in CSS
-         */
-        progressBarWidthOffset(): number {
-            return (
-                ((100 - (this.percentComplete ?? 0)) / 100) *
-                0.3 /* value in [em], as defined in CSS */
-            );
-        },
-
-        /** Returns the progress as width style, for use as a css style set, dynamically depending on the actual progress in the cue
-         * @devdoc max-width makes sure, the progress bar never overflows the given space.
-         * For performance reasons, the style is only effectively calculated when the cue is currently played
-         */
-        progressStyle(): StyleValue {
-            if (!Number.isFinite(this.time)) {
-                return {
-                    display: 'none',
-                };
-            }
-            if (
-                !this.hasCuePassed &&
-                !this.isCueAhead &&
-                this.percentComplete != null
-            ) {
-                //show the progress according to the percentage available
-                return {
-                    width: `calc(${this.percentComplete}% +
-                     ${this.progressBarWidthOffset}em)`,
-                    'max-width': '100%',
-                };
-            } else {
-                return {};
-            }
-        },
-
-        /** Determines whether this cue is currently selected and is looping */
-        isCueLooping(): boolean {
-            return (
-                this.isCueSelected && this.playbackMode === PlaybackMode.LoopCue
-            );
-        },
-        /** Determines whether this cue is currently selected and is playing to cue end only */
-        isCuePlay(): boolean {
-            return (
-                this.isCueSelected && this.playbackMode === PlaybackMode.PlayCue
-            );
-        },
-    },
+/** Determines whether this cue is currently selected and is looping */
+const isCueLooping = computed(() => {
+    return props.isCueSelected && props.playbackMode === PlaybackMode.LoopCue;
+});
+/** Determines whether this cue is currently selected and is playing to cue end only */
+const isCuePlay = computed(() => {
+    return props.isCueSelected && props.playbackMode === PlaybackMode.PlayCue;
 });
 </script>
 <style scoped>
