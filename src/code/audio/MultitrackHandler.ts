@@ -4,6 +4,8 @@ import { ComponentPublicInstance } from 'vue';
 /** @class A Handler for multi-track playback queries and operations.
  * @remarks This handles play/pause/mute operations on instances of Track components.
  * The goal is to free the compilation from multi-track handling.
+ * @devdoc //TODO Later, when using Pinia the getters for these should be reworked, to not use data from the actual track
+ * instances but from the Pinia store. I would expect this would ease CPU burden by a quite large factor, omitting the need to get all those track instances each time
  */
 export default class MultitrackHandler {
     /** @constructor
@@ -82,7 +84,13 @@ export default class MultitrackHandler {
             });
 
             if (positions && positions.length > 0) {
-                return positions.reduce((p, c) => p + c, 0) / positions.length;
+                //TODO here, an optimum between unnecessary many events and a reasonable value has to be found.
+
+                // just take the first
+                return positions[0] ?? 0;
+
+                // calculate the average
+                //return positions.reduce((p, c) => p + c, 0) / positions.length;
             }
         }
         return 0;

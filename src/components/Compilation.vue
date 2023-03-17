@@ -438,10 +438,14 @@ export default defineComponent({
             }
         },
 
-        /* At change of play state (before/after fading down), synch tracks) */
+        /* At change of play state (before/after fading), synch tracks)
+         * @remarks This must only be done when multitrack playback is expected.
+         */
         isAllPlaying(isAllPlaying: boolean) {
-            console.debug('Compilation::isAllPlaying:', isAllPlaying);
-            this.synchTracks();
+            if (this.isMixable) {
+                console.debug('Compilation::isAllPlaying:', isAllPlaying);
+                this.synchTracks();
+            }
         },
     },
     computed: {
