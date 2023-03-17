@@ -152,8 +152,17 @@ export default class MultitrackHandler {
                     instance.pause();
                 });
             } else {
-                instances.forEach((instance) => {
-                    instance.play();
+                // Start playback for all, but only after the current event loop has finished
+                // See https://nodejs.dev/en/learn/understanding-processnexttick/
+                // Doing it this way makes sure that:
+                // a) the preceding synchTracks() operation has finished (inside the VueJs event loop) beforehand
+                // b) the play operations themselves take place as synchronously as possible
+                // Tests on slower machines and with may tracks have show that this special handling has a huge positive
+                // impact on the timeliness the multitrack playback
+                process.nextTick(() => {
+                    instances.forEach((instance) => {
+                        instance.play();
+                    });
                 });
             }
         }
