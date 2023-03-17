@@ -69,6 +69,12 @@
                         @click="toggleSolo()"
                         data-cy="solo"
                     />
+                    <SelectButton
+                        :disabled="!canPlay"
+                        :isSelected="isActiveTrack"
+                        @click="setActiveTrack()"
+                        data-cy="select"
+                    />
                 </div>
             </template>
             <template v-slot:left-end>
@@ -275,7 +281,7 @@
                 :volume="track.Volume"
                 :isMuted="isMuted"
                 :isSoloed="isSoloed"
-                :isAnySoloed = "isAnySoloed"
+                :isAnySoloed="isAnySoloed"
                 @ended="$emit('trackEnded')"
             ></TrackAudioApiPlayer>
             <Teleport to="#media-player" :disabled="isEditable">
@@ -285,22 +291,24 @@
                     In the edit view, the player widgets are shown for all expanded tracks -->
                     <div
                         v-if="
+                            (isMix && isActiveTrack) ||
                             (isPlayable && isActiveTrack) ||
                             (isEditable && isExpanded)
                         "
                         :class="{
-                            section: isPlayable,
-                            'has-background-grey-dark': isPlayable,
+                            section: isPlayable || isMix,
+                            'has-background-grey-dark': isPlayable || isMix,
                             'is-fullscreen': isTrackPlayerFullScreen,
                             'has-player-navbar-fixed-top':
                                 isTrackPlayerFullScreen,
                             'transition-in-place':
-                                isPlayable /* because in playback view, the players are replaced in place, not expanded */,
+                                isPlayable ||
+                                isMix /* because in playback  or mix view, the players are replaced in place, not expanded */,
                         }"
                         :key="track.Id"
                     >
                         <!-- 
-                        Track playback bar (In play mode, this contains:
+                        Track playback bar (In play or mix mode, this contains:
                         - a slot for the expander icon (if not the only track)
                         - The title (with artist info)
                         - the play/pause button
@@ -310,7 +318,7 @@
                         <!-- 
                         In full screen, this level is at the top, and not visually separated from the cues -->
                         <nav
-                            v-if="isPlayable"
+                            v-if="isPlayable || isMix"
                             class="level"
                             :class="{
                                 'section navbar is-fixed-top has-background-grey-dark is-shadowless is-borderless':
@@ -440,7 +448,8 @@
 
                         <!-- When playing back, on the player widget, offer the cue buttons depending on the situation.
                          -->
-                        <!-- For performance and layout reasons, only render this when used, on desktop and larger screens -->
+                        <!-- For performance and layout reasons, in play mode, only render this when used, on desktop and larger screens -->
+                        <!-- In mix mode, always render, because a full screen is not offered -->
                         <IfMedia
                             query="(min-width: 1024px)"
                             v-if="!isOnlyTrack"
@@ -448,7 +457,9 @@
                             <nav>
                                 <CueButtonsBar
                                     v-if="
-                                        !isTrackPlayerFullScreen && isPlayable
+                                        (!isTrackPlayerFullScreen &&
+                                            isPlayable) ||
+                                        isMix
                                     "
                                     :currentSeconds="currentSeconds"
                                     :isTrackPlaying="isPlaying"
@@ -506,6 +517,7 @@ import CreateCueButton from '@/components/buttons/CreateCueButton.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import MuteButton from '@/components/buttons/MuteButton.vue';
 import SoloButton from '@/components/buttons/SoloButton.vue';
+import SelectButton from '@/components/buttons/SelectButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { settingsMixin } from '@/mixins/settingsMixin';
@@ -541,6 +553,7 @@ export default defineComponent({
         CollapsibleButton,
         MuteButton,
         SoloButton,
+        SelectButton,
         PlayheadSlider,
         CueButtonsBar,
         VolumeKnob,
@@ -723,6 +736,22 @@ export default defineComponent({
                     this.trackPlay();
                 } else {
                     this.togglePlayback();
+                }
+            }
+        },
+
+        /** Activates to this track (if loaded)
+         * @remarks If the track is not loaded, does nothing.
+         * If the track is not yet the active track, tries to activate the track (which will autoplay).
+         * If it's the active track, does nothing
+         */
+        setActiveTrack(): void {
+            if (this.isTrackLoaded) {
+                if (!this.isActiveTrack) {
+                    this.$store.commit(
+                        MutationTypes.UPDATE_SELECTED_TRACK_ID,
+                        this.track.Id,
+                    );
                 }
             }
         },
