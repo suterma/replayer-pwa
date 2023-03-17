@@ -125,6 +125,7 @@ import { PropType, computed, defineProps } from 'vue';
  */
 
 const props = defineProps({
+    /** The temporal position of this cue */
     time: {
         type: null as unknown as PropType<number | null>,
         required: false,
@@ -185,15 +186,6 @@ const props = defineProps({
      */
     hasAddonsRight: Boolean,
 });
-
-// /** Icons from @mdi/js */
-// const mdiPlay = ref(mdiPlay);
-
-// mdiPause: mdiPause,
-
-// /** Icons from BaseIcon.vue */
-// rTrackPlayOnce: rTrackPlayOnce,
-// rTrackRepeatOnce: rTrackRepeatOnce,
 
 /** The title for this cue, usable as tooltip
  * @devdoc This is set from outside the button to keep the button interface flat, for performance reasons
