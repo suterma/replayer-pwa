@@ -33,6 +33,7 @@
                 :isOnlyTrack="isSingleTrack"
                 :isFirst="isFirstTrack(track.Id)"
                 :isLast="isLastTrack(track.Id)"
+                :isAnySoloed="isAnyTrackSoloed"
                 @previousTrack="
                     toPreviousTrack(track.Id, isLoopingPlaybackMode)
                 "
@@ -64,7 +65,7 @@
                                 />
                                 <SoloButton
                                     :disabled="!isAllTrackLoaded"
-                                    :isSolo="isAllTrackSoloed"
+                                    :isSoloed="isAllTrackSoloed"
                                     @click="multitrackHandler?.toggleSolo()"
                                     data-cy="mute"
                                 />
@@ -120,7 +121,7 @@
                                     </template>
                                     <button class="button is-nav is-indicator">
                                         <TimeDisplay
-                                            :modelValue="getAllTrackPosition"                                          
+                                            :modelValue="getAllTrackPosition"
                                             :subSecondDigits="3"
                                         ></TimeDisplay>
                                     </button>
@@ -537,6 +538,11 @@ export default defineComponent({
         /** Determines, whether all tracks in the compilation are currently muted (used with the mix mode) */
         isAllTrackMuted() {
             return this.multitrackHandler?.isAllTrackMuted() ?? false;
+        },
+
+        /** Determines, whether any track in the compilation is currently soloed (used with the mix mode) */
+        isAnyTrackSoloed() {
+            return this.multitrackHandler?.isAnyTrackSoloed() ?? false;
         },
 
         /** Determines, whether all tracks in the compilation are currently soloed (used with the mix mode) */

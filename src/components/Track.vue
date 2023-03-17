@@ -65,7 +65,7 @@
                     />
                     <SoloButton
                         :disabled="!canPlay"
-                        :isSolo="isSolo"
+                        :isSoloed="isSoloed"
                         @click="toggleSolo()"
                         data-cy="solo"
                     />
@@ -74,7 +74,7 @@
             <template v-slot:left-end>
                 <TimeDisplay
                     class="level-item is-narrow is-hidden-mobile is-size-7"
-                    :modelValue="currentSeconds"                   
+                    :modelValue="currentSeconds"
                     :subSecondDigits="3"
                 ></TimeDisplay>
                 <VolumeKnob
@@ -114,7 +114,7 @@
             <template v-slot:left-end>
                 <TimeDisplay
                     class="level-item is-narrow is-hidden-mobile is-size-7"
-                    :modelValue="track?.Duration"                   
+                    :modelValue="track?.Duration"
                 ></TimeDisplay>
                 <VolumeKnob
                     :disabled="!isTrackLoaded"
@@ -273,6 +273,9 @@
                 :sourceDescription="track?.Url"
                 @update:volume="updatedVolume"
                 :volume="track.Volume"
+                :isMuted="isMuted"
+                :isSoloed="isSoloed"
+                :isAnySoloed = "isAnySoloed"
                 @ended="$emit('trackEnded')"
             ></TrackAudioApiPlayer>
             <Teleport to="#media-player" :disabled="isEditable">
@@ -613,6 +616,12 @@ export default defineComponent({
             required: true,
         },
 
+        isAnySoloed: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+
         /** The display mode of this track.
          * @devdoc Allows to reuse this component for more than one DisplayMode.
          * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
@@ -660,9 +669,9 @@ export default defineComponent({
              */
             isMuted: false,
 
-            /** Flag to indicate whether the tarck's audio is currently playing solo
+            /** Flag to indicate whether the track's audio is currently playing solo
              */
-            isSoloed: null as boolean | null,
+            isSoloed: false,
 
             /** The wake lock fill-in that can prevent screen timeout, while a track is in use */
             noSleep: new NoSleep(),
@@ -724,34 +733,29 @@ export default defineComponent({
          */
         toggleMute(mute: boolean | null = null): void {
             if (this.isTrackLoaded) {
-                this.isMuted = this.trackPlayerInstance?.toggleMute(mute);
+                if (mute === null) {
+                    this.isMuted = !this.isMuted;
+                } else {
+                    this.isMuted = mute;
+                }
             }
         },
 
         /** Toggles the solo state of this track
          * @remarks If the track is not loaded, does nothing.
+         * @param solo - If null or not given, toggles the soloed state. When given, sets to the specified state.
+         * @param isAnySoloed - Provides, whether any track in the compilation is currently soloed. This is required to determine the muting of non-soloed tracks.
          */
-        toggleSolo(): void {
+        toggleSolo(solo: boolean | null = null): void {
             if (this.isTrackLoaded) {
-                if (this.isSoloed === true) {
-                    this.isSoloed = null;
+                if (solo === null) {
+                    this.isSoloed = !this.isSoloed;
                 } else {
-                    this.isSoloed = true;
+                    this.isSoloed = solo;
                 }
             }
         },
 
-        /** Sets the solo state of this track
-         * @remarks If the track is not loaded, does nothing.
-         * @param solo - If null or not given, this track is kept unmuted (unless it's muted explicitly)
-         * If false, the track is muted to allow another track to solo.
-         * If true, this is not muted (unless it's muted explicitly), to solo this track.
-         */
-        setSolo(solo: boolean | null = null): void {
-            if (this.isTrackLoaded) {
-                this.isSoloed = this.trackPlayerInstance?.setSolo(solo);
-            }
-        },
         /** Sets the visual transition for the player widget's track change
          */
         setWidgetTransit(transition: string): void {

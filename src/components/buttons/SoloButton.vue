@@ -2,10 +2,10 @@
     <ToggleButton
         class="button is-warning is-yellow"
         :class="{
-            'is-inactive': !isSolo,
+            'is-inactive': !isSoloed,
         }"
-        :isEngaged="isSolo"
-        engaged-label="Listen all"
+        :isEngaged="isSoloed"
+        engaged-label=""
         disengaged-label="Listen solo"
         >S
     </ToggleButton>
@@ -22,7 +22,7 @@ export default defineComponent({
     components: { ToggleButton },
 
     props: {
-        isSolo: {
+        isSoloed: {
             type: Boolean,
             required: true,
             default: null,

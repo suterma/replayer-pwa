@@ -46,15 +46,22 @@ export default class MultitrackHandler {
         return false;
     }
 
+    /** Determines, whether any track in the compilation is currently soloed (used with the mix mode) */
+    isAnyTrackSoloed(): boolean {
+        const instances = this.getAllTrackInstances();
+        if (instances) {
+            return !instances.every((i) => !i.isSoloed) ?? false;
+        }
+        return false;
+    }
     /** Determines, whether all tracks in the compilation are currently solo (used with the mix mode) */
     isAllTrackSoloed(): boolean {
         const instances = this.getAllTrackInstances();
         if (instances) {
-            return instances.every((i) => i.isSoloed) ?? false;
+            return !instances.every((i) => i.isSoloed !== true) ?? true;
         }
         return false;
     }
-
     /** Determines, whether all tracks in the compilation have their media available (used with the mix mode) */
     isAllMediaAvailable(): boolean {
         const instances = this.getAllTrackInstances();
@@ -126,12 +133,11 @@ export default class MultitrackHandler {
 
     /** Toggles the solo state of all tracks, according to whether all tracks are currently solo */
     toggleSolo(): void {
-        const allSolo = this.isAllTrackSoloed();
+        const allSoloed = this.isAllTrackSoloed();
         const instances = this.getAllTrackInstances();
         if (instances) {
             instances.forEach((instance) => {
-                instance.setSolo(!allSolo);
-                //todo why does the track buton not toggle
+                instance.toggleSolo(!allSoloed);
             });
         }
     }

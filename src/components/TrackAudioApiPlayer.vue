@@ -120,6 +120,28 @@ export default defineComponent({
             required: true,
             default: false,
         },
+        /** Whether playback is currently soloed
+         */
+        isSoloed: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+        /** Whether playback is currently muted
+         * @remarks Implements a two-way binding
+         */
+        isMuted: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+        /** Whether any track's playback is currently soloed
+         */
+        isAnySoloed: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
         /** The track volume in range of [0..1]
          * @remarks Implements a two-way binding
          */
@@ -140,8 +162,6 @@ export default defineComponent({
              * Could be NaN or infinity, depending on the source
              */
             durationSeconds: null as number | null,
-            isMuted: false,
-            isSoloed: null as boolean | null,
             /** Whether the media data has loaded (at least enough to start playback)
              * @remarks This implies that metadata also has been loaded already
              * @devdoc see HAVE_CURRENT_DATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
@@ -369,6 +389,22 @@ export default defineComponent({
                 this.pause();
             }
         },
+
+ 
+        isMuted(): void {
+            this.applyMuting();
+        },
+
+ 
+        isSoloed(): void {
+            this.applyMuting();
+        },
+
+ 
+        isAnySoloed(): void {
+            this.applyMuting();
+        },
+
         /** Watch the volume prop to update according externals changes  */
         volume(): void {
             this.updateVolume(this.volume);
@@ -388,6 +424,15 @@ export default defineComponent({
         },
     },
     methods: {
+        /** Applies the muting to the media element of this track
+         * @remarks To effectively determine the applicable muting, the solo state is additionally considered.
+         */
+        applyMuting(): void {
+            this.audioElement.muted =
+                this.isMuted ||
+                (this.isSoloed === false && this.isAnySoloed === true);
+        },
+
         /** Set the track volume to a new value
          *  @remarks Limits the minimum level at -90dB Full Scale
          */
@@ -504,42 +549,13 @@ export default defineComponent({
             //- iPhone 13/Safari
             //- iPad Pro 12.9 2021/Safari (with audio from URL)
             //NOTE: This solution however seems not to work on:
-            //- iPad 9th/Safari, because the buffered lenght is 1, but the sound will only play on 2nd click.
+            //- iPad 9th/Safari, because the buffered length is 1, but the sound will only play on 2nd click.
             if (this.audioElement.buffered.length === 0) {
                 //The isClickToLoadRequired flag defers further media loading until the next user's explicit play request
                 this.isClickToLoadRequired = true;
             }
         },
-        /** Toggles the muted state of this track
-         * @remarks If the track is not loaded, does nothing.
-         * @param mute - If null or not given, toggles the muted state. When given, sets to the specified state.
-         */
-        toggleMute(mute: boolean | null = null): boolean {
-            if (mute === null) {
-                this.isMuted = !this.isMuted;
-                this.audioElement.muted =
-                    this.isMuted || this.isSoloed === false;
-            } else {
-                if (this.isMuted != mute) {
-                    this.isMuted = mute;
-                    this.audioElement.muted =
-                        this.isMuted || this.isSoloed === false;
-                }
-            }
-            return this.isMuted;
-        },
 
-        /** Sets the solo state of this track
-         * @remarks If the track is not loaded, does nothing.
-         * @param solo - If null or not given, this track is kept unmuted (unless it's muted explicitly)
-         * If false, the track is muted to allow another track to solo.
-         * If true, this is not muted (unless it's muted explicitly), to solo this track.
-         */
-        setSolo(solo: boolean | null = null): boolean | null {
-            this.isSoloed = solo;
-            this.audioElement.muted = this.isMuted || this.isSoloed === false;
-            return this.isSoloed;
-        },
         seekToSeconds(seconds: number) {
             this.debugLog(`seekToSeconds`, seconds);
             if (!this.hasLoadedMetadata) return;
