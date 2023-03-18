@@ -26,7 +26,7 @@ import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
 const trackDurationSafetyMarginSeconds = 0.3;
 
 /** A simple vue audio player, for a single track, using the Audio Element and it's API.
- * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used. This has some implications for looping.
+ * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used. This has some implications for looping and transport.
  * @devdoc Internally maintains it's state, updating the enclosed audio element accordingly.
  * @remarks Internally handles cue loops, when in the LoopCue playback mode.
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playing
@@ -308,8 +308,6 @@ export default defineComponent({
             this.volume,
         );
 
-        //NOTE: Not using CORS, property crossOrigin is not set, not asking for permission
-
         //Last, update the source, if already available
         this.audioElement.preload = 'auto';
         this.updateMediaSource(this.mediaUrl);
@@ -336,9 +334,6 @@ export default defineComponent({
             return this.displayMode === TrackDisplayMode.Edit;
         },
 
-        muted(): boolean {
-            return this.isMuted;
-        },
         /** A simple token for the settings
          * @remarks This is only used to detect changes, to recreate the audio fader.
          */
@@ -390,17 +385,14 @@ export default defineComponent({
             }
         },
 
- 
         isMuted(): void {
             this.applyMuting();
         },
 
- 
         isSoloed(): void {
             this.applyMuting();
         },
 
- 
         isAnySoloed(): void {
             this.applyMuting();
         },

@@ -1,12 +1,11 @@
 <template>
-    <span v-if="track.Name" class="has-text-weight-light" data-cy="track-name">
-        <LinkableText :text="track.Name"></LinkableText>
+    <span v-if="name" class="has-text-weight-light" data-cy="track-name">
+        <LinkableText :text="name"></LinkableText>
     </span>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Track } from '@/store/compilation-types';
 import LinkableText from './LinkableText.vue';
 
 /** Displays a track's name as a title.
@@ -18,8 +17,8 @@ export default defineComponent({
         LinkableText,
     },
     props: {
-        track: {
-            type: Track,
+        name: {
+            type: String,
             required: true,
         },
     },

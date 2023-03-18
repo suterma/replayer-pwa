@@ -46,7 +46,10 @@
         <!-- Track header for mixing, having additional channel-style controls -->
         <TrackHeader
             v-else-if="isMix"
-            :track="track"
+            :trackId="track.Id"
+            :artist="track.Artist"
+            :album="track.Album"
+            :name="track.Name"
             :isPlaying="isPlaying"
             :isTrackLoaded="isTrackLoaded"
             :isTrackMediaAvailable="isMediaAvailable"
@@ -93,7 +96,10 @@
         <!-- Track header for single-track playback -->
         <TrackHeader
             v-else
-            :track="track"
+            :trackId="track.Id"
+            :artist="track.Artist"
+            :album="track.Album"
+            :name="track.Name"
             :isPlaying="isPlaying"
             :isTrackLoaded="isTrackLoaded"
             :isTrackMediaAvailable="isMediaAvailable"
@@ -263,7 +269,7 @@
                 Also, fade-out would otherwise be interrupted. -->
             <TrackAudioApiPlayer
                 ref="playerReference"
-                :title="track?.Name"
+                :title="track.Name"
                 :mediaUrl="mediaUrl"
                 @timeupdate="updateTime"
                 @durationChanged="calculateCueDurations"
@@ -357,14 +363,17 @@
                                             }"
                                         >
                                             <TrackTitleName
-                                                :track="track"
+                                                :name="track.Name"
                                             ></TrackTitleName>
                                         </span>
                                         <!-- Artist info (don't show on small devices)-->
                                         <span class="is-size-7 is-hidden-mobile"
                                             >&nbsp;
                                             <!--nbsp as placeholder to keep layout when no artist info -->
-                                            <ArtistInfo :track="track" />
+                                            <ArtistInfo
+                                                :artist="track.Artist"
+                                                :album="track.Album"
+                                            />
                                         </span>
                                     </p>
                                 </div>

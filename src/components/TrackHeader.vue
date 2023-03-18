@@ -17,14 +17,14 @@
             <!-- The title is the only header element that should shrink (break on words) if necessary -->
             <div class="level-item is-narrow is-flex-shrink-1">
                 <p class="title is-4" :class="{ 'has-text-success': isActive }">
-                    <TrackTitleName :track="track"></TrackTitleName>
+                    <TrackTitleName :name="name"></TrackTitleName>
                 </p>
             </div>
 
             <!-- Artist info (don't show on small devices, keep at end to keep the appearance calm)-->
             <div class="level-item is-hidden-mobile is-justify-content-end">
                 <p class="is-size-7">
-                    <ArtistInfo :track="track" />
+                    <ArtistInfo :album="album" :artist="artist" />
                 </p>
             </div>
             <!-- Slot for additional level items -->
@@ -50,7 +50,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Track } from '@/store/compilation-types';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import { ActionTypes } from '@/store/action-types';
@@ -67,8 +66,20 @@ export default defineComponent({
         ArtistInfo,
     },
     props: {
-        track: {
-            type: Track,
+        trackId: {
+            type: String,
+            required: true,
+        },
+        artist: {
+            type: String,
+            required: true,
+        },
+        album: {
+            type: String,
+            required: true,
+        },
+        name: {
+            type: String,
             required: true,
         },
         /** Whether this track is to be considered as the active track */
@@ -103,27 +114,14 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
-
-        /** Whether this component show editable inputs for the contained data
-         * @devdoc Allows to reuse this component for more than one DisplayMode.
-         */
-        isEditable: {
-            type: Boolean,
-            default: false,
-        },
-    },
-    data() {
-        return {
-            currentSeconds: 0,
-            trackData: { ...this.track }, // clone the object
-        };
     },
     methods: {
         /** Updates the track name */
         updateName(name: string) {
-            const trackId = this.track.Id;
-            const artist = this.trackData.Artist;
-            const album = this.trackData.Album;
+            const trackId = this.trackId;
+            const artist = this.artist;
+            const album = this.album;
+
             this.$store.dispatch(ActionTypes.UPDATE_TRACK_DATA, {
                 trackId,
                 name,
@@ -133,9 +131,9 @@ export default defineComponent({
         },
         /** Updates the track artist */
         updateArtist(artist: string) {
-            const trackId = this.track.Id;
-            const name = this.trackData.Name;
-            const album = this.trackData.Album;
+            const trackId = this.trackId;
+            const name = this.name;
+            const album = this.album;
             this.$store.dispatch(ActionTypes.UPDATE_TRACK_DATA, {
                 trackId,
                 name,
@@ -145,9 +143,9 @@ export default defineComponent({
         },
         /** Updates the track album */
         updateAlbum(album: string) {
-            const trackId = this.track.Id;
-            const name = this.trackData.Name;
-            const artist = this.trackData.Artist;
+            const trackId = this.trackId;
+            const name = this.name;
+            const artist = this.artist;
             this.$store.dispatch(ActionTypes.UPDATE_TRACK_DATA, {
                 trackId,
                 name,
