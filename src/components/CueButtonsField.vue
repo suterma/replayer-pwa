@@ -17,7 +17,7 @@
             :hasCuePassed="hasCuePassed(prefixCue)"
             :isCueAhead="isCueAhead(prefixCue)"
             :percentComplete="percentComplete(prefixCue)"
-            @click="$emit('click', prefixCue)"
+            @click="emit('click', prefixCue)"
         >
         </CueButton>
         <template v-for="cue in track.Cues" :key="cue.Id">
@@ -35,91 +35,92 @@
                 :hasCuePassed="hasCuePassed(cue)"
                 :isCueAhead="isCueAhead(cue)"
                 :percentComplete="percentComplete(cue)"
-                @click="$emit('click', cue)"
+                @click="emit('click', cue)"
             >
             </CueButton>
         </template>
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { computed, defineProps, defineEmits } from 'vue';
 import { Cue, ICue, PlaybackMode, Track } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';
+import { useStore } from 'vuex';
 
 /** A field of large cue buttons for a track
  */
-export default defineComponent({
-    name: 'CueButtonsField',
-    components: { CueButton },
-    emits: ['click'],
-    props: {
-        /** The playback progress in the current track, in [seconds]
-         * @remarks This is used for progress display within the set of cues
-         */
-        currentSeconds: Number,
 
-        /** The track to show cues for
-         */
-        track: {
-            type: Track,
-            required: true,
-        },
-        /** Indicates whether the associated Track is currently playing
-         * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
-         */
-        isTrackPlaying: Boolean,
-        /** Whether to show the component in a disabled state
-         * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
-         */
-        disabled: Boolean,
-        /** The playback mode
-         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
-         */
-        playbackMode: {
-            type: String as () => PlaybackMode,
-            required: true,
-        },
+const emit = defineEmits(['click']);
+
+const props = defineProps({
+    /** The playback progress in the current track, in [seconds]
+     * @remarks This is used for progress display within the set of cues
+     */
+    currentSeconds: Number,
+
+    /** The track to show cues for
+     */
+    track: {
+        type: Track,
+        required: true,
     },
-    methods: {
-        /** Determines whether this cue is currently selected
-         * @remarks Note: only one cue in a compilation may be selected */
-        isCueSelected(cue: ICue): boolean {
-            return this.$store.getters.selectedCueId == cue.Id;
-        },
-        /** Determines whether playback of the given cue has already passed
-         * @remarks Is used for visual indication of playback progress
-         * @param cue - the cue to determine the playback progress for
-         */
-        hasCuePassed(cue: ICue): boolean {
-            return CompilationHandler.hasCuePassed(cue, this.currentSeconds);
-        },
-        /** Determines whether playback of this cue has not yet started
-         * @param cue - the cue to determine the playback progress for
-         */
-        isCueAhead(cue: ICue): boolean {
-            return CompilationHandler.isCueAhead(cue, this.currentSeconds);
-        },
-        /** The playback progress within this cue, in [percent], or null if not applicable
-         * @param cue - the cue to determine the playback progress for
-         */
-        percentComplete(cue: ICue): number | null {
-            return CompilationHandler.percentComplete(cue, this.currentSeconds);
-        },
-    },
-    computed: {
-        prefixCue(): ICue {
-            return new Cue(
-                'the Beginning',
-                '',
-                0,
-                this.track.Cues[0]?.Time ?? null,
-                '',
-            );
-        },
+    /** Indicates whether the associated Track is currently playing
+     * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
+     */
+    isTrackPlaying: Boolean,
+    /** Whether to show the component in a disabled state
+     * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+     */
+    disabled: Boolean,
+    /** The playback mode
+     * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+     */
+    playbackMode: {
+        type: String as () => PlaybackMode,
+        required: true,
     },
 });
+
+/** Defines a virtual cue, that acts as a placeholder when the first defined cue is not at the track start. */
+const prefixCue = computed(() => {
+    return new Cue(
+        'the Beginning',
+        '',
+        0,
+        props.track.Cues[0]?.Time ?? null,
+        '',
+    );
+});
+
+const store = useStore();
+
+/** Determines whether the given cue is currently selected
+ * @remarks Note: only one cue in a compilation may be selected */
+function isCueSelected(cue: ICue): boolean {
+    return store.getters.selectedCueId == cue.Id;
+}
+
+/** Determines whether playback of the given cue has already passed
+ * @remarks Is used for visual indication of playback progress
+ * @param cue - the cue to determine the playback progress for
+ */
+function hasCuePassed(cue: ICue): boolean {
+    return CompilationHandler.hasCuePassed(cue, props.currentSeconds);
+}
+/** Determines whether playback of the given cue has not yet started
+ * @param cue - the cue to determine the playback progress for
+ */
+function isCueAhead(cue: ICue): boolean {
+    return CompilationHandler.isCueAhead(cue, props.currentSeconds);
+}
+/** The playback progress within the given cue, in [percent], or null if not applicable
+ * @param cue - the cue to determine the playback progress for
+ */
+function percentComplete(cue: ICue): number | null {
+    return CompilationHandler.percentComplete(cue, props.currentSeconds);
+}
 </script>
 <style lang="scss">
 .cue-buttons-field.buttons {
