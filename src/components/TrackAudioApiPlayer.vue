@@ -10,9 +10,9 @@
     <slot></slot>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { MutationTypes } from '@/store/mutation-types';
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, PropType, ref } from 'vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import {
@@ -33,13 +33,9 @@ const trackDurationSafetyMarginSeconds = 0.3;
  * @remarks Emits 'durationChanged' with the track duration in seconds, once after successful load of the metadata of the track's media file
  * @devdoc Autoplay after load is intentionally not supported, as this is of no use for the Replayer app.
  */
-export default defineComponent({
-    name: 'TrackAudioApiPlayer',
-    components: {
-        TrackAudioPeaks,
-    },
-    mixins: [settingsMixin],
-    emits: [
+
+  //  mixins: [settingsMixin],
+  const emit = defineEmits([
         'timeupdate',
         'durationChanged',
         'update:playbackMode',
@@ -48,8 +44,8 @@ export default defineComponent({
         'update:isFading',
         /** When the end of the track has been reached and playback has ended */
         'ended',
-    ],
-    props: {
+    ]);
+    const props = defineProps({
         /** The title of the track */
         title: {
             type: String,
@@ -150,39 +146,38 @@ export default defineComponent({
             required: true,
             default: DefaultTrackVolume,
         },
-    },
-    data() {
-        return {
+    });
+
             /** The playback progress in the current track, in [seconds] */
             //TODO later provide the currentSeconds from the track (at least initially), similar to the playback mode
             //supporting storage and retrieval with the track persistence
-            currentSeconds: null as number | null,
+          const  currentSeconds = ref<number | null>(null);
+
             /** Gets the duration of the current track, in [seconds]
              * @remarks This is only available after successful load of the media metadata.
              * Could be NaN or infinity, depending on the source
              */
-            durationSeconds: null as number | null,
+             const   durationSeconds= ref<number | null>(null);
             /** Whether the media data has loaded (at least enough to start playback)
              * @remarks This implies that metadata also has been loaded already
              * @devdoc see HAVE_CURRENT_DATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
              */
-            hasLoadedData: false,
+             const      hasLoadedData = ref( false);
             /** Whether the media metadata has loaded. Duration is available now.
              * @devdoc see HAVE_METADATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
              */
-            hasLoadedMetadata: false,
-            mediaError: null as MediaError | null,
+             const       hasLoadedMetadata= ref( false);
+             const       mediaError = ref<MediaError | null>(null);
             /** Whether the audio is currently fading */
-            isFading: false,
+            const       isFading= ref( false);
             /** Whether playback is currently ongoing */
-            playing: false,
-            audioElement: document.createElement('audio'),
+            const       playing= ref( false);
             /** Flags, whether a playing request is currently outstanding. This is true after a play request was received, for as long
              * as playback has not yet started.
              * @remarks This is not equal to deferred loading with the isClickToLoadRequired flag.
              * @devdoc See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted for more information
              */
-            isPlayingRequestOutstanding: false,
+             const        isPlayingRequestOutstanding= ref( false);
 
             /** Flags, whether deferred loading (until a user play click event is handled)
              * is required to further load the track media file data. The flag may be set once after the metadata was successfully loaded.
@@ -190,28 +185,118 @@ export default defineComponent({
              * @remarks This specific handling is currently required on (some?) iOS devices,
              * because they only load data upon explicit user interaction.
              */
-            isClickToLoadRequired: false,
+             const      isClickToLoadRequired= ref( false);
 
             /** The fader to use */
-            fader: undefined as unknown as AudioFader,
-        };
-    },
+            const      fader = ref<AudioFader | undefined>(undefined);
+
+
+
     /** Handles the setup of the audio graph outside the mounted lifespan.
      * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
      */
-    created() {
+     const       audioElement = ref(document.createElement('audio'));
         console.debug(
-            `TrackAudioApiPlayer(${this.title})::created:mediaUrl:${this.mediaUrl} for title ${this.title}`,
+            `TrackAudioApiPlayer(${props.title})::created:mediaUrl:${props.mediaUrl} for title ${props.title}`,
         );
 
-        //Preparing the audio element
+                /** Updates the current seconds display and emits an event with the temporal position of the player
+         * @devdoc This must get only privately called from the audio player
+         * @devdoc This is known to result in setTimeout violations on slower systems
+         */
+         function updateTime(/*event: Event*/):void {
+            currentSeconds.value = audioElement.value.currentTime;
+            emit('timeupdate', currentSeconds);
+            handleCueLoop();
+        }
+                /** Transports (seeks) the playback to the given temporal position */
+                function     seekTo(position: number): void {
+            debugLog(`seekTo:position`, position);
+            audioElement.value.currentTime = position;
+        },
+
+                /** Handles looping for a single cue, if requested
+         * @remarks Cue looping is solved here by observing and handling the recurring time updates.
+         * NOTE: Partial looping is not natively supported with the used HTMLAudioElement.
+         * For memory consumption reasons, a buffered audio source with the Web Audio API is not used,
+         * which however would natively support partial loops.
+         * @remarks Track looping is handled elsewhere.
+         */
+         function     handleCueLoop(): void {
+            switch (props.playbackMode) {
+                case PlaybackMode.LoopCue: {
+                    //Detect, with a safety margin, whether the possible loop is at track end
+                    if (
+                        currentSeconds.value !== null &&
+                        durationSeconds.value !== null &&
+                        Number.isFinite(currentSeconds.value) &&
+                        Number.isFinite(durationSeconds.value)
+                    ) {
+                        const isAtTrackEnd =
+                            currentSeconds.value ?? 0 >=
+                            (durationSeconds.value ?? 0) -
+                                trackDurationSafetyMarginSeconds;
+
+                        //Is a loop due?
+                        if (
+                            props.loopStart !== null &&
+                            props.loopEnd !== null &&
+                            Number.isFinite(props.loopStart) &&
+                            Number.isFinite(props.loopEnd) &&
+                            ((currentSeconds.value ?? 0) >= props.loopEnd ||
+                                isAtTrackEnd)
+                        ) {
+                            //Back to loop start
+                            seekTo(props.loopStart);
+
+                            if (isAtTrackEnd) {
+                                this.debugLog(
+                                    `loopEnd:${this.loopEnd};durationSeconds:${this.durationSeconds}`,
+                                );
+                                //At the end of the track, a seek operation alone would not be enough to continue the loop
+                                //if playback already has ended (when the safety margin from above was too small)
+                                this.$nextTick(() => {
+                                    //Directly issue the play command, without any safety net
+                                    //(should be working, since play was successful already)
+                                    //This handling here has the disadvantage, that a fading operation does take place however,
+                                    //if configured and the safety margin was too short.
+                                    this.audioElement.play();
+                                });
+                            }
+                        }
+                    }
+                    break;
+                }
+                case PlaybackMode.PlayCue: {
+                    //Execute once, when past the end and not yet fading (avoid repeated calls)
+                    if (
+                        this.loopStart !== null &&
+                        this.loopEnd !== null &&
+                        this.currentSeconds !== null &&
+                        Number.isFinite(this.loopStart) &&
+                        Number.isFinite(this.loopEnd) &&
+                        Number.isFinite(this.currentSeconds) &&
+                        this.currentSeconds >= this.loopEnd &&
+                        this.isFading == false
+                    ) {
+                        this.pauseAndSeekTo(this.loopStart);
+                    }
+                    break;
+                }
+            }
+        }
+
+        
+
+                //Preparing the audio element
+
 
         //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
-        this.audioElement.ontimeupdate = this.updateTime;
-        this.audioElement.onloadeddata = this.handleLoadedData;
-        this.audioElement.onloadedmetadata = this.handleLoadedMetadata;
-        this.audioElement.onerror = () => {
-            this.mediaError = this.audioElement?.error;
+        audioElement.value.ontimeupdate = updateTime;
+        audioElement.value.onloadeddata = this.handleLoadedData;
+        audioElement.value.onloadedmetadata = this.handleLoadedMetadata;
+        audioElement.value.onerror = () => {
+            this.mediaError = audioElement.value?.error;
             console.debug(
                 `TrackAudioApiPlayer(${this.title})::onerror:mediaError:`,
                 this.mediaError,
@@ -644,16 +729,7 @@ export default defineComponent({
                 this.seekTo(position);
             });
         },
-        /** Updates the current seconds display and emits an event with the temporal position of the player
-         * @devdoc This must get only privately called from the audio player
-         * @devdoc This is known to result in setTimeout violations on slower systems
-         */
-        updateTime(/*event: Event*/) {
-            this.currentSeconds = this.audioElement?.currentTime;
-            this.$emit('timeupdate', this.currentSeconds);
 
-            this.handleCueLoop();
-        },
         /** Handles looping for a single cue, if requested
          * @remarks Cue looping is solved here by observing and handling the recurring time updates.
          * NOTE: Partial looping is not natively supported with the used HTMLAudioElement.
@@ -818,11 +894,7 @@ export default defineComponent({
             this.audioElement.currentTime = target;
         },
 
-        /** Transports (seeks) the playback to the given temporal position */
-        seekTo(position: number): void {
-            this.debugLog(`seekTo:position`, position);
-            this.audioElement.currentTime = position;
-        },
+
     },
 });
 </script>
