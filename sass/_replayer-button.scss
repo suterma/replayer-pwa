@@ -162,8 +162,28 @@ fieldset[disabled] .button:hover {
 **************************************************************/
 
 /** Buttons in inactive state should present themselves as actionable but deactivated */
-.button.is-danger.is-inactive:not(.is-outlined):not(.is-inverted) 
-{
+
+// is-primary
+.button.is-primary.is-inactive:not(.is-outlined):not(.is-inverted) {
+    background-image: none;
+    background-color: transparent;
+    border-color: #52575c;
+    color: $grey-lightest;
+}
+.button.is-primary.is-inactive:not(.is-outlined):not(.is-inverted):hover {
+    background-image: linear-gradient(
+        180deg,
+        rgb(63, 67, 70, 0.25) 0%,
+        rgb(72, 77, 81, 0.25) 40%,
+        rgb(82, 87, 92, 0.25) 100%
+    );
+
+    filter: none;
+    text-shadow: 1px 1px 1px rgb(10 10 10 / 30%);
+}
+
+// is-danger
+.button.is-danger.is-inactive:not(.is-outlined):not(.is-inverted) {
     background-image: none;
     background-color: transparent;
     border-color: #ee5f5b;
@@ -180,8 +200,8 @@ fieldset[disabled] .button:hover {
     text-shadow: 1px 1px 1px rgb(10 10 10 / 30%);
 }
 
-.button.is-warning.is-inactive:not(.is-outlined):not(.is-inverted) 
-{
+//isWarning
+.button.is-warning.is-inactive:not(.is-outlined):not(.is-inverted) {
     background-image: none;
     background-color: transparent;
     border-color: #f89406;
@@ -192,11 +212,8 @@ fieldset[disabled] .button:hover {
         180deg,
         rgba(250, 161, 35, 0.25) 0%,
         rgb(248, 148, 6, 0.25) 40%,
-        rgb(228 ,136, 6, 0.25) 100%
+        rgb(228, 136, 6, 0.25) 100%
     );
     filter: none;
     text-shadow: 1px 1px 1px rgb(10 10 10 / 30%);
 }
-
-
- 

@@ -11015,6 +11015,19 @@ fieldset[disabled] .button:hover {
  * "inactive" Buttons for actionable items
 **************************************************************/
 /** Buttons in inactive state should present themselves as actionable but deactivated */
+.button.is-primary.is-inactive:not(.is-outlined):not(.is-inverted) {
+  background-image: none;
+  background-color: transparent;
+  border-color: #52575c;
+  color: hsl(0deg, 0%, 93%);
+}
+
+.button.is-primary.is-inactive:not(.is-outlined):not(.is-inverted):hover {
+  background-image: linear-gradient(180deg, rgba(63, 67, 70, 0.25) 0%, rgba(72, 77, 81, 0.25) 40%, rgba(82, 87, 92, 0.25) 100%);
+  filter: none;
+  text-shadow: 1px 1px 1px rgba(10, 10, 10, 0.3);
+}
+
 .button.is-danger.is-inactive:not(.is-outlined):not(.is-inverted) {
   background-image: none;
   background-color: transparent;
