@@ -146,7 +146,7 @@
                         cueClick(cue);
                     }
                 "
-                :track="track"
+                :cues="track.Cues"
             ></CueButtonsField>
         </div>
 
@@ -469,7 +469,7 @@
                                             cueClick(cue);
                                         }
                                     "
-                                    :track="track"
+                                    :cues="track.Cues"
                                 ></CueButtonsBar>
                             </nav>
                         </IfMedia>
@@ -483,7 +483,7 @@
                                         cueClick(cue);
                                     }
                                 "
-                                :track="track"
+                                :cues="track.Cues"
                             ></CueButtonsField>
                         </nav></div
                 ></Transition>

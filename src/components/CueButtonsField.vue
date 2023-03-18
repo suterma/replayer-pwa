@@ -20,7 +20,7 @@
             @click="emit('click', prefixCue)"
         >
         </CueButton>
-        <template v-for="cue in track.Cues" :key="cue.Id">
+        <template v-for="cue in cues" :key="cue.Id">
             <CueButton
                 class="is-flex-grow-1"
                 :disabled="disabled || !Number.isFinite(cue.Time)"
@@ -43,8 +43,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, defineEmits } from 'vue';
-import { Cue, ICue, PlaybackMode, Track } from '@/store/compilation-types';
+import { computed, defineProps, defineEmits, PropType } from 'vue';
+import { Cue, ICue, PlaybackMode } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { useStore } from 'vuex';
@@ -60,12 +60,10 @@ const props = defineProps({
      */
     currentSeconds: Number,
 
-    /** The track to show cues for
+    /** The cues to show
      */
-    track: {
-        type: Track,
-        required: true,
-    },
+    cues: Array as PropType<Array<ICue>>,
+
     /** Indicates whether the associated Track is currently playing
      * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
      */
@@ -85,13 +83,7 @@ const props = defineProps({
 
 /** Defines a virtual cue, that acts as a placeholder when the first defined cue is not at the track start. */
 const prefixCue = computed(() => {
-    return new Cue(
-        'the Beginning',
-        '',
-        0,
-        props.track.Cues[0]?.Time ?? null,
-        '',
-    );
+    return new Cue('the Beginning', '', 0, props.cues?.[0]?.Time ?? null, '');
 });
 
 const store = useStore();
@@ -99,6 +91,7 @@ const store = useStore();
 /** Determines whether the given cue is currently selected
  * @remarks Note: only one cue in a compilation may be selected */
 function isCueSelected(cue: ICue): boolean {
+    //TODO use via provide/inject
     return store.getters.selectedCueId == cue.Id;
 }
 
