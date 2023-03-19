@@ -215,9 +215,6 @@ const isPlayingRequestOutstanding = ref(false);
  */
 const isClickToLoadRequired = ref(false);
 
-/** The fader to use */
-const fader = ref<AudioFader | undefined>(undefined);
-
 /** Writes a debug log message message for this component */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function debugLog(message: string, ...optionalParams: any[]): void {
@@ -231,6 +228,20 @@ function debugLog(message: string, ...optionalParams: any[]): void {
  * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
  */
 const audioElement = ref(document.createElement('audio'));
+
+const store = useStore();
+
+/** The fader to use */
+const fader = ref(
+    new AudioFader(
+        audioElement.value,
+        store.getters.settings.fadeInDuration,
+        store.getters.settings.fadeOutDuration,
+        store.getters.settings.applyFadeInOffset,
+        props.volume,
+    ),
+);
+
 console.debug(
     `TrackAudioApiPlayer(${props.title})::created:mediaUrl:${props.mediaUrl} for title ${props.title}`,
 );
@@ -323,11 +334,13 @@ function handleCueLoop(): void {
     }
 }
 
-/** Applies the muting to the media element of this track
+/** Applies the muting state.
  * @remarks To effectively determine the applicable muting, the solo state is additionally considered.
+ * @devdoc Since using the actual muted property of the audioElement causes considerable syncing issues
+ * (due to unknown reasons however), the volume is controlled instead, via a fading handler feature.
  */
 function applyMuting(): void {
-    audioElement.value.muted =
+    fader.value.muted =
         props.isMuted ||
         (props.isSoloed === false && props.isAnySoloed === true);
 }
@@ -339,9 +352,7 @@ function updateVolume(volume: number): void {
     //Limit the minimum
     const limitedTrackVolume = Math.max(volume, AudioFader.audioVolumeMin);
     debugLog(`limitedTrackVolume:${limitedTrackVolume}`);
-    if (fader.value) {
-        fader.value.setMasterAudioVolume(limitedTrackVolume);
-    }
+    fader.value.setMasterAudioVolume(limitedTrackVolume);
     if (props.volume !== limitedTrackVolume) {
         emit('update:volume', limitedTrackVolume); //loop back the corrected value
     }
@@ -448,15 +459,13 @@ function seekToSeconds(seconds: number): void {
     audioElement.value.currentTime = seconds;
 }
 
-const store = useStore();
-
 function stop() {
     debugLog(`stop`);
     //If it's still playing (e.g. during a fade operation, still immediately stop)
     if (!audioElement.value.paused) {
         audioElement.value.pause();
-        fader.value?.cancel();
-        fader.value?.reset();
+        fader.value.cancel();
+        fader.value.reset();
         emit('update:isPlaying', false);
     }
     //no fading at stop
@@ -500,7 +509,7 @@ function pause(): void {
         emit('update:isFading', true);
 
         fader.value
-            ?.fadeOut()
+            .fadeOut()
             .catch((message) => console.log(message))
             .then(() => {
                 audioElement.value.pause();
@@ -517,7 +526,7 @@ function pauseAndSeekTo(position: number): void {
     isFading.value = true;
     emit('update:isFading', true);
 
-    fader.value?.fadeOut().then(() => {
+    fader.value.fadeOut().then(() => {
         audioElement.value.pause();
         isFading.value = false;
         emit('update:isFading', false);
@@ -700,7 +709,7 @@ audioElement.value.onplay = () => {
     isFading.value = true;
     emit('update:isFading', true);
     fader.value
-        ?.fadeIn()
+        .fadeIn()
         .catch((message) => console.log(message))
         .then(() => {
             isFading.value = false;
@@ -709,14 +718,6 @@ audioElement.value.onplay = () => {
 };
 
 updateVolume(props.volume);
-
-fader.value = new AudioFader(
-    audioElement.value,
-    store.getters.settings.fadeInDuration,
-    store.getters.settings.fadeOutDuration,
-    store.getters.settings.applyFadeInOffset,
-    props.volume,
-);
 
 //Last, update the source, if already available
 audioElement.value.preload = 'auto';
@@ -730,7 +731,7 @@ onUnmounted(() => {
     debugLog(`unmounted:`, props.title);
 
     //properly destroy the audio element and the audio context
-    fader.value?.cancel();
+    fader.value.cancel();
     playing.value = false;
     audioElement.value.pause();
     audioElement.value.removeAttribute('src'); // empty resource
@@ -757,16 +758,14 @@ const audioFaderSettingsToken = computed(
  * (e.g. because the track is not yet loaded anyway)
  */
 watch(audioFaderSettingsToken, () => {
-    if (fader.value) {
-        debugLog(`audioFaderSettingsToken:${audioFaderSettingsToken.value}`);
+    debugLog(`audioFaderSettingsToken:${audioFaderSettingsToken.value}`);
 
-        const newSettings = store.getters.settings;
-        fader.value.updateSettings(
-            newSettings.fadeInDuration,
-            newSettings.fadeOutDuration,
-            newSettings.applyFadeInOffset,
-        );
-    }
+    const newSettings = store.getters.settings;
+    fader.value.updateSettings(
+        newSettings.fadeInDuration,
+        newSettings.fadeOutDuration,
+        newSettings.applyFadeInOffset,
+    );
 });
 
 /** Watch whether the media URL property changed, and then update the audio element accordingly  */
@@ -776,7 +775,7 @@ watch(
     () => {
         debugLog(`mediaUrl:${props.mediaUrl}`);
         updateMediaSource(props.mediaUrl);
-        fader.value?.cancel();
+        fader.value.cancel();
     },
 );
 
