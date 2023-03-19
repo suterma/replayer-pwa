@@ -36,8 +36,8 @@ export default defineComponent({
             Replayer.TOGGLE_PLAYBACK,
             this.togglePlayback,
         );
-        document.addEventListener(Replayer.REWIND, this.rewindOneSecond);
-        document.addEventListener(Replayer.FORWARD, this.forwardOneSecond);
+        document.addEventListener(Replayer.REWIND, this.rewindFiveSeconds);
+        document.addEventListener(Replayer.FORWARD, this.forwardFiveSeconds);
         document.addEventListener(Replayer.VOLUME_DOWN, this.volumeDown);
         document.addEventListener(Replayer.VOLUME_UP, this.volumeUp);
     },
@@ -54,8 +54,8 @@ export default defineComponent({
             Replayer.TOGGLE_PLAYBACK,
             this.togglePlayback,
         );
-        document.removeEventListener(Replayer.REWIND, this.rewindOneSecond);
-        document.removeEventListener(Replayer.FORWARD, this.forwardOneSecond);
+        document.removeEventListener(Replayer.REWIND, this.rewindFiveSeconds);
+        document.removeEventListener(Replayer.FORWARD, this.forwardFiveSeconds);
         document.removeEventListener(Replayer.VOLUME_DOWN, this.volumeDown);
         document.removeEventListener(Replayer.VOLUME_UP, this.volumeUp);
     },
@@ -64,10 +64,10 @@ export default defineComponent({
         togglePlayback(event: Event) {
             this.$emit(Replayer.TOGGLE_PLAYBACK, event);
         },
-        rewindOneSecond(event: Event) {
+        rewindFiveSeconds(event: Event) {
             this.$emit(Replayer.REWIND, event);
         },
-        forwardOneSecond() {
+        forwardFiveSeconds() {
             this.$emit(Replayer.FORWARD, event);
         },
         volumeDown(event: Event) {

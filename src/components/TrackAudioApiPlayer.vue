@@ -3,7 +3,7 @@
         <TrackAudioPeaks
             v-if="audioElement && mediaUrl && hasLoadedData"
             :mediaElement="audioElement"
-            :key="mediaUrl"
+            :key="props.mediaUrl"
             :showZoomView="isEditable"
         />
     </Experimental>
@@ -12,14 +12,26 @@
 
 <script setup lang="ts">
 import { MutationTypes } from '@/store/mutation-types';
-import { defineComponent, PropType, ref } from 'vue';
+import {
+    computed,
+    nextTick,
+    onUnmounted,
+    defineEmits,
+    defineProps,
+    defineExpose,
+    ref,
+    watch,
+    PropType,
+} from 'vue';
 import AudioFader from '@/code/audio/AudioFader';
-import { settingsMixin } from '@/mixins/settingsMixin';
+import { useStore } from 'vuex';
+
 import {
     DefaultTrackVolume,
     PlaybackMode,
     TrackDisplayMode,
 } from '@/store/compilation-types';
+import Experimental from '@/components/Experimental.vue';
 import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
 
 /** A safety margin for detecting the end of a track during playback */
@@ -34,867 +46,800 @@ const trackDurationSafetyMarginSeconds = 0.3;
  * @devdoc Autoplay after load is intentionally not supported, as this is of no use for the Replayer app.
  */
 
-  //  mixins: [settingsMixin],
-  const emit = defineEmits([
-        'timeupdate',
-        'durationChanged',
-        'update:playbackMode',
-        'update:volume',
-        'update:isPlaying',
-        'update:isFading',
-        /** When the end of the track has been reached and playback has ended */
-        'ended',
-    ]);
-    const props = defineProps({
-        /** The title of the track */
-        title: {
-            type: String,
-            default: '',
-            required: false,
-        },
-        /** The media file URL
-         * @remark This URL can point to an online resource or be a local object URL
-         */
-        mediaUrl: {
-            type: String,
-            default: '',
-            required: false,
-        },
-        /** The start time of the selected cue. Used in conjunction with the playbackMode, when in cue loop mode or track play mode.
-         * @devdoc This is used to emulate the buffer looping for the enclosed audio element.
-         * See https://www.w3.org/TR/webaudio/#looping-AudioBufferSourceNode for information about looping.
-         * @remarks This is used as the start time for any repetition, either from looping or when played to end.
-         */
-        loopStart: {
-            type: null as unknown as PropType<number | null>,
-            default: null,
-            required: false,
-            validator: (v: unknown): boolean =>
-                typeof v === 'number' || v === null,
-        },
-        /** The end time of the selected cue. Used in conjunction with the playbackMode, when in cue loop mode.
-         * @devdoc This is used to emulate the buffer looping for the enclosed audio element.
-         * See https://www.w3.org/TR/webaudio/#looping-AudioBufferSourceNode for information about looping.
-         * @remarks This is only used when the playback mode is set to "repeat-cue".
-         */
-        loopEnd: {
-            type: null as unknown as PropType<number | null>,
-            default: null,
-            required: false,
-            validator: (v: unknown): boolean =>
-                typeof v === 'number' || v === null,
-        },
-        /** The track source description
-         * @remarks This is a textual indication of the track media source. It's displayed as part of the timing display
-         */
-        sourceDescription: {
-            type: String,
-            default: '',
-        },
-        /** The display mode of this track.
-         * @devdoc Allows to reuse this component for more than one DisplayMode.
-         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
-         */
-        displayMode: {
-            type: String as () => TrackDisplayMode,
-            default: TrackDisplayMode.Play,
-        },
-        /** The playback mode
-         * @remarks Implements a two-way binding
-         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
-         */
-        playbackMode: {
-            type: String as () => PlaybackMode,
-            required: true,
-        },
+defineExpose({
+    play,
+    pause,
+    seekTo,
+    seekToSeconds,
+    stop,
+    togglePlayback,
+    volumeDown,
+    volumeUp,
+    playFrom,
+    pauseAndSeekTo,
+    updateVolume,
+});
 
-        /** Whether playback is currently ongoing
-         * @remarks Implements a two-way binding
-         */
-        isPlaying: {
-            type: Boolean,
-            required: true,
-            default: false,
-        },
-        /** Whether playback is currently soloed
-         */
-        isSoloed: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
-        /** Whether playback is currently muted
-         * @remarks Implements a two-way binding
-         */
-        isMuted: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
-        /** Whether any track's playback is currently soloed
-         */
-        isAnySoloed: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
-        /** The track volume in range of [0..1]
-         * @remarks Implements a two-way binding
-         */
-        volume: {
-            type: Number,
-            required: true,
-            default: DefaultTrackVolume,
-        },
-    });
-
-            /** The playback progress in the current track, in [seconds] */
-            //TODO later provide the currentSeconds from the track (at least initially), similar to the playback mode
-            //supporting storage and retrieval with the track persistence
-          const  currentSeconds = ref<number | null>(null);
-
-            /** Gets the duration of the current track, in [seconds]
-             * @remarks This is only available after successful load of the media metadata.
-             * Could be NaN or infinity, depending on the source
-             */
-             const   durationSeconds= ref<number | null>(null);
-            /** Whether the media data has loaded (at least enough to start playback)
-             * @remarks This implies that metadata also has been loaded already
-             * @devdoc see HAVE_CURRENT_DATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
-             */
-             const      hasLoadedData = ref( false);
-            /** Whether the media metadata has loaded. Duration is available now.
-             * @devdoc see HAVE_METADATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
-             */
-             const       hasLoadedMetadata= ref( false);
-             const       mediaError = ref<MediaError | null>(null);
-            /** Whether the audio is currently fading */
-            const       isFading= ref( false);
-            /** Whether playback is currently ongoing */
-            const       playing= ref( false);
-            /** Flags, whether a playing request is currently outstanding. This is true after a play request was received, for as long
-             * as playback has not yet started.
-             * @remarks This is not equal to deferred loading with the isClickToLoadRequired flag.
-             * @devdoc See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted for more information
-             */
-             const        isPlayingRequestOutstanding= ref( false);
-
-            /** Flags, whether deferred loading (until a user play click event is handled)
-             * is required to further load the track media file data. The flag may be set once after the metadata was successfully loaded.
-             * @remarks When true, handling of a subsequent play action must first invoke a user-triggered load operation.
-             * @remarks This specific handling is currently required on (some?) iOS devices,
-             * because they only load data upon explicit user interaction.
-             */
-             const      isClickToLoadRequired= ref( false);
-
-            /** The fader to use */
-            const      fader = ref<AudioFader | undefined>(undefined);
-
-
-
-    /** Handles the setup of the audio graph outside the mounted lifespan.
-     * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
+const emit = defineEmits([
+    'timeupdate',
+    'durationChanged',
+    'update:playbackMode',
+    'update:volume',
+    'update:isPlaying',
+    'update:isFading',
+    /** When the end of the track has been reached and playback has ended */
+    'ended',
+]);
+const props = defineProps({
+    /** The title of the track */
+    title: {
+        type: String,
+        default: '',
+        required: false,
+    },
+    /** The media file URL
+     * @remark This URL can point to an online resource or be a local object URL
      */
-     const       audioElement = ref(document.createElement('audio'));
-        console.debug(
-            `TrackAudioApiPlayer(${props.title})::created:mediaUrl:${props.mediaUrl} for title ${props.title}`,
-        );
-
-                /** Updates the current seconds display and emits an event with the temporal position of the player
-         * @devdoc This must get only privately called from the audio player
-         * @devdoc This is known to result in setTimeout violations on slower systems
-         */
-         function updateTime(/*event: Event*/):void {
-            currentSeconds.value = audioElement.value.currentTime;
-            emit('timeupdate', currentSeconds);
-            handleCueLoop();
-        }
-                /** Transports (seeks) the playback to the given temporal position */
-                function     seekTo(position: number): void {
-            debugLog(`seekTo:position`, position);
-            audioElement.value.currentTime = position;
-        },
-
-                /** Handles looping for a single cue, if requested
-         * @remarks Cue looping is solved here by observing and handling the recurring time updates.
-         * NOTE: Partial looping is not natively supported with the used HTMLAudioElement.
-         * For memory consumption reasons, a buffered audio source with the Web Audio API is not used,
-         * which however would natively support partial loops.
-         * @remarks Track looping is handled elsewhere.
-         */
-         function     handleCueLoop(): void {
-            switch (props.playbackMode) {
-                case PlaybackMode.LoopCue: {
-                    //Detect, with a safety margin, whether the possible loop is at track end
-                    if (
-                        currentSeconds.value !== null &&
-                        durationSeconds.value !== null &&
-                        Number.isFinite(currentSeconds.value) &&
-                        Number.isFinite(durationSeconds.value)
-                    ) {
-                        const isAtTrackEnd =
-                            currentSeconds.value ?? 0 >=
-                            (durationSeconds.value ?? 0) -
-                                trackDurationSafetyMarginSeconds;
-
-                        //Is a loop due?
-                        if (
-                            props.loopStart !== null &&
-                            props.loopEnd !== null &&
-                            Number.isFinite(props.loopStart) &&
-                            Number.isFinite(props.loopEnd) &&
-                            ((currentSeconds.value ?? 0) >= props.loopEnd ||
-                                isAtTrackEnd)
-                        ) {
-                            //Back to loop start
-                            seekTo(props.loopStart);
-
-                            if (isAtTrackEnd) {
-                                this.debugLog(
-                                    `loopEnd:${this.loopEnd};durationSeconds:${this.durationSeconds}`,
-                                );
-                                //At the end of the track, a seek operation alone would not be enough to continue the loop
-                                //if playback already has ended (when the safety margin from above was too small)
-                                this.$nextTick(() => {
-                                    //Directly issue the play command, without any safety net
-                                    //(should be working, since play was successful already)
-                                    //This handling here has the disadvantage, that a fading operation does take place however,
-                                    //if configured and the safety margin was too short.
-                                    this.audioElement.play();
-                                });
-                            }
-                        }
-                    }
-                    break;
-                }
-                case PlaybackMode.PlayCue: {
-                    //Execute once, when past the end and not yet fading (avoid repeated calls)
-                    if (
-                        this.loopStart !== null &&
-                        this.loopEnd !== null &&
-                        this.currentSeconds !== null &&
-                        Number.isFinite(this.loopStart) &&
-                        Number.isFinite(this.loopEnd) &&
-                        Number.isFinite(this.currentSeconds) &&
-                        this.currentSeconds >= this.loopEnd &&
-                        this.isFading == false
-                    ) {
-                        this.pauseAndSeekTo(this.loopStart);
-                    }
-                    break;
-                }
-            }
-        }
-
-        
-
-                //Preparing the audio element
-
-
-        //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
-        audioElement.value.ontimeupdate = updateTime;
-        audioElement.value.onloadeddata = this.handleLoadedData;
-        audioElement.value.onloadedmetadata = this.handleLoadedMetadata;
-        audioElement.value.onerror = () => {
-            this.mediaError = audioElement.value?.error;
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::onerror:mediaError:`,
-                this.mediaError,
-            );
-
-            // Use the message and add a descriptive remark.
-            let message = this.mediaError?.message;
-            if (
-                this.mediaError?.code == MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED
-            ) {
-                message =
-                    (message ? message + '. ' : '') +
-                    'The associated resource is not supported. Use an URL to a resource of one of the supported media types.';
-            }
-
-            this.$store.commit(
-                MutationTypes.PUSH_ERROR,
-                `Error while retrieving media source for title '${this.title}'. Message: '${message}'`,
-            );
-        };
-        this.audioElement.onabort = () => {
-            this.debugLog(`onabort`);
-        };
-        this.audioElement.oncanplay = (event) => {
-            this.debugLog(`oncanplay`, event);
-        };
-        this.audioElement.oncanplaythrough = (event) => {
-            this.debugLog(`oncanplaythrough`, event);
-        };
-        this.audioElement.onloadstart = (event) => {
-            this.debugLog(`onloadstart`, event);
-        };
-        /** The progress event is fired periodically as the browser loads a resource.
-         */
-        this.audioElement.onprogress = (event) => {
-            this.debugLog(`onprogress`, event);
-        };
-        this.audioElement.onstalled = (event) => {
-            this.debugLog(`onstalled`, event);
-        };
-        this.audioElement.onsuspend = (event) => {
-            this.debugLog(`onsuspend `, event);
-        };
-        this.audioElement.onended = (event) => {
-            this.debugLog(`onended `, event);
-            this.$emit('update:isPlaying', false);
-            this.$emit('ended');
-
-            //Handle the track play mode
-            if (this.playbackMode === PlaybackMode.PlayTrack) {
-                if (this.loopStart) {
-                    //Back to start (keep pausing)
-                    this.seekTo(this.loopStart);
-                }
-            }
-        };
-        this.audioElement.ondurationchange = (event) => {
-            this.debugLog(`ondurationchange `, event);
-            //Unfortunately, the src element in the event is null, thus directly use the audioElement here.
-            this.updateDuration(this.audioElement.duration);
-        };
-        this.audioElement.onpause = () => {
-            this.debugLog(`onpause`);
-            this.playing = false;
-            this.$emit('update:isPlaying', false);
-        };
-        this.audioElement.onplay = () => {
-            this.debugLog(`onplay`);
-
-            this.playing = true;
-
-            //NOTE: Having the fade-in operation to start here, instead of after the thenable play action
-            //ensures, that a fade operation is applied without any audible delay.
-            this.debugLog('Playback started');
-            this.$emit('update:isPlaying', true);
-            this.isFading = true;
-            this.$emit('update:isFading', true);
-            this.fader
-                .fadeIn()
-                .catch((message) => console.log(message))
-                .then(() => {
-                    this.isFading = false;
-                    this.$emit('update:isFading', false);
-                });
-        };
-
-        this.updateVolume(this.volume);
-
-        this.fader = new AudioFader(
-            this.audioElement,
-            this.getSettings.fadeInDuration,
-            this.getSettings.fadeOutDuration,
-            this.getSettings.applyFadeInOffset,
-            this.volume,
-        );
-
-        //Last, update the source, if already available
-        this.audioElement.preload = 'auto';
-        this.updateMediaSource(this.mediaUrl);
+    mediaUrl: {
+        type: String,
+        default: '',
+        required: false,
     },
-    /** Handles the teardown of the audio graph outside the mounted lifespan.
-     * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
+    /** The start time of the selected cue. Used in conjunction with the playbackMode, when in cue loop mode or track play mode.
+     * @devdoc This is used to emulate the buffer looping for the enclosed audio element.
+     * See https://www.w3.org/TR/webaudio/#looping-AudioBufferSourceNode for information about looping.
+     * @remarks This is used as the start time for any repetition, either from looping or when played to end.
      */
-    unmounted() {
-        this.debugLog(`unmounted:`, this.title);
-
-        //properly destroy the audio element and the audio context
-        this.fader.cancel();
-        this.playing = false;
-        this.audioElement.pause();
-        this.audioElement.removeAttribute('src'); // empty resource
-        this.audioElement.remove();
+    loopStart: {
+        type: null as unknown as PropType<number | null>,
+        default: null,
+        required: false,
+        validator: (v: unknown): boolean => typeof v === 'number' || v === null,
+    },
+    /** The end time of the selected cue. Used in conjunction with the playbackMode, when in cue loop mode.
+     * @devdoc This is used to emulate the buffer looping for the enclosed audio element.
+     * See https://www.w3.org/TR/webaudio/#looping-AudioBufferSourceNode for information about looping.
+     * @remarks This is only used when the playback mode is set to "repeat-cue".
+     */
+    loopEnd: {
+        type: null as unknown as PropType<number | null>,
+        default: null,
+        required: false,
+        validator: (v: unknown): boolean => typeof v === 'number' || v === null,
+    },
+    /** The track source description
+     * @remarks This is a textual indication of the track media source. It's displayed as part of the timing display
+     */
+    sourceDescription: {
+        type: String,
+        default: '',
+    },
+    /** The display mode of this track.
+     * @devdoc Allows to reuse this component for more than one DisplayMode.
+     * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+     */
+    displayMode: {
+        type: String as () => TrackDisplayMode,
+        default: TrackDisplayMode.Play,
+    },
+    /** The playback mode
+     * @remarks Implements a two-way binding
+     * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+     */
+    playbackMode: {
+        type: String as () => PlaybackMode,
+        required: true,
     },
 
-    computed: {
-        /** Whether this component shows editable inputs for the contained data
-         * @devdoc Allows to reuse this component for more than one display mode.
-         */
-        isEditable(): boolean {
-            return this.displayMode === TrackDisplayMode.Edit;
-        },
-
-        /** A simple token for the settings
-         * @remarks This is only used to detect changes, to recreate the audio fader.
-         */
-        audioFaderSettingsToken(): string {
-            return (
-                this.settings.fadeInDuration?.toString() +
-                this.settings.fadeOutDuration?.toString() +
-                this.settings.applyFadeInOffset?.toString()
-            );
-        },
+    /** Whether playback is currently ongoing
+     * @remarks Implements a two-way binding
+     */
+    isPlaying: {
+        type: Boolean,
+        required: true,
+        default: false,
     },
-
-    watch: {
-        /** Watch for changes in the audio fader settings, to immediately apply them
-         * @remarks Settings are not applied when currently no fader does exist
-         * (e.g. because the track is not yet loaded anyway)
-         */
-        audioFaderSettingsToken(): void {
-            if (this.fader) {
-                this.debugLog(
-                    `audioFaderSettingsToken:${this.audioFaderSettingsToken}`,
-                );
-
-                const newSettings = this.getSettings;
-                this.fader.updateSettings(
-                    newSettings.fadeInDuration,
-                    newSettings.fadeOutDuration,
-                    newSettings.applyFadeInOffset,
-                );
-            }
-        },
-        /** Watch whether the media URL property changed, and then update the audio element accordingly  */
-        mediaUrl(mediaUrl: string /*, oldMediaUrl: string*/): void {
-            /*this.debugLog(`mediaUrl:${mediaUrl};oldMediaUrl:${mediaUrl}`);*/
-
-            //if (mediaUrl !== oldMediaUrl) {
-            this.debugLog(`mediaUrl:${mediaUrl}`);
-            this.updateMediaSource(mediaUrl);
-            this.fader.cancel();
-            //}
-        },
-        /** Watch the playback state, and then update the audio element accordingly  */
-        isPlaying(value: boolean): void {
-            this.debugLog(`isPlaying:${value}`);
-            if (value) {
-                this.play();
-            } else {
-                this.pause();
-            }
-        },
-
-        isMuted(): void {
-            this.applyMuting();
-        },
-
-        isSoloed(): void {
-            this.applyMuting();
-        },
-
-        isAnySoloed(): void {
-            this.applyMuting();
-        },
-
-        /** Watch the volume prop to update according externals changes  */
-        volume(): void {
-            this.updateVolume(this.volume);
-        },
-
-        /** Watch the playback mode and update the loop property accordingly
-         * @remarks This handles the PlaybackMode.LoopTrack mode, but not other loop modes.
-         * @devdoc Handle the value also immediately at mount time
-         */
-        playbackMode: {
-            handler(playbackMode: PlaybackMode) {
-                this.debugLog(`watch playbackMode:${playbackMode}`);
-                this.audioElement.loop =
-                    playbackMode === PlaybackMode.LoopTrack;
-            },
-            immediate: true,
-        },
+    /** Whether playback is currently soloed
+     */
+    isSoloed: {
+        type: Boolean,
+        required: false,
+        default: false,
     },
-    methods: {
-        /** Applies the muting to the media element of this track
-         * @remarks To effectively determine the applicable muting, the solo state is additionally considered.
-         */
-        applyMuting(): void {
-            this.audioElement.muted =
-                this.isMuted ||
-                (this.isSoloed === false && this.isAnySoloed === true);
-        },
-
-        /** Set the track volume to a new value
-         *  @remarks Limits the minimum level at -90dB Full Scale
-         */
-        updateVolume(volume: number): void {
-            //Limit the minimum
-            const limitedTrackVolume = Math.max(
-                volume,
-                AudioFader.audioVolumeMin,
-            );
-            this.debugLog(`limitedTrackVolume:${limitedTrackVolume}`);
-            if (this.fader) {
-                this.fader.setMasterAudioVolume(limitedTrackVolume);
-            }
-            if (this.volume !== limitedTrackVolume) {
-                this.$emit('update:volume', limitedTrackVolume); //loop back the corrected value
-            }
-        },
-
-        /** Writes a debug log message message for this component */
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        debugLog(message: string, ...optionalParams: any[]): void {
-            console.debug(
-                `TrackAudioApiPlayer(${this.title})::${message}:`,
-                optionalParams,
-            );
-        },
-        /** Updates the audio element source with the media source, if it's available
-         * @devdoc To be used only privately. To change the source from the outside, use the mediaUrl property.
-         */
-        updateMediaSource(mediaUrl: string): void {
-            this.debugLog(`UpdateMediaSource:${mediaUrl}`);
-            //Only update the audio element, when a source is actually available
-            //Otherwise the element throws an avoidable error
-            if (mediaUrl) {
-                //NOTE: Just changing the .src property does not work when the track is currently playing
-                //(observed on Ubuntu Google Chrome)
-                //An error is only thrown only after the playback ends.
-                //Thus, additional handling is necessary
-                const isCurrentlyPlaying = this.playing;
-                const lastPosition = this.audioElement.currentTime;
-                this.audioElement.pause();
-
-                //Switch the source now, after pause
-                this.audioElement.src = mediaUrl;
-
-                //NOTE: This method assumes, that the new media for this is of (roghly) the same
-                //lenght, just replacing the voice/instrument in the piece.
-                //Thus, the playback position is maintained and not reset,
-                //and the playing state is set again after the switch.
-                //Otherwise the user will need to restart playback from
-                //new position anyway
-                this.audioElement.currentTime = lastPosition;
-                if (isCurrentlyPlaying) {
-                    this.audioElement.play();
-                }
-            }
-        },
-        handleLoadedMetadata(): void {
-            const readyState = this.audioElement?.readyState;
-            this.debugLog(`handleLoadedMetadata:readyState:${readyState}`);
-
-            this.handleReadyState(readyState);
-        },
-        /** Handles the load event of the audio element
-         * @remarks Since loading is usually in progress now, this also resets the isClickToLoadRequired flag, unless
-         * it is specifically detected, that further loading needs to be triggered
-         */
-        handleLoadedData(): void {
-            this.isClickToLoadRequired = false;
-            const readyState = this.audioElement?.readyState;
-
-            this.debugLog(`handleLoadedData:readyState:${readyState}`);
-            this.handleReadyState(readyState);
-        },
-
-        /** If changed, updates the internal duration and emits the durationChanged event
-         * @param {number} duration - could be NaN or infinity, depending on the source
-         */
-        updateDuration(duration: number): void {
-            if (this.durationSeconds !== duration) {
-                this.durationSeconds = duration;
-                this.$emit('durationChanged', this.durationSeconds);
-            }
-        },
-
-        /** Handles the current ready state of the audio element's media, with regard to playability
-         * @remarks Decides, whether deferred loading is required.
-         */
-        handleReadyState(readyState: number) {
-            //Enough of the media resource has been retrieved that the metadata attributes are initialized?
-            if (readyState >= HTMLMediaElement.HAVE_METADATA) {
-                if (!this.hasLoadedMetadata && !this.hasLoadedData) {
-                    this.hasLoadedMetadata = true;
-                    this.hasLoadedData = true;
-                    this.updateDuration(this.audioElement.duration);
-
-                    //Apply the currently known position to the player. It could be non-zero already.
-                    this.seekTo(this.currentSeconds ?? 0);
-                }
-            }
-
-            //Special flag handling, when not  automatically loading further now
-            this.debugLog(
-                `handleReadyState:buffered:`,
-                this.audioElement.buffered,
-            );
-            this.debugLog(
-                `handleReadyState:networkState:${this.audioElement.networkState}`,
-            );
-
-            //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
-            //most probably due to load restriction on an iOS device using Safari.
-            //Works on
-            //- iPhone 13/Safari
-            //- iPad Pro 12.9 2021/Safari (with audio from URL)
-            //NOTE: This solution however seems not to work on:
-            //- iPad 9th/Safari, because the buffered length is 1, but the sound will only play on 2nd click.
-            if (this.audioElement.buffered.length === 0) {
-                //The isClickToLoadRequired flag defers further media loading until the next user's explicit play request
-                this.isClickToLoadRequired = true;
-            }
-        },
-
-        seekToSeconds(seconds: number) {
-            this.debugLog(`seekToSeconds`, seconds);
-            if (!this.hasLoadedMetadata) return;
-
-            this.audioElement.currentTime = seconds;
-        },
-        stop() {
-            this.debugLog(`stop`);
-            //If it's still playing (e.g. during a fade operation, stil immediately stop)
-            if (!this.audioElement.paused) {
-                this.audioElement.pause();
-                this.fader.cancel();
-                this.fader.reset();
-                this.$emit('update:isPlaying', false);
-            }
-            //no fading at stop
-            this.isFading = false;
-            this.$emit('update:isFading', false);
-
-            this.audioElement.currentTime = 0;
-            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, undefined);
-        },
-        togglePlayback() {
-            this.debugLog(`togglePlayback`);
-            if (this.playing) {
-                this.pause();
-            } else {
-                this.play();
-            }
-        },
-        /** Rewinds 1 second */
-        rewindOneSecond() {
-            this.debugLog(`rewindOneSecond`);
-            const time = this.audioElement.currentTime;
-            this.audioElement.currentTime = time - 1;
-        },
-        /** Forwards 1 second */
-        forwardOneSecond() {
-            this.debugLog(`forwardOneSecond`);
-            const time = this.audioElement.currentTime;
-            this.audioElement.currentTime = time + 1;
-        },
-        /**Decreases the track audio volume level
-         * @remarks Applies some limitation on the upper and lower end of the range
-         */
-        volumeDown() {
-            this.debugLog(`volumeDown`, this.volume);
-            this.updateVolume(
-                Math.max(this.volume * 0.71, AudioFader.audioVolumeMin),
-            );
-        },
-        /**Increases the track audio volume level
-         * @remarks Applies some limitation on the upper and lower end of the range
-         */
-        volumeUp() {
-            this.debugLog(`volumeUp`, this.volume);
-            this.updateVolume(
-                Math.max(
-                    Math.min(this.volume * 1.41, 1),
-                    AudioFader.audioVolumeMin,
-                ),
-            );
-        },
-        /** Pauses playback */
-        pause(): void {
-            this.debugLog(`pause`);
-            if (this.playing) {
-                this.isFading = true;
-                this.$emit('update:isFading', true);
-
-                this.fader
-                    .fadeOut()
-                    .catch((message) => console.log(message))
-                    .then(() => {
-                        this.audioElement.pause();
-                        this.isFading = false;
-                        this.$emit('update:isPlaying', false);
-                        this.$emit('update:isFading', false);
-                    });
-            }
-        },
-        /** Pauses playback (with a subsequent seek operation) */
-        pauseAndSeekTo(position: number): void {
-            this.debugLog(`pauseAndSeekTo`);
-
-            this.isFading = true;
-            this.$emit('update:isFading', true);
-
-            this.fader.fadeOut().then(() => {
-                this.audioElement.pause();
-                this.isFading = false;
-                this.$emit('update:isFading', false);
-                this.$emit('update:isPlaying', false);
-                this.seekTo(position);
-            });
-        },
-
-        /** Handles looping for a single cue, if requested
-         * @remarks Cue looping is solved here by observing and handling the recurring time updates.
-         * NOTE: Partial looping is not natively supported with the used HTMLAudioElement.
-         * For memory consumption reasons, a buffered audio source with the Web Audio API is not used,
-         * which however would natively support partial loops.
-         * @remarks Track looping is handled elsewhere.
-         */
-        handleCueLoop(): void {
-            switch (this.playbackMode) {
-                case PlaybackMode.LoopCue: {
-                    //Detect, with a safety margin, whether the possible loop is at track end
-                    if (
-                        this.currentSeconds !== null &&
-                        this.durationSeconds !== null &&
-                        Number.isFinite(this.currentSeconds) &&
-                        Number.isFinite(this.durationSeconds)
-                    ) {
-                        const isAtTrackEnd =
-                            this.currentSeconds >=
-                            this.durationSeconds -
-                                trackDurationSafetyMarginSeconds;
-
-                        //Is a loop due?
-                        if (
-                            this.loopStart !== null &&
-                            this.loopEnd !== null &&
-                            Number.isFinite(this.loopStart) &&
-                            Number.isFinite(this.loopEnd) &&
-                            (this.currentSeconds >= this.loopEnd ||
-                                isAtTrackEnd)
-                        ) {
-                            //Back to loop start
-                            this.seekTo(this.loopStart);
-
-                            if (isAtTrackEnd) {
-                                this.debugLog(
-                                    `loopEnd:${this.loopEnd};durationSeconds:${this.durationSeconds}`,
-                                );
-                                //At the end of the track, a seek operation alone would not be enough to continue the loop
-                                //if playback already has ended (when the safety margin from above was too small)
-                                this.$nextTick(() => {
-                                    //Directly issue the play command, without any safety net
-                                    //(should be working, since play was successful already)
-                                    //This handling here has the disadvantage, that a fading operation does take place however,
-                                    //if configured and the safety margin was too short.
-                                    this.audioElement.play();
-                                });
-                            }
-                        }
-                    }
-                    break;
-                }
-                case PlaybackMode.PlayCue: {
-                    //Execute once, when past the end and not yet fading (avoid repeated calls)
-                    if (
-                        this.loopStart !== null &&
-                        this.loopEnd !== null &&
-                        this.currentSeconds !== null &&
-                        Number.isFinite(this.loopStart) &&
-                        Number.isFinite(this.loopEnd) &&
-                        Number.isFinite(this.currentSeconds) &&
-                        this.currentSeconds >= this.loopEnd &&
-                        this.isFading == false
-                    ) {
-                        this.pauseAndSeekTo(this.loopStart);
-                    }
-                    break;
-                }
-            }
-        },
-
-        /** Starts playback from the given temporal position
-         * @remarks This first seeks to the position, then starts playing
-         */
-        playFrom(position: number): void {
-            this.seekTo(position);
-            this.play();
-        },
-
-        /** If not yet loaded, loads the media, then when it's playable, resolves. */
-        loadAfterClick(): Promise<void> {
-            this.debugLog(`loadAfterClick`);
-            return new Promise((resolve) => {
-                //Is further loading required?
-                const readyState = this.audioElement.readyState;
-                if (
-                    readyState < HTMLMediaElement.HAVE_CURRENT_DATA &&
-                    //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
-                    //most probably due to load restriction on an iOS device.
-                    this.audioElement &&
-                    this.audioElement.buffered &&
-                    this.audioElement.buffered.length === 0
-                ) {
-                    this.debugLog(`loadAfterClick:load-with-handler`);
-                    //Trigger and observe further loading (only once, no event listener removal required)
-                    this.audioElement.addEventListener(
-                        'canplay',
-                        (event) => {
-                            this.debugLog(`loadAfterClick:oncanplay`, event);
-                            resolve(); //to play now
-                        },
-                        { once: true },
-                    );
-                    this.audioElement.load();
-                } else {
-                    this.debugLog(`loadAfterClick:resolve-immediately`);
-                    resolve(); //immediately because there is nothing required to load
-                }
-            });
-        },
-        /** Starts playback at the current position
-         * @remarks Asserts (and if necessary) resolves the playability of the track media
-         */
-        play(): void {
-            if (this.isClickToLoadRequired) {
-                this.loadAfterClick().then(() => {
-                    this.debugLog(`loadAfterClick-then`);
-
-                    this.isClickToLoadRequired = false;
-                    this.play();
-                });
-            } else {
-                if (!this.playing) {
-                    if (!this.isPlayingRequestOutstanding) {
-                        this.isPlayingRequestOutstanding = true;
-
-                        //Just BEFORE playback, apply the possible pre-play transport
-                        if (
-                            this.settings.applyFadeInOffset &&
-                            this.settings.fadeInDuration
-                        ) {
-                            this.applyPreFadeInOffset();
-                        }
-
-                        this.audioElement
-                            .play()
-                            .catch((e) => {
-                                console.error(
-                                    'Playback failed with message: ' + e,
-                                );
-                                this.$emit('update:isPlaying', false);
-                            })
-                            .finally(() => {
-                                this.isPlayingRequestOutstanding = false;
-                            });
-                    } else {
-                        console.warn(
-                            'A play request is already outstanding. This request is discarded.',
-                        );
-                    }
-                }
-            }
-        },
-
-        /** Applies an offset to compensate fade-in durations
-         * @remarks At the beginning of tracks, the offset is cut off at zero.
-         */
-        applyPreFadeInOffset(): void {
-            const time = this.audioElement.currentTime;
-            const offset = this.settings.fadeInDuration / 1000;
-            const target = Math.max(0, time - offset);
-            this.audioElement.currentTime = target;
-        },
-
-
+    /** Whether playback is currently muted
+     * @remarks Implements a two-way binding
+     */
+    isMuted: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
+    /** Whether any track's playback is currently soloed
+     */
+    isAnySoloed: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
+    /** The track volume in range of [0..1]
+     * @remarks Implements a two-way binding
+     */
+    volume: {
+        type: Number,
+        required: true,
+        default: DefaultTrackVolume,
     },
 });
+
+/** The playback progress in the current track, in [seconds] */
+//TODO later provide the currentSeconds from the track (at least initially), similar to the playback mode
+//supporting storage and retrieval with the track persistence
+const currentSeconds = ref<number | null>(null);
+
+/** Gets the duration of the current track, in [seconds]
+ * @remarks This is only available after successful load of the media metadata.
+ * Could be NaN or infinity, depending on the source
+ */
+const durationSeconds = ref<number | null>(null);
+
+/** Whether the media data has loaded (at least enough to start playback)
+ * @remarks This implies that metadata also has been loaded already
+ * @devdoc see HAVE_CURRENT_DATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
+ */
+const hasLoadedData = ref(false);
+
+/** Whether the media metadata has loaded. Duration is available now.
+ * @devdoc see HAVE_METADATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
+ */
+const hasLoadedMetadata = ref(false);
+
+const mediaError = ref<MediaError | null>(null);
+
+/** Whether the audio is currently fading */
+const isFading = ref(false);
+
+/** Whether playback is currently ongoing */
+const playing = ref(false);
+
+/** Flags, whether a playing request is currently outstanding. This is true after a play request was received, for as long
+ * as playback has not yet started.
+ * @remarks This is not equal to deferred loading with the isClickToLoadRequired flag.
+ * @devdoc See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted for more information
+ */
+const isPlayingRequestOutstanding = ref(false);
+
+/** Flags, whether deferred loading (until a user play click event is handled)
+ * is required to further load the track media file data. The flag may be set once after the metadata was successfully loaded.
+ * @remarks When true, handling of a subsequent play action must first invoke a user-triggered load operation.
+ * @remarks This specific handling is currently required on (some?) iOS devices,
+ * because they only load data upon explicit user interaction.
+ */
+const isClickToLoadRequired = ref(false);
+
+/** The fader to use */
+const fader = ref<AudioFader | undefined>(undefined);
+
+/** Writes a debug log message message for this component */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function debugLog(message: string, ...optionalParams: any[]): void {
+    console.debug(
+        `TrackAudioApiPlayer(${props.title})::${message}:`,
+        optionalParams,
+    );
+}
+
+/** Handles the setup of the audio graph outside the mounted lifespan.
+ * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
+ */
+const audioElement = ref(document.createElement('audio'));
+console.debug(
+    `TrackAudioApiPlayer(${props.title})::created:mediaUrl:${props.mediaUrl} for title ${props.title}`,
+);
+
+/** Updates the current seconds display and emits an event with the temporal position of the player
+ * @devdoc This must get only privately called from the audio player
+ * @devdoc This is known to result in setTimeout violations on slower systems
+ */
+function updateTime(/*event: Event*/): void {
+    currentSeconds.value = audioElement.value.currentTime;
+    emit('timeupdate', currentSeconds);
+    handleCueLoop();
+}
+
+/** Transports (seeks) the playback to the given temporal position */
+function seekTo(position: number): void {
+    debugLog(`seekTo:position`, position);
+    audioElement.value.currentTime = position;
+}
+
+/** Handles looping for a single cue, if requested
+ * @remarks Cue looping is solved here by observing and handling the recurring time updates.
+ * NOTE: Partial looping is not natively supported with the used HTMLAudioElement.
+ * For memory consumption reasons, a buffered audio source with the Web Audio API is not used,
+ * which however would natively support partial loops.
+ * @remarks Track looping is handled elsewhere.
+ */
+function handleCueLoop(): void {
+    switch (props.playbackMode) {
+        case PlaybackMode.LoopCue: {
+            //Detect, with a safety margin, whether the possible loop is at track end
+            if (
+                currentSeconds.value !== null &&
+                durationSeconds.value !== null &&
+                Number.isFinite(currentSeconds.value) &&
+                Number.isFinite(durationSeconds.value)
+            ) {
+                const isAtTrackEnd =
+                    currentSeconds.value ??
+                    0 >=
+                        (durationSeconds.value ?? 0) -
+                            trackDurationSafetyMarginSeconds;
+
+                //Is a loop due?
+                if (
+                    props.loopStart !== null &&
+                    props.loopEnd !== null &&
+                    Number.isFinite(props.loopStart) &&
+                    Number.isFinite(props.loopEnd) &&
+                    ((currentSeconds.value ?? 0) >= props.loopEnd ||
+                        isAtTrackEnd)
+                ) {
+                    //Back to loop start
+                    seekTo(props.loopStart);
+
+                    if (isAtTrackEnd) {
+                        debugLog(
+                            `loopEnd:${props.loopEnd};durationSeconds:${durationSeconds.value}`,
+                        );
+                        //At the end of the track, a seek operation alone would not be enough to continue the loop
+                        //if playback already has ended (when the safety margin from above was too small)
+                        nextTick(() => {
+                            //Directly issue the play command, without any safety net
+                            //(should be working, since play was successful already)
+                            //This handling here has the disadvantage, that a fading operation does take place however,
+                            //if configured and the safety margin was too short.
+                            audioElement.value.play();
+                        });
+                    }
+                }
+            }
+            break;
+        }
+        case PlaybackMode.PlayCue: {
+            //Execute once, when past the end and not yet fading (avoid repeated calls)
+            if (
+                props.loopStart !== null &&
+                props.loopEnd !== null &&
+                currentSeconds.value !== null &&
+                Number.isFinite(props.loopStart) &&
+                Number.isFinite(props.loopEnd) &&
+                Number.isFinite(currentSeconds.value) &&
+                currentSeconds.value >= props.loopEnd &&
+                isFading.value == false
+            ) {
+                pauseAndSeekTo(props.loopStart);
+            }
+            break;
+        }
+    }
+}
+
+/** Applies the muting to the media element of this track
+ * @remarks To effectively determine the applicable muting, the solo state is additionally considered.
+ */
+function applyMuting(): void {
+    audioElement.value.muted =
+        props.isMuted ||
+        (props.isSoloed === false && props.isAnySoloed === true);
+}
+
+/** Set the track volume to a new value
+ *  @remarks Limits the minimum level at -90dB Full Scale
+ */
+function updateVolume(volume: number): void {
+    //Limit the minimum
+    const limitedTrackVolume = Math.max(volume, AudioFader.audioVolumeMin);
+    debugLog(`limitedTrackVolume:${limitedTrackVolume}`);
+    if (fader.value) {
+        fader.value.setMasterAudioVolume(limitedTrackVolume);
+    }
+    if (volume !== limitedTrackVolume) {
+        emit('update:volume', limitedTrackVolume); //loop back the corrected value
+    }
+}
+
+/** Updates the audio element source with the media source, if it's available
+ * @devdoc To be used only privately. To change the source from the outside, use the mediaUrl property.
+ */
+function updateMediaSource(mediaUrl: string): void {
+    debugLog(`UpdateMediaSource:${mediaUrl}`);
+    //Only update the audio element, when a source is actually available
+    //Otherwise the element throws an avoidable error
+    if (mediaUrl) {
+        //NOTE: Just changing the .src property does not work when the track is currently playing
+        //(observed on Ubuntu Google Chrome)
+        //An error is only thrown only after the playback ends.
+        //Thus, additional handling is necessary
+        const isCurrentlyPlaying = playing.value;
+        const lastPosition = audioElement.value.currentTime;
+        audioElement.value.pause();
+
+        //Switch the source now, after pause
+        audioElement.value.src = mediaUrl;
+
+        //NOTE: This method assumes, that the new media for this is of (roughly) the same
+        //length, just replacing the voice/instrument in the piece.
+        //Thus, the playback position is maintained and not reset,
+        //and the playing state is set again after the switch.
+        //Otherwise the user will need to restart playback from
+        //new position anyway
+        audioElement.value.currentTime = lastPosition;
+        if (isCurrentlyPlaying) {
+            audioElement.value.play();
+        }
+    }
+}
+function handleLoadedMetadata(): void {
+    const readyState = audioElement.value.readyState;
+    debugLog(`handleLoadedMetadata:readyState:${readyState}`);
+
+    handleReadyState(readyState);
+}
+/** Handles the load event of the audio element
+ * @remarks Since loading is usually in progress now, this also resets the isClickToLoadRequired flag, unless
+ * it is specifically detected, that further loading needs to be triggered
+ */
+function handleLoadedData(): void {
+    isClickToLoadRequired.value = false;
+    const readyState = audioElement.value.readyState;
+
+    debugLog(`handleLoadedData:readyState:${readyState}`);
+    handleReadyState(readyState);
+}
+
+/** If changed, updates the internal duration and emits the durationChanged event
+ * @param {number} duration - could be NaN or infinity, depending on the source
+ */
+function updateDuration(duration: number): void {
+    if (durationSeconds.value !== duration) {
+        durationSeconds.value = duration;
+        emit('durationChanged', durationSeconds.value);
+    }
+}
+
+/** Handles the current ready state of the audio element's media, with regard to playability
+ * @remarks Decides, whether deferred loading is required.
+ */
+function handleReadyState(readyState: number) {
+    //Enough of the media resource has been retrieved that the metadata attributes are initialized?
+    if (readyState >= HTMLMediaElement.HAVE_METADATA) {
+        if (!hasLoadedMetadata.value && !hasLoadedData.value) {
+            hasLoadedMetadata.value = true;
+            hasLoadedData.value = true;
+            updateDuration(audioElement.value.duration);
+
+            //Apply the currently known position to the player. It could be non-zero already.
+            seekTo(currentSeconds.value ?? 0);
+        }
+    }
+
+    //Special flag handling, when not  automatically loading further now
+    debugLog(`handleReadyState:buffered:`, audioElement.value.buffered);
+    debugLog(
+        `handleReadyState:networkState:${audioElement.value.networkState}`,
+    );
+
+    //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
+    //most probably due to load restriction on an iOS device using Safari.
+    //Works on
+    //- iPhone 13/Safari
+    //- iPad Pro 12.9 2021/Safari (with audio from URL)
+    //NOTE: This solution however seems not to work on:
+    //- iPad 9th/Safari, because the buffered length is 1, but the sound will only play on 2nd click.
+    if (audioElement.value.buffered.length === 0) {
+        //The isClickToLoadRequired flag defers further media loading until the next user's explicit play request
+        isClickToLoadRequired.value = true;
+    }
+}
+
+function seekToSeconds(seconds: number): void {
+    debugLog(`seekToSeconds`, seconds);
+    if (!hasLoadedMetadata.value) return;
+
+    audioElement.value.currentTime = seconds;
+}
+
+const store = useStore();
+
+function stop() {
+    debugLog(`stop`);
+    //If it's still playing (e.g. during a fade operation, still immediately stop)
+    if (!audioElement.value.paused) {
+        audioElement.value.pause();
+        fader.value?.cancel();
+        fader.value?.reset();
+        emit('update:isPlaying', false);
+    }
+    //no fading at stop
+    isFading.value = false;
+    emit('update:isFading', false);
+
+    audioElement.value.currentTime = 0;
+    store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, undefined);
+}
+
+function togglePlayback() {
+    debugLog(`togglePlayback`);
+    if (playing.value) {
+        pause();
+    } else {
+        play();
+    }
+}
+
+/**Decreases the track audio volume level
+ * @remarks Applies some limitation on the upper and lower end of the range
+ */
+function volumeDown() {
+    debugLog(`volumeDown`, props.volume);
+    updateVolume(Math.max(props.volume * 0.71, AudioFader.audioVolumeMin));
+}
+/**Increases the track audio volume level
+ * @remarks Applies some limitation on the upper and lower end of the range
+ */
+function volumeUp() {
+    debugLog(`volumeUp`, props.volume);
+    updateVolume(
+        Math.max(Math.min(props.volume * 1.41, 1), AudioFader.audioVolumeMin),
+    );
+}
+/** Pauses playback */
+function pause(): void {
+    debugLog(`pause`);
+    if (playing.value) {
+        isFading.value = true;
+        emit('update:isFading', true);
+
+        fader.value
+            ?.fadeOut()
+            .catch((message) => console.log(message))
+            .then(() => {
+                audioElement.value.pause();
+                isFading.value = false;
+                emit('update:isPlaying', false);
+                emit('update:isFading', false);
+            });
+    }
+}
+/** Pauses playback (with a subsequent seek operation) */
+function pauseAndSeekTo(position: number): void {
+    debugLog(`pauseAndSeekTo`);
+
+    isFading.value = true;
+    emit('update:isFading', true);
+
+    fader.value?.fadeOut().then(() => {
+        audioElement.value.pause();
+        isFading.value = false;
+        emit('update:isFading', false);
+        emit('update:isPlaying', false);
+        seekTo(position);
+    });
+}
+
+/** Starts playback from the given temporal position
+ * @remarks This first seeks to the position, then starts playing
+ */
+function playFrom(position: number): void {
+    seekTo(position);
+    play();
+}
+
+/** If not yet loaded, loads the media, then when it's playable, resolves. */
+function loadAfterClick(): Promise<void> {
+    debugLog(`loadAfterClick`);
+    return new Promise((resolve) => {
+        //Is further loading required?
+        const readyState = audioElement.value.readyState;
+        if (
+            readyState < HTMLMediaElement.HAVE_CURRENT_DATA &&
+            //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
+            //most probably due to load restriction on an iOS device.
+            audioElement.value &&
+            audioElement.value.buffered &&
+            audioElement.value.buffered.length === 0
+        ) {
+            debugLog(`loadAfterClick:load-with-handler`);
+            //Trigger and observe further loading (only once, no event listener removal required)
+            audioElement.value.addEventListener(
+                'canplay',
+                (event) => {
+                    debugLog(`loadAfterClick:oncanplay`, event);
+                    resolve(); //to play now
+                },
+                { once: true },
+            );
+            audioElement.value.load();
+        } else {
+            debugLog(`loadAfterClick:resolve-immediately`);
+            resolve(); //immediately because there is nothing required to load
+        }
+    });
+}
+/** Starts playback at the current position
+ * @remarks Asserts (and if necessary) resolves the playability of the track media
+ */
+function play(): void {
+    if (isClickToLoadRequired.value) {
+        loadAfterClick().then(() => {
+            debugLog(`loadAfterClick-then`);
+
+            isClickToLoadRequired.value = false;
+            play();
+        });
+    } else {
+        if (!playing.value) {
+            if (!isPlayingRequestOutstanding.value) {
+                isPlayingRequestOutstanding.value = true;
+
+                //Just BEFORE playback, apply the possible pre-play transport
+                if (
+                    store.getters.settings.applyFadeInOffset &&
+                    store.getters.settings.fadeInDuration
+                ) {
+                    applyPreFadeInOffset();
+                }
+
+                audioElement.value
+                    .play()
+                    .catch((e) => {
+                        console.error('Playback failed with message: ' + e);
+                        emit('update:isPlaying', false);
+                    })
+                    .finally(() => {
+                        isPlayingRequestOutstanding.value = false;
+                    });
+            } else {
+                console.warn(
+                    'A play request is already outstanding. This request is discarded.',
+                );
+            }
+        }
+    }
+}
+
+/** Applies an offset to compensate fade-in durations
+ * @remarks At the beginning of tracks, the offset is cut off at zero.
+ */
+function applyPreFadeInOffset(): void {
+    const time = audioElement.value.currentTime;
+    const offset = store.getters.settings.fadeInDuration / 1000;
+    const target = Math.max(0, time - offset);
+    audioElement.value.currentTime = target;
+}
+
+//Preparing the audio element
+
+//Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
+audioElement.value.ontimeupdate = updateTime;
+audioElement.value.onloadeddata = handleLoadedData;
+audioElement.value.onloadedmetadata = handleLoadedMetadata;
+audioElement.value.onerror = () => {
+    mediaError.value = audioElement.value?.error;
+    console.debug(
+        `TrackAudioApiPlayer(${props.title})::onerror:mediaError:`,
+        mediaError.value,
+    );
+
+    // Use the message and add a descriptive remark.
+    let message = mediaError.value?.message;
+    if (mediaError.value?.code == MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+        message =
+            (message ? message + '. ' : '') +
+            'The associated resource is not supported. Use an URL to a resource of one of the supported media types.';
+    }
+
+    store.commit(
+        MutationTypes.PUSH_ERROR,
+        `Error while retrieving media source for title '${props.title}'. Message: '${message}'`,
+    );
+};
+audioElement.value.onabort = () => {
+    debugLog(`onabort`);
+};
+audioElement.value.oncanplay = (event) => {
+    debugLog(`oncanplay`, event);
+};
+audioElement.value.oncanplaythrough = (event) => {
+    debugLog(`oncanplaythrough`, event);
+};
+audioElement.value.onloadstart = (event) => {
+    debugLog(`onloadstart`, event);
+};
+/** The progress event is fired periodically as the browser loads a resource.
+ */
+audioElement.value.onprogress = (event) => {
+    debugLog(`onprogress`, event);
+};
+audioElement.value.onstalled = (event) => {
+    debugLog(`onstalled`, event);
+};
+audioElement.value.onsuspend = (event) => {
+    debugLog(`onsuspend `, event);
+};
+audioElement.value.onended = (event) => {
+    debugLog(`onended `, event);
+    emit('update:isPlaying', false);
+    emit('ended');
+
+    //Handle the track play mode
+    if (props.playbackMode === PlaybackMode.PlayTrack) {
+        if (props.loopStart) {
+            //Back to start (keep pausing)
+            seekTo(props.loopStart);
+        }
+    }
+};
+audioElement.value.ondurationchange = (event) => {
+    debugLog(`ondurationchange `, event);
+    //Unfortunately, the src element in the event is null, thus directly use the audioElement here.
+    updateDuration(audioElement.value.duration);
+};
+audioElement.value.onpause = () => {
+    debugLog(`onpause`);
+    playing.value = false;
+    emit('update:isPlaying', false);
+};
+audioElement.value.onplay = () => {
+    debugLog(`onplay`);
+    playing.value = true;
+
+    //NOTE: Having the fade-in operation to start here, instead of after the thenable play action
+    //ensures, that a fade operation is applied without any audible delay.
+    debugLog('Playback started');
+    emit('update:isPlaying', true);
+    isFading.value = true;
+    emit('update:isFading', true);
+    fader.value
+        ?.fadeIn()
+        .catch((message) => console.log(message))
+        .then(() => {
+            isFading.value = false;
+            emit('update:isFading', false);
+        });
+};
+
+updateVolume(props.volume);
+
+fader.value = new AudioFader(
+    audioElement.value,
+    store.getters.settings.fadeInDuration,
+    store.getters.settings.fadeOutDuration,
+    store.getters.settings.applyFadeInOffset,
+    props.volume,
+);
+
+//Last, update the source, if already available
+audioElement.value.preload = 'auto';
+updateMediaSource(props.mediaUrl);
+
+/** Handles the teardown of the audio graph outside the mounted lifespan.
+ * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
+ */
+
+onUnmounted(() => {
+    debugLog(`unmounted:`, props.title);
+
+    //properly destroy the audio element and the audio context
+    fader.value?.cancel();
+    playing.value = false;
+    audioElement.value.pause();
+    audioElement.value.removeAttribute('src'); // empty resource
+    audioElement.value.remove();
+});
+
+/** Whether this component shows editable inputs for the contained data
+ * @devdoc Allows to reuse this component for more than one display mode.
+ */
+const isEditable = computed(() => props.displayMode === TrackDisplayMode.Edit);
+
+/** A simple token for the settings
+ * @remarks This is only used to detect changes, to recreate the audio fader.
+ */
+const audioFaderSettingsToken = computed(
+    () =>
+        store.getters.settings.fadeInDuration?.toString() +
+        store.getters.settings.fadeOutDuration?.toString() +
+        store.getters.settings.applyFadeInOffset?.toString(),
+);
+
+/** Watch for changes in the audio fader settings, to immediately apply them
+ * @remarks Settings are not applied when currently no fader does exist
+ * (e.g. because the track is not yet loaded anyway)
+ */
+watch(audioFaderSettingsToken, () => {
+    if (fader.value) {
+        debugLog(`audioFaderSettingsToken:${audioFaderSettingsToken.value}`);
+
+        const newSettings = store.getters.settings;
+        fader.value.updateSettings(
+            newSettings.fadeInDuration,
+            newSettings.fadeOutDuration,
+            newSettings.applyFadeInOffset,
+        );
+    }
+});
+
+/** Watch whether the media URL property changed, and then update the audio element accordingly  */
+
+watch(
+    () => props.mediaUrl,
+    () => {
+        debugLog(`mediaUrl:${props.mediaUrl}`);
+        updateMediaSource(props.mediaUrl);
+        fader.value?.cancel();
+    },
+);
+
+/** Watch the playback state, and then update the audio element accordingly  */
+watch(
+    () => props.isPlaying,
+    (isPlaying) => {
+        debugLog(`isPlaying:${isPlaying}`);
+        if (isPlaying) {
+            play();
+        } else {
+            pause();
+        }
+    },
+);
+
+/** Watch the mute/solo state, and then update the audio element accordingly  */
+watch(
+    () => props.isMuted,
+    () => {
+        applyMuting();
+    },
+);
+
+/** Watch the mute/solo state, and then update the audio element accordingly  */
+watch(
+    () => props.isSoloed,
+    () => {
+        applyMuting();
+    },
+);
+
+/** Watch the mute/solo state, and then update the audio element accordingly  */
+watch(
+    () => props.isAnySoloed,
+    () => {
+        applyMuting();
+    },
+);
+
+/** Watch the volume prop to update according externals changes  */
+watch(
+    () => props.volume,
+    () => {
+        updateVolume(props.volume);
+    },
+);
+
+/** Watch the playback mode and update the loop property accordingly
+ * @remarks This handles the PlaybackMode.LoopTrack mode, but not other loop modes.
+ * @devdoc Handle the value also immediately at mount time
+ */
+
+watch(
+    () => props.playbackMode,
+    (playbackMode: PlaybackMode) => {
+        debugLog(`watch playbackMode:${playbackMode}`);
+        audioElement.value.loop = playbackMode === PlaybackMode.LoopTrack;
+    },
+
+    {
+        immediate: true,
+    },
+);
 </script>

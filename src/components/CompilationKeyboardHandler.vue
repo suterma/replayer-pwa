@@ -43,7 +43,9 @@ export enum Replayer {
     TO_PREV_CUE = 'topreviouscue',
     TO_MNEMONIC_CUE = 'tomnemoniccue',
     TOGGLE_PLAYBACK = 'toggleplayback',
+    /** Rewinds 5 seconds */
     REWIND = 'rewind',
+    /** Forwards 5 seconds */
     FORWARD = 'forward',
     VOLUME_DOWN = 'volumedown',
     VOLUME_UP = 'volumeup',

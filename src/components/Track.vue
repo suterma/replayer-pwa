@@ -845,11 +845,14 @@ export default defineComponent({
                 this.activateWakeLock();
             }
         },
+        /** Rewinds 5 seconds, if this is the active track */
+
         rewind() {
             if (this.isActiveTrack) {
                 this.seek(-5);
             }
         },
+        /** Forwards 5 seconds, if this is the active track */
         forward() {
             if (this.isActiveTrack) {
                 this.seek(+5);
@@ -903,7 +906,7 @@ export default defineComponent({
                     //Control playback according to the play state, using a single operation.
                     //This supports a possible fade operation.
                     //For the cue time, handle all non-null values (Zero is valid)
-                    if (this.trackPlayerInstance?.playing === true) {
+                    if (this.isPlaying) {
                         if (cueTime != null) {
                             this.trackPlayerInstance?.pauseAndSeekTo(cueTime);
                         } else {
@@ -962,13 +965,12 @@ export default defineComponent({
                 }
 
                 //Set the position to this cue and handle playback
-                const isPlaying = this.trackPlayerInstance?.playing;
                 console.debug(
                     `Track(${this.track.Name})::cueClick:isPlaying:`,
-                    isPlaying,
+                    this.isPlaying,
                 );
                 if (togglePlayback) {
-                    if (isPlaying === true) {
+                    if (this.isPlaying) {
                         this.trackPlayerInstance?.pauseAndSeekTo(cue.Time);
                     } else {
                         this.trackPlayerInstance?.playFrom(cue.Time);
@@ -992,7 +994,7 @@ export default defineComponent({
                 );
 
                 //Set the position to this cue and handle playback
-                if (this.trackPlayerInstance?.playing === true) {
+                if (this.isPlaying) {
                     this.trackPlayerInstance?.seekTo(cue.Time); //keep playing
                 } else {
                     this.trackPlayerInstance?.playFrom(cue.Time);
@@ -1013,7 +1015,7 @@ export default defineComponent({
             );
 
             //Set the position to the beginning and handle playback
-            if (this.trackPlayerInstance?.playing === true) {
+            if (this.isPlaying) {
                 this.trackPlayerInstance?.seekTo(0); //keep playing
             } else {
                 this.trackPlayerInstance?.playFrom(0);
@@ -1117,10 +1119,11 @@ export default defineComponent({
          * @remarks This activates the wake lock, when playing starts.
          */
         isPlaying(val) {
+            //TODO the wake lock should be kept at compilation level
             console.debug(`Track(${this.track.Name})::isPlaying:val:`, val);
-            if (val) {
-                this.activateWakeLock();
-            }
+            // if (val) {
+            //     this.activateWakeLock();
+            // }
         },
         /** Handles changes of the full screen state
          * @devdoc This hides the scroll bars in the (full screen div's) underlying content

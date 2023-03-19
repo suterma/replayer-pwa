@@ -110,7 +110,8 @@ export const getters: GetterTree<State, State> & Getters = {
             state.selectedCueId,
         );
     },
-    /** @inheritdoc */ settings: (state) => {
+    /** @inheritdoc */
+    settings: (state) => {
         return state.settings;
     },
     /** @inheritdoc */
