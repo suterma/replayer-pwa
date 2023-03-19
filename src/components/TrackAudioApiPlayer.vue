@@ -63,7 +63,6 @@ defineExpose({
 const emit = defineEmits([
     'timeupdate',
     'durationChanged',
-    'update:playbackMode',
     'update:volume',
     'update:isPlaying',
     'update:isFading',
@@ -343,7 +342,7 @@ function updateVolume(volume: number): void {
     if (fader.value) {
         fader.value.setMasterAudioVolume(limitedTrackVolume);
     }
-    if (volume !== limitedTrackVolume) {
+    if (props.volume !== limitedTrackVolume) {
         emit('update:volume', limitedTrackVolume); //loop back the corrected value
     }
 }
@@ -830,16 +829,12 @@ watch(
  * @remarks This handles the PlaybackMode.LoopTrack mode, but not other loop modes.
  * @devdoc Handle the value also immediately at mount time
  */
-
 watch(
     () => props.playbackMode,
     (playbackMode: PlaybackMode) => {
         debugLog(`watch playbackMode:${playbackMode}`);
         audioElement.value.loop = playbackMode === PlaybackMode.LoopTrack;
     },
-
-    {
-        immediate: true,
-    },
+    { immediate: true },
 );
 </script>
