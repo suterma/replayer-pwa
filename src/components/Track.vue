@@ -276,7 +276,6 @@
                 v-model:isPlaying="isPlaying"
                 @update:isFading="updateFading"
                 @update:playbackMode="updatedPlaybackMode"
-                :displayMode="displayMode"
                 :playbackMode="playbackMode"
                 :loopStart="selectedCue?.Time"
                 :loopEnd="

@@ -207,7 +207,7 @@ export default class MultitrackHandler {
         }
     }
 
-    /** Synchronizes all track positions to the average position of them. */
+    /** Synchronizes all track positions. */
     synchTracks(): void {
         const currentPosition = this.getAllTrackPosition();
         const instances = this.getAllTrackInstances();

@@ -4,7 +4,7 @@
             v-if="audioElement && mediaUrl && hasLoadedData"
             :mediaElement="audioElement"
             :key="props.mediaUrl"
-            :showZoomView="isEditable"
+            :showZoomView="true"
         />
     </Experimental>
     <slot></slot>
@@ -26,11 +26,7 @@ import {
 import AudioFader from '@/code/audio/AudioFader';
 import { useStore } from 'vuex';
 
-import {
-    DefaultTrackVolume,
-    PlaybackMode,
-    TrackDisplayMode,
-} from '@/store/compilation-types';
+import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import Experimental from '@/components/Experimental.vue';
 import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
 
@@ -112,14 +108,6 @@ const props = defineProps({
     sourceDescription: {
         type: String,
         default: '',
-    },
-    /** The display mode of this track.
-     * @devdoc Allows to reuse this component for more than one DisplayMode.
-     * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
-     */
-    displayMode: {
-        type: String as () => TrackDisplayMode,
-        default: TrackDisplayMode.Play,
     },
     /** The playback mode
      * @remarks Implements a two-way binding
@@ -737,11 +725,6 @@ onUnmounted(() => {
     audioElement.value.removeAttribute('src'); // empty resource
     audioElement.value.remove();
 });
-
-/** Whether this component shows editable inputs for the contained data
- * @devdoc Allows to reuse this component for more than one display mode.
- */
-const isEditable = computed(() => props.displayMode === TrackDisplayMode.Edit);
 
 /** A simple token for the settings
  * @remarks This is only used to detect changes, to recreate the audio fader.
