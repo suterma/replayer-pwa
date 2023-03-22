@@ -7,6 +7,12 @@
             :showZoomView="true"
         />
     </Experimental>
+    <TrackAudioMeter
+        v-if="audioElement && mediaUrl && hasLoadedData && isPlaying"
+        :mediaElement="audioElement"
+        :key="props.mediaUrl"
+        >METER
+    </TrackAudioMeter>
     <slot></slot>
 </template>
 
@@ -29,6 +35,7 @@ import { useStore } from 'vuex';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import Experimental from '@/components/Experimental.vue';
 import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
+import TrackAudioMeter from '@/components/TrackAudioMeter.vue';
 
 /** A safety margin for detecting the end of a track during playback */
 const trackDurationSafetyMarginSeconds = 0.3;
