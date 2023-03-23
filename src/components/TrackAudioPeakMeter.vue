@@ -1,12 +1,13 @@
 <template>
     <div
-        id="my-peak-meter"
-        style="width: 5em; height: 20em; margin: 1em 0"
+        :disabled="disabled"
+        ref="meter"
+        style="width: 100%; height: 5em; margin: 1em 0"
     ></div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, defineProps, onUnmounted } from 'vue';
+import { onMounted, defineProps, onUnmounted, ref } from 'vue';
 import { createMeter, createMeterNode } from 'web-audio-peak-meter';
 
 /** An audio visualizer, for a single track, using the Web Audio API.
@@ -14,31 +15,36 @@ import { createMeter, createMeterNode } from 'web-audio-peak-meter';
  */
 
 const props = defineProps({
-    /** The external media element to use.
+    /** The external audio source to use.
      */
-    mediaElement: {
-        type: HTMLMediaElement,
+    audioSource: {
+        type: MediaElementAudioSourceNode,
         required: true,
     },
+    /** The external audio context to use.
+     */
+    audioContext: {
+        type: AudioContext,
+        required: true,
+    },
+
+    /** Whether to show the component in a disabled state
+     * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+     */
+    disabled: Boolean,
 });
 
-const AudioContext = window.AudioContext;
-let context: AudioContext;
+let meterNode: AnalyserNode;
+const meter = ref(null);
 
 onMounted(() => {
-    //TODO currently does not work after second mount
-    context = new AudioContext();
-    var myMeterElement = document.getElementById('my-peak-meter');
-    var sourceNode = context.createMediaElementSource(props.mediaElement);
-    sourceNode.connect(context.destination);
-    var meterNode = createMeterNode(sourceNode, context);
-    createMeter(myMeterElement, meterNode, {});
+    meterNode = createMeterNode(props.audioSource, props.audioContext);
+    createMeter(meter.value, meterNode, {});
 });
 
 onUnmounted(() => {
-    console.debug('TrackAudioMeter::onUnmounted');
-    // analyser.disconnect();
-    // source.disconnect(analyser);
-    context.close();
+    console.debug('TrackAudioPeakMeter::onUnmounted');
+    meterNode.disconnect();
+    props.audioSource.disconnect(meterNode);
 });
 </script>

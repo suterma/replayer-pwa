@@ -271,6 +271,7 @@
                 ref="playerReference"
                 :title="track.Name"
                 :mediaUrl="mediaUrl"
+                :disabled="!isTrackLoaded"
                 @timeupdate="updateTime"
                 @durationChanged="calculateCueDurations"
                 v-model:isPlaying="isPlaying"

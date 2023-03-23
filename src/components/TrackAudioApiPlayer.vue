@@ -1,14 +1,14 @@
 <template>
     <Experimental>
         <TrackAudioPeaks
-            v-if="audioElement && mediaUrl && hasLoadedData"
+            :disabled="disabled"
             :mediaElement="audioElement"
             :key="props.mediaUrl"
             :showZoomView="true"
         />
     </Experimental>
     <TrackAudioPeakMeter
-        v-if="audioElement && mediaUrl && hasLoadedData && isPlaying"
+        :disabled="disabled"
         :audioSource="audioSource"
         :audioContext="audioContext"
         :key="props.mediaUrl"
@@ -165,6 +165,10 @@ const props = defineProps({
         required: true,
         default: DefaultTrackVolume,
     },
+    /** Whether to show the component in a disabled state
+     * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+     */
+    disabled: Boolean,
 });
 
 /** The playback progress in the current track, in [seconds] */
@@ -232,12 +236,9 @@ audioContext = new AudioContext();
  * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
  */
 const audioElement = ref(document.createElement('audio'));
-
-console.debug('TrackAudioMeter::createMediaElementSource');
 const audioSource = shallowRef<
     InstanceType<typeof MediaElementAudioSourceNode>
 >(audioContext.createMediaElementSource(audioElement.value));
-
 audioSource.value.connect(audioContext.destination);
 
 /** The fader to use */
