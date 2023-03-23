@@ -1,8 +1,9 @@
 <template>
     <div
+        class="audio-peak-meter"
         :disabled="disabled"
         ref="meter"
-        style="width: 100%; height: 5em; margin: 1em 0"
+        style="width: 100%; height: 3em; margin: 0 0"
     ></div>
 </template>
 
@@ -39,7 +40,27 @@ const meter = ref(null);
 
 onMounted(() => {
     meterNode = createMeterNode(props.audioSource, props.audioContext);
-    createMeter(meter.value, meterNode, {});
+    createMeter(meter.value, meterNode, {
+        borderSize: 1,
+        fontSize: 9,
+        backgroundColor: 'black',
+        tickColor: '#ddd',
+        labelColor: '#ddd',
+        gradient: [
+            '#ee5f5b 1%',
+            '#ee5f5b 16%',
+            '#f9e406 16%',
+            '#f9e406 45%',
+            '#62c462 45%',
+            '#62c462 100%',
+        ],
+        dbRange: 60,
+        dbTickSize: 6,
+        maskTransition: '0.020',
+        audioMeterStandard: 'true-peak', // Could be "true-peak" (ITU-R BS.1770) or "peak-sample"
+        refreshEveryApproxMs: 20,
+        peakHoldDuration: 5000,
+    });
 });
 
 onUnmounted(() => {
@@ -48,3 +69,48 @@ onUnmounted(() => {
     props.audioSource.disconnect(meterNode);
 });
 </script>
+
+<style>
+/** show not background around the bars */
+.audio-peak-meter > div {
+    background-color: transparent !important;
+}
+
+/** no spacing at begin and end of meter bars 
+.audio-peak-meter
+    > div
+    > div[style^='position: absolute; background-color: black;'] {
+    right: 0 !important;
+    left: 0 !important;
+}
+.audio-peak-meter > div > div[style^='position: absolute; height:'] {
+    right: 0 !important;
+    left: 0 !important;
+}*/
+
+/** slightly rounded meter bars */
+.audio-peak-meter > div > div[style^='position: absolute;'] {
+    border-radius: 4px;
+}
+.audio-peak-meter
+    > div
+    > div[style^='position: absolute; background-color: black;'] {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/** Transition for slow decrease */
+.audio-peak-meter
+    > div
+    > div[style^='position: absolute; background-color: black;'] {
+    transition-duration: 48ms;
+    transition-property: width height;
+    transition-timing-function: linear;
+}
+
+/** show no textual peak indicators */
+.audio-peak-meter > div > div[style^='text-align: center;'] {
+    display: none;
+    visibility: hidden;
+}
+</style>
