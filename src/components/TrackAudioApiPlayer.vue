@@ -1,19 +1,19 @@
 <template>
     <Experimental>
         <TrackAudioPeaks
-            v-if="audioElement && mediaUrl && hasLoadedData"
+            :disabled="disabled"
             :mediaElement="audioElement"
             :key="props.mediaUrl"
             :showZoomView="true"
         />
     </Experimental>
-    <TrackAudioMeter
-        v-if="audioElement && mediaUrl && hasLoadedData && isPlaying"
+    <TrackAudioPeakMeter
+        :disabled="disabled"
         :audioSource="audioSource"
         :audioContext="audioContext"
         :key="props.mediaUrl"
         >METER
-    </TrackAudioMeter>
+    </TrackAudioPeakMeter>
     <slot></slot>
 </template>
 
@@ -37,7 +37,7 @@ import { useStore } from 'vuex';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import Experimental from '@/components/Experimental.vue';
 import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
-import TrackAudioMeter from '@/components/TrackAudioMeter.vue';
+import TrackAudioPeakMeter from '@/components/TrackAudioPeakMeter.vue';
 
 /** A safety margin for detecting the end of a track during playback */
 const trackDurationSafetyMarginSeconds = 0.3;
@@ -165,6 +165,10 @@ const props = defineProps({
         required: true,
         default: DefaultTrackVolume,
     },
+    /** Whether to show the component in a disabled state
+     * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+     */
+    disabled: Boolean,
 });
 
 /** The playback progress in the current track, in [seconds] */
@@ -232,12 +236,9 @@ audioContext = new AudioContext();
  * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
  */
 const audioElement = ref(document.createElement('audio'));
-
-console.debug('TrackAudioMeter::createMediaElementSource');
 const audioSource = shallowRef<
     InstanceType<typeof MediaElementAudioSourceNode>
 >(audioContext.createMediaElementSource(audioElement.value));
-
 audioSource.value.connect(audioContext.destination);
 
 /** The fader to use */
