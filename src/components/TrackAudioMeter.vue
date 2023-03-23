@@ -30,31 +30,31 @@
 import { onMounted, defineProps, onUnmounted } from 'vue';
 
 /** An audio visualizer, for a single track, using the Web Audio API.
- * @devdoc Also see https://www.w3.org/TR/webaudio/#vu-meter-mode
  */
 
 const props = defineProps({
-    /** The external media element to use.
+    /** The external audio source to use.
      */
-    mediaElement: {
-        type: HTMLMediaElement,
+    audioSource: {
+        type: MediaElementAudioSourceNode,
+        required: true,
+    },
+    /** The external audio context to use.
+     */
+    audioContext: {
+        type: AudioContext,
         required: true,
     },
 });
 
-const AudioContext = window.AudioContext;
-let context: AudioContext;
-context = new AudioContext();
-
 let analyser: AnalyserNode;
 let sampleBuffer: Float32Array;
-let source: MediaElementAudioSourceNode;
 
 onMounted(() => {
     //NOTE: currently gives error on second mount
     console.debug('TrackAudioMeter::onMounted');
 
-    analyser = context.createAnalyser();
+    analyser = props.audioContext.createAnalyser();
     // Time domain samples are always provided with the count of
     // fftSize even though there is no FFT involved.
     // (Note that fftSize can only have particular values, not an
@@ -62,12 +62,11 @@ onMounted(() => {
     analyser.fftSize = 2048;
 
     sampleBuffer = new Float32Array(analyser.fftSize);
-    console.debug('TrackAudioMeter::createMediaElementSource');
 
-    source = context.createMediaElementSource(props.mediaElement);
     console.debug('TrackAudioMeter::analyser');
 
-    source.connect(analyser);
+    props.audioSource.connect(analyser);
+    //props.audioSource.connect(props.audioContext.destination);
     console.debug('TrackAudioMeter::loop');
 
     loop();
@@ -76,8 +75,7 @@ onMounted(() => {
 onUnmounted(() => {
     console.debug('TrackAudioMeter::onUnmounted');
     analyser.disconnect();
-    source.disconnect(analyser);
-    //context.close();
+    props.audioSource.disconnect(analyser);
 });
 
 function displayNumber(id: string, value: number) {
@@ -92,10 +90,6 @@ function displayNumber(id: string, value: number) {
 }
 
 function loop() {
-    // Vary power of input to analyser. Linear in amplitude, so
-    // nonlinear in dB power.
-    //gain1.gain.value = 0.5 * (1 + Math.sin(Date.now() / 4e2));
-
     analyser.getFloatTimeDomainData(sampleBuffer);
 
     // Compute average power over the interval.

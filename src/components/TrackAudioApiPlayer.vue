@@ -9,7 +9,8 @@
     </Experimental>
     <TrackAudioMeter
         v-if="audioElement && mediaUrl && hasLoadedData && isPlaying"
-        :mediaElement="audioElement"
+        :audioSource="audioSource"
+        :audioContext="audioContext"
         :key="props.mediaUrl"
         >METER
     </TrackAudioMeter>
@@ -28,6 +29,7 @@ import {
     ref,
     watch,
     PropType,
+    shallowRef,
 } from 'vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { useStore } from 'vuex';
@@ -219,12 +221,24 @@ function debugLog(message: string, ...optionalParams: any[]): void {
     );
 }
 
+const store = useStore();
+
+//TODO put context in pinia store
+const AudioContext = window.AudioContext;
+let audioContext: AudioContext;
+audioContext = new AudioContext();
+
 /** Handles the setup of the audio graph outside the mounted lifespan.
  * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
  */
 const audioElement = ref(document.createElement('audio'));
 
-const store = useStore();
+console.debug('TrackAudioMeter::createMediaElementSource');
+const audioSource = shallowRef<
+    InstanceType<typeof MediaElementAudioSourceNode>
+>(audioContext.createMediaElementSource(audioElement.value));
+
+audioSource.value.connect(audioContext.destination);
 
 /** The fader to use */
 const fader = ref(
