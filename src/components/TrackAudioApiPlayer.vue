@@ -30,6 +30,7 @@ import {
     watch,
     PropType,
     shallowRef,
+    onMounted,
 } from 'vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { useStore } from 'vuex';
@@ -248,18 +249,18 @@ const audioSource = shallowRef<
  * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
  */
 
-//onMounted(() => {
-audioSource.value.connect(audio.context.destination);
-console.debug(
-    `TrackAudioApiPlayer(${props.title})::onMounted:mediaUrl:${props.mediaUrl} for title ${props.title}`,
-);
-//});
-// onUnmounted(() => {
-//     audioSource.value.disconnect(audio.context.destination);
-//     console.debug(
-//         `TrackAudioApiPlayer(${props.title})::audioSource:mediaUrl:${props.mediaUrl} for title ${props.title}`,
-//     );
-// });
+onMounted(() => {
+    audioSource.value.connect(audio.context.destination);
+    console.debug(
+        `TrackAudioApiPlayer(${props.title})::onMounted:mediaUrl:${props.mediaUrl} for title ${props.title}`,
+    );
+});
+onUnmounted(() => {
+    audioSource.value.disconnect(audio.context.destination);
+    console.debug(
+        `TrackAudioApiPlayer(${props.title})::audioSource:mediaUrl:${props.mediaUrl} for title ${props.title}`,
+    );
+});
 
 /** Updates the current seconds display and emits an event with the temporal position of the player
  * @devdoc This must get only privately called from the audio player

@@ -2,6 +2,7 @@
     <div
         :disabled="disabled"
         class="audio-peak-meter"
+        :class="{ 'has-opacity-half': disabled }"
         ref="meter"
         style="width: 100%; height: 3em; margin: 0 0"
     ></div>
@@ -12,6 +13,7 @@ import { onMounted, defineProps, onUnmounted, ref } from 'vue';
 import { createMeter, createMeterNode } from 'web-audio-peak-meter';
 
 /** An audio visualizer, for a single track, using the Web Audio API.
+ * @devdoc Uses the https://github.com/esonderegger/web-audio-peak-meter
  */
 
 const props = defineProps({
