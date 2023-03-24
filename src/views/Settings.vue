@@ -235,7 +235,6 @@ import { defineComponent } from 'vue';
 import { MutationTypes } from '@/store/mutation-types';
 import { settingsMixin } from '@/mixins/settingsMixin';
 import { Settings } from '@/store/state-types';
-import { ActionTypes } from '@/store/action-types';
 import { confirm } from '@/code/ui/dialogs';
 
 /** A Settings view
@@ -260,11 +259,7 @@ export default defineComponent({
                 `Do you want to reset the application to the initial settings? Already downloaded compilations remain available on the device.`,
             ).then((ok) => {
                 if (ok) {
-                    this.$store
-                        .dispatch(ActionTypes.RESET_APPLICATION)
-                        .then(() => {
-                            this.$router.push('/');
-                        });
+                    this.$router.push('/reset');
                 }
             });
         },
