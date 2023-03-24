@@ -10,7 +10,7 @@
     <TrackAudioPeakMeter
         :disabled="disabled"
         :audioSource="audioSource"
-        :audioContext="audioContext"
+        :audioContext="audio.context"
         :key="props.mediaUrl"
         >METER
     </TrackAudioPeakMeter>
@@ -38,6 +38,7 @@ import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import Experimental from '@/components/Experimental.vue';
 import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
 import TrackAudioPeakMeter from '@/components/TrackAudioPeakMeter.vue';
+import { useAudioStore } from '@/store/audio';
 
 /** A safety margin for detecting the end of a track during playback */
 const trackDurationSafetyMarginSeconds = 0.3;
@@ -227,22 +228,9 @@ function debugLog(message: string, ...optionalParams: any[]): void {
 
 const store = useStore();
 
-//TODO put context in pinia store
-const AudioContext = window.AudioContext;
-let audioContext: AudioContext;
-audioContext = new AudioContext();
-
-/** Handles the setup of the audio graph outside the mounted lifespan.
- * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
- */
-const audioElement = ref(document.createElement('audio'));
-const audioSource = shallowRef<
-    InstanceType<typeof MediaElementAudioSourceNode>
->(audioContext.createMediaElementSource(audioElement.value));
-audioSource.value.connect(audioContext.destination);
-
+const audioElement = shallowRef(document.createElement('audio'));
 /** The fader to use */
-const fader = ref(
+const fader = shallowRef(
     new AudioFader(
         audioElement.value,
         store.getters.settings.fadeInDuration,
@@ -251,10 +239,27 @@ const fader = ref(
         props.volume,
     ),
 );
+const audio = useAudioStore();
+const audioSource = shallowRef<
+    InstanceType<typeof MediaElementAudioSourceNode>
+>(audio.context.createMediaElementSource(audioElement.value));
 
+/** Handles the setup of the audio graph.
+ * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
+ */
+
+//onMounted(() => {
+audioSource.value.connect(audio.context.destination);
 console.debug(
-    `TrackAudioApiPlayer(${props.title})::created:mediaUrl:${props.mediaUrl} for title ${props.title}`,
+    `TrackAudioApiPlayer(${props.title})::onMounted:mediaUrl:${props.mediaUrl} for title ${props.title}`,
 );
+//});
+// onUnmounted(() => {
+//     audioSource.value.disconnect(audio.context.destination);
+//     console.debug(
+//         `TrackAudioApiPlayer(${props.title})::audioSource:mediaUrl:${props.mediaUrl} for title ${props.title}`,
+//     );
+// });
 
 /** Updates the current seconds display and emits an event with the temporal position of the player
  * @devdoc This must get only privately called from the audio player

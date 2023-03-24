@@ -46,6 +46,7 @@
         "konva": "^8.3.11",
         "lodash.debounce": "^4.0.8",
         "nosleep.js": "^0.12.0",
+        "pinia": "^2.0.33",
         "register-service-worker": "^1.7.2",
         "uuid": "^8.3.2",
         "vue": "^3.2.39",

@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import App from './App.vue';
+import { createPinia } from 'pinia';
 import './registerServiceWorker';
 import router from './router';
 import { store } from './store/store';
@@ -13,8 +14,11 @@ console.log('Environment: ' + process.env.NODE_ENV);
 console.log('GIT_VERSION: ' + process.env.VUE_APP_GIT_VERSION);
 console.log('GIT_AUTHOR_DATE: ' + process.env.VUE_APP_GIT_AUTHOR_DATE);
 
+const pinia = createPinia();
+
 createApp(App)
     .use(store)
+    .use(pinia)
     .use(router)
     .use(VueScrollTo)
     .use(vClickOutside)

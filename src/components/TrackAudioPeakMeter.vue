@@ -1,7 +1,7 @@
 <template>
     <div
-        class="audio-peak-meter"
         :disabled="disabled"
+        class="audio-peak-meter"
         ref="meter"
         style="width: 100%; height: 3em; margin: 0 0"
     ></div>
@@ -12,7 +12,6 @@ import { onMounted, defineProps, onUnmounted, ref } from 'vue';
 import { createMeter, createMeterNode } from 'web-audio-peak-meter';
 
 /** An audio visualizer, for a single track, using the Web Audio API.
- * @devdoc Also see https://www.w3.org/TR/webaudio/#vu-meter-mode
  */
 
 const props = defineProps({
@@ -39,13 +38,13 @@ let meterNode: AnalyserNode;
 const meter = ref(null);
 
 onMounted(() => {
+    console.debug('TrackAudioPeakMeter::onMounted');
     meterNode = createMeterNode(props.audioSource, props.audioContext);
     createMeter(meter.value, meterNode, {
-        borderSize: 1,
         fontSize: 6,
-        backgroundColor: 'black',
         tickColor: '#aaa',
         labelColor: '#aaa',
+
         gradient: [
             '#ee5f5b 0%',
             '#ee5f5b 5%',
@@ -55,18 +54,14 @@ onMounted(() => {
             '#62c462 100%',
         ],
         dbRange: 60,
-        dbTickSize: 6,
-        maskTransition: '0.020',
-        audioMeterStandard: 'true-peak', // Could be "true-peak" (ITU-R BS.1770) or "peak-sample"
-        refreshEveryApproxMs: 20,
-        peakHoldDuration: 5000,
+        audioMeterStandard: 'peak-sample', // Could be "true-peak" (ITU-R BS.1770, very computationally expensive) or "peak-sample" (computationally faster)
     });
 });
 
 onUnmounted(() => {
     console.debug('TrackAudioPeakMeter::onUnmounted');
-    meterNode.disconnect();
-    props.audioSource.disconnect(meterNode);
+    meterNode?.disconnect();
+    props.audioSource?.disconnect(meterNode);
 });
 </script>
 
