@@ -42,14 +42,14 @@ onMounted(() => {
     meterNode = createMeterNode(props.audioSource, props.audioContext);
     createMeter(meter.value, meterNode, {
         borderSize: 1,
-        fontSize: 9,
+        fontSize: 6,
         backgroundColor: 'black',
-        tickColor: '#ddd',
-        labelColor: '#ddd',
+        tickColor: '#aaa',
+        labelColor: '#aaa',
         gradient: [
             '#ee5f5b 0%',
-            '#ee5f5b 10%',
-            '#f9e406 10%',
+            '#ee5f5b 5%',
+            '#f9e406 5%',
             '#f9e406 20%',
             '#62c462 20%',
             '#62c462 100%',
