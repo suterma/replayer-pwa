@@ -612,7 +612,7 @@ function loadAfterClick(): Promise<void> {
 /** Starts playback at the current position
  * @remarks Asserts (and if necessary) resolves the playability of the track media
  */
-function play(): void {
+async function play(): Promise<void> {
     if (isClickToLoadRequired.value) {
         loadAfterClick().then(() => {
             debugLog(`loadAfterClick-then`);
@@ -624,6 +624,15 @@ function play(): void {
         if (!playing.value) {
             if (!isPlayingRequestOutstanding.value) {
                 isPlayingRequestOutstanding.value = true;
+
+                // resume audio context if required (when this is the first time any track is playing)
+                if (audio.context.state === 'suspended') {
+                    await audio.context.resume();
+                    //TODO clenaup once working
+                    //    .then(() => {
+                    //         debugLog("audioContext:resumed") ;
+                    //    });
+                }
 
                 //Just BEFORE playback, apply the possible pre-play transport
                 if (
