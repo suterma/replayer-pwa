@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia';
 import { shallowRef } from 'vue';
 
-const AudioContext = window.AudioContext;
+const AudioContext =
+    window.AudioContext || // Default
+    window.webkitAudioContext; // Safari and old versions of Chrome
 const audioContext = new AudioContext();
 
 /** A store for audio-related global state */
