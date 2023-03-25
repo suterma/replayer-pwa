@@ -578,9 +578,24 @@ function playFrom(position: number): void {
     play();
 }
 
+/**    Asserts a running audio context by resuming if required (when this is the first time any track is playing)
+ */
+async function assertRunningAudioContext() {
+    // resume audio context if required (when this is the first time any track is playing)
+    if (audio.context.state === 'suspended') {
+        await audio.context.resume();
+        //TODO clenaup once working
+        //    .then(() => {
+        //         debugLog("audioContext:resumed") ;
+        //    });
+    }
+}
+
 /** If not yet loaded, loads the media, then when it's playable, resolves. */
 function loadAfterClick(): Promise<void> {
     debugLog(`loadAfterClick`);
+    assertRunningAudioContext();
+
     return new Promise((resolve) => {
         //Is further loading required?
         const readyState = audioElement.value.readyState;
@@ -625,14 +640,7 @@ async function play(): Promise<void> {
             if (!isPlayingRequestOutstanding.value) {
                 isPlayingRequestOutstanding.value = true;
 
-                // resume audio context if required (when this is the first time any track is playing)
-                if (audio.context.state === 'suspended') {
-                    await audio.context.resume();
-                    //TODO clenaup once working
-                    //    .then(() => {
-                    //         debugLog("audioContext:resumed") ;
-                    //    });
-                }
+                assertRunningAudioContext();
 
                 //Just BEFORE playback, apply the possible pre-play transport
                 if (
