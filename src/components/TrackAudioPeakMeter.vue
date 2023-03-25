@@ -62,7 +62,7 @@ onMounted(() => {
 
 onUnmounted(() => {
     console.debug('TrackAudioPeakMeter::onUnmounted');
-    meterNode?.disconnect();
+    meterNode?.disconnect(props.audioContext.destination);
     props.audioSource?.disconnect(meterNode);
 });
 </script>

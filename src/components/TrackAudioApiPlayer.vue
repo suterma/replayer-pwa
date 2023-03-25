@@ -12,8 +12,15 @@
         :audioSource="audioSource"
         :audioContext="audio.context"
         :key="props.mediaUrl"
-        >METER
+    >
     </TrackAudioPeakMeter>
+    <TrackAudioMeter
+        :disabled="disabled"
+        :audioSource="audioSource"
+        :audioContext="audio.context"
+        :key="props.mediaUrl"
+    >
+    </TrackAudioMeter>
     <slot></slot>
 </template>
 
@@ -39,6 +46,7 @@ import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import Experimental from '@/components/Experimental.vue';
 import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
 import TrackAudioPeakMeter from '@/components/TrackAudioPeakMeter.vue';
+import TrackAudioMeter from '@/components/TrackAudioMeter.vue';
 import { useAudioStore } from '@/store/audio';
 
 /** A safety margin for detecting the end of a track during playback */
@@ -240,7 +248,16 @@ const fader = shallowRef(
         props.volume,
     ),
 );
+
+// --- Audio Metering ---
+
 const audio = useAudioStore();
+
+// NOTE: When creating the audio source as a MediaElementAudioSourceNode, if the source URL is not CORS-enabled, the MediaElementAudioSourceNode outputs all zeroes.
+// Thus, no audio is heard and also the level meter shows no data
+
+//TODO: first check whether the resource allows for CORS, then enable the MediaElementAudioSourceNode and the level meter. Otherwise,
+//do not use the MediaElementAudioSourceNode and the meter, and just let the audio element play it's content directly to the output.
 const audioSource = shallowRef<
     InstanceType<typeof MediaElementAudioSourceNode>
 >(audio.context.createMediaElementSource(audioElement.value));
@@ -261,6 +278,8 @@ onUnmounted(() => {
         `TrackAudioApiPlayer(${props.title})::audioSource:mediaUrl:${props.mediaUrl} for title ${props.title}`,
     );
 });
+
+// ---  ---
 
 /** Updates the current seconds display and emits an event with the temporal position of the player
  * @devdoc This must get only privately called from the audio player
