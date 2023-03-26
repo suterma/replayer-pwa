@@ -20,7 +20,7 @@ export class Settings {
             /*fadeInDuration*/ 1000,
             /*fadeOutDuration*/ 500,
             /*applyFadeInOffset*/ true,
-            /*showLevelMeter*/ false,
+            /*showLevelMeter*/ true,
             /*displayExperimentalContent*/ false,
             /*keyboardShortcutTimeout*/ 1000,
         );
@@ -47,7 +47,7 @@ export class Settings {
     applyFadeInOffset;
 
     /** Whether to show the audio level meter
-     * @remarks Default is false //TODO later set to true
+     * @remarks Default is true
      */
     showLevelMeter;
 
