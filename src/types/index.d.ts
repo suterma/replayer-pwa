@@ -12,6 +12,6 @@ declare module '@vue/runtime-core' {
  */
 declare global {
     interface Window {
-        webkitAudioContext: typeof AudioContext;
+        webkitAudioContext: typeof webkitAudioContext;
     }
 }
