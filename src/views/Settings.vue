@@ -176,6 +176,23 @@
                     </label>
                 </div>
             </div>
+
+            <div class="field">
+                <div class="control">
+                    <label class="checkbox">
+                        <input
+                            type="checkbox"
+                            :checked="getSettings.showLevelMeter"
+                            @change="showLevelMeterChanged"
+                        />
+                        Show audio level meters
+                        <span class="has-opacity-half is-size-7">
+                            (not working on older iOS devices, uses more
+                            energy)</span
+                        >
+                    </label>
+                </div>
+            </div>
         </div>
 
         <div class="box">
@@ -280,6 +297,16 @@ export default defineComponent({
 
             this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
         },
+
+        showLevelMeterChanged(event: Event) {
+            const checked = (event.target as HTMLInputElement)?.checked;
+            const settings = this.getSettings;
+
+            settings.showLevelMeter = checked;
+
+            this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
+        },
+
         fadeInDurationChanged(event: Event) {
             console.debug('event', event);
             this.$store.commit(MutationTypes.UPDATE_SETTINGS, this.settings);

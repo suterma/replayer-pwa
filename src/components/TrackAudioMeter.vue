@@ -50,7 +50,8 @@ const props = defineProps({
     /** The external audio context to use.
      */
     audioContext: {
-        type: null as unknown as PropType<AudioContext | unknown>,
+        //Defining other than straight AudioContext is necessary for iOS < v14 compatibility of the compiled code
+        type: null as unknown as PropType<AudioContext>,
         required: true,
     },
 
@@ -85,7 +86,6 @@ onMounted(() => {
     console.debug('TrackAudioMeter::analyser');
 
     props.audioSource.connect(analyser);
-    //props.audioSource.connect(props.audioContext.destination);
     console.debug('TrackAudioMeter::loop');
 
     loop();
@@ -94,8 +94,9 @@ onMounted(() => {
 onUnmounted(() => {
     cancelAnimationFrame(loopRequestId);
     console.debug('TrackAudioMeter::onUnmounted');
-    analyser.disconnect();
-    props.audioSource.disconnect(analyser);
+    analyser.disconnect(); //the input
+    //props.audioSource.disconnect(analyser);
+
 });
 
 function displayNumber(
@@ -157,8 +158,6 @@ function loop() {
 }
 </script>
 <style type="scss">
- 
-
 .audio-level-meter {
     width: 100%;
     height: 1.5em;

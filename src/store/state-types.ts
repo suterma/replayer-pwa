@@ -20,6 +20,7 @@ export class Settings {
             /*fadeInDuration*/ 1000,
             /*fadeOutDuration*/ 500,
             /*applyFadeInOffset*/ true,
+            /*showLevelMeter*/ false,
             /*displayExperimentalContent*/ false,
             /*keyboardShortcutTimeout*/ 1000,
         );
@@ -45,6 +46,11 @@ export class Settings {
      */
     applyFadeInOffset;
 
+    /** Whether to show the audio level meter
+     * @remarks Default is false //TODO later set to true
+     */
+    showLevelMeter;
+
     /** Whether to show experimental content
      * @remarks Default is false
      */
@@ -55,7 +61,7 @@ export class Settings {
     keyboardShortcutTimeout;
 
     /** Parses the JSON and returns new instance of this class, with the defined values applied.
-     * @remarks For udefined values, the application default is used.
+     * @remarks For undefined values, the application default is used.
      * @remarks Instead of creating an unprototyped object with JSON.parse, this creates a new object of this type
      * @param jsonSettings - a JSON representation of Settings
      */
@@ -73,6 +79,9 @@ export class Settings {
         }
         if (obj.applyFadeInOffset != undefined) {
             settings.applyFadeInOffset = obj.applyFadeInOffset;
+        }
+        if (obj.showLevelMeter != undefined) {
+            settings.showLevelMeter = obj.showLevelMeter;
         }
         if (obj.displayExperimentalContent != undefined) {
             settings.displayExperimentalContent =
@@ -92,6 +101,7 @@ export class Settings {
         fadeInDuration: number,
         fadeOutDuration: number,
         applyFadeInOffset: boolean,
+        showLevelMeter: boolean,
         displayExperimentalContent: boolean,
         keyboardShortcutTimeout: number,
     ) {
@@ -99,6 +109,7 @@ export class Settings {
         this.fadeInDuration = fadeInDuration;
         this.fadeOutDuration = fadeOutDuration;
         this.applyFadeInOffset = applyFadeInOffset;
+        this.showLevelMeter = showLevelMeter;
         this.displayExperimentalContent = displayExperimentalContent;
         this.keyboardShortcutTimeout = keyboardShortcutTimeout;
     }

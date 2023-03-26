@@ -8,6 +8,7 @@
         />
     </Experimental>
     <TrackAudioPeakMeter
+        v-if="showLevelMeter && audioSource"
         :disabled="disabled"
         :audioSource="audioSource"
         :audioContext="audio.context"
@@ -15,6 +16,7 @@
     >
     </TrackAudioPeakMeter>
     <TrackAudioMeter
+        v-if="showLevelMeter && audioSource"
         :disabled="disabled"
         :audioSource="audioSource"
         :audioContext="audio.context"
@@ -38,6 +40,7 @@ import {
     PropType,
     shallowRef,
     onMounted,
+    ShallowRef,
 } from 'vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { useStore } from 'vuex';
@@ -237,7 +240,13 @@ function debugLog(message: string, ...optionalParams: any[]): void {
 
 const store = useStore();
 
+// --- Audio Setup ---
+
+/** Audio element to use
+ * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
+ */
 const audioElement = shallowRef(document.createElement('audio'));
+
 /** The fader to use */
 const fader = shallowRef(
     new AudioFader(
@@ -249,7 +258,7 @@ const fader = shallowRef(
     ),
 );
 
-// --- Audio Metering ---
+// --- Audio Metering Setup---
 
 const audio = useAudioStore();
 
@@ -258,25 +267,52 @@ const audio = useAudioStore();
 
 //TODO: first check whether the resource allows for CORS, then enable the MediaElementAudioSourceNode and the level meter. Otherwise,
 //do not use the MediaElementAudioSourceNode and the meter, and just let the audio element play it's content directly to the output.
-const audioSource = shallowRef<
-    InstanceType<typeof MediaElementAudioSourceNode>
->(audio.context.createMediaElementSource(audioElement.value));
 
-/** Handles the setup of the audio graph.
- * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
+/** The optional audio source node, required when for metering is requested
  */
+const audioSource: ShallowRef<InstanceType<
+    typeof MediaElementAudioSourceNode
+> | null> = shallowRef(null);
 
-onMounted(() => {
-    audioSource.value.connect(audio.context.destination);
-    console.debug(
-        `TrackAudioApiPlayer(${props.title})::onMounted:mediaUrl:${props.mediaUrl} for title ${props.title}`,
-    );
-});
-onUnmounted(() => {
-    audioSource.value.disconnect(audio.context.destination);
-    console.debug(
-        `TrackAudioApiPlayer(${props.title})::audioSource:mediaUrl:${props.mediaUrl} for title ${props.title}`,
-    );
+/** Watch the showLevelMeter setting, and act accordingly
+ * @remarks This handles the audio setup for metering
+ * @devdoc Handle the value also immediately at mount time //TODO doest this work??
+ */
+watch(
+    () => store.getters.settings.showLevelMeter,
+    (showLevelMeter: boolean, wasShowingLevelMeter) => {
+        console.debug(
+            `TrackAudioApiPlayer(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:showLevelMeter${showLevelMeter}`,
+        );
+        if (showLevelMeter) {
+            if (audioSource.value === null) {
+                audioSource.value = audio.context.createMediaElementSource(
+                    audioElement.value,
+                );
+            }
+            audioSource.value.connect(audio.context.destination);
+            console.debug(
+                `TrackAudioApiPlayer(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:connected`,
+            );
+        } else {
+            audioSource.value?.disconnect(audio.context.destination);
+            audioSource.value?.disconnect();
+            //NOTE: a MediaElementAudioSourceNode can not get destroyed, so this will be reused if later required
+            //See https://stackoverflow.com/a/38631334/79485
+        }
+        if (wasShowingLevelMeter === true && !showLevelMeter) {
+            // reconnect the just lost connection to the output
+            audioSource.value?.connect(audio.context.destination);
+        }
+    },
+    { immediate: true },
+);
+
+/** Whether to show the level meters
+ * @remarks This is a shortcut to access the current settings value only, the availability of the audioSource must be assessed separately.
+ */
+const showLevelMeter = computed((): boolean => {
+    return store.getters.settings.showLevelMeter;
 });
 
 // ---  ---

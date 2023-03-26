@@ -26,8 +26,8 @@ const props = defineProps({
     /** The external audio context to use.
      */
     audioContext: {
-        //Defining other than straight AudioContext might be necessary for iOS compatibility
-        type: null as unknown as PropType<AudioContext | unknown>,
+        //Defining other than straight AudioContext is necessary for iOS < v14 compatibility of the compiled code
+        type: null as unknown as PropType<AudioContext>,
         required: true,
     },
 
@@ -64,7 +64,10 @@ onMounted(() => {
 onUnmounted(() => {
     console.debug('TrackAudioPeakMeter::onUnmounted');
     meterNode?.disconnect(props.audioContext.destination);
-    props.audioSource?.disconnect(meterNode);
+    meterNode?.disconnect(); // the input
+
+    //reconnect the source directly to the output (was bridged by the meter node)
+    props.audioSource?.connect(props.audioContext.destination);
 });
 </script>
 
