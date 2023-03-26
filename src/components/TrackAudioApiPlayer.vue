@@ -15,14 +15,14 @@
         :key="props.mediaUrl"
     >
     </TrackAudioPeakMeter>
-    <TrackAudioMeter
+    <TrackAudioLevelMeter
         v-if="showLevelMeter && audioSource"
         :disabled="disabled"
         :audioSource="audioSource"
         :audioContext="audio.context"
         :key="props.mediaUrl"
     >
-    </TrackAudioMeter>
+    </TrackAudioLevelMeter>
     <slot></slot>
 </template>
 
@@ -39,7 +39,6 @@ import {
     watch,
     PropType,
     shallowRef,
-    onMounted,
     ShallowRef,
 } from 'vue';
 import AudioFader from '@/code/audio/AudioFader';
@@ -49,7 +48,7 @@ import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import Experimental from '@/components/Experimental.vue';
 import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
 import TrackAudioPeakMeter from '@/components/TrackAudioPeakMeter.vue';
-import TrackAudioMeter from '@/components/TrackAudioMeter.vue';
+import TrackAudioLevelMeter from '@/components/TrackAudioLevelMeter.vue';
 import { useAudioStore } from '@/store/audio';
 
 /** A safety margin for detecting the end of a track during playback */

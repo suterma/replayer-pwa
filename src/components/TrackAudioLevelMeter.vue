@@ -35,19 +35,28 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, defineProps, onUnmounted, ref, PropType } from 'vue';
+import {
+    onMounted,
+    defineProps,
+    onUnmounted,
+    ref,
+    PropType,
+    computed,
+} from 'vue';
+import { useElementBounding } from '@vueuse/core';
 
-/** An simple audio visualizer, for a single track, using the Web Audio API.
+/** An simple audio level meter (visualizer), for a single audio source node, using the Web Audio API.
+ * @remarks Internally uses the Web Audio API's AnalyserNode. Therefor, because it down-mixes time domain data (See https://webaudio.github.io/web-audio-api/#time-domain-down-mixing), the level is only mono.
  */
 
 const props = defineProps({
-    /** The external audio source to use.
+    /** The audio source node to use.
      */
     audioSource: {
-        type: MediaElementAudioSourceNode,
+        type: AudioNode,
         required: true,
     },
-    /** The external audio context to use.
+    /** The audio context to use.
      */
     audioContext: {
         //Defining other than straight AudioContext is necessary for iOS < v14 compatibility of the compiled code
@@ -74,6 +83,7 @@ let canUseFloatTimeDomainData: boolean;
 /** The float data buffer to possibly use.
  */
 let floatSampleBuffer: Float32Array;
+
 /** The byte data buffer to possibly use, as an alternative, when float data is not available.
  * @remarks The 8bit data only covers a dynamic range of about 36dB.
  */
@@ -86,8 +96,7 @@ const rmsLevelDisplay = ref(null);
 const peakLevelDisplay = ref(null);
 
 onMounted(() => {
-    //NOTE: currently gives error on second mount
-    console.debug('TrackAudioMeter::onMounted');
+    console.debug('TrackAudioLevelMeter::onMounted');
 
     analyser = props.audioContext.createAnalyser();
 
@@ -109,17 +118,12 @@ onMounted(() => {
         byteSampleBuffer = new Uint8Array(analyser.fftSize);
     }
 
-    console.debug('TrackAudioMeter::analyser');
-
     props.audioSource.connect(analyser);
-    console.debug('TrackAudioMeter::loop');
-
     loop();
 });
 
 onUnmounted(() => {
     cancelAnimationFrame(loopRequestId);
-    console.debug('TrackAudioMeter::onUnmounted');
     analyser.disconnect(); //the input
 });
 
@@ -195,10 +199,6 @@ function loop() {
     }
     peakInstantaneousPowerDecibels = 10 * Math.log10(peakInstantaneousPower);
 
-    // Note that you should then add or subtract as appropriate to
-    // get the _reference level_ suitable for your application.
-
-    // Display value.
     displayNumber(
         rmsLevelMeter.value as unknown as HTMLMeterElement,
         rmsLevelDisplay.value as unknown as HTMLSpanElement,
@@ -213,44 +213,62 @@ function loop() {
 
     loopRequestId = requestAnimationFrame(loop);
 }
+
+// --- meter styles, depending on actual component extent ---
+
+/** The styles for the meter range element are dynamically calculated to be able to
+ * use a pixel-defined gradient. This makes the gradient regions visually fixed (non-dependent from the
+ * actual meter value)
+ */
+//See https://stackoverflow.com/a/69078238/79485 for the v-bind mechanism
+const { width } = useElementBounding(rmsLevelMeter);
+
+/** 0dBFS */
+const widthFullScale = computed(() => {
+    return `${width.value}px`;
+});
+/** Overload warning at -3dBFS */
+const widthWarnOverload = computed(() => {
+    return `${width.value * 0.95}px`;
+});
+
+/** Saturation at -12dBFS */
+const widthSaturation = computed(() => {
+    return `${width.value * 0.8}px`;
+});
+
+/** Scale minimum is at -60dBFS */
+const widthMinimum = computed(() => {
+    return `${0}px`;
+});
 </script>
-<style type="scss">
+<style lang="scss">
 .audio-level-meter {
     width: 100%;
     height: 1.5em;
     background-color: transparent;
-
-    /* border: 1px solid red; */
     border: none;
-
     border-radius: 4px;
-}
-
-meter {
-    --background: black;
-
-    /* The gray background in Firefox */
-    background: var(--background);
-    display: block;
-    margin-bottom: 1em;
-    width: 100%;
 }
 
 meter::-webkit-meter-bar {
     background: none; /* Required to get rid of the default background property */
     background-color: black;
-    border: 0px;
+    border: 0px; /* do not show a border (border none seems not to work)*/
     border-radius: 4px;
     height: 1em;
 }
 
+/* See also https://css-tricks.com/html5-meter-element/ */
 meter::-webkit-meter-optimum-value {
     background-image: linear-gradient(
         90deg,
-        #ee5f5b 100px,
-        #f9e406 20px,
-        #62c462 5px,
-        #62c462 0px
+        #62c462 v-bind('widthMinimum'),
+        #62c462 v-bind('widthSaturation'),
+        #f9e406 v-bind('widthSaturation'),
+        #f9e406 v-bind('widthWarnOverload'),
+        #ee5f5b v-bind('widthWarnOverload'),
+        #ee5f5b v-bind('widthFullScale')
     );
 }
 </style>
