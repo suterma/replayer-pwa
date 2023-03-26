@@ -62,7 +62,23 @@ const props = defineProps({
 });
 
 let analyser: AnalyserNode;
-let sampleBuffer: Float32Array;
+
+/** Whether the float time domain data can be obtained.
+ * @devdoc The float time domain version is not available for Safari on iOS below version 14.5
+ * (See https://caniuse.com/mdn-api_analysernode_getfloattimedomaindata)
+ *  * The byte time domain version is available with Safari from iOS version 6.
+ * (See https://caniuse.com/mdn-api_analysernode_getbytetimedomaindata)
+ */
+let canUseFloatTimeDomainData: boolean;
+
+/** The float data buffer to possibly use.
+ */
+let floatSampleBuffer: Float32Array;
+/** The byte data buffer to possibly use, as an alternative, when float data is not available.
+ * @remarks The 8bit data only covers a dynamic range of about 36dB.
+ */
+let byteSampleBuffer: Uint8Array;
+
 let loopRequestId: number;
 const rmsLevelMeter = ref(null);
 const peakLevelMeter = ref(null);
@@ -75,13 +91,23 @@ onMounted(() => {
 
     analyser = props.audioContext.createAnalyser();
 
+    canUseFloatTimeDomainData =
+        typeof analyser.getFloatTimeDomainData === 'function';
+
     // Time domain samples are always provided with the count of
     // fftSize even though there is no FFT involved.
     // (Note that fftSize can only have particular values (powers of two),
     // not an arbitrary integer.)
+    // The value of 1024 has been empirically determined to be high enough to also include
+    // bass and drum kick sounds in the calculated level at a reasonable degree.
+    // You may set to a higher value to trade computational expense for more accuracy.
     analyser.fftSize = 1024;
 
-    sampleBuffer = new Float32Array(analyser.fftSize);
+    if (canUseFloatTimeDomainData) {
+        floatSampleBuffer = new Float32Array(analyser.fftSize);
+    } else {
+        byteSampleBuffer = new Uint8Array(analyser.fftSize);
+    }
 
     console.debug('TrackAudioMeter::analyser');
 
@@ -95,8 +121,6 @@ onUnmounted(() => {
     cancelAnimationFrame(loopRequestId);
     console.debug('TrackAudioMeter::onUnmounted');
     analyser.disconnect(); //the input
-    //props.audioSource.disconnect(analyser);
-
 });
 
 function displayNumber(
@@ -113,30 +137,63 @@ function displayNumber(
 }
 
 function loop() {
-    analyser.getFloatTimeDomainData(sampleBuffer);
+    if (canUseFloatTimeDomainData) {
+        analyser.getFloatTimeDomainData(floatSampleBuffer);
+    } else {
+        analyser.getByteTimeDomainData(byteSampleBuffer);
+    }
 
     // Compute average power over the interval.
     let sumOfSquares = 0;
-    for (let i = 0; i < sampleBuffer.length; i++) {
-        const sample = sampleBuffer[i];
-        if (sample) {
-            sumOfSquares += sample ** 2;
+    let avgPowerDecibels: number;
+
+    if (canUseFloatTimeDomainData) {
+        for (let i = 0; i < floatSampleBuffer.length; i++) {
+            const sample = floatSampleBuffer[i];
+            if (sample) {
+                sumOfSquares += sample ** 2;
+            }
         }
+        avgPowerDecibels =
+            10 * Math.log10(sumOfSquares / floatSampleBuffer.length);
+    } else {
+        for (let i = 0; i < byteSampleBuffer.length; i++) {
+            const sample = byteSampleBuffer[i];
+            if (sample) {
+                sumOfSquares += (sample / 128 - 1) ** 2;
+            }
+        }
+        avgPowerDecibels =
+            10 * Math.log10(sumOfSquares / byteSampleBuffer.length);
     }
-    const avgPowerDecibels =
-        10 * Math.log10(sumOfSquares / sampleBuffer.length);
 
     // Compute peak instantaneous power over the interval.
     let peakInstantaneousPower = 0;
-    for (let i = 0; i < sampleBuffer.length; i++) {
-        const sample = sampleBuffer[i];
-        if (sample) {
-            const power = sample ** 2;
-            peakInstantaneousPower = Math.max(power, peakInstantaneousPower);
+    let peakInstantaneousPowerDecibels: number;
+    if (canUseFloatTimeDomainData) {
+        for (let i = 0; i < floatSampleBuffer.length; i++) {
+            const sample = floatSampleBuffer[i];
+            if (sample) {
+                const power = sample ** 2;
+                peakInstantaneousPower = Math.max(
+                    power,
+                    peakInstantaneousPower,
+                );
+            }
+        }
+    } else {
+        for (let i = 0; i < byteSampleBuffer.length; i++) {
+            const sample = byteSampleBuffer[i];
+            if (sample) {
+                const power = (sample / 128 - 1) ** 2;
+                peakInstantaneousPower = Math.max(
+                    power,
+                    peakInstantaneousPower,
+                );
+            }
         }
     }
-    const peakInstantaneousPowerDecibels =
-        10 * Math.log10(peakInstantaneousPower);
+    peakInstantaneousPowerDecibels = 10 * Math.log10(peakInstantaneousPower);
 
     // Note that you should then add or subtract as appropriate to
     // get the _reference level_ suitable for your application.
@@ -171,9 +228,6 @@ function loop() {
 
 meter {
     --background: black;
-    /* --optimum: forestgreen;
-    --sub-optimum: gold;
-    --sub-sub-optimum: crimson; */
 
     /* The gray background in Firefox */
     background: var(--background);
