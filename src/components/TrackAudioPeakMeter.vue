@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, defineProps, onUnmounted, ref } from 'vue';
+import { onMounted, defineProps, onUnmounted, ref, PropType } from 'vue';
 import { createMeter, createMeterNode } from 'web-audio-peak-meter';
 
 /** An audio visualizer, for a single track, using the Web Audio API.
@@ -26,7 +26,8 @@ const props = defineProps({
     /** The external audio context to use.
      */
     audioContext: {
-        type: AudioContext,
+        //Defining other than straight AudioContext might be necessary for iOS compatibility
+        type: null as unknown as PropType<AudioContext | unknown>,
         required: true,
     },
 
