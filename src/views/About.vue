@@ -391,14 +391,6 @@
                     </li>
                     <li>
                         <a
-                            href="https://github.com/focus-trap/focus-trap"
-                            target="_blank"
-                            >focus-trap</a
-                        >, trap focus within a DOM node. (Released under the MIT
-                        License, by Marais Rossouw).
-                    </li>
-                    <li>
-                        <a
                             href="https://github.com/Wikiki/bulma-slider"
                             target="_blank"
                         >
