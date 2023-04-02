@@ -11,36 +11,51 @@
             :compilation="compilation"
             :isEditable="isEditable"
         />
-        <!-- Tracks to work with -->
-        <template v-for="(track, index) in tracks" :key="track.Id">
-            <Track
-                :track="track"
-                :ref="'track-' + track.Id"
-                :id="'track-' + track.Id"
-                :displayMode="tracksDisplayMode"
-                :isTrackPlayerFullScreen="
-                    isTrackPlayerFullScreen && !isEditable
-                "
-                @update:isTrackPlayerFullScreen="
-                    updateIsTrackPlayerFullScreen($event)
-                "
-                :playbackMode="compilation.PlaybackMode"
-                @update:playbackMode="updatePlaybackMode($event)"
-                :hasPreviousTrack="index > 0 || isLoopingPlaybackMode"
-                :hasNextTrack="
-                    index < (tracks?.length ?? 0) - 1 || isLoopingPlaybackMode
-                "
-                :isOnlyTrack="isSingleTrack"
-                :isFirst="isFirstTrack(track.Id)"
-                :isLast="isLastTrack(track.Id)"
-                :isAnySoloed="isAnyTrackSoloed"
-                @previousTrack="
-                    toPreviousTrack(track.Id, isLoopingPlaybackMode)
-                "
-                @nextTrack="toNextTrack(track.Id, isLoopingPlaybackMode)"
-                @trackEnded="continueAfterTrack(track.Id)"
-            />
-        </template>
+        <ToggleButton
+            v-if="isMixable"
+            class="button is-primary"
+            :class="{
+                'is-inactive': !showVertical,
+            }"
+            :isEngaged="showVertical"
+            engaged-label="show Horizontal"
+            disengaged-label="show Vertical"
+            @click="showVertical = !showVertical"
+            >Vertical
+        </ToggleButton>
+        <div class="tracks" :class="{ vertical: showVertical && isMixable }">
+            <!-- Tracks to work with -->
+            <template v-for="(track, index) in tracks" :key="track.Id">
+                <Track
+                    :track="track"
+                    :ref="'track-' + track.Id"
+                    :id="'track-' + track.Id"
+                    :displayMode="tracksDisplayMode"
+                    :isTrackPlayerFullScreen="
+                        isTrackPlayerFullScreen && !isEditable
+                    "
+                    @update:isTrackPlayerFullScreen="
+                        updateIsTrackPlayerFullScreen($event)
+                    "
+                    :playbackMode="compilation.PlaybackMode"
+                    @update:playbackMode="updatePlaybackMode($event)"
+                    :hasPreviousTrack="index > 0 || isLoopingPlaybackMode"
+                    :hasNextTrack="
+                        index < (tracks?.length ?? 0) - 1 ||
+                        isLoopingPlaybackMode
+                    "
+                    :isOnlyTrack="isSingleTrack"
+                    :isFirst="isFirstTrack(track.Id)"
+                    :isLast="isLastTrack(track.Id)"
+                    :isAnySoloed="isAnyTrackSoloed"
+                    @previousTrack="
+                        toPreviousTrack(track.Id, isLoopingPlaybackMode)
+                    "
+                    @nextTrack="toNextTrack(track.Id, isLoopingPlaybackMode)"
+                    @trackEnded="continueAfterTrack(track.Id)"
+                />
+            </template>
+        </div>
 
         <!-- Multi-track-Controller -->
         <Teleport to="#media-player">
@@ -166,6 +181,7 @@ import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import MultitrackHandler from '@/code/audio/MultitrackHandler';
+import ToggleButton from '@/components/buttons/ToggleButton.vue';
 
 /** Displays the contained set of tracks according to the required mode.
  * @remarks Also handles the common replayer events for compilations
@@ -183,6 +199,7 @@ export default defineComponent({
         PlaybackIndicator,
         MuteButton,
         SoloButton,
+        ToggleButton,
     },
     props: {
         compilation: Compilation,
@@ -213,6 +230,9 @@ export default defineComponent({
 
             /** The multitrack-handler to use */
             multitrackHandler: undefined as unknown as MultitrackHandler,
+
+            /** Whether to show the track in a vertical orientation */
+            showVertical: false,
         };
     },
     mounted() {
@@ -573,3 +593,13 @@ export default defineComponent({
     },
 });
 </script>
+<style type="css">
+.tracks.vertical {
+    background-color: darkslategray;
+    max-width: calc(100vh - 200px);
+    min-width: calc(100vh - 200px);
+    transform: rotate(-90deg) translate(0, 100px);
+    transform-origin: center;
+    overflow-y: auto;
+}
+</style>
