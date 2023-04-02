@@ -81,11 +81,11 @@
                 </div>
             </template>
             <template v-slot:left-end>
-                <TimeDisplay
+                <!-- <TimeDisplay
                     class="level-item is-narrow is-hidden-mobile is-size-7"
                     :modelValue="currentSeconds"
                     :subSecondDigits="3"
-                ></TimeDisplay>
+                ></TimeDisplay> -->
                 <VolumeKnob
                     :disabled="!isTrackLoaded"
                     :modelValue="track.Volume"

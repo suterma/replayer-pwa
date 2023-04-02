@@ -20,10 +20,16 @@
             :isEngaged="showVertical"
             engaged-label="show Horizontal"
             disengaged-label="show Vertical"
-            @click="showVertical = !showVertical"
+            @click="toggleVertical($event)"
             >Vertical
         </ToggleButton>
-        <div class="tracks" :class="{ vertical: showVertical && isMixable }">
+        <div
+            class="tracks"
+            :class="{
+                vertical: showVertical && isMixable,
+                section: showVertical && isMixable,
+            }"
+        >
             <!-- Tracks to work with -->
             <template v-for="(track, index) in tracks" :key="track.Id">
                 <Track
@@ -257,6 +263,20 @@ export default defineComponent({
                     force: true,
                     /** empirical value (taking into account the non-existing fixed top navbar) */
                     offset: -22,
+                    /** Avoid interference with the key press overlay */
+                    cancelable: false,
+                });
+            }
+        },
+
+        toggleVertical(event: Event): void {
+            this.showVertical = !this.showVertical;
+            if (this.showVertical) {
+                VueScrollTo.scrollTo(event.target, {
+                    /** Always scroll, make it on top of the view */
+                    force: true,
+                    /** empirical value */
+                    offset: 0,
                     /** Avoid interference with the key press overlay */
                     cancelable: false,
                 });
@@ -598,8 +618,8 @@ export default defineComponent({
     background-color: darkslategray;
     max-width: calc(100vh - 200px);
     min-width: calc(100vh - 200px);
-    transform: rotate(-90deg) translate(0, 100px);
-    transform-origin: center;
+    transform: rotate(-90deg) translate(calc(-100vh + 200px), 0);
+    transform-origin: top left;
     overflow-y: auto;
 }
 </style>
