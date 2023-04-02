@@ -51,7 +51,7 @@ import { useStore } from 'vuex';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import Experimental from '@/components/Experimental.vue';
 import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
-import AudioLevelMeter from '/home/marcel/Desktop/github/vue-audio-level-meter/src/components/AudioLevelMeter.vue';
+import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMeter.vue';
 import { useAudioStore } from '@/store/audio';
 
 /** A safety margin for detecting the end of a track during playback */

@@ -51,7 +51,7 @@
         "register-service-worker": "^1.7.2",
         "uuid": "^8.3.2",
         "vue": "^3.2.47",
-        "vue-audio-level-meter": "^1.0.2",
+        "vue-audio-level-meter": "^1.0.3",
         "vue-global-events": "^2.1.1",
         "vue-peaks": "^1.0.1",
         "vue-router": "^4.1.5",
