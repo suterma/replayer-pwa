@@ -7,22 +7,25 @@
             :showZoomView="true"
         />
     </Experimental>
-    <TrackAudioPeakMeter
+    <!-- <TrackAudioPeakMeter
         v-if="showLevelMeter && audioSource"
         :disabled="disabled"
         :audioSource="audioSource"
         :audioContext="audio.context"
         :key="props.mediaUrl"
     >
-    </TrackAudioPeakMeter>
-    <TrackAudioLevelMeter
-        v-if="showLevelMeter && audioSource"
+    </TrackAudioPeakMeter> -->
+
+    <!-- //NOTE: the rendering of the AudioLevelMeter _might_ affect badly the synchronous start of the playback, but only the first time after a page reload/player instantiation.
+    //It's currently not consistently reproducible and goes away after a subsequent sync (e.g. after pause/play) -->
+    <AudioLevelMeter
+        v-if="showLevelMeter && props.mediaUrl && audioSource && audio.context"
         :disabled="disabled"
         :audioSource="audioSource"
         :audioContext="audio.context"
-        :key="props.mediaUrl"
+        :showText="false"
     >
-    </TrackAudioLevelMeter>
+    </AudioLevelMeter>
     <slot></slot>
 </template>
 
@@ -40,6 +43,7 @@ import {
     PropType,
     shallowRef,
     ShallowRef,
+    onMounted,
 } from 'vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { useStore } from 'vuex';
@@ -47,8 +51,7 @@ import { useStore } from 'vuex';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import Experimental from '@/components/Experimental.vue';
 import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
-import TrackAudioPeakMeter from '@/components/TrackAudioPeakMeter.vue';
-import TrackAudioLevelMeter from '@/components/TrackAudioLevelMeter.vue';
+import AudioLevelMeter from '@/components/AudioLevelMeter.vue';
 import { useAudioStore } from '@/store/audio';
 
 /** A safety margin for detecting the end of a track during playback */
@@ -239,6 +242,16 @@ function debugLog(message: string, ...optionalParams: any[]): void {
 
 const store = useStore();
 
+// --- Mounted check (is required for a properly working level meter) ---
+
+const isMounted = ref(false);
+onMounted(() => {
+    isMounted.value = true;
+});
+onUnmounted(() => {
+    isMounted.value = false;
+});
+
 // --- Audio Setup ---
 
 /** Audio element to use
@@ -261,13 +274,7 @@ const fader = shallowRef(
 
 const audio = useAudioStore();
 
-// NOTE: When creating the audio source as a MediaElementAudioSourceNode, if the source URL is not CORS-enabled, the MediaElementAudioSourceNode outputs all zeroes.
-// Thus, no audio is heard and also the level meter shows no data
-
-//TODO: first check whether the resource allows for CORS, then enable the MediaElementAudioSourceNode and the level meter. Otherwise,
-//do not use the MediaElementAudioSourceNode and the meter, and just let the audio element play it's content directly to the output.
-
-/** The optional audio source node, required when for metering is requested
+/** The optional audio source node, required when metering is requested
  */
 const audioSource: ShallowRef<InstanceType<
     typeof MediaElementAudioSourceNode
