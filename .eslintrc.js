@@ -13,9 +13,10 @@ module.exports = {
         '@vue/prettier/@typescript-eslint',
         'plugin:jest/recommended',
         'plugin:jest/style',
+        //TODO try later maybe 'plugin:vue/base',
     ],
     parserOptions: {
-        ecmaVersion: 2020,
+        ecmaVersion: 2015,
         sourceType: 'module',
     },
     rules: {
