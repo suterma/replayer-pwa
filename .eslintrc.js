@@ -13,7 +13,8 @@ module.exports = {
         '@vue/prettier/@typescript-eslint',
         'plugin:jest/recommended',
         'plugin:jest/style',
-        //TODO try later maybe 'plugin:vue/base',
+        //NOTE: this fixes .vue SFC paring with arbitrary element order
+        'plugin:vue/base',
     ],
     parserOptions: {
         ecmaVersion: 2015,
