@@ -53,6 +53,8 @@ import Experimental from '@/components/Experimental.vue';
 import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
 import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMeter.vue';
 import { useAudioStore } from '@/store/audio';
+import FileHandler from '@/store/filehandler';
+import CompilationHandler from '@/store/compilation-handler';
 
 /** A safety margin for detecting the end of a track during playback */
 const trackDurationSafetyMarginSeconds = 0.3;
@@ -282,7 +284,7 @@ const audioSource: ShallowRef<InstanceType<
 
 /** Watch the showLevelMeter setting, and act accordingly
  * @remarks This handles the audio setup for metering
- * @devdoc Handle the value also immediately at mount time //TODO doest this work??
+ * @devdoc Handle the value also immediately at mount time
  */
 watch(
     () => store.getters.settings.showLevelMeter,
@@ -290,7 +292,12 @@ watch(
         console.debug(
             `TrackAudioApiPlayer(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:showLevelMeter${showLevelMeter}`,
         );
-        if (showLevelMeter) {
+        // Create the level meter and associated routing only when requested, and only for local files
+        if (
+            showLevelMeter &&
+            props.mediaUrl &&
+            !FileHandler.isValidHttpUrl(props.mediaUrl)
+        ) {
             if (audioSource.value === null) {
                 audioSource.value = audio.context.createMediaElementSource(
                     audioElement.value,
