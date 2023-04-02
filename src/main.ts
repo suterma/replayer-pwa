@@ -22,7 +22,7 @@ createApp(App)
     .use(router)
     .use(VueScrollTo)
     .use(vClickOutside)
-    .use(PromiseDialog)
+    .use(PromiseDialog, {})
     .component('Experimental', Experimental)
     .directive('focus', {
         mounted: (el) => el.focus(),
