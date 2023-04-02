@@ -93,6 +93,15 @@
                                     AAC media</a
                                 >
                             </li>
+                            <li>
+                                <a
+                                    href="./#/play?media=https://previews.cambridge-mt.com/ImAlright_Full_Preview.mp3"
+                                    target="_blank"
+                                >
+                                    Angels In Amplifiers, Full Preview Mix</a
+                                >, from the 'Mixing Secrets' Free Multitrack
+                                Download Library by Mike Senior
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -453,11 +462,20 @@
                     </li>
                     <li>
                         <a
-                            href="https://w3c.github.io/uievents/tools/key-event-viewer.html "
+                            href="https://w3c.github.io/uievents/tools/key-event-viewer.html"
                             target="_blank"
                         >
                             Keyboard Event Viewer</a
                         >, a simple key event viewer. (Released by W3C).
+                    </li>
+                    <li>
+                        <a
+                            href="https://github.com/suterma/vue-audio-level-meter"
+                            target="_blank"
+                        >
+                            vue-audio-level-meter</a
+                        >, a simple audio (peak) level meter for Vue.js.
+                        (Released under the MIT License, by Marcel Suter)
                     </li>
                 </ul>
             </div>
