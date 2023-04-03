@@ -122,7 +122,7 @@
             "description": "Allows to open a compilation and play tracks from it",
             "icons": [
                 {
-                    "src": "/img/icons/shortcut-play-icon-96x96.webp",
+                    "src": "/img/icons/shortcut-play-icon-96x96.png",
                     "sizes": "96x96",
                     "type": "image/png",
                     "purpose": "any"
