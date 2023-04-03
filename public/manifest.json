@@ -49,7 +49,19 @@
         }
     ],
     "start_url": ".",
+    "orientation": "portrait",
     "display": "standalone",
+    "display_override": [
+        "window-control-overlay",        
+        "standalone",
+        "browser"
+      ],
+    "protocol_handlers": [
+        {
+            "protocol": "web+music",
+            "url": "/#/play?media=%s"
+        }
+    ],
     "screenshots": [
         {
             "label": "A screenshot of the playback view of Replayer",
