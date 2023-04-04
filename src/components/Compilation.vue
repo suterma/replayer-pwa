@@ -78,16 +78,16 @@
                             <div
                                 class="level-item is-justify-content-flex-start"
                             >
-                                <MuteButton
-                                    :disabled="!isAllTrackLoaded"
-                                    :isMuted="isAllTrackMuted"
-                                    @click="multitrackHandler?.toggleMute()"
-                                    data-cy="mute"
-                                />
                                 <SoloButton
                                     :disabled="!isAllTrackLoaded"
                                     :isSoloed="isAllTrackSoloed"
                                     @click="multitrackHandler?.toggleSolo()"
+                                    data-cy="mute"
+                                />
+                                <MuteButton
+                                    :disabled="!isAllTrackLoaded"
+                                    :isMuted="isAllTrackMuted"
+                                    @click="multitrackHandler?.toggleMute()"
                                     data-cy="mute"
                                 />
                             </div>
@@ -621,5 +621,15 @@ export default defineComponent({
     transform: rotate(-90deg) translate(calc(-100vh + 200px), 0);
     transform-origin: top left;
     overflow-y: auto;
+}
+/** Rotate knobs back to their upright position */
+.tracks.vertical .track .is-knob {
+    transform: rotate(+90deg);
+}
+
+/** Rotate buttons back to their upright position */
+.tracks.vertical .track .button {
+    transform: rotate(+90deg);
+    width: 2.5em;
 }
 </style>

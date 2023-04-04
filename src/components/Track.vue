@@ -60,17 +60,17 @@
         >
             <template v-slot:left-start>
                 <div class="level-item is-narrow">
-                    <MuteButton
-                        :disabled="!canPlay"
-                        :isMuted="isMuted"
-                        @click="toggleMute()"
-                        data-cy="mute"
-                    />
                     <SoloButton
                         :disabled="!canPlay"
                         :isSoloed="isSoloed"
                         @click="toggleSolo()"
                         data-cy="solo"
+                    />
+                    <MuteButton
+                        :disabled="!canPlay"
+                        :isMuted="isMuted"
+                        @click="toggleMute()"
+                        data-cy="mute"
                     />
                     <SelectButton
                         :disabled="!canPlay"
