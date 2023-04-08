@@ -47,14 +47,12 @@ import {
 } from 'vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { useStore } from 'vuex';
-
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import Experimental from '@/components/Experimental.vue';
 import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
 import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMeter.vue';
 import { useAudioStore } from '@/store/audio';
 import FileHandler from '@/store/filehandler';
-import CompilationHandler from '@/store/compilation-handler';
 
 /** A safety margin for detecting the end of a track during playback */
 const trackDurationSafetyMarginSeconds = 0.3;
