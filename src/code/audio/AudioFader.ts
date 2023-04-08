@@ -1,7 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
 
-//TODO use a singleton timer method, instead one for each instance
-
 /** @class A fader for an audio element instance.
  * @remarks This handles fade-in/out operations during playback, including a muted state.
  * The goal is to free the actual player from automatic fading handling.
