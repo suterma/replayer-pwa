@@ -211,12 +211,13 @@ export default class MultitrackHandler {
         });
     }
 
-    /** Seeks to the given position for all tracks */
-    seekTo(position: number): void {
+    /** Seeks to the given position for all tracks
+     */
+    seekToSeconds(position: number): void {
         const instances = this.getAllTrackInstances();
         if (instances) {
             instances.forEach((instance) => {
-                instance.seekToSeconds(position);
+                instance.seekToSecondsSilent(position);
             });
         }
     }
@@ -227,7 +228,7 @@ export default class MultitrackHandler {
         const instances = this.getAllTrackInstances();
         if (instances) {
             instances.forEach((instance) => {
-                instance.seekToSeconds(currentPosition + seconds);
+                instance.seekToSecondsSilent(currentPosition + seconds);
             });
         }
     }
@@ -238,7 +239,7 @@ export default class MultitrackHandler {
         const instances = this.getAllTrackInstances();
         if (instances) {
             instances.forEach((instance) => {
-                instance.seekToSeconds(currentPosition);
+                instance.seekToSecondsSilent(currentPosition);
             });
         }
     }

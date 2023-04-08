@@ -44,6 +44,7 @@
                         updateIsTrackPlayerFullScreen($event)
                     "
                     @isPlaying="updateIsTrackPlaying($event)"
+                    @seekToSeconds="handleTrackSeekToSeconds($event)"
                     :playbackMode="compilation.PlaybackMode"
                     @update:playbackMode="updatePlaybackMode($event)"
                     :hasPreviousTrack="index > 0 || isLoopingPlaybackMode"
@@ -101,7 +102,9 @@
                                 v-model.number="getAllTrackPosition"
                                 @update:modelValue="
                                     (position) =>
-                                        multitrackHandler?.seekTo(position)
+                                        multitrackHandler?.seekToSeconds(
+                                            position,
+                                        )
                                 "
                                 @seek="
                                     (seconds) =>
@@ -291,14 +294,28 @@ export default defineComponent({
         /* Handles a change of play state for a single track (before/after fading), by controlling the other tracks
          * @remarks This must only be done when multitrack playback is expected.
          */
-        updateIsTrackPlaying(isPlaying: boolean, wasPlaying: boolean): void {
+        updateIsTrackPlaying(isPlaying: boolean): void {
             if (this.isMixable) {
                 console.debug('Compilation::isPlaying:', isPlaying);
 
-                if (isPlaying && !wasPlaying && !this.isAllPlaying) {
+                if (isPlaying && !this.isAllPlaying) {
                     console.debug('Compilation::isAnyFading:Playing all...');
                     this.multitrackHandler?.play();
                 }
+            }
+        },
+
+        /* Handles a seek operation of a single track, by replicating it to the other tracks
+         * @remarks This must only be done when multitrack playback is expected.
+         */
+        handleTrackSeekToSeconds(seconds: number): void {
+            if (this.isMixable) {
+                console.debug(
+                    'Compilation::handleTrackSeekToSeconds:',
+                    seconds,
+                );
+
+                this.multitrackHandler?.seekToSeconds(seconds);
             }
         },
 

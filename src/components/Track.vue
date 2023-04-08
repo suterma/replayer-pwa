@@ -210,8 +210,7 @@
                             class="is-fullwidth ml-4-tablet mr-4-tablet"
                             v-model.number="currentSeconds"
                             @update:modelValue="
-                                (position) =>
-                                    trackPlayerInstance?.seekTo(position)
+                                (position) => seekToSeconds(position)
                             "
                             @seek="(seconds) => seek(seconds)"
                             :trackDuration="track.Duration"
@@ -389,9 +388,7 @@
                                         v-model.number="currentSeconds"
                                         @update:modelValue="
                                             (position) =>
-                                                trackPlayerInstance?.seekTo(
-                                                    position,
-                                                )
+                                                seekToSeconds(position)
                                         "
                                         @seek="(seconds) => seek(seconds)"
                                         :trackDuration="track.Duration"
@@ -591,6 +588,10 @@ export default defineComponent({
         /** Occurs, when this track starts playing.
          */
         'isPlaying',
+
+        /** Occurs on a seek operation
+         */
+        'seekToSeconds',
 
         /** Occurs, when the user toggles the playback mode */
         'update:playbackMode',
@@ -840,6 +841,13 @@ export default defineComponent({
             this.trackPlayerInstance?.play();
         },
 
+        /** Starts playback from the given temporal position
+         * @remarks This first seeks to the position, then starts playing
+         */
+        playFrom(position: number) {
+            this.trackPlayerInstance?.playFrom(position);
+        },
+
         /** Pauses playback at the current position, with fading if configured.
          * @remarks Does not assert whether this is the active track.
          */
@@ -866,16 +874,30 @@ export default defineComponent({
                 this.seek(+5);
             }
         },
+
+        /** Pauses playback (with a subsequent seek operation) */
+        pauseAndSeekTo(seconds: number): void {
+            this.trackPlayerInstance?.pauseAndSeekTo(seconds);
+        },
+
         /** Seeks forward or backward, for the given amount of seconds */
         seek(seconds: number): void {
-            this.trackPlayerInstance?.seekToSeconds(
-                this.currentSeconds + seconds,
-            );
+            this.seekToSeconds(this.currentSeconds + seconds);
         },
-        /** Seeks to the position, in [seconds] */
+
+        /** Seeks to the position, in [seconds], with emitting an event */
         seekToSeconds(seconds: number): void {
             this.trackPlayerInstance?.seekToSeconds(seconds);
+            this.$emit('seekToSeconds', seconds);
         },
+
+        /** Seeks to the position, in [seconds], without emitting an event
+         * @devdoc This is used to break the circular event handling for multitrack seek operations
+         */
+        seekToSecondsSilent(seconds: number): void {
+            this.trackPlayerInstance?.seekToSeconds(seconds);
+        },
+
         volumeDown() {
             if (this.isActiveTrack) {
                 this.trackPlayerInstance?.volumeDown();
@@ -916,13 +938,13 @@ export default defineComponent({
                     //For the cue time, handle all non-null values (Zero is valid)
                     if (this.isPlaying) {
                         if (cueTime != null) {
-                            this.trackPlayerInstance?.pauseAndSeekTo(cueTime);
+                            this.pauseAndSeekTo(cueTime);
                         } else {
-                            this.trackPlayerInstance?.pause();
+                            this.pause();
                         }
                     } else {
                         if (cueTime != null) {
-                            this.trackPlayerInstance?.seekTo(cueTime);
+                            this.seekToSeconds(cueTime);
                         }
                     }
                     this.activateWakeLock();
@@ -987,12 +1009,12 @@ export default defineComponent({
                 );
                 if (togglePlayback) {
                     if (this.isPlaying) {
-                        this.trackPlayerInstance?.pauseAndSeekTo(cue.Time);
+                        this.pauseAndSeekTo(cue.Time);
                     } else {
-                        this.trackPlayerInstance?.playFrom(cue.Time);
+                        this.playFrom(cue.Time);
                     }
                 } else {
-                    this.trackPlayerInstance?.seekTo(cue.Time);
+                    this.seekToSeconds(cue.Time);
                 }
                 this.activateWakeLock();
             }
@@ -1011,9 +1033,9 @@ export default defineComponent({
 
                 //Set the position to this cue and handle playback
                 if (this.isPlaying) {
-                    this.trackPlayerInstance?.seekTo(cue.Time); //keep playing
+                    this.seekToSeconds(cue.Time); //keep playing
                 } else {
-                    this.trackPlayerInstance?.playFrom(cue.Time);
+                    this.playFrom(cue.Time);
                 }
                 this.activateWakeLock();
             }
@@ -1032,9 +1054,9 @@ export default defineComponent({
 
             //Set the position to the beginning and handle playback
             if (this.isPlaying) {
-                this.trackPlayerInstance?.seekTo(0); //keep playing
+                this.seekToSeconds(0); //keep playing
             } else {
-                this.trackPlayerInstance?.playFrom(0);
+                this.playFrom(0);
             }
             this.activateWakeLock();
         },
@@ -1086,7 +1108,7 @@ export default defineComponent({
 
             // Pause this track, when it's no more active track
             if (wasActive === true && isActive === false) {
-                this.trackPlayerInstance?.pause();
+                this.pause();
             }
 
             if (isActive == false) {

@@ -69,7 +69,6 @@ const trackDurationSafetyMarginSeconds = 0.3;
 defineExpose({
     play,
     pause,
-    seekTo,
     seekToSeconds,
     stop,
     togglePlayback,
@@ -355,12 +354,6 @@ function updateTime(/*event: Event*/): void {
     handleCueLoop();
 }
 
-/** Transports (seeks) the playback to the given temporal position */
-function seekTo(position: number): void {
-    debugLog(`seekTo:position`, position);
-    audioElement.value.currentTime = position;
-}
-
 /** Handles looping for a single cue, if requested
  * @remarks Cue looping is solved here by observing and handling the recurring time updates.
  * NOTE: Partial looping is not natively supported with the used HTMLAudioElement.
@@ -394,7 +387,7 @@ function handleCueLoop(): void {
                         isAtTrackEnd)
                 ) {
                     //Back to loop start
-                    seekTo(props.loopStart);
+                    seekToSeconds(props.loopStart);
 
                     if (isAtTrackEnd) {
                         debugLog(
@@ -528,7 +521,7 @@ function handleReadyState(readyState: number) {
             updateDuration(audioElement.value.duration);
 
             //Apply the currently known position to the player. It could be non-zero already.
-            seekTo(currentSeconds.value ?? 0);
+            seekToSeconds(currentSeconds.value ?? 0);
         }
     }
 
@@ -630,7 +623,7 @@ function pauseAndSeekTo(position: number): void {
         isFading.value = false;
         emit('update:isFading', false);
         emit('update:isPlaying', false);
-        seekTo(position);
+        seekToSeconds(position);
     });
 }
 
@@ -638,7 +631,7 @@ function pauseAndSeekTo(position: number): void {
  * @remarks This first seeks to the position, then starts playing
  */
 function playFrom(position: number): void {
-    seekTo(position);
+    seekToSeconds(position);
     play();
 }
 
@@ -800,7 +793,7 @@ audioElement.value.onended = (event) => {
     if (props.playbackMode === PlaybackMode.PlayTrack) {
         if (props.loopStart) {
             //Back to start (keep pausing)
-            seekTo(props.loopStart);
+            seekToSeconds(props.loopStart);
         }
     }
 };
