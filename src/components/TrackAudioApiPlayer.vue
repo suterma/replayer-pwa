@@ -180,6 +180,15 @@ const props = defineProps({
         required: true,
         default: DefaultTrackVolume,
     },
+
+    /** The track id
+     * @remarks Used to have a unique id on the encapsulated audio element
+     */
+    trackId: {
+        type: String,
+        required: true,
+    },
+
     /** Whether to show the component in a disabled state
      * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
      */
@@ -254,10 +263,20 @@ onUnmounted(() => {
 
 // --- Audio Setup ---
 
+const audio = useAudioStore();
+
 /** Audio element to use
  * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
  */
 const audioElement = shallowRef(document.createElement('audio'));
+audioElement.value.id = 'track-' + props.trackId;
+
+onMounted(() => {
+    audio.addMediaElement(audioElement.value);
+});
+onUnmounted(() => {
+    audio.removeMediaElement(audioElement.value);
+});
 
 /** The fader to use */
 const fader = shallowRef(
@@ -271,8 +290,6 @@ const fader = shallowRef(
 );
 
 // --- Audio Metering Setup---
-
-const audio = useAudioStore();
 
 /** The optional audio source node, required when metering is requested
  */

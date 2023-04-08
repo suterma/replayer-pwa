@@ -271,6 +271,7 @@
                 ref="playerReference"
                 :title="track.Name"
                 :mediaUrl="mediaUrl"
+                :trackId="track.Id"
                 :disabled="!isTrackLoaded"
                 @timeupdate="updateTime"
                 @durationChanged="calculateCueDurations"
@@ -284,6 +285,7 @@
                 "
                 :sourceDescription="track?.Url"
                 @update:volume="updatedVolume"
+                @update:level="updatedLevel"
                 :volume="track.Volume"
                 :isMuted="isMuted"
                 :isSoloed="isSoloed"
@@ -701,6 +703,9 @@ export default defineComponent({
             /** Readonly flag to indicate whether the player is currently fading */
             isFading: false,
 
+            /** The current audio level */
+            level: -96,
+
             /** Whether the cues are currently expanded for editing */
             isExpanded: false,
 
@@ -947,11 +952,19 @@ export default defineComponent({
                 volume: volume,
             });
         },
+        /** Handle track level updates
+         * @param {level:number} - The current audio level
+         * @devdoc Handled here as part of the track because the level is shown as part of the track
+         */
+        updatedLevel(level: number): void {
+            console.debug(`Track(${this.track.Name})::updatedLevel:${level}`);
+            this.level = level;
+        },
 
         /** Handles the click of a cue button, by seeking to it and, optionally, toggling playback
          * @param cue The cue to handle
          * @param togglePlayback Whether to toggle playback. Optional, defaults to true
-         * @devdoc Click invocations by the ENTER key are explicitly not handeled here. These should not get handeled by the keyboard shortcut engine.
+         * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
          */
         cueClick(cue: ICue, togglePlayback = true) {
             console.debug(`Track(${this.track.Name})::cueClick:cue:`, cue);

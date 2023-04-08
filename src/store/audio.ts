@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { shallowRef } from 'vue';
+import { ref, shallowRef } from 'vue';
 
 /**
  *  Defining the AudioContext
@@ -14,5 +14,26 @@ export const useAudioStore = defineStore('audio', () => {
      * @devdoc Does get destroyed only after document unload, but this is good enough I guess.
      */
     const context = shallowRef(audioContext);
-    return { context };
+
+    /** The media elements the application can work with
+     * @remarks Each media element belongs to a track in the compilation
+     */
+
+    const mediaElements = ref(new Array<HTMLMediaElement>());
+
+    /** Adds the given media element to the list of available media elements */
+    function addMediaElement(element: HTMLMediaElement) {
+        mediaElements.value.push(element);
+    }
+    /** Removes the given media element from the list of available media elements, by the id attribute */
+    function removeMediaElement(element: HTMLMediaElement) {
+        const removeElementId = element.id;
+        const removeIndex = mediaElements.value
+            .map((element) => element.id)
+            .indexOf(removeElementId);
+
+        ~removeIndex && mediaElements.value.splice(removeIndex, 1);
+    }
+
+    return { context, mediaElements, addMediaElement, removeMediaElement };
 });
