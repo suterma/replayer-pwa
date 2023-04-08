@@ -588,6 +588,9 @@ export default defineComponent({
          * @remarks allows track navigation from within a track.
          */
         'update:isTrackPlayerFullScreen',
+        /** Occurs, when this track starts playing.
+         */
+        'isPlaying',
 
         /** Occurs, when the user toggles the playback mode */
         'update:playbackMode',
@@ -837,7 +840,7 @@ export default defineComponent({
             this.trackPlayerInstance?.play();
         },
 
-        /** Pauses playback at the current position
+        /** Pauses playback at the current position, with fading if configured.
          * @remarks Does not assert whether this is the active track.
          */
         pause() {
@@ -1131,12 +1134,12 @@ export default defineComponent({
         /** Handles changes in whether this track is playing.
          * @remarks This activates the wake lock, when playing starts.
          */
-        isPlaying(val) {
-            //TODO the wake lock should be kept at compilation level
-            console.debug(`Track(${this.track.Name})::isPlaying:val:`, val);
-            // if (val) {
-            //     this.activateWakeLock();
-            // }
+        isPlaying(isPlaying) {
+            console.debug(
+                `Track(${this.track.Name})::isPlaying:isPlaying:`,
+                isPlaying,
+            );
+            this.$emit('isPlaying', isPlaying);
         },
         /** Handles changes of the full screen state
          * @devdoc This hides the scroll bars in the (full screen div's) underlying content

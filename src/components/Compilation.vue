@@ -43,6 +43,7 @@
                     @update:isTrackPlayerFullScreen="
                         updateIsTrackPlayerFullScreen($event)
                     "
+                    @isPlaying="updateIsTrackPlaying($event)"
                     :playbackMode="compilation.PlaybackMode"
                     @update:playbackMode="updatePlaybackMode($event)"
                     :hasPreviousTrack="index > 0 || isLoopingPlaybackMode"
@@ -287,6 +288,20 @@ export default defineComponent({
             this.isTrackPlayerFullScreen = isFullScreen;
         },
 
+        /* Handles a change of play state for a single track (before/after fading), by controlling the other tracks
+         * @remarks This must only be done when multitrack playback is expected.
+         */
+        updateIsTrackPlaying(isPlaying: boolean, wasPlaying: boolean): void {
+            if (this.isMixable) {
+                console.debug('Compilation::isPlaying:', isPlaying);
+
+                if (isPlaying && !wasPlaying && !this.isAllPlaying) {
+                    console.debug('Compilation::isAnyFading:Playing all...');
+                    this.multitrackHandler?.play();
+                }
+            }
+        },
+
         updatePlaybackMode(playbackMode: PlaybackMode): void {
             //omit the modes that affect more than one track
             if (this.isSingleTrack) {
@@ -485,6 +500,22 @@ export default defineComponent({
             if (this.isMixable) {
                 console.debug('Compilation::isAllPlaying:', isAllPlaying);
                 this.synchTracks();
+            }
+        },
+
+        /* At change of fading state of any track, replicate the determined action to all tracks
+         * @remarks This must only be done when multitrack playback is expected.
+         */
+        isAnyFading(isAnyFading: boolean, wasAnyFading: boolean) {
+            if (this.isMixable) {
+                console.debug('Compilation::isAnyFading:', isAnyFading);
+
+                // Still all playing, but now any fading?
+                if (!wasAnyFading && isAnyFading && this.isAllPlaying) {
+                    // must be a pause operation on a single track
+                    console.debug('Compilation::isAnyFading:Pausing all...');
+                    this.multitrackHandler?.pause();
+                }
             }
         },
     },

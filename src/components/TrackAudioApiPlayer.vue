@@ -600,7 +600,7 @@ function volumeUp() {
         Math.max(Math.min(props.volume * 1.41, 1), AudioFader.audioVolumeMin),
     );
 }
-/** Pauses playback */
+/** Pauses playback at the current position, with fading if configured. */
 function pause(): void {
     debugLog(`pause`);
     if (playing.value) {
