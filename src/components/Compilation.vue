@@ -149,6 +149,14 @@
                                             :modelValue="getAllTrackPosition"
                                             :subSecondDigits="3"
                                         ></TimeDisplay>
+                                        (
+                                        <TimeDisplay
+                                            :modelValue="
+                                                getAllTrackPositionRange
+                                            "
+                                            :subSecondDigits="3"
+                                        ></TimeDisplay>
+                                        )
                                     </button>
                                     <PlaybackIndicator
                                         :isReady="
@@ -514,8 +522,23 @@ export default defineComponent({
          * @remarks This must only be done when multitrack playback is expected.
          */
         isAllPlaying(isAllPlaying: boolean) {
-            if (this.isMixable) {
-                console.debug('Compilation::isAllPlaying:', isAllPlaying);
+            if (this.isMixable && isAllPlaying) {
+                console.debug(
+                    'Compilation::isAllPlaying:synchTracks',
+                    isAllPlaying,
+                );
+                this.synchTracks();
+            }
+        },
+        /* At change of play state (before/after fading), synch tracks)
+         * @remarks This must only be done when multitrack playback is expected.
+         */
+        isAllPaused(isAllPaused: boolean) {
+            if (this.isMixable && isAllPaused) {
+                console.debug(
+                    'Compilation::isAllPaused:synchTracks',
+                    isAllPaused,
+                );
                 this.synchTracks();
             }
         },
@@ -622,6 +645,11 @@ export default defineComponent({
             return this.multitrackHandler?.isAllPlaying() ?? false;
         },
 
+        /** Determines, whether all tracks in the compilation are currently paused (used with the mix mode) */
+        isAllPaused() {
+            return this.multitrackHandler?.isAllPaused() ?? false;
+        },
+
         /** Determines, whether all tracks in the compilation are currently loaded (used with the mix mode) */
         isAllTrackLoaded() {
             return this.multitrackHandler?.isAllTrackLoaded() ?? false;
@@ -651,7 +679,16 @@ export default defineComponent({
          * @returns A single representation for the progress as an average
          */
         getAllTrackPosition(): number {
-            return this.multitrackHandler?.getAllTrackPosition() ?? 0;
+            return (
+                this.multitrackHandler?.getAllTrackPosition().currentSeconds ??
+                0
+            );
+        },
+        /** Determines the range of playback progress of all tracks in the compilation, in [seconds] (used with the mix mode).
+         * @returns A single representation for the range
+         */
+        getAllTrackPositionRange(): number {
+            return this.multitrackHandler?.getAllTrackPosition().range ?? 0;
         },
 
         /** Determines, whether any track in the compilation is currently fading (used with the mix mode) */

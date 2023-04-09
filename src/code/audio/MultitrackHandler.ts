@@ -21,11 +21,24 @@ export default class MultitrackHandler {
     /** The refs to take the instances of TrackAudioApiPlayer from */
     refs: { [name: string]: Element | ComponentPublicInstance | null };
 
-    /** Determines, whether all tracks in the compilation are currently playing (used with the mix mode) */
-    isAllPlaying(): boolean {
-        const instances = this.getAllTrackInstances();
+    /** Determines, whether all tracks in the compilation are currently playing (used with the mix mode)
+     * @param {InstanceType<typeof Track>[]} instances - When set, the instances to use. Otherwise, all available instances are retrieved and used
+     */
+    isAllPlaying(instances?: InstanceType<typeof Track>[]): boolean {
+        if (!instances) {
+            instances = this.getAllTrackInstances();
+        }
         if (instances) {
             return instances.every((i) => i.isPlaying) ?? false;
+        }
+        return false;
+    }
+
+    /** Determines, whether all tracks in the compilation are currently paused (used with the mix mode) */
+    isAllPaused(): boolean {
+        const instances = this.getAllTrackInstances();
+        if (instances) {
+            return instances.every((i) => !i.isPlaying) ?? false;
         }
         return false;
     }
@@ -74,26 +87,46 @@ export default class MultitrackHandler {
     }
 
     /** Determines playback progress of all tracks in the compilation, in [seconds] (used with the mix mode).
-     * @returns A single representation for the progress as an average
+     * @param {InstanceType<typeof Track>[]} instances - When set, the instances to use. Otherwise, all available instances are retrieved and used
+     * @returns A single representation for the progress. If a single track is active, it's value is used, otherwise some average.
      */
-    getAllTrackPosition(): number {
-        const instances = this.getAllTrackInstances();
+    getAllTrackPosition(instances?: InstanceType<typeof Track>[]): {
+        currentSeconds: number;
+        range: number;
+    } {
+        if (!instances) {
+            instances = this.getAllTrackInstances();
+        }
         if (instances) {
             const positions = instances.map((track) => {
                 return track.currentSeconds;
             });
 
-            if (positions && positions.length > 0) {
-                //TODO here, an optimum between unnecessary many events and a reasonable value has to be found.
+            const min = Math.min(...positions);
+            const max = Math.max(...positions);
+            const range = max - min;
 
-                // just take the first
-                return positions[0] ?? 0;
+            const activeTrack = instances.filter((track) => {
+                return track.isActiveTrack;
+            })[0];
+            if (activeTrack) {
+                return {
+                    currentSeconds: activeTrack.currentSeconds,
+                    range: range,
+                };
+            } else {
+                if (positions && positions.length > 0) {
+                    //TODO here, an optimum between unnecessary many events and a reasonable value has to be found.
 
-                // calculate the average
-                //return positions.reduce((p, c) => p + c, 0) / positions.length;
+                    // just take the first
+                    return { currentSeconds: positions[0] ?? 0, range: range };
+
+                    // calculate the average
+                    //return positions.reduce((p, c) => p + c, 0) / positions.length;
+                }
             }
         }
-        return 0;
+        return { currentSeconds: 0, range: 0 };
     }
 
     /** Determines the duration of all tracks in the compilation, in [seconds] (used with the mix mode).
@@ -153,15 +186,10 @@ export default class MultitrackHandler {
     /** Toggles the play state of all tracks, according to whether all tracks are currently playing */
     togglePlayPause(): void {
         const instances = this.getAllTrackInstances();
-
-        if (instances) {
-            if (this.isAllPlaying()) {
-                instances.forEach((instance) => {
-                    instance.pause();
-                });
-            } else {
-                this.playOnNextTick(instances);
-            }
+        if (this.isAllPlaying(instances)) {
+            this.pause(instances);
+        } else {
+            this.play(instances);
         }
     }
 
@@ -175,28 +203,35 @@ export default class MultitrackHandler {
         }
     }
 
-    /** Pauses playback for all tracks. Only issues a pause command for tracks which are not yet fading */
-    pause(): void {
-        const instances = this.getAllTrackInstances();
+    /** Pauses playback for all tracks. Only issues a pause command for tracks which are not yet fading
+     * @param {InstanceType<typeof Track>[]} instances - When set, the instances to use. Otherwise, all available instances are retrieved and used
+     */
+    pause(instances?: InstanceType<typeof Track>[]): void {
+        if (!instances) {
+            instances = this.getAllTrackInstances();
+        }
         if (instances) {
-            instances.forEach((instance) => {
-                if (!instance.isFading) {
-                    instance.pause();
-                }
-            });
+            /** Note: Tests on slower machines have shown that a deferred action (on NextTick) is not beneficial here.
+             * However, testing for already ongoing pause/fadeouts prevent double actions and thus unwanted fading aborts.
+             */
+            if (instances) {
+                instances.forEach((instance) => {
+                    if (instance.isPlaying && !instance.isFading) {
+                        instance.pause();
+                    }
+                });
+            }
         }
     }
 
-    /** Starts playback for all tracks */
-    play(): void {
-        const instances = this.getAllTrackInstances();
-        if (instances) {
-            this.playOnNextTick(instances);
+    /** Starts playback for all tracks, on next Tick
+     * @param {InstanceType<typeof Track>[]} instances - When set, the instances to use. Otherwise, all available instances are retrieved and used
+     */
+    play(instances?: InstanceType<typeof Track>[]): void {
+        if (!instances) {
+            instances = this.getAllTrackInstances();
         }
-    }
 
-    /** Starts playback for all tracks, on next Tick */
-    private playOnNextTick(instances: InstanceType<typeof Track>[]): void {
         // Start playback for all, but only after the current event loop has finished
         // See https://nodejs.dev/en/learn/understanding-processnexttick/
         // Doing it this way makes sure that:
@@ -205,9 +240,11 @@ export default class MultitrackHandler {
         // Tests on slower machines and with may tracks have show that this special handling has a huge positive
         // impact on the timeliness the multitrack playback
         process.nextTick(() => {
-            instances.forEach((instance) => {
-                instance.play();
-            });
+            if (instances) {
+                instances.forEach((instance) => {
+                    instance.play();
+                });
+            }
         });
     }
 
@@ -224,22 +261,22 @@ export default class MultitrackHandler {
 
     /** Seeks the given amount for all tracks */
     seek(seconds: number): void {
-        const currentPosition = this.getAllTrackPosition();
         const instances = this.getAllTrackInstances();
+        const position = this.getAllTrackPosition(instances);
         if (instances) {
             instances.forEach((instance) => {
-                instance.seekToSecondsSilent(currentPosition + seconds);
+                instance.seekToSecondsSilent(position.currentSeconds + seconds);
             });
         }
     }
 
     /** Synchronizes all track positions. */
     synchTracks(): void {
-        const currentPosition = this.getAllTrackPosition();
         const instances = this.getAllTrackInstances();
+        const position = this.getAllTrackPosition(instances);
         if (instances) {
             instances.forEach((instance) => {
-                instance.seekToSecondsSilent(currentPosition);
+                instance.seekToSecondsSilent(position.currentSeconds);
             });
         }
     }
