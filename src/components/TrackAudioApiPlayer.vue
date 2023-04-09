@@ -564,7 +564,7 @@ function handleReadyState(readyState: number) {
 }
 
 function seekToSeconds(seconds: number): void {
-    debugLog(`seekToSeconds`, seconds);
+    //debugLog(`seekToSeconds`, seconds);
     if (!hasLoadedMetadata.value) return;
     if (audioElement.value.currentTime === seconds) {
         return;
@@ -786,10 +786,10 @@ audioElement.value.onabort = () => {
     debugLog(`onabort`);
 };
 audioElement.value.oncanplay = () => {
-    debugLog(`oncanplay`);
+    //debugLog(`oncanplay`);
 };
 audioElement.value.oncanplaythrough = () => {
-    debugLog(`oncanplaythrough`);
+    //debugLog(`oncanplaythrough`);
 };
 audioElement.value.onloadstart = () => {
     debugLog(`onloadstart`);

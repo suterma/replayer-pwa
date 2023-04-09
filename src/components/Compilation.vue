@@ -319,10 +319,10 @@ export default defineComponent({
          */
         handleTrackSeekToSeconds(seconds: number): void {
             if (this.isMixable) {
-                console.debug(
-                    'Compilation::handleTrackSeekToSeconds:',
-                    seconds,
-                );
+                // console.debug(
+                //     'Compilation::handleTrackSeekToSeconds:',
+                //     seconds,
+                // );
 
                 this.multitrackHandler?.seekToSeconds(seconds);
             }
