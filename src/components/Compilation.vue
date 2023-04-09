@@ -475,7 +475,7 @@ export default defineComponent({
             }
             return false;
         },
-        /** Synchronizes all track positions to the average position of them. */
+        /** Synchronizes all track positions. */
         synchTracks() {
             this.multitrackHandler?.synchTracks();
         },
@@ -523,10 +523,10 @@ export default defineComponent({
          */
         isAllPlaying(isAllPlaying: boolean) {
             if (this.isMixable && isAllPlaying) {
-                console.debug(
-                    'Compilation::isAllPlaying:synchTracks',
-                    isAllPlaying,
-                );
+                // console.debug(
+                //     'Compilation::isAllPlaying:synchTracks',
+                //     isAllPlaying,
+                // );
                 this.synchTracks();
             }
         },
@@ -535,10 +535,10 @@ export default defineComponent({
          */
         isAllPaused(isAllPaused: boolean) {
             if (this.isMixable && isAllPaused) {
-                console.debug(
-                    'Compilation::isAllPaused:synchTracks',
-                    isAllPaused,
-                );
+                // console.debug(
+                //     'Compilation::isAllPaused:synchTracks',
+                //     isAllPaused,
+                // );
                 this.synchTracks();
             }
         },

@@ -222,8 +222,6 @@ export default class MultitrackHandler {
      * @param {InstanceType<typeof Track>[]} instances - When set, the instances to use. Otherwise, all available instances are retrieved and used
      */
     play(): void {
-        const instances = this.getAllTrackInstances();
-
         // Start playback for all, but only after the current event loop has finished
         // See https://nodejs.dev/en/learn/understanding-processnexttick/
         // Doing it this way makes sure that:
@@ -232,6 +230,7 @@ export default class MultitrackHandler {
         // Tests on slower machines and with may tracks have show that this special handling has a huge positive
         // impact on the timeliness the multitrack playback
         process.nextTick(() => {
+            const instances = this.getAllTrackInstances();
             if (instances) {
                 instances.forEach((instance) => {
                     instance.play();
@@ -264,15 +263,21 @@ export default class MultitrackHandler {
 
     /** Synchronizes all track positions. */
     synchTracks(): void {
-        const instances = this.getAllTrackInstances();
-        const currentSeconds = this.getAllTrackPosition().currentSeconds;
-        if (instances) {
-            process.nextTick(() => {
+        // See play() about nextTick usage
+        process.nextTick(() => {
+            const instances = this.getAllTrackInstances();
+            if (instances) {
+                const currentSeconds =
+                    this.getAllTrackPosition().currentSeconds;
+                console.debug(
+                    'MultitrackHandler::synchTracks:currentSeconds:',
+                    currentSeconds,
+                );
                 instances.forEach((instance) => {
                     instance.seekToSecondsSilent(currentSeconds);
                 });
-            });
-        }
+            }
+        });
     }
 
     /** Gets the references to all track component instances.
