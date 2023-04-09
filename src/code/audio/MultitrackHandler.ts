@@ -4,6 +4,7 @@ import { ComponentPublicInstance } from 'vue';
 /** @class A Handler for multi-track playback queries and operations.
  * @remarks This handles play/pause/mute operations on instances of Track components.
  * The goal is to free the compilation from multi-track handling.
+ * @devdoc The instances are retrieved for each call. Reusing instances has led to undefined states.
  * @devdoc //TODO Later, when using Pinia the getters for these should be reworked, to not use data from the actual track
  * instances but from the Pinia store. I would expect this would ease CPU burden by a quite large factor, omitting the need to get all those track instances each time
  */
@@ -22,12 +23,10 @@ export default class MultitrackHandler {
     refs: { [name: string]: Element | ComponentPublicInstance | null };
 
     /** Determines, whether all tracks in the compilation are currently playing (used with the mix mode)
-     * @param {InstanceType<typeof Track>[]} instances - When set, the instances to use. Otherwise, all available instances are retrieved and used
      */
-    isAllPlaying(instances?: InstanceType<typeof Track>[]): boolean {
-        if (!instances) {
-            instances = this.getAllTrackInstances();
-        }
+    isAllPlaying(): boolean {
+        const instances = this.getAllTrackInstances();
+
         if (instances) {
             return instances.every((i) => i.isPlaying) ?? false;
         }
@@ -87,16 +86,14 @@ export default class MultitrackHandler {
     }
 
     /** Determines playback progress of all tracks in the compilation, in [seconds] (used with the mix mode).
-     * @param {InstanceType<typeof Track>[]} instances - When set, the instances to use. Otherwise, all available instances are retrieved and used
      * @returns A single representation for the progress. If a single track is active, it's value is used, otherwise some average.
      */
-    getAllTrackPosition(instances?: InstanceType<typeof Track>[]): {
+    getAllTrackPosition(): {
         currentSeconds: number;
         range: number;
     } {
-        if (!instances) {
-            instances = this.getAllTrackInstances();
-        }
+        const instances = this.getAllTrackInstances();
+
         if (instances) {
             const positions = instances.map((track) => {
                 return track.currentSeconds;
@@ -185,11 +182,10 @@ export default class MultitrackHandler {
 
     /** Toggles the play state of all tracks, according to whether all tracks are currently playing */
     togglePlayPause(): void {
-        const instances = this.getAllTrackInstances();
-        if (this.isAllPlaying(instances)) {
-            this.pause(instances);
+        if (this.isAllPlaying()) {
+            this.pause();
         } else {
-            this.play(instances);
+            this.play();
         }
     }
 
@@ -206,10 +202,8 @@ export default class MultitrackHandler {
     /** Pauses playback for all tracks. Only issues a pause command for tracks which are not yet fading
      * @param {InstanceType<typeof Track>[]} instances - When set, the instances to use. Otherwise, all available instances are retrieved and used
      */
-    pause(instances?: InstanceType<typeof Track>[]): void {
-        if (!instances) {
-            instances = this.getAllTrackInstances();
-        }
+    pause(): void {
+        const instances = this.getAllTrackInstances();
         if (instances) {
             /** Note: Tests on slower machines have shown that a deferred action (on NextTick) is not beneficial here.
              * However, testing for already ongoing pause/fadeouts prevent double actions and thus unwanted fading aborts.
@@ -227,10 +221,8 @@ export default class MultitrackHandler {
     /** Starts playback for all tracks, on next Tick
      * @param {InstanceType<typeof Track>[]} instances - When set, the instances to use. Otherwise, all available instances are retrieved and used
      */
-    play(instances?: InstanceType<typeof Track>[]): void {
-        if (!instances) {
-            instances = this.getAllTrackInstances();
-        }
+    play(): void {
+        const instances = this.getAllTrackInstances();
 
         // Start playback for all, but only after the current event loop has finished
         // See https://nodejs.dev/en/learn/understanding-processnexttick/
@@ -262,7 +254,7 @@ export default class MultitrackHandler {
     /** Seeks the given amount for all tracks */
     seek(seconds: number): void {
         const instances = this.getAllTrackInstances();
-        const position = this.getAllTrackPosition(instances);
+        const position = this.getAllTrackPosition();
         if (instances) {
             instances.forEach((instance) => {
                 instance.seekToSecondsSilent(position.currentSeconds + seconds);
@@ -273,10 +265,12 @@ export default class MultitrackHandler {
     /** Synchronizes all track positions. */
     synchTracks(): void {
         const instances = this.getAllTrackInstances();
-        const position = this.getAllTrackPosition(instances);
+        const currentSeconds = this.getAllTrackPosition().currentSeconds;
         if (instances) {
-            instances.forEach((instance) => {
-                instance.seekToSecondsSilent(position.currentSeconds);
+            process.nextTick(() => {
+                instances.forEach((instance) => {
+                    instance.seekToSecondsSilent(currentSeconds);
+                });
             });
         }
     }
