@@ -87,6 +87,8 @@ const emit = defineEmits([
     'update:isFading',
     /** When the end of the track has been reached and playback has ended */
     'ended',
+    /** When the end of a loop has been reached and looping back to the start has occurred */
+    'loopedTo',
 ]);
 const props = defineProps({
     /** The title of the track */
@@ -185,6 +187,14 @@ const props = defineProps({
      */
     trackId: {
         type: String,
+        required: true,
+    },
+
+    /** Whether this track is the active track
+     * @remarks Determines looping behavior (only active tracks are looped)
+     */
+    isActiveTrack: {
+        type: Boolean,
         required: true,
     },
 
@@ -349,33 +359,36 @@ const showLevelMeter = computed((): boolean => {
  * @devdoc This is known to result in setTimeout violations on slower systems
  */
 function updateTime(/*event: Event*/): void {
-    currentSeconds.value = audioElement.value.currentTime;
-    emit('timeupdate', currentSeconds);
-    handleCueLoop();
+    const currentTime = audioElement.value.currentTime;
+    currentSeconds.value = currentTime;
+    emit('timeupdate', currentTime);
+    if (props.isActiveTrack) {
+        // debugLog(`updateTime:currentTime:${currentTime}`);
+        handleCueLoop(currentTime);
+    }
 }
 
-/** Handles looping for a single cue, if requested
+/** Handles looping for a single cue, if requested by PlaybackMode
  * @remarks Cue looping is solved here by observing and handling the recurring time updates.
  * NOTE: Partial looping is not natively supported with the used HTMLAudioElement.
  * For memory consumption reasons, a buffered audio source with the Web Audio API is not used,
  * which however would natively support partial loops.
  * @remarks Track looping is handled elsewhere.
+ * @param {number} currentTime - The time to decide looping on
  */
-function handleCueLoop(): void {
+function handleCueLoop(currentTime: number): void {
     switch (props.playbackMode) {
         case PlaybackMode.LoopCue: {
-            //Detect, with a safety margin, whether the possible loop is at track end
             if (
-                currentSeconds.value !== null &&
+                currentTime !== null &&
                 durationSeconds.value !== null &&
-                Number.isFinite(currentSeconds.value) &&
+                Number.isFinite(currentTime) &&
                 Number.isFinite(durationSeconds.value)
             ) {
+                //Detect, with a safety margin, whether the possible loop is at track end
                 const isAtTrackEnd =
-                    currentSeconds.value ??
-                    0 >=
-                        (durationSeconds.value ?? 0) -
-                            trackDurationSafetyMarginSeconds;
+                    currentTime >=
+                    durationSeconds.value - trackDurationSafetyMarginSeconds;
 
                 //Is a loop due?
                 if (
@@ -383,11 +396,14 @@ function handleCueLoop(): void {
                     props.loopEnd !== null &&
                     Number.isFinite(props.loopStart) &&
                     Number.isFinite(props.loopEnd) &&
-                    ((currentSeconds.value ?? 0) >= props.loopEnd ||
-                        isAtTrackEnd)
+                    (currentTime >= props.loopEnd || isAtTrackEnd)
                 ) {
+                    debugLog(
+                        `loopDue:loopStart:${props.loopStart}:loopEnd:${props.loopEnd};currentTime:${currentTime};durationSeconds.value:${durationSeconds.value}`,
+                    );
                     //Back to loop start
                     seekToSeconds(props.loopStart);
+                    emit('loopedTo', props.loopStart);
 
                     if (isAtTrackEnd) {
                         debugLog(
@@ -412,11 +428,11 @@ function handleCueLoop(): void {
             if (
                 props.loopStart !== null &&
                 props.loopEnd !== null &&
-                currentSeconds.value !== null &&
+                currentTime !== null &&
                 Number.isFinite(props.loopStart) &&
                 Number.isFinite(props.loopEnd) &&
-                Number.isFinite(currentSeconds.value) &&
-                currentSeconds.value >= props.loopEnd &&
+                Number.isFinite(currentTime) &&
+                currentTime >= props.loopEnd &&
                 isFading.value == false
             ) {
                 pauseAndSeekTo(props.loopStart);
@@ -521,7 +537,10 @@ function handleReadyState(readyState: number) {
             updateDuration(audioElement.value.duration);
 
             //Apply the currently known position to the player. It could be non-zero already.
-            seekToSeconds(currentSeconds.value ?? 0);
+            const position = currentSeconds.value;
+            if (position !== null && Number.isFinite(position)) {
+                seekToSeconds(position);
+            }
         }
     }
 
@@ -547,7 +566,9 @@ function handleReadyState(readyState: number) {
 function seekToSeconds(seconds: number): void {
     debugLog(`seekToSeconds`, seconds);
     if (!hasLoadedMetadata.value) return;
-
+    if (audioElement.value.currentTime === seconds) {
+        return;
+    }
     audioElement.value.currentTime = seconds;
 }
 

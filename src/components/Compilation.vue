@@ -61,6 +61,7 @@
                     "
                     @nextTrack="toNextTrack(track.Id, isLoopingPlaybackMode)"
                     @trackEnded="continueAfterTrack(track.Id)"
+                    @trackLoopedTo="multitrackHandler?.seekToSeconds($event)"
                 />
             </template>
         </div>
@@ -475,9 +476,13 @@ export default defineComponent({
             }
             return false;
         },
-        /** Synchronizes all track positions. */
+        /** Synchronizes all track positions.
+         * @remarks This must only be done when multitrack playback is expected.
+         */
         synchTracks() {
-            this.multitrackHandler?.synchTracks();
+            if (this.isMixable) {
+                this.multitrackHandler?.synchTracks();
+            }
         },
     },
     watch: {
@@ -518,7 +523,7 @@ export default defineComponent({
             }
         },
 
-        /* At change of play state (before/after fading), synch tracks)
+        /** At change of play state (before/after fading), synch tracks)
          * @remarks This must only be done when multitrack playback is expected.
          */
         isAllPlaying(isAllPlaying: boolean) {
@@ -530,7 +535,7 @@ export default defineComponent({
                 this.synchTracks();
             }
         },
-        /* At change of play state (before/after fading), synch tracks)
+        /** At change of play state (before/after fading), synch tracks)
          * @remarks This must only be done when multitrack playback is expected.
          */
         isAllPaused(isAllPaused: boolean) {

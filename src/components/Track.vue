@@ -272,6 +272,7 @@
                 :mediaUrl="mediaUrl"
                 :trackId="track.Id"
                 :disabled="!isTrackLoaded"
+                :isActiveTrack="isActiveTrack"
                 @timeupdate="updateTime"
                 @durationChanged="calculateCueDurations"
                 v-model:isPlaying="isPlaying"
@@ -290,6 +291,7 @@
                 :isSoloed="isSoloed"
                 :isAnySoloed="isAnySoloed"
                 @ended="$emit('trackEnded')"
+                @loopedTo="$emit('trackLoopedTo', $event)"
             ></TrackAudioApiPlayer>
             <Teleport to="#media-player" :disabled="isEditable">
                 <Transition :name="skipTransitionName">
@@ -600,6 +602,9 @@ export default defineComponent({
          * @remarks Allows to select the next track in "play all" and "shuffle" mode.
          */
         'trackEnded',
+        /** Occurs, when the end of a loop has been reached and playback has looped.
+         */
+        'trackLoopedTo',
     ],
     mixins: [settingsMixin],
     props: {
@@ -978,7 +983,7 @@ export default defineComponent({
             });
         },
         /** Handle track level updates
-         * @param {level:number} - The current audio level
+         * @param {number} level - The current audio level
          * @devdoc Handled here as part of the track because the level is shown as part of the track
          */
         updatedLevel(level: number): void {
