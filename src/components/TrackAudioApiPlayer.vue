@@ -764,28 +764,28 @@ audioElement.value.onerror = () => {
 audioElement.value.onabort = () => {
     debugLog(`onabort`);
 };
-audioElement.value.oncanplay = (event) => {
-    debugLog(`oncanplay`, event);
+audioElement.value.oncanplay = () => {
+    debugLog(`oncanplay`);
 };
-audioElement.value.oncanplaythrough = (event) => {
-    debugLog(`oncanplaythrough`, event);
+audioElement.value.oncanplaythrough = () => {
+    debugLog(`oncanplaythrough`);
 };
-audioElement.value.onloadstart = (event) => {
-    debugLog(`onloadstart`, event);
+audioElement.value.onloadstart = () => {
+    debugLog(`onloadstart`);
 };
 /** The progress event is fired periodically as the browser loads a resource.
  */
-audioElement.value.onprogress = (event) => {
-    debugLog(`onprogress`, event);
+audioElement.value.onprogress = () => {
+    debugLog(`onprogress`);
 };
-audioElement.value.onstalled = (event) => {
-    debugLog(`onstalled`, event);
+audioElement.value.onstalled = () => {
+    debugLog(`onstalled`);
 };
-audioElement.value.onsuspend = (event) => {
-    debugLog(`onsuspend `, event);
+audioElement.value.onsuspend = () => {
+    debugLog(`onsuspend `);
 };
-audioElement.value.onended = (event) => {
-    debugLog(`onended `, event);
+audioElement.value.onended = () => {
+    debugLog(`onended `);
     emit('update:isPlaying', false);
     emit('ended');
 
