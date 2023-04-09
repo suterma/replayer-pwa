@@ -8,7 +8,7 @@
             >
                 <h2 class="title is-4">
                     <slot v-if="$slots.default"></slot>
-                    <TrackTitleName :track="track"></TrackTitleName>
+                    <TrackTitleName :name="track.Name"></TrackTitleName>
                 </h2>
             </div>
         </div>
@@ -17,7 +17,7 @@
         <div class="level-right">
             <div class="level-item is-hidden-mobile">
                 <span v-if="track.Artist || track.Album" class="is-size-7 ml-2">
-                    <ArtistInfo :track="track" />
+                    <ArtistInfo :artist="track.Artist" :album="track.Album" />
                 </span>
             </div>
 
