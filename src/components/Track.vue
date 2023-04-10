@@ -509,7 +509,6 @@ import {
     ICue,
     TrackDisplayMode,
     PlaybackMode,
-    ITrack,
     ICompilation,
 } from '@/store/compilation-types';
 import CueLevelEditor from '@/components/CueLevelEditor.vue';
@@ -937,12 +936,8 @@ export default defineComponent({
             if (this.isActiveTrack) {
                 console.debug('Track::goToSelectedCue of selected track');
 
-                const selectedCueId = this.$store.getters
-                    .selectedCueId as string;
-                if (selectedCueId) {
-                    const cueTime = this.cues?.filter(
-                        (c) => c.Id === selectedCueId,
-                    )[0]?.Time;
+                if (this.selectedCue) {
+                    const cueTime = this.selectedCue.Time;
 
                     //Control playback according to the play state, using a single operation.
                     //This supports a possible fade operation.
@@ -1213,7 +1208,7 @@ export default defineComponent({
 
             if (
                 playingCueId != undefined &&
-                this.selectedCue?.Id === playingCueId
+                this.selectedCueId === playingCueId
             ) {
                 return true;
             }
@@ -1224,30 +1219,26 @@ export default defineComponent({
          */
         hasPreviousCue(): boolean {
             return (
-                this.selectedCue &&
-                this.allActiveTrackCueIds[0] !== this.selectedCue?.Id
+                this.selectedCueId !== null &&
+                this.allCueIds[0] !== this.selectedCueId
             );
         },
         /** Whether the playing cue has a next cue
          */
         hasNextCue(): boolean {
             return (
-                this.selectedCue &&
-                this.allActiveTrackCueIds.slice(-1)[0] !== this.selectedCue?.Id
+                this.selectedCueId !== null &&
+                this.allCueIds.slice(-1)[0] !== this.selectedCueId
             );
         },
 
-        allActiveTrackCueIds(): string[] {
+        allCueIds(): string[] {
             return this.cues?.map((cue) => cue.Id) ?? [];
         },
 
         /** Whether this track has any cue at all */
         hasCues(): boolean {
-            return (
-                this.cues !== undefined &&
-                this.cues.length !== undefined &&
-                this.cues.length > 0
-            );
+            return this.cues.length !== undefined && this.cues.length > 0;
         },
         /** Gets the currently playing cue, regardless whether it is selected, if available
          */
@@ -1297,8 +1288,15 @@ export default defineComponent({
             >;
         },
 
-        selectedCue(): ICue {
-            return this.$store.getters.selectedCue as ICue;
+        selectedCueId(): string | null {
+            return this.$store.getters.selectedCueId;
+        },
+
+        /** Returns the selected cue
+         * @remarks A selected cue's data is used for looping on a cue's boundaries
+         */
+        selectedCue(): ICue | null {
+            return this.$store.getters.selectedCue;
         },
 
         /** Whether the playback media is available
@@ -1330,7 +1328,8 @@ export default defineComponent({
             }
         },
 
-        cues(): Array<ICue> | undefined {
+        /** Returns all cues of this track */
+        cues(): Array<ICue> {
             return this.track.Cues;
         },
 
@@ -1351,17 +1350,12 @@ export default defineComponent({
             return mediaUrl;
         },
 
-        /** Determines the active track */
-        activeTrack(): ITrack {
-            return this.$store.getters.activeTrack;
-        },
-
         /** Determines the active track id */
-        activeTrackId(): ITrack {
+        activeTrackId(): string | null {
             return this.$store.getters.activeTrackId;
         },
 
-        /** Determines the active track */
+        /** Returns the current compilation */
         compilation(): ICompilation {
             return this.$store.getters.compilation;
         },
