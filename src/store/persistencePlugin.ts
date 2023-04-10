@@ -46,26 +46,15 @@ function retrieveState(store: Store) {
     PersistentStorage.retrieveCompilation().then((compilation) => {
         PersistentStorage.retrieveSelectedCueId().then((cueId) => {
             PersistentStorage.retrieveSelectedTrackId().then((trackId) => {
-                console.debug(
-                    `retrieved Selected trackId:${trackId}; selected cueId:${cueId}`,
-                );
                 //Commit the compilation and selected cue only after both have been retrieved,
                 //to make sure, committing one does not overwrite the other
                 store.commit(MutationTypes.REPLACE_COMPILATION, compilation);
-
-                console.debug(
-                    `replace-retrieved Selected trackId:${trackId}; selected cueId:${cueId}`,
-                );
 
                 //retrieve all available blobs into object urls
                 //(which should actually be the matching media blobs for the afore-loaded compilation)
                 PersistentStorage.retrieveAllMediaBlobs()
                     .then((mediaBlobs) => {
                         //Sort to the most recently used track first, by cue.
-                        console.debug(
-                            `retrieveAllMediaBlobs Selected trackId:${trackId}; selected cueId:${cueId}`,
-                        );
-
                         let mostRecentTrack = null;
                         if (trackId) {
                             mostRecentTrack = CompilationHandler.getTrackById(

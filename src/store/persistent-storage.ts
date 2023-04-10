@@ -15,12 +15,11 @@ import { MediaBlob, Settings } from './state-types';
  * async-local-storage
  * https://github.com/createnextapp/async-local-storage/blob/master/src/index.ts
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createPromise = (getValue: any, callback: any): Promise<any> => {
-    console.debug('PersistentStorage::createPromise');
     return new Promise((resolve, reject) => {
         try {
             const value = getValue();
-            console.debug('PersistentStorage::resolved:value', value);
 
             if (callback) {
                 callback(null, value);
