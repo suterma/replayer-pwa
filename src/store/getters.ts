@@ -52,6 +52,13 @@ export type Getters = {
      */
     activeTrack(state: State): ITrack | null;
 
+    /** Gets the Id of the active track
+     * @remarks The active track is either:
+     * - the track that contains the currently selected cue, if any
+     * - otherwise an explicitly selected track, if any
+     */
+    activeTrackId(state: State): string | null;
+
     /** Gets the set of tracks */
     tracks(state: State): Array<ITrack> | undefined;
 };
@@ -63,7 +70,7 @@ export const getters: GetterTree<State, State> & Getters = {
     },
     /** @inheritdoc */
     hasCompilation: (state) => {
-        //A compilation is recognised as existing, when there is at least one track
+        //A compilation is recognized as existing, when there is at least one track
         if ((state.compilation as ICompilation).Tracks.length > 0) {
             return true;
         }
@@ -134,6 +141,21 @@ export const getters: GetterTree<State, State> & Getters = {
         }
 
         return selectedTrack ?? null;
+    },
+    /** @inheritdoc */
+    activeTrackId: (state): string | null => {
+        const selectedCueId = state.selectedCueId;
+
+        const selectedTrack = CompilationHandler.getTrackByCueId(
+            state.compilation,
+            selectedCueId,
+        );
+
+        if (selectedTrack) {
+            return selectedTrack.Id;
+        }
+        //if no cue is applicable, probably the a track is explicitly selected
+        return state.selectedTrackId;
     },
     /** @inheritdoc */
     tracks: (state): Array<ITrack> | undefined => {

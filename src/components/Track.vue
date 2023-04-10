@@ -649,6 +649,12 @@ export default defineComponent({
             required: true,
         },
 
+        /** Whether this track is the active track in the set of tracks */
+        isActiveTrack: {
+            type: Boolean,
+            required: true,
+        },
+
         isAnySoloed: {
             type: Boolean,
             required: false,
@@ -1353,12 +1359,6 @@ export default defineComponent({
         /** Determines the active track */
         compilation(): ICompilation {
             return this.$store.getters.compilation;
-        },
-
-        /** Determines whether this is the active track */
-        isActiveTrack(): boolean {
-            const activeTrackId = this.activeTrack?.Id as string;
-            return this.track.Id === activeTrackId;
         },
     },
 });

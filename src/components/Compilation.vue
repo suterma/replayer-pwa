@@ -43,6 +43,7 @@
                     @update:isTrackPlayerFullScreen="
                         updateIsTrackPlayerFullScreen($event)
                     "
+                    :isActiveTrack="activeTrackId === track.Id"
                     @isPlaying="updateIsTrackPlaying($event)"
                     @seekToSeconds="handleTrackSeekToSeconds($event)"
                     :playbackMode="compilation.PlaybackMode"
@@ -265,10 +266,10 @@ export default defineComponent({
         /** Visually scrolls to the given track, making it visually at the top of
          * the view.
          */
-        scrollToTrack(track: ITrack) {
-            if (track) {
+        scrollToTrack(trackId: string) {
+            if (trackId) {
                 const trackElement = document.getElementById(
-                    'track-' + track.Id,
+                    'track-' + trackId,
                 );
 
                 VueScrollTo.scrollTo(trackElement, {
@@ -490,11 +491,11 @@ export default defineComponent({
          * @remarks This is intentionally only invoked on when the active track changes (and it's not the only track).
          * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
          */
-        activeTrack(track: ITrack | null) {
-            if (track && !this.isSingleTrack) {
-                console.debug('scrolling to activated track ', track.Name);
+        activeTrackId(trackId: string | null) {
+            if (trackId && !this.isSingleTrack) {
+                console.debug('scrolling to activated track ', trackId);
                 this.$nextTick(() => {
-                    this.scrollToTrack(track);
+                    this.scrollToTrack(trackId);
                 });
             }
         },
@@ -502,11 +503,11 @@ export default defineComponent({
          * @remarks This is intentionally only invoked on when the display mode changes (and it's not the only track).
          */
         tracksDisplayMode() {
-            const track = this.activeTrack;
-            if (track && !this.isSingleTrack) {
-                console.debug('scrolling to mode-changed track ', track.Name);
+            const trackId = this.activeTrackId;
+            if (trackId && !this.isSingleTrack) {
+                console.debug('scrolling to mode-changed track ', trackId);
                 this.$nextTick(() => {
-                    this.scrollToTrack(track);
+                    this.scrollToTrack(trackId);
                 });
             }
         },
@@ -640,9 +641,10 @@ export default defineComponent({
         hasCompilation(): boolean {
             return this.$store.getters.hasCompilation;
         },
-        /** Determines the active track */
-        activeTrack(): ITrack | null {
-            return this.$store.getters.activeTrack;
+
+        /** Determines the active track id*/
+        activeTrackId(): string | null {
+            return this.$store.getters.activeTrackId;
         },
 
         /** Determines, whether all tracks in the compilation are currently playing (used with the mix mode) */
