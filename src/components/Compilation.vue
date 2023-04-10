@@ -30,7 +30,6 @@
                 section: showVertical && isMixable,
             }"
         >
-            <!-- Tracks to work with -->
             <template v-for="(track, index) in tracks" :key="track.Id">
                 <Track
                     :track="track"

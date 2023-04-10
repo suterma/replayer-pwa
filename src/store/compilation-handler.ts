@@ -206,17 +206,33 @@ export default class CompilationHandler {
         }
     }
 
+    /** Converts the total seconds into a simple sss.zzz format,
+     * if a suitable input value is provided.
+     * @param subSecondDigits - The number of digits for the sub-second precision. Should be 1, 2, or 3 (default).
+     * @return The display representation or the empty string.
+     * @devdoc This variant has been somewhat optimized for performance, with regards to the hh:mm:ss.zzz option
+     */
+    static convertToDisplayTime(
+        seconds: number | null | undefined,
+        subSecondDigits = 3,
+    ): string {
+        if (seconds || seconds === 0) {
+            return Number(seconds).toFixed(subSecondDigits);
+        }
+        return '';
+    }
+
     /** Converts the total seconds into a conveniently displayable hh:mm:ss.zzz format,
      * if a suitable input value is provided.
      * @remarks Omits the hour part, if not applicable
      * @param subSecondDigits - The number of digits for the sub-second precision. Should be 1, 2, or 3 (default).
      * @return The display representation or the empty string.
      */
-    static convertToDisplayTime(
+    static convertToDisplayTimeHHMMSS(
         seconds: number | null | undefined,
         subSecondDigits = 3,
     ): string {
-        if (seconds != null && Number.isFinite(seconds)) {
+        if (seconds || seconds === 0) {
             const isNegative = seconds < 0;
             let sign = '';
             if (isNegative) {

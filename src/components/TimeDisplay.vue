@@ -1,16 +1,16 @@
 <template>
-    <span
-        class="is-minimum-7-characters is-family-monospace"
-        :class="{
-            'is-invisible': hidePlaceholder && !hasValue,
-        }"
-        >{{ currentDisplayTime }}</span
-    >
+    <span class="is-minimum-7-characters is-family-monospace">{{
+        currentDisplayTime
+    }}</span>
 </template>
 
 <script lang="ts">
 import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent, PropType } from 'vue';
+
+const oneSubSecondDigitPlaceholder = '--:--.-';
+const twoSubSecondDigitPlaceholder = '--:--.--';
+const threeSubSecondDigitPlaceholder = '--:--.---';
 
 /** A display for a time value in the h:mm:ss.z format
  */
@@ -20,12 +20,6 @@ export default defineComponent({
         modelValue: {
             type: null as unknown as PropType<number | null>,
             default: null,
-        },
-        /** Whether to hide the placeholder for empty values */
-        hidePlaceholder: {
-            type: Boolean,
-            required: false,
-            default: false,
         },
         /** Optionally, the number of digits for the sub-second precision. Should be 1, 2, or 3 (1 is used by default).
          */
@@ -40,24 +34,19 @@ export default defineComponent({
          * @remarks Omits the hour part, if not applicable
          */
         currentDisplayTime(): string {
-            if (!this.hasValue) {
+            if (Number.isFinite(this.modelValue)) {
+                return CompilationHandler.convertToDisplayTime(
+                    this.modelValue,
+                    this.subSecondDigits,
+                );
+            } else {
                 if (this.subSecondDigits === 3) {
-                    return '--:--.---';
+                    return threeSubSecondDigitPlaceholder;
                 } else if (this.subSecondDigits === 2) {
-                    return '--:--.--';
+                    return twoSubSecondDigitPlaceholder;
                 }
-                return '--:--.-';
+                return oneSubSecondDigitPlaceholder;
             }
-            return CompilationHandler.convertToDisplayTime(
-                this.modelValue,
-                this.subSecondDigits,
-            );
-        },
-        /** Whether a time value is available for display.
-         * @remarks null, undefined and other non finite values return false.
-         */
-        hasValue(): boolean {
-            return Number.isFinite(this.modelValue);
         },
     },
 });
