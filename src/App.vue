@@ -52,6 +52,7 @@ import ErrorOverlay from '@/components/ErrorOverlay.vue';
 import { MutationTypes } from './store/mutation-types';
 import { DialogWrapper } from 'vue3-promise-dialog';
 import Experimental from './components/Experimental.vue';
+import { useAudioStore } from './store/audio';
 
 export default defineComponent({
     name: 'App',
@@ -75,8 +76,14 @@ export default defineComponent({
     methods: {
         cleanUp() {
             console.log('App.vue::cleanUp...');
+
             //Make sure, no object URLs are remaining
             this.$store.commit(MutationTypes.REVOKE_ALL_MEDIA_URLS);
+
+            //Close the audio context
+            const audio = useAudioStore();
+            audio.closeContext();
+
             console.log('App.vue::cleanUp done.');
         },
     },

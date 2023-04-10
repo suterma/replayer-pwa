@@ -70,7 +70,17 @@ export default class FileHandler {
         const cleanedFileName = simpleFilename
             .replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>]/gi, ' ')
             .replace(/\s{2,}/g, ' ');
-        return FileHandler.removeExtension(cleanedFileName);
+        return FileHandler.getAllAfterLastSlash(cleanedFileName);
+    }
+
+    /** Returns the last part, after the last slash
+     * @remarks For a complete typical path, this effectively returns the file name
+     */
+    static getAllAfterLastSlash(pathName: string): string {
+        return pathName.substring(
+            pathName.lastIndexOf('/') + 1,
+            pathName.length,
+        );
     }
 
     /** Tries to infer a useful artist name from the URL, by using the second level domain name, if possible.

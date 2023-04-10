@@ -742,7 +742,7 @@ export default defineComponent({
          * @remarks Does not assert whether this is the active track.
          */
         stop(): void {
-            this.trackPlayerInstance.stop();
+            this.trackPlayerInstance?.stop();
             this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, null);
         },
         toPreviousCue() {

@@ -101,7 +101,7 @@
                         <div class="level-item mt-4-mobile">
                             <PlayheadSlider
                                 class="is-fullwidth"
-                                v-model.number="getAllTrackPosition"
+                                v-model.number="getMultitrackPosition"
                                 @update:modelValue="
                                     (position) =>
                                         multitrackHandler?.seekToSeconds(
@@ -148,7 +148,7 @@
                                     </template>
                                     <button class="button is-nav is-indicator">
                                         <TimeDisplay
-                                            :modelValue="getAllTrackPosition"
+                                            :modelValue="getMultitrackPosition"
                                             :subSecondDigits="3"
                                         ></TimeDisplay>
                                         (
@@ -685,17 +685,14 @@ export default defineComponent({
         /** Determines playback progress of all tracks in the compilation, in [seconds] (used with the mix mode).
          * @returns A single representation for the progress as an average
          */
-        getAllTrackPosition(): number {
-            return (
-                this.multitrackHandler?.getAllTrackPosition().currentSeconds ??
-                0
-            );
+        getMultitrackPosition(): number {
+            return this.multitrackHandler?.getAllTrackPosition().currentSeconds;
         },
         /** Determines the range of playback progress of all tracks in the compilation, in [seconds] (used with the mix mode).
          * @returns A single representation for the range
          */
         getAllTrackPositionRange(): number {
-            return this.multitrackHandler?.getAllTrackPosition().range ?? 0;
+            return this.multitrackHandler?.getAllTrackPosition().range;
         },
 
         /** Determines, whether any track in the compilation is currently fading (used with the mix mode) */

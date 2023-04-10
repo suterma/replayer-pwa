@@ -7,6 +7,7 @@ import { ref, shallowRef } from 'vue';
  */
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new AudioContext();
+console.info('new audio context created');
 
 /** A store for audio-related global state */
 export const useAudioStore = defineStore('audio', () => {
@@ -35,5 +36,20 @@ export const useAudioStore = defineStore('audio', () => {
         ~removeIndex && mediaElements.value.splice(removeIndex, 1);
     }
 
-    return { context, mediaElements, addMediaElement, removeMediaElement };
+    /** Closes the audio context.
+     * @remarks This should be called when this store is not used anymore, for example at teardown of the app.
+     */
+    function closeContext() {
+        context.value.close();
+        console.info('audio context closed');
+
+    }
+
+    return {
+        context,
+        mediaElements,
+        addMediaElement,
+        removeMediaElement,
+        closeContext,
+    };
 });
