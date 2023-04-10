@@ -1129,25 +1129,25 @@ export default defineComponent({
                 this.activateWakeLock();
             }
         },
-        /** Handles active track changes.
+        /** Handles active track id changes.
          * @remarks Used to determine the requested player widget transition.
          */
-        activeTrack(active: ITrack, previous: ITrack) {
+        activeTrackId(activeTrackId: string, previousTrackId: string) {
             console.debug(
-                `Track(${this.track.Name})::activeTrack:active:`,
-                active,
+                `Track(${this.track.Name})::activeTrack:activeTrackId:`,
+                activeTrackId,
                 'prev:',
-                previous,
+                previousTrackId,
             );
 
             const indexOfActive = CompilationHandler.getIndexOfTrackById(
                 this.compilation.Tracks,
-                active?.Id,
+                activeTrackId,
             );
 
             const indexOfPrevious = CompilationHandler.getIndexOfTrackById(
                 this.compilation.Tracks,
-                previous?.Id,
+                previousTrackId,
             );
 
             if (indexOfActive == indexOfPrevious + 1) {
@@ -1354,6 +1354,11 @@ export default defineComponent({
         /** Determines the active track */
         activeTrack(): ITrack {
             return this.$store.getters.activeTrack;
+        },
+
+        /** Determines the active track id */
+        activeTrackId(): ITrack {
+            return this.$store.getters.activeTrackId;
         },
 
         /** Determines the active track */
