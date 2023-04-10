@@ -232,9 +232,8 @@ export default class MultitrackHandler {
             const instances = this.getAllTrackInstances();
             if (instances) {
                 instances.forEach((instance) => {
-                    //TODO add a delay correction
                     console.debug(
-                        'MultitrackHandler::play:instance:id',
+                        'MultitrackHandler::play:instance.track.Name',
                         instance.track.Name,
                     );
                     instance.play();
@@ -277,8 +276,17 @@ export default class MultitrackHandler {
                     'MultitrackHandler::synchTracks:currentSeconds:',
                     currentSeconds,
                 );
+                const t0 = performance.now();
                 instances.forEach((instance) => {
+                    console.debug(
+                        'MultitrackHandler::synchTracks:instance.track.Name',
+                        instance.track.Name,
+                    );
                     instance.seekToSecondsSilent(currentSeconds);
+                    const t1 = performance.now();
+                    console.log(
+                        `Call to doSomething took ${t1 - t0} milliseconds.`,
+                    );
                 });
             }
         });

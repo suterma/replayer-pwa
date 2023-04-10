@@ -204,7 +204,9 @@ const props = defineProps({
     disabled: Boolean,
 });
 
-/** The playback progress in the current track, in [seconds] */
+/** The playback progress in the current track, in [seconds]
+ * @devdoc The use of a native variable instead of a ref, did not yield better performance for the time update method.
+ */
 //TODO later provide the currentSeconds from the track (at least initially), similar to the playback mode
 //supporting storage and retrieval with the track persistence
 const currentSeconds = ref<number | null>(null);
@@ -363,7 +365,6 @@ function updateTime(/*event: Event*/): void {
     currentSeconds.value = currentTime;
     emit('timeupdate', currentTime);
     if (props.isActiveTrack) {
-        // debugLog(`updateTime:currentTime:${currentTime}`);
         handleCueLoop(currentTime);
     }
 }
@@ -662,10 +663,6 @@ async function assertRunningAudioContext() {
     // resume audio context if required (when this is the first time any track is playing)
     if (audio.context.state === 'suspended') {
         await audio.context.resume();
-        //TODO clenaup once working
-        //    .then(() => {
-        //         debugLog("audioContext:resumed") ;
-        //    });
     }
 }
 
