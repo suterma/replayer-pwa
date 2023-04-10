@@ -42,7 +42,6 @@ export const useAudioStore = defineStore('audio', () => {
     function closeContext() {
         context.value.close();
         console.info('audio context closed');
-
     }
 
     return {

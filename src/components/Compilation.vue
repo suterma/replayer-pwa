@@ -101,7 +101,7 @@
                         <div class="level-item mt-4-mobile">
                             <PlayheadSlider
                                 class="is-fullwidth"
-                                v-model.number="getMultitrackPosition"
+                                :modelValue="getMultitrackPosition"
                                 @update:modelValue="
                                     (position) =>
                                         multitrackHandler?.seekToSeconds(
