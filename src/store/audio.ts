@@ -40,8 +40,8 @@ export const useAudioStore = defineStore('audio', () => {
      * @remarks This should be called when this store is not used anymore, for example at teardown of the app.
      */
     function closeContext() {
-        context.value.close();
-        console.info('audio context closed');
+        // context.value.close();
+        // console.info('audio context closed');
     }
 
     return {

@@ -527,24 +527,16 @@ export default defineComponent({
         /** At change of play state (before/after fading), synch tracks)
          * @remarks This must only be done when multitrack playback is expected.
          */
-        isAllPlaying(isAllPlaying: boolean) {
-            if (this.isMixable && isAllPlaying) {
-                // console.debug(
-                //     'Compilation::isAllPlaying:synchTracks',
-                //     isAllPlaying,
-                // );
+        isAllPlaying(allPlaying: boolean) {
+            if (this.isMixable && allPlaying && this.isAllTrackLoaded) {
                 this.synchTracks();
             }
         },
         /** At change of play state (before/after fading), synch tracks)
          * @remarks This must only be done when multitrack playback is expected.
          */
-        isAllPaused(isAllPaused: boolean) {
-            if (this.isMixable && isAllPaused) {
-                // console.debug(
-                //     'Compilation::isAllPaused:synchTracks',
-                //     isAllPaused,
-                // );
+        isAllPaused(allPaused: boolean) {
+            if (this.isMixable && allPaused && this.isAllTrackLoaded) {
                 this.synchTracks();
             }
         },

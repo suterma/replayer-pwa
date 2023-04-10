@@ -200,7 +200,6 @@ export default class MultitrackHandler {
     }
 
     /** Pauses playback for all tracks. Only issues a pause command for tracks which are not yet fading
-     * @param {InstanceType<typeof Track>[]} instances - When set, the instances to use. Otherwise, all available instances are retrieved and used
      */
     pause(): void {
         const instances = this.getAllTrackInstances();
@@ -233,6 +232,11 @@ export default class MultitrackHandler {
             const instances = this.getAllTrackInstances();
             if (instances) {
                 instances.forEach((instance) => {
+                    //TODO add a delay correction
+                    console.debug(
+                        'MultitrackHandler::play:instance:id',
+                        instance.track.Name,
+                    );
                     instance.play();
                 });
             }

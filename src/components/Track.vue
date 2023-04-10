@@ -742,7 +742,7 @@ export default defineComponent({
          * @remarks Does not assert whether this is the active track.
          */
         stop(): void {
-            this.trackPlayerInstance?.stop();
+            this.trackPlayerInstance.stop();
             this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, null);
         },
         toPreviousCue() {
@@ -848,26 +848,27 @@ export default defineComponent({
          * @remarks Asserts (and if necessary) resolves the playability of the track media
          */
         play() {
-            this.trackPlayerInstance?.play();
+            this.trackPlayerInstance.play();
         },
 
         /** Starts playback from the given temporal position
          * @remarks This first seeks to the position, then starts playing
          */
         playFrom(position: number) {
-            this.trackPlayerInstance?.playFrom(position);
+            this.trackPlayerInstance.playFrom(position);
         },
 
         /** Pauses playback at the current position, with fading if configured.
          * @remarks Does not assert whether this is the active track.
          */
         pause() {
-            this.trackPlayerInstance?.pause();
+            this.trackPlayerInstance.pause();
         },
 
         togglePlayback() {
+            //console.debug(`Track(${this.track.Name})::togglePlayback`);
             if (this.isActiveTrack) {
-                this.trackPlayerInstance?.togglePlayback();
+                this.trackPlayerInstance.togglePlayback();
                 this.activateWakeLock();
             }
         },
@@ -887,7 +888,7 @@ export default defineComponent({
 
         /** Pauses playback (with a subsequent seek operation) */
         pauseAndSeekTo(seconds: number): void {
-            this.trackPlayerInstance?.pauseAndSeekTo(seconds);
+            this.trackPlayerInstance.pauseAndSeekTo(seconds);
         },
 
         /** Seeks forward or backward, for the given amount of seconds */
@@ -897,7 +898,7 @@ export default defineComponent({
 
         /** Seeks to the position, in [seconds], with emitting an event */
         seekToSeconds(seconds: number): void {
-            this.trackPlayerInstance?.seekToSeconds(seconds);
+            this.trackPlayerInstance.seekToSeconds(seconds);
             this.$emit('seekToSeconds', seconds);
         },
 
@@ -905,24 +906,24 @@ export default defineComponent({
          * @devdoc This is used to break the circular event handling for multitrack seek operations
          */
         seekToSecondsSilent(seconds: number): void {
-            this.trackPlayerInstance?.seekToSeconds(seconds);
+            this.trackPlayerInstance.seekToSeconds(seconds);
         },
 
         volumeDown() {
             if (this.isActiveTrack) {
-                this.trackPlayerInstance?.volumeDown();
+                this.trackPlayerInstance.volumeDown();
                 this.activateWakeLock();
             }
         },
         volumeUp() {
             if (this.isActiveTrack) {
-                this.trackPlayerInstance?.volumeUp();
+                this.trackPlayerInstance.volumeUp();
                 this.activateWakeLock();
             }
         },
         volume(volume: number) {
             if (this.isActiveTrack) {
-                this.trackPlayerInstance?.updateVolume(volume);
+                this.trackPlayerInstance.updateVolume(volume);
                 this.activateWakeLock();
             }
         },
@@ -1283,9 +1284,15 @@ export default defineComponent({
          * does not work, even after it's rendered again later.
          */
         trackPlayerInstance(): InstanceType<typeof TrackAudioApiPlayer> {
-            return this.$refs.playerReference as InstanceType<
+            const instance = this.$refs.playerReference as InstanceType<
                 typeof TrackAudioApiPlayer
             >;
+            if (!instance) {
+                throw new Error(
+                    `Track(${this.track.Name}) has no TrackAudioApiPlayer instance`,
+                );
+            }
+            return instance;
         },
 
         selectedCueId(): string | null {
