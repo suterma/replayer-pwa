@@ -276,16 +276,21 @@ export default class MultitrackHandler {
                     'MultitrackHandler::synchTracks:currentSeconds:',
                     currentSeconds,
                 );
-                const t0 = performance.now();
-                instances.forEach((instance) => {
-                    console.debug(
-                        'MultitrackHandler::synchTracks:instance.track.Name',
-                        instance.track.Name,
+                const synchOriginTimestamp = performance.now();
+                instances.forEach((instance, index) => {
+                    // console.debug(
+                    //     'MultitrackHandler::synchTracks:instance.track.Name',
+                    //     instance.track.Name,
+                    // );
+                    const loopActionTimestamp = performance.now();
+                    const loopActionDelay =
+                        loopActionTimestamp - synchOriginTimestamp;
+                    // Take the accumulated delay into consideration for the seek operation
+                    instance.seekToSecondsSilent(
+                        currentSeconds + loopActionDelay / 1000,
                     );
-                    instance.seekToSecondsSilent(currentSeconds);
-                    const t1 = performance.now();
-                    console.log(
-                        `Call to doSomething took ${t1 - t0} milliseconds.`,
+                    console.debug(
+                        `Accumulated loop action delay (for index ${index}) is ${loopActionDelay} milliseconds.`,
                     );
                 });
             }
