@@ -148,7 +148,7 @@
                                     <button class="button is-nav is-indicator">
                                         <TimeDisplay
                                             :modelValue="getMultitrackPosition"
-                                            :subSecondDigits="3"
+                                            :subSecondDigits="1"
                                         ></TimeDisplay>
                                         (
                                         <TimeDisplay

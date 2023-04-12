@@ -1,6 +1,6 @@
 <template>
     <span class="is-minimum-7-characters is-family-monospace">{{
-        currentDisplayTime
+        currentDisplayTime(modelValue)
     }}</span>
 </template>
 
@@ -29,12 +29,12 @@ export default defineComponent({
             default: 1,
         },
     },
-    computed: {
+    methods: {
         /** Converts the time into a conveniently displayable format.
          * @remarks Omits the hour part, if not applicable
          */
-        currentDisplayTime(): string {
-            if (Number.isFinite(this.modelValue)) {
+        currentDisplayTime(value: number | null): string {
+            if (Number.isFinite(value)) {
                 return CompilationHandler.convertToDisplayTime(
                     this.modelValue,
                     this.subSecondDigits,

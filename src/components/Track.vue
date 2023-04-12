@@ -84,7 +84,7 @@
                 <TimeDisplay
                     class="level-item is-narrow is-size-7"
                     :modelValue="currentSeconds"
-                    :subSecondDigits="3"
+                    :subSecondDigits="1"
                 ></TimeDisplay>
                 <VolumeKnob
                     :disabled="!isTrackLoaded"
