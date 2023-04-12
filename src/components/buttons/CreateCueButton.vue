@@ -20,7 +20,15 @@
             <!-- On large screens also show an indicative text -->
             <span class="is-hidden-touch">Cue</span>
             <span class="has-opacity-half">&nbsp;at&nbsp;</span>
-            <TimeDisplay :modelValue="currentSeconds"></TimeDisplay>
+            <!-- NOTE: As a component update performance optimization, 
+            the numeric value is truncated to one decimal digit, as displayed, avoiding
+            unnecessary update for actually non-distinctly displayed values. -->
+            <TimeDisplay
+                :modelValue="
+                    currentSeconds ? Math.floor(currentSeconds * 10) / 10 : null
+                "
+                :subSecondDigits="1"
+            ></TimeDisplay>
             <ShortcutDisplay
                 shortcut="INSERT"
                 :class="{ 'is-invisible': !useShortcut }"

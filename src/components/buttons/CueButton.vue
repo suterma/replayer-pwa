@@ -58,9 +58,15 @@
                     <!-- Left side -->
                     <div class="level-left">
                         <div class="level-item mr-3">
+                            <!-- NOTE: As a component update performance optimization, 
+                            the numeric value is truncated to one decimal digit, as displayed, avoiding
+                            unnecessary update for actually non-distinctly displayed values. -->
                             <TimeDisplay
                                 class="has-opacity-half foreground"
-                                :modelValue="time"
+                                :modelValue="
+                                    time ? Math.floor(time * 10) / 10 : null
+                                "
+                                :subSecondDigits="1"
                             ></TimeDisplay>
                         </div>
                     </div>

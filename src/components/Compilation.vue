@@ -148,7 +148,6 @@
                                     <button class="button is-nav is-indicator">
                                         <TimeDisplay
                                             :modelValue="getMultitrackPosition"
-                                            :subSecondDigits="1"
                                         ></TimeDisplay>
                                         (
                                         <TimeDisplay
@@ -675,9 +674,16 @@ export default defineComponent({
 
         /** Determines playback progress of all tracks in the compilation, in [seconds] (used with the mix mode).
          * @returns A single representation for the progress as an average
+         * @devdoc As a component update performance optimization, the numeric value is truncated to one decimal digit, as displayed, avoiding
+         * unnecessary update for actually non-distinctly displayed values.
          */
         getMultitrackPosition(): number {
-            return this.multitrackHandler?.getAllTrackPosition().currentSeconds;
+            return (
+                Math.floor(
+                    this.multitrackHandler?.getAllTrackPosition()
+                        .currentSeconds * 10,
+                ) / 10
+            );
         },
         /** Determines the range of playback progress of all tracks in the compilation, in [seconds] (used with the mix mode).
          * @returns A single representation for the range

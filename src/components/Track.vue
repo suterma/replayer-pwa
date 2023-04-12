@@ -81,9 +81,12 @@
                 </div>
             </template>
             <template v-slot:left-end>
+                <!-- NOTE: As a component update performance optimization, 
+                the numeric value is truncated to one decimal digit, as displayed, avoiding
+                unnecessary update for actually non-distinctly displayed values. -->
                 <TimeDisplay
                     class="level-item is-narrow is-size-7"
-                    :modelValue="currentSeconds"
+                    :modelValue="Math.floor(currentSeconds * 10) / 10"
                     :subSecondDigits="1"
                 ></TimeDisplay>
                 <VolumeKnob

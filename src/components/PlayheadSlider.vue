@@ -15,9 +15,13 @@
                         :path="mdiRewind"
                         class="has-text-warning is-align-self-flex-start"
                     />
+                    <!-- NOTE: As a component update performance optimization, 
+                    the numeric value is truncated to one decimal digit, as displayed, avoiding
+                    unnecessary update for actually non-distinctly displayed values. -->
                     <TimeDisplay
                         class="has-text-left is-size-7 has-text-warning"
-                        :modelValue="modelValue"
+                        :modelValue="Math.floor(modelValue * 10) / 10"
+                        :subSecondDigits="1"
                     ></TimeDisplay>
                 </button>
             </div>
@@ -55,9 +59,17 @@
                         :path="mdiFastForward"
                         class="has-text-warning is-align-self-flex-end mr-0"
                     />
+                    <!-- NOTE: As a component update performance optimization, 
+                    the numeric value is truncated to one decimal digit, as displayed, avoiding
+                    unnecessary update for actually non-distinctly displayed values. -->
                     <TimeDisplay
-                        class="has-text-right is-size-7 has-text-warning"
-                        :modelValue="remainingTime"
+                        class="has-text-left is-size-7 has-text-warning"
+                        :modelValue="
+                            remainingTime
+                                ? Math.floor(remainingTime * 10) / 10
+                                : null
+                        "
+                        :subSecondDigits="1"
                     ></TimeDisplay>
                 </button>
             </div>
