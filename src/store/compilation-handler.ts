@@ -210,9 +210,10 @@ export default class CompilationHandler {
      * if a suitable input value is provided.
      * @param subSecondDigits - The number of digits for the sub-second precision. Should be 1, 2, or 3 (default).
      * @return The display representation or the empty string.
-     * @devdoc This variant has been somewhat optimized for performance, with regards to the hh:mm:ss.zzz option
+     * @devdoc This variant has been created as a slightly optimized variant for performance, with regards to the hh:mm:ss.zzz option
+     * //TODO later allow to use this using a global setting
      */
-    static convertToDisplayTime(
+    static convertToDisplayTimeSimple(
         seconds: number | null | undefined,
         subSecondDigits = 3,
     ): string {
@@ -228,7 +229,7 @@ export default class CompilationHandler {
      * @param subSecondDigits - The number of digits for the sub-second precision. Should be 1, 2, or 3 (default).
      * @return The display representation or the empty string.
      */
-    static convertToDisplayTimeHHMMSS(
+    static convertToDisplayTime(
         seconds: number | null | undefined,
         subSecondDigits = 3,
     ): string {
@@ -247,8 +248,7 @@ export default class CompilationHandler {
                 .substring(11, 11 + 9 + subSecondDigits);
             //skip the hour part, if not used
             return (
-                sign +
-                (hhmmss.indexOf('00:') === 0 ? hhmmss.substring(3) : hhmmss)
+                sign + (hhmmss.startsWith('00:') ? hhmmss.substring(3) : hhmmss)
             );
         }
         return '';
