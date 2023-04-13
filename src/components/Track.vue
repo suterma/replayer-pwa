@@ -84,11 +84,14 @@
                 <!-- NOTE: As a component update performance optimization, 
                 the numeric value is truncated to one decimal digit, as displayed, avoiding
                 unnecessary update for actually non-distinctly displayed values. -->
-                <TimeDisplay
-                    class="level-item is-narrow is-size-7"
-                    :modelValue="Math.floor(currentSeconds * 10) / 10"
-                    :subSecondDigits="1"
-                ></TimeDisplay>
+                <Experimental>
+                    <TimeDisplay
+                        class="level-item is-narrow is-size-7"
+                        :modelValue="Math.floor(currentSeconds * 10) / 10"
+                        :subSecondDigits="1"
+                    ></TimeDisplay>
+                </Experimental>
+
                 <VolumeKnob
                     :disabled="!isTrackLoaded"
                     :modelValue="track.Volume"
@@ -516,6 +519,7 @@ import {
 } from '@/store/compilation-types';
 import CueLevelEditor from '@/components/CueLevelEditor.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
+import Experimental from '@/components/Experimental.vue';
 import { MediaUrl } from '@/store/state-types';
 import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
@@ -558,6 +562,7 @@ export default defineComponent({
         TrackAudioApiPlayer,
         ReplayerEventHandler,
         TrackHeader,
+        Experimental,
         TrackHeaderEdit,
         PlayPauseButton,
         TimeDisplay,

@@ -150,9 +150,12 @@
                                             :modelValue="
                                                 getMultitrackPosition.position
                                             "
+                                            :subSecondDigits="1"
                                         ></TimeDisplay>
-                                        <!-- Sync Time display -->
-                                        <!-- //TODO make this a setting -->
+                                    </button>
+                                    <!-- Sync Time display -->
+                                    <!-- //TODO make this display a setting -->
+                                    <button class="button is-nav is-indicator">
                                         <span
                                             class="is-minimum-7-characters is-family-monospace has-text-info"
                                             title="Click to synch tracks"
