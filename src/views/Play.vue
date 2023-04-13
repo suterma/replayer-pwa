@@ -2,7 +2,7 @@
     <CompilationLoader />
 
     <!-- Handle and translate the keyboard shortcuts into Replayer events -->
-    <!-- In playback view, do not require the CTRL modifier -->
+    <!-- In playback/mix view, do not require the CTRL modifier -->
     <!-- In edit view, the CTRL modifier helps disambiguate
          between other uses of the shortcut keys-->
     <CompilationKeyboardHandler :requireCtrlModifier="isEditMode" />
