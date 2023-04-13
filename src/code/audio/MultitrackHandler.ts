@@ -85,45 +85,30 @@ export default class MultitrackHandler {
         return false;
     }
 
-    /** Determines playback progress of all tracks in the compilation, in [seconds] (used with the mix mode).
+    /** Determines playback progress of the selected track (or if none, all tracks) in the compilation, in [seconds] (used with the mix mode).
+     * @remarks To keep the toll on resources small, only the readily available values from the tracks are considered.
      * @returns A single representation for the progress. If a single track is active, it's value is used, otherwise some average.
      */
-    getAllTrackPosition(): {
-        currentSeconds: number;
-        range: number;
-    } {
+    getAllTrackPosition(): number {
         const instances = this.getAllTrackInstances();
 
         if (instances) {
-            const positions = instances.map((track) => {
-                return track.currentSeconds;
-            });
-
-            const min = Math.min(...positions);
-            const max = Math.max(...positions);
-            const range = max - min;
-
             const activeTrack = instances.filter((track) => {
                 return track.isActiveTrack;
             })[0];
             if (activeTrack) {
-                return {
-                    currentSeconds: activeTrack.currentSeconds,
-                    range: range,
-                };
+                return activeTrack.currentSeconds;
             } else {
+                const positions = instances.map((track) => {
+                    return track.currentSeconds;
+                });
                 if (positions && positions.length > 0) {
-                    //TODO here, an optimum between unnecessary many events and a reasonable value has to be found.
-
-                    // just take the first
-                    return { currentSeconds: positions[0] ?? 0, range: range };
-
-                    // calculate the average
-                    //return positions.reduce((p, c) => p + c, 0) / positions.length;
+                    // just take the most late
+                    return Math.min(...positions);
                 }
             }
         }
-        return { currentSeconds: 0, range: 0 };
+        return 0;
     }
 
     /** Determines the duration of all tracks in the compilation, in [seconds] (used with the mix mode).
@@ -259,7 +244,7 @@ export default class MultitrackHandler {
         const position = this.getAllTrackPosition();
         if (instances) {
             instances.forEach((instance) => {
-                instance.seekToSecondsSilent(position.currentSeconds + seconds);
+                instance.seekToSecondsSilent(position + seconds);
             });
         }
     }
@@ -270,31 +255,68 @@ export default class MultitrackHandler {
         process.nextTick(() => {
             const instances = this.getAllTrackInstances();
             if (instances) {
-                const currentSeconds =
-                    this.getAllTrackPosition().currentSeconds;
+                const currentSeconds = this.getAllTrackPosition();
                 console.debug(
                     'MultitrackHandler::synchTracks:currentSeconds:',
                     currentSeconds,
                 );
                 const synchOriginTimestamp = performance.now();
-                instances.forEach((instance, index) => {
-                    // console.debug(
-                    //     'MultitrackHandler::synchTracks:instance.track.Name',
-                    //     instance.track.Name,
-                    // );
-                    const loopActionTimestamp = performance.now();
-                    const loopActionDelay =
-                        loopActionTimestamp - synchOriginTimestamp;
-                    // Take the accumulated delay into consideration for the seek operation
+                instances.forEach((instance /*, index*/) => {
+                    // If this instance is actually playing, take the
+                    // accumulated delay into consideration for the seek operation
+                    let loopActionDelay = 0; // in milliseconds
+                    if (instance.isPlaying) {
+                        const loopActionTimestamp = performance.now();
+                        loopActionDelay =
+                            loopActionTimestamp - synchOriginTimestamp;
+                    }
+
                     instance.seekToSecondsSilent(
                         currentSeconds + loopActionDelay / 1000,
                     );
-                    console.debug(
-                        `Accumulated loop action delay (for index ${index}) is ${loopActionDelay} milliseconds.`,
-                    );
+
+                    // console.debug(
+                    //     `Accumulated loop action delay (for index ${index}) is ${loopActionDelay} milliseconds.`,
+                    // );
                 });
             }
         });
+    }
+
+    /** Determines current, exact playback progress of all tracks in the compilation, in [seconds] (used with the mix mode).
+     * @returns This actually queries each track's player individually and is thus expensive.
+     */
+    getAllCurrentTrackPosition(): number[] {
+        const instances = this.getAllTrackInstances();
+        if (instances) {
+            const synchOriginTimestamp = performance.now();
+            const positions = instances.map((track) => {
+                // If this instance is actually playing, take the
+                // accumulated delay into consideration for the received position
+                let loopActionDelay = 0; // in milliseconds
+                if (track.isPlaying) {
+                    const loopActionTimestamp = performance.now();
+                    loopActionDelay =
+                        loopActionTimestamp - synchOriginTimestamp;
+                }
+                return track.getCurrentPosition() - loopActionDelay / 1000;
+            });
+
+            return positions;
+        }
+        return new Array<number>();
+    }
+
+    /** Determines current, exact playback progress range of all tracks in the compilation, in [seconds]. (used with the mix mode).
+     * @remarks This call is expensive
+     * @returns This actually queries each track's player individually.
+     */
+    getAllTrackPositionRange(): number {
+        const positions = this.getAllCurrentTrackPosition();
+        const min = Math.min(...positions);
+        const max = Math.max(...positions);
+        const range = max - min;
+        return range;
     }
 
     /** Gets the references to all track component instances.

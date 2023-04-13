@@ -77,6 +77,7 @@ defineExpose({
     playFrom,
     pauseAndSeekTo,
     updateVolume,
+    getCurrentPosition,
 });
 
 const emit = defineEmits([
@@ -843,6 +844,14 @@ audioElement.value.onplay = () => {
             emit('update:isFading', false);
         });
 };
+
+/** Gets the current position
+ * @remarks Actually queries the media player.
+ * @devdoc For better overall performance, this call should be avoided in favor of the (more seldom) auto-updated/emitted value.
+ */
+function getCurrentPosition(): number {
+    return audioElement.value.currentTime;
+}
 
 updateVolume(props.volume);
 

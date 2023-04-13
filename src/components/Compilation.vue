@@ -100,7 +100,7 @@
                         <div class="level-item mt-4-mobile">
                             <PlayheadSlider
                                 class="is-fullwidth"
-                                :modelValue="getMultitrackPosition"
+                                :modelValue="getMultitrackPosition.position"
                                 @update:modelValue="
                                     (position) =>
                                         multitrackHandler?.seekToSeconds(
@@ -147,16 +147,27 @@
                                     </template>
                                     <button class="button is-nav is-indicator">
                                         <TimeDisplay
-                                            :modelValue="getMultitrackPosition"
-                                        ></TimeDisplay>
-                                        (
-                                        <TimeDisplay
                                             :modelValue="
-                                                getAllTrackPositionRange
+                                                getMultitrackPosition.position
                                             "
-                                            :subSecondDigits="3"
                                         ></TimeDisplay>
-                                        )
+                                        <!-- Sync Time display -->
+                                        <!-- //TODO make this a setting -->
+                                        <span
+                                            class="is-minimum-7-characters is-family-monospace has-text-info"
+                                            title="Click to synch tracks"
+                                            >({{
+                                                getMultitrackPosition.range?.toFixed(
+                                                    6,
+                                                )
+                                            }}s)</span
+                                        >
+                                    </button>
+                                    <button
+                                        class="button is-info"
+                                        @click="multitrackHandler?.synchTracks"
+                                    >
+                                        Synch
                                     </button>
                                     <PlaybackIndicator
                                         :isReady="
@@ -677,19 +688,16 @@ export default defineComponent({
          * @devdoc As a component update performance optimization, the numeric value is truncated to one decimal digit, as displayed, avoiding
          * unnecessary update for actually non-distinctly displayed values.
          */
-        getMultitrackPosition(): number {
-            return (
-                Math.floor(
-                    this.multitrackHandler?.getAllTrackPosition()
-                        .currentSeconds * 10,
-                ) / 10
-            );
-        },
-        /** Determines the range of playback progress of all tracks in the compilation, in [seconds] (used with the mix mode).
-         * @returns A single representation for the range
-         */
-        getAllTrackPositionRange(): number {
-            return this.multitrackHandler?.getAllTrackPosition().range;
+        getMultitrackPosition(): { position: number; range: number | null } {
+            return {
+                position:
+                    Math.floor(
+                        this.multitrackHandler?.getAllTrackPosition() * 10,
+                    ) / 10,
+                range:
+                    //TODO us a setting and only execute this call when required by the setting
+                    this.multitrackHandler?.getAllTrackPositionRange() ?? null,
+            };
         },
 
         /** Determines, whether any track in the compilation is currently fading (used with the mix mode) */

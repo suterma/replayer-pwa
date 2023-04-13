@@ -846,6 +846,15 @@ export default defineComponent({
                 }
             }
         },
+
+        /** Gets the current position
+         * @remarks Actually queries the media player.
+         * @devdoc For better overall performance, this call should be avoided in favor of the (more seldom) auto-updated/emitted value.
+         */
+        getCurrentPosition(): number {
+            return this.trackPlayerInstance.getCurrentPosition();
+        },
+
         /** Starts playback at the current position
          * @remarks Does not assert whether this is the active track.
          * @remarks Asserts (and if necessary) resolves the playability of the track media
