@@ -284,23 +284,28 @@ export default class MultitrackHandler {
     }
 
     /** Determines current, exact playback progress of all tracks in the compilation, in [seconds] (used with the mix mode).
+     * @remarks Only playable tracks are considered (those having some media loaded and are thus available for playback)
      * @returns This actually queries each track's player individually and is thus expensive.
      */
     getAllCurrentTrackPosition(): number[] {
         const instances = this.getAllTrackInstances();
         if (instances) {
             const synchOriginTimestamp = performance.now();
-            const positions = instances.map((track) => {
-                // If this instance is actually playing, take the
-                // accumulated delay into consideration for the received position
-                let loopActionDelay = 0; // in milliseconds
-                if (track.isPlaying) {
-                    const loopActionTimestamp = performance.now();
-                    loopActionDelay =
-                        loopActionTimestamp - synchOriginTimestamp;
-                }
-                return track.getCurrentPosition() - loopActionDelay / 1000;
-            });
+            const positions = instances
+                .filter((track) => {
+                    return track.isTrackLoaded;
+                })
+                .map((track) => {
+                    // If this instance is actually playing, take the
+                    // accumulated delay into consideration for the received position
+                    let loopActionDelay = 0; // in milliseconds
+                    if (track.isPlaying) {
+                        const loopActionTimestamp = performance.now();
+                        loopActionDelay =
+                            loopActionTimestamp - synchOriginTimestamp;
+                    }
+                    return track.getCurrentPosition() - loopActionDelay / 1000;
+                });
 
             return positions;
         }

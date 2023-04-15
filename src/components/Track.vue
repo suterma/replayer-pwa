@@ -1274,21 +1274,21 @@ export default defineComponent({
             );
         },
 
-        /** Whether this component shows editable inputs for the contained data
+        /** Whether this component is displayed for the "Edit" mode, and thus shows editable inputs for the contained data
          * @devdoc Allows to reuse this component for more than one display mode.
          */
         isEditable(): boolean {
             return this.displayMode === TrackDisplayMode.Edit;
         },
 
-        /** Whether this component shows mixing controls
+        /** Whether this component is displayed for the "Mix" mode, and thus shows mixing controls
          * @devdoc Allows to reuse this component for more than one display mode.
          */
         isMix(): boolean {
             return this.displayMode === TrackDisplayMode.Mix;
         },
 
-        /** Whether this component shows non-collapsible playback buttons
+        /** Whether this component is displayed for the "Play" mode, and thus shows non-collapsible playback buttons
          * @devdoc Allows to reuse this component for more than one display mode.
          */
         isPlayable(): boolean {
