@@ -53,6 +53,8 @@ import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
 import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMeter.vue';
 import { useAudioStore } from '@/store/audio';
 import FileHandler from '@/store/filehandler';
+import { useSettingsStore } from '@/store/settings';
+import { storeToRefs } from 'pinia';
 
 /** A safety margin for detecting the end of a track during playback */
 const trackDurationSafetyMarginSeconds = 0.3;
@@ -291,12 +293,16 @@ onUnmounted(() => {
 });
 
 /** The fader to use */
+const settings = useSettingsStore();
+const { fadeInDuration, fadeOutDuration, applyFadeInOffset, showLevelMeter } =
+    storeToRefs(settings);
+
 const fader = shallowRef(
     new AudioFader(
         audioElement.value,
-        store.getters.settings.fadeInDuration,
-        store.getters.settings.fadeOutDuration,
-        store.getters.settings.applyFadeInOffset,
+        fadeInDuration.value,
+        fadeOutDuration.value,
+        applyFadeInOffset.value,
         props.volume,
     ),
 );
@@ -314,7 +320,7 @@ const audioSource: ShallowRef<InstanceType<
  * @devdoc Handle the value also immediately at mount time
  */
 watch(
-    () => store.getters.settings.showLevelMeter,
+    showLevelMeter,
     (showLevelMeter: boolean, wasShowingLevelMeter) => {
         console.debug(
             `TrackAudioApiPlayer(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:showLevelMeter${showLevelMeter}`,
@@ -347,13 +353,6 @@ watch(
     },
     { immediate: true },
 );
-
-/** Whether to show the level meters
- * @remarks This is a shortcut to access the current settings value only, the availability of the audioSource must be assessed separately.
- */
-const showLevelMeter = computed((): boolean => {
-    return store.getters.settings.showLevelMeter;
-});
 
 // ---  ---
 
@@ -719,10 +718,7 @@ async function play(): Promise<void> {
                 assertRunningAudioContext();
 
                 //Just BEFORE playback, apply the possible pre-play transport
-                if (
-                    store.getters.settings.applyFadeInOffset &&
-                    store.getters.settings.fadeInDuration
-                ) {
+                if (applyFadeInOffset.value && fadeInDuration.value) {
                     applyPreFadeInOffset();
                 }
 
@@ -749,7 +745,7 @@ async function play(): Promise<void> {
  */
 function applyPreFadeInOffset(): void {
     const time = audioElement.value.currentTime;
-    const offset = store.getters.settings.fadeInDuration / 1000;
+    const offset = fadeInDuration.value / 1000;
     const target = Math.max(0, time - offset);
     audioElement.value.currentTime = target;
 }
@@ -879,9 +875,9 @@ onUnmounted(() => {
  */
 const audioFaderSettingsToken = computed(
     () =>
-        store.getters.settings.fadeInDuration?.toString() +
-        store.getters.settings.fadeOutDuration?.toString() +
-        store.getters.settings.applyFadeInOffset?.toString(),
+        fadeInDuration.value?.toString() +
+        fadeOutDuration.value?.toString() +
+        applyFadeInOffset.value?.toString(),
 );
 
 /** Watch for changes in the audio fader settings, to immediately apply them
@@ -891,11 +887,10 @@ const audioFaderSettingsToken = computed(
 watch(audioFaderSettingsToken, () => {
     debugLog(`audioFaderSettingsToken:${audioFaderSettingsToken.value}`);
 
-    const newSettings = store.getters.settings;
     fader.value.updateSettings(
-        newSettings.fadeInDuration,
-        newSettings.fadeOutDuration,
-        newSettings.applyFadeInOffset,
+        fadeInDuration.value,
+        fadeOutDuration.value,
+        applyFadeInOffset.value,
     );
 });
 

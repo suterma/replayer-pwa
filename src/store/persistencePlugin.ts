@@ -5,7 +5,7 @@ import { MutationTypes } from './mutation-types';
 import PersistentStorage from './persistent-storage';
 import { MediaUrl } from './state-types';
 
-/** A plugin that handles persistence, to keep the settings, the compilation and
+/** A plugin that handles persistence, to keep the the compilation and
  * the selected cue over app restarts.
  *  */
 export const persistencePlugin = (store: Store): void => {
@@ -30,17 +30,12 @@ export const persistencePlugin = (store: Store): void => {
         PersistentStorage.storeCompilation(state.compilation);
         PersistentStorage.storeSelectedCueId(state.selectedCueId);
         PersistentStorage.storeSelectedTrackId(state.selectedTrackId);
-        PersistentStorage.storeSettings(state.settings);
     });
 };
 
 /** Retrieves the previously persisted state, if available
  */
 function retrieveState(store: Store) {
-    const settings = PersistentStorage.retrieveSettings();
-    //console.debug('store:retrieveSettings', settings);
-    store.commit(MutationTypes.UPDATE_SETTINGS, settings);
-
     store.commit(MutationTypes.PUSH_PROGRESS, 'Retrieving last compilation...');
 
     PersistentStorage.retrieveCompilation().then((compilation) => {

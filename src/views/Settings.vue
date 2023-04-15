@@ -8,11 +8,7 @@
             <div class="field">
                 <div class="control">
                     <label class="checkbox">
-                        <input
-                            type="checkbox"
-                            :checked="getSettings.preventScreenTimeout"
-                            @change="preventScreenTimeoutChanged"
-                        />
+                        <input type="checkbox" v-model="preventScreenTimeout" />
                         Prevent screen timeout when in use
                         <span class="has-opacity-half is-size-7">
                             (Uses more energy)</span
@@ -34,13 +30,7 @@
                 </label>
                 <div class="control">
                     <div class="select">
-                        <select
-                            v-model.number="
-                                localSettings.keyboardShortcutTimeout
-                            "
-                            @change="keyboardShortcutTimeoutChanged"
-                            class=""
-                        >
+                        <select v-model.number="keyboardShortcutTimeout">
                             <option v-bind:value="500">
                                 Fast (500 milliseconds)
                             </option>
@@ -74,13 +64,7 @@
                         </label>
                         <div class="control">
                             <div class="select">
-                                <select
-                                    v-model.number="
-                                        localSettings.fadeInDuration
-                                    "
-                                    @change="fadeInDurationChanged"
-                                    class=""
-                                >
+                                <select v-model.number="fadeInDuration">
                                     <option v-bind:value="0">no fading</option>
                                     <option v-bind:value="20">
                                         20 milliseconds
@@ -121,13 +105,7 @@
                         </label>
                         <div class="control">
                             <div class="select">
-                                <select
-                                    v-model.number="
-                                        localSettings.fadeOutDuration
-                                    "
-                                    @change="fadeOutDurationChanged"
-                                    class=""
-                                >
+                                <select v-model.number="fadeOutDuration">
                                     <option v-bind:value="0">no fading</option>
                                     <option v-bind:value="20">
                                         20 milliseconds
@@ -163,11 +141,7 @@
             <div class="field">
                 <div class="control">
                     <label class="checkbox">
-                        <input
-                            type="checkbox"
-                            :checked="getSettings.applyFadeInOffset"
-                            @change="applyFadeInOffsetChanged"
-                        />
+                        <input type="checkbox" v-model="applyFadeInOffset" />
                         Apply an offset before fade-in operations
                         <span class="has-opacity-half is-size-7">
                             (The offset compensates for the fade-in
@@ -180,15 +154,26 @@
             <div class="field">
                 <div class="control">
                     <label class="checkbox">
-                        <input
-                            type="checkbox"
-                            :checked="getSettings.showLevelMeter"
-                            @change="showLevelMeterChanged"
-                        />
+                        <input type="checkbox" v-model="showLevelMeter" />
                         Show audio level meters
                         <span class="has-opacity-half is-size-7">
-                            (not working on older iOS devices, uses more
-                            energy)</span
+                            (uses more energy, not working on older iOS
+                            devices)</span
+                        >
+                    </label>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <label class="checkbox">
+                        <input
+                            type="checkbox"
+                            v-model="levelMeterSizeIsLarge"
+                        />
+                        Show large audio level meters
+                        <span class="has-opacity-half is-size-7">
+                            (level meters are full width)</span
                         >
                     </label>
                 </div>
@@ -229,10 +214,7 @@
                         <label class="checkbox">
                             <input
                                 type="checkbox"
-                                :checked="
-                                    getSettings.displayExperimentalContent
-                                "
-                                @change="displayExperimentalContentChanged"
+                                v-model="displayExperimentalContent"
                             />
                             Display Experimental features
                             <span class="has-opacity-half is-size-7">
@@ -247,87 +229,39 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { MutationTypes } from '@/store/mutation-types';
-import { settingsMixin } from '@/mixins/settingsMixin';
-import { Settings } from '@/store/state-types';
+<script setup lang="ts">
+import { useSettingsStore } from '@/store/settings';
+import { storeToRefs } from 'pinia';
 import { confirm } from '@/code/ui/dialogs';
+import { useRouter } from 'vue-router';
 
-/** A Settings view
+/** A Settings view for the settings store
  */
-export default defineComponent({
-    name: 'Settings',
-    mixins: [settingsMixin],
-    components: {},
-    data() {
-        return {
-            localSettings: undefined as unknown as Settings,
-        };
-    },
-    created() {
-        this.localSettings = this.getSettings;
-    },
-    methods: {
-        reset() {
-            console.debug('Settings::reset');
-            confirm(
-                'Reset',
-                `Do you want to reset the application to the initial settings? Already downloaded compilations remain available on the device.`,
-            ).then((ok) => {
-                if (ok) {
-                    this.$router.push('/reset');
-                }
-            });
-        },
-        preventScreenTimeoutChanged(event: Event) {
-            const checked = (event.target as HTMLInputElement)?.checked;
-            const settings = this.getSettings;
 
-            settings.preventScreenTimeout = checked;
+const settings = useSettingsStore();
 
-            this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
-        },
+const {
+    levelMeterSizeIsLarge,
+    preventScreenTimeout,
+    fadeInDuration,
+    fadeOutDuration,
+    applyFadeInOffset,
+    showLevelMeter,
+    displayExperimentalContent,
+    keyboardShortcutTimeout,
+} = storeToRefs(settings);
 
-        applyFadeInOffsetChanged(event: Event) {
-            const checked = (event.target as HTMLInputElement)?.checked;
-            const settings = this.getSettings;
+const router = useRouter();
 
-            settings.applyFadeInOffset = checked;
-
-            this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
-        },
-
-        showLevelMeterChanged(event: Event) {
-            const checked = (event.target as HTMLInputElement)?.checked;
-            const settings = this.getSettings;
-
-            settings.showLevelMeter = checked;
-
-            this.$store.commit(MutationTypes.UPDATE_SETTINGS, settings);
-        },
-
-        fadeInDurationChanged(event: Event) {
-            console.debug('event', event);
-            this.$store.commit(MutationTypes.UPDATE_SETTINGS, this.settings);
-        },
-        fadeOutDurationChanged(event: Event) {
-            console.debug('event', event);
-            this.$store.commit(MutationTypes.UPDATE_SETTINGS, this.settings);
-        },
-
-        keyboardShortcutTimeoutChanged() {
-            console.debug('settings', this.settings);
-            this.$store.commit(MutationTypes.UPDATE_SETTINGS, this.settings);
-        },
-
-        displayExperimentalContentChanged(event: Event) {
-            const checked = (event.target as HTMLInputElement)?.checked;
-            const settings = this.getSettings;
-
-            settings.displayExperimentalContent = checked;
-            this.$store.commit(MutationTypes.UPDATE_SETTINGS, this.settings);
-        },
-    },
-});
+function reset() {
+    console.debug('Settings::reset');
+    confirm(
+        'Reset',
+        `Do you want to reset the application to the initial settings? Already downloaded compilations remain available on the device.`,
+    ).then((ok) => {
+        if (ok) {
+            router.push('/reset');
+        }
+    });
+}
 </script>

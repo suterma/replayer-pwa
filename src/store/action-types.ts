@@ -60,6 +60,6 @@ export enum ActionTypes {
      */
     DELETE_CUE = 'DELETE_CUE',
 
-    /** Completely resests all data and settings to the initial (default) state */
+    /** Completely resets all data and settings to the initial (default) state */
     RESET_APPLICATION = 'RESET_APPLICATION',
 }

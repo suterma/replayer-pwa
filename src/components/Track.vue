@@ -536,7 +536,6 @@ import SoloButton from '@/components/buttons/SoloButton.vue';
 import SelectButton from '@/components/buttons/SelectButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import CompilationHandler from '@/store/compilation-handler';
-import { settingsMixin } from '@/mixins/settingsMixin';
 import NoSleep from 'nosleep.js';
 import { ActionTypes } from '@/store/action-types';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
@@ -547,6 +546,8 @@ import ArtistInfo from './ArtistInfo.vue';
 import IfMedia from '@/components/IfMedia.vue';
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
 import { Replayer } from './CompilationKeyboardHandler.vue';
+import { useSettingsStore } from '@/store/settings';
+import { mapState } from 'pinia';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -613,7 +614,6 @@ export default defineComponent({
          */
         'trackLoopedTo',
     ],
-    mixins: [settingsMixin],
     props: {
         /** The track to display
          * @remarks One of track or trackId is required.
@@ -831,7 +831,7 @@ export default defineComponent({
          * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
          */
         activateWakeLock(): void {
-            if (this.getSettings.preventScreenTimeout) {
+            if (this.preventScreenTimeout) {
                 if (!this.noSleep.isEnabled) {
                     this.noSleep.enable().catch((error) => {
                         console.warn(
@@ -845,7 +845,7 @@ export default defineComponent({
          * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
          */
         deactivateWakeLock(): void {
-            if (this.getSettings.preventScreenTimeout) {
+            if (this.preventScreenTimeout) {
                 if (this.noSleep.isEnabled) {
                     this.noSleep.disable();
                 }
@@ -1090,9 +1090,6 @@ export default defineComponent({
             const time = this.currentSeconds;
             const trackId = this.track.Id;
             const payload = { trackId, time };
-            console.debug(
-                `Track(${this.title})::createNewCue:playback:${time}`,
-            );
             this.$store.dispatch(ActionTypes.ADD_CUE, payload);
         },
 
@@ -1383,6 +1380,16 @@ export default defineComponent({
         compilation(): ICompilation {
             return this.$store.getters.compilation;
         },
+
+        ...mapState(useSettingsStore, ['levelMeterSizeIsLarge']),
+        ...mapState(useSettingsStore, ['preventScreenTimeout']),
+        ...mapState(useSettingsStore, ['fadeInDuration']),
+        ...mapState(useSettingsStore, ['fadeOutDuration']),
+        ...mapState(useSettingsStore, ['applyFadeInOffset']),
+        ...mapState(useSettingsStore, ['showLevelMeter']),
+        ...mapState(useSettingsStore, ['displayExperimentalContent']),
+        ...mapState(useSettingsStore, ['keyboardShortcutTimeout']),
+        ...mapState(useSettingsStore, ['displayExperimentalContent']),
     },
 });
 </script>

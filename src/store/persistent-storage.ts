@@ -1,5 +1,5 @@
 /** The keys to access the used storage */
-enum StorageKeys {
+export enum StorageKeys {
     COMPILATION = 'COMPILATION',
     SELECTED_CUE_ID = 'SELECTED_CUE_ID',
     SELECTED_TRACK_ID = 'SELECTED_TRACK_ID',
@@ -9,7 +9,7 @@ enum StorageKeys {
 
 import { Compilation, ICompilation } from './compilation-types';
 import { get, set, clear, entries, del } from 'idb-keyval';
-import { MediaBlob, Settings } from './state-types';
+import { MediaBlob } from './state-types';
 
 /** @devdoc Taken from
  * async-local-storage
@@ -61,12 +61,7 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
             JSON.stringify(compilation),
         );
     }
-    /** Persistently stores the application settings for later retrieval
-     * @devdoc The local storage is used for performance reasons here. No need to use the Indexed Db for small data
-     */
-    static storeSettings(settings: Settings): void {
-        localStorage.setItem(StorageKeys.SETTINGS, JSON.stringify(settings));
-    }
+
     /** Retrieves media blob data from the persistent store
      * @devdoc The indexed db is used for blob data, as recommended.
      */
@@ -117,16 +112,6 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
         }, null);
     }
 
-    /** Retrieves the application settings from the persistent store
-     * @returns a properly typed settings object
-     * */
-    static retrieveSettings(): Settings {
-        const settings = localStorage.getItem(StorageKeys.SETTINGS);
-        if (settings) {
-            return Settings.fromJson(settings);
-        }
-        return Settings.default();
-    }
     /** Determines whether there is a (non-empty) compilation to retrieve from the persistent store
      * @returns true, when a complilation is availabe to retrieve
      * */

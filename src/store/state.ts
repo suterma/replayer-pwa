@@ -1,4 +1,4 @@
-import { MediaUrl, Settings } from './state-types';
+import { MediaUrl } from './state-types';
 import { Compilation, ICompilation } from './compilation-types';
 import CompilationHandler from './compilation-handler';
 
@@ -48,8 +48,6 @@ interface IState {
      * in favor of use within modal or other dialogs.
      */
     useAppShortcuts: boolean;
-
-    settings: Settings;
 }
 
 export const state: IState = {
@@ -70,8 +68,6 @@ export const state: IState = {
     errorMessageStack: new Array<string>(),
 
     useAppShortcuts: true,
-
-    settings: Settings.default(),
 };
 
 export type State = typeof state;

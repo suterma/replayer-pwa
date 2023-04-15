@@ -34,7 +34,6 @@
 import { defineComponent } from 'vue';
 import KeyResponseOverlay from '@/components/KeyResponseOverlay.vue';
 import { GlobalEvents } from 'vue-global-events';
-import { settingsMixin } from '@/mixins/settingsMixin';
 
 /** A set of Replayer events that are emitted by this Keyboard handler */
 export enum Replayer {
@@ -70,7 +69,6 @@ export enum Replayer {
 export default defineComponent({
     name: 'CompilationKeyboardHandler',
     components: { GlobalEvents, KeyResponseOverlay },
-    mixins: [settingsMixin],
     props: {
         /** Whether to require the CTRL modfier keys for the keyboard events */
         requireCtrlModifier: {
@@ -107,7 +105,7 @@ export default defineComponent({
         /** A timeout duration, used for the mnemonic build-up as well as the keyboard shortcut display timeout
          */
         keyboardShortcutTimeout(): number {
-            return this.getSettings.keyboardShortcutTimeout;
+            return this.keyboardShortcutTimeout;
         },
     },
     methods: {

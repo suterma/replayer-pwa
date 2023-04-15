@@ -3,7 +3,7 @@ import { ICompilation, ICue, ITrack } from './compilation-types';
 import PersistentStorage from './persistent-storage';
 import CompilationHandler from './compilation-handler';
 import { State } from './state';
-import { MediaUrl, Settings } from './state-types';
+import { MediaUrl } from './state-types';
 
 export type Getters = {
     /** Returns the currently available compilation */
@@ -41,9 +41,6 @@ export type Getters = {
      * @returns The cue; or null, if no cue is selected or the selected cue is can not be found.
      */
     selectedCue(state: State): ICue | null;
-    /** Gets the application settings
-     */
-    settings(state: State): Settings;
 
     /** Gets the active track
      * @remarks The active track is either:
@@ -116,10 +113,6 @@ export const getters: GetterTree<State, State> & Getters = {
             state.compilation,
             state.selectedCueId,
         );
-    },
-    /** @inheritdoc */
-    settings: (state) => {
-        return state.settings;
     },
     /** @inheritdoc */
     activeTrack: (state): ITrack | null => {

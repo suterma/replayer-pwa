@@ -5,7 +5,7 @@ import { ActionTypes } from './action-types';
 import { MutationTypes } from './mutation-types';
 import PersistentStorage from './persistent-storage';
 import CompilationParser from './compilation-parser';
-import { MediaBlob, MediaUrl, Settings } from './state-types';
+import { MediaBlob, MediaUrl } from './state-types';
 import JSZip from 'jszip';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 import CompilationHandler from './compilation-handler';
@@ -13,6 +13,7 @@ import FileSaver from 'file-saver';
 import FileHandler from './filehandler';
 import { v4 as uuidv4 } from 'uuid';
 import { Cue, ICompilation } from './compilation-types';
+import { useSettingsStore } from './settings';
 
 type AugmentedActionContext = {
     commit<K extends keyof Mutations>(
@@ -606,7 +607,7 @@ export const actions: ActionTree<State, State> & Actions = {
     [ActionTypes.RESET_APPLICATION]({ commit }: AugmentedActionContext): void {
         withProgress(`Resetting application...`, commit, () => {
             commit(MutationTypes.DISCARD_COMPILATION, undefined);
-            commit(MutationTypes.UPDATE_SETTINGS, Settings.default());
+            useSettingsStore().setDefaults();
         });
     },
 };

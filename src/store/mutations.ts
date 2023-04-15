@@ -10,7 +10,7 @@ import {
 } from './compilation-types';
 import { MutationTypes } from './mutation-types';
 import { State } from './state';
-import { MediaUrl, Settings } from './state-types';
+import { MediaUrl } from './state-types';
 import PersistentStorage from './persistent-storage';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 import CompilationHandler from './compilation-handler';
@@ -49,7 +49,6 @@ export type Mutations<S = State> = {
     [MutationTypes.REASSIGN_CUE_SHORTCUTS](state: S, trackId: string): void;
     [MutationTypes.DISCARD_COMPILATION](state: S): void;
     [MutationTypes.REVOKE_ALL_MEDIA_URLS](state: State): void;
-    [MutationTypes.UPDATE_SETTINGS](state: S, settings: Settings): void;
     [MutationTypes.UPDATE_COMPILATION_TITLE](state: State, title: string): void;
     [MutationTypes.UPDATE_TRACK_DATA](
         state: State,
@@ -436,13 +435,6 @@ export const mutations: MutationTree<State> & Mutations = {
         state.compilation.Tracks.forEach((track) => {
             track.Duration = null;
         });
-    },
-    /** Updates the application settings
-     * @param state - The vuex state
-     * @param settings - The application settings
-     */
-    [MutationTypes.UPDATE_SETTINGS](state: State, settings: Settings) {
-        state.settings = settings;
     },
     [MutationTypes.UPDATE_COMPILATION_TITLE](
         state: State,

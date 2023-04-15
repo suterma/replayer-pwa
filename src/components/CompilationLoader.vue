@@ -3,7 +3,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
-import { settingsMixin } from '@/mixins/settingsMixin';
 import CompilationParser from '@/store/compilation-parser';
 import { MutationTypes } from '@/store/mutation-types';
 
@@ -15,8 +14,6 @@ import { MutationTypes } from '@/store/mutation-types';
  */
 export default defineComponent({
     name: 'CompilationLoader',
-    components: {},
-    mixins: [settingsMixin],
     mounted: function (): void {
         //Check whether a given compilation is to be loaded (by Track API)
         //console.debug('CompilationLoader::mounted:route', this.$route);
