@@ -26,8 +26,9 @@
 
         <!-- Each track is an item in a list and contains all the cues -->
         <!-- Track header for editing, including artist info, expansion-toggler and adaptive spacing -->
+        <!-- NOTE: The @click handler on the header component only handles clicks on otherwise non-interactive elements -->
         <TrackHeaderEdit
-            v-if="isEditable"
+            :displayMode="displayMode"
             :isExpanded="isExpanded"
             @update:isExpanded="updateIsExpanded"
             :canCollapse="!isOnlyTrack"
@@ -42,44 +43,62 @@
             :isActive="isActiveTrack"
             :isFirst="isFirst"
             :isLast="isLast"
-        ></TrackHeaderEdit>
-        <!-- Track header for mixing, having additional channel-style controls -->
-        <TrackHeader
-            v-else-if="isMix"
-            :trackId="track.Id"
-            :artist="track.Artist"
-            :album="track.Album"
-            :name="track.Name"
-            :isPlaying="isPlaying"
-            :isTrackLoaded="isTrackLoaded"
-            :isTrackMediaAvailable="isMediaAvailable"
-            :isActive="isActiveTrack"
-            :class="{
-                'has-cursor-not-allowed': !isTrackLoaded,
-            }"
+            @click="skipToPlayPause"
         >
             <template v-slot:left-start>
                 <div class="level-item is-narrow">
-                    <SoloButton
+                    <!-- Playback control only when playable -->
+                    <PlayPauseButton
+                        v-if="isPlayable"
                         :disabled="!canPlay"
-                        :isSoloed="isSoloed"
-                        @click="toggleSolo()"
-                        data-cy="solo"
+                        :class="{
+                            'is-success': isActiveTrack,
+                            'is-clickable': isTrackLoaded,
+                            'has-cursor-not-allowed': !isTrackLoaded,
+                        }"
+                        :isPlaying="isPlaying"
+                        :isLoading="isFading"
+                        data-cy="toggle-playback"
+                        @click="skipToPlayPause"
                     />
-                    <MuteButton
-                        :disabled="!canPlay"
-                        :isMuted="isMuted"
-                        @click="toggleMute()"
-                        data-cy="mute"
-                    />
-                    <SelectButton
-                        :disabled="!canPlay"
-                        :isSelected="isActiveTrack"
-                        @click="setActiveTrack()"
-                        data-cy="select"
-                    />
+
+                    <!-- Routing controls only when mixable -->
+                    <template v-if="isMix">
+                        <SoloButton
+                            :disabled="!canPlay"
+                            :isSoloed="isSoloed"
+                            @click="toggleSolo()"
+                            data-cy="solo"
+                        />
+                        <MuteButton
+                            :disabled="!canPlay"
+                            :isMuted="isMuted"
+                            @click="toggleMute()"
+                            data-cy="mute"
+                        />
+                        <SelectButton
+                            :disabled="!canPlay"
+                            :isSelected="isActiveTrack"
+                            @click="setActiveTrack()"
+                            data-cy="select"
+                        />
+                    </template>
+                </div>
+
+                <div
+                    class="level-item is-narrow"
+                    :class="{
+                        'is-clickable': isTrackLoaded,
+                        'has-cursor-not-allowed': !isTrackLoaded,
+                    }"
+                    @click="skipToPlayPause"
+                >
+                    <span
+                        :id="`track-${track.Id}-HeaderLevelPlaceholder`"
+                    ></span>
                 </div>
             </template>
+
             <template v-slot:left-end>
                 <!-- NOTE: As a component update performance optimization, 
                 the numeric value is truncated to one decimal digit, as displayed, avoiding
@@ -92,55 +111,29 @@
                     ></TimeDisplay>
                 </Experimental>
 
-                <VolumeKnob
-                    :disabled="!isTrackLoaded"
-                    :modelValue="track.Volume"
-                    @update:modelValue="updatedVolume"
-                />
-            </template>
-        </TrackHeader>
-        <!-- Track header for single-track playback -->
-        <TrackHeader
-            v-else
-            :trackId="track.Id"
-            :artist="track.Artist"
-            :album="track.Album"
-            :name="track.Name"
-            :isPlaying="isPlaying"
-            :isTrackLoaded="isTrackLoaded"
-            :isTrackMediaAvailable="isMediaAvailable"
-            :isActive="isActiveTrack"
-            :class="{
-                'is-clickable': isTrackLoaded,
-                'has-cursor-not-allowed': !isTrackLoaded,
-            }"
-            @click="skipToPlayPause"
-        >
-            <template v-slot:left-start>
-                <div class="level-item is-narrow">
-                    <!-- NOTE: Click handling is already handled at the outer TrackHeader component, thus no (additional)
-                    click handler is defined for this button -->
-                    <PlayPauseButton
-                        :disabled="!canPlay"
-                        :class="{ 'is-success': isActiveTrack }"
-                        :isPlaying="isPlaying"
-                        :isLoading="isFading"
-                        data-cy="toggle-playback"
-                    />
-                </div>
-            </template>
-            <template v-slot:left-end>
+                <!-- NOTE: In edit mode, the time is displayed as part of the transport area, not in the header -->
+                <!-- NOTE: In mix mode, the time display is not needed on individual tracks -->
                 <TimeDisplay
+                    v-if="isPlayable"
                     class="level-item is-narrow is-hidden-mobile is-size-7"
-                    :modelValue="track?.Duration"
+                    :modelValue="
+                        track?.Duration
+                            ? Math.floor(track?.Duration * 10) / 10
+                            : null
+                    "
+                    :subSecondDigits="1"
                 ></TimeDisplay>
+
+                <!-- NOTE: In edit mode, the volume button is displayed as part of the transport area, not in the header -->
                 <VolumeKnob
+                    v-if="!isEditable"
+                    class="level-item is-narrow"
                     :disabled="!isTrackLoaded"
                     :modelValue="track.Volume"
                     @update:modelValue="updatedVolume"
                 />
             </template>
-        </TrackHeader>
+        </TrackHeaderEdit>
 
         <!-- The buttons field (for a single track in play mode) -->
         <div
@@ -527,7 +520,6 @@ import TrackHeaderEdit from '@/components/TrackHeaderEdit.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';
 import CueButtonsField from '@/components/CueButtonsField.vue';
 import MediaControlsBar from '@/components/MediaControlsBar.vue';
-import TrackHeader from '@/components/TrackHeader.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import CreateCueButton from '@/components/buttons/CreateCueButton.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
@@ -562,7 +554,6 @@ export default defineComponent({
         CueLevelEditor,
         TrackAudioApiPlayer,
         ReplayerEventHandler,
-        TrackHeader,
         Experimental,
         TrackHeaderEdit,
         PlayPauseButton,

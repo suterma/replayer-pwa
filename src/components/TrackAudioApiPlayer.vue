@@ -18,15 +18,23 @@
 
     <!-- //NOTE: the rendering of the AudioLevelMeter _might_ affect badly the synchronous start of the playback, but only the first time after a page reload/player instantiation.
     //It's currently not consistently reproducible and goes away after a subsequent sync (e.g. after pause/play) -->
-    <AudioLevelMeter
-        v-if="showLevelMeter && props.mediaUrl && audioSource && audio.context"
-        :disabled="disabled"
-        :audioSource="audioSource"
-        :audioContext="audio.context"
-        :showText="false"
+    <Teleport
+        :to="`#track-${trackId}-HeaderLevelPlaceholder`"
+        :disabled="!props.mediaUrl"
     >
-    </AudioLevelMeter>
-    <slot></slot>
+        <AudioLevelMeter
+            v-if="
+                showLevelMeter && props.mediaUrl && audioSource && audio.context
+            "
+            :disabled="disabled"
+            :audioSource="audioSource"
+            :audioContext="audio.context"
+            :showText="false"
+        >
+        </AudioLevelMeter>
+
+        <slot></slot>
+    </Teleport>
 </template>
 
 <script setup lang="ts">

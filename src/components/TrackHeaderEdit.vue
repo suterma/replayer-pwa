@@ -1,12 +1,13 @@
 <template>
-    <!-- Level, also on mobile -->
-    <div class="level is-mobile">
+    <!-- Level, also on mobile 
+    NOTE: The 100% width is necessary to keep the level's right items fully a the end of the available space. -->
+    <div style="width: 100%" class="level is-mobile" :class="$attrs.class">
         <!-- Left side -->
         <div class="level-left">
-            <!-- Expander with title -->
-            <!-- This should shrink (break on words) if necessary (is-narrow is-flex-shrink-1) -->
+            <!-- Expander -->
             <div
                 class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
+                v-if="isEditMode"
             >
                 <CollapsibleButton
                     v-if="canCollapse"
@@ -17,114 +18,169 @@
                     collapsedText="Click to expand / edit cues"
                     expandedText="Click to collapse"
                 />
+            </div>
 
-                <div class="field">
-                    <p class="control">
-                        <StyledInput
-                            class="input title has-text-weight-light is-4"
-                            :class="{ 'has-text-success': isActive }"
-                            :modelValue="trackName"
-                            @change="updateName($event.target.value)"
-                            type="text"
-                            placeholder="Track name"
-                            title="Track name"
-                            focus
-                            data-cy="track-name"
-                        />
-                    </p>
+            <!-- Slot for additional level items -->
+            <slot name="left-start"></slot>
+
+            <!-- The edit part (except small-screen media edit) -->
+            <template v-if="isEditMode">
+                <!-- Title -->
+                <!-- This should shrink (break on words) if necessary (is-narrow is-flex-shrink-1) -->
+                <div
+                    class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
+                >
+                    <div class="field">
+                        <p class="control">
+                            <StyledInput
+                                class="input title has-text-weight-light is-4"
+                                :class="{ 'has-text-success': isActive }"
+                                :modelValue="trackName"
+                                @change="updateName($event.target.value)"
+                                type="text"
+                                placeholder="Track name"
+                                title="Track name"
+                                focus
+                                data-cy="track-name"
+                            />
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <!-- Only for wide screens, edit the media edit in the level -->
-            <div
-                class="level-item is-narrow is-flex-shrink-2 is-hidden-widescreen-only is-hidden-desktop-only is-hidden-touch is-justify-content-flex-start"
-            >
-                <div class="field">
-                    <p class="control">
-                        <MediaEdit :trackId="trackId" :trackUrl="trackUrl">
-                            <span
-                                v-if="!isTrackMediaAvailable"
-                                class="has-text-warning"
-                            >
-                                <BaseIcon v-once :path="mdiAlert" />Media
-                                unavailable</span
-                            >
-                        </MediaEdit>
-                    </p>
+                <!-- Only for wide screens, edit the media edit in the level -->
+                <div
+                    class="level-item is-narrow is-flex-shrink-2 is-hidden-widescreen-only is-hidden-desktop-only is-hidden-touch is-justify-content-flex-start"
+                >
+                    <div class="field">
+                        <p class="control">
+                            <MediaEdit :trackId="trackId" :trackUrl="trackUrl">
+                                <span
+                                    v-if="!isTrackMediaAvailable"
+                                    class="has-text-warning"
+                                >
+                                    <BaseIcon v-once :path="mdiAlert" />Media
+                                    unavailable</span
+                                >
+                            </MediaEdit>
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <!-- Artist Info (completely hidden on mobile, thus not editable there. 
+                <!-- Artist Info (completely hidden on mobile, thus not editable there. 
                 NOTE: It's also not shown in the play view on mobile anyways) -->
-            <!-- Artist -->
-            <div class="level-item is-flex-shrink-1 is-hidden-mobile">
-                <div class="field">
-                    <p class="control">
-                        <StyledInput
-                            class="input is-italic"
-                            :modelValue="trackArtist"
-                            @change="updateArtist($event.target.value)"
-                            type="text"
-                            placeholder="Artist"
-                            title="Artist"
-                            data-cy="track-artist"
-                        >
-                            <span class="has-opacity-half mr-2 is-single-line"
-                                >by</span
-                            ></StyledInput
-                        >
-                    </p>
+                <!-- Artist -->
+                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                    <div class="field">
+                        <p class="control">
+                            <StyledInput
+                                class="input is-italic"
+                                :modelValue="trackArtist"
+                                @change="updateArtist($event.target.value)"
+                                type="text"
+                                placeholder="Artist"
+                                title="Artist"
+                                data-cy="track-artist"
+                            >
+                                <span
+                                    class="has-opacity-half mr-2 is-single-line"
+                                    >by</span
+                                ></StyledInput
+                            >
+                        </p>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Album -->
-            <div class="level-item is-flex-shrink-1 is-hidden-mobile">
-                <div class="field">
-                    <p class="control">
-                        <StyledInput
-                            class="input is-italic"
-                            :modelValue="trackAlbum"
-                            @change="updateAlbum($event.target.value)"
-                            type="text"
-                            placeholder="Album"
-                            title="Album"
-                            data-cy="track-album"
-                        >
-                            <span class="has-opacity-half mr-2 is-single-line"
-                                >on</span
-                            ></StyledInput
-                        >
+                <!-- Album -->
+                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                    <div class="field">
+                        <p class="control">
+                            <StyledInput
+                                class="input is-italic"
+                                :modelValue="trackAlbum"
+                                @change="updateAlbum($event.target.value)"
+                                type="text"
+                                placeholder="Album"
+                                title="Album"
+                                data-cy="track-album"
+                            >
+                                <span
+                                    class="has-opacity-half mr-2 is-single-line"
+                                    >on</span
+                                ></StyledInput
+                            >
+                        </p>
+                    </div>
+                </div>
+            </template>
+            <template v-else>
+                <!-- Title -->
+                <!-- The title is the only header element that should shrink (break on words) if necessary -->
+                <div
+                    class="level-item is-narrow is-flex-shrink-1"
+                    @click="$emit('click')"
+                    :class="{
+                        'is-clickable': isTrackLoaded,
+                        'has-cursor-not-allowed': !isTrackLoaded,
+                    }"
+                >
+                    <p
+                        class="title is-4"
+                        :class="{ 'has-text-success': isActive }"
+                    >
+                        <TrackTitleName :name="trackName"></TrackTitleName>
                     </p>
                 </div>
-            </div>
+
+                <!-- Artist info (don't show on small devices, keep at end to keep the appearance calm)-->
+                <div
+                    class="level-item is-hidden-mobile is-justify-content-end"
+                    @click="$emit('click')"
+                    :class="{
+                        'is-clickable': isTrackLoaded,
+                        'has-cursor-not-allowed': !isTrackLoaded,
+                    }"
+                >
+                    <p class="is-size-7">
+                        <ArtistInfo :album="trackAlbum" :artist="trackArtist" />
+                    </p>
+                </div>
+            </template>
         </div>
 
         <!-- Right side -->
         <div class="level-right">
             <div class="level-item is-justify-content-flex-end">
+                <!-- Slot for additional level items -->
+                <slot name="left-end"></slot>
                 <PlaybackIndicator
                     :is-ready="!isPlaying && isTrackLoaded"
                     :is-playing="isPlaying"
                     :is-unloaded="!isTrackLoaded"
                     :is-unavailable="!isTrackMediaAvailable"
                     data-cy="playback-indicator"
+                    @click="$emit('click')"
                 />
 
                 <TrackContextMenu
+                    v-if="isEditMode"
                     :isFirstTrack="isFirst"
                     :isLastTrack="isLast"
                     :trackId="trackId"
                     :trackName="trackName"
                 ></TrackContextMenu>
             </div>
+            <!-- Slot for additional level items -->
+            <slot name="right"></slot>
         </div>
     </div>
     <!-- Extra level for the media edit, except on very large screens -->
-    <div class="is-hidden-fullhd">
-        <MediaEdit :trackId="trackId" :trackUrl="trackUrl">
-            <span v-if="!isTrackMediaAvailable" class="has-text-warning">
-                <BaseIcon v-once :path="mdiAlert" />Media unavailable</span
-            ></MediaEdit
-        >
-    </div>
+    <template v-if="isEditMode">
+        <div class="is-hidden-fullhd">
+            <MediaEdit :trackId="trackId" :trackUrl="trackUrl">
+                <span v-if="!isTrackMediaAvailable" class="has-text-warning">
+                    <BaseIcon v-once :path="mdiAlert" />Media unavailable</span
+                ></MediaEdit
+            >
+        </div>
+    </template>
     <!-- <TrackSharingDialog v-if="this.isSharing"></TrackSharingDialog> -->
 </template>
 
@@ -138,6 +194,9 @@ import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import { ActionTypes } from '@/store/action-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiAlert } from '@mdi/js';
+import { TrackDisplayMode } from '@/store/compilation-types';
+import ArtistInfo from '@/components/ArtistInfo.vue';
+import TrackTitleName from './TrackTitleName.vue';
 
 /** A header for editing track metadata
  */
@@ -150,8 +209,10 @@ export default defineComponent({
         CollapsibleButton,
         TrackContextMenu,
         BaseIcon,
+        ArtistInfo,
+        TrackTitleName,
     },
-    emits: ['update:isExpanded'],
+    emits: ['update:isExpanded', 'click'],
     props: {
         trackName: {
             type: String,
@@ -230,6 +291,15 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
+
+        /** The display mode of this track.
+         * @devdoc Allows to reuse this component for more than one DisplayMode.
+         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+         */
+        displayMode: {
+            type: String as () => TrackDisplayMode,
+            default: TrackDisplayMode.Play,
+        },
     },
     data() {
         return {
@@ -306,6 +376,11 @@ export default defineComponent({
             immediate: true,
         },
     },
+    computed: {
+        isEditMode(): boolean {
+            return this.displayMode === TrackDisplayMode.Edit;
+        },
+    },
 });
 </script>
 <style lang="scss" scoped>
@@ -324,7 +399,7 @@ export default defineComponent({
     .level-left {
         word-break: break-word;
         /* This basis is set empirically to fit for the elements on the right */
-        flex-basis: calc(100% - 80px);
+        flex-basis: calc(100% - 120px);
     }
 
     .level-right {

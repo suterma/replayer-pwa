@@ -1,5 +1,5 @@
 <template>
-    <div class="is-grouped" data-cy="media-controls-bar">
+    <div data-cy="media-controls-bar">
         <button
             v-if="hasSecondTrack && !hideTrackNavigation"
             class="button"
