@@ -20,7 +20,7 @@
     //It's currently not consistently reproducible and goes away after a subsequent sync (e.g. after pause/play) -->
     <Teleport
         :to="`#track-${trackId}-HeaderLevelPlaceholder`"
-        :disabled="!props.mediaUrl"
+        :disabled="levelMeterSizeIsLarge"
     >
         <AudioLevelMeter
             v-if="
@@ -302,8 +302,13 @@ onUnmounted(() => {
 
 /** The fader to use */
 const settings = useSettingsStore();
-const { fadeInDuration, fadeOutDuration, applyFadeInOffset, showLevelMeter } =
-    storeToRefs(settings);
+const {
+    fadeInDuration,
+    fadeOutDuration,
+    applyFadeInOffset,
+    showLevelMeter,
+    levelMeterSizeIsLarge,
+} = storeToRefs(settings);
 
 const fader = shallowRef(
     new AudioFader(
