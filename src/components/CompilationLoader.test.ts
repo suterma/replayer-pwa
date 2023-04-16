@@ -8,7 +8,7 @@ import { createStore } from 'vuex';
 import { createRouter, createWebHistory } from 'vue-router';
 import { MutationTypes } from '@/store/mutation-types';
 import { State } from '@/store/state';
-import { MediaBlob, MediaUrl, Settings } from '@/store/state-types';
+import { MediaBlob, MediaUrl } from '@/store/state-types';
 import { Compilation } from '@/store/compilation-types';
 import { ActionTypes } from '@/store/action-types';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
@@ -43,8 +43,6 @@ describe('CompilationLoader.vue', () => {
                     progressMessageStack: new Array<string>(),
 
                     errorMessageStack: new Array<string>(),
-
-                    settings: Settings.default(),
                 };
             },
             mutations: {
@@ -64,17 +62,12 @@ describe('CompilationLoader.vue', () => {
                     );
                 },
             },
-            getters: {
-                settings: (state) => {
-                    return state.settings;
-                },
-            },
         });
         const routes = [
             {
                 path: '/',
                 component: {
-                    // empty for testss
+                    // empty for tests
                 },
             },
         ];

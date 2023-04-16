@@ -16,7 +16,6 @@ export default defineComponent({
 
     computed: {
         /** Whether to display experimental content */
-
         ...mapState(useSettingsStore, ['displayExperimentalContent']),
     },
 });

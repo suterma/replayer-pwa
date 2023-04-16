@@ -37,7 +37,6 @@
         "src/**/*.tsx",
         "src/**/*.vue",
         "src/**/*.d.ts",
-        "src/mixins/settingsMixin.js",
         // folders for test code
         "cypress/**/*.ts",
         "tests/**/*.ts",
