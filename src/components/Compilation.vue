@@ -52,63 +52,63 @@
                     @trackLoopedTo="multitrackHandler?.seekToSeconds($event)"
                 />
             </template>
-            <hr />
-            <!-- Pseudo-Track with "Master" Controls for the Mixer -->
-            <div
-                class="track is-together-print"
-                data-cy="master-track"
-                v-if="isMixable"
-            >
-                <!-- Level, also on mobile 
+            <!-- separate Pseudo-Track with "Master" Controls for the Mixer -->
+            <template v-if="isMixable">
+                <hr />
+                <div class="track is-together-print" data-cy="master-track">
+                    <!-- Level, also on mobile 
                 NOTE: The 100% width is necessary to keep the level's right items fully a the end of the available space. -->
-                <div style="width: 100%" class="level is-mobile">
-                    <!-- Left side -->
-                    <div class="level-left">
-                        <div class="level-item is-justify-content-flex-start">
-                            <SoloButton
-                                :disabled="!isAllTrackLoaded"
-                                :isSoloed="isAllTrackSoloed"
-                                @click="multitrackHandler?.toggleSolo()"
-                                data-cy="solo-all"
-                                title="Solo ALL"
-                            />
-                            <MuteButton
-                                :disabled="!isAllTrackLoaded"
-                                :isMuted="isAllTrackMuted"
-                                @click="multitrackHandler?.toggleMute()"
-                                data-cy="mute-all"
-                                title="Mute ALL"
-                            />
-                        </div>
-                        <div
-                            class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
-                        >
-                            <ToggleButton
-                                class="button is-primary"
-                                :class="{
-                                    'is-inactive': !showVertical,
-                                }"
-                                :isEngaged="showVertical"
-                                engaged-label="show Horizontal"
-                                disengaged-label="show Vertical"
-                                @click="toggleVertical($event)"
+                    <div style="width: 100%" class="level is-mobile">
+                        <!-- Left side -->
+                        <div class="level-left">
+                            <div
+                                class="level-item is-justify-content-flex-start"
                             >
-                                <BaseIcon
-                                    v-if="!showVertical"
-                                    :path="mdiRotateLeftVariant"
+                                <SoloButton
+                                    :disabled="!isAllTrackLoaded"
+                                    :isSoloed="isAllTrackSoloed"
+                                    @click="multitrackHandler?.toggleSolo()"
+                                    data-cy="solo-all"
+                                    title="Solo ALL"
                                 />
-                                <BaseIcon
-                                    v-else
-                                    :path="mdiRotateRightVariant"
-                                    :style="{
-                                        transform: 'rotate(' + 90 + 'deg)',
+                                <MuteButton
+                                    :disabled="!isAllTrackLoaded"
+                                    :isMuted="isAllTrackMuted"
+                                    @click="multitrackHandler?.toggleMute()"
+                                    data-cy="mute-all"
+                                    title="Mute ALL"
+                                />
+                            </div>
+                            <div
+                                class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
+                            >
+                                <ToggleButton
+                                    class="button is-primary"
+                                    :class="{
+                                        'is-inactive': !showVertical,
                                     }"
-                                />
-                            </ToggleButton>
+                                    :isEngaged="showVertical"
+                                    engaged-label="show Horizontal"
+                                    disengaged-label="show Vertical"
+                                    @click="toggleVertical($event)"
+                                >
+                                    <BaseIcon
+                                        v-if="!showVertical"
+                                        :path="mdiRotateLeftVariant"
+                                    />
+                                    <BaseIcon
+                                        v-else
+                                        :path="mdiRotateRightVariant"
+                                        :style="{
+                                            transform: 'rotate(' + 90 + 'deg)',
+                                        }"
+                                    />
+                                </ToggleButton>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </template>
         </div>
 
         <!-- Multi-track-Controller -->

@@ -63,9 +63,7 @@
                             unnecessary update for actually non-distinctly displayed values. -->
                             <TimeDisplay
                                 class="has-opacity-half foreground"
-                                :modelValue="
-                                    time ? Math.floor(time * 10) / 10 : null
-                                "
+                                :modelValue="time"
                                 :subSecondDigits="1"
                             ></TimeDisplay>
                         </div>
@@ -80,6 +78,7 @@
                             <TimeDisplay
                                 class="has-opacity-half foreground"
                                 :modelValue="duration"
+                                :subSecondDigits="1"
                             ></TimeDisplay>
                         </p>
 
