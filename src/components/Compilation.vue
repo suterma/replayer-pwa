@@ -11,23 +11,11 @@
             :compilation="compilation"
             :isEditable="isEditable"
         />
-        <ToggleButton
-            v-if="isMixable"
-            class="button is-primary"
-            :class="{
-                'is-inactive': !showVertical,
-            }"
-            :isEngaged="showVertical"
-            engaged-label="show Horizontal"
-            disengaged-label="show Vertical"
-            @click="toggleVertical($event)"
-            >Vertical
-        </ToggleButton>
+
         <div
             class="tracks"
             :class="{
                 vertical: showVertical && isMixable,
-                section: showVertical && isMixable,
             }"
         >
             <template v-for="(track, index) in tracks" :key="track.Id">
@@ -64,6 +52,63 @@
                     @trackLoopedTo="multitrackHandler?.seekToSeconds($event)"
                 />
             </template>
+            <hr />
+            <!-- Pseudo-Track with "Master" Controls for the Mixer -->
+            <div
+                class="track is-together-print"
+                data-cy="master-track"
+                v-if="isMixable"
+            >
+                <!-- Level, also on mobile 
+                NOTE: The 100% width is necessary to keep the level's right items fully a the end of the available space. -->
+                <div style="width: 100%" class="level is-mobile">
+                    <!-- Left side -->
+                    <div class="level-left">
+                        <div class="level-item is-justify-content-flex-start">
+                            <SoloButton
+                                :disabled="!isAllTrackLoaded"
+                                :isSoloed="isAllTrackSoloed"
+                                @click="multitrackHandler?.toggleSolo()"
+                                data-cy="solo-all"
+                                title="Solo ALL"
+                            />
+                            <MuteButton
+                                :disabled="!isAllTrackLoaded"
+                                :isMuted="isAllTrackMuted"
+                                @click="multitrackHandler?.toggleMute()"
+                                data-cy="mute-all"
+                                title="Mute ALL"
+                            />
+                        </div>
+                        <div
+                            class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
+                        >
+                            <ToggleButton
+                                class="button is-primary"
+                                :class="{
+                                    'is-inactive': !showVertical,
+                                }"
+                                :isEngaged="showVertical"
+                                engaged-label="show Horizontal"
+                                disengaged-label="show Vertical"
+                                @click="toggleVertical($event)"
+                            >
+                                <BaseIcon
+                                    v-if="!showVertical"
+                                    :path="mdiRotateLeftVariant"
+                                />
+                                <BaseIcon
+                                    v-else
+                                    :path="mdiRotateRightVariant"
+                                    :style="{
+                                        transform: 'rotate(' + 90 + 'deg)',
+                                    }"
+                                />
+                            </ToggleButton>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Multi-track-Controller -->
@@ -214,6 +259,8 @@ import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import MultitrackHandler from '@/code/audio/MultitrackHandler';
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
+import { mdiRotateLeftVariant, mdiRotateRightVariant } from '@mdi/js';
 
 /** Displays the contained set of tracks according to the required mode.
  * @remarks Also handles the common replayer events for compilations
@@ -232,6 +279,7 @@ export default defineComponent({
         MuteButton,
         SoloButton,
         ToggleButton,
+        BaseIcon,
     },
     props: {
         compilation: Compilation,
@@ -265,6 +313,10 @@ export default defineComponent({
 
             /** Whether to show the track in a vertical orientation */
             showVertical: false,
+
+            /** Icons from @mdi/js */
+            mdiRotateLeftVariant: mdiRotateLeftVariant,
+            mdiRotateRightVariant: mdiRotateRightVariant,
         };
     },
     mounted() {
@@ -712,7 +764,7 @@ export default defineComponent({
 </script>
 <style type="css">
 .tracks.vertical {
-    background-color: darkslategray;
+    /* background-color: darkslategray; */
     max-width: calc(100vh - 200px);
     min-width: calc(100vh - 200px);
     transform: rotate(-90deg) translate(calc(-100vh + 200px), 0);
