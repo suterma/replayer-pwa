@@ -20,7 +20,7 @@
     //It's currently not consistently reproducible and goes away after a subsequent sync (e.g. after pause/play) -->
     <Teleport
         :to="`#track-${trackId}-HeaderLevelPlaceholder`"
-        :disabled="levelMeterSizeIsLarge"
+        :disabled="levelMeterSizeIsLarge || !props.mediaUrl"
     >
         <AudioLevelMeter
             v-if="
@@ -32,9 +32,8 @@
             :showText="false"
         >
         </AudioLevelMeter>
-
-        <slot></slot>
     </Teleport>
+    <slot></slot>
 </template>
 
 <script setup lang="ts">

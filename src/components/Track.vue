@@ -10,8 +10,8 @@
         data-cy="track"
     >
         <!-- Handle all track-relevant events here
-    Note: A check for the active track is done in the handler methods. 
-    A v-if here would work, but would register the events not in a useful order. -->
+        Note: A check for the active track is done in the handler methods. 
+        A v-if here would work, but would register the events not in a useful order. -->
         <ReplayerEventHandler
             @backtocue="goToSelectedCue"
             @tonextcue="goToSelectedCue"
