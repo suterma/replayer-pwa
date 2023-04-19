@@ -607,7 +607,7 @@ export const actions: ActionTree<State, State> & Actions = {
     [ActionTypes.RESET_APPLICATION]({ commit }: AugmentedActionContext): void {
         withProgress(`Resetting application...`, commit, () => {
             commit(MutationTypes.DISCARD_COMPILATION, undefined);
-            useSettingsStore().setDefaults();
+            useSettingsStore().$reset();
         });
     },
 };

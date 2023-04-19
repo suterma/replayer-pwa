@@ -3,7 +3,7 @@
         <h1 class="title">Settings</h1>
 
         <div class="box">
-            <h3 class="subtitle">General</h3>
+            <h3 class="subtitle">Display</h3>
 
             <div class="field">
                 <div class="control">
@@ -14,6 +14,29 @@
                             (Uses more energy)</span
                         >
                     </label>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"
+                    >Time format
+                    <span class="has-opacity-half is-size-7">
+                        (For display of duration, position and track
+                        length)</span
+                    >
+                </label>
+                <div class="control">
+                    <div class="select">
+                        <select v-model.number="timeFormat">
+                            <!-- TimeFormat.Iso8601Extended -->
+                            <option v-bind:value="1">
+                                hh:mm:ss.zzz (ISO 8601 extended)
+                            </option>
+                            <!-- TimeFormat.DecimalSeconds -->
+                            <option v-bind:value="2">
+                                sss.zzz (Decimal seconds)
+                            </option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -249,6 +272,7 @@ const {
     showLevelMeter,
     displayExperimentalContent,
     keyboardShortcutTimeout,
+    timeFormat,
 } = storeToRefs(settings);
 
 const router = useRouter();

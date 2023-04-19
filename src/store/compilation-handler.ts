@@ -7,6 +7,7 @@ import {
     Track,
 } from './compilation-types';
 import FileHandler from './filehandler';
+import { TimeFormat, useSettingsStore } from './settings';
 import { MediaBlob, MediaUrl } from './state-types';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -211,9 +212,8 @@ export default class CompilationHandler {
      * @param subSecondDigits - The number of digits for the sub-second precision. Should be 1, 2, or 3 (default).
      * @return The display representation or the empty string.
      * @devdoc This variant has been created as a slightly optimized variant for performance, with regards to the hh:mm:ss.zzz option
-     * //TODO later allow to use this using a global setting
      */
-    static convertToDisplayTimeSimple(
+    private static convertSecondsToDecimalSeconds(
         seconds: number | null | undefined,
         subSecondDigits = 3,
     ): string {
@@ -229,7 +229,7 @@ export default class CompilationHandler {
      * @param subSecondDigits - The number of digits for the sub-second precision. Should be 1, 2, or 3 (default).
      * @return The display representation or the empty string.
      */
-    static convertToDisplayTime(
+    static convertSecondsToIso8601Extended(
         seconds: number | null | undefined,
         subSecondDigits = 3,
     ): string {
@@ -249,6 +249,33 @@ export default class CompilationHandler {
             //skip the hour part, if not used
             return (
                 sign + (hhmmss.startsWith('00:') ? hhmmss.substring(3) : hhmmss)
+            );
+        }
+        return '';
+    }
+
+    /** Converts the total seconds into a displayable format,
+     * according to the application settings,
+     * if a suitable input value is provided.
+     * @param subSecondDigits - The number of digits for the sub-second precision. Should be 1, 2, or 3 (default).
+     * @return The display representation or the empty string.
+     */
+    static convertToDisplayTime(
+        seconds: number | null | undefined,
+        subSecondDigits = 3,
+    ): string {
+        const settings = useSettingsStore();
+        const timeFormat = settings.timeFormat;
+
+        if (timeFormat == TimeFormat.Iso8601Extended) {
+            return this.convertSecondsToIso8601Extended(
+                seconds,
+                subSecondDigits,
+            );
+        } else if (timeFormat == TimeFormat.DecimalSeconds) {
+            return this.convertSecondsToDecimalSeconds(
+                seconds,
+                subSecondDigits,
             );
         }
         return '';

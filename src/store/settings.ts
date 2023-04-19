@@ -3,6 +3,23 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { StorageKeys } from './persistent-storage';
 
+/** The precision for time display
+ * @remarks Does not affect the application's internal precision when handling time values.
+ * Only values of 1, 2 and 3 are allowed.
+ */
+export const TimeDisplayDecimalPlaces = 1;
+
+/** Variants of time representation */
+export enum TimeFormat {
+    /** Represents time in the IS0 8601 extended format
+     * @remarks See https://en.wikipedia.org/wiki/ISO_8601#Times
+     */
+    Iso8601Extended = 1,
+    /** Represents time as decimal value of seconds
+     */
+    DecimalSeconds = 2,
+}
+
 /** A store for application settings */
 export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
     /** Whether the audio level meter size is large */
@@ -48,8 +65,16 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
      */
     const keyboardShortcutTimeout = ref(1000);
 
+    /** Whether to show experimental content
+     * @remarks Default is false
+     */
+    const timeFormat = useLocalStorage(
+        'timeFormat',
+        TimeFormat.Iso8601Extended,
+    );
+
     /** Returns the settings with their default value */
-    function setDefaults() {
+    function $reset() {
         levelMeterSizeIsLarge.value = false;
         preventScreenTimeout.value = true;
         fadeInDuration.value = 1000;
@@ -58,6 +83,7 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
         showLevelMeter.value = true;
         displayExperimentalContent.value = false;
         keyboardShortcutTimeout.value = 1000;
+        timeFormat.value = TimeFormat.Iso8601Extended;
     }
 
     return {
@@ -69,7 +95,8 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
         showLevelMeter,
         displayExperimentalContent,
         keyboardShortcutTimeout,
+        timeFormat,
 
-        setDefaults,
+        $reset,
     };
 });
