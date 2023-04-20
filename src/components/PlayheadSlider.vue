@@ -15,14 +15,15 @@
                         :path="mdiRewind"
                         class="has-text-warning is-align-self-flex-start"
                     />
-                    <!-- NOTE: As a component update performance optimization, 
-                    the numeric value is truncated to one decimal digit, as displayed, avoiding
-                    unnecessary update for actually non-distinctly displayed values. -->
-                    <TimeDisplay
-                        class="has-text-left is-size-7 has-text-warning"
-                        :modelValue="Math.floor(modelValue * 10) / 10"
-                        :subSecondDigits="1"
-                    ></TimeDisplay>
+                    <!-- NOTE: As a update performance optimization,
+                        the TimeDisplay component is not used, but the
+                        value is directly computed with the desired number
+                        of subSecond digits. This avoids
+                        unnecessary update for actually non-distinctly displayed values. -->
+                    <span
+                        class="has-text-left is-size-7 has-text-warning is-minimum-7-characters is-family-monospace"
+                        >{{ convertToDisplayTime(modelValue, 1) }}</span
+                    >
                 </button>
             </div>
         </div>
@@ -59,18 +60,15 @@
                         :path="mdiFastForward"
                         class="has-text-warning is-align-self-flex-end mr-0"
                     />
-                    <!-- NOTE: As a component update performance optimization, 
-                    the numeric value is truncated to one decimal digit, as displayed, avoiding
-                    unnecessary update for actually non-distinctly displayed values. -->
-                    <TimeDisplay
-                        class="has-text-left is-size-7 has-text-warning"
-                        :modelValue="
-                            remainingTime
-                                ? Math.floor(remainingTime * 10) / 10
-                                : null
-                        "
-                        :subSecondDigits="1"
-                    ></TimeDisplay>
+                    <!-- NOTE: As a update performance optimization,
+                        the TimeDisplay component is not used, but the
+                        value is directly computed with the desired number
+                        of subSecond digits. This avoids
+                        unnecessary update for actually non-distinctly displayed values. -->
+                    <span
+                        class="has-text-left is-size-7 has-text-warning is-minimum-7-characters is-family-monospace"
+                        >{{ convertToDisplayTime(remainingTime, 1) }}</span
+                    >
                 </button>
             </div>
         </div>
@@ -79,9 +77,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import TimeDisplay from '@/components/TimeDisplay.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiRewind, mdiFastForward } from '@mdi/js';
+import CompilationHandler from '@/store/compilation-handler';
 
 /** Slider that represents the playhead position in a track as the modelValue in a ranged input (slider).
  */
@@ -94,7 +92,7 @@ export default defineComponent({
          */
         'seek',
     ],
-    components: { TimeDisplay, BaseIcon },
+    components: { BaseIcon },
     props: {
         /** Whether to show the component in a disabled state
          * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
@@ -150,6 +148,15 @@ export default defineComponent({
         },
         seek(seconds: number): void {
             this.$emit('seek', seconds);
+        },
+        convertToDisplayTime(
+            value: number | null,
+            subSecondDigits: number,
+        ): string {
+            return CompilationHandler.convertToDisplayTime(
+                value,
+                subSecondDigits,
+            );
         },
     },
     computed: {

@@ -260,7 +260,7 @@ export default class CompilationHandler {
      * @param subSecondDigits - The number of digits for the sub-second precision. Should be 1, 2, or 3 (default).
      * @return The display representation or the empty string.
      */
-    static convertToDisplayTime(
+    public static convertToDisplayTime(
         seconds: number | null | undefined,
         subSecondDigits = 3,
     ): string {
