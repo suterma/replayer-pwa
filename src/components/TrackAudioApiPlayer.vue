@@ -7,14 +7,6 @@
             :showZoomView="true"
         />
     </Experimental>
-    <!-- <TrackAudioPeakMeter
-        v-if="showLevelMeter && audioSource"
-        :disabled="disabled"
-        :audioSource="audioSource"
-        :audioContext="audio.context"
-        :key="props.mediaUrl"
-    >
-    </TrackAudioPeakMeter> -->
 
     <!-- //NOTE: the rendering of the AudioLevelMeter _might_ affect badly the synchronous start of the playback, but only the first time after a page reload/player instantiation.
     //It's currently not consistently reproducible and goes away after a subsequent sync (e.g. after pause/play) -->
