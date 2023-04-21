@@ -221,31 +221,35 @@
         <!-- Experimental settings -->
         <hr />
 
-        <div class="box">
-            <h3 class="subtitle">Experimental</h3>
+        <div class="box is-experimental">
+            <h3 class="subtitle">Experimental (Here be dragons)</h3>
+
             <div class="field">
-                <label class="label"
-                    >Experimental settings
-                    <span class="has-opacity-half is-size-7">
-                        (Here be dragons (use at your own risk))</span
-                    >
-                </label>
+                <div class="control">
+                    <label class="checkbox">
+                        <input
+                            type="checkbox"
+                            v-model="experimentalShowPositionInTrackHeader"
+                        />
+                        Show position in track headers
+                        <span class="has-opacity-half is-size-7">
+                            (uses more space)</span
+                        >
+                    </label>
+                </div>
             </div>
-            <div class="is-experimental">
-                <div class="field">
-                    <div class="control">
-                        <label class="checkbox">
-                            <input
-                                type="checkbox"
-                                v-model="displayExperimentalContent"
-                            />
-                            Display Experimental features
-                            <span class="has-opacity-half is-size-7">
-                                (Allows to test upcoming, experimental
-                                features)</span
-                            >
-                        </label>
-                    </div>
+            <div class="field">
+                <div class="control">
+                    <label class="checkbox">
+                        <input
+                            type="checkbox"
+                            v-model="experimentalShowWaveforms"
+                        />
+                        Show scrollable waveforms
+                        <span class="has-opacity-half is-size-7">
+                            (uses more more memory and CPU power)</span
+                        >
+                    </label>
                 </div>
             </div>
         </div>
@@ -270,9 +274,10 @@ const {
     fadeOutDuration,
     applyFadeInOffset,
     showLevelMeter,
-    displayExperimentalContent,
     keyboardShortcutTimeout,
     timeFormat,
+    experimentalShowPositionInTrackHeader,
+    experimentalShowWaveforms,
 } = storeToRefs(settings);
 
 const router = useRouter();

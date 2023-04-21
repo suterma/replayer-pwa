@@ -52,14 +52,6 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
      */
     const showLevelMeter = useLocalStorage('showLevelMeter', true);
 
-    /** Whether to show experimental content
-     * @remarks Default is false
-     */
-    const displayExperimentalContent = useLocalStorage(
-        'displayExperimentalContent',
-        false,
-    );
-
     /** A timeout duration, used for the mnemonic build-up as well as the keyboard shortcut display timeout
      */
     const keyboardShortcutTimeout = useLocalStorage(
@@ -75,6 +67,22 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
         TimeFormat.Iso8601Extended,
     );
 
+    /** EXPERIMENTAL: Whether to show the track position in the header
+     * @remarks Default is false
+     */
+    const experimentalShowPositionInTrackHeader = useLocalStorage(
+        'experimentalShowPositionInTrackHeader',
+        false,
+    );
+
+    /** EXPERIMENTAL: Whether to show the waveforms
+     * @remarks Default is false
+     */
+    const experimentalShowWaveforms = useLocalStorage(
+        'experimentalShowWaveforms',
+        false,
+    );
+
     /** Returns the settings with their default value */
     function $reset() {
         levelMeterSizeIsLarge.value = false;
@@ -83,9 +91,10 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
         fadeOutDuration.value = 500;
         applyFadeInOffset.value = true;
         showLevelMeter.value = true;
-        displayExperimentalContent.value = false;
         keyboardShortcutTimeout.value = 1000;
         timeFormat.value = TimeFormat.Iso8601Extended;
+        experimentalShowPositionInTrackHeader.value = false;
+        experimentalShowWaveforms.value = false;
     }
 
     return {
@@ -95,9 +104,11 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
         fadeOutDuration,
         applyFadeInOffset,
         showLevelMeter,
-        displayExperimentalContent,
         keyboardShortcutTimeout,
         timeFormat,
+
+        experimentalShowPositionInTrackHeader,
+        experimentalShowWaveforms,
 
         $reset,
     };

@@ -103,7 +103,7 @@
                 <!-- NOTE: As a component update performance optimization, 
                 the numeric value is truncated to one decimal digit, as displayed, avoiding
                 unnecessary update for actually non-distinctly displayed values. -->
-                <Experimental>
+                <Experimental v-if="experimentalShowPositionInTrackHeader">
                     <TimeDisplay
                         class="level-item is-narrow is-size-7"
                         :modelValue="Math.floor(currentSeconds * 10) / 10"
@@ -1378,9 +1378,10 @@ export default defineComponent({
         ...mapState(useSettingsStore, ['fadeOutDuration']),
         ...mapState(useSettingsStore, ['applyFadeInOffset']),
         ...mapState(useSettingsStore, ['showLevelMeter']),
-        ...mapState(useSettingsStore, ['displayExperimentalContent']),
         ...mapState(useSettingsStore, ['keyboardShortcutTimeout']),
-        ...mapState(useSettingsStore, ['displayExperimentalContent']),
+        ...mapState(useSettingsStore, [
+            'experimentalShowPositionInTrackHeader',
+        ]),
     },
 });
 </script>

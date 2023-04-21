@@ -1,5 +1,5 @@
 <template>
-    <Experimental>
+    <Experimental v-if="experimentalShowWaveforms">
         <TrackAudioPeaks
             :disabled="disabled"
             :mediaElement="audioElement"
@@ -307,6 +307,7 @@ const {
     applyFadeInOffset,
     showLevelMeter,
     levelMeterSizeIsLarge,
+    experimentalShowWaveforms,
 } = storeToRefs(settings);
 
 const fader = shallowRef(

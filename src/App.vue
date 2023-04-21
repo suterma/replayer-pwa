@@ -38,7 +38,7 @@
         -->
         <div class="has-player-navbar-fixed-bottom"></div>
         <!-- A placeholder that invisibly extends the bottom for the experimental content in the fixed bottom bar -->
-        <Experimental>
+        <Experimental v-if="experimentalShowPositionInTrackHeader">
             <div style="height: 224px"></div>
         </Experimental>
     </div>
@@ -53,6 +53,8 @@ import { MutationTypes } from './store/mutation-types';
 import { DialogWrapper } from 'vue3-promise-dialog';
 import Experimental from './components/Experimental.vue';
 import { useAudioStore } from './store/audio';
+import { useSettingsStore } from '@/store/settings';
+import { mapState } from 'pinia';
 
 export default defineComponent({
     name: 'App',
@@ -86,6 +88,11 @@ export default defineComponent({
 
             console.log('App.vue::cleanUp done.');
         },
+    },
+    computed: {
+        ...mapState(useSettingsStore, [
+            'experimentalShowPositionInTrackHeader',
+        ]),
     },
 });
 </script>

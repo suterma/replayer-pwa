@@ -78,14 +78,6 @@
                 :iconPath="mdiInformationOutline"
             />
         </Hotkey>
-        <Experimental>
-            <DropdownMenuRouterLink
-                v-once
-                to="/development"
-                title="Development"
-                :iconPath="mdiFlaskOutline"
-            />
-        </Experimental>
         <div id="appContextMenuBottom"></div>
     </DropdownMenu>
 </template>
