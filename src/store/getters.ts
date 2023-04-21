@@ -35,7 +35,7 @@ export type Getters = {
      * @returns The cue identifier; or null, if no cue is selected.
      */
     selectedCueId(state: State): string | null;
-    
+
     /** Gets the currently selected cue
      * @remarks This is more expensive than only getting the selected cue id
      * @remarks Only one cue may be selected at any time, within one compilation / application instance.
@@ -110,7 +110,7 @@ export const getters: GetterTree<State, State> & Getters = {
     },
     /** @inheritdoc */
     selectedCue: (state) => {
-        return CompilationHandler.getCueById(
+        return CompilationHandler.getCompilationCueById(
             state.compilation,
             state.selectedCueId,
         );

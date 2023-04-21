@@ -531,7 +531,7 @@ export const mutations: MutationTree<State> & Mutations = {
             time: number | null;
         },
     ): void {
-        const cue = CompilationHandler.getCueById(
+        const cue = CompilationHandler.getCompilationCueById(
             state.compilation,
             payload.cueId,
         );

@@ -473,7 +473,7 @@ export default class CompilationHandler {
      * @param cueId - The Id of the cue to find.
      * @returns The cue; or null, if no cue id is provided or the selected cue is can not be found.
      * */
-    public static getCueById(
+    public static getCompilationCueById(
         compilation: ICompilation,
         cueId: string | null,
     ): ICue | null {
@@ -481,6 +481,16 @@ export default class CompilationHandler {
             (cue) => cue.Id === cueId,
         );
 
+        return cue ?? null;
+    }
+
+    /** Gets the the matching cue, if any, in the set of cues, by it's Id.
+     * @param cues - The set of cues that are searched
+     * @param cueId - The Id of the cue to find.
+     * @returns The cue; or null, if no cue id is provided or the selected cue is can not be found.
+     * */
+    public static getCueById(cues: ICue[], cueId: string | null): ICue | null {
+        const cue = cues.find((cue) => cue.Id === cueId);
         return cue ?? null;
     }
 
