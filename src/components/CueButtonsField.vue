@@ -88,7 +88,7 @@ const prefixCueButtonId = 'prefix';
 
 /** Handler for a cue clicked event
  * @remarks Emits a click event with the respective cue
- * @devdoc The cue object or id is intentionally not provided from inside the v-for, because using a property-based value
+ * @devdoc The cue object (or id) is intentionally not provided from inside the v-for, because using a property-based value
  * for an event handler in a v-for causes excess rendering operations for components inside v-for loops. See https://stackoverflow.com/a/74270334/79485
  * Instead, the respective cue id is reclaimed inside this handler only at an actual click.
  */
