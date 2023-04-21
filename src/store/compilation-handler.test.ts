@@ -4,6 +4,7 @@
 
 import { MediaBlob } from '@/store/state-types';
 import CompilationHandler from './compilation-handler';
+import { expect } from '@jest/globals';
 
 describe('CompilationHandler.ts', () => {
     let mediaBlobs = new Array<MediaBlob>();
