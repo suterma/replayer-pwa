@@ -13,7 +13,8 @@
         <!-- Use the full width of the button for the inside content
         This causes the icon and description to start from the left side, 
         representing the begin of the cue, which suits the intention -->
-        <span class="player-timeline is-fullwidth">
+        <!-- Do not handle click events here; they should originate from the outer button -->
+        <span style="pointer-events: none" class="player-timeline is-fullwidth">
             <!-- Progress -->
             <span
                 class="player-progress"
