@@ -34,6 +34,7 @@
 import { defineComponent } from 'vue';
 import KeyResponseOverlay from '@/components/KeyResponseOverlay.vue';
 import { GlobalEvents } from 'vue-global-events';
+import { useSettingsStore } from '@/store/settings';
 
 /** A set of Replayer events that are emitted by this Keyboard handler */
 export enum Replayer {
@@ -105,7 +106,8 @@ export default defineComponent({
         /** A timeout duration, used for the mnemonic build-up as well as the keyboard shortcut display timeout
          */
         keyboardShortcutTimeout(): number {
-            return this.keyboardShortcutTimeout;
+            const settings = useSettingsStore();
+            return settings.keyboardShortcutTimeout;
         },
     },
     methods: {

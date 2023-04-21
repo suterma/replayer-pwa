@@ -1,6 +1,5 @@
 import { useLocalStorage } from '@vueuse/core';
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
 import { StorageKeys } from './persistent-storage';
 
 /** The precision for time display
@@ -63,7 +62,10 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
 
     /** A timeout duration, used for the mnemonic build-up as well as the keyboard shortcut display timeout
      */
-    const keyboardShortcutTimeout = ref(1000);
+    const keyboardShortcutTimeout = useLocalStorage(
+        'keyboardShortcutTimeout',
+        1000,
+    );
 
     /** Whether to show experimental content
      * @remarks Default is false
