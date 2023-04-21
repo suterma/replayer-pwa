@@ -90,7 +90,8 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                             data-cy="input-url"
                         />
                     </p>
-                    <Experimental class="control">
+                    <!-- Fetch is currently not supported. Download should be done externally by the user -->
+                    <Experimental v-if="false" class="control">
                         <button
                             type="button"
                             :disabled="!url"
