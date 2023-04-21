@@ -5,6 +5,7 @@
              Also, leave the existing flex-grow, to allow them to fill single lines, but allow to shrink -->
         <CueButton
             v-if="prefixCue.Duration ?? 0 > 0"
+            :id="prefixCue.Id"
             class="is-flex-grow-1 is-flex-shrink-5"
             :disabled="disabled || !Number.isFinite(prefixCue.Time)"
             :time="prefixCue.Time"
@@ -20,17 +21,18 @@
             :hasCuePassed="hasCuePassed(prefixCue)"
             :isCueAhead="isCueAhead(prefixCue)"
             :percentComplete="percentComplete(prefixCue)"
-            @click="emit('click', prefixCue)"
+            @click="cueClicked"
         >
         </CueButton>
         <template v-for="cue in cues" :key="cue.Id">
             <CueButton
+                :id="cue.Id"
                 class="is-flex-grow-1 has-cropped-text"
+                :disabled="disabled || !Number.isFinite(cue.Time)"
                 :time="cue.Time"
                 :shortcut="cue.Shortcut"
                 :duration="cue.Duration"
                 :description="cue.Description"
-                :disabled="disabled || !Number.isFinite(cue.Time)"
                 :isTrackPlaying="isTrackPlaying"
                 :playbackMode="playbackMode"
                 hasAddonsRight
@@ -39,11 +41,8 @@
                 :hasCuePassed="hasCuePassed(cue)"
                 :isCueAhead="isCueAhead(cue)"
                 :percentComplete="percentComplete(cue)"
-                @click="emit('click', cue)"
+                @click="cueClicked"
             >
-                <span class="has-text-weight-semibold foreground is-size-7">{{
-                    cue?.Description
-                }}</span>
             </CueButton>
         </template>
     </div>
@@ -88,9 +87,40 @@ const props = defineProps({
     },
 });
 
+/** A static cue id for the prefix cue */
+const prefixCueButtonId = 'prefix';
+
+/** Handler for a cue clicked event
+ * @remarks Emits a click event with the respective cue
+ * @devdoc The cue object (or id) is intentionally not provided from inside the v-for, because using a property-based value
+ * for an event handler in a v-for causes excess rendering operations for components inside v-for loops. See https://stackoverflow.com/a/74270334/79485
+ * Instead, the respective cue id is reclaimed inside this handler only at an actual click.
+ */
+function cueClicked(event: PointerEvent): void {
+    const clickedCueId = (event.target as HTMLElement).id;
+    if (clickedCueId === prefixCueButtonId) {
+        emit('click', prefixCue.value);
+    } else {
+        if (props.cues) {
+            const clickedCue = CompilationHandler.getCueById(
+                props.cues,
+                clickedCueId,
+            );
+            if (clickedCue) {
+                emit('click', clickedCue);
+            }
+        }
+    }
+}
 /** Defines a virtual cue, that acts as a placeholder when the first defined cue is not at the track start. */
 const prefixCue = computed(() => {
-    return new Cue('the Beginning', '', 0, props.cues?.[0]?.Time ?? null, '');
+    return new Cue(
+        'the Beginning',
+        '',
+        0,
+        props.cues?.[0]?.Time ?? null,
+        prefixCueButtonId,
+    );
 });
 
 const store = useStore();

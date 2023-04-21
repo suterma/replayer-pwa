@@ -23,8 +23,8 @@
         </CueButton>
         <template v-for="cue in cues" :key="cue.Id">
             <CueButton
-                class="is-flex-grow-1"
                 :id="cue.Id"
+                class="is-flex-grow-1"
                 :disabled="disabled || !Number.isFinite(cue.Time)"
                 :time="cue.Time"
                 :shortcut="cue.Shortcut"
@@ -93,8 +93,6 @@ const prefixCueButtonId = 'prefix';
  * Instead, the respective cue id is reclaimed inside this handler only at an actual click.
  */
 function cueClicked(event: PointerEvent): void {
-    console.debug('cueClicked', event);
-    //emit the  clicked button
     const clickedCueId = (event.target as HTMLElement).id;
     if (clickedCueId === prefixCueButtonId) {
         emit('click', prefixCue.value);

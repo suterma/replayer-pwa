@@ -33,8 +33,12 @@
             />
             <BaseIcon v-else :path="mdiPause" class="foreground" />
 
-            <slot></slot>
-
+            <!-- Description depending on variant -->
+            <span
+                v-if="minified && !virtual"
+                class="has-text-weight-semibold foreground is-size-7"
+                >{{ description }}</span
+            >
             <span
                 v-if="!minified && !virtual"
                 class="ml-2 has-text-weight-semibold foreground"
@@ -128,6 +132,8 @@ import { PropType, computed, defineProps } from 'vue';
  * playhead position within this component. This minimizes component updates, as most of the time, the progress
  * properties of a single cue does not change. Instead, progress for a single button
  * does only change when the playhead position is within it's boundaries.
+ * @devdoc Also for performance reasons, this component does not offer a slot. Test have shown
+ * that slot content causes surplus renderings when used in a v-for loop.
  */
 
 const props = defineProps({
