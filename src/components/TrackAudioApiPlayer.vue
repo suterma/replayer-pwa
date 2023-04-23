@@ -59,8 +59,6 @@ import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
 import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMeter.vue';
 import { useAudioStore } from '@/store/audio';
 import FileHandler from '@/store/filehandler';
-import { useSettingsStore } from '@/store/settings';
-import { storeToRefs } from 'pinia';
 
 /** A safety margin for detecting the end of a track during playback */
 const trackDurationSafetyMarginSeconds = 0.3;
@@ -144,7 +142,6 @@ const props = defineProps({
         default: '',
     },
     /** The playback mode
-     * @remarks Implements a two-way binding
      * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
      */
     playbackMode: {
@@ -168,7 +165,6 @@ const props = defineProps({
         default: false,
     },
     /** Whether playback is currently muted
-     * @remarks Implements a two-way binding
      */
     isMuted: {
         type: Boolean,
@@ -211,6 +207,40 @@ const props = defineProps({
      * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
      */
     disabled: Boolean,
+
+    /** The fade-in duration in [milliseconds]. Use zero for no fading.
+     */
+    fadeInDuration: {
+        type: Number,
+        required: true,
+    },
+
+    /** The fade-out duration in [milliseconds]. Use zero for no fading.
+     */
+    fadeOutDuration: {
+        type: Number,
+        required: true,
+    },
+
+    /** Whether to apply an offset for fade-in operations, to compensate for the fading duration
+     */
+    applyFadeInOffset: {
+        type: Boolean,
+        required: false,
+    },
+
+    /** Whether to show the audio level meter
+     * @remarks Default is true
+     */
+    showLevelMeter: Boolean,
+
+    /** EXPERIMENTAL: Whether to show the waveforms
+     * @remarks Default is false
+     */
+    experimentalShowWaveforms: Boolean,
+
+    /** Whether the audio level meter size is large */
+    levelMeterSizeIsLarge: Boolean,
 });
 
 /** The playback progress in the current track, in [seconds]
@@ -304,22 +334,12 @@ onUnmounted(() => {
 });
 
 /** The fader to use */
-const settings = useSettingsStore();
-const {
-    fadeInDuration,
-    fadeOutDuration,
-    applyFadeInOffset,
-    showLevelMeter,
-    levelMeterSizeIsLarge,
-    experimentalShowWaveforms,
-} = storeToRefs(settings);
-
 const fader = shallowRef(
     new AudioFader(
         audioElement.value,
-        fadeInDuration.value,
-        fadeOutDuration.value,
-        applyFadeInOffset.value,
+        props.fadeInDuration,
+        props.fadeOutDuration,
+        props.applyFadeInOffset,
         props.volume,
     ),
 );
@@ -337,7 +357,7 @@ const audioSource: ShallowRef<InstanceType<
  * @devdoc Handle the value also immediately at mount time
  */
 watch(
-    showLevelMeter,
+    () => props.showLevelMeter,
     (showLevelMeter: boolean, wasShowingLevelMeter) => {
         console.debug(
             `TrackAudioApiPlayer(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:showLevelMeter${showLevelMeter}`,
@@ -735,7 +755,7 @@ async function play(): Promise<void> {
                 assertRunningAudioContext();
 
                 //Just BEFORE playback, apply the possible pre-play transport
-                if (applyFadeInOffset.value && fadeInDuration.value) {
+                if (props.applyFadeInOffset && props.fadeInDuration) {
                     applyPreFadeInOffset();
                 }
 
@@ -762,7 +782,7 @@ async function play(): Promise<void> {
  */
 function applyPreFadeInOffset(): void {
     const time = audioElement.value.currentTime;
-    const offset = fadeInDuration.value / 1000;
+    const offset = props.fadeInDuration / 1000;
     const target = Math.max(0, time - offset);
     audioElement.value.currentTime = target;
 }
@@ -892,9 +912,9 @@ onUnmounted(() => {
  */
 const audioFaderSettingsToken = computed(
     () =>
-        fadeInDuration.value?.toString() +
-        fadeOutDuration.value?.toString() +
-        applyFadeInOffset.value?.toString(),
+        props.fadeInDuration.toString() +
+        props.fadeOutDuration.toString() +
+        props.applyFadeInOffset.toString(),
 );
 
 /** Watch for changes in the audio fader settings, to immediately apply them
@@ -905,9 +925,9 @@ watch(audioFaderSettingsToken, () => {
     debugLog(`audioFaderSettingsToken:${audioFaderSettingsToken.value}`);
 
     fader.value.updateSettings(
-        fadeInDuration.value,
-        fadeOutDuration.value,
-        applyFadeInOffset.value,
+        props.fadeInDuration,
+        props.fadeOutDuration,
+        props.applyFadeInOffset,
     );
 });
 

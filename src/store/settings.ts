@@ -37,7 +37,7 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
      */
     const fadeInDuration = useLocalStorage('fadeInDuration', 1000);
 
-    /** The fading duration in [milliseconds]. Use zero for no fading.
+    /** The fade-out duration in [milliseconds]. Use zero for no fading.
      * @remarks Default is 500.
      */
     const fadeOutDuration = useLocalStorage('fadeOutDuration', 500);

@@ -291,6 +291,12 @@
                 :isAnySoloed="isAnySoloed"
                 @ended="$emit('trackEnded')"
                 @loopedTo="$emit('trackLoopedTo', $event)"
+                :fadeInDuration="fadeInDuration"
+                :fadeOutDuration="fadeOutDuration"
+                :applyFadeInOffset="applyFadeInOffset"
+                :showLevelMeter="showLevelMeter && isMix"
+                :experimentalShowWaveforms="experimentalShowWaveforms"
+                :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
             ></TrackAudioApiPlayer>
             <Teleport to="#media-player" :disabled="isEditable">
                 <Transition :name="skipTransitionName">
@@ -1382,6 +1388,7 @@ export default defineComponent({
         ...mapState(useSettingsStore, [
             'experimentalShowPositionInTrackHeader',
         ]),
+        ...mapState(useSettingsStore, ['experimentalShowWaveforms']),
     },
 });
 </script>
