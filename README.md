@@ -35,6 +35,9 @@ The full documentation is available at https://replayer.app/en/documentation
 
 - Run the [Cypress End-To-End regression tests](/cypress/e2e/regression)
 
+    # Manually
+    npm run cypress:open
+
 # Roadmap
 
 See [Trello](https://trello.com/b/UqdfomQI/replayer-20)

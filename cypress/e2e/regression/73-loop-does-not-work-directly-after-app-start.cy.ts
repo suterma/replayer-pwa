@@ -64,7 +64,7 @@ describe('testing the issue "Loop does not work directly after app start #73" fo
             .click();
 
         // ACT (press the ending cue and wait for a loop)
-        cy.get('.track .button.cue').contains('ending-cue').click();
+        cy.get('button[title="Play from ending-cue"]').click();
         cy.wait(4000);
 
         // ASSERT (that the loop occurred)
