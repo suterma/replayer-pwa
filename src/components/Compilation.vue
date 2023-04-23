@@ -113,144 +113,135 @@
 
         <!-- Multi-track-Controller -->
         <Teleport to="#media-player">
-            <div class="section has-background-info-dark" v-if="isMixable">
-                <div>
-                    <!-- 
+            <div class="section has-background-grey-dark" v-if="isMixable">
+                <!-- 
                 Track playback bar (In mix mode, this contains:
                 - a wide slider
                 - the play/pause/mute/solo combo
                 - a set of transport controls
                     -->
-                    <nav class="level is-editable is-unselectable">
-                        <div class="level-left">
-                            <div
-                                class="level-item is-justify-content-flex-start"
+                <nav class="level is-editable is-unselectable">
+                    <div class="level-left">
+                        <div class="level-item is-justify-content-flex-start">
+                            <SoloButton
+                                :disabled="!isAllTrackLoaded"
+                                :isSoloed="isAllTrackSoloed"
+                                @click="multitrackHandler?.toggleSolo()"
+                                data-cy="mute"
+                            />
+                            <MuteButton
+                                :disabled="!isAllTrackLoaded"
+                                :isMuted="isAllTrackMuted"
+                                @click="multitrackHandler?.toggleMute()"
+                                data-cy="mute"
+                            />
+                        </div>
+                        <div
+                            class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
+                        >
+                            <ToggleButton
+                                class="button is-primary"
+                                :class="{
+                                    'is-inactive': !showVertical,
+                                }"
+                                :isEngaged="showVertical"
+                                engaged-label="show Horizontal"
+                                disengaged-label="show Vertical"
+                                @click="toggleVertical($event)"
                             >
-                                <SoloButton
-                                    :disabled="!isAllTrackLoaded"
-                                    :isSoloed="isAllTrackSoloed"
-                                    @click="multitrackHandler?.toggleSolo()"
-                                    data-cy="mute"
+                                <BaseIcon
+                                    v-if="!showVertical"
+                                    :path="mdiRotateLeftVariant"
                                 />
-                                <MuteButton
-                                    :disabled="!isAllTrackLoaded"
-                                    :isMuted="isAllTrackMuted"
-                                    @click="multitrackHandler?.toggleMute()"
-                                    data-cy="mute"
-                                />
-                            </div>
-                            <div
-                                class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
-                            >
-                                <ToggleButton
-                                    class="button is-primary"
-                                    :class="{
-                                        'is-inactive': !showVertical,
+                                <BaseIcon
+                                    v-else
+                                    :path="mdiRotateRightVariant"
+                                    :style="{
+                                        transform: 'rotate(' + 90 + 'deg)',
                                     }"
-                                    :isEngaged="showVertical"
-                                    engaged-label="show Horizontal"
-                                    disengaged-label="show Vertical"
-                                    @click="toggleVertical($event)"
-                                >
-                                    <BaseIcon
-                                        v-if="!showVertical"
-                                        :path="mdiRotateLeftVariant"
-                                    />
-                                    <BaseIcon
-                                        v-else
-                                        :path="mdiRotateRightVariant"
-                                        :style="{
-                                            transform: 'rotate(' + 90 + 'deg)',
-                                        }"
-                                    />
-                                </ToggleButton>
-                            </div>
+                                />
+                            </ToggleButton>
                         </div>
+                    </div>
 
-                        <!-- A central level item. Margins are set to provide nice-looking spacing at all widths -->
-                        <div class="level-item mt-4-mobile">
-                            <PlayheadSlider
-                                class="is-fullwidth"
-                                :modelValue="getMultitrackPosition.position"
-                                @update:modelValue="
-                                    (position) =>
-                                        multitrackHandler?.seekToSeconds(
-                                            position,
-                                        )
+                    <!-- A central level item. Margins are set to provide nice-looking spacing at all widths -->
+                    <div class="level-item mt-4-mobile">
+                        <PlayheadSlider
+                            class="is-fullwidth"
+                            :modelValue="getMultitrackPosition.position"
+                            @update:modelValue="
+                                (position) =>
+                                    multitrackHandler?.seekToSeconds(position)
+                            "
+                            @seek="
+                                (seconds) => multitrackHandler?.seek(seconds)
+                            "
+                            :trackDuration="
+                                multitrackHandler?.getAllTrackDuration()
+                            "
+                        >
+                        </PlayheadSlider>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item is-justify-content-flex-end">
+                            <MediaControlsBar
+                                :playbackMode="compilation.PlaybackMode"
+                                @update:playbackMode="
+                                    updatePlaybackMode($event)
                                 "
-                                @seek="
-                                    (seconds) =>
-                                        multitrackHandler?.seek(seconds)
+                                :hasPreviousTrack="false"
+                                :hasNextTrack="false"
+                                :hasNextCue="false"
+                                :hasPreviousCue="false"
+                                :hideStopButton="true"
+                                @stop="multitrackHandler?.stop()"
+                                @togglePlaying="
+                                    multitrackHandler?.togglePlayPause()
                                 "
-                                :trackDuration="
-                                    multitrackHandler?.getAllTrackDuration()
-                                "
+                                :hideVolumeButton="true"
+                                :isPlaying="isAllPlaying"
+                                :isFading="isAnyFading"
+                                data-cy="mix-media-controls-bar"
                             >
-                            </PlayheadSlider>
-                        </div>
-                        <div class="level-right">
-                            <div class="level-item is-justify-content-flex-end">
-                                <MediaControlsBar
-                                    :playbackMode="compilation.PlaybackMode"
-                                    @update:playbackMode="
-                                        updatePlaybackMode($event)
-                                    "
-                                    :hasPreviousTrack="false"
-                                    :hasNextTrack="false"
-                                    :hasNextCue="false"
-                                    :hasPreviousCue="false"
-                                    :hideStopButton="true"
-                                    @stop="multitrackHandler?.stop()"
-                                    @togglePlaying="
-                                        multitrackHandler?.togglePlayPause()
-                                    "
-                                    :hideVolumeButton="true"
-                                    :isPlaying="isAllPlaying"
-                                    :isFading="isAnyFading"
-                                    data-cy="mix-media-controls-bar"
-                                >
-                                    <template #after-play> </template>
-                                    <button class="button is-nav is-indicator">
-                                        <TimeDisplay
-                                            :modelValue="
-                                                getMultitrackPosition.position
-                                            "
-                                            :subSecondDigits="1"
-                                        ></TimeDisplay>
-                                    </button>
-                                    <!-- Sync Time display -->
-                                    <!-- //TODO make this display a setting -->
-                                    <button class="button is-nav is-indicator">
-                                        <span
-                                            class="is-minimum-7-characters is-family-monospace has-text-info"
-                                            title="Click to synch tracks"
-                                            >({{
-                                                getMultitrackPosition.range?.toFixed(
-                                                    6,
-                                                )
-                                            }}s)</span
-                                        >
-                                    </button>
-                                    <button
-                                        class="button is-info"
-                                        @click="multitrackHandler?.synchTracks"
-                                    >
-                                        Synch
-                                    </button>
-                                    <PlaybackIndicator
-                                        :isReady="
-                                            !isAllPlaying && isAllTrackLoaded
+                                <template #after-play> </template>
+                                <button class="button is-nav is-indicator">
+                                    <TimeDisplay
+                                        :modelValue="
+                                            getMultitrackPosition.position
                                         "
-                                        :isPlaying="isAllPlaying"
-                                        :isUnloaded="!isAllTrackLoaded"
-                                        :isUnavailable="!isAllMediaAvailable"
-                                        data-cy="playback-indicator"
-                                    />
-                                </MediaControlsBar>
-                            </div>
+                                        :subSecondDigits="1"
+                                    ></TimeDisplay>
+                                </button>
+                                <!-- Sync Time display -->
+                                <!-- //TODO make this display a setting -->
+                                <button class="button is-nav is-indicator">
+                                    <span
+                                        class="is-minimum-7-characters is-family-monospace has-text-info"
+                                        title="Click to synch tracks"
+                                        >({{
+                                            getMultitrackPosition.range?.toFixed(
+                                                6,
+                                            )
+                                        }}s)</span
+                                    >
+                                </button>
+                                <button
+                                    class="button is-info"
+                                    @click="multitrackHandler?.synchTracks"
+                                >
+                                    Synch
+                                </button>
+                                <PlaybackIndicator
+                                    :isReady="!isAllPlaying && isAllTrackLoaded"
+                                    :isPlaying="isAllPlaying"
+                                    :isUnloaded="!isAllTrackLoaded"
+                                    :isUnavailable="!isAllMediaAvailable"
+                                    data-cy="playback-indicator"
+                                />
+                            </MediaControlsBar>
                         </div>
-                    </nav>
-                </div>
+                    </div>
+                </nav>
             </div>
         </Teleport>
     </div>

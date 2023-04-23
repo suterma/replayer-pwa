@@ -19,7 +19,8 @@
         <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
     </section>
 
-    <!-- The bottom nav bar, used for the media player widget for the active track -->
+    <!-- The bottom nav bar, used for the media player widget for the active track 
+        plus the compilation-wide transport in mix mode -->
     <nav
         class="navbar is-fixed-bottom has-background-grey-dark is-hidden-print"
         role="form"
