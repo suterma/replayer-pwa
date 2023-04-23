@@ -1477,3 +1477,13 @@ export default defineComponent({
     }
 }
 </style>
+<style lang="scss">
+/**
+* On smaller screens, keep the contained track level meter also small */
+@media screen and (max-width: 768px) {
+    // Like the button size
+    .audio-level-meter {
+        max-width: 40px;
+    }
+}
+</style>
