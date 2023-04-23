@@ -74,6 +74,7 @@
         />
 
         <VolumeKnob
+            v-if="!hideVolumeButton"
             :disabled="disabled"
             :modelValue="volume"
             @update:modelValue="updateVolume"
@@ -194,6 +195,14 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
+
+        /** Whether to hide the volume button
+         */
+        hideVolumeButton: {
+            type: Boolean,
+            default: false,
+        },
+
         /** Whether the playing cue has a next cue
          */
         hasNextCue: {

@@ -113,7 +113,7 @@
 
         <!-- Multi-track-Controller -->
         <Teleport to="#media-player">
-            <div class="section has-background-grey-dark" v-if="isMixable">
+            <div class="section has-background-info-dark" v-if="isMixable">
                 <div>
                     <!-- 
                 Track playback bar (In mix mode, this contains:
@@ -138,6 +138,32 @@
                                     @click="multitrackHandler?.toggleMute()"
                                     data-cy="mute"
                                 />
+                            </div>
+                            <div
+                                class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
+                            >
+                                <ToggleButton
+                                    class="button is-primary"
+                                    :class="{
+                                        'is-inactive': !showVertical,
+                                    }"
+                                    :isEngaged="showVertical"
+                                    engaged-label="show Horizontal"
+                                    disengaged-label="show Vertical"
+                                    @click="toggleVertical($event)"
+                                >
+                                    <BaseIcon
+                                        v-if="!showVertical"
+                                        :path="mdiRotateLeftVariant"
+                                    />
+                                    <BaseIcon
+                                        v-else
+                                        :path="mdiRotateRightVariant"
+                                        :style="{
+                                            transform: 'rotate(' + 90 + 'deg)',
+                                        }"
+                                    />
+                                </ToggleButton>
                             </div>
                         </div>
 
@@ -171,25 +197,19 @@
                                     "
                                     :hasPreviousTrack="false"
                                     :hasNextTrack="false"
-                                    :hideStopButton="false"
+                                    :hasNextCue="false"
+                                    :hasPreviousCue="false"
+                                    :hideStopButton="true"
                                     @stop="multitrackHandler?.stop()"
                                     @togglePlaying="
                                         multitrackHandler?.togglePlayPause()
                                     "
+                                    :hideVolumeButton="true"
                                     :isPlaying="isAllPlaying"
                                     :isFading="isAnyFading"
                                     data-cy="mix-media-controls-bar"
                                 >
-                                    <template #after-play>
-                                        <MuteButton
-                                            :disabled="!isAllTrackLoaded"
-                                            :isMuted="isAllTrackMuted"
-                                            @click="
-                                                multitrackHandler?.toggleMute()
-                                            "
-                                            data-cy="mute"
-                                        />
-                                    </template>
+                                    <template #after-play> </template>
                                     <button class="button is-nav is-indicator">
                                         <TimeDisplay
                                             :modelValue="

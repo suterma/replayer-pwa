@@ -302,7 +302,8 @@
                 <Transition :name="skipTransitionName">
                     <!-- 
                     In the play view, the player widget is only shown for the active track
-                    In the edit view, the player widgets are shown for all expanded tracks -->
+                    In the edit view, the player widgets are shown for all expanded tracks
+                    In the mix view a dedicated mix widget is shown (defined as separate div) -->
                     <div
                         v-if="
                             (isMix && isActiveTrack) ||
@@ -322,7 +323,7 @@
                         :key="track.Id"
                     >
                         <!-- 
-                        Track playback bar (In play or mix mode, this contains:
+                        Track playback bar (In play mode, this contains:
                         - a slot for the expander icon (if not the only track)
                         - The title (with artist info)
                         - the play/pause button
@@ -332,7 +333,7 @@
                         <!-- 
                         In full screen, this level is at the top, and not visually separated from the cues -->
                         <nav
-                            v-if="isPlayable || isMix"
+                            v-if="isPlayable"
                             class="level"
                             :class="{
                                 'section navbar is-fixed-top has-background-grey-dark is-shadowless is-borderless':
@@ -461,33 +462,27 @@
                             </div>
                         </nav>
 
-                        <!-- When playing back, on the player widget, offer the cue buttons depending on the situation.
-                         -->
-                        <!-- For performance and layout reasons, in play mode, only render this when used, on desktop and larger screens -->
-                        <!-- In mix mode, always render, because a full screen is not offered -->
-                        <IfMedia
-                            query="(min-width: 1024px)"
-                            v-if="!isOnlyTrack"
+                        <!-- Offer the cue buttons depending on the situation. -->
+                        <nav
+                            v-if="
+                                (!isOnlyTrack &&
+                                    !isTrackPlayerFullScreen &&
+                                    isPlayable) ||
+                                (!isTrackPlayerFullScreen && isMix)
+                            "
                         >
-                            <nav>
-                                <CueButtonsBar
-                                    v-if="
-                                        (!isTrackPlayerFullScreen &&
-                                            isPlayable) ||
-                                        isMix
-                                    "
-                                    :currentSeconds="currentSeconds"
-                                    :isTrackPlaying="isPlaying"
-                                    :playbackMode="playbackMode"
-                                    @click="
-                                        (cue) => {
-                                            cueClick(cue);
-                                        }
-                                    "
-                                    :cues="track.Cues"
-                                ></CueButtonsBar>
-                            </nav>
-                        </IfMedia>
+                            <CueButtonsBar
+                                :currentSeconds="currentSeconds"
+                                :isTrackPlaying="isPlaying"
+                                :playbackMode="playbackMode"
+                                @click="
+                                    (cue) => {
+                                        cueClick(cue);
+                                    }
+                                "
+                                :cues="track.Cues"
+                            ></CueButtonsBar>
+                        </nav>
                         <nav v-if="isTrackPlayerFullScreen">
                             <CueButtonsField
                                 :currentSeconds="currentSeconds"
@@ -500,8 +495,24 @@
                                 "
                                 :cues="track.Cues"
                             ></CueButtonsField>
-                        </nav></div
-                ></Transition>
+                        </nav>
+                    </div>
+                    <!-- <div
+                        v-else-if="isMix && isActiveTrack"
+                        :class="{
+                            section: isMix,
+                            'has-background-info-dark': isMix,
+                            'is-fullscreen': isTrackPlayerFullScreen,
+                            'has-player-navbar-fixed-top':
+                                isTrackPlayerFullScreen,
+                            'transition-in-place':
+                                isMix /* because in playback  or mix view, the players are replaced in place, not expanded */,
+                        }"
+                    >
+ 
+                        NO MEDIA WIDGET
+                    </div> -->
+                </Transition>
             </Teleport>
         </template>
     </div>
@@ -541,7 +552,6 @@ import VolumeKnob from '@/components/VolumeKnob.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import TrackTitleName from './TrackTitleName.vue';
 import ArtistInfo from './ArtistInfo.vue';
-import IfMedia from '@/components/IfMedia.vue';
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
 import { Replayer } from './CompilationKeyboardHandler.vue';
 import { useSettingsStore } from '@/store/settings';
@@ -576,7 +586,6 @@ export default defineComponent({
         MediaControlsBar,
         TrackTitleName,
         ArtistInfo,
-        IfMedia,
         PlaybackIndicator,
     },
     emits: [
