@@ -8,23 +8,29 @@
         />
     </Experimental>
 
-    <!-- //NOTE: the rendering of the AudioLevelMeter _might_ affect badly the synchronous start of the playback, but only the first time after a page reload/player instantiation.
-    //It's currently not consistently reproducible and goes away after a subsequent sync (e.g. after pause/play) -->
-    <Teleport
-        :to="`#track-${trackId}-HeaderLevelPlaceholder`"
-        :disabled="levelMeterSizeIsLarge || !props.mediaUrl"
-    >
-        <AudioLevelMeter
-            v-if="
-                showLevelMeter && props.mediaUrl && audioSource && audio.context
-            "
-            :disabled="disabled"
-            :audioSource="audioSource"
-            :audioContext="audio.context"
-            :showText="false"
+    <!-- NOTE: the rendering of the AudioLevelMeter _might_ affect badly the synchronous start of the playback, 
+         but only the first time after a page reload/player instantiation.
+         It's currently not consistently reproducible and goes away after a subsequent sync (e.g. after pause/play) -->
+    <!-- NOTE: Teleportation fails with a warning when the parent track component has not yet been mounted.
+         This situation is addressed with the isParentMounted flag. It's working for loading/unloading/reloading compilation and
+         adding new tracks.
+         It not working currently when the application settings change to show the meter, producing a warning. 
+         A solution without a warning for this situation is not devised yet. -->
+    <template v-if="showLevelMeter && isParentMounted && props.mediaUrl">
+        <Teleport
+            :to="`#track-${trackId}-HeaderLevelPlaceholder`"
+            :disabled="levelMeterSizeIsLarge"
         >
-        </AudioLevelMeter>
-    </Teleport>
+            <AudioLevelMeter
+                v-if="audioSource && audio.context"
+                :disabled="disabled"
+                :audioSource="audioSource"
+                :audioContext="audio.context"
+                :showText="false"
+            >
+            </AudioLevelMeter>
+        </Teleport>
+    </template>
     <slot></slot>
 </template>
 
@@ -43,6 +49,7 @@ import {
     shallowRef,
     ShallowRef,
     onMounted,
+    onBeforeUnmount,
 } from 'vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { useStore } from 'vuex';
@@ -264,14 +271,19 @@ function debugLog(message: string, ...optionalParams: any[]): void {
 
 const store = useStore();
 
-// --- Mounted check (is required for a properly working level meter) ---
+// --- Mounted check ---
 
-const isMounted = ref(false);
+/** A fully mounted parent is required for the complete lifetime
+ *  for a properly working level meter with it's teleportation */
+const isParentMounted = ref(false);
 onMounted(() => {
-    isMounted.value = true;
+    nextTick(() => {
+        // Now also the parent track is completely mounted
+        isParentMounted.value = true;
+    });
 });
-onUnmounted(() => {
-    isMounted.value = false;
+onBeforeUnmount(() => {
+    isParentMounted.value = false;
 });
 
 // --- Audio Setup ---
@@ -662,7 +674,7 @@ function playFrom(position: number): void {
     play();
 }
 
-/**    Asserts a running audio context by resuming if required (when this is the first time any track is playing)
+/** Asserts a running audio context by resuming if required (when this is the first time any track is playing)
  */
 async function assertRunningAudioContext() {
     // resume audio context if required (when this is the first time any track is playing)
