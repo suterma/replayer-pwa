@@ -44,9 +44,9 @@ export enum ActionTypes {
      */
     DOWNLOAD_REZ_PACKAGE = 'DOWNLOAD_REZ_PACKAGE',
 
-    /** Updates the compilation title with a new value
+    /** Updates the compilation data with new values
      */
-    UPDATE_COMPILATION_TITLE = 'UPDATE_COMPILATION_TITLE',
+    UPDATE_COMPILATION_DATA = 'UPDATE_COMPILATION_DATA',
     /** Updates the track data with a new values
      */
     UPDATE_TRACK_DATA = 'UPDATE_TRACK_DATA',

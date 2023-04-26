@@ -189,8 +189,15 @@ export default defineComponent({
     methods: {
         /** Updates the compilation title */
         updateCompilationTitle(title: string) {
-            this.$store.dispatch(ActionTypes.UPDATE_COMPILATION_TITLE, title);
+            const artist = this.compilation?.Artist;
+            const album = this.compilation?.Album;
+            this.$store.dispatch(ActionTypes.UPDATE_COMPILATION_DATA, {
+                title,
+                artist,
+                album,
+            });
         },
+
         /** Initiates the download of the current compilation with the chosen target type
          */
         async download(): Promise<void> {

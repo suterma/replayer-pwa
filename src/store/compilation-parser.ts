@@ -31,6 +31,8 @@ export default class CompilationParser {
         return new Compilation(
             CompilationParser.FirstStringOf(xmlCompilation.MediaPath),
             CompilationParser.FirstStringOf(xmlCompilation.Title),
+            CompilationParser.FirstStringOf(xmlCompilation.Artist),
+            CompilationParser.FirstStringOf(xmlCompilation.Album),
             '', //NOTE: URL will be set from calling code, with the standalone XML or ZIP file name
             CompilationParser.FirstStringOf(xmlCompilation.Id),
             CompilationParser.parseFromXmlTracks(
@@ -63,6 +65,8 @@ export default class CompilationParser {
         return new Compilation(
             ''.normalize(),
             'Imported from LivePlayback'.normalize(),
+            ''.normalize(),
+            ''.normalize(),
             ''.normalize(),
             uuidv4(),
             CompilationParser.parseFromPlistTracks(plistCompilation),

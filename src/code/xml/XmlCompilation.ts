@@ -13,9 +13,10 @@ export class XmlCompilation {
             this.Id = compilation.Id;
             this.MediaPath = compilation.MediaPath;
             this.Title = compilation.Title;
+            this.Artist = compilation.Artist;
+            this.Album = compilation.Album;
             this.Tracks = new XmlTracks(compilation.Tracks);
             this.PlaybackMode = compilation.PlaybackMode;
-
         }
     }
     // for the $: any, because this is per the docs of the XML library
@@ -27,6 +28,8 @@ export class XmlCompilation {
     Id = '';
     MediaPath = '';
     Title = '';
+    Artist = '';
+    Album = '';
     Tracks: XmlTracks = new XmlTracks(undefined);
     PlaybackMode: PlaybackMode = PlaybackMode.PlayTrack;
 }

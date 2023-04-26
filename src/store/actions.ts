@@ -54,13 +54,22 @@ export interface Actions {
     [ActionTypes.DOWNLOAD_REZ_PACKAGE]({
         commit,
     }: AugmentedActionContext): void;
-    [ActionTypes.UPDATE_COMPILATION_TITLE](
+    [ActionTypes.UPDATE_COMPILATION_DATA](
         { commit }: AugmentedActionContext,
-        title: string,
+        payload: {
+            title: string;
+            artist: string;
+            album: string;
+        },
     ): void;
     [ActionTypes.UPDATE_TRACK_DATA](
         { commit }: AugmentedActionContext,
-        payload: { trackId: string; name: string },
+        payload: {
+            trackId: string;
+            name: string;
+            artist: string;
+            album: string;
+        },
     ): void;
     [ActionTypes.UPDATE_CUE_DATA](
         { commit }: AugmentedActionContext,
@@ -543,12 +552,16 @@ export const actions: ActionTree<State, State> & Actions = {
                 });
         });
     },
-    [ActionTypes.UPDATE_COMPILATION_TITLE](
+    [ActionTypes.UPDATE_COMPILATION_DATA](
         { commit }: AugmentedActionContext,
-        title: string,
+        payload: {
+            title: string;
+            artist: string;
+            album: string;
+        },
     ): void {
-        withProgress(`Updating compilation title...`, commit, () => {
-            commit(MutationTypes.UPDATE_COMPILATION_TITLE, title);
+        withProgress(`Updating compilation,..`, commit, () => {
+            commit(MutationTypes.UPDATE_COMPILATION_DATA, payload);
         });
     },
     [ActionTypes.UPDATE_TRACK_DATA](

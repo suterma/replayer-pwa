@@ -49,7 +49,14 @@ export type Mutations<S = State> = {
     [MutationTypes.REASSIGN_CUE_SHORTCUTS](state: S, trackId: string): void;
     [MutationTypes.DISCARD_COMPILATION](state: S): void;
     [MutationTypes.REVOKE_ALL_MEDIA_URLS](state: State): void;
-    [MutationTypes.UPDATE_COMPILATION_TITLE](state: State, title: string): void;
+    [MutationTypes.UPDATE_COMPILATION_DATA](
+        state: State,
+        payload: {
+            title: string;
+            artist: string;
+            album: string;
+        },
+    ): void;
     [MutationTypes.UPDATE_TRACK_DATA](
         state: State,
         payload: {
@@ -436,11 +443,17 @@ export const mutations: MutationTree<State> & Mutations = {
             track.Duration = null;
         });
     },
-    [MutationTypes.UPDATE_COMPILATION_TITLE](
+    [MutationTypes.UPDATE_COMPILATION_DATA](
         state: State,
-        title: string,
+        payload: {
+            title: string;
+            artist: string;
+            album: string;
+        },
     ): void {
-        state.compilation.Title = title;
+        state.compilation.Title = payload.title;
+        state.compilation.Artist = payload.artist;
+        state.compilation.Album = payload.album;
     },
     [MutationTypes.UPDATE_TRACK_DATA](
         state: State,

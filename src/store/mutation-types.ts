@@ -111,10 +111,10 @@ export enum MutationTypes {
      */
     REVOKE_ALL_MEDIA_URLS = 'REVOKE_ALL_MEDIA_URLS',
 
-    /** Updates the compilation title
+    /** Updates the compilation data
      * @remarks Also updates the persistent store of the compilation
      */
-    UPDATE_COMPILATION_TITLE = 'UPDATE_COMPILATION_TITLE',
+    UPDATE_COMPILATION_DATA = 'UPDATE_COMPILATION_DATA',
 
     /** Updates the track data
      * @remarks Also updates the persistent store of the compilation

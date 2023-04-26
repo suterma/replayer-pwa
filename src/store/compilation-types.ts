@@ -47,6 +47,12 @@ export interface ICompilation {
     /** The title for this Compilation. */
     Title: string;
 
+    /** The artist for this Compilation. */
+    Artist: string;
+
+    /** The album for this Compilation. */
+    Album: string;
+
     /** the URL, where this Compilation is stored. This is used for storage and retrieval of the compilation. */
     Url: string;
 
@@ -130,6 +136,8 @@ export class Compilation implements ICompilation {
     Type: CompilationType = CompilationType.XML;
     MediaPath = '';
     Title = '';
+    Artist = '';
+    Album = '';
     Url = '';
     Id = '';
     Tracks: Array<ITrack> = new Array<ITrack>();
@@ -141,6 +149,8 @@ export class Compilation implements ICompilation {
     constructor(
         mediaPath: string,
         title: string,
+        artist: string,
+        album: string,
         url: string,
         id: string,
         tracks: Array<ITrack>,
@@ -148,6 +158,8 @@ export class Compilation implements ICompilation {
     ) {
         this.MediaPath = mediaPath;
         this.Title = title;
+        this.Artist = artist;
+        this.Album = album;
         this.Url = url;
         this.Id = id;
         this.Tracks = tracks;
@@ -164,6 +176,8 @@ export class Compilation implements ICompilation {
         const compilation = new Compilation(
             obj.MediaPath,
             obj.Title,
+            obj.Artist,
+            obj.Album,
             obj.Url,
             obj.Id,
             obj.Tracks.map((track) => {
@@ -196,6 +210,8 @@ export class Compilation implements ICompilation {
      */
     static empty(): Compilation {
         return new Compilation(
+            '',
+            '',
             '',
             '',
             '',

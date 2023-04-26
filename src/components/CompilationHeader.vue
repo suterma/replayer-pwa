@@ -2,34 +2,101 @@
     <!-- Level, also on mobile -->
     <nav class="level is-mobile">
         <div class="level-left">
-            <div class="level-item">
-                <div class="field is-fullwidth">
-                    <p class="control is-expanded">
-                        <StyledInput
-                            v-if="
-                                isEditable &&
-                                (title || compilation.Tracks.length > 1)
-                            "
-                            class="input title is-3"
-                            v-model="title"
-                            @change="updateTitle($event.target.value)"
-                            placeholder="Compilation title"
-                            title="Compilation title"
-                        />
-                        <template v-else>
-                            <span
-                                class="title is-3"
-                                data-cy="compilation-title"
+            <!-- Title and artist info is only used when set or in compilations with more than one track -->
+            <!-- On small devices, only title is used -->
+            <template
+                v-if="isEditable && (title || compilation.Tracks.length > 1)"
+            >
+                <div
+                    class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
+                >
+                    <div class="field is-fullwidth">
+                        <p class="control is-expanded">
+                            <StyledInput
+                                v-if="
+                                    isEditable &&
+                                    (title || compilation.Tracks.length > 1)
+                                "
+                                class="input title is-3"
+                                v-model="title"
+                                @change="updateTitle($event.target.value)"
+                                placeholder="Compilation title"
+                                title="Compilation title"
+                            />
+                        </p>
+                    </div>
+                </div>
+                <!-- Artist Info (completely hidden on mobile, thus not editable there. 
+                NOTE: It's also not shown in the play view on mobile anyways) -->
+                <!-- Artist -->
+                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                    <div class="field">
+                        <p class="control">
+                            <StyledInput
+                                class="input is-italic"
+                                v-model="artist"
+                                @change="updateArtist($event.target.value)"
+                                type="text"
+                                placeholder="Artist"
+                                title="Artist"
+                                data-cy="compilation-artist"
                             >
-                                {{ title }}
-                            </span>
-                            <span class="title is-3">
-                                <!-- placeholder -->&nbsp;
-                            </span>
-                        </template>
+                                <span
+                                    class="has-opacity-half mr-2 is-single-line"
+                                    >by</span
+                                ></StyledInput
+                            >
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Album -->
+                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                    <div class="field">
+                        <p class="control">
+                            <StyledInput
+                                class="input is-italic"
+                                v-model="album"
+                                @change="updateAlbum($event.target.value)"
+                                type="text"
+                                placeholder="Album"
+                                title="Album"
+                                data-cy="compilation-album"
+                            >
+                                <span
+                                    class="has-opacity-half mr-2 is-single-line"
+                                    >on</span
+                                ></StyledInput
+                            >
+                        </p>
+                    </div>
+                </div>
+            </template>
+            <template
+                v-else-if="
+                    !isEditable && (title || compilation.Tracks.length > 1)
+                "
+            >
+                <div class="level-item is-justify-content-flex-start">
+                    <span class="title is-3" data-cy="compilation-title">
+                        {{ title }}
+                    </span>
+                </div>
+                <div class="level-item is-hidden-mobile">
+                    <p class="is-size-7">
+                        <ArtistInfo :album="album" :artist="artist" />
                     </p>
                 </div>
-            </div>
+            </template>
+            <template v-else>
+                <div
+                    class="level-item is-hidden-mobile is-justify-content-flex-start"
+                >
+                    <span class="title is-3">
+                        <!-- placeholder -->&nbsp; PLACEHOLDER</span
+                    >
+                </div>
+            </template>
         </div>
         <!-- Context menu on the right side -->
         <div class="level-right">
@@ -46,6 +113,7 @@
 import { defineComponent } from 'vue';
 import { ActionTypes } from '@/store/action-types';
 import { Compilation, ICompilation } from '@/store/compilation-types';
+import ArtistInfo from '@/components/ArtistInfo.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import CompilationContextMenu from '@/components/context-menu/CompilationContextMenu.vue';
 
@@ -53,7 +121,7 @@ import CompilationContextMenu from '@/components/context-menu/CompilationContext
  */
 export default defineComponent({
     name: 'CompilationHeader',
-    components: { StyledInput, CompilationContextMenu },
+    components: { StyledInput, CompilationContextMenu, ArtistInfo },
     props: {
         compilation: {
             type: Compilation,
@@ -71,12 +139,41 @@ export default defineComponent({
         return {
             /** The compilation title */
             title: this.compilation.Title,
+            artist: this.compilation.Artist,
+            album: this.compilation.Album,
         };
     },
     methods: {
         /** Updates the compilation title */
         updateTitle(title: string) {
-            this.$store.dispatch(ActionTypes.UPDATE_COMPILATION_TITLE, title);
+            const artist = this.artist;
+            const album = this.album;
+            this.$store.dispatch(ActionTypes.UPDATE_COMPILATION_DATA, {
+                title,
+                artist,
+                album,
+            });
+        },
+
+        /** Updates the track artist */
+        updateArtist(artist: string) {
+            const title = this.title;
+            const album = this.album;
+            this.$store.dispatch(ActionTypes.UPDATE_COMPILATION_DATA, {
+                title,
+                artist,
+                album,
+            });
+        },
+        /** Updates the track album */
+        updateAlbum(album: string) {
+            const title = this.title;
+            const artist = this.artist;
+            this.$store.dispatch(ActionTypes.UPDATE_COMPILATION_DATA, {
+                title,
+                artist,
+                album,
+            });
         },
     },
 
