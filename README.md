@@ -18,6 +18,8 @@ By the click of a button, Replayer starts to play at predefined times in the aud
 1. In the session, using Replayer on your portable computer, play any part of your set with the click of a cue button.
 1. Additionally, you can use a (bluetooth) numeric keypad, as a remote control
 
+Try the [demo in the browser](https://web.replayer.app/#demo)
+
 # Latest release
 
 -   The latest version is available at https://web.replayer.app (official release)
