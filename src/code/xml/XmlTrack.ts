@@ -1,4 +1,4 @@
-import { Track } from '@/store/compilation-types';
+import { ITrack } from '@/store/compilation-types';
 import { XmlCues } from './XmlCues';
 
 /** @class Implements an XML-Representation of a Track
@@ -7,7 +7,7 @@ export class XmlTrack {
     /** @constructor
      * @param {Track} track - The Typescript track object to represent
      */
-    constructor(track: Track) {
+    constructor(track: ITrack) {
         this.Id = track.Id;
         this.Artist = track.Artist;
         this.Name = track.Name;

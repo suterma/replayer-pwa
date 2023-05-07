@@ -2,14 +2,7 @@ import { defineStore } from 'pinia';
 import { state } from './state';
 import { getters } from './getters';
 import CompilationHandler from './compilation-handler';
-import {
-    Compilation,
-    Cue,
-    ICompilation,
-    ICue,
-    ITrack,
-    Track,
-} from './compilation-types';
+import { Compilation, Cue, ICompilation, ICue, ITrack, Track } from './compilation-types';
 import { v4 as uuidv4 } from 'uuid';
 import FileHandler from './filehandler';
 import JSZip from 'jszip';

@@ -64,6 +64,9 @@ export interface ICompilation {
 
     /** The set of tracks */
     Tracks: Array<ITrack>;
+
+    /** Whether any of title, album or artist is set to a non-empty value */
+    hasLabels(): boolean;
 }
 /** @interface Defines a Replayer track */
 export interface ITrack {
@@ -105,6 +108,9 @@ export interface ITrack {
      * @devdoc This identifier allows to recognise this item over multiple edits
      */
     Id: string;
+
+    /** Whether any of name, album or artist is set to a non-empty value */
+    hasLabels(): boolean;
 }
 
 /** @interface Defines a Replayer cue */
@@ -208,7 +214,12 @@ export class Compilation implements ICompilation {
             '',
             uuidv4(),
             new Array<ITrack>(),
-         );
+        );
+    }
+
+    /** Whether any of title, album or artist is set to a non-empty value */
+    public hasLabels(): boolean {
+        return !!this.Title || !!this.Album || !!this.Artist;
     }
 }
 
@@ -279,6 +290,11 @@ export class Track implements ITrack {
         );
         console.debug('Track::fromJson:'), track;
         return track;
+    }
+
+    /** Whether any of name, album or artist is set to a non-empty value */
+    public hasLabels(): boolean {
+        return !!this.Name || !!this.Album || !!this.Artist;
     }
 }
 

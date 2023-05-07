@@ -5,8 +5,12 @@
             <!-- Title and artist info is only used when set or in compilations with more than one track -->
             <!-- On small devices, only title is used -->
             <template
-                v-if="isEditable && (title || compilation.Tracks.length > 1)"
+                v-if="
+                    isEditable &&
+                    (compilation.hasLabels || compilation.Tracks.length > 1)
+                "
             >
+                <!-- Display in edit view, when there is a Title or more than one track -->
                 <div
                     class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
                 >
@@ -15,10 +19,11 @@
                             <StyledInput
                                 v-if="
                                     isEditable &&
-                                    (title || compilation.Tracks.length > 1)
+                                    (compilation.Title ||
+                                        compilation.Tracks.length > 1)
                                 "
                                 class="input title is-3"
-                                v-model="title"
+                                :modelValue="compilation.Title"
                                 @change="updateTitle($event.target.value)"
                                 placeholder="Compilation title"
                                 title="Compilation title"
@@ -34,7 +39,7 @@
                         <p class="control">
                             <StyledInput
                                 class="input is-italic"
-                                v-model="artist"
+                                :modelValue="compilation.Artist"
                                 @change="updateArtist($event.target.value)"
                                 type="text"
                                 placeholder="Artist"
@@ -56,7 +61,7 @@
                         <p class="control">
                             <StyledInput
                                 class="input is-italic"
-                                v-model="album"
+                                :modelValue="compilation.Album"
                                 @change="updateAlbum($event.target.value)"
                                 type="text"
                                 placeholder="Album"
@@ -72,27 +77,24 @@
                     </div>
                 </div>
             </template>
-            <template
-                v-else-if="
-                    !isEditable && (title || compilation.Tracks.length > 1)
-                "
-            >
+            <template v-else>
+                <!-- Display in non-edit view -->
                 <div class="level-item is-justify-content-flex-start">
                     <span class="title is-3" data-cy="compilation-title">
-                        {{ title }}
+                        <!-- Use a placeholder to still use the height when not actual title is displayed -->
+                        <template v-if="compilation.Title">
+                            {{ compilation.Title }}
+                        </template>
+                        <template v-else>&nbsp;</template>
                     </span>
                 </div>
                 <div class="level-item is-hidden-mobile">
                     <p class="is-size-7">
-                        <ArtistInfo :album="album" :artist="artist" />
+                        <ArtistInfo
+                            :album="compilation.Album"
+                            :artist="compilation.Artist"
+                        />
                     </p>
-                </div>
-            </template>
-            <template v-else>
-                <div
-                    class="level-item is-hidden-mobile is-justify-content-flex-start"
-                >
-                    <span class="title is-3"> <!-- placeholder -->&nbsp;</span>
                 </div>
             </template>
         </div>
@@ -109,7 +111,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Compilation, ICompilation } from '@/store/compilation-types';
+import { Compilation } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import CompilationContextMenu from '@/components/context-menu/CompilationContextMenu.vue';
@@ -136,10 +138,10 @@ export default defineComponent({
     },
     data() {
         return {
-            /** The compilation title */
-            title: this.compilation.Title,
-            artist: this.compilation.Artist,
-            album: this.compilation.Album,
+            // /** The compilation title */
+            // title: this.compilation.Title,
+            // artist: this.compilation.Artist,
+            // album: this.compilation.Album,
         };
     },
     methods: {
@@ -147,28 +149,22 @@ export default defineComponent({
 
         /** Updates the compilation title */
         updateTitle(title: string) {
-            const artist = this.artist;
-            const album = this.album;
+            const artist = this.compilation.Artist;
+            const album = this.compilation.Album;
             this.updateCompilationData(title, artist, album);
         },
 
         /** Updates the track artist */
         updateArtist(artist: string) {
-            const title = this.title;
-            const album = this.album;
+            const title = this.compilation.Title;
+            const album = this.compilation.Album;
             this.updateCompilationData(title, artist, album);
         },
         /** Updates the track album */
         updateAlbum(album: string) {
-            const title = this.title;
-            const artist = this.artist;
+            const title = this.compilation.Title;
+            const artist = this.compilation.Artist;
             this.updateCompilationData(title, artist, album);
-        },
-    },
-
-    watch: {
-        compilation(compilation: ICompilation) {
-            this.title = compilation.Title;
         },
     },
 });
