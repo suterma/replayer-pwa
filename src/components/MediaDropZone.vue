@@ -219,6 +219,8 @@ export default defineComponent({
     methods: {
         ...mapActions(useAppStore, [
             'addDefaultTrack',
+            'useMediaFromUrl',
+            'loadFromFile',
             'loadFromFile',
             'updateTrackUrl',
         ]),

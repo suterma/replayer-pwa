@@ -31,7 +31,7 @@ export default defineComponent({
     name: 'ErrorOverlay',
     components: {},
     computed: {
-        ...mapState(useAppStore, ['errorMessages', 'hasErrorMessages']),
+        ...mapState(useMessageStore, ['errorMessages', 'hasErrorMessages']),
     },
     methods: {
         ...mapActions(useAppStore, [

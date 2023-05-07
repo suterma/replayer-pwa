@@ -57,6 +57,7 @@ import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
 import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMeter.vue';
 import { useAudioStore } from '@/store/audio';
 import FileHandler from '@/store/filehandler';
+import { useMessageStore } from '@/store/messages';
 
 /** A safety margin for detecting the end of a track during playback */
 const trackDurationSafetyMarginSeconds = 0.3;
@@ -799,19 +800,16 @@ audioElement.value.onerror = () => {
     );
 
     // Use the message and add a descriptive remark.
-    let message = mediaError.value?.message;
+    let errorMessage = mediaError.value?.message ?? 'Audio ERROR';
     if (mediaError.value?.code == MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
-        message =
-            (message ? message + '. ' : '') +
+        errorMessage =
+            (errorMessage ? `${errorMessage}. ` : '') +
             'The associated resource is not supported. Use an URL to a resource of one of the supported media types.';
     }
 
-    //TODO
-    //Emit and handle an error event
-    // store.commit(
-    //     MutationTypes.PUSH_ERROR,
-    //     `Error while retrieving media source for title '${props.title}'. Message: '${message}'`,
-    // );
+    //TODO Emit and handle an error event
+    const message = useMessageStore();
+    message.pushError(errorMessage);
 };
 audioElement.value.onabort = () => {
     debugLog(`onabort`);

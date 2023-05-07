@@ -11,14 +11,14 @@
     </div>
 </template>
 <script lang="ts">
-import { useAppStore } from '@/store/app';
+import { useMessageStore } from '@/store/messages';
 import { mapState } from 'pinia';
 import { defineComponent } from 'vue';
 /** A simple overlay display of the latest application progress message, if any */
 export default defineComponent({
     name: 'ProgressOverlay',
     computed: {
-        ...mapState(useAppStore, ['progressMessage', 'hasProgressMessage']),
+        ...mapState(useMessageStore, ['progressMessage', 'hasProgressMessage']),
     },
 });
 </script>
