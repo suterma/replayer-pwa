@@ -3,7 +3,6 @@ import App from './App.vue';
 import { createPinia } from 'pinia';
 import './registerServiceWorker';
 import router from './router';
-import { store } from './store/store';
 import VueScrollTo from 'vue-scrollto';
 import vClickOutside from 'click-outside-vue3';
 import { PromiseDialog } from 'vue3-promise-dialog';
@@ -17,7 +16,6 @@ console.log('GIT_AUTHOR_DATE: ' + process.env.VUE_APP_GIT_AUTHOR_DATE);
 const pinia = createPinia();
 
 createApp(App)
-    .use(store)
     .use(pinia)
     .use(router)
     .use(VueScrollTo)
@@ -30,10 +28,12 @@ createApp(App)
     .mount('#app');
 
 // Show general errors (including unhandled promises) within the app's notification system
-import { MutationTypes } from './store/mutation-types';
+import { useAppStore } from './store/app';
+const app = useAppStore();
+
 onerror = (_event, _source, _lineno, _colno, error) => {
-    store.commit(MutationTypes.PUSH_ERROR, `${error?.name}: ${error?.message}`);
+    app.pushError(`${error?.name}: ${error?.message}`);
 };
 window.addEventListener('unhandledrejection', function (event) {
-    store.commit(MutationTypes.PUSH_ERROR, `${event?.reason}`);
+    app.pushError(`${event?.reason}`);
 });

@@ -25,7 +25,10 @@
             unnecessary update for actually non-distinctly displayed values. -->
             <TimeDisplay
                 :modelValue="
-                    currentSeconds ? Math.floor(currentSeconds * 10) / 10 : null
+                    currentSeconds !== undefined &&
+                    Number.isFinite(currentSeconds)
+                        ? Math.floor(currentSeconds * 10) / 10
+                        : null
                 "
                 :subSecondDigits="1"
             ></TimeDisplay>

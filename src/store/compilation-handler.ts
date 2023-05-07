@@ -649,6 +649,8 @@ export default class CompilationHandler {
         return null;
     }
 
-    /** An empty Id, usable for a reset. */
+    /** An empty Id, usable for un-selecting/resetting a selection.
+     * @devdoc This avoids using null for effectively having no selection.
+     */
     public static EmptyId = '';
 }

@@ -77,8 +77,7 @@ import { defineComponent, onMounted, onUnmounted } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
 import { Hotkey } from '@simolation/vue-hotkey';
-import { useStore } from 'vuex';
-import { MutationTypes } from '@/store/mutation-types';
+import { useAppStore } from '@/store/app';
 
 export default defineComponent({
     name: 'TrackSharingDialog',
@@ -92,12 +91,12 @@ export default defineComponent({
     setup() {
         /** Temporarily pause the use of the global app shortcuts in favor of typical
          * key event handling within this dialog. */
-        const store = useStore();
+        const app = useAppStore();
         onMounted(() => {
-            store.commit(MutationTypes.USE_APP_SHORTCUTS, false);
+            app.useAppShortcuts = false;
         });
         onUnmounted(() => {
-            store.commit(MutationTypes.USE_APP_SHORTCUTS, true);
+            app.useAppShortcuts = true;
         });
 
         /** NOTE: Returning the returnValue function is required by vue3-promise-dialog */

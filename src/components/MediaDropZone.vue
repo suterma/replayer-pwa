@@ -110,7 +110,7 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                             :disabled="!url"
                             class="button is-primary"
                             :class="{
-                                'is-loading': isUsingMediaFromUrl,
+                                'is-loading': isProcessingDataFromUrl,
                             }"
                             :title="replaceInfo"
                             data-cy="submit-source"
@@ -151,11 +151,11 @@ The URL input is wider, because it should be able to easily deal with lengthy in
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ActionTypes } from '@/store/action-types';
-import { MutationTypes } from '@/store/mutation-types';
 import FileHandler from '@/store/filehandler';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiSwapHorizontal, mdiMusicNotePlus } from '@mdi/js';
+import { mapActions } from 'pinia';
+import { useAppStore } from '@/store/app';
 
 /** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
  * @remarks Supports collapsing the control after load, to keep the user more focused
@@ -205,8 +205,8 @@ export default defineComponent({
 
             /** Whether this component is currently loading data from an URL */
             isLoadingFromUrl: false,
-            /** Whether this component is currently using media data from an URL */
-            isUsingMediaFromUrl: false,
+            /** Whether this component is currently processing data from an URL */
+            isProcessingDataFromUrl: false,
             /** Whether this component is currently loading data from a file */
             isLoadingFromFile: false,
 
@@ -216,6 +216,12 @@ export default defineComponent({
         };
     },
     methods: {
+        ...mapActions(useAppStore, [
+            'addDefaultTrack',
+            'loadFromFile',
+            'updateTrackUrl',
+        ]),
+
         openFile() {
             console.debug('MediaDropZone::openFile');
             (this.$refs.file as HTMLInputElement).click();
@@ -283,9 +289,7 @@ export default defineComponent({
             console.debug('MediaDropZone::loadMediaFile:file.name', file.name);
 
             this.isLoadingFromFile = true;
-            this.$store
-                .dispatch(ActionTypes.LOAD_FROM_FILE, file)
-
+            this.loadFromFile(file)
                 .then(() => {
                     if (FileHandler.isSupportedMediaFile(file)) {
                         if (this.isReplacementMode) {
@@ -293,15 +297,12 @@ export default defineComponent({
                                 this.updateFileForTrack(this.trackId, file);
                             }
                         } else {
-                            this.$store.commit(
-                                MutationTypes.ADD_DEFAULT_TRACK,
-                                file.name,
-                            );
+                            this.addDefaultTrack(file.name);
                         }
                     }
                 })
                 .catch((errorMessage: string) => {
-                    this.$store.commit(MutationTypes.PUSH_ERROR, errorMessage);
+                    this.pushError(errorMessage);
                 })
                 .finally(() => {
                     this.isLoadingFromFile = false;
@@ -331,56 +332,31 @@ export default defineComponent({
                 }
             }
         },
-        /** Fetches a single URL by loading it's content
-         */
-        fetchUrl(): void {
-            console.debug('MediaDropZone::fetchUrl:url:', this.url);
-            if (this.url) {
-                this.isLoadingFromUrl = true;
-                this.$store
-                    .dispatch(ActionTypes.LOAD_FROM_URL, this.url)
-                    .then(() => {
-                        if (this.isReplacementMode) {
-                            if (this.trackId) {
-                                this.updateExistingTrackWithUrl(
-                                    this.trackId,
-                                    this.url,
-                                );
-                            }
-                        }
-                    })
-                    .catch((errorMessage: string) => {
-                        this.$store.commit(
-                            MutationTypes.PUSH_ERROR,
-                            errorMessage,
-                        );
-                    })
-                    .finally(() => {
-                        this.isLoadingFromUrl = false;
-                        this.url = ''; //remove the now loaded url
-                        this.collapse();
-                    });
-            }
-        },
 
-        /** Uses a single URL by applying it to a new track */
+        /** Uses a single URL and load it's content */
         useUrl(): void {
             console.debug('MediaDropZone::useUrl:url:', this.url);
             if (this.url) {
-                this.isUsingMediaFromUrl = true;
+                this.isProcessingDataFromUrl = true;
 
-                // Determine the type of data to load
-                let actionType = ActionTypes.USE_MEDIA_FROM_URL;
+                // Determine the type of data that is about to load
+                let isUsingSingleMediaFile = true; //USE_MEDIA_FROM_URL
                 if (
                     FileHandler.isSupportedPackageFileName(this.url) ||
                     FileHandler.isSupportedCompilationFileName(this.url)
                 ) {
-                    actionType = ActionTypes.LOAD_FROM_URL;
+                    isUsingSingleMediaFile = false;
                 }
 
                 // Try to load the assumed type
-                this.$store
-                    .dispatch(actionType, this.url)
+                const load = (url: string) => {
+                    if (isUsingSingleMediaFile) {
+                        return this.useMediaFromUrl(url);
+                    } else {
+                        return this.loadFromUrl(url);
+                    }
+                };
+                load(this.url)
                     .then(() => {
                         if (this.isReplacementMode) {
                             if (this.trackId) {
@@ -391,27 +367,21 @@ export default defineComponent({
                             }
                         } else {
                             // Decide what to do with this new resource:
-                            if (actionType == ActionTypes.LOAD_FROM_URL) {
-                                //If a package has been loaded, the intention was most likely to play it
-                                this.$router.push('play');
-                            } else {
+                            if (isUsingSingleMediaFile) {
                                 //If a single new media file has been loaded, the intention was most likely to edit it
                                 this.$router.push('edit');
-                                this.$store.commit(
-                                    MutationTypes.ADD_DEFAULT_TRACK,
-                                    this.url,
-                                );
+                                this.addDefaultTrack(this.url);
+                            } else {
+                                //If a package has been loaded, the intention was most likely to play it
+                                this.$router.push('play');
                             }
                         }
                     })
                     .catch((errorMessage: string) => {
-                        this.$store.commit(
-                            MutationTypes.PUSH_ERROR,
-                            errorMessage,
-                        );
+                        this.pushError(errorMessage);
                     })
                     .finally(() => {
-                        this.isUsingMediaFromUrl = false;
+                        this.isProcessingDataFromUrl = false;
                         this.url = ''; //remove the now loaded url
                         this.collapse();
                     });
@@ -436,10 +406,7 @@ export default defineComponent({
 
             url: string,
         ) {
-            this.$store.commit(MutationTypes.UPDATE_TRACK_URL, {
-                trackId,
-                url,
-            });
+            this.updateTrackUrl(trackId, url);
         },
     },
     computed: {

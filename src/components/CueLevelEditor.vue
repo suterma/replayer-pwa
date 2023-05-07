@@ -112,7 +112,7 @@
             <div class="level-right">
                 <div class="field">
                     <p class="control" title="Trash this cue">
-                        <button class="button" @click="deleteCue()">
+                        <button class="button" @click="deleteThisCue()">
                             <BaseIcon v-once :path="mdiTrashCanOutline" />
                         </button>
                     </p>
@@ -123,9 +123,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { Cue, PlaybackMode } from '@/store/compilation-types';
-import { ActionTypes } from '@/store/action-types';
 import CompilationHandler from '@/store/compilation-handler';
 import CueButton from '@/components/buttons/CueButton.vue';
 import AdjustCueButton from '@/components/buttons/AdjustCueButton.vue';
@@ -134,12 +133,15 @@ import TimeDisplay from './TimeDisplay.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import IfMedia from '@/components/IfMedia.vue';
 import { mdiTrashCanOutline } from '@mdi/js';
+import { mapActions } from 'pinia';
+import { useAppStore } from '@/store/app';
+import { mapState } from 'pinia';
 
 /** An Editor for for a single cue
  * @remarks Shows a cue button with an inline progress bar, plus input fields for all properties
  * @devdoc Input value binding is not implemented with a two-way v-model binding because the incoming values are taken
  * from a property (where setting of values is not permitted).
- * Instead, the values are one-way bound via :value and changes are directly stored in the state via Vuex mutations.
+ * Instead, the values are one-way bound via :value and changes are directly stored in the state.
  * This approach is chosen over the ...data pattern because the shortcut values can also change from a menu entry
  * in the track's dropdown menu.
  */
@@ -165,9 +167,31 @@ export default defineComponent({
         },
 
         /** The playback progress in the current track, in [seconds]
-         * @remarks This is used for progress display within the set of cues
+         * @remarks This is used to update cue positions
          */
         currentSeconds: Number,
+
+        /** The playback progress within this cue, in [percent], or null if not applicable
+         * @remarks This value is only used when both the cue is not ahead nor has passed.
+         */
+        percentComplete: {
+            type: null as unknown as PropType<number | null>,
+            required: false,
+        },
+        /** Whether this cue is currently selected
+         * @remarks Note: only one cue in a compilation may be selected */
+        isCueSelected: Boolean,
+
+        /* Whether playback of this cue has already passed
+                 (the playhead has completely passed beyond the end of this cue) */
+        hasCuePassed: Boolean,
+
+        /* Whether to show this cue as passive, in dimmed style. */
+        virtual: Boolean,
+
+        /* Determines whether playback of this cue has not yet started
+        (the playhead has not yet reached the beginning of this cue)*/
+        isCueAhead: Boolean,
 
         /** Indicates whether the associated Track is currently playing
          * @remarks This is used to depict the expected action on button press.
@@ -195,35 +219,28 @@ export default defineComponent({
         }
     },
     methods: {
+        ...mapActions(useAppStore, ['updateCueData', 'deleteCue']),
+
         /** Updates the set cue description */
         updateDescription(event: Event) {
             const cueId = this.cue.Id;
             const shortcut = this.cue.Shortcut;
             const time = this.cue.Time;
             const description = (event.target as HTMLInputElement).value;
-            this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
-                cueId,
-                description,
-                shortcut,
-                time,
-            });
+            this.updateCueData(cueId, description, shortcut, time);
         },
         /** Deletes the cue */
-        deleteCue(): void {
+        deleteThisCue(): void {
             const cueId = this.cue.Id;
-            this.$store.dispatch(ActionTypes.DELETE_CUE, cueId);
+            this.deleteCue(cueId);
         },
+
         /** Updates the set cue time */
         updateCueTime(time: number | null) {
             const cueId = this.cue.Id;
             const shortcut = this.cue.Shortcut;
             const description = this.cue.Description;
-            this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
-                cueId,
-                description,
-                shortcut,
-                time,
-            });
+            this.updateCueData(cueId, description, shortcut, time);
 
             //Also , for user convenience, to simplify adjusting cues, play at change
             //(while keeping the focus at the number spinner)
@@ -241,12 +258,7 @@ export default defineComponent({
                 const cueId = this.cue.Id;
                 const shortcut = this.cue.Shortcut;
                 const description = this.cue.Description;
-                this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
-                    cueId,
-                    description,
-                    shortcut,
-                    time,
-                });
+                this.updateCueData(cueId, description, shortcut, time);
             }
         },
         /** Updates the set cue shortcut */
@@ -255,12 +267,7 @@ export default defineComponent({
             const description = this.cue.Description;
             const time = this.cue.Time;
             const shortcut = (event.target as HTMLInputElement).value;
-            this.$store.dispatch(ActionTypes.UPDATE_CUE_DATA, {
-                cueId,
-                description,
-                shortcut,
-                time,
-            });
+            this.updateCueData(cueId, description, shortcut, time);
         },
         /** Handles the click event of the cue button */
         cueClick() {
@@ -287,37 +294,7 @@ export default defineComponent({
         },
     },
     computed: {
-        /** Determines whether this cue is currently selected
-         * @remarks Note: only one cue in a compilation may be selected */
-        isCueSelected(): boolean {
-            return this.$store.getters.selectedCueId == this.cue?.Id;
-        },
-
-        /** Determines whether playback of the given cue has already passed
-         * @remarks Is used for visual indication of playback progress
-         * @param cue - the cue to determine the playback progress for
-         */
-        hasCuePassed(): boolean {
-            return CompilationHandler.hasCuePassed(
-                this.cue,
-                this.currentSeconds,
-            );
-        },
-        /** Determines whether playback of this cue has not yet started
-         * @param cue - the cue to determine the playback progress for
-         */
-        isCueAhead(): boolean {
-            return CompilationHandler.isCueAhead(this.cue, this.currentSeconds);
-        },
-        /** The playback progress within this cue, in [percent], or null if not applicable
-         * @param cue - the cue to determine the playback progress for
-         */
-        percentComplete(): number | null {
-            return CompilationHandler.percentComplete(
-                this.cue,
-                this.currentSeconds,
-            );
-        },
+        ...mapState(useAppStore, ['selectedCueId']),
 
         /** Gets a cue placeholder denoting the cue's position */
         cuePlaceholder(): string {

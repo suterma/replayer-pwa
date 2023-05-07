@@ -12,7 +12,7 @@ export class ObjectUrlHandler {
             ? window.URL.createObjectURL(blob)
             : window.webkitURL.createObjectURL(blob);
         console.log(
-            'StorageHandler::createObjectUrl:url/id:' +
+            'ObjectUrlHandler::createObjectUrl:url/id:' +
                 `'${url}'/'${identifier}''`,
         );
         return url;
@@ -20,7 +20,7 @@ export class ObjectUrlHandler {
 
     /** Revokes an object URL, plus writes a log */
     public static revokeObjectURL(url: string): void {
-        console.log('StorageHandler::revokeObjectURL:url:' + `'${url}'`);
+        console.log('ObjectUrlHandler::revokeObjectURL:url:' + `'${url}'`);
         return window.URL
             ? window.URL.revokeObjectURL(url)
             : window.webkitURL.revokeObjectURL(url);

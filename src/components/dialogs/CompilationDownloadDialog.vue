@@ -145,15 +145,14 @@
 </template>
 
 <script lang="ts">
-import { ActionTypes } from '@/store/action-types';
 import { Compilation } from '@/store/compilation-types';
 import { defineComponent, ref } from 'vue';
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
 import { Hotkey } from '@simolation/vue-hotkey';
 import CompilationHandler from '@/store/compilation-handler';
 import { onMounted, onUnmounted } from 'vue';
-import { useStore } from 'vuex';
-import { MutationTypes } from '@/store/mutation-types';
+import { mapActions } from 'pinia';
+import { useAppStore } from '@/store/app';
 
 export default defineComponent({
     name: 'CompilationDownloadDialog',
@@ -167,12 +166,12 @@ export default defineComponent({
     setup() {
         /** Temporarily pause the use of the global app shortcuts in favor of typical
          * key event handling within this dialog. */
-        const store = useStore();
+        const app = useAppStore();
         onMounted(() => {
-            store.commit(MutationTypes.USE_APP_SHORTCUTS, false);
+            app.useAppShortcuts = false;
         });
         onUnmounted(() => {
-            store.commit(MutationTypes.USE_APP_SHORTCUTS, true);
+            app.useAppShortcuts = true;
         });
 
         /** NOTE: Returning the returnValue function is required by vue3-promise-dialog */
@@ -187,15 +186,19 @@ export default defineComponent({
     },
 
     methods: {
+        ...mapActions(useAppStore, [
+            'updateCompilationData',
+            'downloadRezPackage',
+            'downloadRexFile',
+        ]),
+
         /** Updates the compilation title */
         updateCompilationTitle(title: string) {
-            const artist = this.compilation?.Artist;
-            const album = this.compilation?.Album;
-            this.$store.dispatch(ActionTypes.UPDATE_COMPILATION_DATA, {
-                title,
-                artist,
-                album,
-            });
+            if (this.compilation) {
+                const artist = this.compilation?.Artist;
+                const album = this.compilation?.Album;
+                this.updateCompilationData(title, artist, album);
+            }
         },
 
         /** Initiates the download of the current compilation with the chosen target type
@@ -206,17 +209,6 @@ export default defineComponent({
             } else {
                 return this.downloadRexFile();
             }
-        },
-        /** Initiates the download of the current compilation as a single XML (.rex) file
-         */
-        async downloadRexFile(): Promise<void> {
-            this.$store.dispatch(ActionTypes.DOWNLOAD_REX_FILE);
-        },
-
-        /** Initiates the download of the current compilation as a ZIP (.rez) package
-         */
-        async downloadRezPackage(): Promise<void> {
-            this.$store.dispatch(ActionTypes.DOWNLOAD_REZ_PACKAGE);
         },
     },
 

@@ -33,7 +33,7 @@
                     :isActiveTrack="activeTrackId === track.Id"
                     @isPlaying="updateIsTrackPlaying($event)"
                     @seekToSeconds="handleTrackSeekToSeconds($event)"
-                    :playbackMode="compilation.PlaybackMode"
+                    :playbackMode="playbackMode"
                     @update:playbackMode="updatePlaybackMode($event)"
                     :hasPreviousTrack="index > 0 || isLoopingPlaybackMode"
                     :hasNextTrack="
@@ -185,7 +185,7 @@
                     <div class="level-right">
                         <div class="level-item is-justify-content-flex-end">
                             <MediaControlsBar
-                                :playbackMode="compilation.PlaybackMode"
+                                :playbackMode="playbackMode"
                                 @update:playbackMode="
                                     updatePlaybackMode($event)
                                 "
@@ -258,7 +258,6 @@ import {
     PlaybackMode,
 } from '@/store/compilation-types';
 import Track from '@/components/Track.vue';
-import { MutationTypes } from '@/store/mutation-types';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import MediaControlsBar from '@/components/MediaControlsBar.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
@@ -272,6 +271,8 @@ import MultitrackHandler from '@/code/audio/MultitrackHandler';
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiRotateLeftVariant, mdiRotateRightVariant } from '@mdi/js';
+import { mapWritableState, mapActions, mapState } from 'pinia';
+import { useAppStore } from '@/store/app';
 
 /** Displays the contained set of tracks according to the required mode.
  * @remarks Also handles the common replayer events for compilations
@@ -294,6 +295,7 @@ export default defineComponent({
     },
     props: {
         compilation: Compilation,
+
         /** The display mode of the contained tracks.
          * @devdoc Allows to reuse this component for more than one DisplayMode.
          * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
@@ -338,6 +340,8 @@ export default defineComponent({
         );
     },
     methods: {
+        ...mapActions(useAppStore, ['updateSelectedCueId']),
+
         /** Visually scrolls to the given track, making it visually at the top of
          * the view.
          */
@@ -395,11 +399,6 @@ export default defineComponent({
          */
         handleTrackSeekToSeconds(seconds: number): void {
             if (this.isMixable) {
-                // console.debug(
-                //     'Compilation::handleTrackSeekToSeconds:',
-                //     seconds,
-                // );
-
                 this.multitrackHandler?.seekToSeconds(seconds);
             }
         },
@@ -415,9 +414,7 @@ export default defineComponent({
                 }
             }
 
-            this.$store.commit(MutationTypes.UPDATE_PLAYBACK_MODE, {
-                playbackMode,
-            });
+            this.playbackMode = playbackMode;
         },
 
         /** Moves playback to the previous track
@@ -459,12 +456,10 @@ export default defineComponent({
          */
         continueAfterTrack(trackId: string): void {
             console.debug('continueAfterTrack', trackId);
-            if (this.compilation) {
+            if (this.hasTracks) {
                 if (
-                    this.compilation.PlaybackMode ==
-                        PlaybackMode.LoopCompilation ||
-                    this.compilation.PlaybackMode ==
-                        PlaybackMode.ShuffleCompilation
+                    this.playbackMode === PlaybackMode.LoopCompilation ||
+                    this.playbackMode === PlaybackMode.ShuffleCompilation
                 ) {
                     this.toNextTrack(trackId, true);
                 }
@@ -491,16 +486,15 @@ export default defineComponent({
             const indexOfSelected = allCueIds.indexOf(this.selectedCueId);
             if (indexOfSelected > 0) {
                 const prevCueId = allCueIds[indexOfSelected - 1];
-                this.$store.commit(
-                    MutationTypes.UPDATE_SELECTED_CUE_ID,
-                    prevCueId,
-                );
+                if (prevCueId) {
+                    this.updateSelectedCueId(prevCueId);
+                }
             } else {
                 //loop to last
-                this.$store.commit(
-                    MutationTypes.UPDATE_SELECTED_CUE_ID,
-                    allCueIds.at(-1),
-                );
+                const lastCueId = allCueIds.at(-1);
+                if (lastCueId) {
+                    this.updateSelectedCueId(lastCueId);
+                }
             }
         },
 
@@ -511,16 +505,15 @@ export default defineComponent({
             const indexOfSelected = allCueIds.indexOf(this.selectedCueId);
             if (indexOfSelected < allCueIds.length - 1) {
                 const nextCueId = allCueIds[indexOfSelected + 1];
-                this.$store.commit(
-                    MutationTypes.UPDATE_SELECTED_CUE_ID,
-                    nextCueId,
-                );
+                if (nextCueId) {
+                    this.updateSelectedCueId(nextCueId);
+                }
             } else {
                 //loop to first
-                this.$store.commit(
-                    MutationTypes.UPDATE_SELECTED_CUE_ID,
-                    allCueIds.at(0),
-                );
+                const firstCueId = allCueIds.at(0);
+                if (firstCueId) {
+                    this.updateSelectedCueId(firstCueId);
+                }
             }
         },
 
@@ -531,10 +524,7 @@ export default defineComponent({
                 (cue) => cue.Shortcut == (event as CustomEvent).detail,
             );
             if (matchingCue) {
-                this.$store.commit(
-                    MutationTypes.UPDATE_SELECTED_CUE_ID,
-                    matchingCue.Id,
-                );
+                this.updateSelectedCueId(matchingCue.Id);
             }
         },
 
@@ -574,6 +564,7 @@ export default defineComponent({
                 });
             }
         },
+
         /** Handle scrolling to the active track, when the display mode changes.
          * @remarks This is intentionally only invoked on when the display mode changes (and it's not the only track).
          */
@@ -582,7 +573,9 @@ export default defineComponent({
             if (trackId && !this.isSingleTrack) {
                 console.debug('scrolling to mode-changed track ', trackId);
                 this.$nextTick(() => {
-                    this.scrollToTrack(trackId);
+                    if (trackId != null) {
+                        this.scrollToTrack(trackId);
+                    }
                 });
             }
         },
@@ -633,6 +626,9 @@ export default defineComponent({
         },
     },
     computed: {
+        ...mapState(useAppStore, ['selectedCueId', 'activeTrackId']),
+        ...mapWritableState(useAppStore, ['playbackMode']),
+
         /** Whether this compilation has no more than single track.
          */
         isSingleTrack(): boolean {
@@ -654,10 +650,7 @@ export default defineComponent({
         /** Whether the tracks are currently in a shuffled order.
          */
         isTracksShuffled(): boolean {
-            return (
-                this.compilation?.PlaybackMode ==
-                PlaybackMode.ShuffleCompilation
-            );
+            return this.playbackMode === PlaybackMode.ShuffleCompilation;
         },
         /** Whether the PlaybackMode is looping the tracks
          * in the compilation.
@@ -666,9 +659,8 @@ export default defineComponent({
          */
         isLoopingPlaybackMode(): boolean {
             return (
-                this.compilation?.PlaybackMode ==
-                    PlaybackMode.ShuffleCompilation ||
-                this.compilation?.PlaybackMode == PlaybackMode.LoopCompilation
+                this.playbackMode === PlaybackMode.ShuffleCompilation ||
+                this.playbackMode === PlaybackMode.LoopCompilation
             );
         },
 
@@ -689,7 +681,7 @@ export default defineComponent({
          * @remarks The order may also be shuffled, depending on the PlaybackMode
          */
         tracks(): Array<ITrack> | undefined {
-            const tracks = this.$store.getters.tracks as
+            const tracks = this.compilation?.Tracks as
                 | Array<ITrack>
                 | undefined;
             //Deterministically shuffle if required
@@ -698,20 +690,10 @@ export default defineComponent({
             }
             return tracks;
         },
-        selectedCueId(): string {
-            return this.$store.getters.selectedCueId as string;
-        },
+
         /** Returns all cues from all tracks in the current compilation */
         allCues(): Array<ICue> {
             return CompilationHandler.getAllCues(this.tracks);
-        },
-        hasCompilation(): boolean {
-            return this.$store.getters.hasCompilation;
-        },
-
-        /** Determines the active track id*/
-        activeTrackId(): string | null {
-            return this.$store.getters.activeTrackId;
         },
 
         /** Determines, whether all tracks in the compilation are currently playing (used with the mix mode) */

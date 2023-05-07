@@ -13,8 +13,7 @@ import About from '../views/About.vue';
 import Demo from '../views/Demo.vue';
 import Development from '../views/Development.vue';
 import { useTitle } from '@vueuse/core';
-import { computed } from 'vue';
-import { store } from '@/store/store';
+import { useAppStore } from '@/store/app';
 
 /** The app routes
  * @devdoc route level code-splitting is not used, because it is not supported with ES6/2015
@@ -88,21 +87,7 @@ const router = createRouter({
     routes,
 });
 
-/** Use the current route and compilation as the title for the document */
-const title = computed(() => {
-    let compilationInfo = '';
-    const compilationTitle = store.getters.compilation?.Title;
-    const toName = router.currentRoute.value.name?.toString();
-    //on some routes, also display the compilation title
-    if (
-        compilationTitle &&
-        toName &&
-        ['Play', 'Edit', 'Mix', 'Setlist'].includes(toName)
-    ) {
-        compilationInfo = ' | ' + compilationTitle;
-    }
-    return `${toName}${compilationInfo}`;
-});
+const title = useTitle('Starting');
 
 /**
  *  Show title according new route
@@ -129,6 +114,23 @@ router.afterEach((to, from, failure) => {
             `Changed route from ${from.path?.toString()} to ${to.path?.toString()}`,
         );
     }
+});
+
+router.afterEach((to) => {
+    // Update the title, only after navigation (pinia will be installed by now)
+    const toName = to.name?.toString();
+    //on some routes, also display the compilation title
+    let compilationInfo = '';
+    const app = useAppStore();
+    const compilationTitle = app.compilation?.Title;
+    if (
+        compilationTitle &&
+        toName &&
+        ['Play', 'Edit', 'Mix', 'Setlist'].includes(toName)
+    ) {
+        compilationInfo = ' | ' + compilationTitle;
+    }
+    title.value = `${toName}${compilationInfo}`;
 });
 
 export default router;

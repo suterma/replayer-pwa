@@ -21,6 +21,8 @@
             @click="cueClicked"
         >
         </CueButton>
+        <!-- Using the v-for on a template instead of the actual component saves unnecessary renderings. 
+             See https://stackoverflow.com/a/76074016/79485 -->
         <template v-for="cue in cues" :key="cue.Id">
             <CueButton
                 :id="cue.Id"
@@ -49,7 +51,8 @@ import { computed, defineProps, defineEmits, PropType } from 'vue';
 import { Cue, ICue, PlaybackMode } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';
-import { useStore } from 'vuex';
+import { useAppStore } from '@/store/app';
+import { storeToRefs } from 'pinia';
 
 /** A field of large cue buttons for a track
  */
@@ -70,6 +73,7 @@ const props = defineProps({
      * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
      */
     isTrackPlaying: Boolean,
+
     /** Whether to show the component in a disabled state
      * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
      */
@@ -120,13 +124,14 @@ const prefixCue = computed(() => {
     );
 });
 
-const store = useStore();
+const app = useAppStore();
+const { selectedCueId } = storeToRefs(app);
 
-/** Determines whether the given cue is currently selected
+/** Determines whether this cue is currently selected
  * @remarks Note: only one cue in a compilation may be selected */
 function isCueSelected(cue: ICue): boolean {
     //TODO use via provide/inject
-    return store.getters.selectedCueId == cue.Id;
+    return selectedCueId.value === cue.Id;
 }
 
 /** Determines whether playback of the given cue has already passed

@@ -35,7 +35,6 @@
 </template>
 
 <script setup lang="ts">
-import { MutationTypes } from '@/store/mutation-types';
 import {
     computed,
     nextTick,
@@ -52,7 +51,6 @@ import {
     onBeforeUnmount,
 } from 'vue';
 import AudioFader from '@/code/audio/AudioFader';
-import { useStore } from 'vuex';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import Experimental from '@/components/Experimental.vue';
 import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
@@ -298,8 +296,6 @@ function debugLog(message: string, ...optionalParams: any[]): void {
         optionalParams,
     );
 }
-
-const store = useStore();
 
 // --- Mounted check ---
 
@@ -624,7 +620,9 @@ function stop() {
     emit('update:isFading', false);
 
     audioElement.value.currentTime = 0;
-    store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, undefined);
+
+    //TODO emit and handle a stop event
+    //store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, undefined);
 }
 
 function togglePlayback() {
@@ -808,10 +806,12 @@ audioElement.value.onerror = () => {
             'The associated resource is not supported. Use an URL to a resource of one of the supported media types.';
     }
 
-    store.commit(
-        MutationTypes.PUSH_ERROR,
-        `Error while retrieving media source for title '${props.title}'. Message: '${message}'`,
-    );
+    //TODO
+    //Emit and handle an error event
+    // store.commit(
+    //     MutationTypes.PUSH_ERROR,
+    //     `Error while retrieving media source for title '${props.title}'. Message: '${message}'`,
+    // );
 };
 audioElement.value.onabort = () => {
     debugLog(`onabort`);

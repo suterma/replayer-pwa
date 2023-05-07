@@ -34,12 +34,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ActionTypes } from '@/store/action-types';
 import { Compilation } from '@/store/compilation-types';
 import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
 import { confirm, downloadCompilation } from '@/code/ui/dialogs';
 import { Hotkey } from '@simolation/vue-hotkey';
 import { mdiTrashCanOutline, mdiTrayArrowDown } from '@mdi/js';
+import { mapActions } from 'pinia';
+import { useAppStore } from '@/store/app';
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
@@ -59,6 +60,8 @@ export default defineComponent({
         };
     },
     methods: {
+        ...mapActions(useAppStore, ['discardCompilation']),
+
         /** Closes the compilation
          */
         close(): void {
@@ -67,7 +70,7 @@ export default defineComponent({
                 `Do you want to discard (and loose any changes to) compilation '${this.compilation.Title}'? Hint: to keep changes for later use, download a copy first.`,
             ).then((ok) => {
                 if (ok) {
-                    this.$store.dispatch(ActionTypes.DISCARD_COMPILATION);
+                    this.discardCompilation();
                 }
             });
         },

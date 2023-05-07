@@ -76,9 +76,8 @@ import { Cue, ICue, Track } from '@/store/compilation-types';
 import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
 import { Hotkey } from '@simolation/vue-hotkey';
-import { useStore } from 'vuex';
-import { MutationTypes } from '@/store/mutation-types';
 import { v4 as uuidv4 } from 'uuid';
+import { useAppStore } from '@/store/app';
 
 export default defineComponent({
     name: 'AddTextCuesDialog',
@@ -93,12 +92,12 @@ export default defineComponent({
     setup() {
         /** Temporarily pause the use of the global app shortcuts in favor of typical
          * key event handling within this dialog. */
-        const store = useStore();
+        const app = useAppStore();
         onMounted(() => {
-            store.commit(MutationTypes.USE_APP_SHORTCUTS, false);
+            app.useAppShortcuts = false;
         });
         onUnmounted(() => {
-            store.commit(MutationTypes.USE_APP_SHORTCUTS, true);
+            app.useAppShortcuts = true;
         });
 
         const cueText = ref('');

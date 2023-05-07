@@ -35,6 +35,8 @@ import { defineComponent } from 'vue';
 import KeyResponseOverlay from '@/components/KeyResponseOverlay.vue';
 import { GlobalEvents } from 'vue-global-events';
 import { useSettingsStore } from '@/store/settings';
+import { mapState } from 'pinia';
+import { useAppStore } from '@/store/app';
 
 /** A set of Replayer events that are emitted by this Keyboard handler */
 export enum Replayer {
@@ -97,18 +99,8 @@ export default defineComponent({
         };
     },
     computed: {
-        hasCompilation(): boolean {
-            return this.$store.getters.hasCompilation;
-        },
-        useAppShortcuts(): boolean {
-            return this.$store.getters.useAppShortcuts;
-        },
-        /** A timeout duration, used for the mnemonic build-up as well as the keyboard shortcut display timeout
-         */
-        keyboardShortcutTimeout(): number {
-            const settings = useSettingsStore();
-            return settings.keyboardShortcutTimeout;
-        },
+        ...mapState(useAppStore, ['hasCompilation', 'useAppShortcuts']),
+        ...mapState(useSettingsStore, ['keyboardShortcutTimeout']),
     },
     methods: {
         /** Generally handle all keydown events, by checking for recognizable events

@@ -2,9 +2,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ActionTypes } from '@/store/action-types';
 import CompilationParser from '@/store/compilation-parser';
-import { MutationTypes } from '@/store/mutation-types';
+import { useAppStore } from '@/store/app';
+import { mapActions } from 'pinia';
 
 /** A Loader for packages or tracks, from the URL
  * @remarks Implements the Track and Package API by loading items from the URL parameters
@@ -24,30 +24,33 @@ export default defineComponent({
             const track = CompilationParser.parseFromUrlQuery(query);
             if (track && track.Url) {
                 //Add the track, before the track media URL (to avoid the creation of a default track)
-                this.$store.commit(MutationTypes.ADD_TRACK, track);
+                this.addTrack(track);
                 const firstCueId = track.Cues[0]?.Id;
                 if (firstCueId) {
-                    this.$store.commit(
-                        MutationTypes.UPDATE_SELECTED_CUE_ID,
-                        firstCueId,
-                    );
+                    this.updateSelectedCueId(firstCueId);
                 }
                 //Now, after the track has been added, add the track's media URL
-                this.$store.dispatch(ActionTypes.USE_MEDIA_FROM_URL, track.Url);
+                this.useMediaFromUrl(track.Url);
             } else {
-                this.$store.commit(
-                    MutationTypes.PUSH_ERROR,
+                this.pushError(
                     'No valid track media URL found, no track is loaded',
                 );
             }
         }
         //Handle a Package API Request (mandatory package is available)
         if (query && query['package']) {
-            this.$store.dispatch(ActionTypes.LOAD_FROM_URL, query['package']);
+            this.loadFromUrl(query['package'] as string);
         }
         this.removeQuery();
     },
     methods: {
+        ...mapActions(useAppStore, [
+            'loadFromUrl',
+            'updateSelectedCueId',
+            'addTrack',
+            'useMediaFromUrl',
+        ]),
+
         /** Removes the API query from the fragment, since it has been applied now
          */
         removeQuery() {
