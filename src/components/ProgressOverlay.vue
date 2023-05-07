@@ -11,20 +11,14 @@
     </div>
 </template>
 <script lang="ts">
+import { useAppStore } from '@/store/app';
+import { mapState } from 'pinia';
 import { defineComponent } from 'vue';
 /** A simple overlay display of the latest application progress message, if any */
 export default defineComponent({
     name: 'ProgressOverlay',
-    components: {},
     computed: {
-        progressMessage(): string {
-            return this.$store.getters.progressMessage;
-        },
-        hasProgressMessage(): boolean {
-            return (
-                this.progressMessage != null && this.progressMessage.length > 0
-            );
-        },
+        ...mapState(useAppStore, ['progressMessage', 'hasProgressMessage']),
     },
 });
 </script>

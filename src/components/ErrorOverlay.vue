@@ -22,23 +22,25 @@
     </div>
 </template>
 <script lang="ts">
-import { MutationTypes } from '@/store/mutation-types';
+import { useAppStore } from '@/store/app';
+import { mapActions, mapState } from 'pinia';
 import { defineComponent } from 'vue';
 /** A simple overlay display of the latest application error message, if any */
 export default defineComponent({
     name: 'ErrorOverlay',
     components: {},
     computed: {
-        errorMessages(): string[] {
-            return this.$store.getters.errorMessages;
-        },
-        hasErrorMessages(): boolean {
-            return this.errorMessages != null && this.errorMessages.length > 0;
-        },
+        ...mapState(useAppStore, ['errorMessages', 'hasErrorMessages']),
     },
     methods: {
+        ...mapActions(useAppStore, [
+            'addDefaultTrack',
+            'loadFromFile',
+            'updateTrackUrl',
+            'popError',
+        ]),
         dismiss() {
-            this.$store.commit(MutationTypes.POP_ERROR, null);
+            this.popError();
         },
     },
 });

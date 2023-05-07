@@ -50,12 +50,12 @@ import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import ReplayerAd from '@/components/ReplayerAd.vue';
 import ErrorOverlay from '@/components/ErrorOverlay.vue';
-import { MutationTypes } from './store/mutation-types';
 import { DialogWrapper } from 'vue3-promise-dialog';
 import Experimental from './components/Experimental.vue';
 import { useAudioStore } from './store/audio';
 import { useSettingsStore } from '@/store/settings';
-import { mapState } from 'pinia';
+import { mapActions, mapState } from 'pinia';
+import { useAppStore } from './store/app';
 
 export default defineComponent({
     name: 'App',
@@ -77,11 +77,13 @@ export default defineComponent({
     },
 
     methods: {
+        ...mapActions(useAppStore, ['revokeAllMediaUrls']),
+
         cleanUp() {
             console.log('App.vue::cleanUp...');
 
             //Make sure, no object URLs are remaining
-            this.$store.commit(MutationTypes.REVOKE_ALL_MEDIA_URLS);
+            this.revokeAllMediaUrls();
 
             //Close the audio context
             const audio = useAudioStore();

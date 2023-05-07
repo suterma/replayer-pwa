@@ -64,11 +64,6 @@ export interface ICompilation {
 
     /** The set of tracks */
     Tracks: Array<ITrack>;
-
-    /** The playback mode.
-     * @remarks This can be set by the user, and is persisted.
-     */
-    PlaybackMode: PlaybackMode;
 }
 /** @interface Defines a Replayer track */
 export interface ITrack {
@@ -141,7 +136,6 @@ export class Compilation implements ICompilation {
     Url = '';
     Id = '';
     Tracks: Array<ITrack> = new Array<ITrack>();
-    PlaybackMode: PlaybackMode = PlaybackMode.PlayTrack;
 
     /** Creates a new compilation
      * @param playbackMode {playbackMode} - Playback mode. This is persisted in the application state for user convenience.
@@ -154,7 +148,6 @@ export class Compilation implements ICompilation {
         url: string,
         id: string,
         tracks: Array<ITrack>,
-        playbackMode: PlaybackMode,
     ) {
         this.MediaPath = mediaPath;
         this.Title = title;
@@ -163,7 +156,6 @@ export class Compilation implements ICompilation {
         this.Url = url;
         this.Id = id;
         this.Tracks = tracks;
-        this.PlaybackMode = playbackMode;
     }
 
     /** Parses the JSON and returns new instance of this class.
@@ -201,7 +193,6 @@ export class Compilation implements ICompilation {
                     track.Volume ?? DefaultTrackVolume,
                 );
             }),
-            obj.PlaybackMode ?? PlaybackMode.PlayTrack /** default */,
         );
         return compilation;
     }
@@ -217,8 +208,7 @@ export class Compilation implements ICompilation {
             '',
             uuidv4(),
             new Array<ITrack>(),
-            PlaybackMode.PlayTrack,
-        );
+         );
     }
 }
 

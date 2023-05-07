@@ -92,9 +92,7 @@
                 <div
                     class="level-item is-hidden-mobile is-justify-content-flex-start"
                 >
-                    <span class="title is-3">
-                        <!-- placeholder -->&nbsp; PLACEHOLDER</span
-                    >
+                    <span class="title is-3"> <!-- placeholder -->&nbsp;</span>
                 </div>
             </template>
         </div>
@@ -111,11 +109,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ActionTypes } from '@/store/action-types';
 import { Compilation, ICompilation } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import CompilationContextMenu from '@/components/context-menu/CompilationContextMenu.vue';
+import { mapActions } from 'pinia';
+import { useAppStore } from '@/store/app';
 
 /** A nav bar as header with a menu for a compilation
  */
@@ -144,36 +143,26 @@ export default defineComponent({
         };
     },
     methods: {
+        ...mapActions(useAppStore, ['updateCompilationData']),
+
         /** Updates the compilation title */
         updateTitle(title: string) {
             const artist = this.artist;
             const album = this.album;
-            this.$store.dispatch(ActionTypes.UPDATE_COMPILATION_DATA, {
-                title,
-                artist,
-                album,
-            });
+            this.updateCompilationData(title, artist, album);
         },
 
         /** Updates the track artist */
         updateArtist(artist: string) {
             const title = this.title;
             const album = this.album;
-            this.$store.dispatch(ActionTypes.UPDATE_COMPILATION_DATA, {
-                title,
-                artist,
-                album,
-            });
+            this.updateCompilationData(title, artist, album);
         },
         /** Updates the track album */
         updateAlbum(album: string) {
             const title = this.title;
             const artist = this.artist;
-            this.$store.dispatch(ActionTypes.UPDATE_COMPILATION_DATA, {
-                title,
-                artist,
-                album,
-            });
+            this.updateCompilationData(title, artist, album);
         },
     },
 

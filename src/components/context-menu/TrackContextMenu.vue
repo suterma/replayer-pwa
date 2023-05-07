@@ -1,19 +1,5 @@
 <template>
     <DropdownMenu title="Track context menu">
-        <DropdownMenuItem
-            :disabled="isFirstTrack"
-            title="Move up"
-            subTitle="(to an earlier position)"
-            @click="moveUp()"
-            :iconPath="mdiTransferUp"
-        />
-        <DropdownMenuItem
-            :disabled="isLastTrack"
-            title="Move down"
-            subTitle="(to a later position)"
-            @click="moveDown()"
-            :iconPath="mdiTransferDown"
-        />
         <Experimental v-once>
             <DropdownMenuItem
                 v-if="track"
@@ -33,14 +19,14 @@
             v-once
             title="Clone"
             subTitle="(with cues and media)"
-            @click="cloneTrack()"
+            @click="cloneTrack(trackId)"
             :iconPath="mdiContentDuplicate"
         />
         <DropdownMenuItem
             v-once
             title="Reassign cue shortcuts"
             subTitle="(first as seed, then incrementing)"
-            @click="reassignCueShortcuts()"
+            @click="reassignCueShortcuts(trackId)"
             :iconPath="mdiOrderNumericAscending"
         />
         <hr class="dropdown-divider" />
@@ -49,7 +35,7 @@
             title="Remove"
             subTitle="(remove
                             the track from the compilation)"
-            @click="removeTrack()"
+            @click="remove()"
             :iconPath="mdiTrashCanOutline"
         />
     </DropdownMenu>
@@ -66,11 +52,11 @@ import {
     mdiTrashCanOutline,
     mdiOrderNumericAscending,
 } from '@mdi/js';
-import { ActionTypes } from '@/store/action-types';
-import { MutationTypes } from '@/store/mutation-types';
 import { addTextCues, confirm, shareTrack } from '@/code/ui/dialogs';
 import { ICue, ITrack } from '@/store/compilation-types';
 import CompilationHandler from '@/store/compilation-handler';
+import { mapActions } from 'pinia';
+import { useAppStore } from '@/store/app';
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
@@ -105,6 +91,13 @@ export default defineComponent({
         };
     },
     methods: {
+        ...mapActions(useAppStore, [
+            'addCue',
+            'removeTrack',
+            'cloneTrack',
+            'reassignCueShortcuts',
+        ]),
+
         share() {
             if (this.track) {
                 shareTrack(this.track).then((ok) => {
@@ -120,10 +113,7 @@ export default defineComponent({
                     if (cues) {
                         const trackId = this.trackId;
                         cues.forEach((cue) => {
-                            this.$store.commit(MutationTypes.ADD_CUE, {
-                                trackId,
-                                cue,
-                            });
+                            this.addCue(trackId, cue);
                         });
 
                         console.debug(
@@ -135,64 +125,25 @@ export default defineComponent({
         },
         /** Removes the track from the compilation
          */
-        removeTrack() {
+        remove() {
             confirm(
                 'Removing track',
                 `Do you want to remove track "${this.trackName}"?`,
             ).then((ok) => {
                 if (ok) {
-                    this.$store.dispatch(
-                        ActionTypes.REMOVE_TRACK,
-                        this.trackId,
-                    );
+                    this.removeTrack(this.trackId);
                 }
             });
         },
-        /** Clones the track by creating a deep copy
-         */
-        cloneTrack() {
-            this.$store.dispatch(ActionTypes.CLONE_TRACK, this.trackId);
-        },
-        moveUp() {
-            this.$store.commit(MutationTypes.MOVE_TRACK_UP, this.trackId);
-        },
-        moveDown() {
-            this.$store.commit(MutationTypes.MOVE_TRACK_DOWN, this.trackId);
-        },
-
-        /** Reassign shortcut
-         * @remarks Uses the first shortcut mnemonic as seed, then incrementing the number
-         */
-        reassignCueShortcuts() {
-            console.debug(
-                `TrackContextMenu::reassignCueShortcuts:trackId:${this.trackId}`,
-            );
-
-            this.$store.commit(
-                MutationTypes.REASSIGN_CUE_SHORTCUTS,
-                this.trackId,
-            );
-        },
     },
     computed: {
-        /** The currently available tracks in the compilation
-         */
-        tracks(): Array<ITrack> | undefined {
-            const tracks = this.$store.getters.tracks as
-                | Array<ITrack>
-                | undefined;
-
-            return tracks;
-        },
-
         /** The track for the context, if any
          */
         track(): ITrack | undefined {
-            if (this.tracks && this.trackId) {
-                return CompilationHandler.getTrackById(
-                    this.tracks,
-                    this.trackId,
-                );
+            const tracks = useAppStore().tracks;
+
+            if (tracks && this.trackId) {
+                return CompilationHandler.getTrackById(tracks, this.trackId);
             }
             return undefined;
         },

@@ -34,7 +34,9 @@ import { MediaUrl } from '@/store/state-types';
 import MediaSourceIndicator from '@/components/MediaSourceIndicator.vue';
 import { mdiMusicNotePlus, mdiTrashCanOutline } from '@mdi/js';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { MutationTypes } from '@/store/mutation-types';
+import { mapActions } from 'pinia';
+import { useAppStore } from '@/store/app';
+import { mapState } from 'pinia';
 
 /** Shows the available media URLs as a tag list
  * @remarks Also allows removal of the media URLs
@@ -51,23 +53,19 @@ export default defineComponent({
         };
     },
     methods: {
+        ...mapActions(useAppStore, ['addDefaultTrack', 'discardMediaUrl']),
+
         addTrack(mediaUrl: MediaUrl): void {
             const source = mediaUrl.source;
-            this.$store.commit(MutationTypes.ADD_DEFAULT_TRACK, source);
+            this.addDefaultTrack(source);
         },
         discard(mediaUrl: MediaUrl): void {
             console.debug('MediaList::discard:source', mediaUrl);
-            this.$store.commit(MutationTypes.DISCARD_MEDIA_URL, mediaUrl);
+            this.discardMediaUrl(mediaUrl);
         },
     },
     computed: {
-        /** A dictionary of media URLs, representing playable media files
-         * @remarks A name for the resource is used as key, preventing duplicate files for the same content.
-         * For online URL's: a simplified resource name, derived from the URL;
-         * For files: the full name (including a possible path) of the original media file (from the disk or from within a REZ/ZIP-file) */
-        mediaUrls(): Map<string, MediaUrl> {
-            return this.$store.getters.mediaUrls as Map<string, MediaUrl>;
-        },
+        ...mapState(useAppStore, ['mediaUrls']),
     },
 });
 </script>

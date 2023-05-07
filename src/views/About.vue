@@ -152,13 +152,6 @@
                         the MIT License, Copyright © 2014-2021 Evan You)
                     </li>
                     <li>
-                        <a href="https://vuex.vuejs.org/" target="_blank"
-                            >Vuex</a
-                        >, a state management pattern + library for Vue.js
-                        applications. (Released under the MIT License, by the
-                        vuejs team)
-                    </li>
-                    <li>
                         <a href="https://router.vuejs.org/" target="_blank"
                             >Vue Router</a
                         >, a the official router for Vue.js. (Released under the

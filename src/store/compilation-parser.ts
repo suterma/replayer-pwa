@@ -5,7 +5,6 @@ import {
     ICompilation,
     ICue,
     ITrack,
-    PlaybackMode,
     Track,
 } from './compilation-types';
 import { v4 as uuidv4 } from 'uuid';
@@ -38,9 +37,6 @@ export default class CompilationParser {
             CompilationParser.parseFromXmlTracks(
                 xmlCompilation.Tracks[0].Track,
             ),
-            (<any>PlaybackMode)[
-                CompilationParser.FirstStringOf(xmlCompilation.PlaybackMode)
-            ],
         );
     }
 
@@ -70,7 +66,6 @@ export default class CompilationParser {
             ''.normalize(),
             uuidv4(),
             CompilationParser.parseFromPlistTracks(plistCompilation),
-            PlaybackMode.PlayTrack /* default */,
         );
     }
 

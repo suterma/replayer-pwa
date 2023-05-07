@@ -130,7 +130,7 @@
                     class="level-item is-narrow"
                     :disabled="!isTrackLoaded"
                     :modelValue="track.Volume"
-                    @update:modelValue="updatedVolume"
+                    @update:modelValue="updateTrackVolume"
                 />
             </template>
         </TrackHeaderEdit>
@@ -160,16 +160,21 @@
             <div v-if="isEditable && isExpanded" :key="track.Id">
                 <div class="levels transition-in-place">
                     <TransitionGroup name="list">
-                        <div v-for="cue in cues" :key="cue.Id">
-                            <CueLevelEditor
-                                :disabled="!canPlay"
-                                :cue="cue"
-                                :isTrackPlaying="isPlaying"
-                                :playbackMode="playbackMode"
-                                :currentSeconds="currentSeconds"
-                                @click="cueClick(cue)"
-                                @play="cuePlay(cue)"
-                            />
+                        <!-- A single child element is necessary here for the TransitionGroup to work properly. -->
+                        <div :key="track.Id">
+                            <!-- Using the v-for on a template instead of the actual component saves unnecessary renderings. 
+                            See https://stackoverflow.com/a/76074016/79485 -->
+                            <template v-for="cue in cues" :key="cue.Id">
+                                <CueLevelEditor
+                                    :disabled="!canPlay"
+                                    :cue="cue"
+                                    :isTrackPlaying="isPlaying"
+                                    :playbackMode="playbackMode"
+                                    :currentSeconds="currentSeconds"
+                                />
+                                <!-- @click="cueClick(cue)"
+                                    @play="cuePlay(cue)" -->
+                            </template>
                         </div>
                     </TransitionGroup>
                 </div>
@@ -241,7 +246,7 @@
                                 :playbackMode="playbackMode"
                                 @update:playbackMode="updatedPlaybackMode"
                                 :volume="track.Volume"
-                                @update:volume="updatedVolume"
+                                @update:volume="updateTrackVolume"
                                 :hidePlayPauseButton="true"
                             >
                             </MediaControlsBar>
@@ -283,7 +288,7 @@
                     (selectedCue?.Time ?? 0) + (selectedCue?.Duration ?? 0)
                 "
                 :sourceDescription="track?.Url"
-                @update:volume="updatedVolume"
+                @update:volume="updateTrackVolume"
                 @update:level="updatedLevel"
                 :volume="track.Volume"
                 :isMuted="isMuted"
@@ -440,7 +445,7 @@
                                             updatedPlaybackMode
                                         "
                                         :volume="track.Volume"
-                                        @update:volume="updatedVolume"
+                                        @update:volume="updateTrackVolume"
                                         @seek="(seconds) => seek(seconds)"
                                         :isPlaying="isPlaying"
                                         :isFading="isFading"
@@ -525,13 +530,11 @@ import {
     ICue,
     TrackDisplayMode,
     PlaybackMode,
-    ICompilation,
 } from '@/store/compilation-types';
 import CueLevelEditor from '@/components/CueLevelEditor.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
 import Experimental from '@/components/Experimental.vue';
 import { MediaUrl } from '@/store/state-types';
-import { MutationTypes } from '@/store/mutation-types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeaderEdit from '@/components/TrackHeaderEdit.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';
@@ -546,7 +549,6 @@ import SelectButton from '@/components/buttons/SelectButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import NoSleep from 'nosleep.js';
-import { ActionTypes } from '@/store/action-types';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import VolumeKnob from '@/components/VolumeKnob.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
@@ -555,7 +557,8 @@ import ArtistInfo from './ArtistInfo.vue';
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
 import { Replayer } from './CompilationKeyboardHandler.vue';
 import { useSettingsStore } from '@/store/settings';
-import { mapState } from 'pinia';
+import { mapActions, mapState } from 'pinia';
+import { useAppStore } from '@/store/app';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -746,6 +749,14 @@ export default defineComponent({
         };
     },
     methods: {
+        ...mapActions(useAppStore, [
+            'updateSelectedCueId',
+            'updateSelectedTrackId',
+            'addCueAtTime',
+            'updateTrackVolume',
+            'updateDurations',
+        ]),
+
         toggleTrackPlayerFullScreen(): void {
             this.$emit(
                 'update:isTrackPlayerFullScreen',
@@ -757,7 +768,7 @@ export default defineComponent({
          */
         stop(): void {
             this.trackPlayerInstance.stop();
-            this.$store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, null);
+            this.updateSelectedCueId(CompilationHandler.EmptyId);
         },
         toPreviousCue() {
             document.dispatchEvent(new Event(Replayer.TO_PREV_CUE));
@@ -790,10 +801,7 @@ export default defineComponent({
         setActiveTrack(): void {
             if (this.isTrackLoaded) {
                 if (!this.isActiveTrack) {
-                    this.$store.commit(
-                        MutationTypes.UPDATE_SELECTED_TRACK_ID,
-                        this.track.Id,
-                    );
+                    this.updateSelectedTrackId(this.track.Id);
                 }
             }
         },
@@ -833,6 +841,7 @@ export default defineComponent({
             this.skipTransitionName = transition;
         },
 
+        //TODO put the wake lock in the app store
         /** Activates the wake lock (if enabled in settings)
          * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
          */
@@ -994,19 +1003,7 @@ export default defineComponent({
                 `Track(${this.track.Name})::updateIsExpanded:${isExpanded}`,
             );
         },
-        /** Handle track volume updates
-         * @devdoc Handled here as part of the track because the track volume is
-         * essentially a property of the track, not of the player or the player chrome.
-         */
-        updatedVolume(volume: number): void {
-            console.debug(`Track(${this.track.Name})::updatedVolume:${volume}`);
 
-            const trackId = this.track.Id;
-            this.$store.commit(MutationTypes.UPDATE_TRACK_VOLUME, {
-                trackId,
-                volume: volume,
-            });
-        },
         /** Handle track level updates
          * @param {number} level - The current audio level
          * @devdoc Handled here as part of the track because the level is shown as part of the track
@@ -1026,10 +1023,7 @@ export default defineComponent({
             if (cue.Time != null && Number.isFinite(cue.Time)) {
                 if (cue.Id) {
                     //Update the selected cue to this cue
-                    this.$store.commit(
-                        MutationTypes.UPDATE_SELECTED_CUE_ID,
-                        cue.Id,
-                    );
+                    this.updateSelectedCueId(cue.Id);
                 }
 
                 //Set the position to this cue and handle playback
@@ -1055,11 +1049,7 @@ export default defineComponent({
         cuePlay(cue: ICue) {
             console.debug(`Track(${this.track.Name})::cuePlay:cue:`, cue);
             if (cue.Time != null && Number.isFinite(cue.Time)) {
-                //Update the selected cue to this cue
-                this.$store.commit(
-                    MutationTypes.UPDATE_SELECTED_CUE_ID,
-                    cue.Id,
-                );
+                this.updateSelectedCueId(cue.Id);
 
                 //Set the position to this cue and handle playback
                 if (this.isPlaying) {
@@ -1076,11 +1066,7 @@ export default defineComponent({
         trackPlay() {
             console.debug(`Track(${this.track.Name})::trackPlay`);
 
-            //Update the track cue to this track
-            this.$store.commit(
-                MutationTypes.UPDATE_SELECTED_TRACK_ID,
-                this.track.Id,
-            );
+            this.updateSelectedTrackId(this.track.Id);
 
             //Set the position to the beginning and handle playback
             if (this.isPlaying) {
@@ -1093,10 +1079,7 @@ export default defineComponent({
         /** Handles the request for a new cue by creating one for the current time
          */
         createNewCue(): void {
-            const time = this.currentSeconds;
-            const trackId = this.track.Id;
-            const payload = { trackId, time };
-            this.$store.dispatch(ActionTypes.ADD_CUE, payload);
+            this.addCueAtTime(this.track.Id, this.currentSeconds);
         },
 
         /** Updates the current seconds property with the temporal position of the track audio player
@@ -1114,11 +1097,7 @@ export default defineComponent({
         calculateCueDurations(trackDurationSeconds: number) {
             this.isTrackLoaded = true;
             this.trackDuration = trackDurationSeconds;
-            const trackId = this.track.Id;
-            this.$store.commit(MutationTypes.UPDATE_DURATIONS, {
-                trackId,
-                trackDurationSeconds,
-            });
+            this.updateDurations(this.track.Id, trackDurationSeconds);
         },
     },
 
@@ -1204,6 +1183,30 @@ export default defineComponent({
         },
     },
     computed: {
+        ...mapState(useSettingsStore, [
+            'levelMeterSizeIsLarge',
+            'preventScreenTimeout',
+            'fadeInDuration',
+            'fadeOutDuration',
+            'applyFadeInOffset',
+            'showLevelMeter',
+            'keyboardShortcutTimeout',
+            'experimentalShowPositionInTrackHeader',
+            'experimentalShowWaveforms',
+        ]),
+
+        ...mapState(useAppStore, [
+            'selectedCueId',
+            'mediaUrls',
+            'activeTrackId',
+            'compilation',
+        ]),
+
+        /** Returns the selected cue
+         * @remarks A selected cue's data is used for looping on a cue's boundaries
+         */
+        ...mapState(useAppStore, ['selectedCue']),
+
         /** The description of the currently playing cue
          * @remarks The implementation makes sure that at least always an empty string is returned.
          * Combined with an &nbsp;, this avoids layout flicker.
@@ -1315,17 +1318,6 @@ export default defineComponent({
             return instance;
         },
 
-        selectedCueId(): string | null {
-            return this.$store.getters.selectedCueId;
-        },
-
-        /** Returns the selected cue
-         * @remarks A selected cue's data is used for looping on a cue's boundaries
-         */
-        selectedCue(): ICue | null {
-            return this.$store.getters.selectedCue;
-        },
-
         /** Whether the playback media is available
          * @devdoc This is only working for local file paths, not for online URL's, because these are directly fetched from the media element.
          */
@@ -1366,38 +1358,12 @@ export default defineComponent({
          */
 
         trackMediaUrl(): MediaUrl | null {
-            const mediaUrls = this.$store.getters.mediaUrls as Map<
-                string,
-                MediaUrl
-            >;
             let mediaUrl = CompilationHandler.getMatchingPackageMediaUrl(
                 this.track?.Url,
-                mediaUrls,
+                this.mediaUrls,
             );
             return mediaUrl;
         },
-
-        /** Determines the active track id */
-        activeTrackId(): string | null {
-            return this.$store.getters.activeTrackId;
-        },
-
-        /** Returns the current compilation */
-        compilation(): ICompilation {
-            return this.$store.getters.compilation;
-        },
-
-        ...mapState(useSettingsStore, ['levelMeterSizeIsLarge']),
-        ...mapState(useSettingsStore, ['preventScreenTimeout']),
-        ...mapState(useSettingsStore, ['fadeInDuration']),
-        ...mapState(useSettingsStore, ['fadeOutDuration']),
-        ...mapState(useSettingsStore, ['applyFadeInOffset']),
-        ...mapState(useSettingsStore, ['showLevelMeter']),
-        ...mapState(useSettingsStore, ['keyboardShortcutTimeout']),
-        ...mapState(useSettingsStore, [
-            'experimentalShowPositionInTrackHeader',
-        ]),
-        ...mapState(useSettingsStore, ['experimentalShowWaveforms']),
     },
 });
 </script>

@@ -126,12 +126,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ICompilation, ITrack } from '@/store/compilation-types';
+import { ITrack } from '@/store/compilation-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import SetlistItem from '@/components/SetlistItem.vue';
 import { mdiDrag, mdiPrinterOutline } from '@mdi/js';
 import draggable from 'vuedraggable';
-import { MutationTypes } from '@/store/mutation-types';
+import { mapActions } from 'pinia';
+import { useAppStore } from '@/store/app';
+import { mapState } from 'pinia';
 
 /** A printable display of a complete compilation, with a track and cue listing */
 export default defineComponent({
@@ -160,26 +162,21 @@ export default defineComponent({
         };
     },
     computed: {
-        compilation(): ICompilation {
-            return this.$store.getters.compilation;
-        },
+        ...mapState(useAppStore, ['compilation', 'hasCompilation']),
 
-        hasCompilation(): boolean {
-            return this.$store.getters.hasCompilation;
-        },
         orderedTracks: {
             get(): ITrack[] {
                 return this.compilation.Tracks;
             },
             set(value: ITrack[]) {
                 const orderedTrackIds = value.map((item) => item.Id);
-                this.$store.commit(MutationTypes.UPDATE_TRACK_ORDER, {
-                    orderedTrackIds,
-                });
+                this.updateTrackOrder(orderedTrackIds);
             },
         },
     },
     methods: {
+        ...mapActions(useAppStore, ['updateTrackOrder']),
+
         printWindow: function () {
             window.print();
         },

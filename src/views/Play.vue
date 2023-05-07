@@ -58,7 +58,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Compilation from '@/components/Compilation.vue';
-import { ICompilation, TrackDisplayMode } from '@/store/compilation-types';
+import { TrackDisplayMode } from '@/store/compilation-types';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import WelcomeText from '@/components/WelcomeText.vue';
 import CompilationLoader from '@/components/CompilationLoader.vue';
@@ -66,7 +66,8 @@ import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
 import DismissiblePanel from '@/components/DismissiblePanel.vue';
 import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
-import { MediaUrl } from '@/store/state-types';
+import { mapState } from 'pinia';
+import { useAppStore } from '@/store/app';
 
 /** A view for playing an existing compilation */
 export default defineComponent({
@@ -88,16 +89,16 @@ export default defineComponent({
             isMediaDropZoneExpanded: false,
         };
     },
-    beforeMount() {
-        //Immediately apply the hasCompilation watch with the current state. (Emulates the "immediate watch" from vue2 in the options API)
-        this.updateMediaDropZoneExpansion(!this.hasCompilation);
-    },
+
     watch: {
         /** When the compilation loads or closes, update the media loader expansion accordingly
          * @remarks When there is already something loaded, only the unobtrusive icon should be shown
          */
-        hasCompilation(newVal): void {
-            this.updateMediaDropZoneExpansion(!newVal);
+        hasCompilation: {
+            handler(newVal) {
+                this.updateMediaDropZoneExpansion(!newVal);
+            },
+            immediate: true,
         },
     },
     methods: {
@@ -110,15 +111,12 @@ export default defineComponent({
         },
     },
     computed: {
-        compilation(): ICompilation {
-            return this.$store.getters.compilation;
-        },
-
-        hasCompilation(): boolean {
-            const hasCompilation = this.$store.getters.hasCompilation;
-            console.log(`Play::hasCompilation:${hasCompilation}`);
-            return hasCompilation;
-        },
+        ...mapState(useAppStore, [
+            'compilation',
+            'hasCompilation',
+            'mediaUrls',
+            'hasAvailableMedia',
+        ]),
 
         /** Gets the track display mode */
         tracksDisplayMode(): TrackDisplayMode {
@@ -133,15 +131,6 @@ export default defineComponent({
         /** Whether the compilation is shown as editable */
         isEditMode(): boolean {
             return this.tracksDisplayMode === TrackDisplayMode.Edit;
-        },
-        hasAvailableMedia(): boolean {
-            return this.mediaUrls.size > 0;
-        },
-        /** A dictionary of media URLs, representing playable media files
-         * @remarks the media file path is used as key, preventing duplicate files for the same content.
-         */
-        mediaUrls(): Map<string, MediaUrl> {
-            return this.$store.getters.mediaUrls as Map<string, MediaUrl>;
         },
     },
 });

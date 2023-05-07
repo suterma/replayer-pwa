@@ -49,7 +49,8 @@ import { computed, defineProps, defineEmits, PropType } from 'vue';
 import { Cue, ICue, PlaybackMode } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';
-import { useStore } from 'vuex';
+import { useAppStore } from '@/store/app';
+import { storeToRefs } from 'pinia';
 
 /** A field of large cue buttons for a track
  */
@@ -120,13 +121,14 @@ const prefixCue = computed(() => {
     );
 });
 
-const store = useStore();
+const app = useAppStore();
+const { selectedCueId } = storeToRefs(app);
 
-/** Determines whether the given cue is currently selected
+/** Determines whether this cue is currently selected
  * @remarks Note: only one cue in a compilation may be selected */
 function isCueSelected(cue: ICue): boolean {
     //TODO use via provide/inject
-    return store.getters.selectedCueId == cue.Id;
+    return selectedCueId.value === cue.Id;
 }
 
 /** Determines whether playback of the given cue has already passed

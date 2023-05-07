@@ -4,8 +4,9 @@
 </template>
 
 <script lang="ts">
+import { useAppStore } from '@/store/app';
+import { mapActions } from 'pinia';
 import { defineComponent } from 'vue';
-import { ActionTypes } from '@/store/action-types';
 
 /** A view for demo purposes
  * @remarks Just loads the demo compilation and navigates to the play view. Later, some explanatory items could be added.
@@ -20,6 +21,8 @@ export default defineComponent({
     },
 
     methods: {
+        ...mapActions(useAppStore, ['loadFromUrl']),
+
         loadDemo() {
             // const url =
             //     location.protocol +
@@ -32,7 +35,7 @@ export default defineComponent({
             const url =
                 'https://lib.replayer.app/demo-compilation-featuring-lidija-roos.rez';
             console.debug('loadDemo:', url);
-            this.$store.dispatch(ActionTypes.LOAD_FROM_URL, url);
+            this.loadFromUrl(url);
         },
     },
 });

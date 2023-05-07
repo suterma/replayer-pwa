@@ -191,12 +191,13 @@ import MediaEdit from '@/components/MediaEdit.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
-import { ActionTypes } from '@/store/action-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiAlert } from '@mdi/js';
 import { TrackDisplayMode } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import TrackTitleName from './TrackTitleName.vue';
+import { mapActions } from 'pinia';
+import { useAppStore } from '@/store/app';
 
 /** A header for editing track metadata
  */
@@ -318,6 +319,8 @@ export default defineComponent({
         }
     },
     methods: {
+        ...mapActions(useAppStore, ['updateTrackData']),
+
         /** Toggles the expansion state
          */
         toggleExpanded() {
@@ -335,36 +338,22 @@ export default defineComponent({
             const trackId = this.trackId;
             const artist = this.trackArtist;
             const album = this.trackAlbum;
-            this.$store.dispatch(ActionTypes.UPDATE_TRACK_DATA, {
-                trackId,
-                name,
-                artist,
-                album,
-            });
+
+            this.updateTrackData(trackId, name, artist, album);
         },
         /** Updates the track artist */
         updateArtist(artist: string) {
             const trackId = this.trackId;
             const name = this.trackName;
             const album = this.trackAlbum;
-            this.$store.dispatch(ActionTypes.UPDATE_TRACK_DATA, {
-                trackId,
-                name,
-                artist,
-                album,
-            });
+            this.updateTrackData(trackId, name, artist, album);
         },
         /** Updates the track album */
         updateAlbum(album: string) {
             const trackId = this.trackId;
             const name = this.trackName;
             const artist = this.trackArtist;
-            this.$store.dispatch(ActionTypes.UPDATE_TRACK_DATA, {
-                trackId,
-                name,
-                artist,
-                album,
-            });
+            this.updateTrackData(trackId, name, artist, album);
         },
     },
     watch: {

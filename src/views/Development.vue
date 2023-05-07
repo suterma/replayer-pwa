@@ -152,7 +152,7 @@
         :options="{
             imageSize: 40,
             hideDefaultValue: false,
-            valueTextY: 50,
+            valueTextX: 50,
             valueTextY: 55,
             tickLength: 20,
             tickOffset: -7,
@@ -173,7 +173,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ICompilation } from '@/store/compilation-types';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import NavButton from '@/components/buttons/NavButton.vue';
@@ -189,6 +188,9 @@ import {
     rTrackPlayOnce,
     rTrackRepeatOnce,
 } from '@/components/icons/BaseIcon.vue';
+import { useAppStore } from '@/store/app';
+import { mapState } from 'pinia';
+
 export default defineComponent({
     name: 'Development',
     components: {
@@ -232,12 +234,7 @@ export default defineComponent({
         },
     },
     computed: {
-        compilation(): ICompilation {
-            return this.$store.getters.compilation;
-        },
-        hasCompilation(): boolean {
-            return this.$store.getters.hasCompilation;
-        },
+        ...mapState(useAppStore, ['compilation', 'hasCompilation']),
     },
 });
 </script>
