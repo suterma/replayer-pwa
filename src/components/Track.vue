@@ -130,7 +130,7 @@
                     class="level-item is-narrow"
                     :disabled="!isTrackLoaded"
                     :modelValue="track.Volume"
-                    @update:modelValue="updateTrackVolume"
+                    @update:modelValue="updateVolume"
                 />
             </template>
         </TrackHeaderEdit>
@@ -243,7 +243,7 @@
                                 :playbackMode="playbackMode"
                                 @update:playbackMode="updatedPlaybackMode"
                                 :volume="track.Volume"
-                                @update:volume="updateTrackVolume"
+                                @update:volume="updateVolume"
                                 :hidePlayPauseButton="true"
                             >
                             </MediaControlsBar>
@@ -285,7 +285,7 @@
                     (selectedCue?.Time ?? 0) + (selectedCue?.Duration ?? 0)
                 "
                 :sourceDescription="track?.Url"
-                @update:volume="updateTrackVolume"
+                @update:volume="updateVolume"
                 @update:level="updatedLevel"
                 :volume="track.Volume"
                 :isMuted="isMuted"
@@ -442,7 +442,7 @@
                                             updatedPlaybackMode
                                         "
                                         :volume="track.Volume"
-                                        @update:volume="updateTrackVolume"
+                                        @update:volume="updateVolume"
                                         @seek="(seconds) => seek(seconds)"
                                         :isPlaying="isPlaying"
                                         :isFading="isFading"
@@ -938,23 +938,25 @@ export default defineComponent({
             this.trackPlayerInstance.seekToSeconds(seconds);
         },
 
+        /** Handles the volume up command if this is the active track */
         volumeDown() {
             if (this.isActiveTrack) {
                 this.trackPlayerInstance.volumeDown();
                 this.activateWakeLock();
             }
         },
+        /** Handles the volume down command if this is the active track */
         volumeUp() {
             if (this.isActiveTrack) {
                 this.trackPlayerInstance.volumeUp();
                 this.activateWakeLock();
             }
         },
-        volume(volume: number) {
-            if (this.isActiveTrack) {
-                this.trackPlayerInstance.updateVolume(volume);
-                this.activateWakeLock();
-            }
+
+        /** Updates the volume of this track, regardless of whether it is the active track */
+        updateVolume(volume: number) {
+            this.updateTrackVolume(this.track.Id, volume);
+            this.activateWakeLock();
         },
 
         /** Pauses playback and seeks to the currently selected cue's position, but only

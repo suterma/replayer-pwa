@@ -53,7 +53,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
         }
     }
 
-    /** Updates the track volume mode
+    /** Updates the track volume
      * @remarks Also updates the persistent store of the compilation
      */
     function updateTrackVolume(trackId: string, volume: number): void {
