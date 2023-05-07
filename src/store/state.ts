@@ -37,11 +37,12 @@ export const state = {
      * For files: the full name (including a possible path) of the original media file (from the disk or from within a REZ/ZIP-file) */
     mediaUrls: useLocalStorage('mediaUrls', new Map<string, MediaUrl>()),
 
-     /** Whether to use global app shortcuts
+    /** Whether to use global app shortcuts
      * @remarks This can be used to temporarily pause global app shortcuts
      * in favor of use within modal or other dialogs.
      */
     useAppShortcuts: useLocalStorage('useAppShortcuts', true),
+
     /** The playback mode.
      * @remarks This can be set by the user, and is persisted.
      */
