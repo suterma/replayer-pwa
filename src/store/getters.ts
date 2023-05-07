@@ -1,7 +1,7 @@
 import { ICompilation } from './compilation-types';
 import CompilationHandler from './compilation-handler';
 import { state } from './state';
- import { computed } from 'vue';
+import { computed } from 'vue';
 
 export const getters = {
     /** Defines the function to determine whether a compilation is available (created or loaded) */
@@ -24,67 +24,6 @@ export const getters = {
     /** Whether any Media URL's are available */
     hasAvailableMedia: computed(() => {
         return state.mediaUrls.value.size > 0;
-    }),
-
-    /** Gets the latest (newest) progress message from the stack */
-    progressMessage: computed(() => {
-        const progressMessage =
-            state.progressMessageStack.value[
-                state.progressMessageStack.value.length - 1
-            ];
-        return progressMessage ?? null;
-    }),
-
-    /** Whether any progress message is available */
-    hasProgressMessage: computed(() => {
-        return (
-            state.progressMessageStack.value != null &&
-            state.progressMessageStack.value.length > 0
-        );
-    }),
-
-    /** Gets the latest (newest) error message from the stack */
-    errorMessage: computed(() => {
-        const errorMessage =
-            state.errorMessageStack.value[
-                state.errorMessageStack.value.length - 1
-            ];
-        return errorMessage ?? null;
-    }),
-
-    /** Gets the error messages from the stack */
-    errorMessages: computed(() => {
-        return state.errorMessageStack.value;
-    }),
-    /** Whether any error message is available */
-
-    hasErrorMessages: computed(() => {
-        return (
-            state.errorMessageStack.value != null &&
-            state.errorMessageStack.value.length > 0
-        );
-    }),
-    /** Gets the latest (newest) success message from the stack */
-
-    successMessage: computed(() => {
-        const successMessage =
-            state.successMessageStack.value[
-                state.successMessageStack.value.length - 1
-            ];
-        return successMessage ?? null;
-    }),
-
-    /** Gets the success messages from the stack */
-    successMessages: computed(() => {
-        return state.successMessageStack.value;
-    }),
-    /** Whether any success message is available */
-
-    hasSuccessMessages: computed(() => {
-        return (
-            state.successMessageStack.value != null &&
-            state.successMessageStack.value.length > 0
-        );
     }),
 
     /** Gets the currently selected cue

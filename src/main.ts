@@ -7,6 +7,7 @@ import VueScrollTo from 'vue-scrollto';
 import vClickOutside from 'click-outside-vue3';
 import { PromiseDialog } from 'vue3-promise-dialog';
 import Experimental from '@/components/Experimental.vue';
+import { useMessageStore } from './store/messages';
 
 console.log('App version: ' + process.env.VUE_APP_VERSION);
 console.log('Environment: ' + process.env.NODE_ENV);
@@ -27,13 +28,12 @@ createApp(App)
     })
     .mount('#app');
 
-// Show general errors (including unhandled promises) within the app's notification system
-import { useAppStore } from './store/app';
-const app = useAppStore();
+// Show general errors (including unhandled promises)
+const message = useMessageStore();
 
 onerror = (_event, _source, _lineno, _colno, error) => {
-    app.pushError(`${error?.name}: ${error?.message}`);
+    message.pushError(`${error?.name}: ${error?.message}`);
 };
 window.addEventListener('unhandledrejection', function (event) {
-    app.pushError(`${event?.reason}`);
+    message.pushError(`${event?.reason}`);
 });

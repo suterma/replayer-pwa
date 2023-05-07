@@ -1,6 +1,6 @@
 import { useLocalStorage } from '@vueuse/core';
 import { defineStore } from 'pinia';
-import { StorageKeys } from './persistent-storage';
+import { StorageKeys } from '.';
 
 /** The precision for time display
  * @remarks Does not affect the application's internal precision when handling time values.

@@ -37,27 +37,7 @@ export const state = {
      * For files: the full name (including a possible path) of the original media file (from the disk or from within a REZ/ZIP-file) */
     mediaUrls: useLocalStorage('mediaUrls', new Map<string, MediaUrl>()),
 
-    /** An application work message stack, used for progress indication
-     * @remarks during ongoing work, the stack is non-empty
-     */
-    progressMessageStack: useLocalStorage(
-        'progressMessageStack',
-        new Array<string>(),
-    ),
-    /** An application error message stack, used for error indication
-     * @remarks during unacknowledged errors, the stack is non-empty
-     */
-    errorMessageStack: useLocalStorage(
-        'errorMessageStack',
-        new Array<string>(),
-    ),
-    /** An application success message stack, used for success indication
-     */
-    successMessageStack: useLocalStorage(
-        'successMessageStack',
-        new Array<string>(),
-    ),
-    /** Whether to use global app shortcuts
+     /** Whether to use global app shortcuts
      * @remarks This can be used to temporarily pause global app shortcuts
      * in favor of use within modal or other dialogs.
      */

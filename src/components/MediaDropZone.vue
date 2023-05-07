@@ -156,6 +156,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiSwapHorizontal, mdiMusicNotePlus } from '@mdi/js';
 import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
+import { useMessageStore } from '@/store/messages';
 
 /** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
  * @remarks Supports collapsing the control after load, to keep the user more focused
@@ -221,6 +222,7 @@ export default defineComponent({
             'loadFromFile',
             'updateTrackUrl',
         ]),
+        ...mapActions(useMessageStore, ['pushError']),
 
         openFile() {
             console.debug('MediaDropZone::openFile');

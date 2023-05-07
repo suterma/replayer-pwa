@@ -2,20 +2,31 @@ import { defineStore } from 'pinia';
 import { state } from './state';
 import { getters } from './getters';
 import CompilationHandler from './compilation-handler';
-import { Compilation, Cue, ICompilation, ICue, ITrack, Track } from './compilation-types';
+import {
+    Compilation,
+    Cue,
+    ICompilation,
+    ICue,
+    ITrack,
+    Track,
+} from './compilation-types';
 import { v4 as uuidv4 } from 'uuid';
 import FileHandler from './filehandler';
 import JSZip from 'jszip';
 import CompilationParser from './compilation-parser';
 import { MediaBlob, MediaUrl } from './state-types';
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
-import PersistentStorage, { StorageKeys } from './persistent-storage';
+import PersistentStorage from './persistent-storage';
 import FileSaver from 'file-saver';
+import { StorageKeys } from '.';
+import { useMessageStore } from './messages';
 
 /** A store for the app (compilation and associated) state
  * @devdoc This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores
  */
 export const useAppStore = defineStore(StorageKeys.APP, () => {
+    const message = useMessageStore();
+
     /** Updates the currently selected cue Id, for application-wide handling
      * @remarks This does not control the playback itself. It is intended for display and handling purposes.
      * @remarks Removes any explicit track id selection.
@@ -40,34 +51,6 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
         if (firstCue) {
             state.selectedCueId.value = firstCue.Id;
         }
-    }
-
-    /** Initiates the display of a progress message by pushing the message onto the stack of progress messages */
-    function pushProgress(message: string): void {
-        state.progressMessageStack.value.push(message);
-        console.log('PROGRESS: ' + message);
-    }
-
-    /** Initiates the display of an error message by pushing the message onto the stack of error messages */
-    function pushError(message: string): void {
-        state.errorMessageStack.value.push(message);
-        console.error('ERROR: ' + message);
-    }
-    /** Ends the display of a previous progress message, by popping the message from the stack of progress messages */
-    function popProgress(): void {
-        const message = state.progressMessageStack.value.pop();
-        console.debug('POP_PROGRESS: ' + message);
-    }
-
-    /** Ends the display of a previous error message, by popping the message from the stack of error messages */
-    function popError(): void {
-        state.errorMessageStack.value.pop();
-    }
-
-    /** Ends the display any previous progress message, by clearing all messages from the stack of progress messages */
-    function finishProgress(): void {
-        state.progressMessageStack.value.length = 0;
-        console.debug('FINISH_PROGRESS');
     }
 
     /** Updates the track volume mode
@@ -335,11 +318,11 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
     function loadFromUrl(url: string): Promise<string> {
         return new Promise((resolve, reject) => {
             if (!FileHandler.isValidHttpUrl(url)) {
-                popProgress();
+                message.popProgress();
                 reject(`Provided input is not a valid URL: '${url}'`);
             }
 
-            pushProgress(`Loading URL '${url}'...`);
+            message.pushProgress(`Loading URL '${url}'...`);
             // HINT: Replayer expects CORS to be allowed here (no no-cors).
             // If the origin server doesn’t include the suitable
             // Access-Control-Allow-Origin response header, the request will fail
@@ -362,12 +345,12 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
                         response.status ===
                         0 /* opaque response, in case no-cors would have been used */
                     ) {
-                        popProgress();
+                        message.popProgress();
                         reject(
                             `Fetch has failed for URL: '${url}' due to disallowed CORS by the server. Please manually download the resource and load it from the file system.`,
                         );
                     } else if (!response.ok) {
-                        popProgress();
+                        message.popProgress();
                         reject(
                             `Network response while fetching URL '${url}' was not 200 OK, but: '${response.status} ${response.statusText}'`,
                         );
@@ -381,7 +364,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
 
                         //Check whether MIME Type is supported
                         if (!FileHandler.isSupportedMimeType(mimeType)) {
-                            popProgress();
+                            message.popProgress();
                             reject(
                                 `Content MIME type '${mimeType}' is not supported`,
                             );
@@ -399,10 +382,10 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
                             .then(() => {
                                 resolve(localResourceName);
                                 //The action is done, so terminate the progress
-                                popProgress();
+                                message.popProgress();
                             })
                             .catch((errorMessage: string) => {
-                                popProgress();
+                                message.popProgress();
                                 reject(
                                     `Loading from the received resource file has failed for URL: '${url}' with the message: '${errorMessage}'`,
                                 );
@@ -410,7 +393,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
                     });
                 })
                 .catch((errorMessage: string) => {
-                    popProgress();
+                    message.popProgress();
                     reject(
                         `Fetch has failed for URL: '${url}' with the message: '${errorMessage}'. Maybe the file is too large or the server does not allow CORS. If any of this is the case, manually download the resource and load it from the file system.`,
                     );
@@ -426,7 +409,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
 
     function loadFromFile(file: File): Promise<void> {
         return new Promise((resolve, reject) => {
-            pushProgress(
+            message.pushProgress(
                 `Loading file '${file.name}' '${
                     file.type
                 }' (${FileHandler.AsMegabytes(file.size)}MB)`,
@@ -473,7 +456,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
                             processables.forEach(
                                 (zipEntry: JSZip.JSZipObject): void => {
                                     //Set the progress message, before using any of the async functions
-                                    pushProgress(
+                                    message.pushProgress(
                                         `Processing ZIP entry: ${zipEntry.name}`,
                                     );
                                     zipEntry
@@ -482,7 +465,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
                                             //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
                                             const zipEntryName =
                                                 zipEntry.name.normalize();
-                                            pushProgress(
+                                            message.pushProgress(
                                                 `Processing content for ZIP entry '${zipEntryName}'...`,
                                             );
 
@@ -502,7 +485,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
                                                         );
                                                     })
                                                     .finally(() => {
-                                                        popProgress();
+                                                        message.popProgress();
                                                     });
                                             } else if (
                                                 FileHandler.isSupportedMediaFileName(
@@ -521,7 +504,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
                                                         mediaBlob.fileName,
                                                     );
                                                 }
-                                                popProgress();
+                                                message.popProgress();
                                             } else if (
                                                 FileHandler.isBplistFileName(
                                                     zipEntryName,
@@ -534,7 +517,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
                                                         compilation,
                                                     );
                                                 });
-                                                popProgress();
+                                                message.popProgress();
                                             } else if (
                                                 FileHandler.isSupportedPackageFileName(
                                                     zipEntryName,
@@ -558,10 +541,10 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
                                                     `ZIP: Unknown content type for file '${zipEntryName}' within package: '${file.name}'`,
                                                 );
                                             }
-                                            popProgress();
+                                            message.popProgress();
                                         })
                                         .finally(() => {
-                                            popProgress();
+                                            message.popProgress();
                                         });
                                 },
                             );
@@ -573,7 +556,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
                         },
                     )
                     .finally(() => {
-                        popProgress();
+                        message.popProgress();
                         resolve();
                     });
             } else if (FileHandler.isXmlFile(file)) {
@@ -586,8 +569,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
                             replaceCompilation(compilation);
                         })
                         .finally(() => {
-                            popProgress();
-
+                            message.popProgress();
                             resolve();
                         });
                 };
@@ -603,7 +585,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
                 reader.readAsText(file);
             } else if (FileHandler.isSupportedMediaFile(file)) {
                 addMediaBlob(new MediaBlob(file.name, file));
-                popProgress();
+                message.popProgress();
                 resolve();
             } else if (FileHandler.isBplistFileName(file.name)) {
                 const reader = new FileReader();
@@ -615,8 +597,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
                             replaceCompilation(compilation);
                         })
                         .finally(() => {
-                            popProgress();
-
+                            message.popProgress();
                             resolve();
                         });
                 };
@@ -631,7 +612,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
                 };
                 reader.readAsArrayBuffer(file);
             } else {
-                popProgress();
+                message.popProgress();
                 reject(
                     `Unsupported content type for file '${file.name}', content was not processed.`,
                 );
@@ -695,11 +676,11 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
     function useMediaFromUrl(url: string): Promise<string> {
         return new Promise((resolve, reject) => {
             if (!FileHandler.isValidHttpUrl(url)) {
-                popProgress();
+                message.popProgress();
                 reject(`Provided input is not a valid media URL: '${url}'`);
             }
 
-            pushProgress(`Using URL '${url}'...`);
+            message.pushProgress(`Using URL '${url}'...`);
             const finalUrl = new URL(url);
             const localResourceName =
                 FileHandler.getLocalResourceName(finalUrl);
@@ -708,7 +689,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
             resolve(localResourceName);
 
             //The action is done, so terminate the progress
-            popProgress();
+            message.popProgress();
         });
     }
 
@@ -851,7 +832,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
     /** Initiates the download of the current compilation as a single XML (.rex) file
      */
     function downloadRexFile(): void {
-        pushProgress(`Downloading REX file...`);
+        message.pushProgress(`Downloading REX file...`);
 
         const xml = CompilationParser.convertToXml(state.compilation.value);
         const blob = new Blob([xml], {
@@ -859,13 +840,13 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
         });
         FileSaver.saveAs(blob, `${state.compilation.value?.Title}.rex`);
 
-        popProgress();
+        message.popProgress();
     }
 
     /** Initiates the download of the current compilation as a ZIP (.rez) package
      */
     function downloadRezPackage(): void {
-        pushProgress(`Downloading REZ file...`);
+        message.pushProgress(`Downloading REZ file...`);
 
         //Get the XML first
         const xml = CompilationParser.convertToXml(state.compilation.value);
@@ -893,7 +874,7 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
                     );
                 })
                 .finally(() => {
-                    popProgress();
+                    message.popProgress();
                 });
         });
     }
@@ -939,11 +920,6 @@ export const useAppStore = defineStore(StorageKeys.APP, () => {
         //Actions
         updateSelectedCueId,
         updateSelectedTrackId,
-        pushProgress,
-        pushError,
-        popProgress,
-        popError,
-        finishProgress,
         updateTrackVolume,
         addCueAtTime,
         addCue,

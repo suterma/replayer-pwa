@@ -23,6 +23,7 @@
 </template>
 <script lang="ts">
 import { useAppStore } from '@/store/app';
+import { useMessageStore } from '@/store/messages';
 import { mapActions, mapState } from 'pinia';
 import { defineComponent } from 'vue';
 /** A simple overlay display of the latest application error message, if any */
@@ -37,8 +38,8 @@ export default defineComponent({
             'addDefaultTrack',
             'loadFromFile',
             'updateTrackUrl',
-            'popError',
         ]),
+        ...mapActions(useMessageStore, ['popError']),
         dismiss() {
             this.popError();
         },

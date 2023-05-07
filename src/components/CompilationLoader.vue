@@ -4,6 +4,7 @@
 import { defineComponent } from 'vue';
 import CompilationParser from '@/store/compilation-parser';
 import { useAppStore } from '@/store/app';
+import { useMessageStore } from '@/store/messages';
 import { mapActions } from 'pinia';
 
 /** A Loader for packages or tracks, from the URL
@@ -50,6 +51,8 @@ export default defineComponent({
             'addTrack',
             'useMediaFromUrl',
         ]),
+
+        ...mapActions(useMessageStore, ['pushError']),
 
         /** Removes the API query from the fragment, since it has been applied now
          */

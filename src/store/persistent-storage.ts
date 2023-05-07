@@ -1,15 +1,6 @@
-/** The keys to access the used storage */
-export enum StorageKeys {
-    COMPILATION = 'COMPILATION',
-    SELECTED_CUE_ID = 'SELECTED_CUE_ID',
-    SELECTED_TRACK_ID = 'SELECTED_TRACK_ID',
-    MEDIA_BLOB = 'MEDIA_BLOB',
-    SETTINGS = 'SETTINGS',
-    APP = 'APP',
-}
-
 import { get, set, entries, del, clear } from 'idb-keyval';
 import { MediaBlob } from './state-types';
+import { StorageKeys } from '.';
 
 /**
  * Provides simplified access to persistent storage for the Replayer app. This

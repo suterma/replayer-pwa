@@ -33,16 +33,16 @@
             />
             <BaseIcon v-else :path="mdiPause" class="foreground" />
 
-            <!-- Description depending on variant -->
+            <!-- Text depending on variant -->
             <span
                 v-if="minified && !virtual"
                 class="has-text-weight-semibold foreground is-size-7"
-                >{{ description }}</span
+                >{{ cueText }}</span
             >
             <span
                 v-if="!minified && !virtual"
                 class="ml-2 has-text-weight-semibold foreground"
-                >{{ description }}</span
+                >{{ cueText }}</span
             >
             <BaseIcon
                 v-if="isCueLooping"
@@ -200,11 +200,24 @@ const props = defineProps({
 });
 
 /** The title for this cue, usable as tooltip
- * @devdoc This is set from outside the button to keep the button interface flat, for performance reasons
  */
 const cueTitle = computed(() => {
     if (props.description) {
         return `Play from ${props.description}`;
+    } else if (props.time != undefined) {
+        return `Play from ${CompilationHandler.convertToDisplayTime(
+            props.time,
+            1,
+        )}`;
+    }
+    return `Play from here`;
+});
+
+/** The text for this cue, usable as label
+ */
+const cueText = computed(() => {
+    if (props.description) {
+        return props.description;
     } else if (props.time != undefined) {
         return `Play from ${CompilationHandler.convertToDisplayTime(
             props.time,
