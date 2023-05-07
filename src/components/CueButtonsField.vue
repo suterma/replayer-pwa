@@ -73,6 +73,7 @@ const props = defineProps({
      * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
      */
     isTrackPlaying: Boolean,
+
     /** Whether to show the component in a disabled state
      * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
      */

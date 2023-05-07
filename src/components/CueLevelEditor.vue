@@ -123,7 +123,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { Cue, PlaybackMode } from '@/store/compilation-types';
 import CompilationHandler from '@/store/compilation-handler';
 import CueButton from '@/components/buttons/CueButton.vue';
@@ -167,9 +167,31 @@ export default defineComponent({
         },
 
         /** The playback progress in the current track, in [seconds]
-         * @remarks This is used for progress display within the set of cues
+         * @remarks This is used to update cue positions
          */
         currentSeconds: Number,
+
+        /** The playback progress within this cue, in [percent], or null if not applicable
+         * @remarks This value is only used when both the cue is not ahead nor has passed.
+         */
+        percentComplete: {
+            type: null as unknown as PropType<number | null>,
+            required: false,
+        },
+        /** Whether this cue is currently selected
+         * @remarks Note: only one cue in a compilation may be selected */
+        isCueSelected: Boolean,
+
+        /* Whether playback of this cue has already passed
+                 (the playhead has completely passed beyond the end of this cue) */
+        hasCuePassed: Boolean,
+
+        /* Whether to show this cue as passive, in dimmed style. */
+        virtual: Boolean,
+
+        /* Determines whether playback of this cue has not yet started
+        (the playhead has not yet reached the beginning of this cue)*/
+        isCueAhead: Boolean,
 
         /** Indicates whether the associated Track is currently playing
          * @remarks This is used to depict the expected action on button press.
@@ -273,38 +295,6 @@ export default defineComponent({
     },
     computed: {
         ...mapState(useAppStore, ['selectedCueId']),
-
-        /** Determines whether this cue is currently selected
-         * @remarks Note: only one cue in a compilation may be selected */
-        isCueSelected(): boolean {
-            return this.selectedCueId == this.cue?.Id;
-        },
-
-        /** Determines whether playback of the given cue has already passed
-         * @remarks Is used for visual indication of playback progress
-         * @param cue - the cue to determine the playback progress for
-         */
-        hasCuePassed(): boolean {
-            return CompilationHandler.hasCuePassed(
-                this.cue,
-                this.currentSeconds,
-            );
-        },
-        /** Determines whether playback of this cue has not yet started
-         * @param cue - the cue to determine the playback progress for
-         */
-        isCueAhead(): boolean {
-            return CompilationHandler.isCueAhead(this.cue, this.currentSeconds);
-        },
-        /** The playback progress within this cue, in [percent], or null if not applicable
-         * @param cue - the cue to determine the playback progress for
-         */
-        percentComplete(): number | null {
-            return CompilationHandler.percentComplete(
-                this.cue,
-                this.currentSeconds,
-            );
-        },
 
         /** Gets a cue placeholder denoting the cue's position */
         cuePlaceholder(): string {

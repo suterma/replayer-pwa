@@ -162,19 +162,16 @@
                     <TransitionGroup name="list">
                         <!-- A single child element is necessary here for the TransitionGroup to work properly. -->
                         <div :key="track.Id">
-                            <!-- Using the v-for on a template instead of the actual component saves unnecessary renderings. 
-                            See https://stackoverflow.com/a/76074016/79485 -->
-                            <template v-for="cue in cues" :key="cue.Id">
-                                <CueLevelEditor
-                                    :disabled="!canPlay"
-                                    :cue="cue"
-                                    :isTrackPlaying="isPlaying"
-                                    :playbackMode="playbackMode"
-                                    :currentSeconds="currentSeconds"
-                                />
-                                <!-- @click="cueClick(cue)"
-                                    @play="cuePlay(cue)" -->
-                            </template>
+                            <CueLevelEditors
+                                :cues="cues"
+                                :disabled="!canPlay"
+                                :isTrackPlaying="isPlaying"
+                                :playbackMode="playbackMode"
+                                :currentSeconds="currentSeconds"
+                                @click="cueClick"
+                                @play="cuePlay"
+                            >
+                            </CueLevelEditors>
                         </div>
                     </TransitionGroup>
                 </div>
@@ -531,7 +528,7 @@ import {
     TrackDisplayMode,
     PlaybackMode,
 } from '@/store/compilation-types';
-import CueLevelEditor from '@/components/CueLevelEditor.vue';
+import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
 import Experimental from '@/components/Experimental.vue';
 import { MediaUrl } from '@/store/state-types';
@@ -570,7 +567,7 @@ import { useAppStore } from '@/store/app';
 export default defineComponent({
     name: 'Track',
     components: {
-        CueLevelEditor,
+        CueLevelEditors,
         TrackAudioApiPlayer,
         ReplayerEventHandler,
         Experimental,
