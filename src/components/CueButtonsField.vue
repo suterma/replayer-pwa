@@ -21,6 +21,8 @@
             @click="cueClicked"
         >
         </CueButton>
+        <!-- Using the v-for on a template instead of the actual component saves unnecessary renderings. 
+             See https://stackoverflow.com/a/76074016/79485 -->
         <template v-for="cue in cues" :key="cue.Id">
             <CueButton
                 :id="cue.Id"
