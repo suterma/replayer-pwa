@@ -221,7 +221,7 @@ export default defineComponent({
             'addDefaultTrack',
             'useMediaFromUrl',
             'loadFromFile',
-            'loadFromFile',
+            'loadFromUrl',
             'updateTrackUrl',
         ]),
         ...mapActions(useMessageStore, ['pushError']),
