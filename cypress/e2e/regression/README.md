@@ -4,6 +4,12 @@ These tests assert the fixes made for the various issues with the "Regression Te
 
 Their name follows the branch name pattern.
 
-Run with 
+Run headless with 
 
     npm run cypress:run-chrome
+    
+Run interactively with 
+
+    npm run serve
+    # then in a separate process
+    npm run cypress:open  
