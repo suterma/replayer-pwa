@@ -6,7 +6,7 @@ describe('testing the issue "Invalid Files from an URI (e.g. images) should grac
             'https://marcelsuter.ch/wp-content/uploads/2018/04/cropped-IMG_marcelphone_20180323_100356.jpg',
         );
         cy.get('[data-cy="notification-danger"]').contains(
-            'Error while retrieving media source',
+            "The media resource at 'https://marcelsuter.ch/wp-content/uploads/2018/04/cropped-IMG_marcelphone_20180323_100356.jpg' is not supported. Use an URL to a resource of one of the supported media types.",
         );
     });
 
@@ -15,7 +15,7 @@ describe('testing the issue "Invalid Files from an URI (e.g. images) should grac
             'https://replayer.app/user/pages/01.home/02._howitworks/visual-function-web-vertical-en.webp',
         );
         cy.get('[data-cy="notification-danger"]').contains(
-            'Error while retrieving media source',
+            "The media resource at 'https://replayer.app/user/pages/01.home/02._howitworks/visual-function-web-vertical-en.webp' is not supported. Use an URL to a resource of one of the supported media types.",
         );
     });
 
@@ -24,7 +24,7 @@ describe('testing the issue "Invalid Files from an URI (e.g. images) should grac
             'https://marcelsuter.ch/wp-content/uploads/2018/08/Complete-compilation-public.pdf',
         );
         cy.get('[data-cy="notification-danger"]').contains(
-            'Error while retrieving media source',
+            "The media resource at 'https://marcelsuter.ch/wp-content/uploads/2018/08/Complete-compilation-public.pdf' is not supported. Use an URL to a resource of one of the supported media types.",
         );
     });
 
@@ -33,7 +33,7 @@ describe('testing the issue "Invalid Files from an URI (e.g. images) should grac
             'https://twit.tv/shows/security-now/episodes/901?autostart=false',
         );
         cy.get('[data-cy="notification-danger"]').contains(
-            'Error while retrieving media source',
+            "The media resource at 'https://twit.tv/shows/security-now/episodes/901?autostart=false' is not supported. Use an URL to a resource of one of the supported media types.",
         );
     });
 });

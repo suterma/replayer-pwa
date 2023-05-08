@@ -804,7 +804,7 @@ audioElement.value.onerror = () => {
     if (mediaError.value?.code == MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
         errorMessage =
             (errorMessage ? `${errorMessage}. ` : '') +
-            'The associated resource is not supported. Use an URL to a resource of one of the supported media types.';
+            `The media resource at '${audioElement.value.currentSrc}' is not supported. Use an URL to a resource of one of the supported media types.`;
     }
 
     //TODO Emit and handle an error event
