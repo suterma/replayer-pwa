@@ -8,7 +8,7 @@ import {
 } from './compilation-types';
 import FileHandler from './filehandler';
 import { TimeFormat, useSettingsStore } from './settings';
-import { MediaBlob, MediaUrl } from './state-types';
+import { MediaBlob, MediaUrl } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
 /**

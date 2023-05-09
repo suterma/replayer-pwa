@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { MediaUrl } from '@/store/state-types';
+import { MediaUrl } from '@/store/types';
 import MediaSourceIndicator from '@/components/MediaSourceIndicator.vue';
 import { mdiMusicNotePlus, mdiTrashCanOutline } from '@mdi/js';
 import BaseIcon from '@/components/icons/BaseIcon.vue';

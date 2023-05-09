@@ -1,6 +1,6 @@
 import { useLocalStorage } from '@vueuse/core';
 import { defineStore } from 'pinia';
-import { StorageKeys } from '.';
+import { StorageKeys } from '..';
 
 /** The precision for time display
  * @remarks Does not affect the application's internal precision when handling time values.
@@ -59,8 +59,8 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
         1000,
     );
 
-    /** Whether to show experimental content
-     * @remarks Default is false
+    /** The time format to use for display
+     * @remarks Default is true
      */
     const timeFormat = useLocalStorage(
         'timeFormat',
@@ -106,10 +106,8 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
         showLevelMeter,
         keyboardShortcutTimeout,
         timeFormat,
-
         experimentalShowPositionInTrackHeader,
         experimentalShowWaveforms,
-
         $reset,
     };
 });

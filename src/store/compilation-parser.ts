@@ -8,7 +8,7 @@ import {
     Track,
 } from './compilation-types';
 import { v4 as uuidv4 } from 'uuid';
-import { MediaBlob } from './state-types';
+import { MediaBlob } from './types';
 import xml2js from 'xml2js';
 import NSKeyedUnarchiver from '@suterma/nskeyedunarchiver-liveplayback/source';
 import bplist from 'bplist-parser';

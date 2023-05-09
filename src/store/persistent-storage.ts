@@ -1,5 +1,5 @@
 import { get, set, entries, del, clear } from 'idb-keyval';
-import { MediaBlob } from './state-types';
+import { MediaBlob } from './types';
 import { StorageKeys } from '.';
 
 /**

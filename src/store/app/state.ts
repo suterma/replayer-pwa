@@ -1,6 +1,6 @@
-import { MediaUrl } from './state-types';
-import { Compilation, PlaybackMode } from './compilation-types';
-import CompilationHandler from './compilation-handler';
+import { MediaUrl } from '../types';
+import { Compilation, PlaybackMode } from '../compilation-types';
+import CompilationHandler from '../compilation-handler';
 import { useLocalStorage } from '@vueuse/core';
 
 /** Implements the state of this application */

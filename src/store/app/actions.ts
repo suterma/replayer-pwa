@@ -5,22 +5,21 @@ import {
     ICue,
     ITrack,
     Track,
-} from './compilation-types';
-import CompilationHandler from './compilation-handler';
+} from '../compilation-types';
+import CompilationHandler from '../compilation-handler';
 import { state } from './state';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 import FileSaver from 'file-saver';
-import PersistentStorage from './persistent-storage';
+import PersistentStorage from '../persistent-storage';
 import JSZip from 'jszip';
-import { MediaBlob, MediaUrl } from './state-types';
-import FileHandler from './filehandler';
-import CompilationParser from './compilation-parser';
-import { useMessageStore } from './messages';
+import { MediaBlob, MediaUrl } from '../types';
+import FileHandler from '../filehandler';
+import CompilationParser from '../compilation-parser';
+import { useMessageStore } from '../messages';
 
 export const actions = {
-
     /** Updates the currently selected cue Id, for application-wide handling
      * @remarks This does not control the playback itself. It is intended for display and handling purposes.
      * @remarks Removes any explicit track id selection.

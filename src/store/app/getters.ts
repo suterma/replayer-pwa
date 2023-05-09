@@ -1,5 +1,5 @@
-import { ICompilation } from './compilation-types';
-import CompilationHandler from './compilation-handler';
+import { ICompilation } from '../compilation-types';
+import CompilationHandler from '../compilation-handler';
 import { state } from './state';
 import { computed } from 'vue';
 

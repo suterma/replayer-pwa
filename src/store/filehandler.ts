@@ -1,4 +1,4 @@
-import { RezMimeTypes } from './state-types';
+import { RezMimeTypes } from './types';
 
 /**
  * Provides handling methods for package, media and compilation files,

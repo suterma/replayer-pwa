@@ -531,7 +531,7 @@ import {
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
 import Experimental from '@/components/Experimental.vue';
-import { MediaUrl } from '@/store/state-types';
+import { MediaUrl } from '@/store/types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeaderEdit from '@/components/TrackHeaderEdit.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';
@@ -556,6 +556,7 @@ import { Replayer } from './CompilationKeyboardHandler.vue';
 import { useSettingsStore } from '@/store/settings';
 import { mapActions, mapState } from 'pinia';
 import { useAppStore } from '@/store/app';
+import FileHandler from '@/store/filehandler';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -1326,20 +1327,28 @@ export default defineComponent({
             }
             return false;
         },
-        /** Gets the media object URL, if available
+        /** Gets the media URL, if available
+         * @remarks For non-online URL's, a match is sought from previously stored binary blobs
          */
         mediaUrl(): string | undefined {
+            if (FileHandler.isValidHttpUrl(this.track.Url)) {
+                return this.track.Url;
+            }
             return this.trackMediaUrl?.url;
         },
 
-        /** Gets the media object URL, if available,
+        /** Gets the media URL, if available,
          * and optimized for the active track state
          * @remarks To save memory in the audio elements,
          * an URL is only provided when
          * the player is actually in the currently active track
+         * @remarks For non-online URL's, a match is sought from previously stored binary blobs
          */
         optimizedMediaUrl(): string | undefined {
             if (this.isActiveTrack) {
+                if (FileHandler.isValidHttpUrl(this.track.Url)) {
+                    return this.track.Url;
+                }
                 return this.trackMediaUrl?.url;
             } else {
                 return undefined;
@@ -1351,7 +1360,7 @@ export default defineComponent({
             return this.track.Cues;
         },
 
-        /** Returns the media URL (playable file content) for a track's file name
+        /** Returns the media URL (online URL or playable file content) for a track's file name
          * @remarks if available, the tracks from a compilation package are used, otherwise the
          * files are to be loaded from the file system or from the internet
          */

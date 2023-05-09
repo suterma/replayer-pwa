@@ -49,7 +49,7 @@ import { defineComponent } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import FileHandler from '@/store/filehandler';
 import { mdiMusicCircleOutline, mdiMusicNote } from '@mdi/js';
-import { MediaUrl } from '@/store/state-types';
+import { MediaUrl } from '@/store/types';
 
 /** A display for the media source of a track
  * @remarks Includes a slot at the end of the indicative text, for an adornment icon
