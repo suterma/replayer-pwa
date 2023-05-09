@@ -1,6 +1,10 @@
 <template>
-    <DropdownMenu ref="dropdownMenu" title="App menu" :iconPath="mdiMenu">
+    <DropdownMenu ref="dropdownMenu" :iconPath="mdiMenu">
         <div id="appContextMenuTop"></div>
+        <!-- The compilation-related views are only available when any is loaded -->
+        <div class="dropdown-item is-hidden-mobile">
+            <p class="menu-label">View</p>
+        </div>
         <Hotkey
             v-once
             :keys="['f2']"
@@ -15,49 +19,62 @@
                 :iconPath="mdiPencil"
             />
         </Hotkey>
-        <Hotkey
-            v-once
-            :keys="['f3']"
-            :excluded-elements="[]"
-            v-slot="{ clickRef }"
-        >
-            <DropdownMenuRouterLink
-                to="/play"
-                title="Play"
-                shortcut="F3"
-                :clickRef="clickRef"
-                :iconPath="mdiPlay"
-            />
-        </Hotkey>
-        <Hotkey
-            v-once
-            :keys="['f6']"
-            :excluded-elements="[]"
-            v-slot="{ clickRef }"
-        >
-            <DropdownMenuRouterLink
-                to="/mix"
-                title="Mix"
-                shortcut="F6"
-                :clickRef="clickRef"
-                :iconPath="mdiTuneVertical"
-            />
-        </Hotkey>
-        <Hotkey
-            v-once
-            :keys="['f4']"
-            :excluded-elements="[]"
-            v-slot="{ clickRef }"
-        >
-            <DropdownMenuRouterLink
+        <template v-if="hasCompilation">
+            <Hotkey
                 v-once
-                to="/setlist"
-                title="Set list"
-                shortcut="F4"
-                :clickRef="clickRef"
-                :iconPath="mdiListBoxOutline"
-            />
-        </Hotkey>
+                :keys="['f3']"
+                :excluded-elements="[]"
+                v-slot="{ clickRef }"
+            >
+                <DropdownMenuRouterLink
+                    to="/play"
+                    title="Play"
+                    shortcut="F3"
+                    :clickRef="clickRef"
+                    :iconPath="mdiPlay"
+                />
+            </Hotkey>
+            <Hotkey
+                v-once
+                :keys="['f6']"
+                :excluded-elements="[]"
+                v-slot="{ clickRef }"
+            >
+                <DropdownMenuRouterLink
+                    to="/mix"
+                    title="Mix"
+                    shortcut="F6"
+                    :clickRef="clickRef"
+                    :iconPath="mdiTuneVertical"
+                />
+            </Hotkey>
+            <Hotkey
+                v-once
+                :keys="['f4']"
+                :excluded-elements="[]"
+                v-slot="{ clickRef }"
+            >
+                <DropdownMenuRouterLink
+                    v-once
+                    to="/setlist"
+                    title="Set list"
+                    shortcut="F4"
+                    :clickRef="clickRef"
+                    :iconPath="mdiListBoxOutline"
+                />
+            </Hotkey>
+            <hr class="dropdown-divider" />
+            <div class="dropdown-item is-hidden-mobile">
+                <p class="menu-label">Compilation</p>
+            </div>
+            <div id="appContextMenuCompilation"></div>
+            <hr class="dropdown-divider" />
+        </template>
+
+        <div class="dropdown-item is-hidden-mobile">
+            <p class="menu-label">Application</p>
+        </div>
+
         <DropdownMenuRouterLink
             v-once
             to="/settings"
@@ -106,6 +123,13 @@ export default defineComponent({
         DropdownMenu,
         DropdownMenuRouterLink,
         Hotkey,
+    },
+    props: {
+        /** Whether a compilation is currently loaded */
+        hasCompilation: {
+            type: Boolean,
+            required: true,
+        },
     },
     data() {
         return {

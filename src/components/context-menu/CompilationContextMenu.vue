@@ -1,6 +1,5 @@
 <template>
-    <Teleport to="#appContextMenuBottom">
-        <hr v-once class="dropdown-divider" />
+    <Teleport to="#appContextMenuCompilation">
         <Hotkey
             v-once
             :keys="['ctrl', 's']"
@@ -22,8 +21,8 @@
             v-slot="{ clickRef }"
         >
             <DropdownMenuItem
-                title="Discard... [CTRL+X]"
-                subTitle="Discard current compilation"
+                title="Close... [CTRL+X]"
+                subTitle="Close current compilation"
                 @click="close"
                 :ref="clickRef"
                 :iconPath="mdiTrashCanOutline"
@@ -66,8 +65,8 @@ export default defineComponent({
          */
         close(): void {
             confirm(
-                'Discarding compilation',
-                `Do you want to discard (and loose any changes to) compilation '${this.compilation.Title}'? Hint: to keep changes for later use, download a copy first.`,
+                'Closing compilation',
+                `Do you want to close (and loose any changes to) compilation '${this.compilation.Title}'? Hint: to keep changes for later use, download a copy first.`,
             ).then((ok) => {
                 if (ok) {
                     this.discardCompilation();

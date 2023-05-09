@@ -3,7 +3,7 @@
     <section
         class="section has-background-none is-hidden-print is-pulled-right pb-0"
     >
-        <AppContextMenu></AppContextMenu>
+        <AppContextMenu :hasCompilation="hasCompilation"></AppContextMenu>
     </section>
     <!-- The pages section -->
     <section class="section">
@@ -96,6 +96,7 @@ export default defineComponent({
         ...mapState(useSettingsStore, [
             'experimentalShowPositionInTrackHeader',
         ]),
+        ...mapState(useAppStore, ['hasCompilation']),
     },
 });
 </script>

@@ -31,14 +31,15 @@
                 @click="collapseDropdown()"
             >
                 <div class="dropdown-content" ref="target">
-                    <!-- HINT: Because of 'is-static', this should not be clickable, but unfortunately I was not able to prevent this yet -->
-                    <div
-                        class="dropdown-item is-static is-header has-opacity-half"
-                    >
-                        <p>{{ title }}</p>
-                    </div>
-                    <hr class="dropdown-divider" />
-
+                    <template v-if="title">
+                        <!-- HINT: Because of 'is-static', this should not be clickable, but unfortunately I was not able to prevent this yet -->
+                        <div
+                            class="dropdown-item is-static is-header has-opacity-half"
+                        >
+                            <p>{{ title }}</p>
+                        </div>
+                        <hr class="dropdown-divider" />
+                    </template>
                     <slot>
                         <!-- The menu items -->
                     </slot>

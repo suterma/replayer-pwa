@@ -793,7 +793,7 @@ export const actions = {
         }
     },
 
-    /** Discards the current compilation
+    /** Closes/discards the current compilation
      * @remarks Permanently removes the compilation with all data, including the media files and the object URL references to it from
      * both the persistent storage and the application store. Clears the selected track and cue.
      */
