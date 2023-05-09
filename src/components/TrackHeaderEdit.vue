@@ -129,15 +129,8 @@
                     </p>
                 </div>
 
-                <!-- Artist info (don't show on small devices, keep at end to keep the appearance calm)-->
-                <div
-                    class="level-item is-hidden-mobile is-justify-content-end"
-                    @click="$emit('click')"
-                    :class="{
-                        'is-clickable': isTrackLoaded,
-                        'has-cursor-not-allowed': !isTrackLoaded,
-                    }"
-                >
+                <!-- Artist info (don't show on small devices)-->
+                <div class="level-item is-hidden-mobile">
                     <p class="is-size-7">
                         <ArtistInfo :album="trackAlbum" :artist="trackArtist" />
                     </p>
@@ -156,7 +149,6 @@
                     :is-unloaded="!isTrackLoaded"
                     :is-unavailable="!isTrackMediaAvailable"
                     data-cy="playback-indicator"
-                    @click="$emit('click')"
                 />
 
                 <TrackContextMenu
