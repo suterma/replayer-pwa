@@ -56,6 +56,7 @@ export default class CompilationParser {
      * NOTE: the plist compilation type does not have all data corresponding to a Replayer compilation. Thus some of the information like the GUID, is just made up    .
      */
     private static parseFromPListCompilation(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         plistCompilation: any,
     ): ICompilation {
         return new Compilation(
@@ -85,9 +86,11 @@ export default class CompilationParser {
     }
 
     /** @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static parseFromXmlTracks(xmlTracks: any): Array<ITrack> {
         const tracks = new Array<ITrack>();
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         xmlTracks.forEach((xmlTrack: any) => {
             const track = new Track(
                 CompilationParser.FirstStringOf(xmlTrack.Name),
@@ -110,9 +113,11 @@ export default class CompilationParser {
         return tracks;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static parseFromPlistTracks(plistTracks: any[]): Array<ITrack> {
         const tracks = new Array<ITrack>();
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         plistTracks.forEach((plistTrack: any) => {
             //Only for tracks with real data (LivePlayback may have empty slots in the tracks list)
             if (plistTrack.Duration && plistTrack.Name && plistTrack.Path) {
@@ -162,6 +167,7 @@ export default class CompilationParser {
         return cues;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static parseFromPlistCues(plistCues: any[]): ICue[] {
         const cues = new Array<ICue>();
 
