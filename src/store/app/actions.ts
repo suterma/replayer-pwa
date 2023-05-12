@@ -90,7 +90,7 @@ export const actions = {
             trackId,
         );
         if (matchingTrack) {
-            console.debug('mutations::ADD_CUE:matchingTrack', matchingTrack);
+            console.debug('actions::ADD_CUE:matchingTrack', matchingTrack);
 
             matchingTrack.Cues.push(cue);
 
@@ -99,7 +99,7 @@ export const actions = {
 
             if (matchingTrack.Duration != null) {
                 console.debug(
-                    'mutations::ADD_CUE:matchingTrack.Duration',
+                    'actions::ADD_CUE:matchingTrack.Duration',
                     matchingTrack.Duration,
                 );
                 CompilationHandler.updateCueDurations(
@@ -196,7 +196,7 @@ export const actions = {
      * @remarks Also updates the persistent store of the compilation
      */
     deleteCue(cueId: string): void {
-        console.debug('mutations::DELETE_CUE:', cueId);
+        console.debug('actions::DELETE_CUE:', cueId);
         const matchingTrack = CompilationHandler.getTrackByCueId(
             state.compilation.value,
             cueId,
@@ -223,7 +223,7 @@ export const actions = {
      * @remarks No media data is added, it must get handled elsewhere.
      */
     addDefaultTrack(resourceName: string): void {
-        console.debug('mutations::ADD_DEFAULT_TRACK:', resourceName);
+        console.debug('actions::ADD_DEFAULT_TRACK:', resourceName);
         const track = CompilationHandler.createDefaultTrack(resourceName);
         state.selectedCueId.value = CompilationHandler.EmptyId;
         state.selectedTrackId.value = track.Id;
@@ -240,7 +240,7 @@ export const actions = {
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
             console.debug(
-                `mutations::ADD_MEDIA_URL:removing matching item for key:${
+                `actions::ADD_MEDIA_URL:removing matching item for key:${
                     mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
@@ -249,7 +249,9 @@ export const actions = {
         }
 
         //Now add the new media URL as a replacement
-        console.debug('mutations::ADD_MEDIA_URL:', mediaUrl.resourceName);
+        console.debug(
+            `actions::ADD_MEDIA_URL:resourceName:${mediaUrl.resourceName},mime-type:${mediaUrl.mediaType}`,
+        );
         state.mediaUrls.value.set(mediaUrl.resourceName, mediaUrl);
 
         //If any track uses this media, remove the now stale duration for this track
@@ -620,19 +622,19 @@ export const actions = {
      * @param url - The MediaUrl to use
      */
     discardMediaUrl(mediaUrl: MediaUrl): void {
-        console.debug('mutations::DISCARD_MEDIA_URL:mediaUrl', mediaUrl);
+        console.debug('actions::DISCARD_MEDIA_URL:mediaUrl', mediaUrl);
 
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
             console.debug(
-                `mutations::DISCARD_MEDIA_URL:removing matching item for key:${
+                `actions::DISCARD_MEDIA_URL:removing matching item for key:${
                     mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);
 
             console.debug(
-                `mutations::DISCARD_MEDIA_URL:localResourceName`,
+                `actions::DISCARD_MEDIA_URL:localResourceName`,
                 mediaUrl.resourceName,
             );
             state.mediaUrls.value.delete(mediaUrl.resourceName);
@@ -656,7 +658,7 @@ export const actions = {
      * @remarks No media data is added, it must get handled elsewhere.
      */
     addTrack(track: ITrack): void {
-        console.debug('mutations::ADD_TRACK:', track);
+        console.debug('actions::ADD_TRACK:', track);
         state.compilation.value.Tracks.push(track);
         state.selectedCueId.value = CompilationHandler.EmptyId;
         state.selectedTrackId.value = track.Id;
@@ -776,7 +778,7 @@ export const actions = {
 
         */
     reassignCueShortcuts(trackId: string): void {
-        console.debug('mutations::REASSIGN_CUE_SHORTCUTS:trackId', trackId);
+        console.debug('actions::REASSIGN_CUE_SHORTCUTS:trackId', trackId);
 
         const track = CompilationHandler.getTrackById(
             state.compilation.value.Tracks,
