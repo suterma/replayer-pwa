@@ -19,7 +19,14 @@
             }"
         >
             <template v-for="(track, index) in tracks" :key="track.Id">
+                <NoticeTrack
+                    v-if="track.Url.endsWith('.txt')"
+                    :id="'track-' + track.Id"
+                    :track="track"
+                >
+                </NoticeTrack>
                 <Track
+                    v-else
                     :track="track"
                     :ref="'track-' + track.Id"
                     :id="'track-' + track.Id"
@@ -265,6 +272,7 @@ import MuteButton from '@/components/buttons/MuteButton.vue';
 import SoloButton from '@/components/buttons/SoloButton.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
+import NoticeTrack from '@/components/track/NoticeTrack.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import MultitrackHandler from '@/code/audio/MultitrackHandler';
@@ -292,6 +300,7 @@ export default defineComponent({
         SoloButton,
         ToggleButton,
         BaseIcon,
+        NoticeTrack,
     },
     props: {
         compilation: Compilation,

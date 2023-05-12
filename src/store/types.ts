@@ -99,5 +99,6 @@ export enum RezMimeTypes {
     AUDIO_AAC = 'audio/aac',
     APPLICATION_ZIP = 'application/zip',
     TEXT_XML = 'text/xml',
+    TEXT_PLAIN = 'text/plain',
     APPLICATION_XBPLIST = 'application/x-bplist',
 }

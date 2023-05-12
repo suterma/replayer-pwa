@@ -15,8 +15,9 @@ export default class FileHandler {
         }
         return null;
     }
+    /** The set of accepted file extensions */
     static acceptedFileList =
-        '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.bplist';
+        '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.bplist,.txt';
 
     /** Returns whether the given path represents a Mac OS X resource fork.
      * @remarks Mac OS X resource forks are not processed by Replayer.
@@ -137,7 +138,7 @@ export default class FileHandler {
     }
 
     /** Asserts whether the file represents a media file
-     * @remarks Currently, mp3, wav, flac, ogg, aiff, are supported
+     * @remarks Currently, mp3, wav, flac, ogg, aiff, plus text are supported
      */
     public static isSupportedMediaFile(file: File): boolean {
         return (
@@ -212,7 +213,7 @@ export default class FileHandler {
         return false;
     }
     /** Returns whether the given file name (by prefix/suffix) is a supported media file name by Replayer
-     * @remarks Currently, mp3, wav, flac, ogg, aiff, with name variations, are supported
+     * @remarks Currently, mp3, wav, flac, ogg, aiff plus txt, with name variations, are supported
      */
     static isSupportedMediaFileName(fileName: string | undefined): boolean {
         let isSupportedMediaFileName = false;
@@ -230,6 +231,7 @@ export default class FileHandler {
                         'aif',
                         'aac',
                         'm4a',
+                        'txt',
                     ].includes(fileExtension)
                 ) {
                     isSupportedMediaFileName = true;
@@ -246,17 +248,13 @@ export default class FileHandler {
     /** Returns whether the given MIME type is a supported package MIME type by Replayer
      */
     static isSupportedPackageMimeType(type: string | undefined): boolean {
-        if (type) {
-            if (
-                [
-                    'application/zip' /*zip*/,
-                    'application/x-zip-compressed' /*zip*/,
-                ].includes(type)
-            ) {
-                return true;
-            }
-        }
-        return false;
+        return (
+            !!type &&
+            [
+                'application/zip' /*zip*/,
+                'application/x-zip-compressed' /*zip*/,
+            ].includes(type)
+        );
     }
 
     /** Returns whether the given MIME type is a supported compilation MIME type by Replayer
@@ -264,62 +262,57 @@ export default class FileHandler {
      * @devdoc The types for binary plists are untested
      */
     static isSupportedCompilationMimeType(type: string | undefined): boolean {
-        if (type) {
-            if (
-                [
-                    'application/xml' /*xml*/,
-                    'text/xml' /*xml*/,
-                    'application/x-bplist' /*bplist*/,
-                    'application/x-plist' /*binary plist*/,
-                ].includes(type)
-            ) {
-                return true;
-            }
-        }
-        return false;
+        return (
+            !!type &&
+            [
+                'application/xml' /*xml*/,
+                'text/xml' /*xml*/,
+                'application/x-bplist' /*bplist*/,
+                'application/x-plist' /*binary plist*/,
+            ].includes(type)
+        );
     }
 
     /** Returns whether the given MIME type is a supported XML compilation MIME type by Replayer
      */
     static isXmlMimeType(type: string | undefined): boolean {
-        if (type) {
-            if (
-                ['application/xml' /*xml*/, 'text/xml' /*xml*/].includes(type)
-            ) {
-                return true;
-            }
-        }
-        return false;
+        return (
+            !!type &&
+            ['application/xml' /*xml*/, 'text/xml' /*xml*/].includes(type)
+        );
+    }
+
+    /** Returns whether the given MIME type is a supported text file MIME type by Replayer
+     */
+    static isTextMimeType(type: string | undefined): boolean {
+        return !!type && ['text/plain' /*text*/].includes(type);
     }
 
     /** Returns whether the given MIME type is a supported media MIME type by Replayer
-     * @remarks Currently, MIME types for mp3, wav, flac, ogg, aiff, are supported
+     * @remarks Currently, MIME types for mp3, wav, flac, ogg, aiff, plus plain text, are supported
      */
     static isSupportedMediaMimeType(type: string | undefined): boolean {
-        if (type) {
-            //Check for supported MIME types (see https://stackoverflow.com/a/29672957)
-            if (
-                [
-                    'audio/mp3' /*mp3, by chrome*/,
-                    'audio/mpeg' /*mp3*/,
-                    'audio/vnd.wave' /*wav*/,
-                    'audio/wav' /*wav*/,
-                    'audio/wave' /*wav*/,
-                    'audio/x-wav' /*wav*/,
-                    'audio/flac' /*flac*/,
-                    'application/ogg' /*ogg*/,
-                    'audio/ogg' /*ogg*/,
-                    'audio/vorbis' /*ogg*/,
-                    'audio/vorbis-config' /*ogg*/,
-                    'audio/x-aiff' /*aiff*/,
-                    'audio/aiff' /*aiff*/,
-                    'audio/aac' /*aac*/,
-                ].includes(type)
-            ) {
-                return true;
-            }
-        }
-        return false;
+        //Check for supported MIME types (see https://stackoverflow.com/a/29672957)
+        return (
+            !!type &&
+            [
+                'audio/mp3' /*mp3, by chrome*/,
+                'audio/mpeg' /*mp3*/,
+                'audio/vnd.wave' /*wav*/,
+                'audio/wav' /*wav*/,
+                'audio/wave' /*wav*/,
+                'audio/x-wav' /*wav*/,
+                'audio/flac' /*flac*/,
+                'application/ogg' /*ogg*/,
+                'audio/ogg' /*ogg*/,
+                'audio/vorbis' /*ogg*/,
+                'audio/vorbis-config' /*ogg*/,
+                'audio/x-aiff' /*aiff*/,
+                'audio/aiff' /*aiff*/,
+                'audio/aac' /*aac*/,
+                'text/plain' /*plain text*/,
+            ].includes(type)
+        );
     }
 
     /** Gets the content MIME type from a fetch response
@@ -351,7 +344,7 @@ export default class FileHandler {
     static getFileMimeType(fileName: string): string | undefined {
         const fileExtension = fileName?.split('.').pop()?.toLowerCase();
         console.debug(
-            'CompilationParser::getMimeType:fileExtension',
+            'CompilationParser::getFileMimeType:fileExtension',
             fileExtension,
         );
         let mimeType = undefined;
@@ -371,6 +364,8 @@ export default class FileHandler {
             mimeType = RezMimeTypes.APPLICATION_ZIP /*zip*/;
         } else if (fileExtension == 'xml' || fileExtension == 'rex') {
             mimeType = RezMimeTypes.TEXT_XML /*xml*/;
+        } else if (fileExtension == 'txt') {
+            mimeType = RezMimeTypes.TEXT_PLAIN /*text*/;
         }
 
         return mimeType;
@@ -389,7 +384,7 @@ export default class FileHandler {
             fileName.toLowerCase().endsWith('.rex') ||
             fileName.toLowerCase().endsWith('.xml');
         console.debug(
-            `filehander::isXmlFileName:fileName:'${fileName}' is XML?:'${isXmlFileName}'`,
+            `filehandler::isXmlFileName:fileName:'${fileName}' is XML?:'${isXmlFileName}'`,
         );
         return isXmlFileName;
     }
@@ -400,7 +395,7 @@ export default class FileHandler {
             fileName.toLowerCase().endsWith('.bplist') ||
             fileName.toLowerCase().endsWith('playlist');
         console.debug(
-            `filehander::isBplistFileName:fileName:'${fileName}' is Bplist?:'${isBplistFileName}'`,
+            `filehandler::isBplistFileName:fileName:'${fileName}' is Bplist?:'${isBplistFileName}'`,
         );
         return isBplistFileName;
     }
