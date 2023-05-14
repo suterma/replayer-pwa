@@ -9,7 +9,7 @@ import { mapActions } from 'pinia';
 import { defineComponent } from 'vue';
 
 /** A view for demo purposes
- * @remarks Just loads the demo compilation and navigates to the play view. Later, some explanatory items could be added.
+ * @remarks Just loads the demo compilation and navigates to the play view.
  */
 export default defineComponent({
     name: 'Demo',
@@ -24,16 +24,8 @@ export default defineComponent({
         ...mapActions(useAppStore, ['loadFromUrl']),
 
         loadDemo() {
-            // const url =
-            //     location.protocol +
-            //     '//' +
-            //     location.host +
-            //     location.pathname +
-            //     'demo-compilation-featuring-lidija-roos.rez';
-            // console.debug('loadDemo:', url);
-
             const url =
-                'https://lib.replayer.app/demo-compilation-featuring-lidija-roos.rez';
+                'https://lib.replayer.app/demo-compilation-featuring-lidija-roos-with-info.rez';
             console.debug('loadDemo:', url);
             this.loadFromUrl(url);
         },

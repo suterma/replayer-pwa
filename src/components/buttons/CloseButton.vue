@@ -1,5 +1,5 @@
 <template>
-    <NavButton title="close" :iconPath="mdiClose" @click="close()"
+    <NavButton :title="title" :iconPath="mdiClose" @click="close()"
         ><slot></slot
     ></NavButton>
 </template>
@@ -9,12 +9,12 @@ import { defineComponent } from 'vue';
 import NavButton from '@/components/buttons/NavButton.vue';
 import { mdiClose } from '@mdi/js';
 
-/** A button to display and toggle a collapsed or expanded state, using a directed chevron icon.
- * @remarks The default (expanded) chevron direction is down.
+/** A button to display and toggle a closed or open expanded state, using a cross icon.
+ * @remarks The default state is open.
  */
 export default defineComponent({
     name: 'CloseButton',
-    emits: ['close'],
+    emits: ['close', 'update:modelValue'],
     components: { NavButton },
     props: {
         /** Whether this represents the closed state. */
@@ -26,7 +26,7 @@ export default defineComponent({
         /* The title*/
         title: {
             type: String,
-            default: '',
+            default: 'Close',
         },
     },
 
@@ -40,6 +40,7 @@ export default defineComponent({
     methods: {
         close() {
             this.$emit('close');
+            this.$emit('update:modelValue', true);
         },
     },
 });
