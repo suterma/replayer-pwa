@@ -1,21 +1,41 @@
 /* eslint-disable jest/expect-expect */
 describe('loading and displaying of text content with the issue "98-add-support-for-text-files-in-zip-compilations"', () => {
-    beforeEach(() => {
+    beforeEach(() => {});
+
+    it('shows the contained text note in the demo', () => {
         cy.loadDemo();
+        cy.get('[data-cy="notice-track"]')
+            .contains('Click on a button')
+            .click();
     });
 
-    it('shows the contained text note', () => {
-        // Download the compilation as ZIP
-        cy.get('#app [data-cy="dropdown-menu-trigger"]').click();
-        cy.get('[data-cy="dropdown-menu-item"]').contains('Download').click();
+    it('shows the text note after loading a text file', () => {
+        cy.loadFile('cypress/fixtures/info.txt');
+        cy.get('[data-cy="notice-track"]')
+            .contains('Click on a button')
+            .click();
+    });
 
-        // Choose the ZIP type
-        cy.get('[data-cy="modal-form"] [data-cy="radio-download-zip"]').click();
-        cy.get('[data-cy="modal-form"] [data-cy="button-download"]').click();
+    it('shows the text note after loading an URL', () => {
+        cy.loadMediaUrl('https://lib.replayer.app/README.txt');
+        cy.get('[data-cy="notice-track"]')
+            .contains('This library is mainly used for testing purposes.')
+            .click();
+    });
 
-        // ASSERT (the download)
-        cy.readFile(
-            'cypress/downloads/Demo Compilation (Featuring Lidija Roos).rez',
-        );
+    it('shows the text note also after an app reload', () => {
+        // Arrange
+        cy.loadFile('cypress/fixtures/info.txt');
+        cy.get('[data-cy="notice-track"]')
+            .contains('Click on a button')
+            .click();
+
+        // Act
+        cy.reload();
+
+        // Assert
+        cy.get('[data-cy="notice-track"]')
+            .contains('Click on a button')
+            .click();
     });
 });
