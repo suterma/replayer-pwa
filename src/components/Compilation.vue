@@ -18,15 +18,12 @@
                 vertical: showVertical && isMixable,
             }"
         >
-            <template v-for="(track, index) in tracks" :key="track.Id">
-                <NoticeTrack
-                    v-if="track.Url.endsWith('.txt')"
-                    :id="'track-' + track.Id"
-                    :track="track"
-                >
+            <template v-for="track in textTracks" :key="track.Id">
+                <NoticeTrack :id="'track-' + track.Id" :track="track">
                 </NoticeTrack>
+            </template>
+            <template v-for="(track, index) in tracks" :key="track.Id">
                 <Track
-                    v-else
                     :track="track"
                     :ref="'track-' + track.Id"
                     :id="'track-' + track.Id"
@@ -639,6 +636,8 @@ export default defineComponent({
             'selectedCueId',
             'activeTrackId',
             'hasSingleAudioTrack',
+            'textTracks',
+            'audioTracks',
         ]),
         ...mapWritableState(useAppStore, ['playbackMode']),
 
@@ -681,13 +680,11 @@ export default defineComponent({
             return this.tracksDisplayMode === TrackDisplayMode.Mix;
         },
 
-        /** The currently available tracks in the compilation
+        /** The currently available audio tracks in the compilation
          * @remarks The order may also be shuffled, depending on the PlaybackMode
          */
         tracks(): Array<ITrack> | undefined {
-            const tracks = this.compilation?.Tracks as
-                | Array<ITrack>
-                | undefined;
+            const tracks = this.audioTracks as Array<ITrack> | undefined;
             //Deterministically shuffle if required
             if (tracks && this.isTracksShuffled) {
                 return CompilationHandler.shuffle(tracks, this.shuffleSeed);
@@ -695,7 +692,7 @@ export default defineComponent({
             return tracks;
         },
 
-        /** Returns all cues from all tracks in the current compilation */
+        /** Returns all cues from all audio tracks in the current compilation */
         allCues(): Array<ICue> {
             return CompilationHandler.getAllCues(this.tracks);
         },

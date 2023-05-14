@@ -36,7 +36,7 @@ export default defineComponent({
             type: String,
             default: '',
         },
-        /** The direction of the chevron for the collapsed state: either 'right' (default) or 'up' */
+        /** The direction of the chevron for the collapsed state: either 'right' (default), 'left', or 'up' */
         collapsedChevronDirection: {
             required: false,
             type: String,
@@ -74,6 +74,7 @@ export default defineComponent({
             const addOn = this.collapsedText ? `(${this.collapsedText})` : '';
             return `${this.title} ${addOn}`;
         },
+
         /** The dynamic class for the rotating expander button icon */
         navIconClass(): string {
             return (

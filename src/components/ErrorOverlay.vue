@@ -46,19 +46,3 @@ export default defineComponent({
     },
 });
 </script>
-<style scoped>
-.notification {
-    padding-top: 2.25rem;
-    padding-right: 3.5rem;
-    padding-bottom: 2.25rem;
-    padding-left: 2.5rem;
-
-    margin-bottom: 1rem;
-    margin-top: 1rem;
-}
-
-.notification > .delete {
-    right: 1rem;
-    top: 1rem;
-}
-</style>

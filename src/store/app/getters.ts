@@ -6,7 +6,7 @@ import { computed } from 'vue';
 export const getters = {
     /** Defines the function to determine whether a compilation is available (created or loaded) */
     hasCompilation: computed(() => {
-        //A compilation is recognized as existing, when there is at least one track
+        //A compilation is recognized as existing, when there is at least one track, regardless of it's type
         if (
             state.compilation.value &&
             (state.compilation.value as ICompilation).Tracks.length > 0
@@ -21,13 +21,13 @@ export const getters = {
         return state.mediaUrls.value.size > 0;
     }),
 
-    /** Whether this compilation has exactly one (single) playable track.
+    /** Whether this compilation has exactly one (single) audio track.
      * @remarks Non-audio tracks are not considered
      */
     hasSingleAudioTrack: computed(() => {
         return (
-            state.compilation.value?.Tracks.filter(
-                (track) => !CompilationHandler.isNonPlayableTrack(track),
+            state.compilation.value?.Tracks.filter((track) =>
+                CompilationHandler.isAudioTrack(track),
             ).length == 1
         );
     }),
@@ -43,37 +43,19 @@ export const getters = {
             state.selectedCueId.value,
         );
     }),
-    /** Gets the active track
-     * @remarks The active track is either:
-     * - the track that contains the currently selected cue, if any
-     * - otherwise an explicitly selected track, if any
-     */
-    activeTrack: computed(() => {
-        const selectedCueId = state.selectedCueId.value;
 
-        let selectedTrack = CompilationHandler.getTrackByCueId(
-            state.compilation.value,
-            selectedCueId,
+    /** Gets the set of audio tracks */
+    audioTracks: computed(() => {
+        return state.compilation.value?.Tracks.filter((track) =>
+            CompilationHandler.isAudioTrack(track),
         );
-
-        //if no cue is applicable, try the track
-        if (!selectedTrack) {
-            const selectedTrackId = state.selectedTrackId.value;
-
-            if (selectedTrackId) {
-                selectedTrack = CompilationHandler.getTrackById(
-                    state.compilation.value.Tracks,
-                    selectedTrackId,
-                );
-            }
-        }
-
-        return selectedTrack ?? null;
     }),
 
-    /** Gets the set of tracks */
-    tracks: computed(() => {
-        return state.compilation.value?.Tracks;
+    /** Gets the set of text tracks */
+    textTracks: computed(() => {
+        return state.compilation.value?.Tracks.filter((track) =>
+            CompilationHandler.isTextTrack(track),
+        );
     }),
 
     /** Gets the Id of the active track
@@ -99,12 +81,23 @@ export const getters = {
 
         const single = getters.hasSingleAudioTrack;
         if (single.value) {
-            return state.compilation.value?.Tracks.filter(
-                (track) => !CompilationHandler.isNonPlayableTrack(track),
+            return state.compilation.value?.Tracks.filter((track) =>
+                CompilationHandler.isAudioTrack(track),
             )[0]?.Id;
         }
 
         // none
         return CompilationHandler.EmptyId;
+    }),
+
+    /** Gets the track with the given Id
+     */
+    getTrackById: computed(() => {
+        return (trackId: string) => {
+            return CompilationHandler.getTrackByCueId(
+                state.compilation.value,
+                trackId,
+            );
+        };
     }),
 };

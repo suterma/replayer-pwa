@@ -17,7 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 export default class CompilationHandler {
     /** Determines whether this is a non-playable (text-only) track
      */
-    static isNonPlayableTrack(track: ITrack): boolean {
+    static isTextTrack(track: ITrack): boolean {
         return !this.isAudioTrack(track);
     }
 

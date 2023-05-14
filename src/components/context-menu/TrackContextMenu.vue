@@ -54,7 +54,6 @@ import {
 } from '@mdi/js';
 import { addTextCues, confirm, shareTrack } from '@/code/ui/dialogs';
 import { ICue, ITrack } from '@/store/compilation-types';
-import CompilationHandler from '@/store/compilation-handler';
 import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
 /** A nav bar as header with a menu for a compilation
@@ -140,12 +139,7 @@ export default defineComponent({
         /** The track for the context, if any
          */
         track(): ITrack | undefined {
-            const tracks = useAppStore().tracks;
-
-            if (tracks && this.trackId) {
-                return CompilationHandler.getTrackById(tracks, this.trackId);
-            }
-            return undefined;
+            return useAppStore().getTrackById(this.trackId);
         },
     },
 });

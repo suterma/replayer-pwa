@@ -1,28 +1,14 @@
 <template>
-    <NavButton
-        v-if="closed"
-        :title="'Click to open ' + track.Name"
-        :iconPath="mdiTextBoxOutline"
-        @click="closed = !closed"
-    >
-    </NavButton>
-
-    <div
-        v-else
-        class="track is-together-print"
-        :class="{}"
-        data-cy="notice-track"
-    >
-        <div class="columns is-multiline">
-            <div class="column is-full">
-                <div class="notification is-size-7">
-                    <CloseButton class="top-right" v-model="closed">
-                    </CloseButton>
+    <Transition v-show="!closed" name="item-expand">
+        <div class="track is-together-print" :class="{}" data-cy="notice-track">
+            <div class="notification is-size-7">
+                <span>
                     {{ textContent }}
-                </div>
+                </span>
+                <CloseButton class="top-right" v-model="closed"> </CloseButton>
             </div>
         </div>
-    </div>
+    </Transition>
 </template>
 
 <script setup lang="ts">
@@ -30,13 +16,11 @@
 
 import { computed, defineProps, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
-import CloseButton from '@/components/buttons/CloseButton.vue';
-import NavButton from '@/components/buttons/NavButton.vue';
 import { useAppStore } from '@/store/app';
 import CompilationHandler from '@/store/compilation-handler';
 import { Track } from '@/store/compilation-types';
 import FileHandler from '@/store/filehandler';
-import { mdiTextBoxOutline } from '@mdi/js';
+import CloseButton from '../buttons/CloseButton.vue';
 
 const props = defineProps({
     /** The track to display
@@ -107,5 +91,13 @@ watch(
     right: 0;
     position: absolute;
     top: 0;
+}
+
+.track .notification {
+    /** Make single-lined text vertically aligned with the close button,
+    similar padding for left, for consistency */
+    padding: calc(0.5rem + 2px);
+    padding-right: 2.5rem;
+    min-height: 40px;
 }
 </style>
