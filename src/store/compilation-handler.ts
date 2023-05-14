@@ -15,6 +15,16 @@ import { v4 as uuidv4 } from 'uuid';
  * Provides compilation handling methods
  */
 export default class CompilationHandler {
+    /** Determines whether this is a non-playable (text-only) track
+     */
+    static isNonPlayableTrack(track: ITrack): boolean {
+        return (
+            !track.Duration &&
+            track.Cues.length == 0 &&
+            track.Url.endsWith('.txt')
+        );
+    }
+
     /** Shuffles and returns the given tracks, using a deterministic method, based on the given seed */
     static shuffle(
         tracks: ITrack[],

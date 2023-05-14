@@ -47,7 +47,7 @@
                         index < (tracks?.length ?? 0) - 1 ||
                         isLoopingPlaybackMode
                     "
-                    :isOnlyTrack="isSingleTrack"
+                    :isOnlyAudioTrack="isSingleAudioTrack"
                     :isFirst="isFirstTrack(track.Id)"
                     :isLast="isLastTrack(track.Id)"
                     :isAnySoloed="isAnyTrackSoloed"
@@ -414,7 +414,7 @@ export default defineComponent({
 
         updatePlaybackMode(playbackMode: PlaybackMode): void {
             //omit the modes that affect more than one track
-            if (this.isSingleTrack) {
+            if (this.isSingleAudioTrack) {
                 if (
                     playbackMode === PlaybackMode.LoopCompilation ||
                     playbackMode === PlaybackMode.ShuffleCompilation
@@ -562,11 +562,11 @@ export default defineComponent({
     },
     watch: {
         /** Handle scrolling to the changed active track.
-         * @remarks This is intentionally only invoked on when the active track changes (and it's not the only track).
+         * @remarks This is intentionally only invoked on when the active track changes (and it's not the only audio track).
          * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
          */
         activeTrackId(trackId: string | null) {
-            if (trackId && !this.isSingleTrack) {
+            if (trackId && !this.isSingleAudioTrack) {
                 console.debug('scrolling to activated track ', trackId);
                 this.$nextTick(() => {
                     this.scrollToTrack(trackId);
@@ -579,7 +579,7 @@ export default defineComponent({
          */
         tracksDisplayMode() {
             const trackId = this.activeTrackId;
-            if (trackId && !this.isSingleTrack) {
+            if (trackId && !this.isSingleAudioTrack) {
                 console.debug('scrolling to mode-changed track ', trackId);
                 this.$nextTick(() => {
                     if (trackId != null) {
@@ -635,17 +635,12 @@ export default defineComponent({
         },
     },
     computed: {
-        ...mapState(useAppStore, ['selectedCueId', 'activeTrackId']),
+        ...mapState(useAppStore, [
+            'selectedCueId',
+            'activeTrackId',
+            'isSingleAudioTrack',
+        ]),
         ...mapWritableState(useAppStore, ['playbackMode']),
-
-        /** Whether this compilation has no more than single track.
-         */
-        isSingleTrack(): boolean {
-            if (this.tracks && this.tracks.length > 1) {
-                return false;
-            }
-            return true;
-        },
 
         /** Whether this compilation has any tracks.
          */

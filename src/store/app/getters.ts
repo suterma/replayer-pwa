@@ -16,21 +16,28 @@ export const getters = {
         return false;
     }),
 
-    /** The set of available Media URL's */
-    // mediaUrls: computed(() => {
-    //     return state.mediaUrls.value as Map<string, MediaUrl>;
-    // }),
-
     /** Whether any Media URL's are available */
     hasAvailableMedia: computed(() => {
         return state.mediaUrls.value.size > 0;
+    }),
+
+    /** Whether this compilation has no more than a single playback track.
+     * @remarks Non-audio tracks are not considered
+     */
+    isSingleAudioTrack: computed(() => {
+        return (true
+            // state.compilation.value?.Tracks.filter(
+            //     (track) => !CompilationHandler.isNonPlayableTrack(track),
+            // ).length > 1
+        );
     }),
 
     /** Gets the currently selected cue
      * @remarks This is more expensive than only getting the selected cue id
      * @remarks Only one cue may be selected at any time, within one compilation / application instance.
      * @returns The cue; or null, if no cue is selected or the selected cue is can not be found.
-     */ selectedCue: computed(() => {
+     */ 
+    selectedCue: computed(() => {
         return CompilationHandler.getCompilationCueById(
             state.compilation.value,
             state.selectedCueId.value,

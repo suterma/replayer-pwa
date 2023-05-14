@@ -31,7 +31,7 @@
             :displayMode="displayMode"
             :isExpanded="isExpanded"
             @update:isExpanded="updateIsExpanded"
-            :canCollapse="!isOnlyTrack"
+            :canCollapse="!isOnlyAudioTrack"
             :trackId="track.Id"
             :trackName="track.Name"
             :trackUrl="track.Url"
@@ -137,7 +137,7 @@
 
         <!-- The buttons field (for a single track in play mode) -->
         <div
-            v-if="isPlayable && isOnlyTrack && hasCues"
+            v-if="isPlayable && isOnlyAudioTrack && hasCues"
             class="transition-in-place"
             :key="track.Id"
         >
@@ -343,7 +343,7 @@
                             }"
                         >
                             <!-- Left side (with expander, title and artist of the currently playing track; not shown for a single track) -->
-                            <div v-if="isOnlyTrack" class="level-left">
+                            <div v-if="isOnlyAudioTrack" class="level-left">
                                 <!-- empty placeholder -->
                             </div>
                             <div v-else class="level-left">
@@ -467,7 +467,7 @@
                         <!-- Offer the cue buttons depending on the situation. -->
                         <nav
                             v-if="
-                                (!isOnlyTrack &&
+                                (!isOnlyAudioTrack &&
                                     !isTrackPlayerFullScreen &&
                                     isPlayable) ||
                                 (!isTrackPlayerFullScreen && isMix)
@@ -648,7 +648,7 @@ export default defineComponent({
         /** Whether this is the only track in the compilation
          * @remarks Is used to visually omit some unnecessary items for a compilation with just a single track
          */
-        isOnlyTrack: {
+        isOnlyAudioTrack: {
             type: Boolean,
             default: false,
         },
