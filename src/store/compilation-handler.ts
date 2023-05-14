@@ -18,11 +18,16 @@ export default class CompilationHandler {
     /** Determines whether this is a non-playable (text-only) track
      */
     static isNonPlayableTrack(track: ITrack): boolean {
-        return (
-            !track.Duration &&
-            track.Cues.length == 0 &&
-            track.Url.endsWith('.txt')
-        );
+        return !this.isAudioTrack(track);
+    }
+
+    /** Determines whether this is an audio track
+     * @devdoc track types should later be determined by MIME type.
+     * For this, the MIME type should become part of the (readonly) track information,
+     * determined when the track URL is evaluated.
+     */
+    static isAudioTrack(track: ITrack): boolean {
+        return !track.Url.endsWith('.txt');
     }
 
     /** Shuffles and returns the given tracks, using a deterministic method, based on the given seed */

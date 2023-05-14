@@ -47,7 +47,7 @@
                         index < (tracks?.length ?? 0) - 1 ||
                         isLoopingPlaybackMode
                     "
-                    :isOnlyAudioTrack="isSingleAudioTrack"
+                    :isOnlyAudioTrack="hasSingleAudioTrack"
                     :isFirst="isFirstTrack(track.Id)"
                     :isLast="isLastTrack(track.Id)"
                     :isAnySoloed="isAnyTrackSoloed"
@@ -414,7 +414,7 @@ export default defineComponent({
 
         updatePlaybackMode(playbackMode: PlaybackMode): void {
             //omit the modes that affect more than one track
-            if (this.isSingleAudioTrack) {
+            if (this.hasSingleAudioTrack) {
                 if (
                     playbackMode === PlaybackMode.LoopCompilation ||
                     playbackMode === PlaybackMode.ShuffleCompilation
@@ -566,7 +566,7 @@ export default defineComponent({
          * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
          */
         activeTrackId(trackId: string | null) {
-            if (trackId && !this.isSingleAudioTrack) {
+            if (trackId && !this.hasSingleAudioTrack) {
                 console.debug('scrolling to activated track ', trackId);
                 this.$nextTick(() => {
                     this.scrollToTrack(trackId);
@@ -579,7 +579,7 @@ export default defineComponent({
          */
         tracksDisplayMode() {
             const trackId = this.activeTrackId;
-            if (trackId && !this.isSingleAudioTrack) {
+            if (trackId && !this.hasSingleAudioTrack) {
                 console.debug('scrolling to mode-changed track ', trackId);
                 this.$nextTick(() => {
                     if (trackId != null) {
@@ -638,7 +638,7 @@ export default defineComponent({
         ...mapState(useAppStore, [
             'selectedCueId',
             'activeTrackId',
-            'isSingleAudioTrack',
+            'hasSingleAudioTrack',
         ]),
         ...mapWritableState(useAppStore, ['playbackMode']),
 
