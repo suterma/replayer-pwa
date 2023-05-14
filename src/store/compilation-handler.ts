@@ -15,6 +15,21 @@ import { v4 as uuidv4 } from 'uuid';
  * Provides compilation handling methods
  */
 export default class CompilationHandler {
+    /** Determines whether this is a non-playable (text-only) track
+     */
+    static isTextTrack(track: ITrack): boolean {
+        return !this.isAudioTrack(track);
+    }
+
+    /** Determines whether this is an audio track
+     * @devdoc track types should later be determined by MIME type.
+     * For this, the MIME type should become part of the (readonly) track information,
+     * determined when the track URL is evaluated.
+     */
+    static isAudioTrack(track: ITrack): boolean {
+        return !track.Url.endsWith('.txt');
+    }
+
     /** Shuffles and returns the given tracks, using a deterministic method, based on the given seed */
     static shuffle(
         tracks: ITrack[],

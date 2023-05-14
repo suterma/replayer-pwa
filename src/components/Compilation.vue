@@ -18,15 +18,12 @@
                 vertical: showVertical && isMixable,
             }"
         >
-            <template v-for="(track, index) in tracks" :key="track.Id">
-                <NoticeTrack
-                    v-if="track.Url.endsWith('.txt')"
-                    :id="'track-' + track.Id"
-                    :track="track"
-                >
+            <template v-for="track in textTracks" :key="track.Id">
+                <NoticeTrack :id="'track-' + track.Id" :track="track">
                 </NoticeTrack>
+            </template>
+            <template v-for="(track, index) in tracks" :key="track.Id">
                 <Track
-                    v-else
                     :track="track"
                     :ref="'track-' + track.Id"
                     :id="'track-' + track.Id"
@@ -47,7 +44,7 @@
                         index < (tracks?.length ?? 0) - 1 ||
                         isLoopingPlaybackMode
                     "
-                    :isOnlyTrack="isSingleTrack"
+                    :isOnlyAudioTrack="hasSingleAudioTrack"
                     :isFirst="isFirstTrack(track.Id)"
                     :isLast="isLastTrack(track.Id)"
                     :isAnySoloed="isAnyTrackSoloed"
@@ -414,7 +411,7 @@ export default defineComponent({
 
         updatePlaybackMode(playbackMode: PlaybackMode): void {
             //omit the modes that affect more than one track
-            if (this.isSingleTrack) {
+            if (this.hasSingleAudioTrack) {
                 if (
                     playbackMode === PlaybackMode.LoopCompilation ||
                     playbackMode === PlaybackMode.ShuffleCompilation
@@ -562,11 +559,11 @@ export default defineComponent({
     },
     watch: {
         /** Handle scrolling to the changed active track.
-         * @remarks This is intentionally only invoked on when the active track changes (and it's not the only track).
+         * @remarks This is intentionally only invoked on when the active track changes (and it's not the only audio track).
          * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
          */
         activeTrackId(trackId: string | null) {
-            if (trackId && !this.isSingleTrack) {
+            if (trackId && !this.hasSingleAudioTrack) {
                 console.debug('scrolling to activated track ', trackId);
                 this.$nextTick(() => {
                     this.scrollToTrack(trackId);
@@ -579,7 +576,7 @@ export default defineComponent({
          */
         tracksDisplayMode() {
             const trackId = this.activeTrackId;
-            if (trackId && !this.isSingleTrack) {
+            if (trackId && !this.hasSingleAudioTrack) {
                 console.debug('scrolling to mode-changed track ', trackId);
                 this.$nextTick(() => {
                     if (trackId != null) {
@@ -635,17 +632,14 @@ export default defineComponent({
         },
     },
     computed: {
-        ...mapState(useAppStore, ['selectedCueId', 'activeTrackId']),
+        ...mapState(useAppStore, [
+            'selectedCueId',
+            'activeTrackId',
+            'hasSingleAudioTrack',
+            'textTracks',
+            'audioTracks',
+        ]),
         ...mapWritableState(useAppStore, ['playbackMode']),
-
-        /** Whether this compilation has no more than single track.
-         */
-        isSingleTrack(): boolean {
-            if (this.tracks && this.tracks.length > 1) {
-                return false;
-            }
-            return true;
-        },
 
         /** Whether this compilation has any tracks.
          */
@@ -686,13 +680,11 @@ export default defineComponent({
             return this.tracksDisplayMode === TrackDisplayMode.Mix;
         },
 
-        /** The currently available tracks in the compilation
+        /** The currently available audio tracks in the compilation
          * @remarks The order may also be shuffled, depending on the PlaybackMode
          */
         tracks(): Array<ITrack> | undefined {
-            const tracks = this.compilation?.Tracks as
-                | Array<ITrack>
-                | undefined;
+            const tracks = this.audioTracks as Array<ITrack> | undefined;
             //Deterministically shuffle if required
             if (tracks && this.isTracksShuffled) {
                 return CompilationHandler.shuffle(tracks, this.shuffleSeed);
@@ -700,7 +692,7 @@ export default defineComponent({
             return tracks;
         },
 
-        /** Returns all cues from all tracks in the current compilation */
+        /** Returns all cues from all audio tracks in the current compilation */
         allCues(): Array<ICue> {
             return CompilationHandler.getAllCues(this.tracks);
         },

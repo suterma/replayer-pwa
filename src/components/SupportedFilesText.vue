@@ -39,6 +39,13 @@
                         ><span class="is-family-monospace">.m4a</span>)</span
                     >,&nbsp;for a track.
                 </li>
+                <li>
+                    <span class="has-text-weight-bold">TEXT</span>
+                    <span
+                        >&nbsp;(<span class="is-family-monospace">.txt</span
+                        ><span></span>)</span
+                    >,&nbsp;for additional content.
+                </li>
             </ul>
         </div>
         <p>Compilations, with multiple tracks:</p>
@@ -85,6 +92,10 @@
                     ,&nbsp;
                     <span class="has-text-weight-bold">AAC</span>
                     ,&nbsp;for a track.
+                </li>
+                <li>
+                    <span class="has-text-weight-bold">TEXT</span>
+                    ,&nbsp;for additional content.
                 </li>
                 <li>
                     <span class="has-text-weight-bold">ZIP</span
