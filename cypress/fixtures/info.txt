@@ -1,2 +1,1 @@
 Click a button to play the track from that time position or use the controls at the bottom.
-

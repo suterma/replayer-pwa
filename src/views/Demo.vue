@@ -25,7 +25,7 @@ export default defineComponent({
 
         loadDemo() {
             const url =
-                'https://lib.replayer.app/demo-compilation-featuring-lidija-roos-with-info.rez';
+                'https://lib.replayer.app/demo-compilation-featuring-lidija-roos-with-info.rex';
             console.debug('loadDemo:', url);
             this.loadFromUrl(url);
         },
