@@ -12,7 +12,12 @@
             >
                 <!-- <BaseIcon v-once :path="mdiMusicNotePlus" /> -->
                 <span>Use</span>
-                <MediaSourceIndicator :mediaUrl="mediaUrl" show-size show-type>
+                <MediaSourceIndicator
+                    :mediaUrl="mediaUrl"
+                    :source="fileName"
+                    show-size
+                    show-type
+                >
                 </MediaSourceIndicator>
             </button>
         </p>
@@ -56,7 +61,8 @@ export default defineComponent({
         ...mapActions(useAppStore, ['addDefaultTrack', 'discardMediaUrl']),
 
         addTrack(mediaUrl: MediaUrl): void {
-            const source = mediaUrl.source;
+            console.debug('MediaList::addTrack:source', mediaUrl);
+            const source = mediaUrl.resourceName;
             this.addDefaultTrack(source);
         },
         discard(mediaUrl: MediaUrl): void {
