@@ -22,6 +22,8 @@ to not displace them visually when the border around the single dragged item is 
     background-color: $background;
     border-radius: $radius;
     box-shadow: $shadow;
+    // rotate: (.5deg);
+    // transform-origin: right;
 
     /* keep it above the other items: z-index must be larger than the fixed footer*/
     z-index: 3;
