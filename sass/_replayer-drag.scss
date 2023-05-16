@@ -29,8 +29,7 @@ to not displace them visually when the border around the single dragged item is 
 
 /* dragging content / at the new place */
 [data-draggable='true'][draggable='true'].drag-ghost {
-    // not used, the new place should be shown as empty during the transition
-    border-color: transparent;
+    border-color: $border;
 }
 
 /* ghost image while dragging */

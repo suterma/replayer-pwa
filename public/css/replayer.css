@@ -11589,7 +11589,7 @@ to not displace them visually when the border around the single dragged item is 
 
 /* dragging content / at the new place */
 [data-draggable=true][draggable=true].drag-ghost {
-  border-color: transparent;
+  border-color: #52575c;
 }
 
 /* ghost image while dragging */
