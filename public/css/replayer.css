@@ -11562,6 +11562,41 @@ button.dropdown-item:disabled:hover {
   transform: translateX(32px);
 }
 
+/*************************************************************
+ * Stylings for draggable content
+ * Dragged items should be similar in style as a drop down menu, 
+ * visually appearing above the other content
+ * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
+**************************************************************
+*/
+/* use an invisible border around draggable items, 
+to not displace them visually when the border around the single dragged item is shown*/
+[data-draggable=true] {
+  border-color: transparent;
+  border-width: 1px;
+  border-style: solid;
+}
+
+[data-draggable=true][draggable=true] {
+  /* Like dropdown content*/
+  border-color: #52575c;
+  background-color: #3a3f44;
+  border-radius: 4px;
+  box-shadow: 0 0.5em 1em -0.125em rgb(10, 10, 10), 0 0 0 1px rgba(10, 10, 10, 0.02);
+  /* keep it above the other items: z-index must be larger than the fixed footer*/
+  z-index: 3;
+}
+
+/* dragging content / at the new place */
+[data-draggable=true][draggable=true].drag-ghost {
+  border-color: transparent;
+}
+
+/* ghost image while dragging */
+[data-draggable=true][draggable=true].drag {
+  opacity: 0;
+}
+
 /* Slider (from bulma-slider) without border for the thumb*/
 input[type=range].slider {
   appearance: none;
@@ -12177,16 +12212,6 @@ while also keeping the original with.
 .is-scaled-50 {
   transform: scale(0.5) translate(-50%, -50%);
   width: 200%;
-}
-
-/** **********************************************************
- * Outlines
-**************************************************************
-*/
-.has-outline-dashed-success {
-  outline: dashed #62c462;
-  border-radius: 4px;
-  outline-offset: 4px;
 }
 
 /** **********************************************************

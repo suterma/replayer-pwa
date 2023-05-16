@@ -1,0 +1,40 @@
+@charset "utf-8";
+
+/*************************************************************
+ * Stylings for draggable content
+ * Dragged items should be similar in style as a drop down menu, 
+ * visually appearing above the other content
+ * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there
+**************************************************************
+*/
+
+/* use an invisible border around draggable items, 
+to not displace them visually when the border around the single dragged item is shown*/
+[data-draggable='true'] {
+    border-color: transparent;
+    border-width: 1px;
+    border-style: solid;
+}
+
+[data-draggable='true'][draggable='true'] {
+    /* Like dropdown content*/
+    border-color: $border;
+    background-color: $background;
+    border-radius: $radius;
+    box-shadow: $shadow;
+
+    /* keep it above the other items: z-index must be larger than the fixed footer*/
+    z-index: 3;
+}
+
+/* dragging content / at the new place */
+[data-draggable='true'][draggable='true'].drag-ghost {
+    // not used, the new place should be shown as empty during the transition
+    border-color: transparent;
+}
+
+/* ghost image while dragging */
+[data-draggable='true'][draggable='true'].drag {
+    // not used, the cursor shows already an indicative icon
+    opacity: 0;
+}

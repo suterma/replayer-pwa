@@ -56,71 +56,78 @@
         <h1 class="title is-3" v-if="!printTracksOnNewPage">
             {{ compilation.Title }}
         </h1>
-        <draggable
-            v-model="orderedTracks"
-            @start="drag = true"
-            @end="drag = false"
-            handle=".handle"
-            ghost-class="has-outline-dashed-success"
-            drag-class="has-text-success"
-            item-key="Id"
-            :animation="200"
-            :component-data="{
-                tag: 'div',
-                type: 'transition-group',
-                name: !drag ? 'flip-list' : null,
-            }"
-            data-cy="track-list"
-        >
-            <template #item="{ element, index }">
-                <div class="is-together-print" data-cy="track-list-item">
-                    <!-- When each track is on a new page, also show the compilation each time -->
+        <table class="table is-fullwidth">
+            <draggable
+                v-model="orderedTracks"
+                @start="drag = true"
+                @end="drag = false"
+                handle=".handle"
+                ghost-class="drag-ghost"
+                drag-class="drag"
+                item-key="Id"
+                :animation="200"
+                tag="tbody"
+                :component-data="{
+                    tag: 'tbody',
+                    type: 'transition-group',
+                    name: !drag ? 'flip-list' : null,
+                }"
+                data-cy="track-list"
+            >
+                <template #item="{ element, index }">
+                    <tr class="is-together-print" data-cy="track-list-item">
+                        <td>
+                            <!-- When each track is on a new page, also show the compilation each time -->
 
-                    <h1 class="title is-3" v-if="printTracksOnNewPage">
-                        <span> {{ compilation.Title }}</span>
-                    </h1>
-                    <SetlistItem
-                        :track="element"
-                        :showCues="showCues"
-                        :showMediaSource="showMediaSource"
-                    >
-                        <!-- The track index (as part of the title) -->
-                        <span v-if="showNumbering">{{ index + 1 }})&nbsp;</span>
-                        <template #title-end
-                            ><BaseIcon
-                                class="handle grabbable is-hidden-print"
-                                v-once
-                                :path="mdiDrag"
-                                title="Drag and drop to reorder"
-                                data-cy="drag-handle"
-                        /></template>
-                    </SetlistItem>
+                            <h1 class="title is-3" v-if="printTracksOnNewPage">
+                                <span> {{ compilation.Title }}</span>
+                            </h1>
+                            <SetlistItem
+                                :track="element"
+                                :showCues="showCues"
+                                :showMediaSource="showMediaSource"
+                                class=""
+                            >
+                                <!-- The track index (as part of the title) -->
+                                <span class="mr-2" v-if="showNumbering"
+                                    >{{ index + 1 }})&nbsp;</span
+                                >
+                                <template #title-end
+                                    ><BaseIcon
+                                        class="grabbable handle is-hidden-print"
+                                        v-once
+                                        :path="mdiDrag"
+                                        title="Drag and drop to reorder"
+                                        data-cy="drag-handle"
+                                /></template>
+                            </SetlistItem>
 
-                    <hr />
-                    <template v-if="printTracksOnNewPage">
-                        <!-- Page break indicator (shown on screen, but not visually printed) -->
-                        <span
-                            class="has-text-centered is-size-7 is-unselectable is-hidden-print"
-                            style="
-                                width: 100%;
-                                margin-top: calc(-2.5em - 1px);
-                                position: absolute;
-                            "
-                            ><span
-                                style="background-color: #272b30"
-                                class="pl-2 pr-3"
-                                >Page break</span
-                            ></span
-                        >
-                        <!-- Page break, if requested, but no on last page -->
-                        <div
-                            v-if="!(index + 1 === orderedTracks.length)"
-                            class="has-page-break-after"
-                        ></div>
-                    </template>
-                </div>
-            </template>
-        </draggable>
+                            <template v-if="printTracksOnNewPage">
+                                <!-- Page break indicator (shown on screen, but not visually printed) -->
+                                <span
+                                    class="has-text-centered is-size-7 is-unselectable is-hidden-print"
+                                    style="
+                                        width: 100%;
+                                        margin-top: calc(-2.5em - 1px);
+                                        position: absolute;
+                                    "
+                                    ><span
+                                        style="background-color: #272b30"
+                                        class="pl-2 pr-3"
+                                        >Page break</span
+                                    ></span
+                                >
+                                <!-- Page break, if requested, but no on last page -->
+                                <div
+                                    v-if="!(index + 1 === orderedTracks.length)"
+                                    class="has-page-break-after"
+                                ></div>
+                            </template>
+                        </td>
+                    </tr>
+                </template>
+            </draggable>
+        </table>
     </div>
 </template>
 
@@ -155,18 +162,22 @@ export default defineComponent({
             /** Whether to show the media source */
             showMediaSource: false,
             /** Whether to show the media source */
-            showNumbering: true,
+            showNumbering: false,
             /** Icons from @mdi/js */
             mdiDrag: mdiDrag,
             mdiPrinterOutline: mdiPrinterOutline,
         };
     },
     computed: {
-        ...mapState(useAppStore, ['compilation', 'hasCompilation']),
+        ...mapState(useAppStore, [
+            'compilation',
+            'hasCompilation',
+            'audioTracks',
+        ]),
 
         orderedTracks: {
             get(): ITrack[] {
-                return this.compilation.Tracks;
+                return this.audioTracks;
             },
             set(value: ITrack[]) {
                 const orderedTrackIds = value.map((item) => item.Id);
