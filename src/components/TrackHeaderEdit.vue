@@ -40,7 +40,6 @@
                                 type="text"
                                 placeholder="Track name"
                                 title="Track name"
-                                focus
                                 data-cy="track-name"
                             />
                         </p>

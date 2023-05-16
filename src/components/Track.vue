@@ -187,6 +187,7 @@
                         <div class="level-item is-justify-content-flex-start">
                             <div class="buttons has-addons mb-0">
                                 <PlayPauseButton
+                                    v-focus
                                     :disabled="!canPlay"
                                     class="is-success mb-0"
                                     :isPlaying="isPlaying"
