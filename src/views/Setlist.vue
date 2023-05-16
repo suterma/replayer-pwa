@@ -108,7 +108,7 @@
                                     class="has-text-centered is-size-7 is-unselectable is-hidden-print"
                                     style="
                                         width: 100%;
-                                        margin-top: calc(-2.5em - 1px);
+                                        margin-top: -2px;
                                         position: absolute;
                                     "
                                     ><span
