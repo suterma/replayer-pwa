@@ -214,8 +214,12 @@ const cueTitle = computed(() => {
 });
 
 /** The text for this cue, usable as label
+ * @remarks Minified cues never have a text, to save spaces
  */
 const cueText = computed(() => {
+    if (props.minified) {
+        return '';
+    }
     if (props.description) {
         return props.description;
     } else if (props.time != undefined) {
