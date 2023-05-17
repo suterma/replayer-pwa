@@ -35,7 +35,7 @@
                     <input
                         :disabled="disabled"
                         class="slider is-fullwidth is-small is-slim is-circle is-warning"
-                        step="stepSize"
+                        :step="stepSize"
                         min="0"
                         id=""
                         :max="trackDuration ?? 0"
