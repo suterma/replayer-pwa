@@ -13,6 +13,7 @@
             title="Adjusts the cue time to the current playback time"
             @click="$emit('adjustCue')"
             :ref="clickRef"
+            data-cy="adjust-cue"
         >
             <BaseIcon
                 :path="isSelectedCue ? mdiTimerPlay : mdiTimerPlayOutline"

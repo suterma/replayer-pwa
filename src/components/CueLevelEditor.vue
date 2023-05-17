@@ -65,6 +65,7 @@
                             <AdjustCueButton
                                 @adjustCue="adjustTime()"
                                 :isSelectedCue="isCueSelected"
+                                data-cy="adjust-cue"
                             ></AdjustCueButton>
                         </div>
                     </div>

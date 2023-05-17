@@ -194,6 +194,7 @@
                                     :isLoading="isFading"
                                     @click="skipToPlayPause()"
                                     title="Play from current position"
+                                    data-cy="toggle-playback"
                                 />
                                 <CreateCueButton
                                     :disabled="!canPlay"
@@ -201,6 +202,7 @@
                                     :isActiveTrack="isActiveTrack"
                                     :currentSeconds="currentSeconds"
                                     @createNewCue="createNewCue()"
+                                    data-cy="insert-cue"
                                 ></CreateCueButton>
                             </div>
                         </div>

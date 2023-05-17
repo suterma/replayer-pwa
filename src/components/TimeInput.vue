@@ -9,6 +9,7 @@
         @input="debouncedHandler($event)"
         placeholder="time [seconds]"
         size="5"
+        data-cy="input-cue-position"
     />
 </template>
 

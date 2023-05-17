@@ -15,6 +15,7 @@
             :ref="clickRef"
             title="Add a cue now (at the current playback time)!"
             :disabled="disabled"
+            data-cy="insert-cue"
         >
             <BaseIcon v-once :path="mdiPlus" />
             <!-- On large screens also show an indicative text -->
