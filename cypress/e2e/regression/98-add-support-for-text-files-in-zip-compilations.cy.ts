@@ -4,16 +4,12 @@ describe('loading and displaying of text content with the issue "98-add-support-
 
     it('shows the contained text note in the demo', () => {
         cy.loadDemo();
-        cy.get('[data-cy="notice-track"]')
-            .contains('Click on a button')
-            .click();
+        cy.get('[data-cy="notice-track"]').contains('Click a button').click();
     });
 
     it('shows the text note after loading a text file', () => {
         cy.loadFile('cypress/fixtures/info.txt');
-        cy.get('[data-cy="notice-track"]')
-            .contains('Click on a button')
-            .click();
+        cy.get('[data-cy="notice-track"]').contains('Click a button').click();
     });
 
     it('shows the text note after loading an URL', () => {
@@ -26,16 +22,12 @@ describe('loading and displaying of text content with the issue "98-add-support-
     it('shows the text note also after an app reload', () => {
         // Arrange
         cy.loadFile('cypress/fixtures/info.txt');
-        cy.get('[data-cy="notice-track"]')
-            .contains('Click on a button')
-            .click();
+        cy.get('[data-cy="notice-track"]').contains('Click a button').click();
 
         // Act
         cy.reload();
 
         // Assert
-        cy.get('[data-cy="notice-track"]')
-            .contains('Click on a button')
-            .click();
+        cy.get('[data-cy="notice-track"]').contains('Click a button').click();
     });
 });
