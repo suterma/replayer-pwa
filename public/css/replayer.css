@@ -12285,6 +12285,17 @@ while also keeping the original with.
   background-color: transparent;
 }
 
+/* Tables have always the first and last border line */
+.table tbody tr:first-child td,
+.table tbody tr:first-child th {
+  border-top: 1px solid #52575c;
+}
+
+.table tbody tr:last-child td,
+.table tbody tr:last-child th {
+  border-bottom: 1px solid #52575c;
+}
+
 /* Headings should have a fixed color, not changing on hover */
 .heading {
   color: #aaa;

@@ -207,6 +207,19 @@ while also keeping the original with.
     background-color: transparent;
 }
 
+/* Tables have always the first and last border line */
+
+.table tbody tr:first-child td,
+.table tbody tr:first-child th {
+    border-top: $table-cell-border;
+}
+
+.table tbody tr:last-child td,
+.table tbody tr:last-child th {
+    border-bottom: $table-cell-border;
+}
+
+
 /* Headings should have a fixed color, not changing on hover */
 .heading {
     color: $text;
