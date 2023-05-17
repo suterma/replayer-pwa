@@ -104,7 +104,7 @@ describe('testing the issue "71-a-zip-without-a-compilation-does-not-create-defa
     });
 
     it('should not add a default track when loading an XML compilation', () => {
-        cy.loadFile('cypress/fixtures/2-track-compilation-for-tests.rex');
+        cy.loadFile('cypress/fixtures/2-tracks-with-anechoic-voices.rex');
         cy.visit('/#edit');
 
         // ASSERT that there is just the expected amount of tracks (no additional default track)

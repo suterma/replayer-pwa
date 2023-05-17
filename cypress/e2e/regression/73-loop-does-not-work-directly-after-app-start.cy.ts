@@ -75,13 +75,12 @@ describe('testing the issue "Loop does not work directly after app start #73" fo
 
     it('should loop for the "loop compilation" play mode', () => {
         // ARRANGE (load 2-track compilation and start playback)
-        cy.loadFile('cypress/fixtures/2-track-compilation-for-tests.rex');
+        cy.loadFile('cypress/fixtures/2-tracks-with-anechoic-voices.rex');
         cy.get('button[data-cy="toggle-playback"]')
             .eq(1 /*second track*/)
             .click();
-        // ARRANGE (set cue track play mode)
+        // ARRANGE (set loop compilation play mode)
         cy.get('.button[data-cy="toggle-playback-mode"]')
-            .click()
             .click()
             .click()
             .click()
@@ -90,14 +89,14 @@ describe('testing the issue "Loop does not work directly after app start #73" fo
         // ACT (go to the ending and wait for a move to the subsequent track)
         cy.get('input[type=range]')
             .as('range')
-            .invoke('val', 58)
+            .invoke('val', 2)
             .trigger('change');
         cy.wait(4000);
 
-        // ASSERT (that the first track was selected)
+        // ASSERT (that the first track was selected next)
         cy.get('nav#media-player [data-cy="track-name"]').should(
             'have.text',
-            'Voice_anechoic_male',
+            'female',
         );
     });
 });
