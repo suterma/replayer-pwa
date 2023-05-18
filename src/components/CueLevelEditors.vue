@@ -13,6 +13,7 @@
             :percentComplete="percentComplete(cue)"
             @click="cueClick(cue)"
             @play="cuePlay(cue)"
+            @adjust="cueAdjust(cue)"
         />
     </template>
 </template>
@@ -23,7 +24,7 @@ import { ICue, PlaybackMode } from '@/store/compilation-types';
 import CompilationHandler from '@/store/compilation-handler';
 import CueLevelEditor from '@/components/CueLevelEditor.vue';
 import { useAppStore } from '@/store/app';
-import { mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 
 /** An set of Editors for for cues in a track.
  */
@@ -67,6 +68,8 @@ export default defineComponent({
     },
 
     methods: {
+        ...mapActions(useAppStore, ['updateCueData']),
+
         /** Handles the click event of the cue button */
         cueClick(cue: ICue) {
             this.$emit('click', cue);
@@ -75,6 +78,20 @@ export default defineComponent({
         /** Handles the play event of the cue button */
         cuePlay(cue: ICue) {
             this.$emit('play', cue);
+        },
+
+        /** Adjusts the time of the cue to the current playback time */
+        cueAdjust(cue: ICue) {
+            if (
+                this.currentSeconds !== undefined &&
+                Number.isFinite(this.currentSeconds)
+            ) {
+                const time = CompilationHandler.roundTime(this.currentSeconds);
+                const cueId = cue.Id;
+                const shortcut = cue.Shortcut;
+                const description = cue.Description;
+                this.updateCueData(cueId, description, shortcut, time);
+            }
         },
 
         /** Determines whether this cue is currently selected

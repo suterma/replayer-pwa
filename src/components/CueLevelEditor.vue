@@ -63,7 +63,7 @@
                         </p>
                         <div class="control is-hidden-mobile">
                             <AdjustCueButton
-                                @adjustCue="adjustTime()"
+                                @adjustCue="$emit('adjust')"
                                 :isSelectedCue="isCueSelected"
                                 data-cy="adjust-cue"
                             ></AdjustCueButton>
@@ -126,7 +126,6 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { Cue, PlaybackMode } from '@/store/compilation-types';
-import CompilationHandler from '@/store/compilation-handler';
 import CueButton from '@/components/buttons/CueButton.vue';
 import AdjustCueButton from '@/components/buttons/AdjustCueButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
@@ -156,7 +155,7 @@ export default defineComponent({
         TimeInput,
         IfMedia,
     },
-    emits: ['click', 'play'],
+    emits: ['click', 'play', 'adjust'],
     props: {
         cue: {
             type: Cue,
@@ -166,11 +165,6 @@ export default defineComponent({
             type: Boolean,
             required: false,
         },
-
-        /** The playback progress in the current track, in [seconds]
-         * @remarks This is used to update cue positions
-         */
-        currentSeconds: Number,
 
         /** The playback progress within this cue, in [percent], or null if not applicable
          * @remarks This value is only used when both the cue is not ahead nor has passed.
@@ -249,19 +243,6 @@ export default defineComponent({
                 this.$emit('play');
             }
         },
-        /** Adjusts the time of the cue to the current playback time */
-        adjustTime() {
-            if (
-                this.currentSeconds !== undefined &&
-                Number.isFinite(this.currentSeconds)
-            ) {
-                const time = CompilationHandler.roundTime(this.currentSeconds);
-                const cueId = this.cue.Id;
-                const shortcut = this.cue.Shortcut;
-                const description = this.cue.Description;
-                this.updateCueData(cueId, description, shortcut, time);
-            }
-        },
         /** Updates the set cue shortcut */
         updateShortcut(event: Event) {
             const cueId = this.cue.Id;
@@ -270,6 +251,7 @@ export default defineComponent({
             const shortcut = (event.target as HTMLInputElement).value;
             this.updateCueData(cueId, description, shortcut, time);
         },
+
         /** Handles the click event of the cue button */
         cueClick() {
             this.$emit('click');
