@@ -47,6 +47,11 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
      */
     const applyFadeInOffset = useLocalStorage('applyFadeInOffset', true);
 
+    /** The default duration for a pre-roll for play operations
+     * @remarks Default is zero
+     */
+    const defaultPreRollDuration = useLocalStorage('defaultPreRollDuration', 0);
+
     /** Whether to show the audio level meter
      * @remarks Default is true
      */
@@ -90,6 +95,7 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
         fadeInDuration.value = 1000;
         fadeOutDuration.value = 500;
         applyFadeInOffset.value = true;
+        defaultPreRollDuration.value = 0;
         showLevelMeter.value = true;
         keyboardShortcutTimeout.value = 1000;
         timeFormat.value = TimeFormat.Iso8601Extended;
@@ -103,6 +109,7 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
         fadeInDuration,
         fadeOutDuration,
         applyFadeInOffset,
+        defaultPreRollDuration,
         showLevelMeter,
         keyboardShortcutTimeout,
         timeFormat,

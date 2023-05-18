@@ -228,6 +228,13 @@ const props = defineProps({
         required: false,
     },
 
+    /** The default Pre-roll duration in [milliseconds]. Use zero for no default pre-roll.
+     */
+    defaultPreRollDuration: {
+        type: Number,
+        required: true,
+    },
+
     /** Whether to show the audio level meter
      * @remarks Default is true
      */
@@ -753,10 +760,8 @@ async function play(): Promise<void> {
 
                 assertRunningAudioContext();
 
-                //Just BEFORE playback, apply the possible pre-play transport
-                if (props.applyFadeInOffset && props.fadeInDuration) {
-                    applyPreFadeInOffset();
-                }
+                //Just BEFORE playback, apply the possible pre-roll
+                applyPreRoll();
 
                 audioElement.value
                     .play()
@@ -776,12 +781,22 @@ async function play(): Promise<void> {
     }
 }
 
-/** Applies an offset to compensate fade-in durations
+/** Applies an offset according to required pre-roll and compensating for fade-in durations
  * @remarks At the beginning of tracks, the offset is cut off at zero.
  */
-function applyPreFadeInOffset(): void {
+function applyPreRoll(): void {
+    // The offset, in seconds
+    let offset = 0;
+
+    if (props.applyFadeInOffset && props.fadeInDuration) {
+        offset = offset + props.fadeInDuration / 1000;
+    }
+
+    if (props.defaultPreRollDuration) {
+        offset = offset + props.defaultPreRollDuration / 1000;
+    }
+
     const time = audioElement.value.currentTime;
-    const offset = props.fadeInDuration / 1000;
     const target = Math.max(0, time - offset);
     audioElement.value.currentTime = target;
 }

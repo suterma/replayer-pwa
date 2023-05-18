@@ -297,6 +297,7 @@
                 @ended="$emit('trackEnded')"
                 @loopedTo="$emit('trackLoopedTo', $event)"
                 :fadeInDuration="fadeInDuration"
+                :defaultPreRollDuration="defaultPreRollDuration"
                 :fadeOutDuration="fadeOutDuration"
                 :applyFadeInOffset="applyFadeInOffset"
                 :showLevelMeter="showLevelMeter && isMix"
@@ -1192,6 +1193,7 @@ export default defineComponent({
             'fadeInDuration',
             'fadeOutDuration',
             'applyFadeInOffset',
+            'defaultPreRollDuration',
             'showLevelMeter',
             'keyboardShortcutTimeout',
             'experimentalShowPositionInTrackHeader',

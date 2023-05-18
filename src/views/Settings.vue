@@ -75,6 +75,47 @@
         <div class="box">
             <h3 class="subtitle">Audio</h3>
 
+            <!-- Default pre-roll duration -->
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label"
+                            >Default pre-roll duration
+                            <span class="has-opacity-half is-size-7">
+                                (For play operations)</span
+                            >
+                        </label>
+                        <div class="control">
+                            <div class="select">
+                                <select v-model.number="defaultPreRollDuration">
+                                    <option v-bind:value="0">
+                                        no pre-roll
+                                    </option>
+                                    <option v-bind:value="667">
+                                        0.66 seconds (1 beat @ 90 BPM)
+                                    </option>
+                                    <option v-bind:value="1333">
+                                        1.33 seconds (2 beats @ 90 BPM)
+                                    </option>
+                                    <option v-bind:value="2000">
+                                        2.00 seconds (3 beats @ 90 BPM)
+                                    </option>
+                                    <option v-bind:value="2667">
+                                        2.66 seconds (4 beats @ 90 BPM)
+                                    </option>
+                                    <option v-bind:value="4000">
+                                        4.00 seconds (6 beats @ 90 BPM)
+                                    </option>
+                                    <option v-bind:value="5333">
+                                        5.33 seconds (8 beats @ 90 BPM)
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Fading durations, with two columns -->
             <div class="columns">
                 <div class="column">
@@ -165,10 +206,10 @@
                 <div class="control">
                     <label class="checkbox">
                         <input type="checkbox" v-model="applyFadeInOffset" />
-                        Apply an offset before fade-in operations
+                        Add fade-in to pre-roll
                         <span class="has-opacity-half is-size-7">
-                            (The offset compensates for the fade-in
-                            duration)</span
+                            (The additional pre-roll time compensates for the
+                            fade-in duration)</span
                         >
                     </label>
                 </div>
@@ -273,6 +314,7 @@ const {
     fadeInDuration,
     fadeOutDuration,
     applyFadeInOffset,
+    defaultPreRollDuration,
     showLevelMeter,
     keyboardShortcutTimeout,
     timeFormat,
