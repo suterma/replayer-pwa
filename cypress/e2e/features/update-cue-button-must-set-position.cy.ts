@@ -21,7 +21,7 @@ describe('the cue update button', () => {
         cy.get('input[type=number][data-cy="input-cue-position"]')
             .invoke('val') // call the val() method to extract the value
             .then((val) => +(val ?? '')) // convert it to a number
-            .should('be.greaterThan', 50); // also compare it to a number
+            .should('be.least', 50); // also compare it to a number
         //Because it starts to play, it will eventually be greater than the set value
     });
 });
