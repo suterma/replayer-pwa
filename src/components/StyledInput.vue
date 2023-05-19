@@ -21,7 +21,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-/** A text input, which has a dedicated edit icon.
+/** A text input that accepts fallthrough attributes like class, etc.
  * @remarks Provides a slot for a prefix content
  */
 export default defineComponent({
@@ -34,8 +34,7 @@ export default defineComponent({
             type: String,
             default: undefined,
         },
-        /** The placeholder to show in edit mode, when empty
-         */
+
         placeholder: {
             type: String,
             default: undefined,
@@ -56,4 +55,3 @@ export default defineComponent({
     },
 });
 </script>
-<style scoped></style>

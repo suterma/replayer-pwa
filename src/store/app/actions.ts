@@ -151,6 +151,19 @@ export const actions = {
         }
     },
 
+    /** Updates the track beats per minute
+     * @remarks Also updates the persistent store of the compilation
+     */
+    updateTrackBeatsPerMinute(trackId: string, beatsPerMinute: number | null): void {
+        const track = CompilationHandler.getTrackById(
+            state.compilation.value.Tracks,
+            trackId,
+        );
+        if (track) {
+            track.BeatsPerMinute = beatsPerMinute;
+        }
+    },
+
     /** Updates the cue data
      * @remarks Also updates the persistent store of the compilation
      */

@@ -35,6 +35,7 @@
             :trackId="track.Id"
             :trackName="track.Name"
             :trackUrl="track.Url"
+            :trackBeatsPerMinute="track.BeatsPerMinute"
             :trackArtist="track.Artist"
             :trackAlbum="track.Album"
             :isPlaying="isPlaying"

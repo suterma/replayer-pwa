@@ -102,6 +102,7 @@ export default class CompilationHandler {
             artist,
             album,
             0,
+            null,
             trackUrl,
             trackId,
             new Array<ICue>(),

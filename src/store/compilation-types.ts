@@ -95,8 +95,14 @@ export interface ITrack {
      */
     Album: string;
 
-    /** The measure in beats per minute (Zero for no value). */
+    /** The measure in beats per minute (Zero for no value).
+     * @deprecated This value is deprecated
+     */
     Measure: number;
+
+    /** The tempo in beats per minute
+     */
+    BeatsPerMinute: number | null;
 
     /** The URL or the local file name (possibly including a path) for the media file.
      * @devdoc If it is relative, it may get made absolute using the compilation's media path.
@@ -184,6 +190,7 @@ export class Compilation implements ICompilation {
                     track.Album,
                     track.Artist,
                     track.Measure,
+                    track.BeatsPerMinute,
                     track.Url,
                     track.Id,
                     track.Cues.map((cue) => {
@@ -233,6 +240,7 @@ export class Track implements ITrack {
     Album = '';
     Artist = '';
     Measure = 0;
+    BeatsPerMinute: number | null = null;
     Url = '';
     Id = '';
     Cues: Array<ICue> = new Array<ICue>();
@@ -253,6 +261,7 @@ export class Track implements ITrack {
         album: string,
         artist: string,
         measure: number,
+        beatsPerMinute: number | null,
         url: string,
         id: string,
         cues: Array<ICue>,
@@ -263,6 +272,7 @@ export class Track implements ITrack {
         this.Album = album;
         this.Artist = artist;
         this.Measure = measure;
+        this.BeatsPerMinute = beatsPerMinute;
         this.Url = url;
         this.Id = id;
         this.Cues = cues;
@@ -282,6 +292,7 @@ export class Track implements ITrack {
             obj.Album,
             obj.Artist,
             obj.Measure,
+            obj.BeatsPerMinute,
             obj.Url,
             obj.Id,
             obj.Cues,

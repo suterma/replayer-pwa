@@ -108,6 +108,27 @@
                         </p>
                     </div>
                 </div>
+                <!-- BPM -->
+                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                    <div class="field">
+                        <p class="control">
+                            <BpmEditor
+                                class="input"
+                                :modelValue="trackBeatsPerMinute"
+                                @change="
+                                    updateBeatsPerMinute($event.target.value)
+                                "
+                                placeholder="Beats per minute"
+                                title="Beats per minute"
+                            >
+                                <span
+                                    class="has-opacity-half mr-2 is-single-line"
+                                    >Tempo</span
+                                ></BpmEditor
+                            >
+                        </p>
+                    </div>
+                </div>
             </template>
             <template v-else>
                 <!-- Title -->
@@ -176,10 +197,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
 import StyledInput from '@/components/StyledInput.vue';
+import BpmEditor from '@/components/editor/BpmEditor.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
@@ -187,10 +209,10 @@ import { mdiAlert } from '@mdi/js';
 import { TrackDisplayMode } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import TrackTitleName from './TrackTitleName.vue';
-import { mapActions } from 'pinia';
+import { mapActions, mapWritableState } from 'pinia';
 import { useAppStore } from '@/store/app';
 
-/** A header for editing track metadata
+/** A header for editing "beats per minute" track metadata
  */
 export default defineComponent({
     name: 'TrackHeaderEdit',
@@ -203,6 +225,7 @@ export default defineComponent({
         BaseIcon,
         ArtistInfo,
         TrackTitleName,
+        BpmEditor,
     },
     emits: ['update:isExpanded', 'click'],
     props: {
@@ -225,6 +248,10 @@ export default defineComponent({
         trackUrl: {
             type: String,
             required: true,
+        },
+        trackBeatsPerMinute: {
+            type: null as unknown as PropType<number | null>,
+            default: null,
         },
         /** Whether this track is to be considered as the active track */
         isActive: {
@@ -310,7 +337,10 @@ export default defineComponent({
         }
     },
     methods: {
-        ...mapActions(useAppStore, ['updateTrackData']),
+        ...mapActions(useAppStore, [
+            'updateTrackData',
+            'updateTrackBeatsPerMinute',
+        ]),
 
         /** Toggles the expansion state
          */
@@ -346,6 +376,11 @@ export default defineComponent({
             const artist = this.trackArtist;
             this.updateTrackData(trackId, name, artist, album);
         },
+        /** Updates the beats per minute */
+        updateBeatsPerMinute(beatsPerMinute: number | null) {
+            const trackId = this.trackId;
+            this.updateTrackBeatsPerMinute(trackId, beatsPerMinute);
+        },
     },
     watch: {
         /** Updates the expanded state according to the active state. */
@@ -360,6 +395,8 @@ export default defineComponent({
         isEditMode(): boolean {
             return this.displayMode === TrackDisplayMode.Edit;
         },
+
+        ...mapWritableState(useAppStore, ['compilation']),
     },
 });
 </script>
