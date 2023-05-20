@@ -112,6 +112,13 @@
                     ></TimeDisplay>
                 </Experimental>
 
+                <span
+                    v-if="!isEditable"
+                    class="is-size-7 level-item is-narrow is-hidden-mobile"
+                >
+                    <span>{{ track.BeatsPerMinute }}&nbsp;BPM</span>
+                </span>
+
                 <!-- NOTE: In edit mode, the time is displayed as part of the transport area, not in the header -->
                 <!-- NOTE: In mix mode, the time display is not needed on individual tracks -->
                 <TimeDisplay
