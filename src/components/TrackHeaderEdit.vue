@@ -109,14 +109,17 @@
                     </div>
                 </div>
                 <!-- BPM -->
-                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                <div class="level-item is-flex-shrink-1">
                     <div class="field">
                         <p class="control">
                             <BpmEditor
                                 class="input"
                                 :modelValue="trackBeatsPerMinute"
                                 @change="
-                                    updateBeatsPerMinute($event.target.value)
+                                    updateTrackBeatsPerMinute(
+                                        trackId,
+                                        $event.target.value,
+                                    )
                                 "
                                 placeholder="Beats per minute"
                                 title="Beats per minute"
@@ -375,11 +378,6 @@ export default defineComponent({
             const name = this.trackName;
             const artist = this.trackArtist;
             this.updateTrackData(trackId, name, artist, album);
-        },
-        /** Updates the beats per minute */
-        updateBeatsPerMinute(beatsPerMinute: number | null) {
-            const trackId = this.trackId;
-            this.updateTrackBeatsPerMinute(trackId, beatsPerMinute);
         },
     },
     watch: {

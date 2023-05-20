@@ -2,6 +2,7 @@
     <slot></slot>
     <!-- Let the attributes fall through the input element: -->
     <input
+        class="bpm"
         v-bind="$attrs"
         type="number"
         inputmode="numeric"
@@ -46,4 +47,8 @@ const vModel = computed<number | null>({
     },
 });
 </script>
-<style lang="scss"></style>
+<style lang="scss">
+input.bpm {
+    width: 8ch;
+}
+</style>

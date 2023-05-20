@@ -62,6 +62,50 @@
             </ul>
         </div>
 
+        <h2 class="subtitle has-text-danger">Bindings</h2>
+        <div class="field">
+            <label class="label">Selected Cue Id ({{ selectedCueId }})</label>
+            <div class="control">
+                <input
+                    class="input"
+                    type="text"
+                    v-model="selectedCueId"
+                    placeholder="Selected Cue Id"
+                />
+            </div>
+        </div>
+        <div
+            class="field"
+            v-if="compilation.Tracks[0] && compilation.Tracks[0].Cues[0]"
+        >
+            <label class="label"
+                >Description of first cue of first track ({{
+                    firstCueOfFirstTrack
+                }})</label
+            >
+            <div class="control">
+                <input
+                    class="input"
+                    type="text"
+                    v-model="compilation.Tracks[0].Cues[0].Description"
+                    placeholder="Description of first cue of first track"
+                />
+            </div>
+        </div>
+        <div class="field" v-if="compilation.Tracks[0]">
+            <label class="label"
+                >BPM of first track ({{ bpmOfFirstTrack }})</label
+            >
+            <div class="control">
+                <input
+                    class="input"
+                    type="text"
+                    v-model="compilation.Tracks[0].BeatsPerMinute"
+                    placeholder="BPM of first track"
+                />
+            </div>
+        </div>
+
         <h2 class="subtitle has-text-danger">
             Loader component with various compilations
         </h2>
@@ -189,7 +233,7 @@ import {
     rTrackRepeatOnce,
 } from '@/components/icons/BaseIcon.vue';
 import { useAppStore } from '@/store/app';
-import { mapState } from 'pinia';
+import { mapState, mapWritableState } from 'pinia';
 
 export default defineComponent({
     name: 'Development',
@@ -234,7 +278,15 @@ export default defineComponent({
         },
     },
     computed: {
-        ...mapState(useAppStore, ['compilation', 'hasCompilation']),
+        ...mapState(useAppStore, ['hasCompilation']),
+        ...mapWritableState(useAppStore, ['compilation', 'selectedCueId']),
+        firstCueOfFirstTrack(): string | null {
+            return this.compilation?.Tracks[0]?.Cues[0]?.Description ?? null;
+        },
+
+        bpmOfFirstTrack(): number | null {
+            return this.compilation.Tracks[0]?.BeatsPerMinute ?? null;
+        },
     },
 });
 </script>
