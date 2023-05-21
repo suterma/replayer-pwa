@@ -14,6 +14,7 @@
             :playbackMode="playbackMode"
             hasAddonsRight
             virtual
+            showText
             :isCueSelected="isCueSelected(prefixCue)"
             :hasCuePassed="hasCuePassed(prefixCue)"
             :isCueAhead="isCueAhead(prefixCue)"
@@ -35,6 +36,7 @@
                 :isTrackPlaying="isTrackPlaying"
                 :playbackMode="playbackMode"
                 hasAddonsRight
+                showText
                 :isCueSelected="isCueSelected(cue)"
                 :hasCuePassed="hasCuePassed(cue)"
                 :isCueAhead="isCueAhead(cue)"

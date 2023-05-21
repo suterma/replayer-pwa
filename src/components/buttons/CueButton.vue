@@ -189,9 +189,12 @@ const props = defineProps({
         required: true,
     },
     /** Whether the button is shown in a minified, single-line, icon only, variant.
-     * @remarks This is currently used for the edit mode.
      */
     minified: Boolean,
+
+    /** Whether a text based on the description or time is shown on the button.
+     */
+    showText: Boolean,
     /** Whether the button has addons at it's right side. This determines progress bar styling.
      * @remarks This can be used when the button is part of a button group.
      * @remarks The progress bar radius at the right side must be removed for fully progressed cues.
@@ -217,7 +220,7 @@ const cueTitle = computed(() => {
  * @remarks Minified cues never have a text, to save spaces
  */
 const cueText = computed(() => {
-    if (props.minified) {
+    if (!props.showText) {
         return '';
     }
     if (props.description) {
