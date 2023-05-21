@@ -27,7 +27,7 @@
         <!-- Each track is an item in a list and contains all the cues -->
         <!-- Track header for editing, including artist info, expansion-toggler and adaptive spacing -->
         <!-- NOTE: The @click handler on the header component only handles clicks on otherwise non-interactive elements -->
-        <TrackHeaderEdit
+        <TrackHeader
             :displayMode="displayMode"
             :isExpanded="isExpanded"
             @update:isExpanded="updateIsExpanded"
@@ -141,7 +141,7 @@
                     @update:modelValue="updateVolume"
                 />
             </template>
-        </TrackHeaderEdit>
+        </TrackHeader>
 
         <!-- The buttons field (for a single track in play mode) -->
         <div
@@ -545,7 +545,7 @@ import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
 import Experimental from '@/components/Experimental.vue';
 import { MediaUrl } from '@/store/types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
-import TrackHeaderEdit from '@/components/TrackHeaderEdit.vue';
+import TrackHeader from '@/components/TrackHeader.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';
 import CueButtonsField from '@/components/CueButtonsField.vue';
 import MediaControlsBar from '@/components/MediaControlsBar.vue';
@@ -584,7 +584,7 @@ export default defineComponent({
         TrackAudioApiPlayer,
         ReplayerEventHandler,
         Experimental,
-        TrackHeaderEdit,
+        TrackHeader,
         PlayPauseButton,
         TimeDisplay,
         CreateCueButton,

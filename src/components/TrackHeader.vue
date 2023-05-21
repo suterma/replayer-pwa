@@ -218,7 +218,7 @@ import { useAppStore } from '@/store/app';
 /** A header for editing "beats per minute" track metadata
  */
 export default defineComponent({
-    name: 'TrackHeaderEdit',
+    name: 'TrackHeader',
     components: {
         MediaEdit,
         PlaybackIndicator,
