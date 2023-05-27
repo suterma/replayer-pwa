@@ -1,29 +1,45 @@
 <template>
     <CollapsibleButton
-        v-if="!hideExpandedButton || !isExpanded"
+        v-show="!hideButton"
         class="is-nav"
-        v-model="isExpanded"
+        :modelValue="modelValue"
+        @update:modelValue="(value) => emit('update:modelValue', value)"
         collapsedText="Click to expand "
         expandedText="Click to collapse"
+        :iconPath="iconPath"
         ><span><slot name="caption"></slot></span
     ></CollapsibleButton>
-    <template v-if="isExpanded"><slot></slot></template>
+    <template v-if="modelValue"><slot></slot></template>
 </template>
 <script setup lang="ts">
 /** A panel with an expander button that controls the expansion state of the slotted content.
  * @remarks the v-if directive is used, completely omitting collapsed content, if not displayed.
  */
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
-import { ref, defineProps } from 'vue';
+import {} from 'vue';
+import { mdiChevronDown } from '@mdi/js';
 
+// eslint-disable-next-line no-undef
 defineProps({
-    /** Hides the toggle button in the expanded state */
-    hideExpandedButton: {
+    /** The icon to use, which is a chevron by default
+     */
+    iconPath: {
+        type: String,
+        default: mdiChevronDown,
+    },
+    /** Whether this represents the expanded state. */
+    modelValue: {
         type: Boolean,
-        required: false,
+        default: false,
+    },
+
+    /** Whether the toggler button is not hidden. Default is false (toggler button is shown). */
+    hideButton: {
+        type: Boolean,
         default: false,
     },
 });
 
-const isExpanded = ref(false);
+// eslint-disable-next-line no-undef
+const emit = defineEmits(['update:modelValue']);
 </script>

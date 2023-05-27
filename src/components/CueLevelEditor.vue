@@ -65,7 +65,6 @@
                             <AdjustCueButton
                                 @adjustCue="$emit('adjust')"
                                 :isSelectedCue="isCueSelected"
-                                data-cy="adjust-cue"
                             ></AdjustCueButton>
                         </div>
                     </div>

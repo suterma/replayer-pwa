@@ -31,16 +31,14 @@
                         </p>
                     </div>
                 </div>
-                <CollapsiblePanel :hideExpandedButton="true">
+                <CloakedPanel>
                     <template #caption
                         ><span class="has-opacity-half"
                             >Artist / Album</span
                         ></template
                     >
-                    <!-- Artist Info (completely hidden on mobile, thus not editable there. 
-                NOTE: It's also not shown in the play view on mobile anyways) -->
                     <!-- Artist -->
-                    <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                    <div class="level-item is-flex-shrink-3">
                         <div class="field">
                             <p class="control">
                                 <StyledInput
@@ -62,7 +60,7 @@
                     </div>
 
                     <!-- Album -->
-                    <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                    <div class="level-item is-flex-shrink-3">
                         <div class="field">
                             <p class="control">
                                 <StyledInput
@@ -82,7 +80,7 @@
                             </p>
                         </div>
                     </div>
-                </CollapsiblePanel>
+                </CloakedPanel>
             </template>
             <template v-else>
                 <!-- Display in non-edit view -->
@@ -95,7 +93,7 @@
                         <template v-else>&nbsp;</template>
                     </span>
                 </div>
-                <div class="level-item is-hidden-mobile">
+                <div class="level-item">
                     <p class="is-size-7">
                         <ArtistInfo
                             :album="compilation.Album"
@@ -120,11 +118,12 @@
 import { defineComponent } from 'vue';
 import { Compilation } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
-import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
+import CloakedPanel from '@/components/CloakedPanel.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import CompilationContextMenu from '@/components/context-menu/CompilationContextMenu.vue';
 import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
+import { mdiPlus } from '@mdi/js';
 
 /** A nav bar as header with a menu for a compilation
  */
@@ -134,7 +133,7 @@ export default defineComponent({
         StyledInput,
         CompilationContextMenu,
         ArtistInfo,
-        CollapsiblePanel,
+        CloakedPanel,
     },
     props: {
         compilation: {
@@ -151,10 +150,7 @@ export default defineComponent({
     },
     data() {
         return {
-            // /** The compilation title */
-            // title: this.compilation.Title,
-            // artist: this.compilation.Artist,
-            // album: this.compilation.Album,
+            mdiPlus: mdiPlus,
         };
     },
     methods: {

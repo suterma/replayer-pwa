@@ -63,16 +63,14 @@
                         </p>
                     </div>
                 </div>
-                <CollapsiblePanel :hideExpandedButton="true">
+                <CloakedPanel>
                     <template #caption
                         ><span class="has-opacity-half"
                             >Artist / Album</span
                         ></template
                     >
-                    <!-- Artist Info (completely hidden on mobile, thus not editable there. 
-                    NOTE: It's also not shown in the play view on mobile anyways) -->
                     <!-- Artist -->
-                    <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                    <div class="level-item is-flex-shrink-3">
                         <div class="field">
                             <p class="control">
                                 <StyledInput
@@ -94,7 +92,7 @@
                     </div>
 
                     <!-- Album -->
-                    <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                    <div class="level-item is-flex-shrink-3">
                         <div class="field">
                             <p class="control">
                                 <StyledInput
@@ -114,7 +112,7 @@
                             </p>
                         </div>
                     </div>
-                </CollapsiblePanel>
+                </CloakedPanel>
 
                 <Experimental v-if="experimentalUseTempo">
                     <!-- Time Signature Editor -->
@@ -192,8 +190,8 @@
                     </p>
                 </div>
 
-                <!-- Artist info (don't show on small devices)-->
-                <div class="level-item is-hidden-mobile">
+                <!-- Artist info-->
+                <div class="level-item">
                     <p class="is-size-7">
                         <ArtistInfo :album="trackAlbum" :artist="trackArtist" />
                     </p>
@@ -243,7 +241,7 @@
 import { PropType, defineComponent } from 'vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
-import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
+import CloakedPanel from '@/components/CloakedPanel.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import BpmEditor from '@/components/editor/BpmEditor.vue';
 import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
@@ -264,7 +262,7 @@ export default defineComponent({
     name: 'TrackHeader',
     components: {
         MediaEdit,
-        CollapsiblePanel,
+        CloakedPanel,
         PlaybackIndicator,
         StyledInput,
         CollapsibleButton,

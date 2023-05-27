@@ -115,9 +115,7 @@
                 </Experimental>
 
                 <Experimental v-if="experimentalUseTempo && !isEditable">
-                    <span
-                        class="is-size-7 level-item is-narrow is-hidden-mobile"
-                    >
+                    <span class="is-size-7 level-item is-narrow">
                         <span>{{ track.BeatsPerMinute }}&nbsp;BPM</span>
                     </span>
                 </Experimental>
@@ -393,8 +391,8 @@
                                                 :name="track.Name"
                                             ></TrackTitleName>
                                         </span>
-                                        <!-- Artist info (don't show on small devices)-->
-                                        <span class="is-size-7 is-hidden-mobile"
+                                        <!-- Artist info-->
+                                        <span class="is-size-7"
                                             >&nbsp;
                                             <!--nbsp as placeholder to keep layout when no artist info -->
                                             <ArtistInfo

@@ -15,7 +15,7 @@
 
         <!-- Right side -->
         <div class="level-right">
-            <div class="level-item is-hidden-mobile">
+            <div class="level-item">
                 <span v-if="track.Artist || track.Album" class="is-size-7 ml-2">
                     <ArtistInfo :artist="track.Artist" :album="track.Album" />
                 </span>
