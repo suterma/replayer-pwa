@@ -124,12 +124,13 @@
 
                 <!-- NOTE: In edit mode, the time is displayed as part of the transport area, not in the header -->
                 <!-- NOTE: In mix mode, the time display is not needed on individual tracks -->
+                <!-- NOTE: In playback mode, the currently remaining time is shown, to indicate any ongoing playback action -->
                 <TimeDisplay
                     v-if="isPlayable"
                     class="level-item is-narrow is-hidden-mobile is-size-7"
                     :modelValue="
-                        track?.Duration
-                            ? Math.floor(track?.Duration * 10) / 10
+                        remainingTime
+                            ? Math.ceil(remainingTime * 10) / 10
                             : null
                     "
                     :subSecondDigits="1"
@@ -770,6 +771,16 @@ export default defineComponent({
             'updateDurations',
         ]),
 
+        convertToDisplayTime(
+            value: number | null,
+            subSecondDigits: number,
+        ): string {
+            return CompilationHandler.convertToDisplayTime(
+                value,
+                subSecondDigits,
+            );
+        },
+
         toggleTrackPlayerFullScreen(): void {
             this.$emit(
                 'update:isTrackPlayerFullScreen',
@@ -1223,6 +1234,13 @@ export default defineComponent({
          * @remarks A selected cue's data is used for looping on a cue's boundaries
          */
         ...mapState(useAppStore, ['selectedCue']),
+
+        remainingTime(): number | null {
+            return CompilationHandler.calculateRemainingTime(
+                this.currentSeconds,
+                this.trackDuration,
+            );
+        },
 
         /** The description of the currently playing cue
          * @remarks The implementation makes sure that at least always an empty string is returned.

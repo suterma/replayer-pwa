@@ -161,9 +161,10 @@ export default defineComponent({
     },
     computed: {
         remainingTime(): number | null {
-            if (this.trackDuration != null) {
-                return -(this.trackDuration - this.modelValue);
-            } else return null;
+            return CompilationHandler.calculateRemainingTime(
+                this.modelValue,
+                this.trackDuration,
+            );
         },
     },
 });

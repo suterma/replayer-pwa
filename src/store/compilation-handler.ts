@@ -225,6 +225,19 @@ export default class CompilationHandler {
         }
     }
 
+    /** Calculates the remaining time.
+     * @param {number} trackDuration - could be NaN or infinity, depending on the source
+     * @returns The remaining time or null if not applicable
+     */
+    static calculateRemainingTime(
+        currentPosition: number,
+        trackDuration: number | null,
+    ): number | null {
+        if (trackDuration != null && Number.isFinite(trackDuration)) {
+            return currentPosition - trackDuration;
+        } else return null;
+    }
+
     /** Converts the total seconds into a simple sss.zzz format,
      * if a suitable input value is provided.
      * @param subSecondDigits - The number of digits for the sub-second precision. Should be 1, 2, or 3 (default).
