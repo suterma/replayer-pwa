@@ -81,6 +81,7 @@
                                     placeholder="Artist"
                                     title="Artist"
                                     data-cy="track-artist"
+                                    focusOnMounted
                                 >
                                     <span
                                         class="has-opacity-half mr-2 is-single-line"
@@ -115,60 +116,81 @@
                 </CloakedPanel>
 
                 <Experimental v-if="experimentalUseTempo">
-                    <!-- Time Signature Editor -->
-                    <div class="level-item is-flex-shrink-2">
-                        <div class="field">
-                            <p class="control">
-                                <TimeSignatureEditor
-                                    class="input"
-                                    :numerator="trackTimeSignatureNumerator"
-                                    @change:numerator="
-                                        updateTrackTimeSignatureNumerator(
-                                            trackId,
-                                            $event.target.value,
-                                        )
-                                    "
-                                    :denominator="trackTimeSignatureDenominator"
-                                    @change:denominator="
-                                        updateTrackTimeSignatureDenominator(
-                                            trackId,
-                                            $event.target.value,
-                                        )
-                                    "
-                                    title="Time signature"
-                                >
-                                    <span
-                                        class="has-opacity-half mr-2 is-single-line"
-                                        >Time Signature</span
-                                    ></TimeSignatureEditor
-                                >
-                            </p>
+                    <CloakedPanel>
+                        <template #caption
+                            ><span class="has-opacity-half"
+                                >Tempo</span
+                            ></template
+                        >
+                        <!-- Time Signature Editor -->
+                        <div class="level-item is-flex-shrink-2">
+                            <div class="field">
+                                <p class="control">
+                                    <TimeSignatureEditor
+                                        class="input"
+                                        :numerator="trackTimeSignatureNumerator"
+                                        @change:numerator="
+                                            updateTrackTimeSignatureNumerator(
+                                                trackId,
+                                                $event.target.value,
+                                            )
+                                        "
+                                        :denominator="
+                                            trackTimeSignatureDenominator
+                                        "
+                                        @change:denominator="
+                                            updateTrackTimeSignatureDenominator(
+                                                trackId,
+                                                $event.target.value,
+                                            )
+                                        "
+                                        title="Time signature"
+                                    >
+                                        <span
+                                            class="has-opacity-half mr-2 is-single-line"
+                                            >Time Signature</span
+                                        ></TimeSignatureEditor
+                                    >
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <!-- BPM -->
-                    <div class="level-item is-flex-shrink-2">
-                        <div class="field">
-                            <p class="control">
-                                <BpmEditor
-                                    class="input"
-                                    :modelValue="trackBeatsPerMinute"
-                                    @change="
-                                        updateTrackBeatsPerMinute(
-                                            trackId,
-                                            $event.target.value,
-                                        )
-                                    "
-                                    placeholder="Beats per minute"
-                                    title="Beats per minute"
-                                >
-                                    <span
-                                        class="has-opacity-half mr-2 is-single-line"
-                                        >Tempo</span
-                                    ></BpmEditor
-                                >
-                            </p>
+                        <!-- BPM -->
+                        <div class="level-item is-flex-shrink-2">
+                            <div class="field">
+                                <p class="control">
+                                    <BpmEditor
+                                        class="input"
+                                        :modelValue="trackBeatsPerMinute"
+                                        @change="
+                                            updateTrackBeatsPerMinute(
+                                                trackId,
+                                                $event.target.value,
+                                            )
+                                        "
+                                        placeholder="BPM"
+                                        title="BPM (Beats per minute)"
+                                    >
+                                        <span
+                                            class="has-opacity-half mr-2 is-single-line"
+                                            >Tempo</span
+                                        ></BpmEditor
+                                    >
+                                </p>
+                            </div>
                         </div>
-                    </div>
+                        <!-- Metronome -->
+                        <div class="level-item is-flex-shrink-2">
+                            <div class="field">
+                                <p class="control">
+                                    <a
+                                        href="https://tic.replayer.app"
+                                        target="_blank"
+                                        >TAP</a
+                                    >
+                                </p>
+                            </div>
+                        </div>
+                    </CloakedPanel>
                 </Experimental>
             </template>
             <template v-else>
@@ -242,6 +264,7 @@ import { PropType, defineComponent } from 'vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
 import CloakedPanel from '@/components/CloakedPanel.vue';
+import Experimental from '@/components/Experimental.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import BpmEditor from '@/components/editor/BpmEditor.vue';
 import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
@@ -263,6 +286,7 @@ export default defineComponent({
     components: {
         MediaEdit,
         CloakedPanel,
+        Experimental,
         PlaybackIndicator,
         StyledInput,
         CollapsibleButton,

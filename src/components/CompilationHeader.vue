@@ -49,6 +49,7 @@
                                     placeholder="Artist"
                                     title="Artist"
                                     data-cy="compilation-artist"
+                                    focusOnMounted
                                 >
                                     <span
                                         class="has-opacity-half mr-2 is-single-line"

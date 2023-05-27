@@ -91,7 +91,7 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
     /** EXPERIMENTAL: Whether to show tempo editors/display
      * @remarks Default is false
      */
-    const experimentalUseTempo = useLocalStorage('experimentalUseTempo', false);
+    const experimentalUseTempo = useLocalStorage('experimentalUseTempo', true);
 
     /** Returns the settings with their default value */
     function $reset() {
@@ -106,7 +106,7 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
         timeFormat.value = TimeFormat.Iso8601Extended;
         experimentalShowPositionInTrackHeader.value = false;
         experimentalShowWaveforms.value = false;
-        experimentalUseTempo.value = false;
+        experimentalUseTempo.value = true;
     }
 
     return {

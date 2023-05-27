@@ -43,14 +43,19 @@ export default defineComponent({
         /** Whether this input should get focus when mounted
          * @devdoc v-focus does not work since the directive does not fall through
          */
-        focus: {
+        focusOnMounted: {
             type: Boolean,
             default: false,
         },
     },
     mounted: function (): void {
-        if (this.focus) {
-            (this.$refs['styled-input'] as HTMLInputElement).focus();
+        if (this.focusOnMounted) {
+            // Since the input might not be rendered until the next DOM update,
+            // defer the actual focussing
+            // See https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks/Vue_refs_focus_management#vues_nexttick_method
+            this.$nextTick(() => {
+                (this.$refs['styled-input'] as HTMLInputElement).focus();
+            });
         }
     },
 });
