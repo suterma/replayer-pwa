@@ -152,15 +152,43 @@ export const actions = {
     },
 
     /** Updates the track beats per minute
-     * @remarks Also updates the persistent store of the compilation
      */
-    updateTrackBeatsPerMinute(trackId: string, beatsPerMinute: number | null): void {
+    updateTrackBeatsPerMinute(
+        trackId: string,
+        beatsPerMinute: number | null,
+    ): void {
         const track = CompilationHandler.getTrackById(
             state.compilation.value.Tracks,
             trackId,
         );
         if (track) {
             track.BeatsPerMinute = beatsPerMinute;
+        }
+    },
+
+    updateTrackTimeSignatureNumerator(
+        trackId: string,
+        numerator: number | null,
+    ): void {
+        const track = CompilationHandler.getTrackById(
+            state.compilation.value.Tracks,
+            trackId,
+        );
+        if (track) {
+            track.TimeSignatureNumerator = numerator;
+        }
+    },
+
+    updateTrackTimeSignatureDenominator(
+        trackId: string,
+        denominator: number | null,
+    ): void {
+        const track = CompilationHandler.getTrackById(
+            state.compilation.value.Tracks,
+            trackId,
+        );
+        if (track) {
+            track.TimeSignatureDenominator = denominator;
         }
     },
 

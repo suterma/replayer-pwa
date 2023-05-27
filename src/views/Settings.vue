@@ -293,6 +293,17 @@
                     </label>
                 </div>
             </div>
+            <div class="field">
+                <div class="control">
+                    <label class="checkbox">
+                        <input type="checkbox" v-model="experimentalUseTempo" />
+                        Show tempo editors / display
+                        <span class="has-opacity-half is-size-7">
+                            (uses more more space)</span
+                        >
+                    </label>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -320,6 +331,7 @@ const {
     timeFormat,
     experimentalShowPositionInTrackHeader,
     experimentalShowWaveforms,
+    experimentalUseTempo,
 } = storeToRefs(settings);
 
 const router = useRouter();

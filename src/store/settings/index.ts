@@ -88,6 +88,11 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
         false,
     );
 
+    /** EXPERIMENTAL: Whether to show tempo editors/display
+     * @remarks Default is false
+     */
+    const experimentalUseTempo = useLocalStorage('experimentalUseTempo', false);
+
     /** Returns the settings with their default value */
     function $reset() {
         levelMeterSizeIsLarge.value = false;
@@ -101,6 +106,7 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
         timeFormat.value = TimeFormat.Iso8601Extended;
         experimentalShowPositionInTrackHeader.value = false;
         experimentalShowWaveforms.value = false;
+        experimentalUseTempo.value = false;
     }
 
     return {
@@ -115,6 +121,7 @@ export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
         timeFormat,
         experimentalShowPositionInTrackHeader,
         experimentalShowWaveforms,
+        experimentalUseTempo,
         $reset,
     };
 });

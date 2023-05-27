@@ -104,6 +104,10 @@ export interface ITrack {
      */
     BeatsPerMinute: number | null;
 
+    TimeSignatureNumerator: number | null;
+
+    TimeSignatureDenominator: number | null;
+
     /** The URL or the local file name (possibly including a path) for the media file.
      * @devdoc If it is relative, it may get made absolute using the compilation's media path.
      */
@@ -191,6 +195,8 @@ export class Compilation implements ICompilation {
                     track.Artist,
                     track.Measure,
                     track.BeatsPerMinute,
+                    track.TimeSignatureNumerator,
+                    track.TimeSignatureDenominator,
                     track.Url,
                     track.Id,
                     track.Cues.map((cue) => {
@@ -241,6 +247,8 @@ export class Track implements ITrack {
     Artist = '';
     Measure = 0;
     BeatsPerMinute: number | null = null;
+    TimeSignatureNumerator: number | null = null;
+    TimeSignatureDenominator: number | null = null;
     Url = '';
     Id = '';
     Cues: Array<ICue> = new Array<ICue>();
@@ -262,6 +270,8 @@ export class Track implements ITrack {
         artist: string,
         measure: number,
         beatsPerMinute: number | null,
+        timeSignatureNumerator: number | null,
+        timeSignatureDenominator: number | null,
         url: string,
         id: string,
         cues: Array<ICue>,
@@ -273,6 +283,8 @@ export class Track implements ITrack {
         this.Artist = artist;
         this.Measure = measure;
         this.BeatsPerMinute = beatsPerMinute;
+        this.TimeSignatureNumerator = timeSignatureNumerator;
+        this.TimeSignatureDenominator = timeSignatureDenominator;
         this.Url = url;
         this.Id = id;
         this.Cues = cues;
@@ -293,6 +305,8 @@ export class Track implements ITrack {
             obj.Artist,
             obj.Measure,
             obj.BeatsPerMinute,
+            obj.TimeSignatureNumerator,
+            obj.TimeSignatureDenominator,
             obj.Url,
             obj.Id,
             obj.Cues,

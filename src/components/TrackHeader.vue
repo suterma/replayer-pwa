@@ -108,30 +108,62 @@
                         </p>
                     </div>
                 </div>
-                <!-- BPM -->
-                <div class="level-item is-flex-shrink-1">
-                    <div class="field">
-                        <p class="control">
-                            <BpmEditor
-                                class="input"
-                                :modelValue="trackBeatsPerMinute"
-                                @change="
-                                    updateTrackBeatsPerMinute(
-                                        trackId,
-                                        $event.target.value,
-                                    )
-                                "
-                                placeholder="Beats per minute"
-                                title="Beats per minute"
-                            >
-                                <span
-                                    class="has-opacity-half mr-2 is-single-line"
-                                    >Tempo</span
-                                ></BpmEditor
-                            >
-                        </p>
+                <Experimental v-if="experimentalUseTempo">
+                    <!-- Time Signature Editor -->
+                    <div class="level-item is-flex-shrink-2">
+                        <div class="field">
+                            <p class="control">
+                                <TimeSignatureEditor
+                                    class="input"
+                                    :numerator="trackTimeSignatureNumerator"
+                                    @change:numerator="
+                                        updateTrackTimeSignatureNumerator(
+                                            trackId,
+                                            $event.target.value,
+                                        )
+                                    "
+                                    :denominator="trackTimeSignatureDenominator"
+                                    @change:denominator="
+                                        updateTrackTimeSignatureDenominator(
+                                            trackId,
+                                            $event.target.value,
+                                        )
+                                    "
+                                    title="Time signature"
+                                >
+                                    <span
+                                        class="has-opacity-half mr-2 is-single-line"
+                                        >Time Signature</span
+                                    ></TimeSignatureEditor
+                                >
+                            </p>
+                        </div>
                     </div>
-                </div>
+                    <!-- BPM -->
+                    <div class="level-item is-flex-shrink-2">
+                        <div class="field">
+                            <p class="control">
+                                <BpmEditor
+                                    class="input"
+                                    :modelValue="trackBeatsPerMinute"
+                                    @change="
+                                        updateTrackBeatsPerMinute(
+                                            trackId,
+                                            $event.target.value,
+                                        )
+                                    "
+                                    placeholder="Beats per minute"
+                                    title="Beats per minute"
+                                >
+                                    <span
+                                        class="has-opacity-half mr-2 is-single-line"
+                                        >Tempo</span
+                                    ></BpmEditor
+                                >
+                            </p>
+                        </div>
+                    </div>
+                </Experimental>
             </template>
             <template v-else>
                 <!-- Title -->
@@ -205,6 +237,7 @@ import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import BpmEditor from '@/components/editor/BpmEditor.vue';
+import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
@@ -212,8 +245,9 @@ import { mdiAlert } from '@mdi/js';
 import { TrackDisplayMode } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import TrackTitleName from './TrackTitleName.vue';
-import { mapActions, mapWritableState } from 'pinia';
+import { mapActions, mapWritableState, mapState } from 'pinia';
 import { useAppStore } from '@/store/app';
+import { useSettingsStore } from '@/store/settings';
 
 /** A header for editing "beats per minute" track metadata
  */
@@ -228,6 +262,7 @@ export default defineComponent({
         BaseIcon,
         ArtistInfo,
         TrackTitleName,
+        TimeSignatureEditor,
         BpmEditor,
     },
     emits: ['update:isExpanded', 'click'],
@@ -253,6 +288,14 @@ export default defineComponent({
             required: true,
         },
         trackBeatsPerMinute: {
+            type: null as unknown as PropType<number | null>,
+            default: null,
+        },
+        trackTimeSignatureNumerator: {
+            type: null as unknown as PropType<number | null>,
+            default: null,
+        },
+        trackTimeSignatureDenominator: {
             type: null as unknown as PropType<number | null>,
             default: null,
         },
@@ -343,6 +386,8 @@ export default defineComponent({
         ...mapActions(useAppStore, [
             'updateTrackData',
             'updateTrackBeatsPerMinute',
+            'updateTrackTimeSignatureNumerator',
+            'updateTrackTimeSignatureDenominator',
         ]),
 
         /** Toggles the expansion state
@@ -395,6 +440,7 @@ export default defineComponent({
         },
 
         ...mapWritableState(useAppStore, ['compilation']),
+        ...mapState(useSettingsStore, ['experimentalUseTempo']),
     },
 });
 </script>

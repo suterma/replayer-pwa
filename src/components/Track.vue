@@ -36,6 +36,8 @@
             :trackName="track.Name"
             :trackUrl="track.Url"
             :trackBeatsPerMinute="track.BeatsPerMinute"
+            :trackTimeSignatureNumerator="track.TimeSignatureNumerator"
+            :trackTimeSignatureDenominator="track.TimeSignatureDenominator"
             :trackArtist="track.Artist"
             :trackAlbum="track.Album"
             :isPlaying="isPlaying"
@@ -112,12 +114,13 @@
                     ></TimeDisplay>
                 </Experimental>
 
-                <span
-                    v-if="!isEditable"
-                    class="is-size-7 level-item is-narrow is-hidden-mobile"
-                >
-                    <span>{{ track.BeatsPerMinute }}&nbsp;BPM</span>
-                </span>
+                <Experimental v-if="experimentalUseTempo && !isEditable">
+                    <span
+                        class="is-size-7 level-item is-narrow is-hidden-mobile"
+                    >
+                        <span>{{ track.BeatsPerMinute }}&nbsp;BPM</span>
+                    </span>
+                </Experimental>
 
                 <!-- NOTE: In edit mode, the time is displayed as part of the transport area, not in the header -->
                 <!-- NOTE: In mix mode, the time display is not needed on individual tracks -->
@@ -1206,6 +1209,7 @@ export default defineComponent({
             'keyboardShortcutTimeout',
             'experimentalShowPositionInTrackHeader',
             'experimentalShowWaveforms',
+            'experimentalUseTempo',
         ]),
 
         ...mapState(useAppStore, [
