@@ -39,7 +39,7 @@
         <div class="has-text-centered block">
             <CollapsiblePanel>
                 <template #caption>
-                    <span>Available media</span>
+                    <span class="has-opacity-half">Available media</span>
                 </template>
 
                 <div class="block mt-5">

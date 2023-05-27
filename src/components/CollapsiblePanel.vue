@@ -1,5 +1,6 @@
 <template>
     <CollapsibleButton
+        v-if="!hideExpandedButton || !isExpanded"
         class="is-nav"
         v-model="isExpanded"
         collapsedText="Click to expand "
@@ -8,22 +9,21 @@
     ></CollapsibleButton>
     <template v-if="isExpanded"><slot></slot></template>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue';
-import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
-
+<script setup lang="ts">
 /** A panel with an expander button that controls the expansion state of the slotted content.
  * @remarks the v-if directive is used, completely omitting collapsed content, if not displayed.
  */
-export default defineComponent({
-    name: 'CollapsiblePanel',
-    components: { CollapsibleButton },
+import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
+import { ref, defineProps } from 'vue';
 
-    data() {
-        return {
-            /** Whether the panel displayed in the expanded state */
-            isExpanded: false,
-        };
+defineProps({
+    /** Hides the toggle button in the expanded state */
+    hideExpandedButton: {
+        type: Boolean,
+        required: false,
+        default: false,
     },
 });
+
+const isExpanded = ref(false);
 </script>

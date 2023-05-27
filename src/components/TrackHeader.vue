@@ -63,51 +63,59 @@
                         </p>
                     </div>
                 </div>
-                <!-- Artist Info (completely hidden on mobile, thus not editable there. 
-                NOTE: It's also not shown in the play view on mobile anyways) -->
-                <!-- Artist -->
-                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
-                    <div class="field">
-                        <p class="control">
-                            <StyledInput
-                                class="input is-italic"
-                                :modelValue="trackArtist"
-                                @change="updateArtist($event.target.value)"
-                                type="text"
-                                placeholder="Artist"
-                                title="Artist"
-                                data-cy="track-artist"
-                            >
-                                <span
-                                    class="has-opacity-half mr-2 is-single-line"
-                                    >by</span
-                                ></StyledInput
-                            >
-                        </p>
+                <CollapsiblePanel :hideExpandedButton="true">
+                    <template #caption
+                        ><span class="has-opacity-half"
+                            >Artist / Album</span
+                        ></template
+                    >
+                    <!-- Artist Info (completely hidden on mobile, thus not editable there. 
+                    NOTE: It's also not shown in the play view on mobile anyways) -->
+                    <!-- Artist -->
+                    <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                        <div class="field">
+                            <p class="control">
+                                <StyledInput
+                                    class="input is-italic"
+                                    :modelValue="trackArtist"
+                                    @change="updateArtist($event.target.value)"
+                                    type="text"
+                                    placeholder="Artist"
+                                    title="Artist"
+                                    data-cy="track-artist"
+                                >
+                                    <span
+                                        class="has-opacity-half mr-2 is-single-line"
+                                        >by</span
+                                    ></StyledInput
+                                >
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Album -->
-                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
-                    <div class="field">
-                        <p class="control">
-                            <StyledInput
-                                class="input is-italic"
-                                :modelValue="trackAlbum"
-                                @change="updateAlbum($event.target.value)"
-                                type="text"
-                                placeholder="Album"
-                                title="Album"
-                                data-cy="track-album"
-                            >
-                                <span
-                                    class="has-opacity-half mr-2 is-single-line"
-                                    >on</span
-                                ></StyledInput
-                            >
-                        </p>
+                    <!-- Album -->
+                    <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                        <div class="field">
+                            <p class="control">
+                                <StyledInput
+                                    class="input is-italic"
+                                    :modelValue="trackAlbum"
+                                    @change="updateAlbum($event.target.value)"
+                                    type="text"
+                                    placeholder="Album"
+                                    title="Album"
+                                    data-cy="track-album"
+                                >
+                                    <span
+                                        class="has-opacity-half mr-2 is-single-line"
+                                        >on</span
+                                    ></StyledInput
+                                >
+                            </p>
+                        </div>
                     </div>
-                </div>
+                </CollapsiblePanel>
+
                 <Experimental v-if="experimentalUseTempo">
                     <!-- Time Signature Editor -->
                     <div class="level-item is-flex-shrink-2">
@@ -235,6 +243,7 @@
 import { PropType, defineComponent } from 'vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
+import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import BpmEditor from '@/components/editor/BpmEditor.vue';
 import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
@@ -255,6 +264,7 @@ export default defineComponent({
     name: 'TrackHeader',
     components: {
         MediaEdit,
+        CollapsiblePanel,
         PlaybackIndicator,
         StyledInput,
         CollapsibleButton,

@@ -31,51 +31,58 @@
                         </p>
                     </div>
                 </div>
-                <!-- Artist Info (completely hidden on mobile, thus not editable there. 
+                <CollapsiblePanel :hideExpandedButton="true">
+                    <template #caption
+                        ><span class="has-opacity-half"
+                            >Artist / Album</span
+                        ></template
+                    >
+                    <!-- Artist Info (completely hidden on mobile, thus not editable there. 
                 NOTE: It's also not shown in the play view on mobile anyways) -->
-                <!-- Artist -->
-                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
-                    <div class="field">
-                        <p class="control">
-                            <StyledInput
-                                class="input is-italic"
-                                :modelValue="compilation.Artist"
-                                @change="updateArtist($event.target.value)"
-                                type="text"
-                                placeholder="Artist"
-                                title="Artist"
-                                data-cy="compilation-artist"
-                            >
-                                <span
-                                    class="has-opacity-half mr-2 is-single-line"
-                                    >by</span
-                                ></StyledInput
-                            >
-                        </p>
+                    <!-- Artist -->
+                    <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                        <div class="field">
+                            <p class="control">
+                                <StyledInput
+                                    class="input is-italic"
+                                    :modelValue="compilation.Artist"
+                                    @change="updateArtist($event.target.value)"
+                                    type="text"
+                                    placeholder="Artist"
+                                    title="Artist"
+                                    data-cy="compilation-artist"
+                                >
+                                    <span
+                                        class="has-opacity-half mr-2 is-single-line"
+                                        >by</span
+                                    ></StyledInput
+                                >
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Album -->
-                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
-                    <div class="field">
-                        <p class="control">
-                            <StyledInput
-                                class="input is-italic"
-                                :modelValue="compilation.Album"
-                                @change="updateAlbum($event.target.value)"
-                                type="text"
-                                placeholder="Album"
-                                title="Album"
-                                data-cy="compilation-album"
-                            >
-                                <span
-                                    class="has-opacity-half mr-2 is-single-line"
-                                    >on</span
-                                ></StyledInput
-                            >
-                        </p>
+                    <!-- Album -->
+                    <div class="level-item is-flex-shrink-1 is-hidden-mobile">
+                        <div class="field">
+                            <p class="control">
+                                <StyledInput
+                                    class="input is-italic"
+                                    :modelValue="compilation.Album"
+                                    @change="updateAlbum($event.target.value)"
+                                    type="text"
+                                    placeholder="Album"
+                                    title="Album"
+                                    data-cy="compilation-album"
+                                >
+                                    <span
+                                        class="has-opacity-half mr-2 is-single-line"
+                                        >on</span
+                                    ></StyledInput
+                                >
+                            </p>
+                        </div>
                     </div>
-                </div>
+                </CollapsiblePanel>
             </template>
             <template v-else>
                 <!-- Display in non-edit view -->
@@ -113,6 +120,7 @@
 import { defineComponent } from 'vue';
 import { Compilation } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
+import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import CompilationContextMenu from '@/components/context-menu/CompilationContextMenu.vue';
 import { mapActions } from 'pinia';
@@ -122,7 +130,12 @@ import { useAppStore } from '@/store/app';
  */
 export default defineComponent({
     name: 'CompilationHeader',
-    components: { StyledInput, CompilationContextMenu, ArtistInfo },
+    components: {
+        StyledInput,
+        CompilationContextMenu,
+        ArtistInfo,
+        CollapsiblePanel,
+    },
     props: {
         compilation: {
             type: Compilation,
