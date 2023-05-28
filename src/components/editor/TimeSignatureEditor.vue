@@ -1,7 +1,7 @@
 <template>
     <slot></slot>
-    <!-- Let the attributes fall through the input element: -->
     <div class="is-flex is-justify-content-space-between">
+        <!-- Let the attributes fall through the input element: -->
         <input
             class="time-signature"
             v-bind="$attrs"
@@ -15,6 +15,7 @@
             tabindex="0"
         />
         <span>/</span>
+        <!-- Let the attributes fall through the input element: -->
         <input
             class="time-signature"
             v-bind="$attrs"

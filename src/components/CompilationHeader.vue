@@ -31,56 +31,28 @@
                         </p>
                     </div>
                 </div>
-                <CloakedPanel>
+                <CloakedPanel
+                    :revealFor="[compilation.Artist, compilation.Album]"
+                >
                     <template #caption
                         ><span class="has-opacity-half"
                             >Artist / Album</span
                         ></template
                     >
-                    <!-- Artist -->
-                    <div class="level-item is-flex-shrink-3">
-                        <div class="field">
-                            <p class="control">
-                                <StyledInput
-                                    class="input is-italic"
-                                    :modelValue="compilation.Artist"
-                                    @change="updateArtist($event.target.value)"
-                                    type="text"
-                                    placeholder="Artist"
-                                    title="Artist"
-                                    data-cy="compilation-artist"
-                                    focusOnMounted
-                                >
-                                    <span
-                                        class="has-opacity-half mr-2 is-single-line"
-                                        >by</span
-                                    ></StyledInput
-                                >
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Album -->
-                    <div class="level-item is-flex-shrink-3">
-                        <div class="field">
-                            <p class="control">
-                                <StyledInput
-                                    class="input is-italic"
-                                    :modelValue="compilation.Album"
-                                    @change="updateAlbum($event.target.value)"
-                                    type="text"
-                                    placeholder="Album"
-                                    title="Album"
-                                    data-cy="compilation-album"
-                                >
-                                    <span
-                                        class="has-opacity-half mr-2 is-single-line"
-                                        >on</span
-                                    ></StyledInput
-                                >
-                            </p>
-                        </div>
-                    </div>
+                    <ArtistLevelEditor
+                        :artist="compilation.Artist"
+                        @update:artist="
+                            (value) => {
+                                updateArtist(value);
+                            }
+                        "
+                        :album="compilation.Album"
+                        @update:album="
+                            (value) => {
+                                updateAlbum(value);
+                            }
+                        "
+                    ></ArtistLevelEditor>
                 </CloakedPanel>
             </template>
             <template v-else>
@@ -120,6 +92,7 @@ import { defineComponent } from 'vue';
 import { Compilation } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import CloakedPanel from '@/components/CloakedPanel.vue';
+import ArtistLevelEditor from '@/components/editor/ArtistLevelEditor.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import CompilationContextMenu from '@/components/context-menu/CompilationContextMenu.vue';
 import { mapActions } from 'pinia';
@@ -135,6 +108,7 @@ export default defineComponent({
         CompilationContextMenu,
         ArtistInfo,
         CloakedPanel,
+        ArtistLevelEditor,
     },
     props: {
         compilation: {

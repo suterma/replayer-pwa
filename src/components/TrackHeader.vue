@@ -63,55 +63,27 @@
                         </p>
                     </div>
                 </div>
-                <CloakedPanel>
+                <CloakedPanel :revealFor="[trackArtist, trackAlbum]">
                     <template #caption
                         ><span class="has-opacity-half"
                             >Artist / Album</span
                         ></template
                     >
-                    <!-- Artist -->
                     <div class="level-item is-flex-shrink-3">
-                        <div class="field">
-                            <p class="control">
-                                <StyledInput
-                                    class="input is-italic"
-                                    :modelValue="trackArtist"
-                                    @change="updateArtist($event.target.value)"
-                                    type="text"
-                                    placeholder="Artist"
-                                    title="Artist"
-                                    data-cy="track-artist"
-                                    focusOnMounted
-                                >
-                                    <span
-                                        class="has-opacity-half mr-2 is-single-line"
-                                        >by</span
-                                    ></StyledInput
-                                >
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Album -->
-                    <div class="level-item is-flex-shrink-3">
-                        <div class="field">
-                            <p class="control">
-                                <StyledInput
-                                    class="input is-italic"
-                                    :modelValue="trackAlbum"
-                                    @change="updateAlbum($event.target.value)"
-                                    type="text"
-                                    placeholder="Album"
-                                    title="Album"
-                                    data-cy="track-album"
-                                >
-                                    <span
-                                        class="has-opacity-half mr-2 is-single-line"
-                                        >on</span
-                                    ></StyledInput
-                                >
-                            </p>
-                        </div>
+                        <ArtistLevelEditor
+                            :artist="trackArtist"
+                            @update:artist="
+                                (value) => {
+                                    updateArtist(value);
+                                }
+                            "
+                            :album="trackAlbum"
+                            @update:album="
+                                (value) => {
+                                    updateAlbum(value);
+                                }
+                            "
+                        ></ArtistLevelEditor>
                     </div>
                 </CloakedPanel>
 
@@ -264,6 +236,7 @@ import { PropType, defineComponent } from 'vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
 import CloakedPanel from '@/components/CloakedPanel.vue';
+import ArtistLevelEditor from '@/components/editor/ArtistLevelEditor.vue';
 import Experimental from '@/components/Experimental.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import BpmEditor from '@/components/editor/BpmEditor.vue';
@@ -287,6 +260,7 @@ export default defineComponent({
         MediaEdit,
         CloakedPanel,
         Experimental,
+        ArtistLevelEditor,
         PlaybackIndicator,
         StyledInput,
         CollapsibleButton,

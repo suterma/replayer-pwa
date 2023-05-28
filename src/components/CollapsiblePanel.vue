@@ -1,6 +1,5 @@
 <template>
     <CollapsibleButton
-        v-show="!hideButton"
         class="is-nav"
         :modelValue="modelValue"
         @update:modelValue="(value) => emit('update:modelValue', value)"
@@ -16,7 +15,6 @@
  * @remarks the v-if directive is used, completely omitting collapsed content, if not displayed.
  */
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
-import {} from 'vue';
 import { mdiChevronDown } from '@mdi/js';
 
 // eslint-disable-next-line no-undef
@@ -29,12 +27,6 @@ defineProps({
     },
     /** Whether this represents the expanded state. */
     modelValue: {
-        type: Boolean,
-        default: false,
-    },
-
-    /** Whether the toggler button is not hidden. Default is false (toggler button is shown). */
-    hideButton: {
         type: Boolean,
         default: false,
     },
