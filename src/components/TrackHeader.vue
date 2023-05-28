@@ -88,7 +88,13 @@
                 </CloakedPanel>
 
                 <Experimental v-if="experimentalUseTempo">
-                    <CloakedPanel>
+                    <CloakedPanel
+                        :revealFor="[
+                            trackTimeSignatureNumerator,
+                            trackTimeSignatureDenominator,
+                            trackBeatsPerMinute,
+                        ]"
+                    >
                         <template #caption
                             ><span class="has-opacity-half"
                                 >Tempo</span
