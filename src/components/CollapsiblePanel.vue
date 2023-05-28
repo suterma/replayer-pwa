@@ -2,7 +2,7 @@
     <CollapsibleButton
         class="is-nav"
         :modelValue="modelValue"
-        @update:modelValue="(value) => emit('update:modelValue', value)"
+        @update:modelValue="(value) => (modelValue = value)"
         collapsedText="Click to expand "
         expandedText="Click to collapse"
         :iconPath="iconPath"
@@ -16,6 +16,7 @@
  */
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import { mdiChevronDown } from '@mdi/js';
+import { ref } from 'vue';
 
 // eslint-disable-next-line no-undef
 defineProps({
@@ -25,13 +26,8 @@ defineProps({
         type: String,
         default: mdiChevronDown,
     },
-    /** Whether this represents the expanded state. */
-    modelValue: {
-        type: Boolean,
-        default: false,
-    },
 });
 
-// eslint-disable-next-line no-undef
-const emit = defineEmits(['update:modelValue']);
+/** Whether to show this panel as expanded */
+const modelValue = ref(false);
 </script>
