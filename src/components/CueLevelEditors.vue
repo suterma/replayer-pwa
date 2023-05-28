@@ -1,21 +1,23 @@
 <template>
     <!-- Using the v-for on a template instead of the actual component saves unnecessary renderings. 
          See https://stackoverflow.com/a/76074016/79485 -->
-    <template v-for="cue in cues" :key="cue.Id">
-        <CueLevelEditor
-            :disabled="disabled"
-            :cue="cue"
-            :isTrackPlaying="isTrackPlaying"
-            :playbackMode="playbackMode"
-            :isCueSelected="isCueSelected(cue)"
-            :hasCuePassed="hasCuePassed(cue)"
-            :isCueAhead="isCueAhead(cue)"
-            :percentComplete="percentComplete(cue)"
-            @click="cueClick(cue)"
-            @play="cuePlay(cue)"
-            @adjust="cueAdjust(cue)"
-        />
-    </template>
+    <TransitionGroup name="list">
+        <template v-for="cue in cues" :key="cue.Id">
+            <CueLevelEditor
+                :disabled="disabled"
+                :cue="cue"
+                :isTrackPlaying="isTrackPlaying"
+                :playbackMode="playbackMode"
+                :isCueSelected="isCueSelected(cue)"
+                :hasCuePassed="hasCuePassed(cue)"
+                :isCueAhead="isCueAhead(cue)"
+                :percentComplete="percentComplete(cue)"
+                @click="cueClick(cue)"
+                @play="cuePlay(cue)"
+                @adjust="cueAdjust(cue)"
+            />
+        </template>
+    </TransitionGroup>
 </template>
 
 <script lang="ts">
@@ -23,6 +25,7 @@ import { PropType, defineComponent } from 'vue';
 import { ICue, PlaybackMode } from '@/store/compilation-types';
 import CompilationHandler from '@/store/compilation-handler';
 import CueLevelEditor from '@/components/CueLevelEditor.vue';
+
 import { useAppStore } from '@/store/app';
 import { mapState, mapActions } from 'pinia';
 
@@ -30,9 +33,7 @@ import { mapState, mapActions } from 'pinia';
  */
 export default defineComponent({
     name: 'CueLevelEditors',
-    components: {
-        CueLevelEditor,
-    },
+    components: { CueLevelEditor },
     emits: ['click', 'play'],
     props: {
         cues: {

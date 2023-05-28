@@ -168,22 +168,17 @@
         <!-- The level editors and playback bar (in edit mode for an expanded track) -->
         <Transition name="item-expand">
             <div v-if="isEditable && isExpanded" :key="track.Id">
-                <div class="levels transition-in-place">
-                    <TransitionGroup name="list">
-                        <!-- A single child element is necessary here for the TransitionGroup to work properly. -->
-                        <div :key="track.Id">
-                            <CueLevelEditors
-                                :cues="cues"
-                                :disabled="!canPlay"
-                                :isTrackPlaying="isPlaying"
-                                :playbackMode="playbackMode"
-                                :currentSeconds="currentSeconds"
-                                @click="cueClick"
-                                @play="cuePlay"
-                            >
-                            </CueLevelEditors>
-                        </div>
-                    </TransitionGroup>
+                <div class="levels">
+                    <CueLevelEditors
+                        :cues="cues"
+                        :disabled="!canPlay"
+                        :isTrackPlaying="isPlaying"
+                        :playbackMode="playbackMode"
+                        :currentSeconds="currentSeconds"
+                        @click="cueClick"
+                        @play="cuePlay"
+                    >
+                    </CueLevelEditors>
                 </div>
                 <!-- 
                 Track playback bar (In edit mode, this contains:
@@ -513,21 +508,6 @@
                             ></CueButtonsField>
                         </nav>
                     </div>
-                    <!-- <div
-                        v-else-if="isMix && isActiveTrack"
-                        :class="{
-                            section: isMix,
-                            'has-background-info-dark': isMix,
-                            'is-fullscreen': isTrackPlayerFullScreen,
-                            'has-player-navbar-fixed-top':
-                                isTrackPlayerFullScreen,
-                            'transition-in-place':
-                                isMix /* because in playback  or mix view, the players are replaced in place, not expanded */,
-                        }"
-                    >
- 
-                        NO MEDIA WIDGET
-                    </div> -->
                 </Transition>
             </Teleport>
         </template>

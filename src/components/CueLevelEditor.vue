@@ -1,5 +1,4 @@
 <template>
-    <!-- Main container (disabled when track is not loaded)-->
     <fieldset :disabled="disabled" data-cy="cue-editor">
         <div class="level is-mobile">
             <!-- Left side -->
