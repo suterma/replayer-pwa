@@ -2,7 +2,7 @@
     <input
         type="number"
         inputmode="decimal"
-        step="0.1"
+        :step="step"
         :value="modelValue"
         @change="immediatelyUpdateTime($event)"
         @paste="immediatelyUpdateTime($event)"
@@ -28,6 +28,12 @@ export default defineComponent({
         modelValue: {
             type: null as unknown as PropType<number | null>,
             default: null,
+        },
+        /** The step size of the numerical input (0.1 is default) */
+        step: {
+            type: Number,
+            default: 0.1,
+            required: false,
         },
     },
 

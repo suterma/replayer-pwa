@@ -104,6 +104,7 @@ export default class CompilationParser {
                 CompilationParser.FirstNumberOf(
                     xmlTrack.TimeSignatureDenominator,
                 ),
+                CompilationParser.FirstNumberOf(xmlTrack.originTime),
                 CompilationParser.FirstStringOf(xmlTrack.Url),
                 CompilationParser.FirstStringOf(xmlTrack.Id),
                 CompilationParser.parseFromXmlCues(xmlTrack.Cues[0].Cue),
@@ -137,6 +138,7 @@ export default class CompilationParser {
                     ''.normalize(),
                     0,
                     null /*BPM*/,
+                    null,
                     null,
                     null,
                     decodeURI(plistTrack.Path).normalize(),
@@ -285,6 +287,7 @@ export default class CompilationParser {
                 artist,
                 0,
                 null /*BPM*/,
+                null,
                 null,
                 null,
                 mediaUrl,

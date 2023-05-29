@@ -2,7 +2,7 @@
     <slot></slot>
     <!-- Let the attributes fall through the input element: -->
     <input
-        class="bpm"
+        class="bpm has-text-right"
         v-bind="$attrs"
         type="number"
         inputmode="numeric"

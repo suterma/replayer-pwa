@@ -105,6 +105,7 @@ export default class CompilationHandler {
             null /* BPM */,
             null,
             null,
+            null,
             trackUrl,
             trackId,
             new Array<ICue>(),

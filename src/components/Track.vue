@@ -194,6 +194,20 @@
                                     );
                                 }
                             "
+                        :originTime="track.OriginTime"
+                        @update:originTime="
+                                (value: number| null) => {
+                                    updateTrackOriginTime(
+                                        track.Id,
+                                        value,
+                                    );
+                                }
+                            "
+                        @adjustOriginTime="
+                            () => {
+                                updateTrackOriginTime(track.Id, currentSeconds);
+                            }
+                        "
                     >
                     </TempoLevelEditor>
                 </Experimental>
@@ -782,6 +796,7 @@ export default defineComponent({
             'updateTrackBeatsPerMinute',
             'updateTrackTimeSignatureNumerator',
             'updateTrackTimeSignatureDenominator',
+            'updateTrackOriginTime',
         ]),
 
         convertToDisplayTime(

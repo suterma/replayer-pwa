@@ -108,6 +108,9 @@ export interface ITrack {
 
     TimeSignatureDenominator: number | null;
 
+    /** The origin time for the beat (first downbeat of the first measure) */
+    OriginTime: number | null;
+
     /** The URL or the local file name (possibly including a path) for the media file.
      * @devdoc If it is relative, it may get made absolute using the compilation's media path.
      */
@@ -197,6 +200,7 @@ export class Compilation implements ICompilation {
                     track.BeatsPerMinute,
                     track.TimeSignatureNumerator,
                     track.TimeSignatureDenominator,
+                    track.OriginTime,
                     track.Url,
                     track.Id,
                     track.Cues.map((cue) => {
@@ -249,6 +253,7 @@ export class Track implements ITrack {
     BeatsPerMinute: number | null = null;
     TimeSignatureNumerator: number | null = null;
     TimeSignatureDenominator: number | null = null;
+    OriginTime: number | null = null;
     Url = '';
     Id = '';
     Cues: Array<ICue> = new Array<ICue>();
@@ -272,6 +277,7 @@ export class Track implements ITrack {
         beatsPerMinute: number | null,
         timeSignatureNumerator: number | null,
         timeSignatureDenominator: number | null,
+        originTime: number | null,
         url: string,
         id: string,
         cues: Array<ICue>,
@@ -285,6 +291,7 @@ export class Track implements ITrack {
         this.BeatsPerMinute = beatsPerMinute;
         this.TimeSignatureNumerator = timeSignatureNumerator;
         this.TimeSignatureDenominator = timeSignatureDenominator;
+        this.OriginTime = originTime;
         this.Url = url;
         this.Id = id;
         this.Cues = cues;
@@ -307,6 +314,7 @@ export class Track implements ITrack {
             obj.BeatsPerMinute,
             obj.TimeSignatureNumerator,
             obj.TimeSignatureDenominator,
+            obj.OriginTime,
             obj.Url,
             obj.Id,
             obj.Cues,

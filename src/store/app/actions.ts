@@ -192,6 +192,16 @@ export const actions = {
         }
     },
 
+    updateTrackOriginTime(trackId: string, originTime: number | null): void {
+        const track = CompilationHandler.getTrackById(
+            state.compilation.value.Tracks,
+            trackId,
+        );
+        if (track) {
+            track.OriginTime = originTime;
+        }
+    },
+
     /** Updates the cue data
      * @remarks Also updates the persistent store of the compilation
      */

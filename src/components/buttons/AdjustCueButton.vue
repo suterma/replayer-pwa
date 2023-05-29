@@ -1,6 +1,6 @@
 <template>
-    <!-- Create Cue (With Hotkey for the active track)
-                Creating a cue should also work when invoked from inside a 
+    <!-- Adjust Cue (With Hotkey for the active track)
+                Adjusting a cue should also work when invoked from inside a 
                 textbox, thus explicitly no elements are excluded.-->
     <Hotkey
         :disabled="!isSelectedCue"
@@ -53,7 +53,8 @@ export default defineComponent({
         /** Whether this button is for the globally selected cue (The button should only execute the hotkey for the globally selected cue ) */
         isSelectedCue: {
             type: Boolean,
-            required: true,
+            default: false,
+            required: false,
         },
     },
     data() {

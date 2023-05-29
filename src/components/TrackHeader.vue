@@ -86,119 +86,6 @@
                         ></ArtistLevelEditor>
                     </div>
                 </CloakedPanel>
-                <Experimental v-if="experimentalUseTempo">
-                    <TempoLevelEditor
-                        :beatsPerMinute="trackBeatsPerMinute"
-                        @update:beatsPerMinute="
-                        (value: number| null) => {
-                             updateTrackBeatsPerMinute(trackId, value);
-                        }
-                    "
-                        :numerator="trackTimeSignatureNumerator"
-                        @update:numerator="
-                            (value) => {
-                                updateTrackTimeSignatureNumerator(
-                                    trackId,
-                                    value,
-                                );
-                            }
-                        "
-                        :denominator="trackTimeSignatureDenominator"
-                        @update:denominator="
-                            (value) => {
-                                updateTrackTimeSignatureDenominator(
-                                    trackId,
-                                    value,
-                                );
-                            }
-                        "
-                    >
-                    </TempoLevelEditor>
-                </Experimental>
-
-                <Experimental v-if="experimentalUseTempo">
-                    <CloakedPanel
-                        :revealFor="[
-                            trackTimeSignatureNumerator,
-                            trackTimeSignatureDenominator,
-                            trackBeatsPerMinute,
-                        ]"
-                    >
-                        <template #caption
-                            ><span class="has-opacity-half"
-                                >Tempo</span
-                            ></template
-                        >
-                        <!-- Time Signature Editor -->
-                        <div class="level-item is-flex-shrink-2">
-                            <div class="field">
-                                <p class="control">
-                                    <TimeSignatureEditor
-                                        class="input"
-                                        :numerator="trackTimeSignatureNumerator"
-                                        @change:numerator="
-                                            updateTrackTimeSignatureNumerator(
-                                                trackId,
-                                                $event.target.value,
-                                            )
-                                        "
-                                        :denominator="
-                                            trackTimeSignatureDenominator
-                                        "
-                                        @change:denominator="
-                                            updateTrackTimeSignatureDenominator(
-                                                trackId,
-                                                $event.target.value,
-                                            )
-                                        "
-                                        title="Time signature"
-                                    >
-                                        <span
-                                            class="has-opacity-half mr-2 is-single-line"
-                                            >Time Signature</span
-                                        ></TimeSignatureEditor
-                                    >
-                                </p>
-                            </div>
-                        </div>
-                        <!-- BPM -->
-                        <div class="level-item is-flex-shrink-2">
-                            <div class="field">
-                                <p class="control">
-                                    <BpmEditor
-                                        class="input"
-                                        :modelValue="trackBeatsPerMinute"
-                                        @change="
-                                            updateTrackBeatsPerMinute(
-                                                trackId,
-                                                $event.target.value,
-                                            )
-                                        "
-                                        placeholder="BPM"
-                                        title="BPM (Beats per minute)"
-                                    >
-                                        <span
-                                            class="has-opacity-half mr-2 is-single-line"
-                                            >Tempo</span
-                                        ></BpmEditor
-                                    >
-                                </p>
-                            </div>
-                        </div>
-                        <!-- Metronome -->
-                        <div class="level-item is-flex-shrink-2">
-                            <div class="field">
-                                <p class="control">
-                                    <a
-                                        href="https://tic.replayer.app"
-                                        target="_blank"
-                                        >TAP</a
-                                    >
-                                </p>
-                            </div>
-                        </div>
-                    </CloakedPanel>
-                </Experimental>
             </template>
             <template v-else>
                 <!-- Title -->
@@ -272,11 +159,7 @@ import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
 import CloakedPanel from '@/components/CloakedPanel.vue';
 import ArtistLevelEditor from '@/components/editor/ArtistLevelEditor.vue';
-import TempoLevelEditor from '@/components/editor/TempoLevelEditor.vue';
-import Experimental from '@/components/Experimental.vue';
 import StyledInput from '@/components/StyledInput.vue';
-import BpmEditor from '@/components/editor/BpmEditor.vue';
-import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
@@ -295,7 +178,6 @@ export default defineComponent({
     components: {
         MediaEdit,
         CloakedPanel,
-        Experimental,
         ArtistLevelEditor,
         PlaybackIndicator,
         StyledInput,
@@ -304,9 +186,6 @@ export default defineComponent({
         BaseIcon,
         ArtistInfo,
         TrackTitleName,
-        TimeSignatureEditor,
-        BpmEditor,
-        TempoLevelEditor,
     },
     emits: ['update:isExpanded', 'click'],
     props: {
@@ -426,12 +305,7 @@ export default defineComponent({
         }
     },
     methods: {
-        ...mapActions(useAppStore, [
-            'updateTrackData',
-            'updateTrackBeatsPerMinute',
-            'updateTrackTimeSignatureNumerator',
-            'updateTrackTimeSignatureDenominator',
-        ]),
+        ...mapActions(useAppStore, ['updateTrackData']),
 
         /** Toggles the expansion state
          */
