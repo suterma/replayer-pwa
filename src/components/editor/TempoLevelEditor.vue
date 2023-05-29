@@ -9,8 +9,8 @@
                 <p class="control">
                     <StyledInput
                         class="input is-italic"
-                        :modelValue="props.artist"
-                        @update:modelValue="(value:string) => emit('update:artist', value)"
+                        :modelValue="artist"
+                        @update:modelValue="(value:string) => $emit('update:artist', value)"
                         type="text"
                         placeholder="Artist"
                         title="Artist"
@@ -30,8 +30,8 @@
                 <p class="control">
                     <StyledInput
                         class="input is-italic"
-                        :modelValue="props.album"
-                        @update:modelValue="(value:string) => emit('update:album', value)"
+                        :modelValue="album"
+                        @update:modelValue="(value:string) => $emit('update:album', value)"
                         type="text"
                         placeholder="Album"
                         title="Album"
@@ -44,8 +44,10 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
 import StyledInput from '@/components/StyledInput.vue';
+
+import { defineComponent } from 'vue';
 
 /** A level-based Editor for an artist and album
  * @remarks Shows a level with inputs for artist and album as level items
@@ -53,16 +55,20 @@ import StyledInput from '@/components/StyledInput.vue';
  * from a property (where setting of values is not permitted).
  * Instead, the values are one-way bound via :value and changes are directly stored in the state.
  */
-const emit = defineEmits(['update:artist', 'update:album']);
+export default defineComponent({
+    name: 'ArtistLevelEditor',
+    components: { StyledInput },
+    emits: ['update:artist', 'update:album'],
 
-const props = defineProps({
-    artist: {
-        type: String,
-        required: true,
-    },
-    album: {
-        type: String,
-        required: true,
+    props: {
+        artist: {
+            type: String,
+            required: true,
+        },
+        album: {
+            type: String,
+            required: true,
+        },
     },
 });
 </script>

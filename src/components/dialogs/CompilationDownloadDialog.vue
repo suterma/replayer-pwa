@@ -146,11 +146,10 @@
 
 <script lang="ts">
 import { Compilation } from '@/store/compilation-types';
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted, onUnmounted } from 'vue';
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
 import { Hotkey } from '@simolation/vue-hotkey';
 import CompilationHandler from '@/store/compilation-handler';
-import { onMounted, onUnmounted } from 'vue';
 import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
 

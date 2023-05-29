@@ -121,7 +121,7 @@ import {
 } from '@/components/icons/BaseIcon.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { PlaybackMode } from '@/store/compilation-types';
-import { PropType, computed, defineProps } from 'vue';
+import { PropType, computed } from 'vue';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar

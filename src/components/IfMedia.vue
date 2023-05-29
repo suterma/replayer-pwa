@@ -3,7 +3,6 @@
  * @devdoc Maybe later rework this for more simple use
  */
 import { useMediaQuery } from '@vueuse/core';
-import { defineProps } from 'vue';
 
 const props = defineProps<{
     query: string;

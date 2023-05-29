@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, defineEmits, PropType } from 'vue';
+import { computed, PropType } from 'vue';
 import { Cue, ICue, PlaybackMode } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';

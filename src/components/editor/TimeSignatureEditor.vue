@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, PropType, computed } from 'vue';
+import { PropType, computed } from 'vue';
 
 /** A field of large cue buttons for a track
  */

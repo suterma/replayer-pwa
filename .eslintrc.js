@@ -3,6 +3,7 @@ module.exports = {
     env: {
         node: true,
         'jest/globals': true,
+        'vue/setup-compiler-macros': true,
     },
     plugins: ['@typescript-eslint', 'jest'],
     extends: [
@@ -31,6 +32,7 @@ module.exports = {
         'jest/no-identical-title': 'error',
         'jest/prefer-to-have-length': 'warn',
         'jest/valid-expect': 'error',
+        'vue/multi-word-component-names': 'warn',
     },
     settings: {
         jest: {
