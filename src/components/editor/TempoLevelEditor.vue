@@ -1,74 +1,93 @@
 <template>
     <div class="level">
-        <div class="level-item has-text-centered">
-            <span class="has-opacity-half is-single-line">by</span>
-        </div>
-        <div class="level-item has-text-centered is-flex-shrink-5">
-            <!-- Artist -->
-            <div class="field">
-                <p class="control">
-                    <StyledInput
-                        class="input is-italic"
-                        :modelValue="artist"
-                        @update:modelValue="(value:string) => $emit('update:artist', value)"
-                        type="text"
-                        placeholder="Artist"
-                        title="Artist"
-                        data-cy="track-artist"
-                        focusOnMounted
-                    >
-                    </StyledInput>
-                </p>
+        <div class="level-left">
+            <!-- BPM -->
+            <div class="level-item has-text-centered">
+                <span class="has-opacity-half is-single-line">Tempo</span>
             </div>
-        </div>
-        <div class="level-item has-text-centered">
-            <span class="has-opacity-half is-single-line">on</span>
-        </div>
-        <div class="level-item has-text-centered is-flex-shrink-5">
-            <!-- Album -->
-            <div class="field">
-                <p class="control">
-                    <StyledInput
-                        class="input is-italic"
-                        :modelValue="album"
-                        @update:modelValue="(value:string) => $emit('update:album', value)"
-                        type="text"
-                        placeholder="Album"
-                        title="Album"
-                        data-cy="track-album"
-                    >
-                    </StyledInput>
-                </p>
+            <div class="level-item is-flex-shrink-2">
+                <div class="field">
+                    <p class="control">
+                        <BpmEditor
+                            class="input"
+                            :modelValue="props.beatsPerMinute"
+                            @change="
+                                emit(
+                                    'update:beatsPerMinute',
+                                    $event.target.value,
+                                )
+                            "
+                            placeholder="BPM"
+                            title="BPM (Beats per minute)"
+                        >
+                        </BpmEditor>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Time Signature -->
+            <div class="level-item has-text-centered">
+                <span class="has-opacity-half">Time Signature</span>
+            </div>
+            <div class="level-item is-flex-shrink-2">
+                <div class="field">
+                    <p class="control">
+                        <TimeSignatureEditor
+                            class="input"
+                            :numerator="props.numerator"
+                            @update:numerator="(value:number|null) => emit('update:numerator', value)"
+                            :denominator="props.denominator"
+                            @update:denominator="(value:number|null) => {emit('update:denominator', value);}"
+                            title="Time signature"
+                        >
+                        </TimeSignatureEditor>
+                    </p>
+                </div>
+            </div>
+            <!-- Metronome -->
+            <div class="level-item is-flex-shrink-2">
+                <div class="field">
+                    <p class="control">
+                        <a href="https://tic.replayer.app" target="_blank"
+                            >TAP</a
+                        >
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
-<script lang="ts">
-import StyledInput from '@/components/StyledInput.vue';
+<script setup lang="ts">
+import { PropType } from 'vue';
+import BpmEditor from '@/components/editor/BpmEditor.vue';
+import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
 
-import { defineComponent } from 'vue';
-
-/** A level-based Editor for an artist and album
- * @remarks Shows a level with inputs for artist and album as level items
- * @devdoc Input value binding is not implemented with a two-way v-model binding because the incoming values are taken
- * from a property (where setting of values is not permitted).
- * Instead, the values are one-way bound via :value and changes are directly stored in the state.
+/** A level-based Editor for tempo-related values
+ * @remarks Shows a level with inputs for BPM, time signature etc., as level items
  */
-export default defineComponent({
-    name: 'ArtistLevelEditor',
-    components: { StyledInput },
-    emits: ['update:artist', 'update:album'],
 
-    props: {
-        artist: {
-            type: String,
-            required: true,
-        },
-        album: {
-            type: String,
-            required: true,
-        },
+const emit = defineEmits([
+    'update:numerator',
+    'update:denominator',
+    'update:beatsPerMinute',
+]);
+
+const props = defineProps({
+    numerator: {
+        type: null as unknown as PropType<number | null>,
+        required: false,
+        default: null,
+    },
+    denominator: {
+        type: null as unknown as PropType<number | null>,
+        required: false,
+        default: null,
+    },
+    beatsPerMinute: {
+        type: null as unknown as PropType<number | null>,
+        required: false,
+        default: null,
     },
 });
 </script>

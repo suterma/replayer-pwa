@@ -49,9 +49,6 @@ import StyledInput from '@/components/StyledInput.vue';
 
 /** A level-based Editor for an artist and album
  * @remarks Shows a level with inputs for artist and album as level items
- * @devdoc Input value binding is not implemented with a two-way v-model binding because the incoming values are taken
- * from a property (where setting of values is not permitted).
- * Instead, the values are one-way bound via :value and changes are directly stored in the state.
  */
 const emit = defineEmits(['update:artist', 'update:album']);
 

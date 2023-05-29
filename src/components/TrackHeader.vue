@@ -86,6 +86,35 @@
                         ></ArtistLevelEditor>
                     </div>
                 </CloakedPanel>
+                <Experimental v-if="experimentalUseTempo">
+                    <TempoLevelEditor
+                        :beatsPerMinute="trackBeatsPerMinute"
+                        @update:beatsPerMinute="
+                        (value: number| null) => {
+                             updateTrackBeatsPerMinute(trackId, value);
+                        }
+                    "
+                        :numerator="trackTimeSignatureNumerator"
+                        @update:numerator="
+                            (value) => {
+                                updateTrackTimeSignatureNumerator(
+                                    trackId,
+                                    value,
+                                );
+                            }
+                        "
+                        :denominator="trackTimeSignatureDenominator"
+                        @update:denominator="
+                            (value) => {
+                                updateTrackTimeSignatureDenominator(
+                                    trackId,
+                                    value,
+                                );
+                            }
+                        "
+                    >
+                    </TempoLevelEditor>
+                </Experimental>
 
                 <Experimental v-if="experimentalUseTempo">
                     <CloakedPanel
@@ -243,6 +272,7 @@ import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
 import CloakedPanel from '@/components/CloakedPanel.vue';
 import ArtistLevelEditor from '@/components/editor/ArtistLevelEditor.vue';
+import TempoLevelEditor from '@/components/editor/TempoLevelEditor.vue';
 import Experimental from '@/components/Experimental.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import BpmEditor from '@/components/editor/BpmEditor.vue';
@@ -276,6 +306,7 @@ export default defineComponent({
         TrackTitleName,
         TimeSignatureEditor,
         BpmEditor,
+        TempoLevelEditor,
     },
     emits: ['update:isExpanded', 'click'],
     props: {

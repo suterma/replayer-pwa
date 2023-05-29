@@ -165,9 +165,39 @@
             ></CueButtonsField>
         </div>
 
-        <!-- The level editors and playback bar (in edit mode for an expanded track) -->
+        <!-- The tempo and cue level editors and playback bar (in edit mode for an expanded track) -->
         <Transition name="item-expand">
             <div v-if="isEditable && isExpanded" :key="track.Id">
+                <Experimental v-if="experimentalUseTempo">
+                    <TempoLevelEditor
+                        :beatsPerMinute="track.BeatsPerMinute"
+                        @update:beatsPerMinute="
+                        (value: number| null) => {
+                             updateTrackBeatsPerMinute(track.Id, value);
+                        }
+                    "
+                        :numerator="track.TimeSignatureNumerator"
+                        @update:numerator="
+                                (value: number| null) => {
+                                    updateTrackTimeSignatureNumerator(
+                                        track.Id,
+                                        value,
+                                    );
+                                }
+                            "
+                        :denominator="track.TimeSignatureDenominator"
+                        @update:denominator="
+                                (value: number| null) => {
+                                    updateTrackTimeSignatureDenominator(
+                                        track.Id,
+                                        value,
+                                    );
+                                }
+                            "
+                    >
+                    </TempoLevelEditor>
+                </Experimental>
+
                 <div class="levels">
                     <CueLevelEditors
                         :cues="cues"
@@ -523,6 +553,7 @@ import {
     PlaybackMode,
 } from '@/store/compilation-types';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
+import TempoLevelEditor from '@/components/editor/TempoLevelEditor.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
 import Experimental from '@/components/Experimental.vue';
 import { MediaUrl } from '@/store/types';
@@ -581,6 +612,7 @@ export default defineComponent({
         MediaControlsBar,
         TrackTitleName,
         ArtistInfo,
+        TempoLevelEditor,
         PlaybackIndicator,
     },
     emits: [
@@ -747,6 +779,9 @@ export default defineComponent({
             'addCueAtTime',
             'updateTrackVolume',
             'updateDurations',
+            'updateTrackBeatsPerMinute',
+            'updateTrackTimeSignatureNumerator',
+            'updateTrackTimeSignatureDenominator',
         ]),
 
         convertToDisplayTime(

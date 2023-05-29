@@ -1,7 +1,7 @@
 <template>
-    <span class="is-experimental">
+    <div class="is-experimental">
         <slot></slot>
-    </span>
+    </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
