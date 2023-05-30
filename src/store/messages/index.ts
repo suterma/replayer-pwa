@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { useLocalStorage } from '@vueuse/core';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { StorageKeys } from '..';
 
 /** A store for messages, that are to be displayed.
@@ -16,12 +16,11 @@ export const useMessageStore = defineStore(StorageKeys.MESSAGES, () => {
         new Array<string>(),
     );
     /** An application error message stack, used for error indication
+     * @remarks Error messages are not persisted over app restarts
      * @remarks during unacknowledged errors, the stack is non-empty
      */
-    const errorMessageStack = useLocalStorage(
-        'errorMessageStack',
-        new Array<string>(),
-    );
+    const errorMessageStack = ref(new Array<string>());
+
     /** An application success message stack, used for success indication
      */
     const successMessageStack = useLocalStorage(
