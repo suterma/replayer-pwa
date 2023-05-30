@@ -3,7 +3,6 @@ module.exports = {
     env: {
         node: true,
         'jest/globals': true,
-        'vue/setup-compiler-macros': true,
     },
     plugins: ['@typescript-eslint', 'jest'],
     extends: [
@@ -38,5 +37,10 @@ module.exports = {
         jest: {
             version: require('jest/package.json').version,
         },
+    },
+    globals: {
+        /* Fixes a no-undef error in es-lint. */
+        defineProps: 'readonly',
+        defineEmits: 'readonly',
     },
 };
