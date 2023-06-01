@@ -192,13 +192,19 @@ export const actions = {
         }
     },
 
+    /** Updates the track origin time.
+     * @remarks Rounds the time to the Replayer default precision
+     */
     updateTrackOriginTime(trackId: string, originTime: number | null): void {
         const track = CompilationHandler.getTrackById(
             state.compilation.value.Tracks,
             trackId,
         );
         if (track) {
-            track.OriginTime = originTime;
+            track.OriginTime =
+                originTime != null && isFinite(originTime)
+                    ? CompilationHandler.roundTime(originTime)
+                    : originTime;
         }
     },
 
