@@ -50,12 +50,11 @@
                 <span class="has-opacity-half">Origin</span>
             </div>
             <!-- A normal input for the time, with an adjustment add-on (from a bit wider screens)-->
-            <div class="level-item is-flex-shrink-1">
+            <div class="level-item">
                 <div class="field has-addons has-addons-except-mobile">
                     <p class="control">
-                        //TODO why is this so wide???
                         <TimeInput
-                            class="input has-text-right"
+                            class="has-text-right"
                             :modelValue="props.originTime"
                             @update:modelValue="(value:number|null) => {emit('update:originTime', value);}"
                             size="9"

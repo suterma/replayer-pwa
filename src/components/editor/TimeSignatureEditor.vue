@@ -3,7 +3,7 @@
     <div class="is-flex is-justify-content-space-between">
         <!-- Let the attributes fall through the input element: -->
         <input
-            class="time-signature has-text-right"
+            class="input time-signature has-text-right"
             v-bind="$attrs"
             type="number"
             inputmode="numeric"
@@ -18,7 +18,7 @@
         <span class="mt-2">/</span>
         <!-- Let the attributes fall through the input element: -->
         <input
-            class="time-signature has-text-right"
+            class="input time-signature has-text-right"
             v-bind="$attrs"
             type="number"
             inputmode="numeric"

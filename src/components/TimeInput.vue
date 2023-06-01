@@ -1,5 +1,6 @@
 <template>
     <input
+        class="input"
         type="number"
         inputmode="decimal"
         :step="step"
