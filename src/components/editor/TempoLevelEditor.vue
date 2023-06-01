@@ -53,6 +53,7 @@
             <div class="level-item is-flex-shrink-1">
                 <div class="field has-addons has-addons-except-mobile">
                     <p class="control">
+                        //TODO why is this so wide???
                         <TimeInput
                             class="input has-text-right"
                             :modelValue="props.originTime"
@@ -126,3 +127,9 @@ const props = defineProps({
     },
 });
 </script>
+<style scoped>
+/** Actually never use the adjust button hotkey area, because it's never used here */
+/deep/ .button .is-invisible {
+    display: none;
+}
+</style>
