@@ -81,3 +81,23 @@ export default defineComponent({
     },
 });
 </script>
+
+<style scoped>
+/*************************************************************
+ * Time input width depending on viewport size
+**************************************************************
+*/
+
+/* minimum input width for decimal time */
+input[type='number'][inputmode='decimal'] {
+    min-width: 9ch;
+}
+
+/* fullhd */
+@media screen and (min-width: 1408px) {
+    /* minimum input width for decimal time */
+    input[type='number'][inputmode='decimal'] {
+        min-width: 11ch;
+    }
+}
+</style>

@@ -379,14 +379,10 @@ export default defineComponent({
 }
 
 /*************************************************************
- * Input width depending on viewport size
+ * Shortcut input width depending on viewport size
 **************************************************************
 */
 
-/* minimum input width for decimal time */
-input[type='number'][inputmode='decimal'] {
-    min-width: 9ch;
-}
 /* minimum input width for shortcuts */
 input[type='text'] {
     min-width: 6ch;
@@ -394,10 +390,6 @@ input[type='text'] {
 
 /* fullhd */
 @media screen and (min-width: 1408px) {
-    /* minimum input width for decimal time */
-    input[type='number'][inputmode='decimal'] {
-        min-width: 11ch;
-    }
     /* minimum input width for shortcuts */
     input[type='text'] {
         min-width: 8ch;
