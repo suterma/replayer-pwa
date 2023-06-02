@@ -42,5 +42,6 @@ module.exports = {
         /* Fixes a no-undef error in es-lint. */
         defineProps: 'readonly',
         defineEmits: 'readonly',
+        defineExpose: 'readonly',
     },
 };
