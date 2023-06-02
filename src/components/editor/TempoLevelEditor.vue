@@ -128,7 +128,8 @@ const props = defineProps({
 </script>
 <style scoped>
 /** Actually never use the adjust button hotkey area, because it's never used here */
-/deep/ .button .is-invisible {
+
+:deep(.button .is-invisible) {
     display: none;
 }
 </style>
