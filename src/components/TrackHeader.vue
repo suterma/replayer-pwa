@@ -106,10 +106,14 @@
                     </p>
                 </div>
 
-                <!-- Artist info-->
-                <div class="level-item">
+                <!-- Artist info (should not take too much width, and hide on small displays anyways)-->
+                <div class="level-item is-hidden-mobile">
                     <p class="is-size-7">
-                        <ArtistInfo :album="trackAlbum" :artist="trackArtist" />
+                        <ArtistInfo
+                            :album="trackAlbum"
+                            :artist="trackArtist"
+                            style="max-width: 25vw"
+                        />
                     </p>
                 </div>
             </template>

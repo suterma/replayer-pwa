@@ -15,9 +15,14 @@
 
         <!-- Right side -->
         <div class="level-right">
-            <div class="level-item">
+            <div class="level-item is-hidden-mobile">
                 <span v-if="track.Artist || track.Album" class="is-size-7 ml-2">
-                    <ArtistInfo :artist="track.Artist" :album="track.Album" />
+                    <!-- Artist info (should not take too much width, and hide on small displays anyways)-->
+                    <ArtistInfo
+                        :artist="track.Artist"
+                        :album="track.Album"
+                        style="max-width: 50vw"
+                    />
                 </span>
             </div>
 
