@@ -16,6 +16,11 @@ export const getters = {
         return false;
     }),
 
+    /** The current compilation title */
+    compilationTitle: computed(() => {
+        return state.compilation.value?.Title;
+    }),
+
     /** Whether any Media URL's are available */
     hasAvailableMedia: computed(() => {
         return state.mediaUrls.value.size > 0;

@@ -55,6 +55,7 @@ The URL input is wider, because it should be able to easily deal with lengthy in
                 <button
                     class="button is-nav"
                     title="Add media / expand drop zone"
+                    data-cy="add-media"
                     @click="expand"
                 >
                     <BaseIcon v-once :path="mdiMusicNotePlus" />

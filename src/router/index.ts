@@ -3,6 +3,7 @@ import {
     createWebHashHistory,
     isNavigationFailure,
     NavigationFailureType,
+    RouteLocationNormalized,
     RouteRecordRaw,
 } from 'vue-router';
 import Play from '../views/Play.vue';
@@ -116,13 +117,23 @@ router.afterEach((to, from, failure) => {
     }
 });
 
+/** Updates the document title, using the current route and compilation title */
+export function updateTitle(): void {
+    updateTitleForRoute(router.currentRoute.value);
+}
+
 router.afterEach((to) => {
     // Update the title, only after navigation (pinia will be installed by now)
+    updateTitleForRoute(to);
+});
+
+/** Updates the document title, using the given route and compilation title */
+function updateTitleForRoute(to: RouteLocationNormalized) {
     const toName = to.name?.toString();
     //on some routes, also display the compilation title
     let compilationInfo = '';
     const app = useAppStore();
-    const compilationTitle = app.compilation?.Title;
+    const compilationTitle = app.compilationTitle;
     if (
         compilationTitle &&
         toName &&
@@ -131,6 +142,6 @@ router.afterEach((to) => {
         compilationInfo = ' | ' + compilationTitle;
     }
     title.value = `${toName}${compilationInfo}`;
-});
+}
 
 export default router;

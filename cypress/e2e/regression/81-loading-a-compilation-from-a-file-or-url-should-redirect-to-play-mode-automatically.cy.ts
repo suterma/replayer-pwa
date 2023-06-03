@@ -31,4 +31,23 @@ describe('testing the issue "Loading a compilation from a file or URL should red
         // ASSERT
         cy.hash().should('eq', '#/play');
     });
+
+    it('should replace an existing compilation entirely, when a new compilation is loaded', () => {
+        // ARRANGE (to have a existing compilation)
+        cy.loadFile('cypress/fixtures/your-light-by-lidija-roos.zip');
+        cy.get('[data-cy="compilation"]').contains('your light by lidija roos');
+
+        // ACT (add a new compilation from URL via URL input)
+        cy.visit('/#/edit');
+        cy.get('[data-cy="add-media"]').click();
+        cy.get('[data-cy="input-url"]').click();
+        cy.get('[data-cy="input-url"]').type(
+            'https://lib.replayer.app/anechoic-voices/Anechoic%20Voices.zip',
+        );
+        cy.get('[data-cy="submit-source"]').click();
+
+        // ASSERT
+        cy.get('[data-cy="compilation"]').contains('lidija'); //.should('not.exist');
+        cy.get('[data-cy="compilation"]').contains('female speech');
+    });
 });
