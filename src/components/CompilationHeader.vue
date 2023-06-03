@@ -88,7 +88,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { Compilation } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import CloakedPanel from '@/components/CloakedPanel.vue';
@@ -112,7 +112,7 @@ export default defineComponent({
     },
     props: {
         compilation: {
-            type: Compilation,
+            type: Object as PropType<Compilation>,
             required: true,
         },
         /** Whether this component show editable inputs for the contained data

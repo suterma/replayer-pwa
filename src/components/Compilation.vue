@@ -252,7 +252,7 @@
 </template>
 
 <script lang="ts">
-import { ComponentPublicInstance, defineComponent } from 'vue';
+import { ComponentPublicInstance, PropType, defineComponent } from 'vue';
 import VueScrollTo from 'vue-scrollto';
 import {
     Compilation,
@@ -284,6 +284,7 @@ import { useAppStore } from '@/store/app';
  * @remarks Also supports shuffling of tracks
  */
 export default defineComponent({
+    // eslint-disable-next-line vue/multi-word-component-names
     name: 'Compilation',
     components: {
         Track,
@@ -300,7 +301,7 @@ export default defineComponent({
         NoticeTrack,
     },
     props: {
-        compilation: Compilation,
+        compilation: Object as PropType<Compilation>,
 
         /** The display mode of the contained tracks.
          * @devdoc Allows to reuse this component for more than one DisplayMode.

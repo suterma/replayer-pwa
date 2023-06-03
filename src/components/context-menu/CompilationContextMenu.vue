@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { Compilation } from '@/store/compilation-types';
 import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
 import { confirm, downloadCompilation } from '@/code/ui/dialogs';
@@ -47,7 +47,7 @@ export default defineComponent({
     components: { DropdownMenuItem, Hotkey },
     props: {
         compilation: {
-            type: Compilation,
+            type: Object as PropType<Compilation>,
             required: true,
         },
     },

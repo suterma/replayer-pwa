@@ -559,12 +559,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import {
-    Track,
     ICue,
     TrackDisplayMode,
     PlaybackMode,
+    Track,
 } from '@/store/compilation-types';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import TempoLevelEditor from '@/components/editor/TempoLevelEditor.vue';
@@ -605,6 +605,7 @@ import FileHandler from '@/store/filehandler';
  * @remarks Also handles the common replayer events for tracks
  */
 export default defineComponent({
+    // eslint-disable-next-line vue/multi-word-component-names
     name: 'Track',
     components: {
         CueLevelEditors,
@@ -666,7 +667,7 @@ export default defineComponent({
          * @remarks One of track or trackId is required.
          */
         track: {
-            type: Track,
+            type: Object as PropType<Track>,
             required: true,
         },
 
