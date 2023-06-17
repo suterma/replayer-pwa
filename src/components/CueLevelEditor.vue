@@ -159,6 +159,7 @@ export default defineComponent({
             type: Cue,
             required: true,
         },
+
         disabled: {
             type: Boolean,
             required: false,
@@ -171,6 +172,7 @@ export default defineComponent({
             type: null as unknown as PropType<number | null>,
             required: false,
         },
+
         /** Whether this cue is currently selected
          * @remarks Note: only one cue in a compilation may be selected */
         isCueSelected: Boolean,
@@ -191,6 +193,7 @@ export default defineComponent({
          * While playing, this is pause, and vice versa.
          */
         isTrackPlaying: Boolean,
+
         /** The playback mode
          * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
          */
@@ -222,6 +225,7 @@ export default defineComponent({
             const description = (event.target as HTMLInputElement).value;
             this.updateCueData(cueId, description, shortcut, time);
         },
+
         /** Deletes the cue */
         deleteThisCue(): void {
             const cueId = this.cue.Id;
@@ -241,6 +245,7 @@ export default defineComponent({
                 this.$emit('play');
             }
         },
+
         /** Updates the set cue shortcut */
         updateShortcut(event: Event) {
             const cueId = this.cue.Id;
