@@ -9,12 +9,11 @@ import { Store } from '..';
  */
 export const useMessageStore = defineStore(Store.Messages, () => {
     /** An application work message stack, used for progress indication
+     * @remarks Progress messages are not persisted over app restarts
      * @remarks during ongoing work, the stack is non-empty
      */
-    const progressMessageStack = useLocalStorage(
-        'progressMessageStack',
-        new Array<string>(),
-    );
+    const progressMessageStack = ref(new Array<string>());
+
     /** An application error message stack, used for error indication
      * @remarks Error messages are not persisted over app restarts
      * @remarks during unacknowledged errors, the stack is non-empty

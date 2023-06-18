@@ -12,8 +12,11 @@ export class XmlTrack {
         this.Artist = track.Artist;
         this.Name = track.Name;
         this.Album = track.Album;
-        this.Measure = track.Measure;
         this.Url = track.Url;
+        this.BeatsPerMinute = track.BeatsPerMinute;
+        this.TimeSignatureNumerator = track.TimeSignatureNumerator;
+        this.TimeSignatureDenominator = track.TimeSignatureDenominator;
+        this.OriginTime = track.OriginTime;
         this.Volume = track.Volume;
         this.Cues = new XmlCues(track.Cues);
     }
@@ -22,8 +25,11 @@ export class XmlTrack {
     Artist: string;
     Name: string;
     Album: string;
-    Measure: number | null;
     Url: string;
+    BeatsPerMinute: number | null;
+    TimeSignatureNumerator: number | null;
+    TimeSignatureDenominator: number | null;
+    OriginTime: number | null;
     Volume: number;
     Cues: XmlCues;
 }

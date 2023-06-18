@@ -101,7 +101,6 @@ export default class CompilationHandler {
             name,
             artist,
             album,
-            0,
             null /* BPM */,
             null,
             null,

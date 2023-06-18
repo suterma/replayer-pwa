@@ -95,11 +95,6 @@ export interface ITrack {
      */
     Album: string;
 
-    /** The measure in beats per minute (Zero for no value).
-     * @deprecated This value is deprecated
-     */
-    Measure: number;
-
     /** The tempo in beats per minute
      */
     BeatsPerMinute: number | null;
@@ -196,7 +191,6 @@ export class Compilation implements ICompilation {
                     track.Name,
                     track.Album,
                     track.Artist,
-                    track.Measure,
                     track.BeatsPerMinute,
                     track.TimeSignatureNumerator,
                     track.TimeSignatureDenominator,
@@ -249,7 +243,6 @@ export class Track implements ITrack {
     Name = '';
     Album = '';
     Artist = '';
-    Measure = 0;
     BeatsPerMinute: number | null = null;
     TimeSignatureNumerator: number | null = null;
     TimeSignatureDenominator: number | null = null;
@@ -273,7 +266,6 @@ export class Track implements ITrack {
         name: string,
         album: string,
         artist: string,
-        measure: number,
         beatsPerMinute: number | null,
         timeSignatureNumerator: number | null,
         timeSignatureDenominator: number | null,
@@ -287,7 +279,6 @@ export class Track implements ITrack {
         this.Name = name;
         this.Album = album;
         this.Artist = artist;
-        this.Measure = measure;
         this.BeatsPerMinute = beatsPerMinute;
         this.TimeSignatureNumerator = timeSignatureNumerator;
         this.TimeSignatureDenominator = timeSignatureDenominator;
@@ -310,7 +301,6 @@ export class Track implements ITrack {
             obj.Name,
             obj.Album,
             obj.Artist,
-            obj.Measure,
             obj.BeatsPerMinute,
             obj.TimeSignatureNumerator,
             obj.TimeSignatureDenominator,

@@ -77,12 +77,18 @@ export default class CompilationParser {
         }
         return '';
     }
-    /** Returns the first item in the array, if defined. Otherwise, the number 0 is returned as a default. */
-    private static FirstNumberOf(array: number[]): number {
+    /** Returns the first item in the array as a number, if defined. Otherwise, null is returned as a default. */
+    private static FirstNumberOf(array: string[]): number | null {
         if (array) {
-            return Number(array[0] === undefined ? 0 : array[0]);
+            const firstItem = array[0];
+            if (firstItem) {
+                const firstNumber = Number.parseFloat(firstItem);
+                if (Number.isFinite(firstNumber)) {
+                    return firstNumber;
+                }
+            }
         }
-        return 0;
+        return null;
     }
 
     /** @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
@@ -96,7 +102,7 @@ export default class CompilationParser {
                 CompilationParser.FirstStringOf(xmlTrack.Name),
                 CompilationParser.FirstStringOf(xmlTrack.Album),
                 CompilationParser.FirstStringOf(xmlTrack.Artist),
-                CompilationParser.FirstNumberOf(xmlTrack.Measure),
+                /** NOTE: the formerly used measure property is deprecated */
                 CompilationParser.FirstNumberOf(xmlTrack.BeatsPerMinute),
                 CompilationParser.FirstNumberOf(
                     xmlTrack.TimeSignatureNumerator,
@@ -109,12 +115,9 @@ export default class CompilationParser {
                 CompilationParser.FirstStringOf(xmlTrack.Id),
                 CompilationParser.parseFromXmlCues(xmlTrack.Cues[0].Cue),
                 null,
-                CompilationParser.FirstNumberOf(xmlTrack.Volume),
+                CompilationParser.FirstNumberOf(xmlTrack.Volume) ??
+                    DefaultTrackVolume,
             );
-
-            if (!track.Volume) {
-                track.Volume = DefaultTrackVolume;
-            }
             tracks.push(track);
         });
 
@@ -136,7 +139,6 @@ export default class CompilationParser {
                     plistTrack.Name.normalize(),
                     ''.normalize(),
                     ''.normalize(),
-                    0,
                     null /*BPM*/,
                     null,
                     null,
@@ -285,7 +287,6 @@ export default class CompilationParser {
                 title,
                 album,
                 artist,
-                0,
                 null /*BPM*/,
                 null,
                 null,
