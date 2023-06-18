@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia';
 import { useLocalStorage } from '@vueuse/core';
 import { computed, ref } from 'vue';
-import { StorageKeys } from '..';
+import { Store } from '..';
 
 /** A store for messages, that are to be displayed.
  * @devdoc This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores
  * @devdoc The use of this separate store offloads the message handling from the other stores.
  */
-export const useMessageStore = defineStore(StorageKeys.MESSAGES, () => {
+export const useMessageStore = defineStore(Store.Messages, () => {
     /** An application work message stack, used for progress indication
      * @remarks during ongoing work, the stack is non-empty
      */

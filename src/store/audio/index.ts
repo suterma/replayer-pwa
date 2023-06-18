@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, shallowRef } from 'vue';
+import { Store } from '..';
 
 /**
  *  Defining the AudioContext
@@ -10,7 +11,7 @@ const audioContext = new AudioContext();
 console.info('new audio context created');
 
 /** A store for audio-related global state */
-export const useAudioStore = defineStore('audio', () => {
+export const useAudioStore = defineStore(Store.Audio, () => {
     /** The audio context to use for the lifetime of the app instance
      * @devdoc Does get destroyed only after document unload, but this is good enough I guess.
      */

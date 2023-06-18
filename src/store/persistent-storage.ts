@@ -1,6 +1,6 @@
 import { get, set, entries, del, clear } from 'idb-keyval';
 import { MediaBlob } from './types';
-import { StorageKeys } from '.';
+import { Store } from '.';
 
 /**
  * Provides simplified access to persistent storage for the Replayer app. This
@@ -18,7 +18,7 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
             'PersistentStorage::storeMediaBlob:fileName',
             data.fileName,
         );
-        set(StorageKeys.MEDIA_BLOB + data.fileName, data.blob);
+        set(Store.MediaBlob + data.fileName, data.blob);
     }
 
     /** Retrieves media blob data from the persistent store
@@ -31,8 +31,8 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
             entries.forEach((item) => {
                 const key = item[0].toString();
                 const blob = item[1];
-                if (key.startsWith(StorageKeys.MEDIA_BLOB)) {
-                    const fileName = key.slice(StorageKeys.MEDIA_BLOB.length);
+                if (key.startsWith(Store.MediaBlob)) {
+                    const fileName = key.slice(Store.MediaBlob.length);
                     mediaBlobs.push(new MediaBlob(fileName, blob));
                 }
             });
@@ -44,7 +44,7 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
      * @devdoc The indexed db is used for blob data, as recommended.
      */
     static retrieveMediaBlob(fileName: string): Promise<MediaBlob> {
-        return (get(StorageKeys.MEDIA_BLOB + fileName) as Promise<Blob>).then(
+        return (get(Store.MediaBlob + fileName) as Promise<Blob>).then(
             (blob) => {
                 return new MediaBlob(fileName, blob);
             },
@@ -55,7 +55,7 @@ export default class PersistentStorage /*implements IPersistentStorage*/ {
      * @devdoc The indexed db is used for blob data, as recommended.
      */
     static removeMediaBlob(fileName: string): Promise<void> {
-        return del(StorageKeys.MEDIA_BLOB + fileName);
+        return del(Store.MediaBlob + fileName);
     }
 
     /** Removes all media blob data from the persistent store

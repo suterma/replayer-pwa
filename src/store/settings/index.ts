@@ -1,6 +1,6 @@
 import { useLocalStorage } from '@vueuse/core';
 import { defineStore } from 'pinia';
-import { StorageKeys } from '..';
+import { Store } from '..';
 
 /** The precision for time display
  * @remarks Does not affect the application's internal precision when handling time values.
@@ -20,7 +20,7 @@ export enum TimeFormat {
 }
 
 /** A store for application settings */
-export const useSettingsStore = defineStore(StorageKeys.SETTINGS, () => {
+export const useSettingsStore = defineStore(Store.Settings, () => {
     /** Whether the audio level meter size is large */
     const levelMeterSizeIsLarge = useLocalStorage(
         'levelMeterSizeIsLarge',
