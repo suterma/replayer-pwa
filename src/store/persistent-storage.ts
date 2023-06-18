@@ -9,7 +9,7 @@ import { Store } from '.';
  * //TODO later with pinia, use it directly from the pinia app store (or maybe make a specific store?)
  * @devdoc Internally decides on optimal storage type use for each entity, thus hiding this complexity from the using code.
  * @devdoc Implements a module as described in https://www.typescriptlang.org/docs/handbook/modules.html */
-export default class PersistentStorage /*implements IPersistentStorage*/ {
+export default class PersistentStorage {
     /** Persistently stores media blob data for later retrieval
      * @devdoc The indexed db is used for blob data, as recommended for large data.
      */
