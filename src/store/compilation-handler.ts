@@ -633,7 +633,12 @@ export default class CompilationHandler {
                 Number.isFinite(cue.Time) &&
                 Number.isFinite(cue.Duration)
             ) {
-                return cue.Time + cue.Duration <= currentSeconds;
+                // Calculate the cue end with max precision for 64 bits.
+                // See https://stackoverflow.com/a/3644302/79485
+                const cueEnd = parseFloat(
+                    (cue.Time + cue.Duration).toPrecision(12),
+                );
+                return cueEnd <= currentSeconds;
             }
         }
         return false;
