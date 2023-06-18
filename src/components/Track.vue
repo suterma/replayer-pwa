@@ -664,7 +664,6 @@ export default defineComponent({
     ],
     props: {
         /** The track to display
-         * @remarks One of track or trackId is required.
          */
         track: {
             type: Object as PropType<Track>,
