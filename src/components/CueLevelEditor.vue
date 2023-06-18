@@ -123,7 +123,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { Cue, PlaybackMode } from '@/store/compilation-types';
+import { ICue, PlaybackMode } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
 import AdjustCueButton from '@/components/buttons/AdjustCueButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
@@ -156,13 +156,8 @@ export default defineComponent({
     emits: ['click', 'play', 'adjust'],
     props: {
         cue: {
-            type: Cue,
+            type: null as unknown as PropType<ICue>,
             required: true,
-        },
-
-        disabled: {
-            type: Boolean,
-            required: false,
         },
 
         /** The playback progress within this cue, in [percent], or null if not applicable
@@ -200,6 +195,11 @@ export default defineComponent({
         playbackMode: {
             type: String as () => PlaybackMode,
             required: true,
+        },
+
+        disabled: {
+            type: Boolean,
+            required: false,
         },
     },
     data() {

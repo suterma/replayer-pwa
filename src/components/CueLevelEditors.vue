@@ -1,6 +1,10 @@
 <template>
     <!-- Using the v-for on a template instead of the actual component saves unnecessary renderings. 
-         See https://stackoverflow.com/a/76074016/79485 -->
+         See https://stackoverflow.com/a/76074016/79485 
+         NOTE: However, in this situation, with the surrounding TransitionGroup, all contained CueLevelEditor
+         components still get patched and rendered, at each track time change, even if they
+         are not containing the playback head, thus are not visually impacted.
+        -->
     <TransitionGroup name="list">
         <template v-for="cue in cues" :key="cue.Id">
             <CueLevelEditor
