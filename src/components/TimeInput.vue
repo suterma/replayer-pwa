@@ -24,7 +24,7 @@ import debounce from 'lodash.debounce';
  */
 export default defineComponent({
     name: 'TimeInput',
-    emits: ['change'],
+    emits: ['change', 'update:modelValue'],
     props: {
         modelValue: {
             type: null as unknown as PropType<number | null>,
@@ -68,14 +68,17 @@ export default defineComponent({
         },
         /** Updates the set cue time */
         updateTime(event: Event) {
-            const time = CompilationHandler.roundTime(
-                parseFloat((event.target as HTMLInputElement).value),
-            );
+            const text = (event.target as HTMLInputElement).value;
+            const time = text
+                ? CompilationHandler.roundTime(
+                      parseFloat((event.target as HTMLInputElement).value),
+                  )
+                : null;
             if (this.modelValue != time) {
                 if (!Number.isFinite(time)) {
-                    this.$emit('change', null);
+                    this.$emit('update:modelValue', null);
                 } else {
-                    this.$emit('change', time);
+                    this.$emit('update:modelValue', time);
                 }
             }
         },

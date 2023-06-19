@@ -56,7 +56,7 @@
                             <TimeInput
                                 class="input has-text-right"
                                 :modelValue="cueTime"
-                                @change="updateCueTime"
+                                @update:modelValue="updateCueTime"
                                 size="9"
                             />
                         </p>

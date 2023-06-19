@@ -43,7 +43,8 @@ const vModel = computed<number | null>({
         return props.modelValue;
     },
     set(value): void {
-        emit('update:modelValue', value);
+        // only actual numbers should be emitted, not empty strings or NaN
+        emit('update:modelValue', Number.isFinite(value) ? value : null);
     },
 });
 </script>

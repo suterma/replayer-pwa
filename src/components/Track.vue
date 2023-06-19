@@ -781,6 +781,8 @@ export default defineComponent({
             /** The visual transition to use for skipping track */
             skipTransitionName: 'slide-left',
 
+            useMeasureNumberAsPosition: false,
+
             /** Icons from @mdi/js */
             mdiChevronUp: mdiChevronUp,
             mdiChevronDown: mdiChevronDown,

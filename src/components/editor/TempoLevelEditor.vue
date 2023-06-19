@@ -14,7 +14,7 @@
                             @change="
                                 emit(
                                     'update:beatsPerMinute',
-                                    $event.target.value,
+                                    Number.parseInt($event.target.value),
                                 )
                             "
                             placeholder="BPM"
@@ -67,6 +67,23 @@
                     </div>
                 </div>
             </div>
+            <div class="level-item is-flex-shrink-2">
+                <div class="field">
+                    <p class="control">
+                        <label
+                            class="checkbox"
+                            title="Use measure number as position"
+                        >
+                            <input
+                                type="checkbox"
+                                v-model="useMeasureNumberAsPosition"
+                                :disabled="!hasAllTempoValues"
+                            />
+                            Use measure number as position
+                        </label>
+                    </p>
+                </div>
+            </div>
         </div>
         <div class="level-right">
             <!-- Metronome -->
@@ -84,7 +101,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue';
+import { PropType, computed, ref, watch } from 'vue';
 import BpmEditor from '@/components/editor/BpmEditor.vue';
 import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
 import TimeInput from '@/components/TimeInput.vue';
@@ -99,32 +116,82 @@ const emit = defineEmits([
     'update:denominator',
     'update:beatsPerMinute',
     'update:originTime',
+    'update:useMeasureNumberAsPosition',
     'adjustOriginTime',
 ]);
 
 const props = defineProps({
     numerator: {
         type: null as unknown as PropType<number | null>,
-        required: false,
+        required: true,
         default: null,
     },
     denominator: {
         type: null as unknown as PropType<number | null>,
-        required: false,
+        required: true,
         default: null,
     },
     beatsPerMinute: {
         type: null as unknown as PropType<number | null>,
-        required: false,
+        required: true,
         default: null,
     },
     /** The origin of the track beats (the first downbeat of the first measure) */
     originTime: {
         type: null as unknown as PropType<number | null>,
-        required: false,
+        required: true,
         default: null,
     },
 });
+
+/** Whether to use the measure number to set and display the cue positions */
+const useMeasureNumberAsPosition = ref(false);
+
+//const useMeasureNumberAsPositionAllowed = ref(false);
+
+/** Whether all required values for the use of the measure number as position are available.
+ */
+const hasAllTempoValues = computed(() => {
+    return (
+        (Number.isFinite(props.beatsPerMinute) &&
+            Number.isFinite(props.denominator) &&
+            Number.isFinite(props.numerator) &&
+            Number.isFinite(props.originTime)) ??
+        false
+    );
+});
+
+/** Watches whether any of the required values for the use of the measure number as position is missing; reset the option if true.
+ */
+watch(
+    hasAllTempoValues,
+    (hasAllValues) => {
+        console.debug('hasAllValues:', hasAllValues);
+        if (hasAllValues === false) {
+            useMeasureNumberAsPosition.value = false;
+        }
+    },
+    { immediate: true },
+);
+// watch(
+//     [
+//         props.beatsPerMinute,
+//         props.denominator,
+//         props.numerator,
+//         props.originTime,
+//     ],
+//     ([newBpm, newDen, newNum, newOt]) => {
+//         const hasAllValues =
+//             Number.isFinite(newBpm) &&
+//             Number.isFinite(newDen) &&
+//             Number.isFinite(newNum) &&
+//             Number.isFinite(newOt);
+//         if (!hasAllValues) {
+//             emit('update:useMeasureNumberAsPosition', false);
+//         }
+//         useMeasureNumberAsPositionAllowed.value = hasAllValues;
+//     },
+// );
 </script>
 <style scoped>
 /** Actually never use the adjust button hotkey area, because it's never used here */
