@@ -888,6 +888,8 @@ audioElement.value.onplay = () => {
         });
 };
 
+audioElement.value.preload = 'auto';
+
 /** Gets the current position
  * @remarks Actually queries the media player.
  * @devdoc For better overall performance, this call should be avoided in favor of the (more seldom) auto-updated/emitted value.
@@ -897,10 +899,6 @@ function getCurrentPosition(): number {
 }
 
 updateVolume(props.volume);
-
-//Last, update the source, if already available
-audioElement.value.preload = 'auto';
-updateMediaSource(props.mediaUrl);
 
 /** Handles the teardown of the audio graph outside the mounted lifespan.
  * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
@@ -942,7 +940,6 @@ watch(audioFaderSettingsToken, () => {
 });
 
 /** Watch whether the media URL property changed, and then update the audio element accordingly  */
-
 watch(
     () => props.mediaUrl,
     () => {
@@ -950,6 +947,7 @@ watch(
         updateMediaSource(props.mediaUrl);
         fader.value.cancel();
     },
+    { immediate: true },
 );
 
 /** Watch the playback state, and then update the audio element accordingly  */
