@@ -208,6 +208,17 @@
                                 updateTrackOriginTime(track.Id, currentSeconds);
                             }
                         "
+                        :useMeasureNumberAsPosition="
+                            track.UseMeasureNumberAsPosition
+                        "
+                        @update:useMeasureNumberAsPosition="
+                                (value: boolean | null) => {
+                                    updateUseMeasureNumberAsPosition(
+                                        track.Id,
+                                        value,
+                                    );
+                                }
+                            "
                     >
                     </TempoLevelEditor>
                 </Experimental>
@@ -781,8 +792,6 @@ export default defineComponent({
             /** The visual transition to use for skipping track */
             skipTransitionName: 'slide-left',
 
-            useMeasureNumberAsPosition: false,
-
             /** Icons from @mdi/js */
             mdiChevronUp: mdiChevronUp,
             mdiChevronDown: mdiChevronDown,
@@ -799,6 +808,7 @@ export default defineComponent({
             'updateTrackTimeSignatureNumerator',
             'updateTrackTimeSignatureDenominator',
             'updateTrackOriginTime',
+            'updateUseMeasureNumberAsPosition',
         ]),
 
         convertToDisplayTime(

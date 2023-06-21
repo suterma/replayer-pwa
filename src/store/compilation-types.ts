@@ -106,6 +106,9 @@ export interface ITrack {
     /** The origin time for the beat (first downbeat of the first measure) */
     OriginTime: number | null;
 
+    /** Whether to use the measure number to set and display the cue positions */
+    UseMeasureNumberAsPosition: boolean | null;
+
     /** The URL or the local file name (possibly including a path) for the media file.
      * @devdoc If it is relative, it may get made absolute using the compilation's media path.
      */
@@ -195,6 +198,7 @@ export class Compilation implements ICompilation {
                     track.TimeSignatureNumerator,
                     track.TimeSignatureDenominator,
                     track.OriginTime,
+                    track.UseMeasureNumberAsPosition,
                     track.Url,
                     track.Id,
                     track.Cues.map((cue) => {
@@ -247,6 +251,7 @@ export class Track implements ITrack {
     TimeSignatureNumerator: number | null = null;
     TimeSignatureDenominator: number | null = null;
     OriginTime: number | null = null;
+    UseMeasureNumberAsPosition: boolean | null = null;
     Url = '';
     Id = '';
     Cues: Array<ICue> = new Array<ICue>();
@@ -270,6 +275,7 @@ export class Track implements ITrack {
         timeSignatureNumerator: number | null,
         timeSignatureDenominator: number | null,
         originTime: number | null,
+        useMeasureNumberAsPosition: boolean | null,
         url: string,
         id: string,
         cues: Array<ICue>,
@@ -283,6 +289,7 @@ export class Track implements ITrack {
         this.TimeSignatureNumerator = timeSignatureNumerator;
         this.TimeSignatureDenominator = timeSignatureDenominator;
         this.OriginTime = originTime;
+        this.UseMeasureNumberAsPosition = useMeasureNumberAsPosition;
         this.Url = url;
         this.Id = id;
         this.Cues = cues;
@@ -305,6 +312,7 @@ export class Track implements ITrack {
             obj.TimeSignatureNumerator,
             obj.TimeSignatureDenominator,
             obj.OriginTime,
+            obj.UseMeasureNumberAsPosition,
             obj.Url,
             obj.Id,
             obj.Cues,

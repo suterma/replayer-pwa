@@ -74,9 +74,16 @@
                             class="checkbox"
                             title="Use measure number as position"
                         >
+                            //TODO create a labeled checkbox //TODO persistence
+                            reoundtrip still does not work!
                             <input
                                 type="checkbox"
-                                v-model="useMeasureNumberAsPosition"
+                                :value="
+                                    props.useMeasureNumberAsPosition == true
+                                "
+                                @change="(event:any) =>
+                            {emit('update:useMeasureNumberAsPosition',
+                            event.target.checked);}"
                                 :disabled="!hasAllTempoValues"
                             />
                             Use measure number as position
@@ -101,7 +108,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed, ref, watch } from 'vue';
+import { PropType, computed, watch } from 'vue';
 import BpmEditor from '@/components/editor/BpmEditor.vue';
 import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
 import TimeInput from '@/components/TimeInput.vue';
@@ -142,12 +149,13 @@ const props = defineProps({
         required: true,
         default: null,
     },
+    /** Whether to use the measure number to set and display the cue positions */
+    useMeasureNumberAsPosition: {
+        type: null as unknown as PropType<boolean | null>,
+        required: true,
+        default: null,
+    },
 });
-
-/** Whether to use the measure number to set and display the cue positions */
-const useMeasureNumberAsPosition = ref(false);
-
-//const useMeasureNumberAsPositionAllowed = ref(false);
 
 /** Whether all required values for the use of the measure number as position are available.
  */
@@ -168,30 +176,11 @@ watch(
     (hasAllValues) => {
         console.debug('hasAllValues:', hasAllValues);
         if (hasAllValues === false) {
-            useMeasureNumberAsPosition.value = false;
+            emit('update:useMeasureNumberAsPosition', false);
         }
     },
     { immediate: true },
 );
-// watch(
-//     [
-//         props.beatsPerMinute,
-//         props.denominator,
-//         props.numerator,
-//         props.originTime,
-//     ],
-//     ([newBpm, newDen, newNum, newOt]) => {
-//         const hasAllValues =
-//             Number.isFinite(newBpm) &&
-//             Number.isFinite(newDen) &&
-//             Number.isFinite(newNum) &&
-//             Number.isFinite(newOt);
-//         if (!hasAllValues) {
-//             emit('update:useMeasureNumberAsPosition', false);
-//         }
-//         useMeasureNumberAsPositionAllowed.value = hasAllValues;
-//     },
-// );
 </script>
 <style scoped>
 /** Actually never use the adjust button hotkey area, because it's never used here */

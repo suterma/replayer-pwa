@@ -208,6 +208,21 @@ export const actions = {
         }
     },
 
+    /** Updates whether to use the measure number to set and display the cue positions
+     */
+    updateUseMeasureNumberAsPosition(
+        trackId: string,
+        useMeasureNumberAsPosition: boolean | null,
+    ): void {
+        const track = CompilationHandler.getTrackById(
+            state.compilation.value.Tracks,
+            trackId,
+        );
+        if (track) {
+            track.UseMeasureNumberAsPosition = useMeasureNumberAsPosition;
+        }
+    },
+
     /** Updates the cue data
      * @remarks Also updates the persistent store of the compilation
      */

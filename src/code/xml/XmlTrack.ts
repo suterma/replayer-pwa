@@ -17,6 +17,7 @@ export class XmlTrack {
         this.TimeSignatureNumerator = track.TimeSignatureNumerator;
         this.TimeSignatureDenominator = track.TimeSignatureDenominator;
         this.OriginTime = track.OriginTime;
+        this.UseMeasureNumberAsPosition = track.UseMeasureNumberAsPosition;
         this.Volume = track.Volume;
         this.Cues = new XmlCues(track.Cues);
     }
@@ -30,6 +31,7 @@ export class XmlTrack {
     TimeSignatureNumerator: number | null;
     TimeSignatureDenominator: number | null;
     OriginTime: number | null;
+    UseMeasureNumberAsPosition: boolean | null;
     Volume: number;
     Cues: XmlCues;
 }

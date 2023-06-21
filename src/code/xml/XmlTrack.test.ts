@@ -28,6 +28,7 @@ describe('the XML mapping', function () {
         expect(target.TimeSignatureNumerator).toBe(track.TimeSignatureNumerator);
         expect(target.TimeSignatureDenominator).toBe(track.TimeSignatureDenominator);
         expect(target.OriginTime).toBe(track.OriginTime);
+        expect(target.useMeasureNumberAsPosition).toBe(track.useMeasureNumberAsPosition);        
         expect(target.Name).toBe(track.Name);
         expect(target.Url).toBe(track.Url);
         expect(target.Volume).toBe(track.Volume);

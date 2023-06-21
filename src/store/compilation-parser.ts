@@ -91,6 +91,18 @@ export default class CompilationParser {
         return null;
     }
 
+    /** Returns the first item in the array as a boolean, if defined. Otherwise, null is returned as a default. */
+    private static FirstBooleanOf(array: string[]): boolean | null {
+        if (array) {
+            const firstItem = array[0];
+            if (firstItem) {
+                const firstBoolean = firstItem == 'true';
+                return firstBoolean;
+            }
+        }
+        return null;
+    }
+
     /** @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static parseFromXmlTracks(xmlTracks: any): Array<ITrack> {
@@ -111,6 +123,9 @@ export default class CompilationParser {
                     xmlTrack.TimeSignatureDenominator,
                 ),
                 CompilationParser.FirstNumberOf(xmlTrack.originTime),
+                CompilationParser.FirstBooleanOf(
+                    xmlTrack.useMeasureNumberAsPosition,
+                ),
                 CompilationParser.FirstStringOf(xmlTrack.Url),
                 CompilationParser.FirstStringOf(xmlTrack.Id),
                 CompilationParser.parseFromXmlCues(xmlTrack.Cues[0].Cue),
@@ -140,6 +155,7 @@ export default class CompilationParser {
                     ''.normalize(),
                     ''.normalize(),
                     null /*BPM*/,
+                    null,
                     null,
                     null,
                     null,
@@ -288,6 +304,7 @@ export default class CompilationParser {
                 album,
                 artist,
                 null /*BPM*/,
+                null,
                 null,
                 null,
                 null,
