@@ -74,11 +74,9 @@
                             class="checkbox"
                             title="Use measure number as position"
                         >
-                            //TODO create a labeled checkbox //TODO persistence
-                            reoundtrip still does not work!
                             <input
                                 type="checkbox"
-                                :value="
+                                :checked="
                                     props.useMeasureNumberAsPosition == true
                                 "
                                 @change="(event:any) =>
