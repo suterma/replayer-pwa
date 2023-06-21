@@ -70,22 +70,12 @@
             <div class="level-item is-flex-shrink-2">
                 <div class="field">
                     <p class="control">
-                        <label
-                            class="checkbox"
-                            title="Use measure number as position"
-                        >
-                            <input
-                                type="checkbox"
-                                :checked="
-                                    props.useMeasureNumberAsPosition == true
-                                "
-                                @change="(event:any) =>
-                            {emit('update:useMeasureNumberAsPosition',
-                            event.target.checked);}"
-                                :disabled="!hasAllTempoValues"
-                            />
-                            Use measure number as position
-                        </label>
+                        <LabeledCheckbox
+                            :modelValue="props.useMeasureNumberAsPosition"
+                            @update:modelValue="(value:boolean|null) => {emit('update:useMeasureNumberAsPosition', value);}"
+                            label="Use measure number as position"
+                            :disabled="!hasAllTempoValues"
+                        ></LabeledCheckbox>
                     </p>
                 </div>
             </div>
@@ -110,6 +100,7 @@ import { PropType, computed, watch } from 'vue';
 import BpmEditor from '@/components/editor/BpmEditor.vue';
 import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
 import TimeInput from '@/components/TimeInput.vue';
+import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 import AdjustCueButton from '@/components/buttons/AdjustCueButton.vue';
 
 /** A level-based Editor for tempo-related values
