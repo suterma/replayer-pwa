@@ -7,13 +7,11 @@
 
             <div class="field">
                 <div class="control">
-                    <label class="checkbox">
-                        <input type="checkbox" v-model="preventScreenTimeout" />
-                        Prevent screen timeout when in use
-                        <span class="has-opacity-half is-size-7">
-                            (Uses more energy)</span
-                        >
-                    </label>
+                    <LabeledCheckbox
+                        v-model="preventScreenTimeout"
+                        label="Prevent screen timeout when in use"
+                        hint="Uses more energy"
+                    ></LabeledCheckbox>
                 </div>
             </div>
             <div class="field">
@@ -204,42 +202,32 @@
 
             <div class="field">
                 <div class="control">
-                    <label class="checkbox">
-                        <input type="checkbox" v-model="applyFadeInOffset" />
-                        Add fade-in to pre-roll
-                        <span class="has-opacity-half is-size-7">
-                            (The additional pre-roll time compensates for the
-                            fade-in duration)</span
-                        >
-                    </label>
+                    <LabeledCheckbox
+                        v-model="applyFadeInOffset"
+                        label="Add fade-in to pre-roll"
+                        hint="The additional pre-roll time compensates for the fade-in duration"
+                    ></LabeledCheckbox>
                 </div>
             </div>
 
             <div class="field">
                 <div class="control">
-                    <label class="checkbox">
-                        <input type="checkbox" v-model="showLevelMeter" />
-                        Show audio level meters
-                        <span class="has-opacity-half is-size-7">
-                            (uses more energy, not working on older iOS
-                            devices)</span
-                        >
-                    </label>
+                    <LabeledCheckbox
+                        v-model="showLevelMeter"
+                        label="Show audio level meters"
+                        hint="Uses more energy, not working on older iOS
+                            devices"
+                    ></LabeledCheckbox>
                 </div>
             </div>
 
             <div class="field">
                 <div class="control">
-                    <label class="checkbox">
-                        <input
-                            type="checkbox"
-                            v-model="levelMeterSizeIsLarge"
-                        />
-                        Show large audio level meters
-                        <span class="has-opacity-half is-size-7">
-                            (level meters are full width)</span
-                        >
-                    </label>
+                    <LabeledCheckbox
+                        v-model="levelMeterSizeIsLarge"
+                        label="Show large audio level meters"
+                        hint="Level meters are full width"
+                    ></LabeledCheckbox>
                 </div>
             </div>
         </div>
@@ -267,41 +255,29 @@
 
             <div class="field">
                 <div class="control">
-                    <label class="checkbox">
-                        <input
-                            type="checkbox"
-                            v-model="experimentalShowPositionInTrackHeader"
-                        />
-                        Show position in track headers
-                        <span class="has-opacity-half is-size-7">
-                            (uses more space)</span
-                        >
-                    </label>
+                    <LabeledCheckbox
+                        v-model="experimentalShowPositionInTrackHeader"
+                        label="Show position in track headers"
+                        hint="Uses more space"
+                    ></LabeledCheckbox>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
-                    <label class="checkbox">
-                        <input
-                            type="checkbox"
-                            v-model="experimentalShowWaveforms"
-                        />
-                        Show scrollable waveforms
-                        <span class="has-opacity-half is-size-7">
-                            (uses more more memory and CPU power)</span
-                        >
-                    </label>
+                    <LabeledCheckbox
+                        v-model="experimentalShowWaveforms"
+                        label="Show scrollable waveforms"
+                        hint="Uses more more memory and CPU power"
+                    ></LabeledCheckbox>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
-                    <label class="checkbox">
-                        <input type="checkbox" v-model="experimentalUseTempo" />
-                        Show tempo editors / display
-                        <span class="has-opacity-half is-size-7">
-                            (uses more more space)</span
-                        >
-                    </label>
+                    <LabeledCheckbox
+                        v-model="experimentalUseTempo"
+                        label="Show tempo editors / display"
+                        hint="Uses more more space"
+                    ></LabeledCheckbox>
                 </div>
             </div>
         </div>
@@ -313,6 +289,7 @@ import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import { confirm } from '@/code/ui/dialogs';
 import { useRouter } from 'vue-router';
+import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 
 /** A Settings view for the settings store
  */
