@@ -827,13 +827,13 @@ audioElement.value.onabort = () => {
     debugLog(`onabort`);
 };
 audioElement.value.oncanplay = () => {
-    //debugLog(`oncanplay`);
+    debugLog(`oncanplay`);
 };
 audioElement.value.oncanplaythrough = () => {
-    //debugLog(`oncanplaythrough`);
+    debugLog(`oncanplaythrough`);
 };
 audioElement.value.onloadstart = () => {
-    debugLog(`onloadstart`);
+    debugLog(`onloadstart::src:${audioElement.value.src}`);
 };
 /** The progress event is fired periodically as the browser loads a resource.
  */
