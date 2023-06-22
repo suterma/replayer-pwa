@@ -312,6 +312,54 @@ export default class CompilationHandler {
         }
         return '';
     }
+    /** Converts the total seconds into a displayable measure/beats format,
+     * according to the application settings,
+     * if a suitable input value is provided.
+     * @param seconds - The current playhead position in [seconds]
+     * @param origin - The origin of the beat (time of first beat) in [seconds]
+     * @param beatsPerMinute - The number of beats per minute (will be converted to beats per seconds internally)
+     * @param seconds - The time signature numerator
+     * @param numerator - The time signature numerator
+     * @param denominator - The time signature denominator
+     * @return The measure/beats representation or the empty string.
+     */
+    public static convertToMeasureTime(
+        seconds: number | null | undefined,
+        origin: number,
+        beatsPerMinute: number,
+        numerator: number,
+        denominator: number,
+    ): string {
+        if (seconds != null && Number.isFinite(seconds)) {
+            const shiftedTime = seconds - origin;
+
+            // Never show negative beats
+            if (shiftedTime < 0) {
+                return '---|-';
+            }
+            const signature = numerator / denominator;
+            const beat = shiftedTime * (beatsPerMinute / 60) * signature;
+            const measureNumber =
+                Math.floor(beat / numerator) +
+                1; /* Measures are index-one based */
+            const beatInMeasureNumber =
+                Math.floor(beat % numerator) +
+                1; /* Beats are index-one based */
+
+            // set fixed integral digits
+            let measureNumberPrefix = '';
+            if (measureNumber < 100) {
+                measureNumberPrefix += '0';
+            }
+            if (measureNumber < 10) {
+                measureNumberPrefix += '0';
+            }
+
+            return `${measureNumberPrefix}${measureNumber}|${beatInMeasureNumber}`;
+        }
+
+        return '';
+    }
 
     /** Gets a lazy variant of the given file name, for better non-literal matching in case of special characters.
      * @remarks This removes non-printable characters (below the space, 32dec, 20hex) and non-ascii characters.

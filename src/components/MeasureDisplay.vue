@@ -1,0 +1,69 @@
+<template>
+    <span class="is-minimum-7-characters is-family-monospace">{{
+        currentDisplayMeasure(modelValue)
+    }}</span>
+</template>
+
+<script lang="ts">
+import CompilationHandler from '@/store/compilation-handler';
+import { defineComponent, PropType } from 'vue';
+
+const oneSubBeatPlaceholder = '---|-';
+
+/** A display for a measure/beat value in the mmm.b format
+ * @remarks The display value is calculated according to the set properties
+ */
+export default defineComponent({
+    name: 'MeasureDisplay',
+    props: {
+        /** The current playhead position in the track
+         */
+        modelValue: {
+            type: null as unknown as PropType<number | null>,
+            default: null,
+        },
+        /** The beat origin (offset in the track time)
+         */
+        origin: {
+            type: Number,
+            required: true,
+        },
+
+        /** The tempo in beats per minute.
+         */
+        beatsPerMinute: {
+            type: Number,
+            required: true,
+        },
+        /** The time signature numerator
+         */
+        numerator: {
+            type: Number,
+            required: true,
+        },
+        /** The time signature numerator
+         */
+        denominator: {
+            type: Number,
+            required: true,
+        },
+    },
+    methods: {
+        /** Converts the time into a measure/beats format.
+         */
+        currentDisplayMeasure(value: number | null): string {
+            if (Number.isFinite(value)) {
+                return CompilationHandler.convertToMeasureTime(
+                    this.modelValue,
+                    this.origin,
+                    this.beatsPerMinute,
+                    this.numerator,
+                    this.denominator,
+                );
+            } else {
+                return oneSubBeatPlaceholder;
+            }
+        },
+    },
+});
+</script>

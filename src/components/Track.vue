@@ -221,6 +221,19 @@
                             "
                     >
                     </TempoLevelEditor>
+                    <MeasureDisplay
+                        v-if="
+                            track.OriginTime != null &&
+                            track.BeatsPerMinute != null &&
+                            track.TimeSignatureNumerator != null &&
+                            track.TimeSignatureDenominator != null
+                        "
+                        :modelValue="currentSeconds"
+                        :origin="track.OriginTime"
+                        :beatsPerMinute="track.BeatsPerMinute"
+                        :numerator="track.TimeSignatureNumerator"
+                        :denominator="track.TimeSignatureDenominator"
+                    ></MeasureDisplay>
                 </Experimental>
 
                 <div class="levels">
@@ -594,6 +607,7 @@ import MuteButton from '@/components/buttons/MuteButton.vue';
 import SoloButton from '@/components/buttons/SoloButton.vue';
 import SelectButton from '@/components/buttons/SelectButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
+import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import NoSleep from 'nosleep.js';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
@@ -639,6 +653,7 @@ export default defineComponent({
         TrackTitleName,
         ArtistInfo,
         TempoLevelEditor,
+        MeasureDisplay,
         PlaybackIndicator,
     },
     emits: [
