@@ -1,10 +1,10 @@
 /** A position using a musical meter (a time representation using measures and beats).
  *  */
 export class MetricalPosition {
-    /** The measure number (index-1 based) */
+    /** The measure number (one-based) */
     Measure: number;
 
-    /** The beat number within the current measure (index-1 based)
+    /** The beat number within the current measure (one-based)
      * @remarks The beat number is optional, when only a measure should be represented.
      */
     Beat: number | null;
