@@ -36,8 +36,7 @@
             :trackName="track.Name"
             :trackUrl="track.Url"
             :trackBeatsPerMinute="track.BeatsPerMinute"
-            :trackTimeSignatureNumerator="track.TimeSignatureNumerator"
-            :trackTimeSignatureDenominator="track.TimeSignatureDenominator"
+            :trackTimeSignature="track.TimeSignature"
             :trackArtist="track.Artist"
             :trackAlbum="track.Album"
             :isPlaying="isPlaying"
@@ -176,19 +175,10 @@
                              updateTrackBeatsPerMinute(track.Id, value);
                         }
                     "
-                        :numerator="track.TimeSignatureNumerator"
-                        @update:numerator="
-                                (value: number| null) => {
-                                    updateTrackTimeSignatureNumerator(
-                                        track.Id,
-                                        value,
-                                    );
-                                }
-                            "
-                        :denominator="track.TimeSignatureDenominator"
-                        @update:denominator="
-                                (value: number| null) => {
-                                    updateTrackTimeSignatureDenominator(
+                        :timeSignature="track.TimeSignature"
+                        @update:timeSignature="
+                                (value: ITimeSignature | null) => {
+                                    updateTrackTimeSignature(
                                         track.Id,
                                         value,
                                     );
@@ -225,14 +215,12 @@
                         v-if="
                             track.OriginTime != null &&
                             track.BeatsPerMinute != null &&
-                            track.TimeSignatureNumerator != null &&
-                            track.TimeSignatureDenominator != null
+                            track.TimeSignature != null
                         "
                         :modelValue="currentSeconds"
                         :origin="track.OriginTime"
                         :beatsPerMinute="track.BeatsPerMinute"
-                        :numerator="track.TimeSignatureNumerator"
-                        :denominator="track.TimeSignatureDenominator"
+                        :timeSignature="track.TimeSignature"
                     ></MeasureDisplay>
                 </Experimental>
 
@@ -621,6 +609,10 @@ import { useSettingsStore } from '@/store/settings';
 import { mapActions, mapState } from 'pinia';
 import { useAppStore } from '@/store/app';
 import FileHandler from '@/store/filehandler';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { ITimeSignature } from '@/code/compilation/ITimeSignature';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -820,8 +812,7 @@ export default defineComponent({
             'updateTrackVolume',
             'updateDurations',
             'updateTrackBeatsPerMinute',
-            'updateTrackTimeSignatureNumerator',
-            'updateTrackTimeSignatureDenominator',
+            'updateTrackTimeSignature',
             'updateTrackOriginTime',
             'updateUseMeasureNumberAsPosition',
         ]),

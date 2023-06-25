@@ -1,5 +1,6 @@
 import { ICue, Track } from '@/store/compilation-types';
 import { XmlTrack } from './XmlTrack';
+import { TimeSignature } from '../compilation/TimeSignature';
 
 describe('the XML mapping', function () {
     it('should return an initialized XmlTrack object', function () {
@@ -8,6 +9,7 @@ describe('the XML mapping', function () {
             'testName',
             'testAlbum',
             'testArtist',
+            new TimeSignature(3 4),
             88.8,
             'https://test.example.com?myfile.mp3',
             'testId',
@@ -24,9 +26,8 @@ describe('the XML mapping', function () {
         expect(target.Artist).toBe(track.Artist);
         expect(target.Cues.Cue).toHaveLength(0);
         expect(target.Id).toBe(track.Id);
-         expect(target.BeatsPerMinute).toBe(track.BeatsPerMinute);
-        expect(target.TimeSignatureNumerator).toBe(track.TimeSignatureNumerator);
-        expect(target.TimeSignatureDenominator).toBe(track.TimeSignatureDenominator);
+        expect(target.BeatsPerMinute).toBe(track.BeatsPerMinute);
+        expect(target.TimeSignature).toBe(track.TimeSignature);
         expect(target.OriginTime).toBe(track.OriginTime);
         expect(target.useMeasureNumberAsPosition).toBe(track.useMeasureNumberAsPosition);        
         expect(target.Name).toBe(track.Name);

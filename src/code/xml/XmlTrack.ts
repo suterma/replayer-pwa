@@ -1,5 +1,6 @@
 import { ITrack } from '@/store/compilation-types';
 import { XmlCues } from './XmlCues';
+import { XmlTimeSignature } from './XmlTimeSignature';
 
 /** @class Implements an XML-Representation of a Track
  * @remarks This is intended to define the export structure for a compilation, for export with the xml2js module */
@@ -14,8 +15,9 @@ export class XmlTrack {
         this.Album = track.Album;
         this.Url = track.Url;
         this.BeatsPerMinute = track.BeatsPerMinute;
-        this.TimeSignatureNumerator = track.TimeSignatureNumerator;
-        this.TimeSignatureDenominator = track.TimeSignatureDenominator;
+        this.TimeSignature = track.TimeSignature
+            ? new XmlTimeSignature(track.TimeSignature)
+            : null;
         this.OriginTime = track.OriginTime;
         this.UseMeasureNumberAsPosition = track.UseMeasureNumberAsPosition;
         this.Volume = track.Volume;
@@ -28,8 +30,7 @@ export class XmlTrack {
     Album: string;
     Url: string;
     BeatsPerMinute: number | null;
-    TimeSignatureNumerator: number | null;
-    TimeSignatureDenominator: number | null;
+    TimeSignature: XmlTimeSignature | null;
     OriginTime: number | null;
     UseMeasureNumberAsPosition: boolean | null;
     Volume: number;

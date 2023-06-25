@@ -174,6 +174,7 @@ import TrackTitleName from './TrackTitleName.vue';
 import { mapActions, mapWritableState, mapState } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { useSettingsStore } from '@/store/settings';
+import { ITimeSignature } from '@/code/compilation/ITimeSignature';
 
 /** A header for editing "beats per minute" track metadata
  */
@@ -217,12 +218,8 @@ export default defineComponent({
             type: null as unknown as PropType<number | null>,
             default: null,
         },
-        trackTimeSignatureNumerator: {
-            type: null as unknown as PropType<number | null>,
-            default: null,
-        },
-        trackTimeSignatureDenominator: {
-            type: null as unknown as PropType<number | null>,
+        trackTimeSignature: {
+            type: null as unknown as PropType<ITimeSignature | null>,
             default: null,
         },
         /** Whether this track is to be considered as the active track */

@@ -1,3 +1,4 @@
+import { ITimeSignature } from '@/code/compilation/ITimeSignature';
 import { v4 as uuidv4 } from 'uuid';
 
 export enum CompilationType {
@@ -99,9 +100,8 @@ export interface ITrack {
      */
     BeatsPerMinute: number | null;
 
-    TimeSignatureNumerator: number | null;
-
-    TimeSignatureDenominator: number | null;
+    /** The time signature */
+    TimeSignature: ITimeSignature | null;
 
     /** The origin time for the beat (first downbeat of the first measure) */
     OriginTime: number | null;
@@ -195,8 +195,7 @@ export class Compilation implements ICompilation {
                     track.Album,
                     track.Artist,
                     track.BeatsPerMinute,
-                    track.TimeSignatureNumerator,
-                    track.TimeSignatureDenominator,
+                    track.TimeSignature,
                     track.OriginTime,
                     track.UseMeasureNumberAsPosition,
                     track.Url,
@@ -248,8 +247,7 @@ export class Track implements ITrack {
     Album = '';
     Artist = '';
     BeatsPerMinute: number | null = null;
-    TimeSignatureNumerator: number | null = null;
-    TimeSignatureDenominator: number | null = null;
+    TimeSignature: ITimeSignature | null;
     OriginTime: number | null = null;
     UseMeasureNumberAsPosition: boolean | null = null;
     Url = '';
@@ -272,8 +270,7 @@ export class Track implements ITrack {
         album: string,
         artist: string,
         beatsPerMinute: number | null,
-        timeSignatureNumerator: number | null,
-        timeSignatureDenominator: number | null,
+        timeSignature: ITimeSignature | null,
         originTime: number | null,
         useMeasureNumberAsPosition: boolean | null,
         url: string,
@@ -286,8 +283,7 @@ export class Track implements ITrack {
         this.Album = album;
         this.Artist = artist;
         this.BeatsPerMinute = beatsPerMinute;
-        this.TimeSignatureNumerator = timeSignatureNumerator;
-        this.TimeSignatureDenominator = timeSignatureDenominator;
+        this.TimeSignature = timeSignature;
         this.OriginTime = originTime;
         this.UseMeasureNumberAsPosition = useMeasureNumberAsPosition;
         this.Url = url;
@@ -309,8 +305,7 @@ export class Track implements ITrack {
             obj.Album,
             obj.Artist,
             obj.BeatsPerMinute,
-            obj.TimeSignatureNumerator,
-            obj.TimeSignatureDenominator,
+            obj.TimeSignature,
             obj.OriginTime,
             obj.UseMeasureNumberAsPosition,
             obj.Url,

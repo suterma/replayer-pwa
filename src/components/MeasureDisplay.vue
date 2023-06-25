@@ -5,6 +5,7 @@
 </template>
 
 <script lang="ts">
+import { ITimeSignature } from '@/code/compilation/ITimeSignature';
 import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent, PropType } from 'vue';
 
@@ -35,16 +36,10 @@ export default defineComponent({
             type: Number,
             required: true,
         },
-        /** The time signature numerator
+        /** The time signature
          */
-        numerator: {
-            type: Number,
-            required: true,
-        },
-        /** The time signature numerator
-         */
-        denominator: {
-            type: Number,
+        timeSignature: {
+            type: null as unknown as PropType<ITimeSignature>,
             required: true,
         },
     },
@@ -57,8 +52,7 @@ export default defineComponent({
                     this.modelValue,
                     this.origin,
                     this.beatsPerMinute,
-                    this.numerator,
-                    this.denominator,
+                    this.timeSignature,
                 );
             } else {
                 return oneSubBeatPlaceholder;

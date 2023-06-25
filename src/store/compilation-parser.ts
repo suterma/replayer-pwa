@@ -16,6 +16,8 @@ import { XmlCompilation } from '@/code/xml/XmlCompilation';
 import { LocationQuery } from 'vue-router';
 import CompilationHandler from './compilation-handler';
 import FileHandler from './filehandler';
+import { ITimeSignature } from '@/code/compilation/ITimeSignature';
+import { TimeSignature } from '@/code/compilation/TimeSignature';
 
 /**
  * Provides helper methods for parsing compilations from and to external storage formats.
@@ -116,13 +118,10 @@ export default class CompilationParser {
                 CompilationParser.FirstStringOf(xmlTrack.Artist),
                 /** NOTE: the formerly used measure property is deprecated */
                 CompilationParser.FirstNumberOf(xmlTrack.BeatsPerMinute),
-                CompilationParser.FirstNumberOf(
-                    xmlTrack.TimeSignatureNumerator,
+                CompilationParser.parseFromXmlTimeSignature(
+                    xmlTrack.TimeSignature[0],
                 ),
-                CompilationParser.FirstNumberOf(
-                    xmlTrack.TimeSignatureDenominator,
-                ),
-                CompilationParser.FirstNumberOf(xmlTrack.originTime),
+                CompilationParser.FirstNumberOf(xmlTrack.OriginTime),
                 CompilationParser.FirstBooleanOf(
                     xmlTrack.useMeasureNumberAsPosition,
                 ),
@@ -155,7 +154,6 @@ export default class CompilationParser {
                     ''.normalize(),
                     ''.normalize(),
                     null /*BPM*/,
-                    null,
                     null,
                     null,
                     null,
@@ -195,6 +193,27 @@ export default class CompilationParser {
             });
         }
         return cues;
+    }
+
+    /** Parses an XML representation of a time signature into an object instance. */
+    private static parseFromXmlTimeSignature(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        xmlTimeSignature: any,
+    ): ITimeSignature | null {
+        let timeSignature = null;
+
+        if (
+            xmlTimeSignature &&
+            xmlTimeSignature.Numerator != null &&
+            xmlTimeSignature.Denominator != null
+        ) {
+            timeSignature = new TimeSignature(
+                CompilationParser.FirstNumberOf(xmlTimeSignature.Numerator),
+                CompilationParser.FirstNumberOf(xmlTimeSignature.Denominator),
+            );
+        }
+
+        return timeSignature;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -304,7 +323,6 @@ export default class CompilationParser {
                 album,
                 artist,
                 null /*BPM*/,
-                null,
                 null,
                 null,
                 null,

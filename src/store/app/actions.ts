@@ -18,6 +18,7 @@ import { MediaBlob, MediaUrl } from '../types';
 import FileHandler from '../filehandler';
 import CompilationParser from '../compilation-parser';
 import { useMessageStore } from '../messages';
+import { ITimeSignature } from '@/code/compilation/ITimeSignature';
 
 export const actions = {
     /** Updates the currently selected cue Id, for application-wide handling
@@ -166,29 +167,16 @@ export const actions = {
         }
     },
 
-    updateTrackTimeSignatureNumerator(
+    updateTrackTimeSignature(
         trackId: string,
-        numerator: number | null,
+        timeSignature: ITimeSignature | null,
     ): void {
         const track = CompilationHandler.getTrackById(
             state.compilation.value.Tracks,
             trackId,
         );
         if (track) {
-            track.TimeSignatureNumerator = numerator;
-        }
-    },
-
-    updateTrackTimeSignatureDenominator(
-        trackId: string,
-        denominator: number | null,
-    ): void {
-        const track = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
-        if (track) {
-            track.TimeSignatureDenominator = denominator;
+            track.TimeSignature = timeSignature;
         }
     },
 

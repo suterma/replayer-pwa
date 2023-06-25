@@ -34,10 +34,8 @@
                     <p class="control">
                         <TimeSignatureEditor
                             class="input"
-                            :numerator="props.numerator"
-                            @update:numerator="(value:number|null) => emit('update:numerator', value)"
-                            :denominator="props.denominator"
-                            @update:denominator="(value:number|null) => {emit('update:denominator', value);}"
+                            :modelValue="props.timeSignature"
+                            @update:modelValue="(value:ITimeSignature|null) => {emit('update:timeSignature', value);}"
                             title="Time signature"
                         >
                         </TimeSignatureEditor>
@@ -102,13 +100,14 @@ import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 import AdjustCueButton from '@/components/buttons/AdjustCueButton.vue';
+import { ITimeSignature } from '@/code/compilation/ITimeSignature';
 
 /** A level-based Editor for tempo-related values
  * @remarks Shows a level with inputs for BPM, time signature etc., as level items
  */
 
 const emit = defineEmits([
-    'update:numerator',
+    'update:timeSignature',
     'update:denominator',
     'update:beatsPerMinute',
     'update:originTime',
@@ -117,13 +116,8 @@ const emit = defineEmits([
 ]);
 
 const props = defineProps({
-    numerator: {
-        type: null as unknown as PropType<number | null>,
-        required: true,
-        default: null,
-    },
-    denominator: {
-        type: null as unknown as PropType<number | null>,
+    timeSignature: {
+        type: null as unknown as PropType<ITimeSignature | null>,
         required: true,
         default: null,
     },
@@ -151,8 +145,8 @@ const props = defineProps({
 const hasAllTempoValues = computed(() => {
     return (
         (Number.isFinite(props.beatsPerMinute) &&
-            Number.isFinite(props.denominator) &&
-            Number.isFinite(props.numerator) &&
+            Number.isFinite(props.timeSignature?.Denominator) &&
+            Number.isFinite(props.timeSignature?.Numerator) &&
             Number.isFinite(props.originTime)) ??
         false
     );

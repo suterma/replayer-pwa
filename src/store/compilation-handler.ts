@@ -1,3 +1,4 @@
+import { ITimeSignature } from '@/code/compilation/ITimeSignature';
 import {
     Cue,
     DefaultTrackVolume,
@@ -102,7 +103,6 @@ export default class CompilationHandler {
             artist,
             album,
             null /* BPM */,
-            null,
             null,
             null,
             null,
@@ -327,23 +327,29 @@ export default class CompilationHandler {
         seconds: number | null | undefined,
         origin: number,
         beatsPerMinute: number,
-        numerator: number,
-        denominator: number,
+        timeSignature: ITimeSignature,
     ): string {
-        if (seconds != null && Number.isFinite(seconds)) {
+        if (
+            seconds != null &&
+            Number.isFinite(seconds) &&
+            timeSignature &&
+            timeSignature.Numerator &&
+            timeSignature.Denominator
+        ) {
             const shiftedTime = seconds - origin;
 
             // Never show negative beats
             if (shiftedTime < 0) {
                 return '---|-';
             }
-            const signature = numerator / denominator;
+            const signature =
+                timeSignature.Numerator / timeSignature.Denominator;
             const beat = shiftedTime * (beatsPerMinute / 60) * signature;
             const measureNumber =
-                Math.floor(beat / numerator) +
+                Math.floor(beat / timeSignature.Numerator) +
                 1; /* Measures are index-one based */
             const beatInMeasureNumber =
-                Math.floor(beat % numerator) +
+                Math.floor(beat % timeSignature.Numerator) +
                 1; /* Beats are index-one based */
 
             // set fixed integral digits
