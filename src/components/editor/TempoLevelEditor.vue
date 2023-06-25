@@ -77,6 +77,25 @@
                     </p>
                 </div>
             </div>
+            <div class="level-item is-flex-shrink-2">
+                <div class="field">
+                    <p class="control">
+                        <MetricalEditor
+                            class="input"
+                            :modelValue="currentMeasureNumber"
+                            @change="
+                                emit(
+                                    'update:currentMeasureNumber',
+                                    Number.parseInt($event.target.value),
+                                )
+                            "
+                            placeholder="Measure"
+                            title="Current measure number"
+                        >
+                        </MetricalEditor>
+                    </p>
+                </div>
+            </div>
         </div>
         <div class="level-right">
             <!-- Metronome -->
@@ -94,8 +113,9 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed, watch } from 'vue';
+import { PropType, computed, ref, watch } from 'vue';
 import BpmEditor from '@/components/editor/BpmEditor.vue';
+import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
@@ -112,8 +132,11 @@ const emit = defineEmits([
     'update:beatsPerMinute',
     'update:originTime',
     'update:useMeasureNumberAsPosition',
+    'update:currentMeasureNumber',
     'adjustOriginTime',
 ]);
+
+const currentMeasureNumber = ref(1);
 
 const props = defineProps({
     timeSignature: {

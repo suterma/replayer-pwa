@@ -23,6 +23,7 @@ export default defineComponent({
             type: null as unknown as PropType<number | null>,
             default: null,
         },
+
         /** The beat origin (offset in the track time)
          */
         origin: {

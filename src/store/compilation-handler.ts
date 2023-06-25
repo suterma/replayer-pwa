@@ -7,10 +7,11 @@ import {
     ITrack,
     Track,
 } from './compilation-types';
- import { TimeFormat, useSettingsStore } from './settings';
+import { TimeFormat, useSettingsStore } from './settings';
 import { MediaBlob, MediaUrl } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import FileHandler from './filehandler';
+import { MetricalPosition } from '@/code/compilation/MetricalPosition';
 
 /**
  * Provides compilation handling methods
@@ -312,6 +313,7 @@ export default class CompilationHandler {
         }
         return '';
     }
+
     /** Converts the total seconds into a displayable measure/beats format,
      * according to the application settings,
      * if a suitable input value is provided.
@@ -329,9 +331,47 @@ export default class CompilationHandler {
         beatsPerMinute: number,
         timeSignature: ITimeSignature,
     ): string {
+        const metricalPosition = this.convertToMetricalPosition(
+            seconds,
+            origin,
+            beatsPerMinute,
+            timeSignature,
+        );
+        if (metricalPosition) {
+            // set fixed integral digits
+            let measureNumberPrefix = '';
+            if (metricalPosition.Measure < 100) {
+                measureNumberPrefix += '0';
+            }
+            if (metricalPosition.Measure < 10) {
+                measureNumberPrefix += '0';
+            }
+
+            return `${measureNumberPrefix}${metricalPosition.Measure}|${metricalPosition.Beat}`;
+        }
+
+        return '';
+    }
+
+    /** Converts the total seconds into a metrical position
+     * if a suitable input value is provided.
+     * @param seconds - The current playhead position in [seconds]
+     * @param origin - The origin of the beat (time of first beat) in [seconds]
+     * @param beatsPerMinute - The number of beats per minute
+     * @param seconds - The time signature numerator
+     * @param timeSignature - The time signature
+     * @return The metrical position or null
+     */
+    public static convertToMetricalPosition(
+        seconds: number | null | undefined,
+        origin: number,
+        beatsPerMinute: number,
+        timeSignature: ITimeSignature,
+    ): MetricalPosition | null {
         if (
             seconds != null &&
             Number.isFinite(seconds) &&
+            Number.isFinite(origin) &&
             timeSignature &&
             timeSignature.Numerator &&
             timeSignature.Denominator
@@ -340,7 +380,7 @@ export default class CompilationHandler {
 
             // Never show negative beats
             if (shiftedTime < 0) {
-                return '---|-';
+                return null;
             }
             const signature =
                 timeSignature.Numerator / timeSignature.Denominator;
@@ -352,19 +392,42 @@ export default class CompilationHandler {
                 Math.floor(beat % timeSignature.Numerator) +
                 1; /* Beats are index-one based */
 
-            // set fixed integral digits
-            let measureNumberPrefix = '';
-            if (measureNumber < 100) {
-                measureNumberPrefix += '0';
-            }
-            if (measureNumber < 10) {
-                measureNumberPrefix += '0';
-            }
-
-            return `${measureNumberPrefix}${measureNumber}|${beatInMeasureNumber}`;
+            return new MetricalPosition(measureNumber, beatInMeasureNumber);
         }
 
-        return '';
+        return null;
+    }
+
+    /** Converts a metrical position in a temporal position,
+     * if a suitable input value is provided.
+     * @param metricalPosition - The metrical position to convert from
+     * @param origin - The origin of the beat (time of first beat) in [seconds]
+     * @param beatsPerMinute - The number of beats per minute
+     * @param seconds - The time signature numerator
+     * @param timeSignature - The time signature
+     * @return The temporal position or null
+     */
+    public static convertFromMetricalPosition(
+        metricalPosition: MetricalPosition | null,
+        origin: number,
+        beatsPerMinute: number,
+        timeSignature: ITimeSignature,
+    ): number | null {
+        if (
+            metricalPosition &&
+            Number.isFinite(origin) &&
+            timeSignature &&
+            timeSignature.Numerator &&
+            timeSignature.Denominator
+        ) {
+            // the position in beats, into the track
+            const beats =
+                metricalPosition.Measure * timeSignature.Numerator +
+                (metricalPosition.Beat ?? 0);
+            const time = (beats / beatsPerMinute) * 60;
+            return origin + time;
+        }
+        return null;
     }
 
     /** Gets a lazy variant of the given file name, for better non-literal matching in case of special characters.
