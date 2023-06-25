@@ -346,14 +346,9 @@
                         (Released under the MIT License, by the VueUse team)
                     </li>
                     <li>
-                        <a
-                            href="https://github.com/lodash/lodash/tree/4.0.8-npm-packages/lodash.debounce"
-                            target="_blank"
-                        >
-                            lodash.debounce</a
-                        >, rhe lodash method _.debounce exported as a Node.js
-                        module. (Released under the MIT License, by the Lodash
-                        team)
+                        <a href="https://lodash.com/" target="_blank"> Lodash</a
+                        >, a modern JavaScript utility library. (Released under
+                        the MIT License, by the Lodash team)
                     </li>
                     <li>
                         <a
