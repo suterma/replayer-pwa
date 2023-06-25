@@ -7,10 +7,10 @@ import {
     ITrack,
     Track,
 } from './compilation-types';
-import FileHandler from './filehandler';
-import { TimeFormat, useSettingsStore } from './settings';
+ import { TimeFormat, useSettingsStore } from './settings';
 import { MediaBlob, MediaUrl } from './types';
 import { v4 as uuidv4 } from 'uuid';
+import FileHandler from './filehandler';
 
 /**
  * Provides compilation handling methods

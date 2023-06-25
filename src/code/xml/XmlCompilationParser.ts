@@ -6,21 +6,20 @@ import {
     ICue,
     ITrack,
     Track,
-} from './compilation-types';
+} from '../../store/compilation-types';
 import { v4 as uuidv4 } from 'uuid';
-import { MediaBlob } from './types';
 import xml2js from 'xml2js';
 import { XmlCompilation } from '@/code/xml/XmlCompilation';
 import { LocationQuery } from 'vue-router';
-import CompilationHandler from './compilation-handler';
-import FileHandler from './filehandler';
+import CompilationHandler from '../../store/compilation-handler';
 import { ITimeSignature } from '@/code/compilation/ITimeSignature';
 import { TimeSignature } from '@/code/compilation/TimeSignature';
 
 /**
- * Provides helper methods for parsing compilations from and to external storage formats.
+ * Provides static helper methods for parsing compilations from and to XML.
+ * @devdoc Code is written to work with the xml2js module specifically
  */
-export default class CompilationParser {
+export default abstract class XmlCompilationParser {
     /** Parses an XML object into an ICompilation.
      * @param xmlCompilation - An object representing the stored Compilation from an XML import.
      * @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
@@ -28,19 +27,19 @@ export default class CompilationParser {
     private static parseFromXmlCompilation(xmlCompilation: any): ICompilation {
         console.debug('Raw xmlCompilation:', xmlCompilation);
         return new Compilation(
-            CompilationParser.FirstStringOf(xmlCompilation.MediaPath),
-            CompilationParser.FirstStringOf(xmlCompilation.Title),
-            CompilationParser.FirstStringOf(xmlCompilation.Artist),
-            CompilationParser.FirstStringOf(xmlCompilation.Album),
+            XmlCompilationParser.FirstStringOf(xmlCompilation.MediaPath),
+            XmlCompilationParser.FirstStringOf(xmlCompilation.Title),
+            XmlCompilationParser.FirstStringOf(xmlCompilation.Artist),
+            XmlCompilationParser.FirstStringOf(xmlCompilation.Album),
             '', //NOTE: URL will be set from calling code, with the standalone XML or ZIP file name
-            CompilationParser.FirstStringOf(xmlCompilation.Id),
-            CompilationParser.parseFromXmlTracks(
+            XmlCompilationParser.FirstStringOf(xmlCompilation.Id),
+            XmlCompilationParser.parseFromXmlTracks(
                 xmlCompilation.Tracks[0].Track,
             ),
         );
     }
 
-    /** Converts a compilation Object into an XML representation */
+    /** Converts a compilation instance into its XML representation */
     public static convertToXml(compilation: ICompilation): string {
         const obj = {
             XmlCompilation: new XmlCompilation(compilation),
@@ -91,23 +90,25 @@ export default class CompilationParser {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         xmlTracks.forEach((xmlTrack: any) => {
             const track = new Track(
-                CompilationParser.FirstStringOf(xmlTrack.Name),
-                CompilationParser.FirstStringOf(xmlTrack.Album),
-                CompilationParser.FirstStringOf(xmlTrack.Artist),
+                XmlCompilationParser.FirstStringOf(xmlTrack.Name),
+                XmlCompilationParser.FirstStringOf(xmlTrack.Album),
+                XmlCompilationParser.FirstStringOf(xmlTrack.Artist),
                 /** NOTE: the formerly used measure property is deprecated */
-                CompilationParser.FirstNumberOf(xmlTrack.BeatsPerMinute),
-                CompilationParser.parseFromXmlTimeSignature(
-                    xmlTrack.TimeSignature[0],
+                XmlCompilationParser.FirstNumberOf(xmlTrack.BeatsPerMinute),
+                XmlCompilationParser.parseFromXmlTimeSignature(
+                    xmlTrack.TimeSignature ? xmlTrack.TimeSignature[0] : null,
                 ),
-                CompilationParser.FirstNumberOf(xmlTrack.OriginTime),
-                CompilationParser.FirstBooleanOf(
+                XmlCompilationParser.FirstNumberOf(xmlTrack.OriginTime),
+                XmlCompilationParser.FirstBooleanOf(
                     xmlTrack.useMeasureNumberAsPosition,
                 ),
-                CompilationParser.FirstStringOf(xmlTrack.Url),
-                CompilationParser.FirstStringOf(xmlTrack.Id),
-                CompilationParser.parseFromXmlCues(xmlTrack.Cues[0].Cue),
+                XmlCompilationParser.FirstStringOf(xmlTrack.Url),
+                XmlCompilationParser.FirstStringOf(xmlTrack.Id),
+                XmlCompilationParser.parseFromXmlCues(
+                    xmlTrack.Cues ? xmlTrack.Cues[0].Cue : null,
+                ),
                 null,
-                CompilationParser.FirstNumberOf(xmlTrack.Volume) ??
+                XmlCompilationParser.FirstNumberOf(xmlTrack.Volume) ??
                     DefaultTrackVolume,
             );
             tracks.push(track);
@@ -126,15 +127,15 @@ export default class CompilationParser {
             xmlCues.forEach((xmlCue: any): void => {
                 //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
                 const cue = new Cue(
-                    CompilationParser.FirstStringOf(
+                    XmlCompilationParser.FirstStringOf(
                         xmlCue.Description,
                     ).normalize(),
-                    CompilationParser.FirstStringOf(
+                    XmlCompilationParser.FirstStringOf(
                         xmlCue.Shortcut,
                     ).normalize(),
-                    CompilationParser.FirstNumberOf(xmlCue.Time),
+                    XmlCompilationParser.FirstNumberOf(xmlCue.Time),
                     null,
-                    CompilationParser.FirstStringOf(xmlCue.Id),
+                    XmlCompilationParser.FirstStringOf(xmlCue.Id),
                 );
                 cues.push(cue);
             });
@@ -155,8 +156,10 @@ export default class CompilationParser {
             xmlTimeSignature.Denominator != null
         ) {
             timeSignature = new TimeSignature(
-                CompilationParser.FirstNumberOf(xmlTimeSignature.Numerator),
-                CompilationParser.FirstNumberOf(xmlTimeSignature.Denominator),
+                XmlCompilationParser.FirstNumberOf(xmlTimeSignature.Numerator),
+                XmlCompilationParser.FirstNumberOf(
+                    xmlTimeSignature.Denominator,
+                ),
             );
         }
 
@@ -175,26 +178,11 @@ export default class CompilationParser {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 .then((result: any) => {
                     console.debug('Parsed XML compilation: ', result);
-                    return CompilationParser.parseFromXmlCompilation(
+                    return XmlCompilationParser.parseFromXmlCompilation(
                         result.XmlCompilation,
                     );
                 })
         );
-    }
-
-    /** Handles the given filename and buffer as having media content and converts it into a MediaBlob
-     * @remarks Guesses the MIME type from the file name extension
-     * @devdoc This is used when a file is read from the ZIP package and not yet available as blob
-     */
-    public static handleAsMediaContent(
-        mediaFileName: string,
-        content: Buffer,
-    ): MediaBlob {
-        console.debug('CompilationParser::handleAsMediaContent');
-        const blob = new Blob([content], {
-            type: FileHandler.getFileMimeType(mediaFileName),
-        });
-        return new MediaBlob(mediaFileName, blob);
     }
 
     /** Parses a new track from a query
@@ -204,20 +192,20 @@ export default class CompilationParser {
      * @devdoc Currently does not support shortcuts
      */
     public static parseFromUrlQuery(query: LocationQuery): ITrack | undefined {
-        const mediaUrl = CompilationParser.getSingle(query.media);
+        const mediaUrl = XmlCompilationParser.getSingle(query.media);
 
         if (mediaUrl) {
             //Get the track metadata
-            const title = CompilationParser.getSingle(query.title) ?? '';
-            const artist = CompilationParser.getSingle(query.artist) ?? '';
-            const album = CompilationParser.getSingle(query.album) ?? '';
+            const title = XmlCompilationParser.getSingle(query.title) ?? '';
+            const artist = XmlCompilationParser.getSingle(query.artist) ?? '';
+            const album = XmlCompilationParser.getSingle(query.album) ?? '';
 
             //Get the cues if available
             let cues = Array<ICue>();
             for (const key in query) {
                 const time = parseFloat(key);
                 if (!isNaN(time)) {
-                    const description = CompilationParser.getSingle(
+                    const description = XmlCompilationParser.getSingle(
                         query[key],
                     ) as string;
                     const cueId = uuidv4();

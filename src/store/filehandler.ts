@@ -1,4 +1,4 @@
-import { RezMimeTypes } from './types';
+import { MediaBlob, RezMimeTypes } from './types';
 
 /**
  * Provides handling methods for package, media and compilation files,
@@ -396,6 +396,21 @@ export default class FileHandler {
         return (
             parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:'
         );
+    }
+
+    /** Handles the given filename and buffer as having media content and converts it into a MediaBlob
+     * @remarks Guesses the MIME type from the file name extension
+     * @devdoc This is used when a file is read from the ZIP package and not yet available as blob
+     */
+    public static handleAsMediaContent(
+        mediaFileName: string,
+        content: Buffer,
+    ): MediaBlob {
+        console.debug('CompilationParser::handleAsMediaContent');
+        const blob = new Blob([content], {
+            type: FileHandler.getFileMimeType(mediaFileName),
+        });
+        return new MediaBlob(mediaFileName, blob);
     }
 
     public static BytesPerMegaByte = 1024 * 1024;

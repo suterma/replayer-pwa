@@ -16,7 +16,7 @@ import PersistentStorage from '../persistent-storage';
 import JSZip from 'jszip';
 import { MediaBlob, MediaUrl } from '../types';
 import FileHandler from '../filehandler';
-import CompilationParser from '../compilation-parser';
+import CompilationParser from '../../code/xml/XmlCompilationParser';
 import { useMessageStore } from '../messages';
 import { ITimeSignature } from '@/code/compilation/ITimeSignature';
 
@@ -553,7 +553,7 @@ export const actions = {
                                                 )
                                             ) {
                                                 const mediaBlob =
-                                                    CompilationParser.handleAsMediaContent(
+                                                    FileHandler.handleAsMediaContent(
                                                         zipEntryName,
                                                         content,
                                                     );

@@ -3,7 +3,7 @@
  */
 
 import { LocationQuery } from 'vue-router';
-import CompilationParser from './compilation-parser';
+import CompilationParser from './XmlCompilationParser';
 
 describe('compilation-parser.ts', () => {
     it('should parse an undefined track when the query is empty', () => {
