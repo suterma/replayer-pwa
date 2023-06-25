@@ -54,7 +54,7 @@ export default class CompilationParser {
 
     /** Parses a PLIST object into an ICompilation.
      * @param plistCompilation - An object representing the stored Compilation from a PLIST import.
-     *  @devdoc The PList contains an array of all tracks.
+     * @devdoc The PList contains an array of all tracks.
      * NOTE: the plist compilation type does not have all data corresponding to a Replayer compilation. Thus some of the information like the GUID, is just made up    .
      */
     private static parseFromPListCompilation(

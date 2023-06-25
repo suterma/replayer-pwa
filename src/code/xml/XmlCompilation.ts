@@ -2,7 +2,7 @@ import { ICompilation, PlaybackMode } from '@/store/compilation-types';
 import { XmlTracks } from './XmlTracks';
 
 /** @class Implements an XML-Representation of a Compilation
- * @remarks This is intended to define the export structure for a compilation, for export with the xml2js module
+ * @remarks This is intended to define the export structure for an export with the xml2js module
  */
 export class XmlCompilation {
     /** @constructor

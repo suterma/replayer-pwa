@@ -3,7 +3,8 @@ import { XmlCues } from './XmlCues';
 import { XmlTimeSignature } from './XmlTimeSignature';
 
 /** @class Implements an XML-Representation of a Track
- * @remarks This is intended to define the export structure for a compilation, for export with the xml2js module */
+ * @remarks This is intended to define the export structure for an export with the xml2js module
+ */
 export class XmlTrack {
     /** @constructor
      * @param {Track} track - The Typescript track object to represent

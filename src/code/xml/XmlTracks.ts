@@ -2,7 +2,8 @@ import { ITrack, Track } from '@/store/compilation-types';
 import { XmlTrack } from './XmlTrack';
 
 /** @class Implements an XML-Representation of a Tracks set
- * @remarks This is intended to define the export structure for a compilation, for export with the xml2js module */
+ * @remarks This is intended to define the export structure for an export with the xml2js module
+ */
 export class XmlTracks {
     /** @constructor
      * @param {string} fileName - The name of the original media file (from the disk or from within a REZ/ZIP-file)
