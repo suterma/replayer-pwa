@@ -566,19 +566,6 @@ export const actions = {
                                                 }
                                                 message.popProgress();
                                             } else if (
-                                                FileHandler.isBplistFileName(
-                                                    zipEntryName,
-                                                )
-                                            ) {
-                                                CompilationParser.handleAsLivePlaybackPlaylist(
-                                                    content,
-                                                ).then((compilation) => {
-                                                    this.replaceCompilation(
-                                                        compilation,
-                                                    );
-                                                });
-                                                message.popProgress();
-                                            } else if (
                                                 FileHandler.isSupportedPackageFileName(
                                                     zipEntryName,
                                                 )
@@ -647,30 +634,6 @@ export const actions = {
                 this.addMediaBlob(new MediaBlob(file.name, file));
                 message.popProgress();
                 resolve();
-            } else if (FileHandler.isBplistFileName(file.name)) {
-                const reader = new FileReader();
-
-                reader.onload = () => {
-                    const content = Buffer.from(reader.result as ArrayBuffer);
-                    CompilationParser.handleAsLivePlaybackPlaylist(content)
-                        .then((compilation) => {
-                            this.replaceCompilation(compilation);
-                        })
-                        .finally(() => {
-                            message.popProgress();
-                            resolve();
-                        });
-                };
-                reader.onerror = (): void => {
-                    console.error(
-                        'Failed to read file ' +
-                            file.name +
-                            ': ' +
-                            reader.error,
-                    );
-                    reader.abort(); // (...does this do anything useful in an onerror handler?)
-                };
-                reader.readAsArrayBuffer(file);
             } else {
                 message.popProgress();
                 reject(

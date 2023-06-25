@@ -65,12 +65,6 @@
                     >, <span class="is-family-monospace">.xml</span>), with URLs
                     to online media resources
                 </li>
-                <li>
-                    <span class="has-text-weight-bold">bplist</span> (<span
-                        class="is-family-monospace"
-                        >.bplist</span
-                    >), from the LivePlayback app, without media files
-                </li>
             </ul>
         </div>
     </div>

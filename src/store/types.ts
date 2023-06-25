@@ -100,5 +100,4 @@ export enum RezMimeTypes {
     APPLICATION_ZIP = 'application/zip',
     TEXT_XML = 'text/xml',
     TEXT_PLAIN = 'text/plain',
-    APPLICATION_XBPLIST = 'application/x-bplist',
 }

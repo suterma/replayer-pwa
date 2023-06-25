@@ -10,8 +10,6 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { MediaBlob } from './types';
 import xml2js from 'xml2js';
-import NSKeyedUnarchiver from '@suterma/nskeyedunarchiver-liveplayback/source';
-import bplist from 'bplist-parser';
 import { XmlCompilation } from '@/code/xml/XmlCompilation';
 import { LocationQuery } from 'vue-router';
 import CompilationHandler from './compilation-handler';
@@ -50,26 +48,6 @@ export default class CompilationParser {
         const builder = new xml2js.Builder();
         const xml = builder.buildObject(obj);
         return xml;
-    }
-
-    /** Parses a PLIST object into an ICompilation.
-     * @param plistCompilation - An object representing the stored Compilation from a PLIST import.
-     * @devdoc The PList contains an array of all tracks.
-     * NOTE: the plist compilation type does not have all data corresponding to a Replayer compilation. Thus some of the information like the GUID, is just made up    .
-     */
-    private static parseFromPListCompilation(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        plistCompilation: any,
-    ): ICompilation {
-        return new Compilation(
-            ''.normalize(),
-            'Imported from LivePlayback'.normalize(),
-            ''.normalize(),
-            ''.normalize(),
-            ''.normalize(),
-            uuidv4(),
-            CompilationParser.parseFromPlistTracks(plistCompilation),
-        );
     }
 
     /** Returns the first item in the array, if defined. Otherwise, the empty string is returned as a default. */
@@ -138,37 +116,6 @@ export default class CompilationParser {
         return tracks;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private static parseFromPlistTracks(plistTracks: any[]): Array<ITrack> {
-        const tracks = new Array<ITrack>();
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        plistTracks.forEach((plistTrack: any) => {
-            //Only for tracks with real data (LivePlayback may have empty slots in the tracks list)
-            if (plistTrack.Duration && plistTrack.Name && plistTrack.Path) {
-                //NOTE: the plist compilation type does not have all data corresponding to a Replayer compilation.
-                //Thus some of the information like the GUID, is just made up.
-                //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
-                const track = new Track(
-                    plistTrack.Name.normalize(),
-                    ''.normalize(),
-                    ''.normalize(),
-                    null /*BPM*/,
-                    null,
-                    null,
-                    null,
-                    decodeURI(plistTrack.Path).normalize(),
-                    uuidv4(),
-                    CompilationParser.parseFromPlistCues(plistTrack.Markers),
-                    null,
-                    DefaultTrackVolume,
-                );
-                tracks.push(track);
-            }
-        });
-        return tracks;
-    }
-
     /** @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static parseFromXmlCues(xmlCues: any): ICue[] {
@@ -216,25 +163,6 @@ export default class CompilationParser {
         return timeSignature;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private static parseFromPlistCues(plistCues: any[]): ICue[] {
-        const cues = new Array<ICue>();
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        plistCues.forEach((plistCue: any) => {
-            //NOTE: the plist compilation type does not have all data corresponding to a Replayer compilation. Thus some of the information like the GUID, is just made up    .
-            const cue = new Cue(
-                plistCue.Name,
-                plistCue.ShortCut,
-                plistCue.Position,
-                null,
-                uuidv4(),
-            );
-            cues.push(cue);
-        });
-        return cues;
-    }
-
     /** Handles the given Buffer as having XML content and parses it into the compilation meta data
      */
     public static handleAsXmlCompilation(
@@ -252,24 +180,6 @@ export default class CompilationParser {
                     );
                 })
         );
-    }
-
-    /** Handles the given Buffer as having plist content and parses it into the compilation meta data
-     */
-    public static handleAsLivePlaybackPlaylist(
-        content: Buffer,
-    ): Promise<ICompilation> {
-        console.debug('CompilationParser::handleAsLivePlaybackPlaylist');
-        return bplist
-            .parseFile(content)
-            .then((inputPropertyList: unknown[]) => {
-                const unarchivedObject = new NSKeyedUnarchiver().unarchive(
-                    inputPropertyList,
-                );
-                return CompilationParser.parseFromPListCompilation(
-                    unarchivedObject,
-                );
-            });
     }
 
     /** Handles the given filename and buffer as having media content and converts it into a MediaBlob

@@ -228,24 +228,6 @@
                     </li>
                     <li>
                         <a
-                            href="https://github.com/joeferner/node-bplist-parser"
-                            target="_blank"
-                            >bplist-parser</a
-                        >, a binary Mac OS X Plist (property list) parser.
-                        (Released under the MIT License, by Joe Ferner)
-                    </li>
-                    <li>
-                        <a
-                            href="https://github.com/suterma/node-NSKeyedUnarchiver-LivePlayback"
-                            target="_blank"
-                            >node-nskeyedunarchiver-liveplayback</a
-                        >, a simple NSKeyedUnarchiver in Javascript, to
-                        unarchive iOS property lists. (Released under the MIT
-                        License, by Marcel Suter)
-                    </li>
-
-                    <li>
-                        <a
                             href="https://github.com/eligrey/FileSaver.js"
                             target="_blank"
                             >FileSaver.js</a

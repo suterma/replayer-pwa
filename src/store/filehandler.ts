@@ -17,7 +17,7 @@ export default class FileHandler {
     }
     /** The set of accepted file extensions */
     static acceptedFileList =
-        '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.bplist,.txt';
+        '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.txt';
 
     /** Returns whether the given path represents a Mac OS X resource fork.
      * @remarks Mac OS X resource forks are not processed by Replayer.
@@ -200,15 +200,13 @@ export default class FileHandler {
     }
 
     /** Returns whether the given file name (by it's extension) is a supported compilation file name by Replayer
-     * @remarks XML (.rex, .xml) and bplist data is always considered a Compilation in this context
+     * @remarks XML (.rex, .xml) data is always considered a Compilation in this context
      */
     static isSupportedCompilationFileName(
         fileName: string | undefined,
     ): boolean {
         if (fileName) {
-            return (
-                this.isBplistFileName(fileName) || this.isXmlFileName(fileName)
-            );
+            return this.isXmlFileName(fileName);
         }
         return false;
     }
@@ -258,18 +256,12 @@ export default class FileHandler {
     }
 
     /** Returns whether the given MIME type is a supported compilation MIME type by Replayer
-     * @remarks XML and bplist data is always considered a Compilation in this context
-     * @devdoc The types for binary plists are untested
+     * @remarks XML data is always considered a Compilation in this context
      */
     static isSupportedCompilationMimeType(type: string | undefined): boolean {
         return (
             !!type &&
-            [
-                'application/xml' /*xml*/,
-                'text/xml' /*xml*/,
-                'application/x-bplist' /*bplist*/,
-                'application/x-plist' /*binary plist*/,
-            ].includes(type)
+            ['application/xml' /*xml*/, 'text/xml' /*xml*/].includes(type)
         );
     }
 
@@ -387,17 +379,6 @@ export default class FileHandler {
             `filehandler::isXmlFileName:fileName:'${fileName}' is XML?:'${isXmlFileName}'`,
         );
         return isXmlFileName;
-    }
-
-    /** Asserts whether the file name represents a bplist (Binary Propertylist) compilation file */
-    public static isBplistFileName(fileName: string): boolean {
-        const isBplistFileName =
-            fileName.toLowerCase().endsWith('.bplist') ||
-            fileName.toLowerCase().endsWith('playlist');
-        console.debug(
-            `filehandler::isBplistFileName:fileName:'${fileName}' is Bplist?:'${isBplistFileName}'`,
-        );
-        return isBplistFileName;
     }
 
     /** Determines whether the string contains a valid URL, starting with the http|https protocol.

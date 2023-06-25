@@ -123,13 +123,6 @@
                     A REZ Package containing an REX compilation with 2 tracks
                     and matching mp3 files.
                 </li>
-                <li>
-                    <a href="/#/play/Demo%20Adonia%20Junior%2021.bplist"
-                        >Demo Binary Property List compilation (as from the
-                        LivePlayback app)</a
-                    ><br />
-                    A bplist file with 21 tracks (no media files).
-                </li>
             </ul>
         </div>
 

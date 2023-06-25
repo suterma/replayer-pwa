@@ -7,9 +7,6 @@ module.exports = {
         'vue',
     ],
     /*transformIgnorePatterns: ['<rootDir>/node_modules/'],*/
-    transformIgnorePatterns: [
-        '/node_modules/(?!@suterma/nskeyedunarchiver-liveplayback)',
-    ],
     transform: {
         /** Use the Typescript runner for testing ts code */
         '^.+\\.ts?$': 'ts-jest',
