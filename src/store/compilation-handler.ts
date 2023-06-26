@@ -7,11 +7,12 @@ import {
     ITrack,
     Track,
 } from './compilation-types';
-import { TimeFormat, useSettingsStore } from './settings';
+import { DefaultMathPrecision, TimeFormat, useSettingsStore } from './settings';
 import { MediaBlob, MediaUrl } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import FileHandler from './filehandler';
 import { MetricalPosition } from '@/code/compilation/MetricalPosition';
+import _ from 'lodash';
 
 /**
  * Provides compilation handling methods
@@ -170,11 +171,10 @@ export default class CompilationHandler {
         return cues;
     }
 
-    /** Rounds the given time to the Replayer default precision.
-     * @remarks The time will be rounded to two decimal digits after the point (1/100th of a second)
+    /** Rounds the given value to the Replayer default math precision for time values.
      */
     static roundTime(time: number): number {
-        return Math.round(time * 100) / 100;
+        return _.round(time, DefaultMathPrecision);
     }
 
     /** Extracts all online URLs from the compilation's tracks.
@@ -376,6 +376,8 @@ export default class CompilationHandler {
             timeSignature.Numerator &&
             timeSignature.Denominator
         ) {
+            //TODO does not work correctly, write a test!
+
             const shiftedTime = seconds - origin;
 
             // Never show negative beats
@@ -385,14 +387,38 @@ export default class CompilationHandler {
             const signature =
                 timeSignature.Numerator / timeSignature.Denominator;
             const beat = shiftedTime * (beatsPerMinute / 60) * signature;
-            const measureNumber =
-                Math.floor(beat / timeSignature.Numerator) +
-                1; /* Measures are index-one based */
-            const beatInMeasureNumber =
-                Math.floor(beat % timeSignature.Numerator) +
-                1; /* Beats are index-one based */
+            const pinnedBeat = _.floor(_.round(beat, 10));
 
-            return new MetricalPosition(measureNumber, beatInMeasureNumber);
+            // Calculating the measure and beat numbers with floor and round helps to maintain monotonic changes
+            // Otherwise, small math errors could lead to skipping of values
+            const measureNumber =
+                pinnedBeat / timeSignature.Numerator +
+                1; /* Measures are index-one based */
+
+            const beatInMeasureNumber =
+                (pinnedBeat % timeSignature.Numerator) +
+                1; /* Beats are index-one based */
+            console.debug(
+                `measureNumber: ${measureNumber};beat:${beatInMeasureNumber}`,
+            );
+
+            const pinnedMeasureNumber = _.floor(measureNumber);
+
+            // const pinnedBeatInMeasureNumber = _.floor(
+            //     _.round(beatInMeasureNumber, DefaultMathPrecision),
+            // );
+
+            //const pinnedMeasureNumber = measureNumber;
+            const pinnedBeatInMeasureNumber = beatInMeasureNumber;
+
+            console.debug(
+                `pinnedMeasureNumber: ${pinnedMeasureNumber};pinnedBeatInMeasureNumber:${pinnedBeatInMeasureNumber}`,
+            );
+
+            return new MetricalPosition(
+                pinnedMeasureNumber,
+                pinnedBeatInMeasureNumber,
+            );
         }
 
         return null;
@@ -421,9 +447,10 @@ export default class CompilationHandler {
             timeSignature.Denominator
         ) {
             // the position in beats, into the track
+            // NOTE: beats here is zero-based, whereas the metrical position data is one-based
             const beats =
-                metricalPosition.Measure * timeSignature.Numerator +
-                (metricalPosition.Beat ?? 0);
+                (metricalPosition.Measure - 1) * timeSignature.Numerator +
+                ((metricalPosition.Beat ?? 1) - 1);
             const time = (beats / beatsPerMinute) * 60;
             return origin + time;
         }

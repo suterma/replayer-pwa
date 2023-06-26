@@ -8,6 +8,11 @@ import { Store } from '..';
  */
 export const TimeDisplayDecimalPlaces = 1;
 
+/** The default precision for time handling and time calculations
+ * @remarks Prevents the use of overly lengthy number values, which are not relevant for music playback.
+ */
+export const DefaultMathPrecision = 3;
+
 /** Variants of time representation */
 export enum TimeFormat {
     /** Represents time in the IS0 8601 extended format
