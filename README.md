@@ -38,6 +38,15 @@ The full documentation is available at https://replayer.app/en/documentation
     # Manually
     npm run cypress:open
 
+# Build
+
+This package currently runs best with node version 16. (node version 18 fails because of some dependencies that are not working with it.)
+
+    npm install -g n
+    n 16
+    npm install
+    npm run build
+
 # Roadmap
 
 See [Trello](https://trello.com/b/UqdfomQI/replayer-20)
