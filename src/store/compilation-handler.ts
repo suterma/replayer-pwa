@@ -130,8 +130,8 @@ export default class CompilationHandler {
             (a.Time ?? 0) > (b.Time ?? 0)
                 ? 1
                 : (b.Time ?? 0) > (a.Time ?? 0)
-                ? -1
-                : 0,
+                    ? -1
+                    : 0,
         );
         return cues;
     }
@@ -323,7 +323,7 @@ export default class CompilationHandler {
      * @param seconds - The time signature numerator
      * @param numerator - The time signature numerator
      * @param denominator - The time signature denominator
-     * @return The measure/beats representation or the empty string.
+     * @return The measure/beats representation or a placeholder.
      */
     public static convertToMeasureTime(
         seconds: number | null | undefined,
@@ -337,7 +337,7 @@ export default class CompilationHandler {
             beatsPerMinute,
             timeSignature,
         );
-        if (metricalPosition) {
+        if (metricalPosition && metricalPosition.Measure) {
             // set fixed integral digits
             let measureNumberPrefix = '';
             if (metricalPosition.Measure < 100) {
@@ -348,9 +348,11 @@ export default class CompilationHandler {
             }
 
             return `${measureNumberPrefix}${metricalPosition.Measure}|${metricalPosition.Beat}`;
+        } else if (metricalPosition && metricalPosition.Beat) {
+            return `---|${metricalPosition.Beat}`;
         }
 
-        return '';
+        return '---|-';
     }
 
     /** Converts the total seconds into a metrical position
@@ -380,14 +382,11 @@ export default class CompilationHandler {
 
             const shiftedTime = seconds - origin;
 
-            // Never show negative beats
-            if (shiftedTime < 0) {
-                return null;
-            }
             const signature =
                 timeSignature.Numerator / timeSignature.Denominator;
             const beat = shiftedTime * (beatsPerMinute / 60) * signature;
-            const pinnedBeat = _.floor(_.round(beat, 10));
+            //            const pinnedBeat = _.floor(_.round(beat, 10));
+            const  /*non*/pinnedBeat = (_.round(beat, 10));
 
             // Calculating the measure and beat numbers with floor and round helps to maintain monotonic changes
             // Otherwise, small math errors could lead to skipping of values
@@ -403,17 +402,24 @@ export default class CompilationHandler {
             );
 
             const pinnedMeasureNumber = _.floor(measureNumber);
-
-            // const pinnedBeatInMeasureNumber = _.floor(
-            //     _.round(beatInMeasureNumber, DefaultMathPrecision),
-            // );
-
-            //const pinnedMeasureNumber = measureNumber;
             const pinnedBeatInMeasureNumber = beatInMeasureNumber;
 
             console.debug(
                 `pinnedMeasureNumber: ${pinnedMeasureNumber};pinnedBeatInMeasureNumber:${pinnedBeatInMeasureNumber}`,
             );
+
+            // Never show measures below index 1, but count the beats nonetheless
+            if (shiftedTime < 0) {
+                const beatInMeasureNumber =
+                    ((pinnedBeat + 1) % timeSignature.Numerator)
+                /* Beats are index-one based */
+                const pinnedBeatInMeasureNumber = beatInMeasureNumber;
+
+                return new MetricalPosition(
+                    null,
+                    pinnedBeatInMeasureNumber + (timeSignature.Numerator)
+                );
+            }
 
             return new MetricalPosition(
                 pinnedMeasureNumber,
@@ -441,6 +447,7 @@ export default class CompilationHandler {
     ): number | null {
         if (
             metricalPosition &&
+            metricalPosition.Measure &&
             Number.isFinite(origin) &&
             timeSignature &&
             timeSignature.Numerator &&
@@ -614,8 +621,8 @@ export default class CompilationHandler {
             (a.Time ?? 0) > (b.Time ?? 0)
                 ? 1
                 : (b.Time ?? 0) > (a.Time ?? 0)
-                ? -1
-                : 0,
+                    ? -1
+                    : 0,
         );
     }
 

@@ -1,6 +1,6 @@
 <template>
     <span class="is-minimum-7-characters is-family-monospace">{{
-        currentDisplayMeasure(modelValue)
+        currentDisplayMeasure
     }}</span>
 </template>
 
@@ -8,8 +8,6 @@
 import { ITimeSignature } from '@/code/compilation/ITimeSignature';
 import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent, PropType } from 'vue';
-
-const oneSubBeatPlaceholder = '---|-';
 
 /** A display for a measure/beat value in the mmm.b format
  * @remarks The display value is calculated according to the set properties
@@ -44,20 +42,17 @@ export default defineComponent({
             required: true,
         },
     },
-    methods: {
+    computed: {
         /** Converts the time into a measure/beats format.
          */
-        currentDisplayMeasure(value: number | null): string {
-            if (Number.isFinite(value)) {
-                return CompilationHandler.convertToMeasureTime(
-                    this.modelValue,
-                    this.origin,
-                    this.beatsPerMinute,
-                    this.timeSignature,
-                );
-            } else {
-                return oneSubBeatPlaceholder;
-            }
+        currentDisplayMeasure(): string {
+            return CompilationHandler.convertToMeasureTime(
+                this.modelValue,
+                this.origin,
+                this.beatsPerMinute,
+                this.timeSignature,
+            );
+
         },
     },
 });
