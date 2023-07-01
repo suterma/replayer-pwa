@@ -5,8 +5,6 @@
 </template>
 
 <script lang="ts">
-import { ITimeSignature } from '@/code/compilation/ITimeSignature';
-import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent, PropType } from 'vue';
 
 /** A display for a measure/beat value in the mmm.b format
@@ -46,7 +44,7 @@ export default defineComponent({
         /** Converts the time into a measure/beats format.
          */
         currentDisplayMeasure(): string {
-            return CompilationHandler.convertToMeasureTime(
+            return Meter.convertToMeasureTime(
                 this.modelValue,
                 this.origin,
                 this.beatsPerMinute,
