@@ -1,12 +1,10 @@
-
 import _ from 'lodash';
-import { ITimeSignature } from "./ITimeSignature";
-import { MetricalPosition } from "./MetricalPosition";
+import { ITimeSignature } from './ITimeSignature';
+import { MetricalPosition } from './MetricalPosition';
 
 /** @class Static functions for the musical meter
  */
 export class Meter {
-
     /** Converts the time (in total seconds) into a displayable measure/beats format,
      * according to the meter,
      * if a suitable input value is provided.
@@ -49,13 +47,13 @@ export class Meter {
     }
 
     /** Converts a temporal position (in total seconds within a track) into a metrical position
-    * if a suitable input value is provided.
-    * @param seconds - The temporal position to convert in [seconds]
-    * @param origin - The temporal position of the (declared) first beat in [seconds]
-    * @param beatsPerMinute - The number of beats per minute
-    * @param timeSignature - The time signature
-    * @return The metrical position or null
-    */
+     * if a suitable input value is provided.
+     * @param seconds - The temporal position to convert in [seconds]
+     * @param origin - The temporal position of the (declared) first beat in [seconds]
+     * @param beatsPerMinute - The number of beats per minute
+     * @param timeSignature - The time signature
+     * @return The metrical position or null
+     */
     public static fromTime(
         seconds: number | null | undefined,
         origin: number,
@@ -70,7 +68,6 @@ export class Meter {
             timeSignature.Numerator &&
             timeSignature.Denominator
         ) {
-
             // get the time relative to the teporal position of the declared first beat
             const shiftedTime = seconds - origin;
 
@@ -79,12 +76,12 @@ export class Meter {
 
             const beat = shiftedTime * (beatsPerMinute / 60) * signatureValue;
 
-            const beatNumber = _.floor(
-                beat);
+            const beatNumber = _.floor(beat);
 
             const measureNumber = _.floor(
                 beatNumber / timeSignature.Numerator +
-                1 /* Measures are index-one based */);
+                    1 /* Measures are index-one based */,
+            );
 
             const beatInMeasureNumber =
                 (beatNumber % timeSignature.Numerator) +
@@ -93,20 +90,17 @@ export class Meter {
             // Never show measures below index 1, but count the beats nonetheless
             if (shiftedTime < 0) {
                 const beatInMeasureNumber =
-                    ((beatNumber + 1) % timeSignature.Numerator)
+                    (beatNumber + 1) % timeSignature.Numerator;
                 /* Beats are index-one based */
                 const beatNumberInMeasureNumber = beatInMeasureNumber;
 
                 return new MetricalPosition(
                     null,
-                    beatNumberInMeasureNumber + (timeSignature.Numerator)
+                    beatNumberInMeasureNumber + timeSignature.Numerator,
                 );
             }
 
-            return new MetricalPosition(
-                measureNumber,
-                beatInMeasureNumber,
-            );
+            return new MetricalPosition(measureNumber, beatInMeasureNumber);
         }
 
         return null;

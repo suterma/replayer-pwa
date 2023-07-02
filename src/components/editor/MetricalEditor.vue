@@ -1,12 +1,22 @@
 <template>
     <slot></slot>
     <!-- Let the attributes fall through the input element: -->
-    <input class="input bpm has-text-right" v-bind="$attrs" type="number" inputmode="numeric" step="1" min="1"
-        v-model.number="vModel" size="3" data-cy="input-measure" :placeholder="placeholder" tabindex="0" />
+    <input
+        class="input bpm has-text-right"
+        v-bind="$attrs"
+        type="number"
+        inputmode="numeric"
+        step="1"
+        min="1"
+        v-model.number="vModel"
+        size="3"
+        data-cy="input-measure"
+        :placeholder="placeholder"
+        tabindex="0"
+    />
 </template>
 
 <script setup lang="ts">
-
 import { ITimeSignature } from '@/code/music/ITimeSignature';
 import { Meter } from '@/code/music/Meter';
 import { MetricalPosition } from '@/code/music/MetricalPosition';
@@ -64,13 +74,12 @@ const vModel = computed<number | null>({
     },
     set(value): void {
         if (value != null) {
-            const temporalPosition =
-                Meter.toTime(
-                    new MetricalPosition(value, null),
-                    props.origin,
-                    props.beatsPerMinute,
-                    props.timeSignature,
-                );
+            const temporalPosition = Meter.toTime(
+                new MetricalPosition(value, null),
+                props.origin,
+                props.beatsPerMinute,
+                props.timeSignature,
+            );
             // only actual numbers should be emitted, not empty strings or NaN
             if (temporalPosition != null && Number.isFinite(temporalPosition)) {
                 emit(

@@ -10,7 +10,9 @@
         "editor.formatOnSave": true,
         "editor.detectIndentation": true,
         "vetur.format.options.tabSize": 4,
-        "editor.rulers": [80],
+        "editor.rulers": [
+            80
+        ],
         "editor.guides.indentation": true,
         "cSpell.words": [
             "borderless",
@@ -25,6 +27,9 @@
             "semibold",
             "simolation",
             "slipmatio",
-        ]
+        ],
+        "javascript.preferences.quoteStyle": "single",
+        "typescript.preferences.quoteStyle": "single",
+        "html.completion.attributeDefaultValue": "singlequotes"
     }
 }

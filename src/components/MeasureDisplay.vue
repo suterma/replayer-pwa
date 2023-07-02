@@ -52,7 +52,6 @@ export default defineComponent({
                 this.beatsPerMinute,
                 this.timeSignature,
             );
-
         },
     },
 });
