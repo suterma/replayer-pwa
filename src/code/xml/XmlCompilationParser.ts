@@ -12,8 +12,9 @@ import xml2js from 'xml2js';
 import { XmlCompilation } from '@/code/xml/XmlCompilation';
 import { LocationQuery } from 'vue-router';
 import CompilationHandler from '../../store/compilation-handler';
-import { ITimeSignature } from '@/code/compilation/ITimeSignature';
-import { TimeSignature } from '@/code/compilation/TimeSignature';
+import { TimeSignature } from '../music/TimeSignature';
+import { ITimeSignature } from '../music/ITimeSignature';
+
 
 /**
  * Provides static helper methods for parsing compilations from and to XML.
@@ -109,7 +110,7 @@ export default abstract class XmlCompilationParser {
                 ),
                 null,
                 XmlCompilationParser.FirstNumberOf(xmlTrack.Volume) ??
-                    DefaultTrackVolume,
+                DefaultTrackVolume,
             );
             tracks.push(track);
         });

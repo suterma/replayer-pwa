@@ -2,40 +2,20 @@
     <slot></slot>
     <div class="is-flex is-justify-content-space-between">
         <!-- Let the attributes fall through the input element: -->
-        <input
-            class="input time-signature has-text-right"
-            v-bind="$attrs"
-            type="number"
-            inputmode="numeric"
-            step="1"
-            min="1"
-            v-model.number="vModelNumerator"
-            size="2"
-            data-cy="input-timeSignatureNumerator"
-            tabindex="0"
-            title="Numerator"
-        />
+        <input class="input time-signature has-text-right" v-bind="$attrs" type="number" inputmode="numeric" step="1"
+            min="1" v-model.number="vModelNumerator" size="2" data-cy="input-timeSignatureNumerator" tabindex="0"
+            title="Numerator" />
         <span class="mt-2">/</span>
         <!-- Let the attributes fall through the input element: -->
-        <input
-            class="input time-signature has-text-right"
-            v-bind="$attrs"
-            type="number"
-            inputmode="numeric"
-            step="1"
-            min="1"
-            v-model.number="vModelDenominator"
-            size="2"
-            data-cy="input-timeSignatureDenominator"
-            tabindex="0"
-            title="Denominator"
-        />
+        <input class="input time-signature has-text-right" v-bind="$attrs" type="number" inputmode="numeric" step="1"
+            min="1" v-model.number="vModelDenominator" size="2" data-cy="input-timeSignatureDenominator" tabindex="0"
+            title="Denominator" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { ITimeSignature } from '@/code/compilation/ITimeSignature';
-import { TimeSignature } from '@/code/compilation/TimeSignature';
+import { ITimeSignature } from '@/code/music/ITimeSignature';
+import { TimeSignature } from '@/code/music/TimeSignature';
 import { PropType, computed } from 'vue';
 
 /** A field of large cue buttons for a track

@@ -1,4 +1,4 @@
-import { ITimeSignature } from '@/code/compilation/ITimeSignature';
+import { ITimeSignature } from '@/code/music/ITimeSignature';
 import { v4 as uuidv4 } from 'uuid';
 
 export enum CompilationType {

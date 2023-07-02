@@ -18,7 +18,7 @@ import { MediaBlob, MediaUrl } from '../types';
 import FileHandler from '../filehandler';
 import CompilationParser from '../../code/xml/XmlCompilationParser';
 import { useMessageStore } from '../messages';
-import { ITimeSignature } from '@/code/compilation/ITimeSignature';
+import { ITimeSignature } from '@/code/music/ITimeSignature';
 
 export const actions = {
     /** Updates the currently selected cue Id, for application-wide handling
@@ -300,8 +300,7 @@ export const actions = {
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
             console.debug(
-                `actions::ADD_MEDIA_URL:removing matching item for key:${
-                    mediaUrl.resourceName
+                `actions::ADD_MEDIA_URL:removing matching item for key:${mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);
@@ -470,8 +469,7 @@ export const actions = {
 
         return new Promise((resolve, reject) => {
             message.pushProgress(
-                `Loading file '${file.name}' '${
-                    file.type
+                `Loading file '${file.name}' '${file.type
                 }' (${FileHandler.AsMegabytes(file.size)}MB)`,
             );
             if (FileHandler.isSupportedPackageFile(file)) {
@@ -623,9 +621,9 @@ export const actions = {
                 reader.onerror = (): void => {
                     console.error(
                         'Failed to read file ' +
-                            file.name +
-                            ': ' +
-                            reader.error,
+                        file.name +
+                        ': ' +
+                        reader.error,
                     );
                     reader.abort(); // (...does this do anything useful in an onerror handler?)
                 };
@@ -652,8 +650,7 @@ export const actions = {
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
             console.debug(
-                `actions::DISCARD_MEDIA_URL:removing matching item for key:${
-                    mediaUrl.resourceName
+                `actions::DISCARD_MEDIA_URL:removing matching item for key:${mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);

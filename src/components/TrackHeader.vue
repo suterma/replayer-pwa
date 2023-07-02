@@ -5,19 +5,10 @@
         <!-- Left side -->
         <div class="level-left">
             <!-- Expander -->
-            <div
-                class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
-                v-if="isEditMode"
-            >
-                <CollapsibleButton
-                    v-if="canCollapse"
-                    class="is-nav"
-                    :modelValue="isExpanded"
-                    @update:modelValue="toggleExpanded"
-                    title="Track"
-                    collapsedText="Click to expand / edit cues"
-                    expandedText="Click to collapse"
-                />
+            <div class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start" v-if="isEditMode">
+                <CollapsibleButton v-if="canCollapse" class="is-nav" :modelValue="isExpanded"
+                    @update:modelValue="toggleExpanded" title="Track" collapsedText="Click to expand / edit cues"
+                    expandedText="Click to collapse" />
             </div>
 
             <!-- Slot for additional level items -->
@@ -27,81 +18,51 @@
             <template v-if="isEditMode">
                 <!-- Title -->
                 <!-- This should shrink (break on words) if necessary (is-narrow is-flex-shrink-1) -->
-                <div
-                    class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
-                >
+                <div class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start">
                     <div class="field">
                         <p class="control">
-                            <StyledInput
-                                class="input title has-text-weight-light is-4"
-                                :class="{ 'has-text-success': isActive }"
-                                :modelValue="trackName"
-                                @change="updateName($event.target.value)"
-                                type="text"
-                                placeholder="Track name"
-                                title="Track name"
-                                data-cy="track-name"
-                            />
+                            <StyledInput class="input title has-text-weight-light is-4"
+                                :class="{ 'has-text-success': isActive }" :modelValue="trackName"
+                                @change="updateName($event.target.value)" type="text" placeholder="Track name"
+                                title="Track name" data-cy="track-name" />
                         </p>
                     </div>
                 </div>
                 <!-- Only for wide screens, edit the media edit in the level -->
                 <div
-                    class="level-item is-narrow is-flex-shrink-2 is-hidden-widescreen-only is-hidden-desktop-only is-hidden-touch is-justify-content-flex-start"
-                >
+                    class="level-item is-narrow is-flex-shrink-2 is-hidden-widescreen-only is-hidden-desktop-only is-hidden-touch is-justify-content-flex-start">
                     <div class="field">
                         <p class="control">
                             <MediaEdit :trackId="trackId" :trackUrl="trackUrl">
-                                <span
-                                    v-if="!isTrackMediaAvailable"
-                                    class="has-text-warning"
-                                >
+                                <span v-if="!isTrackMediaAvailable" class="has-text-warning">
                                     <BaseIcon v-once :path="mdiAlert" />Media
-                                    unavailable</span
-                                >
+                                    unavailable
+                                </span>
                             </MediaEdit>
                         </p>
                     </div>
                 </div>
                 <CloakedPanel :revealFor="[trackArtist, trackAlbum]">
-                    <template #caption
-                        ><span class="has-opacity-half"
-                            >Artist / Album</span
-                        ></template
-                    >
+                    <template #caption><span class="has-opacity-half">Artist / Album</span></template>
                     <div class="level-item is-flex-shrink-3">
-                        <ArtistLevelEditor
-                            :artist="trackArtist"
-                            @update:artist="
-                                (value) => {
-                                    updateArtist(value);
-                                }
-                            "
-                            :album="trackAlbum"
-                            @update:album="
-                                (value) => {
-                                    updateAlbum(value);
-                                }
-                            "
-                        ></ArtistLevelEditor>
+                        <ArtistLevelEditor :artist="trackArtist" @update:artist="(value) => {
+                            updateArtist(value);
+                        }
+                            " :album="trackAlbum" @update:album="(value) => {
+        updateAlbum(value);
+    }
+        "></ArtistLevelEditor>
                     </div>
                 </CloakedPanel>
             </template>
             <template v-else>
                 <!-- Title -->
                 <!-- The title is the only header element that should shrink (break on words) if necessary -->
-                <div
-                    class="level-item is-narrow is-flex-shrink-1"
-                    @click="$emit('click')"
-                    :class="{
-                        'is-clickable': isTrackLoaded,
-                        'has-cursor-not-allowed': !isTrackLoaded,
-                    }"
-                >
-                    <p
-                        class="title is-4"
-                        :class="{ 'has-text-success': isActive }"
-                    >
+                <div class="level-item is-narrow is-flex-shrink-1" @click="$emit('click')" :class="{
+                    'is-clickable': isTrackLoaded,
+                    'has-cursor-not-allowed': !isTrackLoaded,
+                }">
+                    <p class="title is-4" :class="{ 'has-text-success': isActive }">
                         <TrackTitleName :name="trackName"></TrackTitleName>
                     </p>
                 </div>
@@ -109,11 +70,7 @@
                 <!-- Artist info (should not take too much width, and hide on small displays anyways)-->
                 <div class="level-item is-hidden-mobile">
                     <p class="is-size-7">
-                        <ArtistInfo
-                            :album="trackAlbum"
-                            :artist="trackArtist"
-                            style="max-width: 25vw"
-                        />
+                        <ArtistInfo :album="trackAlbum" :artist="trackArtist" style="max-width: 25vw" />
                     </p>
                 </div>
             </template>
@@ -124,21 +81,11 @@
             <div class="level-item is-justify-content-flex-end">
                 <!-- Slot for additional level items -->
                 <slot name="left-end"></slot>
-                <PlaybackIndicator
-                    :is-ready="!isPlaying && isTrackLoaded"
-                    :is-playing="isPlaying"
-                    :is-unloaded="!isTrackLoaded"
-                    :is-unavailable="!isTrackMediaAvailable"
-                    data-cy="playback-indicator"
-                />
+                <PlaybackIndicator :is-ready="!isPlaying && isTrackLoaded" :is-playing="isPlaying"
+                    :is-unloaded="!isTrackLoaded" :is-unavailable="!isTrackMediaAvailable" data-cy="playback-indicator" />
 
-                <TrackContextMenu
-                    v-if="isEditMode"
-                    :isFirstTrack="isFirst"
-                    :isLastTrack="isLast"
-                    :trackId="trackId"
-                    :trackName="trackName"
-                ></TrackContextMenu>
+                <TrackContextMenu v-if="isEditMode" :isFirstTrack="isFirst" :isLastTrack="isLast" :trackId="trackId"
+                    :trackName="trackName"></TrackContextMenu>
             </div>
             <!-- Slot for additional level items -->
             <slot name="right"></slot>
@@ -149,9 +96,9 @@
         <div class="is-hidden-fullhd">
             <MediaEdit :trackId="trackId" :trackUrl="trackUrl">
                 <span v-if="!isTrackMediaAvailable" class="has-text-warning">
-                    <BaseIcon v-once :path="mdiAlert" />Media unavailable</span
-                ></MediaEdit
-            >
+                    <BaseIcon v-once :path="mdiAlert" />Media unavailable
+                </span>
+            </MediaEdit>
         </div>
     </template>
     <!-- <TrackSharingDialog v-if="this.isSharing"></TrackSharingDialog> -->
@@ -174,7 +121,7 @@ import TrackTitleName from './TrackTitleName.vue';
 import { mapActions, mapWritableState, mapState } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { useSettingsStore } from '@/store/settings';
-import { ITimeSignature } from '@/code/compilation/ITimeSignature';
+import { ITimeSignature } from '@/code/music/ITimeSignature';
 
 /** A header for editing "beats per minute" track metadata
  */

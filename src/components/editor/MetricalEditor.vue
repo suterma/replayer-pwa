@@ -1,24 +1,15 @@
 <template>
     <slot></slot>
     <!-- Let the attributes fall through the input element: -->
-    <input
-        class="input bpm has-text-right"
-        v-bind="$attrs"
-        type="number"
-        inputmode="numeric"
-        step="1"
-        min="1"
-        v-model.number="vModel"
-        size="3"
-        data-cy="input-beatsPerMinute"
-        :placeholder="placeholder"
-        tabindex="0"
-    />
+    <input class="input bpm has-text-right" v-bind="$attrs" type="number" inputmode="numeric" step="1" min="1"
+        v-model.number="vModel" size="3" data-cy="input-beatsPerMinute" :placeholder="placeholder" tabindex="0" />
 </template>
 
 <script setup lang="ts">
-import { ITimeSignature } from '@/code/compilation/ITimeSignature';
-import { MetricalPosition } from '@/code/compilation/MetricalPosition';
+
+import { ITimeSignature } from '@/code/music/ITimeSignature';
+import { Meter } from '@/code/music/Meter';
+import { MetricalPosition } from '@/code/music/MetricalPosition';
 import CompilationHandler from '@/store/compilation-handler';
 import { PropType, computed } from 'vue';
 
@@ -63,7 +54,7 @@ const props = defineProps({
 const vModel = computed<number | null>({
     get(): number | null {
         return (
-            CompilationHandler.convertToMetricalPosition(
+            Meter.fromTime(
                 props.modelValue,
                 props.origin,
                 props.beatsPerMinute,
@@ -74,7 +65,7 @@ const vModel = computed<number | null>({
     set(value): void {
         if (value != null) {
             const temporalPosition =
-                CompilationHandler.convertFromMetricalPosition(
+                Meter.toTime(
                     new MetricalPosition(value, null),
                     props.origin,
                     props.beatsPerMinute,

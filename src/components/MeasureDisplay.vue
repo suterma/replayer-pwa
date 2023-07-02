@@ -5,6 +5,8 @@
 </template>
 
 <script lang="ts">
+import { ITimeSignature } from '@/code/music/ITimeSignature';
+import { Meter } from '@/code/music/Meter';
 import { defineComponent, PropType } from 'vue';
 
 /** A display for a measure/beat value in the mmm.b format

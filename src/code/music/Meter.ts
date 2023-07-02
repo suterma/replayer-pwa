@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { ITimeSignature } from "./ITimeSignature";
 import { MetricalPosition } from "./MetricalPosition";
 
@@ -22,7 +23,7 @@ export class Meter {
         beatsPerMinute: number,
         timeSignature: ITimeSignature,
     ): string {
-        const metricalPosition = this.convertToMetricalPosition(
+        const metricalPosition = this.fromTime(
             seconds,
             origin,
             beatsPerMinute,
@@ -46,16 +47,15 @@ export class Meter {
         return '---|-';
     }
 
-    /** Converts the total seconds into a metrical position
+    /** Converts a temporal position (in total seconds) into a metrical position
     * if a suitable input value is provided.
-    * @param seconds - The current playhead position in [seconds]
+    * @param seconds - The temporal position in [seconds]
     * @param origin - The origin of the beat (time of first beat) in [seconds]
     * @param beatsPerMinute - The number of beats per minute
-    * @param seconds - The time signature numerator
     * @param timeSignature - The time signature
     * @return The metrical position or null
     */
-    public static convertToMetricalPosition(
+    public static fromTime(
         seconds: number | null | undefined,
         origin: number,
         beatsPerMinute: number,
@@ -111,16 +111,15 @@ export class Meter {
         return null;
     }
 
-    /** Converts a metrical position in a temporal position,
+    /** Converts a metrical position into a temporal position,
      * if a suitable input value is provided.
      * @param metricalPosition - The metrical position to convert from
      * @param origin - The origin of the beat (time of first beat) in [seconds]
      * @param beatsPerMinute - The number of beats per minute
-     * @param seconds - The time signature numerator
      * @param timeSignature - The time signature
-     * @return The temporal position or null
+     * @return The temporal position in seconds or null
      */
-    public static convertFromMetricalPosition(
+    public static toTime(
         metricalPosition: MetricalPosition | null,
         origin: number,
         beatsPerMinute: number,
@@ -139,9 +138,12 @@ export class Meter {
             const beats =
                 (metricalPosition.Measure - 1) * timeSignature.Numerator;
             const time = (beats / beatsPerMinute) * 60;
-            return origin + time + 0.001;
+
+            // Use epsilon to make sure the temporal position is never earlier than the calculated position for the beat.
+            return origin + time + Meter.TemporalEpsilon;
         }
         return null;
     }
-
+    /** The smallest amount of time that is resolved within Replayer's percision */
+    private static TemporalEpsilon = 0.001;
 }
