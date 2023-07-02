@@ -1,4 +1,5 @@
-import _ from "lodash";
+
+import _ from 'lodash';
 import { ITimeSignature } from "./ITimeSignature";
 import { MetricalPosition } from "./MetricalPosition";
 

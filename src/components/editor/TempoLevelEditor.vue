@@ -14,7 +14,7 @@
                             @change="
                                 emit(
                                     'update:beatsPerMinute',
-                                    Number.parseInt($event.target.value),
+                                    Number.parseFloat($event.target.value),
                                 )
                             "
                             placeholder="BPM"
@@ -100,7 +100,7 @@ import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 import AdjustCueButton from '@/components/buttons/AdjustCueButton.vue';
-import { ITimeSignature } from '@/code/compilation/ITimeSignature';
+import { ITimeSignature } from '@/code/music/ITimeSignature';
 
 /** A level-based Editor for tempo-related values
  * @remarks Shows a level with inputs for BPM, time signature etc., as level items

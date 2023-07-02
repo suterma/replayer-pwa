@@ -2,7 +2,7 @@
     <slot></slot>
     <!-- Let the attributes fall through the input element: -->
     <input class="input bpm has-text-right" v-bind="$attrs" type="number" inputmode="numeric" step="1" min="1"
-        v-model.number="vModel" size="3" data-cy="input-beatsPerMinute" :placeholder="placeholder" tabindex="0" />
+        v-model.number="vModel" size="3" data-cy="input-measure" :placeholder="placeholder" tabindex="0" />
 </template>
 
 <script setup lang="ts">
@@ -13,7 +13,7 @@ import { MetricalPosition } from '@/code/music/MetricalPosition';
 import CompilationHandler from '@/store/compilation-handler';
 import { PropType, computed } from 'vue';
 
-/** An time editor, which is using the measure number for manipulation
+/** An editor for the measure number
  */
 
 const emit = defineEmits(['update:modelValue']);
