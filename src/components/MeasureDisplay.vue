@@ -46,7 +46,7 @@ export default defineComponent({
         /** Converts the time into a measure/beats format.
          */
         currentDisplayMeasure(): string {
-            return Meter.convertToMeasureTime(
+            return Meter.toMeasureDisplay(
                 this.modelValue,
                 this.origin,
                 this.beatsPerMinute,
