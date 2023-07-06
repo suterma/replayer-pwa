@@ -10,10 +10,9 @@
                     <p class="control">
                         <BpmEditor
                             class="input"
-                            :modelValue="props.beatsPerMinute"
+                            :modelValue="props.meter?.BeatsPerMinute"
                             @change="
-                                emit(
-                                    'update:beatsPerMinute',
+                                updateMeterWithBpm(
                                     Number.parseFloat($event.target.value),
                                 )
                             "
@@ -34,8 +33,10 @@
                     <p class="control">
                         <TimeSignatureEditor
                             class="input"
-                            :modelValue="props.timeSignature"
-                            @update:modelValue="(value:ITimeSignature|null) => {emit('update:timeSignature', value);}"
+                            :modelValue="props.meter?.TimeSignature"
+                            @update:modelValue="
+                              (value:ITimeSignature|null) =>   updateMeterWithTimeSignature(value)
+                            "
                             title="Time signature"
                         >
                         </TimeSignatureEditor>
@@ -53,8 +54,8 @@
                     <p class="control">
                         <TimeInput
                             class="has-text-right"
-                            :modelValue="props.originTime"
-                            @update:modelValue="(value:number|null) => {emit('update:originTime', value);}"
+                            :modelValue="props.meter?.OriginTime"
+                            @update:modelValue="(value:number|null) => updateMeterWithOriginTime(value)"
                             size="9"
                         />
                     </p>
@@ -100,6 +101,8 @@ import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 import AdjustCueButton from '@/components/buttons/AdjustCueButton.vue';
+import { IMeter } from '@/code/music/IMeter';
+import { Meter } from '@/code/music/Meter';
 import { ITimeSignature } from '@/code/music/ITimeSignature';
 
 /** A level-based Editor for tempo-related values
@@ -107,27 +110,15 @@ import { ITimeSignature } from '@/code/music/ITimeSignature';
  */
 
 const emit = defineEmits([
-    'update:timeSignature',
-    'update:denominator',
-    'update:beatsPerMinute',
-    'update:originTime',
+    'update:meter',
+    'adjustOriginTime',
     'update:useMeasureNumberAsPosition',
 ]);
 
 const props = defineProps({
-    timeSignature: {
-        type: null as unknown as PropType<ITimeSignature | null>,
-        required: true,
-        default: null,
-    },
-    beatsPerMinute: {
-        type: null as unknown as PropType<number | null>,
-        required: true,
-        default: null,
-    },
-    /** The origin of the track beats (the first downbeat of the first measure) */
-    originTime: {
-        type: null as unknown as PropType<number | null>,
+    /** The musical meter */
+    meter: {
+        type: null as unknown as PropType<IMeter | null>,
         required: true,
         default: null,
     },
@@ -142,14 +133,40 @@ const props = defineProps({
 /** Whether all required values for the use of the measure number as position are available.
  */
 const hasAllTempoValues = computed(() => {
-    return (
-        (Number.isFinite(props.beatsPerMinute) &&
-            Number.isFinite(props.timeSignature?.Denominator) &&
-            Number.isFinite(props.timeSignature?.Numerator) &&
-            Number.isFinite(props.originTime)) ??
-        false
-    );
+    return props.meter?.hasAllValues();
 });
+
+function updateMeterWithBpm(bpm: number): void {
+    const meter = new Meter(
+        props.meter?.TimeSignature ?? null,
+        bpm,
+        props.meter?.OriginTime ?? null,
+    );
+
+    emit('update:meter', meter);
+}
+
+function updateMeterWithTimeSignature(
+    timeSignature: ITimeSignature | null,
+): void {
+    const meter = new Meter(
+        timeSignature,
+        props.meter?.BeatsPerMinute ?? null,
+        props.meter?.OriginTime ?? null,
+    );
+
+    emit('update:meter', meter);
+}
+
+function updateMeterWithOriginTime(originTime: number | null): void {
+    const meter = new Meter(
+        props.meter?.TimeSignature ?? null,
+        props.meter?.BeatsPerMinute ?? null,
+        originTime,
+    );
+
+    emit('update:meter', meter);
+}
 
 /** Watches whether any of the required values for the use of the measure number as position is missing; reset the option if true.
  */

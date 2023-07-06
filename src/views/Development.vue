@@ -278,7 +278,7 @@ export default defineComponent({
         },
 
         bpmOfFirstTrack(): number | null {
-            return this.compilation.Tracks[0]?.BeatsPerMinute ?? null;
+            return this.compilation.Tracks[0]?.Meter?.BeatsPerMinute ?? null;
         },
     },
 });

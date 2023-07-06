@@ -1,33 +1,54 @@
 import _ from 'lodash';
 import { ITimeSignature } from './ITimeSignature';
 import { MetricalPosition } from './MetricalPosition';
+import { IMeter } from './IMeter';
 
 /** @class Static functions for the musical meter
  */
-export class Meter {
+export class Meter implements IMeter {
+    TimeSignature: ITimeSignature | null;
+    BeatsPerMinute: number | null;
+    OriginTime: number | null;
+
+    /** Whether all required values for the use of the meter are available.
+     */
+    public hasAllValues(): boolean {
+        return (
+            (Number.isFinite(this.BeatsPerMinute) &&
+                Number.isFinite(this.TimeSignature?.Denominator) &&
+                Number.isFinite(this.TimeSignature?.Numerator) &&
+                Number.isFinite(this.OriginTime)) ??
+            false
+        );
+    }
+
+    /** Creates a new meter
+     * @param {ITimeSignature | null} timeSignature - The time signature
+     * @param {number | null} beatsPerMinute - The tempo in beats per minute
+     * @param {number | null} originTime - The temporal position of the origin of the beat (time of first beat) in the track in [seconds]
+     */
+    constructor(
+        timeSignature: ITimeSignature | null,
+        beatsPerMinute: number | null,
+        originTime: number | null,
+    ) {
+        this.TimeSignature = timeSignature;
+        this.BeatsPerMinute = beatsPerMinute;
+        this.OriginTime = originTime;
+    }
+
     /** Converts the time (in total seconds) into a displayable measure/beats format,
      * according to the meter,
      * if a suitable input value is provided.
-     * @param seconds - The temporal position in [seconds]
-     * @param origin - The origin of the beat (time of first beat) in [seconds]
-     * @param beatsPerMinute - The number of beats per minute (will be converted to beats per seconds internally)
-     * @param seconds - The time signature numerator
-     * @param numerator - The time signature numerator
-     * @param denominator - The time signature denominator
+     * @param time - The temporal position in [seconds]
+     * @param meter - The meter to use for the conversion
      * @return The measure/beats representation or a placeholder.
      */
     public static toMeasureDisplay(
-        seconds: number | null | undefined,
-        origin: number,
-        beatsPerMinute: number,
-        timeSignature: ITimeSignature,
+        time: number | null | undefined,
+        meter: IMeter,
     ): string {
-        const metricalPosition = this.fromTime(
-            seconds,
-            origin,
-            beatsPerMinute,
-            timeSignature,
-        );
+        const metricalPosition = this.fromTime(time, meter);
         if (metricalPosition && metricalPosition.Measure) {
             // set fixed integral digits
             let measureNumberPrefix = '';
@@ -48,55 +69,55 @@ export class Meter {
 
     /** Converts a temporal position (in total seconds within a track) into a metrical position
      * if a suitable input value is provided.
-     * @param seconds - The temporal position to convert in [seconds]
-     * @param origin - The temporal position of the (declared) first beat in [seconds]
-     * @param beatsPerMinute - The number of beats per minute
-     * @param timeSignature - The time signature
+     * @param time - The temporal position in [seconds]
+     * @param meter - The meter to use for the conversion
      * @return The metrical position or null
      */
     public static fromTime(
         seconds: number | null | undefined,
-        origin: number,
-        beatsPerMinute: number,
-        timeSignature: ITimeSignature,
+        meter: IMeter,
     ): MetricalPosition | null {
         if (
             seconds != null &&
             Number.isFinite(seconds) &&
-            Number.isFinite(origin) &&
-            timeSignature &&
-            timeSignature.Numerator &&
-            timeSignature.Denominator
+            meter != null &&
+            meter.OriginTime != null &&
+            Number.isFinite(meter.OriginTime) &&
+            meter.BeatsPerMinute &&
+            meter.TimeSignature &&
+            meter.TimeSignature.Numerator &&
+            meter.TimeSignature.Denominator
         ) {
             // get the time relative to the teporal position of the declared first beat
-            const shiftedTime = seconds - origin;
+            const shiftedTime = seconds - meter.OriginTime;
 
             const signatureValue =
-                timeSignature.Numerator / timeSignature.Denominator;
+                meter.TimeSignature.Numerator / meter.TimeSignature.Denominator;
 
-            const beat = shiftedTime * (beatsPerMinute / 60) * signatureValue;
+            const beat =
+                shiftedTime * (meter.BeatsPerMinute / 60) * signatureValue;
 
             const beatNumber = _.floor(beat);
 
             const measureNumber = _.floor(
-                beatNumber / timeSignature.Numerator +
+                beatNumber / meter.TimeSignature.Numerator +
                     1 /* Measures are index-one based */,
             );
 
             const beatInMeasureNumber =
-                (beatNumber % timeSignature.Numerator) +
+                (beatNumber % meter.TimeSignature.Numerator) +
                 1; /* Beats in measures are index-one based */
 
             // Never show measures below index 1, but count the beats nonetheless
             if (shiftedTime < 0) {
                 const beatInMeasureNumber =
-                    (beatNumber + 1) % timeSignature.Numerator;
+                    (beatNumber + 1) % meter.TimeSignature.Numerator;
                 /* Beats are index-one based */
                 const beatNumberInMeasureNumber = beatInMeasureNumber;
 
                 return new MetricalPosition(
                     null,
-                    beatNumberInMeasureNumber + timeSignature.Numerator,
+                    beatNumberInMeasureNumber + meter.TimeSignature.Numerator,
                 );
             }
 
@@ -109,33 +130,33 @@ export class Meter {
     /** Converts a metrical position into a temporal position (within a track),
      * if a suitable input value is provided.
      * @param metricalPosition - The metrical position to convert from
-     * @param origin - The temporal position of the (declared) first beat in [seconds]
-     * @param beatsPerMinute - The number of beats per minute
-     * @param timeSignature - The time signature
+     * @param meter - The musical meter
      * @return The temporal position in seconds or null
      */
     public static toTime(
         metricalPosition: MetricalPosition | null,
-        origin: number,
-        beatsPerMinute: number,
-        timeSignature: ITimeSignature,
+        meter: IMeter,
     ): number | null {
         if (
             metricalPosition &&
             metricalPosition.Measure &&
-            Number.isFinite(origin) &&
-            timeSignature &&
-            timeSignature.Numerator &&
-            timeSignature.Denominator
+            Number.isFinite(meter.OriginTime) &&
+            meter.BeatsPerMinute &&
+            Number.isFinite(meter.BeatsPerMinute) &&
+            meter.OriginTime &&
+            Number.isFinite(meter.OriginTime) &&
+            meter.TimeSignature &&
+            meter.TimeSignature.Numerator &&
+            meter.TimeSignature.Denominator
         ) {
             // the position in beats, into the track
             // NOTE: beats here is zero-based, whereas the metrical position data is one-based
             const beats =
-                (metricalPosition.Measure - 1) * timeSignature.Numerator;
-            const time = (beats / beatsPerMinute) * 60;
+                (metricalPosition.Measure - 1) * meter.TimeSignature.Numerator;
+            const time = (beats / meter.BeatsPerMinute) * 60;
 
             // Use epsilon to make sure the temporal position is never earlier than the calculated position for the beat.
-            return origin + time + Meter.TemporalEpsilon;
+            return meter.OriginTime + time + Meter.TemporalEpsilon;
         }
         return null;
     }

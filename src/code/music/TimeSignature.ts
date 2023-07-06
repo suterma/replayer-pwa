@@ -9,7 +9,7 @@ export class TimeSignature implements ITimeSignature {
     /** The note value of the beats */
     Denominator: number | null;
 
-    /** Creates a new track
+    /** Creates a new time signature
      * @param {number | null} numerator - The number of beats per measure
      * @param {number | null} denominator - The note value of the beats
      */

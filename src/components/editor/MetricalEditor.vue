@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { ITimeSignature } from '@/code/music/ITimeSignature';
+import { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
 import { MetricalPosition } from '@/code/music/MetricalPosition';
 import CompilationHandler from '@/store/compilation-handler';
@@ -29,31 +29,17 @@ import { PropType, computed } from 'vue';
 const emit = defineEmits(['update:modelValue']);
 
 const props = defineProps({
-    /** The beats per Minute
+    /** The current playhead position in the track
      */
     modelValue: {
         type: null as unknown as PropType<number | null>,
-        required: false,
         default: null,
     },
-    /** The beat origin (offset in the track time)
-     */
-    origin: {
-        type: Number,
+    /** The musical meter */
+    meter: {
+        type: null as unknown as PropType<IMeter | null>,
         required: true,
-    },
-
-    /** The tempo in beats per minute.
-     */
-    beatsPerMinute: {
-        type: Number,
-        required: true,
-    },
-    /** The time signature
-     */
-    timeSignature: {
-        type: null as unknown as PropType<ITimeSignature>,
-        required: true,
+        default: null,
     },
     placeholder: {
         type: String,
@@ -63,29 +49,30 @@ const props = defineProps({
 /**  */
 const vModel = computed<number | null>({
     get(): number | null {
-        return (
-            Meter.fromTime(
-                props.modelValue,
-                props.origin,
-                props.beatsPerMinute,
-                props.timeSignature,
-            )?.Measure ?? null
-        );
+        if (props.meter) {
+            return (
+                Meter.fromTime(props.modelValue, props.meter)?.Measure ?? null
+            );
+        }
+        return null;
     },
     set(value): void {
         if (value != null) {
-            const temporalPosition = Meter.toTime(
-                new MetricalPosition(value, null),
-                props.origin,
-                props.beatsPerMinute,
-                props.timeSignature,
-            );
-            // only actual numbers should be emitted, not empty strings or NaN
-            if (temporalPosition != null && Number.isFinite(temporalPosition)) {
-                emit(
-                    'update:modelValue',
-                    CompilationHandler.roundTime(temporalPosition),
+            if (props.meter) {
+                const temporalPosition = Meter.toTime(
+                    new MetricalPosition(value, null),
+                    props.meter,
                 );
+                // only actual numbers should be emitted, not empty strings or NaN
+                if (
+                    temporalPosition != null &&
+                    Number.isFinite(temporalPosition)
+                ) {
+                    emit(
+                        'update:modelValue',
+                        CompilationHandler.roundTime(temporalPosition),
+                    );
+                }
             }
         }
     },

@@ -18,7 +18,7 @@ import { MediaBlob, MediaUrl } from '../types';
 import FileHandler from '../filehandler';
 import CompilationParser from '../../code/xml/XmlCompilationParser';
 import { useMessageStore } from '../messages';
-import { ITimeSignature } from '@/code/music/ITimeSignature';
+import { IMeter } from '@/code/music/IMeter';
 
 export const actions = {
     /** Updates the currently selected cue Id, for application-wide handling
@@ -152,47 +152,28 @@ export const actions = {
         }
     },
 
-    /** Updates the track beats per minute
+    /** Updates the track meter.
+     * @remarks This is only relevant for music tracks
      */
-    updateTrackBeatsPerMinute(
-        trackId: string,
-        beatsPerMinute: number | null,
-    ): void {
+    updateMeter(trackId: string, meter: IMeter | null): void {
+        debugger;
         const track = CompilationHandler.getTrackById(
             state.compilation.value.Tracks,
             trackId,
         );
         if (track) {
-            track.BeatsPerMinute = beatsPerMinute;
+            track.Meter = meter;
         }
     },
-
-    updateTrackTimeSignature(
-        trackId: string,
-        timeSignature: ITimeSignature | null,
-    ): void {
-        const track = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
-        if (track) {
-            track.TimeSignature = timeSignature;
-        }
-    },
-
     /** Updates the track origin time.
-     * @remarks Rounds the time to the Replayer default precision
      */
     updateTrackOriginTime(trackId: string, originTime: number | null): void {
         const track = CompilationHandler.getTrackById(
             state.compilation.value.Tracks,
             trackId,
         );
-        if (track) {
-            track.OriginTime =
-                originTime != null && isFinite(originTime)
-                    ? CompilationHandler.roundTime(originTime)
-                    : originTime;
+        if (track && track.Meter) {
+            track.Meter.OriginTime = originTime;
         }
     },
 
@@ -300,7 +281,8 @@ export const actions = {
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
             console.debug(
-                `actions::ADD_MEDIA_URL:removing matching item for key:${mediaUrl.resourceName
+                `actions::ADD_MEDIA_URL:removing matching item for key:${
+                    mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);
@@ -469,7 +451,8 @@ export const actions = {
 
         return new Promise((resolve, reject) => {
             message.pushProgress(
-                `Loading file '${file.name}' '${file.type
+                `Loading file '${file.name}' '${
+                    file.type
                 }' (${FileHandler.AsMegabytes(file.size)}MB)`,
             );
             if (FileHandler.isSupportedPackageFile(file)) {
@@ -621,9 +604,9 @@ export const actions = {
                 reader.onerror = (): void => {
                     console.error(
                         'Failed to read file ' +
-                        file.name +
-                        ': ' +
-                        reader.error,
+                            file.name +
+                            ': ' +
+                            reader.error,
                     );
                     reader.abort(); // (...does this do anything useful in an onerror handler?)
                 };
@@ -650,7 +633,8 @@ export const actions = {
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
             console.debug(
-                `actions::DISCARD_MEDIA_URL:removing matching item for key:${mediaUrl.resourceName
+                `actions::DISCARD_MEDIA_URL:removing matching item for key:${
+                    mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);

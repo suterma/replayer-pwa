@@ -35,8 +35,7 @@
             :trackId="track.Id"
             :trackName="track.Name"
             :trackUrl="track.Url"
-            :trackBeatsPerMinute="track.BeatsPerMinute"
-            :trackTimeSignature="track.TimeSignature"
+            :trackMeter="track.Meter"
             :trackArtist="track.Artist"
             :trackAlbum="track.Album"
             :isPlaying="isPlaying"
@@ -115,7 +114,7 @@
 
                 <Experimental v-if="experimentalUseTempo && !isEditable">
                     <span class="is-size-7 level-item is-narrow">
-                        <span>{{ track.BeatsPerMinute }}&nbsp;BPM</span>
+                        <span>{{ track.Meter?.BeatsPerMinute }}&nbsp;BPM</span>
                     </span>
                 </Experimental>
 
@@ -169,30 +168,12 @@
             <div v-if="isEditable && isExpanded" :key="track.Id">
                 <Experimental v-if="experimentalUseTempo">
                     <TempoLevelEditor
-                        :beatsPerMinute="track.BeatsPerMinute"
-                        @update:beatsPerMinute="
-                        (value: number| null) => {
-                             updateTrackBeatsPerMinute(track.Id, value);
+                        :meter="track.Meter"
+                        @update:meter="
+                        (value: IMeter | null) => {
+                             updateMeter(track.Id, value);
                         }
                     "
-                        :timeSignature="track.TimeSignature"
-                        @update:timeSignature="
-                                (value: ITimeSignature | null) => {
-                                    updateTrackTimeSignature(
-                                        track.Id,
-                                        value,
-                                    );
-                                }
-                            "
-                        :originTime="track.OriginTime"
-                        @update:originTime="
-                                (value: number| null) => {
-                                    updateTrackOriginTime(
-                                        track.Id,
-                                        value,
-                                    );
-                                }
-                            "
                         @adjustOriginTime="
                             () => {
                                 updateTrackOriginTime(track.Id, currentSeconds);
@@ -212,29 +193,17 @@
                     >
                     </TempoLevelEditor>
                     <MeasureDisplay
-                        v-if="
-                            track.OriginTime != null &&
-                            track.BeatsPerMinute != null &&
-                            track.TimeSignature != null
-                        "
+                        v-if="hasMeter"
                         :modelValue="currentSeconds"
-                        :origin="track.OriginTime"
-                        :beatsPerMinute="track.BeatsPerMinute"
-                        :timeSignature="track.TimeSignature"
+                        :meter="track.Meter"
                     ></MeasureDisplay>
                     <MetricalEditor
-                        v-if="
-                            track.OriginTime != null &&
-                            track.BeatsPerMinute != null &&
-                            track.TimeSignature != null
-                        "
+                        v-if="hasMeter"
                         v-model="currentSeconds"
                         @update:modelValue="
                             (position) => seekToSeconds(position)
                         "
-                        :origin="track.OriginTime"
-                        :beatsPerMinute="track.BeatsPerMinute"
-                        :timeSignature="track.TimeSignature"
+                        :meter="track.Meter"
                     >
                     </MetricalEditor>
                 </Experimental>
@@ -625,10 +594,6 @@ import { useSettingsStore } from '@/store/settings';
 import { mapActions, mapState } from 'pinia';
 import { useAppStore } from '@/store/app';
 import FileHandler from '@/store/filehandler';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { ITimeSignature } from '@/code/compilation/ITimeSignature';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -828,8 +793,7 @@ export default defineComponent({
             'addCueAtTime',
             'updateTrackVolume',
             'updateDurations',
-            'updateTrackBeatsPerMinute',
-            'updateTrackTimeSignature',
+            'updateMeter',
             'updateTrackOriginTime',
             'updateUseMeasureNumberAsPosition',
         ]),
@@ -1297,6 +1261,13 @@ export default defineComponent({
          * @remarks A selected cue's data is used for looping on a cue's boundaries
          */
         ...mapState(useAppStore, ['selectedCue']),
+
+        /** Returns whether the track has a completely defined meter */
+        hasMeter(): boolean {
+            debugger;
+            //TODO why does is hasAllValues not a function
+            return this.track?.Meter?.hasAllValues() ?? false;
+        },
 
         remainingTime(): number | null {
             return CompilationHandler.calculateRemainingTime(

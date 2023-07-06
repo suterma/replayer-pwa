@@ -1,4 +1,4 @@
-import { ITimeSignature } from '@/code/music/ITimeSignature';
+import { IMeter } from '@/code/music/IMeter';
 import { v4 as uuidv4 } from 'uuid';
 
 export enum CompilationType {
@@ -96,15 +96,10 @@ export interface ITrack {
      */
     Album: string;
 
-    /** The tempo in beats per minute
+    /** The musical meter for this track
+     * @remark This is only relevant for music tracks.
      */
-    BeatsPerMinute: number | null;
-
-    /** The time signature */
-    TimeSignature: ITimeSignature | null;
-
-    /** The origin time for the beat (first downbeat of the first measure) */
-    OriginTime: number | null;
+    Meter: IMeter | null;
 
     /** Whether to use the measure number to set and display the cue positions */
     UseMeasureNumberAsPosition: boolean | null;
@@ -194,9 +189,7 @@ export class Compilation implements ICompilation {
                     track.Name,
                     track.Album,
                     track.Artist,
-                    track.BeatsPerMinute,
-                    track.TimeSignature,
-                    track.OriginTime,
+                    track.Meter,
                     track.UseMeasureNumberAsPosition,
                     track.Url,
                     track.Id,
@@ -246,9 +239,7 @@ export class Track implements ITrack {
     Name = '';
     Album = '';
     Artist = '';
-    BeatsPerMinute: number | null = null;
-    TimeSignature: ITimeSignature | null;
-    OriginTime: number | null = null;
+    Meter: IMeter | null = null;
     UseMeasureNumberAsPosition: boolean | null = null;
     Url = '';
     Id = '';
@@ -269,9 +260,7 @@ export class Track implements ITrack {
         name: string,
         album: string,
         artist: string,
-        beatsPerMinute: number | null,
-        timeSignature: ITimeSignature | null,
-        originTime: number | null,
+        meter: IMeter | null,
         useMeasureNumberAsPosition: boolean | null,
         url: string,
         id: string,
@@ -282,9 +271,7 @@ export class Track implements ITrack {
         this.Name = name;
         this.Album = album;
         this.Artist = artist;
-        this.BeatsPerMinute = beatsPerMinute;
-        this.TimeSignature = timeSignature;
-        this.OriginTime = originTime;
+        this.Meter = meter;
         this.UseMeasureNumberAsPosition = useMeasureNumberAsPosition;
         this.Url = url;
         this.Id = id;
@@ -304,9 +291,7 @@ export class Track implements ITrack {
             obj.Name,
             obj.Album,
             obj.Artist,
-            obj.BeatsPerMinute,
-            obj.TimeSignature,
-            obj.OriginTime,
+            obj.Meter,
             obj.UseMeasureNumberAsPosition,
             obj.Url,
             obj.Id,

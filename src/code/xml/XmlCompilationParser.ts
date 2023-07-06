@@ -14,7 +14,8 @@ import { LocationQuery } from 'vue-router';
 import CompilationHandler from '../../store/compilation-handler';
 import { TimeSignature } from '../music/TimeSignature';
 import { ITimeSignature } from '../music/ITimeSignature';
-
+import { Meter } from '../music/Meter';
+import { IMeter } from '../music/IMeter';
 
 /**
  * Provides static helper methods for parsing compilations from and to XML.
@@ -95,11 +96,9 @@ export default abstract class XmlCompilationParser {
                 XmlCompilationParser.FirstStringOf(xmlTrack.Album),
                 XmlCompilationParser.FirstStringOf(xmlTrack.Artist),
                 /** NOTE: the formerly used measure property is deprecated */
-                XmlCompilationParser.FirstNumberOf(xmlTrack.BeatsPerMinute),
-                XmlCompilationParser.parseFromXmlTimeSignature(
-                    xmlTrack.TimeSignature ? xmlTrack.TimeSignature[0] : null,
+                XmlCompilationParser.parseFromXmlMeter(
+                    xmlTrack.Meter ? xmlTrack.Meter[0] : null,
                 ),
-                XmlCompilationParser.FirstNumberOf(xmlTrack.OriginTime),
                 XmlCompilationParser.FirstBooleanOf(
                     xmlTrack.useMeasureNumberAsPosition,
                 ),
@@ -110,7 +109,7 @@ export default abstract class XmlCompilationParser {
                 ),
                 null,
                 XmlCompilationParser.FirstNumberOf(xmlTrack.Volume) ??
-                DefaultTrackVolume,
+                    DefaultTrackVolume,
             );
             tracks.push(track);
         });
@@ -142,6 +141,26 @@ export default abstract class XmlCompilationParser {
             });
         }
         return cues;
+    }
+
+    /** Parses an XML representation of a meter into an object instance. */
+    private static parseFromXmlMeter(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        xmlMeter: any,
+    ): IMeter | null {
+        let meter = null;
+
+        if (xmlMeter && xmlMeter.TimeSignature) {
+            meter = new Meter(
+                XmlCompilationParser.parseFromXmlTimeSignature(
+                    xmlMeter.TimeSignature,
+                ),
+                XmlCompilationParser.FirstNumberOf(xmlMeter.BeatsPerMinute),
+                XmlCompilationParser.FirstNumberOf(xmlMeter.OriginTime),
+            );
+        }
+
+        return meter;
     }
 
     /** Parses an XML representation of a time signature into an object instance. */
@@ -221,9 +240,7 @@ export default abstract class XmlCompilationParser {
                 title,
                 album,
                 artist,
-                null /*BPM*/,
-                null,
-                null,
+                null /* meter */,
                 null,
                 mediaUrl,
                 trackId,

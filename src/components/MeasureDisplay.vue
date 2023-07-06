@@ -1,11 +1,13 @@
 <template>
-    <span class="is-minimum-7-characters is-family-monospace">{{
-        currentDisplayMeasure
-    }}</span>
+    <span
+        v-if="currentDisplayMeasure"
+        class="is-minimum-7-characters is-family-monospace"
+        >{{ currentDisplayMeasure }}</span
+    >
 </template>
 
 <script lang="ts">
-import { ITimeSignature } from '@/code/music/ITimeSignature';
+import { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
 import { defineComponent, PropType } from 'vue';
 
@@ -21,37 +23,22 @@ export default defineComponent({
             type: null as unknown as PropType<number | null>,
             default: null,
         },
-
-        /** The beat origin (offset in the track time)
-         */
-        origin: {
-            type: Number,
+        /** The musical meter */
+        meter: {
+            type: null as unknown as PropType<IMeter | null>,
             required: true,
-        },
-
-        /** The tempo in beats per minute.
-         */
-        beatsPerMinute: {
-            type: Number,
-            required: true,
-        },
-        /** The time signature
-         */
-        timeSignature: {
-            type: null as unknown as PropType<ITimeSignature>,
-            required: true,
+            default: null,
         },
     },
     computed: {
         /** Converts the time into a measure/beats format.
          */
-        currentDisplayMeasure(): string {
-            return Meter.toMeasureDisplay(
-                this.modelValue,
-                this.origin,
-                this.beatsPerMinute,
-                this.timeSignature,
-            );
+        currentDisplayMeasure(): string | null {
+            if (this.modelValue != null && this.meter != null) {
+                return Meter.toMeasureDisplay(this.modelValue, this.meter);
+            } else {
+                return null;
+            }
         },
     },
 });
