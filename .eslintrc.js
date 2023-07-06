@@ -31,7 +31,7 @@ module.exports = {
         'jest/no-identical-title': 'error',
         'jest/prefer-to-have-length': 'warn',
         'jest/valid-expect': 'error',
-        'vue/multi-word-component-names': 'warn',
+        'vue/multi-word-component-names': 'off',
     },
     settings: {
         jest: {
