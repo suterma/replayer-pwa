@@ -10,18 +10,6 @@ export class Meter implements IMeter {
     BeatsPerMinute: number | null;
     OriginTime: number | null;
 
-    /** Whether all required values for the use of the meter are available.
-     */
-    public hasAllValues(): boolean {
-        return (
-            (Number.isFinite(this.BeatsPerMinute) &&
-                Number.isFinite(this.TimeSignature?.Denominator) &&
-                Number.isFinite(this.TimeSignature?.Numerator) &&
-                Number.isFinite(this.OriginTime)) ??
-            false
-        );
-    }
-
     /** Creates a new meter
      * @param {ITimeSignature | null} timeSignature - The time signature
      * @param {number | null} beatsPerMinute - The tempo in beats per minute

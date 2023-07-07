@@ -155,8 +155,7 @@ export const actions = {
     /** Updates the track meter.
      * @remarks This is only relevant for music tracks
      */
-    updateMeter(trackId: string, meter: IMeter | null): void {
-        debugger;
+    updateMeter(trackId: string, meter: IMeter): void {
         const track = CompilationHandler.getTrackById(
             state.compilation.value.Tracks,
             trackId,

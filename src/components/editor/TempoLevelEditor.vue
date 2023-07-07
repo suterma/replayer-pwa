@@ -71,7 +71,7 @@
                     <p class="control">
                         <LabeledCheckbox
                             :modelValue="props.useMeasureNumberAsPosition"
-                            @update:modelValue="(value:boolean|null) => {emit('update:useMeasureNumberAsPosition', value);}"
+                            @update:modelValue="(value:boolean|null) => updateUseMeasureNumberAsPosition(value)"
                             label="Use measure number as position"
                             :disabled="!hasAllTempoValues"
                         ></LabeledCheckbox>
@@ -131,9 +131,17 @@ const props = defineProps({
 });
 
 /** Whether all required values for the use of the measure number as position are available.
+ * @devdoc The use of a getter or a function on the meter seems not to work (returns undefined at times),
+ * thus calculation is done explicitly here
  */
 const hasAllTempoValues = computed(() => {
-    return props.meter?.hasAllValues();
+    return (
+        (Number.isFinite(props.meter?.BeatsPerMinute) &&
+            Number.isFinite(props.meter?.TimeSignature?.Denominator) &&
+            Number.isFinite(props.meter?.TimeSignature?.Numerator) &&
+            Number.isFinite(props.meter?.OriginTime)) ??
+        false
+    );
 });
 
 function updateMeterWithBpm(bpm: number): void {
@@ -168,14 +176,19 @@ function updateMeterWithOriginTime(originTime: number | null): void {
     emit('update:meter', meter);
 }
 
+function updateUseMeasureNumberAsPosition(
+    useMeasureNumberAsPosition: boolean | null,
+): void {
+    emit('update:useMeasureNumberAsPosition', useMeasureNumberAsPosition);
+}
+
 /** Watches whether any of the required values for the use of the measure number as position is missing; reset the option if true.
  */
 watch(
     hasAllTempoValues,
     (hasAllValues) => {
-        console.debug('hasAllValues:', hasAllValues);
         if (hasAllValues === false) {
-            emit('update:useMeasureNumberAsPosition', false);
+            updateUseMeasureNumberAsPosition(false);
         }
     },
     { immediate: true },

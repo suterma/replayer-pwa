@@ -170,10 +170,10 @@
                     <TempoLevelEditor
                         :meter="track.Meter"
                         @update:meter="
-                        (value: IMeter | null) => {
-                             updateMeter(track.Id, value);
-                        }
-                    "
+                            (value: IMeter): void => {
+                                updateMeter(track.Id, value);
+                            }
+                        "
                         @adjustOriginTime="
                             () => {
                                 updateTrackOriginTime(track.Id, currentSeconds);
@@ -1262,11 +1262,22 @@ export default defineComponent({
          */
         ...mapState(useAppStore, ['selectedCue']),
 
-        /** Returns whether the track has a completely defined meter */
+        /** Whether all required values for the use of the measure number as position are available.
+         * @devdoc The use of a getter or a function on the meter seems not to work (returns undefined at times),
+         * thus calculation is done explicitly here
+         */
         hasMeter(): boolean {
-            debugger;
-            //TODO why does is hasAllValues not a function
-            return this.track?.Meter?.hasAllValues() ?? false;
+            return (
+                (Number.isFinite(this.track?.Meter?.BeatsPerMinute) &&
+                    Number.isFinite(
+                        this.track?.Meter?.TimeSignature?.Denominator,
+                    ) &&
+                    Number.isFinite(
+                        this.track?.Meter?.TimeSignature?.Numerator,
+                    ) &&
+                    Number.isFinite(this.track?.Meter?.OriginTime)) ??
+                false
+            );
         },
 
         remainingTime(): number | null {

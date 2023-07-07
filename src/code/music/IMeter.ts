@@ -11,8 +11,4 @@ export interface IMeter {
 
     /** The origin time for the beat (first downbeat of the first measure) */
     OriginTime: number | null;
-
-    /** Whether all required values for the use of the meter are available.
-     */
-    hasAllValues(): boolean;
 }
