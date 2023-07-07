@@ -2,6 +2,7 @@
     <span
         v-if="currentDisplayMeasure"
         class="is-minimum-7-characters is-family-monospace is-single-line"
+        title="Measure|Beat"
         >{{ currentDisplayMeasure }}</span
     >
 </template>

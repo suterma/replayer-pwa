@@ -13,6 +13,7 @@
         data-cy="input-measure"
         :placeholder="placeholder"
         tabindex="0"
+        title="Measure number"
     />
 </template>
 
