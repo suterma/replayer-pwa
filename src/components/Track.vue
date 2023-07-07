@@ -594,6 +594,7 @@ import { useSettingsStore } from '@/store/settings';
 import { mapActions, mapState } from 'pinia';
 import { useAppStore } from '@/store/app';
 import FileHandler from '@/store/filehandler';
+import { Meter } from '@/code/music/Meter';
 
 /** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
@@ -1267,17 +1268,7 @@ export default defineComponent({
          * thus calculation is done explicitly here
          */
         hasMeter(): boolean {
-            return (
-                (Number.isFinite(this.track?.Meter?.BeatsPerMinute) &&
-                    Number.isFinite(
-                        this.track?.Meter?.TimeSignature?.Denominator,
-                    ) &&
-                    Number.isFinite(
-                        this.track?.Meter?.TimeSignature?.Numerator,
-                    ) &&
-                    Number.isFinite(this.track?.Meter?.OriginTime)) ??
-                false
-            );
+            return Meter.isValid(this.track?.Meter);
         },
 
         remainingTime(): number | null {

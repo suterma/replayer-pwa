@@ -25,6 +25,18 @@ export class Meter implements IMeter {
         this.OriginTime = originTime;
     }
 
+    /** Determines whether all properties are set to valid data */
+    public static isValid(meter: IMeter | null): boolean {
+        return (
+            (meter != null &&
+                Number.isFinite(meter.BeatsPerMinute) &&
+                Number.isFinite(meter.TimeSignature?.Denominator) &&
+                Number.isFinite(meter.TimeSignature?.Numerator) &&
+                Number.isFinite(meter.OriginTime)) ??
+            false
+        );
+    }
+
     /** Converts the time (in total seconds) into a displayable measure/beats format,
      * according to the meter,
      * if a suitable input value is provided.

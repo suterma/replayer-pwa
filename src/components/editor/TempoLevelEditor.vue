@@ -135,13 +135,7 @@ const props = defineProps({
  * thus calculation is done explicitly here
  */
 const hasAllTempoValues = computed(() => {
-    return (
-        (Number.isFinite(props.meter?.BeatsPerMinute) &&
-            Number.isFinite(props.meter?.TimeSignature?.Denominator) &&
-            Number.isFinite(props.meter?.TimeSignature?.Numerator) &&
-            Number.isFinite(props.meter?.OriginTime)) ??
-        false
-    );
+    return Meter.isValid(props.meter);
 });
 
 function updateMeterWithBpm(bpm: number): void {
