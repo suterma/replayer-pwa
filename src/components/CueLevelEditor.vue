@@ -60,6 +60,24 @@
                                 size="9"
                             />
                         </p>
+                        <Experimental v-if="experimentalUseTempo">
+                            <div class="control">
+                                <MeasureDisplay
+                                    v-if="hasMeter"
+                                    :modelValue="cueTime"
+                                    :meter="meter"
+                                ></MeasureDisplay>
+                            </div>
+                            <div class="control">
+                                <MetricalEditor
+                                    v-if="hasMeter"
+                                    v-model="cueTime"
+                                    @update:modelValue="updateCueTime"
+                                    :meter="meter"
+                                >
+                                </MetricalEditor>
+                            </div>
+                        </Experimental>
                         <div class="control is-hidden-mobile">
                             <AdjustCueButton
                                 @adjustCue="$emit('adjust')"
@@ -134,7 +152,12 @@ import { mdiTrashCanOutline } from '@mdi/js';
 import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { mapState } from 'pinia';
-
+import { IMeter } from '@/code/music/IMeter';
+import Experimental from '@/components/Experimental.vue';
+import MeasureDisplay from '@/components/MeasureDisplay.vue';
+import MetricalEditor from '@/components/editor/MetricalEditor.vue';
+import { Meter } from '@/code/music/Meter';
+import { useSettingsStore } from '@/store/settings';
 /** An Editor for for a single cue
  * @remarks Shows a cue button with an inline progress bar, plus input fields for all properties
  * @devdoc Input value binding is not implemented with a two-way v-model binding because the incoming values are taken
@@ -152,6 +175,9 @@ export default defineComponent({
         TimeDisplay,
         TimeInput,
         IfMedia,
+        MeasureDisplay,
+        MetricalEditor,
+        Experimental,
     },
     emits: ['click', 'play', 'adjust'],
     props: {
@@ -166,6 +192,13 @@ export default defineComponent({
         percentComplete: {
             type: null as unknown as PropType<number | null>,
             required: false,
+        },
+
+        /** The musical meter */
+        meter: {
+            type: null as unknown as PropType<IMeter | null>,
+            required: true,
+            default: null,
         },
 
         /** Whether this cue is currently selected
@@ -281,6 +314,7 @@ export default defineComponent({
     },
     computed: {
         ...mapState(useAppStore, ['selectedCueId']),
+        ...mapState(useSettingsStore, ['experimentalUseTempo']),
 
         /** Gets a cue placeholder denoting the cue's position */
         cuePlaceholder(): string {
@@ -291,6 +325,12 @@ export default defineComponent({
          */
         cueTime(): number | null {
             return this.cue.Time;
+        },
+
+        /** Whether all required values for the use of the measure number as position are available.
+         */
+        hasMeter(): boolean {
+            return Meter.isValid(this.meter);
         },
     },
 });

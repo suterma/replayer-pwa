@@ -215,6 +215,7 @@
                         :isTrackPlaying="isPlaying"
                         :playbackMode="playbackMode"
                         :currentSeconds="currentSeconds"
+                        :meter="track.Meter"
                         @click="cueClick"
                         @play="cuePlay"
                     >
@@ -1264,8 +1265,6 @@ export default defineComponent({
         ...mapState(useAppStore, ['selectedCue']),
 
         /** Whether all required values for the use of the measure number as position are available.
-         * @devdoc The use of a getter or a function on the meter seems not to work (returns undefined at times),
-         * thus calculation is done explicitly here
          */
         hasMeter(): boolean {
             return Meter.isValid(this.track?.Meter);

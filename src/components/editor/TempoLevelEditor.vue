@@ -131,8 +131,6 @@ const props = defineProps({
 });
 
 /** Whether all required values for the use of the measure number as position are available.
- * @devdoc The use of a getter or a function on the meter seems not to work (returns undefined at times),
- * thus calculation is done explicitly here
  */
 const hasAllTempoValues = computed(() => {
     return Meter.isValid(props.meter);

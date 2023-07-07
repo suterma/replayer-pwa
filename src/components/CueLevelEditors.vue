@@ -16,6 +16,7 @@
                 :hasCuePassed="hasCuePassed(cue)"
                 :isCueAhead="isCueAhead(cue)"
                 :percentComplete="percentComplete(cue)"
+                :meter="meter"
                 @click="cueClick(cue)"
                 @play="cuePlay(cue)"
                 @adjust="cueAdjust(cue)"
@@ -32,6 +33,7 @@ import CueLevelEditor from '@/components/CueLevelEditor.vue';
 
 import { useAppStore } from '@/store/app';
 import { mapState, mapActions } from 'pinia';
+import { IMeter } from '@/code/music/IMeter';
 
 /** An set of Editors for for cues in a track.
  */
@@ -47,6 +49,13 @@ export default defineComponent({
         disabled: {
             type: Boolean,
             required: false,
+        },
+
+        /** The musical meter */
+        meter: {
+            type: null as unknown as PropType<IMeter | null>,
+            required: true,
+            default: null,
         },
 
         /** The playback progress in the current track, in [seconds]
