@@ -13,7 +13,7 @@
             size="2"
             data-cy="input-timeSignatureNumerator"
             tabindex="0"
-            title="Numerator"
+            title="Time signature numerator"
         />
         <span class="mt-2">/</span>
         <!-- Let the attributes fall through the input element: -->
@@ -28,7 +28,7 @@
             size="2"
             data-cy="input-timeSignatureDenominator"
             tabindex="0"
-            title="Denominator"
+            title="Time signature denominator"
         />
     </div>
 </template>
