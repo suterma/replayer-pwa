@@ -64,11 +64,13 @@
                             v-experiment="experimentalUseTempo"
                             class="control"
                         >
-                            <MeasureDisplay
-                                v-if="hasMeter"
-                                :modelValue="cueTime"
-                                :meter="meter"
-                            ></MeasureDisplay>
+                            <button class="button is-indicator">
+                                <MeasureDisplay
+                                    v-if="hasMeter"
+                                    :modelValue="cueTime"
+                                    :meter="meter"
+                                ></MeasureDisplay>
+                            </button>
                         </div>
                         <div
                             v-experiment="experimentalUseTempo"
@@ -95,16 +97,26 @@
                 <!-- For performance and layout reasons, only render this when used (emulating is-hidden-touch) -->
                 <IfMedia query="(min-width: 1024px)">
                     <div class="level-item is-flex-shrink-1">
-                        <p
-                            class="is-single-line"
+                        <button
+                            class="button is-indicator"
                             title="Duration (until next cue)"
                         >
-                            <TimeDisplay
-                                class="has-opacity-half"
-                                :modelValue="cue.Duration"
-                            >
+                            <TimeDisplay :modelValue="cue.Duration">
                             </TimeDisplay>
-                        </p>
+                        </button>
+                    </div>
+
+                    <div
+                        v-if="hasMeter"
+                        class="level-item is-flex-shrink-1"
+                        vx-experiment="experimentalUseTempo"
+                    >
+                        <button class="button is-indicator">
+                            <MeasureDifferenceDisplay
+                                :modelValue="cue.Duration"
+                                :meter="meter"
+                            ></MeasureDifferenceDisplay>
+                        </button>
                     </div>
                     <!-- A rather slim input for the shortcut (a short mnemonic) -->
                     <div class="level-item is-flex-shrink-1">
@@ -158,6 +170,7 @@ import { useAppStore } from '@/store/app';
 import { mapState } from 'pinia';
 import { IMeter } from '@/code/music/IMeter';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
+import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import { Meter } from '@/code/music/Meter';
 import { useSettingsStore } from '@/store/settings';
@@ -179,6 +192,7 @@ export default defineComponent({
         TimeInput,
         IfMedia,
         MeasureDisplay,
+        MeasureDifferenceDisplay,
         MetricalEditor,
     },
     emits: ['click', 'play', 'adjust'],

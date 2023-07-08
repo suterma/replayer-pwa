@@ -67,6 +67,68 @@ export class Meter implements IMeter {
         return '---|-';
     }
 
+    /** Converts the time (in total seconds) into a displayable decimal beats format,
+     * according to the meter,
+     * if a suitable input value is provided.
+     * @param time - The temporal position in [seconds]
+     * @param meter - The meter to use for the conversion
+     * @return The decimal beats representation or a placeholder.
+     */
+    public static toBeatsDisplay(
+        time: number | null | undefined,
+        meter: IMeter,
+    ): string {
+        const metricalPosition = this.fromTime(time, meter);
+        if (metricalPosition && metricalPosition.Measure) {
+            // set fixed integral digits
+            let measureNumberPrefix = '';
+            if (metricalPosition.Measure < 100) {
+                measureNumberPrefix += '0';
+            }
+            if (metricalPosition.Measure < 10) {
+                measureNumberPrefix += '0';
+            }
+
+            return `${measureNumberPrefix}${metricalPosition.Measure}|${metricalPosition.Beat}`;
+        } else if (metricalPosition && metricalPosition.Beat) {
+            return `---|${metricalPosition.Beat}`;
+        }
+
+        return '---|-';
+    }
+
+    /** Converts a temporal duration (in seconds) into a decimal beat count
+     * if a suitable input value is provided.
+     * @param duration - The temporal duration in [seconds]
+     * @param meter - The meter to use for the conversion
+     * @return The decimal beat count or null
+     */
+    public static beatsFromDuration(
+        duration: number | null | undefined,
+        meter: IMeter,
+    ): number | null {
+        if (
+            duration != null &&
+            Number.isFinite(duration) &&
+            meter != null &&
+            meter.TimeSignature != null &&
+            meter.TimeSignature.Numerator != null &&
+            meter.TimeSignature.Denominator != null &&
+            meter.BeatsPerMinute != null &&
+            Meter.isValid(meter)
+        ) {
+            const signatureValue =
+                meter.TimeSignature.Numerator / meter.TimeSignature.Denominator;
+
+            const beats =
+                duration * (meter.BeatsPerMinute / 60) * signatureValue;
+
+            return beats;
+        }
+
+        return null;
+    }
+
     /** Converts a temporal position (in total seconds within a track) into a metrical position
      * if a suitable input value is provided.
      * @param time - The temporal position in [seconds]
