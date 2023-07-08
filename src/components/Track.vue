@@ -566,7 +566,6 @@ import {
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import TempoLevelEditor from '@/components/editor/TempoLevelEditor.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
-import Experimental from '@/components/Experimental.vue';
 import { MediaUrl } from '@/store/types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
@@ -611,7 +610,6 @@ export default defineComponent({
         CueLevelEditors,
         TrackAudioApiPlayer,
         ReplayerEventHandler,
-        Experimental,
         TrackHeader,
         PlayPauseButton,
         TimeDisplay,

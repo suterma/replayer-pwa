@@ -153,7 +153,6 @@ import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { mapState } from 'pinia';
 import { IMeter } from '@/code/music/IMeter';
-import Experimental from '@/components/Experimental.vue';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import { Meter } from '@/code/music/Meter';
@@ -177,7 +176,6 @@ export default defineComponent({
         IfMedia,
         MeasureDisplay,
         MetricalEditor,
-        Experimental,
     },
     emits: ['click', 'play', 'adjust'],
     props: {

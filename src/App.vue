@@ -51,7 +51,6 @@ import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import ReplayerAd from '@/components/ReplayerAd.vue';
 import ErrorOverlay from '@/components/ErrorOverlay.vue';
 import { DialogWrapper } from 'vue3-promise-dialog';
-import Experimental from './components/Experimental.vue';
 import { useAudioStore } from './store/audio';
 import { useSettingsStore } from '@/store/settings';
 import { mapActions, mapState } from 'pinia';
@@ -65,7 +64,6 @@ export default defineComponent({
         ErrorOverlay,
         DialogWrapper,
         ReplayerAd,
-        Experimental,
     },
 
     /** Register a handler to handle page reloads and tab/browser exits

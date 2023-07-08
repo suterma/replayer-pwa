@@ -27,6 +27,10 @@ createApp(App)
     .directive('focus', {
         mounted: (el) => el.focus(),
     })
+    .directive('color', (el, binding) => {
+        // this will be called for both `mounted` and `updated`
+        el.style.color = binding.value;
+    })
     .mount('#app');
 
 // Show general errors (including unhandled promises)
