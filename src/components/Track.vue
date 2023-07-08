@@ -104,19 +104,19 @@
                 <!-- NOTE: As a component update performance optimization, 
                 the numeric value is truncated to one decimal digit, as displayed, avoiding
                 unnecessary update for actually non-distinctly displayed values. -->
-                <Experimental v-if="experimentalShowPositionInTrackHeader">
-                    <TimeDisplay
-                        class="level-item is-narrow is-size-7"
-                        :modelValue="Math.floor(currentSeconds * 10) / 10"
-                        :subSecondDigits="1"
-                    ></TimeDisplay>
-                </Experimental>
+                <TimeDisplay
+                    v-experiment="experimentalShowPositionInTrackHeader"
+                    class="level-item is-narrow is-size-7"
+                    :modelValue="Math.floor(currentSeconds * 10) / 10"
+                    :subSecondDigits="1"
+                ></TimeDisplay>
 
-                <Experimental v-if="experimentalUseTempo && !isEditable">
-                    <span class="is-size-7 level-item is-narrow">
-                        <span>{{ track.Meter?.BeatsPerMinute }}&nbsp;BPM</span>
-                    </span>
-                </Experimental>
+                <span
+                    v-experiment="experimentalUseTempo"
+                    class="is-size-7 level-item is-narrow"
+                >
+                    <span>{{ track.Meter?.BeatsPerMinute }}&nbsp;BPM</span>
+                </span>
 
                 <!-- NOTE: In edit mode, the time is displayed as part of the transport area, not in the header -->
                 <!-- NOTE: In mix mode, the time display is not needed on individual tracks -->
@@ -166,23 +166,23 @@
         <!-- The tempo and cue level editors and playback bar (in edit mode for an expanded track) -->
         <Transition name="item-expand">
             <div v-if="isEditable && isExpanded" :key="track.Id">
-                <Experimental v-if="experimentalUseTempo">
-                    <TempoLevelEditor
-                        :meter="track.Meter"
-                        @update:meter="
-                            (value: IMeter): void => {
-                                updateMeter(track.Id, value);
-                            }
-                        "
-                        @adjustOriginTime="
-                            () => {
-                                updateTrackOriginTime(track.Id, currentSeconds);
-                            }
-                        "
-                        :useMeasureNumberAsPosition="
-                            track.UseMeasureNumberAsPosition
-                        "
-                        @update:useMeasureNumberAsPosition="
+                <TempoLevelEditor
+                    v-experiment="experimentalUseTempo"
+                    :meter="track.Meter"
+                    @update:meter="
+                        (value: IMeter): void => {
+                            updateMeter(track.Id, value);
+                        }
+                    "
+                    @adjustOriginTime="
+                        () => {
+                            updateTrackOriginTime(track.Id, currentSeconds);
+                        }
+                    "
+                    :useMeasureNumberAsPosition="
+                        track.UseMeasureNumberAsPosition
+                    "
+                    @update:useMeasureNumberAsPosition="
                                 (value: boolean | null) => {
                                     updateUseMeasureNumberAsPosition(
                                         track.Id,
@@ -190,23 +190,22 @@
                                     );
                                 }
                             "
-                    >
-                    </TempoLevelEditor>
-                    <MeasureDisplay
-                        v-if="hasMeter"
-                        :modelValue="currentSeconds"
-                        :meter="track.Meter"
-                    ></MeasureDisplay>
-                    <MetricalEditor
-                        v-if="hasMeter"
-                        v-model="currentSeconds"
-                        @update:modelValue="
-                            (position) => seekToSeconds(position)
-                        "
-                        :meter="track.Meter"
-                    >
-                    </MetricalEditor>
-                </Experimental>
+                >
+                </TempoLevelEditor>
+                <MeasureDisplay
+                    v-experiment="experimentalUseTempo"
+                    v-if="hasMeter"
+                    :modelValue="currentSeconds"
+                    :meter="track.Meter"
+                ></MeasureDisplay>
+                <MetricalEditor
+                    v-experiment="experimentalUseTempo"
+                    v-if="hasMeter"
+                    v-model="currentSeconds"
+                    @update:modelValue="(position) => seekToSeconds(position)"
+                    :meter="track.Meter"
+                >
+                </MetricalEditor>
 
                 <div class="levels">
                     <CueLevelEditors

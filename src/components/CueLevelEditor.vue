@@ -60,24 +60,28 @@
                                 size="9"
                             />
                         </p>
-                        <Experimental v-if="experimentalUseTempo">
-                            <div class="control">
-                                <MeasureDisplay
-                                    v-if="hasMeter"
-                                    :modelValue="cueTime"
-                                    :meter="meter"
-                                ></MeasureDisplay>
-                            </div>
-                            <div class="control">
-                                <MetricalEditor
-                                    v-if="hasMeter"
-                                    v-model="cueTime"
-                                    @update:modelValue="updateCueTime"
-                                    :meter="meter"
-                                >
-                                </MetricalEditor>
-                            </div>
-                        </Experimental>
+                        <div
+                            v-experiment="experimentalUseTempo"
+                            class="control"
+                        >
+                            <MeasureDisplay
+                                v-if="hasMeter"
+                                :modelValue="cueTime"
+                                :meter="meter"
+                            ></MeasureDisplay>
+                        </div>
+                        <div
+                            v-experiment="experimentalUseTempo"
+                            class="control"
+                        >
+                            <MetricalEditor
+                                v-if="hasMeter"
+                                v-model="cueTime"
+                                @update:modelValue="updateCueTime"
+                                :meter="meter"
+                            >
+                            </MetricalEditor>
+                        </div>
                         <div class="control is-hidden-mobile">
                             <AdjustCueButton
                                 @adjustCue="$emit('adjust')"

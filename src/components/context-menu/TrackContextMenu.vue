@@ -1,20 +1,21 @@
 <template>
     <DropdownMenu title="Track context menu">
-        <Experimental v-once>
-            <DropdownMenuItem
-                v-if="track"
-                title="Add multiple cues..."
-                subTitle="(add cues using text lines)"
-                @click="addMultipleCues()"
-            />
-            <DropdownMenuItem
-                v-if="track"
-                title="Share..."
-                subTitle="(allows to share a track)"
-                @click="share()"
-            />
-        </Experimental>
-
+        <DropdownMenuItem
+            v-once
+            v-experiment="true"
+            v-if="track"
+            title="Add multiple cues..."
+            subTitle="(add cues using text lines)"
+            @click="addMultipleCues()"
+        />
+        <DropdownMenuItem
+            v-once
+            v-experiment="true"
+            v-if="track"
+            title="Share..."
+            subTitle="(allows to share a track)"
+            @click="share()"
+        />
         <DropdownMenuItem
             v-once
             title="Clone"

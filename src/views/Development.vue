@@ -1,5 +1,5 @@
 <template>
-    <Experimental>
+    <div v-experiment="true">
         <div class="block">
             <section class="hero is-danger is-small">
                 <div class="hero-body">
@@ -177,7 +177,7 @@
         <p>
             Icons are "Inline SVG's from from https://materialdesignicons.com/
         </p>
-    </Experimental>
+    </div>
 
     <h3>Control knobs</h3>
 

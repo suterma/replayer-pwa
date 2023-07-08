@@ -1,9 +1,6 @@
 <template>
-    <slot></slot>
-    <!-- Let the attributes fall through the input element: -->
     <input
         class="input bpm has-text-right"
-        v-bind="$attrs"
         type="number"
         inputmode="numeric"
         step="1"

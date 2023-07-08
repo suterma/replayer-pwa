@@ -1,12 +1,11 @@
 <template>
-    <Experimental v-if="experimentalShowWaveforms">
-        <TrackAudioPeaks
-            :disabled="disabled"
-            :mediaElement="audioElement"
-            :key="props.mediaUrl"
-            :showZoomView="true"
-        />
-    </Experimental>
+    <TrackAudioPeaks
+        v-experiment="experimentalShowWaveforms"
+        :disabled="disabled"
+        :mediaElement="audioElement"
+        :key="props.mediaUrl"
+        :showZoomView="true"
+    />
 
     <!-- NOTE: the rendering of the AudioLevelMeter _might_ affect badly the synchronous start of the playback, 
          but only the first time after a page reload/player instantiation.

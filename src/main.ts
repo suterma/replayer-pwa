@@ -6,7 +6,6 @@ import router, { updateTitle } from './router';
 import VueScrollTo from 'vue-scrollto';
 import vClickOutside from 'click-outside-vue3';
 import { PromiseDialog } from 'vue3-promise-dialog';
-import Experimental from '@/components/Experimental.vue';
 import { useMessageStore } from './store/messages';
 import { useAppStore } from './store/app';
 
@@ -23,13 +22,16 @@ createApp(App)
     .use(VueScrollTo)
     .use(vClickOutside)
     .use(PromiseDialog, {})
-    .component('Experimental', Experimental)
     .directive('focus', {
         mounted: (el) => el.focus(),
     })
-    .directive('color', (el, binding) => {
+    .directive('experiment', (el: HTMLElement, binding) => {
         // this will be called for both `mounted` and `updated`
-        el.style.color = binding.value;
+        if (binding.value) {
+            el.classList.add('is-experimental');
+        } else {
+            el.remove();
+        }
     })
     .mount('#app');
 
