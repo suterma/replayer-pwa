@@ -2,7 +2,7 @@
     <DropdownMenu title="Track context menu">
         <DropdownMenuItem
             v-once
-            v-experiment="true"
+            v-experiment="experimentalShowAddMultipleCuesAction"
             v-if="track"
             title="Add multiple cues..."
             subTitle="(add cues using text lines)"
@@ -10,7 +10,7 @@
         />
         <DropdownMenuItem
             v-once
-            v-experiment="true"
+            v-experiment="experimentalAllowTrackSharingByLink"
             v-if="track"
             title="Share..."
             subTitle="(allows to share a track)"
@@ -57,6 +57,9 @@ import { addTextCues, confirm, shareTrack } from '@/code/ui/dialogs';
 import { ICue, ITrack } from '@/store/compilation-types';
 import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
+import { useSettingsStore } from '@/store/settings';
+import { mapState } from 'pinia';
+
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
@@ -137,6 +140,10 @@ export default defineComponent({
         },
     },
     computed: {
+        ...mapState(useSettingsStore, [
+            'experimentalShowAddMultipleCuesAction',
+            'experimentalAllowTrackSharingByLink',
+        ]),
         /** The track for the context, if any
          */
         track(): ITrack | undefined {

@@ -280,6 +280,23 @@
                     ></LabeledCheckbox>
                 </div>
             </div>
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="experimentalShowAddMultipleCuesAction"
+                        label="Show menu action to add multiple cues using text"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="experimentalAllowTrackSharingByLink"
+                        label="Show menu action to share a track by link"
+                        hint="Uses the track API"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -307,6 +324,8 @@ const {
     keyboardShortcutTimeout,
     timeFormat,
     experimentalShowPositionInTrackHeader,
+    experimentalShowAddMultipleCuesAction,
+    experimentalAllowTrackSharingByLink,
     experimentalShowWaveforms,
     experimentalUseTempo,
 } = storeToRefs(settings);

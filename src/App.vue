@@ -39,9 +39,10 @@
         -->
         <div class="has-player-navbar-fixed-bottom"></div>
         <!-- A placeholder that invisibly extends the bottom for the experimental content in the fixed bottom bar -->
-        <Experimental v-if="experimentalShowPositionInTrackHeader">
-            <div style="height: 224px"></div>
-        </Experimental>
+        <div
+            v-experiment="experimentalShowPositionInTrackHeader"
+            style="height: 224px"
+        ></div>
     </div>
 </template>
 <script lang="ts">

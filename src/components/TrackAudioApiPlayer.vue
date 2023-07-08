@@ -1,6 +1,7 @@
 <template>
     <TrackAudioPeaks
         v-experiment="experimentalShowWaveforms"
+        v-if="experimentalShowWaveforms"
         :disabled="disabled"
         :mediaElement="audioElement"
         :key="props.mediaUrl"
