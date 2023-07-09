@@ -21,7 +21,7 @@
             :percentComplete="percentComplete(prefixCue)"
             @click="cueClicked"
             :meter="meter"
-            :useMeasureNumberAsPosition="useMeasureNumberAsPosition"
+            :useMeasureNumbers="useMeasureNumbers"
         >
         </CueButton>
         <!-- Using the v-for on a template instead of the actual component saves unnecessary renderings. 
@@ -45,7 +45,7 @@
                 :percentComplete="percentComplete(cue)"
                 @click="cueClicked"
                 :meter="meter"
-                :useMeasureNumberAsPosition="useMeasureNumberAsPosition"
+                :useMeasureNumbers="useMeasureNumbers"
             >
             </CueButton>
         </template>
@@ -101,7 +101,7 @@ const props = defineProps({
     },
 
     /** Whether to use the measure number to set and display the cue positions */
-    useMeasureNumberAsPosition: {
+    useMeasureNumbers: {
         type: null as unknown as PropType<boolean | null>,
         required: true,
         default: null,

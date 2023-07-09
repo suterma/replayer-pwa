@@ -74,8 +74,8 @@
                 <div class="field">
                     <p class="control">
                         <LabeledCheckbox
-                            :modelValue="props.useMeasureNumberAsPosition"
-                            @update:modelValue="(value:boolean|null) => updateUseMeasureNumberAsPosition(value)"
+                            :modelValue="props.useMeasureNumbers"
+                            @update:modelValue="(value:boolean|null) => updateUseMeasureNumbers(value)"
                             label="Use/show measure numbers"
                             :disabled="!hasAllTempoValues"
                         ></LabeledCheckbox>
@@ -116,7 +116,7 @@ import { ITimeSignature } from '@/code/music/ITimeSignature';
 const emit = defineEmits([
     'update:meter',
     'adjustOriginTime',
-    'update:useMeasureNumberAsPosition',
+    'update:useMeasureNumbers',
 ]);
 
 const props = defineProps({
@@ -127,7 +127,7 @@ const props = defineProps({
         default: null,
     },
     /** Whether to use the measure number to set and display the cue positions */
-    useMeasureNumberAsPosition: {
+    useMeasureNumbers: {
         type: null as unknown as PropType<boolean | null>,
         required: true,
         default: null,
@@ -172,10 +172,8 @@ function updateMeterWithOriginTime(originTime: number | null): void {
     emit('update:meter', meter);
 }
 
-function updateUseMeasureNumberAsPosition(
-    useMeasureNumberAsPosition: boolean | null,
-): void {
-    emit('update:useMeasureNumberAsPosition', useMeasureNumberAsPosition);
+function updateUseMeasureNumbers(useMeasureNumbers: boolean | null): void {
+    emit('update:useMeasureNumbers', useMeasureNumbers);
 }
 
 /** Watches whether any of the required values for the use of the measure number as position is missing; reset the option if true.
@@ -184,7 +182,7 @@ watch(
     hasAllTempoValues,
     (hasAllValues) => {
         if (hasAllValues === false) {
-            updateUseMeasureNumberAsPosition(false);
+            updateUseMeasureNumbers(false);
         }
     },
     { immediate: true },

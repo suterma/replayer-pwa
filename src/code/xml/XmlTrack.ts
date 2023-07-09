@@ -16,7 +16,7 @@ export class XmlTrack {
         this.Album = track.Album;
         this.Url = track.Url;
         this.Meter = track.Meter;
-        this.UseMeasureNumberAsPosition = track.UseMeasureNumberAsPosition;
+        this.UseMeasureNumbers = track.UseMeasureNumbers;
         this.Volume = track.Volume;
         this.Cues = new XmlCues(track.Cues);
     }
@@ -27,7 +27,7 @@ export class XmlTrack {
     Album: string;
     Url: string;
     Meter: XmlMeter | null;
-    UseMeasureNumberAsPosition: boolean | null;
+    UseMeasureNumbers: boolean | null;
     Volume: number;
     Cues: XmlCues;
 }

@@ -178,16 +178,16 @@ export const actions = {
 
     /** Updates whether to use the measure number to set and display the cue positions
      */
-    updateUseMeasureNumberAsPosition(
+    updateUseMeasureNumbers(
         trackId: string,
-        useMeasureNumberAsPosition: boolean | null,
+        useMeasureNumbers: boolean | null,
     ): void {
         const track = CompilationHandler.getTrackById(
             state.compilation.value.Tracks,
             trackId,
         );
         if (track) {
-            track.UseMeasureNumberAsPosition = useMeasureNumberAsPosition;
+            track.UseMeasureNumbers = useMeasureNumbers;
         }
     },
 

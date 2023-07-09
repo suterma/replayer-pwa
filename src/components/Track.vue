@@ -161,7 +161,7 @@
                 "
                 :cues="track.Cues"
                 :meter="track.Meter"
-                :useMeasureNumberAsPosition="track.UseMeasureNumberAsPosition"
+                :useMeasureNumbers="track.UseMeasureNumbers"
             ></CueButtonsField>
         </div>
 
@@ -181,12 +181,10 @@
                             updateTrackOriginTime(track.Id, currentSeconds);
                         }
                     "
-                    :useMeasureNumberAsPosition="
-                        track.UseMeasureNumberAsPosition
-                    "
-                    @update:useMeasureNumberAsPosition="
+                    :useMeasureNumbers="track.UseMeasureNumbers"
+                    @update:useMeasureNumbers="
                                 (value: boolean | null) => {
-                                    updateUseMeasureNumberAsPosition(
+                                    updateUseMeasureNumbers(
                                         track.Id,
                                         value,
                                     );
@@ -199,7 +197,7 @@
                 <nav
                     v-experiment="experimentalUseTempo"
                     class="level"
-                    v-if="hasMeter && track.UseMeasureNumberAsPosition"
+                    v-if="hasMeter && track.UseMeasureNumbers"
                 >
                     <!-- Left side -->
                     <div class="level-left">
@@ -230,9 +228,7 @@
                         :playbackMode="playbackMode"
                         :currentSeconds="currentSeconds"
                         :meter="track.Meter"
-                        :useMeasureNumberAsPosition="
-                            track.UseMeasureNumberAsPosition
-                        "
+                        :useMeasureNumbers="track.UseMeasureNumbers"
                         @click="cueClick"
                         @play="cuePlay"
                     >
@@ -812,7 +808,7 @@ export default defineComponent({
             'updateDurations',
             'updateMeter',
             'updateTrackOriginTime',
-            'updateUseMeasureNumberAsPosition',
+            'updateUseMeasureNumbers',
         ]),
 
         convertToDisplayTime(

@@ -65,7 +65,7 @@
                         <div class="level-item mr-3">
                             <MeasureDisplay
                                 v-experiment="true"
-                                v-if="hasMeter && useMeasureNumberAsPosition"
+                                v-if="hasMeter && useMeasureNumbers"
                                 class="has-opacity-half foreground"
                                 :modelValue="time"
                                 :meter="meter"
@@ -89,7 +89,7 @@
                         <p class="level-item mr-3 is-hidden-touch">
                             <MeasureDifferenceDisplay
                                 v-experiment="true"
-                                v-if="hasMeter && useMeasureNumberAsPosition"
+                                v-if="hasMeter && useMeasureNumbers"
                                 class="has-opacity-half foreground"
                                 :modelValue="duration"
                                 :meter="meter"
@@ -229,7 +229,7 @@ const props = defineProps({
     },
 
     /** Whether to use the measure number to set and display the cue positions */
-    useMeasureNumberAsPosition: {
+    useMeasureNumbers: {
         type: null as unknown as PropType<boolean | null>,
         required: true,
         default: null,
@@ -245,7 +245,7 @@ const cueTitle = computed(() => {
         if (
             props.meter != null &&
             Meter.isValid(props.meter) &&
-            props.useMeasureNumberAsPosition
+            props.useMeasureNumbers
         ) {
             return `Play from ${Meter.toMeasureDisplay(
                 props.time,

@@ -102,7 +102,7 @@ export interface ITrack {
     Meter: IMeter | null;
 
     /** Whether to use the measure number to set and display the cue positions */
-    UseMeasureNumberAsPosition: boolean | null;
+    UseMeasureNumbers: boolean | null;
 
     /** The URL or the local file name (possibly including a path) for the media file.
      * @devdoc If it is relative, it may get made absolute using the compilation's media path.
@@ -190,7 +190,7 @@ export class Compilation implements ICompilation {
                     track.Album,
                     track.Artist,
                     track.Meter,
-                    track.UseMeasureNumberAsPosition,
+                    track.UseMeasureNumbers,
                     track.Url,
                     track.Id,
                     track.Cues.map((cue) => {
@@ -240,7 +240,7 @@ export class Track implements ITrack {
     Album = '';
     Artist = '';
     Meter: IMeter | null = null;
-    UseMeasureNumberAsPosition: boolean | null = null;
+    UseMeasureNumbers: boolean | null = null;
     Url = '';
     Id = '';
     Cues: Array<ICue> = new Array<ICue>();
@@ -261,7 +261,7 @@ export class Track implements ITrack {
         album: string,
         artist: string,
         meter: IMeter | null,
-        useMeasureNumberAsPosition: boolean | null,
+        useMeasureNumbers: boolean | null,
         url: string,
         id: string,
         cues: Array<ICue>,
@@ -272,7 +272,7 @@ export class Track implements ITrack {
         this.Album = album;
         this.Artist = artist;
         this.Meter = meter;
-        this.UseMeasureNumberAsPosition = useMeasureNumberAsPosition;
+        this.UseMeasureNumbers = useMeasureNumbers;
         this.Url = url;
         this.Id = id;
         this.Cues = cues;
@@ -292,7 +292,7 @@ export class Track implements ITrack {
             obj.Album,
             obj.Artist,
             obj.Meter,
-            obj.UseMeasureNumberAsPosition,
+            obj.UseMeasureNumbers,
             obj.Url,
             obj.Id,
             obj.Cues,

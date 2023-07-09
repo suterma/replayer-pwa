@@ -62,7 +62,7 @@
                         </p>
                         <div
                             v-experiment="experimentalUseTempo"
-                            v-if="hasMeter && useMeasureNumberAsPosition"
+                            v-if="hasMeter && useMeasureNumbers"
                             class="control"
                         >
                             <button class="button is-indicator">
@@ -74,7 +74,7 @@
                         </div>
                         <div
                             v-experiment="experimentalUseTempo"
-                            v-if="hasMeter && useMeasureNumberAsPosition"
+                            v-if="hasMeter && useMeasureNumbers"
                             class="control"
                         >
                             <MetricalEditor
@@ -107,7 +107,7 @@
                     </div>
 
                     <div
-                        v-if="hasMeter && useMeasureNumberAsPosition"
+                        v-if="hasMeter && useMeasureNumbers"
                         class="level-item is-flex-shrink-1"
                         v-experiment="experimentalUseTempo"
                     >
@@ -218,7 +218,7 @@ export default defineComponent({
         },
 
         /** Whether to use the measure number to set and display the cue positions */
-        useMeasureNumberAsPosition: {
+        useMeasureNumbers: {
             type: null as unknown as PropType<boolean | null>,
             required: true,
             default: null,
