@@ -135,6 +135,11 @@ while also keeping the original with.
     width: 200%;
 }
 
+/* monospace fonts should also not compact whitespace*/
+.is-family-monospace {
+    white-space: pre;
+}
+
 /** **********************************************************
  * Explicit cursors
 **************************************************************

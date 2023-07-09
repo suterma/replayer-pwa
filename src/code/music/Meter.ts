@@ -37,7 +37,7 @@ export class Meter implements IMeter {
         );
     }
 
-    /** Converts the time (in total seconds) into a displayable measure/beats format,
+    /** Converts a temporal position into a displayable measure/beats count format,
      * according to the meter,
      * if a suitable input value is provided.
      * @param time - The temporal position in [seconds]
@@ -53,48 +53,59 @@ export class Meter implements IMeter {
             // set fixed integral digits
             let measureNumberPrefix = '';
             if (metricalPosition.Measure < 100) {
-                measureNumberPrefix += '0';
+                measureNumberPrefix += ' ';
             }
             if (metricalPosition.Measure < 10) {
-                measureNumberPrefix += '0';
+                measureNumberPrefix += ' ';
             }
 
-            return `${measureNumberPrefix}${metricalPosition.Measure}|${metricalPosition.Beat}`;
+            return `#|${measureNumberPrefix}${metricalPosition.Measure} |.${metricalPosition.Beat}`;
         } else if (metricalPosition && metricalPosition.Beat) {
-            return `---|${metricalPosition.Beat}`;
+            return `#|    |.${metricalPosition.Beat}`;
         }
 
-        return '---|-';
+        return '#|    |. ';
     }
 
-    /** Converts the time (in total seconds) into a displayable decimal beats format,
+    /** Converts a temporal duration into a displayable multimeasure rest format,
      * according to the meter,
      * if a suitable input value is provided.
-     * @param time - The temporal position in [seconds]
+     * @remarks This is intended to be used to denote durations instead of positions (as with toMeasureDisplay)
+     * @param duration - The temporal duration in [seconds]
      * @param meter - The meter to use for the conversion
-     * @return The decimal beats representation or a placeholder.
+     * @return The multimeasure rest representation or a placeholder.
      */
-    public static toBeatsDisplay(
-        time: number | null | undefined,
+    public static toMultiMeasureRestDisplay(
+        duration: number | null | undefined,
         meter: IMeter,
     ): string {
-        const metricalPosition = this.fromTime(time, meter);
-        if (metricalPosition && metricalPosition.Measure) {
-            // set fixed integral digits
-            let measureNumberPrefix = '';
-            if (metricalPosition.Measure < 100) {
-                measureNumberPrefix += '0';
-            }
-            if (metricalPosition.Measure < 10) {
-                measureNumberPrefix += '0';
-            }
+        if (
+            meter.OriginTime != null &&
+            duration != null &&
+            Meter.isValid(meter)
+        ) {
+            const metricalPosition = this.fromTime(
+                duration +
+                    meter.OriginTime -
+                    Meter.TemporalEpsilon /* to make sure, that there is not a beat to much counted*/,
+                meter,
+            );
+            if (metricalPosition && metricalPosition.Measure) {
+                // set fixed integral digits
+                let measureNumberPrefix = '';
+                if (metricalPosition.Measure < 100) {
+                    measureNumberPrefix += ' ';
+                }
+                if (metricalPosition.Measure < 10) {
+                    measureNumberPrefix += ' ';
+                }
 
-            return `${measureNumberPrefix}${metricalPosition.Measure}|${metricalPosition.Beat}`;
-        } else if (metricalPosition && metricalPosition.Beat) {
-            return `---|${metricalPosition.Beat}`;
+                return `├${measureNumberPrefix}${metricalPosition.Measure} ┤`;
+            } else if (metricalPosition && metricalPosition.Beat) {
+                return `├    ┤`;
+            }
         }
-
-        return '---|-';
+        return '├    ┤';
     }
 
     /** Converts a temporal duration (in seconds) into a decimal beat count

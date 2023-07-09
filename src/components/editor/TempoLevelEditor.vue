@@ -46,7 +46,11 @@
 
             <!-- Origin -->
             <div class="level-item has-text-centered">
-                <span class="has-opacity-half">Origin</span>
+                <span
+                    class="has-opacity-half"
+                    title="Temporal position of the first downbeat (beat 1 in measure 1)"
+                    >Origin</span
+                >
             </div>
             <!-- A normal input for the time, with an adjustment add-on (from a bit wider screens)-->
             <div class="level-item">

@@ -31,7 +31,7 @@ export default defineComponent({
         },
     },
     computed: {
-        /** Converts the time into a measure.beats format.
+        /** Converts the time into a displayable measure duration format
          */
         currentDisplayMeasure(): string | null {
             if (
@@ -40,13 +40,10 @@ export default defineComponent({
                 Meter.isValid(this.meter) &&
                 this.meter.OriginTime != null
             ) {
-                const beats = Meter.beatsFromDuration(
+                return Meter.toMultiMeasureRestDisplay(
                     this.modelValue,
                     this.meter,
                 );
-                if (beats) {
-                    return _.round(beats, 2)?.toString() ?? '';
-                }
             }
             return '';
         },
