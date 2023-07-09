@@ -63,10 +63,18 @@
                     <!-- Left side -->
                     <div class="level-left">
                         <div class="level-item mr-3">
+                            <MeasureDisplay
+                                v-experiment="true"
+                                v-if="hasMeter && useMeasureNumberAsPosition"
+                                class="has-opacity-half foreground"
+                                :modelValue="time"
+                                :meter="meter"
+                            ></MeasureDisplay>
                             <!-- NOTE: As a component update performance optimization, 
                             the numeric value is truncated to one decimal digit, as displayed, avoiding
                             unnecessary update for actually non-distinctly displayed values. -->
                             <TimeDisplay
+                                v-else
                                 class="has-opacity-half foreground"
                                 :modelValue="time"
                                 :subSecondDigits="1"
@@ -79,8 +87,16 @@
                         <!-- For layout reasons, only render this when used, on desktop and larger screens -->
 
                         <p class="level-item mr-3 is-hidden-touch">
+                            <MeasureDifferenceDisplay
+                                v-experiment="true"
+                                v-if="hasMeter && useMeasureNumberAsPosition"
+                                class="has-opacity-half foreground"
+                                :modelValue="duration"
+                                :meter="meter"
+                            ></MeasureDifferenceDisplay>
                             <!-- Use a right position for Durations, to keep them as much out of visibility as possible -->
                             <TimeDisplay
+                                v-else
                                 class="has-opacity-half foreground"
                                 :modelValue="duration"
                                 :subSecondDigits="1"
@@ -122,6 +138,10 @@ import {
 import CompilationHandler from '@/store/compilation-handler';
 import { PlaybackMode } from '@/store/compilation-types';
 import { PropType, computed } from 'vue';
+import { IMeter } from '@/code/music/IMeter';
+import { Meter } from '@/code/music/Meter';
+import MeasureDisplay from '@/components/MeasureDisplay.vue';
+import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
@@ -200,6 +220,20 @@ const props = defineProps({
      * @remarks The progress bar radius at the right side must be removed for fully progressed cues.
      */
     hasAddonsRight: Boolean,
+
+    /** The musical meter */
+    meter: {
+        type: null as unknown as PropType<IMeter | null>,
+        required: true,
+        default: null,
+    },
+
+    /** Whether to use the measure number to set and display the cue positions */
+    useMeasureNumberAsPosition: {
+        type: null as unknown as PropType<boolean | null>,
+        required: true,
+        default: null,
+    },
 });
 
 /** The title for this cue, usable as tooltip
@@ -208,10 +242,21 @@ const cueTitle = computed(() => {
     if (props.description) {
         return `Play from ${props.description}`;
     } else if (props.time != undefined) {
-        return `Play from ${CompilationHandler.convertToDisplayTime(
-            props.time,
-            1,
-        )}`;
+        if (
+            props.meter != null &&
+            Meter.isValid(props.meter) &&
+            props.useMeasureNumberAsPosition
+        ) {
+            return `Play from ${Meter.toMeasureDisplay(
+                props.time,
+                props.meter,
+            )}`;
+        } else {
+            return `Play from ${CompilationHandler.convertToDisplayTime(
+                props.time,
+                1,
+            )}`;
+        }
     }
     return `Play from here`;
 });
@@ -225,13 +270,9 @@ const cueText = computed(() => {
     }
     if (props.description) {
         return props.description;
-    } else if (props.time != undefined) {
-        return `Play from ${CompilationHandler.convertToDisplayTime(
-            props.time,
-            1,
-        )}`;
+    } else {
+        return cueTitle.value;
     }
-    return `Play from here`;
 });
 
 /** The width offset for the progress-bar
@@ -278,6 +319,12 @@ const isCueLooping = computed(() => {
 /** Determines whether this cue is currently selected and is playing to cue end only */
 const isCuePlay = computed(() => {
     return props.isCueSelected && props.playbackMode === PlaybackMode.PlayCue;
+});
+
+/** Whether all required values for the use of the measure number as position are available.
+ */
+const hasMeter = computed(() => {
+    return Meter.isValid(props.meter);
 });
 </script>
 <style scoped>

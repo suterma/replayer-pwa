@@ -160,6 +160,8 @@
                     }
                 "
                 :cues="track.Cues"
+                :meter="track.Meter"
+                :useMeasureNumberAsPosition="track.UseMeasureNumberAsPosition"
             ></CueButtonsField>
         </div>
 
