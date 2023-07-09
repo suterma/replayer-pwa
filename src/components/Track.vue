@@ -172,7 +172,7 @@
                     v-experiment="experimentalUseTempo"
                     :meter="track.Meter"
                     @update:meter="
-                        (value: IMeter): void => {
+                        (value: any /*IMeter*/): void => {
                             updateMeter(track.Id, value);
                         }
                     "
