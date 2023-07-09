@@ -6,14 +6,14 @@ export enum CompilationType {
     XML = 'XML',
 }
 
-/** A display mode for tracks. Specifying this mode makes the track component reusable for different display modes. */
+/** A view mode for tracks. Specifying this mode makes the track component reusable for different view modes. */
 export enum TrackViewMode {
     /** Shown with editable inputs for the contained data */
-    Edit = 'edit',
+    Edit = 'EDIT',
     /** Shown optimized for multi-track/mixer playback */
-    Mix = 'mix',
+    Mix = 'MIX',
     /** Shown optimized for playback */
-    Play = 'play',
+    Play = 'PLAY',
 }
 
 /** A playback mode for tracks and cues. */

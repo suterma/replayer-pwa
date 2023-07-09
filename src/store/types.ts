@@ -1,15 +1,5 @@
 import FileHandler from './filehandler';
 
-/** @enum An enumeration of display modes
- *  @remarks Defines the intention of the display layout and feature set
- */
-export enum DisplayMode {
-    /** A mode for playback during a rehearsal. Optimised for simple and fast playback handling */
-    Play = 'PLAY',
-    /** A mode for creating and editing items */
-    Edit = 'EDIT',
-}
-
 /** @class Implements a playable media URL
  * @remarks A media URL is an annotated URL; either an online URL (with http|https protocol), or an object URL for a blob, representing a media file
  */

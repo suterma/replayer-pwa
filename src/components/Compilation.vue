@@ -27,7 +27,7 @@
                     :track="track"
                     :ref="'track-' + track.Id"
                     :id="'track-' + track.Id"
-                    :displayMode="trackViewode"
+                    :viewMode="trackViewode"
                     :isTrackPlayerFullScreen="
                         isTrackPlayerFullScreen && !isEditable
                     "
@@ -304,7 +304,7 @@ export default defineComponent({
         compilation: Object as PropType<Compilation>,
 
         /** The display mode of the contained tracks.
-         * @devdoc Allows to reuse this component for more than one DisplayMode.
+         * @devdoc Allows to reuse this component for more than one view.
          * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
          */
         trackViewode: {

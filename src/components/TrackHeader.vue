@@ -281,7 +281,7 @@ export default defineComponent({
         },
 
         /** The display mode of this track.
-         * @devdoc Allows to reuse this component for more than one DisplayMode.
+         * @devdoc Allows to reuse this component for more than one view mode.
          * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
          */
         displayMode: {

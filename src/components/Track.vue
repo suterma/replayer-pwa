@@ -28,7 +28,7 @@
         <!-- Track header for editing, including artist info, expansion-toggler and adaptive spacing -->
         <!-- NOTE: The @click handler on the header component only handles clicks on otherwise non-interactive elements -->
         <TrackHeader
-            :displayMode="displayMode"
+            :displayMode="viewMode"
             :isExpanded="isExpanded"
             @update:isExpanded="updateIsExpanded"
             :canCollapse="!isOnlyAudioTrack"
@@ -64,7 +64,7 @@
                     />
 
                     <!-- Routing controls only when mixable -->
-                    <template v-if="isMix">
+                    <template v-if="isMixable">
                         <SoloButton
                             :disabled="!canPlay"
                             :isSoloed="isSoloed"
@@ -359,7 +359,7 @@
                 :defaultPreRollDuration="defaultPreRollDuration"
                 :fadeOutDuration="fadeOutDuration"
                 :applyFadeInOffset="applyFadeInOffset"
-                :showLevelMeter="showLevelMeter && isMix"
+                :showLevelMeter="showLevelMeter && isMixable"
                 :experimentalShowWaveforms="experimentalShowWaveforms"
                 :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
             ></TrackAudioApiPlayer>
@@ -371,19 +371,19 @@
                     In the mix view a dedicated mix widget is shown (defined as separate div) -->
                     <div
                         v-if="
-                            (isMix && isActiveTrack) ||
+                            (isMixable && isActiveTrack) ||
                             (isPlayable && isActiveTrack) ||
                             (isEditable && isExpanded)
                         "
                         :class="{
-                            section: isPlayable || isMix,
-                            'has-background-grey-dark': isPlayable || isMix,
+                            section: isPlayable || isMixable,
+                            'has-background-grey-dark': isPlayable || isMixable,
                             'is-fullscreen': isTrackPlayerFullScreen,
                             'has-player-navbar-fixed-top':
                                 isTrackPlayerFullScreen,
                             'transition-in-place':
                                 isPlayable ||
-                                isMix /* because in playback  or mix view, the players are replaced in place, not expanded */,
+                                isMixable /* because in playback  or mix view, the players are replaced in place, not expanded */,
                         }"
                         :key="track.Id"
                     >
@@ -533,7 +533,7 @@
                                 (!isOnlyAudioTrack &&
                                     !isTrackPlayerFullScreen &&
                                     isPlayable) ||
-                                (!isTrackPlayerFullScreen && isMix)
+                                (!isTrackPlayerFullScreen && isMixable)
                             "
                         >
                             <CueButtonsBar
@@ -731,10 +731,10 @@ export default defineComponent({
         },
 
         /** The display mode of this track.
-         * @devdoc Allows to reuse this component for more than one DisplayMode.
+         * @devdoc Allows to reuse this component for more than one view mode.
          * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
          */
-        displayMode: {
+        viewMode: {
             type: String as () => TrackViewMode,
             default: TrackViewMode.Play,
         },
@@ -1363,25 +1363,25 @@ export default defineComponent({
             );
         },
 
-        /** Whether this component is displayed for the "Edit" mode, and thus shows editable inputs for the contained data
-         * @devdoc Allows to reuse this component for more than one display mode.
+        /** Whether this component is viewed for the "Edit" mode, and thus shows editable inputs for the contained data
+         * @devdoc Allows to reuse this component for more than one view mode.
          */
         isEditable(): boolean {
-            return this.displayMode === TrackViewMode.Edit;
+            return this.viewMode === TrackViewMode.Edit;
         },
 
-        /** Whether this component is displayed for the "Mix" mode, and thus shows mixing controls
-         * @devdoc Allows to reuse this component for more than one display mode.
+        /** Whether this component is viewed for the "Mix" mode, and thus shows mixing controls
+         * @devdoc Allows to reuse this component for more than one view mode.
          */
-        isMix(): boolean {
-            return this.displayMode === TrackViewMode.Mix;
+        isMixable(): boolean {
+            return this.viewMode === TrackViewMode.Mix;
         },
 
-        /** Whether this component is displayed for the "Play" mode, and thus shows non-collapsible playback buttons
-         * @devdoc Allows to reuse this component for more than one display mode.
+        /** Whether this component is viewed for the "Play" mode, and thus shows non-collapsible playback buttons
+         * @devdoc Allows to reuse this component for more than one view mode.
          */
         isPlayable(): boolean {
-            return this.displayMode === TrackViewMode.Play;
+            return this.viewMode === TrackViewMode.Play;
         },
 
         /** Gets a reference to the player instance.
