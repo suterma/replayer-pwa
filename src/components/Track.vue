@@ -85,7 +85,7 @@
                         />
                     </template>
                 </div>
-
+                <!-- Placeholder for the audio level meter (used for teleporting from the player component) -->
                 <div
                     class="level-item is-narrow"
                     :class="{
