@@ -12371,18 +12371,13 @@ a[target=_blank]:hover {
  * Experimental content
 **************************************************************
 */
-/* Use danger text */
-.is-experimental,
-.is-experimental .title,
-.is-experimental .subtitle,
-.is-experimental h1,
-.is-experimental h3 {
-  color: #ee5f5b;
-}
-
 /* elements on a slight danger-like area */
 .is-experimental {
-  background-color: rgba(238, 95, 91, 0.14);
   outline: dashed #ee5f5b;
   outline-offset: 0;
+}
+
+/* elements on a slight danger-like background, but not the inputs */
+.is-experimental:not(input) {
+  background-color: rgba(238, 95, 91, 0.14);
 }

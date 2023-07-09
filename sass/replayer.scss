@@ -299,18 +299,12 @@ a[target='_blank']:hover {
 **************************************************************
 */
 
-/* Use danger text */
-.is-experimental,
-.is-experimental .title,
-.is-experimental .subtitle,
-.is-experimental h1,
-.is-experimental h3 {
-    color: $danger;
-}
-
-/* elements on a slight danger-like area */
+ /* elements on a slight danger-like area */
 .is-experimental {
-    background-color: rgba($danger, 0.14);
     outline: dashed $danger;
     outline-offset: 0;
+}
+/* elements on a slight danger-like background, but not the inputs */
+.is-experimental:not(input) {
+    background-color: rgba($danger, 0.14);
 }
