@@ -72,7 +72,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import TrackTitleName from '@/components/TrackTitleName.vue';
@@ -89,7 +89,7 @@ export default defineComponent({
     props: {
         /** The track to show an item for */
         track: {
-            type: Track,
+            type: Object as PropType<Track>,
             required: true,
         },
         /** Whether to show the cues

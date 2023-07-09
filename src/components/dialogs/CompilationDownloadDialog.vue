@@ -146,7 +146,7 @@
 
 <script lang="ts">
 import { Compilation } from '@/store/compilation-types';
-import { defineComponent, ref, onMounted, onUnmounted } from 'vue';
+import { defineComponent, ref, onMounted, onUnmounted, PropType } from 'vue';
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
 import { Hotkey } from '@simolation/vue-hotkey';
 import CompilationHandler from '@/store/compilation-handler';
@@ -160,7 +160,9 @@ export default defineComponent({
         Hotkey,
     },
     props: {
-        compilation: Compilation,
+        compilation: {
+            type: Object as PropType<Compilation>,
+        },
     },
     setup() {
         /** Temporarily pause the use of the global app shortcuts in favor of typical

@@ -69,7 +69,7 @@
 
 <script lang="ts">
 import { Cue, ICue, Track } from '@/store/compilation-types';
-import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
+import { PropType, defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
 import { Hotkey } from '@simolation/vue-hotkey';
 import { v4 as uuidv4 } from 'uuid';
@@ -82,7 +82,9 @@ export default defineComponent({
         Hotkey,
     },
     props: {
-        track: Track,
+        track: {
+            type: Object as PropType<Track>,
+        },
     },
 
     setup() {

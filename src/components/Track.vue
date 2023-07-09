@@ -595,7 +595,6 @@ import TimeDisplay from '@/components/TimeDisplay.vue';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import CompilationHandler from '@/store/compilation-handler';
-import NoSleep from 'nosleep.js';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import VolumeKnob from '@/components/VolumeKnob.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
@@ -743,15 +742,14 @@ export default defineComponent({
             type: Boolean,
             default: false,
         },
-        /** The playback mode */
+        /** The playback mode
+         * @remarks Used overall in the compilation, not per track
+         */
         playbackMode: {
             type: String as () => PlaybackMode,
             required: true,
             default: PlaybackMode.PlayTrack,
         },
-    },
-    unmounted() {
-        this.deactivateWakeLock();
     },
     data() {
         return {
@@ -780,9 +778,6 @@ export default defineComponent({
             /** Flag to indicate whether the track's audio is currently playing solo
              */
             isSoloed: false,
-
-            /** The wake lock fill-in that can prevent screen timeout, while a track is in use */
-            noSleep: new NoSleep(),
 
             /** Readonly flag to indicate whether the player is currently fading */
             isFading: false,
@@ -907,32 +902,6 @@ export default defineComponent({
             this.skipTransitionName = transition;
         },
 
-        //TODO put the wake lock in the app store
-        /** Activates the wake lock (if enabled in settings)
-         * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
-         */
-        activateWakeLock(): void {
-            if (this.preventScreenTimeout) {
-                if (!this.noSleep.isEnabled) {
-                    this.noSleep.enable().catch((error) => {
-                        console.warn(
-                            `Swallowed error for failed WakeLock promise: ${error.name}, ${error.message}`,
-                        );
-                    });
-                }
-            }
-        },
-        /** Deactivates the wake lock (if enabled in settings)
-         * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
-         */
-        deactivateWakeLock(): void {
-            if (this.preventScreenTimeout) {
-                if (this.noSleep.isEnabled) {
-                    this.noSleep.disable();
-                }
-            }
-        },
-
         /** Gets the current position
          * @remarks Actually queries the media player.
          * @devdoc For better overall performance, this call should be avoided in favor of the (more seldom) auto-updated/emitted value.
@@ -967,7 +936,6 @@ export default defineComponent({
             //console.debug(`Track(${this.track.Name})::togglePlayback`);
             if (this.isActiveTrack) {
                 this.trackPlayerInstance.togglePlayback();
-                this.activateWakeLock();
             }
         },
         /** Rewinds 5 seconds, if this is the active track */
@@ -1011,21 +979,18 @@ export default defineComponent({
         volumeDown() {
             if (this.isActiveTrack) {
                 this.trackPlayerInstance.volumeDown();
-                this.activateWakeLock();
             }
         },
         /** Handles the volume down command if this is the active track */
         volumeUp() {
             if (this.isActiveTrack) {
                 this.trackPlayerInstance.volumeUp();
-                this.activateWakeLock();
             }
         },
 
         /** Updates the volume of this track, regardless of whether it is the active track */
         updateVolume(volume: number) {
             this.updateTrackVolume(this.track.Id, volume);
-            this.activateWakeLock();
         },
 
         /** Pauses playback and seeks to the currently selected cue's position, but only
@@ -1054,7 +1019,6 @@ export default defineComponent({
                             this.seekToSeconds(cueTime);
                         }
                     }
-                    this.activateWakeLock();
                 }
             }
         },
@@ -1108,7 +1072,6 @@ export default defineComponent({
                 } else {
                     this.seekToSeconds(cue.Time);
                 }
-                this.activateWakeLock();
             }
         },
         /** Handles the play event of a cue button, by immediately restarting playback at the cue (instead of toggling)
@@ -1125,7 +1088,6 @@ export default defineComponent({
                 } else {
                     this.playFrom(cue.Time);
                 }
-                this.activateWakeLock();
             }
         },
         /** Handles the play event of a button, by immediately restarting playback at the beginning of the track (instead of toggling)
@@ -1142,7 +1104,6 @@ export default defineComponent({
             } else {
                 this.playFrom(0);
             }
-            this.activateWakeLock();
         },
         /** Handles the request for a new cue by creating one for the current time
          */
@@ -1183,13 +1144,6 @@ export default defineComponent({
             // Pause this track, when it's no more active track
             if (wasActive === true && isActive === false) {
                 this.pause();
-            }
-
-            if (isActive == false) {
-                this.deactivateWakeLock();
-            }
-            if (isActive == true) {
-                this.activateWakeLock();
             }
         },
         /** Handles active track id changes.

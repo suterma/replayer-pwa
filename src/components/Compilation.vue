@@ -278,6 +278,8 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiRotateLeftVariant, mdiRotateRightVariant } from '@mdi/js';
 import { mapWritableState, mapActions, mapState } from 'pinia';
 import { useAppStore } from '@/store/app';
+import NoSleep from 'nosleep.js';
+import { useSettingsStore } from '@/store/settings';
 
 /** Displays the contained set of tracks according to the required mode.
  * @remarks Also handles the common replayer events for compilations
@@ -322,6 +324,9 @@ export default defineComponent({
              */
             isTrackPlayerFullScreen: false,
 
+            /** The wake lock fill-in that can prevent screen timeout, while a track is in use */
+            noSleep: new NoSleep(),
+
             /** A seed for the deterministic shuffling (until next shuffling is requested)
              * @remarks Reshuffling occurs when the PlaybackMode is toggled to ShuffleCompilation.
              * @devdoc This allows to keep the shuffled order.
@@ -346,8 +351,40 @@ export default defineComponent({
             },
         );
     },
+
+    activated(): void {
+        this.activateWakeLock();
+    },
+    deactivated(): void {
+        this.deactivateWakeLock();
+    },
+
     methods: {
         ...mapActions(useAppStore, ['updateSelectedCueId']),
+
+        /** Activates the wake lock (if enabled in settings)
+         * @remarks Implements https://github.com/suterma/replayer-pwa/issues/26
+         * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
+         */
+        activateWakeLock(): void {
+            if (this.preventScreenTimeout) {
+                if (!this.noSleep.isEnabled) {
+                    this.noSleep.enable().catch((error) => {
+                        console.warn(
+                            `Swallowed error for failed WakeLock promise: ${error.name}, ${error.message}`,
+                        );
+                    });
+                }
+            }
+        },
+        /** Deactivates the wake lock
+         * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
+         */
+        deactivateWakeLock(): void {
+            if (this.noSleep.isEnabled) {
+                this.noSleep.disable();
+            }
+        },
 
         /** Visually scrolls to the given track, making it visually at the top of
          * the view.
@@ -641,6 +678,8 @@ export default defineComponent({
             'audioTracks',
         ]),
         ...mapWritableState(useAppStore, ['playbackMode']),
+
+        ...mapState(useSettingsStore, ['preventScreenTimeout']),
 
         /** Whether this compilation has any tracks.
          */

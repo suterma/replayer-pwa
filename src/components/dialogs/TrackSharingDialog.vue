@@ -67,7 +67,7 @@
 
 <script lang="ts">
 import { ICue, Track } from '@/store/compilation-types';
-import { defineComponent, onMounted, onUnmounted } from 'vue';
+import { PropType, defineComponent, onMounted, onUnmounted } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
 import { Hotkey } from '@simolation/vue-hotkey';
@@ -80,7 +80,9 @@ export default defineComponent({
         Hotkey,
     },
     props: {
-        track: Track,
+        track: {
+            type: Object as PropType<Track>,
+        },
     },
     setup() {
         /** Temporarily pause the use of the global app shortcuts in favor of typical
