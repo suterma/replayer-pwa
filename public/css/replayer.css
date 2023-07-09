@@ -12375,6 +12375,7 @@ a[target=_blank]:hover {
 .is-experimental {
   outline: dashed #ee5f5b;
   outline-offset: 0;
+  outline-width: thin;
 }
 
 /* elements on a slight danger-like background, but not the inputs */

@@ -303,6 +303,7 @@ a[target='_blank']:hover {
 .is-experimental {
     outline: dashed $danger;
     outline-offset: 0;
+    outline-width: thin;
 }
 /* elements on a slight danger-like background, but not the inputs */
 .is-experimental:not(input) {
