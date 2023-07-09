@@ -99,9 +99,7 @@ export default abstract class XmlCompilationParser {
                 XmlCompilationParser.parseFromXmlMeter(
                     xmlTrack.Meter ? xmlTrack.Meter[0] : null,
                 ),
-                XmlCompilationParser.FirstBooleanOf(
-                    xmlTrack.useMeasureNumberAsPosition,
-                ),
+                XmlCompilationParser.FirstBooleanOf(xmlTrack.useMeasureNumbers),
                 XmlCompilationParser.FirstStringOf(xmlTrack.Url),
                 XmlCompilationParser.FirstStringOf(xmlTrack.Id),
                 XmlCompilationParser.parseFromXmlCues(

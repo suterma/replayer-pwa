@@ -29,7 +29,7 @@ describe('the XML mapping', function () {
         expect(target.BeatsPerMinute).toBe(track.BeatsPerMinute);
         expect(target.TimeSignature).toBe(track.TimeSignature);
         expect(target.OriginTime).toBe(track.OriginTime);
-        expect(target.useMeasureNumberAsPosition).toBe(track.useMeasureNumberAsPosition);        
+        expect(target.useMeasureNumbers).toBe(track.useMeasureNumbers);        
         expect(target.Name).toBe(track.Name);
         expect(target.Url).toBe(track.Url);
         expect(target.Volume).toBe(track.Volume);
