@@ -116,7 +116,7 @@ export default defineComponent({
             required: true,
         },
         /** Whether this component show editable inputs for the contained data
-         * @devdoc Allows to reuse this component for more than one DisplayMode.
+         * @devdoc Allows to reuse this component for more than one view mode.
          */
         isEditable: {
             type: Boolean,
