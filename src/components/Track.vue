@@ -192,20 +192,33 @@
                             "
                 >
                 </TempoLevelEditor>
-                <MeasureDisplay
+
+                <!-- Main container -->
+                <nav
                     v-experiment="experimentalUseTempo"
-                    v-if="hasMeter"
-                    :modelValue="currentSeconds"
-                    :meter="track.Meter"
-                ></MeasureDisplay>
-                <MetricalEditor
-                    v-experiment="experimentalUseTempo"
-                    v-if="hasMeter"
-                    v-model="currentSeconds"
-                    @update:modelValue="(position) => seekToSeconds(position)"
-                    :meter="track.Meter"
+                    class="level"
+                    v-if="hasMeter && track.UseMeasureNumberAsPosition"
                 >
-                </MetricalEditor>
+                    <!-- Left side -->
+                    <div class="level-left">
+                        <div class="level-item">
+                            <MeasureDisplay
+                                :modelValue="currentSeconds"
+                                :meter="track.Meter"
+                            ></MeasureDisplay>
+                        </div>
+                        <div class="level-item">
+                            <MetricalEditor
+                                v-model="currentSeconds"
+                                @update:modelValue="
+                                    (position) => seekToSeconds(position)
+                                "
+                                :meter="track.Meter"
+                            >
+                            </MetricalEditor>
+                        </div>
+                    </div>
+                </nav>
 
                 <div class="levels">
                     <CueLevelEditors
@@ -215,6 +228,9 @@
                         :playbackMode="playbackMode"
                         :currentSeconds="currentSeconds"
                         :meter="track.Meter"
+                        :useMeasureNumberAsPosition="
+                            track.UseMeasureNumberAsPosition
+                        "
                         @click="cueClick"
                         @play="cuePlay"
                     >

@@ -17,6 +17,7 @@
                 :isCueAhead="isCueAhead(cue)"
                 :percentComplete="percentComplete(cue)"
                 :meter="meter"
+                :useMeasureNumberAsPosition="useMeasureNumberAsPosition"
                 @click="cueClick(cue)"
                 @play="cuePlay(cue)"
                 @adjust="cueAdjust(cue)"
@@ -54,6 +55,13 @@ export default defineComponent({
         /** The musical meter */
         meter: {
             type: null as unknown as PropType<IMeter | null>,
+            required: true,
+            default: null,
+        },
+
+        /** Whether to use the measure number to set and display the cue positions */
+        useMeasureNumberAsPosition: {
+            type: null as unknown as PropType<boolean | null>,
             required: true,
             default: null,
         },

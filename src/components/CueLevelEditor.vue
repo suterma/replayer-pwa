@@ -62,11 +62,11 @@
                         </p>
                         <div
                             v-experiment="experimentalUseTempo"
+                            v-if="hasMeter && useMeasureNumberAsPosition"
                             class="control"
                         >
                             <button class="button is-indicator">
                                 <MeasureDisplay
-                                    v-if="hasMeter"
                                     :modelValue="cueTime"
                                     :meter="meter"
                                 ></MeasureDisplay>
@@ -74,10 +74,10 @@
                         </div>
                         <div
                             v-experiment="experimentalUseTempo"
+                            v-if="hasMeter && useMeasureNumberAsPosition"
                             class="control"
                         >
                             <MetricalEditor
-                                v-if="hasMeter"
                                 v-model="cueTime"
                                 @update:modelValue="updateCueTime"
                                 :meter="meter"
@@ -107,9 +107,9 @@
                     </div>
 
                     <div
-                        v-if="hasMeter"
+                        v-if="hasMeter && useMeasureNumberAsPosition"
                         class="level-item is-flex-shrink-1"
-                        vx-experiment="experimentalUseTempo"
+                        v-experiment="experimentalUseTempo"
                     >
                         <button class="button is-indicator">
                             <MeasureDifferenceDisplay
@@ -213,6 +213,13 @@ export default defineComponent({
         /** The musical meter */
         meter: {
             type: null as unknown as PropType<IMeter | null>,
+            required: true,
+            default: null,
+        },
+
+        /** Whether to use the measure number to set and display the cue positions */
+        useMeasureNumberAsPosition: {
+            type: null as unknown as PropType<boolean | null>,
             required: true,
             default: null,
         },

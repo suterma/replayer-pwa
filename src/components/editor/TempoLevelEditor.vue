@@ -76,7 +76,7 @@
                         <LabeledCheckbox
                             :modelValue="props.useMeasureNumberAsPosition"
                             @update:modelValue="(value:boolean|null) => updateUseMeasureNumberAsPosition(value)"
-                            label="Use measure number as position"
+                            label="Use/show measure numbers"
                             :disabled="!hasAllTempoValues"
                         ></LabeledCheckbox>
                     </p>
