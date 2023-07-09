@@ -757,6 +757,7 @@ export default defineComponent({
              * @remarks This is used for track progress display within the set of cues
              */
             currentSeconds: 0,
+
             /** Flag to indicate whether the player has it's track loaded.
              * @remarks This is used to toggle playback button states
              */
@@ -771,6 +772,7 @@ export default defineComponent({
             /** Flag to indicate whether the player is currently playing
              */
             isPlaying: false,
+
             /** Flag to indicate whether the audio is currently muted
              */
             isMuted: false,
@@ -831,9 +833,11 @@ export default defineComponent({
             this.trackPlayerInstance.stop();
             this.updateSelectedCueId(CompilationHandler.EmptyId);
         },
+
         toPreviousCue() {
             document.dispatchEvent(new Event(Replayer.TO_PREV_CUE));
         },
+
         toNextCue() {
             document.dispatchEvent(new Event(Replayer.TO_NEXT_CUE));
         },
@@ -981,6 +985,7 @@ export default defineComponent({
                 this.trackPlayerInstance.volumeDown();
             }
         },
+
         /** Handles the volume down command if this is the active track */
         volumeUp() {
             if (this.isActiveTrack) {
@@ -1022,12 +1027,14 @@ export default defineComponent({
                 }
             }
         },
+
         /** Handle playback mode updates
          */
         updatedPlaybackMode(playbackMode: PlaybackMode): void {
             this.$emit('update:playbackMode', playbackMode);
         },
-        /** Handle isExpended update
+
+        /** Handle isExpanded update
          */
         updateIsExpanded(isExpanded: boolean): void {
             this.isExpanded = isExpanded;
@@ -1036,7 +1043,7 @@ export default defineComponent({
             );
         },
 
-        /** Handle track level updates
+        /** Handle track audio level updates
          * @param {number} level - The current audio level
          * @devdoc Handled here as part of the track because the level is shown as part of the track
          */
@@ -1074,6 +1081,7 @@ export default defineComponent({
                 }
             }
         },
+
         /** Handles the play event of a cue button, by immediately restarting playback at the cue (instead of toggling)
          * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
          */
@@ -1090,6 +1098,7 @@ export default defineComponent({
                 }
             }
         },
+
         /** Handles the play event of a button, by immediately restarting playback at the beginning of the track (instead of toggling)
          * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
          */
@@ -1105,6 +1114,7 @@ export default defineComponent({
                 this.playFrom(0);
             }
         },
+
         /** Handles the request for a new cue by creating one for the current time
          */
         createNewCue(): void {
@@ -1146,6 +1156,7 @@ export default defineComponent({
                 this.pause();
             }
         },
+
         /** Handles active track id changes.
          * @remarks Used to determine the requested player widget transition.
          */
@@ -1181,6 +1192,7 @@ export default defineComponent({
                 this.skipTransitionName = 'slide-fade-right';
             }
         },
+
         /** Handles changes in whether this track is playing.
          * @remarks This activates the wake lock, when playing starts.
          */
@@ -1191,6 +1203,7 @@ export default defineComponent({
             );
             this.$emit('isPlaying', isPlaying);
         },
+
         /** Handles changes of the full screen state
          * @devdoc This hides the scroll bars in the (full screen div's) underlying content
          */
@@ -1263,6 +1276,7 @@ export default defineComponent({
         },
 
         /** Whether the currently playing cue is the selected cue
+         * @remarks used for the playhead slider visualization
          */
         playingCueIsSelected(): boolean {
             const playingCueId = this.playingCue?.Id;
@@ -1301,6 +1315,7 @@ export default defineComponent({
         hasCues(): boolean {
             return this.cues.length !== undefined && this.cues.length > 0;
         },
+
         /** Gets the currently playing cue, regardless whether it is selected, if available
          */
         playingCue(): ICue | null {
@@ -1364,6 +1379,7 @@ export default defineComponent({
             }
             return false;
         },
+
         /** Gets the media URL, if available
          * @remarks For non-online URL's, a match is sought from previously stored binary blobs
          */
