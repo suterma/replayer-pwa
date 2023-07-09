@@ -572,7 +572,7 @@
 import { PropType, defineComponent } from 'vue';
 import {
     ICue,
-    TrackDisplayMode,
+    TrackViewMode,
     PlaybackMode,
     Track,
 } from '@/store/compilation-types';
@@ -676,7 +676,7 @@ export default defineComponent({
         'trackLoopedTo',
     ],
     props: {
-        /** The track to display
+        /** The track to handle
          */
         track: {
             type: Object as PropType<Track>,
@@ -721,7 +721,9 @@ export default defineComponent({
             type: Boolean,
             required: true,
         },
-
+        /** Whether any track (including this one) in the compilation is currently soloed.
+         * This is required to determine the muting of non-soloed tracks.
+         */
         isAnySoloed: {
             type: Boolean,
             required: false,
@@ -733,8 +735,8 @@ export default defineComponent({
          * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
          */
         displayMode: {
-            type: String as () => TrackDisplayMode,
-            default: TrackDisplayMode.Play,
+            type: String as () => TrackViewMode,
+            default: TrackViewMode.Play,
         },
         /** Whether to show the track player widget in full screen mode */
         isTrackPlayerFullScreen: {
@@ -1365,21 +1367,21 @@ export default defineComponent({
          * @devdoc Allows to reuse this component for more than one display mode.
          */
         isEditable(): boolean {
-            return this.displayMode === TrackDisplayMode.Edit;
+            return this.displayMode === TrackViewMode.Edit;
         },
 
         /** Whether this component is displayed for the "Mix" mode, and thus shows mixing controls
          * @devdoc Allows to reuse this component for more than one display mode.
          */
         isMix(): boolean {
-            return this.displayMode === TrackDisplayMode.Mix;
+            return this.displayMode === TrackViewMode.Mix;
         },
 
         /** Whether this component is displayed for the "Play" mode, and thus shows non-collapsible playback buttons
          * @devdoc Allows to reuse this component for more than one display mode.
          */
         isPlayable(): boolean {
-            return this.displayMode === TrackDisplayMode.Play;
+            return this.displayMode === TrackViewMode.Play;
         },
 
         /** Gets a reference to the player instance.

@@ -7,7 +7,7 @@ export enum CompilationType {
 }
 
 /** A display mode for tracks. Specifying this mode makes the track component reusable for different display modes. */
-export enum TrackDisplayMode {
+export enum TrackViewMode {
     /** Shown with editable inputs for the contained data */
     Edit = 'edit',
     /** Shown optimized for multi-track/mixer playback */

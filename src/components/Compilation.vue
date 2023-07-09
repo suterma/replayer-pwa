@@ -27,7 +27,7 @@
                     :track="track"
                     :ref="'track-' + track.Id"
                     :id="'track-' + track.Id"
-                    :displayMode="tracksDisplayMode"
+                    :displayMode="trackViewode"
                     :isTrackPlayerFullScreen="
                         isTrackPlayerFullScreen && !isEditable
                     "
@@ -258,7 +258,7 @@ import {
     Compilation,
     ITrack,
     ICue,
-    TrackDisplayMode,
+    TrackViewMode,
     PlaybackMode,
 } from '@/store/compilation-types';
 import Track from '@/components/Track.vue';
@@ -307,9 +307,9 @@ export default defineComponent({
          * @devdoc Allows to reuse this component for more than one DisplayMode.
          * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
          */
-        tracksDisplayMode: {
-            type: String as () => TrackDisplayMode,
-            default: TrackDisplayMode.Play,
+        trackViewode: {
+            type: String as () => TrackViewMode,
+            default: TrackViewMode.Play,
             required: false,
         },
     },
@@ -575,7 +575,7 @@ export default defineComponent({
         /** Handle scrolling to the active track, when the display mode changes.
          * @remarks This is intentionally only invoked on when the display mode changes (and it's not the only track).
          */
-        tracksDisplayMode() {
+        trackViewode() {
             const trackId = this.activeTrackId;
             if (trackId && !this.hasSingleAudioTrack) {
                 console.debug('scrolling to mode-changed track ', trackId);
@@ -672,13 +672,13 @@ export default defineComponent({
          * @remarks For simplicity, the header is shown as editable, as long as the tracks are editable, too.
          */
         isEditable(): boolean {
-            return this.tracksDisplayMode === TrackDisplayMode.Edit;
+            return this.trackViewode === TrackViewMode.Edit;
         },
 
         /** Whether the mix mode is active
          */
         isMixable(): boolean {
-            return this.tracksDisplayMode === TrackDisplayMode.Mix;
+            return this.trackViewode === TrackViewMode.Mix;
         },
 
         /** The currently available audio tracks in the compilation

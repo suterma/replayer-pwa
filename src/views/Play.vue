@@ -11,7 +11,7 @@
     <Compilation
         v-if="hasCompilation"
         :compilation="compilation"
-        :tracksDisplayMode="tracksDisplayMode"
+        :trackViewode="trackViewode"
     />
 
     <div v-else class="section pl-0 pr-0 block">
@@ -58,7 +58,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Compilation from '@/components/Compilation.vue';
-import { TrackDisplayMode } from '@/store/compilation-types';
+import { TrackViewMode } from '@/store/compilation-types';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import WelcomeText from '@/components/WelcomeText.vue';
 import CompilationLoader from '@/components/CompilationLoader.vue';
@@ -119,18 +119,18 @@ export default defineComponent({
         ]),
 
         /** Gets the track display mode */
-        tracksDisplayMode(): TrackDisplayMode {
+        trackViewode(): TrackViewMode {
             if (this.$route.name === 'Edit') {
-                return TrackDisplayMode.Edit;
+                return TrackViewMode.Edit;
             }
             if (this.$route.name === 'Mix') {
-                return TrackDisplayMode.Mix;
+                return TrackViewMode.Mix;
             }
-            return TrackDisplayMode.Play;
+            return TrackViewMode.Play;
         },
         /** Whether the compilation is shown as editable */
         isEditMode(): boolean {
-            return this.tracksDisplayMode === TrackDisplayMode.Edit;
+            return this.trackViewode === TrackViewMode.Edit;
         },
     },
 });
