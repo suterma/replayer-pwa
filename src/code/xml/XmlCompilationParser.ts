@@ -147,11 +147,10 @@ export default abstract class XmlCompilationParser {
         xmlMeter: any,
     ): IMeter | null {
         let meter = null;
-
         if (xmlMeter && xmlMeter.TimeSignature) {
             meter = new Meter(
                 XmlCompilationParser.parseFromXmlTimeSignature(
-                    xmlMeter.TimeSignature,
+                    xmlMeter.TimeSignature[0],
                 ),
                 XmlCompilationParser.FirstNumberOf(xmlMeter.BeatsPerMinute),
                 XmlCompilationParser.FirstNumberOf(xmlMeter.OriginTime),
