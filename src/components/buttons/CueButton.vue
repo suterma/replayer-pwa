@@ -137,11 +137,11 @@ import {
 } from '@/components/icons/BaseIcon.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { PlaybackMode } from '@/store/compilation-types';
-import { PropType, computed } from 'vue';
-import { IMeter } from '@/code/music/IMeter';
+import { PropType, computed, inject } from 'vue';
 import { Meter } from '@/code/music/Meter';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
+import { meterInjectionKey } from '../InjectionKeys';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
@@ -221,13 +221,6 @@ const props = defineProps({
      */
     hasAddonsRight: Boolean,
 
-    /** The musical meter */
-    meter: {
-        type: null as unknown as PropType<IMeter | null>,
-        required: true,
-        default: null,
-    },
-
     /** Whether to use the measure number to set and display the cue positions */
     useMeasureNumbers: {
         type: null as unknown as PropType<boolean | null>,
@@ -236,6 +229,9 @@ const props = defineProps({
     },
 });
 
+/** The musical meter */
+const meter = inject(meterInjectionKey);
+
 /** The title for this cue, usable as tooltip
  */
 const cueTitle = computed(() => {
@@ -243,13 +239,14 @@ const cueTitle = computed(() => {
         return `Play from ${props.description}`;
     } else if (props.time != undefined) {
         if (
-            props.meter != null &&
-            Meter.isValid(props.meter) &&
+            meter != undefined &&
+            meter.value != null &&
+            Meter.isValid(meter.value) &&
             props.useMeasureNumbers
         ) {
             return `Play from ${Meter.toMeasureDisplay(
                 props.time,
-                props.meter,
+                meter.value,
             )}`;
         } else {
             return `Play from ${CompilationHandler.convertToDisplayTime(
@@ -324,7 +321,7 @@ const isCuePlay = computed(() => {
 /** Whether all required values for the use of the measure number as position are available.
  */
 const hasMeter = computed(() => {
-    return Meter.isValid(props.meter);
+    return Meter.isValid(meter?.value);
 });
 </script>
 <style scoped>

@@ -26,9 +26,10 @@ export class Meter implements IMeter {
     }
 
     /** Determines whether all properties are set to valid data */
-    public static isValid(meter: IMeter | null): boolean {
+    public static isValid(meter: IMeter | null | undefined): boolean {
         return (
             (meter != null &&
+                meter != undefined &&
                 Number.isFinite(meter.BeatsPerMinute) &&
                 Number.isFinite(meter.TimeSignature?.Denominator) &&
                 Number.isFinite(meter.TimeSignature?.Numerator) &&

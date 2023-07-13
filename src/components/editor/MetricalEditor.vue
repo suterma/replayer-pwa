@@ -15,15 +15,14 @@
 </template>
 
 <script setup lang="ts">
-import { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
 import { MetricalPosition } from '@/code/music/MetricalPosition';
 import CompilationHandler from '@/store/compilation-handler';
-import { PropType, computed } from 'vue';
+import { PropType, computed, inject } from 'vue';
+import { meterInjectionKey } from '../InjectionKeys';
 
 /** An editor for the measure number
  */
-
 const emit = defineEmits(['update:modelValue']);
 
 const props = defineProps({
@@ -33,33 +32,32 @@ const props = defineProps({
         type: null as unknown as PropType<number | null>,
         default: null,
     },
-    /** The musical meter */
-    meter: {
-        type: null as unknown as PropType<IMeter | null>,
-        required: true,
-        default: null,
-    },
+
     placeholder: {
         type: String,
         default: undefined,
     },
 });
+
+/** The musical meter */
+const meter = inject(meterInjectionKey);
+
 /**  */
 const vModel = computed<number | null>({
     get(): number | null {
-        if (props.meter) {
+        if (meter?.value) {
             return (
-                Meter.fromTime(props.modelValue, props.meter)?.Measure ?? null
+                Meter.fromTime(props.modelValue, meter?.value)?.Measure ?? null
             );
         }
         return null;
     },
     set(value): void {
         if (value != null) {
-            if (props.meter) {
+            if (meter?.value) {
                 const temporalPosition = Meter.toTime(
                     new MetricalPosition(value, null),
-                    props.meter,
+                    meter.value,
                 );
                 // only actual numbers should be emitted, not empty strings or NaN
                 if (

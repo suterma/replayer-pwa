@@ -35,7 +35,6 @@
             :trackId="track.Id"
             :trackName="track.Name"
             :trackUrl="track.Url"
-            :trackMeter="track.Meter"
             :trackArtist="track.Artist"
             :trackAlbum="track.Album"
             :isPlaying="isPlaying"
@@ -160,7 +159,6 @@
                     }
                 "
                 :cues="track.Cues"
-                :meter="track.Meter"
                 :useMeasureNumbers="track.UseMeasureNumbers"
             ></CueButtonsField>
         </div>
@@ -168,9 +166,9 @@
         <!-- The tempo and cue level editors and playback bar (in edit mode for an expanded track) -->
         <Transition name="item-expand">
             <div v-if="isEditable && isExpanded" :key="track.Id">
+                <!-- //TODO maybe use writable inject, or use the v-model approach? -->
                 <TempoLevelEditor
                     v-experiment="experimentalUseTempo"
-                    :meter="track.Meter"
                     @update:meter="
                         (value: any /*IMeter*/): void => {
                             app.updateMeter(track.Id, value);
@@ -204,7 +202,6 @@
                         <div class="level-item">
                             <MeasureDisplay
                                 :modelValue="currentSeconds"
-                                :meter="track.Meter"
                             ></MeasureDisplay>
                         </div>
                         <div class="level-item">
@@ -213,7 +210,6 @@
                                 @update:modelValue="
                                     (position) => seekToSeconds(position)
                                 "
-                                :meter="track.Meter"
                             >
                             </MetricalEditor>
                         </div>
@@ -227,7 +223,6 @@
                         :isTrackPlaying="isPlaying"
                         :playbackMode="playbackMode"
                         :currentSeconds="currentSeconds"
-                        :meter="track.Meter"
                         :useMeasureNumbers="track.UseMeasureNumbers"
                         @click="cueClick"
                         @play="cuePlay"
@@ -577,7 +572,7 @@
  * - However, the player's src property is only set when actually used to keep the memory footprint low.
  * @remarks Also handles the common replayer events for tracks
  */
-import { PropType, Ref, computed, ref, watch } from 'vue';
+import { PropType, Ref, computed, provide, readonly, ref, watch } from 'vue';
 import {
     ICue,
     TrackViewMode,
@@ -613,6 +608,7 @@ import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import FileHandler from '@/store/filehandler';
 import { Meter } from '@/code/music/Meter';
+import { meterInjectionKey } from './InjectionKeys';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -735,6 +731,15 @@ const props = defineProps({
         default: PlaybackMode.PlayTrack,
     },
 });
+
+/** Provide reactivity to the track's meter (used for provisioning).
+ */
+const meter = ref(props.track.Meter);
+
+/** The track's meter is provided to descendant component using the provide/inject pattern.
+ */
+//TODO provide with an update function here
+provide(meterInjectionKey, meter);
 
 /** The playback progress in the current track, in [seconds]
  * @remarks This is used for track progress display within the set of cues
@@ -1233,7 +1238,7 @@ watch(
 
 /** Whether all required values for the use of the measure number as position are available.
  */
-const hasMeter = computed(() => Meter.isValid(props.track?.Meter));
+const hasMeter = computed(() => Meter.isValid(props.track.Meter));
 
 const remainingTime = computed(() =>
     CompilationHandler.calculateRemainingTime(

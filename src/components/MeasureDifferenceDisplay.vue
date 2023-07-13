@@ -7,46 +7,34 @@
     >
 </template>
 
-<script lang="ts">
-import { IMeter } from '@/code/music/IMeter';
+<script setup lang="ts">
+/** A display for a measure/beat value as a duration (measure difference) */
+
 import { Meter } from '@/code/music/Meter';
 import _ from 'lodash';
-import { defineComponent, PropType } from 'vue';
+import { computed, inject, PropType } from 'vue';
+import { meterInjectionKey } from './InjectionKeys';
 
-/** A display for a measure/beat value as a duration (measure difference) */
-export default defineComponent({
-    name: 'MeasureDisplay',
-    props: {
-        /** The time difference in [seconds]
-         */
-        modelValue: {
-            type: null as unknown as PropType<number | null>,
-            default: null,
-        },
-        /** The musical meter */
-        meter: {
-            type: null as unknown as PropType<IMeter | null>,
-            required: true,
-            default: null,
-        },
+/** The musical meter */
+const meter = inject(meterInjectionKey);
+
+const props = defineProps({
+    /** The current playhead position in the track
+     */
+    modelValue: {
+        type: null as unknown as PropType<number | null>,
+        default: null,
     },
-    computed: {
-        /** Converts the time into a displayable measure duration format
-         */
-        currentDisplayMeasure(): string | null {
-            if (
-                this.modelValue != null &&
-                this.meter != null &&
-                Meter.isValid(this.meter) &&
-                this.meter.OriginTime != null
-            ) {
-                return Meter.toMultiMeasureRestDisplay(
-                    this.modelValue,
-                    this.meter,
-                );
-            }
-            return '';
-        },
-    },
+});
+const currentDisplayMeasure = computed(() => {
+    if (
+        props.modelValue != null &&
+        meter?.value != null &&
+        Meter.isValid(meter.value) &&
+        meter.value.OriginTime != null
+    ) {
+        return Meter.toMultiMeasureRestDisplay(props.modelValue, meter.value);
+    }
+    return '';
 });
 </script>

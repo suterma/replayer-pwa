@@ -10,7 +10,7 @@
                     <p class="control">
                         <BpmEditor
                             class="input"
-                            :modelValue="props.meter?.BeatsPerMinute"
+                            :modelValue="meter?.BeatsPerMinute"
                             @change="
                                 updateMeterWithBpm(
                                     Number.parseFloat($event.target.value),
@@ -33,7 +33,7 @@
                     <p class="control">
                         <TimeSignatureEditor
                             class="input"
-                            :modelValue="props.meter?.TimeSignature"
+                            :modelValue="meter?.TimeSignature"
                             @update:modelValue="
                               (value:ITimeSignature|null) =>   updateMeterWithTimeSignature(value)
                             "
@@ -58,7 +58,7 @@
                     <p class="control">
                         <TimeInput
                             class="has-text-right"
-                            :modelValue="props.meter?.OriginTime"
+                            :modelValue="meter?.OriginTime"
                             @update:modelValue="(value:number|null) => updateMeterWithOriginTime(value)"
                             size="9"
                         />
@@ -99,15 +99,15 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed, watch } from 'vue';
+import { PropType, computed, inject, watch } from 'vue';
 import BpmEditor from '@/components/editor/BpmEditor.vue';
 import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 import AdjustCueButton from '@/components/buttons/AdjustCueButton.vue';
-import { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
 import { ITimeSignature } from '@/code/music/ITimeSignature';
+import { meterInjectionKey } from '../InjectionKeys';
 
 /** A level-based Editor for tempo-related values
  * @remarks Shows a level with inputs for BPM, time signature etc., as level items
@@ -120,12 +120,6 @@ const emit = defineEmits([
 ]);
 
 const props = defineProps({
-    /** The musical meter */
-    meter: {
-        type: null as unknown as PropType<IMeter | null>,
-        required: true,
-        default: null,
-    },
     /** Whether to use the measure number to set and display the cue positions */
     useMeasureNumbers: {
         type: null as unknown as PropType<boolean | null>,
@@ -134,42 +128,48 @@ const props = defineProps({
     },
 });
 
+/** The musical meter */
+const meter = inject(meterInjectionKey);
+
 /** Whether all required values for the use of the measure number as position are available.
  */
 const hasAllTempoValues = computed(() => {
-    return Meter.isValid(props.meter);
+    return Meter.isValid(meter?.value);
 });
 
 function updateMeterWithBpm(bpm: number): void {
-    const meter = new Meter(
-        props.meter?.TimeSignature ?? null,
-        bpm,
-        props.meter?.OriginTime ?? null,
+    emit(
+        'update:meter',
+        new Meter(
+            meter?.value?.TimeSignature ?? null,
+            bpm,
+            meter?.value?.OriginTime ?? null,
+        ),
     );
-
-    emit('update:meter', meter);
 }
 
 function updateMeterWithTimeSignature(
     timeSignature: ITimeSignature | null,
 ): void {
-    const meter = new Meter(
-        timeSignature,
-        props.meter?.BeatsPerMinute ?? null,
-        props.meter?.OriginTime ?? null,
+    emit(
+        'update:meter',
+        new Meter(
+            timeSignature,
+            meter?.value?.BeatsPerMinute ?? null,
+            meter?.value?.OriginTime ?? null,
+        ),
     );
-
-    emit('update:meter', meter);
 }
 
 function updateMeterWithOriginTime(originTime: number | null): void {
-    const meter = new Meter(
-        props.meter?.TimeSignature ?? null,
-        props.meter?.BeatsPerMinute ?? null,
-        originTime,
+    emit(
+        'update:meter',
+        new Meter(
+            meter?.value?.TimeSignature ?? null,
+            meter?.value?.BeatsPerMinute ?? null,
+            originTime,
+        ),
     );
-
-    emit('update:meter', meter);
 }
 
 function updateUseMeasureNumbers(useMeasureNumbers: boolean | null): void {

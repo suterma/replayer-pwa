@@ -20,7 +20,6 @@
             :isCueAhead="isCueAhead(prefixCue)"
             :percentComplete="percentComplete(prefixCue)"
             @click="cueClicked"
-            :meter="meter"
             :useMeasureNumbers="useMeasureNumbers"
         >
         </CueButton>
@@ -44,7 +43,6 @@
                 :isCueAhead="isCueAhead(cue)"
                 :percentComplete="percentComplete(cue)"
                 @click="cueClicked"
-                :meter="meter"
                 :useMeasureNumbers="useMeasureNumbers"
             >
             </CueButton>
@@ -91,13 +89,6 @@ const props = defineProps({
     playbackMode: {
         type: String as () => PlaybackMode,
         required: true,
-    },
-
-    /** The musical meter */
-    meter: {
-        type: null as unknown as PropType<IMeter | null>,
-        required: true,
-        default: null,
     },
 
     /** Whether to use the measure number to set and display the cue positions */
