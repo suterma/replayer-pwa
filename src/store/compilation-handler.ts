@@ -112,7 +112,7 @@ export default class CompilationHandler {
         );
         return newTrack;
     }
-    /** Return the index of the track in the given compilation */
+    /** Return the index of the track in the given set of tracks */
     static getIndexOfTrackById(tracks: ITrack[], trackId: string): number {
         return tracks.map((item) => item.Id).indexOf(trackId);
     }
