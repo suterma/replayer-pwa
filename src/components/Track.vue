@@ -173,18 +173,18 @@
                     :meter="track.Meter"
                     @update:meter="
                         (value: any /*IMeter*/): void => {
-                            updateMeter(track.Id, value);
+                            app.updateMeter(track.Id, value);
                         }
                     "
                     @adjustOriginTime="
                         () => {
-                            updateTrackOriginTime(track.Id, currentSeconds);
+                            app.updateTrackOriginTime(track.Id, currentSeconds);
                         }
                     "
                     :useMeasureNumbers="track.UseMeasureNumbers"
                     @update:useMeasureNumbers="
                                 (value: boolean | null) => {
-                                    updateUseMeasureNumbers(
+                                    app.updateUseMeasureNumbers(
                                         track.Id,
                                         value,
                                     );
@@ -330,7 +330,7 @@
                 when this track is not the active track, to keep the reference alive. 
                 Also, fade-out would otherwise be interrupted. -->
             <TrackAudioApiPlayer
-                ref="playerReference"
+                ref="trackPlayerInstance"
                 :title="track.Name"
                 :mediaUrl="mediaUrl"
                 :trackId="track.Id"
@@ -568,8 +568,8 @@
     </div>
 </template>
 
-<script lang="ts">
-import { PropType, defineComponent } from 'vue';
+<script setup lang="ts">
+import { PropType, Ref, computed, defineExpose, ref, watch } from 'vue';
 import {
     ICue,
     TrackViewMode,
@@ -579,7 +579,6 @@ import {
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import TempoLevelEditor from '@/components/editor/TempoLevelEditor.vue';
 import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
-import { MediaUrl } from '@/store/types';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeader from '@/components/TrackHeader.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';
@@ -600,10 +599,9 @@ import VolumeKnob from '@/components/VolumeKnob.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import TrackTitleName from './TrackTitleName.vue';
 import ArtistInfo from './ArtistInfo.vue';
-import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
 import { Replayer } from './CompilationKeyboardHandler.vue';
 import { useSettingsStore } from '@/store/settings';
-import { mapActions, mapState } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import FileHandler from '@/store/filehandler';
 import { Meter } from '@/code/music/Meter';
@@ -615,817 +613,788 @@ import { Meter } from '@/code/music/Meter';
  * - However, the player's src property is only set when actually used to keep the memory footprint low.
  * @remarks Also handles the common replayer events for tracks
  */
-export default defineComponent({
-    // eslint-disable-next-line vue/multi-word-component-names
-    name: 'Track',
-    components: {
-        CueLevelEditors,
-        TrackAudioApiPlayer,
-        ReplayerEventHandler,
-        TrackHeader,
-        PlayPauseButton,
-        TimeDisplay,
-        CreateCueButton,
-        CollapsibleButton,
-        MuteButton,
-        SoloButton,
-        SelectButton,
-        PlayheadSlider,
-        CueButtonsBar,
-        VolumeKnob,
-        CueButtonsField,
-        MediaControlsBar,
-        TrackTitleName,
-        ArtistInfo,
-        TempoLevelEditor,
-        MeasureDisplay,
-        MetricalEditor,
-        PlaybackIndicator,
+
+const emit = defineEmits([
+    /** Occurs, when the previous track should be set as the active track
+     * @remarks allows track navigation from within a track.
+     */
+    'previousTrack',
+    /** Occurs, when the next track should be set as the active track
+     * @remarks allows track navigation from within a track.
+     */
+    'nextTrack',
+    /** Occurs, when the next track should be set as the active track
+     * @remarks allows track navigation from within a track.
+     */
+    'update:isTrackPlayerFullScreen',
+    /** Occurs, when this track starts playing.
+     */
+    'isPlaying',
+
+    /** Occurs on a seek operation
+     */
+    'seekToSeconds',
+
+    /** Occurs, when the user toggles the playback mode */
+    'update:playbackMode',
+    /** Occurs, when the end of the track has been reached and playback has ended.
+     * @remarks This is not triggered when the track or one of it's cue is looping.
+     * @remarks Allows to select the next track in "play all" and "shuffle" mode.
+     */
+    'trackEnded',
+    /** Occurs, when the end of a loop has been reached and playback has looped.
+     */
+    'trackLoopedTo',
+]);
+
+const props = defineProps({
+    /** The track to handle
+     */
+    track: {
+        type: Object as PropType<Track>,
+        required: true,
     },
-    emits: [
-        /** Occurs, when the previous track should be set as the active track
-         * @remarks allows track navigation from within a track.
-         */
-        'previousTrack',
-        /** Occurs, when the next track should be set as the active track
-         * @remarks allows track navigation from within a track.
-         */
-        'nextTrack',
-        /** Occurs, when the next track should be set as the active track
-         * @remarks allows track navigation from within a track.
-         */
-        'update:isTrackPlayerFullScreen',
-        /** Occurs, when this track starts playing.
-         */
-        'isPlaying',
 
-        /** Occurs on a seek operation
-         */
-        'seekToSeconds',
-
-        /** Occurs, when the user toggles the playback mode */
-        'update:playbackMode',
-        /** Occurs, when the end of the track has been reached and playback has ended.
-         * @remarks This is not triggered when the track or one of it's cue is looping.
-         * @remarks Allows to select the next track in "play all" and "shuffle" mode.
-         */
-        'trackEnded',
-        /** Occurs, when the end of a loop has been reached and playback has looped.
-         */
-        'trackLoopedTo',
-    ],
-    props: {
-        /** The track to handle
-         */
-        track: {
-            type: Object as PropType<Track>,
-            required: true,
-        },
-
-        /** Whether this track has a previous track
-         * @remarks Skipping can also just loop
-         */
-        hasPreviousTrack: {
-            type: Boolean,
-            default: false,
-        },
-        /** Whether this track has a next track to skip to
-         * @remarks Skipping can also just loop
-         */
-        hasNextTrack: {
-            type: Boolean,
-            default: false,
-        },
-
-        /** Whether this is the only track in the compilation
-         * @remarks Is used to visually omit some unnecessary items for a compilation with just a single track
-         */
-        isOnlyAudioTrack: {
-            type: Boolean,
-            default: false,
-        },
-        /** Whether this track is the first track in the set of tracks */
-        isFirst: {
-            type: Boolean,
-            required: true,
-        },
-        /** Whether this track is the last track in the set of tracks */
-        isLast: {
-            type: Boolean,
-            required: true,
-        },
-
-        /** Whether this track is the active track in the set of tracks */
-        isActiveTrack: {
-            type: Boolean,
-            required: true,
-        },
-        /** Whether any track (including this one) in the compilation is currently soloed.
-         * This is required to determine the muting of non-soloed tracks.
-         */
-        isAnySoloed: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
-
-        /** The display mode of this track.
-         * @devdoc Allows to reuse this component for more than one view mode.
-         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
-         */
-        viewMode: {
-            type: String as () => TrackViewMode,
-            default: TrackViewMode.Play,
-        },
-        /** Whether to show the track player widget in full screen mode */
-        isTrackPlayerFullScreen: {
-            type: Boolean,
-            default: false,
-        },
-        /** The playback mode
-         * @remarks Used overall in the compilation, not per track
-         */
-        playbackMode: {
-            type: String as () => PlaybackMode,
-            required: true,
-            default: PlaybackMode.PlayTrack,
-        },
+    /** Whether this track has a previous track
+     * @remarks Skipping can also just loop
+     */
+    hasPreviousTrack: {
+        type: Boolean,
+        default: false,
     },
-    data() {
-        return {
-            /** The playback progress in the current track, in [seconds]
-             * @remarks This is used for track progress display within the set of cues
-             */
-            currentSeconds: 0,
-
-            /** Flag to indicate whether the player has it's track loaded.
-             * @remarks This is used to toggle playback button states
-             */
-            isTrackLoaded: false,
-
-            /** Gets the duration of the current track, in [seconds]
-             * @remarks This is only available after successful load of the track (i.e. it's media metadata).
-             * Could be NaN or infinity, depending on the source
-             */
-            trackDuration: null as number | null,
-
-            /** Flag to indicate whether the player is currently playing
-             */
-            isPlaying: false,
-
-            /** Flag to indicate whether the audio is currently muted
-             */
-            isMuted: false,
-
-            /** Flag to indicate whether the track's audio is currently playing solo
-             */
-            isSoloed: false,
-
-            /** Readonly flag to indicate whether the player is currently fading */
-            isFading: false,
-
-            /** The current audio level */
-            level: -96,
-
-            /** Whether the cues are currently expanded for editing */
-            isExpanded: false,
-
-            /** The visual transition to use for skipping track */
-            skipTransitionName: 'slide-left',
-
-            /** Icons from @mdi/js */
-            mdiChevronUp: mdiChevronUp,
-            mdiChevronDown: mdiChevronDown,
-        };
+    /** Whether this track has a next track to skip to
+     * @remarks Skipping can also just loop
+     */
+    hasNextTrack: {
+        type: Boolean,
+        default: false,
     },
-    methods: {
-        ...mapActions(useAppStore, [
-            'updateSelectedCueId',
-            'updateSelectedTrackId',
-            'addCueAtTime',
-            'updateTrackVolume',
-            'updateDurations',
-            'updateMeter',
-            'updateTrackOriginTime',
-            'updateUseMeasureNumbers',
-        ]),
 
-        convertToDisplayTime(
-            value: number | null,
-            subSecondDigits: number,
-        ): string {
-            return CompilationHandler.convertToDisplayTime(
-                value,
-                subSecondDigits,
-            );
-        },
+    /** Whether this is the only track in the compilation
+     * @remarks Is used to visually omit some unnecessary items for a compilation with just a single track
+     */
+    isOnlyAudioTrack: {
+        type: Boolean,
+        default: false,
+    },
+    /** Whether this track is the first track in the set of tracks */
+    isFirst: {
+        type: Boolean,
+        required: true,
+    },
+    /** Whether this track is the last track in the set of tracks */
+    isLast: {
+        type: Boolean,
+        required: true,
+    },
 
-        toggleTrackPlayerFullScreen(): void {
-            this.$emit(
-                'update:isTrackPlayerFullScreen',
-                !this.isTrackPlayerFullScreen,
-            );
-        },
-        /** Stops playback and removes any selected cue
-         * @remarks Does not assert whether this is the active track.
-         */
-        stop(): void {
-            this.trackPlayerInstance.stop();
-            this.updateSelectedCueId(CompilationHandler.EmptyId);
-        },
+    /** Whether this track is the active track in the set of tracks */
+    isActiveTrack: {
+        type: Boolean,
+        required: true,
+    },
+    /** Whether any track (including this one) in the compilation is currently soloed.
+     * This is required to determine the muting of non-soloed tracks.
+     */
+    isAnySoloed: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
 
-        toPreviousCue() {
-            document.dispatchEvent(new Event(Replayer.TO_PREV_CUE));
-        },
+    /** The display mode of this track.
+     * @devdoc Allows to reuse this component for more than one view mode.
+     * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+     */
+    viewMode: {
+        type: String as () => TrackViewMode,
+        default: TrackViewMode.Play,
+    },
+    /** Whether to show the track player widget in full screen mode */
+    isTrackPlayerFullScreen: {
+        type: Boolean,
+        default: false,
+    },
+    /** The playback mode
+     * @remarks Used overall in the compilation, not per track
+     */
+    playbackMode: {
+        type: String as () => PlaybackMode,
+        required: true,
+        default: PlaybackMode.PlayTrack,
+    },
+});
 
-        toNextCue() {
-            document.dispatchEvent(new Event(Replayer.TO_NEXT_CUE));
-        },
+/** The playback progress in the current track, in [seconds]
+ * @remarks This is used for track progress display within the set of cues
+ */
+const currentSeconds = ref(0);
 
-        /** Skips to this track (if loaded)
-         * @remarks If the track is not loaded, does nothing.
-         * If the track is not yet the active track, tries to activate the track (which will autoplay).
-         * If it's the active track, just toggles play/pause
-         * @devdoc Conditional event registration inside the template did not work.
-         */
-        skipToPlayPause(): void {
-            if (this.isTrackLoaded) {
-                if (!this.isActiveTrack) {
-                    this.trackPlay();
-                } else {
-                    this.togglePlayback();
-                }
-            }
-        },
+/** Flag to indicate whether the player has it's track loaded.
+ * @remarks This is used to toggle playback button states
+ */
+const isTrackLoaded = ref(false);
 
-        /** Activates to this track (if loaded)
-         * @remarks If the track is not loaded, does nothing.
-         * If the track is not yet the active track, tries to activate the track (which will autoplay).
-         * If it's the active track, does nothing
-         */
-        setActiveTrack(): void {
-            if (this.isTrackLoaded) {
-                if (!this.isActiveTrack) {
-                    this.updateSelectedTrackId(this.track.Id);
-                }
-            }
-        },
+/** Gets the duration of the current track, in [seconds]
+ * @remarks This is only available after successful load of the track (i.e. it's media metadata).
+ * Could be NaN or infinity, depending on the source
+ */
+const trackDuration: Ref<number | null> = ref(null);
 
-        /** Toggles the muted state of this track
-         * @remarks If the track is not loaded, does nothing.
-         * @param mute - If null or not given, toggles the muted state. When given, sets to the specified state.
-         */
-        toggleMute(mute: boolean | null = null): void {
-            if (this.isTrackLoaded) {
-                if (mute === null) {
-                    this.isMuted = !this.isMuted;
-                } else {
-                    this.isMuted = mute;
-                }
-            }
-        },
+/** Flag to indicate whether the player is currently playing
+ */
+const isPlaying = ref(false);
 
-        /** Toggles the solo state of this track
-         * @remarks If the track is not loaded, does nothing.
-         * @param solo - If null or not given, toggles the soloed state. When given, sets to the specified state.
-         * @param isAnySoloed - Provides, whether any track in the compilation is currently soloed. This is required to determine the muting of non-soloed tracks.
-         */
-        toggleSolo(solo: boolean | null = null): void {
-            if (this.isTrackLoaded) {
-                if (solo === null) {
-                    this.isSoloed = !this.isSoloed;
-                } else {
-                    this.isSoloed = solo;
-                }
-            }
-        },
+/** Flag to indicate whether the audio is currently muted
+ */
+const isMuted = ref(false);
 
-        /** Sets the visual transition for the player widget's track change
-         */
-        setWidgetTransit(transition: string): void {
-            this.skipTransitionName = transition;
-        },
+/** Flag to indicate whether the track's audio is currently playing solo
+ */
+const isSoloed = ref(false);
 
-        /** Gets the current position
-         * @remarks Actually queries the media player.
-         * @devdoc For better overall performance, this call should be avoided in favor of the (more seldom) auto-updated/emitted value.
-         */
-        getCurrentPosition(): number {
-            return this.trackPlayerInstance.getCurrentPosition();
-        },
+/** Readonly flag to indicate whether the player is currently fading */
+const isFading = ref(false);
 
-        /** Starts playback at the current position
-         * @remarks Does not assert whether this is the active track.
-         * @remarks Asserts (and if necessary) resolves the playability of the track media
-         */
-        play() {
-            this.trackPlayerInstance.play();
-        },
+/** The current audio level */
+const level = ref(-96);
 
-        /** Starts playback from the given temporal position
-         * @remarks This first seeks to the position, then starts playing
-         */
-        playFrom(position: number) {
-            this.trackPlayerInstance.playFrom(position);
-        },
+/** Whether the cues are currently expanded for editing */
+const isExpanded = ref(false);
 
-        /** Pauses playback at the current position, with fading if configured.
-         * @remarks Does not assert whether this is the active track.
-         */
-        pause() {
-            this.trackPlayerInstance.pause();
-        },
+/** The visual transition to use for skipping track */
+const skipTransitionName = ref('slide-left');
 
-        togglePlayback() {
-            //console.debug(`Track(${this.track.Name})::togglePlayback`);
-            if (this.isActiveTrack) {
-                this.trackPlayerInstance.togglePlayback();
-            }
-        },
-        /** Rewinds 5 seconds, if this is the active track */
+// ...mapActions(useAppStore, [
+//     'updateSelectedCueId',
+//     'updateSelectedTrackId',
+//     'addCueAtTime',
+//     'updateTrackVolume',
+//     'updateDurations',
+//     'updateMeter',
+//     'updateTrackOriginTime',
+//     'updateUseMeasureNumbers',
+// ]);
 
-        rewind() {
-            if (this.isActiveTrack) {
-                this.seek(-5);
-            }
-        },
-        /** Forwards 5 seconds, if this is the active track */
-        forward() {
-            if (this.isActiveTrack) {
-                this.seek(+5);
-            }
-        },
+// function   convertToDisplayTime(
+//     value: number | null,
+//     subSecondDigits: number,
+// ): string {
+//     return CompilationHandler.convertToDisplayTime(
+//         value,
+//         subSecondDigits,
+//     );
+// };
 
-        /** Pauses playback (with a subsequent seek operation) */
-        pauseAndSeekTo(seconds: number): void {
-            this.trackPlayerInstance.pauseAndSeekTo(seconds);
-        },
+const settings = useSettingsStore();
+const {
+    levelMeterSizeIsLarge,
+    fadeInDuration,
+    fadeOutDuration,
+    applyFadeInOffset,
+    defaultPreRollDuration,
+    showLevelMeter,
+    experimentalShowPositionInTrackHeader,
+    experimentalShowWaveforms,
+    experimentalUseTempo,
+} = storeToRefs(settings);
 
-        /** Seeks forward or backward, for the given amount of seconds */
-        seek(seconds: number): void {
-            this.seekToSeconds(this.currentSeconds + seconds);
-        },
+const app = useAppStore();
 
-        /** Seeks to the position, in [seconds], with emitting an event */
-        seekToSeconds(seconds: number): void {
-            this.trackPlayerInstance.seekToSeconds(seconds);
-            this.$emit('seekToSeconds', seconds);
-        },
+const {
+    selectedCueId,
+    compilation,
+    /**
+     * @remarks A selected cue's data is used for looping on a cue's boundaries
+     */
+    selectedCue,
+    mediaUrls,
+    activeTrackId,
+} = storeToRefs(app);
 
-        /** Seeks to the position, in [seconds], without emitting an event
-         * @devdoc This is used to break the circular event handling for multitrack seek operations
-         */
-        seekToSecondsSilent(seconds: number): void {
-            this.trackPlayerInstance.seekToSeconds(seconds);
-        },
+function toggleTrackPlayerFullScreen(): void {
+    emit('update:isTrackPlayerFullScreen', !props.isTrackPlayerFullScreen);
+}
 
-        /** Handles the volume up command if this is the active track */
-        volumeDown() {
-            if (this.isActiveTrack) {
-                this.trackPlayerInstance.volumeDown();
-            }
-        },
+/** Stops playback and removes any selected cue
+ * @remarks Does not assert whether this is the active track.
+ */
+function stop(): void {
+    trackPlayerInstance.value?.stop();
+    app.updateSelectedCueId(CompilationHandler.EmptyId);
+}
 
-        /** Handles the volume down command if this is the active track */
-        volumeUp() {
-            if (this.isActiveTrack) {
-                this.trackPlayerInstance.volumeUp();
-            }
-        },
+function toPreviousCue() {
+    document.dispatchEvent(new Event(Replayer.TO_PREV_CUE));
+}
 
-        /** Updates the volume of this track, regardless of whether it is the active track */
-        updateVolume(volume: number) {
-            this.updateTrackVolume(this.track.Id, volume);
-        },
+function toNextCue() {
+    document.dispatchEvent(new Event(Replayer.TO_NEXT_CUE));
+}
 
-        /** Pauses playback and seeks to the currently selected cue's position, but only
-         * if this track is the active track (i.e. the selected cue is within this track)
-         */
-        goToSelectedCue() {
-            /*Check for the active track here (again), because otherwise some event handling
+/** Skips to this track (if loaded)
+ * @remarks If the track is not loaded, does nothing.
+ * If the track is not yet the active track, tries to activate the track (which will autoplay).
+ * If it's the active track, just toggles play/pause
+ * @devdoc Conditional event registration inside the template did not work.
+ */
+function skipToPlayPause(): void {
+    if (isTrackLoaded.value) {
+        if (!props.isActiveTrack) {
+            trackPlay();
+        } else {
+            togglePlayback();
+        }
+    }
+}
+
+/** Activates to this track (if loaded)
+ * @remarks If the track is not loaded, does nothing.
+ * If the track is not yet the active track, tries to activate the track (which will autoplay).
+ * If it's the active track, does nothing
+ */
+function setActiveTrack(): void {
+    if (isTrackLoaded.value) {
+        if (!props.isActiveTrack) {
+            app.updateSelectedTrackId(props.track.Id);
+        }
+    }
+}
+
+/** Toggles the muted state of this track
+ * @remarks If the track is not loaded, does nothing.
+ * @param mute - If null or not given, toggles the muted state. When given, sets to the specified state.
+ */
+function toggleMute(mute: boolean | null = null): void {
+    if (isTrackLoaded.value) {
+        if (mute === null) {
+            isMuted.value = !isMuted.value;
+        } else {
+            isMuted.value = mute;
+        }
+    }
+}
+
+/** Toggles the solo state of this track
+ * @remarks If the track is not loaded, does nothing.
+ * @param solo - If null or not given, toggles the soloed state. When given, sets to the specified state.
+ * @param isAnySoloed - Provides, whether any track in the compilation is currently soloed. This is required to determine the muting of non-soloed tracks.
+ */
+function toggleSolo(solo: boolean | null = null): void {
+    if (isTrackLoaded.value) {
+        if (solo === null) {
+            isSoloed.value = !isSoloed.value;
+        } else {
+            isSoloed.value = solo;
+        }
+    }
+}
+
+/** Sets the visual transition for the player widget's track change
+ */
+//  function      setWidgetTransit(transition: string): void {
+//     skipTransitionName.value = transition;
+// };
+
+/** Gets the current position
+ * @remarks Actually queries the media player.
+ * @devdoc For better overall performance, this call should be avoided in favor of the (more seldom) auto-updated/emitted value.
+ */
+function getCurrentPosition(): number {
+    return trackPlayerInstance.value?.getCurrentPosition() ?? 0;
+}
+
+/** Starts playback at the current position
+ * @remarks Does not assert whether this is the active track.
+ * @remarks Asserts (and if necessary) resolves the playability of the track media
+ */
+function play() {
+    trackPlayerInstance.value?.play();
+}
+
+/** Starts playback from the given temporal position
+ * @remarks This first seeks to the position, then starts playing
+ */
+function playFrom(position: number) {
+    trackPlayerInstance.value?.playFrom(position);
+}
+
+/** Pauses playback at the current position, with fading if configured.
+ * @remarks Does not assert whether this is the active track.
+ */
+function pause() {
+    trackPlayerInstance.value?.pause();
+}
+
+function togglePlayback() {
+    //console.debug(`Track(${this.track.Name})::togglePlayback`);
+    if (props.isActiveTrack) {
+        trackPlayerInstance.value?.togglePlayback();
+    }
+}
+
+/** Rewinds 5 seconds, if this is the active track */
+function rewind() {
+    if (props.isActiveTrack) {
+        seek(-5);
+    }
+}
+
+/** Forwards 5 seconds, if this is the active track */
+function forward() {
+    if (props.isActiveTrack) {
+        seek(+5);
+    }
+}
+
+/** Pauses playback (with a subsequent seek operation) */
+function pauseAndSeekTo(seconds: number): void {
+    trackPlayerInstance.value?.pauseAndSeekTo(seconds);
+}
+
+/** Seeks forward or backward, for the given amount of seconds */
+function seek(seconds: number): void {
+    seekToSeconds(currentSeconds.value + seconds);
+}
+
+/** Seeks to the position, in [seconds], with emitting an event */
+function seekToSeconds(seconds: number): void {
+    trackPlayerInstance.value?.seekToSeconds(seconds);
+    emit('seekToSeconds', seconds);
+}
+
+/** Seeks to the position, in [seconds], without emitting an event
+ * @devdoc This is used to break the circular event handling for multitrack seek operations
+ */
+function seekToSecondsSilent(seconds: number): void {
+    trackPlayerInstance.value?.seekToSeconds(seconds);
+}
+
+/** Handles the volume up command if this is the active track */
+function volumeDown() {
+    if (props.isActiveTrack) {
+        trackPlayerInstance.value?.volumeDown();
+    }
+}
+
+/** Handles the volume down command if this is the active track */
+function volumeUp() {
+    if (props.isActiveTrack) {
+        trackPlayerInstance.value?.volumeUp();
+    }
+}
+
+/** Updates the volume of this track, regardless of whether it is the active track */
+function updateVolume(volume: number) {
+    app.updateTrackVolume(props.track.Id, volume);
+}
+
+/** Pauses playback and seeks to the currently selected cue's position, but only
+ * if this track is the active track (i.e. the selected cue is within this track)
+ */
+function goToSelectedCue() {
+    /*Check for the active track here (again), because otherwise some event handling
             sequences might cause actions on non-active tracks too.*/
-            if (this.isActiveTrack) {
-                console.debug('Track::goToSelectedCue of selected track');
+    if (props.isActiveTrack) {
+        console.debug('Track::goToSelectedCue of selected track');
 
-                if (this.selectedCue) {
-                    const cueTime = this.selectedCue.Time;
+        if (selectedCue.value) {
+            const cueTime = selectedCue.value.Time;
 
-                    //Control playback according to the play state, using a single operation.
-                    //This supports a possible fade operation.
-                    //For the cue time, handle all non-null values (Zero is valid)
-                    if (this.isPlaying) {
-                        if (cueTime != null) {
-                            this.pauseAndSeekTo(cueTime);
-                        } else {
-                            this.pause();
-                        }
-                    } else {
-                        if (cueTime != null) {
-                            this.seekToSeconds(cueTime);
-                        }
-                    }
-                }
-            }
-        },
-
-        /** Handle playback mode updates
-         */
-        updatedPlaybackMode(playbackMode: PlaybackMode): void {
-            this.$emit('update:playbackMode', playbackMode);
-        },
-
-        /** Handle isExpanded update
-         */
-        updateIsExpanded(isExpanded: boolean): void {
-            this.isExpanded = isExpanded;
-            console.debug(
-                `Track(${this.track.Name})::updateIsExpanded:${isExpanded}`,
-            );
-        },
-
-        /** Handle track audio level updates
-         * @param {number} level - The current audio level
-         * @devdoc Handled here as part of the track because the level is shown as part of the track
-         */
-        updatedLevel(level: number): void {
-            console.debug(`Track(${this.track.Name})::updatedLevel:${level}`);
-            this.level = level;
-        },
-
-        /** Handles the click of a cue button, by seeking to it and, optionally, toggling playback
-         * @param cue The cue to handle
-         * @param togglePlayback Whether to toggle playback. Optional, defaults to true
-         * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
-         */
-        cueClick(cue: ICue, togglePlayback = true) {
-            console.debug(`Track(${this.track.Name})::cueClick:cue:`, cue);
-            if (cue.Time != null && Number.isFinite(cue.Time)) {
-                if (cue.Id) {
-                    //Update the selected cue to this cue
-                    this.updateSelectedCueId(cue.Id);
-                }
-
-                //Set the position to this cue and handle playback
-                console.debug(
-                    `Track(${this.track.Name})::cueClick:isPlaying:`,
-                    this.isPlaying,
-                );
-                if (togglePlayback) {
-                    if (this.isPlaying) {
-                        this.pauseAndSeekTo(cue.Time);
-                    } else {
-                        this.playFrom(cue.Time);
-                    }
+            //Control playback according to the play state, using a single operation.
+            //This supports a possible fade operation.
+            //For the cue time, handle all non-null values (Zero is valid)
+            if (isPlaying.value) {
+                if (cueTime != null) {
+                    pauseAndSeekTo(cueTime);
                 } else {
-                    this.seekToSeconds(cue.Time);
+                    pause();
                 }
-            }
-        },
-
-        /** Handles the play event of a cue button, by immediately restarting playback at the cue (instead of toggling)
-         * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
-         */
-        cuePlay(cue: ICue) {
-            console.debug(`Track(${this.track.Name})::cuePlay:cue:`, cue);
-            if (cue.Time != null && Number.isFinite(cue.Time)) {
-                this.updateSelectedCueId(cue.Id);
-
-                //Set the position to this cue and handle playback
-                if (this.isPlaying) {
-                    this.seekToSeconds(cue.Time); //keep playing
-                } else {
-                    this.playFrom(cue.Time);
-                }
-            }
-        },
-
-        /** Handles the play event of a button, by immediately restarting playback at the beginning of the track (instead of toggling)
-         * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
-         */
-        trackPlay() {
-            console.debug(`Track(${this.track.Name})::trackPlay`);
-
-            this.updateSelectedTrackId(this.track.Id);
-
-            //Set the position to the beginning and handle playback
-            if (this.isPlaying) {
-                this.seekToSeconds(0); //keep playing
             } else {
-                this.playFrom(0);
+                if (cueTime != null) {
+                    seekToSeconds(cueTime);
+                }
             }
-        },
+        }
+    }
+}
 
-        /** Handles the request for a new cue by creating one for the current time
-         */
-        createNewCue(): void {
-            this.addCueAtTime(this.track.Id, this.currentSeconds);
-        },
+/** Handle playback mode updates
+ */
+function updatedPlaybackMode(playbackMode: PlaybackMode): void {
+    emit('update:playbackMode', playbackMode);
+}
 
-        /** Updates the current seconds property with the temporal position of the track audio player
-         * @remarks This is used to control the cue display for this track's cues
-         */
-        updateTime(currentTime: number) {
-            this.currentSeconds = currentTime;
-        },
+/** Handle isExpanded update
+ */
+function updateIsExpanded(expanded: boolean): void {
+    isExpanded.value = expanded;
+    console.debug(
+        `Track(${props.track.Name})::updateIsExpanded:${isExpanded.value}`,
+    );
+}
 
-        updateFading(fading: boolean) {
-            this.isFading = fading;
-        },
+/** Handle track audio level updates
+ * @param {number} level - The current audio level
+ * @devdoc Handled here as part of the track because the level is shown as part of the track
+ */
+function updatedLevel(updatedLevel: number): void {
+    console.debug(`Track(${props.track.Name})::updatedLevel:${level.value}`);
+    level.value = updatedLevel;
+}
 
-        /** Updates the track duration and calculates the cue durations */
-        calculateCueDurations(trackDurationSeconds: number) {
-            this.isTrackLoaded = true;
-            this.trackDuration = trackDurationSeconds;
-            this.updateDurations(this.track.Id, trackDurationSeconds);
-        },
-    },
+/** Handles the click of a cue button, by seeking to it and, optionally, toggling playback
+ * @param cue The cue to handle
+ * @param togglePlayback Whether to toggle playback. Optional, defaults to true
+ * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
+ */
+function cueClick(cue: ICue, togglePlayback = true) {
+    console.debug(`Track(${props.track.Name})::cueClick:cue:`, cue);
+    if (cue.Time != null && Number.isFinite(cue.Time)) {
+        if (cue.Id) {
+            //Update the selected cue to this cue
+            app.updateSelectedCueId(cue.Id);
+        }
 
-    watch: {
-        /** Handles changes in whether this is the active track.
+        //Set the position to this cue and handle playback
+        console.debug(
+            `Track(${props.track.Name})::cueClick:isPlaying:`,
+            isPlaying.value,
+        );
+        if (togglePlayback) {
+            if (isPlaying.value) {
+                pauseAndSeekTo(cue.Time);
+            } else {
+                playFrom(cue.Time);
+            }
+        } else {
+            seekToSeconds(cue.Time);
+        }
+    }
+}
+
+/** Handles the play event of a cue button, by immediately restarting playback at the cue (instead of toggling)
+ * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
+ */
+function cuePlay(cue: ICue) {
+    console.debug(`Track(${props.track.Name})::cuePlay:cue:`, cue);
+    if (cue.Time != null && Number.isFinite(cue.Time)) {
+        app.updateSelectedCueId(cue.Id);
+
+        //Set the position to this cue and handle playback
+        if (isPlaying.value) {
+            seekToSeconds(cue.Time); //keep playing
+        } else {
+            playFrom(cue.Time);
+        }
+    }
+}
+
+/** Handles the play event of a button, by immediately restarting playback at the beginning of the track (instead of toggling)
+ * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
+ */
+function trackPlay() {
+    console.debug(`Track(${props.track.Name})::trackPlay`);
+
+    app.updateSelectedTrackId(props.track.Id);
+
+    //Set the position to the beginning and handle playback
+    if (isPlaying.value) {
+        seekToSeconds(0); //keep playing
+    } else {
+        playFrom(0);
+    }
+}
+
+/** Handles the request for a new cue by creating one for the current time
+ */
+function createNewCue(): void {
+    app.addCueAtTime(props.track.Id, currentSeconds.value);
+}
+
+/** Updates the current seconds property with the temporal position of the track audio player
+ * @remarks This is used to control the cue display for this track's cues
+ */
+function updateTime(currentTime: number) {
+    currentSeconds.value = currentTime;
+}
+
+function updateFading(fading: boolean) {
+    isFading.value = fading;
+}
+
+/** Updates the track duration and calculates the cue durations */
+function calculateCueDurations(trackDurationSeconds: number) {
+    isTrackLoaded.value = true;
+    trackDuration.value = trackDurationSeconds;
+    app.updateDurations(props.track.Id, trackDurationSeconds);
+}
+
+defineExpose({
+    /** For skipping from the compilation level, to a given track, the skipToPlayPause needs to be accessible from outside */
+    skipToPlayPause,
+});
+
+/** Handles changes in whether this is the active track.
          * @remarks When this ceases to be the active track, pause playback.
            This avoids having multiple tracks playing at the same time.
          */
-        isActiveTrack(isActive, wasActive) {
-            console.debug(
-                `Track(${this.track.Name})::isActiveTrack:val:`,
-                isActive,
-            );
+watch(
+    () => props.isActiveTrack,
+    (isActive, wasActive) => {
+        console.debug(
+            `Track(${props.track.Name})::isActiveTrack:val:`,
+            isActive,
+        );
 
-            // Pause this track, when it's no more active track
-            if (wasActive === true && isActive === false) {
-                this.pause();
-            }
-        },
-
-        /** Handles active track id changes.
-         * @remarks Used to determine the requested player widget transition.
-         */
-        activeTrackId(activeTrackId: string, previousTrackId: string) {
-            console.debug(
-                `Track(${this.track.Name})::activeTrack:activeTrackId:`,
-                activeTrackId,
-                'prev:',
-                previousTrackId,
-            );
-
-            const indexOfActive = CompilationHandler.getIndexOfTrackById(
-                this.compilation.Tracks,
-                activeTrackId,
-            );
-
-            const indexOfPrevious = CompilationHandler.getIndexOfTrackById(
-                this.compilation.Tracks,
-                previousTrackId,
-            );
-
-            if (indexOfActive == indexOfPrevious + 1) {
-                // exactly next
-                this.skipTransitionName = 'slide-left';
-            } else if (indexOfActive == indexOfPrevious - 1) {
-                // exactly previous
-                this.skipTransitionName = 'slide-right';
-            } else if (indexOfActive > indexOfPrevious) {
-                // later than next
-                this.skipTransitionName = 'slide-fade-left';
-            } else if (indexOfActive < indexOfPrevious) {
-                // earlier than previous
-                this.skipTransitionName = 'slide-fade-right';
-            }
-        },
-
-        /** Handles changes in whether this track is playing.
-         * @remarks This activates the wake lock, when playing starts.
-         */
-        isPlaying(isPlaying) {
-            console.debug(
-                `Track(${this.track.Name})::isPlaying:isPlaying:`,
-                isPlaying,
-            );
-            this.$emit('isPlaying', isPlaying);
-        },
-
-        /** Handles changes of the full screen state
-         * @devdoc This hides the scroll bars in the (full screen div's) underlying content
-         */
-        isTrackPlayerFullScreen(isFullScreen: boolean): void {
-            console.debug(
-                `Track(${this.track.Name})::isTrackPlayerFullScreen:isFullScreen:`,
-                isFullScreen,
-            );
-            document.documentElement.style.overflowY = isFullScreen
-                ? 'clip'
-                : 'auto';
-        },
+        // Pause this track, when it's no more active track
+        if (wasActive === true && isActive === false) {
+            pause();
+        }
     },
-    computed: {
-        ...mapState(useSettingsStore, [
-            'levelMeterSizeIsLarge',
-            'preventScreenTimeout',
-            'fadeInDuration',
-            'fadeOutDuration',
-            'applyFadeInOffset',
-            'defaultPreRollDuration',
-            'showLevelMeter',
-            'keyboardShortcutTimeout',
-            'experimentalShowPositionInTrackHeader',
-            'experimentalShowWaveforms',
-            'experimentalUseTempo',
-        ]),
+);
 
-        ...mapState(useAppStore, [
-            'selectedCueId',
-            'mediaUrls',
-            'activeTrackId',
-            'compilation',
-        ]),
+/** Handles active track id changes.
+ * @remarks Used to determine the requested player widget transition.
+ */
 
-        /** Returns the selected cue
-         * @remarks A selected cue's data is used for looping on a cue's boundaries
-         */
-        ...mapState(useAppStore, ['selectedCue']),
+watch(activeTrackId, (activeTrackId, previousTrackId) => {
+    console.debug(
+        `Track(${props.track.Name})::activeTrack:activeTrackId:`,
+        activeTrackId,
+        'prev:',
+        previousTrackId,
+    );
 
-        /** Whether all required values for the use of the measure number as position are available.
-         */
-        hasMeter(): boolean {
-            return Meter.isValid(this.track?.Meter);
-        },
+    if (activeTrackId != null && previousTrackId != null) {
+        const indexOfActive = CompilationHandler.getIndexOfTrackById(
+            //TODO check: why is not the tracks computed prop used? or a tracks prop for the store? maybe because of the possible shuffling?
+            compilation.value.Tracks,
+            activeTrackId,
+        );
 
-        remainingTime(): number | null {
-            return CompilationHandler.calculateRemainingTime(
-                this.currentSeconds,
-                this.trackDuration,
-            );
-        },
+        const indexOfPrevious = CompilationHandler.getIndexOfTrackById(
+            compilation.value.Tracks,
+            previousTrackId,
+        );
 
-        /** The description of the currently playing cue
-         * @remarks The implementation makes sure that at least always an empty string is returned.
-         * Combined with an &nbsp;, this avoids layout flicker.
-         */
-        playingCueDescription(): string {
-            const description = this.playingCue?.Description;
+        if (indexOfActive == indexOfPrevious + 1) {
+            // exactly next
+            skipTransitionName.value = 'slide-left';
+        } else if (indexOfActive == indexOfPrevious - 1) {
+            // exactly previous
+            skipTransitionName.value = 'slide-right';
+        } else if (indexOfActive > indexOfPrevious) {
+            // later than next
+            skipTransitionName.value = 'slide-fade-left';
+        } else if (indexOfActive < indexOfPrevious) {
+            // earlier than previous
+            skipTransitionName.value = 'slide-fade-right';
+        }
+    }
+});
 
-            if (description) {
-                return description;
-            }
-            return '';
-        },
+/** Handles changes in whether this track is playing.
+ * @remarks This activates the wake lock, when playing starts.
+ */
+watch(isPlaying, () => {
+    console.debug(
+        `Track(${props.track.Name})::isPlaying:isPlaying:`,
+        isPlaying,
+    );
+    emit('isPlaying', isPlaying);
+});
 
-        /** Whether the current track can play, i.e. the mediaUrl is set and the track media is loaded */
-        canPlay(): boolean {
-            return (this.mediaUrl ?? '').length > 0 && this.isTrackLoaded;
-        },
-
-        /** Whether the currently playing cue is the selected cue
-         * @remarks used for the playhead slider visualization
-         */
-        playingCueIsSelected(): boolean {
-            const playingCueId = this.playingCue?.Id;
-
-            if (
-                playingCueId != undefined &&
-                this.selectedCueId === playingCueId
-            ) {
-                return true;
-            }
-            return false;
-        },
-
-        /** Whether the playing cue has a previous cue
-         */
-        hasPreviousCue(): boolean {
-            return (
-                this.selectedCueId !== null &&
-                this.allCueIds[0] !== this.selectedCueId
-            );
-        },
-        /** Whether the playing cue has a next cue
-         */
-        hasNextCue(): boolean {
-            return (
-                this.selectedCueId !== null &&
-                this.allCueIds.slice(-1)[0] !== this.selectedCueId
-            );
-        },
-
-        allCueIds(): string[] {
-            return this.cues?.map((cue) => cue.Id) ?? [];
-        },
-
-        /** Whether this track has any cue at all */
-        hasCues(): boolean {
-            return this.cues.length !== undefined && this.cues.length > 0;
-        },
-
-        /** Gets the currently playing cue, regardless whether it is selected, if available
-         */
-        playingCue(): ICue | null {
-            return (
-                this.track.Cues.filter(
-                    (cue) =>
-                        cue.Time !== null &&
-                        Number.isFinite(cue.Time) &&
-                        cue.Duration !== null &&
-                        Number.isFinite(cue.Duration) &&
-                        this.currentSeconds >= cue.Time &&
-                        this.currentSeconds < cue.Time + (cue.Duration ?? 0),
-                )[0] ?? null
-            );
-        },
-
-        /** Whether this component is viewed for the "Edit" mode, and thus shows editable inputs for the contained data
-         * @devdoc Allows to reuse this component for more than one view mode.
-         */
-        isEditable(): boolean {
-            return this.viewMode === TrackViewMode.Edit;
-        },
-
-        /** Whether this component is viewed for the "Mix" mode, and thus shows mixing controls
-         * @devdoc Allows to reuse this component for more than one view mode.
-         */
-        isMixable(): boolean {
-            return this.viewMode === TrackViewMode.Mix;
-        },
-
-        /** Whether this component is viewed for the "Play" mode, and thus shows non-collapsible playback buttons
-         * @devdoc Allows to reuse this component for more than one view mode.
-         */
-        isPlayable(): boolean {
-            return this.viewMode === TrackViewMode.Play;
-        },
-
-        /** Gets a reference to the player instance.
-         * @devdoc $ref's are non-reactive, see https://v3.vuejs.org/api/special-attributes.html#ref
-         * Thus, referencing an instance after it has been removed from the DOM (e.g. by v-if)
-         * does not work, even after it's rendered again later.
-         */
-        trackPlayerInstance(): InstanceType<typeof TrackAudioApiPlayer> {
-            const instance = this.$refs.playerReference as InstanceType<
-                typeof TrackAudioApiPlayer
-            >;
-            if (!instance) {
-                throw new Error(
-                    `Track(${this.track.Name}) has no TrackAudioApiPlayer instance`,
-                );
-            }
-            return instance;
-        },
-
-        /** Whether the playback media is available
-         * @devdoc This is only working for local file paths, not for online URL's, because these are directly fetched from the media element.
-         */
-        isMediaAvailable(): boolean {
-            if (this.mediaUrl) {
-                return true;
-            }
-            return false;
-        },
-
-        /** Gets the media URL, if available
-         * @remarks For non-online URL's, a match is sought from previously stored binary blobs
-         */
-        mediaUrl(): string | undefined {
-            if (FileHandler.isValidHttpUrl(this.track.Url)) {
-                return this.track.Url;
-            }
-            return this.trackMediaUrl?.url;
-        },
-
-        /** Gets the media URL, if available,
-         * and optimized for the active track state
-         * @remarks To save memory in the audio elements,
-         * an URL is only provided when
-         * the player is actually in the currently active track
-         * @remarks For non-online URL's, a match is sought from previously stored binary blobs
-         */
-        optimizedMediaUrl(): string | undefined {
-            if (this.isActiveTrack) {
-                if (FileHandler.isValidHttpUrl(this.track.Url)) {
-                    return this.track.Url;
-                }
-                return this.trackMediaUrl?.url;
-            } else {
-                return undefined;
-            }
-        },
-
-        /** Returns all cues of this track */
-        cues(): Array<ICue> {
-            return this.track.Cues;
-        },
-
-        /** Returns the media URL (online URL or playable file content) for a track's file name
-         * @remarks if available, the tracks from a compilation package are used, otherwise the
-         * files are to be loaded from the file system or from the internet
-         */
-
-        trackMediaUrl(): MediaUrl | null {
-            let mediaUrl = CompilationHandler.getMatchingPackageMediaUrl(
-                this.track?.Url,
-                this.mediaUrls,
-            );
-            return mediaUrl;
-        },
+watch(
+    () => props.isTrackPlayerFullScreen,
+    (isFullScreen) => {
+        console.debug(
+            `Track(${props.track.Name})::isTrackPlayerFullScreen:isFullScreen:`,
+            isFullScreen,
+        );
+        document.documentElement.style.overflowY = isFullScreen
+            ? 'clip'
+            : 'auto';
     },
+);
+
+//-- computed
+
+/** Whether all required values for the use of the measure number as position are available.
+ */
+const hasMeter = computed(() => Meter.isValid(props.track?.Meter));
+
+const remainingTime = computed(() =>
+    CompilationHandler.calculateRemainingTime(
+        currentSeconds.value,
+        trackDuration.value,
+    ),
+);
+
+/** The description of the currently playing cue
+ * @remarks The implementation makes sure that at least always an empty string is returned.
+ * Combined with an &nbsp;, this avoids layout flicker.
+ */
+const playingCueDescription = computed(() => {
+    const description = playingCue.value?.Description;
+
+    if (description) {
+        return description;
+    }
+    return '';
+});
+
+/** Whether the current track can play, i.e. the mediaUrl is set and the track media is loaded */
+const canPlay = computed(() => {
+    return (mediaUrl.value ?? '').length > 0 && isTrackLoaded.value;
+});
+
+/** Whether the currently playing cue is the selected cue
+ * @remarks used for the playhead slider visualization
+ */
+const playingCueIsSelected = computed(() => {
+    const playingCueId = playingCue.value?.Id;
+
+    if (playingCueId != undefined && selectedCueId.value === playingCueId) {
+        return true;
+    }
+    return false;
+});
+
+/** Whether the playing cue has a previous cue
+ */
+const hasPreviousCue = computed(() => {
+    return selectedCueId !== null && allCueIds.value[0] !== selectedCueId.value;
+});
+
+/** Whether the playing cue has a next cue
+ */
+const hasNextCue = computed(() => {
+    return (
+        selectedCueId !== null &&
+        allCueIds.value.slice(-1)[0] !== selectedCueId.value
+    );
+});
+
+const allCueIds = computed(() => {
+    return cues.value?.map((cue) => cue.Id) ?? [];
+});
+
+/** Whether this track has any cue at all */
+const hasCues = computed(() => {
+    return cues.value.length !== undefined && cues.value.length > 0;
+});
+
+/** Gets the currently playing cue, regardless whether it is selected, if available
+ */
+const playingCue = computed(() => {
+    return (
+        props.track.Cues.filter(
+            (cue) =>
+                cue.Time !== null &&
+                Number.isFinite(cue.Time) &&
+                cue.Duration !== null &&
+                Number.isFinite(cue.Duration) &&
+                currentSeconds.value >= cue.Time &&
+                currentSeconds.value < cue.Time + (cue.Duration ?? 0),
+        )[0] ?? null
+    );
+});
+
+/** Whether this component is viewed for the "Edit" mode, and thus shows editable inputs for the contained data
+ * @devdoc Allows to reuse this component for more than one view mode.
+ */
+const isEditable = computed(() => {
+    return props.viewMode === TrackViewMode.Edit;
+});
+
+/** Whether this component is viewed for the "Mix" mode, and thus shows mixing controls
+ * @devdoc Allows to reuse this component for more than one view mode.
+ */
+const isMixable = computed(() => {
+    return props.viewMode === TrackViewMode.Mix;
+});
+
+/** Whether this component is viewed for the "Play" mode, and thus shows non-collapsible playback buttons
+ * @devdoc Allows to reuse this component for more than one view mode.
+ */
+const isPlayable = computed(() => {
+    return props.viewMode === TrackViewMode.Play;
+});
+
+/** Gets a reference to the player instance.
+ * @devdoc $ref's are non-reactive, see https://v3.vuejs.org/api/special-attributes.html#ref
+ * Thus, referencing an instance after it has been removed from the DOM (e.g. by v-if)
+ * does not work, even after it's rendered again later.
+ */
+//const trackPlayerInstance :Ref<<typeof TrackAudioApiPlayer>| null>  = ref(null);
+const trackPlayerInstance: Ref<InstanceType<
+    typeof TrackAudioApiPlayer
+> | null> = ref(null);
+//const trackPlayerInstance = ref(null);
+
+//  const   trackPlayerInstance= computed( ()=>{
+//     if (!playerReference) {
+//         throw new Error(
+//             `Track(${props.track.Name}) has no TrackAudioApiPlayer instance`,
+//         );
+//     }
+//     return playerReference;
+// });
+
+/** Whether the playback media is available
+ * @devdoc This is only working for local file paths, not for online URL's, because these are directly fetched from the media element.
+ */
+const isMediaAvailable = computed(() => {
+    if (mediaUrl.value) {
+        return true;
+    }
+    return false;
+});
+
+/** Gets the media URL, if available
+ * @remarks For non-online URL's, a match is sought from previously stored binary blobs
+ */
+const mediaUrl = computed(() => {
+    if (FileHandler.isValidHttpUrl(props.track.Url)) {
+        return props.track.Url;
+    }
+    return trackMediaUrl.value?.url;
+});
+
+/** Gets the media URL, if available,
+ * and optimized for the active track state
+ * @remarks To save memory in the audio elements,
+ * an URL is only provided when
+ * the player is actually in the currently active track
+ * @remarks For non-online URL's, a match is sought from previously stored binary blobs
+ */
+//  const  optimizedMediaUrl= computed( ()=>{
+//     if (props.isActiveTrack) {
+//         if (FileHandler.isValidHttpUrl(props.track.Url)) {
+//             return props.track.Url;
+//         }
+//         return trackMediaUrl.value?.url;
+//     } else {
+//         return undefined;
+//     }
+// });
+
+/** Returns all cues of this track */
+const cues = computed(() => {
+    return props.track.Cues;
+});
+/** Returns the media URL (online URL or playable file content) for a track's file name
+ * @remarks if available, the tracks from a compilation package are used, otherwise the
+ * files are to be loaded from the file system or from the internet
+ */
+
+const trackMediaUrl = computed(() => {
+    let mediaUrl = CompilationHandler.getMatchingPackageMediaUrl(
+        props.track?.Url,
+        mediaUrls.value,
+    );
+    return mediaUrl;
 });
 </script>
 <style lang="scss" scoped>

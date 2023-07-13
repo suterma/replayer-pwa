@@ -217,10 +217,10 @@ export default class MultitrackHandler {
             const instances = this.getAllTrackInstances();
             if (instances) {
                 instances.forEach((instance) => {
-                    console.debug(
-                        'MultitrackHandler::play:instance.track.Name',
-                        instance.track.Name,
-                    );
+                    // console.debug(
+                    //     'MultitrackHandler::play:instance.Track.Name',
+                    //     instance.Track.Name,
+                    // );
                     instance.play();
                 });
             }
