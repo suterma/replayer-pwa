@@ -569,7 +569,15 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, Ref, computed, defineExpose, ref, watch } from 'vue';
+/** Displays a track div with a title, and a panel with a dedicated media player and the cue buttons for it.
+ * @displayName Track
+ * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
+ * Details:
+ * - The collapsed panel is not removed from the DOM because of issues with the ref handling in conjunction with v-if
+ * - However, the player's src property is only set when actually used to keep the memory footprint low.
+ * @remarks Also handles the common replayer events for tracks
+ */
+import { PropType, Ref, computed, ref, watch } from 'vue';
 import {
     ICue,
     TrackViewMode,
@@ -606,27 +614,22 @@ import { useAppStore } from '@/store/app';
 import FileHandler from '@/store/filehandler';
 import { Meter } from '@/code/music/Meter';
 
-/** Displays a track tile with a title, and a panel with a dedicated media player and the cue buttons for it.
- * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
- * Details:
- * - The collapsed panel is not removed from the DOM because of issues with the $ref handling in conjunction with v-if
- * - However, the player's src property is only set when actually used to keep the memory footprint low.
- * @remarks Also handles the common replayer events for tracks
- */
-
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
      * @remarks allows track navigation from within a track.
      */
     'previousTrack',
+
     /** Occurs, when the next track should be set as the active track
      * @remarks allows track navigation from within a track.
      */
     'nextTrack',
+
     /** Occurs, when the next track should be set as the active track
      * @remarks allows track navigation from within a track.
      */
     'update:isTrackPlayerFullScreen',
+
     /** Occurs, when this track starts playing.
      */
     'isPlaying',
@@ -637,11 +640,13 @@ const emit = defineEmits([
 
     /** Occurs, when the user toggles the playback mode */
     'update:playbackMode',
+
     /** Occurs, when the end of the track has been reached and playback has ended.
      * @remarks This is not triggered when the track or one of it's cue is looping.
      * @remarks Allows to select the next track in "play all" and "shuffle" mode.
      */
     'trackEnded',
+
     /** Occurs, when the end of a loop has been reached and playback has looped.
      */
     'trackLoopedTo',
@@ -662,6 +667,7 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+
     /** Whether this track has a next track to skip to
      * @remarks Skipping can also just loop
      */
@@ -677,11 +683,13 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+
     /** Whether this track is the first track in the set of tracks */
     isFirst: {
         type: Boolean,
         required: true,
     },
+
     /** Whether this track is the last track in the set of tracks */
     isLast: {
         type: Boolean,
@@ -693,6 +701,7 @@ const props = defineProps({
         type: Boolean,
         required: true,
     },
+
     /** Whether any track (including this one) in the compilation is currently soloed.
      * This is required to determine the muting of non-soloed tracks.
      */
@@ -710,11 +719,13 @@ const props = defineProps({
         type: String as () => TrackViewMode,
         default: TrackViewMode.Play,
     },
+
     /** Whether to show the track player widget in full screen mode */
     isTrackPlayerFullScreen: {
         type: Boolean,
         default: false,
     },
+
     /** The playback mode
      * @remarks Used overall in the compilation, not per track
      */
