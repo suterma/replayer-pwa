@@ -167,8 +167,8 @@
         <Transition name="item-expand">
             <div v-if="isEditable && isExpanded" :key="track.Id">
                 <!-- @devdoc: TempoLevelEditor does not use the provide/inject pattern, 
-                    although it is used for the track's downstream components otherwise,
-                    because I have experienced problems with the reactivity with TempoLevelEditor.
+                    although it is used for the track's descendant components otherwise,
+                    because I have experienced problems with the reactivity inside TempoLevelEditor.
                     A standard property/event approach is used here instead. -->
                 <TempoLevelEditor
                     v-experiment="experimentalUseTempo"
@@ -575,7 +575,7 @@
  * - However, the player's src property is only set when actually used to keep the memory footprint low.
  * @remarks Also handles the common replayer events for tracks
  */
-import { PropType, Ref, computed, provide, ref, watch } from 'vue';
+import { PropType, Ref, computed, provide, readonly, ref, watch } from 'vue';
 import {
     ICue,
     TrackViewMode,
@@ -745,14 +745,13 @@ const props = defineProps({
 const useMeasureNumbers = computed(
     () => props.track.UseMeasureNumbers === true,
 );
-provide(useMeasureNumbersInjectionKey, useMeasureNumbers);
+provide(useMeasureNumbersInjectionKey, readonly(useMeasureNumbers));
 
 /** The track's meter
  * @devdoc This value is provided to descendant components using the provide/inject pattern.
  */
 const meter = ref(props.track.Meter);
-//TODO provide with an update function here
-provide(meterInjectionKey, meter);
+provide(meterInjectionKey, readonly(meter));
 
 /** The playback progress in the current track, in [seconds]
  * @remarks This is used for track progress display within the set of cues
