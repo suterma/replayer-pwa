@@ -20,7 +20,6 @@
             :isCueAhead="isCueAhead(prefixCue)"
             :percentComplete="percentComplete(prefixCue)"
             @click="cueClicked"
-            :useMeasureNumbers="useMeasureNumbers"
         >
         </CueButton>
         <!-- Using the v-for on a template instead of the actual component saves unnecessary renderings. 
@@ -43,7 +42,6 @@
                 :isCueAhead="isCueAhead(cue)"
                 :percentComplete="percentComplete(cue)"
                 @click="cueClicked"
-                :useMeasureNumbers="useMeasureNumbers"
             >
             </CueButton>
         </template>
@@ -57,7 +55,6 @@ import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { useAppStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
-import { IMeter } from '@/code/music/IMeter';
 
 /** A field of large cue buttons for a track
  */
@@ -89,13 +86,6 @@ const props = defineProps({
     playbackMode: {
         type: String as () => PlaybackMode,
         required: true,
-    },
-
-    /** Whether to use the measure number to set and display the cue positions */
-    useMeasureNumbers: {
-        type: null as unknown as PropType<boolean | null>,
-        required: true,
-        default: null,
     },
 });
 

@@ -141,7 +141,10 @@ import { PropType, computed, inject } from 'vue';
 import { Meter } from '@/code/music/Meter';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
-import { meterInjectionKey } from '../InjectionKeys';
+import {
+    meterInjectionKey,
+    useMeasureNumbersInjectionKey,
+} from '../InjectionKeys';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
@@ -220,17 +223,12 @@ const props = defineProps({
      * @remarks The progress bar radius at the right side must be removed for fully progressed cues.
      */
     hasAddonsRight: Boolean,
-
-    /** Whether to use the measure number to set and display the cue positions */
-    useMeasureNumbers: {
-        type: null as unknown as PropType<boolean | null>,
-        required: true,
-        default: null,
-    },
 });
 
 /** The musical meter */
 const meter = inject(meterInjectionKey);
+
+const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
 
 /** The title for this cue, usable as tooltip
  */
@@ -242,7 +240,7 @@ const cueTitle = computed(() => {
             meter != undefined &&
             meter.value != null &&
             Meter.isValid(meter.value) &&
-            props.useMeasureNumbers
+            useMeasureNumbers?.value
         ) {
             return `Play from ${Meter.toMeasureDisplay(
                 props.time,

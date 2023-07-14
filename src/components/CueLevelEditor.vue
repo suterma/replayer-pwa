@@ -152,23 +152,7 @@
     </fieldset>
 </template>
 
-<script lang="ts">
-import { PropType, defineComponent } from 'vue';
-import { ICue, PlaybackMode } from '@/store/compilation-types';
-import CueButton from '@/components/buttons/CueButton.vue';
-import AdjustCueButton from '@/components/buttons/AdjustCueButton.vue';
-import BaseIcon from '@/components/icons/BaseIcon.vue';
-import TimeDisplay from './TimeDisplay.vue';
-import TimeInput from '@/components/TimeInput.vue';
-import IfMedia from '@/components/IfMedia.vue';
-import { mdiTrashCanOutline } from '@mdi/js';
-import { mapActions } from 'pinia';
-import { useAppStore } from '@/store/app';
-import { mapState } from 'pinia';
-import MeasureDisplay from '@/components/MeasureDisplay.vue';
-import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
-import MetricalEditor from '@/components/editor/MetricalEditor.vue';
-import { useSettingsStore } from '@/store/settings';
+<script setup lang="ts">
 /** An Editor for for a single cue
  * @remarks Shows a cue button with an inline progress bar, plus input fields for all properties
  * @devdoc Input value binding is not implemented with a two-way v-model binding because the incoming values are taken
@@ -177,168 +161,161 @@ import { useSettingsStore } from '@/store/settings';
  * This approach is chosen over the ...data pattern because the shortcut values can also change from a menu entry
  * in the track's dropdown menu.
  */
-export default defineComponent({
-    name: 'CueLevelEditor',
-    components: {
-        CueButton,
-        AdjustCueButton,
-        BaseIcon,
-        TimeDisplay,
-        TimeInput,
-        IfMedia,
-        MeasureDisplay,
-        MeasureDifferenceDisplay,
-        MetricalEditor,
+import { PropType, onMounted, watch, computed, inject, ref, Ref } from 'vue';
+import { storeToRefs } from 'pinia';
+
+import { ICue, PlaybackMode } from '@/store/compilation-types';
+import CueButton from '@/components/buttons/CueButton.vue';
+import AdjustCueButton from '@/components/buttons/AdjustCueButton.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
+import TimeDisplay from './TimeDisplay.vue';
+import TimeInput from '@/components/TimeInput.vue';
+import IfMedia from '@/components/IfMedia.vue';
+import { mdiTrashCanOutline } from '@mdi/js';
+import { useAppStore } from '@/store/app';
+import MeasureDisplay from '@/components/MeasureDisplay.vue';
+import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
+import MetricalEditor from '@/components/editor/MetricalEditor.vue';
+import { useSettingsStore } from '@/store/settings';
+import { useMeasureNumbersInjectionKey } from './InjectionKeys';
+
+const emit = defineEmits(['click', 'play', 'adjust']);
+
+const props = defineProps({
+    cue: {
+        type: null as unknown as PropType<ICue>,
+        required: true,
     },
-    emits: ['click', 'play', 'adjust'],
-    props: {
-        cue: {
-            type: null as unknown as PropType<ICue>,
-            required: true,
-        },
 
-        /** The playback progress within this cue, in [percent], or null if not applicable
-         * @remarks This value is only used when both the cue is not ahead nor has passed.
-         */
-        percentComplete: {
-            type: null as unknown as PropType<number | null>,
-            required: false,
-        },
+    /** The playback progress within this cue, in [percent], or null if not applicable
+     * @remarks This value is only used when both the cue is not ahead nor has passed.
+     */
+    percentComplete: {
+        type: null as unknown as PropType<number | null>,
+        required: false,
+    },
 
-        /** Whether to use the measure number to set and display the cue positions */
-        useMeasureNumbers: {
-            type: null as unknown as PropType<boolean | null>,
-            required: true,
-            default: null,
-        },
+    /** Whether this cue is currently selected
+     * @remarks Note: only one cue in a compilation may be selected */
+    isCueSelected: Boolean,
 
-        /** Whether this cue is currently selected
-         * @remarks Note: only one cue in a compilation may be selected */
-        isCueSelected: Boolean,
-
-        /* Whether playback of this cue has already passed
+    /* Whether playback of this cue has already passed
                  (the playhead has completely passed beyond the end of this cue) */
-        hasCuePassed: Boolean,
+    hasCuePassed: Boolean,
 
-        /* Whether to show this cue as passive, in dimmed style. */
-        virtual: Boolean,
+    /* Whether to show this cue as passive, in dimmed style. */
+    virtual: Boolean,
 
-        /* Determines whether playback of this cue has not yet started
+    /* Determines whether playback of this cue has not yet started
         (the playhead has not yet reached the beginning of this cue)*/
-        isCueAhead: Boolean,
+    isCueAhead: Boolean,
 
-        /** Indicates whether the associated Track is currently playing
-         * @remarks This is used to depict the expected action on button press.
-         * While playing, this is pause, and vice versa.
-         */
-        isTrackPlaying: Boolean,
+    /** Indicates whether the associated Track is currently playing
+     * @remarks This is used to depict the expected action on button press.
+     * While playing, this is pause, and vice versa.
+     */
+    isTrackPlaying: Boolean,
 
-        /** The playback mode
-         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
-         */
-        playbackMode: {
-            type: String as () => PlaybackMode,
-            required: true,
-        },
-
-        disabled: {
-            type: Boolean,
-            required: false,
-        },
+    /** The playback mode
+     * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+     */
+    playbackMode: {
+        type: String as () => PlaybackMode,
+        required: true,
     },
-    data() {
-        return {
-            /** Icons from @mdi/js */
-            mdiTrashCanOutline: mdiTrashCanOutline,
-        };
-    },
-    mounted: function (): void {
-        //Track the selection
-        if (this.isCueSelected) {
-            this.setFocusToDescriptionInput();
-        }
-    },
-    methods: {
-        ...mapActions(useAppStore, ['updateCueData', 'deleteCue']),
 
-        /** Updates the set cue description */
-        updateDescription(event: Event) {
-            const cueId = this.cue.Id;
-            const shortcut = this.cue.Shortcut;
-            const time = this.cue.Time;
-            const description = (event.target as HTMLInputElement).value;
-            this.updateCueData(cueId, description, shortcut, time);
-        },
-
-        /** Deletes the cue */
-        deleteThisCue(): void {
-            const cueId = this.cue.Id;
-            this.deleteCue(cueId);
-        },
-
-        /** Updates the set cue time */
-        updateCueTime(time: number | null) {
-            const cueId = this.cue.Id;
-            const shortcut = this.cue.Shortcut;
-            const description = this.cue.Description;
-            this.updateCueData(cueId, description, shortcut, time);
-
-            //Also , for user convenience, to simplify adjusting cues, play at change
-            //(while keeping the focus at the number spinner)
-            if (Number.isFinite(time)) {
-                this.$emit('play');
-            }
-        },
-
-        /** Updates the set cue shortcut */
-        updateShortcut(event: Event) {
-            const cueId = this.cue.Id;
-            const description = this.cue.Description;
-            const time = this.cue.Time;
-            const shortcut = (event.target as HTMLInputElement).value;
-            this.updateCueData(cueId, description, shortcut, time);
-        },
-
-        /** Handles the click event of the cue button */
-        cueClick() {
-            this.$emit('click');
-        },
-
-        /** Sets the focus to the cue description input box
-         */
-        setFocusToDescriptionInput() {
-            console.debug('focussing to cue', this.cue.Id);
-            const cueDescription = this.$refs
-                .cueDescription as HTMLInputElement;
-            cueDescription.focus();
-        },
-    },
-    watch: {
-        /** Track updates to the selected cue and follows the focus to the matching description input.
-         * @remarks This helps navigating the cues and updating the description along with it.
-         */
-        isCueSelected(val, oldVal) {
-            if (oldVal == false && val == true) {
-                this.setFocusToDescriptionInput();
-            }
-        },
-    },
-    computed: {
-        ...mapState(useAppStore, ['selectedCueId']),
-        ...mapState(useSettingsStore, ['experimentalUseTempo']),
-
-        /** Gets a cue placeholder denoting the cue's position */
-        cuePlaceholder(): string {
-            return `Cue description`;
-        },
-        /** Gets the cue's time
-         * @devdoc provided as performance optimization, to allow render checks directly on this value, not via the cue object
-         */
-        cueTime(): number | null {
-            return this.cue.Time;
-        },
+    disabled: {
+        type: Boolean,
+        required: false,
     },
 });
+
+onMounted(() => {
+    //Track the selection
+    if (props.isCueSelected) {
+        setFocusToDescriptionInput();
+    }
+});
+
+const app = useAppStore();
+
+/** Updates the set cue description */
+function updateDescription(event: Event) {
+    const cueId = props.cue.Id;
+    const shortcut = props.cue.Shortcut;
+    const time = props.cue.Time;
+    const description = (event.target as HTMLInputElement).value;
+    app.updateCueData(cueId, description, shortcut, time);
+}
+
+/** Deletes the cue */
+function deleteThisCue(): void {
+    const cueId = props.cue.Id;
+    app.deleteCue(cueId);
+}
+
+/** Updates the set cue time */
+function updateCueTime(time: number | null) {
+    const cueId = props.cue.Id;
+    const shortcut = props.cue.Shortcut;
+    const description = props.cue.Description;
+    app.updateCueData(cueId, description, shortcut, time);
+
+    //Also , for user convenience, to simplify adjusting cues, play at change
+    //(while keeping the focus at the number spinner)
+    if (Number.isFinite(time)) {
+        emit('play');
+    }
+}
+
+/** Updates the set cue shortcut */
+function updateShortcut(event: Event) {
+    const cueId = props.cue.Id;
+    const description = props.cue.Description;
+    const time = props.cue.Time;
+    const shortcut = (event.target as HTMLInputElement).value;
+    app.updateCueData(cueId, description, shortcut, time);
+}
+
+/** Handles the click event of the cue button */
+function cueClick() {
+    emit('click');
+}
+
+const cueDescription: Ref<InstanceType<typeof HTMLInputElement> | null> =
+    ref(null);
+
+/** Sets the focus to the cue description input box
+ */
+function setFocusToDescriptionInput() {
+    console.debug('focussing to cue', props.cue.Id);
+    const input = cueDescription.value as HTMLInputElement;
+    input.focus();
+}
+
+/** Track updates to the selected cue and follows the focus to the matching description input.
+ * @remarks This helps navigating the cues and updating the description along with it.
+ */
+watch(
+    () => props.isCueSelected,
+    (val, oldVal) => {
+        if (oldVal == false && val == true) {
+            setFocusToDescriptionInput();
+        }
+    },
+);
+
+const settings = useSettingsStore();
+const { experimentalUseTempo } = storeToRefs(settings);
+
+const cuePlaceholder = computed(() => `Cue description`);
+
+/** Gets the cue's time
+ * @devdoc provided as performance optimization, to allow render checks directly on this value, not via the cue object
+ */
+const cueTime = computed(() => props.cue.Time);
+
+const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
 </script>
 <style lang="scss" scoped>
 /*************************************************************

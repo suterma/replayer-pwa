@@ -159,7 +159,6 @@
                     }
                 "
                 :cues="track.Cues"
-                :useMeasureNumbers="track.UseMeasureNumbers"
             ></CueButtonsField>
         </div>
 
@@ -223,7 +222,6 @@
                         :isTrackPlaying="isPlaying"
                         :playbackMode="playbackMode"
                         :currentSeconds="currentSeconds"
-                        :useMeasureNumbers="track.UseMeasureNumbers"
                         @click="cueClick"
                         @play="cuePlay"
                     >
@@ -572,7 +570,7 @@
  * - However, the player's src property is only set when actually used to keep the memory footprint low.
  * @remarks Also handles the common replayer events for tracks
  */
-import { PropType, Ref, computed, provide, readonly, ref, watch } from 'vue';
+import { PropType, Ref, computed, provide, ref, watch } from 'vue';
 import {
     ICue,
     TrackViewMode,
@@ -608,7 +606,10 @@ import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import FileHandler from '@/store/filehandler';
 import { Meter } from '@/code/music/Meter';
-import { meterInjectionKey } from './InjectionKeys';
+import {
+    meterInjectionKey,
+    useMeasureNumbersInjectionKey,
+} from './InjectionKeys';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -732,12 +733,19 @@ const props = defineProps({
     },
 });
 
-/** Provide reactivity to the track's meter (used for provisioning).
+/** Whether to use measure numbers for the track's cue position handling
+ * @remarks Must only be true, whan a valid meter is also provided
+ * @devdoc This value is provided to descendant components using the provide/inject pattern.
+ */
+const useMeasureNumbers = computed(
+    () => props.track.UseMeasureNumbers === true,
+);
+provide(useMeasureNumbersInjectionKey, useMeasureNumbers);
+
+/** The track's meter
+ * @devdoc This value is provided to descendant components using the provide/inject pattern.
  */
 const meter = ref(props.track.Meter);
-
-/** The track's meter is provided to descendant component using the provide/inject pattern.
- */
 //TODO provide with an update function here
 provide(meterInjectionKey, meter);
 
