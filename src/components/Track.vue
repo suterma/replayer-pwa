@@ -162,12 +162,17 @@
             ></CueButtonsField>
         </div>
 
-        <!-- The tempo and cue level editors and playback bar (in edit mode for an expanded track) -->
+        <!-- The tempo and cue level editors and playback bar (in edit mode for an expanded track)
+         -->
         <Transition name="item-expand">
             <div v-if="isEditable && isExpanded" :key="track.Id">
-                <!-- //TODO maybe use writable inject, or use the v-model approach? -->
+                <!-- @devdoc: TempoLevelEditor does not use the provide/inject pattern, 
+                    although it is used for the track's downstream components otherwise,
+                    because I have experienced problems with the reactivity with TempoLevelEditor.
+                    A standard property/event approach is used here instead. -->
                 <TempoLevelEditor
                     v-experiment="experimentalUseTempo"
+                    :meter="track.Meter"
                     @update:meter="
                         (value: any /*IMeter*/): void => {
                             app.updateMeter(track.Id, value);
