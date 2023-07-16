@@ -85,7 +85,7 @@ const emit = defineEmits([
     'timeupdate',
     'durationChanged',
     'update:volume',
-    'update:isPlaying',
+    'update:isTrackPlaying',
     'update:isFading',
     /** When the end of the track has been reached and playback has ended */
     'ended',
@@ -147,7 +147,7 @@ const props = defineProps({
     /** Whether playback is currently ongoing
      * @remarks Implements a two-way binding
      */
-    isPlaying: {
+    isTrackPlaying: {
         type: Boolean,
         required: true,
         default: false,
@@ -617,7 +617,7 @@ function stop() {
         audioElement.value.pause();
         fader.value.cancel();
         fader.value.reset();
-        emit('update:isPlaying', false);
+        emit('update:isTrackPlaying', false);
     }
     //no fading at stop
     isFading.value = false;
@@ -667,7 +667,7 @@ function pause(): void {
             .then(() => {
                 audioElement.value.pause();
                 isFading.value = false;
-                emit('update:isPlaying', false);
+                emit('update:isTrackPlaying', false);
                 emit('update:isFading', false);
             });
     }
@@ -683,7 +683,7 @@ function pauseAndSeekTo(position: number): void {
         audioElement.value.pause();
         isFading.value = false;
         emit('update:isFading', false);
-        emit('update:isPlaying', false);
+        emit('update:isTrackPlaying', false);
         seekToSeconds(position);
     });
 }
@@ -763,7 +763,7 @@ async function play(): Promise<void> {
                     .play()
                     .catch((e) => {
                         console.error('Playback failed with message: ' + e);
-                        emit('update:isPlaying', false);
+                        emit('update:isTrackPlaying', false);
                     })
                     .finally(() => {
                         isPlayingRequestOutstanding.value = false;
@@ -847,7 +847,7 @@ audioElement.value.onsuspend = () => {
 };
 audioElement.value.onended = () => {
     debugLog(`onended `);
-    emit('update:isPlaying', false);
+    emit('update:isTrackPlaying', false);
     emit('ended');
 
     //Handle the track play mode
@@ -866,7 +866,7 @@ audioElement.value.ondurationchange = (event) => {
 audioElement.value.onpause = () => {
     debugLog(`onpause`);
     playing.value = false;
-    emit('update:isPlaying', false);
+    emit('update:isTrackPlaying', false);
 };
 audioElement.value.onplay = () => {
     debugLog(`onplay`);
@@ -875,7 +875,7 @@ audioElement.value.onplay = () => {
     //NOTE: Having the fade-in operation to start here, instead of after the thenable play action
     //ensures, that a fade operation is applied without any audible delay.
     debugLog('Playback started');
-    emit('update:isPlaying', true);
+    emit('update:isTrackPlaying', true);
     isFading.value = true;
     emit('update:isFading', true);
     fader.value
@@ -951,10 +951,10 @@ watch(
 
 /** Watch the playback state, and then update the audio element accordingly  */
 watch(
-    () => props.isPlaying,
-    (isPlaying) => {
-        debugLog(`isPlaying:${isPlaying}`);
-        if (isPlaying) {
+    () => props.isTrackPlaying,
+    (isTrackPlaying) => {
+        debugLog(`isTrackPlaying:${isTrackPlaying}`);
+        if (isTrackPlaying) {
             play();
         } else {
             pause();

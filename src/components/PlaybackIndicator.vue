@@ -4,7 +4,7 @@
         :class="{
             'has-text-warning': isUnavailable,
             'has-text-dark': isUnloaded,
-            'has-text-success': isPlaying && !isUnavailable,
+            'has-text-success': isTrackPlaying && !isUnavailable,
             'has-text-grey-dark': isReady && isUnavailable,
             'has-text-grey': isReady && !isUnavailable,
         }"
@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-/** An indicator for the track playback state
+/** An indicator for the playback state of a track
  */
 import NavButton from '@/components/buttons/NavButton.vue';
 import { mdiAlert, mdiCircle } from '@mdi/js';
@@ -46,7 +46,7 @@ const props = defineProps({
 const indication = computed(() => {
     if (props.isUnavailable) {
         return 'Track media is unavailable';
-    } else if (isPlaying?.value) {
+    } else if (isTrackPlaying?.value) {
         return 'Track is playing';
     } else if (props.isReady) {
         return 'Track is loaded and ready to play';
@@ -59,7 +59,7 @@ const indication = computed(() => {
 
 /** Flag to indicate whether this track's player is currently playing
  */
-const isPlaying = inject(isPlayingInjectionKey);
+const isTrackPlaying = inject(isPlayingInjectionKey);
 </script>
 <style scoped>
 .is-indicator {

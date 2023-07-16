@@ -4,9 +4,9 @@
             button: true,
             'is-loading': isLoading,
         }"
-        :title="isPlaying ? 'Pause' : 'Play'"
+        :title="isTrackPlaying ? 'Pause' : 'Play'"
     >
-        <BaseIcon v-if="isPlaying" :path="mdiPause" />
+        <BaseIcon v-if="isTrackPlaying" :path="mdiPause" />
         <BaseIcon v-else :path="mdiPlay" />
         <slot></slot>
     </button>
@@ -30,5 +30,5 @@ defineProps({
 });
 /** Flag to indicate whether this track's player is currently playing
  */
-const isPlaying = inject(isPlayingInjectionKey);
+const isTrackPlaying = inject(isPlayingInjectionKey);
 </script>

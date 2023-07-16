@@ -331,7 +331,7 @@
                 :isActiveTrack="isActiveTrack"
                 @timeupdate="updateTime"
                 @durationChanged="calculateCueDurations"
-                v-model:isPlaying="isPlaying"
+                v-model:isTrackPlaying="isTrackPlaying"
                 @update:isFading="updateFading"
                 @update:playbackMode="updatedPlaybackMode"
                 :playbackMode="playbackMode"
@@ -507,7 +507,7 @@
                                     >
                                         <PlaybackIndicator
                                             :isReady="
-                                                !isPlaying && isTrackLoaded
+                                                !isTrackPlaying && isTrackLoaded
                                             "
                                             :isUnloaded="!isTrackLoaded"
                                             :isUnavailable="!isMediaAvailable"
@@ -626,7 +626,7 @@ const emit = defineEmits([
 
     /** Occurs, when this track starts playing.
      */
-    'isPlaying',
+    'isTrackPlaying',
 
     /** Occurs on a seek operation
      */
@@ -767,8 +767,8 @@ const trackDuration: Ref<number | null> = ref(null);
 
 /** Flag to indicate whether this track's player is currently playing
  */
-const isPlaying = ref(false);
-provide(isPlayingInjectionKey, readonly(isPlaying));
+const isTrackPlaying = ref(false);
+provide(isPlayingInjectionKey, readonly(isTrackPlaying));
 
 /** Flag to indicate whether the audio is currently muted
  */
@@ -1008,7 +1008,7 @@ function goToSelectedCue() {
             //Control playback according to the play state, using a single operation.
             //This supports a possible fade operation.
             //For the cue time, handle all non-null values (Zero is valid)
-            if (isPlaying.value) {
+            if (isTrackPlaying.value) {
                 if (cueTime != null) {
                     pauseAndSeekTo(cueTime);
                 } else {
@@ -1062,11 +1062,11 @@ function cueClick(cue: ICue, togglePlayback = true) {
 
         //Set the position to this cue and handle playback
         console.debug(
-            `Track(${props.track.Name})::cueClick:isPlaying:`,
-            isPlaying.value,
+            `Track(${props.track.Name})::cueClick:isTrackPlaying:`,
+            isTrackPlaying.value,
         );
         if (togglePlayback) {
-            if (isPlaying.value) {
+            if (isTrackPlaying.value) {
                 pauseAndSeekTo(cue.Time);
             } else {
                 playFrom(cue.Time);
@@ -1086,7 +1086,7 @@ function cuePlay(cue: ICue) {
         app.updateSelectedCueId(cue.Id);
 
         //Set the position to this cue and handle playback
-        if (isPlaying.value) {
+        if (isTrackPlaying.value) {
             seekToSeconds(cue.Time); //keep playing
         } else {
             playFrom(cue.Time);
@@ -1103,7 +1103,7 @@ function trackPlay() {
     app.updateSelectedTrackId(props.track.Id);
 
     //Set the position to the beginning and handle playback
-    if (isPlaying.value) {
+    if (isTrackPlaying.value) {
         seekToSeconds(0); //keep playing
     } else {
         playFrom(0);
@@ -1201,12 +1201,12 @@ watch(activeTrackId, (activeTrackId, previousTrackId) => {
 /** Handles changes in whether this track is playing.
  * @remarks This activates the wake lock, when playing starts.
  */
-watch(isPlaying, () => {
+watch(isTrackPlaying, () => {
     console.debug(
-        `Track(${props.track.Name})::isPlaying:isPlaying:`,
-        isPlaying,
+        `Track(${props.track.Name})::isTrackPlaying:`,
+        isTrackPlaying,
     );
-    emit('isPlaying', isPlaying);
+    emit('isTrackPlaying', isTrackPlaying);
 });
 
 watch(

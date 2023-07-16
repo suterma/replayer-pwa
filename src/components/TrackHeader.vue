@@ -125,7 +125,7 @@
                 <!-- Slot for additional level items -->
                 <slot name="left-end"></slot>
                 <PlaybackIndicator
-                    :is-ready="!isPlaying && isTrackLoaded"
+                    :is-ready="!isTrackPlaying && isTrackLoaded"
                     :is-unloaded="!isTrackLoaded"
                     :is-unavailable="!isTrackMediaAvailable"
                     data-cy="playback-indicator"
@@ -159,7 +159,7 @@
 <script setup lang="ts">
 /** A header for editing "beats per minute" track metadata
  */
-import { PropType, computed, inject, onBeforeMount, ref, watch } from 'vue';
+import { PropType, computed, inject, onBeforeMount, watch } from 'vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
 import CloakedPanel from '@/components/CloakedPanel.vue';
@@ -334,7 +334,7 @@ const isEditMode = computed(() => {
 
 /** Flag to indicate whether this track's player is currently playing
  */
-const isPlaying = inject(isPlayingInjectionKey);
+const isTrackPlaying = inject(isPlayingInjectionKey);
 </script>
 <style lang="scss" scoped>
 /* Use smaller margins within a track, to keep the UI condensed */

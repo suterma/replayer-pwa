@@ -35,7 +35,7 @@
                         updateIsTrackPlayerFullScreen($event)
                     "
                     :isActiveTrack="activeTrackId === track.Id"
-                    @isPlaying="updateIsTrackPlaying($event)"
+                    @isTrackPlaying="updateIsTrackPlaying($event)"
                     @seekToSeconds="handleTrackSeekToSeconds($event)"
                     :playbackMode="playbackMode"
                     @update:playbackMode="updatePlaybackMode($event)"
@@ -400,11 +400,11 @@ export default defineComponent({
         /* Handles a change of play state for a single track (before/after fading), by controlling the other tracks
          * @remarks This must only be done when multitrack playback is expected.
          */
-        updateIsTrackPlaying(isPlaying: boolean): void {
+        updateIsTrackPlaying(isTrackPlaying: boolean): void {
             if (this.isMixable) {
-                console.debug('Compilation::isPlaying:', isPlaying);
+                console.debug('Compilation::isTrackPlaying:', isTrackPlaying);
 
-                if (isPlaying && !this.isAllPlaying) {
+                if (isTrackPlaying && !this.isAllPlaying) {
                     console.debug('Compilation::isAnyFading:Playing all...');
                     this.multitrackHandler?.play();
                 }
