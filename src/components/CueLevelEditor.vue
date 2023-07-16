@@ -77,7 +77,7 @@
                             class="control"
                         >
                             <MetricalEditor
-                                v-model="cueTime"
+                                :modelValue="cueTime"
                                 @update:modelValue="updateCueTime"
                             >
                             </MetricalEditor>

@@ -741,6 +741,8 @@ const props = defineProps({
 /** Whether to use measure numbers for the track's cue position handling
  * @remarks Must only be true, whan a valid meter is also provided
  * @devdoc This value is provided to descendant components using the provide/inject pattern.
+ * @devdoc Here, a ComputedRef must be used, not a ref, because the ref of the dereferenced meter
+ * would not be reactive.
  */
 const useMeasureNumbers = computed(
     () => props.track.UseMeasureNumbers === true,
@@ -749,8 +751,10 @@ provide(useMeasureNumbersInjectionKey, readonly(useMeasureNumbers));
 
 /** The track's meter
  * @devdoc This value is provided to descendant components using the provide/inject pattern.
+ * @devdoc Here, a ComputedRef must be used, not a ref, because the ref of the dereferenced meter
+ * would not be reactive.
  */
-const meter = ref(props.track.Meter);
+const meter = computed(() => props.track.Meter);
 provide(meterInjectionKey, readonly(meter));
 
 /** The playback progress in the current track, in [seconds]
