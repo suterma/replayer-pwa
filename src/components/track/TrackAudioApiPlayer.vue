@@ -49,7 +49,7 @@ import {
 } from 'vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
-import TrackAudioPeaks from '@/components/TrackAudioPeaks.vue';
+import TrackAudioPeaks from '@/components/track/TrackAudioPeaks.vue';
 import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMeter.vue';
 import { useAudioStore } from '@/store/audio';
 import FileHandler from '@/store/filehandler';

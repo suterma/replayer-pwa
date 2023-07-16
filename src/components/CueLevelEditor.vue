@@ -168,7 +168,7 @@ import { ICue, PlaybackMode } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
 import AdjustCueButton from '@/components/buttons/AdjustCueButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import TimeDisplay from './TimeDisplay.vue';
+import TimeDisplay from '@/components/TimeDisplay.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import IfMedia from '@/components/IfMedia.vue';
 import { mdiTrashCanOutline } from '@mdi/js';
@@ -177,7 +177,7 @@ import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import { useSettingsStore } from '@/store/settings';
-import { useMeasureNumbersInjectionKey } from './TrackInjectionKeys';
+import { useMeasureNumbersInjectionKey } from '@/components/track/TrackInjectionKeys';
 
 const emit = defineEmits(['click', 'play', 'adjust']);
 

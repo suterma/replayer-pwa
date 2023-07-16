@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import LinkableText from './LinkableText.vue';
+import LinkableText from '@/components/LinkableText.vue';
 
 /** Displays a track's name as a title.
  * @remarks This component makes some layout decisions, but intentionally no size or color decisions.

@@ -18,7 +18,7 @@
 import { inject } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiPlay, mdiPause } from '@mdi/js';
-import { isPlayingInjectionKey } from '../TrackInjectionKeys';
+import { isPlayingInjectionKey } from '../track/TrackInjectionKeys';
 
 defineProps({
     /** Flag to indicate the loading state */

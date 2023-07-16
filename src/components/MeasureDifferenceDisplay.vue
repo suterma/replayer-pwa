@@ -13,7 +13,7 @@
 import { Meter } from '@/code/music/Meter';
 import _ from 'lodash';
 import { computed, inject, PropType } from 'vue';
-import { meterInjectionKey } from './TrackInjectionKeys';
+import { meterInjectionKey } from '@/components/track/TrackInjectionKeys';
 
 /** The musical meter */
 const meter = inject(meterInjectionKey);

@@ -75,7 +75,7 @@
 import { PropType, defineComponent } from 'vue';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
-import TrackTitleName from '@/components/TrackTitleName.vue';
+import TrackTitleName from '@/components/track/TrackTitleName.vue';
 import { Track } from '@/store/compilation-types';
 
 /** A printable display of a complete compilation, with a track and cue listing */

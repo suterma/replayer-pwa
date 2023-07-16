@@ -575,9 +575,9 @@ import {
 } from '@/store/compilation-types';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import TempoLevelEditor from '@/components/editor/TempoLevelEditor.vue';
-import TrackAudioApiPlayer from '@/components/TrackAudioApiPlayer.vue';
+import TrackAudioApiPlayer from '@/components/track/TrackAudioApiPlayer.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
-import TrackHeader from '@/components/TrackHeader.vue';
+import TrackHeader from '@/components/track/TrackHeader.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';
 import CueButtonsField from '@/components/CueButtonsField.vue';
 import MediaControlsBar from '@/components/MediaControlsBar.vue';
@@ -594,9 +594,8 @@ import CompilationHandler from '@/store/compilation-handler';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import VolumeKnob from '@/components/VolumeKnob.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
-import TrackTitleName from './TrackTitleName.vue';
-import ArtistInfo from './ArtistInfo.vue';
-import { Replayer } from './CompilationKeyboardHandler.vue';
+import TrackTitleName from '@/components/track/TrackTitleName.vue';
+import ArtistInfo from '@/components/ArtistInfo.vue';
 import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
@@ -607,6 +606,7 @@ import {
     useMeasureNumbersInjectionKey,
 } from './TrackInjectionKeys';
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
+import { Replayer } from '../CompilationKeyboardHandler.vue';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track

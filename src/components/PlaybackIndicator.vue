@@ -20,7 +20,7 @@
 import NavButton from '@/components/buttons/NavButton.vue';
 import { mdiAlert, mdiCircle } from '@mdi/js';
 import { computed, inject } from 'vue';
-import { isPlayingInjectionKey } from './TrackInjectionKeys';
+import { isPlayingInjectionKey } from './track/TrackInjectionKeys';
 
 const props = defineProps({
     /** Whether the indicator should convey the ready state */

@@ -236,7 +236,7 @@ import {
     TrackViewMode,
     PlaybackMode,
 } from '@/store/compilation-types';
-import Track from '@/components/Track.vue';
+import Track from '@/components/track/Track.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MuteButton from '@/components/buttons/MuteButton.vue';
