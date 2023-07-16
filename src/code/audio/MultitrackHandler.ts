@@ -97,10 +97,10 @@ export default class MultitrackHandler {
                 return track.isActiveTrack;
             })[0];
             if (activeTrack) {
-                return activeTrack.currentSeconds;
+                return activeTrack.currentPosition;
             } else {
                 const positions = instances.map((track) => {
-                    return track.currentSeconds;
+                    return track.currentPosition;
                 });
                 if (positions && positions.length > 0) {
                     // just take the most late
@@ -255,10 +255,10 @@ export default class MultitrackHandler {
         process.nextTick(() => {
             const instances = this.getAllTrackInstances();
             if (instances) {
-                const currentSeconds = this.getAllTrackPosition();
+                const currentPosition = this.getAllTrackPosition();
                 console.debug(
-                    'MultitrackHandler::synchTracks:currentSeconds:',
-                    currentSeconds,
+                    'MultitrackHandler::synchTracks:currentPosition:',
+                    currentPosition,
                 );
                 const synchOriginTimestamp = performance.now();
                 instances.forEach((instance /*, index*/) => {
@@ -272,7 +272,7 @@ export default class MultitrackHandler {
                     }
 
                     instance.seekToSecondsSilent(
-                        currentSeconds + loopActionDelay / 1000,
+                        currentPosition + loopActionDelay / 1000,
                     );
 
                     // console.debug(

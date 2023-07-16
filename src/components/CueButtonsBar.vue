@@ -53,12 +53,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from 'vue';
+import { computed, inject, PropType } from 'vue';
 import { Cue, ICue, PlaybackMode } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { useAppStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
+import { currentPositionInjectionKey } from './track/TrackInjectionKeys';
 
 /** A single line bar with simple cue buttons for a track
  */
@@ -66,11 +67,6 @@ import { storeToRefs } from 'pinia';
 const emit = defineEmits(['click']);
 
 const props = defineProps({
-    /** The playback progress in the current track, in [seconds]
-     * @remarks This is used for progress display within the set of cues
-     */
-    currentSeconds: Number,
-
     /** The cues to show
      */
     cues: Array as PropType<Array<ICue>>,
@@ -138,24 +134,26 @@ function isCueSelected(cue: ICue): boolean {
     return selectedCueId.value === cue.Id;
 }
 
+const currentPosition = inject(currentPositionInjectionKey);
+
 /** Determines whether playback of the given cue has already passed
  * @remarks Is used for visual indication of playback progress
  * @param cue - the cue to determine the playback progress for
  */
 function hasCuePassed(cue: ICue): boolean {
-    return CompilationHandler.hasCuePassed(cue, props.currentSeconds);
+    return CompilationHandler.hasCuePassed(cue, currentPosition?.value);
 }
 /** Determines whether playback of this cue has not yet started
  * @param cue - the cue to determine the playback progress for
  */
 function isCueAhead(cue: ICue): boolean {
-    return CompilationHandler.isCueAhead(cue, props.currentSeconds);
+    return CompilationHandler.isCueAhead(cue, currentPosition?.value);
 }
 /** The playback progress within this cue, in [percent], or null if not applicable
  * @param cue - the cue to determine the playback progress for
  */
 function percentComplete(cue: ICue): number | null {
-    return CompilationHandler.percentComplete(cue, props.currentSeconds);
+    return CompilationHandler.percentComplete(cue, currentPosition?.value);
 }
 </script>
 

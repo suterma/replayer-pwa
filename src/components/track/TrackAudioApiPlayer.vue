@@ -46,6 +46,7 @@ import {
     ShallowRef,
     onMounted,
     onBeforeUnmount,
+    inject,
 } from 'vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
@@ -54,6 +55,7 @@ import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMete
 import { useAudioStore } from '@/store/audio';
 import FileHandler from '@/store/filehandler';
 import { useMessageStore } from '@/store/messages';
+import { currentPositionInjectionKey } from './TrackInjectionKeys';
 
 /** A safety margin for detecting the end of a track during playback */
 const trackDurationSafetyMarginSeconds = 0.3;
@@ -78,7 +80,6 @@ defineExpose({
     playFrom,
     pauseAndSeekTo,
     updateVolume,
-    getCurrentPosition,
 });
 
 const emit = defineEmits([
@@ -245,18 +246,13 @@ const props = defineProps({
     levelMeterSizeIsLarge: Boolean,
 });
 
-/** The playback progress in the current track, in [seconds]
- * @devdoc The use of a native variable instead of a ref, did not yield better performance for the time update method.
- */
-//TODO later provide the currentSeconds from the track (at least initially), similar to the playback mode
-//supporting storage and retrieval with the track persistence
-const currentSeconds = ref<number | null>(null);
-
 /** Gets the duration of the current track, in [seconds]
  * @remarks This is only available after successful load of the media metadata.
  * Could be NaN or infinity, depending on the source
  */
 const durationSeconds = ref<number | null>(null);
+
+const currentPosition = inject(currentPositionInjectionKey);
 
 /** Whether the media data has loaded (at least enough to start playback)
  * @remarks This implies that metadata also has been loaded already
@@ -399,7 +395,6 @@ watch(
  */
 function updateTime(/*event: Event*/): void {
     const currentTime = audioElement.value.currentTime;
-    currentSeconds.value = currentTime;
     emit('timeupdate', currentTime);
     if (props.isActiveTrack) {
         handleCueLoop(currentTime);
@@ -575,7 +570,7 @@ function handleReadyState(readyState: number) {
             updateDuration(audioElement.value.duration);
 
             //Apply the currently known position to the player. It could be non-zero already.
-            const position = currentSeconds.value;
+            const position = currentPosition.value;
             if (position !== null && Number.isFinite(position)) {
                 seekToSeconds(position);
             }
@@ -888,14 +883,6 @@ audioElement.value.onplay = () => {
 };
 
 audioElement.value.preload = 'auto';
-
-/** Gets the current position
- * @remarks Actually queries the media player.
- * @devdoc For better overall performance, this call should be avoided in favor of the (more seldom) auto-updated/emitted value.
- */
-function getCurrentPosition(): number {
-    return audioElement.value.currentTime;
-}
 
 updateVolume(props.volume);
 

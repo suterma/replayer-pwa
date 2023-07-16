@@ -11,7 +11,6 @@
 /** A display for a measure/beat value as a duration (measure difference) */
 
 import { Meter } from '@/code/music/Meter';
-import _ from 'lodash';
 import { computed, inject, PropType } from 'vue';
 import { meterInjectionKey } from '@/components/track/TrackInjectionKeys';
 

@@ -24,111 +24,99 @@
     </TransitionGroup>
 </template>
 
-<script lang="ts">
-import { PropType, defineComponent } from 'vue';
+<script setup lang="ts">
+import { PropType, inject } from 'vue';
 import { ICue, PlaybackMode } from '@/store/compilation-types';
 import CompilationHandler from '@/store/compilation-handler';
 import CueLevelEditor from '@/components/CueLevelEditor.vue';
-
 import { useAppStore } from '@/store/app';
-import { mapState, mapActions } from 'pinia';
+import { currentPositionInjectionKey } from './track/TrackInjectionKeys';
 
 /** An set of Editors for for cues in a track.
  */
-export default defineComponent({
-    name: 'CueLevelEditors',
-    components: { CueLevelEditor },
-    emits: ['click', 'play'],
-    props: {
-        cues: {
-            type: Array as PropType<Array<ICue>>,
-            required: true,
-        },
-        disabled: {
-            type: Boolean,
-            required: false,
-        },
 
-        /** The playback progress in the current track, in [seconds]
-         * @remarks This is used for progress display within the set of cues
-         */
-        currentSeconds: Number,
+const emit = defineEmits(['click', 'play']);
 
-        /** Indicates whether the associated Track is currently playing
-         * @remarks This is used to depict the expected action on button press.
-         * While playing, this is pause, and vice versa.
-         */
-        isTrackPlaying: Boolean,
-
-        /** The playback mode
-         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
-         */
-        playbackMode: {
-            type: String as () => PlaybackMode,
-            required: true,
-        },
+defineProps({
+    cues: {
+        type: Array as PropType<Array<ICue>>,
+        required: true,
     },
-    data() {
-        return {};
+    disabled: {
+        type: Boolean,
+        required: false,
     },
 
-    methods: {
-        ...mapActions(useAppStore, ['updateCueData']),
+    /** Indicates whether the associated Track is currently playing
+     * @remarks This is used to depict the expected action on button press.
+     * While playing, this is pause, and vice versa.
+     */
+    isTrackPlaying: Boolean,
 
-        /** Handles the click event of the cue button */
-        cueClick(cue: ICue) {
-            this.$emit('click', cue);
-        },
-
-        /** Handles the play event of the cue button */
-        cuePlay(cue: ICue) {
-            this.$emit('play', cue);
-        },
-
-        /** Adjusts the time of the cue to the current playback time */
-        cueAdjust(cue: ICue) {
-            if (
-                this.currentSeconds !== undefined &&
-                Number.isFinite(this.currentSeconds)
-            ) {
-                const time = CompilationHandler.roundTime(this.currentSeconds);
-                const cueId = cue.Id;
-                const shortcut = cue.Shortcut;
-                const description = cue.Description;
-                this.updateCueData(cueId, description, shortcut, time);
-            }
-        },
-
-        /** Determines whether this cue is currently selected
-         * @remarks Note: only one cue in a compilation may be selected */
-        isCueSelected(cue: ICue): boolean {
-            //TODO use via provide/inject
-            return this.selectedCueId === cue.Id;
-        },
-
-        /** Determines whether playback of the given cue has already passed
-         * @remarks Is used for visual indication of playback progress
-         * @param cue - the cue to determine the playback progress for
-         */
-        hasCuePassed(cue: ICue): boolean {
-            return CompilationHandler.hasCuePassed(cue, this.currentSeconds);
-        },
-        /** Determines whether playback of the given cue has not yet started
-         * @param cue - the cue to determine the playback progress for
-         */
-        isCueAhead(cue: ICue): boolean {
-            return CompilationHandler.isCueAhead(cue, this.currentSeconds);
-        },
-        /** The playback progress within the given cue, in [percent], or null if not applicable
-         * @param cue - the cue to determine the playback progress for
-         */
-        percentComplete(cue: ICue): number | null {
-            return CompilationHandler.percentComplete(cue, this.currentSeconds);
-        },
-    },
-    watch: {},
-    computed: {
-        ...mapState(useAppStore, ['selectedCueId']),
+    /** The playback mode
+     * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+     */
+    playbackMode: {
+        type: String as () => PlaybackMode,
+        required: true,
     },
 });
+
+const currentPosition = inject(currentPositionInjectionKey);
+
+const app = useAppStore();
+
+/** Handles the click event of the cue button */
+function cueClick(cue: ICue) {
+    emit('click', cue);
+}
+
+/** Handles the play event of the cue button */
+function cuePlay(cue: ICue) {
+    emit('play', cue);
+}
+
+/** Adjusts the time of the cue to the current playback time */
+function cueAdjust(cue: ICue) {
+    if (
+        currentPosition?.value !== null &&
+        currentPosition?.value !== undefined &&
+        Number.isFinite(currentPosition.value)
+    ) {
+        const time = CompilationHandler.roundTime(currentPosition.value);
+        const cueId = cue.Id;
+        const shortcut = cue.Shortcut;
+        const description = cue.Description;
+        app.updateCueData(cueId, description, shortcut, time);
+    }
+}
+
+/** Determines whether this cue is currently selected
+ * @remarks Note: only one cue in a compilation may be selected */
+function isCueSelected(cue: ICue): boolean {
+    //TODO use via provide/inject
+    return app.selectedCueId === cue.Id;
+}
+
+/** Determines whether playback of the given cue has already passed
+ * @remarks Is used for visual indication of playback progress
+ * @param cue - the cue to determine the playback progress for
+ */
+function hasCuePassed(cue: ICue): boolean {
+    return CompilationHandler.hasCuePassed(cue, currentPosition?.value);
+}
+
+/** Determines whether playback of the given cue has not yet started
+ * @param cue - the cue to determine the playback progress for
+ */
+function isCueAhead(cue: ICue): boolean {
+    return CompilationHandler.isCueAhead(cue, currentPosition?.value);
+}
+
+/** The playback progress within the given cue, in [percent], or null if not applicable
+ * @param cue - the cue to determine the playback progress for
+ */
+function percentComplete(cue: ICue): number | null {
+    return CompilationHandler.percentComplete(cue, currentPosition?.value);
+}
 </script>

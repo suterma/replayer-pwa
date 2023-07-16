@@ -104,7 +104,7 @@
                 <TimeDisplay
                     v-experiment="experimentalShowPositionInTrackHeader"
                     class="level-item is-narrow is-size-7"
-                    :modelValue="Math.floor(currentSeconds * 10) / 10"
+                    :modelValue="Math.floor(currentPosition * 10) / 10"
                     :subSecondDigits="1"
                 ></TimeDisplay>
 
@@ -148,7 +148,6 @@
         >
             <CueButtonsField
                 :disabled="!canPlay"
-                :currentSeconds="currentSeconds"
                 :playbackMode="playbackMode"
                 @click="
                     (cue) => {
@@ -177,7 +176,10 @@
                     "
                     @adjustOriginTime="
                         () => {
-                            app.updateTrackOriginTime(track.Id, currentSeconds);
+                            app.updateTrackOriginTime(
+                                track.Id,
+                                currentPosition,
+                            );
                         }
                     "
                     :useMeasureNumbers="track.UseMeasureNumbers"
@@ -202,12 +204,12 @@
                     <div class="level-left">
                         <div class="level-item">
                             <MeasureDisplay
-                                :modelValue="currentSeconds"
+                                :modelValue="currentPosition"
                             ></MeasureDisplay>
                         </div>
                         <div class="level-item">
                             <MetricalEditor
-                                v-model="currentSeconds"
+                                v-model="currentPosition"
                                 @update:modelValue="
                                     (position) => seekToSeconds(position)
                                 "
@@ -222,7 +224,6 @@
                         :cues="cues"
                         :disabled="!canPlay"
                         :playbackMode="playbackMode"
-                        :currentSeconds="currentSeconds"
                         @click="cueClick"
                         @play="cuePlay"
                     >
@@ -252,7 +253,6 @@
                                     :disabled="!canPlay"
                                     class="mb-0"
                                     :isActiveTrack="isActiveTrack"
-                                    :currentSeconds="currentSeconds"
                                     @createNewCue="createNewCue()"
                                     data-cy="insert-cue"
                                 ></CreateCueButton>
@@ -264,7 +264,7 @@
                         <PlayheadSlider
                             :disabled="!canPlay"
                             class="is-fullwidth ml-4-tablet mr-4-tablet"
-                            v-model.number="currentSeconds"
+                            v-model.number="currentPosition"
                             @update:modelValue="
                                 (position) => seekToSeconds(position)
                             "
@@ -451,7 +451,7 @@
                                 <div class="level-item">
                                     <PlayheadSlider
                                         class="is-fullwidth"
-                                        v-model.number="currentSeconds"
+                                        v-model.number="currentPosition"
                                         @update:modelValue="
                                             (position) =>
                                                 seekToSeconds(position)
@@ -528,7 +528,6 @@
                             "
                         >
                             <CueButtonsBar
-                                :currentSeconds="currentSeconds"
                                 :playbackMode="playbackMode"
                                 @click="
                                     (cue) => {
@@ -540,7 +539,6 @@
                         </nav>
                         <nav v-if="isTrackPlayerFullScreen">
                             <CueButtonsField
-                                :currentSeconds="currentSeconds"
                                 :playbackMode="playbackMode"
                                 @click="
                                     (cue) => {
@@ -602,6 +600,8 @@ import { useAppStore } from '@/store/app';
 import FileHandler from '@/store/filehandler';
 import { Meter } from '@/code/music/Meter';
 import {
+    currentPositionDisplayInjectionKey,
+    currentPositionInjectionKey,
     meterInjectionKey,
     useMeasureNumbersInjectionKey,
 } from './TrackInjectionKeys';
@@ -750,9 +750,18 @@ const meter = computed(() => props.track.Meter);
 provide(meterInjectionKey, readonly(meter));
 
 /** The playback progress in the current track, in [seconds]
+ * @remarks This is used for cue event handling within the set of cues, like creating a new cue at the current position
+ */
+const currentPosition = ref(0);
+provide(currentPositionInjectionKey, readonly(currentPosition));
+
+/** The playback progress in the current track, as a readonly, formatted, displayable text
  * @remarks This is used for track progress display within the set of cues
  */
-const currentSeconds = ref(0);
+const currentPositionDisplay = computed(() =>
+    CompilationHandler.convertToDisplayTime(currentPosition.value),
+);
+provide(currentPositionDisplayInjectionKey, readonly(currentPositionDisplay));
 
 /** Flag to indicate whether the player has it's track loaded.
  * @remarks This is used to toggle playback button states
@@ -958,7 +967,7 @@ function pauseAndSeekTo(seconds: number): void {
 
 /** Seeks forward or backward, for the given amount of seconds */
 function seek(seconds: number): void {
-    seekToSeconds(currentSeconds.value + seconds);
+    seekToSeconds(currentPosition.value + seconds);
 }
 
 /** Seeks to the position, in [seconds], with emitting an event */
@@ -1113,14 +1122,14 @@ function trackPlay() {
 /** Handles the request for a new cue by creating one for the current time
  */
 function createNewCue(): void {
-    app.addCueAtTime(props.track.Id, currentSeconds.value);
+    app.addCueAtTime(props.track.Id, currentPosition.value);
 }
 
 /** Updates the current seconds property with the temporal position of the track audio player
  * @remarks This is used to control the cue display for this track's cues
  */
 function updateTime(currentTime: number) {
-    currentSeconds.value = currentTime;
+    currentPosition.value = currentTime;
 }
 
 function updateFading(fading: boolean) {
@@ -1228,7 +1237,7 @@ const hasMeter = computed(() => Meter.isValid(props.track.Meter));
 
 const remainingTime = computed(() =>
     CompilationHandler.calculateRemainingTime(
-        currentSeconds.value,
+        currentPosition.value,
         trackDuration.value,
     ),
 );
@@ -1297,8 +1306,8 @@ const playingCue = computed(() => {
                 Number.isFinite(cue.Time) &&
                 cue.Duration !== null &&
                 Number.isFinite(cue.Duration) &&
-                currentSeconds.value >= cue.Time &&
-                currentSeconds.value < cue.Time + (cue.Duration ?? 0),
+                currentPosition.value >= cue.Time &&
+                currentPosition.value < cue.Time + (cue.Duration ?? 0),
         )[0] ?? null
     );
 });

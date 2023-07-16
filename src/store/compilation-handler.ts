@@ -617,13 +617,13 @@ export default class CompilationHandler {
     /** Determines whether playback of the given cue has already passed
      * @remarks Is used for visual indication of playback progress
      * @param cue - the cue to determine the playback progress for
-     * @param currentSeconds - the number of seconds already passed in the cue's track
+     * @param currentPosition - the number of seconds already passed in the cue's track
      */
     public static hasCuePassed(
         cue: ICue,
-        currentSeconds: number | undefined,
+        currentPosition: number | null | undefined,
     ): boolean {
-        if (currentSeconds !== undefined) {
+        if (currentPosition !== undefined && currentPosition != undefined) {
             if (
                 cue &&
                 cue.Time !== null &&
@@ -636,7 +636,7 @@ export default class CompilationHandler {
                 const cueEnd = parseFloat(
                     (cue.Time + cue.Duration).toPrecision(12),
                 );
-                return cueEnd <= currentSeconds;
+                return cueEnd <= currentPosition;
             }
         }
         return false;
@@ -644,15 +644,15 @@ export default class CompilationHandler {
 
     /** Determines whether playback of this cue has not yet started
      * @param cue - the cue to determine the playback progress for
-     * @param currentSeconds - the number of seconds already passed in the cue's track
+     * @param currentPosition - the number of seconds already passed in the cue's track
      */
     public static isCueAhead(
         cue: ICue,
-        currentSeconds: number | undefined,
+        currentPosition: number | null | undefined,
     ): boolean {
-        if (currentSeconds !== undefined) {
+        if (currentPosition !== undefined && currentPosition != undefined) {
             if (cue && cue.Time !== null && Number.isFinite(cue.Time)) {
-                return currentSeconds < cue.Time;
+                return currentPosition < cue.Time;
             }
         }
         return false;
@@ -660,23 +660,23 @@ export default class CompilationHandler {
 
     /** The playback progress within this cue, in [percent], or null if not applicable
      * @param cue - the cue to determine the playback progress for
-     * @param currentSeconds - the number of seconds already passed in the cue's track
+     * @param currentPosition - the number of seconds already passed in the cue's track
      */
     public static percentComplete(
         cue: ICue,
-        currentSeconds: number | undefined,
+        currentPosition: number | null | undefined,
     ): number | null {
-        if (currentSeconds !== undefined) {
+        if (currentPosition !== undefined && currentPosition != undefined) {
             if (
                 cue &&
                 cue.Time !== null &&
                 cue.Duration !== null &&
                 Number.isFinite(cue.Time) &&
                 Number.isFinite(cue.Duration) &&
-                !CompilationHandler.isCueAhead(cue, currentSeconds) &&
-                !CompilationHandler.hasCuePassed(cue, currentSeconds)
+                !CompilationHandler.isCueAhead(cue, currentPosition) &&
+                !CompilationHandler.hasCuePassed(cue, currentPosition)
             ) {
-                return (100 / cue.Duration) * (currentSeconds - cue.Time);
+                return (100 / cue.Duration) * (currentPosition - cue.Time);
             }
             return null;
         }
