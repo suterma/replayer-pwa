@@ -12,16 +12,12 @@
             :shortcut="prefixCue.Shortcut"
             :duration="prefixCue.Duration"
             :description="prefixCue.Description"
-            :isTrackPlaying="isTrackPlaying"
             :playbackMode="playbackMode"
             hasAddonsRight
             minified
             showText
             virtual
             :isCueSelected="isCueSelected(prefixCue)"
-            :hasCuePassed="hasCuePassed(prefixCue)"
-            :isCueAhead="isCueAhead(prefixCue)"
-            :percentComplete="percentComplete(prefixCue)"
             @click="cueClicked"
         >
         </CueButton>
@@ -36,15 +32,11 @@
                 :shortcut="cue.Shortcut"
                 :duration="cue.Duration"
                 :description="cue.Description"
-                :isTrackPlaying="isTrackPlaying"
                 :playbackMode="playbackMode"
                 hasAddonsRight
                 minified
                 showText
                 :isCueSelected="isCueSelected(cue)"
-                :hasCuePassed="hasCuePassed(cue)"
-                :isCueAhead="isCueAhead(cue)"
-                :percentComplete="percentComplete(cue)"
                 @click="cueClicked"
             >
             </CueButton>
@@ -59,7 +51,7 @@ import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { useAppStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
-import { currentPositionInjectionKey } from './track/TrackInjectionKeys';
+import { isPlayingInjectionKey } from './track/TrackInjectionKeys';
 
 /** A single line bar with simple cue buttons for a track
  */
@@ -75,10 +67,7 @@ const props = defineProps({
      * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
      */
     disabled: Boolean,
-    /** Indicates whether the associated Track is currently playing
-     * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
-     */
-    isTrackPlaying: Boolean,
+
     /** The playback mode
      * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
      */
@@ -132,28 +121,6 @@ const { selectedCueId } = storeToRefs(app);
 function isCueSelected(cue: ICue): boolean {
     //TODO use via provide/inject
     return selectedCueId.value === cue.Id;
-}
-
-const currentPosition = inject(currentPositionInjectionKey);
-
-/** Determines whether playback of the given cue has already passed
- * @remarks Is used for visual indication of playback progress
- * @param cue - the cue to determine the playback progress for
- */
-function hasCuePassed(cue: ICue): boolean {
-    return CompilationHandler.hasCuePassed(cue, currentPosition?.value);
-}
-/** Determines whether playback of this cue has not yet started
- * @param cue - the cue to determine the playback progress for
- */
-function isCueAhead(cue: ICue): boolean {
-    return CompilationHandler.isCueAhead(cue, currentPosition?.value);
-}
-/** The playback progress within this cue, in [percent], or null if not applicable
- * @param cue - the cue to determine the playback progress for
- */
-function percentComplete(cue: ICue): number | null {
-    return CompilationHandler.percentComplete(cue, currentPosition?.value);
 }
 </script>
 

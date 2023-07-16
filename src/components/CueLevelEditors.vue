@@ -10,12 +10,8 @@
             <CueLevelEditor
                 :disabled="disabled"
                 :cue="cue"
-                :isTrackPlaying="isTrackPlaying"
                 :playbackMode="playbackMode"
                 :isCueSelected="isCueSelected(cue)"
-                :hasCuePassed="hasCuePassed(cue)"
-                :isCueAhead="isCueAhead(cue)"
-                :percentComplete="percentComplete(cue)"
                 @click="cueClick(cue)"
                 @play="cuePlay(cue)"
                 @adjust="cueAdjust(cue)"
@@ -46,12 +42,6 @@ defineProps({
         type: Boolean,
         required: false,
     },
-
-    /** Indicates whether the associated Track is currently playing
-     * @remarks This is used to depict the expected action on button press.
-     * While playing, this is pause, and vice versa.
-     */
-    isTrackPlaying: Boolean,
 
     /** The playback mode
      * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
@@ -96,27 +86,5 @@ function cueAdjust(cue: ICue) {
 function isCueSelected(cue: ICue): boolean {
     //TODO use via provide/inject
     return app.selectedCueId === cue.Id;
-}
-
-/** Determines whether playback of the given cue has already passed
- * @remarks Is used for visual indication of playback progress
- * @param cue - the cue to determine the playback progress for
- */
-function hasCuePassed(cue: ICue): boolean {
-    return CompilationHandler.hasCuePassed(cue, currentPosition?.value);
-}
-
-/** Determines whether playback of the given cue has not yet started
- * @param cue - the cue to determine the playback progress for
- */
-function isCueAhead(cue: ICue): boolean {
-    return CompilationHandler.isCueAhead(cue, currentPosition?.value);
-}
-
-/** The playback progress within the given cue, in [percent], or null if not applicable
- * @param cue - the cue to determine the playback progress for
- */
-function percentComplete(cue: ICue): number | null {
-    return CompilationHandler.percentComplete(cue, currentPosition?.value);
 }
 </script>

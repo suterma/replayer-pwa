@@ -623,19 +623,34 @@ export default class CompilationHandler {
         cue: ICue,
         currentPosition: number | null | undefined,
     ): boolean {
+        if (cue) {
+            return this.hasPassed(cue.Time, cue.Duration, currentPosition);
+        }
+
+        return false;
+    }
+
+    /** Determines whether playback of the given position / duration has already passed
+     * @remarks Is used for visual indication of playback progress
+     * @param currentPosition - the number of seconds already passed in the cue's track
+     */
+    public static hasPassed(
+        time: number | null | undefined,
+        duration: number | null | undefined,
+        currentPosition: number | null | undefined,
+    ): boolean {
         if (currentPosition !== undefined && currentPosition != undefined) {
             if (
-                cue &&
-                cue.Time !== null &&
-                cue.Duration !== null &&
-                Number.isFinite(cue.Time) &&
-                Number.isFinite(cue.Duration)
+                time !== undefined &&
+                time !== null &&
+                duration !== undefined &&
+                duration !== null &&
+                Number.isFinite(time) &&
+                Number.isFinite(duration)
             ) {
                 // Calculate the cue end with max precision for 64 bits.
                 // See https://stackoverflow.com/a/3644302/79485
-                const cueEnd = parseFloat(
-                    (cue.Time + cue.Duration).toPrecision(12),
-                );
+                const cueEnd = parseFloat((time + duration).toPrecision(12));
                 return cueEnd <= currentPosition;
             }
         }
@@ -650,9 +665,30 @@ export default class CompilationHandler {
         cue: ICue,
         currentPosition: number | null | undefined,
     ): boolean {
+        if (cue) {
+            return this.isAhead(cue.Time, cue.Duration, currentPosition);
+        }
+        return false;
+    }
+
+    /** Determines whether playback of this time / duration has not yet started
+     * @param currentPosition - the number of seconds already passed in the cue's track
+     */
+    public static isAhead(
+        time: number | null | undefined,
+        duration: number | null | undefined,
+        currentPosition: number | null | undefined,
+    ): boolean {
         if (currentPosition !== undefined && currentPosition != undefined) {
-            if (cue && cue.Time !== null && Number.isFinite(cue.Time)) {
-                return currentPosition < cue.Time;
+            if (
+                time !== undefined &&
+                time !== null &&
+                duration !== undefined &&
+                duration !== null &&
+                Number.isFinite(time) &&
+                Number.isFinite(duration)
+            ) {
+                return currentPosition < time;
             }
         }
         return false;
@@ -677,6 +713,32 @@ export default class CompilationHandler {
                 !CompilationHandler.hasCuePassed(cue, currentPosition)
             ) {
                 return (100 / cue.Duration) * (currentPosition - cue.Time);
+            }
+            return null;
+        }
+        return null;
+    }
+
+    /** The playback progress within this time / duration, in [percent], or null if not applicable
+     * @param currentPosition - the number of seconds already passed in the cue's track
+     */
+    public static hasPercentComplete(
+        time: number | null | undefined,
+        duration: number | null | undefined,
+        currentPosition: number | null | undefined,
+    ): number | null {
+        if (currentPosition !== undefined && currentPosition != undefined) {
+            if (
+                time !== undefined &&
+                time !== null &&
+                duration !== undefined &&
+                duration !== null &&
+                Number.isFinite(time) &&
+                Number.isFinite(duration) &&
+                !CompilationHandler.isAhead(time, duration, currentPosition) &&
+                !CompilationHandler.hasPassed(time, duration, currentPosition)
+            ) {
+                return (100 / duration) * (currentPosition - time);
             }
             return null;
         }

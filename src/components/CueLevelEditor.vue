@@ -11,7 +11,6 @@
                                 :time="cue.Time"
                                 :shortcut="cue.Shortcut"
                                 :duration="cue.Duration"
-                                :isTrackPlaying="isTrackPlaying"
                                 :playbackMode="playbackMode"
                                 @click="cueClick()"
                                 minified
@@ -209,12 +208,6 @@ const props = defineProps({
     /* Determines whether playback of this cue has not yet started
         (the playhead has not yet reached the beginning of this cue)*/
     isCueAhead: Boolean,
-
-    /** Indicates whether the associated Track is currently playing
-     * @remarks This is used to depict the expected action on button press.
-     * While playing, this is pause, and vice versa.
-     */
-    isTrackPlaying: Boolean,
 
     /** The playback mode
      * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979

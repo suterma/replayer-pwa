@@ -10,15 +10,11 @@
             :shortcut="prefixCue.Shortcut"
             :duration="prefixCue.Duration"
             :description="prefixCue.Description"
-            :isTrackPlaying="isTrackPlaying"
             :playbackMode="playbackMode"
             hasAddonsRight
             virtual
             showText
             :isCueSelected="isCueSelected(prefixCue)"
-            :hasCuePassed="hasCuePassed(prefixCue)"
-            :isCueAhead="isCueAhead(prefixCue)"
-            :percentComplete="percentComplete(prefixCue)"
             @click="cueClicked"
         >
         </CueButton>
@@ -33,14 +29,10 @@
                 :shortcut="cue.Shortcut"
                 :duration="cue.Duration"
                 :description="cue.Description"
-                :isTrackPlaying="isTrackPlaying"
                 :playbackMode="playbackMode"
                 hasAddonsRight
                 showText
                 :isCueSelected="isCueSelected(cue)"
-                :hasCuePassed="hasCuePassed(cue)"
-                :isCueAhead="isCueAhead(cue)"
-                :percentComplete="percentComplete(cue)"
                 @click="cueClicked"
             >
             </CueButton>
@@ -55,7 +47,6 @@ import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { useAppStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
-import { currentPositionInjectionKey } from './track/TrackInjectionKeys';
 
 /** A field of large cue buttons for a track
  */
@@ -66,11 +57,6 @@ const props = defineProps({
     /** The cues to show
      */
     cues: Array as PropType<Array<ICue>>,
-
-    /** Indicates whether the associated Track is currently playing
-     * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
-     */
-    isTrackPlaying: Boolean,
 
     /** Whether to show the component in a disabled state
      * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
@@ -130,28 +116,6 @@ const { selectedCueId } = storeToRefs(app);
 function isCueSelected(cue: ICue): boolean {
     //TODO use via provide/inject
     return selectedCueId.value === cue.Id;
-}
-
-const currentPosition = inject(currentPositionInjectionKey);
-
-/** Determines whether playback of the given cue has already passed
- * @remarks Is used for visual indication of playback progress
- * @param cue - the cue to determine the playback progress for
- */
-function hasCuePassed(cue: ICue): boolean {
-    return CompilationHandler.hasCuePassed(cue, currentPosition?.value);
-}
-/** Determines whether playback of the given cue has not yet started
- * @param cue - the cue to determine the playback progress for
- */
-function isCueAhead(cue: ICue): boolean {
-    return CompilationHandler.isCueAhead(cue, currentPosition?.value);
-}
-/** The playback progress within the given cue, in [percent], or null if not applicable
- * @param cue - the cue to determine the playback progress for
- */
-function percentComplete(cue: ICue): number | null {
-    return CompilationHandler.percentComplete(cue, currentPosition?.value);
 }
 </script>
 <style lang="scss">

@@ -19,9 +19,9 @@
             <span
                 class="player-progress"
                 :class="{
-                    'player-progress-full': hasCuePassed,
+                    'player-progress-full': hasCuePassed(),
                     'has-addons-right': hasAddonsRight,
-                    'player-progress-none': isCueAhead,
+                    'player-progress-none': isCueAhead(),
                 }"
                 :style="progressStyle"
             ></span>
@@ -142,6 +142,7 @@ import { Meter } from '@/code/music/Meter';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
 import {
+    currentPositionInjectionKey,
     isPlayingInjectionKey,
     meterInjectionKey,
     useMeasureNumbersInjectionKey,
@@ -178,27 +179,13 @@ const props = defineProps({
         type: null as unknown as PropType<string | null>,
         required: false,
     },
-    /** The playback progress within this cue, in [percent], or null if not applicable
-     * @remarks This value is only used when both the cue is not ahead nor has passed.
-     */
-    percentComplete: {
-        type: null as unknown as PropType<number | null>,
-        required: false,
-    },
+
     /** Whether this cue is currently selected
      * @remarks Note: only one cue in a compilation may be selected */
     isCueSelected: Boolean,
 
-    /* Whether playback of this cue has already passed
-                 (the playhead has completely passed beyond the end of this cue) */
-    hasCuePassed: Boolean,
-
     /* Whether to show this cue as passive, in dimmed style. */
     virtual: Boolean,
-
-    /* Determines whether playback of this cue has not yet started
-        (the playhead has not yet reached the beginning of this cue)*/
-    isCueAhead: Boolean,
 
     /** The playback mode
      * @remarks This is used to indicate looping behavior to the user
@@ -278,7 +265,7 @@ const cueText = computed(() => {
  */
 const progressBarWidthOffset = computed(() => {
     return (
-        ((100 - (props.percentComplete ?? 0)) / 100) *
+        ((100 - (percentComplete() ?? 0)) / 100) *
         0.3 /* value in [em], as defined in CSS */
     );
 });
@@ -293,14 +280,10 @@ const progressStyle = computed(() => {
             display: 'none',
         };
     }
-    if (
-        !props.hasCuePassed &&
-        !props.isCueAhead &&
-        props.percentComplete != null
-    ) {
+    if (!hasCuePassed() && !isCueAhead() && percentComplete() != null) {
         //show the progress according to the percentage available
         return {
-            width: `calc(${props.percentComplete}% +
+            width: `calc(${percentComplete()}% +
                      ${progressBarWidthOffset.value}em)`,
             'max-width': '100%',
         };
@@ -323,6 +306,42 @@ const isCuePlay = computed(() => {
 const hasMeter = computed(() => {
     return Meter.isValid(meter?.value);
 });
+
+const currentPosition = inject(currentPositionInjectionKey);
+
+/** Determines whether playback of the given cue has already passed
+ * @remarks Is used for visual indication of playback progress
+ * @param cue - the cue to determine the playback progress for
+ */
+function hasCuePassed(): boolean {
+    return CompilationHandler.hasPassed(
+        props.time,
+        props.duration,
+        currentPosition?.value,
+    );
+}
+
+/** Determines whether playback of the given cue has not yet started
+ * @param cue - the cue to determine the playback progress for
+ */
+function isCueAhead(): boolean {
+    return CompilationHandler.isAhead(
+        props.time,
+        props.duration,
+        currentPosition?.value,
+    );
+}
+
+/** The playback progress within the given cue, in [percent], or null if not applicable
+ * @param cue - the cue to determine the playback progress for
+ */
+function percentComplete(): number | null {
+    return CompilationHandler.hasPercentComplete(
+        props.time,
+        props.duration,
+        currentPosition?.value,
+    );
+}
 </script>
 <style scoped>
 /* Button progress-styles, in addition to player progress styles, that support also full/none progress specifically */
