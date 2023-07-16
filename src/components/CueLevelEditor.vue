@@ -177,7 +177,7 @@ import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import { useSettingsStore } from '@/store/settings';
-import { useMeasureNumbersInjectionKey } from './InjectionKeys';
+import { useMeasureNumbersInjectionKey } from './TrackInjectionKeys';
 
 const emit = defineEmits(['click', 'play', 'adjust']);
 

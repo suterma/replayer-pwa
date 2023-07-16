@@ -188,61 +188,36 @@
                     </div>
                     <div class="level-right">
                         <div class="level-item is-justify-content-flex-end">
-                            <MediaControlsBar
-                                :playbackMode="playbackMode"
-                                @update:playbackMode="
-                                    updatePlaybackMode($event)
-                                "
-                                :hasPreviousTrack="false"
-                                :hasNextTrack="false"
-                                :hasNextCue="false"
-                                :hasPreviousCue="false"
-                                :hideStopButton="true"
-                                @stop="multitrackHandler?.stop()"
-                                @togglePlaying="
-                                    multitrackHandler?.togglePlayPause()
-                                "
-                                :hideVolumeButton="true"
-                                :isPlaying="isAllPlaying"
-                                :isFading="isAnyFading"
-                                data-cy="mix-media-controls-bar"
-                            >
-                                <template #after-play> </template>
-                                <button class="button is-nav is-indicator">
-                                    <TimeDisplay
-                                        :modelValue="
-                                            getMultitrackPosition.position
-                                        "
-                                        :subSecondDigits="1"
-                                    ></TimeDisplay>
-                                </button>
-                                <!-- Sync Time display -->
-                                <!-- //TODO make this display a setting -->
-                                <button class="button is-nav is-indicator">
-                                    <span
-                                        class="is-minimum-7-characters is-family-monospace has-text-info"
-                                        title="Click to synch tracks"
-                                        >({{
-                                            getMultitrackPosition.range?.toFixed(
-                                                6,
-                                            )
-                                        }}s)</span
-                                    >
-                                </button>
-                                <button
-                                    class="button is-info"
-                                    @click="multitrackHandler?.synchTracks"
+                            <button class="button is-nav is-indicator">
+                                <TimeDisplay
+                                    :modelValue="getMultitrackPosition.position"
+                                    :subSecondDigits="1"
+                                ></TimeDisplay>
+                            </button>
+                            <!-- Sync Time display -->
+                            <!-- //TODO make this display a setting -->
+                            <button class="button is-nav is-indicator">
+                                <span
+                                    class="is-minimum-7-characters is-family-monospace has-text-info"
+                                    title="Click to synch tracks"
+                                    >({{
+                                        getMultitrackPosition.range?.toFixed(6)
+                                    }}s)</span
                                 >
-                                    Synch
-                                </button>
-                                <PlaybackIndicator
-                                    :isReady="!isAllPlaying && isAllTrackLoaded"
-                                    :isPlaying="isAllPlaying"
-                                    :isUnloaded="!isAllTrackLoaded"
-                                    :isUnavailable="!isAllMediaAvailable"
-                                    data-cy="playback-indicator"
-                                />
-                            </MediaControlsBar>
+                            </button>
+                            <button
+                                class="button is-info"
+                                @click="multitrackHandler?.synchTracks"
+                            >
+                                Synch
+                            </button>
+                            <PlaybackIndicator
+                                :isReady="!isAllPlaying && isAllTrackLoaded"
+                                :isPlaying="isAllPlaying"
+                                :isUnloaded="!isAllTrackLoaded"
+                                :isUnavailable="!isAllMediaAvailable"
+                                data-cy="playback-indicator"
+                            />
                         </div>
                     </div>
                 </nav>
@@ -263,7 +238,6 @@ import {
 } from '@/store/compilation-types';
 import Track from '@/components/Track.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
-import MediaControlsBar from '@/components/MediaControlsBar.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MuteButton from '@/components/buttons/MuteButton.vue';
 import SoloButton from '@/components/buttons/SoloButton.vue';
@@ -293,7 +267,6 @@ export default defineComponent({
         ReplayerEventHandler,
         CompilationHeader,
         PlayheadSlider,
-        MediaControlsBar,
         TimeDisplay,
         PlaybackIndicator,
         MuteButton,

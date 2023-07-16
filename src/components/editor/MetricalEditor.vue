@@ -19,7 +19,7 @@ import { Meter } from '@/code/music/Meter';
 import { MetricalPosition } from '@/code/music/MetricalPosition';
 import CompilationHandler from '@/store/compilation-handler';
 import { PropType, computed, inject } from 'vue';
-import { meterInjectionKey } from '../InjectionKeys';
+import { meterInjectionKey } from '../TrackInjectionKeys';
 
 /** An editor for the measure number
  */

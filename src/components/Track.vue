@@ -614,7 +614,8 @@ import { Meter } from '@/code/music/Meter';
 import {
     meterInjectionKey,
     useMeasureNumbersInjectionKey,
-} from './InjectionKeys';
+} from './TrackInjectionKeys';
+//TODOimport { isPlayingInjectionKey } from './TrackInjectionKeys';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -776,6 +777,7 @@ const trackDuration: Ref<number | null> = ref(null);
 /** Flag to indicate whether the player is currently playing
  */
 const isPlaying = ref(false);
+//TODO provide(isPlayingInjectionKey, readonly(isPlaying));
 
 /** Flag to indicate whether the audio is currently muted
  */
@@ -796,27 +798,6 @@ const isExpanded = ref(false);
 
 /** The visual transition to use for skipping track */
 const skipTransitionName = ref('slide-left');
-
-// ...mapActions(useAppStore, [
-//     'updateSelectedCueId',
-//     'updateSelectedTrackId',
-//     'addCueAtTime',
-//     'updateTrackVolume',
-//     'updateDurations',
-//     'updateMeter',
-//     'updateTrackOriginTime',
-//     'updateUseMeasureNumbers',
-// ]);
-
-// function   convertToDisplayTime(
-//     value: number | null,
-//     subSecondDigits: number,
-// ): string {
-//     return CompilationHandler.convertToDisplayTime(
-//         value,
-//         subSecondDigits,
-//     );
-// };
 
 const settings = useSettingsStore();
 const {
@@ -1250,8 +1231,6 @@ watch(
     },
 );
 
-//-- computed
-
 /** Whether all required values for the use of the measure number as position are available.
  */
 const hasMeter = computed(() => Meter.isValid(props.track.Meter));
@@ -1363,16 +1342,6 @@ const isPlayable = computed(() => {
 const trackPlayerInstance: Ref<InstanceType<
     typeof TrackAudioApiPlayer
 > | null> = ref(null);
-//const trackPlayerInstance = ref(null);
-
-//  const   trackPlayerInstance= computed( ()=>{
-//     if (!playerReference) {
-//         throw new Error(
-//             `Track(${props.track.Name}) has no TrackAudioApiPlayer instance`,
-//         );
-//     }
-//     return playerReference;
-// });
 
 /** Whether the playback media is available
  * @devdoc This is only working for local file paths, not for online URL's, because these are directly fetched from the media element.
@@ -1416,6 +1385,7 @@ const mediaUrl = computed(() => {
 const cues = computed(() => {
     return props.track.Cues;
 });
+
 /** Returns the media URL (online URL or playable file content) for a track's file name
  * @remarks if available, the tracks from a compilation package are used, otherwise the
  * files are to be loaded from the file system or from the internet

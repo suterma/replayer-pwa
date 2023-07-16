@@ -13,7 +13,7 @@
  */
 import { Meter } from '@/code/music/Meter';
 import { computed, inject, PropType } from 'vue';
-import { meterInjectionKey } from './InjectionKeys';
+import { meterInjectionKey } from './TrackInjectionKeys';
 
 /** The musical meter */
 const meter = inject(meterInjectionKey);

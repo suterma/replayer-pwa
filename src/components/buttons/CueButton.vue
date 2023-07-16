@@ -144,7 +144,7 @@ import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue'
 import {
     meterInjectionKey,
     useMeasureNumbersInjectionKey,
-} from '../InjectionKeys';
+} from '../TrackInjectionKeys';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
