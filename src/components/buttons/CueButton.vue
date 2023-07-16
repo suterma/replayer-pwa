@@ -142,6 +142,7 @@ import { Meter } from '@/code/music/Meter';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
 import {
+    isPlayingInjectionKey,
     meterInjectionKey,
     useMeasureNumbersInjectionKey,
 } from '../TrackInjectionKeys';
@@ -199,10 +200,6 @@ const props = defineProps({
         (the playhead has not yet reached the beginning of this cue)*/
     isCueAhead: Boolean,
 
-    /** Indicates whether the associated Track is currently playing
-     * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
-     */
-    isTrackPlaying: Boolean,
     /** The playback mode
      * @remarks This is used to indicate looping behavior to the user
      * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
@@ -229,6 +226,11 @@ const props = defineProps({
 const meter = inject(meterInjectionKey);
 
 const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
+
+/** Flag to indicate whether this track's player is currently playing
+ * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
+ */
+const isTrackPlaying = inject(isPlayingInjectionKey);
 
 /** The title for this cue, usable as tooltip
  */

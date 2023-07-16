@@ -126,7 +126,6 @@
                 <slot name="left-end"></slot>
                 <PlaybackIndicator
                     :is-ready="!isPlaying && isTrackLoaded"
-                    :is-playing="isPlaying"
                     :is-unloaded="!isTrackLoaded"
                     :is-unavailable="!isTrackMediaAvailable"
                     data-cy="playback-indicator"
@@ -157,8 +156,10 @@
     <!-- <TrackSharingDialog v-if="this.isSharing"></TrackSharingDialog> -->
 </template>
 
-<script lang="ts">
-import { PropType, defineComponent } from 'vue';
+<script setup lang="ts">
+/** A header for editing "beats per minute" track metadata
+ */
+import { PropType, computed, inject, onBeforeMount, ref, watch } from 'vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
 import CloakedPanel from '@/components/CloakedPanel.vue';
@@ -171,196 +172,169 @@ import { mdiAlert } from '@mdi/js';
 import { TrackViewMode } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import TrackTitleName from './TrackTitleName.vue';
-import { mapActions, mapWritableState, mapState } from 'pinia';
 import { useAppStore } from '@/store/app';
-import { useSettingsStore } from '@/store/settings';
 import { ITimeSignature } from '@/code/music/ITimeSignature';
+import { isPlayingInjectionKey } from './TrackInjectionKeys';
 
-/** A header for editing "beats per minute" track metadata
- */
-export default defineComponent({
-    name: 'TrackHeader',
-    components: {
-        MediaEdit,
-        CloakedPanel,
-        ArtistLevelEditor,
-        PlaybackIndicator,
-        StyledInput,
-        CollapsibleButton,
-        TrackContextMenu,
-        BaseIcon,
-        ArtistInfo,
-        TrackTitleName,
+const emit = defineEmits(['update:isExpanded', 'click']);
+
+const props = defineProps({
+    trackName: {
+        type: String,
+        required: true,
     },
-    emits: ['update:isExpanded', 'click'],
-    props: {
-        trackName: {
-            type: String,
-            required: true,
-        },
-        trackArtist: {
-            type: String,
-            required: true,
-        },
-        trackAlbum: {
-            type: String,
-            required: true,
-        },
-        trackId: {
-            type: String,
-            required: true,
-        },
-        trackUrl: {
-            type: String,
-            required: true,
-        },
-        trackBeatsPerMinute: {
-            type: null as unknown as PropType<number | null>,
-            default: null,
-        },
-        trackTimeSignature: {
-            type: null as unknown as PropType<ITimeSignature | null>,
-            default: null,
-        },
-        /** Whether this track is to be considered as the active track */
-        isActive: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
-        /** Whether this track is the first track in the set of tracks */
-        isFirst: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
-        /** Whether this track is the last track in the set of tracks */
-        isLast: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
-        /** Whether this track is expanded */
-        isExpanded: {
-            type: Boolean,
-            default: false,
-        },
-
-        /** Whether this track can collapse
-         * @remarks If set to false, this prevents collapsing
-         * and also hides the collapsing toggler completely
-         * This is useful for single-track compilations where
-         * collapsing is not useful
-         */
-        canCollapse: {
-            type: Boolean,
-            default: true,
-        },
-
-        /** Flag to indicate whether the player is currently playing
-         */
-        isPlaying: {
-            type: Boolean,
-            default: false,
-        },
-
-        /** Flag to indicate whether the player has it's track loaded.
-         */
-        isTrackLoaded: {
-            type: Boolean,
-            default: false,
-        },
-
-        /** Whether the media source is available
-         * @remarks For a file: whether the resource is in the media store
-         * @remarks For an URL: //TODO implement
-         */
-        isTrackMediaAvailable: {
-            type: Boolean,
-            default: false,
-        },
-
-        /** The display mode of this track.
-         * @devdoc Allows to reuse this component for more than one view mode.
-         * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
-         */
-        displayMode: {
-            type: String as () => TrackViewMode,
-            default: TrackViewMode.Play,
-        },
+    trackArtist: {
+        type: String,
+        required: true,
     },
-    data() {
-        return {
-            /** Flag to indicate whether the track is currently shared via the dialog.
-             */
-            isSharing: false,
-
-            /** Icons from @mdi/js */
-            mdiAlert: mdiAlert,
-        };
+    trackAlbum: {
+        type: String,
+        required: true,
     },
-    /** Make sure for non-collapsible headers, they are reported initially as expanded once   */
-    beforeMount() {
-        if (!this.canCollapse) {
-            this.$emit('update:isExpanded', true);
-        }
+    trackId: {
+        type: String,
+        required: true,
     },
-    methods: {
-        ...mapActions(useAppStore, ['updateTrackData']),
-
-        /** Toggles the expansion state
-         */
-        toggleExpanded() {
-            if (this.canCollapse) {
-                const expanded = !this.isExpanded;
-                console.debug(
-                    `TrackHeader::toggleExpanded:expanded:${expanded}`,
-                );
-                this.$emit('update:isExpanded', expanded);
-            }
-        },
-
-        /** Updates the track name */
-        updateName(name: string) {
-            const trackId = this.trackId;
-            const artist = this.trackArtist;
-            const album = this.trackAlbum;
-
-            this.updateTrackData(trackId, name, artist, album);
-        },
-        /** Updates the track artist */
-        updateArtist(artist: string) {
-            const trackId = this.trackId;
-            const name = this.trackName;
-            const album = this.trackAlbum;
-            this.updateTrackData(trackId, name, artist, album);
-        },
-        /** Updates the track album */
-        updateAlbum(album: string) {
-            const trackId = this.trackId;
-            const name = this.trackName;
-            const artist = this.trackArtist;
-            this.updateTrackData(trackId, name, artist, album);
-        },
+    trackUrl: {
+        type: String,
+        required: true,
     },
-    watch: {
-        /** Updates the expanded state according to the active state. */
-        isActive: {
-            handler(isActive: boolean) {
-                if (isActive) this.$emit('update:isExpanded', isActive);
-            },
-            immediate: true,
-        },
+    trackBeatsPerMinute: {
+        type: null as unknown as PropType<number | null>,
+        default: null,
     },
-    computed: {
-        isEditMode(): boolean {
-            return this.displayMode === TrackViewMode.Edit;
-        },
+    trackTimeSignature: {
+        type: null as unknown as PropType<ITimeSignature | null>,
+        default: null,
+    },
+    /** Whether this track is to be considered as the active track */
+    isActive: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
+    /** Whether this track is the first track in the set of tracks */
+    isFirst: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
+    /** Whether this track is the last track in the set of tracks */
+    isLast: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
+    /** Whether this track is expanded */
+    isExpanded: {
+        type: Boolean,
+        default: false,
+    },
 
-        ...mapWritableState(useAppStore, ['compilation']),
-        ...mapState(useSettingsStore, ['experimentalUseTempo']),
+    /** Whether this track can collapse
+     * @remarks If set to false, this prevents collapsing
+     * and also hides the collapsing toggler completely
+     * This is useful for single-track compilations where
+     * collapsing is not useful
+     */
+    canCollapse: {
+        type: Boolean,
+        default: true,
+    },
+
+    /** Flag to indicate whether the player has it's track loaded.
+     */
+    isTrackLoaded: {
+        type: Boolean,
+        default: false,
+    },
+
+    /** Whether the media source is available
+     * @remarks For a file: whether the resource is in the media store
+     * @remarks For an URL: //TODO implement
+     */
+    isTrackMediaAvailable: {
+        type: Boolean,
+        default: false,
+    },
+
+    /** The display mode of this track.
+     * @devdoc Allows to reuse this component for more than one view mode.
+     * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
+     */
+    displayMode: {
+        type: String as () => TrackViewMode,
+        default: TrackViewMode.Play,
     },
 });
+
+/** Flag to indicate whether the track is currently shared via the dialog.
+ */
+//const isSharing = ref(false);
+
+/** Make sure for non-collapsible headers, they are reported initially as expanded once   */
+onBeforeMount(() => {
+    if (!props.canCollapse) {
+        emit('update:isExpanded', true);
+    }
+});
+
+const app = useAppStore();
+
+/** Toggles the expansion state
+ */
+function toggleExpanded(): void {
+    if (props.canCollapse) {
+        const expanded = !props.isExpanded;
+        console.debug(`TrackHeader::toggleExpanded:expanded:${expanded}`);
+        emit('update:isExpanded', expanded);
+    }
+}
+
+/** Updates the track name */
+function updateName(name: string) {
+    const trackId = props.trackId;
+    const artist = props.trackArtist;
+    const album = props.trackAlbum;
+
+    app.updateTrackData(trackId, name, artist, album);
+}
+
+/** Updates the track artist */
+function updateArtist(artist: string) {
+    const trackId = props.trackId;
+    const name = props.trackName;
+    const album = props.trackAlbum;
+    app.updateTrackData(trackId, name, artist, album);
+}
+
+/** Updates the track album */
+function updateAlbum(album: string) {
+    const trackId = props.trackId;
+    const name = props.trackName;
+    const artist = props.trackArtist;
+    app.updateTrackData(trackId, name, artist, album);
+}
+
+/** Handles changes in whether this is the active track.
+         * @remarks When this ceases to be the active track, pause playback.
+           This avoids having multiple tracks playing at the same time.
+         */
+watch(
+    () => props.isActive,
+    (isActive: boolean): void => {
+        if (isActive) emit('update:isExpanded', isActive);
+    },
+    { immediate: true },
+);
+
+const isEditMode = computed(() => {
+    return props.displayMode === TrackViewMode.Edit;
+});
+
+/** Flag to indicate whether this track's player is currently playing
+ */
+const isPlaying = inject(isPlayingInjectionKey);
 </script>
 <style lang="scss" scoped>
 /* Use smaller margins within a track, to keep the UI condensed */

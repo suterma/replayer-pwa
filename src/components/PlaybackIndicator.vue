@@ -14,72 +14,57 @@
     </NavButton>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import NavButton from '@/components/buttons/NavButton.vue';
-import { mdiAlert, mdiCircle } from '@mdi/js';
-
+<script setup lang="ts">
 /** An indicator for the track playback state
  */
-export default defineComponent({
-    name: 'PlaybackIndicator',
-    components: { NavButton },
-    props: {
-        /** Whether the indicator should convey the playing state */
-        isPlaying: {
-            type: Boolean,
-            default: false,
-            required: false,
-        },
+import NavButton from '@/components/buttons/NavButton.vue';
+import { mdiAlert, mdiCircle } from '@mdi/js';
+import { computed, inject } from 'vue';
+import { isPlayingInjectionKey } from './TrackInjectionKeys';
 
-        /** Whether the indicator should convey the ready state */
-        isReady: {
-            type: Boolean,
-            default: false,
-            required: false,
-        },
-        /** Whether the indicator should convey the unloaded state */
-        isUnloaded: {
-            type: Boolean,
-            default: true,
-            required: false,
-        },
-        /** Whether the indicator should convey the unavailable state */
-        isUnavailable: {
-            type: Boolean,
-            default: false,
-            required: false,
-        },
+const props = defineProps({
+    /** Whether the indicator should convey the ready state */
+    isReady: {
+        type: Boolean,
+        default: false,
+        required: false,
     },
-    data() {
-        return {
-            /** Icons from @mdi/js */
-            mdiCircle: mdiCircle,
-            mdiAlert: mdiAlert,
-        };
+    /** Whether the indicator should convey the unloaded state */
+    isUnloaded: {
+        type: Boolean,
+        default: true,
+        required: false,
     },
-    computed: {
-        indication(): string {
-            if (this.isUnavailable) {
-                return 'Track media is unavailable';
-            } else if (this.isPlaying) {
-                return 'Track is playing';
-            } else if (this.isReady) {
-                return 'Track is loaded and ready to play';
-            } else if (this.isUnloaded) {
-                return 'Track not loaded';
-            }
-
-            return 'Track is in an unknown state';
-        },
+    /** Whether the indicator should convey the unavailable state */
+    isUnavailable: {
+        type: Boolean,
+        default: false,
+        required: false,
     },
 });
+
+const indication = computed(() => {
+    if (props.isUnavailable) {
+        return 'Track media is unavailable';
+    } else if (isPlaying?.value) {
+        return 'Track is playing';
+    } else if (props.isReady) {
+        return 'Track is loaded and ready to play';
+    } else if (props.isUnloaded) {
+        return 'Track not loaded';
+    }
+
+    return 'Track is in an unknown state';
+});
+
+/** Flag to indicate whether this track's player is currently playing
+ */
+const isPlaying = inject(isPlayingInjectionKey);
 </script>
 <style scoped>
 .is-indicator {
     /** Playback Indicators do not interact, however, for the title tooltip, pointer-events none is not usable */
     pointer-events: auto !important;
     cursor: default;
-
 }
 </style>

@@ -37,7 +37,6 @@
             v-if="!hidePlayPauseButton"
             class="is-success"
             :disabled="disabled"
-            :isPlaying="isPlaying"
             :isLoading="isFading"
             @click="togglePlayback()"
             title="Play from current position"
@@ -131,13 +130,6 @@ export default defineComponent({
          * @remarks Controls the display of the player, to hint the fading action
          */
         isFading: {
-            type: Boolean,
-            default: false,
-        },
-        /** Whether the media is currently playing
-         * @remarks Controls the display of the player, to hint the playing action
-         */
-        isPlaying: {
             type: Boolean,
             default: false,
         },

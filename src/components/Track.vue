@@ -37,7 +37,6 @@
             :trackUrl="track.Url"
             :trackArtist="track.Artist"
             :trackAlbum="track.Album"
-            :isPlaying="isPlaying"
             :isTrackLoaded="isTrackLoaded"
             :isTrackMediaAvailable="isMediaAvailable"
             :isActive="isActiveTrack"
@@ -56,7 +55,6 @@
                             'is-clickable': isTrackLoaded,
                             'has-cursor-not-allowed': !isTrackLoaded,
                         }"
-                        :isPlaying="isPlaying"
                         :isLoading="isFading"
                         data-cy="toggle-playback"
                         @click="skipToPlayPause"
@@ -151,7 +149,6 @@
             <CueButtonsField
                 :disabled="!canPlay"
                 :currentSeconds="currentSeconds"
-                :isTrackPlaying="isPlaying"
                 :playbackMode="playbackMode"
                 @click="
                     (cue) => {
@@ -224,7 +221,6 @@
                     <CueLevelEditors
                         :cues="cues"
                         :disabled="!canPlay"
-                        :isTrackPlaying="isPlaying"
                         :playbackMode="playbackMode"
                         :currentSeconds="currentSeconds"
                         @click="cueClick"
@@ -247,7 +243,6 @@
                                     v-focus
                                     :disabled="!canPlay"
                                     class="is-success mb-0"
-                                    :isPlaying="isPlaying"
                                     :isLoading="isFading"
                                     @click="skipToPlayPause()"
                                     title="Play from current position"
@@ -505,7 +500,6 @@
                                         :volume="track.Volume"
                                         @update:volume="updateVolume"
                                         @seek="(seconds) => seek(seconds)"
-                                        :isPlaying="isPlaying"
                                         :isFading="isFading"
                                         @togglePlaying="skipToPlayPause()"
                                         :hidePlayPauseButton="false"
@@ -515,7 +509,6 @@
                                             :isReady="
                                                 !isPlaying && isTrackLoaded
                                             "
-                                            :isPlaying="isPlaying"
                                             :isUnloaded="!isTrackLoaded"
                                             :isUnavailable="!isMediaAvailable"
                                             data-cy="playback-indicator"
@@ -536,7 +529,6 @@
                         >
                             <CueButtonsBar
                                 :currentSeconds="currentSeconds"
-                                :isTrackPlaying="isPlaying"
                                 :playbackMode="playbackMode"
                                 @click="
                                     (cue) => {
@@ -549,7 +541,6 @@
                         <nav v-if="isTrackPlayerFullScreen">
                             <CueButtonsField
                                 :currentSeconds="currentSeconds"
-                                :isTrackPlaying="isPlaying"
                                 :playbackMode="playbackMode"
                                 @click="
                                     (cue) => {
@@ -615,7 +606,7 @@ import {
     meterInjectionKey,
     useMeasureNumbersInjectionKey,
 } from './TrackInjectionKeys';
-//TODOimport { isPlayingInjectionKey } from './TrackInjectionKeys';
+import { isPlayingInjectionKey } from './TrackInjectionKeys';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -774,10 +765,10 @@ const isTrackLoaded = ref(false);
  */
 const trackDuration: Ref<number | null> = ref(null);
 
-/** Flag to indicate whether the player is currently playing
+/** Flag to indicate whether this track's player is currently playing
  */
 const isPlaying = ref(false);
-//TODO provide(isPlayingInjectionKey, readonly(isPlaying));
+provide(isPlayingInjectionKey, readonly(isPlaying));
 
 /** Flag to indicate whether the audio is currently muted
  */
