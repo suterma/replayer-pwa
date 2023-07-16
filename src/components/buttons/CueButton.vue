@@ -343,12 +343,11 @@ const isCueAhead = computed(() => {
  * @param cue - the cue to determine the playback progress for
  */
 const percentComplete = computed(() => {
-    return 50;
-    // return CompilationHandler.hasPercentComplete(
-    //     props.time,
-    //     props.duration,
-    //     currentPosition?.value,
-    // );
+    return CompilationHandler.hasPercentComplete(
+        props.time,
+        props.duration,
+        currentPosition?.value,
+    );
 });
 </script>
 <style scoped>
