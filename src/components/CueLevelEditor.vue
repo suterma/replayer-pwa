@@ -15,9 +15,6 @@
                                 @click="cueClick()"
                                 minified
                                 :isCueSelected="isCueSelected"
-                                :hasCuePassed="hasCuePassed"
-                                :isCueAhead="isCueAhead"
-                                :percentComplete="percentComplete"
                                 hasAddonsRight
                             />
                         </p>
@@ -186,28 +183,12 @@ const props = defineProps({
         required: true,
     },
 
-    /** The playback progress within this cue, in [percent], or null if not applicable
-     * @remarks This value is only used when both the cue is not ahead nor has passed.
-     */
-    percentComplete: {
-        type: null as unknown as PropType<number | null>,
-        required: false,
-    },
-
     /** Whether this cue is currently selected
      * @remarks Note: only one cue in a compilation may be selected */
     isCueSelected: Boolean,
 
-    /* Whether playback of this cue has already passed
-                 (the playhead has completely passed beyond the end of this cue) */
-    hasCuePassed: Boolean,
-
     /* Whether to show this cue as passive, in dimmed style. */
     virtual: Boolean,
-
-    /* Determines whether playback of this cue has not yet started
-        (the playhead has not yet reached the beginning of this cue)*/
-    isCueAhead: Boolean,
 
     /** The playback mode
      * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979

@@ -19,9 +19,9 @@
             <span
                 class="player-progress"
                 :class="{
-                    'player-progress-full': hasCuePassed(),
+                    'player-progress-full': hasCuePassed,
                     'has-addons-right': hasAddonsRight,
-                    'player-progress-none': isCueAhead(),
+                    'player-progress-none': isCueAhead,
                 }"
                 :style="progressStyle"
             ></span>
@@ -214,6 +214,8 @@ const meter = inject(meterInjectionKey);
 
 const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
 
+//TODO try to simiplify the progress with it's own control. Does this affect layouting performance positively
+
 /** Flag to indicate whether this track's player is currently playing
  * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
  */
@@ -265,7 +267,7 @@ const cueText = computed(() => {
  */
 const progressBarWidthOffset = computed(() => {
     return (
-        ((100 - (percentComplete() ?? 0)) / 100) *
+        ((100 - (percentComplete.value ?? 0)) / 100) *
         0.3 /* value in [em], as defined in CSS */
     );
 });
@@ -280,10 +282,14 @@ const progressStyle = computed(() => {
             display: 'none',
         };
     }
-    if (!hasCuePassed() && !isCueAhead() && percentComplete() != null) {
+    if (
+        !hasCuePassed.value &&
+        !isCueAhead.value &&
+        percentComplete.value != null
+    ) {
         //show the progress according to the percentage available
         return {
-            width: `calc(${percentComplete()}% +
+            width: `calc(${percentComplete.value}% +
                      ${progressBarWidthOffset.value}em)`,
             'max-width': '100%',
         };
@@ -313,35 +319,37 @@ const currentPosition = inject(currentPositionInjectionKey);
  * @remarks Is used for visual indication of playback progress
  * @param cue - the cue to determine the playback progress for
  */
-function hasCuePassed(): boolean {
+
+const hasCuePassed = computed(() => {
     return CompilationHandler.hasPassed(
         props.time,
         props.duration,
         currentPosition?.value,
     );
-}
+});
 
 /** Determines whether playback of the given cue has not yet started
  * @param cue - the cue to determine the playback progress for
  */
-function isCueAhead(): boolean {
+const isCueAhead = computed(() => {
     return CompilationHandler.isAhead(
         props.time,
         props.duration,
         currentPosition?.value,
     );
-}
+});
 
 /** The playback progress within the given cue, in [percent], or null if not applicable
  * @param cue - the cue to determine the playback progress for
  */
-function percentComplete(): number | null {
-    return CompilationHandler.hasPercentComplete(
-        props.time,
-        props.duration,
-        currentPosition?.value,
-    );
-}
+const percentComplete = computed(() => {
+    return 50;
+    // return CompilationHandler.hasPercentComplete(
+    //     props.time,
+    //     props.duration,
+    //     currentPosition?.value,
+    // );
+});
 </script>
 <style scoped>
 /* Button progress-styles, in addition to player progress styles, that support also full/none progress specifically */
