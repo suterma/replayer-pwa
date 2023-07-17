@@ -16,6 +16,9 @@
             hasAddonsRight
             minified
             showText
+            :hasCuePassed="hasCuePassed(prefixCue)"
+            :isCueAhead="isCueAhead(prefixCue)"
+            :percentComplete="percentComplete(prefixCue)"
             virtual
             :isCueSelected="isCueSelected(prefixCue)"
             @click="cueClicked"
@@ -36,6 +39,9 @@
                 hasAddonsRight
                 minified
                 showText
+                :hasCuePassed="hasCuePassed(cue)"
+                :isCueAhead="isCueAhead(cue)"
+                :percentComplete="percentComplete(cue)"
                 :isCueSelected="isCueSelected(cue)"
                 @click="cueClicked"
             >
@@ -51,7 +57,7 @@ import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { useAppStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
-import { isPlayingInjectionKey } from './track/TrackInjectionKeys';
+import { currentPositionInjectionKey } from './track/TrackInjectionKeys';
 
 /** A single line bar with simple cue buttons for a track
  */
@@ -121,6 +127,28 @@ const { selectedCueId } = storeToRefs(app);
 function isCueSelected(cue: ICue): boolean {
     //TODO use via provide/inject
     return selectedCueId.value === cue.Id;
+}
+
+const currentPosition = inject(currentPositionInjectionKey);
+
+/** Determines whether playback of the given cue has already passed
+ * @remarks Is used for visual indication of playback progress
+ * @param cue - the cue to determine the playback progress for
+ */
+function hasCuePassed(cue: ICue): boolean {
+    return CompilationHandler.hasCuePassed(cue, currentPosition?.value);
+}
+/** Determines whether playback of the given cue has not yet started
+ * @param cue - the cue to determine the playback progress for
+ */
+function isCueAhead(cue: ICue): boolean {
+    return CompilationHandler.isCueAhead(cue, currentPosition?.value);
+}
+/** The playback progress within the given cue, in [percent], or null if not applicable
+ * @param cue - the cue to determine the playback progress for
+ */
+function percentComplete(cue: ICue): number | null {
+    return CompilationHandler.percentComplete(cue, currentPosition?.value);
 }
 </script>
 

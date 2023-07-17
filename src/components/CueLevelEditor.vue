@@ -14,6 +14,9 @@
                                 :playbackMode="playbackMode"
                                 @click="cueClick()"
                                 minified
+                                :hasCuePassed="hasCuePassed"
+                                :isCueAhead="isCueAhead"
+                                :percentComplete="percentComplete"
                                 :isCueSelected="isCueSelected"
                                 hasAddonsRight
                             />
@@ -186,6 +189,26 @@ const props = defineProps({
     /** Whether this cue is currently selected
      * @remarks Note: only one cue in a compilation may be selected */
     isCueSelected: Boolean,
+
+    /** Determines whether playback of the given cue has already passed
+     * @remarks Is used for visual indication of playback progress
+     */
+
+    hasCuePassed: Boolean,
+
+    /** Determines whether playback of the given cue has not yet started
+     * @param cue - the cue to determine the playback progress for
+     */
+    isCueAhead: Boolean,
+
+    /** The playback progress within the given cue, in [percent], or null if not applicable
+     * @param cue - the cue to determine the playback progress for
+     */
+    percentComplete: {
+        type: null as unknown as PropType<number | null>,
+        required: false,
+        default: null,
+    },
 
     /* Whether to show this cue as passive, in dimmed style. */
     virtual: Boolean,

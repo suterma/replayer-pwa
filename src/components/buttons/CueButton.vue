@@ -142,7 +142,6 @@ import { Meter } from '@/code/music/Meter';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
 import {
-    currentPositionInjectionKey,
     isPlayingInjectionKey,
     meterInjectionKey,
     useMeasureNumbersInjectionKey,
@@ -171,6 +170,27 @@ const props = defineProps({
         type: null as unknown as PropType<number | null>,
         required: false,
     },
+
+    /** Determines whether playback of the given cue has already passed
+     * @remarks Is used for visual indication of playback progress
+     */
+
+    hasCuePassed: Boolean,
+
+    /** Determines whether playback of the given cue has not yet started
+     * @param cue - the cue to determine the playback progress for
+     */
+    isCueAhead: Boolean,
+
+    /** The playback progress within the given cue, in [percent], or null if not applicable
+     * @param cue - the cue to determine the playback progress for
+     */
+    percentComplete: {
+        type: null as unknown as PropType<number | null>,
+        required: false,
+        default: null,
+    },
+
     description: {
         type: String,
         required: false,
@@ -267,7 +287,7 @@ const cueText = computed(() => {
  */
 const progressBarWidthOffset = computed(() => {
     return (
-        ((100 - (percentComplete.value ?? 0)) / 100) *
+        ((100 - (props.percentComplete ?? 0)) / 100) *
         0.3 /* value in [em], as defined in CSS */
     );
 });
@@ -283,13 +303,13 @@ const progressStyle = computed(() => {
         };
     }
     if (
-        !hasCuePassed.value &&
-        !isCueAhead.value &&
-        percentComplete.value != null
+        !props.hasCuePassed &&
+        !props.isCueAhead &&
+        props.percentComplete != null
     ) {
         //show the progress according to the percentage available
         return {
-            width: `calc(${percentComplete.value}% +
+            width: `calc(${props.percentComplete}% +
                      ${progressBarWidthOffset.value}em)`,
             'max-width': '100%',
         };
@@ -311,43 +331,6 @@ const isCuePlay = computed(() => {
  */
 const hasMeter = computed(() => {
     return Meter.isValid(meter?.value);
-});
-
-const currentPosition = inject(currentPositionInjectionKey);
-
-/** Determines whether playback of the given cue has already passed
- * @remarks Is used for visual indication of playback progress
- * @param cue - the cue to determine the playback progress for
- */
-
-const hasCuePassed = computed(() => {
-    return CompilationHandler.hasPassed(
-        props.time,
-        props.duration,
-        currentPosition?.value,
-    );
-});
-
-/** Determines whether playback of the given cue has not yet started
- * @param cue - the cue to determine the playback progress for
- */
-const isCueAhead = computed(() => {
-    return CompilationHandler.isAhead(
-        props.time,
-        props.duration,
-        currentPosition?.value,
-    );
-});
-
-/** The playback progress within the given cue, in [percent], or null if not applicable
- * @param cue - the cue to determine the playback progress for
- */
-const percentComplete = computed(() => {
-    return CompilationHandler.hasPercentComplete(
-        props.time,
-        props.duration,
-        currentPosition?.value,
-    );
 });
 </script>
 <style scoped>
