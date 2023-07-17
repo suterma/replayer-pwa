@@ -1,0 +1,42 @@
+@charset "utf-8";
+
+/*************************************************************
+ * Level helpers
+ * These classes manipulate the default Bulma level control
+**************************************************************
+*/
+
+/** Allows level items to wrap at the end of lines, instead of getting pushed out of the boundary
+To keep the effect on small devices, add the "is-mobile" class.
+This class can be used directly on level containers. or on level-left or level-right containers.
+It affects the immediate children.
+ */
+.level .level-left.level-wrap,
+.level .level-right.level-wrap,
+.level.level-wrap {
+    flex-wrap: wrap;
+    flex-shrink: unset;
+    row-gap: 0.75rem;
+    /** Use up all avaiable space in favor of more space between children */
+    justify-content: space-between;
+
+    /* Make up the missing maring for the multi-line items */
+    margin-right: 0.75rem;
+}
+
+/* Make up the missing maring for the multi-line items */
+.level .level-left.level-wrap {
+    margin-right: 0.75rem;
+}
+
+.level .level-right.level-wrap {
+    margin-left: 0.75rem;
+}
+
+/* To make the justify-content work, the items can not grow or shrink, apparently */
+.level .level-left.level-wrap .level-item,
+.level .level-right.level-wrap .level-item,
+.level.level-wrap .level-item {
+    flex-shrink: unset !important;
+    flex-grow: unset !important;
+}

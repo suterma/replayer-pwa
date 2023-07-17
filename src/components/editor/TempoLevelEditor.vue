@@ -209,18 +209,3 @@ watch(
     display: none;
 }
 </style>
-
-<style lang="scss">
-/** Allows level items to wrap at the end of lines, instead of getting pushed out of the boundary
-To keep the effect on small devices, add the "is-mobile" class.
-This class can be used directly on level containers. or on level-left or level-right containers.
-It affects the immediate children.
- */
-.level-wrap {
-    flex-wrap: wrap;
-    flex-shrink: unset;
-    row-gap: 12px;
-    /** Use up all avaiable space in favor of more space between children */
-    justify-content: space-between;
-}
-</style>
