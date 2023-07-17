@@ -1,87 +1,101 @@
 <template>
-    <div class="level">
-        <div class="level-left">
+    <div class="level is-mobile">
+        <div class="level-left level-wrap">
             <!-- BPM -->
-            <div class="level-item has-text-centered">
-                <span class="has-opacity-half is-single-line">Tempo</span>
-            </div>
-            <div class="level-item is-flex-shrink-2">
-                <div class="field">
-                    <p class="control">
-                        <BpmEditor
-                            class="input"
-                            :modelValue="props.meter?.BeatsPerMinute"
-                            @change="
-                                updateMeterWithBpm(
-                                    Number.parseFloat($event.target.value),
-                                )
-                            "
-                            placeholder="BPM"
-                            title="BPM (Beats per minute)"
-                        >
-                        </BpmEditor>
-                    </p>
+            <div class="level-item has-text-left">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Tempo</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <p class="control">
+                                <BpmEditor
+                                    class="input"
+                                    :modelValue="props.meter?.BeatsPerMinute"
+                                    @change="
+                                        updateMeterWithBpm(
+                                            Number.parseFloat(
+                                                $event.target.value,
+                                            ),
+                                        )
+                                    "
+                                    placeholder="BPM"
+                                    title="BPM (Beats per minute)"
+                                >
+                                </BpmEditor>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Time Signature -->
-            <div class="level-item has-text-centered">
-                <span class="has-opacity-half">Time Signature</span>
-            </div>
-            <div class="level-item is-flex-shrink-2">
-                <div class="field">
-                    <p class="control">
-                        <TimeSignatureEditor
-                            class="input"
-                            :modelValue="props.meter?.TimeSignature"
-                            @update:modelValue="
+            <div class="level-item">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label is-single-line"
+                            >Time Signature</label
+                        >
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <p class="control">
+                                <TimeSignatureEditor
+                                    class="input"
+                                    :modelValue="props.meter?.TimeSignature"
+                                    @update:modelValue="
                               (value:ITimeSignature|null) =>   updateMeterWithTimeSignature(value)
                             "
-                            title="Time signature"
-                        >
-                        </TimeSignatureEditor>
-                    </p>
+                                    title="Time signature"
+                                >
+                                </TimeSignatureEditor>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Origin -->
-            <div class="level-item has-text-centered">
-                <span
-                    class="has-opacity-half"
-                    title="Temporal position of the first downbeat (beat 1 in measure 1)"
-                    >Origin</span
-                >
-            </div>
-            <!-- A normal input for the time, with an adjustment add-on (from a bit wider screens)-->
             <div class="level-item">
-                <div class="field has-addons has-addons-except-mobile">
-                    <p class="control">
-                        <TimeInput
-                            class="has-text-right"
-                            :modelValue="props.meter?.OriginTime"
-                            @update:modelValue="(value:number|null) => updateMeterWithOriginTime(value)"
-                            size="9"
-                        />
-                    </p>
-                    <div class="control is-hidden-mobile">
-                        <AdjustCueButton
-                            @adjustCue="$emit('adjustOriginTime')"
-                        ></AdjustCueButton>
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label is-single-line">Origin</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field has-addons has-addons-except-mobile">
+                            <p class="control">
+                                <TimeInput
+                                    class="has-text-right"
+                                    :modelValue="props.meter?.OriginTime"
+                                    @update:modelValue="(value:number|null) => updateMeterWithOriginTime(value)"
+                                    size="9"
+                                />
+                            </p>
+                            <p class="control is-hidden-mobile">
+                                <AdjustCueButton
+                                    @adjustCue="$emit('adjustOriginTime')"
+                                ></AdjustCueButton>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
+
             <div class="level-item is-flex-shrink-2">
                 <div class="field">
                     <p class="control">
                         <LabeledCheckbox
                             :modelValue="props.useMeasureNumbers"
                             @update:modelValue="(value:boolean|null) => updateUseMeasureNumbers(value)"
-                            label="Use/show measure numbers"
+                            label="Show measure numbers"
                             :disabled="!hasAllTempoValues"
                         ></LabeledCheckbox>
                     </p>
                 </div>
             </div>
+            <!-- Slot for additional level items -->
+            <slot name="left-end"></slot>
         </div>
         <div class="level-right">
             <!-- Metronome -->
@@ -193,5 +207,20 @@ watch(
 
 :deep(.button .is-invisible) {
     display: none;
+}
+</style>
+
+<style lang="scss">
+/** Allows level items to wrap at the end of lines, instead of getting pushed out of the boundary
+To keep the effect on small devices, add the "is-mobile" class.
+This class can be used directly on level containers. or on level-left or level-right containers.
+It affects the immediate children.
+ */
+.level-wrap {
+    flex-wrap: wrap;
+    flex-shrink: unset;
+    row-gap: 12px;
+    /** Use up all avaiable space in favor of more space between children */
+    justify-content: space-between;
 }
 </style>

@@ -95,6 +95,7 @@ export default defineComponent({
 /* minimum input width for decimal time */
 input[type='number'][inputmode='decimal'] {
     min-width: 9ch;
+    max-width: 12ch;
 }
 
 /* fullhd */
@@ -102,6 +103,7 @@ input[type='number'][inputmode='decimal'] {
     /* minimum input width for decimal time */
     input[type='number'][inputmode='decimal'] {
         min-width: 11ch;
+        max-width: 15ch;
     }
 }
 </style>

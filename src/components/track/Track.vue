@@ -191,34 +191,61 @@
                                     );
                                 }
                             "
-                >
+                    ><template
+                        #left-end
+                        v-experiment="experimentalUseTempo"
+                        v-if="hasMeter && track.UseMeasureNumbers"
+                    >
+                        <div class="level-item">
+                            <div class="field is-horizontal">
+                                <div class="field-label is-normal">
+                                    <label class="label is-single-line"
+                                        >Current measure</label
+                                    >
+                                </div>
+                                <div class="field-body">
+                                    <div class="field">
+                                        <p class="control">
+                                            <button class="button is-indicator">
+                                                <MeasureDisplay
+                                                    :modelValue="
+                                                        currentPosition
+                                                    "
+                                                ></MeasureDisplay>
+                                            </button>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="level-item">
+                            <div class="field is-horizontal">
+                                <div class="field-label is-normal">
+                                    <label class="label is-single-line"
+                                        >Skip to measure</label
+                                    >
+                                </div>
+                                <div class="field-body">
+                                    <div class="field">
+                                        <p class="control">
+                                            <MetricalEditor
+                                                v-model="currentPosition"
+                                                @update:modelValue="
+                                                    (position) =>
+                                                        seekToSeconds(position)
+                                                "
+                                            >
+                                            </MetricalEditor>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </TempoLevelEditor>
 
                 <!-- Main container -->
-                <nav
-                    v-experiment="experimentalUseTempo"
-                    class="level"
-                    v-if="hasMeter && track.UseMeasureNumbers"
-                >
-                    <!-- Left side -->
-                    <div class="level-left">
-                        <div class="level-item">
-                            <MeasureDisplay
-                                :modelValue="currentPosition"
-                            ></MeasureDisplay>
-                        </div>
-                        <div class="level-item">
-                            <MetricalEditor
-                                v-model="currentPosition"
-                                @update:modelValue="
-                                    (position) => seekToSeconds(position)
-                                "
-                            >
-                            </MetricalEditor>
-                        </div>
-                    </div>
-                </nav>
-
                 <div class="levels">
                     <CueLevelEditors
                         :cues="cues"
