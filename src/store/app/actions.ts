@@ -152,6 +152,19 @@ export const actions = {
         }
     },
 
+    /** Updates the track pre-roll
+     * @remarks Also updates the persistent store of the compilation
+     */
+    updateTrackPreRoll(trackId: string, preRoll: number | null): void {
+        const track = CompilationHandler.getTrackById(
+            state.compilation.value.Tracks,
+            trackId,
+        );
+        if (track) {
+            track.PreRoll = preRoll;
+        }
+    },
+
     /** Updates the track meter.
      * @remarks This is only relevant for music tracks
      */

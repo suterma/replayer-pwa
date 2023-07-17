@@ -42,7 +42,9 @@ export default defineComponent({
             type: String,
             default: 'right',
         },
-        /* The title*/
+        /** The title
+         * @remarks This text is show as title for the label in both the collapsed and expanded state
+         *  */
         title: {
             type: String,
             default: '',

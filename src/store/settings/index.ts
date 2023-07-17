@@ -52,7 +52,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
      */
     const applyFadeInOffset = useLocalStorage('applyFadeInOffset', true);
 
-    /** The default duration for a pre-roll for play operations
+    /** The default duration for a pre-roll for play operations, in [seconds]
      * @remarks Default is zero
      */
     const defaultPreRollDuration = useLocalStorage('defaultPreRollDuration', 0);
@@ -129,7 +129,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalShowAddMultipleCuesAction.value = false;
         experimentalAllowTrackSharingByLink.value = false;
         experimentalShowWaveforms.value = false;
-        experimentalUseTempo.value = true;
+        experimentalUseTempo.value = false;
     }
 
     return {

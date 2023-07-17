@@ -6,12 +6,13 @@
         @update:modelValue="() => reveal()"
         collapsedText="Click to reveal"
         :iconPath="mdiPlus"
+        :title="title"
         ><span><slot name="caption"></slot></span
     ></CollapsibleButton>
     <!-- Transition for the revealing action. 
         Uses an additional element to make sure that there is a single root within the transition slot -->
     <Transition name="list">
-        <div v-if="modelValue || shouldReveal">
+        <div v-if="modelValue || shouldReveal" :title="title">
             <slot></slot>
         </div>
     </Transition>
@@ -37,6 +38,14 @@ const props = defineProps({
     /** The values to reveal this panel for, if any of them are set
      */
     revealFor: Array as PropType<Array<unknown>>,
+
+    /** The title
+     * @remarks This text is show as title for the label in both the cloaked and the revealed state
+     *  */
+    title: {
+        type: String,
+        default: '',
+    },
 });
 
 /** Whether the panel should be revealed based on available content. */

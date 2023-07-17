@@ -12,6 +12,7 @@ export class XmlTrack {
     constructor(track: ITrack) {
         this.Id = track.Id;
         this.Artist = track.Artist;
+        this.PreRoll = track.PreRoll;
         this.Name = track.Name;
         this.Album = track.Album;
         this.Url = track.Url;
@@ -23,6 +24,7 @@ export class XmlTrack {
 
     Id: string;
     Artist: string;
+    PreRoll: number | null;
     Name: string;
     Album: string;
     Url: string;

@@ -89,22 +89,22 @@
                                     <option v-bind:value="0">
                                         no pre-roll
                                     </option>
-                                    <option v-bind:value="667">
+                                    <option v-bind:value="0.667">
                                         0.66 seconds (1 beat @ 90 BPM)
                                     </option>
-                                    <option v-bind:value="1333">
+                                    <option v-bind:value="1.333">
                                         1.33 seconds (2 beats @ 90 BPM)
                                     </option>
-                                    <option v-bind:value="2000">
+                                    <option v-bind:value="2.0">
                                         2.00 seconds (3 beats @ 90 BPM)
                                     </option>
-                                    <option v-bind:value="2667">
+                                    <option v-bind:value="2.667">
                                         2.66 seconds (4 beats @ 90 BPM)
                                     </option>
-                                    <option v-bind:value="4000">
+                                    <option v-bind:value="4.0">
                                         4.00 seconds (6 beats @ 90 BPM)
                                     </option>
-                                    <option v-bind:value="5333">
+                                    <option v-bind:value="5.333">
                                         5.33 seconds (8 beats @ 90 BPM)
                                     </option>
                                 </select>

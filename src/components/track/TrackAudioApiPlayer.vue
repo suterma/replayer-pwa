@@ -225,9 +225,9 @@ const props = defineProps({
         required: false,
     },
 
-    /** The default Pre-roll duration in [milliseconds]. Use zero for no default pre-roll.
+    /** The Pre-roll duration in [seconds]. Use zero for no pre-roll.
      */
-    defaultPreRollDuration: {
+    preRollDuration: {
         type: Number,
         required: true,
     },
@@ -783,8 +783,8 @@ function applyPreRoll(): void {
         offset = offset + props.fadeInDuration / 1000;
     }
 
-    if (props.defaultPreRollDuration) {
-        offset = offset + props.defaultPreRollDuration / 1000;
+    if (props.preRollDuration) {
+        offset = offset + props.preRollDuration;
     }
 
     const time = audioElement.value.currentTime;

@@ -86,6 +86,38 @@
                         ></ArtistLevelEditor>
                     </div>
                 </CloakedPanel>
+                <CloakedPanel
+                    :revealFor="[trackPreRoll]"
+                    title="The custom pre-roll duration for this track in [seconds]"
+                >
+                    <template #caption
+                        ><span class="has-opacity-half"
+                            >Pre-roll</span
+                        ></template
+                    >
+                    <!-- Pre-Roll -->
+                    <div class="level-item">
+                        <div class="field is-horizontal">
+                            <div class="field-label is-normal">
+                                <label class="label is-single-line"
+                                    >Pre-roll</label
+                                >
+                            </div>
+                            <div class="field-body">
+                                <div class="field">
+                                    <p class="control">
+                                        <TimeInput
+                                            class="has-text-right"
+                                            :modelValue="trackPreRoll"
+                                            @update:modelValue="(value:number|null) => updatePreRoll(value)"
+                                            size="9"
+                                        />
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </CloakedPanel>
             </template>
             <template v-else>
                 <!-- Title -->
@@ -163,6 +195,7 @@ import { PropType, computed, inject, onBeforeMount, watch } from 'vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
 import CloakedPanel from '@/components/CloakedPanel.vue';
+import TimeInput from '@/components/TimeInput.vue';
 import ArtistLevelEditor from '@/components/editor/ArtistLevelEditor.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
@@ -190,6 +223,11 @@ const props = defineProps({
     trackAlbum: {
         type: String,
         required: true,
+    },
+    trackPreRoll: {
+        type: null as unknown as PropType<number | null>,
+        required: false,
+        default: null,
     },
     trackId: {
         type: String,
@@ -314,6 +352,12 @@ function updateAlbum(album: string) {
     const name = props.trackName;
     const artist = props.trackArtist;
     app.updateTrackData(trackId, name, artist, album);
+}
+
+/** Updates the track pre-roll */
+function updatePreRoll(preRoll: number | null) {
+    const trackId = props.trackId;
+    app.updateTrackPreRoll(trackId, preRoll);
 }
 
 /** Handles changes in whether this is the active track.

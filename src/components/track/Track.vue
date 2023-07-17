@@ -37,6 +37,7 @@
             :trackUrl="track.Url"
             :trackArtist="track.Artist"
             :trackAlbum="track.Album"
+            :trackPreRoll="track.PreRoll"
             :isTrackLoaded="isTrackLoaded"
             :isTrackMediaAvailable="isMediaAvailable"
             :isActive="isActiveTrack"
@@ -376,7 +377,7 @@
                 @ended="$emit('trackEnded')"
                 @loopedTo="$emit('trackLoopedTo', $event)"
                 :fadeInDuration="fadeInDuration"
-                :defaultPreRollDuration="defaultPreRollDuration"
+                :preRollDuration="preRollDuration"
                 :fadeOutDuration="fadeOutDuration"
                 :applyFadeInOffset="applyFadeInOffset"
                 :showLevelMeter="showLevelMeter && isMixable"
@@ -1268,6 +1269,14 @@ const remainingTime = computed(() =>
         trackDuration.value,
     ),
 );
+
+/** Calculate the custom pre-roll for this track */
+const preRollDuration = computed(() => {
+    if (props.track.PreRoll !== null) {
+        return props.track.PreRoll;
+    }
+    return defaultPreRollDuration.value;
+});
 
 /** The description of the currently playing cue
  * @remarks The implementation makes sure that at least always an empty string is returned.

@@ -88,6 +88,11 @@ export interface ITrack {
     /** The artist */
     Artist: string;
 
+    /** The track's custom pre-roll duration, in [seconds]
+     * @remarks If not set, the default pre-roll duration will be used
+     */
+    PreRoll: number | null;
+
     /** The name of the track */
     Name: string;
 
@@ -189,6 +194,7 @@ export class Compilation implements ICompilation {
                     track.Name,
                     track.Album,
                     track.Artist,
+                    track.PreRoll,
                     track.Meter,
                     track.UseMeasureNumbers,
                     track.Url,
@@ -239,6 +245,7 @@ export class Track implements ITrack {
     Name = '';
     Album = '';
     Artist = '';
+    PreRoll: number | null = null;
     Meter: IMeter | null = null;
     UseMeasureNumbers: boolean | null = null;
     Url = '';
@@ -260,6 +267,7 @@ export class Track implements ITrack {
         name: string,
         album: string,
         artist: string,
+        preRoll: number | null,
         meter: IMeter | null,
         useMeasureNumbers: boolean | null,
         url: string,
@@ -271,6 +279,7 @@ export class Track implements ITrack {
         this.Name = name;
         this.Album = album;
         this.Artist = artist;
+        this.PreRoll = preRoll;
         this.Meter = meter;
         this.UseMeasureNumbers = useMeasureNumbers;
         this.Url = url;
@@ -291,6 +300,7 @@ export class Track implements ITrack {
             obj.Name,
             obj.Album,
             obj.Artist,
+            obj.PreRoll,
             obj.Meter,
             obj.UseMeasureNumbers,
             obj.Url,
