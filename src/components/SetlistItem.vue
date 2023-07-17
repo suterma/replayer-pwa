@@ -51,6 +51,13 @@
                 <th class="is-size-7">Shortcut</th>
                 <th class="is-size-7">Description</th>
                 <th class="is-size-7">Time</th>
+                <th
+                    v-experiment="experimentalUseTempo"
+                    v-if="props.track.UseMeasureNumbers"
+                    class="is-size-7"
+                >
+                    Measure
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -66,49 +73,61 @@
                 <td>
                     <TimeDisplay :modelValue="cue.Time"></TimeDisplay>
                 </td>
+                <td
+                    v-experiment="experimentalUseTempo"
+                    v-if="props.track.UseMeasureNumbers"
+                >
+                    <MeasureDisplay :modelValue="cue.Time"></MeasureDisplay>
+                </td>
             </tr>
         </tbody>
     </table>
 </template>
 
-<script lang="ts">
-import { PropType, defineComponent } from 'vue';
+<script setup lang="ts">
+/** A printable display of a track, with cue listing */
+
+import { PropType, computed, provide, readonly } from 'vue';
+import { storeToRefs } from 'pinia';
+
 import ArtistInfo from '@/components/ArtistInfo.vue';
+import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import TrackTitleName from '@/components/track/TrackTitleName.vue';
 import { Track } from '@/store/compilation-types';
+import { useSettingsStore } from '@/store/settings';
+import { meterInjectionKey } from './track/TrackInjectionKeys';
 
-/** A printable display of a complete compilation, with a track and cue listing */
-export default defineComponent({
-    name: 'SetlistItem',
-    components: {
-        ArtistInfo,
-        TrackTitleName,
-        TimeDisplay,
+const props = defineProps({
+    /** The track to show an item for */
+    track: {
+        type: Object as PropType<Track>,
+        required: true,
     },
-    props: {
-        /** The track to show an item for */
-        track: {
-            type: Object as PropType<Track>,
-            required: true,
-        },
-        /** Whether to show the cues
-         * @remarks Default is true
-         */
-        showCues: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
-        /** Whether to show the media source */
-        showMediaSource: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
+    /** Whether to show the cues
+     * @remarks Default is true
+     */
+    showCues: {
+        type: Boolean,
+        required: false,
+        default: false,
     },
-    data() {
-        return {};
+    /** Whether to show the media source */
+    showMediaSource: {
+        type: Boolean,
+        required: false,
+        default: false,
     },
 });
+
+/** The track's meter
+ * @devdoc This value is provided to descendant components using the provide/inject pattern.
+ * @devdoc Here, a ComputedRef must be used, not a ref, because the ref of the dereferenced meter
+ * would not be reactive.
+ */
+const meter = computed(() => props.track.Meter);
+provide(meterInjectionKey, readonly(meter));
+
+const settings = useSettingsStore();
+const { experimentalUseTempo } = storeToRefs(settings);
 </script>
