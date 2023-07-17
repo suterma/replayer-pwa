@@ -213,12 +213,11 @@ export class Meter implements IMeter {
     ): number | null {
         if (
             metricalPosition &&
-            metricalPosition.Measure &&
+            metricalPosition.Measure !== null &&
+            meter.OriginTime !== null &&
             Number.isFinite(meter.OriginTime) &&
             meter.BeatsPerMinute &&
             Number.isFinite(meter.BeatsPerMinute) &&
-            meter.OriginTime &&
-            Number.isFinite(meter.OriginTime) &&
             meter.TimeSignature &&
             meter.TimeSignature.Numerator &&
             meter.TimeSignature.Denominator
@@ -231,6 +230,29 @@ export class Meter implements IMeter {
 
             // Use epsilon to make sure the temporal position is never earlier than the calculated position for the beat.
             return meter.OriginTime + time + Meter.TemporalEpsilon;
+        }
+        return null;
+    }
+
+    /** Converts a the duration of a single measure into a temporal duration.
+     * if a suitable input value is provided.
+     * @param meter - The musical meter
+     * @return The measure duration in seconds or null
+     */
+    public static measureDuration(meter: IMeter): number | null {
+        if (
+            meter.BeatsPerMinute /*non-zero*/ &&
+            Number.isFinite(meter.BeatsPerMinute) &&
+            meter.TimeSignature &&
+            meter.TimeSignature.Numerator &&
+            meter.TimeSignature.Denominator
+        ) {
+            // The number of beats per measure
+            // NOTE: beats here is zero-based
+            const beats = meter.TimeSignature.Numerator;
+            const time = (beats / meter.BeatsPerMinute) * 60;
+
+            return time;
         }
         return null;
     }

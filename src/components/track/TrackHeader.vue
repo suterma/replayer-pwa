@@ -86,6 +86,7 @@
                         ></ArtistLevelEditor>
                     </div>
                 </CloakedPanel>
+                <!-- Pre-Roll (in time) -->
                 <CloakedPanel
                     :revealFor="[trackPreRoll]"
                     title="The custom pre-roll duration for this track in [seconds]"
@@ -95,7 +96,7 @@
                             >Pre-roll</span
                         ></template
                     >
-                    <!-- Pre-Roll -->
+
                     <div class="level-item">
                         <div class="field is-horizontal">
                             <div class="field-label is-normal">
@@ -112,6 +113,40 @@
                                             @update:modelValue="(value:number|null) => updatePreRoll(value)"
                                             size="9"
                                         />
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </CloakedPanel>
+                <!-- Pre-Roll (in measures) -->
+                <CloakedPanel
+                    v-if="experimentalUseTempo && useMeasureNumbers"
+                    :revealFor="[trackPreRoll]"
+                    title="The custom pre-roll duration for this track in [measures]"
+                >
+                    <template #caption v-experiment="true"
+                        ><span class="has-opacity-half"
+                            >Pre-roll (measures)</span
+                        ></template
+                    >
+
+                    <div v-experiment="true" class="level-item">
+                        <div class="field is-horizontal">
+                            <div class="field-label is-normal">
+                                <label class="label is-single-line"
+                                    >Pre-roll (measures)</label
+                                >
+                            </div>
+                            <div class="field-body">
+                                <div class="field">
+                                    <p class="control">
+                                        <MetricalEditor
+                                            differential
+                                            :modelValue="trackPreRoll"
+                                            @update:modelValue="(value:number|null) => updatePreRoll(value)"
+                                        >
+                                        </MetricalEditor>
                                     </p>
                                 </div>
                             </div>
@@ -196,6 +231,7 @@ import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
 import CloakedPanel from '@/components/CloakedPanel.vue';
 import TimeInput from '@/components/TimeInput.vue';
+import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import ArtistLevelEditor from '@/components/editor/ArtistLevelEditor.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
@@ -207,7 +243,12 @@ import ArtistInfo from '@/components/ArtistInfo.vue';
 import TrackTitleName from './TrackTitleName.vue';
 import { useAppStore } from '@/store/app';
 import { ITimeSignature } from '@/code/music/ITimeSignature';
-import { isPlayingInjectionKey } from './TrackInjectionKeys';
+import {
+    isPlayingInjectionKey,
+    useMeasureNumbersInjectionKey,
+} from './TrackInjectionKeys';
+import { useSettingsStore } from '@/store/settings';
+import { storeToRefs } from 'pinia';
 
 const emit = defineEmits(['update:isExpanded', 'click']);
 
@@ -318,6 +359,11 @@ onBeforeMount(() => {
 });
 
 const app = useAppStore();
+
+const settings = useSettingsStore();
+const { experimentalUseTempo } = storeToRefs(settings);
+
+const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
 
 /** Toggles the expansion state
  */

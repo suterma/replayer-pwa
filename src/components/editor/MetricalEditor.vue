@@ -4,7 +4,7 @@
         type="number"
         inputmode="numeric"
         step="1"
-        min="1"
+        :min="minimumValue"
         v-model.number="vModel"
         size="3"
         data-cy="input-measure"
@@ -26,7 +26,8 @@ import { meterInjectionKey } from '@/components/track/TrackInjectionKeys';
 const emit = defineEmits(['update:modelValue']);
 
 const props = defineProps({
-    /** The current playhead position in the track
+    /** The current playhead position in the track, in [seconds]
+     * @remarks This value is internally computed into [measure], with regards to the currently set meter
      */
     modelValue: {
         type: null as unknown as PropType<number | null>,
@@ -37,6 +38,14 @@ const props = defineProps({
         type: String,
         default: undefined,
     },
+
+    /** Whether to handle the modelValue as differential time (not regarding the origin time)
+     */
+    differential: {
+        type: Boolean,
+        default: false,
+        required: false,
+    },
 });
 
 /** The musical meter */
@@ -45,19 +54,20 @@ const meter = inject(meterInjectionKey);
 /**  */
 const vModel = computed<number | null>({
     get(): number | null {
-        if (meter?.value) {
+        if (usableMeter.value) {
             return (
-                Meter.fromTime(props.modelValue, meter?.value)?.Measure ?? null
+                Meter.fromTime(props.modelValue, usableMeter?.value)?.Measure ??
+                defaultValue.value
             );
         }
-        return null;
+        return defaultValue.value;
     },
     set(value): void {
         if (value != null) {
-            if (meter?.value) {
+            if (usableMeter.value) {
                 const temporalPosition = Meter.toTime(
                     new MetricalPosition(value, null),
-                    meter.value,
+                    usableMeter.value,
                 );
                 // only actual numbers should be emitted, not empty strings or NaN
                 if (
@@ -72,6 +82,30 @@ const vModel = computed<number | null>({
             }
         }
     },
+});
+
+/** The actual Meter to use. For the differential mode, the origin is replaced with the actual measure duration to allow a zero-based measure time */
+const usableMeter = computed(() => {
+    const actualMeter = meter?.value;
+    if (props.differential && actualMeter) {
+        return new Meter(
+            meter?.value?.TimeSignature ?? null,
+            meter?.value?.BeatsPerMinute ?? null,
+            Meter.measureDuration(
+                actualMeter,
+            ) /* omitting the actual origin time */,
+        );
+    } else return actualMeter;
+});
+
+/** The minimum value to use. For the differential mode, a zero-based measure is applied */
+const minimumValue = computed(() => {
+    return props.differential ? 0 : 1;
+});
+
+/** The default value to use. For the differential mode, zero is the default value */
+const defaultValue = computed(() => {
+    return props.differential ? 0 : null;
 });
 </script>
 <style lang="scss">
