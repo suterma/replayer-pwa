@@ -16,8 +16,14 @@ const router = useRouter();
 onBeforeMount(() => {
     console.debug('Reset::onBeforeMount');
 
-    useAppStore().discardCompilation();
+    const app = useAppStore();
+    app.discardCompilation();
+    app.$reset;
     useSettingsStore().$reset();
+
+    // To make really sure
+    localStorage.clear();
+    indexedDB.deleteDatabase('keyval-store');
 
     router.push('/');
 });

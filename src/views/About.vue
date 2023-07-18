@@ -447,6 +447,16 @@
                         >, a simple audio (peak) level meter for Vue.js.
                         (Released under the MIT License, by Marcel Suter)
                     </li>
+                    <li>
+                        <a
+                            href="https://github.com/omichelsen/compare-versions"
+                            target="_blank"
+                        >
+                            compare-versions</a
+                        >, compare semver version strings to find greater, equal
+                        or lesser. (Released under the MIT License, by Ole Bjørn
+                        Michelsen)
+                    </li>
                 </ul>
             </div>
         </CollapsiblePanel>

@@ -5,14 +5,16 @@
             <div class="modal-card">
                 <form data-cy="modal-form" @submit.prevent="$close(this)">
                     <header class="modal-card-head has-cropped-text">
-                        <h1 class="modal-card-title title">{{ header }}</h1>
+                        <h1 class="modal-card-title title">
+                            <slot name="title"></slot>
+                        </h1>
                     </header>
                     <section class="modal-card-body">
-                        {{ question }}
+                        <slot name="body"></slot>
                     </section>
                     <footer class="modal-card-foot is-justify-content-flex-end">
                         <div class="field is-grouped">
-                            <p class="control">
+                            <p v-if="!required" class="control">
                                 <Hotkey
                                     :keys="['esc']"
                                     :excluded-elements="[]"
@@ -23,23 +25,22 @@
                                         :ref="clickRef"
                                         @click.prevent="$close(this, false)"
                                     >
-                                        Cancel
+                                        {{ cancelButtonText }}
                                     </button>
                                 </Hotkey>
                             </p>
                             <p class="control">
                                 <Hotkey
                                     :keys="['enter']"
-                                    :excluded-elements="[]"
+                                    :excluded-elements="['textarea']"
                                     v-slot="{ clickRef }"
                                 >
                                     <button
-                                        v-focus
                                         type="submit"
                                         class="button is-success"
                                         :ref="clickRef"
                                     >
-                                        Ok
+                                        {{ submitButtonText }}
                                     </button>
                                 </Hotkey>
                             </p>
@@ -58,12 +59,27 @@ import { Hotkey } from '@simolation/vue-hotkey';
 import { useAppStore } from '@/store/app';
 
 export default defineComponent({
-    name: 'ConfirmDialog',
-    components: { UseFocusTrap, Hotkey },
-    props: {
-        question: String,
-        header: String,
+    name: 'ModalDialog',
+    components: {
+        UseFocusTrap,
+        Hotkey,
     },
+    props: {
+        submitButtonText: {
+            type: String,
+            reqired: false,
+            default: 'OK',
+        },
+        cancelButtonText: {
+            type: String,
+            reqired: false,
+            default: 'Cancel',
+        },
+
+        /** The affirmative action is required, no cancel is made button available */
+        required: Boolean,
+    },
+
     setup() {
         /** Temporarily pause the use of the global app shortcuts in favor of typical
          * key event handling within this dialog. */
@@ -75,13 +91,7 @@ export default defineComponent({
             app.useAppShortcuts = true;
         });
 
-        /** NOTE: Returning the returnValue function is required by vue3-promise-dialog */
-        function returnValue() {
-            return true;
-        }
-        return {
-            returnValue,
-        };
+        return {};
     },
 });
 </script>

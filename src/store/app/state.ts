@@ -2,6 +2,7 @@ import { MediaUrl } from '../types';
 import { Compilation, PlaybackMode } from '../compilation-types';
 import CompilationHandler from '../compilation-handler';
 import { useLocalStorage } from '@vueuse/core';
+import { ref } from 'vue';
 
 /** Implements the state of this application */
 export const state = {
@@ -34,14 +35,21 @@ export const state = {
     /** A dictionary of stored media URLs, representing playable media content
      * @remarks A name for the resource is used as key, preventing duplicate files for the same content.
      * For online URL's: a simplified resource name, derived from the URL;
-     * For files: the full name (including a possible path) of the original media file (from the disk or from within a REZ/ZIP-file) */
-    mediaUrls: useLocalStorage('mediaUrls', new Map<string, MediaUrl>()),
+     * For files: the full name (including a possible path) of the original media file (from the disk or from within a REZ/ZIP-file)
+     * This is intentionally not persisted, to avoid using disposed URL's after an app restart.
+     */
+    mediaUrls: ref(new Map<string, MediaUrl>()),
 
     /** Whether to use global app shortcuts
      * @remarks This can be used to temporarily pause global app shortcuts
      * in favor of use within modal or other dialogs.
      */
     useAppShortcuts: useLocalStorage('useAppShortcuts', true),
+
+    /** The previous acknowledged version.
+     * @remarks Used to let the user acknowledge (and internally handle) any new version
+     */
+    acknowledgedVersion: useLocalStorage('acknowledgedVersion', '0.0.1'),
 
     /** The playback mode.
      * @remarks This can be set by the user, and is persisted.

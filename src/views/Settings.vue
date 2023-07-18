@@ -336,7 +336,7 @@ function reset() {
     console.debug('Settings::reset');
     confirm(
         'Reset',
-        `Do you want to reset the application to the initial settings? Already downloaded compilations remain available on the device.`,
+        `Do you want to reset the application to the initial state? Already downloaded compilations remain available on the device.`,
     ).then((ok) => {
         if (ok) {
             router.push('/reset');

@@ -152,6 +152,12 @@ export const actions = {
         }
     },
 
+    /** Updates the version known as the (previously) acknowledged version
+     */
+    updateAcknowledgedVersion(version: string): void {
+        state.acknowledgedVersion.value = version;
+    },
+
     /** Updates the track pre-roll
      * @remarks Also updates the persistent store of the compilation
      */

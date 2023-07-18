@@ -2,7 +2,6 @@
     <UseFocusTrap>
         <div class="modal is-active">
             <div class="modal-background"></div>
-
             <div class="modal-card">
                 <form
                     data-cy="modal-form"

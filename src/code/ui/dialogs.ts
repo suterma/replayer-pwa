@@ -1,6 +1,7 @@
 import { Compilation, ICue, Track } from '@/store/compilation-types';
 import { openDialog } from 'vue3-promise-dialog';
 import ConfirmDialog from '../../components/dialogs/ConfirmDialog.vue';
+import NewVersionDialog from '../../components/dialogs/NewVersionDialog.vue';
 import TrackSharingDialog from '../../components/dialogs/TrackSharingDialog.vue';
 import AddTextCuesDialog from '../../components/dialogs/AddTextCuesDialog.vue';
 import CompilationDownloadDialog from '../../components/dialogs/CompilationDownloadDialog.vue';
@@ -12,6 +13,16 @@ import CompilationDownloadDialog from '../../components/dialogs/CompilationDownl
  */
 export function confirm(header: string, question: string): Promise<boolean> {
     return openDialog(ConfirmDialog, { question, header });
+}
+
+/** A new version announcement/acknowledgement function that uses the NewVersionDialog.vue component
+ * @returns A promise of type boolean, according to whether the user has confirmed.
+ */
+export function acknowledgeVersion(
+    version: string,
+    updateText: string,
+): Promise<boolean> {
+    return openDialog(NewVersionDialog, { version, updateText });
 }
 
 /** A share action that uses the TrackSharingDialog.vue component

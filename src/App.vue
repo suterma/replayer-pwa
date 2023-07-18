@@ -56,6 +56,8 @@ import { useAudioStore } from './store/audio';
 import { useSettingsStore } from '@/store/settings';
 import { mapActions, mapState } from 'pinia';
 import { useAppStore } from './store/app';
+import { acknowledgeVersion } from './code/ui/dialogs';
+import { compare } from 'compare-versions';
 
 export default defineComponent({
     name: 'App',
@@ -75,8 +77,16 @@ export default defineComponent({
         window.onbeforeunload = this.cleanUp;
     },
 
+    async mounted() {
+        this.handleAppUpdate();
+    },
+
     methods: {
-        ...mapActions(useAppStore, ['revokeAllMediaUrls']),
+        ...mapActions(useAppStore, [
+            'revokeAllMediaUrls',
+            'updateAcknowledgedVersion',
+            'discardCompilation',
+        ]),
 
         cleanUp() {
             console.log('App.vue::cleanUp...');
@@ -90,12 +100,48 @@ export default defineComponent({
 
             console.log('App.vue::cleanUp done.');
         },
+
+        /** Check for and handle a new version */
+        handleAppUpdate() {
+            // Check for and handle a new version
+            const currentVersion = process.env.VUE_APP_VERSION;
+            const previousVersion = this.acknowledgedVersion;
+
+            if (currentVersion && currentVersion != previousVersion) {
+                console.debug(
+                    `App.vue::handleAppUpdate from ${previousVersion} to ${currentVersion}`,
+                );
+
+                // Remove stale state, when updating from old vuex state
+                if (compare(previousVersion, '2.0.0', '<')) {
+                    this.discardCompilation();
+                    useSettingsStore().$reset();
+                    localStorage.clear();
+                    indexedDB.deleteDatabase('keyval-store');
+                }
+
+                let updateText = '';
+                if (
+                    compare(currentVersion, '2.0.0', '>=') &&
+                    compare(previousVersion, '2.0.0', '<')
+                ) {
+                    updateText =
+                        'New Features (2.0.0): Tempo handling, UI improvements';
+                }
+
+                acknowledgeVersion(currentVersion, updateText).then(() => {
+                    this.updateAcknowledgedVersion(currentVersion);
+                });
+            }
+
+            console.debug('App.vue::handleAppUpdate done.');
+        },
     },
     computed: {
         ...mapState(useSettingsStore, [
             'experimentalShowPositionInTrackHeader',
         ]),
-        ...mapState(useAppStore, ['hasCompilation']),
+        ...mapState(useAppStore, ['hasCompilation', 'acknowledgedVersion']),
     },
 });
 </script>
