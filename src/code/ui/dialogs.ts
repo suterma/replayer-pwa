@@ -1,4 +1,4 @@
-import { Compilation, ICue, Track } from '@/store/compilation-types';
+import { Compilation, ICue, ITrack } from '@/store/compilation-types';
 import { openDialog } from 'vue3-promise-dialog';
 import ConfirmDialog from '../../components/dialogs/ConfirmDialog.vue';
 import NewVersionDialog from '../../components/dialogs/NewVersionDialog.vue';
@@ -29,14 +29,14 @@ export function acknowledgeVersion(
  * @param track - The track that will be shared
  * @returns A promise of type boolean, according to whether the user has confirmed.
  */
-export function shareTrack(track: Track): Promise<boolean> {
+export function shareTrack(track: ITrack): Promise<boolean> {
     return openDialog(TrackSharingDialog, { track });
 }
 
 /** A text input that creates a cue per line, using the AddTextCuesDialog.vue component
  * @returns A promise of a set of cues that the user will provide.
  */
-export function addTextCues(track: Track): Promise<ICue[]> {
+export function addTextCues(track: ITrack): Promise<ICue[]> {
     return openDialog(AddTextCuesDialog, { track });
 }
 

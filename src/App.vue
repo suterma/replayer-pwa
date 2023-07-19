@@ -126,7 +126,7 @@ export default defineComponent({
                     compare(previousVersion, '2.0.0', '<')
                 ) {
                     updateText =
-                        'New Features (2.0.0): Tempo handling, UI improvements';
+                        'New Features (2.0.0): Tempo handling, UI improvements, Adding multiple cues';
                 }
 
                 acknowledgeVersion(currentVersion, updateText).then(() => {

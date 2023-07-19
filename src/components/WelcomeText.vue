@@ -1,8 +1,8 @@
 <template>
-    <p class="">
+    <p>
         <SupportedFilesText />
     </p>
-    <p class="">
+    <p>
         <a
             href="https://replayer.app/documentation-app"
             alt="Link to the Replayer app documentation"

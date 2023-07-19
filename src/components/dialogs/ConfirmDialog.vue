@@ -1,80 +1,25 @@
 <template>
-    <UseFocusTrap>
-        <div class="modal is-active">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-                <form data-cy="modal-form" @submit.prevent="$close(this)">
-                    <header class="modal-card-head has-cropped-text">
-                        <h1 class="modal-card-title title">{{ header }}</h1>
-                    </header>
-                    <section class="modal-card-body">
-                        {{ question }}
-                    </section>
-                    <footer class="modal-card-foot is-justify-content-flex-end">
-                        <div class="field is-grouped">
-                            <p class="control">
-                                <Hotkey
-                                    :keys="['esc']"
-                                    :excluded-elements="[]"
-                                    v-slot="{ clickRef }"
-                                >
-                                    <button
-                                        class="button"
-                                        :ref="clickRef"
-                                        @click.prevent="$close(this, false)"
-                                    >
-                                        Cancel
-                                    </button>
-                                </Hotkey>
-                            </p>
-                            <p class="control">
-                                <Hotkey
-                                    :keys="['enter']"
-                                    :excluded-elements="[]"
-                                    v-slot="{ clickRef }"
-                                >
-                                    <button
-                                        v-focus
-                                        type="submit"
-                                        class="button is-success"
-                                        :ref="clickRef"
-                                    >
-                                        Ok
-                                    </button>
-                                </Hotkey>
-                            </p>
-                        </div>
-                    </footer>
-                </form>
-            </div>
-        </div>
-    </UseFocusTrap>
+    <ModalDialog>
+        <template #title>{{ header }}</template>
+        <template #body>
+            {{ question }}
+        </template>
+    </ModalDialog>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted } from 'vue';
-import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
-import { Hotkey } from '@simolation/vue-hotkey';
-import { useAppStore } from '@/store/app';
+import { defineComponent } from 'vue';
+
+import ModalDialog from '@/components/dialogs/ModalDialog.vue';
 
 export default defineComponent({
     name: 'ConfirmDialog',
-    components: { UseFocusTrap, Hotkey },
+    components: { ModalDialog },
     props: {
         question: String,
         header: String,
     },
     setup() {
-        /** Temporarily pause the use of the global app shortcuts in favor of typical
-         * key event handling within this dialog. */
-        const app = useAppStore();
-        onMounted(() => {
-            app.useAppShortcuts = false;
-        });
-        onUnmounted(() => {
-            app.useAppShortcuts = true;
-        });
-
         /** NOTE: Returning the returnValue function is required by vue3-promise-dialog */
         function returnValue() {
             return true;

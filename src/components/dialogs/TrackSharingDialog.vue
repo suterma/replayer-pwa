@@ -1,83 +1,36 @@
 <template>
-    <UseFocusTrap>
-        <div class="modal is-active">
-            <div class="modal-background"></div>
-            <div class="modal-card" v-experiment="true">
-                <form data-cy="modal-form" @submit.prevent="$close(this)">
-                    <header class="modal-card-head has-cropped-text">
-                        <h1 class="modal-card-title title">
-                            Share track '{{ track?.Name }}' via...
-                        </h1>
-                    </header>
-                    <section class="modal-card-body">
-                        <div class="control">
-                            <textarea
-                                class="textarea has-fixed-size is-size-7"
-                                placeholder="Track link"
-                                readonly
-                                v-text="trackUrl"
-                            ></textarea>
-                        </div>
-                        <a :href="trackUrl" target="_blank">Click to follow</a>
-                        <div class="content">
-                            You are sharing the track metadata and the URL, not
-                            the media file itself.
-                        </div>
-                    </section>
-                    <footer class="modal-card-foot is-justify-content-flex-end">
-                        <div class="field is-grouped">
-                            <p class="control">
-                                <Hotkey
-                                    :keys="['esc']"
-                                    :excluded-elements="[]"
-                                    v-slot="{ clickRef }"
-                                >
-                                    <button
-                                        class="button"
-                                        :ref="clickRef"
-                                        @click.prevent="$close(this, false)"
-                                    >
-                                        Cancel
-                                    </button>
-                                </Hotkey>
-                            </p>
-                            <p class="control">
-                                <Hotkey
-                                    :keys="['enter']"
-                                    :excluded-elements="[]"
-                                    v-slot="{ clickRef }"
-                                >
-                                    <button
-                                        v-focus
-                                        type="submits"
-                                        class="button is-success"
-                                        :ref="clickRef"
-                                    >
-                                        Ok
-                                    </button>
-                                </Hotkey>
-                            </p>
-                        </div>
-                    </footer>
-                </form>
+    <ModalDialog submitButtonText="Done" wide>
+        <template #title>Share track '{{ track?.Name }}' via...</template>
+        <template #body>
+            <div class="control">
+                <textarea
+                    class="textarea has-fixed-size is-size-7"
+                    placeholder="Track link"
+                    readonly
+                    v-text="trackUrl"
+                ></textarea>
             </div>
-        </div>
-    </UseFocusTrap>
+            <p>
+                <a :href="trackUrl" target="_blank">Click to follow</a>
+            </p>
+            <p>
+                You are sharing the track metadata and the URL, not the media
+                file itself.
+            </p>
+        </template>
+    </ModalDialog>
 </template>
 
 <script lang="ts">
 import { ICue, Track } from '@/store/compilation-types';
-import { PropType, defineComponent, onMounted, onUnmounted } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
-import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
-import { Hotkey } from '@simolation/vue-hotkey';
-import { useAppStore } from '@/store/app';
+import ModalDialog from '@/components/dialogs/ModalDialog.vue';
 
 export default defineComponent({
     name: 'TrackSharingDialog',
     components: {
-        UseFocusTrap,
-        Hotkey,
+        ModalDialog,
     },
     props: {
         track: {
@@ -85,16 +38,6 @@ export default defineComponent({
         },
     },
     setup() {
-        /** Temporarily pause the use of the global app shortcuts in favor of typical
-         * key event handling within this dialog. */
-        const app = useAppStore();
-        onMounted(() => {
-            app.useAppShortcuts = false;
-        });
-        onUnmounted(() => {
-            app.useAppShortcuts = true;
-        });
-
         /** NOTE: Returning the returnValue function is required by vue3-promise-dialog */
         function returnValue() {
             return true;

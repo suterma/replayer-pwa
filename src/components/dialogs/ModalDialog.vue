@@ -2,7 +2,7 @@
     <UseFocusTrap>
         <div class="modal is-active">
             <div class="modal-background"></div>
-            <div class="modal-card">
+            <div class="modal-card" :class="{ 'is-wide': wide }">
                 <form data-cy="modal-form" @submit.prevent="$close(this)">
                     <header class="modal-card-head has-cropped-text">
                         <h1 class="modal-card-title title">
@@ -74,6 +74,9 @@ export default defineComponent({
             default: 'OK',
         },
         submitButtonDisabled: Boolean,
+
+        wide: Boolean,
+
         cancelButtonText: {
             type: String,
             reqired: false,

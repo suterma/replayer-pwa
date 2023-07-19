@@ -99,8 +99,8 @@ export const getters = {
      */
     getTrackById: computed(() => {
         return (trackId: string) => {
-            return CompilationHandler.getTrackByCueId(
-                state.compilation.value,
+            return CompilationHandler.getTrackById(
+                state.compilation.value.Tracks,
                 trackId,
             );
         };
