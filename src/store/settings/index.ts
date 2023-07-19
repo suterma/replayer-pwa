@@ -85,14 +85,6 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         false,
     );
 
-    /** EXPERIMENTAL: Whether to show a menu action for adding multiple cues at once
-     * @remarks Default is false
-     */
-    const experimentalShowAddMultipleCuesAction = useLocalStorage(
-        'experimentalShowAddMultipleCuesAction',
-        false,
-    );
-
     /** EXPERIMENTAL: Whether to show a menu action for sharing a track via the Track API
      * @remarks Default is false
      */
@@ -126,7 +118,6 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         keyboardShortcutTimeout.value = 1000;
         timeFormat.value = TimeFormat.Iso8601Extended;
         experimentalShowPositionInTrackHeader.value = false;
-        experimentalShowAddMultipleCuesAction.value = false;
         experimentalAllowTrackSharingByLink.value = false;
         experimentalShowWaveforms.value = false;
         experimentalUseTempo.value = false;
@@ -143,7 +134,6 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         keyboardShortcutTimeout,
         timeFormat,
         experimentalShowPositionInTrackHeader,
-        experimentalShowAddMultipleCuesAction,
         experimentalAllowTrackSharingByLink,
         experimentalShowWaveforms,
         experimentalUseTempo,

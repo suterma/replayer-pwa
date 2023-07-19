@@ -2,11 +2,17 @@
     <DropdownMenu title="Track context menu">
         <DropdownMenuItem
             v-once
-            v-experiment="experimentalShowAddMultipleCuesAction"
             v-if="track"
             title="Add multiple cues..."
             subTitle="(add cues using text lines)"
             @click="addMultipleCues()"
+        />
+        <DropdownMenuItem
+            v-once
+            title="Reassign cue shortcuts"
+            subTitle="(first as seed, then incrementing)"
+            @click="reassignCueShortcuts(trackId)"
+            :iconPath="mdiOrderNumericAscending"
         />
         <DropdownMenuItem
             v-once
@@ -16,6 +22,7 @@
             subTitle="(allows to share a track)"
             @click="share()"
         />
+        <hr class="dropdown-divider" />
         <DropdownMenuItem
             v-once
             title="Clone"
@@ -23,14 +30,6 @@
             @click="cloneTrack(trackId)"
             :iconPath="mdiContentDuplicate"
         />
-        <DropdownMenuItem
-            v-once
-            title="Reassign cue shortcuts"
-            subTitle="(first as seed, then incrementing)"
-            @click="reassignCueShortcuts(trackId)"
-            :iconPath="mdiOrderNumericAscending"
-        />
-        <hr class="dropdown-divider" />
         <DropdownMenuItem
             v-once
             title="Remove"
@@ -140,10 +139,7 @@ export default defineComponent({
         },
     },
     computed: {
-        ...mapState(useSettingsStore, [
-            'experimentalShowAddMultipleCuesAction',
-            'experimentalAllowTrackSharingByLink',
-        ]),
+        ...mapState(useSettingsStore, ['experimentalAllowTrackSharingByLink']),
         /** The track for the context, if any
          */
         track(): ITrack | undefined {
