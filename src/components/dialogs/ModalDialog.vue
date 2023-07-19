@@ -22,6 +22,7 @@
                                 >
                                     <button
                                         class="button"
+                                        data-cy="modal-cancel-button"
                                         :ref="clickRef"
                                         @click.prevent="$close(this, false)"
                                     >
@@ -38,7 +39,9 @@
                                     <button
                                         type="submit"
                                         class="button is-success"
+                                        data-cy="modal-submit-button"
                                         :ref="clickRef"
+                                        :disabled="submitButtonDisabled"
                                     >
                                         {{ submitButtonText }}
                                     </button>
@@ -70,6 +73,7 @@ export default defineComponent({
             reqired: false,
             default: 'OK',
         },
+        submitButtonDisabled: Boolean,
         cancelButtonText: {
             type: String,
             reqired: false,

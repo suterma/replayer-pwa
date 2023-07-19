@@ -1,162 +1,102 @@
 <template>
-    <UseFocusTrap>
-        <div class="modal is-active">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-                <form
-                    data-cy="modal-form"
-                    @submit.prevent="
-                        download().then(() => {
-                            $close(this);
-                        })
-                    "
-                >
-                    <header class="modal-card-head has-cropped-text">
-                        <h1 class="modal-card-title title is-flex-shrink-1">
-                            Download compilation as...
-                        </h1>
-                    </header>
-                    <section class="modal-card-body">
-                        <div class="field">
-                            <label class="label">Compilation title*</label>
-                            <div class="control has-icons-right">
-                                <input
-                                    class="input"
-                                    :class="{ 'is-danger': !compilationTitle }"
-                                    type="text"
-                                    v-focus
-                                    placeholder="Compilation title"
-                                    :value="compilationTitle"
-                                    @change="
-                                        updateCompilationTitle(
-                                            ($event.target as HTMLInputElement)
-                                                .value,
-                                        )
-                                    "
-                                    @input="
-                                        updateCompilationTitle(
-                                            ($event.target as HTMLInputElement)
-                                                .value,
-                                        )
-                                    "
-                                />
-                                <span
-                                    class="icon is-small is-right"
-                                    v-show="!compilationTitle"
-                                >
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                </span>
-                            </div>
-                            <p v-if="!compilationTitle" class="help is-danger">
-                                The compilation title is required
-                            </p>
-                            <p v-else class="help">
-                                The compilation title is used as file name
-                            </p>
-                        </div>
-                        <div class="field">
-                            <div class="control">
-                                <label class="radio">
-                                    <input
-                                        type="radio"
-                                        name="downloadType"
-                                        class="mr-1"
-                                        v-model="isDownloadZip"
-                                        v-bind:value="true"
-                                        checked
-                                        data-cy="radio-download-zip"
-                                    />
-                                    <span class="has-text-weight-bold"
-                                        >ZIP</span
-                                    >
-                                    <span class="has-opacity-half is-size-7">
-                                        (<span class="is-family-monospace"
-                                            >{{ proposedFileName }}.rez</span
-                                        >), including provided media files
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control">
-                                <label class="radio">
-                                    <input
-                                        type="radio"
-                                        name="downloadType"
-                                        class="mr-1"
-                                        v-model="isDownloadZip"
-                                        v-bind:value="false"
-                                        data-cy="radio-download-xml"
-                                    />
-                                    <span class="has-text-weight-bold"
-                                        >XML</span
-                                    >
-                                    <span class="has-opacity-half is-size-7">
-                                        (<span class="is-family-monospace"
-                                            >{{ proposedFileName }}.rex</span
-                                        >), using media file names / URLs only
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                    </section>
-                    <footer class="modal-card-foot is-justify-content-flex-end">
-                        <div class="field is-grouped">
-                            <p class="control">
-                                <Hotkey
-                                    :keys="['esc']"
-                                    :excluded-elements="[]"
-                                    v-slot="{ clickRef }"
-                                >
-                                    <button
-                                        class="button"
-                                        :ref="clickRef"
-                                        @click.prevent="$close(this, false)"
-                                        data-cy="button-cancel"
-                                    >
-                                        Cancel
-                                    </button>
-                                </Hotkey>
-                            </p>
-                            <p class="control">
-                                <Hotkey
-                                    :keys="['enter']"
-                                    :excluded-elements="[]"
-                                    v-slot="{ clickRef }"
-                                >
-                                    <button
-                                        class="button is-success"
-                                        type="submit"
-                                        :ref="clickRef"
-                                        :disabled="!compilationTitle"
-                                        data-cy="button-download"
-                                    >
-                                        Download
-                                    </button>
-                                </Hotkey>
-                            </p>
-                        </div>
-                    </footer>
-                </form>
+    <ModalDialog
+        submitButtonText="Download"
+        :submitButtonDisabled="!compilationTitle"
+    >
+        <template #title>Download compilation as...</template>
+        <template #body>
+            <div class="field">
+                <label class="label">Compilation title*</label>
+                <div class="control has-icons-right">
+                    <input
+                        class="input"
+                        :class="{ 'is-danger': !compilationTitle }"
+                        type="text"
+                        v-focus
+                        placeholder="Compilation title"
+                        :value="compilationTitle"
+                        @change="
+                            updateCompilationTitle(
+                                ($event.target as HTMLInputElement).value,
+                            )
+                        "
+                        @input="
+                            updateCompilationTitle(
+                                ($event.target as HTMLInputElement).value,
+                            )
+                        "
+                    />
+                    <span
+                        class="icon is-small is-right"
+                        v-show="!compilationTitle"
+                    >
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </span>
+                </div>
+                <p v-if="!compilationTitle" class="help is-danger">
+                    The compilation title is required
+                </p>
+                <p v-else class="help">
+                    The compilation title is used as file name
+                </p>
             </div>
-        </div>
-    </UseFocusTrap>
+            <div class="field">
+                <div class="control">
+                    <label class="radio">
+                        <input
+                            type="radio"
+                            name="downloadType"
+                            class="mr-1"
+                            v-model="isDownloadZip"
+                            v-bind:value="true"
+                            checked
+                            data-cy="radio-download-zip"
+                        />
+                        <span class="has-text-weight-bold">ZIP</span>
+                        <span class="has-opacity-half is-size-7">
+                            (<span class="is-family-monospace"
+                                >{{ proposedFileName }}.rez</span
+                            >), including provided media files
+                        </span>
+                    </label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <label class="radio">
+                        <input
+                            type="radio"
+                            name="downloadType"
+                            class="mr-1"
+                            v-model="isDownloadZip"
+                            v-bind:value="false"
+                            data-cy="radio-download-xml"
+                        />
+                        <span class="has-text-weight-bold">XML</span>
+                        <span class="has-opacity-half is-size-7">
+                            (<span class="is-family-monospace"
+                                >{{ proposedFileName }}.rex</span
+                            >), using media file names / URLs only
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </template>
+    </ModalDialog>
 </template>
 
 <script lang="ts">
 import { Compilation } from '@/store/compilation-types';
 import { defineComponent, ref, onMounted, onUnmounted, PropType } from 'vue';
-import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
-import { Hotkey } from '@simolation/vue-hotkey';
 import CompilationHandler from '@/store/compilation-handler';
 import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
+import ModalDialog from '@/components/dialogs/ModalDialog.vue';
 
 export default defineComponent({
     name: 'CompilationDownloadDialog',
     components: {
-        UseFocusTrap,
-        Hotkey,
+        ModalDialog,
     },
     props: {
         compilation: {
