@@ -49,7 +49,10 @@ export const state = {
     /** The previous acknowledged version.
      * @remarks Used to let the user acknowledge (and internally handle) any new version
      */
-    acknowledgedVersion: useLocalStorage('acknowledgedVersion', '0.0.1'),
+    acknowledgedVersion: useLocalStorage(
+        'acknowledgedVersion',
+        null as string | null,
+    ),
 
     /** The playback mode.
      * @remarks This can be set by the user, and is persisted.
