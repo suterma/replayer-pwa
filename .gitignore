@@ -28,3 +28,6 @@ junit.xml
 cypress/screenshots/
 cypress/videos/
 cypress/downloads/
+
+# Keep the tasks inside the .vscode hidden folder
+!.vscode/tasks.json
