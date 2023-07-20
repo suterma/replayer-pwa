@@ -1,6 +1,7 @@
 <template>
-    <!-- Adjust Cue (With Hotkey for the active track)
-                Adjusting a cue should also work when invoked from inside a 
+    <!-- Adjust time (With Hotkey for a selected item)
+                Adjusting a time value should also work when this hotkey is
+                invoked from inside a 
                 textbox, thus explicitly no elements are excluded.-->
     <Hotkey
         :disabled="!isSelectedCue"
@@ -10,10 +11,10 @@
     >
         <button
             class="button"
-            title="Adjusts the cue time to the current playback time"
-            @click="$emit('adjustCue')"
+            title="Adjusts the time to the current playback time"
+            @click="$emit('adjustTime')"
             :ref="clickRef"
-            data-cy="adjust-cue"
+            data-cy="adjust-time"
         >
             <BaseIcon
                 :path="isSelectedCue ? mdiTimerPlay : mdiTimerPlayOutline"
@@ -38,19 +39,19 @@ import {
     mdiTimerPlayOutline,
     mdiAppleKeyboardShift,
 } from '@mdi/js';
-/** A toggle switch for the playback mode
- * @remarks Handles and emits various states and event for playback control.
+/** A button that emits a click event, intended to ajust a time value to the current playback time.
  */
 export default defineComponent({
-    name: 'AdjustCueButton',
+    name: 'AdjustTimeButton',
     components: { BaseIcon, ShortcutDisplay, Hotkey },
     emits: [
         /** Occurs, when the cue should get adjusted to the the current playhead position.
          */
-        'adjustCue',
+        'adjustTime',
     ],
     props: {
-        /** Whether this button is for the globally selected cue (The button should only execute the hotkey for the globally selected cue ) */
+        /** Whether this button is for the globally selected item
+         * (The button should only execute the hotkey for the globally selected item ) */
         isSelectedCue: {
             type: Boolean,
             default: false,

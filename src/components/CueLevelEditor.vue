@@ -82,10 +82,10 @@
                             </MetricalEditor>
                         </div>
                         <div class="control is-hidden-mobile">
-                            <AdjustCueButton
-                                @adjustCue="$emit('adjust')"
+                            <AdjustTimeButton
+                                @adjustTime="$emit('adjust')"
                                 :isSelectedCue="isCueSelected"
-                            ></AdjustCueButton>
+                            ></AdjustTimeButton>
                         </div>
                     </div>
                 </div>
@@ -165,7 +165,7 @@ import { storeToRefs } from 'pinia';
 
 import { ICue, PlaybackMode } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
-import AdjustCueButton from '@/components/buttons/AdjustCueButton.vue';
+import AdjustTimeButton from '@/components/buttons/AdjustTimeButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import TimeInput from '@/components/TimeInput.vue';

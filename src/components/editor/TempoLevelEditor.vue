@@ -73,9 +73,9 @@
                                 />
                             </p>
                             <p class="control is-hidden-mobile">
-                                <AdjustCueButton
-                                    @adjustCue="$emit('adjustOriginTime')"
-                                ></AdjustCueButton>
+                                <AdjustTimeButton
+                                    @adjustTime="$emit('adjustOriginTime')"
+                                ></AdjustTimeButton>
                             </p>
                         </div>
                     </div>
@@ -118,7 +118,7 @@ import BpmEditor from '@/components/editor/BpmEditor.vue';
 import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
-import AdjustCueButton from '@/components/buttons/AdjustCueButton.vue';
+import AdjustTimeButton from '@/components/buttons/AdjustTimeButton.vue';
 import { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
 import { ITimeSignature } from '@/code/music/ITimeSignature';
