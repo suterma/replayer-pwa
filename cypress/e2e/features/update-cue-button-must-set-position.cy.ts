@@ -15,10 +15,14 @@ describe('the cue update button', () => {
             .trigger('change');
 
         // ACT (update cue)
-        cy.get('button[data-cy="adjust-cue"]').first().click();
+        cy.get('[data-cy="cue-editors"] button[data-cy="adjust-time"]')
+            .first()
+            .click();
 
         // ASSERT (that the cue was updated.)
-        cy.get('input[type=number][data-cy="input-cue-position"]')
+        cy.get(
+            '[data-cy="cue-editors"] input[type=number][data-cy="input-time-position"]',
+        )
             .invoke('val') // call the val() method to extract the value
             .then((val) => +(val ?? '')) // convert it to a number
             .should('be.least', 50); // also compare it to a number

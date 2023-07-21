@@ -247,7 +247,7 @@
                 </TempoLevelEditor>
 
                 <!-- Main container -->
-                <div class="levels">
+                <div class="levels" data-cy="cue-editors">
                     <CueLevelEditors
                         :cues="cues"
                         :disabled="!canPlay"
@@ -1002,13 +1002,6 @@ function seek(seconds: number): void {
 function seekToSeconds(seconds: number): void {
     trackPlayerInstance.value?.seekToSeconds(seconds);
     emit('seekToSeconds', seconds);
-}
-
-/** Seeks to the position, in [seconds], without emitting an event
- * @devdoc This is used to break the circular event handling for multitrack seek operations
- */
-function seekToSecondsSilent(seconds: number): void {
-    trackPlayerInstance.value?.seekToSeconds(seconds);
 }
 
 /** Handles the volume up command if this is the active track */

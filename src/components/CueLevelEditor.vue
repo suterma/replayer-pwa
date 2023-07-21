@@ -84,7 +84,7 @@
                         <div class="control is-hidden-mobile">
                             <AdjustTimeButton
                                 @adjustTime="$emit('adjust')"
-                                :isSelectedCue="isCueSelected"
+                                :isSelectedItem="isCueSelected"
                             ></AdjustTimeButton>
                         </div>
                     </div>

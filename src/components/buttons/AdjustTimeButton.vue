@@ -4,7 +4,7 @@
                 invoked from inside a 
                 textbox, thus explicitly no elements are excluded.-->
     <Hotkey
-        :disabled="!isSelectedCue"
+        :disabled="!isSelectedItem"
         :keys="['shift', 'insert']"
         :excluded-elements="[]"
         v-slot="{ clickRef }"
@@ -17,11 +17,11 @@
             data-cy="adjust-time"
         >
             <BaseIcon
-                :path="isSelectedCue ? mdiTimerPlay : mdiTimerPlayOutline"
+                :path="isSelectedItem ? mdiTimerPlay : mdiTimerPlayOutline"
             />
             <!-- On large screens also show an indicative text -->
             <span class="is-hidden-touch has-opacity-half">Adjust</span>
-            <ShortcutDisplay :class="{ 'is-invisible': !isSelectedCue }">
+            <ShortcutDisplay :class="{ 'is-invisible': !isSelectedItem }">
                 <BaseIcon v-once :path="mdiAppleKeyboardShift" class="mr-1" />
                 + INSERT</ShortcutDisplay
             >
@@ -40,6 +40,7 @@ import {
     mdiAppleKeyboardShift,
 } from '@mdi/js';
 /** A button that emits a click event, intended to ajust a time value to the current playback time.
+ * Also handles a hotkey, when this is marked as selected (via isSelectedItem)
  */
 export default defineComponent({
     name: 'AdjustTimeButton',
@@ -52,7 +53,7 @@ export default defineComponent({
     props: {
         /** Whether this button is for the globally selected item
          * (The button should only execute the hotkey for the globally selected item ) */
-        isSelectedCue: {
+        isSelectedItem: {
             type: Boolean,
             default: false,
             required: false,
