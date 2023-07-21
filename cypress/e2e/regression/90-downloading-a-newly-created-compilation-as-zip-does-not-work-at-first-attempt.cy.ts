@@ -11,7 +11,7 @@ describe('testing the issue "90-downloading-a-newly-created-compilation-as-zip-d
 
         // Choose the ZIP type
         cy.get('[data-cy="modal-form"] [data-cy="radio-download-zip"]').click();
-        cy.get('[data-cy="modal-form"] [data-cy="button-download"]').click();
+        cy.get('[data-cy="modal-form"] [data-cy="submit-button"]').click();
 
         // ASSERT (the download)
         cy.readFile(

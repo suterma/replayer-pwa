@@ -22,7 +22,7 @@
                                 >
                                     <button
                                         class="button"
-                                        data-cy="modal-cancel-button"
+                                        data-cy="cancel-button"
                                         :ref="clickRef"
                                         @click.prevent="$close(this, false)"
                                     >
@@ -39,7 +39,7 @@
                                     <button
                                         type="submit"
                                         class="button is-success"
-                                        data-cy="modal-submit-button"
+                                        data-cy="submit-button"
                                         :ref="clickRef"
                                         :disabled="submitButtonDisabled"
                                     >
