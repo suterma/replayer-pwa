@@ -3,7 +3,13 @@
         <div class="modal is-active">
             <div class="modal-background"></div>
             <div class="modal-card" :class="{ 'is-wide': wide }">
-                <form data-cy="modal-form" @submit.prevent="$close(this)">
+                <form
+                    data-cy="modal-form"
+                    @submit.prevent="
+                        $emit('submit');
+                        $close(this);
+                    "
+                >
                     <header class="modal-card-head has-cropped-text">
                         <h1 class="modal-card-title title">
                             <slot name="title"></slot>
@@ -67,6 +73,7 @@ export default defineComponent({
         UseFocusTrap,
         Hotkey,
     },
+    emits: ['submit'],
     props: {
         submitButtonText: {
             type: String,

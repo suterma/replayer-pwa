@@ -2,6 +2,7 @@
     <ModalDialog
         submitButtonText="Download"
         :submitButtonDisabled="!compilationTitle"
+        @submit="download()"
     >
         <template #title>Download compilation as...</template>
         <template #body>
@@ -87,7 +88,7 @@
 
 <script lang="ts">
 import { Compilation } from '@/store/compilation-types';
-import { defineComponent, ref, onMounted, onUnmounted, PropType } from 'vue';
+import { defineComponent, ref, PropType } from 'vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
@@ -104,16 +105,6 @@ export default defineComponent({
         },
     },
     setup() {
-        /** Temporarily pause the use of the global app shortcuts in favor of typical
-         * key event handling within this dialog. */
-        const app = useAppStore();
-        onMounted(() => {
-            app.useAppShortcuts = false;
-        });
-        onUnmounted(() => {
-            app.useAppShortcuts = true;
-        });
-
         /** NOTE: Returning the returnValue function is required by vue3-promise-dialog */
         function returnValue() {
             return true;
