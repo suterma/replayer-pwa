@@ -1,7 +1,6 @@
 <template>
     <DropdownMenu title="Track context menu">
         <DropdownMenuItem
-            v-once
             v-if="track"
             title="Add multiple cues..."
             subTitle="(add cues using text lines)"
@@ -15,7 +14,6 @@
             :iconPath="mdiOrderNumericAscending"
         />
         <DropdownMenuItem
-            v-once
             v-experiment="experimentalAllowTrackSharingByLink"
             v-if="track"
             title="Share..."
@@ -33,8 +31,7 @@
         <DropdownMenuItem
             v-once
             title="Remove"
-            subTitle="(remove
-                            the track from the compilation)"
+            subTitle="(remove the track from the compilation)"
             @click="remove()"
             :iconPath="mdiTrashCanOutline"
         />

@@ -93,6 +93,14 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         false,
     );
 
+    /** EXPERIMENTAL: Whether to show a menu for the multitrack view
+     * @remarks Default is false
+     */
+    const experimentalMultitrack = useLocalStorage(
+        'experimentalMultitrack',
+        false,
+    );
+
     /** EXPERIMENTAL: Whether to show the waveforms
      * @remarks Default is false
      */
@@ -119,6 +127,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         timeFormat.value = TimeFormat.Iso8601Extended;
         experimentalShowPositionInTrackHeader.value = false;
         experimentalAllowTrackSharingByLink.value = false;
+        experimentalMultitrack.value = false;
         experimentalShowWaveforms.value = false;
         experimentalUseTempo.value = false;
     }
@@ -135,6 +144,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         timeFormat,
         experimentalShowPositionInTrackHeader,
         experimentalAllowTrackSharingByLink,
+        experimentalMultitrack,
         experimentalShowWaveforms,
         experimentalUseTempo,
         $reset,

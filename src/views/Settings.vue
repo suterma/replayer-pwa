@@ -289,6 +289,15 @@
                     ></LabeledCheckbox>
                 </div>
             </div>
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="experimentalMultitrack"
+                        label="Show multitrack view"
+                        hint="Allows to play STEM/multitrack compilations"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -317,6 +326,7 @@ const {
     timeFormat,
     experimentalShowPositionInTrackHeader,
     experimentalAllowTrackSharingByLink,
+    experimentalMultitrack,
     experimentalShowWaveforms,
     experimentalUseTempo,
 } = storeToRefs(settings);

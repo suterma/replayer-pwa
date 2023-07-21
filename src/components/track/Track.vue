@@ -931,28 +931,6 @@ function toggleSolo(solo: boolean | null = null): void {
     }
 }
 
-/** Sets the visual transition for the player widget's track change
- */
-//  function      setWidgetTransit(transition: string): void {
-//     skipTransitionName.value = transition;
-// };
-
-/** Gets the current position
- * @remarks Actually queries the media player.
- * @devdoc For better overall performance, this call should be avoided in favor of the (more seldom) auto-updated/emitted value.
- */
-function getCurrentPosition(): number {
-    return trackPlayerInstance.value?.getCurrentPosition() ?? 0;
-}
-
-/** Starts playback at the current position
- * @remarks Does not assert whether this is the active track.
- * @remarks Asserts (and if necessary) resolves the playability of the track media
- */
-function play() {
-    trackPlayerInstance.value?.play();
-}
-
 /** Starts playback from the given temporal position
  * @remarks This first seeks to the position, then starts playing
  */

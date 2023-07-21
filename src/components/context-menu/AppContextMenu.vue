@@ -35,18 +35,20 @@
                 />
             </Hotkey>
             <Hotkey
-                v-once
+                v-if="experimentalMultitrack"
                 :keys="['f6']"
                 :excluded-elements="[]"
                 v-slot="{ clickRef }"
             >
-                <DropdownMenuRouterLink
-                    to="/mix"
-                    title="Mix"
-                    shortcut="F6"
-                    :clickRef="clickRef"
-                    :iconPath="mdiTuneVertical"
-                />
+                <div v-experiment="experimentalMultitrack">
+                    <DropdownMenuRouterLink
+                        to="/mix"
+                        title="Mix"
+                        shortcut="F6"
+                        :clickRef="clickRef"
+                        :iconPath="mdiTuneVertical"
+                    />
+                </div>
             </Hotkey>
             <Hotkey
                 v-once
@@ -114,6 +116,8 @@ import {
     mdiFlaskOutline,
     mdiTuneVertical,
 } from '@mdi/js';
+import { mapState } from 'pinia';
+import { useSettingsStore } from '@/store/settings';
 
 /** A nav bar as header with a menu for a compilation
  */
@@ -143,6 +147,11 @@ export default defineComponent({
             mdiFlaskOutline: mdiFlaskOutline,
             mdiTuneVertical: mdiTuneVertical,
         };
+    },
+    computed: {
+        ...mapState(useSettingsStore, ['experimentalMultitrack']),
+        /** The track for the context, if any
+         */
     },
 });
 </script>

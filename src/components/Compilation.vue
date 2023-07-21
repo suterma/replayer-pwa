@@ -35,8 +35,6 @@
                         updateIsTrackPlayerFullScreen($event)
                     "
                     :isActiveTrack="activeTrackId === track.Id"
-                    @isTrackPlaying="updateIsTrackPlaying($event)"
-                    @seekToSeconds="handleTrackSeekToSeconds($event)"
                     :playbackMode="playbackMode"
                     @update:playbackMode="updatePlaybackMode($event)"
                     :hasPreviousTrack="index > 0 || isLoopingPlaybackMode"
@@ -47,187 +45,19 @@
                     :isOnlyAudioTrack="hasSingleAudioTrack"
                     :isFirst="isFirstTrack(track.Id)"
                     :isLast="isLastTrack(track.Id)"
-                    :isAnySoloed="isAnyTrackSoloed"
                     @previousTrack="
                         toPreviousTrack(track.Id, isLoopingPlaybackMode)
                     "
                     @nextTrack="toNextTrack(track.Id, isLoopingPlaybackMode)"
                     @trackEnded="continueAfterTrack(track.Id)"
-                    @trackLoopedTo="multitrackHandler?.seekToSeconds($event)"
                 />
             </template>
-            <!-- separate Pseudo-Track with "Master" Controls for the Mixer -->
-            <template v-if="isMixable">
-                <hr />
-                <div class="track is-together-print" data-cy="master-track">
-                    <!-- Level, also on mobile 
-                NOTE: The 100% width is necessary to keep the level's right items fully a the end of the available space. -->
-                    <div style="width: 100%" class="level is-mobile">
-                        <!-- Left side -->
-                        <div class="level-left">
-                            <div
-                                class="level-item is-justify-content-flex-start"
-                            >
-                                <SoloButton
-                                    :disabled="!isAllTrackLoaded"
-                                    :isSoloed="isAllTrackSoloed"
-                                    @click="multitrackHandler?.toggleSolo()"
-                                    data-cy="solo-all"
-                                    title="Solo ALL"
-                                />
-                                <MuteButton
-                                    :disabled="!isAllTrackLoaded"
-                                    :isMuted="isAllTrackMuted"
-                                    @click="multitrackHandler?.toggleMute()"
-                                    data-cy="mute-all"
-                                    title="Mute ALL"
-                                />
-                            </div>
-                            <div
-                                class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
-                            >
-                                <ToggleButton
-                                    class="button is-primary"
-                                    :class="{
-                                        'is-inactive': !showVertical,
-                                    }"
-                                    :isEngaged="showVertical"
-                                    engaged-label="show Horizontal"
-                                    disengaged-label="show Vertical"
-                                    @click="toggleVertical($event)"
-                                >
-                                    <BaseIcon
-                                        v-if="!showVertical"
-                                        :path="mdiRotateLeftVariant"
-                                    />
-                                    <BaseIcon
-                                        v-else
-                                        :path="mdiRotateRightVariant"
-                                        :style="{
-                                            transform: 'rotate(' + 90 + 'deg)',
-                                        }"
-                                    />
-                                </ToggleButton>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </template>
         </div>
-
-        <!-- Multi-track-Controller -->
-        <Teleport to="#media-player">
-            <div class="section has-background-grey-dark" v-if="isMixable">
-                <!-- 
-                Track playback bar (In mix mode, this contains:
-                - a wide slider
-                - the play/pause/mute/solo combo
-                - a set of transport controls
-                    -->
-                <nav class="level is-editable is-unselectable">
-                    <div class="level-left">
-                        <div class="level-item is-justify-content-flex-start">
-                            <SoloButton
-                                :disabled="!isAllTrackLoaded"
-                                :isSoloed="isAllTrackSoloed"
-                                @click="multitrackHandler?.toggleSolo()"
-                                data-cy="mute"
-                            />
-                            <MuteButton
-                                :disabled="!isAllTrackLoaded"
-                                :isMuted="isAllTrackMuted"
-                                @click="multitrackHandler?.toggleMute()"
-                                data-cy="mute"
-                            />
-                        </div>
-                        <div
-                            class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
-                        >
-                            <ToggleButton
-                                class="button is-primary"
-                                :class="{
-                                    'is-inactive': !showVertical,
-                                }"
-                                :isEngaged="showVertical"
-                                engaged-label="show Horizontal"
-                                disengaged-label="show Vertical"
-                                @click="toggleVertical($event)"
-                            >
-                                <BaseIcon
-                                    v-if="!showVertical"
-                                    :path="mdiRotateLeftVariant"
-                                />
-                                <BaseIcon
-                                    v-else
-                                    :path="mdiRotateRightVariant"
-                                    :style="{
-                                        transform: 'rotate(' + 90 + 'deg)',
-                                    }"
-                                />
-                            </ToggleButton>
-                        </div>
-                    </div>
-
-                    <!-- A central level item. Margins are set to provide nice-looking spacing at all widths -->
-                    <div class="level-item mt-4-mobile">
-                        <PlayheadSlider
-                            class="is-fullwidth"
-                            :modelValue="getMultitrackPosition.position"
-                            @update:modelValue="
-                                (position) =>
-                                    multitrackHandler?.seekToSeconds(position)
-                            "
-                            @seek="
-                                (seconds) => multitrackHandler?.seek(seconds)
-                            "
-                            :trackDuration="
-                                multitrackHandler?.getAllTrackDuration()
-                            "
-                        >
-                        </PlayheadSlider>
-                    </div>
-                    <div class="level-right">
-                        <div class="level-item is-justify-content-flex-end">
-                            <button class="button is-nav is-indicator">
-                                <TimeDisplay
-                                    :modelValue="getMultitrackPosition.position"
-                                    :subSecondDigits="1"
-                                ></TimeDisplay>
-                            </button>
-                            <!-- Sync Time display -->
-                            <!-- //TODO make this display a setting -->
-                            <button class="button is-nav is-indicator">
-                                <span
-                                    class="is-minimum-7-characters is-family-monospace has-text-info"
-                                    title="Click to synch tracks"
-                                    >({{
-                                        getMultitrackPosition.range?.toFixed(6)
-                                    }}s)</span
-                                >
-                            </button>
-                            <button
-                                class="button is-info"
-                                @click="multitrackHandler?.synchTracks"
-                            >
-                                Synch
-                            </button>
-                            <PlaybackIndicator
-                                :isReady="!isAllPlaying && isAllTrackLoaded"
-                                :isPlaying="isAllPlaying"
-                                :isUnloaded="!isAllTrackLoaded"
-                                :isUnavailable="!isAllMediaAvailable"
-                                data-cy="playback-indicator"
-                            />
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </Teleport>
     </div>
 </template>
 
 <script lang="ts">
-import { ComponentPublicInstance, PropType, defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import VueScrollTo from 'vue-scrollto';
 import {
     Compilation,
@@ -237,18 +67,10 @@ import {
     PlaybackMode,
 } from '@/store/compilation-types';
 import Track from '@/components/track/Track.vue';
-import TimeDisplay from '@/components/TimeDisplay.vue';
-import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
-import MuteButton from '@/components/buttons/MuteButton.vue';
-import SoloButton from '@/components/buttons/SoloButton.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
-import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import NoticeTrack from '@/components/track/NoticeTrack.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
-import MultitrackHandler from '@/code/audio/MultitrackHandler';
-import ToggleButton from '@/components/buttons/ToggleButton.vue';
-import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiRotateLeftVariant, mdiRotateRightVariant } from '@mdi/js';
 import { mapWritableState, mapActions, mapState } from 'pinia';
 import { useAppStore } from '@/store/app';
@@ -266,13 +88,6 @@ export default defineComponent({
         Track,
         ReplayerEventHandler,
         CompilationHeader,
-        PlayheadSlider,
-        TimeDisplay,
-        PlaybackIndicator,
-        MuteButton,
-        SoloButton,
-        ToggleButton,
-        BaseIcon,
         NoticeTrack,
     },
     props: {
@@ -306,9 +121,6 @@ export default defineComponent({
              */
             shuffleSeed: 1,
 
-            /** The multitrack-handler to use */
-            multitrackHandler: undefined as unknown as MultitrackHandler,
-
             /** Whether to show the track in a vertical orientation */
             showVertical: false,
 
@@ -317,14 +129,6 @@ export default defineComponent({
             mdiRotateRightVariant: mdiRotateRightVariant,
         };
     },
-    mounted() {
-        this.multitrackHandler = new MultitrackHandler(
-            this.$refs as {
-                [name: string]: Element | ComponentPublicInstance | null;
-            },
-        );
-    },
-
     activated(): void {
         this.activateWakeLock();
     },
@@ -395,29 +199,6 @@ export default defineComponent({
 
         updateIsTrackPlayerFullScreen(isFullScreen: boolean): void {
             this.isTrackPlayerFullScreen = isFullScreen;
-        },
-
-        /* Handles a change of play state for a single track (before/after fading), by controlling the other tracks
-         * @remarks This must only be done when multitrack playback is expected.
-         */
-        updateIsTrackPlaying(isTrackPlaying: boolean): void {
-            if (this.isMixable) {
-                console.debug('Compilation::isTrackPlaying:', isTrackPlaying);
-
-                if (isTrackPlaying && !this.isAllPlaying) {
-                    console.debug('Compilation::isAnyFading:Playing all...');
-                    this.multitrackHandler?.play();
-                }
-            }
-        },
-
-        /* Handles a seek operation of a single track, by replicating it to the other tracks
-         * @remarks This must only be done when multitrack playback is expected.
-         */
-        handleTrackSeekToSeconds(seconds: number): void {
-            if (this.isMixable) {
-                this.multitrackHandler?.seekToSeconds(seconds);
-            }
         },
 
         updatePlaybackMode(playbackMode: PlaybackMode): void {
@@ -559,14 +340,6 @@ export default defineComponent({
             }
             return false;
         },
-        /** Synchronizes all track positions.
-         * @remarks This must only be done when multitrack playback is expected.
-         */
-        synchTracks() {
-            if (this.isMixable) {
-                this.multitrackHandler?.synchTracks();
-            }
-        },
     },
     watch: {
         /** Handle scrolling to the changed active track.
@@ -606,39 +379,6 @@ export default defineComponent({
                     'Compilation::playbackMode:shuffleSeed',
                     this.shuffleSeed,
                 );
-            }
-        },
-
-        /** At change of play state (before/after fading), synch tracks)
-         * @remarks This must only be done when multitrack playback is expected.
-         */
-        isAllPlaying(allPlaying: boolean) {
-            if (this.isMixable && allPlaying && this.isAllTrackLoaded) {
-                this.synchTracks();
-            }
-        },
-        /** At change of play state (before/after fading), synch tracks)
-         * @remarks This must only be done when multitrack playback is expected.
-         */
-        isAllPaused(allPaused: boolean) {
-            if (this.isMixable && allPaused && this.isAllTrackLoaded) {
-                this.synchTracks();
-            }
-        },
-
-        /* At change of fading state of any track, replicate the determined action to all tracks
-         * @remarks This must only be done when multitrack playback is expected.
-         */
-        isAnyFading(isAnyFading: boolean, wasAnyFading: boolean) {
-            if (this.isMixable) {
-                console.debug('Compilation::isAnyFading:', isAnyFading);
-
-                // Still all playing, but now any fading?
-                if (!wasAnyFading && isAnyFading && this.isAllPlaying) {
-                    // must be a pause operation on a single track
-                    console.debug('Compilation::isAnyFading:Pausing all...');
-                    this.multitrackHandler?.pause();
-                }
             }
         },
     },
@@ -708,63 +448,6 @@ export default defineComponent({
         /** Returns all cues from all audio tracks in the current compilation */
         allCues(): Array<ICue> {
             return CompilationHandler.getAllCues(this.tracks);
-        },
-
-        /** Determines, whether all tracks in the compilation are currently playing (used with the mix mode) */
-        isAllPlaying() {
-            return this.multitrackHandler?.isAllPlaying() ?? false;
-        },
-
-        /** Determines, whether all tracks in the compilation are currently paused (used with the mix mode) */
-        isAllPaused() {
-            return this.multitrackHandler?.isAllPaused() ?? false;
-        },
-
-        /** Determines, whether all tracks in the compilation are currently loaded (used with the mix mode) */
-        isAllTrackLoaded() {
-            return this.multitrackHandler?.isAllTrackLoaded() ?? false;
-        },
-
-        /** Determines, whether all tracks in the compilation are currently muted (used with the mix mode) */
-        isAllTrackMuted() {
-            return this.multitrackHandler?.isAllTrackMuted() ?? false;
-        },
-
-        /** Determines, whether any track in the compilation is currently soloed (used with the mix mode) */
-        isAnyTrackSoloed() {
-            return this.multitrackHandler?.isAnyTrackSoloed() ?? false;
-        },
-
-        /** Determines, whether all tracks in the compilation are currently soloed (used with the mix mode) */
-        isAllTrackSoloed() {
-            return this.multitrackHandler?.isAllTrackSoloed() ?? false;
-        },
-
-        /** Determines, whether all tracks in the compilation have their media available (used with the mix mode) */
-        isAllMediaAvailable(): boolean {
-            return this.multitrackHandler?.isAllMediaAvailable() ?? false;
-        },
-
-        /** Determines playback progress of all tracks in the compilation, in [seconds] (used with the mix mode).
-         * @returns A single representation for the progress as an average
-         * @devdoc As a component update performance optimization, the numeric value is truncated to one decimal digit, as displayed, avoiding
-         * unnecessary update for actually non-distinctly displayed values.
-         */
-        getMultitrackPosition(): { position: number; range: number | null } {
-            return {
-                position:
-                    Math.floor(
-                        this.multitrackHandler?.getAllTrackPosition() * 10,
-                    ) / 10,
-                range:
-                    //TODO us a setting and only execute this call when required by the setting
-                    this.multitrackHandler?.getAllTrackPositionRange() ?? null,
-            };
-        },
-
-        /** Determines, whether any track in the compilation is currently fading (used with the mix mode) */
-        isAnyFading() {
-            return this.multitrackHandler?.isAnyFading() ?? false;
         },
     },
 });
