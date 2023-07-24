@@ -66,7 +66,7 @@ import {
     TrackViewMode,
     PlaybackMode,
 } from '@/store/compilation-types';
-import Track from '@/components/track/Track.vue';
+import Track from '@/components/track/MediaTrack.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import NoticeTrack from '@/components/track/NoticeTrack.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
