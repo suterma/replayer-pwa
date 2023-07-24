@@ -326,19 +326,11 @@ export const actions = {
      * @remarks If there is only a single track, this track becomes the active track.
      * For single-track compilations this causes the widget player to be shown immediately. Does not set the selected cue.
      * @remarks Removes all data from the previous compilation, including media URL's, by closing/discarding it.
-     * @remarks Also immediately updates the media URL storage with the contained online (http|https) URL's from the compilation.
      */
     replaceCompilation(compilation: ICompilation): void {
         this.discardCompilation();
 
         state.compilation.value = compilation;
-
-        //Add the (non-blob) media URL's from the compilation to the media storage
-        const onlineMediaUrls =
-            CompilationHandler.getOnlineMediaUrls(compilation);
-        onlineMediaUrls.forEach((mediaUrl) => {
-            state.mediaUrls.value.set(mediaUrl.resourceName, mediaUrl);
-        });
 
         /* Set active track (if just one is available), like in MutationTypes.UPDATE_SELECTED_TRACK_ID */
         state.selectedCueId.value = CompilationHandler.EmptyId;

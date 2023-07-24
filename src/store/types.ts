@@ -1,18 +1,11 @@
 import FileHandler from './filehandler';
 
-/** @class Implements a playable media URL
- * @remarks A media URL is an annotated URL; either an online URL (with http|https protocol), or an object URL for a blob, representing a media file
+/** @class Implements a playable media URL for local resources
+ * @remarks A media URL is an annotated URL, consisting of
+ * - an object URL for a blob, representing a media file
+ * - the full name (including a possible path) of the original media file (from the disk or from within a REZ/ZIP-file)
  */
 export class MediaUrl {
-    /** Creates a new MediaUrl object from an online URL, with the file name derived from the URL.
-     * @remarks An online URL is a valid URL starting with the protocol http|https.
-     * @param {string} url - The online URL
-     */
-    static FromOnlineUrl(url: string): MediaUrl {
-        const finalUrl = new URL(url);
-        const localResourceName = FileHandler.getLocalResourceName(finalUrl);
-        return new MediaUrl(localResourceName, url, null, null);
-    }
     /** @constructor
      * @param {string} resourceName - A name for the resource.
      * For online URL's: a simplified resource name, derived from the URL;

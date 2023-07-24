@@ -174,23 +174,6 @@ export default class CompilationHandler {
         return _.round(time, DefaultMathPrecision);
     }
 
-    /** Extracts all online URLs from the compilation's tracks.
-     * @remarks An online URL is a valid URL starting with the http|https protocol.
-     * @param compilation - The compilation to work on.
-     */
-    static getOnlineMediaUrls(compilation: ICompilation): MediaUrl[] {
-        const mediaUrls = new Array<MediaUrl>();
-        if (compilation) {
-            const trackUrls = compilation.Tracks.flatMap((track) => track.Url);
-            trackUrls.forEach((url) => {
-                if (FileHandler.isValidHttpUrl(url)) {
-                    mediaUrls.push(MediaUrl.FromOnlineUrl(url));
-                }
-            });
-        }
-        return mediaUrls;
-    }
-
     /** Updates (recalculates) the durations of the given cues, by using the track duration for the last cue.
      * @remarks Note the following:
      * - the cues with a null time are not used

@@ -32,11 +32,9 @@ export const state = {
         CompilationHandler.EmptyId,
     ),
 
-    /** A dictionary of stored media URLs, representing playable media content
+    /** A dictionary of stored media URLs, representing playable media content from local or unzipped resources.
      * @remarks A name for the resource is used as key, preventing duplicate files for the same content.
-     * For online URL's: a simplified resource name, derived from the URL;
-     * For files: the full name (including a possible path) of the original media file (from the disk or from within a REZ/ZIP-file)
-     * This is intentionally not persisted, to avoid using disposed URL's after an app restart.
+     * This is intentionally not persisted, to avoid using disposed object URL's after an app restart.
      */
     mediaUrls: ref(new Map<string, MediaUrl>()),
 

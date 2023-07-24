@@ -2,9 +2,20 @@
 
 ## Purpose
 
-Replayer internally uses Pinia for storing state. The complete Replayer state consists of these parts:
+Replayer internally uses [Pinia](https://pinia.vuejs.org/) for storing state. The complete Replayer state consists of these parts:
 
--   The **APP** store for the application model. This includes all available playback metadata (including the compilation's tracks with cues). It also includes the **currently selected cue or track**'s GUID, which can represent any single cue or track, or none, of a compilation. The key used are _selectedCueId_ or _selectedTrackId_, respectively. Note: This is not equal to a playback position.
+### App store
+
+The **APP** store contains the application state. This includes
+
+-   all available playback metadata (including the compilation's tracks with cues).
+-   It also includes the **currently selected cue or track**'s GUID, which can represent any single cue (of a track) or track without specifying cue, or none, of a compilation. The key used are `selectedCueId` or `selectedTrackId`, respectively. 
+_Note: This is not equal to a playback position._
+-   The **media URL's** (of class `MediaUrl`, which contain [object URL's for accessing local resources](https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL_static#see_also). These are locally loaded files or extracted files from a ZIP package. 
+_Note: Online media resources are not stored as media URL's._
+
+
+
 -   The **MESSAGES** store, representing current display messages.
 -   The **SETTINGS** store, representing the various application settings.
 -   The **audio environment** in the **AUDIO** store, consisting of the Web Audio API context and an object reference to the individual HTML media elements.
