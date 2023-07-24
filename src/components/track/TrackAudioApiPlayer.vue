@@ -8,13 +8,13 @@
         :showZoomView="true"
     />
 
-    <!-- NOTE: the rendering of the AudioLevelMeter _might_ affect badly the synchronous start of the playback, 
+    <!-- NOTE: the rendering of the AudioLevelMeter _might_ affect badly the synchronous start of the multitrack playback, 
          but only the first time after a page reload/player instantiation.
          It's currently not consistently reproducible and goes away after a subsequent sync (e.g. after pause/play) -->
     <!-- NOTE: Teleportation fails with a warning when the parent track component has not yet been mounted.
          This situation is addressed with the isParentMounted flag. It's working for loading/unloading/reloading compilation and
          adding new tracks.
-         It not working currently when the application settings change to show the meter, producing a warning. 
+         It's not working currently when the application settings change to show the meter, producing a warning. 
          A solution without a warning for this situation is not devised yet. -->
     <template v-if="showLevelMeter && isParentMounted && props.mediaUrl">
         <Teleport
@@ -570,8 +570,12 @@ function handleReadyState(readyState: number) {
             updateDuration(audioElement.value.duration);
 
             //Apply the currently known position to the player. It could be non-zero already.
-            const position = currentPosition.value;
-            if (position !== null && Number.isFinite(position)) {
+            const position = currentPosition?.value;
+            if (
+                position !== null &&
+                position !== undefined &&
+                Number.isFinite(position)
+            ) {
                 seekToSeconds(position);
             }
         }

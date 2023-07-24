@@ -380,7 +380,7 @@
                 :preRollDuration="preRollDuration"
                 :fadeOutDuration="fadeOutDuration"
                 :applyFadeInOffset="applyFadeInOffset"
-                :showLevelMeter="showLevelMeter && isMixable"
+                :showLevelMeter="showLevelMeter"
                 :experimentalShowWaveforms="experimentalShowWaveforms"
                 :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
             ></TrackAudioApiPlayer>
