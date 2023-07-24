@@ -83,19 +83,6 @@
                         />
                     </template>
                 </div>
-                <!-- Placeholder for the audio level meter (used for teleporting from the player component) -->
-                <div
-                    class="level-item is-narrow"
-                    :class="{
-                        'is-clickable': isTrackLoaded,
-                        'has-cursor-not-allowed': !isTrackLoaded,
-                    }"
-                    @click="skipToPlayPause"
-                >
-                    <span
-                        :id="`track-${track.Id}-HeaderLevelPlaceholder`"
-                    ></span>
-                </div>
             </template>
 
             <template v-slot:left-end>
@@ -138,6 +125,20 @@
                     :modelValue="track.Volume"
                     @update:modelValue="updateVolume"
                 />
+
+                <!-- Placeholder for the audio level meter (used for teleporting from the player component) -->
+                <div
+                    class="level-item is-narrow"
+                    :class="{
+                        'is-clickable': isTrackLoaded,
+                        'has-cursor-not-allowed': !isTrackLoaded,
+                    }"
+                    @click="skipToPlayPause"
+                >
+                    <span
+                        :id="`track-${track.Id}-HeaderLevelPlaceholder`"
+                    ></span>
+                </div>
             </template>
         </TrackHeader>
 

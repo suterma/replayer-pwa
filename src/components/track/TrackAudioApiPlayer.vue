@@ -16,7 +16,7 @@
          adding new tracks.
          It's not working currently when the application settings change to show the meter, producing a warning. 
          A solution without a warning for this situation is not devised yet. -->
-    <template v-if="showLevelMeter && isParentMounted && props.mediaUrl">
+    <template v-if="showLevelMeter && isParentMounted && mediaUrl">
         <Teleport
             :to="`#track-${trackId}-HeaderLevelPlaceholder`"
             :disabled="levelMeterSizeIsLarge"
@@ -348,21 +348,24 @@ const audioSource: ShallowRef<InstanceType<
     typeof MediaElementAudioSourceNode
 > | null> = shallowRef(null);
 
-/** Watch the showLevelMeter setting, and act accordingly
+/** Watch the showLevelMeter setting and media url changes, and act accordingly
  * @remarks This handles the audio setup for metering
  * @devdoc Handle the value also immediately at mount time
  */
 watch(
-    () => props.showLevelMeter,
-    (showLevelMeter: boolean, wasShowingLevelMeter) => {
+    [() => props.showLevelMeter, () => props.mediaUrl],
+    (
+        [showLevelMeter, mediaUrl],
+        [wasShowingLevelMeter /* old mediaUrl is not used */],
+    ) => {
         console.debug(
             `TrackAudioApiPlayer(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:showLevelMeter${showLevelMeter}`,
         );
         // Create the level meter and associated routing only when requested, and only for local files
         if (
             showLevelMeter &&
-            props.mediaUrl &&
-            !FileHandler.isValidHttpUrl(props.mediaUrl)
+            mediaUrl &&
+            !FileHandler.isValidHttpUrl(mediaUrl)
         ) {
             if (audioSource.value === null) {
                 audioSource.value = audio.context.createMediaElementSource(
@@ -998,3 +1001,16 @@ watch(
     { immediate: true },
 );
 </script>
+
+<style>
+/** Rotate buttons back to their upright position */
+.audio-level-meter {
+    transform: rotate(-90deg);
+    width: 2.5em;
+}
+.audio-level-container {
+    width: 1.25em;
+    margin-left: -0.75em;
+    padding-left: -0.75em;
+}
+</style>
