@@ -2,10 +2,18 @@ import _ from 'lodash';
 import { ITimeSignature } from './ITimeSignature';
 import { MetricalPosition } from './MetricalPosition';
 import { IMeter } from './IMeter';
+import { TimeSignature } from './TimeSignature';
 
 /** @class Static functions for the musical meter
  */
 export class Meter implements IMeter {
+    /** Creates a new meter with only the given origin time
+     * @remarks Other properties are left null. This is useful to create an initial instance when only the origin time is yet available.
+     */
+    static FromTimeSignature(originTime: number | null): IMeter {
+        return new Meter(new TimeSignature(null, null), null, originTime);
+    }
+
     TimeSignature: ITimeSignature | null;
     BeatsPerMinute: number | null;
     OriginTime: number | null;

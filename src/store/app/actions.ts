@@ -19,6 +19,7 @@ import FileHandler from '../filehandler';
 import CompilationParser from '../../code/xml/XmlCompilationParser';
 import { useMessageStore } from '../messages';
 import { IMeter } from '@/code/music/IMeter';
+import { Meter } from '@/code/music/Meter';
 
 export const actions = {
     /** Updates the currently selected cue Id, for application-wide handling
@@ -184,14 +185,21 @@ export const actions = {
         }
     },
     /** Updates the track origin time.
+     * @remarks Creates a new, initial meter, when none is available yet.
      */
     updateTrackOriginTime(trackId: string, originTime: number | null): void {
         const track = CompilationHandler.getTrackById(
             state.compilation.value.Tracks,
             trackId,
         );
-        if (track && track.Meter) {
-            track.Meter.OriginTime = originTime;
+        if (track) {
+            if (!track.Meter) {
+                track.Meter = Meter.FromTimeSignature(originTime);
+            }
+
+            if (track.Meter) {
+                track.Meter.OriginTime = originTime;
+            }
         }
     },
 
