@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, shallowRef } from 'vue';
 import { Store } from '..';
+import { IMediaHandler } from '@/code/media/IMediaHandler';
 
 /**
  *  Defining the AudioContext
@@ -17,24 +18,28 @@ export const useAudioStore = defineStore(Store.Audio, () => {
      */
     const context = shallowRef(audioContext);
 
-    /** The media elements the application can work with
-     * @remarks Each media element belongs to a track in the compilation
+    /** The media handlers the application can work with
+     * @remarks Each media handler belongs to a track in the compilation
      */
 
-    const mediaElements = ref(new Array<HTMLMediaElement>());
+    const mediaHandlers = ref(new Array<IMediaHandler>());
 
-    /** Adds the given media element to the list of available media elements */
-    function addMediaElement(element: HTMLMediaElement) {
-        mediaElements.value.push(element);
+    /** Adds the given media handler to the list of available media handlers */
+    function addMediaHandler(handler: IMediaHandler) {
+        mediaHandlers.value.push(handler);
     }
-    /** Removes the given media element from the list of available media elements, by the id attribute */
-    function removeMediaElement(element: HTMLMediaElement) {
-        const removeElementId = element.id;
-        const removeIndex = mediaElements.value
-            .map((element) => element.id)
-            .indexOf(removeElementId);
+    /** Removes the given media handler from the list of available media handler, by the id attribute */
+    function removeMediaHandlerById(handlerId: string) {
+        const removeIndex = mediaHandlers.value
+            .map((handler) => handler.id)
+            .indexOf(handlerId);
 
-        ~removeIndex && mediaElements.value.splice(removeIndex, 1);
+        ~removeIndex && mediaHandlers.value.splice(removeIndex, 1);
+    }
+
+    /** Removes the given media handler from the list of available media handler */
+    function removeMediaHandler(handler: IMediaHandler) {
+        removeMediaHandlerById(handler.id);
     }
 
     /** Closes the audio context.
@@ -51,9 +56,9 @@ export const useAudioStore = defineStore(Store.Audio, () => {
 
     return {
         context,
-        mediaElements,
-        addMediaElement,
-        removeMediaElement,
+        mediaHandlers,
+        addMediaHandler,
+        removeMediaHandler,
         closeContext,
     };
 });
