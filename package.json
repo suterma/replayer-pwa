@@ -49,6 +49,7 @@
         "nosleep.js": "^0.12.0",
         "pinia": "^2.0.33",
         "register-service-worker": "^1.7.2",
+        "sub-events": "^1.9.0",
         "uuid": "^8.3.2",
         "vue": "^3.2.47",
         "vue-audio-level-meter": "^1.0.3",

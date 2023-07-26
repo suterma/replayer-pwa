@@ -46,7 +46,6 @@ import {
     ShallowRef,
     onMounted,
     onBeforeUnmount,
-    inject,
 } from 'vue';
 import AudioFader from '@/code/audio/AudioFader';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
@@ -55,8 +54,8 @@ import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMete
 import { useAudioStore } from '@/store/audio';
 import FileHandler from '@/store/filehandler';
 import { useMessageStore } from '@/store/messages';
-import { currentPositionInjectionKey } from './TrackInjectionKeys';
 import AudioHandler from '@/code/media/AudioHandler';
+import { Subscription } from 'cypress/types/net-stubbing';
 
 /** A safety margin for detecting the end of a track during playback */
 const trackDurationSafetyMarginSeconds = 0.3;
@@ -109,6 +108,7 @@ const props = defineProps({
         default: '',
         required: false,
     },
+
     /** The start time of the selected cue. Used in conjunction with the playbackMode, when in cue loop mode or track play mode.
      * @devdoc This is used to emulate the buffer looping for the enclosed audio element.
      * See https://www.w3.org/TR/webaudio/#looping-AudioBufferSourceNode for information about looping.
@@ -120,6 +120,7 @@ const props = defineProps({
         required: false,
         validator: (v: unknown): boolean => typeof v === 'number' || v === null,
     },
+
     /** The end time of the selected cue. Used in conjunction with the playbackMode, when in cue loop mode.
      * @devdoc This is used to emulate the buffer looping for the enclosed audio element.
      * See https://www.w3.org/TR/webaudio/#looping-AudioBufferSourceNode for information about looping.
@@ -131,6 +132,7 @@ const props = defineProps({
         required: false,
         validator: (v: unknown): boolean => typeof v === 'number' || v === null,
     },
+
     /** The track source description
      * @remarks This is a textual indication of the track media source. It's displayed as part of the timing display
      */
@@ -138,6 +140,7 @@ const props = defineProps({
         type: String,
         default: '',
     },
+
     /** The playback mode
      * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
      */
@@ -154,6 +157,7 @@ const props = defineProps({
         required: true,
         default: false,
     },
+
     /** Whether playback is currently soloed
      */
     isSoloed: {
@@ -161,6 +165,7 @@ const props = defineProps({
         required: false,
         default: false,
     },
+
     /** Whether playback is currently muted
      */
     isMuted: {
@@ -168,6 +173,7 @@ const props = defineProps({
         required: false,
         default: false,
     },
+
     /** Whether any track's playback is currently soloed
      */
     isAnySoloed: {
@@ -175,6 +181,7 @@ const props = defineProps({
         required: false,
         default: false,
     },
+
     /** The track volume in range of [0..1]
      * @remarks Implements a two-way binding
      */
@@ -247,24 +254,7 @@ const props = defineProps({
     levelMeterSizeIsLarge: Boolean,
 });
 
-/** Gets the duration of the current track, in [seconds]
- * @remarks This is only available after successful load of the media metadata.
- * Could be NaN or infinity, depending on the source
- */
-const durationSeconds = ref<number | null>(null);
-
-const currentPosition = inject(currentPositionInjectionKey);
-
-/** Whether the media data has loaded (at least enough to start playback)
- * @remarks This implies that metadata also has been loaded already
- * @devdoc see HAVE_CURRENT_DATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
- */
-const hasLoadedData = ref(false);
-
-/** Whether the media metadata has loaded. Duration is available now.
- * @devdoc see HAVE_METADATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
- */
-const hasLoadedMetadata = ref(false);
+//const currentPosition = inject(currentPositionInjectionKey);
 
 const mediaError = ref<MediaError | null>(null);
 
@@ -280,14 +270,6 @@ const playing = ref(false);
  * @devdoc See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted for more information
  */
 const isPlayingRequestOutstanding = ref(false);
-
-/** Flags, whether deferred loading (until a user play click event is handled)
- * is required to further load the track media file data. The flag may be set once after the metadata was successfully loaded.
- * @remarks When true, handling of a subsequent play action must first invoke a user-triggered load operation.
- * @remarks This specific handling is currently required on (some?) iOS devices,
- * because they only load data upon explicit user interaction.
- */
-const isClickToLoadRequired = ref(false);
 
 /** Writes a debug log message message for this component */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -332,6 +314,12 @@ const mediaHandler = shallowRef(
         props.applyFadeInOffset,
         props.volume,
     ),
+);
+
+mediaHandler.value.onDurationChanged.subscribe(
+    (durationSeconds: number | null) => {
+        emit('durationChanged', durationSeconds);
+    },
 );
 
 onMounted(() => {
@@ -416,16 +404,17 @@ function updateTime(/*event: Event*/): void {
 function handleCueLoop(currentTime: number): void {
     switch (props.playbackMode) {
         case PlaybackMode.LoopCue: {
+            const durationSeconds = mediaHandler.value.durationSeconds.value;
             if (
                 currentTime !== null &&
-                durationSeconds.value !== null &&
+                durationSeconds !== null &&
                 Number.isFinite(currentTime) &&
-                Number.isFinite(durationSeconds.value)
+                Number.isFinite(durationSeconds)
             ) {
                 //Detect, with a safety margin, whether the possible loop is at track end
                 const isAtTrackEnd =
                     currentTime >=
-                    durationSeconds.value - trackDurationSafetyMarginSeconds;
+                    durationSeconds - trackDurationSafetyMarginSeconds;
 
                 //Is a loop due?
                 if (
@@ -444,7 +433,7 @@ function handleCueLoop(currentTime: number): void {
 
                     if (isAtTrackEnd) {
                         debugLog(
-                            `loopEnd:${props.loopEnd};durationSeconds:${durationSeconds.value}`,
+                            `loopEnd:${props.loopEnd};durationSeconds:${durationSeconds}`,
                         );
                         //At the end of the track, a seek operation alone would not be enough to continue the loop
                         //if playback already has ended (when the safety margin from above was too small)
@@ -534,79 +523,10 @@ function updateMediaSource(mediaUrl: string): void {
         }
     }
 }
-function handleLoadedMetadata(): void {
-    const readyState = audioElement.value.readyState;
-    debugLog(`handleLoadedMetadata:readyState:${readyState}`);
-
-    handleReadyState(readyState);
-}
-/** Handles the load event of the audio element
- * @remarks Since loading is usually in progress now, this also resets the isClickToLoadRequired flag, unless
- * it is specifically detected, that further loading needs to be triggered
- */
-function handleLoadedData(): void {
-    isClickToLoadRequired.value = false;
-    const readyState = audioElement.value.readyState;
-
-    debugLog(`handleLoadedData:readyState:${readyState}`);
-    handleReadyState(readyState);
-}
-
-/** If changed, updates the internal duration and emits the durationChanged event
- * @param {number} duration - could be NaN or infinity, depending on the source
- */
-function updateDuration(duration: number): void {
-    if (durationSeconds.value !== duration) {
-        durationSeconds.value = duration;
-        emit('durationChanged', durationSeconds.value);
-    }
-}
-
-/** Handles the current ready state of the audio element's media, with regard to playability
- * @remarks Decides, whether deferred loading is required.
- */
-function handleReadyState(readyState: number) {
-    //Enough of the media resource has been retrieved that the metadata attributes are initialized?
-    if (readyState >= HTMLMediaElement.HAVE_METADATA) {
-        if (!hasLoadedMetadata.value && !hasLoadedData.value) {
-            hasLoadedMetadata.value = true;
-            hasLoadedData.value = true;
-            updateDuration(audioElement.value.duration);
-
-            //Apply the currently known position to the player. It could be non-zero already.
-            const position = currentPosition?.value;
-            if (
-                position !== null &&
-                position !== undefined &&
-                Number.isFinite(position)
-            ) {
-                seekToSeconds(position);
-            }
-        }
-    }
-
-    //Special flag handling, when not  automatically loading further now
-    debugLog(`handleReadyState:buffered:`, audioElement.value.buffered);
-    debugLog(
-        `handleReadyState:networkState:${audioElement.value.networkState}`,
-    );
-
-    //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
-    //most probably due to load restriction on an iOS device using Safari.
-    //Works on
-    //- iPhone 13/Safari
-    //- iPad Pro 12.9 2021/Safari (with audio from URL)
-    //NOTE: This solution however seems not to work on:
-    //- iPad 9th/Safari, because the buffered length is 1, but the sound will only play on 2nd click.
-    if (audioElement.value.buffered.length === 0) {
-        //The isClickToLoadRequired flag defers further media loading until the next user's explicit play request
-        isClickToLoadRequired.value = true;
-    }
-}
 
 function seekToSeconds(seconds: number): void {
     //debugLog(`seekToSeconds`, seconds);
-    if (!hasLoadedMetadata.value) return;
+    if (!mediaHandler.value.hasLoadedMetadata.value) return;
     if (audioElement.value.currentTime === seconds) {
         return;
     }
@@ -746,11 +666,11 @@ function loadAfterClick(): Promise<void> {
  * @remarks Asserts (and if necessary) resolves the playability of the track media
  */
 async function play(): Promise<void> {
-    if (isClickToLoadRequired.value) {
+    if (mediaHandler.value.isClickToLoadRequired.value) {
         loadAfterClick().then(() => {
             debugLog(`loadAfterClick-then`);
 
-            isClickToLoadRequired.value = false;
+            mediaHandler.value.isClickToLoadRequired.value = false;
             play();
         });
     } else {
@@ -805,8 +725,6 @@ function applyPreRoll(): void {
 
 //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
 audioElement.value.ontimeupdate = updateTime;
-audioElement.value.onloadeddata = handleLoadedData;
-audioElement.value.onloadedmetadata = handleLoadedMetadata;
 audioElement.value.onerror = () => {
     mediaError.value = audioElement.value?.error;
     console.debug(
@@ -862,11 +780,7 @@ audioElement.value.onended = () => {
         }
     }
 };
-audioElement.value.ondurationchange = (event) => {
-    debugLog(`ondurationchange `, event);
-    //Unfortunately, the src element in the event is null, thus directly use the audioElement here.
-    updateDuration(audioElement.value.duration);
-};
+
 audioElement.value.onpause = () => {
     debugLog(`onpause`);
     playing.value = false;
