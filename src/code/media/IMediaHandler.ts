@@ -1,17 +1,9 @@
+import { SubEvent } from 'sub-events';
+import { Ref } from 'vue';
+
 /** @interface Defines a media handler for use with media tracks. */
 export interface IMediaHandler {
-    /** Updates the current fader settings.
-     * @remarks The settings will be used for the next fade.
-     * However, when the new duration is zero (no fade),
-     * the cancel operation is immediately called, resetting the volume to the initial value for this case.
-     */
-    updateSettings(): void;
-
-    /** Sets the master audio volume
-     * @remarks The value is applied immediately, without any fading, with the possible muted state observed
-     * @param {number} volume - A value between 0 (zero) and 1 (representing full scale)
-     */
-    setMasterAudioVolume(volume: number): void;
+    // --- configuration and update ---
 
     /** A unique identifier for this handler.
      * @remarks To work correctly, this identifier must be unique among all currently existing handlers.
@@ -20,13 +12,14 @@ export interface IMediaHandler {
      */
     readonly id: string;
 
-    readonly paused: boolean;
+    /** Updates the current fader settings.
+     * @remarks The settings will be used for the next fade.
+     * However, when the new duration is zero (no fade),
+     * the cancel operation is immediately called, resetting the volume to the initial value for this case.
+     */
+    updateSettings(): void;
 
-    /** Initiates fade-out operation, then sets the state to paused */
-    //pause(): void;
-
-    /** Immediately pauses playback. Stops a possible ongoing fading operation. */
-    stop(): void;
+    // --- fading ---
 
     /** Returns a linear fade-out promise.
      * @remarks The sound is faded to the minimum audio level.
@@ -48,4 +41,35 @@ export interface IMediaHandler {
      * - the promise is immediately resolved.
      */
     fadeIn(): Promise<void>;
+
+    // --- volume ---
+
+    /** Sets the master audio volume
+     * @remarks The value is applied immediately, without any fading, with the possible muted state observed
+     * @param {number} volume - A value between 0 (zero) and 1 (representing full scale)
+     */
+    setMasterAudioVolume(volume: number): void;
+
+    // --- transport ---
+
+    readonly paused: boolean;
+
+    /** Initiates fade-out operation, then sets the state to paused */
+    //pause(): void;
+
+    /** Immediately pauses playback. Stops a possible ongoing fading operation. */
+    stop(): void;
+
+    // --- media loading ---
+
+    /** Gets the duration of the current track, in [seconds]
+     * @remarks This is only available after successful load of the media metadata.
+     * Could be NaN or infinity, depending on the source
+     */
+    durationSeconds: Ref<number | null>;
+
+    /** Emits a changed duration.
+     * @param {number} duration - could be NaN or infinity, depending on the source
+     */
+    onDurationChanged: SubEvent<number>;
 }

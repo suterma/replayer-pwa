@@ -55,7 +55,7 @@ import { useAudioStore } from '@/store/audio';
 import FileHandler from '@/store/filehandler';
 import { useMessageStore } from '@/store/messages';
 import AudioHandler from '@/code/media/AudioHandler';
-import { Subscription } from 'cypress/types/net-stubbing';
+import { IMediaHandler } from '@/code/media/IMediaHandler';
 
 /** A safety margin for detecting the end of a track during playback */
 const trackDurationSafetyMarginSeconds = 0.3;
@@ -313,7 +313,7 @@ const mediaHandler = shallowRef(
         props.fadeOutDuration,
         props.applyFadeInOffset,
         props.volume,
-    ),
+    ) /* //TODO later, use: as IMediaHandler, expose necessary methods*/,
 );
 
 mediaHandler.value.onDurationChanged.subscribe(

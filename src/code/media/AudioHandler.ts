@@ -67,6 +67,8 @@ export default class AudioHandler implements IMediaHandler {
         };
     }
 
+    // --- configuration and update ---
+
     /** Updates the current settings.
      * @remarks The settings will be used for the next fade.
      * However, when the new duration is zero (no fade),
@@ -253,16 +255,7 @@ export default class AudioHandler implements IMediaHandler {
         }
     }
 
-    /** Gets the duration of the current track, in [seconds]
-     * @remarks This is only available after successful load of the media metadata.
-     * Could be NaN or infinity, depending on the source
-     */
     durationSeconds = ref<number | null>(null);
 
-    /** Defines emittable loading events */
-
-    /** Emits a changed duration.
-     * @param {number} duration - could be NaN or infinity, depending on the source
-     */
     onDurationChanged: SubEvent<number> = new SubEvent();
 }
