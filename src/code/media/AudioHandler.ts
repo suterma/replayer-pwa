@@ -206,9 +206,9 @@ export default class AudioHandler implements IMediaHandler {
      * @param {number} duration - could be NaN or infinity, depending on the source
      */
     updateDuration(duration: number): void {
-        if (this.durationSeconds.value !== duration) {
-            this.durationSeconds.value = duration;
-            this.onDurationChanged.emit(this.durationSeconds.value);
+        if (this._durationSeconds !== duration) {
+            this._durationSeconds = duration;
+            this.onDurationChanged.emit(this._durationSeconds);
         }
     }
 
@@ -255,7 +255,17 @@ export default class AudioHandler implements IMediaHandler {
         }
     }
 
-    durationSeconds = ref<number | null>(null);
+    /** The duration of the track
+     * @remarks Is only available after loading of the track's media source
+     */
+    _durationSeconds: number | null = null;
+
+    /** Gets the duration of the track
+     * @remarks Is only available after loading of the track's media source
+     */
+    get durationSeconds(): number | null {
+        return this._durationSeconds;
+    }
 
     onDurationChanged: SubEvent<number> = new SubEvent();
 }

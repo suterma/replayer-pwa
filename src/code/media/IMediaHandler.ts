@@ -1,5 +1,4 @@
 import { SubEvent } from 'sub-events';
-import { Ref } from 'vue';
 
 /** @interface Defines a media handler for use with media tracks. */
 export interface IMediaHandler {
@@ -66,7 +65,7 @@ export interface IMediaHandler {
      * @remarks This is only available after successful load of the media metadata.
      * Could be NaN or infinity, depending on the source
      */
-    durationSeconds: Ref<number | null>;
+    readonly durationSeconds: number | null;
 
     /** Emits a changed duration.
      * @param {number} duration - could be NaN or infinity, depending on the source
