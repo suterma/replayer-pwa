@@ -11,14 +11,18 @@ export interface IMediaHandler {
      */
     readonly id: string;
 
-    /** Updates the current fader settings.
+    // --- fading ---
+
+    /** Updates the current fading settings.
      * @remarks The settings will be used for the next fade.
      * However, when the new duration is zero (no fade),
      * the cancel operation is immediately called, resetting the volume to the initial value for this case.
      */
-    updateSettings(): void;
-
-    // --- fading ---
+    updateFadingSettings(
+        fadeInDuration: number,
+        fadeOutDuration: number,
+        applyFadeInOffset: boolean,
+    ): void;
 
     /** Returns a linear fade-out promise.
      * @remarks The sound is faded to the minimum audio level.
@@ -49,6 +53,10 @@ export interface IMediaHandler {
      */
     setMasterAudioVolume(volume: number): void;
 
+    /** Gets or sets the muted state
+     */
+    muted: boolean;
+
     // --- transport ---
 
     readonly paused: boolean;
@@ -67,8 +75,20 @@ export interface IMediaHandler {
      */
     readonly durationSeconds: number | null;
 
+    /** Whether the media metadata has loaded. Duration is available now.
+     */
+    readonly hasLoadedMetadata: boolean;
+
     /** Emits a changed duration.
      * @param {number} duration - could be NaN or infinity, depending on the source
      */
     onDurationChanged: SubEvent<number>;
+
+    /** Flags, whether deferred loading (until a user play click event is handled)
+     * is required to further load the track media file data. The flag may be set once after the metadata was successfully loaded.
+     * @remarks When true, handling of a subsequent play action must first invoke a user-triggered load operation.
+     * @remarks This specific handling is currently required on (some?) iOS devices,
+     * because they only load data upon explicit user interaction.
+     */
+    isClickToLoadRequired: boolean;
 }

@@ -254,8 +254,6 @@ const props = defineProps({
     levelMeterSizeIsLarge: Boolean,
 });
 
-//const currentPosition = inject(currentPositionInjectionKey);
-
 const mediaError = ref<MediaError | null>(null);
 
 /** Whether the audio is currently fading */
@@ -306,27 +304,23 @@ const audioElement = shallowRef(document.createElement('audio'));
 audioElement.value.id = 'track-' + props.trackId;
 
 /** The media handler (with fader) to use */
-const mediaHandler = shallowRef(
-    new AudioHandler(
-        audioElement.value,
-        props.fadeInDuration,
-        props.fadeOutDuration,
-        props.applyFadeInOffset,
-        props.volume,
-    ) /* //TODO later, use: as IMediaHandler, expose necessary methods*/,
+const mediaHandler: IMediaHandler = new AudioHandler(
+    audioElement.value,
+    props.fadeInDuration,
+    props.fadeOutDuration,
+    props.applyFadeInOffset,
+    props.volume,
 );
 
-mediaHandler.value.onDurationChanged.subscribe(
-    (durationSeconds: number | null) => {
-        emit('durationChanged', durationSeconds);
-    },
-);
+mediaHandler.onDurationChanged.subscribe((durationSeconds: number | null) => {
+    emit('durationChanged', durationSeconds);
+});
 
 onMounted(() => {
-    audio.addMediaHandler(mediaHandler.value);
+    audio.addMediaHandler(mediaHandler);
 });
 onUnmounted(() => {
-    audio.removeMediaHandler(mediaHandler.value);
+    audio.removeMediaHandler(mediaHandler);
 });
 
 // --- Audio Metering Setup---
@@ -404,7 +398,7 @@ function updateTime(/*event: Event*/): void {
 function handleCueLoop(currentTime: number): void {
     switch (props.playbackMode) {
         case PlaybackMode.LoopCue: {
-            const durationSeconds = mediaHandler.value.durationSeconds.value;
+            const durationSeconds = mediaHandler.durationSeconds;
             if (
                 currentTime !== null &&
                 durationSeconds !== null &&
@@ -425,7 +419,7 @@ function handleCueLoop(currentTime: number): void {
                     (currentTime >= props.loopEnd || isAtTrackEnd)
                 ) {
                     debugLog(
-                        `loopDue:loopStart:${props.loopStart}:loopEnd:${props.loopEnd};currentTime:${currentTime};durationSeconds.value:${durationSeconds.value}`,
+                        `loopDue:loopStart:${props.loopStart}:loopEnd:${props.loopEnd};currentTime:${currentTime};durationSeconds.value:${durationSeconds}`,
                     );
                     //Back to loop start
                     seekToSeconds(props.loopStart);
@@ -474,7 +468,7 @@ function handleCueLoop(currentTime: number): void {
  * (due to unknown reasons however), the volume is controlled instead, via a fading handler feature.
  */
 function applyMuting(): void {
-    mediaHandler.value.muted =
+    mediaHandler.muted =
         props.isMuted ||
         (props.isSoloed === false && props.isAnySoloed === true);
 }
@@ -486,7 +480,7 @@ function updateVolume(volume: number): void {
     //Limit the minimum
     const limitedTrackVolume = Math.max(volume, AudioFader.audioVolumeMin);
     debugLog(`limitedTrackVolume:${limitedTrackVolume}`);
-    mediaHandler.value.setMasterAudioVolume(limitedTrackVolume);
+    mediaHandler.setMasterAudioVolume(limitedTrackVolume);
     if (props.volume !== limitedTrackVolume) {
         emit('update:volume', limitedTrackVolume); //loop back the corrected value
     }
@@ -526,7 +520,7 @@ function updateMediaSource(mediaUrl: string): void {
 
 function seekToSeconds(seconds: number): void {
     //debugLog(`seekToSeconds`, seconds);
-    if (!mediaHandler.value.hasLoadedMetadata.value) return;
+    if (!mediaHandler.hasLoadedMetadata) return;
     if (audioElement.value.currentTime === seconds) {
         return;
     }
@@ -536,8 +530,8 @@ function seekToSeconds(seconds: number): void {
 function stop() {
     debugLog(`stop`);
     //If it's still playing (e.g. during a fade operation, still immediately stop)
-    if (!mediaHandler.value.paused) {
-        mediaHandler.value.stop();
+    if (!mediaHandler.paused) {
+        mediaHandler.stop();
         emit('update:isTrackPlaying', false);
     }
     //no fading at stop
@@ -583,7 +577,7 @@ function pause(): void {
         isFading.value = true;
         emit('update:isFading', true);
 
-        mediaHandler.value
+        mediaHandler
             .fadeOut()
             .catch((message) => console.log(message))
             .then(() => {
@@ -603,7 +597,7 @@ function pauseAndSeekTo(position: number): void {
     isFading.value = true;
     emit('update:isFading', true);
 
-    mediaHandler.value.fadeOut().then(() => {
+    mediaHandler.fadeOut().then(() => {
         audioElement.value.pause();
         isFading.value = false;
         emit('update:isFading', false);
@@ -666,11 +660,11 @@ function loadAfterClick(): Promise<void> {
  * @remarks Asserts (and if necessary) resolves the playability of the track media
  */
 async function play(): Promise<void> {
-    if (mediaHandler.value.isClickToLoadRequired.value) {
+    if (mediaHandler.isClickToLoadRequired) {
         loadAfterClick().then(() => {
             debugLog(`loadAfterClick-then`);
 
-            mediaHandler.value.isClickToLoadRequired.value = false;
+            mediaHandler.isClickToLoadRequired = false;
             play();
         });
     } else {
@@ -796,7 +790,7 @@ audioElement.value.onplay = () => {
     emit('update:isTrackPlaying', true);
     isFading.value = true;
     emit('update:isFading', true);
-    mediaHandler.value
+    mediaHandler
         .fadeIn()
         .catch((message) => console.log(message))
         .then(() => {
@@ -817,7 +811,7 @@ onUnmounted(() => {
     debugLog(`unmounted:`, props.title);
 
     //properly destroy the audio element and the audio context
-    mediaHandler.value.stop();
+    mediaHandler.stop();
     playing.value = false;
     audioElement.value.pause();
     audioElement.value.removeAttribute('src'); // empty resource
@@ -841,7 +835,7 @@ const audioFaderSettingsToken = computed(
 watch(audioFaderSettingsToken, () => {
     debugLog(`audioFaderSettingsToken:${audioFaderSettingsToken.value}`);
 
-    mediaHandler.value.updateSettings(
+    mediaHandler.updateFadingSettings(
         props.fadeInDuration,
         props.fadeOutDuration,
         props.applyFadeInOffset,
@@ -854,7 +848,7 @@ watch(
     () => {
         debugLog(`mediaUrl:${props.mediaUrl}`);
         updateMediaSource(props.mediaUrl);
-        mediaHandler.value.stop();
+        mediaHandler.stop();
     },
     { immediate: true },
 );

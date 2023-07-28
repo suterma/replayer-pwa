@@ -1,4 +1,3 @@
-import { ref } from 'vue';
 import AudioFader from '../audio/AudioFader';
 import { IMediaHandler } from './IMediaHandler';
 import { SubEvent } from 'sub-events';
@@ -50,7 +49,7 @@ export default class AudioHandler implements IMediaHandler {
         //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
         //this.audio.ontimeupdate = this.updateTime;
         audio.onloadeddata = () => {
-            this.isClickToLoadRequired.value = false;
+            this.isClickToLoadRequired = false;
             const readyState = this._audio.readyState;
             this.debugLog(`onloadeddata:readyState:${readyState}`);
             this.handleReadyState(readyState);
@@ -69,7 +68,7 @@ export default class AudioHandler implements IMediaHandler {
 
     // --- configuration and update ---
 
-    /** Updates the current settings.
+    /** Updates the current fading settings.
      * @remarks The settings will be used for the next fade.
      * However, when the new duration is zero (no fade),
      * the cancel operation is immediately called, resetting the volume to the initial value for this case.
@@ -77,7 +76,7 @@ export default class AudioHandler implements IMediaHandler {
      * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
      * @param {boolean} applyFadeInOffset - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
      */
-    updateSettings(
+    updateFadingSettings(
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         fadeInDuration: number = 1000,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
@@ -175,27 +174,21 @@ export default class AudioHandler implements IMediaHandler {
      * @remarks This implies that metadata also has been loaded already
      * @devdoc see HAVE_CURRENT_DATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
      */
-    hasLoadedData = ref(false);
+    hasLoadedData = false;
 
     /** Whether the media metadata has loaded. Duration is available now.
      * @devdoc see HAVE_METADATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
      */
-    hasLoadedMetadata = ref(false);
+    hasLoadedMetadata = false;
 
-    /** Flags, whether deferred loading (until a user play click event is handled)
-     * is required to further load the track media file data. The flag may be set once after the metadata was successfully loaded.
-     * @remarks When true, handling of a subsequent play action must first invoke a user-triggered load operation.
-     * @remarks This specific handling is currently required on (some?) iOS devices,
-     * because they only load data upon explicit user interaction.
-     */
-    isClickToLoadRequired = ref(false);
+    isClickToLoadRequired = false;
 
     /** Handles the load event of the audio element
      * @remarks Since loading is usually in progress now, this also resets the isClickToLoadRequired flag, unless
      * it is specifically detected, that further loading needs to be triggered
      */
     handleLoadedData(): void {
-        this.isClickToLoadRequired.value = false;
+        this.isClickToLoadRequired = false;
         const readyState = this._audio.readyState;
 
         this.debugLog(`handleLoadedData:readyState:${readyState}`);
@@ -218,9 +211,9 @@ export default class AudioHandler implements IMediaHandler {
     handleReadyState(readyState: number): void {
         //Enough of the media resource has been retrieved that the metadata attributes are initialized?
         if (readyState >= HTMLMediaElement.HAVE_METADATA) {
-            if (!this.hasLoadedMetadata.value && !this.hasLoadedData.value) {
-                this.hasLoadedMetadata.value = true;
-                this.hasLoadedData.value = true;
+            if (!this.hasLoadedMetadata && !this.hasLoadedData) {
+                this.hasLoadedMetadata = true;
+                this.hasLoadedData = true;
                 this.updateDuration(this._audio.duration);
 
                 //Apply the currently known position to the player. It could be non-zero already.
@@ -251,7 +244,7 @@ export default class AudioHandler implements IMediaHandler {
         //- iPad 9th/Safari, because the buffered length is 1, but the sound will only play on 2nd click.
         if (this._audio.buffered.length === 0) {
             //The isClickToLoadRequired flag defers further media loading until the next user's explicit play request
-            this.isClickToLoadRequired.value = true;
+            this.isClickToLoadRequired = true;
         }
     }
 
