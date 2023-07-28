@@ -25,17 +25,19 @@ export interface IMediaHandler {
         applyFadeInOffset: boolean,
     ): void;
 
-    /** Returns a linear fade-out promise.
+    /** Returns a fade-out promise for the currently playing track
      * @remarks The sound is faded to the minimum audio level.
      * An actual fade operation is only started when
-     * - the fading duration is non-zero and
+     * - the set duration is non-zero and
      * - no previous fade operation is ongoing
+     * - the immediate parameter is not set to true
      * otherwise
      * - a fade with duration zero is started and the promise is immediately resolved.
+     * @param immediate - When set to true, the fade operation is done with duration zero.
      */
-    fadeOut(): Promise<void>;
+    fadeOut(immediate?: boolean): Promise<void>;
 
-    /** Returns a linear fade-in promise.
+    /** Returns a fade-in promise.
      * @remarks The sound is faded to the master volume audio level.
      * A pre-fade offset is applied, when configured
      * An actual fade operation is only started when
@@ -78,7 +80,7 @@ export interface IMediaHandler {
      */
     readonly paused: boolean;
 
-    /** Initiates fade-out operation, then sets the state to paused */
+    /** Initiates a fade-out operation, then sets the state to paused */
     pause(): void;
 
     /** Immediately pauses playback. Stops a possible ongoing fading operation. */
