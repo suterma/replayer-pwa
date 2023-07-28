@@ -47,7 +47,7 @@ import {
     onMounted,
     onBeforeUnmount,
 } from 'vue';
-import AudioFader from '@/code/audio/AudioFader';
+import AudioFader from '@/code/media/AudioFader';
 import { DefaultTrackVolume, PlaybackMode } from '@/store/compilation-types';
 import TrackAudioPeaks from '@/components/track/TrackAudioPeaks.vue';
 import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMeter.vue';
@@ -547,7 +547,7 @@ function stop() {
 function togglePlayback() {
     debugLog(`togglePlayback`);
     if (playing.value) {
-        pause();
+        mediaHandler.pause();
     } else {
         play();
     }
@@ -571,23 +571,17 @@ function volumeUp() {
 }
 /** Pauses playback at the current position, with fading if configured. */
 function pause(): void {
-    //TODO implement in the handler
-    debugLog(`pause`);
-    if (playing.value) {
-        isFading.value = true;
-        emit('update:isFading', true);
-
-        mediaHandler
-            .fadeOut()
-            .catch((message) => console.log(message))
-            .then(() => {
-                audioElement.value.pause();
-                isFading.value = false;
-                emit('update:isTrackPlaying', false);
-                emit('update:isFading', false);
-            });
-    }
+    mediaHandler.pause();
 }
+
+mediaHandler.onFadingChanged.subscribe((fading: boolean) => {
+    emit('update:isFading', fading);
+});
+
+mediaHandler.onPausedChanged.subscribe((paused: boolean) => {
+    emit('update:isTrackPlaying', !paused);
+});
+
 /** Pauses playback (with a subsequent seek operation) */
 function pauseAndSeekTo(position: number): void {
     //TODO implement in the handler
@@ -861,7 +855,7 @@ watch(
         if (isTrackPlaying) {
             play();
         } else {
-            pause();
+            mediaHandler.pause();
         }
     },
 );

@@ -1,10 +1,10 @@
-import AudioFader from '../audio/AudioFader';
-import { IAudioFader } from '../audio/IAudioFader';
+import AudioFader from './AudioFader';
+import { IAudioFader } from './IAudioFader';
 import { IMediaHandler } from './IMediaHandler';
 import { SubEvent } from 'sub-events';
 
 /** @class Implements a handler for audio data.
- * @remarks This handles transport and volume operations for audio sources (HTML Audio Elements).
+ * @remarks This handles transport/loop and volume operations for audio sources (HTML media elements).
  * See https://github.com/suterma/replayer-pwa/tree/main/doc/media-handling#readme
  * @devdoc Internally uses an AudioFader instance for most volume-related tasks.
  */
@@ -151,10 +151,26 @@ export default class AudioHandler implements IMediaHandler {
 
     // --- transport ---
 
-    // pause(): void {
-    //     //TODO start fading, with a task
-    //     this.audio.pause();
-    // }
+    onFadingChanged: SubEvent<boolean> = new SubEvent();
+    onPausedChanged: SubEvent<boolean> = new SubEvent();
+
+    /** Pauses playback, with fading if configured. */
+    pause(): void {
+        this.debugLog(`pause`);
+        if (!this.paused) {
+            this.onFadingChanged.emit(true);
+
+            this.fadeOut()
+                .catch((message) => console.log(message))
+                .then(() => {
+                    this._audio.pause();
+                    this.onFadingChanged.emit(false);
+                    this.onPausedChanged.emit(true);
+                });
+        }
+    }
+
+    //TODO watch and handle the audio element pause
 
     stop(): void {
         this._audio.pause();

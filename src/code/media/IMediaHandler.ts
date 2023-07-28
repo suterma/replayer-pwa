@@ -1,13 +1,14 @@
 import { SubEvent } from 'sub-events';
 
-/** @interface Defines a media handler for use with media tracks. */
+/** @interface Defines a media handler.
+ *  This handles transport, loop and volume operations for media sources like HTML media elements.
+ */
 export interface IMediaHandler {
     // --- configuration and update ---
 
     /** A unique identifier for this handler.
      * @remarks To work correctly, this identifier must be unique among all currently existing handlers.
      *  Best, to make it universally unique by using a UUID.
-     * @devdoc This identifier allows to internally recognise this handler's element in the DOM. It's used as the HTML Element Id.
      */
     readonly id: string;
 
@@ -59,13 +60,27 @@ export interface IMediaHandler {
 
     // --- transport ---
 
+    /** Emits a changed fading state.
+     * @param {boolean} fading - whether a fading operation is currently ongoing
+     */
+    onFadingChanged: SubEvent<boolean>;
+
+    /** Emits a changed paused state.
+     * @param {boolean} paused - whether the playback is currently paused (or otherwise not playing)
+     */
+    onPausedChanged: SubEvent<boolean>;
+
+    /** Gets the paused state
+     */
     readonly paused: boolean;
 
     /** Initiates fade-out operation, then sets the state to paused */
-    //pause(): void;
+    pause(): void;
 
     /** Immediately pauses playback. Stops a possible ongoing fading operation. */
     stop(): void;
+
+    // --- looping ---
 
     // --- media loading ---
 
