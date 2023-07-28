@@ -1,4 +1,5 @@
 import AudioFader from '../audio/AudioFader';
+import { IAudioFader } from '../audio/IAudioFader';
 import { IMediaHandler } from './IMediaHandler';
 import { SubEvent } from 'sub-events';
 
@@ -10,7 +11,7 @@ import { SubEvent } from 'sub-events';
 export default class AudioHandler implements IMediaHandler {
     // --- internals ---
 
-    private _fader: AudioFader;
+    private _fader: IAudioFader;
 
     /** The audio element instance to act upon */
     private _audio: HTMLAudioElement;

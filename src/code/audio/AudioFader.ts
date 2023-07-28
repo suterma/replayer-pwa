@@ -1,20 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
+import { IAudioFader } from './IAudioFader';
 
-/** @class A fader for an audio element instance.
- * @remarks This handles fade-in/out operations during playback, including a muted state.
- * The goal is to free the actual player from automatic fading handling.
- * Using this promise-based approach especially frees the using code from
- * using timers for calling delayed stop or pause operations after a fade operation.
- * @remarks Newly attempted fade operations are prevented during already ongoing fade operations. The ongoing
- * fade operation is however cancelled (and subsequently fades to min).
- * @remarks Also supports a master volume and a muted state that is applied on top of the fading volume changes.
+/** @class Implements an audio fader for a media element instance.
  * @remarks Currently only supports a linear fade, with a constant gradient,
  * only determined by the predefined durations for a full-scale fade.
- * @remarks Fading is only actually executed for non-zero fading durations.
- * For zero fading durations, the call immediately returns with a resolved promise, without any call to a fade operation.
- * This can be used as a convenient way to skip fadings.
  */
-export default class AudioFader {
+export default class AudioFader implements IAudioFader {
     /** This is set to a fixed value, as a tradeoff between call frequency and smoothness
      * @devdoc This should be set to a value that produces small volume changes, that are barely audible
      */
@@ -56,14 +47,7 @@ export default class AudioFader {
 
         this.reset();
     }
-    /** Updates the current settings.
-     * @remarks The settings will be used for the next fade.
-     * However, when the new duration is zero (no fade),
-     * the cancel operation is immediately called, resetting the volume to the initial value for this case.
-     * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
-     * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
-     * @param {boolean} applyFadeInOffset - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
-     */
+
     updateSettings(
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         fadeInDuration: number = 1000,
@@ -204,48 +188,36 @@ export default class AudioFader {
         return currentVolume;
     }
 
-    /** Returns a linear fade-in promise for the currently playing track
-     * @remarks The sound is faded to the master volume audio level.
-     * A pre-fade offset is applied, when configured
-     * An actual fade operation is only started when
-     * - the duration is non-zero and
-     * - no previous fade operation is ongoing
-     * otherwise
-     * - the promise is immediately resolved.
-     */
     fadeIn(): Promise<void> {
         if (this.hadToCancel()) {
             return Promise.resolve();
         } else {
-            if (this.fadeInDuration) {
+            const currentVolume = this.getCurrentAudioVolume();
+            const currentMasterAudioVolume = this.getMasterAudioVolume();
+
+            if (
+                this.fadeInDuration &&
+                currentVolume < currentMasterAudioVolume
+            ) {
                 return new Promise((resolve) => {
-                    const currentVolume = this.getCurrentAudioVolume();
-                    if (currentVolume < this.getMasterAudioVolume()) {
-                        return this.fade(
-                            currentVolume,
-                            this.getMasterAudioVolume(),
-                            this.fadeInDuration,
-                        )
-                            .catch(() => {
-                                console.debug(
-                                    `AudioFader::fadeIn:linear:aborted`,
-                                );
-                            })
-                            .then(() => {
-                                console.debug(
-                                    `AudioFader::fadeIn:linear:ended`,
-                                );
-                            })
-                            .finally(() => {
-                                resolve();
-                            });
-                    } else {
-                        resolve(); //immediately
-                    }
+                    return this.fade(
+                        currentVolume,
+                        currentMasterAudioVolume,
+                        this.fadeInDuration,
+                    )
+                        .catch(() => {
+                            console.debug(`AudioFader::fadeIn:linear:aborted`);
+                        })
+                        .then(() => {
+                            console.debug(`AudioFader::fadeIn:linear:ended`);
+                        })
+                        .finally(() => {
+                            resolve();
+                        });
                 });
             } else {
                 //nothing to fade
-                this.setAudioVolume(this.getMasterAudioVolume());
+                this.setAudioVolume(currentMasterAudioVolume);
                 return Promise.resolve();
             }
         }
@@ -303,21 +275,16 @@ export default class AudioFader {
         });
     }
 
-    /** Returns a linear fade-out promise for the currently playing track
-     * @remarks The sound is faded to the minimum audio level.
-     * An actual fade operation is only started when
-     * - the duration is non-zero and
-     * - no previous fade operation is ongoing
-     * otherwise
-     * - a fade with duration zero is started and the promise is immediately resolved.
-     */
     fadeOut(): Promise<void> {
         if (this.hadToCancel()) {
             return Promise.resolve();
         } else {
-            if (this.fadeOutDuration) {
+            const currentVolume = this.getCurrentAudioVolume();
+            if (
+                this.fadeOutDuration &&
+                currentVolume != AudioFader.audioVolumeMin
+            ) {
                 return new Promise((resolve) => {
-                    const currentVolume = this.getCurrentAudioVolume();
                     console.debug(
                         `AudioFader::fadeOut:volume:${currentVolume}`,
                     );
