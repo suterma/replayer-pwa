@@ -282,15 +282,13 @@ export default class AudioFader implements IAudioFader {
         });
     }
 
-    fadeOut(): Promise<void> {
+    fadeOut(immediate?: boolean): Promise<void> {
         if (this.hadToCancel()) {
             return Promise.resolve();
         } else {
+            const duration = immediate ? 0 : this.fadeOutDuration;
             const currentVolume = this.getCurrentAudioVolume();
-            if (
-                this.fadeOutDuration &&
-                currentVolume != AudioFader.audioVolumeMin
-            ) {
+            if (duration && currentVolume != AudioFader.audioVolumeMin) {
                 return new Promise((resolve) => {
                     console.debug(
                         `AudioFader::fadeOut:volume:${currentVolume}`,
@@ -299,7 +297,7 @@ export default class AudioFader implements IAudioFader {
                     return this.fade(
                         currentVolume,
                         AudioFader.audioVolumeMin,
-                        this.fadeOutDuration,
+                        duration,
                     )
                         .catch(() => {
                             console.debug(`AudioFader::fadeOut:linear:aborted`);

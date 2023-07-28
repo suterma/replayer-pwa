@@ -60,6 +60,7 @@ export default class AudioHandler implements IMediaHandler {
             this.debugLog(`onloadedmetadata:readyState:${readyState}`);
             this.handleReadyState(readyState);
         };
+
         audio.ondurationchange = () => {
             const duration = this._audio.duration;
             this.debugLog(`ondurationchange:duration:${duration}`);
@@ -68,8 +69,10 @@ export default class AudioHandler implements IMediaHandler {
 
         audio.onpause = () => {
             this.debugLog(`onpause`);
-            //Upon reception of this event, playback has already paused. No fade-out is required.
             this.onPausedChanged.emit(true);
+            //Upon reception of this event, playback has already paused.
+            //No actual fade-out is required. However, to reset the volume to the minimum, a fast fade-out is still triggered
+            this.fadeOut(/*immediate*/ true);
             this.onFadingChanged.emit(false);
         };
 
@@ -132,9 +135,9 @@ export default class AudioHandler implements IMediaHandler {
 
     // --- fading ---
 
-    fadeOut(): Promise<void> {
+    fadeOut(immediate?: boolean): Promise<void> {
         this.onFadingChanged.emit(true);
-        return this._fader.fadeOut();
+        return this._fader.fadeOut(immediate);
     }
 
     fadeIn(): Promise<void> {
