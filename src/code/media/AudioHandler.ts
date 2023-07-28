@@ -65,6 +65,29 @@ export default class AudioHandler implements IMediaHandler {
             this.debugLog(`ondurationchange:duration:${duration}`);
             this.updateDuration(duration);
         };
+
+        audio.onpause = () => {
+            this.debugLog(`onpause`);
+            //Upon reception of this event, playback has already paused. No fade-out is required.
+            this.onPausedChanged.emit(true);
+            this.onFadingChanged.emit(false);
+        };
+
+        audio.onplay = () => {
+            this.debugLog(`onplay`);
+            this.onPausedChanged.emit(false);
+
+            //Upon reception of this event, playback has already started. Fade-in is required if not yet ongoing.
+            if (!this._fader.fading) {
+                this.onFadingChanged.emit(true);
+
+                this.fadeIn()
+                    .catch((message) => console.log(message))
+                    .then(() => {
+                        this.onFadingChanged.emit(false);
+                    });
+            }
+        };
     }
 
     // --- configuration and update ---
@@ -110,11 +133,17 @@ export default class AudioHandler implements IMediaHandler {
     // --- fading ---
 
     fadeOut(): Promise<void> {
+        this.onFadingChanged.emit(true);
         return this._fader.fadeOut();
     }
 
     fadeIn(): Promise<void> {
+        this.onFadingChanged.emit(true);
         return this._fader.fadeIn();
+    }
+
+    get fading(): boolean {
+        return this._fader.fading;
     }
 
     // --- volume ---

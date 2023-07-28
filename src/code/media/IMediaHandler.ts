@@ -58,6 +58,10 @@ export interface IMediaHandler {
      */
     muted: boolean;
 
+    /** Gets the fading state
+     */
+    readonly fading: boolean;
+
     // --- transport ---
 
     /** Emits a changed fading state.

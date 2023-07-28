@@ -121,6 +121,13 @@ export default class AudioFader implements IAudioFader {
         }
     }
 
+    get fading(): boolean {
+        if (this.operationToken) {
+            return true;
+        }
+        return false;
+    }
+
     /** Gets the muted state.
      */
     get muted(): boolean {

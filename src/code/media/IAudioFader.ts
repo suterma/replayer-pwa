@@ -36,6 +36,10 @@ export interface IAudioFader {
      */
     reset(): void;
 
+    /** Gets the fading state.
+     */
+    get fading(): boolean;
+
     /** Gets the muted state.
      */
     get muted(): boolean;

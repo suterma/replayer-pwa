@@ -256,12 +256,6 @@ const props = defineProps({
 
 const mediaError = ref<MediaError | null>(null);
 
-/** Whether the audio is currently fading */
-const isFading = ref(false);
-
-/** Whether playback is currently ongoing */
-const playing = ref(false);
-
 /** Flags, whether a playing request is currently outstanding. This is true after a play request was received, for as long
  * as playback has not yet started.
  * @remarks This is not equal to deferred loading with the isClickToLoadRequired flag.
@@ -453,7 +447,7 @@ function handleCueLoop(currentTime: number): void {
                 Number.isFinite(props.loopEnd) &&
                 Number.isFinite(currentTime) &&
                 currentTime >= props.loopEnd &&
-                isFading.value == false
+                mediaHandler.fading == false
             ) {
                 pauseAndSeekTo(props.loopStart);
             }
@@ -498,7 +492,7 @@ function updateMediaSource(mediaUrl: string): void {
         //(observed on Ubuntu Google Chrome)
         //An error is only thrown only after the playback ends.
         //Thus, additional handling is necessary
-        const isCurrentlyPlaying = playing.value;
+        const isCurrentlyPlaying = !mediaHandler.paused;
         const lastPosition = audioElement.value.currentTime;
         audioElement.value.pause();
 
@@ -532,24 +526,18 @@ function stop() {
     //If it's still playing (e.g. during a fade operation, still immediately stop)
     if (!mediaHandler.paused) {
         mediaHandler.stop();
-        emit('update:isTrackPlaying', false);
     }
-    //no fading at stop
-    isFading.value = false;
-    emit('update:isFading', false);
 
+    //TODO use seek to
     audioElement.value.currentTime = 0;
-
-    //TODO emit and handle a stop event
-    //store.commit(MutationTypes.UPDATE_SELECTED_CUE_ID, undefined);
 }
 
 function togglePlayback() {
     debugLog(`togglePlayback`);
-    if (playing.value) {
-        mediaHandler.pause();
-    } else {
+    if (mediaHandler.paused) {
         play();
+    } else {
+        mediaHandler.pause();
     }
 }
 
@@ -588,14 +576,8 @@ function pauseAndSeekTo(position: number): void {
 
     debugLog(`pauseAndSeekTo`);
 
-    isFading.value = true;
-    emit('update:isFading', true);
-
     mediaHandler.fadeOut().then(() => {
-        audioElement.value.pause();
-        isFading.value = false;
-        emit('update:isFading', false);
-        emit('update:isTrackPlaying', false);
+        mediaHandler.pause();
         seekToSeconds(position);
     });
 }
@@ -662,7 +644,7 @@ async function play(): Promise<void> {
             play();
         });
     } else {
-        if (!playing.value) {
+        if (mediaHandler.paused) {
             if (!isPlayingRequestOutstanding.value) {
                 isPlayingRequestOutstanding.value = true;
 
@@ -769,30 +751,6 @@ audioElement.value.onended = () => {
     }
 };
 
-audioElement.value.onpause = () => {
-    debugLog(`onpause`);
-    playing.value = false;
-    emit('update:isTrackPlaying', false);
-};
-audioElement.value.onplay = () => {
-    debugLog(`onplay`);
-    playing.value = true;
-
-    //NOTE: Having the fade-in operation to start here, instead of after the thenable play action
-    //ensures, that a fade operation is applied without any audible delay.
-    debugLog('Playback started');
-    emit('update:isTrackPlaying', true);
-    isFading.value = true;
-    emit('update:isFading', true);
-    mediaHandler
-        .fadeIn()
-        .catch((message) => console.log(message))
-        .then(() => {
-            isFading.value = false;
-            emit('update:isFading', false);
-        });
-};
-
 audioElement.value.preload = 'auto';
 
 updateVolume(props.volume);
@@ -806,7 +764,6 @@ onUnmounted(() => {
 
     //properly destroy the audio element and the audio context
     mediaHandler.stop();
-    playing.value = false;
     audioElement.value.pause();
     audioElement.value.removeAttribute('src'); // empty resource
     audioElement.value.remove();
