@@ -11,6 +11,8 @@
  * This can be used as a convenient way to skip fadings.
  */
 export interface IAudioFader {
+    //TODO later use media element instead of autio element
+
     /** Updates the current settings.
      * @remarks The settings will be used for the next fade.
      * However, when the new duration is zero (no fade),

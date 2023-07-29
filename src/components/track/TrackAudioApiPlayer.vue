@@ -57,9 +57,6 @@ import { useMessageStore } from '@/store/messages';
 import AudioHandler from '@/code/media/AudioHandler';
 import { IMediaHandler } from '@/code/media/IMediaHandler';
 
-/** A safety margin for detecting the end of a track during playback */
-const trackDurationSafetyMarginSeconds = 0.3;
-
 /** A simple vue audio player, for a single track, using the Audio Element and it's API.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used. This has some implications for looping and transport.
  * @devdoc Internally maintains it's state, updating the enclosed audio element accordingly.
@@ -90,8 +87,6 @@ const emit = defineEmits([
     'update:isFading',
     /** When the end of the track has been reached and playback has ended */
     'ended',
-    /** When the end of a loop has been reached and looping back to the start has occurred */
-    'loopedTo',
 ]);
 const props = defineProps({
     /** The title of the track */
@@ -297,7 +292,7 @@ const audio = useAudioStore();
 const audioElement = shallowRef(document.createElement('audio'));
 audioElement.value.id = 'track-' + props.trackId;
 
-/** The media handler (with fader) to use */
+/** The media handler to use */
 const mediaHandler: IMediaHandler = new AudioHandler(
     audioElement.value,
     props.fadeInDuration,
@@ -309,6 +304,21 @@ const mediaHandler: IMediaHandler = new AudioHandler(
 mediaHandler.onDurationChanged.subscribe((durationSeconds: number | null) => {
     emit('durationChanged', durationSeconds);
 });
+
+mediaHandler.onCurrentTimeChanged.subscribe((currentTime: number) => {
+    emit('timeupdate', currentTime);
+});
+
+/** Handle a changed active state of the track */
+watch(
+    () => props.isActiveTrack,
+    () => {
+        if (props.isActiveTrack) debugLog(`mediaUrl:${props.mediaUrl}`);
+        updateMediaSource(props.mediaUrl);
+        mediaHandler.stop();
+    },
+    { immediate: true },
+);
 
 onMounted(() => {
     audio.addMediaHandler(mediaHandler);
@@ -368,93 +378,6 @@ watch(
 );
 
 // ---  ---
-
-/** Updates the current seconds display and emits an event with the temporal position of the player
- * @devdoc This must get only privately called from the audio player
- * @devdoc This is known to result in setTimeout violations on slower systems
- */
-function updateTime(/*event: Event*/): void {
-    const currentTime = audioElement.value.currentTime;
-    emit('timeupdate', currentTime);
-    if (props.isActiveTrack) {
-        handleCueLoop(currentTime);
-    }
-}
-
-/** Handles looping for a single cue, if requested by PlaybackMode
- * @remarks Cue looping is solved here by observing and handling the recurring time updates.
- * NOTE: Partial looping is not natively supported with the used HTMLAudioElement.
- * For memory consumption reasons, a buffered audio source with the Web Audio API is not used,
- * which however would natively support partial loops.
- * @remarks Track looping is handled elsewhere.
- * @param {number} currentTime - The time to decide looping on
- */
-function handleCueLoop(currentTime: number): void {
-    switch (props.playbackMode) {
-        case PlaybackMode.LoopCue: {
-            const durationSeconds = mediaHandler.durationSeconds;
-            if (
-                currentTime !== null &&
-                durationSeconds !== null &&
-                Number.isFinite(currentTime) &&
-                Number.isFinite(durationSeconds)
-            ) {
-                //Detect, with a safety margin, whether the possible loop is at track end
-                const isAtTrackEnd =
-                    currentTime >=
-                    durationSeconds - trackDurationSafetyMarginSeconds;
-
-                //Is a loop due?
-                if (
-                    props.loopStart !== null &&
-                    props.loopEnd !== null &&
-                    Number.isFinite(props.loopStart) &&
-                    Number.isFinite(props.loopEnd) &&
-                    (currentTime >= props.loopEnd || isAtTrackEnd)
-                ) {
-                    debugLog(
-                        `loopDue:loopStart:${props.loopStart}:loopEnd:${props.loopEnd};currentTime:${currentTime};durationSeconds.value:${durationSeconds}`,
-                    );
-                    //Back to loop start
-                    seekToSeconds(props.loopStart);
-                    emit('loopedTo', props.loopStart);
-
-                    if (isAtTrackEnd) {
-                        debugLog(
-                            `loopEnd:${props.loopEnd};durationSeconds:${durationSeconds}`,
-                        );
-                        //At the end of the track, a seek operation alone would not be enough to continue the loop
-                        //if playback already has ended (when the safety margin from above was too small)
-                        nextTick(() => {
-                            //Directly issue the play command, without any safety net
-                            //(should be working, since play was successful already)
-                            //This handling here has the disadvantage, that a fading operation does take place however,
-                            //if configured and the safety margin was too short.
-                            audioElement.value.play();
-                        });
-                    }
-                }
-            }
-            break;
-        }
-        case PlaybackMode.PlayCue: {
-            //Execute once, when past the end and not yet fading (avoid repeated calls)
-            if (
-                props.loopStart !== null &&
-                props.loopEnd !== null &&
-                currentTime !== null &&
-                Number.isFinite(props.loopStart) &&
-                Number.isFinite(props.loopEnd) &&
-                Number.isFinite(currentTime) &&
-                currentTime >= props.loopEnd &&
-                mediaHandler.fading == false
-            ) {
-                pauseAndSeekTo(props.loopStart);
-            }
-            break;
-        }
-    }
-}
 
 /** Applies the muting state.
  * @remarks To effectively determine the applicable muting, the solo state is additionally considered.
@@ -694,7 +617,6 @@ function applyPreRoll(): void {
 //Preparing the audio element
 
 //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
-audioElement.value.ontimeupdate = updateTime;
 audioElement.value.onerror = () => {
     mediaError.value = audioElement.value?.error;
     console.debug(
@@ -847,19 +769,6 @@ watch(
     () => {
         updateVolume(props.volume);
     },
-);
-
-/** Watch the playback mode and update the loop property accordingly
- * @remarks This handles the PlaybackMode.LoopTrack mode, but not other loop modes.
- * @devdoc Handle the value also immediately at mount time
- */
-watch(
-    () => props.playbackMode,
-    (playbackMode: PlaybackMode) => {
-        debugLog(`watch playbackMode:${playbackMode}`);
-        audioElement.value.loop = playbackMode === PlaybackMode.LoopTrack;
-    },
-    { immediate: true },
 );
 </script>
 

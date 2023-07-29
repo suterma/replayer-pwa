@@ -1,7 +1,7 @@
 import { SubEvent } from 'sub-events';
 
 /** @interface Defines a media handler.
- *  This handles transport, loop and volume operations for media sources like HTML media elements.
+ *  This handles transport, loop and volume operations for media sources like e.g. HTML media elements.
  */
 export interface IMediaHandler {
     // --- configuration and update ---
@@ -104,6 +104,11 @@ export interface IMediaHandler {
      * @param {number} duration - could be NaN or infinity, depending on the source
      */
     onDurationChanged: SubEvent<number>;
+
+    /** Emits a changed current time position.
+     * @param {number} currentTime - could be NaN or infinity, depending on the source
+     */
+    onCurrentTimeChanged: SubEvent<number>;
 
     /** Flags, whether deferred loading (until a user play click event is handled)
      * is required to further load the track media file data. The flag may be set once after the metadata was successfully loaded.

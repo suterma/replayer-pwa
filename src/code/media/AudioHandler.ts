@@ -6,7 +6,7 @@ import { SubEvent } from 'sub-events';
 /** @class Implements a handler for audio data.
  * @remarks This handles transport/loop and volume operations for audio sources (HTML media elements).
  * See https://github.com/suterma/replayer-pwa/tree/main/doc/media-handling#readme
- * @devdoc Internally uses an AudioFader instance for most volume-related tasks.
+ * @devdoc Looping and fading are internally handeled with their own handlers.
  */
 export default class AudioHandler implements IMediaHandler {
     // --- internals ---
@@ -48,13 +48,13 @@ export default class AudioHandler implements IMediaHandler {
         );
 
         //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
-        //this.audio.ontimeupdate = this.updateTime;
         audio.onloadeddata = () => {
             this.isClickToLoadRequired = false;
             const readyState = this._audio.readyState;
             this.debugLog(`onloadeddata:readyState:${readyState}`);
             this.handleReadyState(readyState);
         };
+
         audio.onloadedmetadata = () => {
             const readyState = this._audio.readyState;
             this.debugLog(`onloadedmetadata:readyState:${readyState}`);
@@ -91,6 +91,8 @@ export default class AudioHandler implements IMediaHandler {
                     });
             }
         };
+
+        audio.ontimeupdate = this.handleTimeUpdate;
     }
 
     // --- configuration and update ---
@@ -185,6 +187,7 @@ export default class AudioHandler implements IMediaHandler {
 
     onFadingChanged: SubEvent<boolean> = new SubEvent();
     onPausedChanged: SubEvent<boolean> = new SubEvent();
+    onCurrentTimeChanged: SubEvent<number> = new SubEvent();
 
     /** Pauses playback, with fading if configured. */
     pause(): void {
@@ -215,6 +218,12 @@ export default class AudioHandler implements IMediaHandler {
      */
     get paused(): boolean {
         return this._audio.paused;
+    }
+
+    /** Handles the time update event of the audio element
+     */
+    handleTimeUpdate(): void {
+        this.onCurrentTimeChanged.emit(this._audio.currentTime);
     }
 
     // --- media loading ---

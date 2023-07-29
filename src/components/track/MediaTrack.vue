@@ -376,7 +376,6 @@
                 :isSoloed="isSoloed"
                 :isAnySoloed="isAnySoloed"
                 @ended="$emit('trackEnded')"
-                @loopedTo="$emit('trackLoopedTo', $event)"
                 :fadeInDuration="fadeInDuration"
                 :preRollDuration="preRollDuration"
                 :fadeOutDuration="fadeOutDuration"
@@ -669,10 +668,6 @@ const emit = defineEmits([
      * @remarks Allows to select the next track in "play all" and "shuffle" mode.
      */
     'trackEnded',
-
-    /** Occurs, when the end of a loop has been reached and playback has looped.
-     */
-    'trackLoopedTo',
 ]);
 
 const props = defineProps({
