@@ -3,21 +3,21 @@ import { IAudioFader } from './IAudioFader';
 import { IMediaHandler } from './IMediaHandler';
 import { SubEvent } from 'sub-events';
 
-/** @class Implements a handler for audio data.
+/** @class Implements a playback handler for a {HTMLMediaElement}.
  * @remarks This handles transport/loop and volume operations for audio sources (HTML media elements).
  * See https://github.com/suterma/replayer-pwa/tree/main/doc/media-handling#readme
  * @devdoc Looping and fading are internally handeled with their own handlers.
  */
-export default class AudioHandler implements IMediaHandler {
+export default class MediaHandler implements IMediaHandler {
     // --- internals ---
 
     private _fader: IAudioFader;
 
-    /** The audio element instance to act upon */
-    private _audio: HTMLAudioElement;
+    /** The {HTMLMediaElement} instance to act upon */
+    private _media: HTMLMediaElement;
 
     /** @constructor
-     * @param {HTMLAudioElement} audio - The audio element to act upon
+     * @param {HTMLMediaElement} media - The media element to act upon
      * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
      * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
      * @param {boolean} applyFadeInOffset - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
@@ -25,7 +25,7 @@ export default class AudioHandler implements IMediaHandler {
      * @param {string} id - The unique id
      */
     constructor(
-        audio: HTMLAudioElement,
+        media: HTMLMediaElement,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         fadeInDuration: number = 1000,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
@@ -37,10 +37,10 @@ export default class AudioHandler implements IMediaHandler {
 
         id = '',
     ) {
-        this._audio = audio;
+        this._media = media;
         this._id = id;
         this._fader = new AudioFader(
-            audio,
+            media,
             fadeInDuration,
             fadeOutDuration,
             applyFadeInOffset,
@@ -48,26 +48,26 @@ export default class AudioHandler implements IMediaHandler {
         );
 
         //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
-        audio.onloadeddata = () => {
+        this._media.onloadeddata = () => {
             this.isClickToLoadRequired = false;
-            const readyState = this._audio.readyState;
+            const readyState = this._media.readyState;
             this.debugLog(`onloadeddata:readyState:${readyState}`);
             this.handleReadyState(readyState);
         };
 
-        audio.onloadedmetadata = () => {
-            const readyState = this._audio.readyState;
+        this._media.onloadedmetadata = () => {
+            const readyState = this._media.readyState;
             this.debugLog(`onloadedmetadata:readyState:${readyState}`);
             this.handleReadyState(readyState);
         };
 
-        audio.ondurationchange = () => {
-            const duration = this._audio.duration;
+        this._media.ondurationchange = () => {
+            const duration = this._media.duration;
             this.debugLog(`ondurationchange:duration:${duration}`);
             this.updateDuration(duration);
         };
 
-        audio.onpause = () => {
+        this._media.onpause = () => {
             this.debugLog(`onpause`);
             this.onPausedChanged.emit(true);
             //Upon reception of this event, playback has already paused.
@@ -76,7 +76,7 @@ export default class AudioHandler implements IMediaHandler {
             this.onFadingChanged.emit(false);
         };
 
-        audio.onplay = () => {
+        this._media.onplay = () => {
             this.debugLog(`onplay`);
             this.onPausedChanged.emit(false);
 
@@ -92,7 +92,9 @@ export default class AudioHandler implements IMediaHandler {
             }
         };
 
-        audio.ontimeupdate = this.handleTimeUpdate;
+        this._media.ontimeupdate = () => {
+            this.handleTimeUpdate();
+        };
     }
 
     // --- configuration and update ---
@@ -132,7 +134,7 @@ export default class AudioHandler implements IMediaHandler {
     /** Writes a debug log message message for this component */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     debugLog(message: string, ...optionalParams: any[]): void {
-        console.debug(`AudioHandler(${this._id})::${message}:`, optionalParams);
+        console.debug(`MediaHandler(${this._id})::${message}:`, optionalParams);
     }
 
     // --- fading ---
@@ -198,7 +200,7 @@ export default class AudioHandler implements IMediaHandler {
             this.fadeOut()
                 .catch((message) => console.log(message))
                 .then(() => {
-                    this._audio.pause();
+                    this._media.pause();
                     this.onFadingChanged.emit(false);
                     this.onPausedChanged.emit(true);
                 });
@@ -208,7 +210,7 @@ export default class AudioHandler implements IMediaHandler {
     //TODO watch and handle the audio element pause
 
     stop(): void {
-        this._audio.pause();
+        this._media.pause();
         this._fader.cancel();
         this._fader.reset();
     }
@@ -217,13 +219,13 @@ export default class AudioHandler implements IMediaHandler {
      * @remarks During fading, the playback state is not considered as paused.
      */
     get paused(): boolean {
-        return this._audio.paused;
+        return this._media.paused;
     }
 
     /** Handles the time update event of the audio element
      */
     handleTimeUpdate(): void {
-        this.onCurrentTimeChanged.emit(this._audio.currentTime);
+        this.onCurrentTimeChanged.emit(this._media.currentTime);
     }
 
     // --- media loading ---
@@ -247,7 +249,7 @@ export default class AudioHandler implements IMediaHandler {
      */
     handleLoadedData(): void {
         this.isClickToLoadRequired = false;
-        const readyState = this._audio.readyState;
+        const readyState = this._media.readyState;
 
         this.debugLog(`handleLoadedData:readyState:${readyState}`);
         this.handleReadyState(readyState);
@@ -263,7 +265,7 @@ export default class AudioHandler implements IMediaHandler {
         }
     }
 
-    /** Handles the current ready state of the HTMLAudioElement's media, with regard to playability
+    /** Handles the current ready state of the {HTMLMediaElement}'s media, with regard to playability
      * @remarks Decides, whether deferred loading is required.
      */
     handleReadyState(readyState: number): void {
@@ -272,7 +274,7 @@ export default class AudioHandler implements IMediaHandler {
             if (!this.hasLoadedMetadata && !this.hasLoadedData) {
                 this.hasLoadedMetadata = true;
                 this.hasLoadedData = true;
-                this.updateDuration(this._audio.duration);
+                this.updateDuration(this._media.duration);
 
                 //Apply the currently known position to the player. It could be non-zero already.
                 // //TODO probably use a specific initalPosition property for this
@@ -288,9 +290,9 @@ export default class AudioHandler implements IMediaHandler {
         }
 
         //Special flag handling, when not  automatically loading further now
-        this.debugLog(`handleReadyState:buffered:`, this._audio.buffered);
+        this.debugLog(`handleReadyState:buffered:`, this._media.buffered);
         this.debugLog(
-            `handleReadyState:networkState:${this._audio.networkState}`,
+            `handleReadyState:networkState:${this._media.networkState}`,
         );
 
         //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
@@ -300,7 +302,7 @@ export default class AudioHandler implements IMediaHandler {
         //- iPad Pro 12.9 2021/Safari (with audio from URL)
         //NOTE: This solution however seems not to work on:
         //- iPad 9th/Safari, because the buffered length is 1, but the sound will only play on 2nd click.
-        if (this._audio.buffered.length === 0) {
+        if (this._media.buffered.length === 0) {
             //The isClickToLoadRequired flag defers further media loading until the next user's explicit play request
             this.isClickToLoadRequired = true;
         }

@@ -54,7 +54,7 @@ import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMete
 import { useAudioStore } from '@/store/audio';
 import FileHandler from '@/store/filehandler';
 import { useMessageStore } from '@/store/messages';
-import AudioHandler from '@/code/media/AudioHandler';
+import MediaHandler from '@/code/media/MediaHandler';
 import { IMediaHandler } from '@/code/media/IMediaHandler';
 
 /** A simple vue audio player, for a single track, using the Audio Element and it's API.
@@ -293,7 +293,7 @@ const audioElement = shallowRef(document.createElement('audio'));
 audioElement.value.id = 'track-' + props.trackId;
 
 /** The media handler to use */
-const mediaHandler: IMediaHandler = new AudioHandler(
+const mediaHandler: IMediaHandler = new MediaHandler(
     audioElement.value,
     props.fadeInDuration,
     props.fadeOutDuration,
