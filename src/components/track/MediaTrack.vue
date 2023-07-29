@@ -974,7 +974,7 @@ function seek(seconds: number): void {
 
 /** Seeks to the position, in [seconds], with emitting an event */
 function seekToSeconds(seconds: number): void {
-    trackPlayerInstance.value?.seekToSeconds(seconds);
+    trackPlayerInstance.value?.seekTo(seconds);
     emit('seekToSeconds', seconds);
 }
 

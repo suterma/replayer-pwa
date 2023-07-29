@@ -57,19 +57,19 @@ import { useMessageStore } from '@/store/messages';
 import MediaHandler from '@/code/media/MediaHandler';
 import { IMediaHandler } from '@/code/media/IMediaHandler';
 
-/** A simple vue audio player, for a single track, using the Audio Element and it's API.
- * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used. This has some implications for looping and transport.
- * @devdoc Internally maintains it's state, updating the enclosed audio element accordingly.
- * @remarks Internally handles cue loops, when in the LoopCue playback mode.
- * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playing
- * @remarks Emits 'durationChanged' with the track duration in seconds, once after successful load of the metadata of the track's media file
+/** A simple vue audio player element, for a single track, with associated visuals, using an {HTMLAudioElement}.
+ * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
+ * This has some implications for looping and transport.
+ * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playback.
+ * @remarks Emits 'durationChanged' with the track duration in seconds, once after
+ * successful load of the metadata of the track's media file
  * @devdoc Autoplay after load is intentionally not supported, as this is of no use for the Replayer app.
  */
 
 defineExpose({
     play,
     pause,
-    seekToSeconds,
+    seekTo,
     stop,
     togglePlayback,
     volumeDown,
@@ -105,9 +105,6 @@ const props = defineProps({
     },
 
     /** The start time of the selected cue. Used in conjunction with the playbackMode, when in cue loop mode or track play mode.
-     * @devdoc This is used to emulate the buffer looping for the enclosed audio element.
-     * See https://www.w3.org/TR/webaudio/#looping-AudioBufferSourceNode for information about looping.
-     * @remarks This is used as the start time for any repetition, either from looping or when played to end.
      */
     loopStart: {
         type: null as unknown as PropType<number | null>,
@@ -117,9 +114,6 @@ const props = defineProps({
     },
 
     /** The end time of the selected cue. Used in conjunction with the playbackMode, when in cue loop mode.
-     * @devdoc This is used to emulate the buffer looping for the enclosed audio element.
-     * See https://www.w3.org/TR/webaudio/#looping-AudioBufferSourceNode for information about looping.
-     * @remarks This is only used when the playback mode is set to "repeat-cue".
      */
     loopEnd: {
         type: null as unknown as PropType<number | null>,
@@ -197,6 +191,7 @@ const props = defineProps({
     /** Whether this track is the active track
      * @remarks Determines looping behavior (only active tracks are looped)
      */
+    //TODO maybe remove this, and only use the looping range?
     isActiveTrack: {
         type: Boolean,
         required: true,
@@ -435,13 +430,8 @@ function updateMediaSource(mediaUrl: string): void {
     }
 }
 
-function seekToSeconds(seconds: number): void {
-    //debugLog(`seekToSeconds`, seconds);
-    if (!mediaHandler.hasLoadedMetadata) return;
-    if (audioElement.value.currentTime === seconds) {
-        return;
-    }
-    audioElement.value.currentTime = seconds;
+function seekTo(seconds: number): void {
+    mediaHandler.seekTo(seconds);
 }
 
 function stop() {
@@ -501,7 +491,7 @@ function pauseAndSeekTo(position: number): void {
 
     mediaHandler.fadeOut().then(() => {
         mediaHandler.pause();
-        seekToSeconds(position);
+        seekTo(position);
     });
 }
 
@@ -509,7 +499,7 @@ function pauseAndSeekTo(position: number): void {
  * @remarks This first seeks to the position, then starts playing
  */
 function playFrom(position: number): void {
-    seekToSeconds(position);
+    seekTo(position);
     play();
 }
 
@@ -658,19 +648,6 @@ audioElement.value.onstalled = () => {
 };
 audioElement.value.onsuspend = () => {
     debugLog(`onsuspend `);
-};
-audioElement.value.onended = () => {
-    debugLog(`onended `);
-    emit('update:isTrackPlaying', false);
-    emit('ended');
-
-    //Handle the track play mode
-    if (props.playbackMode === PlaybackMode.PlayTrack) {
-        if (props.loopStart) {
-            //Back to start (keep pausing)
-            seekToSeconds(props.loopStart);
-        }
-    }
 };
 
 audioElement.value.preload = 'auto';

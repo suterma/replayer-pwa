@@ -228,6 +228,20 @@ export default class MediaHandler implements IMediaHandler {
         this.onCurrentTimeChanged.emit(this._media.currentTime);
     }
 
+    get currentTime(): number {
+        return this._media.currentTime;
+    }
+
+    seekTo(seconds: number): void {
+        if (!this.hasLoadedMetadata) return;
+        if (this.currentTime === seconds) {
+            return;
+        }
+        if (Number.isFinite(seconds)) {
+            this._media.currentTime = seconds;
+        }
+    }
+
     // --- media loading ---
 
     /** Whether the media data has loaded (at least enough to start playback)

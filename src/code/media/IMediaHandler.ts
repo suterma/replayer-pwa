@@ -80,6 +80,22 @@ export interface IMediaHandler {
      */
     readonly paused: boolean;
 
+    /** Emits a changed current time position.
+     * @param {number} currentTime - could be NaN or infinity, depending on the source
+     */
+    onCurrentTimeChanged: SubEvent<number>;
+
+    /** Gets the current time position.
+     * @remarks This is not necessariliy the exact same value as was last emitted via {onCurrentTimeChanged}.
+     * @returns {number} currentTime - could be NaN or infinity, depending on the source
+     */
+    readonly currentTime: number;
+
+    /** Seeks to the given time position, if the media is loaded and the position is valid.
+     * @param {number} seconds - the temporal position, in [seconds], to seek to
+     */
+    seekTo(seconds: number): void;
+
     /** Initiates a fade-out operation, then sets the state to paused */
     pause(): void;
 
@@ -104,11 +120,6 @@ export interface IMediaHandler {
      * @param {number} duration - could be NaN or infinity, depending on the source
      */
     onDurationChanged: SubEvent<number>;
-
-    /** Emits a changed current time position.
-     * @param {number} currentTime - could be NaN or infinity, depending on the source
-     */
-    onCurrentTimeChanged: SubEvent<number>;
 
     /** Flags, whether deferred loading (until a user play click event is handled)
      * is required to further load the track media file data. The flag may be set once after the metadata was successfully loaded.
