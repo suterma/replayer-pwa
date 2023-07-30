@@ -26,13 +26,15 @@ export const getters = {
         return state.mediaUrls.value.size > 0;
     }),
 
-    /** Whether this compilation has exactly one (single) audio track.
-     * @remarks Non-audio tracks are not considered
+    /** Whether this compilation has exactly one (single) media track.
+     * @remarks Non-media tracks are not considered
      */
-    hasSingleAudioTrack: computed(() => {
+    hasSingleMediaTrack: computed(() => {
         return (
-            state.compilation.value?.Tracks.filter((track) =>
-                CompilationHandler.isAudioTrack(track),
+            state.compilation.value?.Tracks.filter(
+                (track) =>
+                    CompilationHandler.isAudioTrack(track) ||
+                    CompilationHandler.isVideoTrack(track),
             ).length == 1
         );
     }),
@@ -49,10 +51,12 @@ export const getters = {
         );
     }),
 
-    /** Gets the set of audio tracks */
-    audioTracks: computed(() => {
-        return state.compilation.value?.Tracks.filter((track) =>
-            CompilationHandler.isAudioTrack(track),
+    /** Gets the set of media tracks */
+    mediaTracks: computed(() => {
+        return state.compilation.value?.Tracks.filter(
+            (track) =>
+                CompilationHandler.isAudioTrack(track) ||
+                CompilationHandler.isVideoTrack(track),
         );
     }),
 
@@ -84,10 +88,12 @@ export const getters = {
             return selectedTrackByTrackId;
         }
 
-        const single = getters.hasSingleAudioTrack;
+        const single = getters.hasSingleMediaTrack;
         if (single.value) {
-            return state.compilation.value?.Tracks.filter((track) =>
-                CompilationHandler.isAudioTrack(track),
+            return state.compilation.value?.Tracks.filter(
+                (track) =>
+                    CompilationHandler.isAudioTrack(track) ||
+                    CompilationHandler.isVideoTrack(track),
             )[0]?.Id;
         }
 

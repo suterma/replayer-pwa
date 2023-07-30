@@ -31,7 +31,7 @@
             :displayMode="viewMode"
             :isExpanded="isExpanded"
             @update:isExpanded="updateIsExpanded"
-            :canCollapse="!isOnlyAudioTrack"
+            :canCollapse="!isOnlyMediaTrack"
             :trackId="track.Id"
             :trackName="track.Name"
             :trackUrl="track.Url"
@@ -144,7 +144,7 @@
 
         <!-- The buttons field (for a single track in play mode) -->
         <div
-            v-if="isPlayable && isOnlyAudioTrack && hasCues"
+            v-if="isPlayable && isOnlyMediaTrack && hasCues"
             class="transition-in-place"
             :key="track.Id"
         >
@@ -422,7 +422,7 @@
                             }"
                         >
                             <!-- Left side (with expander, title and artist of the currently playing track; not shown for a single track) -->
-                            <div v-if="isOnlyAudioTrack" class="level-left">
+                            <div v-if="isOnlyMediaTrack" class="level-left">
                                 <!-- empty placeholder -->
                             </div>
                             <div v-else class="level-left">
@@ -544,7 +544,7 @@
                         <!-- Offer the cue buttons depending on the situation. -->
                         <nav
                             v-if="
-                                (!isOnlyAudioTrack &&
+                                (!isOnlyMediaTrack &&
                                     !isTrackPlayerFullScreen &&
                                     isPlayable) ||
                                 (!isTrackPlayerFullScreen && isMixable)
@@ -580,7 +580,7 @@
 
 <script setup lang="ts">
 /** Displays a track div with a title, and a panel with a dedicated media player and the cue buttons for it.
- * @displayName Track
+ * @displayName MediaTrack
  * @remarks The panel is initially collapsed and no media is loaded into the player, as a performance optimization.
  * Details:
  * - The collapsed panel is not removed from the DOM because of issues with the ref handling in conjunction with v-if
@@ -692,7 +692,7 @@ const props = defineProps({
     /** Whether this is the only track in the compilation
      * @remarks Is used to visually omit some unnecessary items for a compilation with just a single track
      */
-    isOnlyAudioTrack: {
+    isOnlyMediaTrack: {
         type: Boolean,
         default: false,
     },

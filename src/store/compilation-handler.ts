@@ -19,7 +19,7 @@ export default class CompilationHandler {
     /** Determines whether this is a non-playable (text-only) track
      */
     static isTextTrack(track: ITrack): boolean {
-        return !this.isAudioTrack(track);
+        return track.Url.endsWith('.txt');
     }
 
     /** Determines whether this is an audio track
@@ -28,7 +28,25 @@ export default class CompilationHandler {
      * determined when the track URL is evaluated.
      */
     static isAudioTrack(track: ITrack): boolean {
-        return !track.Url.endsWith('.txt');
+        return (
+            track.Url.endsWith('.mp3') ||
+            track.Url.endsWith('.wav') ||
+            track.Url.endsWith('.wave') ||
+            track.Url.endsWith('.flac') ||
+            track.Url.endsWith('.ogg') ||
+            track.Url.endsWith('.aiff') ||
+            track.Url.endsWith('.aif') ||
+            track.Url.endsWith('.aac') ||
+            track.Url.endsWith('.m4a')
+        );
+    }
+    /** Determines whether this is an audio track
+     * @devdoc track types should later be determined by MIME type.
+     * For this, the MIME type should become part of the (readonly) track information,
+     * determined when the track URL is evaluated.
+     */
+    static isVideoTrack(track: ITrack): boolean {
+        return track.Url.endsWith('.mp4');
     }
 
     /** Shuffles and returns the given tracks, using a deterministic method, based on the given seed */
