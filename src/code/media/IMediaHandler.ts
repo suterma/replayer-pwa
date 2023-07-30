@@ -71,12 +71,12 @@ export interface IMediaHandler {
     /** Emits a changed fading state.
      * @param {boolean} fading - whether a fading operation is currently ongoing
      */
-    onFadingChanged: SubEvent<boolean>;
+    readonly onFadingChanged: SubEvent<boolean>;
 
     /** Emits a changed paused state.
      * @param {boolean} paused - whether the playback is currently paused (or otherwise not playing)
      */
-    onPausedChanged: SubEvent<boolean>;
+    readonly onPausedChanged: SubEvent<boolean>;
 
     /** Gets the paused state
      */
@@ -85,7 +85,7 @@ export interface IMediaHandler {
     /** Emits a changed current time position.
      * @param {number} currentTime - could be NaN or infinity, depending on the source
      */
-    onCurrentTimeChanged: SubEvent<number>;
+    readonly onCurrentTimeChanged: SubEvent<number>;
 
     /** Gets the current time position.
      * @remarks This is not necessariliy the exact same value as was last emitted via {onCurrentTimeChanged}.

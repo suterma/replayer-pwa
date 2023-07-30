@@ -257,7 +257,7 @@ const isPlayingRequestOutstanding = ref(false);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function debugLog(message: string, ...optionalParams: any[]): void {
     console.debug(
-        `TrackAudioApiPlayer(${props.title})::${message}:`,
+        `TrackAudioElement(${props.title})::${message}:`,
         optionalParams,
     );
 }
@@ -334,7 +334,7 @@ watch(
         [wasShowingLevelMeter /* old mediaUrl is not used */],
     ) => {
         console.debug(
-            `TrackAudioApiPlayer(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:showLevelMeter${showLevelMeter}`,
+            `TrackAudioElement(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:showLevelMeter${showLevelMeter}`,
         );
         // Create the level meter and associated routing only when requested, and only for local files
         if (
@@ -349,7 +349,7 @@ watch(
             }
             audioSource.value.connect(audio.context.destination);
             console.debug(
-                `TrackAudioApiPlayer(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:connected`,
+                `TrackAudioElement(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:connected`,
             );
         } else {
             audioSource.value?.disconnect(audio.context.destination);
@@ -574,7 +574,7 @@ function applyPreRoll(): void {
 audioElement.value.onerror = () => {
     mediaError.value = audioElement.value?.error;
     console.debug(
-        `TrackAudioApiPlayer(${props.title})::onerror:mediaError:`,
+        `TrackAudioElement(${props.title})::onerror:mediaError:`,
         mediaError.value,
     );
 

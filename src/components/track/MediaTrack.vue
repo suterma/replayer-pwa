@@ -347,7 +347,7 @@
                 variant, because otherwise the track is not correctly loaded
                 after it has become the active track ( gets
                 play-request-was-interrupted) -->
-            <TrackAudioApiPlayer
+            <TrackAudioElement
                 ref="trackPlayerInstance"
                 :title="track.Name"
                 :mediaUrl="mediaUrl"
@@ -378,7 +378,7 @@
                 :showLevelMeter="showLevelMeter"
                 :experimentalShowWaveforms="experimentalShowWaveforms"
                 :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
-            ></TrackAudioApiPlayer>
+            ></TrackAudioElement>
             <Teleport to="#media-player" :disabled="isEditable">
                 <Transition :name="skipTransitionName">
                     <!-- 
@@ -596,7 +596,7 @@ import {
 } from '@/store/compilation-types';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import TempoLevelEditor from '@/components/editor/TempoLevelEditor.vue';
-import TrackAudioApiPlayer from '@/components/track/TrackAudioApiPlayer.vue';
+import TrackAudioElement from '@/components/track/TrackAudioElement.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeader from '@/components/track/TrackHeader.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';
@@ -1336,10 +1336,9 @@ const isPlayable = computed(() => {
  * Thus, referencing an instance after it has been removed from the DOM (e.g. by v-if)
  * does not work, even after it's rendered again later.
  */
-//const trackPlayerInstance :Ref<<typeof TrackAudioApiPlayer>| null>  = ref(null);
-const trackPlayerInstance: Ref<InstanceType<
-    typeof TrackAudioApiPlayer
-> | null> = ref(null);
+//const trackPlayerInstance :Ref<<typeof TrackAudioElement>| null>  = ref(null);
+const trackPlayerInstance: Ref<InstanceType<typeof TrackAudioElement> | null> =
+    ref(null);
 
 /** Whether the playback media is available
  * @devdoc This is only working for local file paths, not for online URL's, because these are directly fetched from the media element.
