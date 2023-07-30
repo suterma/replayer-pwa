@@ -304,16 +304,9 @@ mediaHandler.onCurrentTimeChanged.subscribe((currentTime: number) => {
     emit('timeupdate', currentTime);
 });
 
-/** Handle a changed active state of the track */
-watch(
-    () => props.isActiveTrack,
-    () => {
-        if (props.isActiveTrack) debugLog(`mediaUrl:${props.mediaUrl}`);
-        updateMediaSource(props.mediaUrl);
-        mediaHandler.stop();
-    },
-    { immediate: true },
-);
+mediaHandler.onEnded.subscribe(() => {
+    emit('ended');
+});
 
 onMounted(() => {
     audio.addMediaHandler(mediaHandler);
@@ -389,10 +382,7 @@ function applyMuting(): void {
  *  @remarks Limits the minimum level at -90dB Full Scale
  */
 function updateVolume(volume: number): void {
-    //Limit the minimum
-    const limitedTrackVolume = Math.max(volume, AudioFader.audioVolumeMin);
-    debugLog(`limitedTrackVolume:${limitedTrackVolume}`);
-    mediaHandler.setMasterAudioVolume(limitedTrackVolume);
+    const limitedTrackVolume = mediaHandler.setMasterAudioVolume(volume);
     if (props.volume !== limitedTrackVolume) {
         emit('update:volume', limitedTrackVolume); //loop back the corrected value
     }
@@ -403,31 +393,7 @@ function updateVolume(volume: number): void {
  */
 function updateMediaSource(mediaUrl: string): void {
     debugLog(`UpdateMediaSource:${mediaUrl}`);
-    //Only update the audio element, when a source is actually available
-    //Otherwise the element throws an avoidable error
-    if (mediaUrl) {
-        //NOTE: Just changing the .src property does not work when the track is currently playing
-        //(observed on Ubuntu Google Chrome)
-        //An error is only thrown only after the playback ends.
-        //Thus, additional handling is necessary
-        const isCurrentlyPlaying = !mediaHandler.paused;
-        const lastPosition = audioElement.value.currentTime;
-        audioElement.value.pause();
-
-        //Switch the source now, after pause
-        audioElement.value.src = mediaUrl;
-
-        //NOTE: This method assumes, that the new media for this is of (roughly) the same
-        //length, just replacing the voice/instrument in the piece.
-        //Thus, the playback position is maintained and not reset,
-        //and the playing state is set again after the switch.
-        //Otherwise the user will need to restart playback from
-        //new position anyway
-        audioElement.value.currentTime = lastPosition;
-        if (isCurrentlyPlaying) {
-            audioElement.value.play();
-        }
-    }
+    mediaHandler.mediaSourceUrl = mediaUrl;
 }
 
 function seekTo(seconds: number): void {
@@ -440,9 +406,7 @@ function stop() {
     if (!mediaHandler.paused) {
         mediaHandler.stop();
     }
-
-    //TODO use seek to
-    audioElement.value.currentTime = 0;
+    mediaHandler.seekTo(0);
 }
 
 function togglePlayback() {

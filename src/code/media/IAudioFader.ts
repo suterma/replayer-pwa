@@ -52,9 +52,11 @@ export interface IAudioFader {
 
     /** Sets the master audio volume
      * @remarks The value is applied immediately, without any fading, with the possible muted state observed
-     * @param {number} volume - A value between 0 (zero) and 1 (representing full scale)
+     * @param {number} volume - A value between 0 (zero, will get limited to the minimum level) and 1 (representing full scale)
+     * @remarks Limits the minimum level at -90dB Full Scale
+     * @returns The applied, possibly limited, master audio volume
      */
-    setMasterAudioVolume(volume: number): void;
+    setMasterAudioVolume(volume: number): number;
 
     /** Returns a fade-in promise for the currently playing track
      * @remarks The sound is faded to the master volume audio level.

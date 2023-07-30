@@ -52,9 +52,11 @@ export interface IMediaHandler {
 
     /** Sets the master audio volume
      * @remarks The value is applied immediately, without any fading, with the possible muted state observed
-     * @param {number} volume - A value between 0 (zero) and 1 (representing full scale)
+     * @param {number} volume - A value between 0 (zero, will get limited to the minimum level) and 1 (representing full scale)
+     * @remarks Limits the minimum level at -90dB Full Scale
+     * @returns The applied, possibly limited, master audio volume
      */
-    setMasterAudioVolume(volume: number): void;
+    setMasterAudioVolume(volume: number): number;
 
     /** Gets or sets the muted state
      */
@@ -102,9 +104,19 @@ export interface IMediaHandler {
     /** Immediately pauses playback. Stops a possible ongoing fading operation. */
     stop(): void;
 
+    /** Occurs, when the end of the track has been reached and playback has ended.
+     * @remarks This is not triggered when the track or one of it's cue is looping.
+     * @remarks Allows to select the next track in "play all" and "shuffle" mode.
+     */
+    onEnded: SubEvent<void>;
+
     // --- looping ---
 
     // --- media loading ---
+
+    /** Gets or sets the media source URL
+     */
+    mediaSourceUrl: string;
 
     /** Gets the duration of the current track, in [seconds]
      * @remarks This is only available after successful load of the media metadata.

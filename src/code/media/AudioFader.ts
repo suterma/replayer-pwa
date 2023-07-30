@@ -165,14 +165,14 @@ export default class AudioFader implements IAudioFader {
         }
     }
 
-    /** Sets the master audio volume
-     * @remarks The value is applied immediately, without any fading, with the possible muted state observed
-     * @param {number} volume - A value between 0 (zero) and 1 (representing full scale)
-     */
-    public setMasterAudioVolume(volume: number): void {
+    /** @devdoc The actually applied volume might be lower than the master volume, when a fade out is in progress. */
+    public setMasterAudioVolume(volume: number): number {
+        const limitedVolume = Math.max(volume, AudioFader.audioVolumeMin);
+
         const fadingRatio = this.getCurrentAudioVolume() / this.masterVolume;
-        this.masterVolume = volume;
+        this.masterVolume = limitedVolume;
         this.setAudioVolume(this.getMasterAudioVolume() * fadingRatio);
+        return limitedVolume;
     }
 
     /** Gets the current audio volume, with a boundary check to make sure

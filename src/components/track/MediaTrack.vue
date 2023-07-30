@@ -347,10 +347,6 @@
                 variant, because otherwise the track is not correctly loaded
                 after it has become the active track ( gets
                 play-request-was-interrupted) -->
-            <!-- 
-                NOTE: The audio player is not removed via v-if
-                when this track is not the active track, to keep the reference alive. 
-                Also, fade-out would otherwise be interrupted. -->
             <TrackAudioApiPlayer
                 ref="trackPlayerInstance"
                 :title="track.Name"
@@ -362,7 +358,6 @@
                 @durationChanged="calculateCueDurations"
                 v-model:isTrackPlaying="isTrackPlaying"
                 @update:isFading="updateFading"
-                @update:playbackMode="updatedPlaybackMode"
                 :playbackMode="playbackMode"
                 :loopStart="selectedCue?.Time"
                 :loopEnd="

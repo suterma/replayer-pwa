@@ -95,6 +95,10 @@ export default class MediaHandler implements IMediaHandler {
         this._media.ontimeupdate = () => {
             this.handleTimeUpdate();
         };
+
+        this._media.onended = () => {
+            this.handleEnded();
+        };
     }
 
     // --- configuration and update ---
@@ -177,12 +181,8 @@ export default class MediaHandler implements IMediaHandler {
     //     }
     // }
 
-    /** Sets the master audio volume
-     * @remarks The value is applied immediately, without any fading, with the possible muted state observed
-     * @param {number} volume - A value between 0 (zero) and 1 (representing full scale)
-     */
-    public setMasterAudioVolume(volume: number): void {
-        this._fader.setMasterAudioVolume(volume);
+    public setMasterAudioVolume(volume: number): number {
+        return this._fader.setMasterAudioVolume(volume);
     }
 
     // --- transport ---
@@ -190,6 +190,7 @@ export default class MediaHandler implements IMediaHandler {
     onFadingChanged: SubEvent<boolean> = new SubEvent();
     onPausedChanged: SubEvent<boolean> = new SubEvent();
     onCurrentTimeChanged: SubEvent<number> = new SubEvent();
+    onEnded: SubEvent<void> = new SubEvent();
 
     /** Pauses playback, with fading if configured. */
     pause(): void {
@@ -227,6 +228,11 @@ export default class MediaHandler implements IMediaHandler {
     handleTimeUpdate(): void {
         this.onCurrentTimeChanged.emit(this._media.currentTime);
     }
+    /** Handles the track end event of the audio element, by providing it further as event.
+     */
+    handleEnded(): void {
+        this.onEnded.emit();
+    }
 
     get currentTime(): number {
         return this._media.currentTime;
@@ -243,6 +249,41 @@ export default class MediaHandler implements IMediaHandler {
     }
 
     // --- media loading ---
+
+    /** Gets the media source URL.
+     */
+    get mediaSourceUrl(): string {
+        return this._media.src;
+    }
+    /** Sets the media source URL.
+     */
+    set mediaSourceUrl(url: string) {
+        //Only update the media element, when a source is actually available
+        //Otherwise the element throws an avoidable error
+        if (url) {
+            //NOTE: Just changing the .src property does not work when the track is currently playing
+            //(observed on Ubuntu Google Chrome)
+            //An error is only thrown only after the playback ends.
+            //Thus, additional handling is necessary
+            const isCurrentlyPlaying = !this.paused;
+            const lastPosition = this.currentTime;
+            this.pause();
+
+            //Switch the source now, after pause
+            this._media.src = url;
+
+            //NOTE: This method assumes, that the new media for this is of (roughly) the same
+            //length, just replacing the voice/instrument in the piece.
+            //Thus, the playback position is maintained and not reset,
+            //and the playing state is set again after the switch.
+            //Otherwise the user will need to restart playback from
+            //new position anyway
+            this._media.currentTime = lastPosition;
+            if (isCurrentlyPlaying) {
+                this._media.play();
+            }
+        }
+    }
 
     /** Whether the media data has loaded (at least enough to start playback)
      * @remarks This implies that metadata also has been loaded already
