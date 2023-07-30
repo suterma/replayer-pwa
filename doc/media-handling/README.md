@@ -34,7 +34,7 @@ If outside access to the underlying media source is required (e.g. for additiona
 
 ## Using the stores
 
-The Replayer state is stored in [various stores](../store/README.md). For the media handling, the Object URL's from the App store are used, and the handlers are then provided to the Audio store.
+The Replayer state is stored in [various stores](../store/README.md). For the media handling, the Object URL's from the App store are used, and for each playable track, a suitable media component is created. The resulting handlers are then provided to the Audio store.
 
 The following picture gives an overview of this architecture:
 
