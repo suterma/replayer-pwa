@@ -93,6 +93,11 @@ export interface IMediaHandler {
      */
     readonly currentTime: number;
 
+    /** Seeks forward or backward, for the given amount of seconds, if the media is loaded and the position is valid.
+     * @param {number} seconds - amount of time, in [seconds], to seek
+     */
+    seek(seconds: number): void;
+
     /** Seeks to the given time position, if the media is loaded and the position is valid.
      * @param {number} seconds - the temporal position, in [seconds], to seek to
      */

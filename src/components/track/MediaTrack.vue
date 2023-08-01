@@ -1011,7 +1011,7 @@ function pauseAndSeekTo(seconds: number): void {
 
 /** Seeks forward or backward, for the given amount of seconds */
 function seek(seconds: number): void {
-    mediaHandler.value?.seekTo(seconds);
+    mediaHandler.value?.seek(seconds);
 }
 
 /** Seeks to the position, in [seconds], with emitting an event */

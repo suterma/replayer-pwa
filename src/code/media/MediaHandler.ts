@@ -253,6 +253,10 @@ export default class MediaHandler implements IMediaHandler {
         }
     }
 
+    seek(seconds: number): void {
+        this.seekTo(this.currentTime + seconds);
+    }
+
     playFrom(position: number): void {
         this.seekTo(position);
         this._media.play();
