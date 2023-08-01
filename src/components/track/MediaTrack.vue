@@ -969,13 +969,6 @@ function toggleSolo(solo: boolean | null = null): void {
     }
 }
 
-/** Starts playback from the given temporal position
- * @remarks This first seeks to the position, then starts playing
- */
-function playFrom(position: number) {
-    mediaHandler.value?.playFrom(position);
-}
-
 /** Pauses playback at the current position, with fading if configured.
  * @remarks Does not assert whether this is the active track.
  */
@@ -1002,11 +995,6 @@ function forward() {
     if (props.isActiveTrack) {
         seek(+5);
     }
-}
-
-/** Pauses playback (with a subsequent seek operation) */
-function pauseAndSeekTo(seconds: number): void {
-    mediaHandler.value?.pauseAndSeekTo(seconds);
 }
 
 /** Seeks forward or backward, for the given amount of seconds */
@@ -1056,7 +1044,7 @@ function goToSelectedCue() {
             //For the cue time, handle all non-null values (Zero is valid)
             if (isTrackPlaying.value) {
                 if (cueTime != null) {
-                    pauseAndSeekTo(cueTime);
+                    mediaHandler.value?.pauseAndSeekTo(cueTime);
                 } else {
                     pause();
                 }
@@ -1113,9 +1101,9 @@ function cueClick(cue: ICue, togglePlayback = true) {
         );
         if (togglePlayback) {
             if (isTrackPlaying.value) {
-                pauseAndSeekTo(cue.Time);
+                mediaHandler.value?.pauseAndSeekTo(cue.Time);
             } else {
-                playFrom(cue.Time);
+                mediaHandler.value?.playFrom(cue.Time);
             }
         } else {
             seekToSeconds(cue.Time);
@@ -1135,7 +1123,7 @@ function cuePlay(cue: ICue) {
         if (isTrackPlaying.value) {
             seekToSeconds(cue.Time); //keep playing
         } else {
-            playFrom(cue.Time);
+            mediaHandler.value?.playFrom(cue.Time);
         }
     }
 }
@@ -1152,7 +1140,7 @@ function trackPlay() {
     if (isTrackPlaying.value) {
         seekToSeconds(0); //keep playing
     } else {
-        playFrom(0);
+        mediaHandler.value?.playFrom(0);
     }
 }
 

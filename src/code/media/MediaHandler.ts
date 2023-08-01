@@ -205,7 +205,7 @@ export default class MediaHandler implements IMediaHandler {
 
             this.fadeOut()
                 .catch((message) => console.log(message))
-                .then(() => {
+                .finally(() => {
                     this._media.pause();
                     this.onFadingChanged.emit(false);
                     this.onPausedChanged.emit(true);
@@ -271,7 +271,9 @@ export default class MediaHandler implements IMediaHandler {
     }
 
     pauseAndSeekTo(position: number): void {
-        this._fader.fadeOut().then(() => {
+        this.onFadingChanged.emit(true);
+        this._fader.fadeOut().finally(() => {
+            this.onFadingChanged.emit(false);
             this.pause();
             this.seekTo(position);
         });

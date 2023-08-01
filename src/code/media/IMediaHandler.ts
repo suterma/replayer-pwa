@@ -116,13 +116,13 @@ export interface IMediaHandler {
     onEnded: SubEvent<void>;
 
     /** Starts playback from the given temporal position
-     * @remarks This first seeks to the position, then starts playing
+     * @remarks This first seeks to the position, then starts playing (with a possible fade-in)
      */
     playFrom(position: number): void;
 
     togglePlayback(): void;
 
-    /** Pauses playback (with a subsequent seek operation) */
+    /** Pauses playback (with a possible fade-out), then seeks to the given position */
     pauseAndSeekTo(position: number): void;
 
     // --- looping ---
