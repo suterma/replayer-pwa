@@ -293,7 +293,7 @@
                         <PlayheadSlider
                             :disabled="!canPlay"
                             class="is-fullwidth ml-4-tablet mr-4-tablet"
-                            v-model.number="currentPosition"
+                            :modelValue="currentPosition ?? 0"
                             @update:modelValue="
                                 (position) => seekToSeconds(position)
                             "
@@ -348,16 +348,14 @@
                 after it has become the active track ( gets
                 play-request-was-interrupted) -->
             <TrackAudioElement
+                v-if="CompilationHandler.isAudioTrack(track)"
                 ref="trackPlayerInstance"
                 :title="track.Name"
                 :mediaUrl="mediaUrl"
                 :trackId="track.Id"
                 :disabled="!isTrackLoaded"
                 :isActiveTrack="isActiveTrack"
-                @timeupdate="updateTime"
-                @durationChanged="calculateCueDurations"
                 v-model:isTrackPlaying="isTrackPlaying"
-                @update:isFading="updateFading"
                 :playbackMode="playbackMode"
                 :loopStart="selectedCue?.Time"
                 :loopEnd="
@@ -379,6 +377,15 @@
                 :experimentalShowWaveforms="experimentalShowWaveforms"
                 :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
             ></TrackAudioElement>
+            <TrackVideoElement
+                v-if="CompilationHandler.isVideoTrack(track)"
+                ref="trackPlayerInstance"
+                :key="track.Id"
+                :title="track.Name"
+                :mediaUrl="mediaUrl"
+                :trackId="track.Id"
+                @ready="useMediaHandler"
+            ></TrackVideoElement>
             <Teleport to="#media-player" :disabled="isEditable">
                 <Transition :name="skipTransitionName">
                     <!-- 
@@ -474,7 +481,7 @@
                                 <div class="level-item">
                                     <PlayheadSlider
                                         class="is-fullwidth"
-                                        v-model.number="currentPosition"
+                                        :viewModel="currentPosition"
                                         @update:modelValue="
                                             (position) =>
                                                 seekToSeconds(position)
@@ -597,6 +604,7 @@ import {
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import TempoLevelEditor from '@/components/editor/TempoLevelEditor.vue';
 import TrackAudioElement from '@/components/track/TrackAudioElement.vue';
+import TrackVideoElement from '@/components/track/TrackVideoElement.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeader from '@/components/track/TrackHeader.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';
@@ -630,6 +638,7 @@ import {
 } from './TrackInjectionKeys';
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
 import { Replayer } from '../CompilationKeyboardHandler.vue';
+import { IMediaHandler } from '@/code/media/IMediaHandler';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -749,6 +758,8 @@ const props = defineProps({
     },
 });
 
+// --- metering ---
+
 /** Whether to use measure numbers for the track's cue position handling
  * @remarks Must only be true, whan a valid meter is also provided
  * @devdoc This value is provided to descendant components using the provide/inject pattern.
@@ -767,6 +778,41 @@ provide(useMeasureNumbersInjectionKey, readonly(useMeasureNumbers));
  */
 const meter = computed(() => props.track.Meter);
 provide(meterInjectionKey, readonly(meter));
+
+// --- playback handling (NEW)
+
+/** A reference to the appropriate media handler
+ * @remarks Gets set only after the respective track media component emits the ready-to-play event.
+ */
+const mediaHandler: Ref<IMediaHandler | null> = ref(null);
+
+/** Updates the media handler for this track, with the emitted one from the underlying component */
+function useMediaHandler(handler: IMediaHandler) {
+    mediaHandler.value = handler;
+
+    // register for the required events
+    //TODO later unsubscribe appropriately
+    handler.onCurrentTimeChanged.subscribe((currentTime) => {
+        currentPosition.value = currentTime;
+    });
+
+    handler.onCanPlay.subscribe(() => {
+        isTrackLoaded.value = true;
+    });
+
+    handler.onDurationChanged.subscribe((duration) => {
+        trackDuration.value = duration;
+        app.updateDurations(props.track.Id, duration);
+    });
+
+    handler.onPausedChanged.subscribe((paused) => {
+        isTrackPlaying.value = !paused;
+    });
+
+    handler.onFadingChanged.subscribe((fading) => {
+        isFading.value = fading;
+    });
+}
 
 /** The playback progress in the current track, in [seconds]
  * @remarks This is used for cue event handling within the set of cues, like creating a new cue at the current position
@@ -800,20 +846,20 @@ provide(isPlayingInjectionKey, readonly(isTrackPlaying));
 
 /** Flag to indicate whether the audio is currently muted
  */
-const isMuted = ref(false);
+const isMuted = ref(false); //TODO fix?
 
 /** Flag to indicate whether the track's audio is currently playing solo
  */
-const isSoloed = ref(false);
+const isSoloed = ref(false); //TODO fix?
 
 /** Readonly flag to indicate whether the player is currently fading */
 const isFading = ref(false);
 
 /** The current audio level */
-const level = ref(-96);
+const level = ref(-96); //TODO fix?
 
 /** Whether the cues are currently expanded for editing */
-const isExpanded = ref(false);
+const isExpanded = ref(false); //TODO fix?
 
 /** The visual transition to use for skipping track */
 const skipTransitionName = ref('slide-left');
@@ -852,7 +898,7 @@ function toggleTrackPlayerFullScreen(): void {
  * @remarks Does not assert whether this is the active track.
  */
 function stop(): void {
-    trackPlayerInstance.value?.stop();
+    mediaHandler.value?.stop();
     app.updateSelectedCueId(CompilationHandler.EmptyId);
 }
 
@@ -900,9 +946,9 @@ function setActiveTrack(): void {
 function toggleMute(mute: boolean | null = null): void {
     if (isTrackLoaded.value) {
         if (mute === null) {
-            isMuted.value = !isMuted.value;
+            isMuted.value = !isMuted.value; //TODO later fix by using the media handle
         } else {
-            isMuted.value = mute;
+            isMuted.value = mute; //TODO later fix by using the media handle
         }
     }
 }
@@ -913,6 +959,7 @@ function toggleMute(mute: boolean | null = null): void {
  * @param isAnySoloed - Provides, whether any track in the compilation is currently soloed. This is required to determine the muting of non-soloed tracks.
  */
 function toggleSolo(solo: boolean | null = null): void {
+    //TODO later fix by using the media handle
     if (isTrackLoaded.value) {
         if (solo === null) {
             isSoloed.value = !isSoloed.value;
@@ -926,20 +973,20 @@ function toggleSolo(solo: boolean | null = null): void {
  * @remarks This first seeks to the position, then starts playing
  */
 function playFrom(position: number) {
-    trackPlayerInstance.value?.playFrom(position);
+    mediaHandler.value?.playFrom(position);
 }
 
 /** Pauses playback at the current position, with fading if configured.
  * @remarks Does not assert whether this is the active track.
  */
 function pause() {
-    trackPlayerInstance.value?.pause();
+    mediaHandler.value?.pause();
 }
 
 function togglePlayback() {
     //console.debug(`Track(${this.track.Name})::togglePlayback`);
     if (props.isActiveTrack) {
-        trackPlayerInstance.value?.togglePlayback();
+        mediaHandler.value?.togglePlayback();
     }
 }
 
@@ -959,31 +1006,31 @@ function forward() {
 
 /** Pauses playback (with a subsequent seek operation) */
 function pauseAndSeekTo(seconds: number): void {
-    trackPlayerInstance.value?.pauseAndSeekTo(seconds);
+    mediaHandler.value?.pauseAndSeekTo(seconds);
 }
 
 /** Seeks forward or backward, for the given amount of seconds */
 function seek(seconds: number): void {
-    seekToSeconds(currentPosition.value + seconds);
+    mediaHandler.value?.seekTo(seconds);
 }
 
 /** Seeks to the position, in [seconds], with emitting an event */
 function seekToSeconds(seconds: number): void {
-    trackPlayerInstance.value?.seekTo(seconds);
+    mediaHandler.value?.seekTo(seconds);
     emit('seekToSeconds', seconds);
 }
 
 /** Handles the volume up command if this is the active track */
 function volumeDown() {
     if (props.isActiveTrack) {
-        trackPlayerInstance.value?.volumeDown();
+        //TODO implement trackPlayerInstance.value?.volumeDown();
     }
 }
 
 /** Handles the volume down command if this is the active track */
 function volumeUp() {
     if (props.isActiveTrack) {
-        trackPlayerInstance.value?.volumeUp();
+        //TODO implement    trackPlayerInstance.value?.volumeUp();
     }
 }
 
@@ -1112,25 +1159,10 @@ function trackPlay() {
 /** Handles the request for a new cue by creating one for the current time
  */
 function createNewCue(): void {
-    app.addCueAtTime(props.track.Id, currentPosition.value);
-}
-
-/** Updates the current seconds property with the temporal position of the track audio player
- * @remarks This is used to control the cue display for this track's cues
- */
-function updateTime(currentTime: number) {
-    currentPosition.value = currentTime;
-}
-
-function updateFading(fading: boolean) {
-    isFading.value = fading;
-}
-
-/** Updates the track duration and calculates the cue durations */
-function calculateCueDurations(trackDurationSeconds: number) {
-    isTrackLoaded.value = true;
-    trackDuration.value = trackDurationSeconds;
-    app.updateDurations(props.track.Id, trackDurationSeconds);
+    if (currentPosition.value != null) {
+        app.addCueAtTime(props.track.Id, currentPosition.value);
+    } else
+        throw new Error('currentPosition must be available for adding a cue');
 }
 
 defineExpose({
@@ -1225,12 +1257,15 @@ watch(
  */
 const hasMeter = computed(() => Meter.isValid(props.track.Meter));
 
-const remainingTime = computed(() =>
-    CompilationHandler.calculateRemainingTime(
-        currentPosition.value,
-        trackDuration.value,
-    ),
-);
+const remainingTime = computed(() => {
+    if (currentPosition.value) {
+        return CompilationHandler.calculateRemainingTime(
+            currentPosition.value,
+            trackDuration.value,
+        );
+    }
+    return trackDuration.value;
+});
 
 /** Calculate the custom pre-roll for this track */
 const preRollDuration = computed(() => {
@@ -1297,6 +1332,11 @@ const hasCues = computed(() => {
 /** Gets the currently playing cue, regardless whether it is selected, if available
  */
 const playingCue = computed(() => {
+    const time = currentPosition.value;
+    if (time == null) {
+        return null;
+    }
+
     return (
         props.track.Cues.filter(
             (cue) =>
@@ -1304,8 +1344,8 @@ const playingCue = computed(() => {
                 Number.isFinite(cue.Time) &&
                 cue.Duration !== null &&
                 Number.isFinite(cue.Duration) &&
-                currentPosition.value >= cue.Time &&
-                currentPosition.value < cue.Time + (cue.Duration ?? 0),
+                time >= cue.Time &&
+                time < cue.Time + (cue.Duration ?? 0),
         )[0] ?? null
     );
 });
@@ -1330,15 +1370,6 @@ const isMixable = computed(() => {
 const isPlayable = computed(() => {
     return props.viewMode === TrackViewMode.Play;
 });
-
-/** Gets a reference to the player instance.
- * @devdoc $ref's are non-reactive, see https://v3.vuejs.org/api/special-attributes.html#ref
- * Thus, referencing an instance after it has been removed from the DOM (e.g. by v-if)
- * does not work, even after it's rendered again later.
- */
-//const trackPlayerInstance :Ref<<typeof TrackAudioElement>| null>  = ref(null);
-const trackPlayerInstance: Ref<InstanceType<typeof TrackAudioElement> | null> =
-    ref(null);
 
 /** Whether the playback media is available
  * @devdoc This is only working for local file paths, not for online URL's, because these are directly fetched from the media element.

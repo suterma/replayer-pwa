@@ -457,6 +457,16 @@
                         or lesser. (Released under the MIT License, by Ole Bjørn
                         Michelsen)
                     </li>
+                    <li>
+                        <a
+                            href="https://vitaly-t.github.io/sub-events/"
+                            target="_blank"
+                        >
+                            sub-events</a
+                        >, Lightweight, strongly-typed events, with monitored
+                        subscriptions. (Released under the MIT License, by
+                        Vitaly Tomilov)
+                    </li>
                 </ul>
             </div>
         </CollapsiblePanel>

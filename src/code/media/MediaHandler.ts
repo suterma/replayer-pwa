@@ -38,7 +38,7 @@ export default class MediaHandler implements IMediaHandler {
         id = '',
     ) {
         this._media = media;
-        this._id = id;
+        this._id = id ? id : 'handler-' + media.id;
         this._fader = new AudioFader(
             media,
             fadeInDuration,
@@ -59,6 +59,11 @@ export default class MediaHandler implements IMediaHandler {
             const readyState = this._media.readyState;
             this.debugLog(`onloadedmetadata:readyState:${readyState}`);
             this.handleReadyState(readyState);
+        };
+
+        this._media.oncanplay = () => {
+            this.debugLog(`oncanplay`);
+            this.onCanPlay.emit();
         };
 
         this._media.ondurationchange = () => {
@@ -248,6 +253,26 @@ export default class MediaHandler implements IMediaHandler {
         }
     }
 
+    playFrom(position: number): void {
+        this.seekTo(position);
+        this._media.play();
+    }
+
+    togglePlayback(): void {
+        if (this.paused) {
+            this._media.play();
+        } else {
+            this.pause();
+        }
+    }
+
+    pauseAndSeekTo(position: number): void {
+        this._fader.fadeOut().then(() => {
+            this.pause();
+            this.seekTo(position);
+        });
+    }
+
     // --- media loading ---
 
     /** Gets the media source URL.
@@ -284,6 +309,12 @@ export default class MediaHandler implements IMediaHandler {
             }
         }
     }
+
+    /** Emitted when the media data has loaded (at least enough to start playback)
+     * @devdoc This is emitted separately from the data loading state and events, since the underlying
+     * implementation does handle it separately.
+     */
+    onCanPlay: SubEvent<void> = new SubEvent();
 
     /** Whether the media data has loaded (at least enough to start playback)
      * @remarks This implies that metadata also has been loaded already

@@ -110,6 +110,16 @@ export interface IMediaHandler {
      */
     onEnded: SubEvent<void>;
 
+    /** Starts playback from the given temporal position
+     * @remarks This first seeks to the position, then starts playing
+     */
+    playFrom(position: number): void;
+
+    togglePlayback(): void;
+
+    /** Pauses playback (with a subsequent seek operation) */
+    pauseAndSeekTo(position: number): void;
+
     // --- looping ---
 
     // --- media loading ---
@@ -123,6 +133,12 @@ export interface IMediaHandler {
      * Could be NaN or infinity, depending on the source
      */
     readonly durationSeconds: number | null;
+
+    /** Emitted when the media data has loaded enough to start playback
+     * @devdoc This is emitted separately from the data loading state and events, since the underlying
+     * implementation might handle it separately.
+     */
+    onCanPlay: SubEvent<void>;
 
     /** Whether the media metadata has loaded. Duration is available now.
      */

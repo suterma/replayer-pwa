@@ -281,13 +281,14 @@ export default class FileHandler {
     }
 
     /** Returns whether the given MIME type is a supported media MIME type by Replayer
-     * @remarks Currently, MIME types for mp3, wav, flac, ogg, aiff, plus plain text, are supported
+     * @remarks Currently, MIME types for various audio, video, plus plain text, are supported.
      */
     static isSupportedMediaMimeType(type: string | undefined): boolean {
         //Check for supported MIME types (see https://stackoverflow.com/a/29672957)
         return (
             !!type &&
             [
+                /** Audio */
                 'audio/mp3' /*mp3, by chrome*/,
                 'audio/mpeg' /*mp3*/,
                 'audio/vnd.wave' /*wav*/,
@@ -303,6 +304,8 @@ export default class FileHandler {
                 'audio/aiff' /*aiff*/,
                 'audio/aac' /*aac*/,
                 'text/plain' /*plain text*/,
+                /** Video */
+                'video/mp4' /*MP4 video*/,
             ].includes(type)
         );
     }
@@ -340,6 +343,7 @@ export default class FileHandler {
             fileExtension,
         );
         let mimeType = undefined;
+        /** Audio */
         if (fileExtension == 'mp3') {
             mimeType = RezMimeTypes.AUDIO_MPEG /*mp3*/;
         } else if (fileExtension == 'wav' || fileExtension == 'wave') {
@@ -352,11 +356,16 @@ export default class FileHandler {
             mimeType = RezMimeTypes.AUDIO_AIFF /*aiff*/;
         } else if (fileExtension == 'aac' || fileExtension == 'm4a') {
             mimeType = RezMimeTypes.AUDIO_AAC /*aac*/;
+        } else if (fileExtension == 'mp4') {
+            /** Video */
+            mimeType = RezMimeTypes.VIDEO_MP4 /*mp4*/;
         } else if (fileExtension == 'zip' || fileExtension == 'rez') {
+            /** Package/Compilation */
             mimeType = RezMimeTypes.APPLICATION_ZIP /*zip*/;
         } else if (fileExtension == 'xml' || fileExtension == 'rex') {
             mimeType = RezMimeTypes.TEXT_XML /*xml*/;
         } else if (fileExtension == 'txt') {
+            /** Text */
             mimeType = RezMimeTypes.TEXT_PLAIN /*text*/;
         }
 

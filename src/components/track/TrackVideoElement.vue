@@ -1,17 +1,24 @@
 <template>
-    TrackVideoElement
     <video
-        :id="'track-' + props.trackId"
+        controls
+        :id="mediaElementId"
         :src="props.mediaUrl"
         ref="videoElement"
     ></video>
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, ref, shallowRef, ShallowRef, onMounted } from 'vue';
+import {
+    computed,
+    onUnmounted,
+    shallowRef,
+    ShallowRef,
+    watchEffect,
+} from 'vue';
 //TOOD fix import { useAudioStore } from '@/store/audio';
-import MediaHandler from '@/code/media/MediaHandler';
 import { IMediaHandler } from '@/code/media/IMediaHandler';
+import MediaHandler from '@/code/media/MediaHandler';
+import { useAudioStore } from '@/store/audio';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -22,10 +29,7 @@ import { IMediaHandler } from '@/code/media/IMediaHandler';
  * @devdoc Autoplay after load is intentionally not supported, as this is of no use for the Replayer app.
  */
 
-defineExpose({
-    /* the media handler */
-    video,
-});
+const emit = defineEmits(['ready']);
 
 const props = defineProps({
     /** The title of the track */
@@ -57,50 +61,47 @@ const props = defineProps({
     disabled: Boolean,
 });
 
-// --- Audio Setup ---
+// --- Media Setup ---
 
-//TOOD fix const audio = useAudioStore();
+const audio = useAudioStore();
+
+//let handler: MediaHandler | null = null;
 
 /** Video element to use
  * @devdoc The element is only available after the component has been mouted
  */
 const videoElement: ShallowRef<HTMLVideoElement | null> = shallowRef(null);
-
-/** The media handler to use */
-const mediaHandler = ref<IMediaHandler | null>(null);
-
-onMounted(() => {
-    /** The media handler to use */
+watchEffect(() => {
     if (videoElement.value) {
-        mediaHandler.value = new MediaHandler(videoElement.value);
-        //TOOD fix audio.addMediaHandler(mediaHandler.value);
-        //TODO emit the mediahandler to the parent
+        emitHandler(videoElement.value);
     }
+    //TODO maybe later use cleanup?
 });
-onUnmounted(() => {
-    if (mediaHandler.value) {
-        //TOOD fix audio.removeMediaHandler(mediaHandler.value);
-    }
-});
+
+function emitHandler(video: HTMLVideoElement) {
+    const mediaHandler = new MediaHandler(video) as IMediaHandler;
+
+    console.log('TrackVideoElement:ready');
+    emit('ready', mediaHandler);
+    audio.addMediaHandler(mediaHandler);
+    //TODO is this really necessary?this.handler = handler;
+}
 
 /** Handles the teardown of the audio graph outside the mounted lifespan.
- * @devdoc The audio element is intentionally not added to the DOM, to keep it unaffected of unmounts during vue-router route changes.
  */
-
 onUnmounted(() => {
-    if (mediaHandler.value) {
-        //properly destroy the audio element and the audio context
-        mediaHandler.value.stop();
-        mediaHandler.value.pause();
-        if (videoElement.value) {
-            videoElement.value.removeAttribute('src'); // empty resource
-        }
-    }
+    // if (handler) {
+    //     audio.removeMediaHandler(handler);
+    //     //properly destroy the audio element and the audio context
+    //     handler.stop();
+    //     handler.pause();
+    //     if (videoElement.value) {
+    //         videoElement.value.removeAttribute('src'); // empty resource
+    //     }
+    // }
 });
 
-// --- providing the handler ---
-
-function video() /*: Ref<IMediaHandler | null>*/ {
-    return mediaHandler;
-}
+const mediaElementId = computed(() => {
+    return 'video-track-' + props.trackId;
+});
 </script>

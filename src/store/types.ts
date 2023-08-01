@@ -80,6 +80,7 @@ export enum RezMimeTypes {
     AUDIO_OGG = 'audio/ogg',
     AUDIO_AIFF = 'audio/aiff',
     AUDIO_AAC = 'audio/aac',
+    VIDEO_MP4 = 'video/mp4',
     APPLICATION_ZIP = 'application/zip',
     TEXT_XML = 'text/xml',
     TEXT_PLAIN = 'text/plain',
