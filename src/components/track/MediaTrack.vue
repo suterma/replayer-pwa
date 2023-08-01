@@ -385,6 +385,7 @@
                 :mediaUrl="mediaUrl"
                 :trackId="track.Id"
                 @ready="useMediaHandler"
+                @click="setActiveTrack"
             ></TrackVideoElement>
             <Teleport to="#media-player" :disabled="isEditable">
                 <Transition :name="skipTransitionName">
@@ -926,7 +927,7 @@ function skipToPlayPause(): void {
     }
 }
 
-/** Activates to this track (if loaded)
+/** Sets this track as the active track (if loaded)
  * @remarks If the track is not loaded, does nothing.
  * If the track is not yet the active track, tries to activate the track (which will autoplay).
  * If it's the active track, does nothing
