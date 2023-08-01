@@ -4,6 +4,10 @@
         :id="mediaElementId"
         :src="props.mediaUrl"
         ref="videoElement"
+        :class="{
+            paused: isPaused,
+            fading: isFading,
+        }"
     ></video>
 </template>
 
@@ -11,6 +15,7 @@
 import {
     computed,
     onUnmounted,
+    ref,
     shallowRef,
     ShallowRef,
     watchEffect,
@@ -78,6 +83,9 @@ watchEffect(() => {
     //TODO maybe later use cleanup?
 });
 
+const isPaused = ref(true);
+const isFading = ref(false);
+
 function emitHandler(video: HTMLVideoElement) {
     const mediaHandler = new MediaHandler(video) as IMediaHandler;
 
@@ -85,6 +93,14 @@ function emitHandler(video: HTMLVideoElement) {
     emit('ready', mediaHandler);
     audio.addMediaHandler(mediaHandler);
     //TODO is this really necessary?this.handler = handler;
+
+    // Internally handle some events of our own
+    mediaHandler.onPausedChanged.subscribe((paused) => {
+        isPaused.value = paused;
+    });
+    mediaHandler.onFadingChanged.subscribe((fading) => {
+        isFading.value = fading;
+    });
 }
 
 /** Handles the teardown of the audio graph outside the mounted lifespan.
@@ -105,3 +121,34 @@ const mediaElementId = computed(() => {
     return 'video-track-' + props.trackId;
 });
 </script>
+
+<style>
+@keyframes fading {
+    from {
+        filter: brightness(1);
+    }
+    to {
+        filter: brightness(0.4);
+    }
+}
+
+@keyframes unfading {
+    from {
+        filter: brightness(0.4);
+    }
+    to {
+        filter: brightness(1);
+    }
+}
+
+video {
+    filter: brightness(1);
+    animation-name: unfading;
+    animation-duration: 0.3s;
+}
+video.paused {
+    animation-name: fading;
+    animation-duration: 0.3s;
+    filter: brightness(40%);
+}
+</style>
