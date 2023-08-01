@@ -1,6 +1,6 @@
 <template>
     <div
-        class="container"
+        class="video-container"
         :class="{
             paused: isPaused,
             fading: isFading,
@@ -171,12 +171,12 @@ video.paused {
   * (does not work directly on the the video element)
  */
 
-.container {
+.video-container {
     position: relative;
     background-color: black;
 }
 
-.container:after {
+.video-container:after {
     content: '';
     position: absolute;
     color: #fafafa;
@@ -194,14 +194,14 @@ video.paused {
     transition: opacity 200ms ease;
 }
 
-.container.paused:after {
+.video-container.paused:after {
     opacity: 0.8;
 }
 
 /**
  * Video hover similar to button hover (except background, since there is already one with the svg)
  */
-.container:hover:after {
+.video-container:hover:after {
     border-color: #7a8288;
     border-width: 1px;
     border-style: solid;
