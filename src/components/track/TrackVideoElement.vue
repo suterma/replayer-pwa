@@ -1,14 +1,23 @@
 <template>
-    <video
-        controls
-        :id="mediaElementId"
-        :src="props.mediaUrl"
-        ref="videoElement"
+    <div
+        class="container"
         :class="{
             paused: isPaused,
             fading: isFading,
         }"
-    ></video>
+    >
+        <video
+            controls
+            :id="mediaElementId"
+            :src="props.mediaUrl"
+            ref="videoElement"
+            :class="{
+                paused: isPaused,
+                fading: isFading,
+            }"
+            title="Click to play/pause"
+        ></video>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -123,7 +132,11 @@ const mediaElementId = computed(() => {
 </script>
 
 <style>
-@keyframes fading {
+/**
+ * Fading to grey for paused state indication.
+ * @remarks A simple transition does not work for filter functions
+ */
+@keyframes fade-to-grey {
     from {
         filter: brightness(1);
     }
@@ -132,7 +145,7 @@ const mediaElementId = computed(() => {
     }
 }
 
-@keyframes unfading {
+@keyframes unfade-from-grey {
     from {
         filter: brightness(0.4);
     }
@@ -143,12 +156,55 @@ const mediaElementId = computed(() => {
 
 video {
     filter: brightness(1);
-    animation-name: unfading;
-    animation-duration: 0.3s;
+    animation-name: unfade-from-grey;
+    animation-duration: 0.2s;
 }
 video.paused {
-    animation-name: fading;
-    animation-duration: 0.3s;
+    animation-name: fade-to-grey;
+    animation-duration: 0.2s;
     filter: brightness(40%);
+}
+
+/**
+ * Adding an overlay for plabyck indication.
+  * @remarks Requires a surrounding div to have the positioning working
+  * (does not work directly on the the video element)
+ */
+
+.container {
+    position: relative;
+    background-color: black;
+}
+
+.container:after {
+    content: '';
+    position: absolute;
+    color: #fafafa;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fafafa' d='M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M10,16.5L16,12L10,7.5V16.5Z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 10vmax;
+
+    opacity: 0;
+    transition: opacity 200ms ease;
+}
+
+.container.paused:after {
+    opacity: 0.8;
+}
+
+/**
+ * Video hover similar to button hover (except background, since there is already one with the svg)
+ */
+.container:hover:after {
+    border-color: #7a8288;
+    border-width: 1px;
+    border-style: solid;
+    text-shadow: 1px 1px 1px rgba(10, 10, 10, 0.3);
 }
 </style>
