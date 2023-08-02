@@ -349,6 +349,7 @@
                 play-request-was-interrupted) -->
             <TrackAudioElement
                 v-if="CompilationHandler.isAudioTrack(track)"
+                :key="track.Id"
                 ref="trackPlayerInstance"
                 :title="track.Name"
                 :mediaUrl="mediaUrl"
@@ -789,6 +790,10 @@ const mediaHandler: Ref<IMediaHandler | null> = ref(null);
 
 /** Updates the media handler for this track, with the emitted one from the underlying component */
 function useMediaHandler(handler: IMediaHandler) {
+    // initialize
+    console.debug('MediaTrack::useMediaHandler:id', handler.id);
+    handler.fader.setMasterAudioVolume(props.track.Volume);
+
     mediaHandler.value = handler;
 
     // register for the required events
@@ -812,6 +817,10 @@ function useMediaHandler(handler: IMediaHandler) {
 
     handler.onFadingChanged.subscribe((fading) => {
         isFading.value = fading;
+    });
+
+    handler.fader.onMasterVolumeChanged.subscribe((volume) => {
+        updateVolume(volume);
     });
 }
 
@@ -970,15 +979,8 @@ function toggleSolo(solo: boolean | null = null): void {
     }
 }
 
-/** Pauses playback at the current position, with fading if configured.
- * @remarks Does not assert whether this is the active track.
- */
-function pause() {
-    mediaHandler.value?.pause();
-}
-
+/** Toggles the playback state, if this is the active track */
 function togglePlayback() {
-    //console.debug(`Track(${this.track.Name})::togglePlayback`);
     if (props.isActiveTrack) {
         mediaHandler.value?.togglePlayback();
     }
@@ -1006,26 +1008,26 @@ function seek(seconds: number): void {
 /** Seeks to the position, in [seconds], with emitting an event */
 function seekToSeconds(seconds: number): void {
     mediaHandler.value?.seekTo(seconds);
-    emit('seekToSeconds', seconds);
-}
-
-/** Handles the volume up command if this is the active track */
-function volumeDown() {
-    if (props.isActiveTrack) {
-        //TODO implement trackPlayerInstance.value?.volumeDown();
-    }
 }
 
 /** Handles the volume down command if this is the active track */
+function volumeDown() {
+    if (props.isActiveTrack) {
+        mediaHandler.value?.fader.volumeDown();
+    }
+}
+
+/** Handles the volume up command if this is the active track */
 function volumeUp() {
     if (props.isActiveTrack) {
-        //TODO implement    trackPlayerInstance.value?.volumeUp();
+        mediaHandler.value?.fader.volumeUp();
     }
 }
 
 /** Updates the volume of this track, regardless of whether it is the active track */
 function updateVolume(volume: number) {
     app.updateTrackVolume(props.track.Id, volume);
+    mediaHandler.value?.fader.setMasterAudioVolume(volume);
 }
 
 /** Pauses playback and seeks to the currently selected cue's position, but only
@@ -1047,7 +1049,7 @@ function goToSelectedCue() {
                 if (cueTime != null) {
                     mediaHandler.value?.pauseAndSeekTo(cueTime);
                 } else {
-                    pause();
+                    mediaHandler.value?.pause();
                 }
             } else {
                 if (cueTime != null) {
@@ -1067,6 +1069,8 @@ function updatedPlaybackMode(playbackMode: PlaybackMode): void {
 /** Handle isExpanded update
  */
 function updateIsExpanded(expanded: boolean): void {
+    //TODO why this is called twice??
+    debugger;
     isExpanded.value = expanded;
     console.debug(
         `Track(${props.track.Name})::updateIsExpanded:${isExpanded.value}`,
@@ -1173,7 +1177,7 @@ watch(
 
         // Pause this track, when it's no more active track
         if (wasActive === true && isActive === false) {
-            pause();
+            mediaHandler.value?.pause();
         }
     },
 );

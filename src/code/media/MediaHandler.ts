@@ -77,7 +77,7 @@ export default class MediaHandler implements IMediaHandler {
             this.onPausedChanged.emit(true);
             //Upon reception of this event, playback has already paused.
             //No actual fade-out is required. However, to reset the volume to the minimum, a fast fade-out is still triggered
-            this.fadeOut(/*immediate*/ true);
+            this._fader.fadeOut(/*immediate*/ true);
             this.onFadingChanged.emit(false);
         };
 
@@ -89,7 +89,8 @@ export default class MediaHandler implements IMediaHandler {
             if (!this._fader.fading) {
                 this.onFadingChanged.emit(true);
 
-                this.fadeIn()
+                this._fader
+                    .fadeIn()
                     .catch((message) => console.log(message))
                     .then(() => {
                         this.onFadingChanged.emit(false);
@@ -148,46 +149,10 @@ export default class MediaHandler implements IMediaHandler {
 
     // --- fading ---
 
-    fadeOut(immediate?: boolean): Promise<void> {
-        this.onFadingChanged.emit(true);
-        return this._fader.fadeOut(immediate);
-    }
-
-    fadeIn(): Promise<void> {
-        this.onFadingChanged.emit(true);
-        return this._fader.fadeIn();
-    }
-
-    get fading(): boolean {
-        return this._fader.fading;
-    }
-
-    // --- volume ---
-
-    /** Gets the muted state.
+    /** Gets the audio fading handler
      */
-    get muted(): boolean {
-        return this._fader.muted;
-    }
-    /** Sets the muted state.
-     */
-    set muted(value: boolean) {
-        this._fader.muted = value;
-    }
-
-    /** Gets the master audio volume, with the possible muted state observed
-     * @returns A value between 0 (zero) and 1 (representing full scale), while observing the muted state.
-     */
-    // private getMasterAudioVolume(): number {
-    //     if (!this.muted) {
-    //         return this._fader.masterVolume;
-    //     } else {
-    //         return AudioFader.audioVolumeMin;
-    //     }
-    // }
-
-    public setMasterAudioVolume(volume: number): number {
-        return this._fader.setMasterAudioVolume(volume);
+    get fader(): IAudioFader {
+        return this._fader;
     }
 
     // --- transport ---
@@ -203,7 +168,8 @@ export default class MediaHandler implements IMediaHandler {
         if (!this.paused) {
             this.onFadingChanged.emit(true);
 
-            this.fadeOut()
+            this._fader
+                .fadeOut()
                 .catch((message) => console.log(message))
                 .finally(() => {
                     this._media.pause();

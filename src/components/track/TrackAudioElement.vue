@@ -418,14 +418,14 @@ function togglePlayback() {
     }
 }
 
-/**Decreases the track audio volume level
+/**Decreases the track audio volume level by rougly 3dB
  * @remarks Applies some limitation on the upper and lower end of the range
  */
 function volumeDown() {
     debugLog(`volumeDown`, props.volume);
     updateVolume(Math.max(props.volume * 0.71, AudioFader.audioVolumeMin));
 }
-/**Increases the track audio volume level
+/**Increases the track audio volume level by rougly 3dB
  * @remarks Applies some limitation on the upper and lower end of the range
  */
 function volumeUp() {
@@ -434,6 +434,7 @@ function volumeUp() {
         Math.max(Math.min(props.volume * 1.41, 1), AudioFader.audioVolumeMin),
     );
 }
+
 /** Pauses playback. */
 function pause(): void {
     mediaHandler.pause();

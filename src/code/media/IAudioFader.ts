@@ -1,4 +1,9 @@
-/** @interface Defines an audio fader.
+import { SubEvent } from 'sub-events';
+
+/** @interface Defines an audio fader. This fader supports two concepts:
+ * A master volume, that emulates a set, overall audio level, and
+ * independent fading and mute operations, which internally
+ * control the actually set audio level at the media element.
  * @remarks This defines audio fade-in/out operations, for use during playback, including a muted state.
  * The goal is to free the actual player from fading handling.
  * Using this promise-based approach especially frees the using code from
@@ -50,13 +55,32 @@ export interface IAudioFader {
      */
     set muted(value: boolean);
 
-    /** Sets the master audio volume
-     * @remarks The value is applied immediately, without any fading, with the possible muted state observed
+    /** Sets the master audio volume.
+     * @remarks The new value is only applied if it actually changes, after limitation.
+     * The 'onMasterVolumeChange' is also only emitted on actual changes.
+     * @remarks A changed value is applied immediately, without any fading, with the possible muted state observed
      * @param {number} volume - A value between 0 (zero, will get limited to the minimum level) and 1 (representing full scale)
      * @remarks Limits the minimum level at -90dB Full Scale
-     * @returns The applied, possibly limited, master audio volume
+     * @returns The new, possibly limited, master audio volume
      */
     setMasterAudioVolume(volume: number): number;
+
+    /** Decreases the master audio volume level by rougly 3dB
+     * @remarks Applies some limitation on the upper and lower end of the range
+     * @returns The new, possibly limited, master audio volume
+     */
+    volumeDown(): number;
+
+    /**Increases the master audio volume level by rougly 3dB
+     * @remarks Applies some limitation on the upper and lower end of the range
+     * @returns The new, possibly limited, master audio volume
+     */
+    volumeUp(): number;
+
+    /** Emits a changed master volume state.
+     * @param {number} volume - the changed master volume
+     */
+    readonly onMasterVolumeChanged: SubEvent<number>;
 
     /** Returns a fade-in promise for the currently playing track
      * @remarks The sound is faded to the master volume audio level.

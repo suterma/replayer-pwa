@@ -1,4 +1,5 @@
 import { SubEvent } from 'sub-events';
+import { IAudioFader } from './IAudioFader';
 
 /** @interface Defines a media handler.
  *  This handles transport, loop and volume operations for media sources like e.g. HTML media elements.
@@ -14,57 +15,9 @@ export interface IMediaHandler {
 
     // --- fading ---
 
-    /** Updates the current fading settings.
-     * @remarks The settings will be used for the next fade.
-     * However, when the new duration is zero (no fade),
-     * the cancel operation is immediately called, resetting the volume to the initial value for this case.
+    /** Gets the audio fading handler
      */
-    updateFadingSettings(
-        fadeInDuration: number,
-        fadeOutDuration: number,
-        applyFadeInOffset: boolean,
-    ): void;
-
-    /** Returns a fade-out promise for the currently playing track
-     * @remarks The sound is faded to the minimum audio level.
-     * An actual fade operation is only started when
-     * - the set duration is non-zero and
-     * - no previous fade operation is ongoing
-     * - the immediate parameter is not set to true
-     * otherwise
-     * - a fade with duration zero is started and the promise is immediately resolved.
-     * @param immediate - When set to true, the fade operation is done with duration zero.
-     */
-    fadeOut(immediate?: boolean): Promise<void>;
-
-    /** Returns a fade-in promise.
-     * @remarks The sound is faded to the master volume audio level.
-     * A pre-fade offset is applied, when configured
-     * An actual fade operation is only started when
-     * - the fading duration is non-zero and
-     * - no previous fade operation is ongoing
-     * otherwise
-     * - the promise is immediately resolved.
-     */
-    fadeIn(): Promise<void>;
-
-    // --- volume ---
-
-    /** Sets the master audio volume
-     * @remarks The value is applied immediately, without any fading, with the possible muted state observed
-     * @param {number} volume - A value between 0 (zero, will get limited to the minimum level) and 1 (representing full scale)
-     * @remarks Limits the minimum level at -90dB Full Scale
-     * @returns The applied, possibly limited, master audio volume
-     */
-    setMasterAudioVolume(volume: number): number;
-
-    /** Gets or sets the muted state
-     */
-    muted: boolean;
-
-    /** Gets the fading state
-     */
-    readonly fading: boolean;
+    readonly fader: IAudioFader;
 
     // --- transport ---
 
@@ -120,6 +73,7 @@ export interface IMediaHandler {
      */
     playFrom(position: number): void;
 
+    /** Toggles the playback state */
     togglePlayback(): void;
 
     /** Pauses playback (with a possible fade-out), then seeks to the given position */

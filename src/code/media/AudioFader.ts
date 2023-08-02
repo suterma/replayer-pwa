@@ -1,7 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import { IAudioFader } from './IAudioFader';
+import { SubEvent } from 'sub-events';
 
-/** @class Implements an audio fader for a media element instance.
+/** @class Implements an audio fader for a media element instance. This fader supports two concepts:
+ * A master volume, that emulates a set, overall audio level, and independent fading operations, which internally
+ * control the actually set audio level at the media element.
  * @remarks Currently only supports a linear fade, with a constant gradient,
  * only determined by the predefined durations for a full-scale fade.
  */
@@ -46,6 +49,17 @@ export default class AudioFader implements IAudioFader {
         this.masterVolume = masterVolume;
 
         this.reset();
+
+        this.audio.onvolumechange = () => {
+            if (!this.fading && !this.muted && !this.audio.paused) {
+                const currentVolume = this.audio.volume;
+                if (currentVolume != this.masterVolume) {
+                    this.masterVolume = currentVolume;
+                    console.debug('onvolumechange-non-fading:', currentVolume);
+                    this.onMasterVolumeChanged.emit(currentVolume);
+                }
+            }
+        };
     }
 
     updateSettings(
@@ -79,7 +93,9 @@ export default class AudioFader implements IAudioFader {
     /** Whether to apply a seek offset before fade-in operations, to compensate the fading duration.*/
     applyFadeInOffset = true;
 
-    /** The master volume level */
+    /** The master volume level
+     * @remarks The master volume emulates an expected volume that is output from the fader, without any mute/solo/fading taken into account.
+     */
     masterVolume = 1;
 
     /** The minimum audio volume level
@@ -115,17 +131,35 @@ export default class AudioFader implements IAudioFader {
      */
     public reset(): void {
         if (this.fadeInDuration || this.fadeOutDuration) {
-            this.setAudioVolume(AudioFader.audioVolumeMin);
+            this.audioVolume = AudioFader.audioVolumeMin;
         } else {
-            this.setAudioVolume(this.masterVolume);
+            this.audioVolume = this.masterVolume;
         }
     }
+
+    // --- fading ---
 
     get fading(): boolean {
         if (this.operationToken) {
             return true;
         }
         return false;
+    }
+
+    // --- volume ---
+
+    volumeDown(): number {
+        return this.setMasterAudioVolume(
+            Math.max(this.masterVolume * 0.71, AudioFader.audioVolumeMin),
+        );
+    }
+    volumeUp(): number {
+        return this.setMasterAudioVolume(
+            Math.max(
+                Math.min(this.masterVolume * 1.41, 1),
+                AudioFader.audioVolumeMin,
+            ),
+        );
     }
 
     /** Gets the muted state.
@@ -140,21 +174,10 @@ export default class AudioFader implements IAudioFader {
         this._muted = value;
 
         // Immediately apply the muting
-        this.setAudioVolume(this.getMasterAudioVolume());
+        this.audioVolume = this.getMasterAudioVolume();
     }
 
-    /** Sets the audio volume to the given value.
-     * @remarks Applies a range check for the allowed maximum range (0..1)
-     */
-    private setAudioVolume(volume: number): void {
-        const limitedVolume = Math.min(
-            AudioFader.audioVolumeMax,
-            Math.max(AudioFader.audioVolumeMin, volume),
-        );
-        this.audio.volume = limitedVolume;
-    }
-
-    /** Gets the master audio volume, with the possible muted state observed
+    /** Gets the master audio volume, with the possible muted state (but not a possibly ongoing fade-in/fade-out) observed
      * @returns A value between 0 (zero) and 1 (representing full scale), while observing the muted state.
      */
     private getMasterAudioVolume(): number {
@@ -165,41 +188,50 @@ export default class AudioFader implements IAudioFader {
         }
     }
 
+    /** Returns a limited volume value, that satisfies the allowed audio volume range */
+    private limited(volume: number): number {
+        return Math.min(
+            AudioFader.audioVolumeMax,
+            Math.max(AudioFader.audioVolumeMin, volume),
+        );
+    }
+
+    /** Internally sets the media element volume, with the
+     * level limited to the allowed audio volume range.
+     */
+    private set audioVolume(volume: number) {
+        this.audio.volume = this.limited(volume);
+    }
+
+    /** Internally gets the media element volume, with the
+     * level limited to the allowed audio volume range.
+     */
+    private get audioVolume() {
+        return this.limited(this.audio.volume);
+    }
+
     /** @devdoc The actually applied volume might be lower than the master volume, when a fade out is in progress. */
     public setMasterAudioVolume(volume: number): number {
-        const limitedVolume = Math.max(volume, AudioFader.audioVolumeMin);
+        const previousVolume = this.masterVolume;
+        const limitedVolume = this.limited(volume);
 
-        const fadingRatio = this.getCurrentAudioVolume() / this.masterVolume;
-        this.masterVolume = limitedVolume;
-        this.setAudioVolume(this.getMasterAudioVolume() * fadingRatio);
-        return limitedVolume;
-    }
-
-    /** Gets the current audio volume, with a boundary check to make sure
-     * it's a valid number between minAudioLevel and maxAudioLevel, inclusive.
-     * If not valid, an average level is returned as a compromise. */
-    private getCurrentAudioVolume(): number {
-        let currentVolume = this.audio.volume;
-
-        if (
-            currentVolume < AudioFader.audioVolumeMin ||
-            currentVolume > AudioFader.audioVolumeMax ||
-            !isFinite(currentVolume)
-        ) {
-            console.warn(
-                `AudioFader::getCurrentAudioVolume:Volume out of bounds. Returning average value`,
-            );
-            currentVolume =
-                (AudioFader.audioVolumeMin + AudioFader.audioVolumeMax) / 2;
+        if (previousVolume !== limitedVolume) {
+            const fadingRatio = this.audioVolume / this.masterVolume;
+            this.masterVolume = limitedVolume;
+            this.audioVolume = this.getMasterAudioVolume() * fadingRatio;
+            this.onMasterVolumeChanged.emit(limitedVolume);
+            return limitedVolume;
         }
-        return currentVolume;
+        return previousVolume;
     }
+
+    onMasterVolumeChanged: SubEvent<number> = new SubEvent();
 
     fadeIn(): Promise<void> {
         if (this.hadToCancel()) {
             return Promise.resolve();
         } else {
-            const currentVolume = this.getCurrentAudioVolume();
+            const currentVolume = this.audioVolume;
             const currentMasterAudioVolume = this.getMasterAudioVolume();
 
             if (
@@ -224,7 +256,7 @@ export default class AudioFader implements IAudioFader {
                 });
             } else {
                 //nothing to fade
-                this.setAudioVolume(currentMasterAudioVolume);
+                this.audioVolume = currentMasterAudioVolume;
                 return Promise.resolve();
             }
         }
@@ -240,7 +272,7 @@ export default class AudioFader implements IAudioFader {
                 `AudioFader::fading for:${duration}ms from:${from} to:${to}`,
             );
             //Set exactly to the expected begin volume
-            this.setAudioVolume(from);
+            this.audioVolume = from;
 
             //Start a repeated call sequence to gradually adjust the volume
             const stepSize = to - from;
@@ -258,7 +290,7 @@ export default class AudioFader implements IAudioFader {
                         'AudioFader::Linear fade aborted due to cancelling or a subsequent fade operation.';
                     console.warn(message);
                     //Set exactly to the expected end volume, starting from there for the next fade
-                    this.setAudioVolume(to);
+                    this.audioVolume = to;
                     reject(message);
                     return;
                 }
@@ -268,7 +300,7 @@ export default class AudioFader implements IAudioFader {
                     clearInterval(clearIntervalId);
                     this.cancel();
                     //Set exactly to the expected end volume, in case it was missed slightly
-                    this.setAudioVolume(to);
+                    this.audioVolume = to;
                     resolve();
                     return;
                 }
@@ -277,7 +309,7 @@ export default class AudioFader implements IAudioFader {
                 const remainingTime = endTime - now;
                 const passedTime = duration - remainingTime;
                 const stepTarget = from + (stepSize / duration) * passedTime;
-                this.setAudioVolume(stepTarget);
+                this.audioVolume = stepTarget;
             }, this.stepDuration);
         });
     }
@@ -287,7 +319,7 @@ export default class AudioFader implements IAudioFader {
             return Promise.resolve();
         } else {
             const duration = immediate ? 0 : this.fadeOutDuration;
-            const currentVolume = this.getCurrentAudioVolume();
+            const currentVolume = this.audioVolume;
             if (duration && currentVolume != AudioFader.audioVolumeMin) {
                 return new Promise((resolve) => {
                     console.debug(
@@ -311,7 +343,7 @@ export default class AudioFader implements IAudioFader {
                 });
             } else {
                 //nothing to fade
-                this.setAudioVolume(AudioFader.audioVolumeMin);
+                this.audioVolume = AudioFader.audioVolumeMin;
                 return Promise.resolve();
             }
         }
