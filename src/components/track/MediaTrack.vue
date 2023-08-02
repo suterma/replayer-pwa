@@ -350,7 +350,6 @@
             <TrackAudioElement
                 v-if="CompilationHandler.isAudioTrack(track)"
                 :key="track.Id"
-                ref="trackPlayerInstance"
                 :title="track.Name"
                 :mediaUrl="mediaUrl"
                 :trackId="track.Id"
@@ -380,7 +379,6 @@
             ></TrackAudioElement>
             <TrackVideoElement
                 v-if="CompilationHandler.isVideoTrack(track)"
-                ref="trackPlayerInstance"
                 :key="track.Id"
                 :title="track.Name"
                 :mediaUrl="mediaUrl"
@@ -760,6 +758,8 @@ const props = defineProps({
     },
 });
 
+console.debug('MediaTrack::Setup:metering...');
+
 // --- metering ---
 
 /** Whether to use measure numbers for the track's cue position handling
@@ -780,6 +780,8 @@ provide(useMeasureNumbersInjectionKey, readonly(useMeasureNumbers));
  */
 const meter = computed(() => props.track.Meter);
 provide(meterInjectionKey, readonly(meter));
+
+console.debug('MediaTrack::Setup:playback...');
 
 // --- playback handling (NEW)
 
@@ -1070,7 +1072,6 @@ function updatedPlaybackMode(playbackMode: PlaybackMode): void {
  */
 function updateIsExpanded(expanded: boolean): void {
     //TODO why this is called twice??
-    debugger;
     isExpanded.value = expanded;
     console.debug(
         `Track(${props.track.Name})::updateIsExpanded:${isExpanded.value}`,
@@ -1162,6 +1163,8 @@ defineExpose({
     /** For skipping from the compilation level, to a given track, the skipToPlayPause needs to be accessible from outside */
     skipToPlayPause,
 });
+
+console.debug('MediaTrack::Setup:watches...');
 
 /** Handles changes in whether this is the active track.
          * @remarks When this ceases to be the active track, pause playback.
@@ -1419,6 +1422,8 @@ const trackMediaUrl = computed(() => {
     );
     return mediaUrl;
 });
+
+console.debug('MediaTrack::Setup:done.');
 </script>
 <style lang="scss" scoped>
 // Track item styles

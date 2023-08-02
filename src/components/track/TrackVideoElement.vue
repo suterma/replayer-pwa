@@ -21,17 +21,11 @@
 </template>
 
 <script setup lang="ts">
-import {
-    computed,
-    onUnmounted,
-    ref,
-    shallowRef,
-    ShallowRef,
-    watchEffect,
-} from 'vue';
+import { computed, onUnmounted, ref, shallowRef, ShallowRef, watch } from 'vue';
 import { IMediaHandler } from '@/code/media/IMediaHandler';
 import MediaHandler from '@/code/media/MediaHandler';
 import { useAudioStore } from '@/store/audio';
+import { Subscription } from 'sub-events';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -81,48 +75,72 @@ const audio = useAudioStore();
 //let handler: MediaHandler | null = null;
 
 /** Video element to use
- * @devdoc The element is only available after the component has been mouted
+ * @devdoc Note: the element is only available after the component has been mouted
  */
 const videoElement: ShallowRef<HTMLVideoElement | null> = shallowRef(null);
-watchEffect(() => {
-    if (videoElement.value) {
-        emitHandler(videoElement.value);
+
+watch(videoElement, async (newVideoElement, oldVideoElement) => {
+    if (oldVideoElement !== null) {
+        destroyHandler(oldVideoElement);
     }
-    //TODO maybe later use cleanup?
+    if (newVideoElement !== null) {
+        createAndEmitHandler(newVideoElement);
+    }
 });
 
 const isPaused = ref(true);
 const isFading = ref(false);
 
-function emitHandler(video: HTMLVideoElement) {
+let handler: IMediaHandler;
+let onPauseChangedSubsription: Subscription;
+let onFadingChangedSubsription: Subscription;
+
+/** Properly destroy the handler, and abandon the video element, including it's handlers */
+function destroyHandler(video: HTMLVideoElement): void {
+    if (handler) {
+        audio.removeMediaHandler(handler);
+        //properly destroy the audio element and the audio context
+        handler.stop();
+        handler.pause();
+
+        // cancel the internal event handlers
+        onPauseChangedSubsription.cancel();
+        onFadingChangedSubsription.cancel();
+
+        if (video) {
+            video.removeAttribute('src'); // empty resource
+        }
+        console.log('TrackVideoElement:destroyed');
+    }
+}
+
+function createAndEmitHandler(video: HTMLVideoElement): void {
     const mediaHandler = new MediaHandler(video) as IMediaHandler;
 
     console.log('TrackVideoElement:ready');
+    handler = mediaHandler;
     emit('ready', mediaHandler);
     audio.addMediaHandler(mediaHandler);
-    //TODO is this really necessary?this.handler = handler;
 
     // Internally handle some events of our own
-    mediaHandler.onPausedChanged.subscribe((paused) => {
-        isPaused.value = paused;
-    });
-    mediaHandler.onFadingChanged.subscribe((fading) => {
-        isFading.value = fading;
-    });
+    onPauseChangedSubsription = mediaHandler.onPausedChanged.subscribe(
+        (paused) => {
+            isPaused.value = paused;
+        },
+    );
+    onFadingChangedSubsription = mediaHandler.onFadingChanged.subscribe(
+        (fading) => {
+            isFading.value = fading;
+        },
+    );
 }
 
-/** Handles the teardown of the audio graph outside the mounted lifespan.
+/** Teardown of the element and handler the mounted lifespan.
  */
 onUnmounted(() => {
-    // if (handler) {
-    //     audio.removeMediaHandler(handler);
-    //     //properly destroy the audio element and the audio context
-    //     handler.stop();
-    //     handler.pause();
-    //     if (videoElement.value) {
-    //         videoElement.value.removeAttribute('src'); // empty resource
-    //     }
-    // }
+    if (videoElement.value) {
+        destroyHandler(videoElement.value);
+    }
 });
 
 const mediaElementId = computed(() => {
