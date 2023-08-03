@@ -16,8 +16,6 @@ import { SubEvent } from 'sub-events';
  * This can be used as a convenient way to skip fadings.
  */
 export interface IAudioFader {
-    //TODO later use media element instead of autio element
-
     /** Updates the current settings.
      * @remarks The settings will be used for the next fade.
      * However, when the new duration is zero (no fade),
@@ -63,7 +61,7 @@ export interface IAudioFader {
      * @remarks Limits the minimum level at -90dB Full Scale
      * @returns The new, possibly limited, master audio volume
      */
-    setMasterAudioVolume(volume: number): number;
+    setVolume(volume: number): number;
 
     /** Decreases the master audio volume level by rougly 3dB
      * @remarks Applies some limitation on the upper and lower end of the range
@@ -80,7 +78,7 @@ export interface IAudioFader {
     /** Emits a changed master volume state.
      * @param {number} volume - the changed master volume
      */
-    readonly onMasterVolumeChanged: SubEvent<number>;
+    readonly onVolumeChanged: SubEvent<number>;
 
     /** Returns a fade-in promise for the currently playing track
      * @remarks The sound is faded to the master volume audio level.

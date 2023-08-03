@@ -793,7 +793,7 @@ const mediaHandler: Ref<IMediaHandler | null> = ref(null);
 function useMediaHandler(handler: IMediaHandler) {
     // initialize
     console.debug('MediaTrack::useMediaHandler:id', handler.id);
-    handler.fader.setMasterAudioVolume(props.track.Volume);
+    handler.fader.setVolume(props.track.Volume);
 
     // register for the required events
     //TODO later unsubscribe appropriately
@@ -1025,7 +1025,7 @@ function volumeUp() {
 /** Updates the volume of this track, regardless of whether it is the active track */
 function updateVolume(volume: number) {
     app.updateTrackVolume(props.track.Id, volume);
-    mediaHandler.value?.fader.setMasterAudioVolume(volume);
+    mediaHandler.value?.fader.setVolume(volume);
 }
 
 /** Pauses playback and seeks to the currently selected cue's position, but only

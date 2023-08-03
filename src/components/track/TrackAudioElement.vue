@@ -382,7 +382,7 @@ function applyMuting(): void {
  *  @remarks Limits the minimum level at -90dB Full Scale
  */
 function updateVolume(volume: number): void {
-    const limitedTrackVolume = mediaHandler.setMasterAudioVolume(volume);
+    const limitedTrackVolume = mediaHandler.setVolume(volume);
     if (props.volume !== limitedTrackVolume) {
         emit('update:volume', limitedTrackVolume); //loop back the corrected value
     }
