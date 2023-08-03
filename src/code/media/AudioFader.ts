@@ -146,6 +146,8 @@ export default class AudioFader implements IAudioFader {
         return false;
     }
 
+    onFadingChanged: SubEvent<boolean> = new SubEvent();
+
     // --- volume ---
 
     volumeDown(): number {
@@ -239,6 +241,7 @@ export default class AudioFader implements IAudioFader {
                 currentMediaVolume < currentMasterAudioVolume
             ) {
                 return new Promise((resolve) => {
+                    this.onFadingChanged.emit(true);
                     return this.fade(
                         currentMediaVolume,
                         currentMasterAudioVolume,
@@ -252,6 +255,7 @@ export default class AudioFader implements IAudioFader {
                         })
                         .finally(() => {
                             resolve();
+                            this.onFadingChanged.emit(false);
                         });
                 });
             } else {
@@ -325,7 +329,7 @@ export default class AudioFader implements IAudioFader {
                     console.debug(
                         `AudioFader::fadeOut:currentMediaVolume:${currentMediaVolume}`,
                     );
-
+                    this.onFadingChanged.emit(true);
                     return this.fade(
                         currentMediaVolume,
                         AudioFader.audioVolumeMin,
@@ -339,6 +343,7 @@ export default class AudioFader implements IAudioFader {
                         })
                         .finally(() => {
                             resolve();
+                            this.onFadingChanged.emit(false);
                         });
                 });
             } else {

@@ -814,11 +814,11 @@ function useMediaHandler(handler: IMediaHandler) {
         isTrackPlaying.value = !paused;
     });
 
-    handler.onFadingChanged.subscribe((fading) => {
+    handler.fader.onFadingChanged.subscribe((fading) => {
         isFading.value = fading;
     });
 
-    handler.fader.onMasterVolumeChanged.subscribe((volume) => {
+    handler.fader.onVolumeChanged.subscribe((volume) => {
         updateVolume(volume);
     });
 

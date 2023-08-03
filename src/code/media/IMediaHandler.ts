@@ -21,11 +21,6 @@ export interface IMediaHandler {
 
     // --- transport ---
 
-    /** Emits a changed fading state.
-     * @param {boolean} fading - whether a fading operation is currently ongoing
-     */
-    readonly onFadingChanged: SubEvent<boolean>;
-
     /** Emits a changed paused state.
      * @param {boolean} paused - whether the playback is currently paused (or otherwise not playing)
      */

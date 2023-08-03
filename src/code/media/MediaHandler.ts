@@ -78,7 +78,6 @@ export default class MediaHandler implements IMediaHandler {
             //Upon reception of this event, playback has already paused.
             //No actual fade-out is required. However, to reset the volume to the minimum, a fast fade-out is still triggered
             this._fader.fadeOut(/*immediate*/ true);
-            this.onFadingChanged.emit(false);
         };
 
         this._media.onplay = () => {
@@ -87,14 +86,7 @@ export default class MediaHandler implements IMediaHandler {
 
             //Upon reception of this event, playback has already started. Fade-in is required if not yet ongoing.
             if (!this._fader.fading) {
-                this.onFadingChanged.emit(true);
-
-                this._fader
-                    .fadeIn()
-                    .catch((message) => console.log(message))
-                    .then(() => {
-                        this.onFadingChanged.emit(false);
-                    });
+                this._fader.fadeIn().catch((message) => console.log(message));
             }
         };
 
@@ -157,7 +149,6 @@ export default class MediaHandler implements IMediaHandler {
 
     // --- transport ---
 
-    onFadingChanged: SubEvent<boolean> = new SubEvent();
     onPausedChanged: SubEvent<boolean> = new SubEvent();
     onCurrentTimeChanged: SubEvent<number> = new SubEvent();
     onEnded: SubEvent<void> = new SubEvent();
@@ -166,14 +157,11 @@ export default class MediaHandler implements IMediaHandler {
     pause(): void {
         this.debugLog(`pause`);
         if (!this.paused) {
-            this.onFadingChanged.emit(true);
-
             this._fader
                 .fadeOut()
                 .catch((message) => console.log(message))
                 .finally(() => {
                     this._media.pause();
-                    this.onFadingChanged.emit(false);
                     this.onPausedChanged.emit(true);
                 });
         }
@@ -237,9 +225,7 @@ export default class MediaHandler implements IMediaHandler {
     }
 
     pauseAndSeekTo(position: number): void {
-        this.onFadingChanged.emit(true);
         this._fader.fadeOut().finally(() => {
-            this.onFadingChanged.emit(false);
             this.pause();
             this.seekTo(position);
         });

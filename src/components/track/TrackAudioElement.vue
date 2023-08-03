@@ -382,7 +382,7 @@ function applyMuting(): void {
  *  @remarks Limits the minimum level at -90dB Full Scale
  */
 function updateVolume(volume: number): void {
-    const limitedTrackVolume = mediaHandler.setVolume(volume);
+    const limitedTrackVolume = mediaHandler.fader.setVolume(volume);
     if (props.volume !== limitedTrackVolume) {
         emit('update:volume', limitedTrackVolume); //loop back the corrected value
     }
@@ -440,7 +440,7 @@ function pause(): void {
     mediaHandler.pause();
 }
 
-mediaHandler.onFadingChanged.subscribe((fading: boolean) => {
+mediaHandler.fader.onFadingChanged.subscribe((fading: boolean) => {
     emit('update:isFading', fading);
 });
 
@@ -454,7 +454,7 @@ function pauseAndSeekTo(position: number): void {
 
     debugLog(`pauseAndSeekTo`);
 
-    mediaHandler.fadeOut().then(() => {
+    mediaHandler.fader.fadeOut().then(() => {
         mediaHandler.pause();
         seekTo(position);
     });
@@ -650,7 +650,7 @@ const audioFaderSettingsToken = computed(
 watch(audioFaderSettingsToken, () => {
     debugLog(`audioFaderSettingsToken:${audioFaderSettingsToken.value}`);
 
-    mediaHandler.updateFadingSettings(
+    mediaHandler.fader.updateSettings(
         props.fadeInDuration,
         props.fadeOutDuration,
         props.applyFadeInOffset,

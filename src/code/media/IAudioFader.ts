@@ -80,6 +80,11 @@ export interface IAudioFader {
      */
     readonly onVolumeChanged: SubEvent<number>;
 
+    /** Emits a changed fading state.
+     * @param {boolean} fading - whether a fading operation is currently ongoing
+     */
+    readonly onFadingChanged: SubEvent<boolean>;
+
     /** Returns a fade-in promise for the currently playing track
      * @remarks The sound is faded to the master volume audio level.
      * A pre-fade offset is applied, when configured

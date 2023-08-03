@@ -128,7 +128,7 @@ function createAndEmitHandler(video: HTMLVideoElement): void {
             isPaused.value = paused;
         },
     );
-    onFadingChangedSubsription = mediaHandler.onFadingChanged.subscribe(
+    onFadingChangedSubsription = mediaHandler.fader.onFadingChanged.subscribe(
         (fading) => {
             isFading.value = fading;
         },
