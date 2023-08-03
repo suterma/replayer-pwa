@@ -224,4 +224,10 @@ video.paused {
     border-style: solid;
     text-shadow: 1px 1px 1px rgba(10, 10, 10, 0.3);
 }
+
+/** Use available space */
+.video-container,
+video {
+    width: 100%;
+}
 </style>

@@ -363,7 +363,6 @@
                 "
                 :sourceDescription="track?.Url"
                 @update:volume="updateVolume"
-                @update:level="updatedLevel"
                 :volume="track.Volume"
                 :isMuted="isMuted"
                 :isSoloed="isSoloed"
@@ -796,8 +795,6 @@ function useMediaHandler(handler: IMediaHandler) {
     console.debug('MediaTrack::useMediaHandler:id', handler.id);
     handler.fader.setMasterAudioVolume(props.track.Volume);
 
-    mediaHandler.value = handler;
-
     // register for the required events
     //TODO later unsubscribe appropriately
     handler.onCurrentTimeChanged.subscribe((currentTime) => {
@@ -824,6 +821,8 @@ function useMediaHandler(handler: IMediaHandler) {
     handler.fader.onMasterVolumeChanged.subscribe((volume) => {
         updateVolume(volume);
     });
+
+    mediaHandler.value = handler;
 }
 
 /** The playback progress in the current track, in [seconds]
@@ -866,9 +865,6 @@ const isSoloed = ref(false); //TODO fix?
 
 /** Readonly flag to indicate whether the player is currently fading */
 const isFading = ref(false);
-
-/** The current audio level */
-const level = ref(-96); //TODO fix?
 
 /** Whether the cues are currently expanded for editing */
 const isExpanded = ref(false); //TODO fix?
@@ -1076,15 +1072,6 @@ function updateIsExpanded(expanded: boolean): void {
     console.debug(
         `Track(${props.track.Name})::updateIsExpanded:${isExpanded.value}`,
     );
-}
-
-/** Handle track audio level updates
- * @param {number} level - The current audio level
- * @devdoc Handled here as part of the track because the level is shown as part of the track
- */
-function updatedLevel(updatedLevel: number): void {
-    console.debug(`Track(${props.track.Name})::updatedLevel:${level.value}`);
-    level.value = updatedLevel;
 }
 
 /** Handles the click of a cue button, by seeking to it and, optionally, toggling playback
