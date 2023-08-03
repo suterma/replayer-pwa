@@ -593,7 +593,16 @@
  * - However, the player's src property is only set when actually used to keep the memory footprint low.
  * @remarks Also handles the common replayer events for tracks
  */
-import { PropType, Ref, computed, provide, readonly, ref, watch } from 'vue';
+import {
+    PropType,
+    Ref,
+    computed,
+    provide,
+    readonly,
+    ref,
+    watch,
+    watchEffect,
+} from 'vue';
 import {
     ICue,
     TrackViewMode,
@@ -814,6 +823,12 @@ function useMediaHandler(handler: IMediaHandler) {
         isTrackPlaying.value = !paused;
     });
 
+    handler.fader.updateSettings(
+        settings.fadeInDuration,
+        settings.fadeOutDuration,
+        settings.applyFadeInOffset,
+    );
+
     handler.fader.onFadingChanged.subscribe((fading) => {
         isFading.value = fading;
     });
@@ -884,6 +899,16 @@ const {
     experimentalShowWaveforms,
     experimentalUseTempo,
 } = storeToRefs(settings);
+
+/** Handles changes in the fading settings
+ */
+watchEffect(() => {
+    mediaHandler.value?.fader?.updateSettings(
+        fadeInDuration.value,
+        fadeOutDuration.value,
+        applyFadeInOffset.value,
+    );
+});
 
 const app = useAppStore();
 
