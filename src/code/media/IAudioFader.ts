@@ -22,7 +22,7 @@ export interface IAudioFader {
      * the cancel operation is immediately called, resetting the volume to the initial value for this case.
      * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
      * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
-     * @param {boolean} applyFadeInOffset - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
+     * @param {boolean} addFadeInPreRoll - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
      */
     updateSettings(
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
@@ -30,7 +30,7 @@ export interface IAudioFader {
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         fadeOutDuration: number,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        applyFadeInOffset: boolean,
+        addFadeInPreRoll: boolean,
     ): void;
 
     /** Cancels the currently running fade operation.

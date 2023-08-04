@@ -203,7 +203,7 @@
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
-                        v-model="applyFadeInOffset"
+                        v-model="addFadeInPreRoll"
                         label="Add fade-in to pre-roll"
                         hint="The additional pre-roll time compensates for the fade-in duration"
                     ></LabeledCheckbox>
@@ -319,7 +319,7 @@ const {
     preventScreenTimeout,
     fadeInDuration,
     fadeOutDuration,
-    applyFadeInOffset,
+    addFadeInPreRoll,
     defaultPreRollDuration,
     showLevelMeter,
     keyboardShortcutTimeout,

@@ -202,27 +202,6 @@ const props = defineProps({
      */
     disabled: Boolean,
 
-    /** The fade-in duration in [milliseconds]. Use zero for no fading.
-     */
-    fadeInDuration: {
-        type: Number,
-        required: true,
-    },
-
-    /** The fade-out duration in [milliseconds]. Use zero for no fading.
-     */
-    fadeOutDuration: {
-        type: Number,
-        required: true,
-    },
-
-    /** Whether to apply an offset for fade-in operations, to compensate for the fading duration
-     */
-    applyFadeInOffset: {
-        type: Boolean,
-        required: false,
-    },
-
     /** The Pre-roll duration in [seconds]. Use zero for no pre-roll.
      */
     preRollDuration: {
@@ -290,9 +269,6 @@ audioElement.value.id = 'track-' + props.trackId;
 /** The media handler to use */
 const mediaHandler: IMediaHandler = new MediaHandler(
     audioElement.value,
-    props.fadeInDuration,
-    props.fadeOutDuration,
-    props.applyFadeInOffset,
     props.volume,
 );
 
@@ -514,6 +490,7 @@ function loadAfterClick(): Promise<void> {
  * @remarks Asserts (and if necessary) resolves the playability of the track media
  */
 async function play(): Promise<void> {
+    debugger;
     if (mediaHandler.isClickToLoadRequired) {
         loadAfterClick().then(() => {
             debugLog(`loadAfterClick-then`);
@@ -529,7 +506,7 @@ async function play(): Promise<void> {
                 assertRunningAudioContext();
 
                 //Just BEFORE playback, apply the possible pre-roll
-                applyPreRoll();
+                //applyPreRoll();
 
                 audioElement.value
                     .play()
@@ -547,26 +524,6 @@ async function play(): Promise<void> {
             }
         }
     }
-}
-
-/** Applies an offset according to required pre-roll and compensating for fade-in durations
- * @remarks At the beginning of tracks, the offset is cut off at zero.
- */
-function applyPreRoll(): void {
-    // The offset, in seconds
-    let offset = 0;
-
-    if (props.applyFadeInOffset && props.fadeInDuration) {
-        offset = offset + props.fadeInDuration / 1000;
-    }
-
-    if (props.preRollDuration) {
-        offset = offset + props.preRollDuration;
-    }
-
-    const time = audioElement.value.currentTime;
-    const target = Math.max(0, time - offset);
-    audioElement.value.currentTime = target;
 }
 
 //Preparing the audio element
@@ -631,30 +588,6 @@ onUnmounted(() => {
     audioElement.value.pause();
     audioElement.value.removeAttribute('src'); // empty resource
     audioElement.value.remove();
-});
-
-/** A simple token for the settings
- * @remarks This is only used to detect changes, to recreate the audio fader.
- */
-const audioFaderSettingsToken = computed(
-    () =>
-        props.fadeInDuration.toString() +
-        props.fadeOutDuration.toString() +
-        props.applyFadeInOffset.toString(),
-);
-
-/** Watch for changes in the audio fader settings, to immediately apply them
- * @remarks Settings are not applied when currently no fader does exist
- * (e.g. because the track is not yet loaded anyway)
- */
-watch(audioFaderSettingsToken, () => {
-    debugLog(`audioFaderSettingsToken:${audioFaderSettingsToken.value}`);
-
-    mediaHandler.fader.updateSettings(
-        props.fadeInDuration,
-        props.fadeOutDuration,
-        props.applyFadeInOffset,
-    );
 });
 
 /** Watch whether the media URL property changed, and then update the audio element accordingly  */

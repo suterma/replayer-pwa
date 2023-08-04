@@ -371,7 +371,7 @@
                 :fadeInDuration="fadeInDuration"
                 :preRollDuration="preRollDuration"
                 :fadeOutDuration="fadeOutDuration"
-                :applyFadeInOffset="applyFadeInOffset"
+                :addFadeInPreRoll="addFadeInPreRoll"
                 :showLevelMeter="showLevelMeter"
                 :experimentalShowWaveforms="experimentalShowWaveforms"
                 :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
@@ -826,7 +826,7 @@ function useMediaHandler(handler: IMediaHandler) {
     handler.fader.updateSettings(
         settings.fadeInDuration,
         settings.fadeOutDuration,
-        settings.applyFadeInOffset,
+        settings.addFadeInPreRoll,
     );
 
     handler.fader.onFadingChanged.subscribe((fading) => {
@@ -892,7 +892,7 @@ const {
     levelMeterSizeIsLarge,
     fadeInDuration,
     fadeOutDuration,
-    applyFadeInOffset,
+    addFadeInPreRoll,
     defaultPreRollDuration,
     showLevelMeter,
     experimentalShowPositionInTrackHeader,
@@ -906,7 +906,7 @@ watchEffect(() => {
     mediaHandler.value?.fader?.updateSettings(
         fadeInDuration.value,
         fadeOutDuration.value,
-        applyFadeInOffset.value,
+        addFadeInPreRoll.value,
     );
 });
 

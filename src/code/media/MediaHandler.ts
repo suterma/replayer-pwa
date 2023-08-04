@@ -6,7 +6,7 @@ import { SubEvent } from 'sub-events';
 /** @class Implements a playback handler for a {HTMLMediaElement}.
  * @remarks This handles transport/loop and volume operations for audio sources (HTML media elements).
  * See https://github.com/suterma/replayer-pwa/tree/main/doc/media-handling#readme
- * @devdoc Looping and fading are internally handeled with their own handlers.
+ * @devdoc Looping and fading are handeled with their own handlers.
  */
 export default class MediaHandler implements IMediaHandler {
     // --- internals ---
@@ -18,20 +18,11 @@ export default class MediaHandler implements IMediaHandler {
 
     /** @constructor
      * @param {HTMLMediaElement} media - The media element to act upon
-     * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
-     * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
-     * @param {boolean} applyFadeInOffset - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
      * @param {number} masterVolume - The overall volume of the output. Can be used to control the output volume in addition to fadings. (Default: 1, representing full scale)
      * @param {string} id - The unique id
      */
     constructor(
         media: HTMLMediaElement,
-        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        fadeInDuration: number = 1000,
-        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        fadeOutDuration: number = 500,
-        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        applyFadeInOffset: boolean = true,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         masterVolume: number = 1,
 
@@ -39,13 +30,7 @@ export default class MediaHandler implements IMediaHandler {
     ) {
         this._media = media;
         this._id = id ? id : 'handler-' + media.id;
-        this._fader = new AudioFader(
-            media,
-            fadeInDuration,
-            fadeOutDuration,
-            applyFadeInOffset,
-            masterVolume,
-        );
+        this._fader = new AudioFader(media, masterVolume);
 
         //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
         this._media.onloadeddata = () => {
@@ -82,12 +67,13 @@ export default class MediaHandler implements IMediaHandler {
 
         this._media.onplay = () => {
             this.debugLog(`onplay`);
-            this.onPausedChanged.emit(false);
 
             //Upon reception of this event, playback has already started. Fade-in is required if not yet ongoing.
             if (!this._fader.fading) {
                 this._fader.fadeIn().catch((message) => console.log(message));
             }
+
+            this.onPausedChanged.emit(false);
         };
 
         this._media.ontimeupdate = () => {
@@ -100,29 +86,6 @@ export default class MediaHandler implements IMediaHandler {
     }
 
     // --- configuration and update ---
-
-    /** Updates the current fading settings.
-     * @remarks The settings will be used for the next fade.
-     * However, when the new duration is zero (no fade),
-     * the cancel operation is immediately called, resetting the volume to the initial value for this case.
-     * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
-     * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
-     * @param {boolean} applyFadeInOffset - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
-     */
-    updateFadingSettings(
-        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        fadeInDuration: number = 1000,
-        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        fadeOutDuration: number = 500,
-        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        applyFadeInOffset: boolean = true,
-    ): void {
-        this._fader.updateSettings(
-            fadeInDuration,
-            fadeOutDuration,
-            applyFadeInOffset,
-        );
-    }
 
     /** The uniqe id */
     _id: string;
@@ -166,8 +129,6 @@ export default class MediaHandler implements IMediaHandler {
                 });
         }
     }
-
-    //TODO watch and handle the audio element pause
 
     stop(): void {
         this._media.pause();

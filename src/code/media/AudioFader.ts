@@ -28,7 +28,7 @@ export default class AudioFader implements IAudioFader {
      * @param {HTMLAudioElement} audio - The audio element to act upon
      * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
      * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
-     * @param {boolean} applyFadeInOffset - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
+     * @param {boolean} addFadeInPreRoll - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
      * @param {number} masterVolume - The overall volume of the output. Can be used to control the output volume in addition to fadings. (Default: 1, representing full scale)
      */
     constructor(
@@ -38,14 +38,14 @@ export default class AudioFader implements IAudioFader {
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         fadeOutDuration: number = 500,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        applyFadeInOffset: boolean = true,
+        addFadeInPreRoll: boolean = true,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         masterVolume: number = 1,
     ) {
         this.audio = audio;
         this.fadeInDuration = fadeInDuration;
         this.fadeOutDuration = fadeOutDuration;
-        this.applyFadeInOffset = applyFadeInOffset;
+        this.addFadeInPreRoll = addFadeInPreRoll;
         this.masterVolume = masterVolume;
 
         this.reset();
@@ -68,7 +68,7 @@ export default class AudioFader implements IAudioFader {
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         fadeOutDuration: number = 500,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        applyFadeInOffset: boolean = true,
+        addFadeInPreRoll: boolean = true,
     ): void {
         const noMoreFading =
             this.fadeInDuration != 0 &&
@@ -77,7 +77,7 @@ export default class AudioFader implements IAudioFader {
             fadeOutDuration === 0;
         this.fadeInDuration = fadeInDuration;
         this.fadeOutDuration = fadeOutDuration;
-        this.applyFadeInOffset = applyFadeInOffset;
+        this.addFadeInPreRoll = addFadeInPreRoll;
 
         if (noMoreFading) {
             //Cancel immediately by setting the fader level to the initial value
@@ -91,7 +91,7 @@ export default class AudioFader implements IAudioFader {
     /** The fade-out duration in [milliseconds] (zero means no fading)*/
     fadeOutDuration;
     /** Whether to apply a seek offset before fade-in operations, to compensate the fading duration.*/
-    applyFadeInOffset = true;
+    addFadeInPreRoll = true;
 
     /** The master volume level
      * @remarks The master volume emulates an expected volume that is output from the fader, without any mute/solo/fading taken into account.
@@ -147,6 +147,24 @@ export default class AudioFader implements IAudioFader {
     }
 
     onFadingChanged: SubEvent<boolean> = new SubEvent();
+
+    // --- transport ---
+
+    /** Applies an offset/pre-roll to compensate for fade-in durations, if appliccable
+     * @remarks At the beginning of a resource, the offset is cut off at zero.
+     */
+    applyFadeInPreRoll(): void {
+        // The offset, in seconds
+        let offset = 0;
+
+        if (this.addFadeInPreRoll && this.fadeInDuration) {
+            offset = offset + this.fadeInDuration / 1000;
+        }
+
+        const time = this.audio.currentTime;
+        const target = Math.max(0, time - offset);
+        this.audio.currentTime = target;
+    }
 
     // --- volume ---
 
@@ -241,6 +259,7 @@ export default class AudioFader implements IAudioFader {
                 currentMediaVolume < currentMasterAudioVolume
             ) {
                 return new Promise((resolve) => {
+                    this.applyFadeInPreRoll();
                     this.onFadingChanged.emit(true);
                     return this.fade(
                         currentMediaVolume,

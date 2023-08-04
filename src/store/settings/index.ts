@@ -50,7 +50,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
     /** Whether to apply an offset for fade-in operations, to compensate for the fading duration
      * @remarks Default is true
      */
-    const applyFadeInOffset = useLocalStorage('applyFadeInOffset', true);
+    const addFadeInPreRoll = useLocalStorage('addFadeInPreRoll', true);
 
     /** The default duration for a pre-roll for play operations, in [seconds]
      * @remarks Default is zero
@@ -120,7 +120,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         preventScreenTimeout.value = true;
         fadeInDuration.value = 1000;
         fadeOutDuration.value = 500;
-        applyFadeInOffset.value = true;
+        addFadeInPreRoll.value = true;
         defaultPreRollDuration.value = 0;
         showLevelMeter.value = true;
         keyboardShortcutTimeout.value = 1000;
@@ -137,7 +137,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         preventScreenTimeout,
         fadeInDuration,
         fadeOutDuration,
-        applyFadeInOffset,
+        addFadeInPreRoll,
         defaultPreRollDuration,
         showLevelMeter,
         keyboardShortcutTimeout,
