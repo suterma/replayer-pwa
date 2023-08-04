@@ -1,5 +1,6 @@
 import { SubEvent } from 'sub-events';
 import { IAudioFader } from './IAudioFader';
+import { IMediaLooper } from './IMediaLooper';
 
 /** @interface Defines a media handler.
  *  This handles transport, loop and volume operations for media sources like e.g. HTML media elements.
@@ -74,8 +75,6 @@ export interface IMediaHandler {
     /** Pauses playback (with a possible fade-out), then seeks to the given position */
     pauseAndSeekTo(position: number): void;
 
-    // --- looping ---
-
     // --- media loading ---
 
     /** Gets or sets the media source URL
@@ -110,4 +109,10 @@ export interface IMediaHandler {
      * because they only load data upon explicit user interaction.
      */
     isClickToLoadRequired: boolean;
+
+    // --- looping ---
+
+    /** Gets the audio fading handler
+     */
+    readonly looper: IMediaLooper;
 }

@@ -2,6 +2,8 @@ import AudioFader from './AudioFader';
 import { IAudioFader } from './IAudioFader';
 import { IMediaHandler } from './IMediaHandler';
 import { SubEvent } from 'sub-events';
+import { IMediaLooper } from './IMediaLooper';
+import { MediaLooper } from './MediaLooper';
 
 /** @class Implements a playback handler for a {HTMLMediaElement}.
  * @remarks This handles transport/loop and volume operations for audio sources (HTML media elements).
@@ -12,6 +14,8 @@ export default class MediaHandler implements IMediaHandler {
     // --- internals ---
 
     private _fader: IAudioFader;
+
+    private _looper: IMediaLooper;
 
     /** The {HTMLMediaElement} instance to act upon */
     private _media: HTMLMediaElement;
@@ -31,33 +35,34 @@ export default class MediaHandler implements IMediaHandler {
         this._media = media;
         this._id = id ? id : 'handler-' + media.id;
         this._fader = new AudioFader(media, masterVolume);
+        this._looper = new MediaLooper(media, this._fader);
 
         //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
-        this._media.onloadeddata = () => {
+        media.onloadeddata = () => {
             this.isClickToLoadRequired = false;
-            const readyState = this._media.readyState;
+            const readyState = media.readyState;
             this.debugLog(`onloadeddata:readyState:${readyState}`);
             this.handleReadyState(readyState);
         };
 
-        this._media.onloadedmetadata = () => {
-            const readyState = this._media.readyState;
+        media.onloadedmetadata = () => {
+            const readyState = media.readyState;
             this.debugLog(`onloadedmetadata:readyState:${readyState}`);
             this.handleReadyState(readyState);
         };
 
-        this._media.oncanplay = () => {
+        media.oncanplay = () => {
             this.debugLog(`oncanplay`);
             this.onCanPlay.emit();
         };
 
-        this._media.ondurationchange = () => {
-            const duration = this._media.duration;
+        media.ondurationchange = () => {
+            const duration = media.duration;
             this.debugLog(`ondurationchange:duration:${duration}`);
             this.updateDuration(duration);
         };
 
-        this._media.onpause = () => {
+        media.onpause = () => {
             this.debugLog(`onpause`);
             this.onPausedChanged.emit(true);
             //Upon reception of this event, playback has already paused.
@@ -65,7 +70,7 @@ export default class MediaHandler implements IMediaHandler {
             this._fader.fadeOut(/*immediate*/ true);
         };
 
-        this._media.onplay = () => {
+        media.onplay = () => {
             this.debugLog(`onplay`);
 
             //Upon reception of this event, playback has already started. Fade-in is required if not yet ongoing.
@@ -76,13 +81,8 @@ export default class MediaHandler implements IMediaHandler {
             this.onPausedChanged.emit(false);
         };
 
-        this._media.ontimeupdate = () => {
-            this.handleTimeUpdate();
-        };
-
-        this._media.onended = () => {
-            this.handleEnded();
-        };
+        media.ontimeupdate = () => this.handleTimeUpdate();
+        media.onended = () => this.handleEnded();
     }
 
     // --- configuration and update ---
@@ -326,4 +326,12 @@ export default class MediaHandler implements IMediaHandler {
     }
 
     onDurationChanged: SubEvent<number> = new SubEvent();
+
+    // --- looping ---
+
+    /** Gets the audio fading handler
+     */
+    get looper(): IMediaLooper {
+        return this._looper;
+    }
 }

@@ -30,6 +30,9 @@ export interface IMediaLooper {
 
     /** Sets the enabled state. */
     set enabled(value: boolean);
+
+    /** Sets a track loop */
+    SetTrackLoop(mode: LoopMode): void;
 }
 
 /** A loop mode for a range
