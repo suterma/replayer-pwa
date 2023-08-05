@@ -1,4 +1,4 @@
-import { IAudioFader } from './IAudioFader';
+import { IMediaHandler } from './IMediaHandler';
 import { IMediaLooper, LoopMode } from './IMediaLooper';
 
 /** @class Implements looping for an {HTMLMediaElement}, including fading.
@@ -10,28 +10,40 @@ import { IMediaLooper, LoopMode } from './IMediaLooper';
  */
 export class MediaLooper implements IMediaLooper {
     /** @constructor
-     * @param {HTMLMediaElement} media - The media element to act upon
-     * @param {IAudioFader} fader - The fader to use, together with the element to act upon
+     * @param {IMediaHandler} media - The media handler to act upon
      */
-    constructor(media: HTMLMediaElement, fader: IAudioFader) {
+    constructor(media: IMediaHandler) {
         this._media = media;
-        this._fader = fader;
-        this._media.loop = false;
 
         //TODO this should later be solved better, consuming less resources
         //Possibly with a setInterval, together with a "reset", when
         //the user plays/pauses/seeks through the media
+        //Unfortunately there can not be more than one arrow function per event
         //this._media.ontimeupdate = () => this.handleTimeUpdate();
+
         setInterval(() => this.handleTimeUpdate(), 30);
     }
 
-    /** The media element to act upon */
-    private _media: HTMLMediaElement;
+    SetLoop(start: number, end: number, mode: LoopMode): void {
+        this._loopMode = mode;
+        this._loopStart = start;
+        this._loopEnd = end;
 
-    /** The fader to use
-     * @remarks This fader MUST act upon the same media element as given to this looper.
-     */
-    private _fader: IAudioFader;
+        //Make sure that looping at least at the end does occurr,
+        //even if the loop end is set beyond the track end
+        this._media.loop = true;
+    }
+    RemoveLoop(): void {
+        this._loopStart = null;
+        this._loopEnd = null;
+
+        //Make sure that looping at least at the end does occurr,
+        //even if the loop end is set beyond the track end
+        this._media.loop = false;
+    }
+
+    /** The media handler to act upon */
+    private _media: IMediaHandler;
 
     /** The loop start */
     private _loopStart: number | null = null;
@@ -41,7 +53,6 @@ export class MediaLooper implements IMediaLooper {
     }
     set loopStart(value: number | null) {
         this._loopStart = value;
-        this.assertLoopMode();
     }
 
     /** The loop end */
@@ -52,7 +63,6 @@ export class MediaLooper implements IMediaLooper {
     }
     set loopEnd(value: number | null) {
         this._loopEnd = value;
-        this.assertLoopMode();
     }
 
     /** The loop mode (recurring by default) */
@@ -63,6 +73,13 @@ export class MediaLooper implements IMediaLooper {
     }
     set LoopMode(value: LoopMode) {
         this._loopMode = value;
+    }
+
+    get loop(): boolean {
+        return this._media.loop;
+    }
+    set loop(value: boolean) {
+        this._media.loop = value;
     }
 
     get enabled(): boolean {
@@ -77,14 +94,6 @@ export class MediaLooper implements IMediaLooper {
         //otherwise, if requested, but unavailable, ignore the request
     }
 
-    /** Sets a track loop */
-    SetTrackLoop(mode: LoopMode) {
-        this._loopMode = mode;
-        this._loopStart = 0;
-        this._loopEnd = this._media.duration + 1 /* margin */;
-        this._media.loop = true;
-    }
-
     /** Determines whether the looping range is well defined (boundaries are properly set) */
     private isRangeAvailable() {
         return (
@@ -95,13 +104,6 @@ export class MediaLooper implements IMediaLooper {
         );
     }
 
-    /** Asserts the availability of the properties and resets the loop, if necessary */
-    private assertLoopMode() {
-        if (!this.isRangeAvailable()) {
-            this._media.loop == false;
-        }
-    }
-
     /** Handles time updates
      * @devdoc Looping is solved here by observing and handling the recurring time updates.
      */
@@ -109,10 +111,7 @@ export class MediaLooper implements IMediaLooper {
         const currentTime = this._media.currentTime;
         const loopMode = this.LoopMode;
 
-        // Additionally assert here, to make sure, no unexpected changes have been
-        // to the media element from another actor
-        this.assertLoopMode();
-        if (this._media.loop) {
+        if (this._media.loop && this.isRangeAvailable()) {
             //NOTE: by asserting above, start and end time are known to be well defined here.
             this.handleLoop(
                 currentTime,
@@ -126,8 +125,11 @@ export class MediaLooper implements IMediaLooper {
     /** An internal flag to prevent repeated fade-outs when looping */
     private isLoopFading = false;
 
-    /** A safety margin for detecting the end of a track during playback */
-    trackDurationSafetyMarginSeconds = 0.3;
+    /** A safety margin for detecting the end of a track during playback
+     * @remarks This value has been empirically determinde.
+     * It's dependent of CPU resources and timing accurracy
+     */
+    trackDurationSafetyMarginSeconds = 0.03;
 
     //TODO handle track looping,  * @remarks Track looping is handled elsewhere.
     //maybe by optionally setting an flag instead of the end time
@@ -145,39 +147,37 @@ export class MediaLooper implements IMediaLooper {
         end: number,
         loopMode: LoopMode,
     ): void {
-        //Detect, with a safety margin, whether the possible loop is at track end
-        //TODO actually use the known track duration here or the track end event
-        const isAtTrackEnd =
-            currentTime >= end - this.trackDurationSafetyMarginSeconds;
+        //Is a ranged loop due because the end of the cue has been reached?
+        const isAtCueEnd = currentTime >= end;
+        //Is a ranged loop due anyway because the end of the track (with safety margin, for safe detection) has been reached?
+        //NOTE: The actual end of the track should not be reached, to avoid unintended premature looping without proper fadeout handling.
+        const isAtCueAtTrackEnd =
+            currentTime >=
+            this._media.duration - this.trackDurationSafetyMarginSeconds;
 
-        //Is a loop due?
-        if (currentTime >= end || isAtTrackEnd) {
+        if (isAtCueEnd || isAtCueAtTrackEnd) {
             //Back to loop start (with fading)
             if (!this.isLoopFading) {
                 this.isLoopFading = true;
-                this._fader.fadeOut().finally(() => {
-                    this._media.currentTime = start;
-                    this.isLoopFading = false;
-                    if (loopMode == LoopMode.Recurring) {
-                        this._fader.fadeIn();
-                    } else {
-                        this._media.pause;
-                    }
-                });
-            }
 
-            //TODO this is only necessary for the cue loop mode
-            if (isAtTrackEnd) {
-                //
-                //At the end of the track, a seek operation alone would not be enough to continue the loop
-                //if playback already has ended (when the safety margin from above was too small)
-                process.nextTick(() => {
-                    //Directly issue the play command, without any safety net
-                    //(should be working, since play was successful already)
-                    //This handling here has the disadvantage, that a fading operation does take place however,
-                    //if configured and the safety margin was too short.
-                    this._media.play(); //again
-                });
+                // Determine whether fadeout would be after track end
+                // Typically happens for the last cue in a track
+                const immediateFadeOutRequired =
+                    end + this._media.fader.fadeOutDuration >
+                    this._media.duration -
+                        this.trackDurationSafetyMarginSeconds;
+
+                this._media.fader
+                    .fadeOut(immediateFadeOutRequired)
+                    .finally(() => {
+                        this._media.seekTo(start);
+                        this.isLoopFading = false;
+                        if (loopMode === LoopMode.Recurring) {
+                            this._media.fader.fadeIn();
+                        } else {
+                            this._media.pause();
+                        }
+                    });
             }
         }
     }
