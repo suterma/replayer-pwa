@@ -26,6 +26,11 @@ export interface IMediaHandler {
      */
     readonly onPausedChanged: SubEvent<boolean>;
 
+    /** Emits a changed seeking state.
+     * @param {boolean} seeking - whether the media is currently seeked (while playing or not)
+     */
+    readonly onSeekingChanged: SubEvent<boolean>;
+
     /** Emits an ocurred seek operation.
      * @param {number} targetTime - the target time of the seek operation
      */

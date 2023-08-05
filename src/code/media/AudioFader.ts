@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { IAudioFader } from './IAudioFader';
+import { FadingMode, IAudioFader } from './IAudioFader';
 import { SubEvent } from 'sub-events';
 
 /** @class Implements an audio fader for a media element instance. This fader supports two concepts:
@@ -146,7 +146,7 @@ export default class AudioFader implements IAudioFader {
         return false;
     }
 
-    onFadingChanged: SubEvent<boolean> = new SubEvent();
+    onFadingChanged: SubEvent<FadingMode> = new SubEvent();
 
     // --- transport ---
 
@@ -260,7 +260,7 @@ export default class AudioFader implements IAudioFader {
             ) {
                 return new Promise((resolve) => {
                     this.applyFadeInPreRoll();
-                    this.onFadingChanged.emit(true);
+                    this.onFadingChanged.emit(FadingMode.FadeIn);
                     return this.fade(
                         currentMediaVolume,
                         currentMasterAudioVolume,
@@ -274,7 +274,7 @@ export default class AudioFader implements IAudioFader {
                         })
                         .finally(() => {
                             resolve();
-                            this.onFadingChanged.emit(false);
+                            this.onFadingChanged.emit(FadingMode.None);
                         });
                 });
             } else {
@@ -348,7 +348,7 @@ export default class AudioFader implements IAudioFader {
                     console.debug(
                         `AudioFader::fadeOut:currentMediaVolume:${currentMediaVolume}`,
                     );
-                    this.onFadingChanged.emit(true);
+                    this.onFadingChanged.emit(FadingMode.FadeOut);
                     return this.fade(
                         currentMediaVolume,
                         AudioFader.audioVolumeMin,
@@ -362,7 +362,7 @@ export default class AudioFader implements IAudioFader {
                         })
                         .finally(() => {
                             resolve();
-                            this.onFadingChanged.emit(false);
+                            this.onFadingChanged.emit(FadingMode.None);
                         });
                 });
             } else {

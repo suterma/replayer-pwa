@@ -65,8 +65,14 @@ export default class MediaHandler implements IMediaHandler {
             this._fader.fadeOut(/*immediate*/ true);
         };
 
+        media.onseeking = () => {
+            this.debugLog(`onseeking`);
+            this.onSeekingChanged.emit(true);
+        };
+
         media.onseeked = () => {
             this.debugLog(`onseeked`);
+            this.onSeekingChanged.emit(false);
             this.onSeeked.emit(this.currentTime);
         };
 
@@ -113,6 +119,7 @@ export default class MediaHandler implements IMediaHandler {
     // --- transport ---
 
     onPausedChanged: SubEvent<boolean> = new SubEvent();
+    onSeekingChanged: SubEvent<boolean> = new SubEvent();
     onSeeked: SubEvent<number> = new SubEvent();
     onCurrentTimeChanged: SubEvent<number> = new SubEvent();
     onEnded: SubEvent<void> = new SubEvent();

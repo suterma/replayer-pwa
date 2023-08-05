@@ -3,7 +3,10 @@
         class="video-container"
         :class="{
             paused: isPaused,
-            fading: isFading,
+            seeking: isSeeking,
+            fading: isFading !== FadingMode.None,
+            'fade-out': isFading == FadingMode.FadeOut,
+            'fade-in': isFading == FadingMode.FadeIn,
         }"
     >
         <video
@@ -13,7 +16,10 @@
             ref="videoElement"
             :class="{
                 paused: isPaused,
-                fading: isFading,
+                seeking: isSeeking,
+                fading: isFading !== FadingMode.None,
+                'fade-out': isFading == FadingMode.FadeOut,
+                'fade-in': isFading == FadingMode.FadeIn,
             }"
             title="Click to play/pause"
         ></video>
@@ -21,11 +27,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onUnmounted, ref, shallowRef, ShallowRef, watch } from 'vue';
+import {
+    computed,
+    onUnmounted,
+    Ref,
+    ref,
+    shallowRef,
+    ShallowRef,
+    watch,
+} from 'vue';
 import { IMediaHandler } from '@/code/media/IMediaHandler';
 import MediaHandler from '@/code/media/MediaHandler';
 import { useAudioStore } from '@/store/audio';
 import { Subscription } from 'sub-events';
+import { FadingMode } from '@/code/media/IAudioFader';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -72,8 +87,6 @@ const props = defineProps({
 
 const audio = useAudioStore();
 
-//let handler: MediaHandler | null = null;
-
 /** Video element to use
  * @devdoc Note: the element is only available after the component has been mouted
  */
@@ -89,22 +102,26 @@ watch(videoElement, async (newVideoElement, oldVideoElement) => {
 });
 
 const isPaused = ref(true);
-const isFading = ref(false);
+const isSeeking = ref(false);
+const isFading = ref(FadingMode.None);
 
-let handler: IMediaHandler;
+const mediaHandler: Ref<IMediaHandler | null> = ref(null);
+
 let onPauseChangedSubsription: Subscription;
+let onSeekingChangedSubsription: Subscription;
 let onFadingChangedSubsription: Subscription;
 
 /** Properly destroy the handler, and abandon the video element, including it's handlers */
 function destroyHandler(video: HTMLVideoElement): void {
-    if (handler) {
-        audio.removeMediaHandler(handler);
+    if (mediaHandler.value) {
+        audio.removeMediaHandler(mediaHandler.value);
         //properly destroy the audio element and the audio context
-        handler.stop();
-        handler.pause();
+        mediaHandler.value.stop();
+        mediaHandler.value.pause();
 
         // cancel the internal event handlers
         onPauseChangedSubsription.cancel();
+        onSeekingChangedSubsription.cancel();
         onFadingChangedSubsription.cancel();
 
         if (video) {
@@ -115,24 +132,27 @@ function destroyHandler(video: HTMLVideoElement): void {
 }
 
 function createAndEmitHandler(video: HTMLVideoElement): void {
-    const mediaHandler = new MediaHandler(video) as IMediaHandler;
+    const handler = new MediaHandler(video) as IMediaHandler;
 
     console.log('TrackVideoElement:ready');
-    handler = mediaHandler;
-    emit('ready', mediaHandler);
-    audio.addMediaHandler(mediaHandler);
+    emit('ready', handler);
+    audio.addMediaHandler(handler);
 
     // Internally handle some events of our own
-    onPauseChangedSubsription = mediaHandler.onPausedChanged.subscribe(
-        (paused) => {
-            isPaused.value = paused;
+    onPauseChangedSubsription = handler.onPausedChanged.subscribe((paused) => {
+        isPaused.value = paused;
+    });
+    onSeekingChangedSubsription = handler.onSeekingChanged.subscribe(
+        (seeking) => {
+            isSeeking.value = seeking;
         },
     );
-    onFadingChangedSubsription = mediaHandler.fader.onFadingChanged.subscribe(
+    onFadingChangedSubsription = handler.fader.onFadingChanged.subscribe(
         (fading) => {
             isFading.value = fading;
         },
     );
+    mediaHandler.value = handler;
 }
 
 /** Teardown of the element and handler the mounted lifespan.
@@ -145,6 +165,22 @@ onUnmounted(() => {
 
 const mediaElementId = computed(() => {
     return 'video-track-' + props.trackId;
+});
+
+/** Gets the fade-in duration in seconds, as string
+ * @remarks Provision of dynamic CSS for visual fade-in according to audio fading */
+const fadeInDuration = computed(() => {
+    const fader = mediaHandler.value?.fader;
+    const duration = fader?.fadeInDuration ? fader?.fadeInDuration / 1000 : 0;
+    return `${duration}s`;
+});
+
+/** Gets the fade-out duration in seconds, as string
+ * @remarks Provision of dynamic CSS for visual fade-in according to audio fading */
+const fadeOutDuration = computed(() => {
+    const fader = mediaHandler.value?.fader;
+    const duration = fader?.fadeOutDuration ? fader?.fadeOutDuration / 1000 : 0;
+    return `${duration}s`;
 });
 </script>
 
@@ -172,14 +208,22 @@ const mediaElementId = computed(() => {
 }
 
 video {
-    filter: brightness(1);
     animation-name: unfade-from-grey;
-    animation-duration: 0.2s;
+    animation-duration: v-bind('fadeInDuration');
+    filter: brightness(1);
 }
+
+/** During fading, slowly adapt the brightness */
+video.fade-out {
+    animation-name: fade-to-grey;
+    animation-duration: v-bind('fadeOutDuration');
+    filter: brightness(0.4);
+}
+/** When paused, immediately reduce the brightness */
 video.paused {
     animation-name: fade-to-grey;
-    animation-duration: 0.2s;
-    filter: brightness(40%);
+    animation-duration: 0s;
+    filter: brightness(0.4);
 }
 
 /**
@@ -213,6 +257,7 @@ video.paused {
 
 .video-container.paused:after {
     opacity: 0.8;
+    transition: opacity 200ms ease;
 }
 
 /**

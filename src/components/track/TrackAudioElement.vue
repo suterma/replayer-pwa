@@ -36,7 +36,6 @@
 
 <script setup lang="ts">
 import {
-    computed,
     nextTick,
     onUnmounted,
     ref,
@@ -56,6 +55,7 @@ import FileHandler from '@/store/filehandler';
 import { useMessageStore } from '@/store/messages';
 import MediaHandler from '@/code/media/MediaHandler';
 import { IMediaHandler } from '@/code/media/IMediaHandler';
+import { FadingMode } from '@/code/media/IAudioFader';
 
 /** A simple vue audio player element, for a single track, with associated visuals, using an {HTMLAudioElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -416,7 +416,7 @@ function pause(): void {
     mediaHandler.pause();
 }
 
-mediaHandler.fader.onFadingChanged.subscribe((fading: boolean) => {
+mediaHandler.fader.onFadingChanged.subscribe((fading: FadingMode) => {
     emit('update:isFading', fading);
 });
 

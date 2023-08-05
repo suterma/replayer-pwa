@@ -93,9 +93,9 @@ export interface IAudioFader {
     readonly onVolumeChanged: SubEvent<number>;
 
     /** Emits a changed fading state.
-     * @param {boolean} fading - whether a fading operation is currently ongoing
+     * @param {FadingMode} fading - kind of fading operation that is currently ongoing
      */
-    readonly onFadingChanged: SubEvent<boolean>;
+    readonly onFadingChanged: SubEvent<FadingMode>;
 
     /** Returns a fade-in promise for the currently playing track
      * @remarks The sound is faded to the master volume audio level.
@@ -119,4 +119,11 @@ export interface IAudioFader {
      * @param immediate - When set to true, the fade operation is done with duration zero.
      */
     fadeOut(immediate?: boolean): Promise<void>;
+}
+/** A fading mode
+ * */
+export enum FadingMode {
+    None = 'None',
+    FadeIn = 'FadeIn',
+    FadeOut = 'FadeOut',
 }

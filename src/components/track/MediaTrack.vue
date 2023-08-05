@@ -56,7 +56,7 @@
                             'is-clickable': isTrackLoaded,
                             'has-cursor-not-allowed': !isTrackLoaded,
                         }"
-                        :isLoading="isFading"
+                        :isLoading="isFading !== FadingMode.None"
                         data-cy="toggle-playback"
                         @click="skipToPlayPause"
                     />
@@ -273,7 +273,7 @@
                                     v-focus
                                     :disabled="!canPlay"
                                     class="is-success mb-0"
-                                    :isLoading="isFading"
+                                    :isLoading="isFading !== FadingMode.None"
                                     @click="skipToPlayPause()"
                                     title="Play from current position"
                                     data-cy="toggle-playback"
@@ -529,7 +529,7 @@
                                         :volume="track.Volume"
                                         @update:volume="updateVolume"
                                         @seek="(seconds) => seek(seconds)"
-                                        :isFading="isFading"
+                                        :isFading="isFading !== FadingMode.None"
                                         @togglePlaying="skipToPlayPause()"
                                         :hidePlayPauseButton="false"
                                         data-cy="media-controls-bar"
@@ -649,6 +649,7 @@ import { Replayer } from '../CompilationKeyboardHandler.vue';
 import { IMediaHandler } from '@/code/media/IMediaHandler';
 import { IMediaLooper, LoopMode } from '@/code/media/IMediaLooper';
 import { MediaLooper } from '@/code/media/MediaLooper';
+import { FadingMode } from '@/code/media/IAudioFader';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -883,8 +884,8 @@ const isMuted = ref(false); //TODO fix?
  */
 const isSoloed = ref(false); //TODO fix?
 
-/** Readonly flag to indicate whether the player is currently fading */
-const isFading = ref(false);
+/** Indicates the kind of current fading */
+const isFading = ref(FadingMode.None);
 
 /** Whether the cues are currently expanded for editing */
 const isExpanded = ref(false); //TODO fix?
