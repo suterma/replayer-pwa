@@ -1,6 +1,5 @@
 import { SubEvent } from 'sub-events';
 import { IAudioFader } from './IAudioFader';
-import { IMediaLooper } from './IMediaLooper';
 
 /** @interface Defines a media handler.
  *  This handles transport, loop and volume operations for media sources like e.g. HTML media elements.
@@ -31,7 +30,12 @@ export interface IMediaHandler {
      */
     readonly paused: boolean;
 
+    /** Gets the duration. Might be a non-finite number, if data is not available.
+     */
+    get duration(): number;
+
     /** Emits a changed current time position.
+     * @remarks The change can stem fron ongoing playback and/or a seek or loop operation.
      * @param {number} currentTime - could be NaN or infinity, depending on the source
      */
     readonly onCurrentTimeChanged: SubEvent<number>;
@@ -59,7 +63,7 @@ export interface IMediaHandler {
     stop(): void;
 
     /** Occurs, when the end of the track has been reached and playback has ended.
-     * @remarks This is not triggered when the track or one of it's cue is looping.
+     * @remarks This is not triggered when the track or a range is looping.
      * @remarks Allows to select the next track in "play all" and "shuffle" mode.
      */
     onEnded: SubEvent<void>;
@@ -68,6 +72,11 @@ export interface IMediaHandler {
      * @remarks This first seeks to the position, then starts playing (with a possible fade-in)
      */
     playFrom(position: number): void;
+
+    /** Starts playback from the current temporal position
+     * @remarks Applies a possible fade-in
+     */
+    play(): void;
 
     /** Toggles the playback state */
     togglePlayback(): void;
@@ -110,9 +119,10 @@ export interface IMediaHandler {
      */
     isClickToLoadRequired: boolean;
 
-    // --- looping ---
+    // --- track looping ---
 
-    /** Gets the audio fading handler
+    /** Gets or set the track looping.
+     * @remarks This only controls "whole track" loopig, not ranged loops.
      */
-    readonly looper: IMediaLooper;
+    loop: boolean;
 }

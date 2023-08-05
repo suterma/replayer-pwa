@@ -1,5 +1,5 @@
 /** @interface Defines features for media looping.
- * @remarks This defines looping of a range or a full track, for use during playback.
+ * @remarks This defines looping of a temporal range, for use during playback.
  * Intentionally, no volume control is defined with regards to looping.
  * Implementors are free to apply e.g. fading at the loop boundaries.
  */
@@ -23,16 +23,11 @@ export interface IMediaLooper {
     /** Sets the loop mode. */
     set LoopMode(value: LoopMode);
 
-    /** Gets enabled state.
-     * @remarks Looping is only 'enabled' when set and when both boundaries are set to a finite number.
-     */
-    get enabled(): boolean;
+    /** Sets a loop */
+    SetLoop(start: number, end: number, mode: LoopMode): void;
 
-    /** Sets the enabled state. */
-    set enabled(value: boolean);
-
-    /** Sets a track loop */
-    SetTrackLoop(mode: LoopMode): void;
+    /** Removes a set loop */
+    RemoveLoop(): void;
 }
 
 /** A loop mode for a range

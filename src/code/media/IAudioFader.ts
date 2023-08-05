@@ -41,6 +41,18 @@ export interface IAudioFader {
      */
     reset(): void;
 
+    /** Gets the fade-in duration.
+     */
+    get fadeInDuration(): number;
+
+    /** Gets the fade-out duration.
+     */
+    get fadeOutDuration(): number;
+
+    /** Whether to apply the seek offset before fade-in operations, to compensate the fading duration.
+     */
+    get addFadeInPreRoll(): boolean;
+
     /** Gets the fading state.
      */
     get fading(): boolean;

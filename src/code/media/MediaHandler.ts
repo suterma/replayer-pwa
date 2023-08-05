@@ -2,8 +2,6 @@ import AudioFader from './AudioFader';
 import { IAudioFader } from './IAudioFader';
 import { IMediaHandler } from './IMediaHandler';
 import { SubEvent } from 'sub-events';
-import { IMediaLooper } from './IMediaLooper';
-import { MediaLooper } from './MediaLooper';
 
 /** @class Implements a playback handler for a {HTMLMediaElement}.
  * @remarks This handles transport/loop and volume operations for audio sources (HTML media elements).
@@ -14,8 +12,6 @@ export default class MediaHandler implements IMediaHandler {
     // --- internals ---
 
     private _fader: IAudioFader;
-
-    private _looper: IMediaLooper;
 
     /** The {HTMLMediaElement} instance to act upon */
     private _media: HTMLMediaElement;
@@ -35,7 +31,6 @@ export default class MediaHandler implements IMediaHandler {
         this._media = media;
         this._id = id ? id : 'handler-' + media.id;
         this._fader = new AudioFader(media, masterVolume);
-        this._looper = new MediaLooper(media, this._fader);
 
         //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
         media.onloadeddata = () => {
@@ -143,9 +138,13 @@ export default class MediaHandler implements IMediaHandler {
         return this._media.paused;
     }
 
+    get duration(): number {
+        return this._media.duration;
+    }
+
     /** Handles the time update event of the audio element
      */
-    handleTimeUpdate(): void {
+    private handleTimeUpdate(): void {
         this.onCurrentTimeChanged.emit(this._media.currentTime);
     }
     /** Handles the track end event of the audio element, by providing it further as event.
@@ -174,12 +173,16 @@ export default class MediaHandler implements IMediaHandler {
 
     playFrom(position: number): void {
         this.seekTo(position);
+        this.play();
+    }
+
+    play(): void {
         this._media.play();
     }
 
     togglePlayback(): void {
         if (this.paused) {
-            this._media.play();
+            this.play();
         } else {
             this.pause();
         }
@@ -224,7 +227,7 @@ export default class MediaHandler implements IMediaHandler {
             //new position anyway
             this._media.currentTime = lastPosition;
             if (isCurrentlyPlaying) {
-                this._media.play();
+                this.play();
             }
         }
     }
@@ -327,11 +330,12 @@ export default class MediaHandler implements IMediaHandler {
 
     onDurationChanged: SubEvent<number> = new SubEvent();
 
-    // --- looping ---
+    // --- track looping ---
 
-    /** Gets the audio fading handler
-     */
-    get looper(): IMediaLooper {
-        return this._looper;
+    get loop(): boolean {
+        return this._media.loop;
+    }
+    set loop(value: boolean) {
+        this._media.loop = value;
     }
 }

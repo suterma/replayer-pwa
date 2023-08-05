@@ -647,7 +647,8 @@ import {
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
 import { Replayer } from '../CompilationKeyboardHandler.vue';
 import { IMediaHandler } from '@/code/media/IMediaHandler';
-import { LoopMode } from '@/code/media/IMediaLooper';
+import { IMediaLooper, LoopMode } from '@/code/media/IMediaLooper';
+import { MediaLooper } from '@/code/media/MediaLooper';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -797,6 +798,11 @@ console.debug('MediaTrack::Setup:playback...');
  */
 const mediaHandler: Ref<IMediaHandler | null> = ref(null);
 
+/** A reference to the appropriate media looper
+ * @remarks Gets set only after the media handler is avaialble and set.
+ */
+const mediaLooper: Ref<IMediaLooper | null> = ref(null);
+
 /** Updates the media handler for this track, with the emitted one from the underlying component */
 function useMediaHandler(handler: IMediaHandler) {
     // initialize
@@ -837,6 +843,7 @@ function useMediaHandler(handler: IMediaHandler) {
     });
 
     mediaHandler.value = handler;
+    mediaLooper.value = new MediaLooper(handler);
 }
 
 /** The playback progress in the current track, in [seconds]
@@ -1439,15 +1446,18 @@ const trackMediaUrl = computed(() => {
 watchEffect(() => {
     switch (props.playbackMode) {
         case PlaybackMode.LoopTrack:
-            if (mediaHandler.value) {
-                mediaHandler.value.looper.SetTrackLoop(LoopMode.Recurring);
+            if (mediaLooper.value && mediaHandler.value) {
+                mediaLooper.value.RemoveLoop();
+                mediaHandler.value.loop = true;
                 console.debug('MediaTrack::track loop');
             }
             break;
 
         case PlaybackMode.PlayCue:
         case PlaybackMode.LoopCue:
-            if (mediaHandler.value) {
+            if (mediaLooper.value && mediaHandler.value) {
+                mediaHandler.value.loop = false;
+
                 const cueBegin = selectedCue.value?.Time;
                 const cueDuration = selectedCue.value?.Duration;
                 if (
@@ -1459,13 +1469,15 @@ watchEffect(() => {
                     Number.isFinite(cueDuration) &&
                     cueDuration > 0
                 ) {
-                    mediaHandler.value.looper.LoopMode =
+                    const loopMode =
                         props.playbackMode === PlaybackMode.LoopCue
                             ? LoopMode.Recurring
                             : LoopMode.Once;
-                    mediaHandler.value.looper.loopStart = cueBegin;
-                    mediaHandler.value.looper.loopEnd = cueBegin + cueDuration;
-                    mediaHandler.value.looper.enabled = true;
+                    mediaLooper.value.SetLoop(
+                        cueBegin,
+                        cueBegin + cueDuration,
+                        loopMode,
+                    );
                     console.debug('MediaTrack::cue loop');
                 }
             }
@@ -1473,9 +1485,12 @@ watchEffect(() => {
 
         default:
             if (mediaHandler.value) {
-                mediaHandler.value.looper.enabled = false;
-                console.debug('MediaTrack::no media loop');
+                mediaHandler.value.loop = false;
             }
+            if (mediaLooper.value) {
+                mediaLooper.value.RemoveLoop();
+            }
+            console.debug('MediaTrack::no media loop');
     }
 });
 
