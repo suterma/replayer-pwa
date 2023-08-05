@@ -810,7 +810,6 @@ function useMediaHandler(handler: IMediaHandler) {
     handler.fader.setVolume(props.track.Volume);
 
     // register for the required events
-    //TODO later unsubscribe appropriately
     handler.onCurrentTimeChanged.subscribe((currentTime) => {
         currentPosition.value = currentTime;
     });

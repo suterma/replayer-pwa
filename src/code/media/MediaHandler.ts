@@ -65,6 +65,11 @@ export default class MediaHandler implements IMediaHandler {
             this._fader.fadeOut(/*immediate*/ true);
         };
 
+        media.onseeked = () => {
+            this.debugLog(`onseeked`);
+            this.onSeeked.emit(this.currentTime);
+        };
+
         media.onplay = () => {
             this.debugLog(`onplay`);
 
@@ -108,6 +113,7 @@ export default class MediaHandler implements IMediaHandler {
     // --- transport ---
 
     onPausedChanged: SubEvent<boolean> = new SubEvent();
+    onSeeked: SubEvent<number> = new SubEvent();
     onCurrentTimeChanged: SubEvent<number> = new SubEvent();
     onEnded: SubEvent<void> = new SubEvent();
 
@@ -144,8 +150,8 @@ export default class MediaHandler implements IMediaHandler {
 
     /** Handles the time update event of the audio element
      */
-    private handleTimeUpdate(): void {
-        this.onCurrentTimeChanged.emit(this._media.currentTime);
+    private handleTimeUpdate(/*event: Event*/): void {
+        this.onCurrentTimeChanged.emit(this.currentTime);
     }
     /** Handles the track end event of the audio element, by providing it further as event.
      */

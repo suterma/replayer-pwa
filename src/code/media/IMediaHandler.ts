@@ -26,6 +26,11 @@ export interface IMediaHandler {
      */
     readonly onPausedChanged: SubEvent<boolean>;
 
+    /** Emits an ocurred seek operation.
+     * @param {number} targetTime - the target time of the seek operation
+     */
+    readonly onSeeked: SubEvent<number>;
+
     /** Gets the paused state
      */
     readonly paused: boolean;
@@ -40,7 +45,7 @@ export interface IMediaHandler {
      */
     readonly onCurrentTimeChanged: SubEvent<number>;
 
-    /** Gets the current time position.
+    /** Gets the current time position in [seconds].
      * @remarks This is not necessariliy the exact same value as was last emitted via {onCurrentTimeChanged}.
      * @returns {number} currentTime - could be NaN or infinity, depending on the source
      */

@@ -41,11 +41,11 @@ export interface IAudioFader {
      */
     reset(): void;
 
-    /** Gets the fade-in duration.
+    /** Gets the fade-in duration in [milliseconds].
      */
     get fadeInDuration(): number;
 
-    /** Gets the fade-out duration.
+    /** Gets the fade-out duration in [milliseconds].
      */
     get fadeOutDuration(): number;
 
