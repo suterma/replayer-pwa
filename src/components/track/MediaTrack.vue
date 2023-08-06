@@ -480,7 +480,7 @@
                                 <div class="level-item">
                                     <PlayheadSlider
                                         class="is-fullwidth"
-                                        :viewModel="currentPosition"
+                                        :modelValue="currentPosition ?? 0"
                                         @update:modelValue="
                                             (position) =>
                                                 seekToSeconds(position)
@@ -1404,24 +1404,6 @@ const mediaUrl = computed(() => {
     }
     return trackMediaUrl.value?.url;
 });
-
-/** Gets the media URL, if available,
- * and optimized for the active track state
- * @remarks To save memory in the audio elements,
- * an URL is only provided when
- * the player is actually in the currently active track
- * @remarks For non-online URL's, a match is sought from previously stored binary blobs
- */
-//  const  optimizedMediaUrl= computed( ()=>{
-//     if (props.isActiveTrack) {
-//         if (FileHandler.isValidHttpUrl(props.track.Url)) {
-//             return props.track.Url;
-//         }
-//         return trackMediaUrl.value?.url;
-//     } else {
-//         return undefined;
-//     }
-// });
 
 /** Returns all cues of this track */
 const cues = computed(() => {
