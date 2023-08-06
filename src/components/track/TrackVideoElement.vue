@@ -31,33 +31,48 @@
     <!-- NOTE: Teleportation fails with a warning when the parent track component has not yet been mounted.
          This situation is addressed with the isParentMounted flag. It's working for loading/unloading/reloading compilation and
          adding new tracks.
-         It's not working currently when the application settings change to show the meter, producing a warning. 
-         A solution without a warning for this situation is not devised yet. -->
-    <template v-if="showLevelMeter && isParentMounted && mediaUrl">
-        <div class="block">
-            <Teleport
-                :to="`#track-${trackId}-HeaderLevelPlaceholder`"
-                :disabled="levelMeterSizeIsLarge"
+         Disabling the teleportation does not work currently: When the application settings change to show the meter, produces a warning. 
+         The solution for this is using a v-if instead of disableing. -->
+
+    <div
+        v-if="
+            showLevelMeter &&
+            audioSource &&
+            audio.context &&
+            isParentMounted &&
+            mediaUrl
+        "
+        class="block"
+    >
+        <AudioLevelMeter
+            v-if="levelMeterSizeIsLarge"
+            :vertical="false"
+            :disabled="disabled"
+            :audioSource="audioSource"
+            :audioContext="audio.context"
+            :showText="false"
+        >
+        </AudioLevelMeter>
+        <Teleport v-else :to="`#track-${trackId}-HeaderLevelPlaceholder`">
+            <AudioLevelMeter
+                :vertical="true"
+                :disabled="disabled"
+                :audioSource="audioSource"
+                :audioContext="audio.context"
+                :showText="false"
             >
-                <AudioLevelMeter
-                    v-if="audioSource && audio.context"
-                    :vertical="!levelMeterSizeIsLarge"
-                    :disabled="disabled"
-                    :audioSource="audioSource"
-                    :audioContext="audio.context"
-                    :showText="false"
-                >
-                </AudioLevelMeter>
-            </Teleport>
-        </div>
-    </template>
+            </AudioLevelMeter>
+        </Teleport>
+    </div>
 </template>
 
 <script setup lang="ts">
 import {
     computed,
     nextTick,
+    onActivated,
     onBeforeUnmount,
+    onDeactivated,
     onMounted,
     onUnmounted,
     Ref,
@@ -288,15 +303,27 @@ watch(
 // --- Mounted check ---
 
 /** A fully mounted parent is required for the complete lifetime
- *  for a properly working level meter with it's teleportation */
+ *  for a properly working level meter with it's teleportation
+ * @devdoc To cater for a use with KeepAlive, the activated/deactivated events are also handled
+ *  */
 const isParentMounted = ref(false);
 onMounted(() => {
-    nextTick(() => {
+    setTimeout(() => {
         // Now also the parent track is completely mounted
         isParentMounted.value = true;
-    });
+    }, 1000);
 });
+onActivated(() => {
+    setTimeout(() => {
+        // Now also the parent track is completely mounted
+        isParentMounted.value = true;
+    }, 1000);
+});
+
 onBeforeUnmount(() => {
+    isParentMounted.value = false;
+});
+onDeactivated(() => {
     isParentMounted.value = false;
 });
 </script>

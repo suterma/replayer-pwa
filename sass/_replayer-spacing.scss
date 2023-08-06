@@ -53,3 +53,12 @@
     }
 }
 
+/************************************************************** 
+ * Specific spacing for tracks and their content
+ **************************************************************/
+
+/** For all blocks for and in a track, use the same small amount of margin as everywhere, 
+for all screen sizes. Keeps the display compact */
+.track .block:not(:last-child) {
+    margin-bottom: 0.5rem;
+}

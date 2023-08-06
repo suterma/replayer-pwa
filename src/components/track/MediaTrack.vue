@@ -1505,22 +1505,9 @@ watchEffect(() => {
 
 console.debug('MediaTrack::Setup:done.');
 </script>
-<style lang="scss">
-/** For all blocks in a track, use the same small amount of margin as everywhere, 
-for all screen sizes. Keeps the display compact */
-.track .block:not(:last-child) {
-    margin-bottom: 0.5rem;
-}
-</style>
 
 <style lang="scss" scoped>
 // Track item styles
-.track .buttons {
-    /** The track's cue button have also an additional small margin at their end.
-    This results in a similar space between level, player, cue buttons and the
-    end of the track */
-    margin-bottom: 4px;
-}
 
 // Define an overall width allocation for fixed right-hand side of the playback control level items
 .level {
