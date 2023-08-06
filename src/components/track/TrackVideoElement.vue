@@ -308,16 +308,16 @@ watch(
  *  */
 const isParentMounted = ref(false);
 onMounted(() => {
-    setTimeout(() => {
+    nextTick(() => {
         // Now also the parent track is completely mounted
         isParentMounted.value = true;
-    }, 1000);
+    });
 });
 onActivated(() => {
-    setTimeout(() => {
+    nextTick(() => {
         // Now also the parent track is completely mounted
         isParentMounted.value = true;
-    }, 1000);
+    });
 });
 
 onBeforeUnmount(() => {
