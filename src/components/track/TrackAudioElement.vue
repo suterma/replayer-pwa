@@ -490,7 +490,6 @@ function loadAfterClick(): Promise<void> {
  * @remarks Asserts (and if necessary) resolves the playability of the track media
  */
 async function play(): Promise<void> {
-    debugger;
     if (mediaHandler.isClickToLoadRequired) {
         loadAfterClick().then(() => {
             debugLog(`loadAfterClick-then`);
@@ -649,7 +648,7 @@ watch(
 
 <style>
 /** Rotate buttons back to their upright position */
-.audio-level-meter {
+/* .audio-level-meter {
     transform: rotate(-90deg);
     width: 2.5em;
 }
@@ -657,5 +656,5 @@ watch(
     width: 1.25em;
     margin-left: -0.75em;
     padding-left: -0.75em;
-}
+} */
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div
-        class="video-container"
+        class="block video-container"
         :class="{
             paused: isPaused,
             seeking: isSeeking,
@@ -21,14 +21,44 @@
                 'fade-out': isFading == FadingMode.FadeOut,
                 'fade-in': isFading == FadingMode.FadeIn,
             }"
+            @click="$emit('click')"
             title="Click to play/pause"
         ></video>
     </div>
+    <!-- NOTE: the rendering of the AudioLevelMeter _might_ affect badly the synchronous start of the multitrack playback, 
+         but only the first time after a page reload/player instantiation.
+         It's currently not consistently reproducible and goes away after a subsequent sync (e.g. after pause/play) -->
+    <!-- NOTE: Teleportation fails with a warning when the parent track component has not yet been mounted.
+         This situation is addressed with the isParentMounted flag. It's working for loading/unloading/reloading compilation and
+         adding new tracks.
+         It's not working currently when the application settings change to show the meter, producing a warning. 
+         A solution without a warning for this situation is not devised yet. -->
+    <template v-if="showLevelMeter && isParentMounted && mediaUrl">
+        <div class="block">
+            <Teleport
+                :to="`#track-${trackId}-HeaderLevelPlaceholder`"
+                :disabled="levelMeterSizeIsLarge"
+            >
+                <AudioLevelMeter
+                    v-if="audioSource && audio.context"
+                    :vertical="!levelMeterSizeIsLarge"
+                    :disabled="disabled"
+                    :audioSource="audioSource"
+                    :audioContext="audio.context"
+                    :showText="false"
+                >
+                </AudioLevelMeter>
+            </Teleport>
+        </div>
+    </template>
 </template>
 
 <script setup lang="ts">
 import {
     computed,
+    nextTick,
+    onBeforeUnmount,
+    onMounted,
     onUnmounted,
     Ref,
     ref,
@@ -41,6 +71,8 @@ import MediaHandler from '@/code/media/MediaHandler';
 import { useAudioStore } from '@/store/audio';
 import { Subscription } from 'sub-events';
 import { FadingMode } from '@/code/media/IAudioFader';
+import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMeter.vue';
+import FileHandler from '@/store/filehandler';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -51,7 +83,7 @@ import { FadingMode } from '@/code/media/IAudioFader';
  * @devdoc Autoplay after load is intentionally not supported, as this is of no use for the Replayer app.
  */
 
-const emit = defineEmits(['ready']);
+const emit = defineEmits(['ready', 'click']);
 
 const props = defineProps({
     /** The title of the track */
@@ -81,6 +113,19 @@ const props = defineProps({
      * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
      */
     disabled: Boolean,
+
+    /** Whether to show the audio level meter
+     * @remarks Default is true
+     */
+    showLevelMeter: Boolean,
+
+    /** EXPERIMENTAL: Whether to show the waveforms
+     * @remarks Default is false
+     */
+    experimentalShowWaveforms: Boolean,
+
+    /** Whether the audio level meter size is large */
+    levelMeterSizeIsLarge: Boolean,
 });
 
 // --- Media Setup ---
@@ -182,6 +227,78 @@ const fadeOutDuration = computed(() => {
     const duration = fader?.fadeOutDuration ? fader?.fadeOutDuration / 1000 : 0;
     return `${duration}s`;
 });
+
+// --- Audio Metering Setup---
+
+/** The optional audio source node, required when metering is requested
+ */
+const audioSource: ShallowRef<InstanceType<
+    typeof MediaElementAudioSourceNode
+> | null> = shallowRef(null);
+
+/** Watch the showLevelMeter setting and media url changes, and act accordingly
+ * @remarks This handles the audio setup for metering
+ * @devdoc Handle the value also immediately at mount time
+ */
+watch(
+    [
+        () => props.showLevelMeter,
+        () => props.mediaUrl,
+        () => videoElement.value,
+    ],
+    (
+        [showLevelMeter, mediaUrl, newVideoElement],
+        [
+            wasShowingLevelMeter /* old mediaUrl and old vidoe element is not used */,
+        ],
+    ) => {
+        console.debug(
+            `TrackAudioElement(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:showLevelMeter${showLevelMeter}`,
+        );
+        // Create the level meter and associated routing only when requested, and only for local files
+        if (
+            showLevelMeter &&
+            mediaUrl &&
+            newVideoElement &&
+            !FileHandler.isValidHttpUrl(mediaUrl)
+        ) {
+            if (audioSource.value === null) {
+                audioSource.value = audio.context.createMediaElementSource(
+                    newVideoElement as HTMLMediaElement,
+                );
+            }
+            audioSource.value.connect(audio.context.destination);
+            console.debug(
+                `TrackAudioElement(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:connected`,
+            );
+        } else {
+            audioSource.value?.disconnect(audio.context.destination);
+            audioSource.value?.disconnect();
+            //NOTE: a MediaElementAudioSourceNode can not get destroyed, so this will be reused if later required
+            //See https://stackoverflow.com/a/38631334/79485
+        }
+        if (wasShowingLevelMeter === true && !showLevelMeter) {
+            // reconnect the just lost connection to the output
+            audioSource.value?.connect(audio.context.destination);
+        }
+    },
+    { immediate: true },
+);
+
+// --- Mounted check ---
+
+/** A fully mounted parent is required for the complete lifetime
+ *  for a properly working level meter with it's teleportation */
+const isParentMounted = ref(false);
+onMounted(() => {
+    nextTick(() => {
+        // Now also the parent track is completely mounted
+        isParentMounted.value = true;
+    });
+});
+onBeforeUnmount(() => {
+    isParentMounted.value = false;
+});
 </script>
 
 <style>
@@ -274,5 +391,18 @@ video.paused {
 .video-container,
 video {
     width: 100%;
+}
+</style>
+
+<style>
+/** Rotate the audio level meter according to it's DOM target */
+.audio-level-meter.vertical {
+    transform: rotate(-90deg);
+    width: 2.5em;
+}
+.audio-level-container.vertical {
+    width: 1.25em;
+    margin-left: -0.75em;
+    padding-left: -0.75em;
 }
 </style>

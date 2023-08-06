@@ -393,6 +393,9 @@
                     :trackId="track.Id"
                     @ready="useMediaHandler"
                     @click="setActiveTrack"
+                    :showLevelMeter="showLevelMeter"
+                    :experimentalShowWaveforms="experimentalShowWaveforms"
+                    :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
                 ></TrackVideoElement>
                 <Teleport to="#media-player" :disabled="isEditable">
                     <Transition :name="skipTransitionName">

@@ -19,11 +19,16 @@
             }"
         >
             <template v-for="track in textTracks" :key="track.Id">
-                <NoticeTrack :id="'track-' + track.Id" :track="track">
+                <NoticeTrack
+                    class="block"
+                    :id="'track-' + track.Id"
+                    :track="track"
+                >
                 </NoticeTrack>
             </template>
             <template v-for="(track, index) in tracks" :key="track.Id">
                 <MediaTrack
+                    class="block"
                     :track="track"
                     :ref="'track-' + track.Id"
                     :id="'track-' + track.Id"
