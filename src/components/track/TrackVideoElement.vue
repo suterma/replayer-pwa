@@ -75,6 +75,7 @@ import {
     onDeactivated,
     onMounted,
     onUnmounted,
+    PropType,
     Ref,
     ref,
     shallowRef,
@@ -88,6 +89,7 @@ import { Subscription } from 'sub-events';
 import { FadingMode } from '@/code/media/IAudioFader';
 import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMeter.vue';
 import FileHandler from '@/store/filehandler';
+import { ICue } from '@/store/compilation-types';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -124,6 +126,11 @@ const props = defineProps({
         required: true,
     },
 
+    /** The cues to show
+     * @remarks The cue descriptions are shown as VTT cues.
+     */
+    cues: Array as PropType<Array<ICue>>,
+
     /** Whether to show the component in a disabled state
      * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
      */
@@ -157,7 +164,7 @@ watch(videoElement, async (newVideoElement, oldVideoElement) => {
         destroyHandler(oldVideoElement);
     }
     if (newVideoElement !== null) {
-        createAndEmitHandler(newVideoElement);
+        mediaHandler.value = createAndEmitHandler(newVideoElement);
     }
 });
 
@@ -191,7 +198,7 @@ function destroyHandler(video: HTMLVideoElement): void {
     }
 }
 
-function createAndEmitHandler(video: HTMLVideoElement): void {
+function createAndEmitHandler(video: HTMLVideoElement): IMediaHandler {
     const handler = new MediaHandler(video) as IMediaHandler;
 
     console.log('TrackVideoElement:ready');
@@ -212,7 +219,8 @@ function createAndEmitHandler(video: HTMLVideoElement): void {
             isFading.value = fading;
         },
     );
-    mediaHandler.value = handler;
+
+    return handler;
 }
 
 /** Teardown of the element and handler the mounted lifespan.
@@ -295,6 +303,62 @@ watch(
         if (wasShowingLevelMeter === true && !showLevelMeter) {
             // reconnect the just lost connection to the output
             audioSource.value?.connect(audio.context.destination);
+        }
+    },
+    { immediate: true },
+);
+
+// --- VTT creation ---
+//TODO EXPERIMENTAL: Create VTT track
+
+/** The smallest amount of time that is resolved within the VTT's percision */
+const TemporalEpsilon = 0.001;
+
+let cueTextTrack: TextTrack | null = null;
+
+watch(
+    [() => props.cues, () => videoElement.value],
+    ([cues, newVideoElement], [,/* old stuff not required */]) => {
+        if (cues && newVideoElement) {
+            if (cueTextTrack === null) {
+                cueTextTrack = newVideoElement.addTextTrack(
+                    'captions',
+                    'English',
+                    'en',
+                );
+                cueTextTrack.mode = 'showing';
+            }
+
+            if (cueTextTrack) {
+                // Delete existing cues
+                const textTrackCues = cueTextTrack.cues;
+                const cueCount = textTrackCues?.length;
+                if (textTrackCues && cueCount) {
+                    for (let index = 0; index < cueCount; index++) {
+                        const firstCueId = textTrackCues[0]?.id;
+                        if (firstCueId) {
+                            const deletableCue =
+                                textTrackCues.getCueById(firstCueId);
+                            if (deletableCue) {
+                                cueTextTrack.removeCue(deletableCue);
+                            }
+                        }
+                    }
+                }
+
+                // Add the current cues
+                props.cues?.forEach((cue) => {
+                    if (cue.Time !== null && cue.Duration !== null)
+                        cueTextTrack?.addCue(
+                            new VTTCue(
+                                cue.Time - TemporalEpsilon,
+                                cue.Time + cue.Duration - 2 * TemporalEpsilon,
+                                cue.Description,
+                            ),
+                        );
+                });
+            }
+            // });
         }
     },
     { immediate: true },

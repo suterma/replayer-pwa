@@ -391,6 +391,7 @@
                     :title="track.Name"
                     :mediaUrl="mediaUrl"
                     :trackId="track.Id"
+                    :cues="track.Cues"
                     @ready="useMediaHandler"
                     @click="setActiveTrack"
                     :showLevelMeter="showLevelMeter"
