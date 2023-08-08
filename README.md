@@ -47,6 +47,17 @@ This package currently runs best with node version 16. (node version 18 fails be
     npm install
     npm run build
 
+NOTE: For node v18 on Windows, use the Workaround "Number 2" by https://sebhastian.com/error-0308010c-digital-envelope-routines-unsupported/
+
+When using VSCode, in the Terminal (Powershell) do
+
+    # Windows PowerShell:
+    $env:NODE_OPTIONS="--openssl-legacy-provider"
+
+once before building.
+
+    
+
 # Roadmap
 
 See [Trello](https://trello.com/b/UqdfomQI/replayer-20)
