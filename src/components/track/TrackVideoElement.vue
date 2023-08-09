@@ -64,6 +64,16 @@
             </AudioLevelMeter>
         </Teleport>
     </div>
+
+    <div v-if="isParentMounted && mediaUrl" class="block">
+        <VideoTextTrackController
+            :trackId="trackId"
+            :cues="cues"
+            :title="title"
+            :videoElement="videoElement"
+            :disabled="!videoElement"
+        ></VideoTextTrackController>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -82,12 +92,14 @@ import {
     ShallowRef,
     watch,
 } from 'vue';
+
 import { IMediaHandler } from '@/code/media/IMediaHandler';
 import MediaHandler from '@/code/media/MediaHandler';
 import { useAudioStore } from '@/store/audio';
 import { Subscription } from 'sub-events';
 import { FadingMode } from '@/code/media/IAudioFader';
 import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMeter.vue';
+import VideoTextTrackController from '@/components/track/VideoTextTrackController.vue';
 import FileHandler from '@/store/filehandler';
 import { ICue } from '@/store/compilation-types';
 
@@ -303,62 +315,6 @@ watch(
         if (wasShowingLevelMeter === true && !showLevelMeter) {
             // reconnect the just lost connection to the output
             audioSource.value?.connect(audio.context.destination);
-        }
-    },
-    { immediate: true },
-);
-
-// --- VTT creation ---
-//TODO EXPERIMENTAL: Create VTT track
-
-/** The smallest amount of time that is resolved within the VTT's percision */
-const TemporalEpsilon = 0.001;
-
-let cueTextTrack: TextTrack | null = null;
-
-watch(
-    [() => props.cues, () => videoElement.value],
-    ([cues, newVideoElement], [,/* old stuff not required */]) => {
-        if (cues && newVideoElement) {
-            if (cueTextTrack === null) {
-                cueTextTrack = newVideoElement.addTextTrack(
-                    'captions',
-                    'English',
-                    'en',
-                );
-                cueTextTrack.mode = 'showing';
-            }
-
-            if (cueTextTrack) {
-                // Delete existing cues
-                const textTrackCues = cueTextTrack.cues;
-                const cueCount = textTrackCues?.length;
-                if (textTrackCues && cueCount) {
-                    for (let index = 0; index < cueCount; index++) {
-                        const firstCueId = textTrackCues[0]?.id;
-                        if (firstCueId) {
-                            const deletableCue =
-                                textTrackCues.getCueById(firstCueId);
-                            if (deletableCue) {
-                                cueTextTrack.removeCue(deletableCue);
-                            }
-                        }
-                    }
-                }
-
-                // Add the current cues
-                props.cues?.forEach((cue) => {
-                    if (cue.Time !== null && cue.Duration !== null)
-                        cueTextTrack?.addCue(
-                            new VTTCue(
-                                cue.Time - TemporalEpsilon,
-                                cue.Time + cue.Duration - 2 * TemporalEpsilon,
-                                cue.Description,
-                            ),
-                        );
-                });
-            }
-            // });
         }
     },
     { immediate: true },
