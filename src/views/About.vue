@@ -135,6 +135,26 @@
                                     files of various sizes</a
                                 >
                             </li>
+                            <li>
+                                <a
+                                    href="./#/play?package=https://lib.replayer.app/nasa-4k/13537_Apollo13ViewsMoon4K_YouTube4K.rex"
+                                    target="_blank"
+                                >
+                                    Small XML (.rex) package (4k), with one
+                                    large linked video (.mp4, 715MB) and a small
+                                    linked text file.</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    href="./#/play?package=https://lib.replayer.app/nasa-4k/Moonlight%20%28Clair%20de%20Lune%29.rez"
+                                    target="_blank"
+                                >
+                                    Large ZIP (.rez) package (327MB), with one
+                                    large included video (.mp4, 327MB) and a
+                                    small included text file.</a
+                                >
+                            </li>
                         </ul>
                     </div>
                 </div>
