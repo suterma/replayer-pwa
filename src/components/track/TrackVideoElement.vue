@@ -478,10 +478,16 @@ video.paused {
     text-shadow: 1px 1px 1px rgba(10, 10, 10, 0.3);
 }
 
-/** Use available space */
+/** Use available horizontal space, but limit height */
 .video-container,
 video {
     width: 100%;
+}
+
+/** limit height on edit, by default */
+.track.is-editable .video-container,
+.track.is-editable video {
+    height: 33vh;
 }
 </style>
 
