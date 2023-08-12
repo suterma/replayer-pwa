@@ -1,5 +1,6 @@
 <template>
     <div
+        v-show="showVideo && props.enableVideo"
         class="block video-container"
         :class="{
             paused: isPaused,
@@ -65,8 +66,9 @@
         </Teleport>
     </div>
 
-    <div v-if="isParentMounted && mediaUrl" class="block">
+    <div v-if="isParentMounted && mediaUrl && props.enableVideo" class="block">
         <VideoTextTrackController
+            v-model="showVideo"
             :trackId="trackId"
             :cues="cues"
             :title="title"
@@ -148,6 +150,13 @@ const props = defineProps({
      */
     disabled: Boolean,
 
+    /** Whether to enable the video output
+     * @remarks If true, shows the video canvas and the video controls.
+     * If set to false, hides the video canvas and the video controls.
+     * In any case the VTT is generated and, if enabled, the audio peak level control is rendered.
+     */
+    enableVideo: Boolean,
+
     /** Whether to show the audio level meter
      * @remarks Default is true
      */
@@ -161,6 +170,10 @@ const props = defineProps({
     /** Whether the audio level meter size is large */
     levelMeterSizeIsLarge: Boolean,
 });
+
+// --- visibility ---
+
+const showVideo = ref(true);
 
 // --- Media Setup ---
 

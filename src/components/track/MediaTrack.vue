@@ -356,7 +356,7 @@
                 variant, because otherwise the track is not correctly loaded
                 after it has become the active track ( gets
                 play-request-was-interrupted) -->
-                <TrackAudioElement
+                <!-- <TrackAudioElement
                     v-if="CompilationHandler.isAudioTrack(track)"
                     :key="track.Id"
                     :title="track.Name"
@@ -384,9 +384,13 @@
                     :showLevelMeter="showLevelMeter"
                     :experimentalShowWaveforms="experimentalShowWaveforms"
                     :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
-                ></TrackAudioElement>
+                ></TrackAudioElement> -->
                 <TrackVideoElement
-                    v-if="CompilationHandler.isVideoTrack(track)"
+                    v-if="
+                        CompilationHandler.isVideoTrack(track) ||
+                        CompilationHandler.isAudioTrack(track)
+                    "
+                    :enableVideo="CompilationHandler.isVideoTrack(track)"
                     :key="track.Id"
                     :title="track.Name"
                     :mediaUrl="mediaUrl"
@@ -639,7 +643,6 @@ import {
 } from '@/store/compilation-types';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import TempoLevelEditor from '@/components/editor/TempoLevelEditor.vue';
-import TrackAudioElement from '@/components/track/TrackAudioElement.vue';
 import TrackVideoElement from '@/components/track/TrackVideoElement.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeader from '@/components/track/TrackHeader.vue';

@@ -1,58 +1,75 @@
 <template>
     <div class="level is-mobile">
         <div class="level-left level-wrap">
-            <!-- Caption toggler -->
+            <!-- Video toggler -->
             <div class="level-item has-text-left">
                 <div class="field is-horizontal">
                     <div class="field-body">
                         <div class="field">
                             <p class="control">
                                 <LabeledCheckbox
-                                    v-model="showCaptions"
-                                    label="Show captions"
+                                    v-model="vModel"
+                                    label="Show video"
                                 ></LabeledCheckbox>
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Size toggler -->
-            <div class="level-item has-text-left">
-                <div class="field is-horizontal">
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control">
-                                <LabeledCheckbox
-                                    v-model="largeCaptions"
-                                    label="Large captions"
-                                ></LabeledCheckbox>
-                            </p>
+            <template v-if="props.modelValue">
+                <!-- Caption toggler -->
+                <div class="level-item has-text-left">
+                    <div class="field is-horizontal">
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <LabeledCheckbox
+                                        v-model="showCaptions"
+                                        label="Show cue captions"
+                                    ></LabeledCheckbox>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- Position toggler -->
-            <div class="level-item has-text-left">
-                <div class="field is-horizontal">
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control">
-                                <LabeledCheckbox
-                                    v-model="centerPosition"
-                                    label="Center"
-                                ></LabeledCheckbox>
-                            </p>
+                <!-- Size toggler -->
+                <div class="level-item has-text-left">
+                    <div class="field is-horizontal">
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <LabeledCheckbox
+                                        v-model="largeCaptions"
+                                        label="Large cue captions"
+                                    ></LabeledCheckbox>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                <!-- Position toggler -->
+                <div class="level-item has-text-left">
+                    <div class="field is-horizontal">
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <LabeledCheckbox
+                                        v-model="centerPosition"
+                                        label="Center"
+                                    ></LabeledCheckbox>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
         </div>
         <div class="level-right"></div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { PropType, Ref, ref, watchEffect } from 'vue';
+import { PropType, Ref, computed, ref, watchEffect } from 'vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 import { ICue } from '@/store/compilation-types';
 
@@ -61,6 +78,13 @@ import { ICue } from '@/store/compilation-types';
  */
 
 const props = defineProps({
+    /** Whether to show the video. Includes showing these controls (except the showVideo toggler)
+     */
+    modelValue: {
+        type: Boolean,
+        required: false,
+        default: true,
+    },
     /** The title of the track */
     title: {
         type: String,
@@ -108,6 +132,21 @@ const centerPosition = ref(true);
 const TemporalEpsilon = 0.001;
 
 const cueTextTrack: Ref<TextTrack | null> = ref(null);
+
+// --- visibility ---
+
+const emit = defineEmits(['update:modelValue']);
+
+const vModel = computed<boolean>({
+    get(): boolean {
+        return props.modelValue;
+    },
+    set(value): void {
+        emit('update:modelValue', value);
+    },
+});
+
+// --- captions ---
 
 /** Handles changes in the caption visibility
  */
