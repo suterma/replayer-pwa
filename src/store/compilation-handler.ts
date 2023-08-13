@@ -40,6 +40,15 @@ export default class CompilationHandler {
             track.Url.endsWith('.m4a')
         );
     }
+    /** Determines whether this is a youtube video track
+     * @devdoc track types should later be determined by MIME type.
+     * For this, the MIME type should become part of the (readonly) track information,
+     * determined when the track URL is evaluated.
+     */
+    static isYoutubeVideoTrack(track: ITrack): boolean {
+        return track.Url.startsWith('https://www.youtube.com/watch?v=');
+    }
+
     /** Determines whether this is an audio track
      * @devdoc track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,

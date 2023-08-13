@@ -9,6 +9,38 @@
             </section>
         </div>
 
+        <div class="block">
+            <CollapsiblePanel>
+                <template #caption
+                    ><h1 class="title has-text-danger">
+                        Youtube via Mediaelement.js
+                    </h1></template
+                >
+                <TrackYoutubeElement
+                    mediaUrl="https://www.youtube.com/watch?v=sKGoqpqJ-MM"
+                ></TrackYoutubeElement>
+            </CollapsiblePanel>
+        </div>
+
+        <div class="block">
+            <CollapsiblePanel>
+                <template #caption
+                    ><h1 class="title has-text-danger">
+                        Spotify embedding
+                    </h1></template
+                >
+                <iframe
+                    style="border-radius: 12px"
+                    src="https://open.spotify.com/embed/track/6tNDVXXaYWsBd3Mqhfelvl?utm_source=generator&theme=0"
+                    width="100%"
+                    height="80"
+                    frameBorder="0"
+                    allowfullscreen="false"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                ></iframe>
+            </CollapsiblePanel>
+        </div>
+
         <h1 class="title has-text-danger">Tests</h1>
 
         <h2 class="subtitle has-text-danger">API tests</h2>
@@ -92,19 +124,6 @@
                 />
             </div>
         </div>
-        <div class="field" v-if="compilation.Tracks[0]">
-            <label class="label"
-                >BPM of first track ({{ bpmOfFirstTrack }})</label
-            >
-            <div class="control">
-                <input
-                    class="input"
-                    type="text"
-                    v-model="compilation.Tracks[0].BeatsPerMinute"
-                    placeholder="BPM of first track"
-                />
-            </div>
-        </div>
 
         <h2 class="subtitle has-text-danger">
             Loader component with various compilations
@@ -146,17 +165,6 @@
                 Throw an exception
             </button>
         </div>
-
-        <h1 class="title has-text-danger">Spotify embedding</h1>
-        <iframe
-            style="border-radius: 12px"
-            src="https://open.spotify.com/embed/track/6tNDVXXaYWsBd3Mqhfelvl?utm_source=generator&theme=0"
-            width="100%"
-            height="80"
-            frameBorder="0"
-            allowfullscreen="false"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-        ></iframe>
 
         <h1 class="title has-text-danger">Icons test</h1>
         <BaseIcon v-once :path="rTrackPlay" />
@@ -227,6 +235,8 @@ import {
 } from '@/components/icons/BaseIcon.vue';
 import { useAppStore } from '@/store/app';
 import { mapState, mapWritableState } from 'pinia';
+import TrackYoutubeElement from '@/components/track/TrackYoutubeElement.vue';
+import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
 
 export default defineComponent({
     name: 'Development',
@@ -235,7 +245,9 @@ export default defineComponent({
         BaseIcon,
         NavButton,
         ControlKnob,
+        TrackYoutubeElement,
         Knob,
+        CollapsiblePanel,
     },
     data() {
         return {
