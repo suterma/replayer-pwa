@@ -487,6 +487,15 @@
                         subscriptions. (Released under the MIT License, by
                         Vitaly Tomilov)
                     </li>
+                    <li>
+                        <a
+                            href="https://vue-youtube.github.io/docs/"
+                            target="_blank"
+                        >
+                            VueYoutube</a
+                        >, Integrate the YouTube Iframe Player into your Vue 2/3
+                        app. (Released under the MIT License, by Techassi)
+                    </li>
                 </ul>
             </div>
         </CollapsiblePanel>
