@@ -1,94 +1,132 @@
-import AudioFader from './AudioFader';
 import { IAudioFader } from './IAudioFader';
 import { IMediaHandler } from './IMediaHandler';
 import { SubEvent } from 'sub-events';
+import type {
+    PlaybackQualityChangeCallback,
+    PlaybackRateChangeCallback,
+    PlayerStateChangeCallback,
+    APIChangeCallback,
+    MaybeElementRef,
+    ErrorCallback,
+    ReadyCallback,
+    PlayerVars,
+    MaybeRef,
+    Player,
+} from '@vue-youtube/shared';
+import YouTubeFader from './YouTubeFader';
+import { PlayerState } from '@vue-youtube/core';
 
-/** @class Implements a playback handler for a {HTMLMediaElement}.
- * @remarks This handles transport/loop and volume operations for audio sources (HTML media elements).
+/** @class Implements a playback handler for a YouTube IFrame player with VueYoutube.
+ * @remarks This handles transport/loop and volume operations for the audio.
  * See https://github.com/suterma/replayer-pwa/tree/main/doc/media-handling#readme
  * @devdoc Fading is handeled internally with it's own handler.
  */
-export default class HtmlMediaHandler implements IMediaHandler {
+export default class YouTubeMediaHandler implements IMediaHandler {
     // --- internals ---
 
     private _fader: IAudioFader;
 
-    /** The {HTMLMediaElement} instance to act upon */
-    private _media: HTMLMediaElement;
+    /** The YouTube player instance to act upon */
+    private _player: Player;
 
     /** @constructor
-     * @param {HTMLMediaElement} media - The media element to act upon
+     * @param {Player} player - The YouTube player instance to act upon
      * @param {number} masterVolume - The overall volume of the output. Can be used to control the output volume in addition to fadings. (Default: 1, representing full scale)
      * @param {string} id - The unique id
      */
     constructor(
-        media: HTMLMediaElement,
+        onStateChange: (...cb: PlayerStateChangeCallback[]) => void,
+        player: Player,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         masterVolume: number = 1,
 
         id = '',
     ) {
-        this._media = media;
-        this._id = id ? id : 'handler-' + media.id;
-        this._fader = new AudioFader(media, masterVolume);
+        this._player = player;
+        this._id = id ? id : 'handler-' + player.getVideoUrl();
+        this._fader = new YouTubeFader(player, masterVolume);
 
-        //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
-        media.onloadeddata = () => {
-            this.isClickToLoadRequired = false;
-            const readyState = media.readyState;
-            this.debugLog(`onloadeddata:readyState:${readyState}`);
-            this.handleReadyState(readyState);
-        };
+        // The duration is available already, because the player is ready, when this constructor is called
+        this.updateDuration(player.getDuration());
 
-        media.onloadedmetadata = () => {
-            const readyState = media.readyState;
-            this.debugLog(`onloadedmetadata:readyState:${readyState}`);
-            this.handleReadyState(readyState);
-        };
-
-        media.oncanplay = () => {
-            this.debugLog(`oncanplay`);
-            this.onCanPlay.emit();
-        };
-
-        media.ondurationchange = () => {
-            const duration = media.duration;
-            this.debugLog(`ondurationchange:duration:${duration}`);
-            this.updateDuration(duration);
-        };
-
-        media.onpause = () => {
-            this.debugLog(`onpause`);
-            this.onPausedChanged.emit(true);
-            //Upon reception of this event, playback has already paused.
-            //No actual fade-out is required. However, to reset the volume to the minimum, a fast fade-out is still triggered
-            this._fader.fadeOut(/*immediate*/ true);
-        };
-
-        media.onseeking = () => {
-            this.debugLog(`onseeking`);
-            this.onSeekingChanged.emit(true);
-        };
-
-        media.onseeked = () => {
-            this.debugLog(`onseeked`);
-            this.onSeekingChanged.emit(false);
-            this.onSeeked.emit(this.currentTime);
-        };
-
-        media.onplay = () => {
-            this.debugLog(`onplay`);
-
-            //Upon reception of this event, playback has already started. Fade-in is required if not yet ongoing.
-            if (!this._fader.fading) {
-                this._fader.fadeIn().catch((message) => console.log(message));
+        onStateChange((event) => {
+            if (event.data == PlayerState.UNSTARTED) {
+                console.debug('TrackYoutubeElement::onStateChange:UNSTARTED');
             }
+            if (event.data == PlayerState.ENDED) {
+                /* occurs when the video has ended */
+                console.debug('TrackYoutubeElement::onStateChange:ENDED');
+            }
+            if (event.data == PlayerState.PLAYING) {
+                console.debug('TrackYoutubeElement::onStateChange:PLAYING');
+            }
+            if (event.data == PlayerState.PAUSED) {
+                console.debug('TrackYoutubeElement::onStateChange:PAUSED');
+            }
+            if (event.data == PlayerState.BUFFERING) {
+                console.debug('TrackYoutubeElement::onStateChange:BUFFERING');
+            }
+            if (event.data == PlayerState.VIDEO_CUED) {
+                console.debug('TrackYoutubeElement::onStateChange:VIDEO_CUED');
+            }
+        });
 
-            this.onPausedChanged.emit(false);
-        };
+        // player.onloadeddata = () => {
+        //     this.isClickToLoadRequired = false;
+        //     const readyState = player.readyState;
+        //     this.debugLog(`onloadeddata:readyState:${readyState}`);
+        //     this.handleReadyState(readyState);
+        // };
 
-        media.ontimeupdate = () => this.handleTimeUpdate();
-        media.onended = () => this.handleEnded();
+        // player.onloadedmetadata = () => {
+        //     const readyState = player.readyState;
+        //     this.debugLog(`onloadedmetadata:readyState:${readyState}`);
+        //     this.handleReadyState(readyState);
+        // };
+
+        // player.oncanplay = () => {
+        //     this.debugLog(`oncanplay`);
+        //     this.onCanPlay.emit();
+        // };
+
+        // player.ondurationchange = () => {
+        //     const duration = player.duration;
+        //     this.debugLog(`ondurationchange:duration:${duration}`);
+        //     this.updateDuration(duration);
+        // };
+
+        // player.onpause = () => {
+        //     this.debugLog(`onpause`);
+        //     this.onPausedChanged.emit(true);
+        //     //Upon reception of this event, playback has already paused.
+        //     //No actual fade-out is required. However, to reset the volume to the minimum, a fast fade-out is still triggered
+        //     this._fader.fadeOut(/*immediate*/ true);
+        // };
+
+        // player.onseeking = () => {
+        //     this.debugLog(`onseeking`);
+        //     this.onSeekingChanged.emit(true);
+        // };
+
+        // player.onseeked = () => {
+        //     this.debugLog(`onseeked`);
+        //     this.onSeekingChanged.emit(false);
+        //     this.onSeeked.emit(this.currentTime);
+        // };
+
+        // player.onplay = () => {
+        //     this.debugLog(`onplay`);
+
+        //     //Upon reception of this event, playback has already started. Fade-in is required if not yet ongoing.
+        //     if (!this._fader.fading) {
+        //         this._fader.fadeIn().catch((message) => console.log(message));
+        //     }
+
+        //     this.onPausedChanged.emit(false);
+        // };
+
+        // player.ontimeupdate = () => this.handleTimeUpdate();
+        // player.onended = () => this.handleEnded();
     }
 
     // --- configuration and update ---
@@ -106,7 +144,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     debugLog(message: string, ...optionalParams: any[]): void {
         console.debug(
-            `HtmlMediaHandler(${this._id})::${message}:`,
+            `YouTubeMediaHandler(${this._id})::${message}:`,
             optionalParams,
         );
     }
@@ -135,14 +173,14 @@ export default class HtmlMediaHandler implements IMediaHandler {
                 .fadeOut()
                 .catch((message) => console.log(message))
                 .finally(() => {
-                    this._media.pause();
+                    this._player.pauseVideo();
                     this.onPausedChanged.emit(true);
                 });
         }
     }
 
     stop(): void {
-        this._media.pause();
+        this._player.pauseVideo();
         this._fader.cancel();
         this._fader.reset();
     }
@@ -151,11 +189,11 @@ export default class HtmlMediaHandler implements IMediaHandler {
      * @remarks During fading, the playback state is not considered as paused.
      */
     get paused(): boolean {
-        return this._media.paused;
+        return this._player.getPlayerState() == PlayerState.PAUSED;
     }
 
     get duration(): number {
-        return this._media.duration;
+        return this._player.getDuration();
     }
 
     /** Handles the time update event of the audio element
@@ -170,7 +208,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
     }
 
     get currentTime(): number {
-        return this._media.currentTime;
+        return this._player.getCurrentTime();
     }
 
     seekTo(seconds: number): void {
@@ -179,7 +217,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
             return;
         }
         if (Number.isFinite(seconds)) {
-            this._media.currentTime = seconds;
+            this._player.seekTo(seconds, true);
         }
     }
 
@@ -193,7 +231,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
     }
 
     play(): void {
-        this._media.play();
+        this._player.playVideo();
     }
 
     togglePlayback(): void {
@@ -216,7 +254,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
     /** Gets the media source URL.
      */
     get mediaSourceUrl(): string {
-        return this._media.src;
+        return this._player.getVideoUrl();
     }
     /** Sets the media source URL.
      */
@@ -233,7 +271,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
             this.pause();
 
             //Switch the source now, after pause
-            this._media.src = url;
+            this._player.loadVideoByUrl(url);
 
             //NOTE: This method assumes, that the new media for this is of (roughly) the same
             //length, just replacing the voice/instrument in the piece.
@@ -241,7 +279,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
             //and the playing state is set again after the switch.
             //Otherwise the user will need to restart playback from
             //new position anyway
-            this._media.currentTime = lastPosition;
+            this._player.seekTo(lastPosition, true);
             if (isCurrentlyPlaying) {
                 this.play();
             }
@@ -273,7 +311,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
      */
     handleLoadedData(): void {
         this.isClickToLoadRequired = false;
-        const readyState = this._media.readyState;
+        const readyState = this._player.getPlayerState();
 
         this.debugLog(`handleLoadedData:readyState:${readyState}`);
         this.handleReadyState(readyState);
@@ -283,6 +321,8 @@ export default class HtmlMediaHandler implements IMediaHandler {
      * @param {number} duration - could be NaN or infinity, depending on the source
      */
     updateDuration(duration: number): void {
+        console.debug('TrackYoutubeElement::updateDuration:duration', duration);
+
         if (this._durationSeconds !== duration) {
             this._durationSeconds = duration;
             this.onDurationChanged.emit(this._durationSeconds);
@@ -298,7 +338,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
             if (!this.hasLoadedMetadata && !this.hasLoadedData) {
                 this.hasLoadedMetadata = true;
                 this.hasLoadedData = true;
-                this.updateDuration(this._media.duration);
+                this.updateDuration(this._player.getDuration());
 
                 //Apply the currently known position to the player. It could be non-zero already.
                 // //TODO probably use a specific initalPosition property for this
@@ -314,10 +354,10 @@ export default class HtmlMediaHandler implements IMediaHandler {
         }
 
         //Special flag handling, when not  automatically loading further now
-        this.debugLog(`handleReadyState:buffered:`, this._media.buffered);
-        this.debugLog(
-            `handleReadyState:networkState:${this._media.networkState}`,
-        );
+        // this.debugLog(`handleReadyState:buffered:`, this._player.buffered);
+        // this.debugLog(
+        //     `handleReadyState:networkState:${this._player.networkState}`,
+        // );
 
         //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
         //most probably due to load restriction on an iOS device using Safari.
@@ -326,10 +366,10 @@ export default class HtmlMediaHandler implements IMediaHandler {
         //- iPad Pro 12.9 2021/Safari (with audio from URL)
         //NOTE: This solution however seems not to work on:
         //- iPad 9th/Safari, because the buffered length is 1, but the sound will only play on 2nd click.
-        if (this._media.buffered.length === 0) {
-            //The isClickToLoadRequired flag defers further media loading until the next user's explicit play request
-            this.isClickToLoadRequired = true;
-        }
+        // if (this._player.buffered.length === 0) {
+        //     //The isClickToLoadRequired flag defers further media loading until the next user's explicit play request
+        //     this.isClickToLoadRequired = true;
+        // }
     }
 
     /** The duration of the track
@@ -349,9 +389,9 @@ export default class HtmlMediaHandler implements IMediaHandler {
     // --- track looping ---
 
     get loop(): boolean {
-        return this._media.loop;
+        return false; //this._player.loop;
     }
     set loop(value: boolean) {
-        this._media.loop = value;
+        //this._player.loop = value;
     }
 }

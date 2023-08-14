@@ -34,6 +34,7 @@ export const getters = {
             state.compilation.value?.Tracks.filter(
                 (track) =>
                     CompilationHandler.isAudioTrack(track) ||
+                    CompilationHandler.isYoutubeVideoTrack(track) ||
                     CompilationHandler.isVideoTrack(track),
             ).length == 1
         );
@@ -56,6 +57,7 @@ export const getters = {
         return state.compilation.value?.Tracks.filter(
             (track) =>
                 CompilationHandler.isAudioTrack(track) ||
+                CompilationHandler.isYoutubeVideoTrack(track) ||
                 CompilationHandler.isVideoTrack(track),
         );
     }),
@@ -93,7 +95,8 @@ export const getters = {
             return state.compilation.value?.Tracks.filter(
                 (track) =>
                     CompilationHandler.isAudioTrack(track) ||
-                    CompilationHandler.isVideoTrack(track),
+                    CompilationHandler.isVideoTrack(track) ||
+                    CompilationHandler.isYoutubeVideoTrack(track),
             )[0]?.Id;
         }
 

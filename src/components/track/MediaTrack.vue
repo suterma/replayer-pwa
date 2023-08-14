@@ -402,6 +402,16 @@
                     :experimentalShowWaveforms="experimentalShowWaveforms"
                     :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
                 ></TrackVideoElement>
+                <TrackYouTubeElement
+                    v-if="CompilationHandler.isYoutubeVideoTrack(track)"
+                    :key="track.Id"
+                    :title="track.Name"
+                    :url="mediaUrl"
+                    :trackId="track.Id"
+                    :cues="track.Cues"
+                    @ready="useMediaHandler"
+                    @click="setActiveTrack"
+                ></TrackYouTubeElement>
                 <Teleport to="#media-player" :disabled="isEditable">
                     <Transition :name="skipTransitionName">
                         <!-- 
@@ -644,6 +654,7 @@ import {
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import TempoLevelEditor from '@/components/editor/TempoLevelEditor.vue';
 import TrackVideoElement from '@/components/track/TrackVideoElement.vue';
+import TrackYouTubeElement from '@/components/track/TrackYouTubeElement.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeader from '@/components/track/TrackHeader.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';

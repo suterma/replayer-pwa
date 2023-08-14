@@ -1,0 +1,198 @@
+<template>
+    <div ref="youtubePlayer" id="custom-track-id"></div>
+    <button @click="togglePlay">Pause / Unpause</button>
+    <button @click="toggleMute">Mute / Unmute</button>
+    <button @click="toggleLoop">Loop / No loop</button>
+    <button @click="instance?.seekTo(10, true)">Seek to 10</button>
+
+    Duration: {{ duration }} Current Time: {{ currentTime }}
+</template>
+
+<script setup lang="ts">
+import {
+    PlayerState,
+    PlayerStateChangeCallback,
+    usePlayer,
+} from '@vue-youtube/core';
+import { PropType, computed, onMounted, onUnmounted, ref } from 'vue';
+import { getCurrentInstance } from 'vue';
+import { createManager } from '@vue-youtube/core';
+import type { Player } from '@vue-youtube/shared';
+import { IMediaHandler } from '@/code/media/IMediaHandler';
+import YouTubeMediaHandler from '@/code/media/YoutubeMediaHandler';
+import { useAudioStore } from '@/store/audio';
+import { ICue } from '@/store/compilation-types';
+
+/** A simple vue YouTube player, for a single track, using vue-youtube.
+ * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playback.
+ * @remarks Emits 'durationChanged' with the track duration in seconds, once after
+ * successful load of the metadata of the track's media file
+ * @devdoc Autoplay after load is intentionally not supported, as this is of no use for the Replayer app.
+ */
+
+const emit = defineEmits(['ready', 'click']);
+
+const props = defineProps({
+    /** The title of the track */
+    title: {
+        type: String,
+        default: '',
+        required: false,
+    },
+
+    /** The track id
+     * @remarks Used to have a unique id on the encapsulated video element
+     */
+    trackId: {
+        type: String,
+        required: true,
+    },
+
+    /** The cues to show
+     * @remarks The cue descriptions are shown as VTT cues.
+     */
+    cues: Array as PropType<Array<ICue>>,
+
+    /** Whether to show the component in a disabled state
+     * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+     */
+    disabled: Boolean,
+
+    /** The YouTube video URL
+     * @remark This URL can point to an online resource or be a local object URL
+     */
+    url: {
+        type: String,
+        default: '',
+        required: true,
+    },
+});
+
+// --- player setup ---
+
+// Locally register the create manager plugin (avoiding vue instance pollution and
+// unnecessary data disclosure, when this component is not used)
+const app = getCurrentInstance();
+if (app) {
+    app.appContext.app.use(createManager());
+}
+
+// Use a template ref to reference the target element
+const youtubePlayer = ref();
+
+const videoId = computed(() => {
+    //taken from https://stackoverflow.com/a/8260383/79485
+    var regExp =
+        /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    var match = props.url.match(regExp);
+    return match && match[7]?.length == 11 ? match[7] : '';
+});
+
+// Call the 'usePlayer' function with the desired video ID and target ref
+const {
+    onReady,
+    onStateChange,
+    onError,
+    togglePlay,
+    toggleMute,
+    toggleLoop,
+    instance,
+} = usePlayer(videoId.value, youtubePlayer, {
+    playerVars: {
+        autoplay: 0,
+        disablekb: 1 /* replayer handles keyboard events on it's own*/,
+        enablejsapi: 1,
+        origin: 'https://localhost:8080',
+    },
+});
+
+onStateChange((event) => {
+    if (event.data == PlayerState.UNSTARTED) {
+        console.debug('TrackYoutubeElement::onStateChange:UNSTARTED');
+    }
+    if (event.data == PlayerState.ENDED) {
+        /* occurs when the video has ended */
+        console.debug('TrackYoutubeElement::onStateChange:ENDED');
+    }
+    if (event.data == PlayerState.PLAYING) {
+        console.debug('TrackYoutubeElement::onStateChange:PLAYING');
+    }
+    if (event.data == PlayerState.PAUSED) {
+        console.debug('TrackYoutubeElement::onStateChange:PAUSED');
+    }
+    if (event.data == PlayerState.BUFFERING) {
+        console.debug('TrackYoutubeElement::onStateChange:BUFFERING');
+    }
+    if (event.data == PlayerState.VIDEO_CUED) {
+        console.debug('TrackYoutubeElement::onStateChange:VIDEO_CUED');
+    }
+});
+
+onError((event) => {
+    console.error('TrackYoutubeElement::onStateChange:onError:', event);
+});
+
+onMounted(() => {
+    console.log('TrackYoutubeElement::mounted');
+});
+
+/// --- updating time (when ready) ---
+
+const currentTime = ref(0);
+const duration = ref(0);
+const isReady = ref(false);
+onReady(() => {
+    isReady.value = true;
+    updateCurrentTime();
+
+    duration.value = instance.value?.getDuration() ?? 0;
+
+    if (instance.value) {
+        createAndEmitHandler(onStateChange, instance.value);
+    }
+});
+onUnmounted(() => {
+    isReady.value = false;
+});
+function updateCurrentTime() {
+    if (isReady.value) {
+        currentTime.value = instance.value?.getCurrentTime() ?? 0;
+        window.requestAnimationFrame(updateCurrentTime);
+    }
+}
+
+// --- Media Setup ---
+
+const audio = useAudioStore();
+
+function createAndEmitHandler(
+    onStateChange: (...cb: PlayerStateChangeCallback[]) => void,
+    player: Player,
+): IMediaHandler {
+    const handler = new YouTubeMediaHandler(
+        onStateChange,
+        player,
+    ) as IMediaHandler;
+
+    console.log('TrackYouTubeElement:ready');
+    emit('ready', handler);
+    audio.addMediaHandler(handler);
+
+    // Internally handle some events of our own
+    // onPauseChangedSubsription = handler.onPausedChanged.subscribe((paused) => {
+    //     isPaused.value = paused;
+    // });
+    // onSeekingChangedSubsription = handler.onSeekingChanged.subscribe(
+    //     (seeking) => {
+    //         isSeeking.value = seeking;
+    //     },
+    // );
+    // onFadingChangedSubsription = handler.fader.onFadingChanged.subscribe(
+    //     (fading) => {
+    //         isFading.value = fading;
+    //     },
+    // );
+
+    return handler;
+}
+</script>
