@@ -1,30 +1,39 @@
 <template>
-    mediaelement!
-    <!-- <youtube-iframe video-id="dQw4w9WgXcQ" @ready="onReady" /> -->
-    <div ref="player"></div>
+    <div ref="youtubePlayer" id="custom-track-id"></div>
+    <button @click="togglePlay">Pause / Unpause</button>
+    <button @click="toggleMute">Mute / Unmute</button>
+    <button @click="toggleLoop">Loop / No loop</button>
+    <button @click="instance?.seekTo(10, true)">Seek to 10</button>
 
-    endMediaElement!
+    Duration: {{ duration }} Current Time: {{ currentTime }}
 </template>
 
 <script setup lang="ts">
-// Import the 'usePlayer' function
-import { usePlayer } from '@vue-youtube/core';
-import { onMounted, ref } from 'vue';
+import { PlayerState, usePlayer } from '@vue-youtube/core';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { getCurrentInstance } from 'vue';
 import { createManager } from '@vue-youtube/core';
 
-// Locally register the create manager plugin (avoid vue instance pollution and
-// data disclosure, when this component is not used)
+// Locally register the create manager plugin (avoiding vue instance pollution and
+// unnecessary data disclosure, when this component is not used)
 const app = getCurrentInstance();
 if (app) {
     app.appContext.app.use(createManager());
 }
 
 // Use a template ref to reference the target element
-const player = ref();
+const youtubePlayer = ref();
 
 // Call the 'usePlayer' function with the desired video ID and target ref
-const { onReady } = usePlayer('sKGoqpqJ-MM', player, {
+const {
+    onReady,
+    onStateChange,
+    onError,
+    togglePlay,
+    toggleMute,
+    toggleLoop,
+    instance,
+} = usePlayer('sKGoqpqJ-MM', youtubePlayer, {
     playerVars: {
         autoplay: 0,
         disablekb: 1 /* replayer handles keyboard events on it's own*/,
@@ -36,16 +45,65 @@ const { onReady } = usePlayer('sKGoqpqJ-MM', player, {
 // Provide multiple event callbacks at once
 onReady(
     (event) => {
-        console.log('I will get triggered when the player is ready');
+        console.log(
+            'TrackYoutubeElement::I will get triggered when the player is ready',
+        );
     },
     (event) => {
-        console.log('You will see this message as well!');
+        console.log('TrackYoutubeElement::You will see this message as well!');
     },
 );
+
+onStateChange((event) => {
+    if (event.data == PlayerState.UNSTARTED) {
+        console.debug('TrackYoutubeElement::onStateChange:UNSTARTED');
+    }
+    if (event.data == PlayerState.ENDED) {
+        /* occurs when the video has ended */
+        console.debug('TrackYoutubeElement::onStateChange:ENDED');
+    }
+    if (event.data == PlayerState.PLAYING) {
+        console.debug('TrackYoutubeElement::onStateChange:PLAYING');
+    }
+    if (event.data == PlayerState.PAUSED) {
+        console.debug('TrackYoutubeElement::onStateChange:PAUSED');
+    }
+    if (event.data == PlayerState.BUFFERING) {
+        console.debug('TrackYoutubeElement::onStateChange:BUFFERING');
+    }
+    if (event.data == PlayerState.VIDEO_CUED) {
+        console.debug('TrackYoutubeElement::onStateChange:VIDEO_CUED');
+    }
+});
+
+onError((event) => {
+    console.error('TrackYoutubeElement::onStateChange:onError:', event);
+});
 
 onMounted(() => {
     console.log('TrackYoutubeElement::mounted');
 });
+
+/// --- updating time (when ready) ---
+
+const currentTime = ref(0);
+const duration = ref(0);
+const isReady = ref(false);
+onReady((event) => {
+    isReady.value = true;
+    updateCurrentTime();
+
+    duration.value = instance.value?.getDuration() ?? 0;
+});
+onUnmounted(() => {
+    isReady.value = false;
+});
+function updateCurrentTime() {
+    if (isReady.value) {
+        currentTime.value = instance.value?.getCurrentTime() ?? 0;
+        window.requestAnimationFrame(updateCurrentTime);
+    }
+}
 
 /** A simple vue youtube player element, for a single track, without further visuals, using an {mediaelement.js}.
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playback.
