@@ -96,7 +96,7 @@ import {
 } from 'vue';
 
 import { IMediaHandler } from '@/code/media/IMediaHandler';
-import MediaHandler from '@/code/media/MediaHandler';
+import HtmlMediaHandler from '@/code/media/HtmlMediaHandler';
 import { useAudioStore } from '@/store/audio';
 import { Subscription } from 'sub-events';
 import { FadingMode } from '@/code/media/IAudioFader';
@@ -224,7 +224,7 @@ function destroyHandler(video: HTMLVideoElement): void {
 }
 
 function createAndEmitHandler(video: HTMLVideoElement): IMediaHandler {
-    const handler = new MediaHandler(video) as IMediaHandler;
+    const handler = new HtmlMediaHandler(video) as IMediaHandler;
 
     console.log('TrackVideoElement:ready');
     emit('ready', handler);

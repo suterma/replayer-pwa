@@ -33,7 +33,7 @@ const {
     toggleMute,
     toggleLoop,
     instance,
-} = usePlayer('sKGoqpqJ-MM', youtubePlayer, {
+} = usePlayer('DkYPge6ZKSQ', youtubePlayer, {
     playerVars: {
         autoplay: 0,
         disablekb: 1 /* replayer handles keyboard events on it's own*/,
@@ -41,18 +41,6 @@ const {
         origin: 'https://localhost:8080',
     },
 });
-
-// Provide multiple event callbacks at once
-onReady(
-    (event) => {
-        console.log(
-            'TrackYoutubeElement::I will get triggered when the player is ready',
-        );
-    },
-    (event) => {
-        console.log('TrackYoutubeElement::You will see this message as well!');
-    },
-);
 
 onStateChange((event) => {
     if (event.data == PlayerState.UNSTARTED) {

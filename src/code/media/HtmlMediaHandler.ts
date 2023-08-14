@@ -8,7 +8,7 @@ import { SubEvent } from 'sub-events';
  * See https://github.com/suterma/replayer-pwa/tree/main/doc/media-handling#readme
  * @devdoc Looping and fading are handeled with their own handlers.
  */
-export default class MediaHandler implements IMediaHandler {
+export default class HtmlMediaHandler implements IMediaHandler {
     // --- internals ---
 
     private _fader: IAudioFader;
@@ -105,7 +105,10 @@ export default class MediaHandler implements IMediaHandler {
     /** Writes a debug log message message for this component */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     debugLog(message: string, ...optionalParams: any[]): void {
-        console.debug(`MediaHandler(${this._id})::${message}:`, optionalParams);
+        console.debug(
+            `HtmlMediaHandler(${this._id})::${message}:`,
+            optionalParams,
+        );
     }
 
     // --- fading ---

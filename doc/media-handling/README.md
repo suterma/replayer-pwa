@@ -18,7 +18,7 @@ For handling the media sources in a suitable way for Replayer, various implement
 
 ## Media Handler interface
 
-A media handler (e.g. class `MediaHandler` of `IMediaHandler`) provides all neccessary manipulation features for the media of a Replayer track, including
+A media handler (e.g. class `HtmlMediaHandler` of `IMediaHandler`) provides all neccessary manipulation features for the media of a Replayer track, including
 
 -   Play/Pause/Stop
 -   Looping
