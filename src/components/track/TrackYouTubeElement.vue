@@ -4,17 +4,11 @@
     <button @click="toggleMute">Mute / Unmute</button>
     <button @click="toggleLoop">Loop / No loop</button>
     <button @click="instance?.seekTo(10, true)">Seek to 10</button>
-
-    Duration: {{ duration }} Current Time: {{ currentTime }}
 </template>
 
 <script setup lang="ts">
-import {
-    PlayerState,
-    PlayerStateChangeCallback,
-    usePlayer,
-} from '@vue-youtube/core';
-import { PropType, computed, onMounted, onUnmounted, ref } from 'vue';
+import { PlayerStateChangeCallback, usePlayer } from '@vue-youtube/core';
+import { PropType, computed, onUnmounted, ref } from 'vue';
 import { getCurrentInstance } from 'vue';
 import { createManager } from '@vue-youtube/core';
 import type { Player } from '@vue-youtube/shared';
@@ -106,64 +100,22 @@ const {
     },
 });
 
-onStateChange((event) => {
-    if (event.data == PlayerState.UNSTARTED) {
-        console.debug('TrackYoutubeElement::onStateChange:UNSTARTED');
-    }
-    if (event.data == PlayerState.ENDED) {
-        /* occurs when the video has ended */
-        console.debug('TrackYoutubeElement::onStateChange:ENDED');
-    }
-    if (event.data == PlayerState.PLAYING) {
-        console.debug('TrackYoutubeElement::onStateChange:PLAYING');
-    }
-    if (event.data == PlayerState.PAUSED) {
-        console.debug('TrackYoutubeElement::onStateChange:PAUSED');
-    }
-    if (event.data == PlayerState.BUFFERING) {
-        console.debug('TrackYoutubeElement::onStateChange:BUFFERING');
-    }
-    if (event.data == PlayerState.VIDEO_CUED) {
-        console.debug('TrackYoutubeElement::onStateChange:VIDEO_CUED');
-    }
-});
-
 onError((event) => {
     console.error('TrackYoutubeElement::onStateChange:onError:', event);
 });
 
-onMounted(() => {
-    console.log('TrackYoutubeElement::mounted');
-});
+/// --- create handler (when ready) ---
 
-/// --- updating time (when ready) ---
+const audio = useAudioStore();
 
-const currentTime = ref(0);
-const duration = ref(0);
 const isReady = ref(false);
 onReady(() => {
     isReady.value = true;
-    updateCurrentTime();
-
-    duration.value = instance.value?.getDuration() ?? 0;
 
     if (instance.value) {
         createAndEmitHandler(onStateChange, instance.value);
     }
 });
-onUnmounted(() => {
-    isReady.value = false;
-});
-function updateCurrentTime() {
-    if (isReady.value) {
-        currentTime.value = instance.value?.getCurrentTime() ?? 0;
-        window.requestAnimationFrame(updateCurrentTime);
-    }
-}
-
-// --- Media Setup ---
-
-const audio = useAudioStore();
 
 function createAndEmitHandler(
     onStateChange: (...cb: PlayerStateChangeCallback[]) => void,
@@ -178,21 +130,10 @@ function createAndEmitHandler(
     emit('ready', handler);
     audio.addMediaHandler(handler);
 
-    // Internally handle some events of our own
-    // onPauseChangedSubsription = handler.onPausedChanged.subscribe((paused) => {
-    //     isPaused.value = paused;
-    // });
-    // onSeekingChangedSubsription = handler.onSeekingChanged.subscribe(
-    //     (seeking) => {
-    //         isSeeking.value = seeking;
-    //     },
-    // );
-    // onFadingChangedSubsription = handler.fader.onFadingChanged.subscribe(
-    //     (fading) => {
-    //         isFading.value = fading;
-    //     },
-    // );
-
     return handler;
 }
+
+onUnmounted(() => {
+    isReady.value = false;
+});
 </script>

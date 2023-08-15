@@ -2,15 +2,15 @@ import { IAudioFader } from './IAudioFader';
 import { IMediaHandler } from './IMediaHandler';
 import { SubEvent } from 'sub-events';
 import type {
-    PlaybackQualityChangeCallback,
-    PlaybackRateChangeCallback,
+    // PlaybackQualityChangeCallback,
+    // PlaybackRateChangeCallback,
     PlayerStateChangeCallback,
-    APIChangeCallback,
-    MaybeElementRef,
-    ErrorCallback,
-    ReadyCallback,
-    PlayerVars,
-    MaybeRef,
+    // APIChangeCallback,
+    // MaybeElementRef,
+    // ErrorCallback,
+    // ReadyCallback,
+    // PlayerVars,
+    // MaybeRef,
     Player,
 } from '@vue-youtube/shared';
 import YouTubeFader from './YouTubeFader';
@@ -46,30 +46,15 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         this._id = id ? id : 'handler-' + player.getVideoUrl();
         this._fader = new YouTubeFader(player, masterVolume);
 
+        // Watch the player state with one-time initial reporting
+        onStateChange((event) => {
+            this.handleStateChange(event.data);
+        });
+        this.handleStateChange(player.getPlayerState());
+
         // The duration is available already, because the player is ready, when this constructor is called
         this.updateDuration(player.getDuration());
-
-        onStateChange((event) => {
-            if (event.data == PlayerState.UNSTARTED) {
-                console.debug('TrackYoutubeElement::onStateChange:UNSTARTED');
-            }
-            if (event.data == PlayerState.ENDED) {
-                /* occurs when the video has ended */
-                console.debug('TrackYoutubeElement::onStateChange:ENDED');
-            }
-            if (event.data == PlayerState.PLAYING) {
-                console.debug('TrackYoutubeElement::onStateChange:PLAYING');
-            }
-            if (event.data == PlayerState.PAUSED) {
-                console.debug('TrackYoutubeElement::onStateChange:PAUSED');
-            }
-            if (event.data == PlayerState.BUFFERING) {
-                console.debug('TrackYoutubeElement::onStateChange:BUFFERING');
-            }
-            if (event.data == PlayerState.VIDEO_CUED) {
-                console.debug('TrackYoutubeElement::onStateChange:VIDEO_CUED');
-            }
-        });
+        this.onCanPlay.emit();
 
         // player.onloadeddata = () => {
         //     this.isClickToLoadRequired = false;
@@ -149,6 +134,21 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         );
     }
 
+    /// --- updating time (repeated when playing) ---
+
+    updateCurrentTime() {
+        const currentTime = this._player.getCurrentTime();
+        console.debug(
+            'YouTubeMediaHandler::updateCurrentTime:currentTime: ',
+            currentTime,
+        );
+
+        this.onCurrentTimeChanged.emit(currentTime);
+        if (this._player.getPlayerState() == PlayerState.PLAYING) {
+            window.requestAnimationFrame(() => this.updateCurrentTime());
+        }
+    }
+
     // --- fading ---
 
     /** Gets the audio fading handler
@@ -198,9 +198,9 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     /** Handles the time update event of the audio element
      */
-    private handleTimeUpdate(/*event: Event*/): void {
-        this.onCurrentTimeChanged.emit(this.currentTime);
-    }
+    // private handleTimeUpdate(/*event: Event*/): void {
+    //     this.onCurrentTimeChanged.emit(this.currentTime);
+    // }
     /** Handles the track end event of the audio element, by providing it further as event.
      */
     handleEnded(): void {
@@ -251,6 +251,38 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     // --- media loading ---
 
+    handleStateChange(state: PlayerState) {
+        this.updateCurrentTime();
+
+        if (state == PlayerState.UNSTARTED) {
+            console.debug('YouTubeMediaHandler::onStateChange:UNSTARTED');
+        }
+        if (state == PlayerState.ENDED) {
+            /* occurs when the video has ended */
+            console.debug('YouTubeMediaHandler::onStateChange:ENDED');
+        }
+        if (state == PlayerState.PLAYING) {
+            console.debug('YouTubeMediaHandler::onStateChange:PLAYING');
+        }
+        if (state == PlayerState.PAUSED) {
+            console.debug('YouTubeMediaHandler::onStateChange:PAUSED');
+        }
+        if (state == PlayerState.BUFFERING) {
+            console.debug('YouTubeMediaHandler::onStateChange:BUFFERING');
+        }
+        if (state == PlayerState.VIDEO_CUED) {
+            console.debug('YouTubeMediaHandler::onStateChange:VIDEO_CUED');
+        }
+    }
+
+    /** Click to load is never required with the YouTube IFrame player.
+     */
+    isClickToLoadRequired = false;
+
+    /** @devdoc Metadata already has loaded when this handler is created
+     */
+    hasLoadedMetadata = false;
+
     /** Gets the media source URL.
      */
     get mediaSourceUrl(): string {
@@ -287,35 +319,13 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     }
 
     /** Emitted when the media data has loaded (at least enough to start playback)
-     * @devdoc This is emitted separately from the data loading state and events, since the underlying
-     * implementation does handle it separately.
      */
     onCanPlay: SubEvent<void> = new SubEvent();
 
-    /** Whether the media data has loaded (at least enough to start playback)
-     * @remarks This implies that metadata also has been loaded already
-     * @devdoc see HAVE_CURRENT_DATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
+    /** The duration of the track
+     * @remarks Is only available after the video has been initially loaded
      */
-    hasLoadedData = false;
-
-    /** Whether the media metadata has loaded. Duration is available now.
-     * @devdoc see HAVE_METADATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
-     */
-    hasLoadedMetadata = false;
-
-    isClickToLoadRequired = false;
-
-    /** Handles the load event of the audio element
-     * @remarks Since loading is usually in progress now, this also resets the isClickToLoadRequired flag, unless
-     * it is specifically detected, that further loading needs to be triggered
-     */
-    handleLoadedData(): void {
-        this.isClickToLoadRequired = false;
-        const readyState = this._player.getPlayerState();
-
-        this.debugLog(`handleLoadedData:readyState:${readyState}`);
-        this.handleReadyState(readyState);
-    }
+    _durationSeconds: number | null = null;
 
     /** If changed, updates the internal duration and emits the durationChanged event
      * @param {number} duration - could be NaN or infinity, depending on the source
@@ -325,57 +335,9 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
         if (this._durationSeconds !== duration) {
             this._durationSeconds = duration;
-            this.onDurationChanged.emit(this._durationSeconds);
+            this.onDurationChanged.emit(duration);
         }
     }
-
-    /** Handles the current ready state of the {HTMLMediaElement}'s media, with regard to playability
-     * @remarks Decides, whether deferred loading is required.
-     */
-    handleReadyState(readyState: number): void {
-        //Enough of the media resource has been retrieved that the metadata attributes are initialized?
-        if (readyState >= HTMLMediaElement.HAVE_METADATA) {
-            if (!this.hasLoadedMetadata && !this.hasLoadedData) {
-                this.hasLoadedMetadata = true;
-                this.hasLoadedData = true;
-                this.updateDuration(this._player.getDuration());
-
-                //Apply the currently known position to the player. It could be non-zero already.
-                // //TODO probably use a specific initalPosition property for this
-                // const position = currentPosition?.value;
-                // if (
-                //     position !== null &&
-                //     position !== undefined &&
-                //     Number.isFinite(position)
-                // ) {
-                //     seekToSeconds(position);
-                // }
-            }
-        }
-
-        //Special flag handling, when not  automatically loading further now
-        // this.debugLog(`handleReadyState:buffered:`, this._player.buffered);
-        // this.debugLog(
-        //     `handleReadyState:networkState:${this._player.networkState}`,
-        // );
-
-        //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
-        //most probably due to load restriction on an iOS device using Safari.
-        //Works on
-        //- iPhone 13/Safari
-        //- iPad Pro 12.9 2021/Safari (with audio from URL)
-        //NOTE: This solution however seems not to work on:
-        //- iPad 9th/Safari, because the buffered length is 1, but the sound will only play on 2nd click.
-        // if (this._player.buffered.length === 0) {
-        //     //The isClickToLoadRequired flag defers further media loading until the next user's explicit play request
-        //     this.isClickToLoadRequired = true;
-        // }
-    }
-
-    /** The duration of the track
-     * @remarks Is only available after loading of the track's media source
-     */
-    _durationSeconds: number | null = null;
 
     /** Gets the duration of the track
      * @remarks Is only available after loading of the track's media source
@@ -384,14 +346,16 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         return this._durationSeconds;
     }
 
+    //TODO Apply the currently known position to the player. It could be non-zero already.
+
     onDurationChanged: SubEvent<number> = new SubEvent();
 
     // --- track looping ---
 
     get loop(): boolean {
-        return false; //this._player.loop;
+        return false; //TODO this._player.loop;
     }
     set loop(value: boolean) {
-        //this._player.loop = value;
+        this._player.setLoop(value);
     }
 }
