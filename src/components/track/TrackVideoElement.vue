@@ -248,7 +248,7 @@ function createAndEmitHandler(video: HTMLVideoElement): IMediaHandler {
     return handler;
 }
 
-/** Teardown of the element and handler the mounted lifespan.
+/** Teardown of the element and handler.
  */
 onUnmounted(() => {
     if (videoElement.value) {

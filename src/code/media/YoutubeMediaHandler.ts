@@ -1,20 +1,10 @@
 import { IAudioFader } from './IAudioFader';
 import { IMediaHandler } from './IMediaHandler';
 import { SubEvent } from 'sub-events';
-import type {
-    // PlaybackQualityChangeCallback,
-    // PlaybackRateChangeCallback,
-    PlayerStateChangeCallback,
-    // APIChangeCallback,
-    // MaybeElementRef,
-    // ErrorCallback,
-    // ReadyCallback,
-    // PlayerVars,
-    // MaybeRef,
-    Player,
-} from '@vue-youtube/shared';
+import type { PlayerStateChangeCallback, Player } from '@vue-youtube/shared';
 import YouTubeFader from './YouTubeFader';
 import { PlayerState } from '@vue-youtube/core';
+import { nextTick } from 'process';
 
 /** @class Implements a playback handler for a YouTube IFrame player with VueYoutube.
  * @remarks This handles transport/loop and volume operations for the audio.
@@ -32,95 +22,37 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     /** @constructor
      * @param {Player} player - The YouTube player instance to act upon
      * @param {number} masterVolume - The overall volume of the output. Can be used to control the output volume in addition to fadings. (Default: 1, representing full scale)
-     * @param {string} id - The unique id
+     * @param {string} id - The unique id for this handler
      */
     constructor(
         onStateChange: (...cb: PlayerStateChangeCallback[]) => void,
         player: Player,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         masterVolume: number = 1,
-
-        id = '',
+        id: string,
     ) {
         this._player = player;
-        this._id = id ? id : 'handler-' + player.getVideoUrl();
+        this._id = 'youtube-media-handler-' + (id ? id : player.getVideoUrl());
         this._fader = new YouTubeFader(player, masterVolume);
 
-        // Watch the player state with one-time initial reporting
         onStateChange((event) => {
             this.handleStateChange(event.data);
         });
-        this.handleStateChange(player.getPlayerState());
 
-        // The duration is available already, because the player is ready, when this constructor is called
-        this.updateDuration(player.getDuration());
-        this.onCanPlay.emit();
+        // report initial state once (after these events were subscribed to by the outside code)
+        nextTick(() => {
+            this.handleStateChange(player.getPlayerState());
 
-        // player.onloadeddata = () => {
-        //     this.isClickToLoadRequired = false;
-        //     const readyState = player.readyState;
-        //     this.debugLog(`onloadeddata:readyState:${readyState}`);
-        //     this.handleReadyState(readyState);
-        // };
-
-        // player.onloadedmetadata = () => {
-        //     const readyState = player.readyState;
-        //     this.debugLog(`onloadedmetadata:readyState:${readyState}`);
-        //     this.handleReadyState(readyState);
-        // };
-
-        // player.oncanplay = () => {
-        //     this.debugLog(`oncanplay`);
-        //     this.onCanPlay.emit();
-        // };
-
-        // player.ondurationchange = () => {
-        //     const duration = player.duration;
-        //     this.debugLog(`ondurationchange:duration:${duration}`);
-        //     this.updateDuration(duration);
-        // };
-
-        // player.onpause = () => {
-        //     this.debugLog(`onpause`);
-        //     this.onPausedChanged.emit(true);
-        //     //Upon reception of this event, playback has already paused.
-        //     //No actual fade-out is required. However, to reset the volume to the minimum, a fast fade-out is still triggered
-        //     this._fader.fadeOut(/*immediate*/ true);
-        // };
-
-        // player.onseeking = () => {
-        //     this.debugLog(`onseeking`);
-        //     this.onSeekingChanged.emit(true);
-        // };
-
-        // player.onseeked = () => {
-        //     this.debugLog(`onseeked`);
-        //     this.onSeekingChanged.emit(false);
-        //     this.onSeeked.emit(this.currentTime);
-        // };
-
-        // player.onplay = () => {
-        //     this.debugLog(`onplay`);
-
-        //     //Upon reception of this event, playback has already started. Fade-in is required if not yet ongoing.
-        //     if (!this._fader.fading) {
-        //         this._fader.fadeIn().catch((message) => console.log(message));
-        //     }
-
-        //     this.onPausedChanged.emit(false);
-        // };
-
-        // player.ontimeupdate = () => this.handleTimeUpdate();
-        // player.onended = () => this.handleEnded();
+            // The duration is available already, because the player is ready, when this constructor is called
+            this.updateDuration(player.getDuration());
+        });
     }
 
     // --- configuration and update ---
 
-    /** The uniqe id */
+    /** The uniqe id for this handler */
     _id: string;
 
-    /** Gets the id.
-     */
     get id(): string {
         return this._id;
     }
@@ -137,12 +69,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     /// --- updating time (repeated when playing) ---
 
     updateCurrentTime() {
-        const currentTime = this._player.getCurrentTime();
-        console.debug(
-            'YouTubeMediaHandler::updateCurrentTime:currentTime: ',
-            currentTime,
-        );
-
+        const currentTime = this.currentTime;
         this.onCurrentTimeChanged.emit(currentTime);
         if (this._player.getPlayerState() == PlayerState.PLAYING) {
             window.requestAnimationFrame(() => this.updateCurrentTime());
@@ -159,8 +86,11 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     // --- transport ---
 
+    /** @remarks With the YouTube player, buffering counts as playing, as it's expected to occurr only during actual playback. */
     onPausedChanged: SubEvent<boolean> = new SubEvent();
+    /** @remarks Seek events are not supported by the YouTube player */
     onSeekingChanged: SubEvent<boolean> = new SubEvent();
+    /** @remarks Seek events are not supported by the YouTube player */
     onSeeked: SubEvent<number> = new SubEvent();
     onCurrentTimeChanged: SubEvent<number> = new SubEvent();
     onEnded: SubEvent<void> = new SubEvent();
@@ -180,31 +110,22 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     }
 
     stop(): void {
-        this._player.pauseVideo();
+        this._player.pauseVideo(); //NOTE: stopVideo is discouraged by the API docs
         this._fader.cancel();
         this._fader.reset();
     }
 
     /** Gets the paused state.
+     * @remarks Paused is anything except playing or buffering.
      * @remarks During fading, the playback state is not considered as paused.
      */
     get paused(): boolean {
-        return this._player.getPlayerState() == PlayerState.PAUSED;
+        const state = this._player.getPlayerState();
+        return state !== PlayerState.PLAYING && state !== PlayerState.BUFFERING;
     }
 
     get duration(): number {
         return this._player.getDuration();
-    }
-
-    /** Handles the time update event of the audio element
-     */
-    // private handleTimeUpdate(/*event: Event*/): void {
-    //     this.onCurrentTimeChanged.emit(this.currentTime);
-    // }
-    /** Handles the track end event of the audio element, by providing it further as event.
-     */
-    handleEnded(): void {
-        this.onEnded.emit();
     }
 
     get currentTime(): number {
@@ -256,22 +177,36 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
         if (state == PlayerState.UNSTARTED) {
             console.debug('YouTubeMediaHandler::onStateChange:UNSTARTED');
+            this.onPausedChanged.emit(true);
         }
         if (state == PlayerState.ENDED) {
             /* occurs when the video has ended */
             console.debug('YouTubeMediaHandler::onStateChange:ENDED');
+            this.onEnded.emit();
         }
         if (state == PlayerState.PLAYING) {
             console.debug('YouTubeMediaHandler::onStateChange:PLAYING');
+            //Upon reception of this event, playback has already started. Fade-in is required if not yet ongoing.
+            if (!this._fader.fading) {
+                this._fader.fadeIn().catch((message) => console.log(message));
+            }
+
+            this.onPausedChanged.emit(false);
         }
         if (state == PlayerState.PAUSED) {
             console.debug('YouTubeMediaHandler::onStateChange:PAUSED');
+            this.onPausedChanged.emit(true);
+            //Upon reception of this event, playback has already paused.
+            //No actual fade-out is required. However, to reset the volume to the minimum, a fast fade-out is still triggered
+            this._fader.fadeOut(/*immediate*/ true);
         }
         if (state == PlayerState.BUFFERING) {
             console.debug('YouTubeMediaHandler::onStateChange:BUFFERING');
         }
         if (state == PlayerState.VIDEO_CUED) {
             console.debug('YouTubeMediaHandler::onStateChange:VIDEO_CUED');
+            this.onPausedChanged.emit(true);
+            this.onCanPlay.emit();
         }
     }
 
@@ -281,7 +216,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     /** @devdoc Metadata already has loaded when this handler is created
      */
-    hasLoadedMetadata = false;
+    hasLoadedMetadata = true;
 
     /** Gets the media source URL.
      */
@@ -291,6 +226,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     /** Sets the media source URL.
      */
     set mediaSourceUrl(url: string) {
+        //TODO implement
         //Only update the media element, when a source is actually available
         //Otherwise the element throws an avoidable error
         if (url) {

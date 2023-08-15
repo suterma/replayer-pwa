@@ -1,5 +1,5 @@
 <template>
-    <div ref="youtubePlayer" id="custom-track-id"></div>
+    <div ref="youtubePlayerElement" id="custom-track-id"></div>
     <button @click="togglePlay">Pause / Unpause</button>
     <button @click="toggleMute">Mute / Unmute</button>
     <button @click="toggleLoop">Loop / No loop</button>
@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { PlayerStateChangeCallback, usePlayer } from '@vue-youtube/core';
-import { PropType, computed, onUnmounted, ref } from 'vue';
+import { PropType, Ref, computed, onUnmounted, ref } from 'vue';
 import { getCurrentInstance } from 'vue';
 import { createManager } from '@vue-youtube/core';
 import type { Player } from '@vue-youtube/shared';
@@ -72,7 +72,7 @@ if (app) {
 }
 
 // Use a template ref to reference the target element
-const youtubePlayer = ref();
+const youtubePlayerElement = ref();
 
 const videoId = computed(() => {
     //taken from https://stackoverflow.com/a/8260383/79485
@@ -91,7 +91,7 @@ const {
     toggleMute,
     toggleLoop,
     instance,
-} = usePlayer(videoId.value, youtubePlayer, {
+} = usePlayer(videoId.value, youtubePlayerElement, {
     playerVars: {
         autoplay: 0,
         disablekb: 1 /* replayer handles keyboard events on it's own*/,
@@ -106,17 +106,18 @@ onError((event) => {
 
 /// --- create handler (when ready) ---
 
+const mediaHandler: Ref<IMediaHandler | null> = ref(null);
+
 const audio = useAudioStore();
 
-const isReady = ref(false);
 onReady(() => {
-    isReady.value = true;
-
     if (instance.value) {
-        createAndEmitHandler(onStateChange, instance.value);
+        mediaHandler.value = createAndEmitHandler(
+            onStateChange,
+            instance.value,
+        );
     }
 });
-
 function createAndEmitHandler(
     onStateChange: (...cb: PlayerStateChangeCallback[]) => void,
     player: Player,
@@ -124,6 +125,9 @@ function createAndEmitHandler(
     const handler = new YouTubeMediaHandler(
         onStateChange,
         player,
+        //TODO use track volume
+        0.5,
+        props.trackId,
     ) as IMediaHandler;
 
     console.log('TrackYouTubeElement:ready');
@@ -133,7 +137,24 @@ function createAndEmitHandler(
     return handler;
 }
 
+/** Teardown of the YouTube player and handler.
+ */
 onUnmounted(() => {
-    isReady.value = false;
+    destroyHandler();
 });
+
+/** Properly destroy the handler, and abandon the YouTube player, including it's handlers */
+function destroyHandler(): void {
+    if (mediaHandler.value) {
+        audio.removeMediaHandler(mediaHandler.value);
+        //properly destroy the audio element and the audio context
+        mediaHandler.value.stop();
+        mediaHandler.value.pause();
+    }
+
+    if (instance.value) {
+        instance.value.destroy();
+    }
+    console.log('TrackYouTubeElement:destroyed');
+}
 </script>
