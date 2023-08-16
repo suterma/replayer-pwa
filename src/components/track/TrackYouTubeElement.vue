@@ -1,9 +1,45 @@
 <template>
-    <div ref="youtubePlayerElement" id="custom-track-id"></div>
-    <button @click="togglePlay">Pause / Unpause</button>
-    <button @click="toggleMute">Mute / Unmute</button>
-    <button @click="toggleLoop">Loop / No loop</button>
-    <button @click="instance?.seekTo(10, true)">Seek to 10</button>
+    //TODO use global styles //TODO make video responsive //Make fader overlay
+    working
+    <div
+        v-show="showVideo"
+        class="block video-container"
+        :class="{
+            paused: isPaused,
+            fading: isFading !== FadingMode.None,
+            'fade-out': isFading == FadingMode.FadeOut,
+            'fade-in': isFading == FadingMode.FadeIn,
+        }"
+    >
+        <div
+            :class="{
+                paused: isPaused,
+                fading: isFading !== FadingMode.None,
+                'fade-out': isFading == FadingMode.FadeOut,
+                'fade-in': isFading == FadingMode.FadeIn,
+            }"
+            :id="'track-youtube-element-' + trackId"
+            @click="$emit('click')"
+            title="Click to play/pause"
+        >
+            <div ref="youtubePlayerElement"></div>
+        </div>
+        <!-- <video
+            controls
+            :id="mediaElementId"
+            :src="props.mediaUrl"
+            ref="videoElement"
+            :class="{
+                paused: isPaused,
+                seeking: isSeeking,
+                fading: isFading !== FadingMode.None,
+                'fade-out': isFading == FadingMode.FadeOut,
+                'fade-in': isFading == FadingMode.FadeIn,
+            }"
+            @click="$emit('click')"
+            title="Click to play/pause"
+        ></video> -->
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -16,12 +52,14 @@ import { IMediaHandler } from '@/code/media/IMediaHandler';
 import YouTubeMediaHandler from '@/code/media/YoutubeMediaHandler';
 import { useAudioStore } from '@/store/audio';
 import { ICue } from '@/store/compilation-types';
+import { FadingMode } from '@/code/media/IAudioFader';
+import { Subscription } from 'sub-events';
 
-/** A simple vue YouTube player, for a single track, using vue-youtube.
+/** A simple vue YouTube player, for a single track, using VueYoutube.
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playback.
  * @remarks Emits 'durationChanged' with the track duration in seconds, once after
- * successful load of the metadata of the track's media file
- * @devdoc Autoplay after load is intentionally not supported, as this is of no use for the Replayer app.
+ * successful load of the video
+ * @devdoc Autoplay is intentionally not supported, as this is of no use for the Replayer app.
  */
 
 const emit = defineEmits(['ready', 'click']);
@@ -61,6 +99,10 @@ const props = defineProps({
         required: true,
     },
 });
+
+// --- visibility ---
+
+const showVideo = ref(true);
 
 // --- player setup ---
 
@@ -118,6 +160,7 @@ onReady(() => {
         );
     }
 });
+
 function createAndEmitHandler(
     onStateChange: (...cb: PlayerStateChangeCallback[]) => void,
     player: Player,
@@ -134,8 +177,23 @@ function createAndEmitHandler(
     emit('ready', handler);
     audio.addMediaHandler(handler);
 
+    // Internally handle some events of our own
+    onPauseChangedSubsription = handler.onPausedChanged.subscribe((paused) => {
+        isPaused.value = paused;
+    });
+    onFadingChangedSubsription = handler.fader.onFadingChanged.subscribe(
+        (fading) => {
+            isFading.value = fading;
+        },
+    );
+
     return handler;
 }
+
+const isPaused = ref(true);
+const isFading = ref(FadingMode.None);
+let onPauseChangedSubsription: Subscription;
+let onFadingChangedSubsription: Subscription;
 
 /** Teardown of the YouTube player and handler.
  */
@@ -151,6 +209,10 @@ function destroyHandler(): void {
         mediaHandler.value.stop();
         mediaHandler.value.pause();
     }
+
+    // cancel the internal event handlers
+    onPauseChangedSubsription.cancel();
+    onFadingChangedSubsription.cancel();
 
     if (instance.value) {
         instance.value.destroy();

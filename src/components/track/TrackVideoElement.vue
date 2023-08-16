@@ -26,15 +26,19 @@
             title="Click to play/pause"
         ></video>
     </div>
-    <!-- NOTE: the rendering of the AudioLevelMeter _might_ affect badly the synchronous start of the multitrack playback, 
+    <!-- NOTE: the rendering of the AudioLevelMeter _might_ affect badly the 
+         synchronous start of the multitrack playback, 
          but only the first time after a page reload/player instantiation.
-         It's currently not consistently reproducible and goes away after a subsequent sync (e.g. after pause/play) -->
-    <!-- NOTE: Teleportation fails with a warning when the parent track component has not yet been mounted.
-         This situation is addressed with the isParentMounted flag. It's working for loading/unloading/reloading compilation and
+         It's currently not consistently reproducible and goes away after a 
+         subsequent sync (e.g. after pause/play) -->
+    <!-- NOTE: Teleportation of the AudioLevelMeter fails with a warning when 
+         the parent track component has not yet been mounted.
+         This situation is addressed with the isParentMounted flag. It's 
+         working for loading/unloading/reloading compilation and
          adding new tracks.
-         Disabling the teleportation does not work currently: When the application settings change to show the meter, produces a warning. 
+         Disabling the teleportation does not work currently: When the 
+         application settings change to show the meter, produces a warning. 
          The solution for this is using a v-if instead of disableing. -->
-
     <div
         v-if="
             showLevelMeter &&
@@ -196,12 +200,11 @@ watch(videoElement, async (newVideoElement, oldVideoElement) => {
 const isPaused = ref(true);
 const isSeeking = ref(false);
 const isFading = ref(FadingMode.None);
-
-const mediaHandler: Ref<IMediaHandler | null> = ref(null);
-
 let onPauseChangedSubsription: Subscription;
 let onSeekingChangedSubsription: Subscription;
 let onFadingChangedSubsription: Subscription;
+
+const mediaHandler: Ref<IMediaHandler | null> = ref(null);
 
 /** Properly destroy the handler, and abandon the video element, including it's handlers */
 function destroyHandler(video: HTMLVideoElement): void {
