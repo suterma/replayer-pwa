@@ -459,7 +459,7 @@ video {
 /** limit height on edit, by default */
 .track.is-editable .video-container,
 .track.is-editable video {
-    height: 33vh;
+    max-height: 33vh;
 }
 </style>
 

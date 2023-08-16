@@ -3,6 +3,7 @@
     working
     <div
         v-show="showVideo"
+        :id="'track-youtube-element-' + trackId"
         class="block video-container"
         :class="{
             paused: isPaused,
@@ -10,20 +11,11 @@
             'fade-out': isFading == FadingMode.FadeOut,
             'fade-in': isFading == FadingMode.FadeIn,
         }"
+        @click="$emit('click')"
+        title="Click to play/pause"
     >
-        <div
-            :class="{
-                paused: isPaused,
-                fading: isFading !== FadingMode.None,
-                'fade-out': isFading == FadingMode.FadeOut,
-                'fade-in': isFading == FadingMode.FadeIn,
-            }"
-            :id="'track-youtube-element-' + trackId"
-            @click="$emit('click')"
-            title="Click to play/pause"
-        >
-            <div ref="youtubePlayerElement"></div>
-        </div>
+        <div ref="youtubePlayerElement" class="video"></div>
+
         <!-- <video
             controls
             :id="mediaElementId"
@@ -220,3 +212,25 @@ function destroyHandler(): void {
     console.log('TrackYouTubeElement:destroyed');
 }
 </script>
+<style>
+/** Make the YouTube IFrame player responsive 
+* See https://webmasterin.net/youtube-videos-responsive-einbinden/
+*/
+.video-container {
+    position: relative;
+    /** This exact padding value is required to make the 
+    video fully visible, with the aspect ratio of 16:9 */
+    padding-bottom: 56.25%;
+    padding-top: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.video-container .video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+</style>
