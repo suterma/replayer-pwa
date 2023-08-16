@@ -24,6 +24,7 @@
 
 @import '_replayer-dropdown.scss';
 @import '_replayer-input.scss';
+@import '_replayer-video.scss';
 @import '_replayer-modal.scss';
 @import '../node_modules/bulma-print/bulma-print';
 @import '../node_modules/bulma-print/sass/experimental/bw.scss';
@@ -148,7 +149,7 @@ while also keeping the original with.
 /* Disabled items should be dimmed. Hovering should not be visible */
 .has-cursor-not-allowed {
     cursor: not-allowed;
-  }
+}
 
 /** **********************************************************
  * Cursors for dragging/sorting
@@ -225,7 +226,6 @@ while also keeping the original with.
     border-bottom: $table-cell-border;
 }
 
-
 /* Headings should have a fixed color, not changing on hover */
 .heading {
     color: $text;
@@ -300,7 +300,7 @@ a[target='_blank']:hover {
 **************************************************************
 */
 
- /* elements on a slight danger-like area */
+/* elements on a slight danger-like area */
 .is-experimental {
     outline: dashed $danger;
     outline-offset: 0;

@@ -1597,4 +1597,15 @@ console.debug('MediaTrack::Setup:done.');
         max-width: 40px;
     }
 }
+
+/** Rotate the audio level meter according to it's DOM target */
+.audio-level-meter.vertical {
+    transform: rotate(-90deg);
+    width: 2.5em;
+}
+.audio-level-container.vertical {
+    width: 1.25em;
+    margin-left: -0.75em;
+    padding-left: -0.75em;
+}
 </style>

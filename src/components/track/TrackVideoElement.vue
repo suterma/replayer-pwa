@@ -364,114 +364,22 @@ onDeactivated(() => {
 });
 </script>
 
-<style>
-/**
- * Fading to grey for paused state indication.
- * @remarks A simple transition does not work for filter functions
- */
-@keyframes fade-to-grey {
-    from {
-        filter: brightness(1);
-    }
-    to {
-        filter: brightness(0.4);
-    }
-}
-
-@keyframes unfade-from-grey {
-    from {
-        filter: brightness(0.4);
-    }
-    to {
-        filter: brightness(1);
-    }
-}
-
+<style scoped>
+/** Match the animation duration to the fade duration
+* @devdoc NOTE: The animation is defined in _replayer-video.scss
+*/
 video {
-    animation-name: unfade-from-grey;
     animation-duration: v-bind('fadeInDuration');
-    filter: brightness(1);
 }
 
-/** During fading, slowly adapt the brightness */
+/** During fading, slowly adapt the brightness 
+* @devdoc NOTE: The animation is defined in _replayer-video.scss
+*/
 video.fade-out {
-    animation-name: fade-to-grey;
     animation-duration: v-bind('fadeOutDuration');
-    filter: brightness(0.4);
 }
 /** When paused, immediately reduce the brightness */
 video.paused {
-    animation-name: fade-to-grey;
     animation-duration: 0s;
-    filter: brightness(0.4);
-}
-
-/**
- * Adding an overlay for plabyck indication.
-  * @remarks Requires a surrounding div to have the positioning working
-  * (does not work directly on the the video element)
- */
-
-.video-container {
-    position: relative;
-    background-color: black;
-}
-
-.video-container:after {
-    content: '';
-    position: absolute;
-    color: #fafafa;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fafafa' d='M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M10,16.5L16,12L10,7.5V16.5Z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 10vmax;
-
-    opacity: 0;
-    transition: opacity 200ms ease;
-}
-
-.video-container.paused:after {
-    opacity: 0.8;
-    transition: opacity 200ms ease;
-}
-
-/**
- * Video hover similar to button hover (except background, since there is already one with the svg)
- */
-.video-container:hover:after {
-    border-color: #7a8288;
-    border-width: 1px;
-    border-style: solid;
-    text-shadow: 1px 1px 1px rgba(10, 10, 10, 0.3);
-}
-
-/** Use available horizontal space, but limit height */
-.video-container,
-video {
-    width: 100%;
-}
-
-/** limit height on edit, by default */
-.track.is-editable .video-container,
-.track.is-editable video {
-    max-height: 33vh;
-}
-</style>
-
-<style>
-/** Rotate the audio level meter according to it's DOM target */
-.audio-level-meter.vertical {
-    transform: rotate(-90deg);
-    width: 2.5em;
-}
-.audio-level-container.vertical {
-    width: 1.25em;
-    margin-left: -0.75em;
-    padding-left: -0.75em;
 }
 </style>

@@ -1,10 +1,9 @@
 <template>
-    //TODO use global styles //TODO make video responsive //Make fader overlay
-    working
+    //TODO use global styles //Make fader overlay working
     <div
         v-show="showVideo"
         :id="'track-youtube-element-' + trackId"
-        class="block video-container"
+        class="block video-container youtube"
         :class="{
             paused: isPaused,
             fading: isFading !== FadingMode.None,
@@ -14,23 +13,7 @@
         @click="$emit('click')"
         title="Click to play/pause"
     >
-        <div ref="youtubePlayerElement" class="video"></div>
-
-        <!-- <video
-            controls
-            :id="mediaElementId"
-            :src="props.mediaUrl"
-            ref="videoElement"
-            :class="{
-                paused: isPaused,
-                seeking: isSeeking,
-                fading: isFading !== FadingMode.None,
-                'fade-out': isFading == FadingMode.FadeOut,
-                'fade-in': isFading == FadingMode.FadeIn,
-            }"
-            @click="$emit('click')"
-            title="Click to play/pause"
-        ></video> -->
+        <div ref="youtubePlayerElement" class="video youtube"></div>
     </div>
 </template>
 
@@ -215,22 +198,34 @@ function destroyHandler(): void {
 <style>
 /** Make the YouTube IFrame player responsive 
 * See https://webmasterin.net/youtube-videos-responsive-einbinden/
+* This exact padding value is required to make the 
+* video fully visible, with the aspect ratio of 16:9  
 */
-.video-container {
+.video-container.youtube {
     position: relative;
-    /** This exact padding value is required to make the 
-    video fully visible, with the aspect ratio of 16:9 */
     padding-bottom: 56.25%;
     padding-top: 0;
     height: 0;
     overflow: hidden;
 }
 
-.video-container .video {
+.video-container.youtube .video.youtube {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+}
+
+/** For the edit view, limit the height */
+.track.is-editable .video-container.youtube .video.youtube,
+.track.is-editable .video.youtube::after {
+    max-height: 33vh;
+}
+
+@media screen and (min-width: 848px) {
+    .track.is-editable .video-container.youtube {
+        padding-bottom: 33vh;
+    }
 }
 </style>
