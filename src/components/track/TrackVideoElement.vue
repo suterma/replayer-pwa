@@ -15,6 +15,7 @@
             :id="mediaElementId"
             :src="props.mediaUrl"
             ref="videoElement"
+            class="video"
             :class="{
                 paused: isPaused,
                 seeking: isSeeking,
@@ -368,18 +369,18 @@ onDeactivated(() => {
 /** Match the animation duration to the fade duration
 * @devdoc NOTE: The animation is defined in _replayer-video.scss
 */
-video {
+.video {
     animation-duration: v-bind('fadeInDuration');
 }
 
 /** During fading, slowly adapt the brightness 
 * @devdoc NOTE: The animation is defined in _replayer-video.scss
 */
-video.fade-out {
+.video.fade-out {
     animation-duration: v-bind('fadeOutDuration');
 }
 /** When paused, immediately reduce the brightness */
-video.paused {
+.video.paused {
     animation-duration: 0s;
 }
 </style>

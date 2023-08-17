@@ -11255,21 +11255,21 @@ button.dropdown-item:disabled:hover {
     filter: brightness(1);
   }
 }
-video {
+.video {
   animation-name: unfade-from-grey;
   animation-duration: 200ms;
   filter: brightness(1);
 }
 
 /** During fading, slowly adapt the brightness */
-video.fade-out {
+.video.fade-out {
   animation-name: fade-to-grey;
   animation-duration: 200ms;
   filter: brightness(0.4);
 }
 
 /** When paused, immediately reduce the brightness */
-video.paused {
+.video.paused {
   animation-name: fade-to-grey;
   animation-duration: 0s;
   filter: brightness(0.4);
@@ -11319,13 +11319,13 @@ video.paused {
 
 /** Use available horizontal space, but limit height */
 .video-container,
-video {
+.video {
   width: 100%;
 }
 
 /** limit height on edit, by default */
 .track.is-editable .video-container,
-.track.is-editable video {
+.track.is-editable .video {
   max-height: 33vh;
 }
 

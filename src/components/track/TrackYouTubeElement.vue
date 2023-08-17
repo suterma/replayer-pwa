@@ -1,5 +1,4 @@
 <template>
-    //TODO use global styles //Make fader overlay working
     <div
         v-show="showVideo"
         :id="'track-youtube-element-' + trackId"
@@ -10,10 +9,26 @@
             'fade-out': isFading == FadingMode.FadeOut,
             'fade-in': isFading == FadingMode.FadeIn,
         }"
-        @click="$emit('click')"
+        @click="
+            {
+                $emit('click');
+                mediaHandler?.play();
+            }
+        "
         title="Click to play/pause"
     >
-        <div ref="youtubePlayerElement" class="video youtube"></div>
+        <div
+            class="video youtube"
+            :class="{
+                paused: isPaused,
+                fading: isFading !== FadingMode.None,
+                'fade-out': isFading == FadingMode.FadeOut,
+                'fade-in': isFading == FadingMode.FadeIn,
+            }"
+        >
+            <!-- The following div will be replaced by the IFrame player -->
+            <div ref="youtubePlayerElement"></div>
+        </div>
     </div>
 </template>
 
@@ -113,7 +128,6 @@ const {
         autoplay: 0,
         disablekb: 1 /* replayer handles keyboard events on it's own*/,
         enablejsapi: 1,
-        origin: 'https://localhost:8080',
     },
 });
 
@@ -194,6 +208,24 @@ function destroyHandler(): void {
     }
     console.log('TrackYouTubeElement:destroyed');
 }
+
+// --- visual fading ---
+
+/** Gets the fade-in duration in seconds, as string
+ * @remarks Provision of dynamic CSS for visual fade-in according to audio fading */
+const fadeInDuration = computed(() => {
+    const fader = mediaHandler.value?.fader;
+    const duration = fader?.fadeInDuration ? fader?.fadeInDuration / 1000 : 0;
+    return `${duration}s`;
+});
+
+/** Gets the fade-out duration in seconds, as string
+ * @remarks Provision of dynamic CSS for visual fade-in according to audio fading */
+const fadeOutDuration = computed(() => {
+    const fader = mediaHandler.value?.fader;
+    const duration = fader?.fadeOutDuration ? fader?.fadeOutDuration / 1000 : 0;
+    return `${duration}s`;
+});
 </script>
 <style>
 /** Make the YouTube IFrame player responsive 
@@ -201,7 +233,7 @@ function destroyHandler(): void {
 * This exact padding value is required to make the 
 * video fully visible, with the aspect ratio of 16:9  
 */
-.video-container.youtube {
+.video-container.youtube .video.youtube {
     position: relative;
     padding-bottom: 56.25%;
     padding-top: 0;
@@ -209,7 +241,7 @@ function destroyHandler(): void {
     overflow: hidden;
 }
 
-.video-container.youtube .video.youtube {
+.video-container.youtube .video.youtube iframe {
     position: absolute;
     top: 0;
     left: 0;
@@ -218,14 +250,36 @@ function destroyHandler(): void {
 }
 
 /** For the edit view, limit the height */
-.track.is-editable .video-container.youtube .video.youtube,
+.track.is-editable .video-container.youtube .video.youtube iframe,
 .track.is-editable .video.youtube::after {
     max-height: 33vh;
 }
+</style>
 
-@media screen and (min-width: 848px) {
-    .track.is-editable .video-container.youtube {
-        padding-bottom: 33vh;
-    }
+<style scoped>
+/** Match the animation duration to the fade duration
+* @devdoc NOTE: The animation is defined in _replayer-video.scss
+*/
+.video {
+    animation-duration: v-bind('fadeInDuration');
+}
+
+/** During fading, slowly adapt the brightness 
+* @devdoc NOTE: The animation is defined in _replayer-video.scss
+*/
+.video.fade-out {
+    animation-duration: v-bind('fadeOutDuration');
+}
+/** When paused, immediately reduce the brightness */
+.video.paused {
+    animation-duration: 0s;
+}
+</style>
+
+<style scoped>
+/** Handle pointer events directly on the the container, if paused, to avoid 
+unintended manipulation of the YouTube player behind the container overlay */
+.video-container.paused:after {
+    pointer-events: all;
 }
 </style>
