@@ -96,11 +96,19 @@ const showVideo = ref(true);
 
 // --- player setup ---
 
-// Locally register the create manager plugin (avoiding vue instance pollution and
-// unnecessary data disclosure, when this component is not used)
-const app = getCurrentInstance();
-if (app) {
-    app.appContext.app.use(createManager());
+// Locally (instead of globally) register the create manager plugin.
+// This avoids vue instance pollution and
+// unnecessary data disclosure, when this component is not used.
+const youTubeManagerAlreadyExists =
+    document.querySelectorAll(
+        `script[src="https://www.youtube.com/player_api"]`,
+    ).length > 0;
+
+if (!youTubeManagerAlreadyExists) {
+    const app = getCurrentInstance();
+    if (app) {
+        app.appContext.app.use(createManager());
+    }
 }
 
 // Use a template ref to reference the target element
