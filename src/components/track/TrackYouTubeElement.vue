@@ -132,10 +132,17 @@ const {
     toggleLoop,
     instance,
 } = usePlayer(videoId.value, youtubePlayerElement, {
+    /** See https://developers.google.com/youtube/player_parameters#Parameters */
     playerVars: {
         autoplay: 0,
         disablekb: 1 /* replayer handles keyboard events on it's own*/,
         enablejsapi: 1,
+        color: 'white',
+        controls: 1,
+        //TODO no effect is visible here:
+        // origin: 'http://localhost:8080/',
+        //origin: 'http://127.0.0.0:8080/',
+        rel: 0,
     },
 });
 
