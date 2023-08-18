@@ -33,7 +33,11 @@
 </template>
 
 <script setup lang="ts">
-import { PlayerStateChangeCallback, usePlayer } from '@vue-youtube/core';
+import {
+    PlayerError,
+    PlayerStateChangeCallback,
+    usePlayer,
+} from '@vue-youtube/core';
 import { PropType, Ref, computed, onUnmounted, ref } from 'vue';
 import { getCurrentInstance } from 'vue';
 import { createManager } from '@vue-youtube/core';
@@ -146,8 +150,36 @@ const {
     },
 });
 
+/** Handle YouTube IFrame player errors
+ * See https://developers.google.com/youtube/iframe_api_reference#Events for details
+ */
 onError((event) => {
-    console.error('TrackYoutubeElement::onStateChange:onError:', event);
+    const url = instance.value?.getVideoUrl();
+    const errorCode = PlayerError[event.data];
+    switch (errorCode) {
+        case PlayerError[PlayerError.INVALID_PARAMETER]:
+            throw new Error(
+                `The request contains an invalid parameter value. Is the given YouTube URL '${url}' working on youtube.com?`,
+            );
+        case PlayerError[PlayerError.HTML5_ERROR]:
+            throw new Error(
+                `The requested content from YouTube URL '${url}' cannot be played in Replayer. Try another video.`,
+            );
+        case PlayerError[PlayerError.NOT_FOUND]:
+            throw new Error(
+                `The requested video from YouTube URL '${url}' was not found. This error occurs when a video has been removed (for any reason) or has been marked as private. Try another video.`,
+            );
+        case PlayerError[PlayerError.NOT_ALLOWED]:
+        case PlayerError[PlayerError.NOT_ALLOWED_DISGUISE]:
+        case '150':
+            throw new Error(
+                `The owner of the requested video from YouTube URL '${url}' does not allow it to be played in embedded players like Replayer. Try another video or watch it online on YouTube (without Replayer).`,
+            );
+        default:
+            throw new Error(
+                `YouTube IFrame player error for YouTube URL '${url}' with code '${event.data}'.`,
+            );
+    }
 });
 
 /// --- create handler (when ready) ---
