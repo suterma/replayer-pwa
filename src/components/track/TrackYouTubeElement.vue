@@ -1,25 +1,9 @@
 <template>
-    <div
-        v-show="showVideo && !playerErrorCode"
-        :id="'track-youtube-element-' + trackId"
-        class="block video-container youtube"
-        :class="{
-            'is-loading': isLoading,
-            paused: isPaused,
-            fading: isFading !== FadingMode.None,
-            'fade-out': isFading == FadingMode.FadeOut,
-            'fade-in': isFading == FadingMode.FadeIn,
-        }"
-        @click="
-            {
-                $emit('click');
-                mediaHandler?.play();
-            }
-        "
-        title="Click to play/pause"
-    >
+    <Transition name="item-expand">
         <div
-            class="video youtube"
+            v-show="showVideo && !playerErrorCode"
+            :id="'track-youtube-element-' + trackId"
+            class="block video-container youtube"
             :class="{
                 'is-loading': isLoading,
                 paused: isPaused,
@@ -27,11 +11,30 @@
                 'fade-out': isFading == FadingMode.FadeOut,
                 'fade-in': isFading == FadingMode.FadeIn,
             }"
+            @click="
+                {
+                    $emit('click');
+                    mediaHandler?.play();
+                }
+            "
+            title="Click to play/pause"
         >
-            <!-- The following div will be replaced by the IFrame player -->
-            <div ref="youtubePlayerElement"></div>
+            <div
+                class="video youtube"
+                :class="{
+                    'is-loading': isLoading,
+                    paused: isPaused,
+                    fading: isFading !== FadingMode.None,
+                    'fade-out': isFading == FadingMode.FadeOut,
+                    'fade-in': isFading == FadingMode.FadeIn,
+                }"
+            >
+                <!-- The following div will be replaced by the IFrame player -->
+                <div ref="youtubePlayerElement"></div>
+            </div>
         </div>
-    </div>
+    </Transition>
+
     <div v-if="hasNotAllowedError" class="block notification is-danger">
         <p>
             The owner of this video does not allow it to be played in embedded
@@ -42,8 +45,14 @@
             instead, without Replayer.
         </p>
     </div>
-    <div v-if="!mediaHandler" class="block notification">
-        <p>Loading....</p>
+    <div v-if="url && !hasNotAllowedError" class="block">
+        <YoutubeTextTrackController
+            v-model="showVideo"
+            :trackId="trackId"
+            :cues="cues"
+            :title="title"
+            :disabled="isLoading"
+        ></YoutubeTextTrackController>
     </div>
 </template>
 
@@ -59,6 +68,7 @@ import { createManager } from '@vue-youtube/core';
 import type { Player } from '@vue-youtube/shared';
 import { IMediaHandler } from '@/code/media/IMediaHandler';
 import YouTubeMediaHandler from '@/code/media/YoutubeMediaHandler';
+import YoutubeTextTrackController from '@/components/track/YoutubeTextTrackController.vue';
 import { useAudioStore } from '@/store/audio';
 import { ICue } from '@/store/compilation-types';
 import { FadingMode } from '@/code/media/IAudioFader';
