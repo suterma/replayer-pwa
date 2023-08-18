@@ -11316,11 +11316,11 @@ button.dropdown-item:disabled:hover {
 /**
  * Video hover similar to button hover (except background, since there is already one with the svg)
  */
-.video-container:hover:after {
+.video-container:hover {
   border-color: #7a8288;
   border-width: 1px;
   border-style: solid;
-  text-shadow: 1px 1px 1px rgba(10, 10, 10, 0.3);
+  /* text-shadow: 1px 1px 1px rgba(10, 10, 10, 0.3); */
 }
 
 /** Use available horizontal space, but limit height */

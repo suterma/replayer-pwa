@@ -91,7 +91,7 @@
 /**
  * Video hover similar to button hover (except background, since there is already one with the svg)
  */
-.video-container:hover:after {
+.video-container:hover {
     border-color: #7a8288;
     border-width: 1px;
     border-style: solid;
