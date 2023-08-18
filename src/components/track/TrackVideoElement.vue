@@ -3,6 +3,7 @@
         v-show="showVideo && props.enableVideo"
         class="block video-container"
         :class="{
+            'is-loading': isLoading,
             paused: isPaused,
             seeking: isSeeking,
             fading: isFading !== FadingMode.None,
@@ -17,6 +18,7 @@
             ref="videoElement"
             class="video"
             :class="{
+                'is-loading': isLoading,
                 paused: isPaused,
                 seeking: isSeeking,
                 fading: isFading !== FadingMode.None,
@@ -181,6 +183,10 @@ const props = defineProps({
 const showVideo = ref(true);
 
 // --- Media Setup ---
+
+const isLoading = computed(() => {
+    return props.mediaUrl && mediaHandler.value == null;
+});
 
 const audio = useAudioStore();
 

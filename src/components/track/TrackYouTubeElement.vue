@@ -4,6 +4,7 @@
         :id="'track-youtube-element-' + trackId"
         class="block video-container youtube"
         :class="{
+            'is-loading': isLoading,
             paused: isPaused,
             fading: isFading !== FadingMode.None,
             'fade-out': isFading == FadingMode.FadeOut,
@@ -20,6 +21,7 @@
         <div
             class="video youtube"
             :class="{
+                'is-loading': isLoading,
                 paused: isPaused,
                 fading: isFading !== FadingMode.None,
                 'fade-out': isFading == FadingMode.FadeOut,
@@ -40,6 +42,9 @@
             instead, without Replayer.
         </p>
     </div>
+    <div v-if="!mediaHandler" class="block notification">
+        <p>Loading....</p>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -48,7 +53,7 @@ import {
     PlayerStateChangeCallback,
     usePlayer,
 } from '@vue-youtube/core';
-import { PropType, Ref, computed, onUnmounted, ref } from 'vue';
+import { PropType, Ref, computed, onUnmounted, ref, watch } from 'vue';
 import { getCurrentInstance } from 'vue';
 import { createManager } from '@vue-youtube/core';
 import type { Player } from '@vue-youtube/shared';
@@ -140,6 +145,10 @@ const videoUrl = computed(() => {
     return instance.value?.getVideoUrl();
 });
 
+const isLoading = computed(() => {
+    return videoId.value && mediaHandler.value == null;
+});
+
 // Call the 'usePlayer' function with the desired video ID and target ref
 const {
     onReady,
@@ -149,7 +158,7 @@ const {
     // toggleMute,
     // toggleLoop,
     instance,
-} = usePlayer(videoId.value, youtubePlayerElement, {
+} = usePlayer(videoId, youtubePlayerElement, {
     /** See https://developers.google.com/youtube/player_parameters#Parameters */
     playerVars: {
         autoplay: 0,
@@ -162,49 +171,7 @@ const {
         //origin: 'http://127.0.0.0:8080/',
         rel: 0,
     },
-});
-
-// --- error handling ---
-
-const playerErrorCode: Ref<string | null> = ref(null);
-const playerErrorMessage: Ref<string | null> = ref(null);
-
-const hasNotAllowedError = computed(() => {
-    return (
-        playerErrorCode.value == PlayerError[PlayerError.NOT_ALLOWED] ||
-        playerErrorCode.value == PlayerError[PlayerError.NOT_ALLOWED_DISGUISE]
-    );
-});
-
-/** Handle YouTube IFrame player errors
- * See https://developers.google.com/youtube/iframe_api_reference#Events for details
- */
-onError((event) => {
-    //TODO set eror code
-    // the handle error message instead of video player locally
-    playerErrorCode.value = PlayerError[event.data];
-    switch (playerErrorCode.value) {
-        case null:
-            break;
-        case PlayerError[PlayerError.INVALID_PARAMETER]:
-            playerErrorMessage.value = `The request contains an invalid parameter value. Is the given YouTube URL '${videoUrl.value}' working on youtube.com?`;
-            throw new Error(playerErrorMessage.value);
-        case PlayerError[PlayerError.HTML5_ERROR]:
-            playerErrorMessage.value = `The requested content from YouTube URL '${videoUrl.value}' cannot be played in Replayer. Try another video.`;
-            throw new Error(playerErrorMessage.value);
-        case PlayerError[PlayerError.NOT_FOUND]:
-            playerErrorMessage.value = `The requested video from YouTube URL '${videoUrl.value}' was not found. This error occurs when a video has been removed (for any reason) or has been marked as private. Try another video.`;
-            throw new Error(playerErrorMessage.value);
-        case PlayerError[PlayerError.NOT_ALLOWED]:
-        case PlayerError[PlayerError.NOT_ALLOWED_DISGUISE]:
-            // NOTE: This error will be handeled inline
-            playerErrorMessage.value = `The owner of the requested video from YouTube URL '${videoUrl.value}' does not allow it to be played in embedded players like Replayer. Try another video or watch it online on YouTube (without Replayer).`;
-            console.error(playerErrorCode.value);
-            break;
-        default:
-            playerErrorMessage.value = `YouTube IFrame player error for YouTube URL '${videoUrl.value}' with code '${event.data}'.`;
-            throw new Error(playerErrorMessage.value);
-    }
+    cookie: true,
 });
 
 /// --- create handler (when ready) ---
@@ -298,6 +265,57 @@ const fadeOutDuration = computed(() => {
     const duration = fader?.fadeOutDuration ? fader?.fadeOutDuration / 1000 : 0;
     return `${duration}s`;
 });
+
+// --- error handling ---
+
+const playerErrorCode: Ref<string | null> = ref(null);
+const playerErrorMessage: Ref<string | null> = ref(null);
+
+const hasNotAllowedError = computed(() => {
+    return (
+        playerErrorCode.value == PlayerError[PlayerError.NOT_ALLOWED] ||
+        playerErrorCode.value == PlayerError[PlayerError.NOT_ALLOWED_DISGUISE]
+    );
+});
+
+/** Handle YouTube IFrame player errors
+ * See https://developers.google.com/youtube/iframe_api_reference#Events for details
+ */
+onError((event) => {
+    playerErrorCode.value = PlayerError[event.data];
+    switch (playerErrorCode.value) {
+        case null:
+            break;
+        case PlayerError[PlayerError.INVALID_PARAMETER]:
+            playerErrorMessage.value = `The request contains an invalid parameter value. Is the given YouTube URL '${videoUrl.value}' working on youtube.com?`;
+            throw new Error(playerErrorMessage.value);
+        case PlayerError[PlayerError.HTML5_ERROR]:
+            playerErrorMessage.value = `The requested content from YouTube URL '${videoUrl.value}' cannot be played in Replayer. Try another video.`;
+            throw new Error(playerErrorMessage.value);
+        case PlayerError[PlayerError.NOT_FOUND]:
+            playerErrorMessage.value = `The requested video from YouTube URL '${videoUrl.value}' was not found. This error occurs when a video has been removed (for any reason) or has been marked as private. Try another video.`;
+            throw new Error(playerErrorMessage.value);
+        case PlayerError[PlayerError.NOT_ALLOWED]:
+        case PlayerError[PlayerError.NOT_ALLOWED_DISGUISE]:
+            // NOTE: This error will be handeled inline
+            playerErrorMessage.value = `The owner of the requested video from YouTube URL '${videoUrl.value}' does not allow it to be played in embedded players like Replayer. Try another video or watch it online on YouTube (without Replayer).`;
+            console.error(playerErrorMessage.value);
+            break;
+        default:
+            playerErrorMessage.value = `YouTube IFrame player error for YouTube URL '${videoUrl.value}' with code '${event.data}'.`;
+            throw new Error(playerErrorMessage.value);
+    }
+});
+
+/** Clear errors for a new video */
+watch(
+    videoId,
+    () => {
+        playerErrorCode.value = null;
+        playerErrorMessage.value = null;
+    },
+    { immediate: true },
+);
 </script>
 <style>
 /** Make the YouTube IFrame player responsive 

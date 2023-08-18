@@ -11302,6 +11302,12 @@ button.dropdown-item:disabled:hover {
   transition: opacity 200ms ease;
 }
 
+.video-container.is-loading:after {
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fafafa' d='M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z'/%3E%3C/svg%3E");
+  animation: spinAround 0.5s infinite linear;
+}
+
 .video-container.paused:after {
   opacity: 0.8;
   transition: opacity 200ms ease;
