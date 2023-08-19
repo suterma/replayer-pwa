@@ -41,6 +41,10 @@ export interface IAudioFader {
      */
     reset(): void;
 
+    /** Destroys the instance by releasing resources.
+     */
+    destroy(): void;
+
     /** Gets the fade-in duration in [milliseconds].
      */
     get fadeInDuration(): number;

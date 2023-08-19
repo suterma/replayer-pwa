@@ -46,6 +46,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
             // The duration is available already, because the player is ready, when this constructor is called
             this.updateDuration(player.getDuration());
         });
+        this.debugLog('created');
     }
 
     // --- configuration and update ---
@@ -66,9 +67,23 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         );
     }
 
+    public destroy(): void {
+        // self
+        this.onPausedChanged.cancelAll();
+        this.onPausedChanged.cancelAll();
+        this.onSeekingChanged.cancelAll();
+        this.onSeeked.cancelAll();
+        this.onCurrentTimeChanged.cancelAll();
+        this.onEnded.cancelAll();
+
+        // fader
+        this.fader.destroy();
+        this.debugLog('destroyed');
+    }
+
     /// --- updating time (repeated when playing) ---
 
-    updateCurrentTime() {
+    updateCurrentTime(): void {
         const currentTime = this.currentTime;
         this.onCurrentTimeChanged.emit(currentTime);
         if (this._player.getPlayerState() == PlayerState.PLAYING) {
@@ -103,6 +118,9 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                 .fadeOut()
                 .catch((message) => console.log(message))
                 .finally(() => {
+                    // NOTE: This currently throws an error, when the handler
+                    // gets destroyed during an ongoing fade operation.
+                    // It's currently not addressed as it's not disturbing for the user.
                     this._player.pauseVideo();
                     this.onPausedChanged.emit(true);
                 });
@@ -172,7 +190,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     // --- media loading ---
 
-    handleStateChange(state: PlayerState) {
+    handleStateChange(state: PlayerState): void {
         this.updateCurrentTime();
 
         if (state == PlayerState.UNSTARTED) {
@@ -267,7 +285,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
      * @param {number} duration - could be NaN or infinity, depending on the source
      */
     updateDuration(duration: number): void {
-        console.debug('TrackYoutubeElement::updateDuration:duration', duration);
+        //console.debug('TrackYoutubeElement::updateDuration:duration', duration);
 
         if (this._durationSeconds !== duration) {
             this._durationSeconds = duration;

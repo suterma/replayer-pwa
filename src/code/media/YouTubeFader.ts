@@ -21,7 +21,7 @@ export default class YouTubeFader implements IAudioFader {
      * by a subsequent operation. This allows the first operation to reject the promise
      * and abandon the fade operation.
      */
-    operationToken = '';
+    operationToken = YouTubeFader.cancelOperationToken;
 
     /** The muted state */
     private _muted = false;
@@ -51,18 +51,6 @@ export default class YouTubeFader implements IAudioFader {
         this.masterVolume = masterVolume;
 
         this.reset();
-
-        //TODO later use with repeated queries?
-        // this.audio.onvolumechange = () => {
-        //     if (!this.fading && !this.muted && !this.audio.paused) {
-        //         const currentVolume = this.audio.volume;
-        //         if (currentVolume != this.masterVolume) {
-        //             this.masterVolume = currentVolume;
-        //             console.debug('onvolumechange-non-fading:', currentVolume);
-        //             this.onVolumeChanged.emit(currentVolume);
-        //         }
-        //     }
-        // };
     }
 
     updateSettings(
@@ -108,18 +96,20 @@ export default class YouTubeFader implements IAudioFader {
     /** The maximum audio volume level */
     public static audioVolumeMax = 1;
 
+    private static cancelOperationToken = 'CANCEL';
+
     /** Resets the token for the currently running fade operation.
      * @remarks Allows operations to cancel themselves in favor of a subsequent operation.
      */
     cancel(): void {
-        this.operationToken = '';
+        this.operationToken = YouTubeFader.cancelOperationToken;
     }
 
     /** If there is a currently running fade operation, reset the token.
      * @returns Whether an operation was ongoing
      */
     hadToCancel(): boolean {
-        if (this.operationToken) {
+        if (this.operationToken !== YouTubeFader.cancelOperationToken) {
             this.cancel();
             return true;
         }
@@ -133,17 +123,29 @@ export default class YouTubeFader implements IAudioFader {
      * Does not affect the muted state.
      */
     public reset(): void {
+        this.audioVolume = this.initialVolume;
+    }
+
+    public destroy(): void {
+        this.cancel();
+        this.reset();
+        this.operationToken = YouTubeFader.cancelOperationToken;
+    }
+
+    /** Geta the initial value for the volume
+     */
+    get initialVolume(): number {
         if (this.fadeInDuration || this.fadeOutDuration) {
-            this.audioVolume = AudioFader.audioVolumeMin;
+            return AudioFader.audioVolumeMin;
         } else {
-            this.audioVolume = this.masterVolume;
+            return this.masterVolume;
         }
     }
 
     // --- fading ---
 
     get fading(): boolean {
-        if (this.operationToken) {
+        if (this.operationToken != YouTubeFader.cancelOperationToken) {
             return true;
         }
         return false;
@@ -253,6 +255,8 @@ export default class YouTubeFader implements IAudioFader {
     onVolumeChanged: SubEvent<number> = new SubEvent();
 
     fadeIn(): Promise<void> {
+        //todo why does fading not work???
+
         if (this.hadToCancel()) {
             return Promise.resolve();
         } else {
@@ -310,14 +314,24 @@ export default class YouTubeFader implements IAudioFader {
             const currentOperationToken = uuidv4();
             this.operationToken = currentOperationToken;
             const clearIntervalId = setInterval(() => {
-                const now = new Date().getTime();
                 //Check whether it's time to end the fade
+                //(By a cancel request)
+                if (this.operationToken == YouTubeFader.cancelOperationToken) {
+                    clearInterval(clearIntervalId);
+                    const message =
+                        'YouTubeFader::Linear fade aborted due to cancelling.';
+                    console.warn(message);
+                    //this.operationToken = YouTubeFader.cancelOperationToken;
+                    reject(message);
+                    return;
+                }
+
                 //(By a subsequent operation)
                 if (this.operationToken != currentOperationToken) {
                     clearInterval(clearIntervalId);
                     this.cancel();
                     const message =
-                        'YouTubeFader::Linear fade aborted due to cancelling or a subsequent fade operation.';
+                        'YouTubeFader::Linear fade aborted due to a subsequent fade operation.';
                     console.warn(message);
                     //Set exactly to the expected end volume, starting from there for the next fade
                     this.audioVolume = to;
@@ -326,6 +340,7 @@ export default class YouTubeFader implements IAudioFader {
                 }
 
                 //(by time is up)
+                const now = new Date().getTime();
                 if (now >= endTime) {
                     clearInterval(clearIntervalId);
                     this.cancel();

@@ -65,7 +65,7 @@ import {
     PlayerStateChangeCallback,
     usePlayer,
 } from '@vue-youtube/core';
-import { PropType, Ref, computed, onUnmounted, ref, watch } from 'vue';
+import { PropType, Ref, computed, onBeforeUnmount, ref, watch } from 'vue';
 import { getCurrentInstance } from 'vue';
 import { createManager } from '@vue-youtube/core';
 import type { Player } from '@vue-youtube/shared';
@@ -239,25 +239,27 @@ let onFadingChangedSubsription: Subscription;
 
 /** Teardown of the YouTube player and handler.
  */
-onUnmounted(() => {
+onBeforeUnmount(() => {
     destroyHandler();
 });
 
 /** Properly destroy the handler, and abandon the YouTube player, including it's handlers */
 function destroyHandler(): void {
-    if (mediaHandler.value) {
-        audio.removeMediaHandler(mediaHandler.value);
-        //properly destroy the audio element and the audio context
-        mediaHandler.value.stop();
-        mediaHandler.value.pause();
-    }
-
     // cancel the internal event handlers
     onPauseChangedSubsription.cancel();
     onFadingChangedSubsription.cancel();
 
+    if (mediaHandler.value) {
+        audio.removeMediaHandler(mediaHandler.value);
+
+        mediaHandler.value.destroy();
+        mediaHandler.value = null;
+    }
+
     if (instance.value) {
+        instance.value.stopVideo();
         instance.value.destroy();
+        instance.value = undefined;
     }
     console.log('TrackYouTubeElement:destroyed');
 }

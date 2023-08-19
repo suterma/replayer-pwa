@@ -111,6 +111,19 @@ export default class HtmlMediaHandler implements IMediaHandler {
         );
     }
 
+    public destroy(): void {
+        // self
+        this.onPausedChanged.cancelAll();
+        this.onPausedChanged.cancelAll();
+        this.onSeekingChanged.cancelAll();
+        this.onSeeked.cancelAll();
+        this.onCurrentTimeChanged.cancelAll();
+        this.onEnded.cancelAll();
+
+        // fader
+        this.fader.destroy();
+    }
+
     // --- fading ---
 
     /** Gets the audio fading handler

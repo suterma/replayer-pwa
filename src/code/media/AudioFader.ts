@@ -62,6 +62,10 @@ export default class AudioFader implements IAudioFader {
         };
     }
 
+    public destroy(): void {
+        //TODO copy over the canceling code from the youtube fader
+    }
+
     updateSettings(
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         fadeInDuration: number = 1000,
