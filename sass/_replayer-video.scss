@@ -102,10 +102,15 @@
 .video-container,
 .video {
     width: 100%;
+    max-height: 100%;
+    // Unfortunately, these tranistions do not work
+    // transition: max-height 200ms ease-in-out;
 }
 
 /** limit height for a small video view, by default */
 .video-container.is-small,
 .video.is-small {
     max-height: 33vh;
+    // Unfortunately, these tranistions do not work
+    // transition: max-height 200ms ease-in-out;
 }

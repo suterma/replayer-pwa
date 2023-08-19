@@ -17,6 +17,21 @@
                 </div>
             </div>
             <template v-if="props.modelValue">
+                <!-- Video size toggler -->
+                <div class="level-item has-text-left">
+                    <div class="field is-horizontal">
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <LabeledCheckbox
+                                        v-model="vModelSmallVideo"
+                                        label="Limit video height"
+                                    ></LabeledCheckbox>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- Caption toggler -->
                 <div class="level-item has-text-left">
                     <div class="field is-horizontal">
@@ -85,6 +100,13 @@ const props = defineProps({
         required: false,
         default: true,
     },
+    /** Whether to show the video in a small canvas.
+     */
+    smallVideo: {
+        type: Boolean,
+        required: false,
+        default: true,
+    },
     /** The title of the track */
     title: {
         type: String,
@@ -135,7 +157,7 @@ const cueTextTrack: Ref<TextTrack | null> = ref(null);
 
 // --- visibility ---
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'update:smallVideo']);
 
 const vModel = computed<boolean>({
     get(): boolean {
@@ -143,6 +165,14 @@ const vModel = computed<boolean>({
     },
     set(value): void {
         emit('update:modelValue', value);
+    },
+});
+const vModelSmallVideo = computed<boolean>({
+    get(): boolean {
+        return props.smallVideo;
+    },
+    set(value): void {
+        emit('update:smallVideo', value);
     },
 });
 

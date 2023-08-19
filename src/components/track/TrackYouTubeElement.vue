@@ -355,10 +355,17 @@ watch(
     height: 100%;
 }
 
-/** For the small video view, limit the height */
-.video-container.youtube .video.youtube.is-small iframe,
-.video.youtube.is-small::after {
-    max-height: 33vh;
+/** For the small video view (on larger screens), limit the height */
+@media screen and (min-width: 654px) {
+    /** For the small video view, limit the height */
+    .video-container.youtube .video.youtube.is-small iframe,
+    .video.youtube.is-small::after {
+        max-height: 33vh;
+    }
+
+    .video-container.youtube .video.youtube.is-small {
+        padding-bottom: 33vh;
+    }
 }
 </style>
 

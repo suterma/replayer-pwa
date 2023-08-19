@@ -25,7 +25,7 @@
                                 <p class="control">
                                     <LabeledCheckbox
                                         v-model="vModelSmallVideo"
-                                        label="Small video display"
+                                        label="Limit video height"
                                     ></LabeledCheckbox>
                                 </p>
                             </div>

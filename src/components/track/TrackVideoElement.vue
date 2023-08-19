@@ -3,6 +3,7 @@
         v-show="showVideo && props.enableVideo"
         class="block video-container"
         :class="{
+            'is-small': smallVideo,
             'is-loading': isLoading,
             paused: isPaused,
             seeking: isSeeking,
@@ -18,6 +19,7 @@
             ref="videoElement"
             class="video"
             :class="{
+                'is-small': smallVideo,
                 'is-loading': isLoading,
                 paused: isPaused,
                 seeking: isSeeking,
@@ -76,6 +78,7 @@
     <div v-if="isParentMounted && mediaUrl && props.enableVideo" class="block">
         <VideoTextTrackController
             v-model="showVideo"
+            v-model:smallVideo="smallVideo"
             :trackId="trackId"
             :cues="cues"
             :title="title"
@@ -181,6 +184,7 @@ const props = defineProps({
 // --- visibility ---
 
 const showVideo = ref(true);
+const smallVideo = ref(true);
 
 // --- Media Setup ---
 
