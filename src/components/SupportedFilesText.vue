@@ -1,7 +1,7 @@
 <template>
     <!-- Shows a complete info on desktop, but a shorter and simpler text on smaller devices -->
     <div class="is-hidden-touch">
-        <p>Supported media formats (desktop):</p>
+        <p>Supported file formats, for tracks:</p>
         <div class="content">
             <ul>
                 <li>
@@ -36,15 +36,32 @@
                     <span
                         >&nbsp;(<span class="is-family-monospace">.aac</span
                         ><span>,&nbsp;</span
-                        ><span class="is-family-monospace">.m4a</span>)</span
-                    >
-                    <span class="has-text-weight-bold">MPEG-4 Part 14</span>
-                    <span
-                        >&nbsp;(<span class="is-family-monospace">.mp4</span
-                        >)</span
+                        ><span class="is-family-monospace">.m4a</span
+                        >),&nbsp;</span
                     >
 
-                    ,&nbsp;for a track.
+                    <span class="has-text-weight-bold">MP4</span>
+                    <span
+                        >&nbsp;(<span class="is-family-monospace"
+                            >.mp4,.m4a,.m4p,.m4b,.m4r,.m4v</span
+                        >),&nbsp;</span
+                    >
+
+                    <span class="has-text-weight-bold">WebM</span>
+                    <span
+                        >&nbsp;(<span class="is-family-monospace">.webm</span
+                        >),&nbsp;</span
+                    >
+
+                    <span class="has-text-weight-bold">Ogg Theora</span>
+                    <span
+                        >&nbsp;(<span class="is-family-monospace"
+                            >.ogv,.ogg</span
+                        >)&nbsp;</span
+                    >
+                </li>
+                <li>
+                    <span class="has-text-weight-bold">YouTube</span>
                 </li>
                 <li>
                     <span class="has-text-weight-bold">TEXT</span>
@@ -55,7 +72,7 @@
                 </li>
             </ul>
         </div>
-        <p>Compilations, with multiple tracks:</p>
+        <p>Compilations files (with multiple tracks):</p>
         <div class="content">
             <ul>
                 <li>
@@ -77,7 +94,7 @@
     </div>
 
     <div class="is-hidden-desktop">
-        <p>Supported media formats:</p>
+        <p>Supported file formats:</p>
         <div class="content">
             <ul>
                 <li>
@@ -92,7 +109,13 @@
                     <span class="has-text-weight-bold">AIFF</span>
                     ,&nbsp;
                     <span class="has-text-weight-bold">AAC</span>
-                    ,&nbsp;for a track.
+                    ,&nbsp;
+                    <span class="has-text-weight-bold">MP4</span>
+                    ,&nbsp;
+                    <span class="has-text-weight-bold">WebM</span>
+                    ,&nbsp;
+                    <span class="has-text-weight-bold">YouTube</span>
+                    ,&nbsp;for a playback track.
                 </li>
                 <li>
                     <span class="has-text-weight-bold">TEXT</span>
@@ -100,9 +123,10 @@
                 </li>
                 <li>
                     <span class="has-text-weight-bold">ZIP</span
-                    >&nbsp;(including media files)&nbsp;<br />
-                    <span class="has-text-weight-bold">XML</span> (with URLs to
-                    online media resources),&nbsp; <br />for a compilation.
+                    >&nbsp;(including multiple tracks and files)&nbsp;<br />
+                    <span class="has-text-weight-bold">XML</span> (including
+                    multiple tracks with URLs to online resources),&nbsp;
+                    <br />for a compilation.
                 </li>
             </ul>
         </div>

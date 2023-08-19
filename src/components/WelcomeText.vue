@@ -4,7 +4,7 @@
     </p>
     <p>
         <a
-            href="https://replayer.app/documentation-app"
+            href="https://replayer.app/documentation/audio-formats"
             alt="Link to the Replayer app documentation"
             target="_blank"
             >Learn more...</a
