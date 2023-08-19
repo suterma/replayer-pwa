@@ -5,6 +5,7 @@
             :id="'track-youtube-element-' + trackId"
             class="block video-container youtube"
             :class="{
+                'is-small': smallVideo,
                 'is-loading': isLoading,
                 paused: isPaused,
                 fading: isFading !== FadingMode.None,
@@ -22,6 +23,7 @@
             <div
                 class="video youtube"
                 :class="{
+                    'is-small': smallVideo,
                     'is-loading': isLoading,
                     paused: isPaused,
                     fading: isFading !== FadingMode.None,
@@ -48,6 +50,7 @@
     <div v-if="url && !hasNotAllowedError" class="block">
         <YoutubeTextTrackController
             v-model="showVideo"
+            v-model:smallVideo="smallVideo"
             :trackId="trackId"
             :cues="cues"
             :title="title"
@@ -122,6 +125,7 @@ const props = defineProps({
 // --- visibility ---
 
 const showVideo = ref(true);
+const smallVideo = ref(true);
 
 // --- player setup ---
 
@@ -349,9 +353,9 @@ watch(
     height: 100%;
 }
 
-/** For the edit view, limit the height */
-.track.is-editable .video-container.youtube .video.youtube iframe,
-.track.is-editable .video.youtube::after {
+/** For the small video view, limit the height */
+.video-container.youtube .video.youtube.is-small iframe,
+.video.youtube.is-small::after {
     max-height: 33vh;
 }
 </style>

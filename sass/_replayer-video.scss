@@ -104,8 +104,8 @@
     width: 100%;
 }
 
-/** limit height on edit, by default */
-.track.is-editable .video-container,
-.track.is-editable .video {
+/** limit height for a small video view, by default */
+.video-container.is-small,
+.video.is-small {
     max-height: 33vh;
 }

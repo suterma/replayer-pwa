@@ -16,11 +16,25 @@
                     </div>
                 </div>
             </div>
-            <!-- <template v-if="props.modelValue"> -->
-            <!-- //TODO later implement the youtube captions -->
-            <template v-if="false">
-                <!-- Caption toggler -->
+            <template v-if="props.modelValue">
+                <!-- Video size toggler -->
                 <div class="level-item has-text-left">
+                    <div class="field is-horizontal">
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <LabeledCheckbox
+                                        v-model="vModelSmallVideo"
+                                        label="Small video display"
+                                    ></LabeledCheckbox>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Caption toggler -->
+                <!-- //TODO later implement the youtube captions -->
+                <!-- <div class="level-item has-text-left">
                     <div class="field is-horizontal">
                         <div class="field-body">
                             <div class="field">
@@ -33,9 +47,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- Size toggler -->
-                <div class="level-item has-text-left">
+                </div> -->
+                <!-- Caption size toggler -->
+                <!-- <div class="level-item has-text-left">
                     <div class="field is-horizontal">
                         <div class="field-body">
                             <div class="field">
@@ -48,9 +62,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!-- Position toggler -->
-                <div class="level-item has-text-left">
+                <!-- <div class="level-item has-text-left">
                     <div class="field is-horizontal">
                         <div class="field-body">
                             <div class="field">
@@ -63,7 +77,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </template>
         </div>
         <div class="level-right"></div>
@@ -71,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, Ref, computed, ref, watchEffect } from 'vue';
+import { PropType, computed } from 'vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 import { ICue } from '@/store/compilation-types';
 
@@ -84,6 +98,13 @@ const props = defineProps({
     /** Whether to show the video. Includes showing these controls (except the showVideo toggler)
      */
     modelValue: {
+        type: Boolean,
+        required: false,
+        default: true,
+    },
+    /** Whether to show the video in a small canvas.
+     */
+    smallVideo: {
         type: Boolean,
         required: false,
         default: true,
@@ -110,16 +131,16 @@ const props = defineProps({
 
 // --- VTT state ---
 
-const showCaptions = ref(true);
-const largeCaptions = ref(true);
+// const showCaptions = ref(true);
+// const largeCaptions = ref(true);
 
 // --- styling and position (NOTE: VTTRegion is not available on Chrome and other browsers)
 
-const centerPosition = ref(true);
+//const centerPosition = ref(true);
 
 // --- visibility ---
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'update:smallVideo']);
 
 const vModel = computed<boolean>({
     get(): boolean {
@@ -127,6 +148,14 @@ const vModel = computed<boolean>({
     },
     set(value): void {
         emit('update:modelValue', value);
+    },
+});
+const vModelSmallVideo = computed<boolean>({
+    get(): boolean {
+        return props.smallVideo;
+    },
+    set(value): void {
+        emit('update:smallVideo', value);
     },
 });
 </script>

@@ -11320,7 +11320,7 @@ button.dropdown-item:disabled:hover {
   border-color: #7a8288;
   border-width: 1px;
   border-style: solid;
-  /* text-shadow: 1px 1px 1px rgba(10, 10, 10, 0.3); */
+  text-shadow: 1px 1px 1px rgba(10, 10, 10, 0.3);
 }
 
 /** Use available horizontal space, but limit height */
@@ -11329,9 +11329,9 @@ button.dropdown-item:disabled:hover {
   width: 100%;
 }
 
-/** limit height on edit, by default */
-.track.is-editable .video-container,
-.track.is-editable .video {
+/** limit height for a small video view, by default */
+.video-container.is-small,
+.video.is-small {
   max-height: 33vh;
 }
 
