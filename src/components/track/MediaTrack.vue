@@ -403,11 +403,11 @@
                     :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
                 ></TrackVideoElement>
                 <div
+                    v-if="CompilationHandler.isYoutubeVideoTrack(track)"
                     class="is-experimental"
                     title="EXPERIMENTAL - use with caution "
                 >
                     <TrackYouTubeElement
-                        v-if="CompilationHandler.isYoutubeVideoTrack(track)"
                         :key="track.Id"
                         :title="track.Name"
                         :url="mediaUrl"
