@@ -402,16 +402,21 @@
                     :experimentalShowWaveforms="experimentalShowWaveforms"
                     :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
                 ></TrackVideoElement>
-                <TrackYouTubeElement
-                    v-if="CompilationHandler.isYoutubeVideoTrack(track)"
-                    :key="track.Id"
-                    :title="track.Name"
-                    :url="mediaUrl"
-                    :trackId="track.Id"
-                    :cues="track.Cues"
-                    @ready="useMediaHandler"
-                    @click="setActiveTrack"
-                ></TrackYouTubeElement>
+                <div
+                    class="is-experimental"
+                    title="EXPERIMENTAL - use with caution "
+                >
+                    <TrackYouTubeElement
+                        v-if="CompilationHandler.isYoutubeVideoTrack(track)"
+                        :key="track.Id"
+                        :title="track.Name"
+                        :url="mediaUrl"
+                        :trackId="track.Id"
+                        :cues="track.Cues"
+                        @ready="useMediaHandler"
+                        @click="setActiveTrack"
+                    ></TrackYouTubeElement>
+                </div>
                 <Teleport to="#media-player" :disabled="isEditable">
                     <Transition :name="skipTransitionName">
                         <!-- 

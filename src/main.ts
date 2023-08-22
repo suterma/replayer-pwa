@@ -29,6 +29,7 @@ createApp(App)
         // this will be called for both `mounted` and `updated`
         if (binding.value) {
             el.classList.add('is-experimental');
+            el.title = 'EXPERIMENTAL - use with caution ';
         } else {
             // NOTE: This does not remove the element from the DOM/VDOM,
             // it will actually run the full vue lifecycle.

@@ -41,7 +41,7 @@
                                     href="./#/play?media=https://lib.replayer.app/your-light-by-lidija-roos.mp3&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&0.0=Intro&17.2=Verse+1&33.98=Verse+1b&49.21=Refrain&64.87=Verse+2&82.4=Verse+2b&100.89=Refrain&112.88=Refrain+Repeat&129.65=Brigde+%2B+Solo&149.86=Refrain+Reprise&161.86=Verse+3b&178.46=Refrain+Variations&224.51=Fade+Out"
                                     target="_blank"
                                 >
-                                    MP3 media, Your Light by Lidija Roos</a
+                                    MP3 audio, Your Light by Lidija Roos</a
                                 >
                             </li>
                             <li>
@@ -49,7 +49,7 @@
                                     href="./#/edit?media=https://lib.replayer.app/your-light-by-lidija-roos.mp3&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&0.0=Intro&17.2=Verse+1&33.98=Verse+1b&49.21=Refrain&64.87=Verse+2&82.4=Verse+2b&100.89=Refrain&112.88=Refrain+Repeat&129.65=Brigde+%2B+Solo&149.86=Refrain+Reprise&161.86=Verse+3b&178.46=Refrain+Variations&224.51=Fade+Out"
                                     target="_blank"
                                 >
-                                    MP3 media, Your Light by Lidija Roos (Edit
+                                    MP3 audio, Your Light by Lidija Roos (Edit
                                     Mode)</a
                                 >
                             </li>
@@ -58,7 +58,7 @@
                                     href="./#/play?media=https://lib.replayer.app/as-a-child-by-lidja-roos.aiff&title=As+A+Child+(AIFF)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
                                     target="_blank"
                                 >
-                                    AIFF media, with only 1 cue</a
+                                    AIFF audio, with only 1 cue</a
                                 >
                             </li>
                             <li>
@@ -66,7 +66,7 @@
                                     href="./#/play?media=https://lib.replayer.app/decisions-by-lidija-roos.ogg"
                                     target="_blank"
                                 >
-                                    OGG Vorbis media, without metadata</a
+                                    OGG Vorbis audio, without metadata</a
                                 >
                             </li>
                             <li>
@@ -74,7 +74,7 @@
                                     href="./#/play?media=https://lib.replayer.app/eyes-have-not-seen-by-lidija-roos.flac&title=Eyes+Have+Not+Seen&album=Not+For+Sale&artist=Lidija+Roos&0.0="
                                     target="_blank"
                                 >
-                                    FLAC media</a
+                                    FLAC audio</a
                                 >
                             </li>
                             <li>
@@ -82,7 +82,7 @@
                                     href="./#/play?media=https://lib.replayer.app/psalm-4-38-by-lidija-roos.wav&title=Psalm+4.38+(WAV)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
                                     target="_blank"
                                 >
-                                    WAV media</a
+                                    WAV audio</a
                                 >
                             </li>
                             <li>
@@ -90,7 +90,7 @@
                                     href="./#/play?media=https://lib.replayer.app/the-gift-by-lidija-roos.m4a&title=The+Gift+(AAC)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
                                     target="_blank"
                                 >
-                                    AAC media</a
+                                    AAC audio</a
                                 >
                             </li>
                             <li>
@@ -101,6 +101,38 @@
                                     Angels In Amplifiers, Full Preview Mix</a
                                 >, from the 'Mixing Secrets' Free Multitrack
                                 Download Library by Mike Senior
+                            </li>
+                            <li>
+                                <a
+                                    href="./#/play?media=https://lib.replayer.app/nasa-4k/13537_Apollo13ViewsMoon4K_YouTube4K.mp4&title=Apollo+13+Views+of+the+Moon+in+4K+(online,+715+MB)&album=https://svs.gsfc.nasa.gov/13537&artist=NASA's+Goddard+Space+Flight+Center&0.755=Intro&12.771=Sunrise&18.875=Lunar+terrain&39.065=Craters&65.374=Crater&83.432=Crater+2&96.431=Earth+rise&120.341=Trajectory&133.114=Full+moon+%26+outro"
+                                    target="_blank"
+                                >
+                                    MP4 video</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    href="./#/play?media=https://lib.replayer.app/nasa-4k/2023_Moon_Phase_North_Up_YouTubeHD.webm&title=Moon+Phases+2023+(North+Up,+YouTubeHD)&album=&artist=NASA's+Scientific+Visualization+Studio&0.0=January&25.1=February&47.383=March&72.085=April&96.058=May&120.798=June&144.763=July&169.755=August&194.203=September&218.403=October&243.082=November&267.325=December"
+                                    target="_blank"
+                                >
+                                    WebM video</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    href="./#/play?media=https://lib.replayer.app/nasa-4k/JPL-20170404-CASSINf-0001-1280x540.ogv&title=Cassini's+Grand+Finale(1280x540)&album=&artist=NASA/Jet+Propulsion+Laboratory-Caltech&0.0=Intro&46.9=Launch+and+Lift-Off&62.2=Arrival+at+Saturn&76.057=Arrival+at+Titian&117.128=The+last+assignment&166.273=Final+orbit"
+                                    target="_blank"
+                                >
+                                    Ogg Theora video</a
+                                >
+                            </li>
+                            <li class="is-experimental">
+                                <a
+                                    href="./#/play?media=https://www.youtube.com/watch?v=USetyquP_dU&title=Crawling+Back+To+You+(Tom+Petty+Cover)&album=TELEFUNKEN+Live+From+The+Lab&artist=Szlachetka&0.0=Announcement&10.455=Piano+intro&63.697=Intro+Part+II&79.605=Verse+&112.158=Verse+2&143.779=Bridge&162.299=Instrumental&263.228=Verse+3&295.321=Refrain+(variation)&326.042=Guitar+solo&445.456=Refrain&477.8=Outro+%2B+Credits"
+                                    target="_blank"
+                                >
+                                    YouTube video (experimental)</a
+                                >
                             </li>
                         </ul>
                     </div>

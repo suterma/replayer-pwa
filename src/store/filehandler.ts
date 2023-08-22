@@ -17,7 +17,7 @@ export default class FileHandler {
     }
     /** The set of accepted file extensions */
     static acceptedFileList =
-        '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.mp4,.txt';
+        '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.mp4,.m4v,.webm,.ogv,.txt';
 
     /** Returns whether the given path represents a Mac OS X resource fork.
      * @remarks Mac OS X resource forks are not processed by Replayer.
@@ -306,6 +306,8 @@ export default class FileHandler {
                 'text/plain' /*plain text*/,
                 /** Video */
                 'video/mp4' /*MP4 video*/,
+                'video/webm' /*WebM video*/,
+                'video/ogg' /*Ogg Theora video*/,
             ].includes(type)
         );
     }
@@ -343,7 +345,7 @@ export default class FileHandler {
             fileExtension,
         );
         let mimeType = undefined;
-        /** Audio */
+        // audio
         if (fileExtension == 'mp3') {
             mimeType = RezMimeTypes.AUDIO_MPEG /*mp3*/;
         } else if (fileExtension == 'wav' || fileExtension == 'wave') {
@@ -356,9 +358,16 @@ export default class FileHandler {
             mimeType = RezMimeTypes.AUDIO_AIFF /*aiff*/;
         } else if (fileExtension == 'aac' || fileExtension == 'm4a') {
             mimeType = RezMimeTypes.AUDIO_AAC /*aac*/;
-        } else if (fileExtension == 'mp4') {
+        }
+        // video
+        else if (fileExtension == 'webm') {
+            mimeType = RezMimeTypes.VIDEO_WEBM;
+        } else if (fileExtension == 'mp4' || fileExtension == 'm4v') {
             /** Video */
-            mimeType = RezMimeTypes.VIDEO_MP4 /*mp4*/;
+            mimeType = RezMimeTypes.VIDEO_MP4;
+        } else if (fileExtension == 'ogv') {
+            /** Video */
+            mimeType = RezMimeTypes.VIDEO_OGG;
         } else if (fileExtension == 'zip' || fileExtension == 'rez') {
             /** Package/Compilation */
             mimeType = RezMimeTypes.APPLICATION_ZIP /*zip*/;

@@ -49,13 +49,18 @@ export default class CompilationHandler {
         return track.Url.startsWith('https://www.youtube.com/watch?v=');
     }
 
-    /** Determines whether this is an audio track
+    /** Determines whether this is a video track
      * @devdoc track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,
      * determined when the track URL is evaluated.
      */
     static isVideoTrack(track: ITrack): boolean {
-        return track.Url.endsWith('.mp4');
+        return (
+            track.Url.endsWith('.mp4') ||
+            track.Url.endsWith('.m4v') ||
+            track.Url.endsWith('.webm') ||
+            track.Url.endsWith('.ogv')
+        );
     }
 
     /** Shuffles and returns the given tracks, using a deterministic method, based on the given seed */
