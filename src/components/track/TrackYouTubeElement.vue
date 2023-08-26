@@ -180,9 +180,9 @@ const {
         enablejsapi: 1,
         color: 'white',
         controls: 1,
-        //TODO no effect is visible here:
-        // origin: 'http://localhost:8080/',
-        //origin: 'http://127.0.0.0:8080/',
+        // Setting the playlist to the one video enables looping the single video itself
+        // See https://stackoverflow.com/a/25781957/79485
+        playlist: videoId.value,
         rel: 0,
     },
     cookie: true,

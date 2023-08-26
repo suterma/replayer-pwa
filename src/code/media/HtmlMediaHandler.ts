@@ -176,9 +176,11 @@ export default class HtmlMediaHandler implements IMediaHandler {
     private handleTimeUpdate(/*event: Event*/): void {
         this.onCurrentTimeChanged.emit(this.currentTime);
     }
+
     /** Handles the track end event of the audio element, by providing it further as event.
      */
     handleEnded(): void {
+        console.debug('HtmlMediaHandler::handleEnded');
         this.onEnded.emit();
     }
 
