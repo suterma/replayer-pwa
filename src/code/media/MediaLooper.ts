@@ -43,10 +43,12 @@ export class MediaLooper implements IMediaLooper {
         this.cancelScheduleNextTimeUpdateHandling();
         if (!this.isLoopFading && this._media.loop && this.isRangeAvailable()) {
             // Make sure we stay in the loop
-            const loopStart = this._loopStart;
-            if (loopStart != null) {
-                if (this._media.currentTime < loopStart) {
-                    this._media.seekTo(loopStart);
+            const fadeInStart = this._loopStart
+                ? this._loopStart - this._media.fader.fadeInDuration
+                : null;
+            if (fadeInStart != null) {
+                if (this._media.currentTime < fadeInStart) {
+                    this._media.seekTo(fadeInStart);
                 }
             }
 
@@ -216,7 +218,9 @@ export class MediaLooper implements IMediaLooper {
                 this._media.fader
                     .fadeOut(immediateFadeOutRequired)
                     .finally(() => {
-                        this._media.seekTo(start);
+                        this._media.seekTo(
+                            start /*- this._media.fader.fadeInDuration,*/,
+                        );
                         if (loopMode === LoopMode.Recurring) {
                             this._media.fader.fadeIn();
                             this.scheduleNextTimeUpdateHandling();

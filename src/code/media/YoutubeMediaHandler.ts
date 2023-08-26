@@ -156,6 +156,11 @@ export default class YouTubeMediaHandler implements IMediaHandler {
             return;
         }
         if (Number.isFinite(seconds)) {
+            console.debug(
+                `YouTubeMediaHandler(${this._id})::seekTo:seconds:${seconds}:`,
+            );
+
+            ..//WHy does this seemingly not seek to the beginning when in a loop??
             this._player.seekTo(seconds, true);
             this.onCurrentTimeChanged.emit(seconds); //immediately (make sure, all dependencies are updated to the new value)
         }
