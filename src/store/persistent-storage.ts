@@ -3,11 +3,9 @@ import { MediaBlob } from './types';
 import { Store } from '.';
 
 /**
- * Provides simplified access to persistent storage for the Replayer app. This
+ * Provides simplified access to persistent storage for blobs within the Replayer app. This
  * allows to keep the media files, available over
  * web app restarts.
- * //TODO later with pinia, use it directly from the pinia app store (or maybe make a specific store?)
- * @devdoc Internally decides on optimal storage type use for each entity, thus hiding this complexity from the using code.
  * @devdoc Implements a module as described in https://www.typescriptlang.org/docs/handbook/modules.html */
 export default class PersistentStorage {
     /** Persistently stores media blob data for later retrieval
