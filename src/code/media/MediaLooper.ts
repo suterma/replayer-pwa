@@ -41,36 +41,85 @@ export class MediaLooper implements IMediaLooper {
      */
     private scheduleNextTimeUpdateHandling() {
         this.cancelScheduleNextTimeUpdateHandling();
-        const expectedLoopEventTime = this._loopEnd;
-        const currentTime = this._media.currentTime;
-        if (expectedLoopEventTime != null) {
-            // estimate the expected loop event time
-            const timeout =
-                expectedLoopEventTime -
-                currentTime +
-                this.loopDetectionSafetyMarginSeconds;
+        if (!this.isLoopFading && this._media.loop && this.isRangeAvailable()) {
+            // Make sure we stay in the loop
+            const loopStart = this._loopStart;
+            if (loopStart != null) {
+                if (this._media.currentTime < loopStart) {
+                    this._media.seekTo(loopStart);
+                }
+            }
 
-            if (timeout <= 0) {
-                //due or overdue, handle immediately
-                this.handleTimeUpdateFor(currentTime);
-            } else {
-                console.debug('Scheduling to seconds:  ' + timeout);
-                this.timeoutHandle = setTimeout(() => {
-                    this.handleTimeUpdate();
-                }, timeout * 1000);
+            const loopEnd = this._loopEnd;
+            const currentTime = this._media.currentTime;
+            if (loopEnd != null) {
+                const timeout = this.getSafeTimeout(currentTime, loopEnd);
+                console.debug(
+                    `MediaLooper::scheduleNextTimeUpdateHandling:timeout: ${timeout}`,
+                );
+                if (timeout <= 0) {
+                    //due or overdue, handle immediately
+                    console.debug(
+                        `MediaLooper::scheduleNextTimeUpdateHandling:looping`,
+                    );
+                    this.handleLoop(
+                        currentTime,
+                        this.loopStart ?? 0,
+                        this.loopEnd ?? 0,
+                        this.LoopMode,
+                    );
+                } else {
+                    console.debug(
+                        `MediaLooper::scheduleNextTimeUpdateHandling:rescheduling`,
+                    );
+                    this.timeoutHandle = setTimeout(() => {
+                        this.scheduleNextTimeUpdateHandling();
+                    }, timeout * 1000);
+                }
             }
         }
     }
 
+    /** Gets the time remaining until of the loop range, with a safety margin applied for loop detection */
+    getSafeTimeout(currentTime: number, loopEnd: number) {
+        // Is the loop end at track end?
+        // NOTE: The actual end of the track should not be reached, to avoid
+        // unintended premature looping without proper loop and fadeout handling.
+        const isAtTrackEnd =
+            loopEnd >=
+            this._media.duration - this.trackDurationSafetyMarginSeconds;
+
+        if (isAtTrackEnd) {
+            return (
+                loopEnd - currentTime - this.trackDurationSafetyMarginSeconds
+            );
+        }
+
+        return loopEnd - currentTime - this.loopDetectionSafetyMarginSeconds;
+    }
+
     SetLoop(start: number, end: number, mode: LoopMode): void {
-        this._loopMode = mode;
-        this._loopStart = start;
-        this._loopEnd = end;
+        let isDirty = false;
+        if (this._loopMode !== mode) {
+            this._loopMode = mode;
+            isDirty = true;
+        }
+        if (this._loopStart !== start) {
+            this._loopStart = start;
+            isDirty = true;
+        }
+        if (this._loopEnd !== end) {
+            this._loopEnd = end;
+            isDirty = true;
+        }
 
         //Make sure that looping at least at the end does occurr,
         //even if the loop end is set beyond the track end
         this._media.loop = true;
-        this.scheduleNextTimeUpdateHandling();
+
+        if (isDirty) {
+            this.scheduleNextTimeUpdateHandling();
+        }
     }
     RemoveLoop(): void {
         this.cancelScheduleNextTimeUpdateHandling();
@@ -119,72 +168,39 @@ export class MediaLooper implements IMediaLooper {
         );
     }
 
-    /** Handles time updates for the already retrieved current time
-     * @remarks To be used when the current time is already known, to avoid an additional call
-     * @devdoc Looping is solved here by observing and handling the recurring time updates.
-     */
-    handleTimeUpdateFor(currentTime: number): void {
-        const loopMode = this.LoopMode;
-
-        console.debug(
-            'MediaLooper::handleTimeUpdateFor:currentTime:' + currentTime,
-        );
-
-        if (this._media.loop && this.isRangeAvailable()) {
-            //NOTE: by asserting above, start and end time are known to be well defined here.
-            this.handleLoop(
-                currentTime,
-                this.loopStart ?? 0,
-                this.loopEnd ?? 0,
-                loopMode,
-            );
-        }
-    }
-
-    /** Handles time updates for the already retrieved current time
-     * @remarks To be used when the current time is already known, to avoid an additional call
-     * @devdoc Looping is solved here by observing and handling the recurring time updates.
-     */
-    handleTimeUpdate(): void {
-        this.handleTimeUpdateFor(this._media.currentTime);
-    }
-
     /** An internal flag to prevent repeated fade-outs when looping */
     private isLoopFading = false;
 
     /** A safety margin for detecting the end of a track during playback
+     * while looping
      * @remarks This value was empirically determined.
      * It's dependent of CPU power and timing accurracy
      */
-    trackDurationSafetyMarginSeconds = 0.03;
+    trackDurationSafetyMarginSeconds = 0.1;
 
     /** A safety margin for detecting scheduling due loops
      * @remarks This value was empirically determined.
      * It's dependent of CPU power and timing accurracy
      */
-    loopDetectionSafetyMarginSeconds = 0.25;
+    loopDetectionSafetyMarginSeconds = 0;
 
-    /** Handles looping
+    /** Handles looping for the given timings
+     * @remarks Determines whether a loop is deemed required due to the timings and returns a boolean accordingly
      * @param {number} currentTime - The time to decide looping on
      * @param {number} start - The start of the loop in [seconds]
      * @param {number} end - The end of the loop in [seconds]
      * @param {LoopMode} loopMode - how to handle the possible loop
+     * @returns {boolean} whether looping has been executed (with preceding fading if required)
      */
     handleLoop(
         currentTime: number,
         start: number,
         end: number,
         loopMode: LoopMode,
-    ): void {
-        //Is a ranged loop due because the end of the cue has been reached?
-        const isAtCueEnd = currentTime >= end;
-        //Is a ranged loop due anyway because the end of the track (with safety margin, for safe detection) has been reached?
-        //NOTE: The actual end of the track should not be reached, to avoid unintended premature looping without proper fadeout handling.
-        const isAtCueAtTrackEnd =
-            currentTime >=
-            this._media.duration - this.trackDurationSafetyMarginSeconds;
-
-        if (isAtCueEnd || isAtCueAtTrackEnd) {
+    ): boolean {
+        //Is a ranged loop due because the end of the loop range has been reached?
+        const timeout = this.getSafeTimeout(currentTime, end);
+        if (timeout <= 0) {
             //Back to loop start (with fading)
             if (!this.isLoopFading) {
                 this.isLoopFading = true;
@@ -201,15 +217,21 @@ export class MediaLooper implements IMediaLooper {
                     .fadeOut(immediateFadeOutRequired)
                     .finally(() => {
                         this._media.seekTo(start);
-                        this.isLoopFading = false;
                         if (loopMode === LoopMode.Recurring) {
                             this._media.fader.fadeIn();
                             this.scheduleNextTimeUpdateHandling();
                         } else {
                             this._media.pause();
                         }
+                        // Reset loop fading last, because this prevents
+                        // unnecessary reschedulings during the above seek
+                        // and fade operations
+                        this.isLoopFading = false;
                     });
+
+                return true;
             }
         }
+        return false;
     }
 }

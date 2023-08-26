@@ -66,6 +66,7 @@ export interface IMediaHandler {
     seek(seconds: number): void;
 
     /** Seeks to the given time position, if the media is loaded and the position is valid.
+     * @remarks Immediately also advertises the new temporal position
      * @param {number} seconds - the temporal position, in [seconds], to seek to
      */
     seekTo(seconds: number): void;
@@ -133,10 +134,10 @@ export interface IMediaHandler {
      */
     isClickToLoadRequired: boolean;
 
-    // --- track looping ---
+    // --- looping ---
 
-    /** Gets or set the track looping.
-     * @remarks This only controls "whole track" loopig, not ranged loops.
+    /** Gets or sets whether to loop this track.
+     * @remarks This does not apply to compilation looping (looping over a set of tracks).
      */
     loop: boolean;
 }

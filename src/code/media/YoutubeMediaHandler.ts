@@ -157,7 +157,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         }
         if (Number.isFinite(seconds)) {
             this._player.seekTo(seconds, true);
-            this.onCurrentTimeChanged.emit(seconds);
+            this.onCurrentTimeChanged.emit(seconds); //immediately (make sure, all dependencies are updated to the new value)
         }
     }
 
@@ -307,10 +307,16 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     // --- track looping ---
 
+    /** Whether the player does loop
+     */
+    _isLooping = false;
+
     get loop(): boolean {
-        return false; //TODO this._player.loop;
+        return this._isLooping;
     }
     set loop(value: boolean) {
+        this._isLooping = value;
+        // NOTE: This handler maintains a playlist of one, so looping executes always on it's own track
         this._player.setLoop(value);
     }
 }
