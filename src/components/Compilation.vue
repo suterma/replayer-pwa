@@ -413,6 +413,7 @@ export default defineComponent({
         isTracksShuffled(): boolean {
             return this.playbackMode === PlaybackMode.ShuffleCompilation;
         },
+
         /** Whether the PlaybackMode is looping the tracks
          * in the compilation.
          * @remarks These are PlaybackMode.ShuffleCompilation

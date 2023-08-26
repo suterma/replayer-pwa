@@ -875,6 +875,10 @@ function useMediaHandler(handler: IMediaHandler) {
         isTrackPlaying.value = !paused;
     });
 
+    handler.onEnded.subscribe(() => {
+        emit('trackEnded');
+    });
+
     handler.fader.updateSettings(
         settings.fadeInDuration,
         settings.fadeOutDuration,

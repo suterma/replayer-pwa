@@ -1,17 +1,4 @@
-const mediaSourceUrls = [
-    {
-        name: 'audio',
-        url: 'https://lib.replayer.app/decisions-by-lidija-roos.ogg',
-    },
-    {
-        name: 'video',
-        url: 'https://lib.replayer.app/nasa-4k/2023_Moon_Phase_North_Up_YouTubeHD.webm',
-    },
-    {
-        name: 'YouTube',
-        url: 'https://www.youtube.com/watch?v=7XzhtWcepos',
-    },
-];
+import { mediaSourceUrls } from './../../fixtures/all-types-of-media-urls';
 
 mediaSourceUrls.forEach((mediaSourceUrl) => {
     describe('the cue update button', () => {
