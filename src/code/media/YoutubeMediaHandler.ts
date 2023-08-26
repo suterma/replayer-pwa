@@ -157,6 +157,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         }
         if (Number.isFinite(seconds)) {
             this._player.seekTo(seconds, true);
+            this.onCurrentTimeChanged.emit(seconds);
         }
     }
 

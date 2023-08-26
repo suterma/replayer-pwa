@@ -193,6 +193,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
         }
         if (Number.isFinite(seconds)) {
             this._media.currentTime = seconds;
+            this.handleTimeUpdate(); //immediately (make sure, all dependencies are updated to the new value)
         }
     }
 

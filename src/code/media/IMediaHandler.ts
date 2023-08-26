@@ -48,14 +48,14 @@ export interface IMediaHandler {
      */
     get duration(): number;
 
-    /** Emits a changed current time position.
+    /** Emits a changed current time position, in [seconds].
      * @remarks The change can stem fron ongoing playback and/or a seek or loop operation.
      * @param {number} currentTime - could be NaN or infinity, depending on the source
      */
     readonly onCurrentTimeChanged: SubEvent<number>;
 
     /** Gets the current time position in [seconds].
-     * @remarks This is not necessariliy the exact same value as was last emitted via {onCurrentTimeChanged}.
+     * @remarks This is not necessarily the exact same value as was last emitted via {onCurrentTimeChanged}.
      * @returns {number} currentTime - could be NaN or infinity, depending on the source
      */
     readonly currentTime: number;

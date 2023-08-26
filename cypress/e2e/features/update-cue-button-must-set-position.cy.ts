@@ -1,10 +1,24 @@
 /* eslint-disable jest/expect-expect */
 describe('the cue update button', () => {
-    it('must set the position according the current playback position', () => {
-        // ARRANGE (crete a cue at the beginning)
-        cy.visit(
-            '/#/edit?media=https://lib.replayer.app/decisions-by-lidija-roos.ogg',
+    it('must set the position according the current playback position (using an audio source)', () => {
+        checkCueUpdateFor(
+            'https://lib.replayer.app/decisions-by-lidija-roos.ogg',
         );
+    });
+
+    it('must set the position according the current playback position (using a video source)', () => {
+        checkCueUpdateFor(
+            'https://lib.replayer.app/nasa-4k/2023_Moon_Phase_North_Up_YouTubeHD.webm',
+        );
+    });
+
+    it('must set the position according the current playback position (using a YouTube source)', () => {
+        checkCueUpdateFor('https://www.youtube.com/watch?v=7XzhtWcepos');
+    });
+
+    function checkCueUpdateFor(mediaSourceUrl: string): void {
+        // ARRANGE (crete a cue at the beginning)
+        cy.visit(`/#/edit?media=${mediaSourceUrl}`);
         cy.get('button[data-cy="insert-cue"]').first().click();
 
         // ACT (go to the middle of the track)
@@ -26,6 +40,6 @@ describe('the cue update button', () => {
             .invoke('val') // call the val() method to extract the value
             .then((val) => +(val ?? '')) // convert it to a number
             .should('be.least', 50); // also compare it to a number
-        //Because it starts to play, it will eventually be greater than the set value
-    });
+        //Because it starts to play, it will eventually be greater than the set value}
+    }
 });
