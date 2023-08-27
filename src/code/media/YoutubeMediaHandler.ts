@@ -103,9 +103,9 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     /** @remarks With the YouTube player, buffering counts as playing, as it's expected to occurr only during actual playback. */
     onPausedChanged: SubEvent<boolean> = new SubEvent();
-    /** @remarks Seek events are not supported by the YouTube player */
+    /** @remarks Seek events are not supported by the YouTube player. However, this event is emitted on explicit seek operations through this API. */
     onSeekingChanged: SubEvent<boolean> = new SubEvent();
-    /** @remarks Seek events are not supported by the YouTube player. It's emitted on explicit seek operations through this API. */
+    /** @remarks Seek events are not supported by the YouTube player. However, this event is emitted on explicit seek operations through this API. */
     onSeeked: SubEvent<number> = new SubEvent();
     onCurrentTimeChanged: SubEvent<number> = new SubEvent();
     onEnded: SubEvent<void> = new SubEvent();
@@ -159,11 +159,10 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                 `YouTubeMediaHandler(${this._id})::seekTo:seconds:${seconds}:`,
             );
 
-            //TODO WHy does this seemingly not seek to the beginning when in a loop??
+            this.onSeekingChanged.emit(true);
             this._player.seekTo(seconds, true);
             this.onSeekingChanged.emit(false);
             this.onSeeked.emit(seconds);
-            //this.onCurrentTimeChanged.emit(seconds); //immediately (make sure, all dependencies are updated to the new value)
         }
     }
 
@@ -240,7 +239,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                 this._fader.fadeOut(/*immediate*/ true);
                 break;
             case PlayerState.BUFFERING:
-                // NOTE: Buffering does not affed the reported playback state
+                // NOTE: Buffering does not affect the reported playback state
                 break;
             case PlayerState.VIDEO_CUED:
                 this._isPlaying = false;

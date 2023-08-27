@@ -218,16 +218,11 @@ export class MediaLooper implements IMediaLooper {
                 this._media.fader
                     .fadeOut(immediateFadeOutRequired)
                     .finally(() => {
-                        this._media.seekTo(
-                            start,
-                            //  -
-                            //     (this._media.fader.fadeInDuration +
-                            //         this._media.fader.fadeOutDuration) /
-                            //         1000,
-                        );
+                        this._media.seekTo(start);
                         if (loopMode === LoopMode.Recurring) {
                             // Wait until the seek operation has executed
                             // NOTE: A nextTick operation seems not to work here
+                            // with all media handlers.
                             // Maybe, on a later version, the seek operation
                             // could be implemented as a promise,
                             // then use a promise-based approach
