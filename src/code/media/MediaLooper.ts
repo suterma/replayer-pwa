@@ -83,7 +83,7 @@ export class MediaLooper implements IMediaLooper {
     }
 
     /** Gets the time remaining until of the loop range, with a safety margin applied for loop detection */
-    getSafeTimeout(currentTime: number, loopEnd: number) {
+    getSafeTimeout(currentTime: number, loopEnd: number): number {
         // Is the loop end at track end?
         // NOTE: The actual end of the track should not be reached, to avoid
         // unintended premature looping without proper loop and fadeout handling.
@@ -219,11 +219,22 @@ export class MediaLooper implements IMediaLooper {
                     .fadeOut(immediateFadeOutRequired)
                     .finally(() => {
                         this._media.seekTo(
-                            start /*- this._media.fader.fadeInDuration,*/,
+                            start,
+                            //  -
+                            //     (this._media.fader.fadeInDuration +
+                            //         this._media.fader.fadeOutDuration) /
+                            //         1000,
                         );
                         if (loopMode === LoopMode.Recurring) {
-                            this._media.fader.fadeIn();
-                            this.scheduleNextTimeUpdateHandling();
+                            // Wait until the seek operation has executed
+                            // NOTE: A nextTick operation seems not to work here
+                            // Maybe, on a later version, the seek operation
+                            // could be implemented as a promise,
+                            // then use a promise-based approach
+                            window.setTimeout(() => {
+                                this._media.fader.fadeIn();
+                                this.scheduleNextTimeUpdateHandling();
+                            }, 1);
                         } else {
                             this._media.pause();
                         }

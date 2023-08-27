@@ -105,7 +105,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     onPausedChanged: SubEvent<boolean> = new SubEvent();
     /** @remarks Seek events are not supported by the YouTube player */
     onSeekingChanged: SubEvent<boolean> = new SubEvent();
-    /** @remarks Seek events are not supported by the YouTube player */
+    /** @remarks Seek events are not supported by the YouTube player. It's emitted on explicit seek operations through this API. */
     onSeeked: SubEvent<number> = new SubEvent();
     onCurrentTimeChanged: SubEvent<number> = new SubEvent();
     onEnded: SubEvent<void> = new SubEvent();
@@ -138,8 +138,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
      * @remarks During fading, the playback state is not considered as paused.
      */
     get paused(): boolean {
-        const state = this._player.getPlayerState();
-        return state !== PlayerState.PLAYING && state !== PlayerState.BUFFERING;
+        return !this._isPlaying;
     }
 
     get duration(): number {
@@ -160,9 +159,11 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                 `YouTubeMediaHandler(${this._id})::seekTo:seconds:${seconds}:`,
             );
 
-            ..//WHy does this seemingly not seek to the beginning when in a loop??
+            //TODO WHy does this seemingly not seek to the beginning when in a loop??
             this._player.seekTo(seconds, true);
-            this.onCurrentTimeChanged.emit(seconds); //immediately (make sure, all dependencies are updated to the new value)
+            this.onSeekingChanged.emit(false);
+            this.onSeeked.emit(seconds);
+            //this.onCurrentTimeChanged.emit(seconds); //immediately (make sure, all dependencies are updated to the new value)
         }
     }
 
@@ -196,41 +197,59 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     // --- media loading ---
 
+    /** Flag, whether the player is currently playing
+     * @remarks When the player was playing, any buffering event still is
+     * considered as playing
+     */
+    private _isPlaying = false;
+
     handleStateChange(state: PlayerState): void {
         this.updateCurrentTime();
 
-        if (state == PlayerState.UNSTARTED) {
-            console.debug('YouTubeMediaHandler::onStateChange:UNSTARTED');
-            this.onPausedChanged.emit(true);
-        }
-        if (state == PlayerState.ENDED) {
-            /* occurs when the video has ended */
-            console.debug('YouTubeMediaHandler::onStateChange:ENDED');
-            this.onEnded.emit();
-        }
-        if (state == PlayerState.PLAYING) {
-            console.debug('YouTubeMediaHandler::onStateChange:PLAYING');
-            //Upon reception of this event, playback has already started. Fade-in is required if not yet ongoing.
-            if (!this._fader.fading) {
-                this._fader.fadeIn().catch((message) => console.log(message));
-            }
+        console.debug(
+            `YouTubeMediaHandler::onStateChange:${PlayerState[state]}`,
+        );
 
-            this.onPausedChanged.emit(false);
-        }
-        if (state == PlayerState.PAUSED) {
-            console.debug('YouTubeMediaHandler::onStateChange:PAUSED');
-            this.onPausedChanged.emit(true);
-            //Upon reception of this event, playback has already paused.
-            //No actual fade-out is required. However, to reset the volume to the minimum, a fast fade-out is still triggered
-            this._fader.fadeOut(/*immediate*/ true);
-        }
-        if (state == PlayerState.BUFFERING) {
-            console.debug('YouTubeMediaHandler::onStateChange:BUFFERING');
-        }
-        if (state == PlayerState.VIDEO_CUED) {
-            console.debug('YouTubeMediaHandler::onStateChange:VIDEO_CUED');
-            this.onPausedChanged.emit(true);
-            this.onCanPlay.emit();
+        switch (state) {
+            case PlayerState.UNSTARTED:
+                this._isPlaying = false;
+                this.onPausedChanged.emit(true);
+                break;
+            case PlayerState.ENDED:
+                /* occurs when the video has ended */
+                this._isPlaying = false;
+                this.onEnded.emit();
+                break;
+            case PlayerState.PLAYING:
+                if (!this._isPlaying) {
+                    this._isPlaying = true;
+                    //Upon reception of this event, playback has already started. Fade-in is required if not yet ongoing.
+                    if (!this._fader.fading) {
+                        this._fader
+                            .fadeIn()
+                            .catch((message) => console.log(message));
+                    }
+                    this.onPausedChanged.emit(false);
+                }
+                break;
+            case PlayerState.PAUSED:
+                this._isPlaying = false;
+                this.onPausedChanged.emit(true);
+                //Upon reception of this event, playback has already paused.
+                //No actual fade-out is required. However, to reset the volume to the minimum, a fast fade-out is still triggered
+                this._fader.fadeOut(/*immediate*/ true);
+                break;
+            case PlayerState.BUFFERING:
+                // NOTE: Buffering does not affed the reported playback state
+                break;
+            case PlayerState.VIDEO_CUED:
+                this._isPlaying = false;
+                this.onPausedChanged.emit(true);
+                this.onCanPlay.emit();
+                break;
+
+            default:
+                throw new Error(`State ${state} is not supported.`);
         }
     }
 

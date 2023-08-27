@@ -50,8 +50,23 @@ export default class AudioFader implements IAudioFader {
 
         this.reset();
 
+        this.setupVolumeChangeEmissions();
+    }
+
+    /** Sets up emission of intentional volume changes on the element.
+     * @remarks This allows a user to control the volume direcly from the audio element controls, which
+     * are usually coupled with external input devices like Bluetooth headsets.
+     * @remarks Only changes that are not caused by automation are considered
+     */
+    setupVolumeChangeEmissions() {
         this.audio.onvolumechange = () => {
-            if (!this.fading && !this.muted && !this.audio.paused) {
+            if (
+                !this.fading &&
+                !this.muted &&
+                !this.audio.paused &&
+                /** Seeking seems to cause volume changes, thus omitted here */
+                !this.audio.seeking
+            ) {
                 const currentVolume = this.audio.volume;
                 if (currentVolume != this.masterVolume) {
                     this.masterVolume = currentVolume;
