@@ -172,12 +172,12 @@ export default defineComponent({
         ...mapState(useAppStore, [
             'compilation',
             'hasCompilation',
-            'audioTracks',
+            'mediaTracks',
         ]),
 
         orderedTracks: {
             get(): ITrack[] {
-                return this.audioTracks;
+                return this.mediaTracks;
             },
             set(value: ITrack[]) {
                 const orderedTrackIds = value.map((item) => item.Id);
