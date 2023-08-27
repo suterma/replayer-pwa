@@ -6,7 +6,7 @@
                 class="level-item has-cropped-text"
                 style="max-width: calc(100vw - 60px)"
             >
-                <h2 class="title is-4">
+                <h2 class="title is-4" :title="track.Url">
                     <slot v-if="$slots.default"></slot>
                     <TrackTitleName :name="track.Name"></TrackTitleName>
                 </h2>

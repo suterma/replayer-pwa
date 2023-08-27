@@ -167,6 +167,7 @@
                 >
                     <p
                         class="title is-4"
+                        :title="trackUrl"
                         :class="{ 'has-text-success': isActive }"
                     >
                         <TrackTitleName :name="trackName"></TrackTitleName>
