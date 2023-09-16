@@ -1,4 +1,11 @@
 <template>
+    <div class="block">
+        <TrackAudioPeaks
+            v-if="videoElement"
+            :mediaElement="videoElement"
+            :showZoomView="true"
+        ></TrackAudioPeaks>
+    </div>
     <div
         v-show="showVideo && props.enableVideo"
         class="block video-container"
@@ -114,6 +121,7 @@ import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMete
 import VideoTextTrackController from '@/components/track/VideoTextTrackController.vue';
 import FileHandler from '@/store/filehandler';
 import { ICue } from '@/store/compilation-types';
+import TrackAudioPeaks from './TrackAudioPeaks.vue';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.

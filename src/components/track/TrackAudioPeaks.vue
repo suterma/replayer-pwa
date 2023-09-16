@@ -1,22 +1,16 @@
 <template>
-    <AudioPeaks
-        :options="options"
-        :mediaElement="mediaElement"
-        :key="showZoomView.toString()"
-    >
+    <AudioPeaks :options="options" :mediaElement="mediaElement">
         <template #overview>
-            <div style="height: 50px"></div>
+            <template />
+            <!-- Using an empty template on a slot 
+         prevents the default content -->
         </template>
         <template #controls
             ><template />
             <!-- Using an empty template on a slot 
          prevents the default content -->
         </template>
-        <template #zoomview v-if="!showZoomView"
-            ><template />
-            <!-- Using an empty template on a slot 
-         prevents the default content -->
-        </template>
+        <template #zoomview> </template>
     </AudioPeaks>
 </template>
 
@@ -37,14 +31,6 @@ export default defineComponent({
         mediaElement: {
             type: HTMLMediaElement,
             required: true,
-        },
-
-        /** Whether to show the zoom view and allow zooming.
-         */
-        showZoomView: {
-            type: Boolean,
-            default: false,
-            required: false,
         },
     },
     data() {
@@ -70,7 +56,7 @@ export default defineComponent({
                     axisLabelColor: 'hsl(0, 0%, 29%)',
                 },
                 webAudio: { audioContext: new AudioContext() },
-                zoomLevels: [256, 512, 1024, 2048],
+                zoomLevels: [256],
                 playheadColor: '#fafafa',
             },
         };
