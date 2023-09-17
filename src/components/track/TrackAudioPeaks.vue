@@ -15,7 +15,8 @@
 </template>
 
 <script lang="ts">
-import AudioPeaks from 'vue-peaks/src/components/AudioPeaks.vue';
+import { AudioPeaks } from 'vue-peaks';
+import 'vue-peaks/dist/style.css';
 import { defineComponent } from 'vue';
 
 /** An audio visualizer, for a single track, using the Web Audio API.
