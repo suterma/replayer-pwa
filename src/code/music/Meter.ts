@@ -173,11 +173,9 @@ export class Meter implements IMeter {
             // get the time relative to the teporal position of the declared first beat
             const shiftedTime = seconds - meter.OriginTime;
 
-            const signatureValue =
-                meter.TimeSignature.Numerator / meter.TimeSignature.Denominator;
+            const beatsPerSecond = meter.BeatsPerMinute / 60;
 
-            const beat =
-                shiftedTime * (meter.BeatsPerMinute / 60) * signatureValue;
+            const beat = shiftedTime * beatsPerSecond;
 
             const beatNumber = _.floor(beat);
 
