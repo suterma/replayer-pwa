@@ -54,11 +54,25 @@ export const useAudioStore = defineStore(Store.Audio, () => {
         }
     }
 
+    //TODO useGesture instead of click handler
+    /** Resumes the audio context, if it's suspended.
+     * @remarks This should be called only on first user gesture, however an internal check prevents the audio context
+     * from repeated resumption.
+     */
+    function resumeContext() {
+        if (context.value.state === 'suspended') {
+            context.value.resume().then(() => {
+                console.info('audio context resumed');
+            });
+        }
+    }
+
     return {
         context,
         mediaHandlers,
         addMediaHandler,
         removeMediaHandler,
         closeContext,
+        resumeContext,
     };
 });

@@ -6,7 +6,7 @@
         <AppContextMenu :hasCompilation="hasCompilation"></AppContextMenu>
     </section>
     <!-- The pages section -->
-    <section class="section">
+    <section class="section" @click="resumeAudioContext()">
         <!-- To keep the audio within the media player component running, 
             simply keep this component alive over route changes -->
         <router-view v-slot="{ Component }">
@@ -87,6 +87,13 @@ export default defineComponent({
             'updateAcknowledgedVersion',
             'discardCompilation',
         ]),
+
+        resumeAudioContext() {
+            const audio = useAudioStore();
+            audio.resumeContext();
+
+            console.log('App.vue::resumeAudioContext done.');
+        },
 
         cleanUp() {
             console.log('App.vue::cleanUp...');
