@@ -52,7 +52,8 @@ export default defineComponent({
                 zoomview: {
                     /* container is provided and handled internally by AudioPeaks */
                     waveformColor: '#aaa',
-                    playedWaveformColor: '#52575c' /* text-grey */,
+                    playedWaveformColor:
+                        '#707070' /* one-third darker (similar to the cue button progress darkening) */,
                     axisGridlineColor: '#00000000' /* transparent */,
                     axisLabelColor: '#fafafa',
                 },
