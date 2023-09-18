@@ -131,7 +131,19 @@
                                     href="./#/play?media=https://www.youtube.com/watch?v=USetyquP_dU&title=Crawling+Back+To+You+(Tom+Petty+Cover)&album=TELEFUNKEN+Live+From+The+Lab&artist=Szlachetka&0.0=Announcement&10.455=Piano+intro&63.697=Intro+Part+II&79.605=Verse+&112.158=Verse+2&143.779=Bridge&162.299=Instrumental&263.228=Verse+3&295.321=Refrain+(variation)&326.042=Guitar+solo&445.456=Refrain&477.8=Outro+%2B+Credits"
                                     target="_blank"
                                 >
-                                    YouTube video (experimental)</a
+                                    YouTube video: Szlachetka playing Crawling
+                                    Back To You (Tom Petty Cover)
+                                    (experimental)</a
+                                >
+                            </li>
+                            <li class="is-experimental">
+                                <a
+                                    href="./#/play?media=https://www.youtube.com/watch?v=tR9FAtxBxUU&title=F%C3%BCr+immer+uf+di&album=Jodelcover&artist=Jodelklub+Edelweiss&3.581=Intro&24.206=Uf+Mueter's+Seel&70.078=Es+Glas...&99.315=Jodel&123.036=Zyt+wo+mir+no+blyybt..."
+                                    target="_blank"
+                                >
+                                    YouTube video: Jodelklub Edelweiss yodeling
+                                    Für Immer Uf Di (Patent Ochsner Cover)
+                                    (experimental)</a
                                 >
                             </li>
                         </ul>
