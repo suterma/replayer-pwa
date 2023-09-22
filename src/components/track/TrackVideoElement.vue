@@ -1,5 +1,5 @@
 <template>
-    <div class="block">
+    <div class="block" v-if="videoElement && isEditable">
         <TrackAudioPeaks
             v-if="videoElement"
             :mediaElement="videoElement"
@@ -123,6 +123,7 @@ import VideoTextTrackController from '@/components/track/VideoTextTrackControlle
 import FileHandler from '@/store/filehandler';
 import { ICue } from '@/store/compilation-types';
 import TrackAudioPeaks from './TrackAudioPeaks.vue';
+import { useRoute } from 'vue-router';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -166,7 +167,7 @@ const props = defineProps({
 
     /** The custom pre-roll duration for this track. Default is zero. */
     trackPreRoll: {
-        type: null as unknown as PropType<number>,
+        type: null as unknown as PropType<number | null>,
         required: false,
         default: 0,
     },
@@ -176,7 +177,7 @@ const props = defineProps({
      */
     disabled: Boolean,
 
-    /** Whether to enable the video output
+    /** Whether to enable the video display
      * @remarks If true, shows the video canvas and the video controls.
      * If set to false, hides the video canvas and the video controls.
      * In any case the VTT is generated and, if enabled, the audio peak level control is rendered.
@@ -188,10 +189,9 @@ const props = defineProps({
      */
     showLevelMeter: Boolean,
 
-    /** EXPERIMENTAL: Whether to show the waveforms
-     * @remarks Default is false
+    /** Whether to show the waveforms (in the edit view)
      */
-    experimentalShowWaveforms: Boolean,
+    showWaveformsOnEdit: Boolean,
 
     /** Whether the audio level meter size is large */
     levelMeterSizeIsLarge: Boolean,
@@ -201,6 +201,13 @@ const props = defineProps({
 
 const showVideo = ref(true);
 const smallVideo = ref(true);
+
+// --- route ---
+
+const route = useRoute();
+const isEditable = computed(() => {
+    return route.name == 'Edit';
+});
 
 // --- Media Setup ---
 
@@ -311,7 +318,7 @@ const fadeOutDuration = computed(() => {
 watchEffect(() => {
     const fader = mediaHandler.value?.fader;
     if (fader) {
-        fader.preRollDuration = props.trackPreRoll;
+        fader.preRollDuration = props.trackPreRoll ?? 0;
     } else {
         console.warn(
             `Pre-roll of '${props.trackPreRoll}' can not be applied; no fader available.`,

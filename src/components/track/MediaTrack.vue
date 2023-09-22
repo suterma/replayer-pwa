@@ -382,7 +382,7 @@
                     :fadeOutDuration="fadeOutDuration"
                     :addFadeInPreRoll="addFadeInPreRoll"
                     :showLevelMeter="showLevelMeter"
-                    :experimentalShowWaveforms="experimentalShowWaveforms"
+                    :showWaveformsOnEdit="showWaveformsOnEdit"
                     :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
                 ></TrackAudioElement> -->
                 <TrackVideoElement
@@ -400,7 +400,7 @@
                     @ready="useMediaHandler"
                     @click="setActiveTrack"
                     :showLevelMeter="showLevelMeter"
-                    :experimentalShowWaveforms="experimentalShowWaveforms"
+                    :showWaveformsOnEdit="showWaveformsOnEdit"
                     :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
                 ></TrackVideoElement>
                 <div
@@ -884,6 +884,10 @@ function useMediaHandler(handler: IMediaHandler) {
     handler.fader.updateSettings(
         settings.fadeInDuration,
         settings.fadeOutDuration,
+        /** Use the default pre-roll duration, only if none set on the track */
+        preRollDuration.value == null
+            ? settings.defaultPreRollDuration
+            : preRollDuration.value,
         settings.addFadeInPreRoll,
     );
 
@@ -955,7 +959,7 @@ const {
     defaultPreRollDuration,
     showLevelMeter,
     experimentalShowPositionInTrackHeader,
-    experimentalShowWaveforms,
+    showWaveformsOnEdit,
     experimentalUseTempo,
 } = storeToRefs(settings);
 
@@ -965,6 +969,7 @@ watchEffect(() => {
     mediaHandler.value?.fader?.updateSettings(
         fadeInDuration.value,
         fadeOutDuration.value,
+        preRollDuration.value,
         addFadeInPreRoll.value,
     );
 });

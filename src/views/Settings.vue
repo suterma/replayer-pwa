@@ -37,6 +37,15 @@
                     </div>
                 </div>
             </div>
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="showWaveformsOnEdit"
+                        label="Show scrollable waveforms (in the edit view)"
+                        hint="Uses more more memory and CPU power. Not applicable to YouTube videos."
+                    ></LabeledCheckbox>
+                </div>
+            </div>
         </div>
 
         <div class="box">
@@ -262,15 +271,7 @@
                     ></LabeledCheckbox>
                 </div>
             </div>
-            <div class="field">
-                <div class="control">
-                    <LabeledCheckbox
-                        v-model="experimentalShowWaveforms"
-                        label="Show scrollable waveforms"
-                        hint="Uses more more memory and CPU power"
-                    ></LabeledCheckbox>
-                </div>
-            </div>
+
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
@@ -324,10 +325,10 @@ const {
     showLevelMeter,
     keyboardShortcutTimeout,
     timeFormat,
+    showWaveformsOnEdit,
     experimentalShowPositionInTrackHeader,
     experimentalAllowTrackSharingByLink,
     experimentalMultitrack,
-    experimentalShowWaveforms,
     experimentalUseTempo,
 } = storeToRefs(settings);
 
