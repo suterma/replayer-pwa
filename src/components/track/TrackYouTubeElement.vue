@@ -63,7 +63,15 @@
 import { PlayerError, PlayerStateChangeCallback } from '@vue-youtube/shared';
 import { usePlayer } from '@vue-youtube/core';
 import { ErrorEvent } from '@vue-youtube/shared';
-import { PropType, Ref, computed, onBeforeUnmount, ref, watch } from 'vue';
+import {
+    PropType,
+    Ref,
+    computed,
+    onBeforeUnmount,
+    ref,
+    watch,
+    watchEffect,
+} from 'vue';
 import { getCurrentInstance } from 'vue';
 import { createManager } from '@vue-youtube/core';
 import type { Player } from '@vue-youtube/shared';
@@ -105,11 +113,11 @@ const props = defineProps({
      */
     cues: Array as PropType<Array<ICue>>,
 
-    /** The custom pre-roll duration for this track */
+    /** The custom pre-roll duration for this track. Default is zero. */
     trackPreRoll: {
-        type: null as unknown as PropType<number | null>,
+        type: null as unknown as PropType<number>,
         required: false,
-        default: null,
+        default: 0,
     },
 
     /** Whether to show the component in a disabled state
@@ -285,6 +293,19 @@ const fadeOutDuration = computed(() => {
     const fader = mediaHandler.value?.fader;
     const duration = fader?.fadeOutDuration ? fader?.fadeOutDuration / 1000 : 0;
     return `${duration}s`;
+});
+
+// --- Transport ---
+
+watchEffect(() => {
+    const fader = mediaHandler.value?.fader;
+    if (fader) {
+        fader.preRollDuration = props.trackPreRoll;
+    } else {
+        console.warn(
+            `Pre-roll of '${props.trackPreRoll}' can not be applied; no fader available.`,
+        );
+    }
 });
 
 // --- error handling ---

@@ -164,11 +164,11 @@ const props = defineProps({
      */
     cues: Array as PropType<Array<ICue>>,
 
-    /** The custom pre-roll duration for this track */
+    /** The custom pre-roll duration for this track. Default is zero. */
     trackPreRoll: {
-        type: null as unknown as PropType<number | null>,
+        type: null as unknown as PropType<number>,
         required: false,
-        default: null,
+        default: 0,
     },
 
     /** Whether to show the component in a disabled state
@@ -309,7 +309,14 @@ const fadeOutDuration = computed(() => {
 // --- Transport ---
 
 watchEffect(() => {
-    mediaHandler.value?.fader.preRoll = props.trackPreRoll;
+    const fader = mediaHandler.value?.fader;
+    if (fader) {
+        fader.preRollDuration = props.trackPreRoll;
+    } else {
+        console.warn(
+            `Pre-roll of '${props.trackPreRoll}' can not be applied; no fader available.`,
+        );
+    }
 });
 
 // --- Audio Metering Setup---
