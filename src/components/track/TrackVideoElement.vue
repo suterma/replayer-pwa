@@ -110,6 +110,7 @@ import {
     shallowRef,
     ShallowRef,
     watch,
+    watchEffect,
 } from 'vue';
 
 import { IMediaHandler } from '@/code/media/IMediaHandler';
@@ -162,6 +163,13 @@ const props = defineProps({
      * @remarks The cue descriptions are shown as VTT cues.
      */
     cues: Array as PropType<Array<ICue>>,
+
+    /** The custom pre-roll duration for this track */
+    trackPreRoll: {
+        type: null as unknown as PropType<number | null>,
+        required: false,
+        default: null,
+    },
 
     /** Whether to show the component in a disabled state
      * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
@@ -296,6 +304,12 @@ const fadeOutDuration = computed(() => {
     const fader = mediaHandler.value?.fader;
     const duration = fader?.fadeOutDuration ? fader?.fadeOutDuration / 1000 : 0;
     return `${duration}s`;
+});
+
+// --- Transport ---
+
+watchEffect(() => {
+    mediaHandler.value?.fader.preRoll = props.trackPreRoll;
 });
 
 // --- Audio Metering Setup---

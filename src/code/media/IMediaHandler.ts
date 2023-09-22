@@ -44,7 +44,7 @@ export interface IMediaHandler {
      */
     readonly paused: boolean;
 
-    /** Gets the duration. Might be a non-finite number, if data is not available.
+    /** Gets the media duration. Might be a non-finite number, if data is not available.
      */
     get duration(): number;
 

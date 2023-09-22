@@ -16,19 +16,23 @@ import { SubEvent } from 'sub-events';
  * This can be used as a convenient way to skip fadings.
  */
 export interface IAudioFader {
+    //TODO couldnt we just use getter/setters with properties???
     /** Updates the current settings.
      * @remarks The settings will be used for the next fade.
      * However, when the new duration is zero (no fade),
      * the cancel operation is immediately called, resetting the volume to the initial value for this case.
      * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
      * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
-     * @param {boolean} addFadeInPreRoll - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
+     * @param {boolean} preRollDuration - The amount of time to the seek backwards before a play operation. (Default: zero)
+     * @param {boolean} addFadeInPreRoll - Whether to apply an additional seek offset before fade-in operations, to compensate the fading duration. (Default: true)
      */
     updateSettings(
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         fadeInDuration: number,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         fadeOutDuration: number,
+        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+        preRollDuration: number,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         addFadeInPreRoll: boolean,
     ): void;
@@ -53,9 +57,17 @@ export interface IAudioFader {
      */
     get fadeOutDuration(): number;
 
-    /** Whether to apply the seek offset before fade-in operations, to compensate the fading duration.
+    /** Whether to apply an additional seek offset before fade-in operations, to compensate the fading duration.
      */
     get addFadeInPreRoll(): boolean;
+
+    /** Gets the amount of time to the seek backwards before a play operation.
+     */
+    get preRollDuration(): number;
+
+    /** Sets the amount of time to the seek backwards before a play operation.
+     */
+    set preRollDuration(duration: number);
 
     /** Gets the fading state.
      */

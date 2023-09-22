@@ -28,6 +28,7 @@ export default class AudioFader implements IAudioFader {
      * @param {HTMLAudioElement} audio - The audio element to act upon
      * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
      * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
+     * @param {number} preRollDuration - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
      * @param {boolean} addFadeInPreRoll - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
      * @param {number} masterVolume - The overall volume of the output. Can be used to control the output volume in addition to fadings. (Default: 1, representing full scale)
      */
@@ -38,6 +39,8 @@ export default class AudioFader implements IAudioFader {
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         fadeOutDuration: number = 500,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+        preRollDuration: number = 0,
+        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         addFadeInPreRoll: boolean = true,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         masterVolume: number = 1,
@@ -45,6 +48,7 @@ export default class AudioFader implements IAudioFader {
         this.audio = audio;
         this.fadeInDuration = fadeInDuration;
         this.fadeOutDuration = fadeOutDuration;
+        this.preRollDuration = preRollDuration;
         this.addFadeInPreRoll = addFadeInPreRoll;
         this.masterVolume = masterVolume;
 
@@ -87,6 +91,8 @@ export default class AudioFader implements IAudioFader {
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         fadeOutDuration: number = 500,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+        preRollDuration: number = 0,
+        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         addFadeInPreRoll: boolean = true,
     ): void {
         const noMoreFading =
@@ -96,6 +102,7 @@ export default class AudioFader implements IAudioFader {
             fadeOutDuration === 0;
         this.fadeInDuration = fadeInDuration;
         this.fadeOutDuration = fadeOutDuration;
+        this.preRollDuration = preRollDuration;
         this.addFadeInPreRoll = addFadeInPreRoll;
 
         if (noMoreFading) {
@@ -111,6 +118,8 @@ export default class AudioFader implements IAudioFader {
     fadeOutDuration;
     /** Whether to apply a seek offset before fade-in operations, to compensate the fading duration.*/
     addFadeInPreRoll = true;
+    /** The amount of time to the seek backwards before a play operation. (Default: zero) */
+    preRollDuration = 0;
 
     /** The master volume level
      * @remarks The master volume emulates an expected volume that is output from the fader, without any mute/solo/fading taken into account.
@@ -169,12 +178,14 @@ export default class AudioFader implements IAudioFader {
 
     // --- transport ---
 
-    /** Applies an offset/pre-roll to compensate for fade-in durations, if appliccable
+    /** Applies the pre-roll:
+     * - an general offset/pre-roll according to the setting
+     * - an offset/pre-roll to compensate for fade-in durations, if appliccable
      * @remarks At the beginning of a resource, the offset is cut off at zero.
      */
-    applyFadeInPreRoll(): void {
+    applyPreRoll(): void {
         // The offset, in seconds
-        let offset = 0;
+        let offset = this.preRollDuration;
 
         if (this.addFadeInPreRoll && this.fadeInDuration) {
             offset = offset + this.fadeInDuration / 1000;
@@ -278,7 +289,7 @@ export default class AudioFader implements IAudioFader {
                 currentMediaVolume < currentMasterAudioVolume
             ) {
                 return new Promise((resolve) => {
-                    this.applyFadeInPreRoll();
+                    this.applyPreRoll();
                     this.onFadingChanged.emit(FadingMode.FadeIn);
                     return this.fade(
                         currentMediaVolume,

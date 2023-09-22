@@ -396,6 +396,7 @@
                     :mediaUrl="mediaUrl"
                     :trackId="track.Id"
                     :cues="track.Cues"
+                    :trackPreRoll="track.PreRoll"
                     @ready="useMediaHandler"
                     @click="setActiveTrack"
                     :showLevelMeter="showLevelMeter"
@@ -413,6 +414,7 @@
                         :url="mediaUrl"
                         :trackId="track.Id"
                         :cues="track.Cues"
+                        :trackPreRoll="track.PreRoll"
                         @ready="useMediaHandler"
                         @click="setActiveTrack"
                     ></TrackYouTubeElement>

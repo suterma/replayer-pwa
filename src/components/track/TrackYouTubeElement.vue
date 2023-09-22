@@ -105,6 +105,13 @@ const props = defineProps({
      */
     cues: Array as PropType<Array<ICue>>,
 
+    /** The custom pre-roll duration for this track */
+    trackPreRoll: {
+        type: null as unknown as PropType<number | null>,
+        required: false,
+        default: null,
+    },
+
     /** Whether to show the component in a disabled state
      * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
      */
