@@ -91,8 +91,6 @@ export default defineComponent({
         resumeAudioContext() {
             const audio = useAudioStore();
             audio.resumeContext();
-
-            console.log('App.vue::resumeAudioContext done.');
         },
 
         cleanUp() {
