@@ -103,7 +103,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
 
     /** Whether to show the waveforms (on edit view)
      */
-    const showWaveformsOnEdit = useLocalStorage('showWaveformsOnEdit', true);
+    const showWaveformsOnEdit = useLocalStorage('showWaveformsOnEdit', false);
 
     /** EXPERIMENTAL: Whether to show tempo editors/display
      * @remarks Default is false
@@ -121,7 +121,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         showLevelMeter.value = true;
         keyboardShortcutTimeout.value = 1000;
         timeFormat.value = TimeFormat.Iso8601Extended;
-        showWaveformsOnEdit.value = true;
+        showWaveformsOnEdit.value = false;
         experimentalShowPositionInTrackHeader.value = false;
         experimentalAllowTrackSharingByLink.value = false;
         experimentalMultitrack.value = false;

@@ -22,6 +22,7 @@
                         unnecessary update for actually non-distinctly displayed values. -->
                     <span
                         class="has-text-left is-size-7 has-text-warning is-minimum-7-characters is-family-monospace"
+                        data-cy="current-time"
                         >{{ convertToDisplayTime(modelValue, 1) }}</span
                     >
                 </button>
@@ -67,6 +68,7 @@
                         unnecessary update for actually non-distinctly displayed values. -->
                     <span
                         class="has-text-left is-size-7 has-text-warning is-minimum-7-characters is-family-monospace"
+                        data-cy="remaining-time"
                         >{{ convertToDisplayTime(remainingTime, 1) }}</span
                     >
                 </button>

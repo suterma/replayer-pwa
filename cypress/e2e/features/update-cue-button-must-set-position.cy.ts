@@ -14,6 +14,9 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
                 .invoke('val', 50)
                 .trigger('change');
 
+            // ACT (allow the seek operation to execute, then should be at least the desired seek position)
+            cy.get('[data-cy="current-time"]').contains('00:50.');
+
             // ACT (update cue)
             cy.get('[data-cy="cue-editors"] button[data-cy="adjust-time"]')
                 .first()
