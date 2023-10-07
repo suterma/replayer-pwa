@@ -1,12 +1,13 @@
 <template>
-    <!-- Level, also on mobile 
-    NOTE: The 100% width is necessary to keep the level's right items fully a the end of the available space. -->
-    <div style="width: 100%" class="level is-mobile" :class="$attrs.class">
+    <!-- Header level with wrap for items in the left part.
+         Using flex-start on the level, to cause the parts to both 
+         begin at the same vertical position -->
+    <div class="level is-align-items-flex-start" :class="$attrs.class">
         <!-- Left side -->
-        <div class="level-left">
+        <div class="level-left level-wrap is-justify-content-flex-start">
             <!-- Expander -->
             <div
-                class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
+                class="level-item is-narrow is-flex-shrink-2"
                 v-if="isEditMode"
             >
                 <CollapsibleButton
@@ -23,45 +24,35 @@
             <!-- Slot for additional level items -->
             <slot name="left-start"></slot>
 
-            <!-- The edit part (except small-screen media edit) -->
+            <!-- The edit part -->
             <template v-if="isEditMode">
-                <!-- Title -->
-                <!-- This should shrink (break on words) if necessary (is-narrow is-flex-shrink-1) -->
-                <div
-                    class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
-                >
-                    <div class="field">
-                        <p class="control">
-                            <StyledInput
-                                class="input title has-text-weight-light is-4"
-                                :class="{ 'has-text-success': isActive }"
-                                :modelValue="trackName"
-                                @change="updateName($event.target.value)"
-                                type="text"
-                                placeholder="Track name"
-                                title="Track name"
-                                data-cy="track-name"
-                            />
-                        </p>
-                    </div>
+                <div class="level-item">
+                    <MediaEdit :trackId="trackId" :trackUrl="trackUrl">
+                        <span
+                            v-if="!isTrackMediaAvailable"
+                            class="has-text-warning"
+                        >
+                            <BaseIcon v-once :path="mdiAlert" />Media
+                            unavailable
+                        </span>
+                    </MediaEdit>
                 </div>
-                <!-- Only for wide screens, edit the media edit in the level -->
-                <div
-                    class="level-item is-narrow is-flex-shrink-2 is-hidden-widescreen-only is-hidden-desktop-only is-hidden-touch is-justify-content-flex-start"
-                >
-                    <div class="field">
-                        <p class="control">
-                            <MediaEdit :trackId="trackId" :trackUrl="trackUrl">
-                                <span
-                                    v-if="!isTrackMediaAvailable"
-                                    class="has-text-warning"
-                                >
-                                    <BaseIcon v-once :path="mdiAlert" />Media
-                                    unavailable
-                                </span>
-                            </MediaEdit>
-                        </p>
-                    </div>
+
+                <!-- Title -->
+                <!-- This should shrink (break on words) if necessary -->
+                <div class="level-item is-narrow is-flex-shrink-2">
+                    <LabeledInput label="Title">
+                        <StyledInput
+                            class="input"
+                            :class="{ 'has-text-success': isActive }"
+                            :modelValue="trackName"
+                            @change="updateName($event.target.value)"
+                            type="text"
+                            placeholder="Track name"
+                            title="Track name"
+                            data-cy="track-name"
+                        />
+                    </LabeledInput>
                 </div>
                 <CloakedPanel :revealFor="[trackArtist, trackAlbum]">
                     <template #caption
@@ -98,25 +89,14 @@
                     >
 
                     <div class="level-item">
-                        <div class="field is-horizontal">
-                            <div class="field-label is-normal">
-                                <label class="label is-single-line"
-                                    >Pre-roll</label
-                                >
-                            </div>
-                            <div class="field-body">
-                                <div class="field">
-                                    <p class="control">
-                                        <TimeInput
-                                            class="has-text-right"
-                                            :modelValue="trackPreRoll"
-                                            @update:modelValue="(value:number|null) => updatePreRoll(value)"
-                                            size="9"
-                                        />
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        <LabeledInput label="Pre-roll">
+                            <TimeInput
+                                class="has-text-right"
+                                :modelValue="trackPreRoll"
+                                @update:modelValue="(value:number|null) => updatePreRoll(value)"
+                                size="9"
+                            />
+                        </LabeledInput>
                     </div>
                 </CloakedPanel>
                 <!-- Pre-Roll (in measures) -->
@@ -132,25 +112,14 @@
                     >
 
                     <div v-experiment="true" class="level-item">
-                        <div class="field is-horizontal">
-                            <div class="field-label is-normal">
-                                <label class="label is-single-line"
-                                    >Pre-roll (measures)</label
-                                >
-                            </div>
-                            <div class="field-body">
-                                <div class="field">
-                                    <p class="control">
-                                        <MetricalEditor
-                                            differential
-                                            :modelValue="trackPreRoll"
-                                            @update:modelValue="(value:number|null) => updatePreRoll(value)"
-                                        >
-                                        </MetricalEditor>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        <LabeledInput label="Pre-roll (measures)">
+                            <MetricalEditor
+                                differential
+                                :modelValue="trackPreRoll"
+                                @update:modelValue="(value:number|null) => updatePreRoll(value)"
+                            >
+                            </MetricalEditor>
+                        </LabeledInput>
                     </div>
                 </CloakedPanel>
             </template>
@@ -188,8 +157,8 @@
         </div>
 
         <!-- Right side -->
-        <div class="level-right">
-            <div class="level-item is-justify-content-flex-end">
+        <div class="level-right is-justify-content-flex-end">
+            <div class="level-item">
                 <!-- Slot for additional level items -->
                 <slot name="left-end"></slot>
                 <PlaybackIndicator
@@ -211,17 +180,6 @@
             <slot name="right"></slot>
         </div>
     </div>
-    <!-- Extra level for the media edit, except on very large screens -->
-    <template v-if="isEditMode">
-        <div class="level is-hidden-fullhd" style="width: 100%">
-            <MediaEdit :trackId="trackId" :trackUrl="trackUrl">
-                <span v-if="!isTrackMediaAvailable" class="has-text-warning">
-                    <BaseIcon v-once :path="mdiAlert" />Media unavailable
-                </span>
-            </MediaEdit>
-        </div>
-    </template>
-    <!-- <TrackSharingDialog v-if="this.isSharing"></TrackSharingDialog> -->
 </template>
 
 <script setup lang="ts">
@@ -234,6 +192,7 @@ import CloakedPanel from '@/components/CloakedPanel.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import ArtistLevelEditor from '@/components/editor/ArtistLevelEditor.vue';
+import LabeledInput from '@/components/editor/LabeledInput.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
