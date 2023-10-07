@@ -2,8 +2,8 @@ import { mediaSourceUrls } from './../../fixtures/all-types-of-media-urls';
 
 mediaSourceUrls.forEach((mediaSourceUrl) => {
     describe('the cue update button', () => {
-        it(`must set the position according the current playback position (using an  ${mediaSourceUrl.name} source)`, () => {
-            // ARRANGE (crete a cue at the beginning)
+        it(`must set the position according the current playback position (using an ${mediaSourceUrl.name} source)`, () => {
+            // ARRANGE (create a cue at the beginning)
             cy.visit(`/#/edit?media=${mediaSourceUrl.url}`);
             cy.get('button[data-cy="insert-cue"]').first().click();
 
