@@ -108,7 +108,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
     /** EXPERIMENTAL: Whether to show tempo editors/display
      * @remarks Default is false
      */
-    const experimentalUseTempo = useLocalStorage('experimentalUseTempo', true);
+    const experimentalUseTempo = useLocalStorage('experimentalUseTempo', false);
 
     /** Returns the settings with their default value */
     function $reset() {
