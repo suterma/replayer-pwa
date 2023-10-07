@@ -103,7 +103,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
 
     /** Whether to show the waveforms (on edit view)
      */
-    const showWaveformsOnEdit = useLocalStorage('showWaveformsOnEdit', false);
+    const showWaveformsOnEdit = useLocalStorage('showWaveformsOnEdit', true);
 
     /** EXPERIMENTAL: Whether to show tempo editors/display
      * @remarks Default is false

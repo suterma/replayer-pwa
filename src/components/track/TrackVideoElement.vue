@@ -1,5 +1,5 @@
 <template>
-    <div class="block" v-if="videoElement && isEditable">
+    <div class="block" v-if="videoElement && isEditable && showWaveformsOnEdit">
         <TrackAudioPeaks
             v-if="videoElement"
             :mediaElement="videoElement"
