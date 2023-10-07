@@ -17,7 +17,7 @@ export const mediaSourceUrls = [
     {
         name: 'video (without CORS)',
         url: 'https://mars.nasa.gov/multimedia/videos/movies/20181108_PaintingCarsForMars/20181108_PaintingCarsForMars-320.mp4',
-        duration: 293.7,
+        duration: 230.8,
     },
     {
         name: 'YouTube',

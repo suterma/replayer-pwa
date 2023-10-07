@@ -55,7 +55,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
             ).should('have.attr', 'title', 'Track is playing');
         });
 
-        it(`should loop for the "loop cue" play mode (using an  ${mediaSourceUrl.name} source)`, () => {
+        it(`should loop for the "loop cue" play mode (using a ${mediaSourceUrl.name} source)`, () => {
             // ARRANGE (set cue track play mode)
             cy.visit(
                 `/#/play?${mediaSourceUrl.duration - 2.0}=ending-cue&media=${
