@@ -229,6 +229,10 @@ export default class FileHandler {
                         'aif',
                         'aac',
                         'm4a',
+                        'webm',
+                        'mp4',
+                        'm4v',
+                        'ogv',
                         'txt',
                     ].includes(fileExtension)
                 ) {

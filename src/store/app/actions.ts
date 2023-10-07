@@ -699,9 +699,16 @@ export const actions = {
         const message = useMessageStore();
 
         return new Promise((resolve, reject) => {
-            if (!FileHandler.isValidHttpUrl(url)) {
+            if (
+                !(
+                    FileHandler.isValidHttpUrl(url) &&
+                    FileHandler.isSupportedMediaFileName(url)
+                )
+            ) {
                 message.popProgress();
-                reject(`Provided input is not a valid media URL: '${url}'`);
+                reject(
+                    `Provided input is not a valid media URL or is not supported: '${url}'. See the documentation for supported media types.`,
+                );
             }
 
             message.pushProgress(`Using URL '${url}'...`);
