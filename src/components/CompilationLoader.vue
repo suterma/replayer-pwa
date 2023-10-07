@@ -1,4 +1,8 @@
-<template><div></div></template>
+<template>
+    <div>
+        <!-- Compilation loader -->
+    </div>
+</template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';

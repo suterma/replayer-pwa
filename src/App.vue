@@ -5,9 +5,12 @@
     >
         <AppContextMenu :hasCompilation="hasCompilation"></AppContextMenu>
     </section>
-    <!-- The pages section -->
+    <!-- The routed view section -->
+    <!-- NOTE: the same audio context is reused for all playback operations and
+         must be resumed once in the app lifetime, when used. 
+         This is solved here globally for simplicity -->
     <section class="section" @click="resumeAudioContext()">
-        <!-- To keep the audio within the media player component running, 
+        <!-- To keep the media elements' playback within the view and their track components running, 
             simply keep this component alive over route changes -->
         <router-view v-slot="{ Component }">
             <keep-alive include="Play">
@@ -154,3 +157,16 @@ export default defineComponent({
     },
 });
 </script>
+<!-- HINT: Uncomment to display the HTML structure for review -->
+<!--
+<style type="css">
+* {
+    border: 1px black solid;
+    margin: 2px;
+    padding: 2px;
+}
+*:hover {
+    background-color: pink;
+}
+</style>
+-->

@@ -1,6 +1,8 @@
 <template>
-    <div />
-    <!-- this should get removed, but empty templates are not allowed -->
+    <div>
+        <!-- ReplayerEventHandler -->
+        <!-- this should get removed, but empty templates are not allowed -->
+    </div>
 </template>
 
 <script lang="ts">
