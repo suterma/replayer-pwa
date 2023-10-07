@@ -95,7 +95,7 @@
                             </li>
                             <li>
                                 <a
-                                    href="./#/play?media=https://previews.cambridge-mt.com/ImAlright_Full_Preview.mp3"
+                                    href="./#/play?media=https://previews.cambridge-mt.com/ImAlright_Full_Preview.mp3&title=I'm+Allright&album='Mixing+Secrets'+Free+Multitrack+Download+Library+by+Mike+Senior&artist=Angels+in+Amplifiers"
                                     target="_blank"
                                 >
                                     Angels In Amplifiers, Full Preview Mix</a
