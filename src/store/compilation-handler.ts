@@ -19,7 +19,7 @@ export default class CompilationHandler {
     /** Determines whether this is a non-playable (text-only) track
      */
     static isTextTrack(track: ITrack): boolean {
-        return track.Url.endsWith('.txt');
+        return FileHandler.isTextFileName(track.Url);
     }
 
     /** Determines whether this is an audio track
@@ -28,25 +28,16 @@ export default class CompilationHandler {
      * determined when the track URL is evaluated.
      */
     static isAudioTrack(track: ITrack): boolean {
-        return (
-            track.Url.endsWith('.mp3') ||
-            track.Url.endsWith('.wav') ||
-            track.Url.endsWith('.wave') ||
-            track.Url.endsWith('.flac') ||
-            track.Url.endsWith('.ogg') ||
-            track.Url.endsWith('.aiff') ||
-            track.Url.endsWith('.aif') ||
-            track.Url.endsWith('.aac') ||
-            track.Url.endsWith('.m4a')
-        );
+        return FileHandler.isAudioFileName(track.Url);
     }
+
     /** Determines whether this is a youtube video track
      * @devdoc track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,
      * determined when the track URL is evaluated.
      */
     static isYoutubeVideoTrack(track: ITrack): boolean {
-        return track.Url.startsWith('https://www.youtube.com/watch?v=');
+        return FileHandler.isYouTubeUrl(track.Url);
     }
 
     /** Determines whether this is a video track
@@ -55,12 +46,7 @@ export default class CompilationHandler {
      * determined when the track URL is evaluated.
      */
     static isVideoTrack(track: ITrack): boolean {
-        return (
-            track.Url.endsWith('.mp4') ||
-            track.Url.endsWith('.m4v') ||
-            track.Url.endsWith('.webm') ||
-            track.Url.endsWith('.ogv')
-        );
+        return FileHandler.isVideoFileName(track.Url);
     }
 
     /** Shuffles and returns the given tracks, using a deterministic method, based on the given seed */

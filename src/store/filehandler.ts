@@ -211,33 +211,18 @@ export default class FileHandler {
         return false;
     }
     /** Returns whether the given file name (by prefix/suffix) is a supported media file name by Replayer
-     * @remarks Currently, mp3, wav, flac, ogg, aiff plus txt, with name variations, are supported
+     * @remarks Currently, some audio, video, youtube plus txt, with name variations, are supported
      */
     static isSupportedMediaFileName(fileName: string | undefined): boolean {
         let isSupportedMediaFileName = false;
         if (fileName && !FileHandler.isMacOsxMetadataFile(fileName)) {
-            const fileExtension = fileName.split('.').pop()?.toLowerCase();
-            if (fileExtension) {
-                if (
-                    [
-                        'mp3',
-                        'wav',
-                        'wave',
-                        'flac',
-                        'ogg',
-                        'aiff',
-                        'aif',
-                        'aac',
-                        'm4a',
-                        'webm',
-                        'mp4',
-                        'm4v',
-                        'ogv',
-                        'txt',
-                    ].includes(fileExtension)
-                ) {
-                    isSupportedMediaFileName = true;
-                }
+            if (
+                this.isAudioFileName(fileName) ||
+                this.isVideoFileName(fileName) ||
+                this.isYouTubeUrl(fileName) ||
+                this.isTextFileName(fileName)
+            ) {
+                isSupportedMediaFileName = true;
             }
         }
 
@@ -245,6 +230,55 @@ export default class FileHandler {
             `filehandler::isSupportedMediaFileName:fileName:'${fileName}' is isSupportedMedia?:'${isSupportedMediaFileName}'`,
         );
         return isSupportedMediaFileName;
+    }
+
+    /** Returns whether the given URL is for a YouTube video
+     */
+    static isYouTubeUrl(url: string): boolean {
+        const youTube = /^(https?:\/\/)?(www\.youtube\.com|youtu\.be)\/.+$/;
+        return youTube.test(url);
+    }
+
+    /** Returns whether the given file name (by prefix/suffix) is a supported video file name by Replayer
+     * @devdoc track types should later be determined by MIME type.
+     * For this, the MIME type should become part of the (readonly) track information,
+     * determined when the track URL is evaluated.
+     */
+    static isVideoFileName(fileName: string): boolean {
+        return (
+            fileName.endsWith('.mp4') ||
+            fileName.endsWith('.m4v') ||
+            fileName.endsWith('.webm') ||
+            fileName.endsWith('.ogv')
+        );
+    }
+
+    /** Returns whether the given file name (by prefix/suffix) is a supported audio file name by Replayer
+     * @devdoc track types should later be determined by MIME type.
+     * For this, the MIME type should become part of the (readonly) track information,
+     * determined when the track URL is evaluated.
+     */
+    static isAudioFileName(fileName: string): boolean {
+        return (
+            fileName.endsWith('.mp3') ||
+            fileName.endsWith('.wav') ||
+            fileName.endsWith('.wave') ||
+            fileName.endsWith('.flac') ||
+            fileName.endsWith('.ogg') ||
+            fileName.endsWith('.aiff') ||
+            fileName.endsWith('.aif') ||
+            fileName.endsWith('.aac') ||
+            fileName.endsWith('.m4a')
+        );
+    }
+
+    /** Returns whether the given file name (by prefix/suffix) is a supported text file name by Replayer
+     * @devdoc track types should later be determined by MIME type.
+     * For this, the MIME type should become part of the (readonly) track information,
+     * determined when the track URL is evaluated.
+     */
+    static isTextFileName(fileName: string): boolean {
+        return fileName.endsWith('.txt');
     }
 
     /** Returns whether the given MIME type is a supported package MIME type by Replayer
