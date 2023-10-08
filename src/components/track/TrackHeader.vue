@@ -44,7 +44,10 @@
 
                 <!-- Title -->
                 <div class="level-item">
-                    <LabeledInput label="Title">
+                    <LabeledInput
+                        label="Title"
+                        :class="{ 'has-text-success': isActive }"
+                    >
                         <StyledInput
                             class="input"
                             :class="{ 'has-text-success': isActive }"

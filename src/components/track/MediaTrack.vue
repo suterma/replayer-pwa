@@ -68,6 +68,7 @@
                         <!-- Title -->
                         <!-- The title is the only header element that should shrink (break on words) if necessary -->
                         <div
+                            v-if="!isEditable"
                             class="is-flex-shrink-1 ml-3"
                             @click="skipToPlayPause"
                             :class="{
