@@ -60,7 +60,7 @@
                             />
                         </p>
                         <div
-                            v-experiment="experimentalUseTempo"
+                            v-experiment="experimentalUseMeter"
                             v-if="useMeasureNumbers"
                             class="control"
                         >
@@ -71,7 +71,7 @@
                             </button>
                         </div>
                         <div
-                            v-experiment="experimentalUseTempo"
+                            v-experiment="experimentalUseMeter"
                             v-if="useMeasureNumbers"
                             class="control"
                         >
@@ -106,7 +106,7 @@
                     <div
                         v-if="useMeasureNumbers"
                         class="level-item is-flex-shrink-1"
-                        v-experiment="experimentalUseTempo"
+                        v-experiment="experimentalUseMeter"
                     >
                         <button class="button is-indicator">
                             <MeasureDifferenceDisplay
@@ -303,7 +303,7 @@ watch(
 );
 
 const settings = useSettingsStore();
-const { experimentalUseTempo } = storeToRefs(settings);
+const { experimentalUseMeter } = storeToRefs(settings);
 
 const cuePlaceholder = computed(() => `Cue description`);
 

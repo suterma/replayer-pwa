@@ -8,6 +8,9 @@
     >
         <!-- Left side -->
         <div class="level-left level-wrap is-justify-content-flex-start">
+            <!-- Slot for additional level items -->
+            <slot name="left-start"></slot>
+
             <!-- Expander -->
             <div
                 class="level-item is-narrow"
@@ -21,12 +24,9 @@
                     title="Track"
                     collapsedText="Click to expand / edit cues"
                     expandedText="Click to collapse"
-                    ><span> </span
+                    ><span></span
                 ></CollapsibleButton>
             </div>
-
-            <!-- Slot for additional level items -->
-            <slot name="left-start"></slot>
 
             <!-- The edit part -->
             <template v-if="isEditMode">
@@ -124,7 +124,7 @@
                 <!-- Pre-Roll (in measures) (hide initially, as long as no cues are set) -->
                 <CloakedPanel
                     v-if="
-                        experimentalUseTempo &&
+                        experimentalUseMeter &&
                         useMeasureNumbers &&
                         (hasCues || trackPreRoll)
                     "
@@ -355,7 +355,7 @@ onBeforeMount(() => {
 const app = useAppStore();
 
 const settings = useSettingsStore();
-const { experimentalUseTempo } = storeToRefs(settings);
+const { experimentalUseMeter } = storeToRefs(settings);
 
 const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
 

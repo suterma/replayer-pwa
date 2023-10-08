@@ -1,35 +1,6 @@
 <template>
     <div class="level is-mobile">
         <div class="level-left level-wrap">
-            <!-- BPM -->
-            <div class="level-item has-text-left">
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">Tempo</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control">
-                                <BpmEditor
-                                    class="input"
-                                    :modelValue="props.meter?.BeatsPerMinute"
-                                    @change="
-                                        updateMeterWithBpm(
-                                            Number.parseFloat(
-                                                $event.target.value,
-                                            ),
-                                        )
-                                    "
-                                    placeholder="BPM"
-                                    title="BPM (Beats per minute)"
-                                >
-                                </BpmEditor>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Time Signature -->
             <div class="level-item">
                 <div class="field is-horizontal">

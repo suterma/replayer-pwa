@@ -48,11 +48,12 @@
                 :hasCues="hasCues"
                 @click="skipToPlayPause"
             >
-                <template v-slot:left-start v-if="isMixable || isPlayable">
+                <template
+                    v-slot:left-start
+                    v-if="isMixable || isPlayable || isEditable"
+                >
                     <div class="level-item is-narrow">
-                        <!-- Playback control only when playable -->
                         <PlayPauseButton
-                            v-if="isPlayable"
                             :disabled="!canPlay"
                             :class="{
                                 'is-success': isActiveTrack,
@@ -164,17 +165,17 @@
             ></CueButtonsField>
         </div>
 
-        <!-- The tempo and cue level editors and playback bar (in edit mode for an expanded track)
+        <!-- The meter and cue level editors and playback bar (in edit mode for an expanded track)
          -->
         <Transition name="item-expand">
             <div v-if="isEditable && isExpanded" :key="track.Id" class="block">
                 <div class="block">
-                    <!-- @devdoc: TempoLevelEditor does not use the provide/inject pattern, 
+                    <!-- @devdoc: MeterLevelEditor does not use the provide/inject pattern, 
                     although it is used for the track's descendant components otherwise,
-                    because I have experienced problems with the reactivity inside TempoLevelEditor.
+                    because I have experienced problems with the reactivity inside MeterLevelEditor.
                     A standard property/event approach is used here instead. -->
-                    <TempoLevelEditor
-                        v-experiment="experimentalUseTempo"
+                    <MeterLevelEditor
+                        v-experiment="experimentalUseMeter"
                         :meter="track.Meter"
                         @update:meter="
                             (value: any /*IMeter*/): void => {
@@ -200,7 +201,7 @@
                             "
                         ><template
                             #left-end
-                            v-experiment="experimentalUseTempo"
+                            v-experiment="experimentalUseMeter"
                             v-if="hasMeter && track.UseMeasureNumbers"
                         >
                             <div class="level-item">
@@ -254,7 +255,7 @@
                                 </div>
                             </div>
                         </template>
-                    </TempoLevelEditor>
+                    </MeterLevelEditor>
                 </div>
 
                 <!-- Main container -->
@@ -278,24 +279,13 @@
                     <!-- Left side -->
                     <div class="level-left">
                         <div class="level-item is-justify-content-flex-start">
-                            <div class="buttons has-addons mb-0">
-                                <PlayPauseButton
-                                    v-focus
-                                    :disabled="!canPlay"
-                                    class="is-success mb-0"
-                                    :isLoading="isFading !== FadingMode.None"
-                                    @click="skipToPlayPause()"
-                                    title="Play from current position"
-                                    data-cy="toggle-playback"
-                                />
-                                <CreateCueButton
-                                    :disabled="!canPlay"
-                                    class="mb-0"
-                                    :isActiveTrack="isActiveTrack"
-                                    @createNewCue="createNewCue()"
-                                    data-cy="insert-cue"
-                                ></CreateCueButton>
-                            </div>
+                            <CreateCueButton
+                                :disabled="!canPlay"
+                                class="mb-0"
+                                :isActiveTrack="isActiveTrack"
+                                @createNewCue="createNewCue()"
+                                data-cy="insert-cue"
+                            ></CreateCueButton>
                         </div>
                     </div>
                     <!-- A central level item. Margins are set to provide nice-looking spacing at all widths -->
@@ -661,7 +651,7 @@ import {
     Track,
 } from '@/store/compilation-types';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
-import TempoLevelEditor from '@/components/editor/TempoLevelEditor.vue';
+import MeterLevelEditor from '@/components/editor/MeterLevelEditor.vue';
 import TrackVideoElement from '@/components/track/TrackVideoElement.vue';
 import TrackYouTubeElement from '@/components/track/TrackYouTubeElement.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
@@ -962,7 +952,7 @@ const {
     showLevelMeter,
     experimentalShowPositionInTrackHeader,
     showWaveformsOnEdit,
-    experimentalUseTempo,
+    experimentalUseMeter,
 } = storeToRefs(settings);
 
 /** Handles changes in the fading settings

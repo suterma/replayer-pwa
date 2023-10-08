@@ -52,7 +52,7 @@
                 <th class="is-size-7">Description</th>
                 <th class="is-size-7">Time</th>
                 <th
-                    v-experiment="experimentalUseTempo"
+                    v-experiment="experimentalUseMeter"
                     v-if="props.track.UseMeasureNumbers"
                     class="is-size-7"
                 >
@@ -74,7 +74,7 @@
                     <TimeDisplay :modelValue="cue.Time"></TimeDisplay>
                 </td>
                 <td
-                    v-experiment="experimentalUseTempo"
+                    v-experiment="experimentalUseMeter"
                     v-if="props.track.UseMeasureNumbers"
                 >
                     <MeasureDisplay :modelValue="cue.Time"></MeasureDisplay>
@@ -129,5 +129,5 @@ const meter = computed(() => props.track.Meter);
 provide(meterInjectionKey, readonly(meter));
 
 const settings = useSettingsStore();
-const { experimentalUseTempo } = storeToRefs(settings);
+const { experimentalUseMeter } = storeToRefs(settings);
 </script>

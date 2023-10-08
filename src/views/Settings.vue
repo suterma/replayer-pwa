@@ -275,8 +275,8 @@
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
-                        v-model="experimentalUseTempo"
-                        label="Show tempo editors / display"
+                        v-model="experimentalUseMeter"
+                        label="Show meter editors / display"
                         hint="Uses more more space"
                     ></LabeledCheckbox>
                 </div>
@@ -329,7 +329,7 @@ const {
     experimentalShowPositionInTrackHeader,
     experimentalAllowTrackSharingByLink,
     experimentalMultitrack,
-    experimentalUseTempo,
+    experimentalUseMeter,
 } = storeToRefs(settings);
 
 const router = useRouter();

@@ -105,10 +105,10 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
      */
     const showWaveformsOnEdit = useLocalStorage('showWaveformsOnEdit', false);
 
-    /** EXPERIMENTAL: Whether to show tempo editors/display
+    /** EXPERIMENTAL: Whether to show meter editors/display
      * @remarks Default is false
      */
-    const experimentalUseTempo = useLocalStorage('experimentalUseTempo', false);
+    const experimentalUseMeter = useLocalStorage('experimentalUseMeter', false);
 
     /** Returns the settings with their default value */
     function $reset() {
@@ -125,7 +125,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalShowPositionInTrackHeader.value = false;
         experimentalAllowTrackSharingByLink.value = false;
         experimentalMultitrack.value = false;
-        experimentalUseTempo.value = false;
+        experimentalUseMeter.value = false;
     }
 
     return {
@@ -142,7 +142,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalShowPositionInTrackHeader,
         experimentalAllowTrackSharingByLink,
         experimentalMultitrack,
-        experimentalUseTempo,
+        experimentalUseMeter,
         $reset,
     };
 });
