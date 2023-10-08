@@ -38,7 +38,7 @@
 
 @media screen and (min-width: 340px /* mobile */) {
     .has-player-navbar-fixed-top {
-        padding-top: calc(160px + 1em);
+        padding-top: calc(190px + 1em);
     }
 }
 
@@ -91,10 +91,9 @@
  * appear a bit bigger and more brightly bordered.
  */
 .cue.button.is-success {
-     box-shadow: 0 0 0 0.125em $success !important ;
-     border-color: $button-color !important;
-
- }
+    box-shadow: 0 0 0 0.125em $success !important ;
+    border-color: $button-color !important;
+}
 
 /** Allows to show elements in front of the player-progress background span
    * @devdoc Otherwise, due to unknown reasons, these elements would be shown behind the progress shade, regardless of that they are defined after the progress shade.
@@ -113,8 +112,39 @@
  * The active track should look like the bottom nav player widget
  * Because outlines can not have a radius, a hard shadow is used 
  */
+
+.track {
+    background-color: transparent;
+    border: solid $track-border-width;
+    border-radius: calc($radius * 4);
+    border-color: transparent;
+    margin: calc(-0.75em);
+    padding: calc(0.75em - $track-border-width);
+
+    /* controls the distance of the bottom border to the last element 
+    (NOTE: Negative values are not allowed here) */
+    padding-bottom: 0;
+}
+
+/* show a border around a track, but only in the edit mode, 
+to visually separate the many controls for different tracks.
+Not showing the border otherwise keeps the UI in non-edit modes calm */
+.track.is-editable {
+    border-color: $button-background-color;
+}
+
 .track.is-active-track {
     background-color: $button-background-color !important; /* similar to has-background-grey-dark */
-    box-shadow: 0 0 0 0.5em $button-background-color;
-    border-radius: $radius;
+}
+
+.track.block {
+    /* controls the distance between tracks (value is similar to section)
+    Use a large value to visually separate the many controls for different tracks. */
+    margin-bottom: 0.5rem;
+}
+
+.track.block.is-editable {
+    /* controls the distance between tracks (value is similar to section)
+    Use a large value to visually separate the many controls for different tracks. */
+    margin-bottom: 3rem;
 }

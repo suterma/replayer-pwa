@@ -15,25 +15,6 @@
 
 @media screen and (max-width: $tablet) {
     .section {
-        padding: 0.5rem 0.5rem;
+        padding: calc(0.75rem) calc(0.75rem);
     }
 }
-
-/* A custom block (usable instead of a section, when only vertical spacing is necessary */
-.block:not(:last-child) {
-  margin-bottom: 3rem;
-}
-
-@media screen and (max-width: $desktop) {
-  .block:not(:last-child) {
-    margin-bottom: 1.5rem;
-  }
-}
-
-@media screen and (max-width: $tablet) {
-  .block:not(:last-child) {
-    margin-bottom: 0.5rem;
-  }
-}
-
-

@@ -8,7 +8,7 @@
     >
         <!-- Left side -->
         <div class="level-left level-wrap is-justify-content-flex-start">
-            <!-- Slot for additional level items -->
+            <!-- Slot for prepending level items -->
             <slot name="left-start"></slot>
 
             <!-- Expander -->
@@ -151,25 +151,6 @@
                 </CloakedPanel>
             </template>
             <template v-else>
-                <!-- Title -->
-                <!-- The title is the only header element that should shrink (break on words) if necessary -->
-                <div
-                    class="level-item is-narrow is-flex-shrink-1"
-                    @click="$emit('click')"
-                    :class="{
-                        'is-clickable': isTrackLoaded,
-                        'has-cursor-not-allowed': !isTrackLoaded,
-                    }"
-                >
-                    <p
-                        class="title is-4"
-                        :title="trackUrl"
-                        :class="{ 'has-text-success': isActive }"
-                    >
-                        <TrackTitleName :name="trackName"></TrackTitleName>
-                    </p>
-                </div>
-
                 <!-- Artist info (should not take too much width, and hide on small displays anyways)-->
                 <div class="level-item is-hidden-mobile">
                     <p class="is-size-7">
@@ -181,13 +162,15 @@
                     </p>
                 </div>
             </template>
+            <!-- Slot for additional level items -->
+            <slot name="left-additional"></slot>
         </div>
 
         <!-- Right side -->
         <div class="level-right is-justify-content-flex-end">
             <div class="level-item">
                 <!-- Slot for additional level items -->
-                <slot name="left-end"></slot>
+                <slot name="right-start"></slot>
                 <PlaybackIndicator
                     :is-ready="!isTrackPlaying && isTrackLoaded"
                     :is-unloaded="!isTrackLoaded"
@@ -228,7 +211,6 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiAlert } from '@mdi/js';
 import { TrackViewMode } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
-import TrackTitleName from './TrackTitleName.vue';
 import { useAppStore } from '@/store/app';
 import { ITimeSignature } from '@/code/music/ITimeSignature';
 import {

@@ -14,6 +14,7 @@
 /* Stack the navbar except on very wide screens
 (navbar is currently only used for the player controls in the bottom nav bar)*/
 /* no hovering indication on the navbar*/
+/* The width for the surrounding border of tracks */
 /** Using Bulma CSS with a theme for Bulma */
 /*! bulma.io v0.9.4 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */
@@ -10637,22 +10638,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 @media screen and (max-width: 769px) {
   .section {
-    padding: 0.5rem 0.5rem;
-  }
-}
-/* A custom block (usable instead of a section, when only vertical spacing is necessary */
-.block:not(:last-child) {
-  margin-bottom: 3rem;
-}
-
-@media screen and (max-width: 1024px) {
-  .block:not(:last-child) {
-    margin-bottom: 1.5rem;
-  }
-}
-@media screen and (max-width: 769px) {
-  .block:not(:last-child) {
-    margin-bottom: 0.5rem;
+    padding: 0.75rem 0.75rem;
   }
 }
 /*************************************************************
@@ -10688,7 +10674,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 
 @media screen and (min-width: 340px) {
   .has-player-navbar-fixed-top {
-    padding-top: calc(160px + 1em);
+    padding-top: calc(190px + 1em);
   }
 }
 @media screen and (min-width: 769px) {
@@ -10756,10 +10742,39 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
  * The active track should look like the bottom nav player widget
  * Because outlines can not have a radius, a hard shadow is used 
  */
+.track {
+  background-color: transparent;
+  border: solid 5px;
+  border-radius: 16px;
+  border-color: transparent;
+  margin: -0.75em;
+  padding: calc(0.75em - 5px);
+  /* controls the distance of the bottom border to the last element 
+  (NOTE: Negative values are not allowed here) */
+  padding-bottom: 0;
+}
+
+/* show a border around a track, but only in the edit mode, 
+to visually separate the many controls for different tracks.
+Not showing the border otherwise keeps the UI in non-edit modes calm */
+.track.is-editable {
+  border-color: #3a3f44;
+}
+
 .track.is-active-track {
   background-color: #3a3f44 !important; /* similar to has-background-grey-dark */
-  box-shadow: 0 0 0 0.5em #3a3f44;
-  border-radius: 4px;
+}
+
+.track.block {
+  /* controls the distance between tracks (value is similar to section)
+  Use a large value to visually separate the many controls for different tracks. */
+  margin-bottom: 0.5rem;
+}
+
+.track.block.is-editable {
+  /* controls the distance between tracks (value is similar to section)
+  Use a large value to visually separate the many controls for different tracks. */
+  margin-bottom: 3rem;
 }
 
 /*************************************************************

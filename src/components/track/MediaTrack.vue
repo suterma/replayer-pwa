@@ -3,8 +3,8 @@
     <div
         class="track is-together-print"
         :class="{
-            'mb-5': isEditable && isExpanded,
             'is-active-track': isActiveTrack,
+            'is-inactive-track': !isActiveTrack,
             'is-editable': isEditable,
         }"
         data-cy="track"
@@ -65,6 +65,27 @@
                             @click="skipToPlayPause"
                         />
 
+                        <!-- Title -->
+                        <!-- The title is the only header element that should shrink (break on words) if necessary -->
+                        <div
+                            class="is-flex-shrink-1 ml-3"
+                            @click="skipToPlayPause"
+                            :class="{
+                                'is-clickable': isTrackLoaded,
+                                'has-cursor-not-allowed': !isTrackLoaded,
+                            }"
+                        >
+                            <p
+                                class="title is-4"
+                                :title="track.Url"
+                                :class="{ 'has-text-success': isActiveTrack }"
+                            >
+                                <TrackTitleName
+                                    :name="track.Name"
+                                ></TrackTitleName>
+                            </p>
+                        </div>
+
                         <!-- Routing controls only when mixable -->
                         <template v-if="isMixable">
                             <SoloButton
@@ -89,7 +110,16 @@
                     </div>
                 </template>
 
-                <template v-slot:left-end>
+                <template v-slot:left-additional>
+                    <span
+                        v-if="isPlayable && track.Meter?.BeatsPerMinute"
+                        class="is-size-7 level-item is-narrow has-opacity-half"
+                    >
+                        <span>{{ track.Meter?.BeatsPerMinute }}&nbsp;BPM</span>
+                    </span>
+                </template>
+
+                <template v-slot:right-start>
                     <!-- NOTE: As a component update performance optimization, 
                 the numeric value is truncated to one decimal digit, as displayed, avoiding
                 unnecessary update for actually non-distinctly displayed values. -->
@@ -99,13 +129,6 @@
                         :modelValue="Math.floor(currentPosition * 10) / 10"
                         :subSecondDigits="1"
                     ></TimeDisplay>
-
-                    <span
-                        v-if="isPlayable && track.Meter?.BeatsPerMinute"
-                        class="is-size-7 level-item is-narrow"
-                    >
-                        <span>{{ track.Meter?.BeatsPerMinute }}&nbsp;BPM</span>
-                    </span>
 
                     <!-- NOTE: In edit mode, the time is displayed as part of the transport area, not in the header -->
                     <!-- NOTE: In mix mode, the time display is not needed on individual tracks -->
