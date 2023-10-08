@@ -161,8 +161,13 @@ export const actions = {
             state.compilation.value.Tracks,
             trackId,
         );
-        if (track && track.Meter) {
-            track.Meter.BeatsPerMinute = beatsPerMinute;
+        if (track) {
+            const meter = new Meter(
+                track.Meter?.TimeSignature ?? null,
+                beatsPerMinute,
+                track.Meter?.OriginTime ?? null,
+            );
+            track.Meter = meter;
         }
     },
 

@@ -100,8 +100,7 @@
                     ></TimeDisplay>
 
                     <span
-                        v-if="isPlayable"
-                        v-experiment="experimentalUseTempo"
+                        v-if="isPlayable && track.Meter?.BeatsPerMinute"
                         class="is-size-7 level-item is-narrow"
                     >
                         <span>{{ track.Meter?.BeatsPerMinute }}&nbsp;BPM</span>
