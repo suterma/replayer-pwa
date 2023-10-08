@@ -118,6 +118,19 @@
                     >
                         <span>{{ track.Meter?.BeatsPerMinute }}&nbsp;BPM</span>
                     </span>
+                    <span
+                        v-if="isPlayable && track.Meter?.TimeSignature"
+                        class="is-size-7 level-item is-narrow has-opacity-half"
+                    >
+                        <span
+                            ><sup>{{
+                                track.Meter?.TimeSignature.Numerator
+                            }}</sup
+                            >/<sub>{{
+                                track.Meter?.TimeSignature.Denominator
+                            }}</sub></span
+                        >
+                    </span>
                 </template>
 
                 <template v-slot:right-start>
