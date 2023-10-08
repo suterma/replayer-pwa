@@ -65,7 +65,7 @@ The URL input is wider, because it should be able to easily deal with lengthy in
 
         <!-- The URL loading part -->
         <div v-if="isExpanded" class="level-item has-text-centered">
-            <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
+            <div class="ml-3 mr-3 is-single-line">&mdash; OR &mdash;</div>
         </div>
         <div
             v-if="isExpanded"
