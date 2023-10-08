@@ -80,6 +80,12 @@ const shouldReveal = computed(() => {
     if (!props.revealFor) return false;
 
     const hasContent = props.revealFor.filter((item) => {
+        // explicit check for boolean
+        if (typeof item == 'boolean') {
+            return item;
+        }
+
+        // simple thruthiness check for others
         return item ? true : false;
     });
     return hasContent.length > 0 ?? false;

@@ -102,8 +102,9 @@
                     </LabeledInput>
                 </CloakedPanel>
 
-                <!-- Pre-Roll (in time) -->
+                <!-- Pre-Roll (in time) (hide initially, as long as no cues are set) -->
                 <CloakedPanel
+                    v-if="hasCues || trackPreRoll"
                     :revealFor="[trackPreRoll]"
                     title="The custom pre-roll duration for this track in [seconds]"
                     class="level-item"
@@ -122,9 +123,13 @@
                         />
                     </LabeledInput>
                 </CloakedPanel>
-                <!-- Pre-Roll (in measures) -->
+                <!-- Pre-Roll (in measures) (hide initially, as long as no cues are set) -->
                 <CloakedPanel
-                    v-if="experimentalUseTempo && useMeasureNumbers"
+                    v-if="
+                        experimentalUseTempo &&
+                        useMeasureNumbers &&
+                        (hasCues || trackPreRoll)
+                    "
                     :revealFor="[trackPreRoll]"
                     title="The custom pre-roll duration for this track in [measures]"
                     class="level-item"
@@ -320,6 +325,12 @@ const props = defineProps({
     isTrackMediaAvailable: {
         type: Boolean,
         default: false,
+    },
+
+    /** Whether this track has any cue at all */
+    hasCues: {
+        type: Boolean,
+        required: true,
     },
 
     /** The display mode of this track.

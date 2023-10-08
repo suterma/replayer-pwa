@@ -45,6 +45,7 @@
                 :isActive="isActiveTrack"
                 :isFirst="isFirst"
                 :isLast="isLast"
+                :hasCues="hasCues"
                 @click="skipToPlayPause"
             >
                 <template v-slot:left-start>
