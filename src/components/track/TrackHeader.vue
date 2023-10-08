@@ -426,6 +426,14 @@ const isEditMode = computed(() => {
  */
 const isTrackPlaying = inject(isPlayingInjectionKey);
 </script>
+
+<style lang="scss">
+/** Tie the label texts more to the respective editor fields */
+.track.is-editable .field.is-horizontal .field-label {
+    margin-right: 0.75em; /* similar to the in-field margin */
+}
+</style>
+
 <style lang="scss" scoped>
 /** Custom modification for the level in the context of a track.
 * @remarks Allow the title text (on the left) to break between words, 

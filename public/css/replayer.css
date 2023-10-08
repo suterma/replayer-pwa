@@ -230,7 +230,8 @@ fieldset[disabled] .file-name, fieldset[disabled] .select select, .select fields
   padding: 0;
 }
 
-/* Bulma Base */ /*! minireset.css v0.0.6 | MIT License | github.com/jgthms/minireset.css */
+/* Bulma Base */
+/*! minireset.css v0.0.6 | MIT License | github.com/jgthms/minireset.css */
 html,
 body,
 p,
@@ -1488,8 +1489,8 @@ a.box:active {
 }
 .button.is-loading::after {
   position: absolute;
-  left: calc(50% - (1em * 0.5));
-  top: calc(50% - (1em * 0.5));
+  left: calc(50% - 1em * 0.5);
+  top: calc(50% - 1em * 0.5);
   position: absolute !important;
 }
 .button.is-static {
@@ -11799,7 +11800,7 @@ input[type=range].slider:not([orient=vertical]).has-output:disabled + output, in
 input[type=range].slider:not([orient=vertical]).has-output {
   display: inline-block;
   vertical-align: middle;
-  width: calc(100% - ( 4.2rem ));
+  width: calc(100% - (4.2rem));
 }
 input[type=range].slider:not([orient=vertical]).has-output + output {
   display: inline-block;
@@ -11905,7 +11906,7 @@ input[type=range].slider:disabled::-ms-thumb {
   transform: scale(1);
 }
 input[type=range].slider:not([orient=vertical]) {
-  min-height: calc(( 1rem + 2px ) * 1.25);
+  min-height: calc((1rem + 2px) * 1.25);
 }
 input[type=range].slider:not([orient=vertical])::-webkit-slider-runnable-track {
   height: 0.5rem;
@@ -11948,7 +11949,7 @@ input[type=range].slider[orient=vertical]::-webkit-slider-thumb {
   margin-left: -0.25rem;
 }
 input[type=range].slider.is-small:not([orient=vertical]) {
-  min-height: calc(( 0.85rem + 2px ) * 1.25);
+  min-height: calc((0.85rem + 2px) * 1.25);
 }
 input[type=range].slider.is-small:not([orient=vertical])::-webkit-slider-runnable-track {
   height: 0.425rem;
@@ -11991,7 +11992,7 @@ input[type=range].slider.is-small[orient=vertical]::-webkit-slider-thumb {
   margin-left: -0.2125rem;
 }
 input[type=range].slider.is-medium:not([orient=vertical]) {
-  min-height: calc(( 1.25rem + 2px ) * 1.25);
+  min-height: calc((1.25rem + 2px) * 1.25);
 }
 input[type=range].slider.is-medium:not([orient=vertical])::-webkit-slider-runnable-track {
   height: 0.625rem;
@@ -12034,7 +12035,7 @@ input[type=range].slider.is-medium[orient=vertical]::-webkit-slider-thumb {
   margin-left: -0.3125rem;
 }
 input[type=range].slider.is-large:not([orient=vertical]) {
-  min-height: calc(( 1.5rem + 2px ) * 1.25);
+  min-height: calc((1.5rem + 2px) * 1.25);
 }
 input[type=range].slider.is-large:not([orient=vertical])::-webkit-slider-runnable-track {
   height: 0.75rem;
@@ -12536,4 +12537,16 @@ a[target=_blank]:hover {
 /* elements on a slight danger-like background, but not the inputs */
 .is-experimental:not(input) {
   background-color: rgba(238, 95, 91, 0.14);
+}
+
+/*************************************************************
+ * Bulma fixes
+**************************************************************
+*/
+/** Fix the vertical alignment of the labels in a horizontal form 
+(this is a general Bulma issue, see https://github.com/jgthms/bulma/issues/3354) */
+@media screen and (min-width: 769px), print {
+  .field.is-horizontal .field-label.is-normal {
+    padding-top: 0.5em;
+  }
 }
