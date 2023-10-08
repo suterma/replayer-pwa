@@ -39,8 +39,7 @@
                 </div>
 
                 <!-- Title -->
-                <!-- This should shrink (break on words) if necessary -->
-                <div class="level-item is-narrow is-flex-shrink-2">
+                <div class="level-item">
                     <LabeledInput label="Title">
                         <StyledInput
                             class="input"
@@ -54,73 +53,98 @@
                         />
                     </LabeledInput>
                 </div>
-                <CloakedPanel :revealFor="[trackArtist, trackAlbum]">
+                <CloakedPanel
+                    :revealFor="[trackArtist, trackAlbum]"
+                    class="level-item"
+                >
                     <template #caption
                         ><span class="has-opacity-half"
                             >Artist / Album</span
                         ></template
                     >
-                    <div class="level-item is-flex-shrink-3">
-                        <ArtistLevelEditor
-                            :artist="trackArtist"
-                            @update:artist="
-                                (value) => {
-                                    updateArtist(value);
-                                }
-                            "
-                            :album="trackAlbum"
-                            @update:album="
-                                (value) => {
-                                    updateAlbum(value);
-                                }
-                            "
-                        ></ArtistLevelEditor>
-                    </div>
+
+                    <ArtistLevelEditor
+                        :artist="trackArtist"
+                        @update:artist="
+                            (value) => {
+                                updateArtist(value);
+                            }
+                        "
+                        :album="trackAlbum"
+                        @update:album="
+                            (value) => {
+                                updateAlbum(value);
+                            }
+                        "
+                    ></ArtistLevelEditor>
                 </CloakedPanel>
+
+                <CloakedPanel
+                    :revealFor="[trackBeatsPerMinute]"
+                    class="level-item"
+                >
+                    <template #caption
+                        ><span class="has-opacity-half">BPM</span></template
+                    >
+                    <LabeledInput label="BPM">
+                        <BpmEditor
+                            class="input"
+                            :modelValue="trackBeatsPerMinute"
+                            @change="
+                                updateBeatsPerMinute(
+                                    Number.parseFloat($event.target.value),
+                                )
+                            "
+                            placeholder="BPM"
+                            title="BPM (Beats per minute)"
+                        >
+                        </BpmEditor>
+                    </LabeledInput>
+                </CloakedPanel>
+
                 <!-- Pre-Roll (in time) -->
                 <CloakedPanel
                     :revealFor="[trackPreRoll]"
                     title="The custom pre-roll duration for this track in [seconds]"
+                    class="level-item"
                 >
                     <template #caption
                         ><span class="has-opacity-half"
                             >Pre-roll</span
                         ></template
                     >
-
-                    <div class="level-item">
-                        <LabeledInput label="Pre-roll">
-                            <TimeInput
-                                class="has-text-right"
-                                :modelValue="trackPreRoll"
-                                @update:modelValue="(value:number|null) => updatePreRoll(value)"
-                                size="9"
-                            />
-                        </LabeledInput>
-                    </div>
+                    <LabeledInput label="Pre-roll">
+                        <TimeInput
+                            class="has-text-right"
+                            :modelValue="trackPreRoll"
+                            @update:modelValue="(value:number|null) => updatePreRoll(value)"
+                            size="9"
+                        />
+                    </LabeledInput>
                 </CloakedPanel>
                 <!-- Pre-Roll (in measures) -->
                 <CloakedPanel
                     v-if="experimentalUseTempo && useMeasureNumbers"
                     :revealFor="[trackPreRoll]"
                     title="The custom pre-roll duration for this track in [measures]"
+                    class="level-item"
                 >
-                    <template #caption v-experiment="true"
-                        ><span class="has-opacity-half"
+                    <template #caption
+                        ><span v-experiment="true" class="has-opacity-half"
                             >Pre-roll (measures)</span
                         ></template
                     >
-
-                    <div v-experiment="true" class="level-item">
-                        <LabeledInput label="Pre-roll (measures)">
-                            <MetricalEditor
-                                differential
-                                :modelValue="trackPreRoll"
-                                @update:modelValue="(value:number|null) => updatePreRoll(value)"
-                            >
-                            </MetricalEditor>
-                        </LabeledInput>
-                    </div>
+                    <LabeledInput
+                        v-experiment="true"
+                        label="Pre-roll (measures)"
+                    >
+                        <MetricalEditor
+                            differential
+                            :modelValue="trackPreRoll"
+                            @update:modelValue="(value:number|null) => updatePreRoll(value)"
+                        >
+                        </MetricalEditor>
+                    </LabeledInput>
                 </CloakedPanel>
             </template>
             <template v-else>
@@ -192,6 +216,7 @@ import CloakedPanel from '@/components/CloakedPanel.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import ArtistLevelEditor from '@/components/editor/ArtistLevelEditor.vue';
+import BpmEditor from '@/components/editor/BpmEditor.vue';
 import LabeledInput from '@/components/editor/LabeledInput.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
@@ -358,6 +383,12 @@ function updateAlbum(album: string) {
     const name = props.trackName;
     const artist = props.trackArtist;
     app.updateTrackData(trackId, name, artist, album);
+}
+
+/** Updates the track BPM */
+function updateBeatsPerMinute(beatsPerMinute: number) {
+    const trackId = props.trackId;
+    app.updateBeatsPerMinute(trackId, beatsPerMinute);
 }
 
 /** Updates the track pre-roll */

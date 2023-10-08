@@ -153,6 +153,19 @@ export const actions = {
         }
     },
 
+    /** Updates the track BPM
+     * @remarks Also updates the persistent store of the compilation
+     */
+    updateBeatsPerMinute(trackId: string, beatsPerMinute: number): void {
+        const track = CompilationHandler.getTrackById(
+            state.compilation.value.Tracks,
+            trackId,
+        );
+        if (track && track.Meter) {
+            track.Meter.BeatsPerMinute = beatsPerMinute;
+        }
+    },
+
     /** Updates the version known as the (previously) acknowledged version
      */
     updateAcknowledgedVersion(version: string): void {

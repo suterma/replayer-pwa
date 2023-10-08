@@ -40,6 +40,7 @@
                 :trackAlbum="track.Album"
                 :trackPreRoll="track.PreRoll"
                 :isTrackLoaded="isTrackLoaded"
+                :trackBeatsPerMinute="track.Meter?.BeatsPerMinute"
                 :isTrackMediaAvailable="isMediaAvailable"
                 :isActive="isActiveTrack"
                 :isFirst="isFirst"
@@ -98,6 +99,7 @@
                     ></TimeDisplay>
 
                     <span
+                        v-if="isPlayable"
                         v-experiment="experimentalUseTempo"
                         class="is-size-7 level-item is-narrow"
                     >

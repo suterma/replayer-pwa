@@ -7,12 +7,18 @@
         collapsedText="Click to reveal"
         :iconPath="mdiPlus"
         :title="title"
+        v-bind="$attrs"
         ><span><slot name="caption"></slot></span
     ></CollapsibleButton>
     <!-- Transition for the revealing action. 
         Uses an additional element to make sure that there is a single root within the transition slot -->
     <Transition name="list">
-        <div v-if="modelValue || shouldReveal" :title="title">
+        <div
+            v-if="modelValue || shouldReveal"
+            :title="title"
+            v-bind="$attrs"
+            ref="slotContainer"
+        >
             <slot></slot>
         </div>
     </Transition>
@@ -22,16 +28,37 @@
  * @remarks Works similar to the "CollapsiblePanel" component, with some differences:
  * The caption and icon is only shown when the content is collapsed/cloaked.
  * @remarks the v-if directive is used, completely omitting collapsed content, if not displayed.
+ * @remarks When the content is reveald by user action, the first input is focused
  */
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import { mdiPlus } from '@mdi/js';
 import { PropType, computed, ref } from 'vue';
+import { nextTick } from 'process';
 
 /** Whether to show this panel as expanded */
 const modelValue = ref(false);
 
+const slotContainer = ref(null);
+
+/** Reveals the cloaked content
+ * @remarks Also focuses the first input, if existings
+ */
 function reveal() {
     modelValue.value = true;
+
+    // Since any components might not be rendered until the next DOM update,
+    // defer the actual focussing
+    // See https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks/Vue_refs_focus_management#vues_nexttick_method
+    nextTick(() => {
+        if (slotContainer.value) {
+            const slotContainerDiv = slotContainer.value as HTMLDivElement;
+            const firstInput =
+                slotContainerDiv.getElementsByTagName('input')[0];
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }
+    });
 }
 // eslint-disable-next-line no-undef
 const props = defineProps({
