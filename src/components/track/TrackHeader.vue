@@ -1,24 +1,28 @@
 <template>
     <!-- Header level with wrap for items in the left part.
-         Using flex-start on the level, to cause the parts to both 
-         begin at the same vertical position -->
-    <div class="level is-align-items-flex-start" :class="$attrs.class">
+         Using flex-start on the level, to cause the left and right parts to both 
+         begin at the same, upper vertical position -->
+    <div
+        class="level is-mobile is-align-items-flex-start"
+        :class="$attrs.class"
+    >
         <!-- Left side -->
         <div class="level-left level-wrap is-justify-content-flex-start">
             <!-- Expander -->
             <div
-                class="level-item is-narrow is-flex-shrink-2"
-                v-if="isEditMode"
+                class="level-item is-narrow"
+                v-if="isEditMode && !(/*is single track*/ (isFirst && isLast))"
             >
                 <CollapsibleButton
                     v-if="canCollapse"
-                    class="is-nav"
+                    class="is-nav has-text-warning"
                     :modelValue="isExpanded"
                     @update:modelValue="toggleExpanded"
                     title="Track"
                     collapsedText="Click to expand / edit cues"
                     expandedText="Click to collapse"
-                />
+                    ><span> </span
+                ></CollapsibleButton>
             </div>
 
             <!-- Slot for additional level items -->
@@ -58,9 +62,7 @@
                     class="level-item"
                 >
                     <template #caption
-                        ><span class="has-opacity-half"
-                            >Artist / Album</span
-                        ></template
+                        ><span class="label">Artist / Album</span></template
                     >
 
                     <ArtistLevelEditor
@@ -83,9 +85,7 @@
                     :revealFor="[trackBeatsPerMinute]"
                     class="level-item"
                 >
-                    <template #caption
-                        ><span class="has-opacity-half">BPM</span></template
-                    >
+                    <template #caption><span class="label">BPM</span></template>
                     <LabeledInput label="BPM">
                         <BpmEditor
                             class="input"
@@ -110,9 +110,7 @@
                     class="level-item"
                 >
                     <template #caption
-                        ><span class="has-opacity-half"
-                            >Pre-roll</span
-                        ></template
+                        ><span class="label">Pre-roll</span></template
                     >
                     <LabeledInput label="Pre-roll">
                         <TimeInput
@@ -135,7 +133,7 @@
                     class="level-item"
                 >
                     <template #caption
-                        ><span v-experiment="true" class="has-opacity-half"
+                        ><span v-experiment="true" class="label"
                             >Pre-roll (measures)</span
                         ></template
                     >

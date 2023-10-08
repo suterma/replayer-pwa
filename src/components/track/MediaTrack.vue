@@ -48,7 +48,7 @@
                 :hasCues="hasCues"
                 @click="skipToPlayPause"
             >
-                <template v-slot:left-start>
+                <template v-slot:left-start v-if="isMixable || isPlayable">
                     <div class="level-item is-narrow">
                         <!-- Playback control only when playable -->
                         <PlayPauseButton
