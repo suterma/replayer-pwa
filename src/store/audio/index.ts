@@ -8,7 +8,9 @@ import { IMediaHandler } from '@/code/media/IMediaHandler';
  *  @devdoc webkitAudioContext supports older versions of Safari
  */
 const AudioContext = window.AudioContext || window.webkitAudioContext;
-const audioContext = new AudioContext();
+const audioContext = new AudioContext({
+    latencyHint: 'interactive',
+});
 console.info('new audio context created');
 
 /** A store for audio-related global state */
