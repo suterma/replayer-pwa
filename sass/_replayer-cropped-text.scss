@@ -26,3 +26,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/** Unset the line-height.
+This has caused cropped "under the line-parts" in characters like "q,g"
+when the cropped text was used e.g. with the "title" class */
+.has-cropped-text * {
+    line-height: unset;
+}

@@ -86,7 +86,6 @@
                                 :track="element"
                                 :showCues="showCues"
                                 :showMediaSource="showMediaSource"
-                                class=""
                             >
                                 <!-- The track index (as part of the title) -->
                                 <span class="mr-2" v-if="showNumbering"
