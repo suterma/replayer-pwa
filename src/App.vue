@@ -112,14 +112,10 @@ export default defineComponent({
         /** Check for and handle a new version */
         handleAppUpdate() {
             // Check for and handle a new version
-            const currentVersion = process.env.VUE_APP_VERSION;
-            const previousVersion = this.acknowledgedVersion;
+            const currentVersion = process.env.VUE_APP_VERSION ?? '0.0.1';
+            const previousVersion = this.acknowledgedVersion ?? currentVersion;
 
-            if (
-                previousVersion &&
-                currentVersion &&
-                currentVersion != previousVersion
-            ) {
+            if (currentVersion != previousVersion) {
                 console.debug(
                     `App.vue::handleAppUpdate from ${previousVersion} to ${currentVersion}`,
                 );
