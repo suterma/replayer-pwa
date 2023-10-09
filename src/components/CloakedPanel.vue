@@ -91,15 +91,3 @@ const shouldReveal = computed(() => {
     return hasContent.length > 0 ?? false;
 });
 </script>
-<style>
-/* we will explain what these classes do next! */
-.v-enter-active,
-.v-leave-active {
-    transition: opacity 0.5s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-    opacity: 0;
-}
-</style>
