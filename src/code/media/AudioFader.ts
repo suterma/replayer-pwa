@@ -62,7 +62,7 @@ export default class AudioFader implements IAudioFader {
      * are usually coupled with external input devices like Bluetooth headsets.
      * @remarks Only changes that are not caused by automation are considered
      */
-    setupVolumeChangeEmissions() {
+    setupVolumeChangeEmissions(): void {
         this.audio.onvolumechange = () => {
             if (
                 !this.fading &&

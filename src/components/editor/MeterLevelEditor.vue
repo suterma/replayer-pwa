@@ -85,7 +85,6 @@
 
 <script setup lang="ts">
 import { PropType, computed, watch } from 'vue';
-import BpmEditor from '@/components/editor/BpmEditor.vue';
 import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
@@ -124,16 +123,6 @@ const props = defineProps({
 const hasAllTempoValues = computed(() => {
     return Meter.isValid(props.meter);
 });
-
-function updateMeterWithBpm(bpm: number): void {
-    const meter = new Meter(
-        props.meter?.TimeSignature ?? null,
-        bpm,
-        props.meter?.OriginTime ?? null,
-    );
-
-    emit('update:meter', meter);
-}
 
 function updateMeterWithTimeSignature(
     timeSignature: ITimeSignature | null,

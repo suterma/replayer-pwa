@@ -39,6 +39,7 @@ export default defineComponent({
     },
 
     setup() {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const debouncedHandler = null as any;
         return {
             debouncedHandler,
