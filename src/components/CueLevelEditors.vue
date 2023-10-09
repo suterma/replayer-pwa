@@ -1,35 +1,45 @@
 <template>
-    <!-- Using the v-for on a template instead of the actual component saves unnecessary renderings. 
+    <!-- Using the v-for on a template instead of the actual component usually saves unnecessary renderings. 
          See https://stackoverflow.com/a/76074016/79485 
+         
          NOTE: However, in this situation, with the surrounding TransitionGroup, all contained CueLevelEditor
-         components still get patched and rendered, at each track time change, even if they
+         components still get patched and rendered, at each position time change, even if they
          are not containing the playback head, thus are not visually impacted.
+         Because of this, for simplicity, the variant without template 
+         is used instead, with some throttling applied.
         -->
-    <TransitionGroup name="list">
-        <template v-for="cue in cues" :key="cue.Id">
-            <CueLevelEditor
-                :disabled="disabled"
-                :cue="cue"
-                :playbackMode="playbackMode"
-                :hasCuePassed="hasCuePassed(cue)"
-                :isCueAhead="isCueAhead(cue)"
-                :percentComplete="percentComplete(cue)"
-                :isCueSelected="isCueSelected(cue)"
-                @click="cueClick(cue)"
-                @play="cuePlay(cue)"
-                @adjust="cueAdjust(cue)"
-            />
-        </template>
+    <TransitionGroup
+        name="list"
+        @before-enter="pause"
+        @afterEnter="resume"
+        @beforeLeave="pause"
+        @afterLeave="resume"
+    >
+        <CueLevelEditor
+            v-for="cue in cues"
+            :key="cue.Id"
+            :disabled="disabled"
+            :cue="cue"
+            :playbackMode="playbackMode"
+            :hasCuePassed="hasCuePassed(cue)"
+            :isCueAhead="isCueAhead(cue)"
+            :percentComplete="percentComplete(cue)"
+            :isCueSelected="isCueSelected(cue)"
+            @click="cueClick(cue)"
+            @play="cuePlay(cue)"
+            @adjust="cueAdjust(cue)"
+        />
     </TransitionGroup>
 </template>
 
 <script setup lang="ts">
-import { PropType, inject } from 'vue';
+import { PropType, Ref, inject, ref } from 'vue';
 import { ICue, PlaybackMode } from '@/store/compilation-types';
 import CompilationHandler from '@/store/compilation-handler';
 import CueLevelEditor from '@/components/CueLevelEditor.vue';
 import { useAppStore } from '@/store/app';
 import { currentPositionInjectionKey } from './track/TrackInjectionKeys';
+import { useRafFn } from '@vueuse/core';
 
 /** An set of Editors for for cues in a track.
  */
@@ -56,6 +66,13 @@ defineProps({
 });
 
 const currentPosition = inject(currentPositionInjectionKey);
+
+/** Throttling (and pausing during transition) the position update handling
+ * to keep the UI more responsive overall*/
+const currentPositionThrottled: Ref<number | null> = ref(null);
+const { pause, resume } = useRafFn(() => {
+    currentPositionThrottled.value = currentPosition?.value ?? null;
+});
 
 const app = useAppStore();
 
@@ -96,18 +113,21 @@ function isCueSelected(cue: ICue): boolean {
  * @param cue - the cue to determine the playback progress for
  */
 function hasCuePassed(cue: ICue): boolean {
-    return CompilationHandler.hasCuePassed(cue, currentPosition?.value);
+    return CompilationHandler.hasCuePassed(cue, currentPositionThrottled.value);
 }
 /** Determines whether playback of the given cue has not yet started
  * @param cue - the cue to determine the playback progress for
  */
 function isCueAhead(cue: ICue): boolean {
-    return CompilationHandler.isCueAhead(cue, currentPosition?.value);
+    return CompilationHandler.isCueAhead(cue, currentPositionThrottled.value);
 }
 /** The playback progress within the given cue, in [percent], or null if not applicable
  * @param cue - the cue to determine the playback progress for
  */
 function percentComplete(cue: ICue): number | null {
-    return CompilationHandler.percentComplete(cue, currentPosition?.value);
+    return CompilationHandler.percentComplete(
+        cue,
+        currentPositionThrottled.value,
+    );
 }
 </script>
