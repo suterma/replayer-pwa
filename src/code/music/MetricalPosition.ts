@@ -1,7 +1,7 @@
 /** A position using a musical meter (a time representation using measures and beats).
  *  */
 export class MetricalPosition {
-    /** The measure number (one-based) 
+    /** The measure number (one-based)
      * @remarks The measure number is optional (e.g. set to null when the playhead is before the origin).
      */
     Measure: number | null;
