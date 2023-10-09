@@ -117,7 +117,7 @@ export default defineComponent({
              */
             isTrackPlayerFullScreen: false,
 
-            /** The wake lock fill-in that can prevent screen timeout, while a track is in use */
+            /** The wake lock fill-in that can prevent screen timeout */
             noSleep: new NoSleep(),
 
             /** A seed for the deterministic shuffling (until next shuffling is requested)
@@ -134,9 +134,13 @@ export default defineComponent({
             mdiRotateRightVariant: mdiRotateRightVariant,
         };
     },
+    /** Called after the component instance is inserted into the DOM as part of a tree cached by <KeepAlive>.
+     * @remarks Implements #26 in a simple way, as soon as a compilation is shown (disregarding the actual selection of a track)
+     */
     activated(): void {
         this.activateWakeLock();
     },
+    /** Called after the component instance is removed from the DOM as part of a tree cached by <KeepAlive>. */
     deactivated(): void {
         this.deactivateWakeLock();
     },
