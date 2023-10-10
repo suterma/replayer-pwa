@@ -1,9 +1,13 @@
 <template>
     <slot v-if="youTubeConsent"></slot>
     <template v-else>
-        //TODO fix dialog display Playing YouTube content requires conset to the
-        YouTube TOS.
-        <button @click="youTubeConsent = true">Open consent dialog</button>
+        <div class="field">
+            <p class="control">
+                <button class="button" @click="getConsent">
+                    YouTube consent...
+                </button>
+            </p>
+        </div>
     </template>
 </template>
 
@@ -20,11 +24,15 @@ const { youTubeConsent } = storeToRefs(settings);
 
 onMounted(() => {
     if (!youTubeConsent.value) {
-        consentYouTube().then((ok) => {
-            if (ok) {
-                youTubeConsent.value = true;
-            }
-        });
+        getConsent();
     }
 });
+
+function getConsent() {
+    consentYouTube().then((ok) => {
+        if (ok) {
+            youTubeConsent.value = true;
+        }
+    });
+}
 </script>

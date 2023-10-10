@@ -432,11 +432,7 @@
                     :showWaveformsOnEdit="showWaveformsOnEdit"
                     :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
                 ></TrackVideoElement>
-                <div
-                    v-if="CompilationHandler.isYoutubeVideoTrack(track)"
-                    class="is-experimental"
-                    title="EXPERIMENTAL - use with caution "
-                >
+                <div v-if="CompilationHandler.isYoutubeVideoTrack(track)">
                     <OnConsent>
                         <TrackYouTubeElement
                             :key="track.Id"
