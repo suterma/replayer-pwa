@@ -11292,7 +11292,7 @@ button.dropdown-item:disabled:hover {
 }
 
 /**
- * Adding an overlay for plabyck indication.
+ * Adding an overlay for plaback indication.
   * @remarks Requires a surrounding div to have the positioning working
   * (does not work directly on the the video element)
  */
@@ -11301,7 +11301,7 @@ button.dropdown-item:disabled:hover {
   background-color: black;
 }
 
-.video-container:after {
+.video-container.use-overlay-icon:after {
   content: "";
   position: absolute;
   color: #fafafa;

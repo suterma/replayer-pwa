@@ -11,6 +11,8 @@
                 fading: isFading !== FadingMode.None,
                 'fade-out': isFading == FadingMode.FadeOut,
                 'fade-in': isFading == FadingMode.FadeIn,
+                /** using an overlay is not allowed per https://developers.google.com/youtube/terms/required-minimum-functionality#overlays-and-frames */
+                'use-overlay-icon': false,
             }"
             @click="
                 {
