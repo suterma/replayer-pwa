@@ -242,6 +242,19 @@
         </div>
 
         <div class="box">
+            <h3 class="subtitle">Video</h3>
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="youTubeConsent"
+                        label="Allow connection to YouTube"
+                        hint="Discloses some data to Google"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
+        </div>
+
+        <div class="box">
             <h3 class="subtitle">Advanced</h3>
             <div class="field">
                 <label class="label"
@@ -326,6 +339,7 @@ const {
     keyboardShortcutTimeout,
     timeFormat,
     showWaveformsOnEdit,
+    youTubeConsent,
     experimentalShowPositionInTrackHeader,
     experimentalAllowTrackSharingByLink,
     experimentalMultitrack,

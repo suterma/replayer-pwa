@@ -437,16 +437,18 @@
                     class="is-experimental"
                     title="EXPERIMENTAL - use with caution "
                 >
-                    <TrackYouTubeElement
-                        :key="track.Id"
-                        :title="track.Name"
-                        :url="mediaUrl"
-                        :trackId="track.Id"
-                        :cues="track.Cues"
-                        :trackPreRoll="track.PreRoll"
-                        @ready="useMediaHandler"
-                        @click="setActiveTrack"
-                    ></TrackYouTubeElement>
+                    <OnConsent>
+                        <TrackYouTubeElement
+                            :key="track.Id"
+                            :title="track.Name"
+                            :url="mediaUrl"
+                            :trackId="track.Id"
+                            :cues="track.Cues"
+                            :trackPreRoll="track.PreRoll"
+                            @ready="useMediaHandler"
+                            @click="setActiveTrack"
+                        ></TrackYouTubeElement>
+                    </OnConsent>
                 </div>
                 <Teleport to="#media-player" :disabled="isEditable">
                     <Transition :name="skipTransitionName">
@@ -687,6 +689,7 @@ import {
     PlaybackMode,
     Track,
 } from '@/store/compilation-types';
+import OnConsent from '@/components/dialogs/OnConsent.vue';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import MeterLevelEditor from '@/components/editor/MeterLevelEditor.vue';
 import TrackVideoElement from '@/components/track/TrackVideoElement.vue';

@@ -5,6 +5,7 @@ import NewVersionDialog from '../../components/dialogs/NewVersionDialog.vue';
 import TrackSharingDialog from '../../components/dialogs/TrackSharingDialog.vue';
 import AddTextCuesDialog from '../../components/dialogs/AddTextCuesDialog.vue';
 import CompilationDownloadDialog from '../../components/dialogs/CompilationDownloadDialog.vue';
+import YouTubeConsentDialog from '../../components/dialogs/YouTubeConsentDialog.vue';
 
 /** A simple confirmation function that uses the ConfirmDialog.vue component
  * @param header - What the question is about, shown in the header part of the dialog
@@ -48,4 +49,11 @@ export function downloadCompilation(
     compilation: Compilation,
 ): Promise<boolean> {
     return openDialog(CompilationDownloadDialog, { compilation });
+}
+
+/** A consent dialog for accessing YouTube content
+ * @returns A promise of type boolean, according to whether the user has confirmed consent.
+ */
+export function consentYouTube(): Promise<boolean> {
+    return openDialog(YouTubeConsentDialog, {});
 }

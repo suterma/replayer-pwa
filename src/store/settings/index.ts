@@ -105,6 +105,10 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
      */
     const showWaveformsOnEdit = useLocalStorage('showWaveformsOnEdit', false);
 
+    /** Whether to consent to loading YouTube resources has been given
+     */
+    const youTubeConsent = useLocalStorage('youTubeConsent', false);
+
     /** EXPERIMENTAL: Whether to show meter editors/display
      * @remarks Default is false
      */
@@ -122,6 +126,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         keyboardShortcutTimeout.value = 1000;
         timeFormat.value = TimeFormat.Iso8601Extended;
         showWaveformsOnEdit.value = false;
+        youTubeConsent.value = false;
         experimentalShowPositionInTrackHeader.value = false;
         experimentalAllowTrackSharingByLink.value = false;
         experimentalMultitrack.value = false;
@@ -139,6 +144,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         keyboardShortcutTimeout,
         timeFormat,
         showWaveformsOnEdit,
+        youTubeConsent,
         experimentalShowPositionInTrackHeader,
         experimentalAllowTrackSharingByLink,
         experimentalMultitrack,
