@@ -72,6 +72,12 @@
             data-cy="toggle-playback-mode"
         />
 
+        <FadingToggler
+            :modelValue="isFadingEnabled"
+            @update:modelValue="updatedIsFadingEnabled"
+            data-cy="toggle-playback-mode"
+        />
+
         <VolumeKnob
             v-if="!hideVolumeButton"
             :disabled="disabled"
@@ -88,6 +94,7 @@ import { PlaybackMode, DefaultTrackVolume } from '@/store/compilation-types';
 
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import PlaybackModeButton from '@/components/buttons/PlaybackModeButton.vue';
+import FadingToggler from '@/components/buttons/FadingToggler.vue';
 import VolumeKnob from '@/components/VolumeKnob.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import {
@@ -105,6 +112,7 @@ export default defineComponent({
     components: {
         PlayPauseButton,
         PlaybackModeButton,
+        FadingToggler,
         BaseIcon,
         VolumeKnob,
     },
@@ -120,6 +128,7 @@ export default defineComponent({
          */
         'togglePlaying',
         'update:playbackMode',
+        'update:isFadingEnabled',
         'update:volume',
         /** Emitted at a seek button click, with the amount of seconds as argument (can also be negative)
          */
@@ -151,6 +160,14 @@ export default defineComponent({
          */
         playbackMode: {
             type: String as () => PlaybackMode,
+            required: true,
+        },
+
+        /** Whether fading is currently enabled
+         * @remarks Implements a two-way binding
+         */
+        isFadingEnabled: {
+            type: Boolean,
             required: true,
         },
 
@@ -254,6 +271,11 @@ export default defineComponent({
          */
         updatePlaybackMode(playbackMode: PlaybackMode): void {
             this.$emit('update:playbackMode', playbackMode);
+        },
+
+        /** Handling the enabled state of the fading */
+        updatedIsFadingEnabled(isFadingEnabled: boolean): void {
+            this.$emit('update:isFadingEnabled', isFadingEnabled);
         },
 
         /** Handle a volume update

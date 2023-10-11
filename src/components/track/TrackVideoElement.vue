@@ -297,11 +297,18 @@ const mediaElementId = computed(() => {
     return 'video-track-' + props.trackId;
 });
 
+// --- visual fading ---
+
 /** Gets the fade-in duration in seconds, as string
  * @remarks Provision of dynamic CSS for visual fade-in according to audio fading */
 const fadeInDuration = computed(() => {
     const fader = mediaHandler.value?.fader;
-    const duration = fader?.fadeInDuration ? fader?.fadeInDuration / 1000 : 0;
+    const duration = fader?.isFadingEnabled
+        ? fader?.fadeInDuration
+            ? fader?.fadeInDuration / 1000
+            : 0
+        : 0;
+
     return `${duration}s`;
 });
 
@@ -309,7 +316,11 @@ const fadeInDuration = computed(() => {
  * @remarks Provision of dynamic CSS for visual fade-in according to audio fading */
 const fadeOutDuration = computed(() => {
     const fader = mediaHandler.value?.fader;
-    const duration = fader?.fadeOutDuration ? fader?.fadeOutDuration / 1000 : 0;
+    const duration = fader?.isFadingEnabled
+        ? fader?.fadeOutDuration
+            ? fader?.fadeOutDuration / 1000
+            : 0
+        : 0;
     return `${duration}s`;
 });
 

@@ -167,6 +167,10 @@ export default class AudioFader implements IAudioFader {
 
     // --- fading ---
 
+    /** Gets or sets whether fading is enabled.
+     */
+    isFadingEnabled = true;
+
     get fading(): boolean {
         if (this.operationToken) {
             return true;
@@ -285,6 +289,7 @@ export default class AudioFader implements IAudioFader {
             const currentMasterAudioVolume = this.getVolume();
 
             if (
+                this.isFadingEnabled &&
                 this.fadeInDuration &&
                 currentMediaVolume < currentMasterAudioVolume
             ) {
@@ -373,7 +378,11 @@ export default class AudioFader implements IAudioFader {
         } else {
             const duration = immediate ? 0 : this.fadeOutDuration;
             const currentMediaVolume = this.audioVolume;
-            if (duration && currentMediaVolume != AudioFader.audioVolumeMin) {
+            if (
+                this.isFadingEnabled &&
+                duration &&
+                currentMediaVolume != AudioFader.audioVolumeMin
+            ) {
                 return new Promise((resolve) => {
                     console.debug(
                         `AudioFader::fadeOut:currentMediaVolume:${currentMediaVolume}`,

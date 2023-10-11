@@ -56,4 +56,9 @@ export const state = {
      * @remarks This can be set by the user, and is persisted.
      */
     playbackMode: useLocalStorage('playbackMode', PlaybackMode.PlayTrack),
+
+    /** The fading enabled state.
+     * @remarks This can be set by the user, and is persisted.
+     */
+    isFadingEnabled: useLocalStorage('isFadingEnabled', true),
 };

@@ -363,6 +363,8 @@
                                 :hideCueNavigation="true"
                                 :playbackMode="playbackMode"
                                 @update:playbackMode="updatedPlaybackMode"
+                                :isFadingEnabled="isFadingEnabled"
+                                @update:isFadingEnabled="updatedIsFadingEnabled"
                                 :volume="track.Volume"
                                 @update:volume="updateVolume"
                                 :hidePlayPauseButton="true"
@@ -596,6 +598,10 @@
                                             @update:playbackMode="
                                                 updatedPlaybackMode
                                             "
+                                            :isFadingEnabled="isFadingEnabled"
+                                            @update:isFadingEnabled="
+                                                updatedIsFadingEnabled
+                                            "
                                             :volume="track.Volume"
                                             @update:volume="updateVolume"
                                             @seek="(seconds) => seek(seconds)"
@@ -755,6 +761,9 @@ const emit = defineEmits([
     /** Occurs, when the user toggles the playback mode */
     'update:playbackMode',
 
+    /** Occurs, when the user changes the fading enabled state */
+    'update:isFadingEnabled',
+
     /** Occurs, when the end of the track has been reached and playback has ended.
      * @remarks This is not triggered when the track or one of it's cue is looping.
      * @remarks Allows to select the next track in "play all" and "shuffle" mode.
@@ -841,6 +850,15 @@ const props = defineProps({
         type: String as () => PlaybackMode,
         required: true,
         default: PlaybackMode.PlayTrack,
+    },
+
+    /** Whether fading is enabled
+     * @remarks Used overall in the compilation, not per track
+     */
+    isFadingEnabled: {
+        type: Boolean,
+        required: false,
+        default: true,
     },
 });
 
@@ -1000,6 +1018,12 @@ watchEffect(() => {
         preRollDuration.value,
         addFadeInPreRoll.value,
     );
+});
+
+watchEffect(() => {
+    if (mediaHandler.value && mediaHandler.value.fader) {
+        mediaHandler.value.fader.isFadingEnabled = props.isFadingEnabled;
+    }
 });
 
 const app = useAppStore();
@@ -1179,6 +1203,12 @@ function goToSelectedCue() {
  */
 function updatedPlaybackMode(playbackMode: PlaybackMode): void {
     emit('update:playbackMode', playbackMode);
+}
+
+/** Handle fading enabled updated
+ */
+function updatedIsFadingEnabled(isFadingEnabled: PlaybackMode): void {
+    emit('update:isFadingEnabled', isFadingEnabled);
 }
 
 /** Handle isExpanded update

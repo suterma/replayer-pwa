@@ -42,6 +42,8 @@
                     :isActiveTrack="activeTrackId === track.Id"
                     :playbackMode="playbackMode"
                     @update:playbackMode="updatePlaybackMode($event)"
+                    :isFadingEnabled="isFadingEnabled"
+                    @update:isFadingEnabled="updatedIsFadingEnabled($event)"
                     :hasPreviousTrack="index > 0 || isLoopingPlaybackMode"
                     :hasNextTrack="
                         index < (tracks?.length ?? 0) - 1 ||
@@ -224,6 +226,12 @@ export default defineComponent({
             this.playbackMode = playbackMode;
         },
 
+        /** Handle fading enabled updated
+         */
+        updatedIsFadingEnabled(isFadingEnabled: boolean): void {
+            this.isFadingEnabled = isFadingEnabled;
+        },
+
         /** Moves playback to the previous track
          * @param trackId - The Id of the track to use the previous of
          * @param loop - When true, and the previous track is not defined, the last track is used.
@@ -399,7 +407,7 @@ export default defineComponent({
             'textTracks',
             'mediaTracks',
         ]),
-        ...mapWritableState(useAppStore, ['playbackMode']),
+        ...mapWritableState(useAppStore, ['playbackMode', 'isFadingEnabled']),
 
         ...mapState(useSettingsStore, ['preventScreenTimeout']),
 

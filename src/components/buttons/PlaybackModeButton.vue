@@ -1,11 +1,5 @@
 <template>
-    <button
-        :class="{
-            button: true,
-        }"
-        @click="togglePlaybackMode()"
-        :title="modeTitle"
-    >
+    <button class="button" @click="togglePlaybackMode()" :title="modeTitle">
         <BaseIcon v-if="isPlaybackTrack" :path="rTrackPlay" />
         <BaseIcon v-if="isPlaybackLoopTrack" :path="rTrackRepeat" />
         <BaseIcon v-if="isPlaybackCue" :path="rTrackPlayOnce" />

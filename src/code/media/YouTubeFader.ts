@@ -153,6 +153,10 @@ export default class YouTubeFader implements IAudioFader {
 
     // --- fading ---
 
+    /** Gets or sets whether fading is enabled.
+     */
+    isFadingEnabled = true;
+
     get fading(): boolean {
         if (this.operationToken != YouTubeFader.cancelOperationToken) {
             return true;
@@ -275,6 +279,7 @@ export default class YouTubeFader implements IAudioFader {
             const currentMasterAudioVolume = this.getVolume();
 
             if (
+                this.isFadingEnabled &&
                 this.fadeInDuration &&
                 currentMediaVolume < currentMasterAudioVolume
             ) {
@@ -376,7 +381,11 @@ export default class YouTubeFader implements IAudioFader {
         } else {
             const duration = immediate ? 0 : this.fadeOutDuration;
             const currentMediaVolume = this.audioVolume;
-            if (duration && currentMediaVolume != AudioFader.audioVolumeMin) {
+            if (
+                this.isFadingEnabled &&
+                duration &&
+                currentMediaVolume != AudioFader.audioVolumeMin
+            ) {
                 return new Promise((resolve) => {
                     console.debug(
                         `YouTubeFader::fadeOut:currentMediaVolume:${currentMediaVolume}`,

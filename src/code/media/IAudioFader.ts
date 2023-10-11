@@ -49,6 +49,14 @@ export interface IAudioFader {
      */
     destroy(): void;
 
+    /** Gets whether fading is enabled.
+     */
+    get isFadingEnabled(): boolean;
+
+    /** Sets whether fading is enabled.
+     */
+    set isFadingEnabled(enabled: boolean);
+
     /** Gets the fade-in duration in [milliseconds].
      */
     get fadeInDuration(): number;
