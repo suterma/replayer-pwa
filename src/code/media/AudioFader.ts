@@ -19,7 +19,7 @@ export default class AudioFader implements IAudioFader {
      * by a subsequent operation. This allows the first operation to reject the promise
      * and abandon the fade operation.
      */
-    operationToken = '';
+    operationToken = AudioFader.cancelOperationToken;
 
     /** The muted state */
     private _muted = false;
@@ -28,7 +28,7 @@ export default class AudioFader implements IAudioFader {
      * @param {HTMLAudioElement} audio - The audio element to act upon
      * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
      * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
-     * @param {number} preRollDuration - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
+     * @param {number} preRollDuration - The amount of time to the seek backwards before a play operation. (Default: zero)
      * @param {boolean} addFadeInPreRoll - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
      * @param {number} masterVolume - The overall volume of the output. Can be used to control the output volume in addition to fadings. (Default: 1, representing full scale)
      */
@@ -51,6 +51,9 @@ export default class AudioFader implements IAudioFader {
         this.preRollDuration = preRollDuration;
         this.addFadeInPreRoll = addFadeInPreRoll;
         this.masterVolume = masterVolume;
+
+        // Fixed default
+        this.isFadingEnabled = true;
 
         this.reset();
 
@@ -79,10 +82,6 @@ export default class AudioFader implements IAudioFader {
                 }
             }
         };
-    }
-
-    public destroy(): void {
-        //TODO copy over the canceling code from the youtube fader
     }
 
     updateSettings(
@@ -130,21 +129,24 @@ export default class AudioFader implements IAudioFader {
      * @remarks  -90dbFS Amplitude
      */
     public static audioVolumeMin = 0.00003162;
+
     /** The maximum audio volume level */
     public static audioVolumeMax = 1;
+
+    private static cancelOperationToken = 'CANCEL';
 
     /** Resets the token for the currently running fade operation.
      * @remarks Allows operations to cancel themselves in favor of a subsequent operation.
      */
     cancel(): void {
-        this.operationToken = '';
+        this.operationToken = AudioFader.cancelOperationToken;
     }
 
     /** If there is a currently running fade operation, reset the token.
      * @returns Whether an operation was ongoing
      */
     hadToCancel(): boolean {
-        if (this.operationToken) {
+        if (this.operationToken !== AudioFader.cancelOperationToken) {
             this.cancel();
             return true;
         }
@@ -158,11 +160,17 @@ export default class AudioFader implements IAudioFader {
      * Does not affect the muted state.
      */
     public reset(): void {
-        if (this.fadeInDuration || this.fadeOutDuration) {
+        if (this.effectiveFadeInDuration || this.effectiveFadeOutDuration) {
             this.audioVolume = AudioFader.audioVolumeMin;
         } else {
             this.audioVolume = this.masterVolume;
         }
+    }
+
+    public destroy(): void {
+        this.cancel();
+        this.reset();
+        this.operationToken = AudioFader.cancelOperationToken;
     }
 
     // --- fading ---
@@ -172,10 +180,25 @@ export default class AudioFader implements IAudioFader {
     isFadingEnabled = true;
 
     get fading(): boolean {
-        if (this.operationToken) {
+        if (this.operationToken != AudioFader.cancelOperationToken) {
             return true;
         }
         return false;
+    }
+
+    /** Gets the effective fade-in duration, taking into account whether fade-in is enabled. */
+    get effectiveFadeInDuration(): number {
+        if (!this.isFadingEnabled) {
+            return 0;
+        }
+        return this.fadeInDuration;
+    }
+    /** Gets the effective fade-out duration, taking into account whether fade-in is enabled. */
+    get effectiveFadeOutDuration(): number {
+        if (!this.isFadingEnabled) {
+            return 0;
+        }
+        return this.fadeOutDuration;
     }
 
     onFadingChanged: SubEvent<FadingMode> = new SubEvent();
@@ -191,8 +214,8 @@ export default class AudioFader implements IAudioFader {
         // The offset, in seconds
         let offset = this.preRollDuration;
 
-        if (this.addFadeInPreRoll && this.fadeInDuration) {
-            offset = offset + this.fadeInDuration / 1000;
+        if (this.addFadeInPreRoll && this.effectiveFadeInDuration) {
+            offset = offset + this.effectiveFadeInDuration / 1000;
         }
 
         const time = this.audio.currentTime;
@@ -287,19 +310,18 @@ export default class AudioFader implements IAudioFader {
         } else {
             const currentMediaVolume = this.audioVolume;
             const currentMasterAudioVolume = this.getVolume();
+            this.applyPreRoll();
 
             if (
-                this.isFadingEnabled &&
-                this.fadeInDuration &&
+                this.effectiveFadeInDuration &&
                 currentMediaVolume < currentMasterAudioVolume
             ) {
                 return new Promise((resolve) => {
-                    this.applyPreRoll();
                     this.onFadingChanged.emit(FadingMode.FadeIn);
                     return this.fade(
                         currentMediaVolume,
                         currentMasterAudioVolume,
-                        this.fadeInDuration,
+                        this.effectiveFadeInDuration,
                     )
                         .catch(() => {
                             console.debug(`AudioFader::fadeIn:linear:aborted`);
@@ -338,8 +360,17 @@ export default class AudioFader implements IAudioFader {
             const currentOperationToken = uuidv4();
             this.operationToken = currentOperationToken;
             const clearIntervalId = setInterval(() => {
-                const now = new Date().getTime();
                 //Check whether it's time to end the fade
+                //(By a cancel request)
+                if (this.operationToken == AudioFader.cancelOperationToken) {
+                    clearInterval(clearIntervalId);
+                    const message =
+                        'AudioFader::Linear fade aborted due to cancelling.';
+                    console.warn(message);
+                    reject(message);
+                    return;
+                }
+
                 //(By a subsequent operation)
                 if (this.operationToken != currentOperationToken) {
                     clearInterval(clearIntervalId);
@@ -354,6 +385,7 @@ export default class AudioFader implements IAudioFader {
                 }
 
                 //(by time is up)
+                const now = new Date().getTime();
                 if (now >= endTime) {
                     clearInterval(clearIntervalId);
                     this.cancel();
@@ -376,13 +408,9 @@ export default class AudioFader implements IAudioFader {
         if (this.hadToCancel()) {
             return Promise.resolve();
         } else {
-            const duration = immediate ? 0 : this.fadeOutDuration;
+            const duration = immediate ? 0 : this.effectiveFadeOutDuration;
             const currentMediaVolume = this.audioVolume;
-            if (
-                this.isFadingEnabled &&
-                duration &&
-                currentMediaVolume != AudioFader.audioVolumeMin
-            ) {
+            if (duration && currentMediaVolume != AudioFader.audioVolumeMin) {
                 return new Promise((resolve) => {
                     console.debug(
                         `AudioFader::fadeOut:currentMediaVolume:${currentMediaVolume}`,
