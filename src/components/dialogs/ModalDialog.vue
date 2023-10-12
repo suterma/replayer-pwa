@@ -48,6 +48,7 @@
                                         data-cy="submit-button"
                                         :ref="clickRef"
                                         :disabled="submitButtonDisabled"
+                                        v-focus
                                     >
                                         {{ submitButtonText }}
                                     </button>
