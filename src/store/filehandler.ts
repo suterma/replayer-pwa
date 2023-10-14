@@ -245,11 +245,12 @@ export default class FileHandler {
      * determined when the track URL is evaluated.
      */
     static isVideoFileName(fileName: string): boolean {
+        const name = fileName.split('?')[0] ?? ''; //remove query from URL's
         return (
-            fileName.endsWith('.mp4') ||
-            fileName.endsWith('.m4v') ||
-            fileName.endsWith('.webm') ||
-            fileName.endsWith('.ogv')
+            name.endsWith('.mp4') ||
+            name.endsWith('.m4v') ||
+            name.endsWith('.webm') ||
+            name.endsWith('.ogv')
         );
     }
 
@@ -259,16 +260,17 @@ export default class FileHandler {
      * determined when the track URL is evaluated.
      */
     static isAudioFileName(fileName: string): boolean {
+        const name = fileName.split('?')[0] ?? ''; //remove query from URL's
         return (
-            fileName.endsWith('.mp3') ||
-            fileName.endsWith('.wav') ||
-            fileName.endsWith('.wave') ||
-            fileName.endsWith('.flac') ||
-            fileName.endsWith('.ogg') ||
-            fileName.endsWith('.aiff') ||
-            fileName.endsWith('.aif') ||
-            fileName.endsWith('.aac') ||
-            fileName.endsWith('.m4a')
+            name.endsWith('.mp3') ||
+            name.endsWith('.wav') ||
+            name.endsWith('.wave') ||
+            name.endsWith('.flac') ||
+            name.endsWith('.ogg') ||
+            name.endsWith('.aiff') ||
+            name.endsWith('.aif') ||
+            name.endsWith('.aac') ||
+            name.endsWith('.m4a')
         );
     }
 
@@ -278,7 +280,8 @@ export default class FileHandler {
      * determined when the track URL is evaluated.
      */
     static isTextFileName(fileName: string): boolean {
-        return fileName.endsWith('.txt');
+        const name = fileName.split('?')[0] ?? ''; //remove query from URL's
+        return name.endsWith('.txt');
     }
 
     /** Returns whether the given MIME type is a supported package MIME type by Replayer
