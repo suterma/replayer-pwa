@@ -361,6 +361,7 @@
                                 :hideStopButton="true"
                                 :hideTrackNavigation="true"
                                 :hideCueNavigation="true"
+                                :hideFadingToggler="hideFadingToggler"
                                 :playbackMode="playbackMode"
                                 @update:playbackMode="updatedPlaybackMode"
                                 :isFadingEnabled="isFadingEnabled"
@@ -1024,6 +1025,12 @@ watchEffect(() => {
         addFadeInPreRoll.value,
     );
 });
+
+/** Computes whether the fading toggler is needed at all
+ */
+const hideFadingToggler = computed(
+    () => fadeInDuration.value === 0 && fadeOutDuration.value === 0,
+);
 
 watchEffect(() => {
     if (mediaHandler.value && mediaHandler.value.fader) {

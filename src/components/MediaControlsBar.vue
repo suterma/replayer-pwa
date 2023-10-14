@@ -73,6 +73,7 @@
         />
 
         <FadingToggler
+            v-if="!hideFadingToggler"
             :modelValue="isFadingEnabled"
             @update:modelValue="updatedIsFadingEnabled"
             data-cy="toggle-playback-mode"
@@ -208,6 +209,13 @@ export default defineComponent({
         /** Whether to hide the volume button
          */
         hideVolumeButton: {
+            type: Boolean,
+            default: false,
+        },
+
+        /** Whether to hide the fading toggler button
+         */
+        hideFadingToggler: {
             type: Boolean,
             default: false,
         },
