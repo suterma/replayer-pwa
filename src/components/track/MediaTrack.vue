@@ -382,12 +382,14 @@
             on the track state as a performance optimizations
             -->
         <template v-if="mediaUrl">
-            <div class="block">
-                <!-- //TODO currently the mediaUrl is not using the optimized
+            <Transition name="item-expand">
+                <!-- Hide the waveform and Video for non-expanded track during edit, save screen real estate -->
+                <div class="block" v-show="!isEditable || isExpanded">
+                    <!-- //TODO currently the mediaUrl is not using the optimized
                 variant, because otherwise the track is not correctly loaded
                 after it has become the active track ( gets
                 play-request-was-interrupted) -->
-                <!-- <TrackAudioElement
+                    <!-- <TrackAudioElement
                     v-if="CompilationHandler.isAudioTrack(track)"
                     :key="track.Id"
                     :title="track.Name"
@@ -416,38 +418,41 @@
                     :showWaveformsOnEdit="showWaveformsOnEdit"
                     :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
                 ></TrackAudioElement> -->
-                <TrackVideoElement
-                    v-if="
-                        CompilationHandler.isVideoTrack(track) ||
-                        CompilationHandler.isAudioTrack(track)
-                    "
-                    :enableVideo="CompilationHandler.isVideoTrack(track)"
-                    :key="track.Id"
-                    :title="track.Name"
-                    :mediaUrl="mediaUrl"
-                    :trackId="track.Id"
-                    :cues="track.Cues"
-                    :trackPreRoll="track.PreRoll"
-                    @ready="useMediaHandler"
-                    @click="setActiveTrack"
-                    :showLevelMeter="showLevelMeter"
-                    :showWaveformsOnEdit="showWaveformsOnEdit"
-                    :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
-                ></TrackVideoElement>
-                <div v-if="CompilationHandler.isYoutubeVideoTrack(track)">
-                    <OnConsent>
-                        <TrackYouTubeElement
-                            :key="track.Id"
-                            :title="track.Name"
-                            :url="mediaUrl"
-                            :trackId="track.Id"
-                            :cues="track.Cues"
-                            :trackPreRoll="track.PreRoll"
-                            @ready="useMediaHandler"
-                            @click="setActiveTrack"
-                        ></TrackYouTubeElement>
-                    </OnConsent>
+                    <TrackVideoElement
+                        v-if="
+                            CompilationHandler.isVideoTrack(track) ||
+                            CompilationHandler.isAudioTrack(track)
+                        "
+                        :enableVideo="CompilationHandler.isVideoTrack(track)"
+                        :key="track.Id"
+                        :title="track.Name"
+                        :mediaUrl="mediaUrl"
+                        :trackId="track.Id"
+                        :cues="track.Cues"
+                        :trackPreRoll="track.PreRoll"
+                        @ready="useMediaHandler"
+                        @click="setActiveTrack"
+                        :showLevelMeter="showLevelMeter"
+                        :showWaveformsOnEdit="showWaveformsOnEdit"
+                        :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
+                    ></TrackVideoElement>
+                    <div v-if="CompilationHandler.isYoutubeVideoTrack(track)">
+                        <OnConsent>
+                            <TrackYouTubeElement
+                                :key="track.Id"
+                                :title="track.Name"
+                                :url="mediaUrl"
+                                :trackId="track.Id"
+                                :cues="track.Cues"
+                                :trackPreRoll="track.PreRoll"
+                                @ready="useMediaHandler"
+                                @click="setActiveTrack"
+                            ></TrackYouTubeElement>
+                        </OnConsent>
+                    </div>
                 </div>
+            </Transition>
+            <div class="block">
                 <Teleport to="#media-player" :disabled="isEditable">
                     <Transition :name="skipTransitionName">
                         <!-- 
