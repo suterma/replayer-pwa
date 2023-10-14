@@ -41,8 +41,8 @@
                 <div class="control">
                     <LabeledCheckbox
                         v-model="showWaveformsOnEdit"
-                        label="Show scrollable waveforms (in the edit view)"
-                        hint="Uses more more memory and CPU power. Not applicable to YouTube videos."
+                        label="Show scrollable waveforms (in the edit view, local files only)"
+                        hint="Uses more more memory and CPU power."
                     ></LabeledCheckbox>
                 </div>
             </div>

@@ -1,10 +1,16 @@
 <template>
     <div class="block" v-if="videoElement && isEditable && showWaveformsOnEdit">
-        <TrackAudioPeaks
-            v-if="videoElement"
-            :mediaElement="videoElement"
-            :showZoomView="true"
-        ></TrackAudioPeaks>
+        <CloakedPanel :revealFor="[isShortDuration]" title="Waveform">
+            <template #caption
+                ><span class="has-opacity-half">
+                    <BaseIcon :path="mdiWaveform" /> </span
+            ></template>
+            <TrackAudioPeaks
+                v-if="videoElement"
+                :mediaElement="videoElement"
+                :showZoomView="true"
+            ></TrackAudioPeaks>
+        </CloakedPanel>
     </div>
     <div
         v-show="showVideo && props.enableVideo"
@@ -122,8 +128,11 @@ import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMete
 import VideoTextTrackController from '@/components/track/VideoTextTrackController.vue';
 import FileHandler from '@/store/filehandler';
 import { ICue } from '@/store/compilation-types';
+import CloakedPanel from '@/components/CloakedPanel.vue';
 import TrackAudioPeaks from './TrackAudioPeaks.vue';
 import { useRoute } from 'vue-router';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
+import { mdiWaveform } from '@mdi/js';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -215,6 +224,12 @@ const isLoading = computed(() => {
     return props.mediaUrl && mediaHandler.value == null;
 });
 
+const isShortDuration = computed(() => {
+    return (
+        mediaDuration.value != null && mediaDuration.value < 600
+    ); /* 10 minutes*/
+});
+
 const audio = useAudioStore();
 
 /** Video element to use
@@ -233,9 +248,11 @@ watch(videoElement, async (newVideoElement, oldVideoElement) => {
 
 const isPaused = ref(true);
 const isSeeking = ref(false);
+const mediaDuration: Ref<number | null> = ref(null);
 const isFading = ref(FadingMode.None);
 let onPauseChangedSubsription: Subscription;
 let onSeekingChangedSubsription: Subscription;
+let onDurationChangedSubsription: Subscription;
 let onFadingChangedSubsription: Subscription;
 
 const mediaHandler: Ref<IMediaHandler | null> = ref(null);
@@ -251,6 +268,7 @@ function destroyHandler(video: HTMLVideoElement): void {
         // cancel the internal event handlers
         onPauseChangedSubsription.cancel();
         onSeekingChangedSubsription.cancel();
+        onDurationChangedSubsription.cancel();
         onFadingChangedSubsription.cancel();
 
         if (video) {
@@ -274,6 +292,11 @@ function createAndEmitHandler(video: HTMLVideoElement): IMediaHandler {
     onSeekingChangedSubsription = handler.onSeekingChanged.subscribe(
         (seeking) => {
             isSeeking.value = seeking;
+        },
+    );
+    onDurationChangedSubsription = handler.onDurationChanged.subscribe(
+        (duration) => {
+            mediaDuration.value = duration;
         },
     );
     onFadingChangedSubsription = handler.fader.onFadingChanged.subscribe(
