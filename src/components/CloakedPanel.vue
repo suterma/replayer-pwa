@@ -1,30 +1,35 @@
 <template>
-    <CollapsibleButton
-        v-show="!modelValue && !shouldReveal"
-        class="is-nav"
-        :modelValue="modelValue"
-        @update:modelValue="() => reveal()"
-        collapsedText="Click to reveal"
-        :iconPath="mdiPlus"
-        :title="title"
-        v-bind="$attrs"
-        ><span><slot name="caption"></slot></span
-    ></CollapsibleButton>
-    <!-- Transition for the revealing action. 
-        Uses an additional element to make sure that there is a single root within the transition slot -->
-    <Transition name="list">
-        <div
-            v-if="modelValue || shouldReveal"
+    <DismissiblePanel @dismissed="cloak" :dismissible="dismissible">
+        <CollapsibleButton
+            v-show="!modelValue && !shouldReveal"
+            class="is-nav"
+            :modelValue="modelValue"
+            @update:modelValue="() => reveal()"
+            collapsedText="Click to reveal"
+            :iconPath="mdiPlus"
             :title="title"
             v-bind="$attrs"
-            ref="slotContainer"
-        >
-            <slot></slot>
-        </div>
-    </Transition>
+            ><span><slot name="caption"></slot></span
+        ></CollapsibleButton>
+        <!-- Transition for the revealing action. 
+        Uses an additional element to make sure that there is a single root within the transition slot -->
+        <Transition name="item-expand-right">
+            <div
+                class="transition-in-place"
+                v-if="modelValue || shouldReveal"
+                :title="title"
+                v-bind="$attrs"
+                ref="slotContainer"
+            >
+                <slot></slot>
+            </div>
+        </Transition>
+    </DismissiblePanel>
 </template>
 <script setup lang="ts">
 /** A panel with an one-off expander button that triggers the expansion state of the slotted content.
+ * The content is by default cloaked again by either pressing "ESC" or clicking outside, if none of the
+ * conditions of the "reveal-for" property apply
  * @remarks Works similar to the "CollapsiblePanel" component, with some differences:
  * The caption and icon is only shown when the content is collapsed/cloaked.
  * @remarks the v-if directive is used, completely omitting collapsed content, if not displayed.
@@ -34,6 +39,7 @@ import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import { mdiPlus } from '@mdi/js';
 import { PropType, computed, ref } from 'vue';
 import { nextTick } from 'process';
+import DismissiblePanel from '@/components/DismissiblePanel.vue';
 
 /** Whether to show this panel as expanded */
 const modelValue = ref(false);
@@ -60,6 +66,13 @@ function reveal() {
         }
     });
 }
+
+/** Cloaks the revealed content
+ */
+function cloak() {
+    modelValue.value = false;
+}
+
 // eslint-disable-next-line no-undef
 const props = defineProps({
     /** The values to reveal this panel for, if any of them are set
@@ -72,6 +85,13 @@ const props = defineProps({
     title: {
         type: String,
         default: '',
+    },
+
+    /** Whether this controls actually handles the dismissal and emits the dismissed event. Default is <c>true</c> */
+    dismissible: {
+        type: Boolean,
+        required: false,
+        default: true,
     },
 });
 

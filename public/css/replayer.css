@@ -11607,6 +11607,7 @@ for all screen sizes. Keeps the display compact */
 .slide-fade-right-leave-active,
 .fade-leave-active,
 .item-expand-leave-active,
+.item-expand-right-leave-active,
 .list-leave-active {
   z-index: -1;
 }
@@ -11620,6 +11621,7 @@ for all screen sizes. Keeps the display compact */
 .slide-fade-right-leave-active.transition-in-place,
 .fade-leave-active.transition-in-place,
 .item-expand-leave-active.transition-in-place,
+.item-expand-right-leave-active.transition-in-place,
 .list-leave-active.transition-in-place {
   position: absolute;
 }
@@ -11634,6 +11636,7 @@ for all screen sizes. Keeps the display compact */
 .navbar.is-fixed-bottom .slide-fade-right-leave-active.transition-in-place,
 .navbar.is-fixed-bottom .fade-leave-active.transition-in-place,
 .navbar.is-fixed-bottom .item-expand-leave-active.transition-in-place,
+.navbar.is-fixed-bottom .item-expand-right-leave-active.transition-in-place,
 .navbar.is-fixed-bottom .list-leave-active.transition-in-place {
   bottom: 0;
   left: 0;
@@ -11643,6 +11646,8 @@ for all screen sizes. Keeps the display compact */
 /* All transitions should have the same timing */
 .item-expand-enter-active,
 .item-expand-leave-active,
+.item-expand-right-enter-active,
+.item-expand-right-leave-active,
 .slide-left-enter-active,
 .slide-left-leave-active,
 .slide-right-enter-active,
@@ -11658,7 +11663,7 @@ for all screen sizes. Keeps the display compact */
 }
 
 /** **********************************************************
- * Transition for expanding a single item
+ * Transition for expanding a single item (top-down)
 **************************************************************
 */
 .item-expand-enter-from,
@@ -11666,6 +11671,17 @@ for all screen sizes. Keeps the display compact */
   opacity: 0;
   transform-origin: top;
   transform: scaleY(0) translateY(-50%);
+}
+
+/** **********************************************************
+ * Transition for expanding a single item (to the right)
+**************************************************************
+*/
+.item-expand-right-enter-from,
+.item-expand-right-leave-to {
+  opacity: 0;
+  transform-origin: left;
+  transform: scaleX(0) translateX(-50%);
 }
 
 /** **********************************************************

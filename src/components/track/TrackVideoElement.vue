@@ -1,6 +1,10 @@
 <template>
     <div class="block" v-if="videoElement && isEditable && showWaveformsOnEdit">
-        <CloakedPanel :revealFor="[isShortDuration]" title="Waveform">
+        <CloakedPanel
+            :revealFor="[isShortDuration]"
+            :dismissible="false"
+            title="Waveform"
+        >
             <template #caption
                 ><span class="has-opacity-half">
                     <BaseIcon :path="mdiWaveform" /> </span
