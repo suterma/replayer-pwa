@@ -62,6 +62,7 @@
                 </div>
                 <CloakedPanel
                     :revealFor="[trackArtist, trackAlbum]"
+                    title="Artist and Album for this track"
                     class="level-item"
                 >
                     <template #caption
@@ -86,10 +87,11 @@
 
                 <CloakedPanel
                     :revealFor="[trackBeatsPerMinute]"
+                    title="Beats per minute value (BPM) for this track"
                     class="level-item"
                 >
                     <template #caption><span class="label">BPM</span></template>
-                    <LabeledInput label="BPM">
+                    <LabeledInput label="BPM" title="BPM (Beats per minute)">
                         <BpmEditor
                             class="input"
                             :modelValue="trackBeatsPerMinute"
@@ -99,7 +101,6 @@
                                 )
                             "
                             placeholder="BPM"
-                            title="BPM (Beats per minute)"
                         >
                         </BpmEditor>
                     </LabeledInput>

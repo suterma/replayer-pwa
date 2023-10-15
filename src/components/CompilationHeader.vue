@@ -33,6 +33,7 @@
                 </div>
                 <CloakedPanel
                     :revealFor="[compilation.Artist, compilation.Album]"
+                    title="Artist and Album for this compilation"
                 >
                     <template #caption
                         ><span class="has-opacity-half"
