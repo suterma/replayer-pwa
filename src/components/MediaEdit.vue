@@ -14,7 +14,7 @@
             title="Click to edit the media source"
         />
     </MediaSourceIndicator>
-    <DismissiblePanel v-else @dismissed="exit">
+    <DismissiblePanel v-else @dismissed="exit" hotkey>
         <MediaDropZone
             :isExpanded="true"
             :replaceUrl="trackUrl"

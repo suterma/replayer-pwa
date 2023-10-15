@@ -1,6 +1,6 @@
 <template>
     <div class="block" v-if="videoElement && isEditable && showWaveformsOnEdit">
-        <CloakedPanel
+        <CoveredPanel
             :revealFor="[isShortDuration]"
             :dismissible="false"
             title="Waveform"
@@ -14,7 +14,7 @@
                 :mediaElement="videoElement"
                 :showZoomView="true"
             ></TrackAudioPeaks>
-        </CloakedPanel>
+        </CoveredPanel>
     </div>
     <div
         v-show="showVideo && props.enableVideo"
@@ -132,7 +132,7 @@ import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMete
 import VideoTextTrackController from '@/components/track/VideoTextTrackController.vue';
 import FileHandler from '@/store/filehandler';
 import { ICue } from '@/store/compilation-types';
-import CloakedPanel from '@/components/CloakedPanel.vue';
+import CoveredPanel from '@/components/CoveredPanel.vue';
 import TrackAudioPeaks from './TrackAudioPeaks.vue';
 import { useRoute } from 'vue-router';
 import BaseIcon from '@/components/icons/BaseIcon.vue';

@@ -31,7 +31,7 @@
                         </p>
                     </div>
                 </div>
-                <CloakedPanel
+                <CoveredPanel
                     :revealFor="[compilation.Artist, compilation.Album]"
                     title="Artist and Album for this compilation"
                 >
@@ -54,7 +54,7 @@
                             }
                         "
                     ></ArtistLevelEditor>
-                </CloakedPanel>
+                </CoveredPanel>
             </template>
             <template v-else>
                 <!-- Display in non-edit view -->
@@ -92,7 +92,7 @@
 import { PropType, defineComponent } from 'vue';
 import { Compilation } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
-import CloakedPanel from '@/components/CloakedPanel.vue';
+import CoveredPanel from '@/components/CoveredPanel.vue';
 import ArtistLevelEditor from '@/components/editor/ArtistLevelEditor.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import CompilationContextMenu from '@/components/context-menu/CompilationContextMenu.vue';
@@ -108,7 +108,7 @@ export default defineComponent({
         StyledInput,
         CompilationContextMenu,
         ArtistInfo,
-        CloakedPanel,
+        CoveredPanel,
         ArtistLevelEditor,
     },
     props: {

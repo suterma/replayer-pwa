@@ -3,6 +3,8 @@
 The URL input is wider, because it should be able to easily deal with lengthy input values -->
     <div class="level media-drop-zone">
         <div v-if="isExpanded" class="level-item has-text-centered">
+            <Hotkey :keys="['esc']" :excluded-elements="[]" @hotkey="collapse">
+            </Hotkey>
             <!-- This is a combined file load and drop zone -->
             <!-- tabindex, to make the label tabbable with focus-->
             <!-- Because the label is tied to the file handler, clicking on it invokes the invisible file input -->
@@ -49,7 +51,7 @@ The URL input is wider, because it should be able to easily deal with lengthy in
         </div>
 
         <!-- The unexpanded plus sign -->
-        <div v-if="!isExpanded" class="level-item has-text-centered">
+        <div v-else class="level-item has-text-centered">
             <div class="ml-3 mr-3">
                 <!-- expanded-trigger -->
                 <button
@@ -144,6 +146,7 @@ import { mdiSwapHorizontal, mdiMusicNotePlus } from '@mdi/js';
 import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { useMessageStore } from '@/store/messages';
+import { Hotkey } from '@simolation/vue-hotkey';
 
 /** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
  * @remarks Supports collapsing the control after load, to keep the user more focused
@@ -154,7 +157,7 @@ import { useMessageStore } from '@/store/messages';
  */
 export default defineComponent({
     name: 'MediaDropZone',
-    components: { BaseIcon },
+    components: { BaseIcon, Hotkey },
     props: {
         /** Whether to show the zone in the expanded state */
         isExpanded: {

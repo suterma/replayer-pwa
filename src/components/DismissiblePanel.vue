@@ -1,9 +1,7 @@
 <template>
     <div v-click-outside="dismissed">
-        <!-- The Hotkey needs to be enabled/disabled using v-if, not with it's own enabled property
-        See https://github.com/Simolation/vue-hotkey/issues/2  -->
         <Hotkey
-            :disabled="!dismissible"
+            :disabled="!dismissible || !hotkey"
             :keys="['esc']"
             :excluded-elements="[]"
             @hotkey="dismissed"
@@ -30,6 +28,12 @@ export default defineComponent({
             type: Boolean,
             required: false,
             default: true,
+        },
+        /** Whether to register the ESC hotkey. */
+        hotkey: {
+            type: Boolean,
+            required: false,
+            default: false,
         },
     },
     methods: {

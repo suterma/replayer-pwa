@@ -1,12 +1,18 @@
 <template>
-    <DismissiblePanel @dismissed="cloak" :dismissible="dismissible">
+    <!-- NOTE: The hotkey is only registered for the single (focused) revealed panel 
+    that is actualle revealed explicitly (for editing purposes). This way, only ever
+    one hotkey is registered on the page. Multiple registered same hotkeys are not possible-->
+    <DismissiblePanel
+        @dismissed="cover"
+        :dismissible="dismissible"
+        :hotkey="!isCovered && !hasContentToRevealFor"
+    >
         <CollapsibleButton
-            v-show="!modelValue && !shouldReveal"
+            v-show="isCovered"
             class="is-nav"
-            :modelValue="modelValue"
+            :modelValue="isRevelationRequested"
             @update:modelValue="() => reveal()"
             collapsedText="Click to reveal"
-            :iconPath="mdiPlus"
             :title="title"
             v-bind="$attrs"
             ><span><slot name="caption"></slot></span
@@ -16,7 +22,7 @@
         <Transition name="item-expand-right">
             <div
                 class="transition-in-place"
-                v-if="modelValue || shouldReveal"
+                v-if="!isCovered"
                 :title="title"
                 v-bind="$attrs"
                 ref="slotContainer"
@@ -27,30 +33,29 @@
     </DismissiblePanel>
 </template>
 <script setup lang="ts">
-/** A panel with an one-off expander button that triggers the expansion state of the slotted content.
- * The content is by default cloaked again by either pressing "ESC" or clicking outside, if none of the
+/** A panel with a reveal button that triggers the render state of the slotted content.
+ * The content is by default covered again by either pressing "ESC" or clicking outside, if none of the
  * conditions of the "reveal-for" property apply
  * @remarks Works similar to the "CollapsiblePanel" component, with some differences:
- * The caption and icon is only shown when the content is collapsed/cloaked.
- * @remarks the v-if directive is used, completely omitting collapsed content, if not displayed.
- * @remarks When the content is reveald by user action, the first input is focused
+ * - The caption and icon is only shown when the content is covered.
+ * - the v-if directive is used, completely omitting covered content.
+ * - When the content is reveald by user action, the first input is focused
  */
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
-import { mdiPlus } from '@mdi/js';
 import { PropType, computed, ref } from 'vue';
 import { nextTick } from 'process';
 import DismissiblePanel from '@/components/DismissiblePanel.vue';
 
-/** Whether to show this panel as expanded */
-const modelValue = ref(false);
+/** Whether to show this panel as revealed is requested */
+const isRevelationRequested = ref(false);
 
 const slotContainer = ref(null);
 
-/** Reveals the cloaked content
+/** Explicitly reveals the covered content
  * @remarks Also focuses the first input, if existings
  */
 function reveal() {
-    modelValue.value = true;
+    isRevelationRequested.value = true;
 
     // Since any components might not be rendered until the next DOM update,
     // defer the actual focussing
@@ -67,10 +72,11 @@ function reveal() {
     });
 }
 
-/** Cloaks the revealed content
+/** Explicitly covers the revealed content
+ * @remarks If any content is available to reveal for, it will override this intention
  */
-function cloak() {
-    modelValue.value = false;
+function cover() {
+    isRevelationRequested.value = false;
 }
 
 // eslint-disable-next-line no-undef
@@ -80,7 +86,7 @@ const props = defineProps({
     revealFor: Array as PropType<Array<unknown>>,
 
     /** The title
-     * @remarks This text is show as title for the label in both the cloaked and the revealed state
+     * @remarks This text is show as title for the label in both the covered and the revealed state
      *  */
     title: {
         type: String,
@@ -96,7 +102,7 @@ const props = defineProps({
 });
 
 /** Whether the panel should be revealed based on available content. */
-const shouldReveal = computed(() => {
+const hasContentToRevealFor = computed(() => {
     if (!props.revealFor) return false;
 
     const hasContent = props.revealFor.filter((item) => {
@@ -109,5 +115,10 @@ const shouldReveal = computed(() => {
         return item ? true : false;
     });
     return hasContent.length > 0 ?? false;
+});
+
+/** Whether the panel is actually covered. */
+const isCovered = computed(() => {
+    return !(isRevelationRequested.value || hasContentToRevealFor.value);
 });
 </script>

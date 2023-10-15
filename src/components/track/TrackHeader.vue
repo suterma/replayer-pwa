@@ -60,7 +60,7 @@
                         />
                     </LabeledInput>
                 </div>
-                <CloakedPanel
+                <CoveredPanel
                     :revealFor="[trackArtist, trackAlbum]"
                     title="Artist and Album for this track"
                     class="level-item"
@@ -83,9 +83,9 @@
                             }
                         "
                     ></ArtistLevelEditor>
-                </CloakedPanel>
+                </CoveredPanel>
 
-                <CloakedPanel
+                <CoveredPanel
                     :revealFor="[trackBeatsPerMinute]"
                     title="Beats per minute value (BPM) for this track"
                     class="level-item"
@@ -104,10 +104,10 @@
                         >
                         </BpmEditor>
                     </LabeledInput>
-                </CloakedPanel>
+                </CoveredPanel>
 
                 <!-- Pre-Roll (in time) (hide initially, as long as no cues are set) -->
-                <CloakedPanel
+                <CoveredPanel
                     v-if="hasCues || trackPreRoll"
                     :revealFor="[trackPreRoll]"
                     title="The custom pre-roll duration for this track in [seconds]"
@@ -124,9 +124,9 @@
                             size="9"
                         />
                     </LabeledInput>
-                </CloakedPanel>
+                </CoveredPanel>
                 <!-- Pre-Roll (in measures) (hide initially, as long as no cues are set) -->
-                <CloakedPanel
+                <CoveredPanel
                     v-if="
                         experimentalUseMeter &&
                         useMeasureNumbers &&
@@ -152,7 +152,7 @@
                         >
                         </MetricalEditor>
                     </LabeledInput>
-                </CloakedPanel>
+                </CoveredPanel>
             </template>
             <template v-else>
                 <!-- Artist info (should not take too much width, and hide on small displays anyways)-->
@@ -202,7 +202,7 @@
 import { PropType, computed, inject, onBeforeMount, watch } from 'vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
-import CloakedPanel from '@/components/CloakedPanel.vue';
+import CoveredPanel from '@/components/CoveredPanel.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import ArtistLevelEditor from '@/components/editor/ArtistLevelEditor.vue';
