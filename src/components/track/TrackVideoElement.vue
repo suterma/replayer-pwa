@@ -11,6 +11,7 @@
             ></template>
             <TrackAudioPeaks
                 v-if="videoElement"
+                :key="mediaUrl"
                 :mediaElement="videoElement"
                 :showZoomView="true"
             ></TrackAudioPeaks>

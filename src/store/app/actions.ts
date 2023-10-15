@@ -953,7 +953,6 @@ export const actions = {
 
     /** Returns the app state to it's default */
     $reset(): void {
-        debugger;
         this.discardCompilation();
         state.compilation.value = Compilation.empty();
         state.selectedCueId.value = CompilationHandler.EmptyId;
