@@ -6,6 +6,17 @@
 **************************************************************
 */
 
+/** Desktop variant for the level breakpoint */
+@media screen and (max-width: 1024px) {
+    .level.has-breakpoint-desktop {
+        display: block;
+    }
+    .level-left.has-breakpoint-desktop,
+    .level-right.has-breakpoint-desktop {
+        display: block;
+    }
+}
+
 /** Allows level items to wrap at the end of lines, instead of getting pushed out of the boundary
 To keep the effect on small devices, add the "is-mobile" class.
 This class can be used directly on level containers. or on level-left or level-right containers.

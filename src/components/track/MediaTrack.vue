@@ -496,7 +496,7 @@
                         In full screen, this level is at the top, and not visually separated from the cues -->
                             <nav
                                 v-if="isPlayable"
-                                class="level"
+                                class="level has-breakpoint-desktop"
                                 :class="{
                                     'section navbar is-fixed-top has-background-grey-dark is-shadowless is-borderless':
                                         isTrackPlayerFullScreen,
