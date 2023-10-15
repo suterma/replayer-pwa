@@ -1653,13 +1653,13 @@ console.debug('MediaTrack::Setup:done.');
 // Define an overall width allocation for fixed right-hand side of the playback control level items
 .level {
     .level-left {
-        flex-basis: calc(100% - 600px);
+        flex-basis: calc(100% - 660px);
         .level-item {
             flex-shrink: 1;
         }
     }
     .level-right {
-        flex-basis: 600px;
+        flex-basis: 660px;
         .level-item {
             flex-shrink: 1;
         }
