@@ -16,7 +16,6 @@
     </MediaSourceIndicator>
     <DismissiblePanel v-else @dismissed="exit" hotkey>
         <MediaDropZone
-            :isExpanded="true"
             :replaceUrl="trackUrl"
             :trackId="trackId"
             ref="mediaDropZone"

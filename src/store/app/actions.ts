@@ -339,7 +339,7 @@ export const actions = {
         );
         state.mediaUrls.value.set(mediaUrl.resourceName, mediaUrl);
 
-        //If any track uses this media, remove the now stale duration for this track
+        //If any track uses this media, remove the now stale duration in this track
         const matchingTrack = state.compilation.value.Tracks.find((t) =>
             CompilationHandler.isLazyMatchingMediaUrl(t.Url, mediaUrl),
         );
@@ -685,7 +685,7 @@ export const actions = {
             PersistentStorage.removeMediaBlob(mediaUrl.resourceName);
         }
 
-        //If any track used this media, remove the now stale duration for this track
+        //If any track used this media, remove the now stale duration in this track
         const matchingTracks = state.compilation.value.Tracks.filter((t) =>
             CompilationHandler.isMatchingResourceName(
                 t.Url,

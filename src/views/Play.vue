@@ -24,16 +24,8 @@
         class="section pt-6 pl-0 pr-0 block"
         v-if="isEditMode || !hasCompilation"
     >
-        <DismissiblePanel
-            @dismissed="collapseMediaDropZone"
-            :dismissible="isMediaDropZoneExpanded"
-        >
-            <!-- Offer the demo only when no compilation/track is shown -->
-            <MediaDropZone
-                v-model:isExpanded="isMediaDropZoneExpanded"
-                :offerDemo="!hasCompilation"
-            />
-        </DismissiblePanel>
+        <!-- Offer the demo only when no compilation/track is shown -->
+        <MediaDropZone :offerDemo="!hasCompilation" />
     </div>
     <template v-if="isEditMode && hasAvailableMedia">
         <div class="has-text-centered block">
@@ -63,7 +55,6 @@ import MediaDropZone from '@/components/MediaDropZone.vue';
 import WelcomeText from '@/components/WelcomeText.vue';
 import CompilationLoader from '@/components/CompilationLoader.vue';
 import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
-import DismissiblePanel from '@/components/DismissiblePanel.vue';
 import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
 import { mapState } from 'pinia';
@@ -81,35 +72,13 @@ export default defineComponent({
         WelcomeText,
         CollapsiblePanel,
         MediaList,
-        DismissiblePanel,
     },
     data() {
-        return {
-            /** Whether the media drop zone is displayed in the expanded state */
-            isMediaDropZoneExpanded: false,
-        };
+        return {};
     },
 
-    watch: {
-        /** When the compilation loads or closes, update the media loader expansion accordingly
-         * @remarks When there is already something loaded, only the unobtrusive icon should be shown
-         */
-        hasCompilation: {
-            handler(newVal) {
-                this.updateMediaDropZoneExpansion(!newVal);
-            },
-            immediate: true,
-        },
-    },
-    methods: {
-        collapseMediaDropZone(): void {
-            this.isMediaDropZoneExpanded = !this.hasCompilation;
-        },
-
-        updateMediaDropZoneExpansion(expanded: boolean): void {
-            this.isMediaDropZoneExpanded = expanded;
-        },
-    },
+    watch: {},
+    methods: {},
     computed: {
         ...mapState(useAppStore, [
             'compilation',

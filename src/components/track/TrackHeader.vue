@@ -110,7 +110,7 @@
                 <CoveredPanel
                     v-if="hasCues || trackPreRoll"
                     :revealFor="[trackPreRoll]"
-                    title="The custom pre-roll duration for this track in [seconds]"
+                    title="The custom pre-roll duration for in track in [seconds]"
                     class="level-item"
                 >
                     <template #caption
@@ -133,7 +133,7 @@
                         (hasCues || trackPreRoll)
                     "
                     :revealFor="[trackPreRoll]"
-                    title="The custom pre-roll duration for this track in [measures]"
+                    title="The custom pre-roll duration in this track in [measures]"
                     class="level-item"
                 >
                     <template #caption

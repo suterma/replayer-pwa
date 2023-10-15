@@ -115,7 +115,7 @@ const props = defineProps({
      */
     cues: Array as PropType<Array<ICue>>,
 
-    /** The custom pre-roll duration for this track. Default is zero. */
+    /** The custom pre-roll duration in this track. Default is zero. */
     trackPreRoll: {
         type: null as unknown as PropType<number | null>,
         required: false,
