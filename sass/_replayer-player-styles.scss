@@ -11,32 +11,43 @@
 
 // Fixed at bottom
 .has-player-navbar-fixed-bottom {
-    padding-bottom: calc(200px + 1em);
+    padding-bottom: calc(230px + 1em);
 }
 
 @media screen and (min-width: 340px /* mobile */) {
-    .has-player-navbar-fixed-bottom {
-        padding-bottom: calc(160px + 1em);
+    .has-player-navbar-bottom-top {
+        padding-bottom: calc(230px + 1em);
+    }
+}
+
+@media screen and (min-width: 384px /* when the max count of media controls break */) {
+    .has-player-navbar-bottom-top {
+        padding-bottom: calc(190px + 1em);
     }
 }
 
 @media screen and (min-width: 769px /* tablet */) {
-    .has-player-navbar-fixed-bottom {
-        padding-bottom: calc(105px + 1em);
+    .has-player-navbar-bottom-top {
+        padding-bottom: calc(140px + 1em);
     }
 }
 @media screen and (min-width: 1024px) {
-    .has-player-navbar-fixed-bottom {
+    .has-player-navbar-bottom-top {
         padding-bottom: calc(152px + 1em);
     }
 }
-
 // Fixed at top
 .has-player-navbar-fixed-top {
-    padding-top: calc(200px + 1em);
+    padding-top: calc(230px + 1em);
 }
 
 @media screen and (min-width: 340px /* mobile */) {
+    .has-player-navbar-fixed-top {
+        padding-top: calc(230px + 1em);
+    }
+}
+
+@media screen and (min-width: 384px /* when the max count of media controls break */) {
     .has-player-navbar-fixed-top {
         padding-top: calc(190px + 1em);
     }
@@ -44,7 +55,7 @@
 
 @media screen and (min-width: 769px /* tablet */) {
     .has-player-navbar-fixed-top {
-        padding-top: calc(105px + 1em);
+        padding-top: calc(140px + 1em);
     }
 }
 @media screen and (min-width: 1024px) {
