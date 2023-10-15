@@ -17,6 +17,7 @@
                 shortcut="F2"
                 :clickRef="clickRef"
                 :iconPath="mdiPencil"
+                :disabled="true"
             />
         </Hotkey>
         <template v-if="hasCompilation">

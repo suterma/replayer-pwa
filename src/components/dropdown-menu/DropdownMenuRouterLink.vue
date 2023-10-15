@@ -9,48 +9,59 @@
             :subTitle="subTitle"
             :iconPath="iconPath"
             :shortcut="shortcut"
+            :disabled="isActiveRoute"
         >
         </DropdownMenuItem>
     </router-link>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 /** An item for a Dropdown menu
  */
-export default defineComponent({
-    name: 'DropdownMenuRouterLink',
-    components: { DropdownMenuItem },
-    props: {
-        title: {
-            type: String,
-            required: true,
-        },
-        shortcut: {
-            type: String,
-            required: false,
-        },
-        /** set a reference to the clickable button for the link*/
-        clickRef: {
-            type: Object,
-            required: false,
-        },
-        subTitle: {
-            type: String,
-            default: '',
-            required: false,
-        },
-        iconPath: {
-            type: String,
-            default: '',
-            required: false,
-        },
-
-        to: {
-            type: String,
-            required: true,
-        },
+const props = defineProps({
+    title: {
+        type: String,
+        required: true,
     },
+    shortcut: {
+        type: String,
+        required: false,
+    },
+    /** set a reference to the clickable button for the link*/
+    clickRef: {
+        type: Object,
+        required: false,
+    },
+    subTitle: {
+        type: String,
+        default: '',
+        required: false,
+    },
+    iconPath: {
+        type: String,
+        default: '',
+        required: false,
+    },
+    disabled: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
+
+    to: {
+        type: String,
+        required: true,
+    },
+});
+
+const route = useRoute();
+
+/** Wheter this item represents the current route
+ */
+const isActiveRoute = computed(() => {
+    return route.path == props.to;
 });
 </script>
