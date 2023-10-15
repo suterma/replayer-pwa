@@ -72,6 +72,13 @@
             data-cy="toggle-playback-mode"
         />
 
+        <PreRollToggler
+            v-if="!hidePreRollToggler"
+            :modelValue="isPreRollEnabled"
+            @update:modelValue="updatedIsPreRollEnabled"
+            data-cy="toggle-preroll-mode"
+        />
+
         <FadingToggler
             v-if="!hideFadingToggler"
             :modelValue="isFadingEnabled"
@@ -96,6 +103,7 @@ import { PlaybackMode, DefaultTrackVolume } from '@/store/compilation-types';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import PlaybackModeButton from '@/components/buttons/PlaybackModeButton.vue';
 import FadingToggler from '@/components/buttons/FadingToggler.vue';
+import PreRollToggler from '@/components/buttons/PreRollToggler.vue';
 import VolumeKnob from '@/components/VolumeKnob.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import {
@@ -114,6 +122,7 @@ export default defineComponent({
         PlayPauseButton,
         PlaybackModeButton,
         FadingToggler,
+        PreRollToggler,
         BaseIcon,
         VolumeKnob,
     },
@@ -130,6 +139,7 @@ export default defineComponent({
         'togglePlaying',
         'update:playbackMode',
         'update:isFadingEnabled',
+        'update:isPreRollEnabled',
         'update:volume',
         /** Emitted at a seek button click, with the amount of seconds as argument (can also be negative)
          */
@@ -168,6 +178,14 @@ export default defineComponent({
          * @remarks Implements a two-way binding
          */
         isFadingEnabled: {
+            type: Boolean,
+            required: true,
+        },
+
+        /** Whether pre-roll is currently enabled
+         * @remarks Implements a two-way binding
+         */
+        isPreRollEnabled: {
             type: Boolean,
             required: true,
         },
@@ -216,6 +234,13 @@ export default defineComponent({
         /** Whether to hide the fading toggler button
          */
         hideFadingToggler: {
+            type: Boolean,
+            default: false,
+        },
+
+        /** Whether to hide the pre-roll toggler button
+         */
+        hidePreRollToggler: {
             type: Boolean,
             default: false,
         },
@@ -284,6 +309,11 @@ export default defineComponent({
         /** Handling the enabled state of the fading */
         updatedIsFadingEnabled(isFadingEnabled: boolean): void {
             this.$emit('update:isFadingEnabled', isFadingEnabled);
+        },
+
+        /** Handling the enabled state of the pre-roll */
+        updatedIsPreRollEnabled(isPreRollEnabled: boolean): void {
+            this.$emit('update:isPreRollEnabled', isPreRollEnabled);
         },
 
         /** Handle a volume update

@@ -5,21 +5,21 @@
             'is-inactive': !modelValue,
         }"
         :isEngaged="modelValue"
-        engaged-label="fading is on"
-        disengaged-label="fading is off"
-        @click="togglePlaybackMode()"
+        engaged-label="pre-roll is on"
+        disengaged-label="pre-roll is off"
+        @click="togglePreRollMode()"
     >
-        <BaseIcon v-if="modelValue" :path="mdiNetworkStrength4" />
-        <BaseIcon v-else :path="mdiNetworkStrengthOutline" />
+        <BaseIcon v-if="modelValue" :path="mdiRayEndArrow" />
+        <BaseIcon v-else :path="mdiRayVertex" />
     </ToggleButton>
 </template>
 
 <script setup lang="ts">
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { mdiNetworkStrength4, mdiNetworkStrengthOutline } from '@mdi/js';
+import { mdiRayEndArrow, mdiRayVertex } from '@mdi/js';
 
-/** A toggle button for the fading state
+/** A toggle button for the pre-roll state
  */
 const props = defineProps({
     modelValue: {
@@ -31,7 +31,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
-function togglePlaybackMode() {
+function togglePreRollMode() {
     emit('update:modelValue', !props.modelValue);
 }
 </script>

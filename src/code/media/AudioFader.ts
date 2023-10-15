@@ -205,6 +205,10 @@ export default class AudioFader implements IAudioFader {
 
     // --- transport ---
 
+    /** Gets or sets whether pre-roll is enabled.
+     */
+    isPreRollEnabled = true;
+
     /** Applies the pre-roll:
      * - an general offset/pre-roll according to the setting
      * - an offset/pre-roll to compensate for fade-in durations, if appliccable
@@ -212,7 +216,7 @@ export default class AudioFader implements IAudioFader {
      */
     applyPreRoll(): void {
         // The offset, in seconds
-        let offset = this.preRollDuration;
+        let offset = this.isPreRollEnabled ? this.preRollDuration : 0;
 
         if (this.addFadeInPreRoll && this.effectiveFadeInDuration) {
             offset = offset + this.effectiveFadeInDuration / 1000;

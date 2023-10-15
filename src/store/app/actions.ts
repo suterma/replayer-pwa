@@ -4,6 +4,7 @@ import {
     ICompilation,
     ICue,
     ITrack,
+    PlaybackMode,
     Track,
 } from '../compilation-types';
 import CompilationHandler from '../compilation-handler';
@@ -948,5 +949,20 @@ export const actions = {
             (a, b) =>
                 orderedTrackIds.indexOf(a.Id) - orderedTrackIds.indexOf(b.Id),
         );
+    },
+
+    /** Returns the app state to it's default */
+    $reset(): void {
+        debugger;
+        this.discardCompilation();
+        state.compilation.value = Compilation.empty();
+        state.selectedCueId.value = CompilationHandler.EmptyId;
+        state.selectedTrackId.value = CompilationHandler.EmptyId;
+        state.mediaUrls.value = new Map<string, MediaUrl>();
+        state.useAppShortcuts.value = true;
+        state.acknowledgedVersion.value = null;
+        state.playbackMode.value = PlaybackMode.PlayTrack;
+        state.isFadingEnabled.value = true;
+        state.isPreRollEnabled.value = true;
     },
 };

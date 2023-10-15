@@ -15,10 +15,7 @@ const router = useRouter();
 
 onBeforeMount(() => {
     console.debug('Reset::onBeforeMount');
-
-    const app = useAppStore();
-    app.discardCompilation();
-    app.$reset;
+    useAppStore().$reset();
     useSettingsStore().$reset();
 
     // To make really sure

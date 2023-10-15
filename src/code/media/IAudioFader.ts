@@ -57,6 +57,14 @@ export interface IAudioFader {
      */
     set isFadingEnabled(enabled: boolean);
 
+    /** Gets whether pre-roll is enabled.
+     */
+    get isPreRollEnabled(): boolean;
+
+    /** Sets whether pre-roll is enabled.
+     */
+    set isPreRollEnabled(enabled: boolean);
+
     /** Gets the fade-in duration in [milliseconds].
      */
     get fadeInDuration(): number;

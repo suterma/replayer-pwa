@@ -44,6 +44,8 @@
                     @update:playbackMode="updatePlaybackMode($event)"
                     :isFadingEnabled="isFadingEnabled"
                     @update:isFadingEnabled="updatedIsFadingEnabled($event)"
+                    :isPreRollEnabled="isPreRollEnabled"
+                    @update:isPreRollEnabled="updatedIsPreRollEnabled($event)"
                     :hasPreviousTrack="index > 0 || isLoopingPlaybackMode"
                     :hasNextTrack="
                         index < (tracks?.length ?? 0) - 1 ||
@@ -232,6 +234,12 @@ export default defineComponent({
             this.isFadingEnabled = isFadingEnabled;
         },
 
+        /** Handle pre-roll enabled updated
+         */
+        updatedIsPreRollEnabled(isPreRollEnabled: boolean): void {
+            this.isPreRollEnabled = isPreRollEnabled;
+        },
+
         /** Moves playback to the previous track
          * @param trackId - The Id of the track to use the previous of
          * @param loop - When true, and the previous track is not defined, the last track is used.
@@ -407,7 +415,11 @@ export default defineComponent({
             'textTracks',
             'mediaTracks',
         ]),
-        ...mapWritableState(useAppStore, ['playbackMode', 'isFadingEnabled']),
+        ...mapWritableState(useAppStore, [
+            'playbackMode',
+            'isFadingEnabled',
+            'isPreRollEnabled',
+        ]),
 
         ...mapState(useSettingsStore, ['preventScreenTimeout']),
 

@@ -114,7 +114,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
      */
     const experimentalUseMeter = useLocalStorage('experimentalUseMeter', false);
 
-    /** Returns the settings with their default value */
+    /** Returns the settings to their default value */
     function $reset() {
         levelMeterSizeIsLarge.value = false;
         preventScreenTimeout.value = true;

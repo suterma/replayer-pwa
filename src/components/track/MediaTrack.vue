@@ -361,11 +361,16 @@
                                 :hideStopButton="true"
                                 :hideTrackNavigation="true"
                                 :hideCueNavigation="true"
+                                :hidePreRollToggler="hidePreRollToggler"
                                 :hideFadingToggler="hideFadingToggler"
                                 :playbackMode="playbackMode"
                                 @update:playbackMode="updatedPlaybackMode"
                                 :isFadingEnabled="isFadingEnabled"
                                 @update:isFadingEnabled="updatedIsFadingEnabled"
+                                :isPreRollEnabled="isPreRollEnabled"
+                                @update:isPreRollEnabled="
+                                    updatedIsPreRollEnabled
+                                "
                                 :volume="track.Volume"
                                 @update:volume="updateVolume"
                                 :hidePlayPauseButton="true"
@@ -608,6 +613,10 @@
                                             @update:isFadingEnabled="
                                                 updatedIsFadingEnabled
                                             "
+                                            :isPreRollEnabled="isPreRollEnabled"
+                                            @update:isPreRollEnabled="
+                                                updatedIsPreRollEnabled
+                                            "
                                             :volume="track.Volume"
                                             @update:volume="updateVolume"
                                             @seek="(seconds) => seek(seconds)"
@@ -616,6 +625,12 @@
                                             "
                                             @togglePlaying="skipToPlayPause()"
                                             :hidePlayPauseButton="false"
+                                            :hidePreRollToggler="
+                                                hidePreRollToggler
+                                            "
+                                            :hideFadingToggler="
+                                                hideFadingToggler
+                                            "
                                             data-cy="media-controls-bar"
                                         >
                                             <PlaybackIndicator
@@ -770,6 +785,9 @@ const emit = defineEmits([
     /** Occurs, when the user changes the fading enabled state */
     'update:isFadingEnabled',
 
+    /** Occurs, when the user changes the pre-roll enabled state */
+    'update:isPreRollEnabled',
+
     /** Occurs, when the end of the track has been reached and playback has ended.
      * @remarks This is not triggered when the track or one of it's cue is looping.
      * @remarks Allows to select the next track in "play all" and "shuffle" mode.
@@ -862,6 +880,15 @@ const props = defineProps({
      * @remarks Used overall in the compilation, not per track
      */
     isFadingEnabled: {
+        type: Boolean,
+        required: false,
+        default: true,
+    },
+
+    /** Whether pre-roll is enabled
+     * @remarks Used overall in the compilation, not per track
+     */
+    isPreRollEnabled: {
         type: Boolean,
         required: false,
         default: true,
@@ -1032,9 +1059,16 @@ const hideFadingToggler = computed(
     () => fadeInDuration.value === 0 && fadeOutDuration.value === 0,
 );
 
+/** Computes whether the pre-roll toggler is needed at all
+ */
+const hidePreRollToggler = computed(() => preRollDuration.value === 0);
+
+/** Applies updated fading and pre-roll to the media handler
+ */
 watchEffect(() => {
     if (mediaHandler.value && mediaHandler.value.fader) {
         mediaHandler.value.fader.isFadingEnabled = props.isFadingEnabled;
+        mediaHandler.value.fader.isPreRollEnabled = props.isPreRollEnabled;
     }
 });
 
@@ -1219,8 +1253,14 @@ function updatedPlaybackMode(playbackMode: PlaybackMode): void {
 
 /** Handle fading enabled updated
  */
-function updatedIsFadingEnabled(isFadingEnabled: PlaybackMode): void {
+function updatedIsFadingEnabled(isFadingEnabled: boolean): void {
     emit('update:isFadingEnabled', isFadingEnabled);
+}
+
+/** Handle pre-roll enabled updated
+ */
+function updatedIsPreRollEnabled(isPreRollEnabled: boolean): void {
+    emit('update:isPreRollEnabled', isPreRollEnabled);
 }
 
 /** Handle isExpanded update
