@@ -9,18 +9,16 @@
         disengaged-label="no fading"
         @click="togglePlaybackMode()"
     >
-        <BaseIcon v-if="modelValue" :path="rFadeInFadeOutOn" />
-        <BaseIcon v-else :path="rFadeInFadeOutOff" />
+        <BaseIcon v-if="modelValue" :path="mdiNetworkStrength4" />
+        <BaseIcon v-else :path="mdiNetworkStrengthOff" />
     </ToggleButton>
 </template>
 
 <script setup lang="ts">
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import {
-    rFadeInFadeOutOff,
-    rFadeInFadeOutOn,
-} from '@/components/icons/BaseIcon.vue';
+import { mdiNetworkStrength4, mdiNetworkStrengthOff } from '@mdi/js';
+
 /** A toggle button for the fading state
  */
 const props = defineProps({
