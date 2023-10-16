@@ -1716,23 +1716,14 @@ console.debug('MediaTrack::Setup:done.');
 }
 </style>
 <style lang="scss">
-/**
-* On smaller screens, keep the contained track level meter also small */
-@media screen and (max-width: 768px) {
-    // Like the button size
-    .audio-level-meter {
-        max-width: 40px;
-    }
+/** Specific styles for the vertical level.
+These are chosen for a nice visual fit in the header */
+meter.audio-level-meter.vertical {
+    max-width: 40px;
+    transform: rotate(-90deg);
 }
 
-/** Rotate the audio level meter according to it's DOM target */
-.audio-level-meter.vertical {
-    transform: rotate(-90deg);
-    width: 2.5em;
-}
 .audio-level-container.vertical {
-    width: 1.25em;
-    margin-left: -0.75em;
-    padding-left: -0.75em;
+    width: 22px;
 }
 </style>
