@@ -1716,14 +1716,15 @@ console.debug('MediaTrack::Setup:done.');
 }
 </style>
 <style lang="scss">
-/** Specific styles for the vertical level.
+/** Specific styles for a vertical level in the header (if used there).
 These are chosen for a nice visual fit in the header */
-meter.audio-level-meter.vertical {
-    max-width: 40px;
-    transform: rotate(-90deg);
-}
-
-.audio-level-container.vertical {
-    width: 22px;
+.track-header {
+    .audio-level-container {
+        width: 22px;
+        meter.audio-level-meter {
+            max-width: 40px;
+            transform: rotate(-90deg);
+        }
+    }
 }
 </style>

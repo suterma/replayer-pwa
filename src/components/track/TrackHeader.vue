@@ -3,7 +3,7 @@
          Using flex-start on the level, to cause the left and right parts to both 
          begin at the same, upper vertical position -->
     <div
-        class="level is-mobile is-align-items-flex-start"
+        class="track-header level is-mobile is-align-items-flex-start"
         :class="$attrs.class"
     >
         <!-- Left side -->
