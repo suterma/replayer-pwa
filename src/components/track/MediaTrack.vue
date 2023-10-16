@@ -138,6 +138,7 @@
                 the numeric value is truncated to one decimal digit, as displayed, avoiding
                 unnecessary update for actually non-distinctly displayed values. -->
                     <TimeDisplay
+                        v-if="experimentalShowPositionInTrackHeader"
                         v-experiment="experimentalShowPositionInTrackHeader"
                         class="level-item is-narrow is-size-7"
                         :modelValue="Math.floor(currentPosition * 10) / 10"
