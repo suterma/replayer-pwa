@@ -896,8 +896,6 @@ const props = defineProps({
     },
 });
 
-console.debug('MediaTrack::Setup:metering...');
-
 // --- metering ---
 
 /** Whether to use measure numbers for the track's cue position handling
@@ -918,8 +916,6 @@ provide(useMeasureNumbersInjectionKey, readonly(useMeasureNumbers));
  */
 const meter = computed(() => props.track.Meter);
 provide(meterInjectionKey, readonly(meter));
-
-console.debug('MediaTrack::Setup:playback...');
 
 // --- playback handling (NEW)
 
@@ -1351,12 +1347,10 @@ defineExpose({
     skipToPlayPause,
 });
 
-console.debug('MediaTrack::Setup:watches...');
-
 /** Handles changes in whether this is the active track.
-         * @remarks When this ceases to be the active track, pause playback.
-           This avoids having multiple tracks playing at the same time.
-         */
+ * @remarks When this ceases to be the active track, pause playback.
+ This avoids having multiple tracks playing at the same time.
+*/
 watch(
     () => props.isActiveTrack,
     (isActive, wasActive) => {
@@ -1375,7 +1369,6 @@ watch(
 /** Handles active track id changes.
  * @remarks Used to determine the requested player widget transition.
  */
-
 watch(activeTrackId, (activeTrackId, previousTrackId) => {
     console.debug(
         `Track(${props.track.Name})::activeTrack:activeTrackId:`,
@@ -1386,7 +1379,7 @@ watch(activeTrackId, (activeTrackId, previousTrackId) => {
 
     if (activeTrackId != null && previousTrackId != null) {
         const indexOfActive = CompilationHandler.getIndexOfTrackById(
-            //TODO check: why is not the tracks computed prop used? or a tracks prop for the store? maybe because of the possible shuffling?
+            //Because of the possible shuffling, the tracks computed property is not used
             compilation.value.Tracks,
             activeTrackId,
         );
@@ -1413,7 +1406,6 @@ watch(activeTrackId, (activeTrackId, previousTrackId) => {
 });
 
 /** Handles changes in whether this track is playing.
- * @remarks This activates the wake lock, when playing starts.
  */
 watch(isTrackPlaying, () => {
     console.debug(
@@ -1423,13 +1415,12 @@ watch(isTrackPlaying, () => {
     emit('isTrackPlaying', isTrackPlaying);
 });
 
+/** Handles the overflow style for fullscreen
+ * @remarks Removes a potentially visible scrollbar in the fullscreen view
+ */
 watch(
     () => props.isTrackPlayerFullScreen,
     (isFullScreen) => {
-        console.debug(
-            `Track(${props.track.Name})::isTrackPlayerFullScreen:isFullScreen:`,
-            isFullScreen,
-        );
         document.documentElement.style.overflowY = isFullScreen
             ? 'clip'
             : 'auto';
@@ -1571,25 +1562,15 @@ const mediaUrl = computed(() => {
     if (FileHandler.isValidHttpUrl(props.track.Url)) {
         return props.track.Url;
     }
-    return trackMediaUrl.value?.url;
+    return CompilationHandler.getMatchingPackageMediaUrl(
+        props.track?.Url,
+        mediaUrls.value,
+    )?.url;
 });
 
 /** Returns all cues of this track */
 const cues = computed(() => {
     return props.track.Cues;
-});
-
-/** Returns the media URL (online URL or playable file content) for a track's file name
- * @remarks if available, the tracks from a compilation package are used, otherwise the
- * files are to be loaded from the file system or from the internet
- */
-
-const trackMediaUrl = computed(() => {
-    let mediaUrl = CompilationHandler.getMatchingPackageMediaUrl(
-        props.track?.Url,
-        mediaUrls.value,
-    );
-    return mediaUrl;
 });
 
 // --- looping ---
@@ -1644,8 +1625,6 @@ watchEffect(() => {
             console.debug('MediaTrack::no media loop');
     }
 });
-
-console.debug('MediaTrack::Setup:done.');
 </script>
 
 <style lang="scss" scoped>
