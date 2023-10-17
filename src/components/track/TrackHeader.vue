@@ -57,6 +57,7 @@
                             placeholder="Track name"
                             title="Track name"
                             data-cy="track-name"
+                            :focusOnMounted="isActive"
                         />
                     </LabeledInput>
                 </div>
