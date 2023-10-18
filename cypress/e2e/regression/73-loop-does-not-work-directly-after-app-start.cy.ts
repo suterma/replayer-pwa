@@ -5,6 +5,8 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
         it(`should loop for the "loop track" play mode (using an  ${mediaSourceUrl.name} source)`, () => {
             // ARRANGE (set loop track play mode)
             cy.visit(`/#/play?media=${mediaSourceUrl.url}`);
+            cy.consentIfYouTube(mediaSourceUrl.url);
+
             cy.get('button[data-cy="toggle-playback-mode"]').click();
 
             // ACT (go to the end and wait for a loop)
@@ -30,6 +32,8 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
         it(`should loop for the "loop track" play mode even after an app restart (using an  ${mediaSourceUrl.name} source)`, () => {
             // ARRANGE (set loop track play mode)
             cy.visit(`/#/play?media=${mediaSourceUrl.url}`);
+            cy.consentIfYouTube(mediaSourceUrl.url);
+
             cy.get('button[data-cy="toggle-playback-mode"]').click();
 
             // ACT restart
@@ -62,6 +66,8 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
                     mediaSourceUrl.url
                 }`,
             );
+            cy.consentIfYouTube(mediaSourceUrl.url);
+
             cy.get('button[data-cy="toggle-playback-mode"]')
                 .click()
                 .click()

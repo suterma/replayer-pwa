@@ -7,7 +7,7 @@ describe('testing the issue "71-a-zip-without-a-compilation-does-not-create-defa
         // ACT (replace a file)
         // Note: There are currently two media source displays existing, depending on the viewport width. Take the shown one.
         cy.get('[data-cy="media-source"]').filter(':visible').click();
-        cy.get('input[data-cy="input-file"]').selectFile(
+        cy.get('[data-cy="track"] input[data-cy="input-file"]').selectFile(
             'cypress/fixtures/lidija_roos-not_for_sale.mp3',
             { force: true },
         );
@@ -27,7 +27,7 @@ describe('testing the issue "71-a-zip-without-a-compilation-does-not-create-defa
         // ACT (replace an URL)
         // Note: There are currently two media source displays existing, depending on the viewport width. Take the shown one.
         cy.get('[data-cy="media-source"]').filter(':visible').click();
-        cy.get('[data-cy="input-url"]').type(
+        cy.get('[data-cy="track"] [data-cy="input-url"]').type(
             'https://lib.replayer.app/your-light-by-lidija-roos.mp3',
         );
         cy.get('[data-cy="submit-source"]').click();

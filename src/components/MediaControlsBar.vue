@@ -83,7 +83,7 @@
             v-if="!hideFadingToggler"
             :modelValue="isFadingEnabled"
             @update:modelValue="updatedIsFadingEnabled"
-            data-cy="toggle-playback-mode"
+            data-cy="toggle-fading-mode"
         />
 
         <VolumeKnob

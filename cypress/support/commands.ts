@@ -43,6 +43,7 @@ declare namespace Cypress {
         loadMediaUrl(url: string): void;
         loadFile(path: string): void;
         loadEmpty(): void;
+        consentIfYouTube(url: string): void;
     }
 }
 
@@ -71,4 +72,15 @@ Cypress.Commands.add('loadFile', (path): void => {
 
 Cypress.Commands.add('loadEmpty', (): void => {
     cy.visit('/');
+});
+
+/** Consents to the YouTube consent dialog, if it's a YouTube URL
+ * @param {string} url - The resource URL
+ */
+Cypress.Commands.add('consentIfYouTube', (url): void => {
+    if (url.startsWith('https://www.youtube.com')) {
+        cy.get('[data-cy="youtube-consent"] button[data-cy="submit-button"]')
+            .first()
+            .click();
+    }
 });
