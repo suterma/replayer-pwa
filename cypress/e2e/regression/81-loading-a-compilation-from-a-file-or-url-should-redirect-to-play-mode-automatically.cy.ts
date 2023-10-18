@@ -39,7 +39,6 @@ describe('testing the issue "Loading a compilation from a file or URL should red
 
         // ACT (add a new compilation from URL via URL input)
         cy.visit('/#/edit');
-        cy.get('[data-cy="add-media"]').click();
         cy.get('[data-cy="input-url"]').click();
         cy.get('[data-cy="input-url"]').type(
             'https://lib.replayer.app/anechoic-voices/Anechoic%20Voices.zip',

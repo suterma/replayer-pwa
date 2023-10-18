@@ -30,7 +30,7 @@ describe('testing the issue "71-a-zip-without-a-compilation-does-not-create-defa
         cy.get('[data-cy="track"] [data-cy="input-url"]').type(
             'https://lib.replayer.app/your-light-by-lidija-roos.mp3',
         );
-        cy.get('[data-cy="submit-source"]').click();
+        cy.get('[data-cy="track"] [data-cy="submit-source"]').click();
         // ASSERT that there is just the expected amount of tracks (no additional default track)
         cy.get('[data-cy="compilation"] [data-cy="track"]').then(($tracks) => {
             cy.wrap($tracks).should('have.length', 1);
