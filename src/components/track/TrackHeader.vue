@@ -24,9 +24,13 @@
                     title="Track"
                     collapsedText="Click to expand / edit cues"
                     expandedText="Click to collapse"
-                    ><span class="tag is-warning is-rounded is-outlined">{{
-                        cueCount
-                    }}</span></CollapsibleButton
+                    ><span
+                        :class="{
+                            'is-invisible': isExpanded || cueCount == 0,
+                        }"
+                        class="tag is-warning is-rounded"
+                        >{{ cueCount }}</span
+                    ></CollapsibleButton
                 >
             </div>
 
