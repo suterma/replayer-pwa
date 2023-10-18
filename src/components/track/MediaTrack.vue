@@ -45,7 +45,7 @@
                 :isActive="isActiveTrack"
                 :isFirst="isFirst"
                 :isLast="isLast"
-                :hasCues="hasCues"
+                :cueCount="track.Cues.length"
                 @click="skipToPlayPause"
             >
                 <template

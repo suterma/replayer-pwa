@@ -24,8 +24,10 @@
                     title="Track"
                     collapsedText="Click to expand / edit cues"
                     expandedText="Click to collapse"
-                    ><span></span
-                ></CollapsibleButton>
+                    ><span class="tag is-warning is-rounded is-outlined">{{
+                        cueCount
+                    }}</span></CollapsibleButton
+                >
             </div>
 
             <!-- The edit part -->
@@ -312,9 +314,9 @@ const props = defineProps({
         default: false,
     },
 
-    /** Whether this track has any cue at all */
-    hasCues: {
-        type: Boolean,
+    /** The number of cues in this track */
+    cueCount: {
+        type: Number,
         required: true,
     },
 
@@ -407,6 +409,11 @@ watch(
 
 const isEditMode = computed(() => {
     return props.displayMode === TrackViewMode.Edit;
+});
+
+/** Whether this track has any cues */
+const hasCues = computed(() => {
+    return props.cueCount > 0;
 });
 
 /** Flag to indicate whether this track's player is currently playing
