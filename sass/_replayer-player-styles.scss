@@ -20,7 +20,7 @@
     }
 }
 
-@media screen and (min-width: 384px /* when the max count of media controls break */) {
+@media screen and (min-width: 424px /* when the max count of media controls break */) {
     .has-player-navbar-bottom-top {
         padding-bottom: calc(190px + 1em);
     }
@@ -47,7 +47,7 @@
     }
 }
 
-@media screen and (min-width: 384px /* when the max count of media controls break */) {
+@media screen and (min-width: 424px /* when the max count of media controls break */) {
     .has-player-navbar-fixed-top {
         padding-top: calc(190px + 1em);
     }

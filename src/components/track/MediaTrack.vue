@@ -1631,13 +1631,15 @@ watchEffect(() => {
 // Define an overall width allocation for fixed right-hand side of the playback control level items
 .level {
     .level-left {
-        flex-basis: calc(100% - 660px);
+        // The value for the basis have been empirically found to work best on
+        // Google Chrome, Brave and Firefox, on Ubuntu
+        flex-basis: calc(100% - 686px);
         .level-item {
             flex-shrink: 1;
         }
     }
     .level-right {
-        flex-basis: 660px;
+        flex-basis: 686px;
         .level-item {
             flex-shrink: 1;
         }
