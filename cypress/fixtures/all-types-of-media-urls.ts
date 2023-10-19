@@ -16,7 +16,7 @@ export const mediaSourceUrls = [
     },
     {
         name: 'video (without CORS)',
-        url: 'https://mars.nasa.gov/multimedia/videos/movies/20181108_PaintingCarsForMars/20181108_PaintingCarsForMars-320.mp4',
+        url: 'https://images-assets.nasa.gov/video/Sentinel-6%20Launch%20Footage/Sentinel-6%20Launch%20Footage~small.mp4',
         duration: 230.8,
     },
     {
