@@ -838,12 +838,6 @@ const props = defineProps({
         required: true,
     },
 
-    /** Whether this track is the active track in the set of tracks */
-    isActiveTrack: {
-        type: Boolean,
-        required: true,
-    },
-
     /** Whether any track (including this one) in the compilation is currently soloed.
      * This is required to determine the muting of non-soloed tracks.
      */
@@ -1110,7 +1104,7 @@ function toNextCue() {
  */
 function skipToPlayPause(): void {
     if (isTrackLoaded.value) {
-        if (!props.isActiveTrack) {
+        if (!isActiveTrack.value) {
             trackPlay();
         } else {
             togglePlayback();
@@ -1125,7 +1119,7 @@ function skipToPlayPause(): void {
  */
 function setActiveTrack(): void {
     if (isTrackLoaded.value) {
-        if (!props.isActiveTrack) {
+        if (!isActiveTrack.value) {
             app.updateSelectedTrackId(props.track.Id);
         }
     }
@@ -1163,21 +1157,21 @@ function toggleSolo(solo: boolean | null = null): void {
 
 /** Toggles the playback state, if this is the active track */
 function togglePlayback() {
-    if (props.isActiveTrack) {
+    if (isActiveTrack.value) {
         mediaHandler.value?.togglePlayback();
     }
 }
 
 /** Rewinds 5 seconds, if this is the active track */
 function rewind() {
-    if (props.isActiveTrack) {
+    if (isActiveTrack.value) {
         seek(-5);
     }
 }
 
 /** Forwards 5 seconds, if this is the active track */
 function forward() {
-    if (props.isActiveTrack) {
+    if (isActiveTrack.value) {
         seek(+5);
     }
 }
@@ -1194,14 +1188,14 @@ function seekToSeconds(seconds: number): void {
 
 /** Handles the volume down command if this is the active track */
 function volumeDown() {
-    if (props.isActiveTrack) {
+    if (isActiveTrack.value) {
         mediaHandler.value?.fader.volumeDown();
     }
 }
 
 /** Handles the volume up command if this is the active track */
 function volumeUp() {
-    if (props.isActiveTrack) {
+    if (isActiveTrack.value) {
         mediaHandler.value?.fader.volumeUp();
     }
 }
@@ -1218,9 +1212,8 @@ function updateVolume(volume: number) {
 function goToSelectedCue() {
     /*Check for the active track here (again), because otherwise some event handling
             sequences might cause actions on non-active tracks too.*/
-    if (props.isActiveTrack) {
-        console.debug('Track::goToSelectedCue of selected track');
-
+    if (isActiveTrack.value) {
+        console.debug(`Track(${props.track.Name})::goToSelectedCue`);
         if (selectedCue.value) {
             const cueTime = selectedCue.value.Time;
 
@@ -1345,64 +1338,6 @@ function createNewCue(): void {
 defineExpose({
     /** For skipping from the compilation level, to a given track, the skipToPlayPause needs to be accessible from outside */
     skipToPlayPause,
-});
-
-/** Handles changes in whether this is the active track.
- * @remarks When this ceases to be the active track, pause playback.
- This avoids having multiple tracks playing at the same time.
-*/
-watch(
-    () => props.isActiveTrack,
-    (isActive, wasActive) => {
-        console.debug(
-            `Track(${props.track.Name})::isActiveTrack:val:`,
-            isActive,
-        );
-
-        // Pause this track, when it's no more active track
-        if (wasActive === true && isActive === false) {
-            mediaHandler.value?.pause();
-        }
-    },
-);
-
-/** Handles active track id changes.
- * @remarks Used to determine the requested player widget transition.
- */
-watch(activeTrackId, (activeTrackId, previousTrackId) => {
-    console.debug(
-        `Track(${props.track.Name})::activeTrack:activeTrackId:`,
-        activeTrackId,
-        'prev:',
-        previousTrackId,
-    );
-
-    if (activeTrackId != null && previousTrackId != null) {
-        const indexOfActive = CompilationHandler.getIndexOfTrackById(
-            //Because of the possible shuffling, the tracks computed property is not used
-            compilation.value.Tracks,
-            activeTrackId,
-        );
-
-        const indexOfPrevious = CompilationHandler.getIndexOfTrackById(
-            compilation.value.Tracks,
-            previousTrackId,
-        );
-
-        if (indexOfActive == indexOfPrevious + 1) {
-            // exactly next
-            skipTransitionName.value = 'slide-left';
-        } else if (indexOfActive == indexOfPrevious - 1) {
-            // exactly previous
-            skipTransitionName.value = 'slide-right';
-        } else if (indexOfActive > indexOfPrevious) {
-            // later than next
-            skipTransitionName.value = 'slide-fade-left';
-        } else if (indexOfActive < indexOfPrevious) {
-            // earlier than previous
-            skipTransitionName.value = 'slide-fade-right';
-        }
-    }
 });
 
 /** Handles changes in whether this track is playing.
@@ -1571,6 +1506,69 @@ const mediaUrl = computed(() => {
 /** Returns all cues of this track */
 const cues = computed(() => {
     return props.track.Cues;
+});
+
+// ---  Track/cue selection ---
+
+/** Whether this track is the active track in the set of tracks */
+const isActiveTrack = computed(() => activeTrackId.value === props.track.Id);
+
+/** Handles changes in whether this is the active track.
+ * @remarks When this ceases to be the active track, pause playback.
+ This avoids having multiple tracks playing at the same time.
+*/
+watch(
+    () => isActiveTrack.value,
+    (isActive, wasActive) => {
+        console.debug(
+            `Track(${props.track.Name})::isActiveTrack:val:`,
+            isActive,
+        );
+
+        // Pause this track, when it's no more active track
+        if (wasActive === true && isActive === false) {
+            mediaHandler.value?.pause();
+        }
+    },
+);
+
+/** Handles active track id changes.
+ * @remarks Used to determine the requested player widget transition.
+ */
+watch(activeTrackId, (activeTrackId, previousTrackId) => {
+    console.debug(
+        `Track(${props.track.Name})::activeTrack:activeTrackId:`,
+        activeTrackId,
+        'prev:',
+        previousTrackId,
+    );
+
+    if (activeTrackId != null && previousTrackId != null) {
+        const indexOfActive = CompilationHandler.getIndexOfTrackById(
+            //Because of the possible shuffling, the tracks computed property is not used
+            compilation.value.Tracks,
+            activeTrackId,
+        );
+
+        const indexOfPrevious = CompilationHandler.getIndexOfTrackById(
+            compilation.value.Tracks,
+            previousTrackId,
+        );
+
+        if (indexOfActive == indexOfPrevious + 1) {
+            // exactly next
+            skipTransitionName.value = 'slide-left';
+        } else if (indexOfActive == indexOfPrevious - 1) {
+            // exactly previous
+            skipTransitionName.value = 'slide-right';
+        } else if (indexOfActive > indexOfPrevious) {
+            // later than next
+            skipTransitionName.value = 'slide-fade-left';
+        } else if (indexOfActive < indexOfPrevious) {
+            // earlier than previous
+            skipTransitionName.value = 'slide-fade-right';
+        }
+    }
 });
 
 // --- looping ---

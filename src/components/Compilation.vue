@@ -39,7 +39,6 @@
                     @update:isTrackPlayerFullScreen="
                         updateIsTrackPlayerFullScreen($event)
                     "
-                    :isActiveTrack="activeTrackId === track.Id"
                     :playbackMode="playbackMode"
                     @update:playbackMode="updatePlaybackMode($event)"
                     :isFadingEnabled="isFadingEnabled"
