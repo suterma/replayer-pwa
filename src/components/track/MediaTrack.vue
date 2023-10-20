@@ -114,13 +114,13 @@
                 <template v-slot:left-additional>
                     <span
                         v-if="isPlayable && track.Meter?.BeatsPerMinute"
-                        class="is-size-7 level-item is-narrow has-opacity-half"
+                        class="is-size-7 level-item is-hidden-mobile is-narrow has-opacity-half"
                     >
                         <span>{{ track.Meter?.BeatsPerMinute }}&nbsp;BPM</span>
                     </span>
                     <span
                         v-if="isPlayable && track.Meter?.TimeSignature"
-                        class="is-size-7 level-item is-narrow has-opacity-half"
+                        class="is-size-7 level-item is-hidden-mobile is-narrow has-opacity-half"
                     >
                         <span
                             ><sup>{{
@@ -159,27 +159,28 @@
                         :subSecondDigits="1"
                     ></TimeDisplay>
 
-                    <!-- NOTE: In edit mode, the volume button is displayed as part of the transport area, not in the header -->
-                    <VolumeKnob
-                        v-if="!isEditable"
-                        class="level-item is-narrow"
-                        :disabled="!isTrackLoaded"
-                        :modelValue="track.Volume"
-                        @update:modelValue="updateVolume"
-                    />
-
                     <!-- Placeholder for the audio level meter (used for teleporting from the player component) -->
-                    <div
-                        class="level-item is-narrow"
-                        :class="{
-                            'is-clickable': isTrackLoaded,
-                            'has-cursor-not-allowed': !isTrackLoaded,
-                        }"
-                        @click="skipToPlayPause"
-                    >
-                        <span
-                            :id="`track-${track.Id}-HeaderLevelPlaceholder`"
-                        ></span>
+                    <div class="level-item is-narrow mr-0">
+                        <div
+                            :class="{
+                                'is-clickable': isTrackLoaded,
+                                'has-cursor-not-allowed': !isTrackLoaded,
+                            }"
+                            @click="skipToPlayPause"
+                        >
+                            <span
+                                :id="`track-${track.Id}-HeaderLevelPlaceholder`"
+                            ></span>
+                        </div>
+                    </div>
+                    <div class="level-item is-narrow mr-0 is-hidden-mobile">
+                        <!-- NOTE: In edit mode, the volume button is displayed as part of the transport area, not in the header -->
+                        <VolumeKnob
+                            v-if="!isEditable"
+                            :disabled="!isTrackLoaded"
+                            :modelValue="track.Volume"
+                            @update:modelValue="updateVolume"
+                        />
                     </div>
                 </template>
             </TrackHeader>
@@ -1699,7 +1700,6 @@ watchEffect(() => {
 These are chosen for a nice visual fit in the header */
 .track-header {
     .audio-level-container {
-        width: 22px;
         meter.audio-level-meter {
             max-width: 40px;
             transform: rotate(-90deg);

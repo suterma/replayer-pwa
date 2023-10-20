@@ -1,7 +1,7 @@
 <template>
     <Knob
         title="Drag, scroll or use the arrow keys to change volume"
-        class="button is-rounded"
+        class="button is-nav is-rounded"
         :disabled="disabled ? true : null"
         :modelValue="volume"
         @update:modelValue="updateVolume"

@@ -440,13 +440,18 @@ const isTrackPlaying = inject(isPlayingInjectionKey);
     .level-left {
         word-break: break-word;
         /* This basis is set empirically to fit for the elements on the right */
-        flex-basis: calc(100% - 120px);
+        /* from zero: peaks and indicator is shown */
+        flex-basis: calc(100% - 70px);
+        /* from tablet: time, peaks, volume and indicator is shown */
+        @media screen and (min-width: 769px) {
+            flex-basis: calc(100% - 190px);
+        }
     }
 
     .level-right {
         min-width: 0;
 
-        /* Keep the right hand items (play indicator, expander) as small as possible */
+        /* Keep the right hand items as small as possible */
         flex-basis: 0;
 
         /* These items should keep their size */
