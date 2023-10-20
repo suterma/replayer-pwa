@@ -83,6 +83,7 @@ export enum RezMimeTypes {
     VIDEO_WEBM = 'video/webm',
     VIDEO_MP4 = 'video/mp4',
     VIDEO_OGG = 'video/ogg',
+    // zip, officially registered by IANA
     APPLICATION_ZIP = 'application/zip',
     TEXT_XML = 'text/xml',
     TEXT_PLAIN = 'text/plain',
