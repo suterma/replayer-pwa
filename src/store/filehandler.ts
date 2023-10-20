@@ -285,13 +285,16 @@ export default class FileHandler {
     }
 
     /** Returns whether the given MIME type is a supported package MIME type by Replayer
+     * @devdoc See https://stackoverflow.com/a/72232884/79485 about mime types
      */
     static isSupportedPackageMimeType(type: string | undefined): boolean {
         return (
             !!type &&
             [
-                'application/zip' /*zip*/,
-                'application/x-zip-compressed' /*zip*/,
+                'application/zip' /* zip, officially registered by IANA*/,
+                'application/octet-stream' /* arbitrary binary data */,
+                'application/x-zip-compressed' /* zip, non-standard */,
+                'binary/octet-stream' /*z ip, very unofficial, used by adonia */,
             ].includes(type)
         );
     }
