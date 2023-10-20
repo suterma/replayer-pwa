@@ -442,6 +442,12 @@ const isTrackPlaying = inject(isPlayingInjectionKey);
         /* This basis is set empirically to fit for the elements on the right */
         /* from zero: peaks and indicator is shown */
         flex-basis: calc(100% - 70px);
+
+        /* from zero, when editing: peaks, indicator and menu icon is shown */
+        .is-editable {
+            flex-basis: calc(100% - 130px);
+        }
+
         /* from tablet: time, peaks, volume and indicator is shown */
         @media screen and (min-width: 769px) {
             flex-basis: calc(100% - 190px);
@@ -460,6 +466,13 @@ const isTrackPlaying = inject(isPlayingInjectionKey);
             flex-grow: 0;
             text-align: right;
         }
+    }
+}
+
+.is-editable .level {
+    .level-left {
+        /* from zero, when editing: peaks, indicator and menu icon is shown */
+        flex-basis: calc(100% - 130px);
     }
 }
 </style>
