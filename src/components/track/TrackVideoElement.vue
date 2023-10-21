@@ -17,21 +17,44 @@
             ></TrackAudioPeaks>
         </CoveredPanel>
     </div>
-    <div
-        v-show="showVideo && props.enableVideo"
-        class="block video-container"
-        :class="{
-            'is-small': smallVideo,
-            'is-loading': isLoading,
-            paused: isPaused,
-            seeking: isSeeking,
-            fading: isFading !== FadingMode.None,
-            'fade-out': isFading == FadingMode.FadeOut,
-            'fade-in': isFading == FadingMode.FadeIn,
-        }"
-    >
-        <video
-            controls
+    <template v-if="props.enableVideo">
+        <!-- use the video element -->
+        <div
+            v-show="showVideo && props.enableVideo"
+            class="block video-container"
+            :class="{
+                'is-small': smallVideo,
+                'is-loading': isLoading,
+                paused: isPaused,
+                seeking: isSeeking,
+                fading: isFading !== FadingMode.None,
+                'fade-out': isFading == FadingMode.FadeOut,
+                'fade-in': isFading == FadingMode.FadeIn,
+            }"
+        >
+            <video
+                controls
+                :id="mediaElementId"
+                :src="props.mediaUrl"
+                ref="videoElement"
+                class="video"
+                :class="{
+                    'is-small': smallVideo,
+                    'is-loading': isLoading,
+                    paused: isPaused,
+                    seeking: isSeeking,
+                    fading: isFading !== FadingMode.None,
+                    'fade-out': isFading == FadingMode.FadeOut,
+                    'fade-in': isFading == FadingMode.FadeIn,
+                }"
+                @click="$emit('click')"
+                title="Click to play/pause"
+            ></video>
+        </div>
+    </template>
+    <template v-else>
+        <!-- use the audio element -->
+        <audio
             :id="mediaElementId"
             :src="props.mediaUrl"
             ref="videoElement"
@@ -47,8 +70,8 @@
             }"
             @click="$emit('click')"
             title="Click to play/pause"
-        ></video>
-    </div>
+        ></audio>
+    </template>
     <!-- NOTE: the rendering of the AudioLevelMeter _might_ affect badly the 
          synchronous start of the multitrack playback, 
          but only the first time after a page reload/player instantiation.
@@ -191,10 +214,10 @@ const props = defineProps({
      */
     disabled: Boolean,
 
-    /** Whether to enable the video display
-     * @remarks If true, shows the video canvas and the video controls.
-     * If set to false, hides the video canvas and the video controls.
-     * In any case the VTT is generated and, if enabled, the audio peak level control is rendered.
+    /** Whether to enable the display of video.
+     * @remarks If true, shows the video canvas and the video controls, and uses the HTML video element. VTT is generated.
+     * If set to false, just uses the HTML audio element.
+     * In any case, if enabled, the audio peak level control is rendered.
      */
     enableVideo: Boolean,
 

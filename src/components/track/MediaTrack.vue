@@ -397,35 +397,6 @@
                 variant, because otherwise the track is not correctly loaded
                 after it has become the active track ( gets
                 play-request-was-interrupted) -->
-                    <!-- <TrackAudioElement
-                    v-if="CompilationHandler.isAudioTrack(track)"
-                    :key="track.Id"
-                    :title="track.Name"
-                    :mediaUrl="mediaUrl"
-                    :trackId="track.Id"
-                    :disabled="!isTrackLoaded"
-                    :isActiveTrack="isActiveTrack"
-                    v-model:isTrackPlaying="isTrackPlaying"
-                    :playbackMode="playbackMode"
-                    :loopStart="selectedCue?.Time"
-                    :loopEnd="
-                        (selectedCue?.Time ?? 0) + (selectedCue?.Duration ?? 0)
-                    "
-                    :sourceDescription="track?.Url"
-                    @update:volume="updateVolume"
-                    :volume="track.Volume"
-                    :isMuted="isMuted"
-                    :isSoloed="isSoloed"
-                    :isAnySoloed="isAnySoloed"
-                    @ended="$emit('trackEnded')"
-                    :fadeInDuration="fadeInDuration"
-                    :preRollDuration="preRollDuration"
-                    :fadeOutDuration="fadeOutDuration"
-                    :addFadeInPreRoll="addFadeInPreRoll"
-                    :showLevelMeter="showLevelMeter"
-                    :showWaveformsOnEdit="showWaveformsOnEdit"
-                    :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
-                ></TrackAudioElement> -->
                     <TrackVideoElement
                         v-if="
                             CompilationHandler.isVideoTrack(track) ||
