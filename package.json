@@ -16,6 +16,7 @@
     "license": "GPL-3.0-or-later",
     "scripts": {
         "serve": "vue-cli-service serve --openssl-legacy-provider",
+        "serve:production": "vue-cli-service serve --openssl-legacy-provider --mode production",
         "build": "vue-cli-service build --openssl-legacy-provider",
         "lint": "vue-cli-service lint --openssl-legacy-provider",
         "css-build": "sass --no-source-map sass/replayer.scss public/css/replayer.css",
