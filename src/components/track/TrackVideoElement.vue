@@ -87,6 +87,7 @@
          The solution for this is using a v-if instead of disableing. -->
     <div
         v-if="
+            isAppVisible &&
             showLevelMeter &&
             audioSource &&
             audio.context &&
