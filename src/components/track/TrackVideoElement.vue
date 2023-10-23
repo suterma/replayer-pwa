@@ -98,19 +98,21 @@
         <AudioLevelMeter
             v-if="levelMeterSizeIsLarge"
             :vertical="false"
-            :disabled="disabled"
+            :disabled="disabled || isPaused"
             :audioSource="audioSource"
             :audioContext="audio.context"
             :showText="false"
+            :running="!isPaused && isAppVisible"
         >
         </AudioLevelMeter>
         <Teleport v-else :to="`#track-${trackId}-HeaderLevelPlaceholder`">
             <AudioLevelMeter
                 :vertical="true"
-                :disabled="disabled"
+                :disabled="disabled || isPaused"
                 :audioSource="audioSource"
                 :audioContext="audio.context"
                 :showText="false"
+                :running="!isPaused && isAppVisible"
             >
             </AudioLevelMeter>
         </Teleport>
@@ -161,6 +163,7 @@ import TrackAudioPeaks from './TrackAudioPeaks.vue';
 import { useRoute } from 'vue-router';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiWaveform } from '@mdi/js';
+import { useDocumentVisibility } from '@vueuse/core';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -238,6 +241,10 @@ const props = defineProps({
 
 const showVideo = ref(true);
 const smallVideo = ref(true);
+const visibility = useDocumentVisibility();
+const isAppVisible = computed(() => {
+    return visibility.value === 'visible';
+});
 
 // --- route ---
 
