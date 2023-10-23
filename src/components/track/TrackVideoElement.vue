@@ -85,9 +85,10 @@
          Disabling the teleportation does not work currently: When the 
          application settings change to show the meter, produces a warning. 
          The solution for this is using a v-if instead of disableing. -->
+
+    <!-- //TODO does this visibility get triggered on android app swither -->
     <div
         v-if="
-            isAppVisible &&
             showLevelMeter &&
             audioSource &&
             audio.context &&
@@ -98,22 +99,24 @@
     >
         <AudioLevelMeter
             v-if="levelMeterSizeIsLarge"
+            ref="audioLevelMeter"
             :vertical="false"
             :disabled="disabled || isPaused"
             :audioSource="audioSource"
             :audioContext="audio.context"
             :showText="false"
-            :running="!isPaused && isAppVisible"
+            :running="!isPaused && isAppVisible && audioLevelMeterIsVisible"
         >
         </AudioLevelMeter>
         <Teleport v-else :to="`#track-${trackId}-HeaderLevelPlaceholder`">
             <AudioLevelMeter
+                ref="audioLevelMeter"
                 :vertical="true"
                 :disabled="disabled || isPaused"
                 :audioSource="audioSource"
                 :audioContext="audio.context"
                 :showText="false"
-                :running="!isPaused && isAppVisible"
+                :running="!isPaused && isAppVisible && audioLevelMeterIsVisible"
             >
             </AudioLevelMeter>
         </Teleport>
@@ -165,6 +168,7 @@ import { useRoute } from 'vue-router';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiWaveform } from '@mdi/js';
 import { useDocumentVisibility } from '@vueuse/core';
+import { useElementVisibility } from '@vueuse/core';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -246,6 +250,8 @@ const visibility = useDocumentVisibility();
 const isAppVisible = computed(() => {
     return visibility.value === 'visible';
 });
+const audioLevelMeter = ref(null);
+const audioLevelMeterIsVisible = useElementVisibility(audioLevelMeter);
 
 // --- route ---
 
