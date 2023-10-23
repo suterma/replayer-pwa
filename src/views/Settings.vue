@@ -223,7 +223,7 @@
                 <div class="control">
                     <LabeledCheckbox
                         v-model="showLevelMeter"
-                        label="Show audio level meters"
+                        label="Show audio level meters (for local files)"
                         hint="Uses more energy, not working on older iOS
                             devices"
                     ></LabeledCheckbox>
@@ -233,6 +233,7 @@
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
+                        :disabled="!showLevelMeter"
                         v-model="levelMeterSizeIsLarge"
                         label="Show large audio level meters"
                         hint="Level meters are full width"
