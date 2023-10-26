@@ -3,7 +3,7 @@
         <h1 class="title">Settings</h1>
 
         <div class="box">
-            <h3 class="subtitle">Display</h3>
+            <h3 class="subtitle">Display (General)</h3>
 
             <div class="field">
                 <div class="control">
@@ -37,44 +37,35 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="box">
+            <h3 class="subtitle">Display (Edit)</h3>
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
                         v-model="showWaveformsOnEdit"
-                        label="Show scrollable waveforms (in the edit view, local files only)"
-                        hint="Uses more more memory and CPU power."
+                        label="Show scrollable waveforms (for local media only)"
+                        hint="Uses more more resources"
                     ></LabeledCheckbox>
                 </div>
             </div>
-        </div>
-
-        <div class="box">
-            <h3 class="subtitle">Input</h3>
-
             <div class="field">
-                <label class="label"
-                    >Keyboard shortcut timeout
-                    <span class="has-opacity-half is-size-7">
-                        (For display and handling of playback control)</span
-                    >
-                </label>
                 <div class="control">
-                    <div class="select">
-                        <select v-model.number="keyboardShortcutTimeout">
-                            <option v-bind:value="500">
-                                Fast (500 milliseconds)
-                            </option>
-                            <option v-bind:value="1000">
-                                Medium (1 second)
-                            </option>
-                            <option v-bind:value="2000">
-                                Slow (2 seconds)
-                            </option>
-                            <option v-bind:value="5000">
-                                Molto Grave (5 seconds)
-                            </option>
-                        </select>
-                    </div>
+                    <LabeledCheckbox
+                        v-model="showLevelMeter"
+                        label="Show audio level meters (for local media only)"
+                        hint="Uses more resources, not working on some devices"
+                    ></LabeledCheckbox>
+                </div>
+
+                <div class="control">
+                    <LabeledCheckbox
+                        :disabled="!showLevelMeter"
+                        v-model="levelMeterSizeIsLarge"
+                        label="Use large audio level meters"
+                        hint="Level meters are full width"
+                    ></LabeledCheckbox>
                 </div>
             </div>
         </div>
@@ -218,28 +209,6 @@
                     ></LabeledCheckbox>
                 </div>
             </div>
-
-            <div class="field">
-                <div class="control">
-                    <LabeledCheckbox
-                        v-model="showLevelMeter"
-                        label="Show audio level meters (for local files)"
-                        hint="Uses more energy, not working on older iOS
-                            devices"
-                    ></LabeledCheckbox>
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <LabeledCheckbox
-                        :disabled="!showLevelMeter"
-                        v-model="levelMeterSizeIsLarge"
-                        label="Show large audio level meters"
-                        hint="Level meters are full width"
-                    ></LabeledCheckbox>
-                </div>
-            </div>
         </div>
 
         <div class="box">
@@ -251,6 +220,36 @@
                         label="Allow connection to YouTube"
                         hint="Discloses some data to Google"
                     ></LabeledCheckbox>
+                </div>
+            </div>
+        </div>
+
+        <div class="box">
+            <h3 class="subtitle">Input</h3>
+            <div class="field">
+                <label class="label"
+                    >Keyboard shortcut timeout
+                    <span class="has-opacity-half is-size-7">
+                        (For display and handling of playback control)</span
+                    >
+                </label>
+                <div class="control">
+                    <div class="select">
+                        <select v-model.number="keyboardShortcutTimeout">
+                            <option v-bind:value="500">
+                                Fast (500 milliseconds)
+                            </option>
+                            <option v-bind:value="1000">
+                                Medium (1 second)
+                            </option>
+                            <option v-bind:value="2000">
+                                Slow (2 seconds)
+                            </option>
+                            <option v-bind:value="5000">
+                                Molto Grave (5 seconds)
+                            </option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>

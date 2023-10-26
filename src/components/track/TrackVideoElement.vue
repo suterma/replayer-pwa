@@ -85,10 +85,9 @@
          Disabling the teleportation does not work currently: When the 
          application settings change to show the meter, produces a warning. 
          The solution for this is using a v-if instead of disableing. -->
-
-    <!-- //TODO does this visibility get triggered on android app swither -->
     <div
         v-if="
+            isEditable &&
             showLevelMeter &&
             audioSource &&
             audio.context &&
