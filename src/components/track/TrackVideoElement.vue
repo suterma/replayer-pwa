@@ -1,5 +1,5 @@
 <template>
-    <div class="block" v-if="videoElement && isEditable && showWaveformsOnEdit">
+    <div class="block" v-if="mediaElement && isEditable && showWaveformsOnEdit">
         <CoveredPanel
             :revealFor="[isShortDuration]"
             :dismissible="false"
@@ -10,9 +10,9 @@
                     <BaseIcon :path="mdiWaveform" /> </span
             ></template>
             <TrackAudioPeaks
-                v-if="videoElement"
+                v-if="mediaElement"
                 :key="mediaUrl"
-                :mediaElement="videoElement"
+                :mediaElement="mediaElement"
                 :showZoomView="true"
             ></TrackAudioPeaks>
         </CoveredPanel>
@@ -36,7 +36,7 @@
                 controls
                 :id="mediaElementId"
                 :src="props.mediaUrl"
-                ref="videoElement"
+                ref="mediaElement"
                 class="video"
                 :class="{
                     'is-small': smallVideo,
@@ -57,7 +57,7 @@
         <audio
             :id="mediaElementId"
             :src="props.mediaUrl"
-            ref="videoElement"
+            ref="mediaElement"
             class="video"
             :class="{
                 'is-small': smallVideo,
@@ -129,8 +129,8 @@
             :trackId="trackId"
             :cues="cues"
             :title="title"
-            :videoElement="videoElement"
-            :disabled="!videoElement"
+            :videoElement="(mediaElement as HTMLVideoElement)"
+            :disabled="!mediaElement"
         ></VideoTextTrackController>
     </div>
 </template>
@@ -274,17 +274,17 @@ const isShortDuration = computed(() => {
 
 const audio = useAudioStore();
 
-/** Video element to use
+/** Audio or Video element to use
  * @devdoc Note: the element is only available after the component has been mouted
  */
-const videoElement: ShallowRef<HTMLVideoElement | null> = shallowRef(null);
+const mediaElement: ShallowRef<HTMLMediaElement | null> = shallowRef(null);
 
-watch(videoElement, async (newVideoElement, oldVideoElement) => {
-    if (oldVideoElement !== null) {
-        destroyHandler(oldVideoElement);
+watch(mediaElement, async (newMediaElement, oldMediaElement) => {
+    if (oldMediaElement !== null) {
+        destroyHandler(oldMediaElement);
     }
-    if (newVideoElement !== null) {
-        mediaHandler.value = createAndEmitHandler(newVideoElement);
+    if (newMediaElement !== null) {
+        mediaHandler.value = createAndEmitHandler(newMediaElement);
     }
 });
 
@@ -300,7 +300,7 @@ let onFadingChangedSubsription: Subscription;
 const mediaHandler: Ref<IMediaHandler | null> = ref(null);
 
 /** Properly destroy the handler, and abandon the video element, including it's handlers */
-function destroyHandler(video: HTMLVideoElement): void {
+function destroyHandler(video: HTMLMediaElement): void {
     if (mediaHandler.value) {
         audio.removeMediaHandler(mediaHandler.value);
         //properly destroy the audio element and the audio context
@@ -320,7 +320,7 @@ function destroyHandler(video: HTMLVideoElement): void {
     }
 }
 
-function createAndEmitHandler(video: HTMLVideoElement): IMediaHandler {
+function createAndEmitHandler(video: HTMLMediaElement): IMediaHandler {
     const handler = new HtmlMediaHandler(video) as IMediaHandler;
 
     console.log('TrackVideoElement:ready');
@@ -353,8 +353,8 @@ function createAndEmitHandler(video: HTMLVideoElement): IMediaHandler {
 /** Teardown of the element and handler.
  */
 onUnmounted(() => {
-    if (videoElement.value) {
-        destroyHandler(videoElement.value);
+    if (mediaElement.value) {
+        destroyHandler(mediaElement.value);
     }
 });
 
@@ -418,10 +418,10 @@ watch(
     [
         () => props.showLevelMeter,
         () => props.mediaUrl,
-        () => videoElement.value,
+        () => mediaElement.value,
     ],
     (
-        [showLevelMeter, mediaUrl, newVideoElement],
+        [showLevelMeter, mediaUrl, newMediaElement],
         [
             wasShowingLevelMeter /* old mediaUrl and old vidoe element is not used */,
         ],
@@ -433,24 +433,27 @@ watch(
         if (
             showLevelMeter &&
             mediaUrl &&
-            newVideoElement &&
+            newMediaElement &&
             !FileHandler.isValidHttpUrl(mediaUrl)
         ) {
             if (audioSource.value === null) {
-                audioSource.value = audio.context.createMediaElementSource(
-                    newVideoElement as HTMLMediaElement,
-                );
+                audioSource.value =
+                    audio.context.createMediaElementSource(newMediaElement);
             }
             audioSource.value.connect(audio.context.destination);
             console.debug(
-                `TrackAudioElement(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:connected`,
+                `TrackAudioElement(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:connect`,
             );
         } else {
-            audioSource.value?.disconnect(audio.context.destination);
-            audioSource.value?.disconnect();
             //NOTE: a MediaElementAudioSourceNode can not get destroyed, so this will be reused if later required
             //See https://stackoverflow.com/a/38631334/79485
+            audioSource.value?.disconnect();
+            console.debug(
+                `TrackAudioElement(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:disconnect`,
+            );
         }
+
+        // In case the settings for showing the level meter have changed back to not-showing
         if (wasShowingLevelMeter === true && !showLevelMeter) {
             // reconnect the just lost connection to the output
             audioSource.value?.connect(audio.context.destination);
