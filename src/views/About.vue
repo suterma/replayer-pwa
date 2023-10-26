@@ -199,6 +199,16 @@
                                     small included text file.</a
                                 >
                             </li>
+                            <li>
+                                <a
+                                    href="./#/play?package=https://lib.replayer.app/test/audio-test-tracks.rez"
+                                    target="_blank"
+                                >
+                                    Small ZIP (.rez) package (28k), with 22
+                                    audio test tracks, including sine chirps and
+                                    noise.</a
+                                >
+                            </li>
                         </ul>
                     </div>
                 </div>
