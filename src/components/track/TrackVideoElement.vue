@@ -420,12 +420,7 @@ watch(
         () => props.mediaUrl,
         () => mediaElement.value,
     ],
-    (
-        [showLevelMeter, mediaUrl, newMediaElement],
-        [
-            wasShowingLevelMeter /* old mediaUrl and old vidoe element is not used */,
-        ],
-    ) => {
+    ([showLevelMeter, mediaUrl, newMediaElement]) => {
         console.debug(
             `TrackAudioElement(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:showLevelMeter${showLevelMeter}`,
         );
@@ -441,21 +436,10 @@ watch(
                     audio.context.createMediaElementSource(newMediaElement);
             }
             audioSource.value.connect(audio.context.destination);
-            console.debug(
-                `TrackAudioElement(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:connect`,
-            );
         } else {
             //NOTE: a MediaElementAudioSourceNode can not get destroyed, so this will be reused if later required
             //See https://stackoverflow.com/a/38631334/79485
-            audioSource.value?.disconnect();
-            console.debug(
-                `TrackAudioElement(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:disconnect`,
-            );
-        }
-
-        // In case the settings for showing the level meter have changed back to not-showing
-        if (wasShowingLevelMeter === true && !showLevelMeter) {
-            // reconnect the just lost connection to the output
+            audioSource.value?.disconnect(/* from analyser */);
             audioSource.value?.connect(audio.context.destination);
         }
     },
