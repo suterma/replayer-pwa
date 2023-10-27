@@ -420,9 +420,6 @@ watch(
         () => mediaElement.value,
     ],
     ([showLevelMeter, mediaUrl, newMediaElement]) => {
-        console.debug(
-            `TrackAudioElement(${props.title})::watch:mediaUrl:${props.mediaUrl} for title ${props.title}:showLevelMeter${showLevelMeter}`,
-        );
         // Create the level meter and associated routing only when requested, and only for local files
         if (
             showLevelMeter &&
