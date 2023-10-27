@@ -29,7 +29,7 @@ It affects the immediate children.
     flex-shrink: unset;
     row-gap: 0.75rem;
     /** Use up all available space in favor of more space between children */
-    justify-content: space-between;
+    justify-content: flex-start;
 
     /* Make up the missing maring for the multi-line items */
     margin-right: 0.75rem;
@@ -44,10 +44,14 @@ It affects the immediate children.
     margin-left: 0.75rem;
 }
 
-/* To make the justify-content work, the items can not grow or shrink, apparently */
+/* To make the justify-content from above work, the items can not unconditionally grow, apparently */
 .level .level-left.level-wrap .level-item,
 .level .level-right.level-wrap .level-item,
 .level.level-wrap .level-item {
-    flex-shrink: unset !important;
-    flex-grow: unset !important;
+    flex-grow: unset;
+}
+
+/* Fields in level-items can be full-width, taking up any available space in growing level items */
+.level-item .field.is-fullwidth {
+    width: 100%;
 }

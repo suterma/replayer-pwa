@@ -48,11 +48,14 @@
                     </MediaEdit>
                 </div>
 
-                <!-- Title -->
-                <div class="level-item">
+                <!-- Title (make it wide)-->
+                <div class="level-item is-flex-grow-1">
                     <LabeledInput
                         label="Title"
-                        :class="{ 'has-text-success': isActive }"
+                        class="is-fullwidth"
+                        :class="{
+                            'has-text-success': isActive,
+                        }"
                     >
                         <StyledInput
                             class="input"
