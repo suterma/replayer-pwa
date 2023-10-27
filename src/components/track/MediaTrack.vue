@@ -1228,11 +1228,7 @@ function updatedIsPreRollEnabled(isPreRollEnabled: boolean): void {
 /** Handle isExpanded update
  */
 function updateIsExpanded(expanded: boolean): void {
-    //TODO why this is called twice??
     isExpanded.value = expanded;
-    console.debug(
-        `Track(${props.track.Name})::updateIsExpanded:${isExpanded.value}`,
-    );
 }
 
 /** Handles the click of a cue button, by seeking to it and, optionally, toggling playback
