@@ -206,7 +206,7 @@
 <script setup lang="ts">
 /** A header for editing "beats per minute" track metadata
  */
-import { PropType, computed, inject, onBeforeMount, watch } from 'vue';
+import { PropType, computed, inject, watchEffect } from 'vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaEdit from '@/components/MediaEdit.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
@@ -334,17 +334,6 @@ const props = defineProps({
     },
 });
 
-/** Flag to indicate whether the track is currently shared via the dialog.
- */
-//const isSharing = ref(false);
-
-/** Make sure for non-collapsible headers, they are reported initially as expanded once   */
-onBeforeMount(() => {
-    if (!props.canCollapse) {
-        emit('update:isExpanded', true);
-    }
-});
-
 const app = useAppStore();
 
 const settings = useSettingsStore();
@@ -356,11 +345,23 @@ const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
  */
 function toggleExpanded(): void {
     if (props.canCollapse) {
-        const expanded = !props.isExpanded;
-        console.debug(`TrackHeader::toggleExpanded:expanded:${expanded}`);
-        emit('update:isExpanded', expanded);
+        emit('update:isExpanded', !props.isExpanded);
     }
 }
+
+/** Handles the expanded state
+ * @remarks If this track becomes active, it will always expand
+ * @remarks Make sure for non-collapsible headers, they are reported (at least initially) as expanded
+ */
+watchEffect(() => {
+    if (!props.canCollapse) {
+        emit('update:isExpanded', true);
+    } else {
+        if (props.isActive) {
+            emit('update:isExpanded', true);
+        }
+    }
+});
 
 /** Updates the track name */
 function updateName(name: string) {
@@ -398,18 +399,6 @@ function updatePreRoll(preRoll: number | null) {
     const trackId = props.trackId;
     app.updateTrackPreRoll(trackId, preRoll);
 }
-
-/** Handles changes in whether this is the active track.
-         * @remarks When this ceases to be the active track, pause playback.
-           This avoids having multiple tracks playing at the same time.
-         */
-watch(
-    () => props.isActive,
-    (isActive: boolean): void => {
-        if (isActive) emit('update:isExpanded', isActive);
-    },
-    { immediate: true },
-);
 
 const isEditMode = computed(() => {
     return props.displayMode === TrackViewMode.Edit;
