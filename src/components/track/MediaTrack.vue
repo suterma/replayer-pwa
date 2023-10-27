@@ -207,7 +207,7 @@
         <!-- The meter and cue level editors and playback bar (in edit mode for an expanded track)
          -->
         <Transition name="item-expand">
-            <div v-if="isEditable && isExpanded" :key="track.Id" class="block">
+            <div v-if="isEditable && isExpanded" :key="track.Id">
                 <div class="block">
                     <!-- @devdoc: MeterLevelEditor does not use the provide/inject pattern, 
                     although it is used for the track's descendant components otherwise,
@@ -381,16 +381,7 @@
                         </div>
                     </div>
                 </nav>
-            </div>
-        </Transition>
 
-        <!-- The audio player widget (with controls) but only once the source is available from the store
-            Note: The mediaUrl property (the actual src attribute in the underlying media
-            element) is also depending 
-            on the track state as a performance optimizations
-            -->
-        <template v-if="mediaUrl">
-            <Transition name="item-expand">
                 <!-- Hide the waveform and Video for non-expanded track during edit, save screen real estate -->
                 <div class="block" v-show="!isEditable || isExpanded">
                     <!-- //TODO currently the mediaUrl is not using the optimized
@@ -430,7 +421,15 @@
                         </OnConsent>
                     </div>
                 </div>
-            </Transition>
+            </div>
+        </Transition>
+
+        <!-- The audio player widget (with controls) but only once the source is available from the store
+            Note: The mediaUrl property (the actual src attribute in the underlying media
+            element) is also depending 
+            on the track state as a performance optimizations
+            -->
+        <template v-if="mediaUrl">
             <div class="block">
                 <Teleport to="#media-player" :disabled="isEditable">
                     <Transition :name="skipTransitionName">
