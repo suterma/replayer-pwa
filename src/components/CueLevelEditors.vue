@@ -6,7 +6,7 @@
          components still get patched and rendered, at each position time change, even if they
          are not containing the playback head, thus are not visually impacted.
          Because of this, for simplicity, the variant without template 
-         is used instead, with some throttling applied.
+         is used instead, with some pause/resume for the event handling applied.
         -->
     <TransitionGroup
         name="list"
