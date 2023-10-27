@@ -1547,7 +1547,6 @@ watchEffect(() => {
             if (mediaLooper.value && mediaHandler.value) {
                 mediaLooper.value.RemoveLoop();
                 mediaHandler.value.loop = true;
-                console.debug('MediaTrack::track loop');
             }
             break;
 
@@ -1576,7 +1575,6 @@ watchEffect(() => {
                         cueBegin + cueDuration,
                         loopMode,
                     );
-                    console.debug('MediaTrack::cue loop');
                 }
             }
             break;
@@ -1588,7 +1586,7 @@ watchEffect(() => {
             if (mediaLooper.value) {
                 mediaLooper.value.RemoveLoop();
             }
-            console.debug('MediaTrack::no media loop');
+            break;
     }
 });
 </script>
