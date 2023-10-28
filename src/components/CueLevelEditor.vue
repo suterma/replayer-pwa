@@ -49,78 +49,61 @@
                     </p>
                 </div>
                 <!-- A normal input for the time, with an adjustment add-on (from a bit wider screens)-->
-                <!-- For performance and layout reasons, only render this when used (emulating is-hidden-mobile) -->
-                <IfMedia query="(min-width: 769px)">
-                    <template #default>
-                        <div class="level-item is-flex-shrink-1">
-                            <div class="field has-addons">
-                                <p class="control">
-                                    <TimeInput
-                                        class="input has-text-right"
-                                        title="Time of this cue"
-                                        :modelValue="cueTime"
-                                        @update:modelValue="updateCueTime"
-                                        size="9"
-                                    />
-                                </p>
-                                <div
-                                    v-experiment="experimentalUseMeter"
-                                    v-if="useMeasureNumbers"
-                                    class="control"
-                                >
-                                    <button class="button is-indicator">
-                                        <MeasureDisplay
-                                            :modelValue="cueTime"
-                                        ></MeasureDisplay>
-                                    </button>
-                                </div>
-                                <div
-                                    v-experiment="experimentalUseMeter"
-                                    v-if="useMeasureNumbers"
-                                    class="control"
-                                >
-                                    <MetricalEditor
-                                        :modelValue="cueTime"
-                                        @update:modelValue="updateCueTime"
-                                    >
-                                    </MetricalEditor>
-                                </div>
-                                <div class="control">
-                                    <AdjustTimeButton
-                                        @adjustTime="$emit('adjust')"
-                                        :isSelectedItem="isCueSelected"
-                                    ></AdjustTimeButton>
-                                </div>
-                            </div>
+                <div class="level-item is-flex-shrink-1">
+                    <div class="field has-addons has-addons-except-mobile">
+                        <p class="control is-hidden-mobile">
+                            <TimeInput
+                                class="input has-text-right"
+                                title="Time of this cue"
+                                :modelValue="props.cue.Time"
+                                @update:modelValue="updateCueTime"
+                                size="9"
+                            />
+                        </p>
+                        <div
+                            v-experiment="experimentalUseMeter"
+                            v-if="useMeasureNumbers"
+                            class="control"
+                        >
+                            <button class="button is-indicator">
+                                <MeasureDisplay
+                                    :modelValue="props.cue.Time"
+                                ></MeasureDisplay>
+                            </button>
                         </div>
-                    </template>
-                    <template #else>
-                        <div class="level-item is-flex-shrink-1">
-                            <div class="field has-addons">
-                                <div class="control">
-                                    <AdjustTimeButton
-                                        @adjustTime="$emit('adjust')"
-                                        :isSelectedItem="isCueSelected"
-                                    ></AdjustTimeButton>
-                                </div>
-                            </div>
+                        <div
+                            v-experiment="experimentalUseMeter"
+                            v-if="useMeasureNumbers"
+                            class="control"
+                        >
+                            <MetricalEditor
+                                :modelValue="props.cue.Time"
+                                @update:modelValue="updateCueTime"
+                            >
+                            </MetricalEditor>
                         </div>
-                        <div class="level-item is-flex-shrink-1">
-                            <div class="field">
-                                <p
-                                    class="control"
-                                    title="Mnemonic (as keyboard shortcut)"
-                                >
-                                    <span
-                                        class="input is-static has-opacity-half is-minimum-5-characters"
-                                    >
-                                        {{ cueTime }}</span
-                                    >
-                                </p>
-                            </div>
+                        <div class="control">
+                            <AdjustTimeButton
+                                @adjustTime="$emit('adjust')"
+                                :isSelectedItem="isCueSelected"
+                            ></AdjustTimeButton>
                         </div>
-                    </template>
-                </IfMedia>
+                    </div>
+                </div>
+
+                <div class="level-item is-flex-shrink-1 is-hidden-tablet">
+                    <div class="field">
+                        <p
+                            class="control is-minimum-5-characters has-cropped-text"
+                            title="Time of this cue"
+                        >
+                            <span class="input is-static has-opacity-half">
+                                <!-- Display the cue time, with just 1 decimal digit -->
+                                {{ (props.cue.Time ?? 0).toFixed(1) }}</span
+                            >
+                        </p>
+                    </div>
+                </div>
 
                 <!-- Duration (keep small and hide on touch)-->
                 <!-- For performance and layout reasons, only render this when used (emulating is-hidden-touch) -->
@@ -335,11 +318,6 @@ const settings = useSettingsStore();
 const { experimentalUseMeter } = storeToRefs(settings);
 
 const cuePlaceholder = computed(() => `Cue description`);
-
-/** Gets the cue's time
- * @devdoc provided as performance optimization, to allow render checks directly on this value, not via the cue object
- */
-const cueTime = computed(() => props.cue.Time);
 
 const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
 </script>
