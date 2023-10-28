@@ -10,13 +10,7 @@
          must be resumed once in the app lifetime, when used. 
          This is solved here globally for simplicity -->
     <section class="section" @click="resumeAudioContext()">
-        <!-- To keep the media elements' playback within the view and their track components running, 
-            simply keep this component alive over route changes -->
-        <router-view v-slot="{ Component }">
-            <keep-alive include="Play">
-                <component :is="Component" />
-            </keep-alive>
-        </router-view>
+        <router-view></router-view>
         <ProgressOverlay />
         <ErrorOverlay />
         <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
