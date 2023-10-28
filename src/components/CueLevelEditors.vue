@@ -8,38 +8,41 @@
          Because of this, for simplicity, the variant without template 
          is used instead, with some pause/resume for the event handling applied.
         -->
-    <TransitionGroup
-        name="list"
-        @before-enter="pause"
-        @afterEnter="resume"
-        @beforeLeave="pause"
-        @afterLeave="resume"
-    >
-        <CueLevelEditor
-            v-for="cue in cues"
-            :key="cue.Id"
-            :disabled="disabled"
-            :cue="cue"
-            :playbackMode="playbackMode"
-            :hasCuePassed="hasCuePassed(cue)"
-            :isCueAhead="isCueAhead(cue)"
-            :percentComplete="percentComplete(cue)"
-            :isCueSelected="isCueSelected(cue)"
-            @click="cueClick(cue)"
-            @play="cuePlay(cue)"
-            @adjust="cueAdjust(cue)"
-        />
-    </TransitionGroup>
+    <div ref="transitionGroup">
+        <TransitionGroup
+            :name="animation"
+            @before-enter="pause"
+            @afterEnter="resume"
+            @beforeLeave="pause"
+            @afterLeave="resume"
+        >
+            <CueLevelEditor
+                v-for="cue in cues"
+                :key="cue.Id"
+                :disabled="disabled"
+                :cue="cue"
+                :playbackMode="playbackMode"
+                :hasCuePassed="hasCuePassed(cue)"
+                :isCueAhead="isCueAhead(cue)"
+                :percentComplete="percentComplete(cue)"
+                :isCueSelected="isCueSelected(cue)"
+                @click="cueClick(cue)"
+                @play="cuePlay(cue)"
+                @adjust="cueAdjust(cue)"
+            />
+        </TransitionGroup>
+    </div>
 </template>
 
 <script setup lang="ts">
-import { PropType, Ref, inject, ref } from 'vue';
+import { PropType, Ref, computed, inject, ref } from 'vue';
 import { ICue, PlaybackMode } from '@/store/compilation-types';
 import CompilationHandler from '@/store/compilation-handler';
 import CueLevelEditor from '@/components/CueLevelEditor.vue';
 import { useAppStore } from '@/store/app';
 import { currentPositionInjectionKey } from './track/TrackInjectionKeys';
 import { useRafFn } from '@vueuse/core';
+import { useElementVisibility } from '@vueuse/core';
 
 /** An set of Editors for for cues in a track.
  */
@@ -51,6 +54,7 @@ defineProps({
         type: Array as PropType<Array<ICue>>,
         required: true,
     },
+
     disabled: {
         type: Boolean,
         required: false,
@@ -64,6 +68,22 @@ defineProps({
         required: true,
     },
 });
+
+// --- Handle transition
+
+const transitionGroup = ref(null);
+const transitionGroupIsVisible = useElementVisibility(transitionGroup);
+
+/** Animate the list only when the group already is visible as a whole
+ * @devdoc This mitigates some weird animation of single cue elements when
+ * the outer track expansion is animated together with the scrolling to
+ * the active track.
+ */
+const animation = computed(() => {
+    return transitionGroupIsVisible.value ? 'list' : 'none';
+});
+
+// --- Handle position
 
 const currentPosition = inject(currentPositionInjectionKey);
 
