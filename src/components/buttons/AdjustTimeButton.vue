@@ -19,9 +19,13 @@
             <BaseIcon
                 :path="isSelectedItem ? mdiTimerPlay : mdiTimerPlayOutline"
             />
+            <slot></slot>
             <!-- On large screens also show an indicative text -->
             <span class="is-hidden-touch has-opacity-half">Adjust</span>
-            <ShortcutDisplay :class="{ 'is-invisible': !isSelectedItem }">
+            <ShortcutDisplay
+                class="is-hidden-mobile"
+                :class="{ 'is-invisible': !isSelectedItem }"
+            >
                 <BaseIcon v-once :path="mdiAppleKeyboardShift" class="mr-1" />
                 + INSERT</ShortcutDisplay
             >

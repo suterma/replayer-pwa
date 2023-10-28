@@ -14,4 +14,5 @@ const isMatch = useMediaQuery(props.query);
 
 <template>
     <slot v-if="isMatch"></slot>
+    <slot name="else" v-if="!isMatch"></slot>
 </template>

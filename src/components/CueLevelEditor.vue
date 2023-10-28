@@ -49,58 +49,90 @@
                     </p>
                 </div>
                 <!-- A normal input for the time, with an adjustment add-on (from a bit wider screens)-->
-                <div class="level-item is-flex-shrink-1">
-                    <div class="field has-addons has-addons-except-mobile">
-                        <p class="control">
-                            <TimeInput
-                                class="input has-text-right"
-                                :modelValue="cueTime"
-                                @update:modelValue="updateCueTime"
-                                size="9"
-                            />
-                        </p>
-                        <div
-                            v-experiment="experimentalUseMeter"
-                            v-if="useMeasureNumbers"
-                            class="control"
-                        >
-                            <button class="button is-indicator">
-                                <MeasureDisplay
-                                    :modelValue="cueTime"
-                                ></MeasureDisplay>
-                            </button>
+                <!-- For performance and layout reasons, only render this when used (emulating is-hidden-mobile) -->
+                <IfMedia query="(min-width: 769px)">
+                    <template #default>
+                        <div class="level-item is-flex-shrink-1">
+                            <div class="field has-addons">
+                                <p class="control">
+                                    <TimeInput
+                                        class="input has-text-right"
+                                        title="Time of this cue"
+                                        :modelValue="cueTime"
+                                        @update:modelValue="updateCueTime"
+                                        size="9"
+                                    />
+                                </p>
+                                <div
+                                    v-experiment="experimentalUseMeter"
+                                    v-if="useMeasureNumbers"
+                                    class="control"
+                                >
+                                    <button class="button is-indicator">
+                                        <MeasureDisplay
+                                            :modelValue="cueTime"
+                                        ></MeasureDisplay>
+                                    </button>
+                                </div>
+                                <div
+                                    v-experiment="experimentalUseMeter"
+                                    v-if="useMeasureNumbers"
+                                    class="control"
+                                >
+                                    <MetricalEditor
+                                        :modelValue="cueTime"
+                                        @update:modelValue="updateCueTime"
+                                    >
+                                    </MetricalEditor>
+                                </div>
+                                <div class="control">
+                                    <AdjustTimeButton
+                                        @adjustTime="$emit('adjust')"
+                                        :isSelectedItem="isCueSelected"
+                                    ></AdjustTimeButton>
+                                </div>
+                            </div>
                         </div>
-                        <div
-                            v-experiment="experimentalUseMeter"
-                            v-if="useMeasureNumbers"
-                            class="control"
-                        >
-                            <MetricalEditor
-                                :modelValue="cueTime"
-                                @update:modelValue="updateCueTime"
-                            >
-                            </MetricalEditor>
+                    </template>
+                    <template #else>
+                        <div class="level-item is-flex-shrink-1">
+                            <div class="field has-addons">
+                                <div class="control">
+                                    <AdjustTimeButton
+                                        @adjustTime="$emit('adjust')"
+                                        :isSelectedItem="isCueSelected"
+                                    ></AdjustTimeButton>
+                                </div>
+                            </div>
                         </div>
-                        <div class="control is-hidden-mobile">
-                            <AdjustTimeButton
-                                @adjustTime="$emit('adjust')"
-                                :isSelectedItem="isCueSelected"
-                            ></AdjustTimeButton>
+                        <div class="level-item is-flex-shrink-1">
+                            <div class="field">
+                                <p
+                                    class="control"
+                                    title="Mnemonic (as keyboard shortcut)"
+                                >
+                                    <input
+                                        class="input is-static has-opacity-half"
+                                        type="text"
+                                        inputmode="numeric"
+                                        :value="cueTime"
+                                        size="9"
+                                        readonly
+                                    />
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    </template>
+                </IfMedia>
 
                 <!-- Duration (keep small and hide on touch)-->
                 <!-- For performance and layout reasons, only render this when used (emulating is-hidden-touch) -->
                 <IfMedia query="(min-width: 1024px)">
-                    <div class="level-item is-flex-shrink-1">
-                        <button
-                            class="button is-indicator"
-                            title="Duration (until next cue)"
-                        >
-                            <TimeDisplay :modelValue="cue.Duration">
-                            </TimeDisplay>
-                        </button>
+                    <div
+                        class="level-item is-flex-shrink-1 is-narrow"
+                        title="Duration (until next cue)"
+                    >
+                        <TimeDisplay :modelValue="cue.Duration"> </TimeDisplay>
                     </div>
 
                     <div
