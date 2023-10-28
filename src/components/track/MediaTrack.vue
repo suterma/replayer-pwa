@@ -207,13 +207,14 @@
         <!-- The meter and cue level editors and playback bar (in edit mode for an expanded track)
          -->
         <Transition name="item-expand">
-            <div v-if="isEditable && isExpanded" :key="track.Id">
+            <div v-show="isEditable && isExpanded" :key="track.Id">
                 <div class="block">
                     <!-- @devdoc: MeterLevelEditor does not use the provide/inject pattern, 
                     although it is used for the track's descendant components otherwise,
                     because I have experienced problems with the reactivity inside MeterLevelEditor.
                     A standard property/event approach is used here instead. -->
                     <MeterLevelEditor
+                        v-if="experimentalUseMeter && isEditable"
                         v-experiment="experimentalUseMeter"
                         :meter="track.Meter"
                         @update:meter="
