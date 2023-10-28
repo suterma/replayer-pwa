@@ -65,7 +65,7 @@
                             @click="skipToPlayPause"
                         />
 
-                        <!-- Title -->
+                        <!-- Title input -->
                         <!-- The title is the only header element that should shrink (break on words) if necessary -->
                         <div
                             v-if="!isEditable"
@@ -727,6 +727,8 @@ import { IMediaHandler } from '@/code/media/IMediaHandler';
 import { IMediaLooper, LoopMode } from '@/code/media/IMediaLooper';
 import { MediaLooper } from '@/code/media/MediaLooper';
 import { FadingMode } from '@/code/media/IAudioFader';
+import { useTitle } from '@vueuse/core';
+import { useRoute } from 'vue-router';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -875,7 +877,7 @@ const useMeasureNumbers = computed(
 );
 provide(useMeasureNumbersInjectionKey, readonly(useMeasureNumbers));
 
-/** The track's meter
+/** The track's musical meter
  * @devdoc This value is provided to descendant components using the provide/inject pattern.
  * @devdoc Here, a ComputedRef must be used, not a ref, because the ref of the dereferenced meter
  * would not be reactive.
@@ -883,7 +885,7 @@ provide(useMeasureNumbersInjectionKey, readonly(useMeasureNumbers));
 const meter = computed(() => props.track.Meter);
 provide(meterInjectionKey, readonly(meter));
 
-// --- playback handling (NEW)
+// --- playback handling
 
 /** A reference to the appropriate media handler
  * @remarks Gets set only after the respective track media component emits the ready-to-play event.
@@ -1587,6 +1589,24 @@ watchEffect(() => {
                 mediaLooper.value.RemoveLoop();
             }
             break;
+    }
+});
+
+// --- document title
+
+const title = useTitle();
+const route = useRoute();
+
+/** Show the cue, track, route and app name in the document title */
+watchEffect(() => {
+    if (isActiveTrack.value) {
+        title.value =
+            (playingCueDescription.value
+                ? playingCueDescription.value + ' | '
+                : '') +
+            (props.track?.Name ? props.track?.Name + ' | ' : '') +
+            (route.name?.toString() ? route.name?.toString() + ' | ' : '') +
+            'Replayer';
     }
 });
 </script>
