@@ -207,31 +207,30 @@
         <!-- The meter and cue level editors and playback bar (in edit mode for an expanded track)
          -->
         <Transition name="item-expand">
-            <div v-show="isEditable && isExpanded" :key="track.Id">
-                <div class="block">
-                    <!-- @devdoc: MeterLevelEditor does not use the provide/inject pattern, 
+            <div class="block" v-if="isEditable && isExpanded">
+                <!-- @devdoc: MeterLevelEditor does not use the provide/inject pattern, 
                     although it is used for the track's descendant components otherwise,
                     because I have experienced problems with the reactivity inside MeterLevelEditor.
                     A standard property/event approach is used here instead. -->
-                    <MeterLevelEditor
-                        v-if="experimentalUseMeter && isEditable"
-                        v-experiment="experimentalUseMeter"
-                        :meter="track.Meter"
-                        @update:meter="
-                            (value: any /*IMeter*/): void => {
-                                app.updateMeter(track.Id, value);
-                            }
-                        "
-                        @adjustOriginTime="
-                            () => {
-                                app.updateTrackOriginTime(
-                                    track.Id,
-                                    currentPosition,
-                                );
-                            }
-                        "
-                        :useMeasureNumbers="track.UseMeasureNumbers"
-                        @update:useMeasureNumbers="
+                <MeterLevelEditor
+                    v-if="experimentalUseMeter && isEditable"
+                    v-experiment="experimentalUseMeter"
+                    :meter="track.Meter"
+                    @update:meter="
+                        (value: any /*IMeter*/): void => {
+                            app.updateMeter(track.Id, value);
+                        }
+                    "
+                    @adjustOriginTime="
+                        () => {
+                            app.updateTrackOriginTime(
+                                track.Id,
+                                currentPosition,
+                            );
+                        }
+                    "
+                    :useMeasureNumbers="track.UseMeasureNumbers"
+                    @update:useMeasureNumbers="
                                 (value: boolean | null) => {
                                     app.updateUseMeasureNumbers(
                                         track.Id,
@@ -239,151 +238,156 @@
                                     );
                                 }
                             "
-                        ><template
-                            #left-end
-                            v-experiment="experimentalUseMeter"
-                            v-if="hasMeter && track.UseMeasureNumbers"
-                        >
-                            <div class="level-item">
-                                <div class="field is-horizontal">
-                                    <div class="field-label is-normal">
-                                        <label class="label is-single-line"
-                                            >Current measure</label
-                                        >
-                                    </div>
-                                    <div class="field-body">
-                                        <div class="field">
-                                            <p class="control">
-                                                <button
-                                                    class="button is-indicator"
-                                                >
-                                                    <MeasureDisplay
-                                                        :modelValue="
-                                                            currentPosition
-                                                        "
-                                                    ></MeasureDisplay>
-                                                </button>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="level-item">
-                                <div class="field is-horizontal">
-                                    <div class="field-label is-normal">
-                                        <label class="label is-single-line"
-                                            >Skip to measure</label
-                                        >
-                                    </div>
-                                    <div class="field-body">
-                                        <div class="field">
-                                            <p class="control">
-                                                <MetricalEditor
-                                                    v-model="currentPosition"
-                                                    @update:modelValue="
-                                                        (position) =>
-                                                            seekToSeconds(
-                                                                position,
-                                                            )
-                                                    "
-                                                >
-                                                </MetricalEditor>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </template>
-                    </MeterLevelEditor>
-                </div>
-
-                <!-- Main container -->
-                <div class="block levels" data-cy="cue-editors">
-                    <CueLevelEditors
-                        :cues="cues"
-                        :disabled="!canPlay"
-                        :playbackMode="playbackMode"
-                        @click="cueClick"
-                        @play="cuePlay"
+                    ><template
+                        #left-end
+                        v-experiment="experimentalUseMeter"
+                        v-if="hasMeter && track.UseMeasureNumbers"
                     >
-                    </CueLevelEditors>
-                </div>
-                <!-- 
+                        <div class="level-item">
+                            <div class="field is-horizontal">
+                                <div class="field-label is-normal">
+                                    <label class="label is-single-line"
+                                        >Current measure</label
+                                    >
+                                </div>
+                                <div class="field-body">
+                                    <div class="field">
+                                        <p class="control">
+                                            <button class="button is-indicator">
+                                                <MeasureDisplay
+                                                    :modelValue="
+                                                        currentPosition
+                                                    "
+                                                ></MeasureDisplay>
+                                            </button>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="level-item">
+                            <div class="field is-horizontal">
+                                <div class="field-label is-normal">
+                                    <label class="label is-single-line"
+                                        >Skip to measure</label
+                                    >
+                                </div>
+                                <div class="field-body">
+                                    <div class="field">
+                                        <p class="control">
+                                            <MetricalEditor
+                                                v-model="currentPosition"
+                                                @update:modelValue="
+                                                    (position) =>
+                                                        seekToSeconds(position)
+                                                "
+                                            >
+                                            </MetricalEditor>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </MeterLevelEditor>
+            </div>
+        </Transition>
+
+        <!-- Main container -->
+        <Transition name="item-expand">
+            <div
+                class="block levels"
+                v-if="isEditable && isExpanded"
+                data-cy="cue-editors"
+            >
+                <CueLevelEditors
+                    :cues="cues"
+                    :disabled="!canPlay"
+                    :playbackMode="playbackMode"
+                    @click="cueClick"
+                    @play="cuePlay"
+                >
+                </CueLevelEditors>
+            </div>
+        </Transition>
+        <!-- 
                 Track playback bar (In edit mode, this contains:
                 - the play/pause-add-cue button combo
                 - a wide slider
                 - a very limited set of transport controls (no skip buttons)
                     -->
-                <nav class="block level is-editable is-unselectable">
-                    <!-- Left side -->
-                    <div class="level-left">
-                        <div class="level-item is-justify-content-flex-start">
-                            <CreateCueButton
-                                :disabled="!canPlay"
-                                class="mb-0"
-                                :isActiveTrack="isActiveTrack"
-                                @createNewCue="createNewCue()"
-                                data-cy="insert-cue"
-                            ></CreateCueButton>
-                        </div>
-                    </div>
-                    <!-- A central level item. Margins are set to provide nice-looking spacing at all widths -->
-                    <div class="level-item mt-4-mobile">
-                        <PlayheadSlider
+        <Transition name="item-expand">
+            <nav
+                v-if="isEditable && isExpanded"
+                class="block level is-editable is-unselectable"
+            >
+                <!-- Left side -->
+                <div class="level-left">
+                    <div class="level-item is-justify-content-flex-start">
+                        <CreateCueButton
                             :disabled="!canPlay"
-                            class="is-fullwidth ml-4-tablet mr-4-tablet"
-                            :modelValue="currentPosition ?? 0"
-                            @update:modelValue="
-                                (position) => seekToSeconds(position)
-                            "
-                            @seek="(seconds) => seek(seconds)"
-                            :trackDuration="track.Duration"
-                        >
-                            <!-- On mobile, the text is cropped at full width minus seek buttons, because of the level's automatic stacking,
+                            class="mb-0"
+                            :isActiveTrack="isActiveTrack"
+                            @createNewCue="createNewCue()"
+                            data-cy="insert-cue"
+                        ></CreateCueButton>
+                    </div>
+                </div>
+                <!-- A central level item. Margins are set to provide nice-looking spacing at all widths -->
+                <div class="level-item mt-4-mobile">
+                    <PlayheadSlider
+                        :disabled="!canPlay"
+                        class="is-fullwidth ml-4-tablet mr-4-tablet"
+                        :modelValue="currentPosition ?? 0"
+                        @update:modelValue="
+                            (position) => seekToSeconds(position)
+                        "
+                        @seek="(seconds) => seek(seconds)"
+                        :trackDuration="track.Duration"
+                    >
+                        <!-- On mobile, the text is cropped at full width minus seek buttons, because of the level's automatic stacking,
                                     on lager viewports the text is cropped to not exceed the dynamic playhead slider -->
-                            <p
-                                class="is-size-7 has-cropped-text"
-                                :class="{
-                                    'has-opacity-half': !canPlay,
-                                    'has-text-success': playingCueIsSelected,
-                                    'has-text-warning': !playingCueIsSelected,
-                                }"
-                            >
-                                <span>
-                                    {{ playingCueDescription }}
-                                    &nbsp;
-                                </span>
-                            </p>
-                        </PlayheadSlider>
+                        <p
+                            class="is-size-7 has-cropped-text"
+                            :class="{
+                                'has-opacity-half': !canPlay,
+                                'has-text-success': playingCueIsSelected,
+                                'has-text-warning': !playingCueIsSelected,
+                            }"
+                        >
+                            <span>
+                                {{ playingCueDescription }}
+                                &nbsp;
+                            </span>
+                        </p>
+                    </PlayheadSlider>
+                </div>
+                <div class="level-right">
+                    <div class="level-item is-justify-content-flex-end">
+                        <MediaControlsBar
+                            :disabled="!canPlay"
+                            :hideStopButton="true"
+                            :hideTrackNavigation="true"
+                            :hideCueNavigation="true"
+                            :hidePreRollToggler="hidePreRollToggler"
+                            :hideFadingToggler="hideFadingToggler"
+                            :playbackMode="playbackMode"
+                            @update:playbackMode="updatedPlaybackMode"
+                            :isFadingEnabled="isFadingEnabled"
+                            @update:isFadingEnabled="updatedIsFadingEnabled"
+                            :isPreRollEnabled="isPreRollEnabled"
+                            @update:isPreRollEnabled="updatedIsPreRollEnabled"
+                            :volume="track.Volume"
+                            @update:volume="updateVolume"
+                            :hidePlayPauseButton="true"
+                        >
+                        </MediaControlsBar>
                     </div>
-                    <div class="level-right">
-                        <div class="level-item is-justify-content-flex-end">
-                            <MediaControlsBar
-                                :disabled="!canPlay"
-                                :hideStopButton="true"
-                                :hideTrackNavigation="true"
-                                :hideCueNavigation="true"
-                                :hidePreRollToggler="hidePreRollToggler"
-                                :hideFadingToggler="hideFadingToggler"
-                                :playbackMode="playbackMode"
-                                @update:playbackMode="updatedPlaybackMode"
-                                :isFadingEnabled="isFadingEnabled"
-                                @update:isFadingEnabled="updatedIsFadingEnabled"
-                                :isPreRollEnabled="isPreRollEnabled"
-                                @update:isPreRollEnabled="
-                                    updatedIsPreRollEnabled
-                                "
-                                :volume="track.Volume"
-                                @update:volume="updateVolume"
-                                :hidePlayPauseButton="true"
-                            >
-                            </MediaControlsBar>
-                        </div>
-                    </div>
-                </nav>
-            </div>
+                </div>
+            </nav>
         </Transition>
+
         <Transition name="item-expand">
             <!-- Hide the waveform and Video for non-expanded track during edit, save screen real estate -->
             <div class="block" v-show="!isEditable || isExpanded">

@@ -1,7 +1,8 @@
 <template>
     <div class="block" v-if="mediaElement && isEditable && showWaveformsOnEdit">
+        <!-- Waveforms are automatially only revealed for short audio files -->
         <CoveredPanel
-            :revealFor="[isShortDuration]"
+            :revealFor="[isShortDuration && !props.enableVideo]"
             :dismissible="false"
             title="Waveform"
         >
