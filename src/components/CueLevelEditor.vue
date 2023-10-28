@@ -111,14 +111,11 @@
                                     class="control"
                                     title="Mnemonic (as keyboard shortcut)"
                                 >
-                                    <input
-                                        class="input is-static has-opacity-half"
-                                        type="text"
-                                        inputmode="numeric"
-                                        :value="cueTime"
-                                        size="9"
-                                        readonly
-                                    />
+                                    <span
+                                        class="input is-static has-opacity-half is-minimum-5-characters"
+                                    >
+                                        {{ cueTime }}</span
+                                    >
                                 </p>
                             </div>
                         </div>
