@@ -562,8 +562,9 @@
                 <a
                     href="https://github.com/suterma/replayer-pwa/blob/main/LICENSE"
                     target="_blank"
-                    >GNU General Public License v3.0</a
+                    >GNU Affero General Public License v3.0</a
                 >
+
                 or any later version.
             </p>
             <p>
@@ -583,11 +584,7 @@
             <p>
                 Created by
                 <a href="https://marcelsuter.ch" target="_blank">Marcel Suter</a
-                >. Replayer is licensed to you under the
-                <a href="https://www.gnu.org/licenses/agpl-3.0.en.html"
-                    >GNU Affero General Public License v3.0</a
-                >
-                or any later version.
+                >.
             </p>
         </div>
     </div>
