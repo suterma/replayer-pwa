@@ -1,6 +1,6 @@
 ## 2.0.0 (next)
 
-This release adds video playback, including YouTube. Also, during editing, a waveform view and a peak level meter is available.
+This release adds video playback, including YouTube. Also, during editing, a waveform view and a peak level meter is available. A customizable pre-roll is available.
 
 -   Added video playback for WebM, MP4, Ogg Theora, YouTube
 -   Changed license to AGPLv3
