@@ -395,7 +395,7 @@
                 variant, because otherwise the track is not correctly loaded
                 after it has become the active track ( gets
                 play-request-was-interrupted) -->
-                <TrackVideoElement
+                <TrackMediaElement
                     v-if="
                         CompilationHandler.isVideoTrack(track) ||
                         CompilationHandler.isAudioTrack(track)
@@ -412,7 +412,7 @@
                     :showLevelMeter="showLevelMeter"
                     :showWaveformsOnEdit="showWaveformsOnEdit"
                     :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
-                ></TrackVideoElement>
+                ></TrackMediaElement>
                 <div v-if="CompilationHandler.isYoutubeVideoTrack(track)">
                     <OnConsent>
                         <TrackYouTubeElement
@@ -694,7 +694,7 @@ import {
 import OnConsent from '@/components/dialogs/OnConsent.vue';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import MeterLevelEditor from '@/components/editor/MeterLevelEditor.vue';
-import TrackVideoElement from '@/components/track/TrackVideoElement.vue';
+import TrackMediaElement from '@/components/track/TrackMediaElement.vue';
 import TrackYouTubeElement from '@/components/track/TrackYouTubeElement.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import TrackHeader from '@/components/track/TrackHeader.vue';

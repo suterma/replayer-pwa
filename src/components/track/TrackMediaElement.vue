@@ -316,14 +316,14 @@ function destroyHandler(video: HTMLMediaElement): void {
         if (video) {
             video.removeAttribute('src'); // empty resource
         }
-        console.log('TrackVideoElement:destroyed');
+        console.log('TrackMediaElement:destroyed');
     }
 }
 
 function createAndEmitHandler(video: HTMLMediaElement): IMediaHandler {
     const handler = new HtmlMediaHandler(video) as IMediaHandler;
 
-    console.log('TrackVideoElement:ready');
+    console.log('TrackMediaElement:ready');
     emit('ready', handler);
     audio.addMediaHandler(handler);
 
