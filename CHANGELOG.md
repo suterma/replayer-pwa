@@ -1,4 +1,4 @@
-## 2.0.0 (next)
+## [2.0.0 NEXT RELEASE](https://github.com/suterma/replayer-pwa/compare/v1.4.3...v2.0.0)
 
 This release adds video playback, including YouTube, plus text files in a compilation. Also, during editing, a waveform view and a peak level meter is available. A customizable pre-roll is available.
 
@@ -16,11 +16,9 @@ This release adds video playback, including YouTube, plus text files in a compil
 -   Internally improved media playback handling
 -   Removed bplist support
 -   Added BPM for a track
--   91 adding web audio peak meter by @suterma in https://github.com/suterma/replayer-pwa/pull/93
--   95 use pinia instead of vuex by @suterma in https://github.com/suterma/replayer-pwa/pull/96
--   98 add support for text files in zip compilations by @suterma in https://github.com/suterma/replayer-pwa/pull/99
-
-**Full Changelog**: https://github.com/suterma/replayer-pwa/compare/v1.4.3...v2.0.0
+-   Adding web audio peak meter by @suterma in https://github.com/suterma/replayer-pwa/pull/93
+-   Use pinia instead of vuex by @suterma in https://github.com/suterma/replayer-pwa/pull/96
+-   Add support for text files in zip compilations by @suterma in https://github.com/suterma/replayer-pwa/pull/99
 
 ## [1.4.3](https://github.com/suterma/replayer-pwa/compare/v1.4.1...v1.4.3) (2023-03-10)
 
