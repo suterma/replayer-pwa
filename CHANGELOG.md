@@ -1,6 +1,9 @@
 ## 2.0.0 (next)
 
-//TODO
+This release adds video playback, including YouTube. Also, during editing, a waveform view and a peak level meter is available.
+
+-   Added video playback for WebM, MP4, Ogg Theora, YouTube
+-   Changed license to AGPLv3
 
 ## [1.4.3](https://github.com/suterma/replayer-pwa/compare/v1.4.1...v1.4.3) (2023-03-10)
 
