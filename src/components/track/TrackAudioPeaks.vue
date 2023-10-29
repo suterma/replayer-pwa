@@ -1,10 +1,10 @@
 <template>
     <AudioPeaks :options="options" :mediaElement="mediaElement">
-        <template #overview>
+        <template #overview v-if="!showOverview">
             <template />
             <!-- Using an empty template on a slot 
-         prevents the default content -->
-        </template>
+         prevents the default content --></template
+        >
         <template #controls
             ><template />
             <!-- Using an empty template on a slot 
@@ -33,6 +33,13 @@ export default defineComponent({
             type: HTMLMediaElement,
             required: true,
         },
+        /** The external media element to use.
+         */
+        showOverview: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
     },
     data() {
         return {
@@ -42,9 +49,9 @@ export default defineComponent({
             options: {
                 overview: {
                     /* container is provided and handled internally by AudioPeaks */
-                    waveformColor: 'hsl(120, 45%, 58%)',
-                    playedWaveformColor: 'hsl(127, 36%, 38%)',
-                    highlightColor: 'hsl(206, 70%, 96%)',
+                    waveformColor: '#f89406' /*theme warning color*/,
+                    playedWaveformColor: 'rgba(248,148,6,.67)',
+                    highlightColor: '#aaa',
                     highlightOffset: 0,
                     axisGridlineColor: '#00000000' /* transparent */,
                     axisLabelColor: '#fafafa',

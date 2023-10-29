@@ -14,7 +14,7 @@
                 v-if="mediaElement"
                 :key="mediaUrl"
                 :mediaElement="mediaElement"
-                :showZoomView="true"
+                :showOverview="showOverviewWaveformOnEdit"
             ></TrackAudioPeaks>
         </CoveredPanel>
     </div>
@@ -237,6 +237,10 @@ const props = defineProps({
     /** Whether to show the waveforms (in the edit view)
      */
     showWaveformsOnEdit: Boolean,
+
+    /** Whether to show the overview waveform (in the edit view)
+     */
+    showOverviewWaveformOnEdit: Boolean,
 
     /** Whether the audio level meter size is large */
     levelMeterSizeIsLarge: Boolean,

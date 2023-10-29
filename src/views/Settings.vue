@@ -49,6 +49,14 @@
                         hint="Uses more more resources"
                     ></LabeledCheckbox>
                 </div>
+                <div class="control">
+                    <LabeledCheckbox
+                        :disabled="!showWaveformsOnEdit"
+                        v-model="showOverviewWaveformOnEdit"
+                        label="Additionally show a waveform for the whole track (for local media only)"
+                        hint="Uses more more resources"
+                    ></LabeledCheckbox>
+                </div>
             </div>
             <div class="field">
                 <div class="control">
@@ -339,6 +347,7 @@ const {
     keyboardShortcutTimeout,
     timeFormat,
     showWaveformsOnEdit,
+    showOverviewWaveformOnEdit,
     youTubeConsent,
     experimentalShowPositionInTrackHeader,
     experimentalAllowTrackSharingByLink,

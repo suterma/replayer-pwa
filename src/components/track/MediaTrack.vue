@@ -411,6 +411,7 @@
                     @click="setActiveTrack"
                     :showLevelMeter="showLevelMeter"
                     :showWaveformsOnEdit="showWaveformsOnEdit"
+                    :showOverviewWaveformOnEdit="showOverviewWaveformOnEdit"
                     :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
                 ></TrackMediaElement>
                 <div v-if="CompilationHandler.isYoutubeVideoTrack(track)">
@@ -1010,6 +1011,7 @@ const {
     showLevelMeter,
     experimentalShowPositionInTrackHeader,
     showWaveformsOnEdit,
+    showOverviewWaveformOnEdit,
     experimentalUseMeter,
 } = storeToRefs(settings);
 
