@@ -1,9 +1,26 @@
 ## 2.0.0 (next)
 
-This release adds video playback, including YouTube. Also, during editing, a waveform view and a peak level meter is available. A customizable pre-roll is available.
+This release adds video playback, including YouTube, plus text files in a compilation. Also, during editing, a waveform view and a peak level meter is available. A customizable pre-roll is available.
+
+### What's Changed
 
 -   Added video playback for WebM, MP4, Ogg Theora, YouTube
+-   A waveform view and a peak level meter
+-   Customizable pre-roll available (per track and globally configurable)
 -   Changed license to AGPLv3
+-   Improved document title with playback info
+-   Simplified playback (only plays during play/edit, not other views)
+-   Simplified and improved Editor GUI
+-   Pre-Roll and Fading is now toggleable from the GUI
+-   Text files are now displayed in the top position for a compilation
+-   Internally improved media playback handling
+-   Removed bplist support
+-   Added BPM for a track
+-   91 adding web audio peak meter by @suterma in https://github.com/suterma/replayer-pwa/pull/93
+-   95 use pinia instead of vuex by @suterma in https://github.com/suterma/replayer-pwa/pull/96
+-   98 add support for text files in zip compilations by @suterma in https://github.com/suterma/replayer-pwa/pull/99
+
+**Full Changelog**: https://github.com/suterma/replayer-pwa/compare/v1.4.3...v2.0.0
 
 ## [1.4.3](https://github.com/suterma/replayer-pwa/compare/v1.4.1...v1.4.3) (2023-03-10)
 
