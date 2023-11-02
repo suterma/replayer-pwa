@@ -6,15 +6,25 @@ import {
     RouteLocationNormalized,
     RouteRecordRaw,
 } from 'vue-router';
-import Play from '../views/Play.vue';
-import Setlist from '../views/Setlist.vue';
-import Settings from '../views/Settings.vue';
+import Main from '../views/Main.vue';
 import Reset from '../views/Reset.vue';
-import About from '../views/About.vue';
 import Demo from '../views/Demo.vue';
 import Development from '../views/Development.vue';
 import { useTitle } from '@vueuse/core';
 import { useAppStore } from '@/store/app';
+
+/** A set of route names. */
+export enum Route {
+    Play = 'Play',
+    Edit = 'Edit',
+    Mix = 'Mix',
+    Setlist = 'Setlist',
+    Settings = 'Settings',
+    Reset = 'Reset',
+    Demo = 'Demo',
+    About = 'About',
+    Development = 'Development',
+}
 
 /** The app routes
  * @devdoc route level code-splitting is not used, because it is not supported with ES6/2015
@@ -23,15 +33,15 @@ import { useAppStore } from '@/store/app';
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
-        redirect: { name: 'Play' },
+        redirect: { name: Route.Play },
     },
     {
         /** The route to the playback
          * @remarks This represents the expectedly most used feature, playback of a file or compilation.
          */
         path: '/play',
-        name: 'Play',
-        component: Play,
+        name: Route.Play,
+        component: Main,
     },
     {
         /** The route to the edit mode
@@ -39,8 +49,8 @@ const routes: Array<RouteRecordRaw> = [
          * A real routing alias is not used to distinguish the menu entries for these routes
          */
         path: '/edit',
-        name: 'Edit',
-        component: Play,
+        name: Route.Edit,
+        component: Main,
     },
     {
         /** The route to the mix mode
@@ -48,37 +58,49 @@ const routes: Array<RouteRecordRaw> = [
          * A real routing alias is not used to distinguish the menu entries for these routes
          */
         path: '/mix',
-        name: 'Mix',
-        component: Play,
+        name: Route.Mix,
+        component: Main,
     },
     {
+        /** The route to the set list
+         * @remarks The /setlist route serves as some form of alias.
+         * A real routing alias is not used to distinguish the menu entries for these routes
+         */
         path: '/setlist',
-        name: 'Setlist',
-        component: Setlist,
+        name: Route.Setlist,
+        component: Main,
     },
     {
+        /** The route to the settings
+         * @remarks The /setlist route serves as some form of alias.
+         * A real routing alias is not used to distinguish the menu entries for these routes
+         */
         path: '/settings',
-        name: 'Settings',
-        component: Settings,
+        name: Route.Settings,
+        component: Main,
     },
     {
         path: '/reset',
-        name: 'Reset',
+        name: Route.Reset,
         component: Reset,
     },
     {
+        /** The route to about
+         * @remarks The /about route serves as some form of alias.
+         * A real routing alias is not used to distinguish the menu entries for these routes
+         */
         path: '/about',
-        name: 'About',
-        component: About,
+        name: Route.About,
+        component: Main,
     },
     {
         path: '/demo',
-        name: 'Demo',
+        name: Route.Demo,
         component: Demo,
     },
     {
         path: '/dev',
-        name: 'Development',
+        name: Route.Development,
         component: Development,
     },
 ];
