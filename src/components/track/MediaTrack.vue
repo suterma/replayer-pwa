@@ -736,6 +736,7 @@ import { MediaLooper } from '@/code/media/MediaLooper';
 import { FadingMode } from '@/code/media/IAudioFader';
 import { useTitle } from '@vueuse/core';
 import { useRoute } from 'vue-router';
+import PlaybackModeButton from '../buttons/PlaybackModeButton.vue';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -1049,11 +1050,13 @@ const app = useAppStore();
 
 const {
     selectedCueId,
+    scheduledCueId,
     compilation,
     /**
      * @remarks A selected cue's data is used for looping on a cue's boundaries
      */
     selectedCue,
+    scheduledCue,
     mediaUrls,
     activeTrackId,
 } = storeToRefs(app);
@@ -1062,12 +1065,13 @@ function toggleTrackPlayerFullScreen(): void {
     emit('update:isTrackPlayerFullScreen', !props.isTrackPlayerFullScreen);
 }
 
-/** Stops playback and removes any selected cue
+/** Stops playback and removes any selected or next cue
  * @remarks Does not assert whether this is the active track.
  */
 function stop(): void {
     mediaHandler.value?.stop();
     app.updateSelectedCueId(CompilationHandler.EmptyId);
+    app.updateScheduledCueId(CompilationHandler.EmptyId);
 }
 
 function toPreviousCue() {
@@ -1249,24 +1253,25 @@ function updateIsExpanded(expanded: boolean): void {
 function cueClick(cue: ICue, togglePlayback = true) {
     console.debug(`Track(${props.track.Name})::cueClick:cue:`, cue);
     if (cue.Time != null && Number.isFinite(cue.Time)) {
-        if (cue.Id) {
-            //Update the selected cue to this cue
-            app.updateSelectedCueId(cue.Id);
-        }
-
-        //Set the position to this cue and handle playback
-        console.debug(
-            `Track(${props.track.Name})::cueClick:isTrackPlaying:`,
-            isTrackPlaying.value,
-        );
-        if (togglePlayback) {
-            if (isTrackPlaying.value) {
-                mediaHandler.value?.pauseAndSeekTo(cue.Time);
-            } else {
-                mediaHandler.value?.playFrom(cue.Time);
-            }
+        // Handle cue as current or scheduled?
+        if (
+            props.playbackMode == PlaybackMode.QueueCue &&
+            isTrackPlaying.value
+        ) {
+            app.updateScheduledCueId(cue.Id);
         } else {
-            seekToSeconds(cue.Time);
+            app.updateSelectedCueId(cue.Id);
+
+            //Invoke the cue: set the position to this cue and handle playback
+            if (togglePlayback) {
+                if (isTrackPlaying.value) {
+                    mediaHandler.value?.pauseAndSeekTo(cue.Time);
+                } else {
+                    mediaHandler.value?.playFrom(cue.Time);
+                }
+            } else {
+                seekToSeconds(cue.Time);
+            }
         }
     }
 }
@@ -1275,6 +1280,7 @@ function cueClick(cue: ICue, togglePlayback = true) {
  * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
  */
 function cuePlay(cue: ICue) {
+    //TODO is this still used???
     console.debug(`Track(${props.track.Name})::cuePlay:cue:`, cue);
     if (cue.Time != null && Number.isFinite(cue.Time)) {
         app.updateSelectedCueId(cue.Id);
@@ -1402,6 +1408,7 @@ const hasPreviousCue = computed(() => {
  */
 const hasNextCue = computed(() => {
     return (
+        //TODO maybe the also a possible scheduled cue should be considered?
         selectedCueId !== null &&
         allCueIds.value.slice(-1)[0] !== selectedCueId.value
     );

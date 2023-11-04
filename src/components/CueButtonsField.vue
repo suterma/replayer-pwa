@@ -116,13 +116,20 @@ const prefixCue = computed(() => {
 });
 
 const app = useAppStore();
-const { selectedCueId } = storeToRefs(app);
+const { selectedCueId, scheduledCueId } = storeToRefs(app);
 
 /** Determines whether this cue is currently selected
  * @remarks Note: only one cue in a compilation may be selected */
 function isCueSelected(cue: ICue): boolean {
     //TODO use via provide/inject
     return selectedCueId.value === cue.Id;
+}
+
+/** Determines whether this cue is scheduled
+ * @remarks Note: only one cue in a compilation may be scheduled */
+function isCueScheduled(cue: ICue): boolean {
+    //TODO use via provide/inject
+    return scheduledCueId.value === cue.Id;
 }
 
 const currentPosition = inject(currentPositionInjectionKey);

@@ -128,6 +128,13 @@ function isCueSelected(cue: ICue): boolean {
     return app.selectedCueId === cue.Id;
 }
 
+/** Determines whether this cue is scheduled
+ * @remarks Note: only one cue in a compilation may be scheduled */
+function isCueScheduled(cue: ICue): boolean {
+    //TODO use via provide/inject
+    return app.scheduledCueId.value === cue.Id;
+}
+
 /** Determines whether playback of the given cue has already passed
  * @remarks Is used for visual indication of playback progress
  * @param cue - the cue to determine the playback progress for

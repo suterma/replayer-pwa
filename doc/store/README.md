@@ -15,6 +15,7 @@ The **APP** store contains the application state. This includes
 -   all available playback metadata (including the compilation's tracks with cues).
 -   It also includes the **currently selected cue or track**'s GUID, which can represent any single cue (of a track) or track without specifying cue, or none, of a compilation. The key used are `selectedCueId` or `selectedTrackId`, respectively.
     _Note: This is not equal to a playback position._
+-   The **scheduled cue**'s GUID, in "queue cue" playback mode
 -   The **media URL's** (of class `MediaUrl`, which contain [object URL's for accessing local resources](https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL_static#see_also). These are locally loaded files or extracted files from a ZIP package.
     _Note: Online media resources are not stored as media URL's._
 
