@@ -6,6 +6,8 @@
             'is-virtual': virtual,
             'is-warning': !isCueSelected,
             'is-success': isCueSelected,
+            'is-selected': isCueSelected,
+            'is-scheduled': isCueScheduled,
         }"
         :title="cueTitle"
         data-cy="cue-button"

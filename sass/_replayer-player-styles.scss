@@ -95,15 +95,35 @@
     }
 }
 
+/* Cue buttons should be a bit more present than other buttons
+ */
+button.cue.button {
+    border-width: 1.5px;
+}
+
 /* Make the selected cue visually outstanding besides the color,
  * to better help people with Achromatopsia$
  * This variant uses the existing button shadow, making it permanent. 
  * It is used to visually extend the button, making it to
  * appear a bit bigger and more brightly bordered.
  */
-.cue.button.is-success {
-    box-shadow: 0 0 0 0.125em $success !important ;
-    border-color: $button-color !important;
+
+button.cue.button.is-selected {
+    box-shadow: 0 0 0 0.125em $button-color !important ;
+    border-color: $button-color;
+}
+
+/* Make the scheduled cue visually outstanding
+ */
+button.cue.button.is-scheduled {
+    animation-name: blinking;
+    animation-duration: 900ms;
+    animation-iteration-count: infinite;
+}
+@keyframes blinking {
+    50% {
+        border-color: transparent;
+    }
 }
 
 /** Allows to show elements in front of the player-progress background span
