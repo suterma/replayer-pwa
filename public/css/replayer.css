@@ -10727,7 +10727,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 /* Cue buttons should be a bit more present than other buttons
  */
 button.cue.button {
-  border-width: 1.5px;
+  border-width: 2px;
 }
 
 /* Make the selected cue visually outstanding besides the color,
@@ -10741,17 +10741,22 @@ button.cue.button.is-selected {
   border-color: #fafafa;
 }
 
+button.cue.button.is-selected.is-success {
+  box-shadow: 0 0 0 0.125em #62c462 !important;
+}
+
 /* Make the scheduled cue visually outstanding
  */
 button.cue.button.is-scheduled {
   animation-name: blinking;
   animation-duration: 900ms;
   animation-iteration-count: infinite;
+  border-color: transparent;
 }
 
 @keyframes blinking {
   50% {
-    border-color: transparent;
+    border-color: #fafafa;
   }
 }
 /** Allows to show elements in front of the player-progress background span

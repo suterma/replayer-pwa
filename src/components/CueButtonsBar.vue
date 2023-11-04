@@ -23,6 +23,7 @@
             :percentComplete="percentComplete(prefixCue)"
             virtual
             :isCueSelected="isCueSelected(prefixCue)"
+            :isCueScheduled="isCueScheduled(prefixCue)"
             @click="cueClicked"
         >
         </CueButton>
@@ -45,6 +46,7 @@
                 :isCueAhead="isCueAhead(cue)"
                 :percentComplete="percentComplete(cue)"
                 :isCueSelected="isCueSelected(cue)"
+                :isCueScheduled="isCueScheduled(cue)"
                 @click="cueClicked"
             >
             </CueButton>

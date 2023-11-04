@@ -4,6 +4,7 @@
         <BaseIcon v-if="isPlaybackLoopTrack" :path="rTrackRepeat" />
         <BaseIcon v-if="isPlaybackCue" :path="rTrackPlayOnce" />
         <BaseIcon v-if="isPlaybackLoopCue" :path="rTrackRepeatOnce" />
+        <BaseIcon v-if="isPlaybackQueueCue" :path="mdiPlaylistPlay" />
         <BaseIcon v-if="isPlaybackLoopCompilation" :path="rRepeatVariant" />
         <BaseIcon v-if="isPlaybackShuffleCompilation" :path="rShuffleVariant" />
     </button>
@@ -21,6 +22,7 @@ import {
     rTrackPlayOnce,
     rTrackRepeatOnce,
 } from '@/components/icons/BaseIcon.vue';
+import { mdiPlaylistPlay } from '@mdi/js';
 
 /** A toggle switch for the playback mode
  * @remarks Handles and emits various states and event for playback control.
@@ -48,6 +50,7 @@ export default defineComponent({
             rShuffleVariant: rShuffleVariant,
             rTrackPlayOnce: rTrackPlayOnce,
             rTrackRepeatOnce: rTrackRepeatOnce,
+            mdiPlaylistPlay: mdiPlaylistPlay,
         };
     },
     computed: {
@@ -62,6 +65,9 @@ export default defineComponent({
         },
         isPlaybackLoopCue(): boolean {
             return this.modelValue === PlaybackMode.LoopCue;
+        },
+        isPlaybackQueueCue(): boolean {
+            return this.modelValue === PlaybackMode.QueueCue;
         },
         isPlaybackLoopCompilation(): boolean {
             return this.modelValue === PlaybackMode.LoopCompilation;
@@ -84,6 +90,9 @@ export default defineComponent({
                     break;
                 case PlaybackMode.LoopCue:
                     title += 'Loop cue';
+                    break;
+                case PlaybackMode.QueueCue:
+                    title += 'Queue cue';
                     break;
                 case PlaybackMode.LoopCompilation:
                     title += 'Loop compilation';
@@ -116,6 +125,9 @@ export default defineComponent({
                     nextPlaybackMode = PlaybackMode.LoopCue;
                     break;
                 case PlaybackMode.LoopCue:
+                    nextPlaybackMode = PlaybackMode.QueueCue;
+                    break;
+                case PlaybackMode.QueueCue:
                     nextPlaybackMode = PlaybackMode.LoopCompilation;
                     break;
                 case PlaybackMode.LoopCompilation:

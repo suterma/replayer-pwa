@@ -206,6 +206,10 @@ const props = defineProps({
      * @remarks Note: only one cue in a compilation may be selected */
     isCueSelected: Boolean,
 
+    /** Whether this cue is currently scheduled
+     * @remarks Note: only one cue in a compilation may be scheduled */
+    isCueScheduled: Boolean,
+
     /* Whether to show this cue as passive, in dimmed style. */
     virtual: Boolean,
 
