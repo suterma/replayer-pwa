@@ -1,8 +1,25 @@
 <template>
-    <Playback v-show="routedToPlayback"></Playback>
-    <Setlist v-show="routedToSetlist"></Setlist>
-    <Settings v-show="routedToSettings"></Settings>
-    <About v-show="routedToAbout"></About>
+    <Playback
+        v-show="
+            routedToPlayback || experimentalShowEverythingEverywhereAllAtOnce
+        "
+    ></Playback>
+    <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
+    <Setlist
+        v-show="
+            routedToSetlist || experimentalShowEverythingEverywhereAllAtOnce
+        "
+    ></Setlist>
+    <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
+    <Settings
+        v-show="
+            routedToSettings || experimentalShowEverythingEverywhereAllAtOnce
+        "
+    ></Settings>
+    <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
+    <About
+        v-show="routedToAbout || experimentalShowEverythingEverywhereAllAtOnce"
+    ></About>
 </template>
 
 <script setup lang="ts">
@@ -13,6 +30,8 @@ import Settings from '@/views/main/Settings.vue';
 import About from '@/views/main/About.vue';
 import { computed } from 'vue';
 import { Route } from '@/router';
+import { useSettingsStore } from '@/store/settings';
+import { storeToRefs } from 'pinia';
 
 /** A main view for the Replayer application
  * @remarks This main view works similar but distinct from keep-alive with router-view.
@@ -22,6 +41,10 @@ import { Route } from '@/router';
  * maintain a continuous playback (especially the media elements, but also
  * other DOM related features)
  */
+
+/** Apply the settings */
+const settings = useSettingsStore();
+const { experimentalShowEverythingEverywhereAllAtOnce } = storeToRefs(settings);
 
 /** Handle the routes */
 const router = useRouter();

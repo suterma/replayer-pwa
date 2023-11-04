@@ -286,6 +286,16 @@
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
+                        v-model="experimentalShowEverythingEverywhereAllAtOnce"
+                        label="Show everything everywhere all at once"
+                        hint="Shows all playback views simultaneously, suitable for debugging purposes"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
                         v-model="experimentalShowPositionInTrackHeader"
                         label="Show position in track headers"
                         hint="Uses more space"
@@ -350,6 +360,7 @@ const {
     showOverviewWaveformOnEdit,
     youTubeConsent,
     experimentalShowPositionInTrackHeader,
+    experimentalShowEverythingEverywhereAllAtOnce,
     experimentalAllowTrackSharingByLink,
     experimentalMultitrack,
     experimentalUseMeter,

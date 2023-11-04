@@ -85,6 +85,14 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         false,
     );
 
+    /** EXPERIMENTAL: Whether to show all playback views simultaneously
+     * @remarks Default is false
+     */
+    const experimentalShowEverythingEverywhereAllAtOnce = useLocalStorage(
+        'experimentalShowEverythingEverywhereAllAtOnce',
+        false,
+    );
+
     /** EXPERIMENTAL: Whether to show a menu action for sharing a track via the Track API
      * @remarks Default is false
      */
@@ -136,6 +144,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         showOverviewWaveformOnEdit.value = false;
         youTubeConsent.value = false;
         experimentalShowPositionInTrackHeader.value = false;
+        experimentalShowEverythingEverywhereAllAtOnce.value = false;
         experimentalAllowTrackSharingByLink.value = false;
         experimentalMultitrack.value = false;
         experimentalUseMeter.value = false;
@@ -155,6 +164,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         showOverviewWaveformOnEdit,
         youTubeConsent,
         experimentalShowPositionInTrackHeader,
+        experimentalShowEverythingEverywhereAllAtOnce,
         experimentalAllowTrackSharingByLink,
         experimentalMultitrack,
         experimentalUseMeter,
