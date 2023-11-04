@@ -1255,6 +1255,7 @@ function cueClick(cue: ICue, togglePlayback = true) {
     if (cue.Time != null && Number.isFinite(cue.Time)) {
         // Handle cue as current or scheduled?
         if (
+            selectedCueId /*any is selected?*/ &&
             props.playbackMode == PlaybackMode.QueueCue &&
             isTrackPlaying.value
         ) {
