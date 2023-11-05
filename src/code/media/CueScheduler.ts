@@ -31,24 +31,35 @@ export class CueScheduler implements ICueScheduler {
         );
         return new Promise((resolve, reject) => {
             this.timeoutHandle = setTimeout(() => {
-                //TODO reject if an abort was detected
-                console.debug(
-                    `CueScheduler::ScheduleCue:invoked:targetTime:`,
-                    targetTime,
-                );
+                if (this.timeoutHandle) {
+                    console.debug(
+                        `CueScheduler::ScheduleCue:invoked:targetTime:`,
+                        targetTime,
+                    );
 
-                this._media.seekTo(targetTime);
-                resolve();
+                    this._media.seekTo(targetTime);
+                    resolve();
+                } else {
+                    reject(
+                        `The current scheduling for cue '${targetCue}' was cancelled.`,
+                    );
+                }
             }, timeout * 1000);
         });
     }
 
     RemoveSchedule(): void {
+        console.debug(
+            `CueScheduler::RemoveSchedule:timeoutHandle:`,
+            this.timeoutHandle,
+        );
         if (this.timeoutHandle) {
             clearTimeout(this.timeoutHandle);
+            this.timeoutHandle = null;
         }
     }
 
+    /** A handle to the current scheduling. Will be set to null when cancelled, to indicate the cancel status. */
     private timeoutHandle: NodeJS.Timeout | null = null;
 
     /** The media handler to act upon */
