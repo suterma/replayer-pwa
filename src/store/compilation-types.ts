@@ -26,7 +26,7 @@ export enum PlaybackMode {
     PlayCue = 'PlayCue',
     /** Plays the cue in a loop */
     LoopCue = 'LoopCue',
-    /** Plays cues in a queue
+    /** Plays cues in a queue (EXPERIMENTAL)
      * @remarks Currently the queue lenght is only 2 (having current and next)
      */
     QueueCue = 'QueueCue',

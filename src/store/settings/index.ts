@@ -109,6 +109,14 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         false,
     );
 
+    /** EXPERIMENTAL: Whether to use the queue cue mode
+     * @remarks Default is false
+     */
+    const experimentalUseQueueCueMode = useLocalStorage(
+        'experimentalUseQueueCueMode',
+        false,
+    );
+
     /** Whether to show the waveforms (on edit view)
      */
     const showWaveformsOnEdit = useLocalStorage('showWaveformsOnEdit', true);
@@ -147,6 +155,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalShowEverythingEverywhereAllAtOnce.value = false;
         experimentalAllowTrackSharingByLink.value = false;
         experimentalMultitrack.value = false;
+        experimentalUseQueueCueMode.value = false;
         experimentalUseMeter.value = false;
     }
 
@@ -167,6 +176,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalShowEverythingEverywhereAllAtOnce,
         experimentalAllowTrackSharingByLink,
         experimentalMultitrack,
+        experimentalUseQueueCueMode,
         experimentalUseMeter,
         $reset,
     };

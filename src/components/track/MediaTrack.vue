@@ -1274,7 +1274,7 @@ function cueClick(cue: ICue, togglePlayback = true) {
             // Schedule the cue
             //TODO simplify this code
             if (cueScheduler.value && selectedCue.value) {
-                //TODO variant: Maybe we could also calculate the remaining
+                //IDEA: Maybe we could also calculate the remaining
                 //time to the current cue, not the selected cue,
                 //to allow scheduling also while
                 //the current cue has passed?
