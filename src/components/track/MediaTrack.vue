@@ -736,6 +736,8 @@ import { MediaLooper } from '@/code/media/MediaLooper';
 import { FadingMode } from '@/code/media/IAudioFader';
 import { useTitle } from '@vueuse/core';
 import { useRoute } from 'vue-router';
+import { ICueScheduler } from '@/code/media/ICueScheduler';
+import { CueScheduler } from '@/code/media/CueScheduler';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -904,6 +906,10 @@ const mediaHandler: Ref<IMediaHandler | null> = ref(null);
  */
 const mediaLooper: Ref<IMediaLooper | null> = ref(null);
 
+/** A reference to the cue scheduler
+ */
+const cueScheduler: Ref<ICueScheduler | null> = ref(null);
+
 /** Updates the media handler for this track, with the emitted one from the underlying component */
 function useMediaHandler(handler: IMediaHandler) {
     // initialize
@@ -920,16 +926,23 @@ function useMediaHandler(handler: IMediaHandler) {
     });
 
     handler.onDurationChanged.subscribe((duration) => {
+        removeCueScheduling();
         trackDuration.value = duration;
         app.updateDurations(props.track.Id, duration);
     });
 
     handler.onPausedChanged.subscribe((paused) => {
+        removeCueScheduling();
         isTrackPlaying.value = !paused;
     });
 
     handler.onEnded.subscribe(() => {
+        removeCueScheduling();
         emit('trackEnded');
+    });
+
+    handler.onSeekingChanged.subscribe(() => {
+        removeCueScheduling();
     });
 
     handler.fader.updateSettings(
@@ -952,6 +965,7 @@ function useMediaHandler(handler: IMediaHandler) {
 
     mediaHandler.value = handler;
     mediaLooper.value = new MediaLooper(handler);
+    cueScheduler.value = new CueScheduler(handler);
 }
 
 /** The playback progress in the current track, in [seconds]
@@ -1049,6 +1063,7 @@ const app = useAppStore();
 
 const {
     selectedCueId,
+    scheduledCueId,
     compilation,
     /**
      * @remarks A selected cue's data is used for looping on a cue's boundaries
@@ -1062,12 +1077,13 @@ function toggleTrackPlayerFullScreen(): void {
     emit('update:isTrackPlayerFullScreen', !props.isTrackPlayerFullScreen);
 }
 
-/** Stops playback and removes any selected cue
+/** Stops playback and removes any selected or next cue
  * @remarks Does not assert whether this is the active track.
  */
 function stop(): void {
     mediaHandler.value?.stop();
     app.updateSelectedCueId(CompilationHandler.EmptyId);
+    app.updateScheduledCueId(CompilationHandler.EmptyId);
 }
 
 function toPreviousCue() {
@@ -1249,24 +1265,61 @@ function updateIsExpanded(expanded: boolean): void {
 function cueClick(cue: ICue, togglePlayback = true) {
     console.debug(`Track(${props.track.Name})::cueClick:cue:`, cue);
     if (cue.Time != null && Number.isFinite(cue.Time)) {
-        if (cue.Id) {
-            //Update the selected cue to this cue
-            app.updateSelectedCueId(cue.Id);
-        }
-
-        //Set the position to this cue and handle playback
-        console.debug(
-            `Track(${props.track.Name})::cueClick:isTrackPlaying:`,
-            isTrackPlaying.value,
-        );
-        if (togglePlayback) {
-            if (isTrackPlaying.value) {
-                mediaHandler.value?.pauseAndSeekTo(cue.Time);
+        // Handle cue as current or scheduled?
+        if (
+            selectedCueId /*any is selected?*/ &&
+            props.playbackMode == PlaybackMode.QueueCue &&
+            isTrackPlaying.value
+        ) {
+            // Schedule the cue
+            //TODO simplify this code
+            if (cueScheduler.value && selectedCue.value) {
+                //IDEA: Maybe we could also calculate the remaining
+                //time to the current cue, not the selected cue,
+                //to allow scheduling also while
+                //the current cue has passed?
+                const remainingTime =
+                    CompilationHandler.calculateRemainingTimeToEndOfCue(
+                        currentPosition.value,
+                        selectedCue.value,
+                    );
+                if (remainingTime) {
+                    console.debug(
+                        `Track(${props.track.Name})::scheduling:remainingTime:`,
+                        remainingTime,
+                    );
+                    cueScheduler.value
+                        .ScheduleCue(cue, remainingTime)
+                        .then(() => {
+                            app.updateSelectedCueId(scheduledCueId.value);
+                            app.updateScheduledCueId(
+                                CompilationHandler.EmptyId,
+                            );
+                        })
+                        .catch((reason) => {
+                            console.warn(
+                                `Track(${props.track.Name})::ScheduleCue:aborted:`,
+                                reason,
+                            );
+                        });
+                    app.updateScheduledCueId(cue.Id);
+                }
             } else {
-                mediaHandler.value?.playFrom(cue.Time);
+                console.warn('No cue selected, can not schedule the next cue');
             }
         } else {
-            seekToSeconds(cue.Time);
+            app.updateSelectedCueId(cue.Id);
+
+            //Invoke the cue: set the position to this cue and handle playback
+            if (togglePlayback) {
+                if (isTrackPlaying.value) {
+                    mediaHandler.value?.pauseAndSeekTo(cue.Time);
+                } else {
+                    mediaHandler.value?.playFrom(cue.Time);
+                }
+            } else {
+                seekToSeconds(cue.Time);
+            }
         }
     }
 }
@@ -1275,6 +1328,7 @@ function cueClick(cue: ICue, togglePlayback = true) {
  * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
  */
 function cuePlay(cue: ICue) {
+    //TODO is this still used???
     console.debug(`Track(${props.track.Name})::cuePlay:cue:`, cue);
     if (cue.Time != null && Number.isFinite(cue.Time)) {
         app.updateSelectedCueId(cue.Id);
@@ -1293,7 +1347,6 @@ function cuePlay(cue: ICue) {
  */
 function trackPlay() {
     console.debug(`Track(${props.track.Name})::trackPlay`);
-
     app.updateSelectedTrackId(props.track.Id);
 
     //Set the position to the beginning and handle playback
@@ -1402,6 +1455,7 @@ const hasPreviousCue = computed(() => {
  */
 const hasNextCue = computed(() => {
     return (
+        //TODO maybe the also a possible scheduled cue should be considered?
         selectedCueId !== null &&
         allCueIds.value.slice(-1)[0] !== selectedCueId.value
     );
@@ -1617,6 +1671,15 @@ watchEffect(() => {
             'Replayer';
     }
 });
+
+// --- handling the cue scheduling
+
+/** Removes the cue scheduling
+ */
+function removeCueScheduling(): void {
+    app.updateScheduledCueId(CompilationHandler.EmptyId);
+    cueScheduler.value?.RemoveSchedule();
+}
 </script>
 
 <style lang="scss" scoped>

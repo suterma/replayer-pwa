@@ -151,8 +151,6 @@ export default defineComponent({
     },
     computed: {
         ...mapState(useSettingsStore, ['experimentalMultitrack']),
-        /** The track for the context, if any
-         */
     },
 });
 </script>

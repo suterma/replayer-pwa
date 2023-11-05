@@ -286,6 +286,15 @@
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
+                        v-model="experimentalUseQueueCueMode"
+                        label="Offer queue cue mode"
+                        hint="Offers to select a cue for playback immediately after the current cue"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
                         v-model="experimentalShowEverythingEverywhereAllAtOnce"
                         label="Show everything everywhere all at once"
                         hint="Shows all playback views simultaneously, suitable for debugging purposes"
@@ -363,6 +372,7 @@ const {
     experimentalShowEverythingEverywhereAllAtOnce,
     experimentalAllowTrackSharingByLink,
     experimentalMultitrack,
+    experimentalUseQueueCueMode,
     experimentalUseMeter,
 } = storeToRefs(settings);
 

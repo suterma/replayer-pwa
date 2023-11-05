@@ -21,6 +21,16 @@ export const state = {
      * @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
     selectedCueId: useLocalStorage('selectedCueId', CompilationHandler.EmptyId),
 
+    /** The currently scheduled cue Id, if any, otherwise CompilationHandler.EmptyId.
+     * This is NOT used to determine the currently active track.
+     * @remarks This does not control the playback itself. It is intended for display purposes.
+     * @remarks Set to CompilationHandler.EmptyId, when no cue should be considered scheduled.
+     * @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
+    scheduledCueId: useLocalStorage(
+        'scheduledCueId',
+        CompilationHandler.EmptyId,
+    ),
+
     /** The currently selected track Id, if any, otherwise CompilationHandler.EmptyId.
      * This is also used to determine the currently active track.
      * This serves as alternative when no selected cue Id is set.

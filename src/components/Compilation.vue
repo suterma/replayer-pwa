@@ -148,7 +148,10 @@ export default defineComponent({
     },
 
     methods: {
-        ...mapActions(useAppStore, ['updateSelectedCueId']),
+        ...mapActions(useAppStore, [
+            'updateSelectedCueId',
+            'updateScheduledCueId',
+        ]),
 
         /** Activates the wake lock (if enabled in settings)
          * @remarks Implements https://github.com/suterma/replayer-pwa/issues/26
@@ -323,6 +326,7 @@ export default defineComponent({
         toNextCue() {
             console.debug('Compilation::toNextCue');
             const allCueIds = this.allCues.map((cue) => cue.Id);
+            //TODO maybe just use the scheduled cue here, if available?
             const indexOfSelected = allCueIds.indexOf(this.selectedCueId);
             if (indexOfSelected < allCueIds.length - 1) {
                 const nextCueId = allCueIds[indexOfSelected + 1];
@@ -408,6 +412,7 @@ export default defineComponent({
     computed: {
         ...mapState(useAppStore, [
             'selectedCueId',
+            'nextCueId',
             'activeTrackId',
             'hasSingleMediaTrack',
             'textTracks',

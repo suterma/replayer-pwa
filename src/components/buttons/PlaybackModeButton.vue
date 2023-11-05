@@ -4,6 +4,11 @@
         <BaseIcon v-if="isPlaybackLoopTrack" :path="rTrackRepeat" />
         <BaseIcon v-if="isPlaybackCue" :path="rTrackPlayOnce" />
         <BaseIcon v-if="isPlaybackLoopCue" :path="rTrackRepeatOnce" />
+        <BaseIcon
+            v-if="isPlaybackQueueCue"
+            :path="mdiPlaylistPlay"
+            class="is-experimental"
+        />
         <BaseIcon v-if="isPlaybackLoopCompilation" :path="rRepeatVariant" />
         <BaseIcon v-if="isPlaybackShuffleCompilation" :path="rShuffleVariant" />
     </button>
@@ -21,6 +26,9 @@ import {
     rTrackPlayOnce,
     rTrackRepeatOnce,
 } from '@/components/icons/BaseIcon.vue';
+import { mdiPlaylistPlay } from '@mdi/js';
+import { mapState } from 'pinia';
+import { useSettingsStore } from '@/store/settings';
 
 /** A toggle switch for the playback mode
  * @remarks Handles and emits various states and event for playback control.
@@ -48,6 +56,7 @@ export default defineComponent({
             rShuffleVariant: rShuffleVariant,
             rTrackPlayOnce: rTrackPlayOnce,
             rTrackRepeatOnce: rTrackRepeatOnce,
+            mdiPlaylistPlay: mdiPlaylistPlay,
         };
     },
     computed: {
@@ -62,6 +71,9 @@ export default defineComponent({
         },
         isPlaybackLoopCue(): boolean {
             return this.modelValue === PlaybackMode.LoopCue;
+        },
+        isPlaybackQueueCue(): boolean {
+            return this.modelValue === PlaybackMode.QueueCue;
         },
         isPlaybackLoopCompilation(): boolean {
             return this.modelValue === PlaybackMode.LoopCompilation;
@@ -85,6 +97,9 @@ export default defineComponent({
                 case PlaybackMode.LoopCue:
                     title += 'Loop cue';
                     break;
+                case PlaybackMode.QueueCue:
+                    title += 'Queue cue (EXPERIMENTAL)';
+                    break;
                 case PlaybackMode.LoopCompilation:
                     title += 'Loop compilation';
                     break;
@@ -96,6 +111,7 @@ export default defineComponent({
             }
             return (title += ' (click to toggle)');
         },
+        ...mapState(useSettingsStore, ['experimentalUseQueueCueMode']),
     },
     methods: {
         togglePlaybackMode() {
@@ -116,6 +132,14 @@ export default defineComponent({
                     nextPlaybackMode = PlaybackMode.LoopCue;
                     break;
                 case PlaybackMode.LoopCue:
+                    if (this.experimentalUseQueueCueMode) {
+                        nextPlaybackMode = PlaybackMode.QueueCue;
+                    } else {
+                        //omit the experiment
+                        nextPlaybackMode = PlaybackMode.LoopCompilation;
+                    }
+                    break;
+                case PlaybackMode.QueueCue:
                     nextPlaybackMode = PlaybackMode.LoopCompilation;
                     break;
                 case PlaybackMode.LoopCompilation:

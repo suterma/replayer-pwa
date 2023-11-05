@@ -31,12 +31,21 @@ export const actions = {
         state.selectedCueId.value = cueId;
     },
 
+    /** Updates the scheduled cue Id, for application-wide handling
+     * @remarks This does not control the playback itself. It is intended for display and handling purposes.
+     */
+    updateScheduledCueId(cueId: string): void {
+        state.scheduledCueId.value = cueId;
+    },
+
     /** Updates the currently selected track Id, for application-wide handling
      * @remarks This does not control the playback itself. It is intended for display and handling purposes.
      * @remarks Removes any previous cue id selection, then selects the first cue of this track, if available.
+     * @remarks Removes any previous next cue id selection.
      */
     updateSelectedTrackId(trackId: string): void {
         state.selectedCueId.value = CompilationHandler.EmptyId;
+        state.scheduledCueId.value = CompilationHandler.EmptyId;
         state.selectedTrackId.value = trackId;
 
         const track = CompilationHandler.getTrackById(
@@ -63,8 +72,7 @@ export const actions = {
     },
 
     /** Adds a new cue with the given time
-         *    @remarks Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.
-     
+     * @remarks Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.
      */
     addCueAtTime(trackId: string, time: number): void {
         const roundedTime = CompilationHandler.roundTime(time);
@@ -361,6 +369,7 @@ export const actions = {
 
         /* Set active track (if just one is available), like in MutationTypes.UPDATE_SELECTED_TRACK_ID */
         state.selectedCueId.value = CompilationHandler.EmptyId;
+        state.scheduledCueId.value = CompilationHandler.EmptyId;
         state.selectedTrackId.value =
             compilation.Tracks.length == 1
                 ? compilation.Tracks[0]?.Id ?? CompilationHandler.EmptyId
@@ -704,6 +713,7 @@ export const actions = {
         console.debug('actions::ADD_TRACK:', track);
         state.compilation.value.Tracks.push(track);
         state.selectedCueId.value = CompilationHandler.EmptyId;
+        state.scheduledCueId.value = CompilationHandler.EmptyId;
         state.selectedTrackId.value = track.Id;
     },
 
@@ -759,7 +769,8 @@ export const actions = {
     },
 
     /** Removes an existing track, with it's cues.
-     * @remarks Removes the track from the compilation. If the selected cue was one of the track, the selection is cleared.
+     * @remarks Removes the track from the compilation.
+     * If the selected or next cue was one of the track, the selection is cleared.
      */
     removeTrack(trackId: string): void {
         const trackToRemove = CompilationHandler.getTrackById(
@@ -767,10 +778,15 @@ export const actions = {
             trackId,
         );
         const currentlySelectedCueId = state.selectedCueId.value;
+        const scheduledCueId = state.scheduledCueId.value;
         trackToRemove?.Cues.forEach((cue) => {
             if (currentlySelectedCueId === cue.Id) {
                 /* unselect cue, this track is no longer the active track */
                 state.selectedCueId.value = CompilationHandler.EmptyId;
+            }
+            if (scheduledCueId === cue.Id) {
+                /* unselect cue, this track is no longer the active track */
+                state.scheduledCueId.value = CompilationHandler.EmptyId;
             }
         });
 
@@ -956,6 +972,7 @@ export const actions = {
         this.discardCompilation();
         state.compilation.value = Compilation.empty();
         state.selectedCueId.value = CompilationHandler.EmptyId;
+        state.scheduledCueId.value = CompilationHandler.EmptyId;
         state.selectedTrackId.value = CompilationHandler.EmptyId;
         state.mediaUrls.value = new Map<string, MediaUrl>();
         state.useAppShortcuts.value = true;

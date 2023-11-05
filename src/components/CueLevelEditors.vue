@@ -26,6 +26,7 @@
                 :isCueAhead="isCueAhead(cue)"
                 :percentComplete="percentComplete(cue)"
                 :isCueSelected="isCueSelected(cue)"
+                :isCueScheduled="isCueScheduled(cue)"
                 @click="cueClick(cue)"
                 @play="cuePlay(cue)"
                 @adjust="cueAdjust(cue)"
@@ -126,6 +127,13 @@ function cueAdjust(cue: ICue) {
 function isCueSelected(cue: ICue): boolean {
     //TODO use via provide/inject
     return app.selectedCueId === cue.Id;
+}
+
+/** Determines whether this cue is scheduled
+ * @remarks Note: only one cue in a compilation may be scheduled */
+function isCueScheduled(cue: ICue): boolean {
+    //TODO use via provide/inject
+    return app.scheduledCueId === cue.Id;
 }
 
 /** Determines whether playback of the given cue has already passed

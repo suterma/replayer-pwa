@@ -52,6 +52,7 @@ export default defineComponent({
         ...mapActions(useAppStore, [
             'loadFromUrl',
             'updateSelectedCueId',
+            'updateScheduledCueId',
             'addTrack',
             'useMediaFromUrl',
         ]),

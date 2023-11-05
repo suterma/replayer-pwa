@@ -6,6 +6,8 @@
             'is-virtual': virtual,
             'is-warning': !isCueSelected,
             'is-success': isCueSelected,
+            'is-selected': isCueSelected,
+            'is-scheduled': isCueScheduled,
         }"
         :title="cueTitle"
         data-cy="cue-button"
@@ -203,6 +205,10 @@ const props = defineProps({
     /** Whether this cue is currently selected
      * @remarks Note: only one cue in a compilation may be selected */
     isCueSelected: Boolean,
+
+    /** Whether this cue is currently scheduled
+     * @remarks Note: only one cue in a compilation may be scheduled */
+    isCueScheduled: Boolean,
 
     /* Whether to show this cue as passive, in dimmed style. */
     virtual: Boolean,

@@ -225,8 +225,9 @@ export default class CompilationHandler {
         }
     }
 
-    /** Calculates the remaining time.
-     * @param {number} trackDuration - could be NaN or infinity, depending on the source
+    /** Calculates the remaining time to the end of the track.
+     * @param {number} currentPosition - the number of seconds already passed in the track
+     * @param {number | null} trackDuration - could be NaN or infinity, depending on the source
      * @returns The remaining time or null if not applicable
      */
     static calculateRemainingTime(
@@ -235,6 +236,39 @@ export default class CompilationHandler {
     ): number | null {
         if (trackDuration != null && Number.isFinite(trackDuration)) {
             return currentPosition - trackDuration;
+        } else return null;
+    }
+
+    /** Calculates the remaining time to the beginning of the given cue.
+     * @param {number} currentPosition - the number of seconds already passed in the track
+     * @param {ICue} cue - the cue to determine the playback progress for
+     * @returns The remaining time or null if not applicable
+     */
+    static calculateRemainingTimeToCue(
+        currentPosition: number,
+        cue: ICue,
+    ): number | null {
+        if (cue.Time != null && Number.isFinite(cue.Time)) {
+            return cue.Time - currentPosition;
+        } else return null;
+    }
+
+    /** Calculates the remaining time to the end of the given cue.
+     * @param {number} currentPosition - the number of seconds already passed in the track
+     * @param {ICue} cue - the cue to determine the playback progress for
+     * @returns The remaining time or null if not applicable
+     */
+    static calculateRemainingTimeToEndOfCue(
+        currentPosition: number,
+        cue: ICue,
+    ): number | null {
+        if (
+            cue.Time != null &&
+            Number.isFinite(cue.Time) &&
+            cue.Duration != null &&
+            Number.isFinite(cue.Duration)
+        ) {
+            return cue.Time + cue.Duration - currentPosition;
         } else return null;
     }
 
@@ -641,7 +675,7 @@ export default class CompilationHandler {
         duration: number | null | undefined,
         currentPosition: number | null | undefined,
     ): boolean {
-        if (currentPosition !== undefined && currentPosition != undefined) {
+        if (currentPosition !== undefined && currentPosition !== null) {
             if (
                 time !== undefined &&
                 time !== null &&
@@ -668,28 +702,21 @@ export default class CompilationHandler {
         currentPosition: number | null | undefined,
     ): boolean {
         if (cue) {
-            return this.isAhead(cue.Time, cue.Duration, currentPosition);
+            return this.isAhead(cue.Time, currentPosition);
         }
         return false;
     }
 
-    /** Determines whether playback of this time / duration has not yet started
+    /** Determines whether playback of this time has not yet started
+     * @param time - the point in time to use for the calculation
      * @param currentPosition - the number of seconds already passed in the cue's track
      */
     public static isAhead(
         time: number | null | undefined,
-        duration: number | null | undefined,
         currentPosition: number | null | undefined,
     ): boolean {
-        if (currentPosition !== undefined && currentPosition != undefined) {
-            if (
-                time !== undefined &&
-                time !== null &&
-                duration !== undefined &&
-                duration !== null &&
-                Number.isFinite(time) &&
-                Number.isFinite(duration)
-            ) {
+        if (currentPosition !== undefined && currentPosition !== null) {
+            if (time !== undefined && time !== null && Number.isFinite(time)) {
                 return currentPosition < time;
             }
         }
@@ -704,7 +731,7 @@ export default class CompilationHandler {
         cue: ICue,
         currentPosition: number | null | undefined,
     ): number | null {
-        if (currentPosition !== undefined && currentPosition != undefined) {
+        if (currentPosition !== undefined && currentPosition !== null) {
             if (
                 cue &&
                 cue.Time !== null &&
@@ -729,7 +756,7 @@ export default class CompilationHandler {
         duration: number | null | undefined,
         currentPosition: number | null | undefined,
     ): number | null {
-        if (currentPosition !== undefined && currentPosition != undefined) {
+        if (currentPosition !== undefined && currentPosition !== null) {
             if (
                 time !== undefined &&
                 time !== null &&
@@ -737,7 +764,7 @@ export default class CompilationHandler {
                 duration !== null &&
                 Number.isFinite(time) &&
                 Number.isFinite(duration) &&
-                !CompilationHandler.isAhead(time, duration, currentPosition) &&
+                !CompilationHandler.isAhead(time, currentPosition) &&
                 !CompilationHandler.hasPassed(time, duration, currentPosition)
             ) {
                 return (100 / duration) * (currentPosition - time);

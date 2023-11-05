@@ -26,6 +26,10 @@ export enum PlaybackMode {
     PlayCue = 'PlayCue',
     /** Plays the cue in a loop */
     LoopCue = 'LoopCue',
+    /** Plays cues in a queue (EXPERIMENTAL)
+     * @remarks Currently the queue lenght is only 2 (having current and next)
+     */
+    QueueCue = 'QueueCue',
     /** Plays all tracks of the compilation in a loop */
     LoopCompilation = 'LoopCompilation',
     /** Plays all tracks of the compilation in random order */

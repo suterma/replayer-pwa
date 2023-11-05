@@ -52,6 +52,18 @@ export const getters = {
         );
     }),
 
+    /** Gets the currently scheduled cue
+     * @remarks This is more expensive than only getting the scheduled cue id
+     * @remarks Only one cue may be scheduled at any time, within one compilation / application instance.
+     * @returns The cue; or null, if no cue is scheduled or the scheduled cue is can not be found.
+     */
+    scheduledCue: computed(() => {
+        return CompilationHandler.getCompilationCueById(
+            state.compilation.value,
+            state.scheduledCueId.value,
+        );
+    }),
+
     /** Gets the set of media tracks */
     mediaTracks: computed(() => {
         return state.compilation.value?.Tracks.filter(
@@ -74,6 +86,7 @@ export const getters = {
      * - the track that contains the currently selected cue, if any
      * - or an explicitly selected track, if any
      * - or the single audio track (if there is only one audio track)
+     * The active track is not dependend of any currently scheduled cues
      */
     activeTrackId: computed(() => {
         const selectedTrackByCue = CompilationHandler.getTrackByCueId(

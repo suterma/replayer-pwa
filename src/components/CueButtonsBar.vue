@@ -23,6 +23,7 @@
             :percentComplete="percentComplete(prefixCue)"
             virtual
             :isCueSelected="isCueSelected(prefixCue)"
+            :isCueScheduled="isCueScheduled(prefixCue)"
             @click="cueClicked"
         >
         </CueButton>
@@ -45,6 +46,7 @@
                 :isCueAhead="isCueAhead(cue)"
                 :percentComplete="percentComplete(cue)"
                 :isCueSelected="isCueSelected(cue)"
+                :isCueScheduled="isCueScheduled(cue)"
                 @click="cueClicked"
             >
             </CueButton>
@@ -122,13 +124,20 @@ const prefixCue = computed(() => {
 });
 
 const app = useAppStore();
-const { selectedCueId } = storeToRefs(app);
+const { selectedCueId, scheduledCueId } = storeToRefs(app);
 
 /** Determines whether this cue is currently selected
  * @remarks Note: only one cue in a compilation may be selected */
 function isCueSelected(cue: ICue): boolean {
     //TODO use via provide/inject
     return selectedCueId.value === cue.Id;
+}
+
+/** Determines whether this cue is scheduled
+ * @remarks Note: only one cue in a compilation may be scheduled */
+function isCueScheduled(cue: ICue): boolean {
+    //TODO use via provide/inject
+    return scheduledCueId.value === cue.Id;
 }
 
 const currentPosition = inject(currentPositionInjectionKey);
