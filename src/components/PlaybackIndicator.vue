@@ -45,7 +45,7 @@ const props = defineProps({
 
 const indication = computed(() => {
     if (props.isUnavailable) {
-        return 'Track media is unavailable';
+        return 'Track media is unavailable. Please replace it.';
     } else if (isTrackPlaying?.value) {
         return 'Track is playing';
     } else if (props.isReady) {
