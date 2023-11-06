@@ -36,17 +36,23 @@
 
             <!-- The edit part -->
             <template v-if="isEditMode">
-                <div class="level-item">
-                    <MediaEdit :trackId="trackId" :trackUrl="trackUrl">
-                        <span
-                            v-if="!isTrackMediaAvailable"
-                            class="has-text-warning"
+                <!-- <div class="level-item"> -->
+                <CoveredPanel>
+                    <template #caption>
+                        <MediaSourceIndicator
+                            :source="trackUrl"
+                            :unavailable="!isTrackMediaAvailable"
                         >
-                            <BaseIcon v-once :path="mdiAlert" />Media
-                            unavailable
-                        </span>
-                    </MediaEdit>
-                </div>
+                        </MediaSourceIndicator>
+                    </template>
+                    <MediaDropZone
+                        :replaceUrl="trackUrl"
+                        :trackId="trackId"
+                        ref="mediaDropZone"
+                    >
+                    </MediaDropZone>
+                </CoveredPanel>
+                <!-- </div> -->
 
                 <!-- Title (make it wide)-->
                 <div class="level-item is-flex-grow-1">
@@ -211,8 +217,9 @@
  */
 import { PropType, computed, inject, watchEffect } from 'vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
-import MediaEdit from '@/components/MediaEdit.vue';
+import MediaDropZone from '@/components/MediaDropZone.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
+import MediaSourceIndicator from '@/components/MediaSourceIndicator.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import ArtistLevelEditor from '@/components/editor/ArtistLevelEditor.vue';
@@ -221,8 +228,6 @@ import LabeledInput from '@/components/editor/LabeledInput.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
-import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { mdiAlert } from '@mdi/js';
 import { TrackViewMode } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import { useAppStore } from '@/store/app';

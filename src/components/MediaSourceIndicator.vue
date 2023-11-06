@@ -1,14 +1,27 @@
 <template>
     <!-- align like a bulma level, vertically centered -->
-    <p class="control is-flex is-align-items-center" :title="mediaSource">
-        <span class="button is-indicator">
+    <p
+        class="control is-flex is-align-items-center"
+        :title="
+            unavailable
+                ? `Track media '${mediaSource}' is unavailable. Please replace it.`
+                : mediaSource
+        "
+    >
+        <label
+            class="button is-indicator"
+            :class="{ 'has-text-warning': unavailable }"
+        >
             <BaseIcon :path="iconPath" />
-        </span>
-        <span class="is-indicator is-hidden-mobile"
+        </label>
+        <span
+            class="is-indicator is-hidden-mobile"
+            :class="{ 'has-text-warning': unavailable }"
             >{{ typeText }}:&nbsp;
         </span>
         <span
             class="media-source has-text-break-word is-indicator"
+            :class="{ 'has-text-warning': unavailable }"
             data-cy="media-source"
             >{{ mediaSource }}
 
@@ -37,7 +50,10 @@
                 </span>
             </template>
         </span>
-        <span class="has-text-break-word is-indicator">
+        <span
+            class="has-text-break-word is-indicator"
+            :class="{ 'has-text-warning': unavailable }"
+        >
             <!-- A slot for an adornment -->
             <slot></slot>
         </span>
@@ -82,6 +98,12 @@ export default defineComponent({
             default: false,
         },
         showType: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+        /** Whether the media is unavailable */
+        unavailable: {
             type: Boolean,
             required: false,
             default: false,
