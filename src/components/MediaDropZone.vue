@@ -55,12 +55,10 @@
         <div class="level-item has-text-centered">
             <div class="ml-3 mr-3 is-single-line">&mdash; OR &mdash;</div>
         </div>
-        <div
-            class="level-item has-text-centered is-flex-grow-5 is-flex-shrink-1"
-        >
+        <div class="level-item is-flex-shrink-1">
             <form @submit.prevent="useUrl">
-                <div class="field has-addons is-flex-grow-5 is-flex-shrink-1">
-                    <p class="control is-flex-grow-5 is-flex-shrink-1">
+                <div class="field has-addons">
+                    <p class="control">
                         <!-- The URL is required for form submit -->
                         <input
                             class="input"
