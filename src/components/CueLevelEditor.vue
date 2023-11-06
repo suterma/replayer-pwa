@@ -36,6 +36,7 @@
                                 @input="updateDescription($event)"
                                 :placeholder="cuePlaceholder"
                                 size="320"
+                                v-focus
                             />
                         </p>
                     </div>
@@ -172,7 +173,7 @@
  * This approach is chosen over the ...data pattern because the shortcut values can also change from a menu entry
  * in the track's dropdown menu.
  */
-import { PropType, onMounted, watch, computed, inject, ref, Ref } from 'vue';
+import { PropType, computed, inject, ref, Ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { ICue, PlaybackMode } from '@/store/compilation-types';
@@ -239,13 +240,6 @@ const props = defineProps({
     },
 });
 
-onMounted(() => {
-    //Track the selection
-    if (props.isCueSelected) {
-        setFocusToDescriptionInput();
-    }
-});
-
 const app = useAppStore();
 
 /** Updates the set cue description */
@@ -293,26 +287,6 @@ function cueClick() {
 
 const cueDescription: Ref<InstanceType<typeof HTMLInputElement> | null> =
     ref(null);
-
-/** Sets the focus to the cue description input box
- */
-function setFocusToDescriptionInput() {
-    console.debug('focussing to cue', props.cue.Id);
-    const input = cueDescription.value as HTMLInputElement;
-    input.focus();
-}
-
-/** Track updates to the selected cue and follows the focus to the matching description input.
- * @remarks This helps navigating the cues and updating the description along with it.
- */
-watch(
-    () => props.isCueSelected,
-    (val, oldVal) => {
-        if (oldVal == false && val == true) {
-            setFocusToDescriptionInput();
-        }
-    },
-);
 
 const settings = useSettingsStore();
 const { experimentalUseMeter } = storeToRefs(settings);
