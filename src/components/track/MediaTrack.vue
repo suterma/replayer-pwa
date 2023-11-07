@@ -462,6 +462,7 @@
                                     isMixable /* because in playback  or mix view, the players are replaced in place, not expanded */,
                             }"
                             :key="track.Id"
+                            :disabled="!canPlay"
                         >
                             <!-- 
                         Track playback bar (In play mode, this contains:
@@ -548,6 +549,7 @@
                                             "
                                             @seek="(seconds) => seek(seconds)"
                                             :trackDuration="track.Duration"
+                                            :disabled="!canPlay"
                                         >
                                             <!-- On mobile, the text is cropped at full width minus seek buttons, because of the level's automatic stacking,
                                     on lager viewports the text is strictly cropped to 129px -->
@@ -611,6 +613,7 @@
                                             :hideFadingToggler="
                                                 hideFadingToggler
                                             "
+                                            :disabled="!canPlay"
                                             data-cy="media-controls-bar"
                                         >
                                             <PlaybackIndicator

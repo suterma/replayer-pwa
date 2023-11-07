@@ -15,6 +15,7 @@
             collapsedText="Click to reveal"
             :title="title"
             v-bind="$attrs"
+            :disabled="disabled"
             ><span><slot name="caption"></slot></span
         ></CollapsibleButton>
         <!-- Transition for the revealing action. 
@@ -99,6 +100,9 @@ const props = defineProps({
         required: false,
         default: true,
     },
+    /** Whether to show the component in a disabled state
+     */
+    disabled: Boolean,
 });
 
 /** Whether the panel should be revealed based on available content. */

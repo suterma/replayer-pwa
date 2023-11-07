@@ -2,6 +2,7 @@
     <Knob
         title="Drag, scroll or use the arrow keys to change volume"
         class="button is-nav is-rounded"
+        :class="{ 'is-static': disabled, 'has-cursor-not-allowed': disabled }"
         :disabled="disabled ? true : null"
         :modelValue="volume"
         @update:modelValue="updateVolume"
@@ -36,7 +37,6 @@ export default defineComponent({
         },
 
         /** Whether to show the component in a disabled state
-         * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
          */
         disabled: Boolean,
     },

@@ -1,5 +1,10 @@
 <template>
-    <button class="button is-nav" :title="title" tabindex="0">
+    <button
+        class="button is-nav"
+        :title="title"
+        tabindex="0"
+        :disabled="disabled"
+    >
         <BaseIcon :path="iconPath" :class="iconClass" />
         <slot></slot>
     </button>
@@ -36,6 +41,10 @@ export default defineComponent({
             type: String,
             default: '',
         },
+        /** Whether to show the component in a disabled state
+         * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
+         */
+        disabled: Boolean,
     },
 });
 </script>

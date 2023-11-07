@@ -6,6 +6,7 @@
         :title="titleText"
         :iconPath="mdiChevronDown"
         @click="toggleExpanded()"
+        :disabled="disabled"
         ><slot></slot
     ></NavButton>
 </template>
@@ -49,6 +50,9 @@ export default defineComponent({
             type: String,
             default: '',
         },
+        /** Whether to show the component in a disabled state
+         */
+        disabled: Boolean,
     },
 
     data() {

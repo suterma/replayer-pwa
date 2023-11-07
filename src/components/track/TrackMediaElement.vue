@@ -4,6 +4,7 @@
         <CoveredPanel
             :revealFor="[isShortDuration && !props.enableVideo]"
             :dismissible="false"
+            :disabled="disabled || !mediaElement || !audioSource"
             title="Waveform"
         >
             <template #caption
@@ -56,6 +57,7 @@
     <template v-else>
         <!-- use the audio element -->
         <audio
+            controls
             :id="mediaElementId"
             :src="props.mediaUrl"
             ref="mediaElement"
