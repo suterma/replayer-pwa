@@ -20,8 +20,8 @@
         </CoveredPanel>
     </div>
     <div v-experiment="true">
-        <button @click="mediaElement?.play()">forceplay</button>forceplay:{{
-            mediaHandler?.isClickToLoadRequired
+        <button @click="mediaElement?.play()">forceplay</button>clickRequired:{{
+            clickRequired
         }}
     </div>
     <template v-if="props.enableVideo">
@@ -479,6 +479,12 @@ onBeforeUnmount(() => {
 });
 onDeactivated(() => {
     isParentMounted.value = false;
+});
+
+// --- click to load handling ---
+
+const clickRequired = computed(() => {
+    return mediaHandler.value?.isClickToLoadRequired;
 });
 </script>
 

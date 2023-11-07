@@ -334,16 +334,25 @@ export default class HtmlMediaHandler implements IMediaHandler {
             `handleReadyState:networkState:${this._media.networkState}`,
         );
 
-        //When nothing is buffered at this moment, we can assume that the phone is not currently trying to load further data,
-        //most probably due to load restriction on an iOS device using Safari.
-        //Works on
-        //- iPhone 13/Safari
-        //- iPad Pro 12.9 2021/Safari (with audio from URL)
-        //NOTE: This solution however seems not to work on:
-        //- iPad 9th/Safari, because the buffered length is 1, but the sound will only play on 2nd click.
-        if (this._media.buffered.length === 0) {
+        // When network is idle, but nothing is buffered at this moment,
+        // we can assume that the phone is not currently trying to load further data,
+        // most probably due to load restriction on an iOS device using Safari.
+        // Works on
+        // - iPhone 13/Safari
+        // - iPad Pro 12.9 2021/Safari (with audio from URL)
+        // NOTE: This solution however seems not to work on:
+        // - iPad 9th/Safari, because the buffered length is 1, but the sound will only play on 2nd click.
+        if (
+            this._media.networkState === HTMLMediaElement.NETWORK_IDLE &&
+            this._media.buffered.length === 0
+        ) {
             //The isClickToLoadRequired flag defers further media loading until the next user's explicit play request
             this.isClickToLoadRequired = true;
+            this.debugLog(
+                `handleReadyState:isClickToLoadRequired:${this.isClickToLoadRequired}`,
+            );
+            //TODO test wise: In this specific case, prematurely emit the can play event, because, it's actually most ready
+            this.onCanPlay.emit();
         }
     }
 
