@@ -331,27 +331,35 @@ export default class HtmlMediaHandler implements IMediaHandler {
         //Special flag handling, when not  automatically loading further now
         this.debugLog(`handleReadyState:buffered:`, this._media.buffered);
         this.debugLog(
+            `handleReadyState:buffered.length:`,
+            this._media.buffered.length,
+        );
+        this.debugLog(
             `handleReadyState:networkState:${this._media.networkState}`,
         );
 
-        // When network is idle, but nothing is buffered at this moment,
+        // When having metadata, while network is idle, but nothing is buffered at this moment,
         // we can assume that the phone is not currently trying to load further data,
         // most probably due to load restriction on an iOS device using Safari.
-        // Works on
+        // This is condition applies to
         // - iPhone 13/Safari
         // - iPad Pro 12.9 2021/Safari (with audio from URL)
         // NOTE: This solution however seems not to work on:
         // - iPad 9th/Safari, because the buffered length is 1, but the sound will only play on 2nd click.
         if (
+            readyState === HTMLMediaElement.HAVE_METADATA &&
             this._media.networkState === HTMLMediaElement.NETWORK_IDLE &&
             this._media.buffered.length === 0
         ) {
-            //The isClickToLoadRequired flag defers further media loading until the next user's explicit play request
             this.isClickToLoadRequired = true;
             this.debugLog(
                 `handleReadyState:isClickToLoadRequired:${this.isClickToLoadRequired}`,
             );
-            //TODO test wise: In this specific case, prematurely emit the can play event, because, it's actually most ready
+            // In this specific case, prematurely emit the onCanPlay event,
+            // to initiate enabling of the play and cue buttons.
+            // Clicking any of these buttons while the isClickToLoadRequired flag is set,
+            // should then issue a user-triggered play command.
+            // Finally, this will then further load and play the track media
             this.onCanPlay.emit();
         }
     }
