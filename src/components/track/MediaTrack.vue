@@ -1104,6 +1104,12 @@ function toNextCue() {
  * @devdoc Conditional event registration inside the template did not work.
  */
 function skipToPlayPause(): void {
+    //TODO fix
+    if (mediaHandler.value?.isClickToLoadRequired) {
+        console.debug('like force play');
+        mediaHandler.value?.play();
+    }
+
     if (isTrackLoaded.value) {
         if (!isActiveTrack.value) {
             trackPlay();

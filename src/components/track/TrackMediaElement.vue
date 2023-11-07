@@ -19,7 +19,11 @@
             ></TrackAudioPeaks>
         </CoveredPanel>
     </div>
-    <button v-experiment="true" @click="mediaElement?.play()">forceplay</button>
+    <div v-experiment="true">
+        <button @click="mediaElement?.play()">forceplay</button>forceplay:{{
+            mediaHandler?.isClickToLoadRequired
+        }}
+    </div>
     <template v-if="props.enableVideo">
         <!-- use the video element -->
         <div
