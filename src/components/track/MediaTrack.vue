@@ -1108,6 +1108,7 @@ function skipToPlayPause(): void {
     if (mediaHandler.value?.isClickToLoadRequired) {
         console.debug('like force play');
         mediaHandler.value?.play();
+        return;
     }
 
     if (isTrackLoaded.value) {
