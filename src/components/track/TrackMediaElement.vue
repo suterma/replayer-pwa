@@ -19,11 +19,6 @@
             ></TrackAudioPeaks>
         </CoveredPanel>
     </div>
-    <div v-experiment="true">
-        <button @click="mediaElement?.play()">forceplay</button>clickRequired:{{
-            clickRequired
-        }}
-    </div>
     <template v-if="props.enableVideo">
         <!-- use the video element -->
         <div
@@ -62,7 +57,6 @@
     <template v-else>
         <!-- use the audio element -->
         <audio
-            controls
             :id="mediaElementId"
             :src="props.mediaUrl"
             ref="mediaElement"
@@ -479,12 +473,6 @@ onBeforeUnmount(() => {
 });
 onDeactivated(() => {
     isParentMounted.value = false;
-});
-
-// --- click to load handling ---
-
-const clickRequired = computed(() => {
-    return mediaHandler.value?.isClickToLoadRequired;
 });
 </script>
 

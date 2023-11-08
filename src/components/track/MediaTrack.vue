@@ -1104,18 +1104,18 @@ function toNextCue() {
  * @devdoc Conditional event registration inside the template did not work.
  */
 function skipToPlayPause(): void {
-    if (mediaHandler.value?.isClickToLoadRequired) {
-        // this play command will cause further loading
-        mediaHandler.value?.play();
-    } else {
-        if (isTrackLoaded.value) {
-            if (!isActiveTrack.value) {
-                trackPlay();
-            } else {
-                togglePlayback();
-            }
+    // if (mediaHandler.value?.isClickToLoadRequired) {
+    //     // this play command will cause further loading
+    //     mediaHandler.value?.play();
+    // } else {
+    if (isTrackLoaded.value) {
+        if (!isActiveTrack.value) {
+            trackPlay();
+        } else {
+            togglePlayback();
         }
     }
+    // }
 }
 
 /** Sets this track as the active track (if loaded)
@@ -1336,7 +1336,6 @@ function cueClick(cue: ICue, togglePlayback = true) {
  * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
  */
 function cuePlay(cue: ICue) {
-    //TODO is this still used???
     console.debug(`Track(${props.track.Name})::cuePlay:cue:`, cue);
     if (cue.Time != null && Number.isFinite(cue.Time)) {
         app.updateSelectedCueId(cue.Id);

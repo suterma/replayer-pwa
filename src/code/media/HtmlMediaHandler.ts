@@ -352,8 +352,8 @@ export default class HtmlMediaHandler implements IMediaHandler {
             this._media.buffered.length === 0
         ) {
             this.isClickToLoadRequired = true;
-            this.debugLog(
-                `handleReadyState:isClickToLoadRequired:${this.isClickToLoadRequired}`,
+            console.warn(
+                'User gesture required (iOS-Condition) for further loading...',
             );
             // In this specific case, prematurely emit the onCanPlay event,
             // to initiate enabling of the play and cue buttons.
