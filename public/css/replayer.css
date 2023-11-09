@@ -10742,7 +10742,7 @@ button.cue.button.is-selected {
 }
 
 button.cue.button.is-selected.is-success {
-  box-shadow: 0 0 0 0.125em #f0f9f0 !important;
+  box-shadow: 0 0 0 0.125em #62c462 !important;
 }
 
 /* Make the scheduled cue visually outstanding
