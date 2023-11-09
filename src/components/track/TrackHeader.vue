@@ -37,7 +37,7 @@
             <!-- The edit part -->
             <template v-if="isEditMode">
                 <!-- <div class="level-item"> -->
-                <CoveredPanel>
+                <CoveredPanel ref="mediaDropZonePanel">
                     <template #caption>
                         <MediaSourceIndicator
                             :source="trackUrl"
@@ -49,6 +49,7 @@
                         :replaceUrl="trackUrl"
                         :trackId="trackId"
                         ref="mediaDropZone"
+                        @accepted="acceptedMedia()"
                     >
                     </MediaDropZone>
                 </CoveredPanel>
@@ -215,7 +216,7 @@
 <script setup lang="ts">
 /** A header for editing "beats per minute" track metadata
  */
-import { PropType, computed, inject, watchEffect } from 'vue';
+import { PropType, computed, inject, ref, watchEffect } from 'vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
@@ -420,6 +421,14 @@ const hasCues = computed(() => {
 /** Flag to indicate whether this track's player is currently playing
  */
 const isTrackPlaying = inject(isPlayingInjectionKey);
+
+// --- drop zone handling ---
+const mediaDropZonePanel = ref(null);
+
+function acceptedMedia() {
+    debugger;
+    mediaDropZonePanel.value.cover();
+}
 </script>
 
 <style lang="scss">

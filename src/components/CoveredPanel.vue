@@ -1,6 +1,6 @@
 <template>
     <!-- NOTE: The hotkey is only registered for the single (focused) revealed panel 
-    that is actualle revealed explicitly (for editing purposes). This way, only ever
+    that is currently revealed explicitly (for editing purposes). This way, only ever
     one hotkey is registered on the page. Multiple registered same hotkeys are not possible-->
     <DismissiblePanel
         @dismissed="cover"
@@ -41,6 +41,8 @@
  * - The caption and icon is only shown when the content is covered.
  * - the v-if directive is used, completely omitting covered content.
  * - When the content is reveald by user action, the first input is focused
+ * @remarks A parent component can explicitly cover and reveal the content via
+ * exposed functions
  */
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import { PropType, computed, ref } from 'vue';
@@ -124,5 +126,11 @@ const hasContentToRevealFor = computed(() => {
 /** Whether the panel is actually covered. */
 const isCovered = computed(() => {
     return !(isRevelationRequested.value || hasContentToRevealFor.value);
+});
+
+/** A parent component should be able to cover and reveal, if needed */
+defineExpose({
+    reveal,
+    cover,
 });
 </script>

@@ -130,12 +130,15 @@ import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { useMessageStore } from '@/store/messages';
 
-/** Accepts input of files and URLs for tracks, by presenting a drop zone (with file input) and a URL text box
- * @remarks Supports collapsing the control after load, to keep the user more focused
- * @remarks Supports two modes: "replace", intended to replace an existing source for a single track,
+/** Accepts input of files and URLs for tracks, by presenting a drop zone
+ * (with file input) and a URL text box
+ * @remarks Supports collapsing the control after load, to keep the user
+ * more focused
+ * @remarks Supports two modes: "replace", intended to replace an existing
+ * source for a single track,
  *  or "add", to add a new source, possibly producing multiple new tracks.
- * @remarks Includes a slot at the end of the indicative text, for an adornment icon
- * of size 40px
+ * @remarks Includes a slot at the end of the indicative text, for an
+ * adornment icon of size 40px
  */
 export default defineComponent({
     name: 'MediaDropZone',
@@ -162,7 +165,13 @@ export default defineComponent({
             default: false,
         },
     },
-    emits: ['update:is-expanded'],
+    emits: [
+        /** One or more files or an URL have been selected and are about to load
+         * @remarks This event can be used to trigger a perparatory action
+         * for the loading of the resources
+         */
+        'accepted',
+    ],
     data() {
         return {
             /** Indicates whether there is currently a dragging operation ongoing */
@@ -202,12 +211,6 @@ export default defineComponent({
                 .files as unknown as File[];
             this.loadMediaFiles(files);
         },
-        expand() {
-            this.$emit('update:is-expanded', true);
-        },
-        collapse() {
-            this.$emit('update:is-expanded', false);
-        },
         /** Checks whether a file is supported by examining mime type and/or the file name (by prefix/suffix) */
         isSupported(file: File): boolean {
             console.log('Filename: ' + file.name);
@@ -221,6 +224,8 @@ export default defineComponent({
          */
         async loadMediaFiles(files: File[]): Promise<void> {
             console.debug('MediaDropZone::loadMediaFiles');
+            this.$emit('accepted');
+
             // Array is required to use the forEach and other functions
             const filesArray = Array.from(files);
             filesArray.forEach((file) => {
@@ -277,7 +282,6 @@ export default defineComponent({
                 })
                 .finally(() => {
                     this.isLoadingFromFile = false;
-                    this.collapse(); //This component
                 });
         },
         dragover(event: DragEvent) {
@@ -307,6 +311,8 @@ export default defineComponent({
         /** Uses a single URL and load it's content */
         useUrl(): void {
             console.debug('MediaDropZone::useUrl:url:', this.url);
+            this.$emit('accepted');
+
             if (this.url) {
                 this.isProcessingDataFromUrl = true;
 
@@ -354,7 +360,6 @@ export default defineComponent({
                     .finally(() => {
                         this.isProcessingDataFromUrl = false;
                         this.url = ''; //remove the now loaded url
-                        this.collapse();
                     });
             }
         },
