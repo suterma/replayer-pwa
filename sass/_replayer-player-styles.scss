@@ -102,26 +102,32 @@ button.cue.button {
 }
 
 /* Make the selected cue visually outstanding besides the color,
- * to better help people with Achromatopsia$
+ * to better help people with Achromatopsia
  * This variant uses the existing button shadow, making it permanent. 
  * It is used to visually extend the button, making it to
  * appear a bit bigger and more brightly bordered.
  */
 
 button.cue.button.is-selected {
-    box-shadow: 0 0 0 0.125em $button-color !important ;
+    box-shadow: 0 0 0 0.2em $button-color;
     border-color: $button-color;
 }
 
 button.cue.button.is-selected.is-success {
-    box-shadow: 0 0 0 0.125em $success !important ;
+    box-shadow: 0 0 0 0.2em $success;
+}
+
+/* In the cues bar, due to tighter spacing, remove the left and right box shadow*/
+
+.cue-buttons-bar.buttons button.cue.button.is-selected.is-success {
+    box-shadow: 0 -0.2em 0 0 $success, 0 0.2em 0 0 $success;
 }
 
 /* Make the scheduled cue visually outstanding
  */
 button.cue.button.is-scheduled {
     animation-name: blinking;
-    animation-duration: 900ms;
+    animation-duration: 600ms;
     animation-iteration-count: infinite;
     border-color: transparent;
 }

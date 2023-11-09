@@ -18,6 +18,7 @@
                                 :isCueAhead="isCueAhead"
                                 :percentComplete="percentComplete"
                                 :isCueSelected="isCueSelected"
+                                :isCueScheduled="isCueScheduled"
                                 hasAddonsRight
                             />
                         </p>
@@ -202,6 +203,10 @@ const props = defineProps({
     /** Whether this cue is currently selected
      * @remarks Note: only one cue in a compilation may be selected */
     isCueSelected: Boolean,
+
+    /** Whether this cue is currently scheduled
+     * @remarks Note: only one cue in a compilation may be scheduled */
+    isCueScheduled: Boolean,
 
     /** Determines whether playback of the given cue has already passed
      * @remarks Is used for visual indication of playback progress
