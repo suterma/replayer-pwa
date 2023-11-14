@@ -123,12 +123,10 @@ export default defineComponent({
                 }
 
                 let updateText = '';
-                if (
-                    compare(currentVersion, '2.0.0', '>=') &&
-                    compare(previousVersion, '2.0.0', '<')
-                ) {
+                if (compare(previousVersion, '2.0.0', '<')) {
                     updateText =
-                        'New Features (2.0.0): Tempo handling, UI improvements, Adding multiple cues';
+                        updateText +
+                        'New Features (2.0.0): Video and YouTube support, UI improvements';
                 }
 
                 acknowledgeVersion(currentVersion, updateText).then(() => {
