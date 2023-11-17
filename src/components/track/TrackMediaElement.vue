@@ -92,7 +92,7 @@
             isEditable &&
             showLevelMeter &&
             audioSource &&
-            audio.context &&
+            context &&
             isParentMounted &&
             mediaUrl
         "
@@ -104,7 +104,7 @@
             :vertical="false"
             :disabled="disabled || isPaused"
             :audioSource="audioSource"
-            :audioContext="audio.context"
+            :audioContext="context"
             :showText="false"
             :running="!isPaused && isAppVisible && audioLevelMeterIsVisible"
         >
@@ -115,7 +115,7 @@
                 :vertical="true"
                 :disabled="disabled || isPaused"
                 :audioSource="audioSource"
-                :audioContext="audio.context"
+                :audioContext="context"
                 :showText="false"
                 :running="!isPaused && isAppVisible && audioLevelMeterIsVisible"
             >
@@ -170,6 +170,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiWaveform } from '@mdi/js';
 import { useDocumentVisibility } from '@vueuse/core';
 import { useElementVisibility } from '@vueuse/core';
+import { storeToRefs } from 'pinia';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -409,6 +410,8 @@ watchEffect(() => {
 
 // --- Audio Metering Setup---
 
+const { context } = storeToRefs(audio);
+
 /** The optional audio source node, required when metering is requested
  */
 const audioSource: ShallowRef<InstanceType<
@@ -426,23 +429,27 @@ watch(
         () => mediaElement.value,
     ],
     ([showLevelMeter, mediaUrl, newMediaElement]) => {
-        // Create the level meter and associated routing only when requested, and only for local files
-        if (
-            showLevelMeter &&
-            mediaUrl &&
-            newMediaElement &&
-            !FileHandler.isValidHttpUrl(mediaUrl)
-        ) {
-            if (audioSource.value === null) {
-                audioSource.value =
-                    audio.context.createMediaElementSource(newMediaElement);
+        if (context.value) {
+            // Create the level meter and associated routing only when requested, and only for local files
+            if (
+                showLevelMeter &&
+                mediaUrl &&
+                newMediaElement &&
+                !FileHandler.isValidHttpUrl(mediaUrl)
+            ) {
+                if (audioSource.value === null) {
+                    audioSource.value =
+                        context.value.createMediaElementSource(newMediaElement);
+                }
+                audioSource.value.connect(context.value.destination);
+            } else {
+                //NOTE: a MediaElementAudioSourceNode can not get destroyed, so this will be reused if later required
+                //See https://stackoverflow.com/a/38631334/79485
+                audioSource.value?.disconnect(/* from analyser */);
+                audioSource.value?.connect(context.value.destination);
             }
-            audioSource.value.connect(audio.context.destination);
         } else {
-            //NOTE: a MediaElementAudioSourceNode can not get destroyed, so this will be reused if later required
-            //See https://stackoverflow.com/a/38631334/79485
-            audioSource.value?.disconnect(/* from analyser */);
-            audioSource.value?.connect(audio.context.destination);
+            console.error('Audio context is not available');
         }
     },
     { immediate: true },

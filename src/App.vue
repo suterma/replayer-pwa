@@ -42,8 +42,7 @@
         ></div>
     </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import ReplayerAd from '@/components/ReplayerAd.vue';
@@ -51,99 +50,89 @@ import ErrorOverlay from '@/components/ErrorOverlay.vue';
 import { DialogWrapper } from 'vue3-promise-dialog';
 import { useAudioStore } from './store/audio';
 import { useSettingsStore } from '@/store/settings';
-import { mapActions, mapState } from 'pinia';
 import { useAppStore } from './store/app';
 import { acknowledgeVersion } from './code/ui/dialogs';
 import { compare } from 'compare-versions';
+import { onBeforeMount, onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
 
-export default defineComponent({
-    name: 'App',
-    components: {
-        AppContextMenu,
-        ProgressOverlay,
-        ErrorOverlay,
-        DialogWrapper,
-        ReplayerAd,
-    },
+/** Register a handler to handle page reloads and tab/browser exits
+ * @devdoc Using the "unmounted" lifecycle event proved to be unreliable: Page reload in the Browser did not trigger "unmounted"
+ * Using the window's onbeforeunload causes the cleanup to get reliably triggered at page reload
+ */
 
-    /** Register a handler to handle page reloads and tab/browser exits
-     * @devdoc Using the "unmounted" lifecycle event proved to be unreliable: Page reload in the Browser did not trigger "unmounted"
-     * Using the window's onbeforeunload causes the cleanup to get reliably triggered at page reload
-     */
-    beforeMount() {
-        window.onbeforeunload = this.cleanUp;
-    },
+// --- resource handling
 
-    async mounted() {
-        this.handleAppUpdate();
-    },
-
-    methods: {
-        ...mapActions(useAppStore, [
-            'revokeAllMediaUrls',
-            'updateAcknowledgedVersion',
-            'discardCompilation',
-        ]),
-
-        resumeAudioContext() {
-            const audio = useAudioStore();
-            audio.resumeContext();
-        },
-
-        cleanUp() {
-            console.log('App.vue::cleanUp...');
-
-            //Make sure, no object URLs are remaining
-            this.revokeAllMediaUrls();
-
-            //Close the audio context
-            const audio = useAudioStore();
-            audio.closeContext();
-
-            console.log('App.vue::cleanUp done.');
-        },
-
-        /** Check for and handle a new version */
-        handleAppUpdate() {
-            // Check for and handle a new version
-            const currentVersion = process.env.VUE_APP_VERSION ?? '0.0.1';
-            const previousVersion = this.acknowledgedVersion ?? currentVersion;
-
-            if (currentVersion != previousVersion) {
-                console.debug(
-                    `App.vue::handleAppUpdate from ${previousVersion} to ${currentVersion}`,
-                );
-
-                // Remove stale state, when updating from old vuex state
-                if (compare(previousVersion, '2.0.0', '<')) {
-                    this.discardCompilation();
-                    useSettingsStore().$reset();
-                    localStorage.clear();
-                    indexedDB.deleteDatabase('keyval-store');
-                }
-
-                let updateText = '';
-                if (compare(previousVersion, '2.0.0', '<')) {
-                    updateText =
-                        updateText +
-                        'New version (2.0.0): This release adds video playback, including YouTube. It shows text files in a compilation. During editing, a waveform view and a peak level meter is available. A customizable pre-roll can be set.';
-                }
-
-                acknowledgeVersion(currentVersion, updateText).then(() => {
-                    this.updateAcknowledgedVersion(currentVersion);
-                });
-            }
-
-            console.debug('App.vue::handleAppUpdate done.');
-        },
-    },
-    computed: {
-        ...mapState(useSettingsStore, [
-            'experimentalShowPositionInTrackHeader',
-        ]),
-        ...mapState(useAppStore, ['hasCompilation', 'acknowledgedVersion']),
-    },
+onBeforeMount(() => {
+    window.onbeforeunload = cleanUp;
 });
+
+onMounted(() => {
+    handleAppUpdate();
+});
+
+const app = useAppStore();
+const audio = useAudioStore();
+const settings = useSettingsStore();
+
+const { hasCompilation } = storeToRefs(app);
+const { showLevelMeter, experimentalShowPositionInTrackHeader } =
+    storeToRefs(settings);
+
+function cleanUp() {
+    console.log('App.vue::cleanUp...');
+
+    //Make sure, no object URLs are remaining
+    app.revokeAllMediaUrls();
+
+    audio.closeContext();
+
+    console.log('App.vue::cleanUp done.');
+}
+
+// --- audio context handling ---
+
+function resumeAudioContext() {
+    if (showLevelMeter.value) {
+        audio.resumeContext();
+    }
+}
+
+// --- app state ---s
+
+/** Check for and handle a new version */
+function handleAppUpdate() {
+    // Check for and handle a new version
+    const currentVersion = process.env.VUE_APP_VERSION ?? '0.0.1';
+    const previousVersion = app.acknowledgedVersion ?? currentVersion;
+
+    if (currentVersion != previousVersion) {
+        console.debug(
+            `App.vue::handleAppUpdate from ${previousVersion} to ${currentVersion}`,
+        );
+
+        // Remove stale state, when updating from old vuex state
+        if (compare(previousVersion, '2.0.0', '<')) {
+            app.discardCompilation();
+            useSettingsStore().$reset();
+            localStorage.clear();
+            indexedDB.deleteDatabase('keyval-store');
+        }
+
+        let updateText = '';
+        if (compare(previousVersion, '2.0.0', '<')) {
+            updateText =
+                updateText +
+                'New version (2.0.0): This release adds video playback, including YouTube. It shows text files in a compilation. During editing, a waveform view and a peak level meter is available. A customizable pre-roll can be set.';
+        }
+
+        acknowledgeVersion(currentVersion, updateText).then(() => {
+            app.updateAcknowledgedVersion(currentVersion);
+        });
+    }
+
+    console.debug('App.vue::handleAppUpdate done.');
+}
 </script>
 <!-- HINT: Uncomment to display the HTML structure for review -->
 <!--
