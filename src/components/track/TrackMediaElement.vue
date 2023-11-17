@@ -93,6 +93,7 @@
             showLevelMeter &&
             audioSource &&
             context &&
+            context.state == 'running' &&
             isParentMounted &&
             mediaUrl
         "
@@ -102,7 +103,7 @@
             v-if="levelMeterSizeIsLarge"
             ref="audioLevelMeter"
             :vertical="false"
-            :disabled="disabled || isPaused"
+            :disabled="disabled || isPaused || true"
             :audioSource="audioSource"
             :audioContext="context"
             :showText="false"
@@ -113,7 +114,7 @@
             <AudioLevelMeter
                 ref="audioLevelMeter"
                 :vertical="true"
-                :disabled="disabled || isPaused"
+                :disabled="disabled || isPaused || true"
                 :audioSource="audioSource"
                 :audioContext="context"
                 :showText="false"
