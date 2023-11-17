@@ -1,6 +1,6 @@
 ## [2.0.0 NEXT RELEASE](https://github.com/suterma/replayer-pwa/compare/v1.4.3...v2.0.0)
 
-This release adds video playback, including YouTube, plus text files in a compilation. Also, during editing, a waveform view and a peak level meter is available. A customizable pre-roll is available.
+This release adds video playback, including YouTube. It shows text files in a compilation. During editing, a waveform view and a peak level meter is available. A customizable pre-roll can be set.
 
 ### What's Changed
 
