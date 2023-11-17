@@ -126,7 +126,7 @@ export default defineComponent({
                 if (compare(previousVersion, '2.0.0', '<')) {
                     updateText =
                         updateText +
-                        'New Features (2.0.0): Video and YouTube support, UI improvements';
+                        'New version (2.0.0): This release adds video playback, including YouTube. It shows text files in a compilation. During editing, a waveform view and a peak level meter is available. A customizable pre-roll can be set.';
                 }
 
                 acknowledgeVersion(currentVersion, updateText).then(() => {
