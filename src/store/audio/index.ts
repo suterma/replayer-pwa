@@ -69,39 +69,46 @@ export const useAudioStore = defineStore(Store.Audio, () => {
         if (!isContextRunningFlag.value) {
             createContext();
             if (audioContext.value) {
-                if (audioContext.value.state === 'suspended') {
+                if (audioContext.value.state === 'running') {
+                    reportRunningAudioContext();
+                } else {
+                    console.info('AudioContext resuming...');
                     audioContext.value.resume().then(() => {
-                        isContextRunningFlag.value = true;
-                        console.info('AudioContext resumed');
-
-                        // Write additional info. Cast to any is necessary,
-                        // as the type does not know about these properties
-                        console.info(
-                            'AudioContext base latency: ' +
-                                // eslint-disable-next-line
-                                (audioContext.value as any)?.baseLatency +
-                                'sec',
-                        );
-                        console.info(
-                            'AudioContext output latency: ' +
-                                // eslint-disable-next-line
-                                (audioContext.value as any)?.outputLatency +
-                                'sec',
-                        );
+                        reportRunningAudioContext();
                     });
                 }
             }
         }
     }
 
+    function reportRunningAudioContext() {
+        isContextRunningFlag.value = true;
+        console.info('AudioContext running');
+
+        // Write additional info. Cast to any is necessary,
+        // as the type does not know about these properties
+        console.info(
+            'AudioContext base latency: ' +
+                // eslint-disable-next-line
+                (audioContext.value as any)?.baseLatency +
+                'sec',
+        );
+        console.info(
+            'AudioContext output latency: ' +
+                // eslint-disable-next-line
+                (audioContext.value as any)?.outputLatency +
+                'sec',
+        );
+    }
+
     /** Creates the audio context, if it's not alredy created.
      */
     function createContext() {
         if (audioContext.value === null) {
-            console.info('AudioContext created');
             audioContext.value = new AudioContext({
                 latencyHint: 'interactive',
             });
+            console.info('AudioContext created');
         }
     }
 
