@@ -103,7 +103,7 @@
             v-if="levelMeterSizeIsLarge"
             ref="audioLevelMeter"
             :vertical="false"
-            :disabled="disabled || isPaused || true"
+            :disabled="disabled || isPaused"
             :audioSource="audioSource"
             :audioContext="context"
             :showText="false"
@@ -114,7 +114,7 @@
             <AudioLevelMeter
                 ref="audioLevelMeter"
                 :vertical="true"
-                :disabled="disabled || isPaused || true"
+                :disabled="disabled || isPaused"
                 :audioSource="audioSource"
                 :audioContext="context"
                 :showText="false"
@@ -428,29 +428,40 @@ watch(
         () => props.showLevelMeter,
         () => props.mediaUrl,
         () => mediaElement.value,
+        () => isEditable.value,
+        () => isPaused.value /* only used as trigger */,
     ],
-    ([showLevelMeter, mediaUrl, newMediaElement]) => {
-        if (context.value) {
-            // Create the level meter and associated routing only when requested, and only for local files
-            if (
-                showLevelMeter &&
-                mediaUrl &&
-                newMediaElement &&
-                !FileHandler.isValidHttpUrl(mediaUrl)
-            ) {
-                if (audioSource.value === null) {
-                    audioSource.value =
-                        context.value.createMediaElementSource(newMediaElement);
+    ([showLevelMeter, mediaUrl, newMediaElement, isEditable]) => {
+        // Metering is only used in edit mode
+        if (isEditable) {
+            if (context.value) {
+                // Create the level meter and associated routing only when requested, and only for local files
+                if (
+                    showLevelMeter &&
+                    mediaUrl &&
+                    newMediaElement &&
+                    !FileHandler.isValidHttpUrl(mediaUrl)
+                ) {
+                    if (audioSource.value === null) {
+                        audioSource.value =
+                            context.value.createMediaElementSource(
+                                newMediaElement,
+                            );
+                    }
+                    audioSource.value.connect(context.value.destination);
+                } else {
+                    //NOTE: a MediaElementAudioSourceNode can not get destroyed, so this will be reused if later required
+                    //See https://stackoverflow.com/a/38631334/79485
+                    audioSource.value?.disconnect(/* from analyser */);
+                    audioSource.value?.connect(context.value.destination);
                 }
-                audioSource.value.connect(context.value.destination);
             } else {
-                //NOTE: a MediaElementAudioSourceNode can not get destroyed, so this will be reused if later required
-                //See https://stackoverflow.com/a/38631334/79485
-                audioSource.value?.disconnect(/* from analyser */);
-                audioSource.value?.connect(context.value.destination);
+                console.error(
+                    'Audio context is not available or not (yet) running',
+                );
             }
         } else {
-            console.error('Audio context is not available');
+            console.debug('Track is not editable');
         }
     },
     { immediate: true },

@@ -216,7 +216,7 @@
 <script setup lang="ts">
 /** A header for editing "beats per minute" track metadata
  */
-import { PropType, computed, inject, ref, watchEffect } from 'vue';
+import { PropType, Ref, computed, inject, ref, watchEffect } from 'vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
@@ -423,11 +423,10 @@ const hasCues = computed(() => {
 const isTrackPlaying = inject(isPlayingInjectionKey);
 
 // --- drop zone handling ---
-const mediaDropZonePanel = ref(null);
+const mediaDropZonePanel: Ref<typeof CoveredPanel | null> = ref(null);
 
 function acceptedMedia() {
-    debugger;
-    mediaDropZonePanel.value.cover();
+    mediaDropZonePanel.value?.cover();
 }
 </script>
 

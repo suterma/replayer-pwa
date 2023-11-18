@@ -54,12 +54,12 @@ export const useAudioStore = defineStore(Store.Audio, () => {
         }
     }
 
-    /** Resumes the audio context, if it's suspended.
+    /** Creates and resumes the audio context, if it's suspended.
      * @remarks This should be called only on first user gesture, however an internal check prevents the audio context
-     * from repeated resumption.
+     * from repeated creation and resumption.
      */
     function resumeContext() {
-        assureContext();
+        createContext();
         if (audioContext.value) {
             if (audioContext.value.state === 'suspended') {
                 audioContext.value.resume().then(() => {
@@ -71,7 +71,7 @@ export const useAudioStore = defineStore(Store.Audio, () => {
 
     /** Creates the audio context, if it's not alredy created.
      */
-    function assureContext() {
+    function createContext() {
         if (audioContext.value === null) {
             console.info('audio context created');
             audioContext.value = new AudioContext({
@@ -81,7 +81,6 @@ export const useAudioStore = defineStore(Store.Audio, () => {
     }
 
     const context = computed(() => {
-        assureContext();
         return audioContext.value;
     });
 

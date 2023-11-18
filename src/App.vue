@@ -9,7 +9,7 @@
     <!-- NOTE: the same audio context is reused for all playback operations and
          must be resumed once in the app lifetime, when used. 
          This is solved here globally for simplicity -->
-    <section class="section" @click="resumeAudioContext()">
+    <section class="section">
         <router-view></router-view>
         <ProgressOverlay />
         <ErrorOverlay />
@@ -48,55 +48,22 @@ import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import ReplayerAd from '@/components/ReplayerAd.vue';
 import ErrorOverlay from '@/components/ErrorOverlay.vue';
 import { DialogWrapper } from 'vue3-promise-dialog';
-import { useAudioStore } from './store/audio';
 import { useSettingsStore } from '@/store/settings';
 import { useAppStore } from './store/app';
 import { acknowledgeVersion } from './code/ui/dialogs';
 import { compare } from 'compare-versions';
-import { onBeforeMount, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
-
-/** Register a handler to handle page reloads and tab/browser exits
- * @devdoc Using the "unmounted" lifecycle event proved to be unreliable: Page reload in the Browser did not trigger "unmounted"
- * Using the window's onbeforeunload causes the cleanup to get reliably triggered at page reload
- */
-
-// --- resource handling
-
-onBeforeMount(() => {
-    window.onbeforeunload = cleanUp;
-});
 
 onMounted(() => {
     handleAppUpdate();
 });
 
 const app = useAppStore();
-const audio = useAudioStore();
 const settings = useSettingsStore();
 
 const { hasCompilation } = storeToRefs(app);
-const { showLevelMeter, experimentalShowPositionInTrackHeader } =
-    storeToRefs(settings);
-
-function cleanUp() {
-    console.log('App.vue::cleanUp...');
-
-    //Make sure, no object URLs are remaining
-    app.revokeAllMediaUrls();
-
-    audio.closeContext();
-
-    console.log('App.vue::cleanUp done.');
-}
-
-// --- audio context handling ---
-
-function resumeAudioContext() {
-    if (showLevelMeter.value) {
-        audio.resumeContext();
-    }
-}
+const { experimentalShowPositionInTrackHeader } = storeToRefs(settings);
 
 // --- app state ---s
 

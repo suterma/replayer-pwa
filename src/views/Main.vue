@@ -1,25 +1,33 @@
 <template>
-    <Playback
-        v-show="
-            routedToPlayback || experimentalShowEverythingEverywhereAllAtOnce
-        "
-    ></Playback>
-    <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
-    <Setlist
-        v-show="
-            routedToSetlist || experimentalShowEverythingEverywhereAllAtOnce
-        "
-    ></Setlist>
-    <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
-    <Settings
-        v-show="
-            routedToSettings || experimentalShowEverythingEverywhereAllAtOnce
-        "
-    ></Settings>
-    <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
-    <About
-        v-show="routedToAbout || experimentalShowEverythingEverywhereAllAtOnce"
-    ></About>
+    <!-- NOTE: the same audio context is reused for all playback operations and
+         must be resumed once in the main view lifetime, when used.  -->
+    <div @click="resumeAudioContext()">
+        <Playback
+            v-show="
+                routedToPlayback ||
+                experimentalShowEverythingEverywhereAllAtOnce
+            "
+        ></Playback>
+        <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
+        <Setlist
+            v-show="
+                routedToSetlist || experimentalShowEverythingEverywhereAllAtOnce
+            "
+        ></Setlist>
+        <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
+        <Settings
+            v-show="
+                routedToSettings ||
+                experimentalShowEverythingEverywhereAllAtOnce
+            "
+        ></Settings>
+        <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
+        <About
+            v-show="
+                routedToAbout || experimentalShowEverythingEverywhereAllAtOnce
+            "
+        ></About>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -28,10 +36,12 @@ import Playback from '@/views/main/Playback.vue';
 import Setlist from '@/views/main/Setlist.vue';
 import Settings from '@/views/main/Settings.vue';
 import About from '@/views/main/About.vue';
-import { computed } from 'vue';
+import { computed, onBeforeMount } from 'vue';
 import { Route } from '@/router';
 import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
+import { useAppStore } from '@/store/app';
+import { useAudioStore } from '@/store/audio';
 
 /** A main view for the Replayer application
  * @remarks This main view works similar but distinct from keep-alive with router-view.
@@ -49,13 +59,21 @@ const { experimentalShowEverythingEverywhereAllAtOnce } = storeToRefs(settings);
 /** Handle the routes */
 const router = useRouter();
 
+/** Any route that actively controls playback */
 const routedToPlayback = computed(() => {
-    return (
-        router.currentRoute.value.name === Route.Play ||
-        router.currentRoute.value.name === Route.Edit ||
-        router.currentRoute.value.name === Route.Mix
-    );
+    return routedToPlay.value || routedToEdit.value || routedToMix.value;
 });
+
+const routedToPlay = computed(() => {
+    return router.currentRoute.value.name === Route.Play;
+});
+const routedToEdit = computed(() => {
+    return router.currentRoute.value.name === Route.Edit;
+});
+const routedToMix = computed(() => {
+    return router.currentRoute.value.name === Route.Mix;
+});
+
 const routedToSetlist = computed(() => {
     return router.currentRoute.value.name === Route.Setlist;
 });
@@ -65,4 +83,41 @@ const routedToSettings = computed(() => {
 const routedToAbout = computed(() => {
     return router.currentRoute.value.name === Route.About;
 });
+
+// --- resource and audio context handling
+
+/** Register a handler to handle page reloads and tab/browser exits
+ * @devdoc Using the "unmounted" lifecycle event proved to be unreliable: Page reload in the Browser did not trigger "unmounted"
+ * Using the window's onbeforeunload causes the cleanup to get reliably triggered at page reload
+ */
+onBeforeMount(() => {
+    window.onbeforeunload = cleanUp;
+});
+
+const app = useAppStore();
+const audio = useAudioStore();
+const { showLevelMeter } = storeToRefs(settings);
+
+function cleanUp() {
+    console.log('Main.vue::cleanUp...');
+
+    //Make sure, no object URLs are remaining
+    app.revokeAllMediaUrls();
+
+    audio.closeContext();
+
+    console.log('Main.vue::cleanUp done.');
+}
+
+/*
+ * @devdoc Great care has been taken to only ever create and use the audio context
+ * when required. Currently, the audio level meter is only shown with a
+ * corresponding option set to true and only in edit mode.
+ * Audio context handling throughout the application reflects this.
+ */
+function resumeAudioContext() {
+    if (showLevelMeter.value && routedToEdit.value) {
+        audio.resumeContext();
+    }
+}
 </script>
