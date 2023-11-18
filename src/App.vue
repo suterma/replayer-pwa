@@ -65,7 +65,7 @@ const settings = useSettingsStore();
 const { hasCompilation } = storeToRefs(app);
 const { experimentalShowPositionInTrackHeader } = storeToRefs(settings);
 
-// --- app state ---s
+// --- app state ---
 
 /** Check for and handle a new version */
 function handleAppUpdate() {
@@ -89,13 +89,20 @@ function handleAppUpdate() {
         let updateText = '';
         if (compare(previousVersion, '2.0.0', '<')) {
             updateText =
-                updateText +
-                'New version (2.0.0): This release adds video playback, including YouTube. It shows text files in a compilation. During editing, a waveform view and a peak level meter is available. A customizable pre-roll can be set.';
+                'New version (2.0.0): This release adds video playback, including YouTube. It shows text files in a compilation. During editing, a waveform view and a peak level meter is available. A customizable pre-roll can be set.\r\n' +
+                updateText;
+        }
+        if (compare(previousVersion, '2.0.1', '<')) {
+            updateText =
+                'Bugfix version (2.0.1): Audio related bugfixes.\r\n' +
+                updateText;
         }
 
         acknowledgeVersion(currentVersion, updateText).then(() => {
             app.updateAcknowledgedVersion(currentVersion);
         });
+    } else {
+        app.updateAcknowledgedVersion(currentVersion);
     }
 
     console.debug('App.vue::handleAppUpdate done.');
