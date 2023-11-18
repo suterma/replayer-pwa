@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ShallowRef, computed, ref, shallowRef } from 'vue';
+import { ShallowRef, computed, ref, shallowRef, readonly } from 'vue';
 import { Store } from '..';
 import { IMediaHandler } from '@/code/media/IMediaHandler';
 
@@ -21,6 +21,12 @@ export const useAudioStore = defineStore(Store.Audio, () => {
      */
 
     const mediaHandlers = ref(new Array<IMediaHandler>());
+
+    /** Internal flag, whether the audio context currently can be considered as running. */
+    const isContextRunningFlag = shallowRef(false);
+
+    /** Readonly flag, whether the audio context currently can be considered as running. */
+    const isContextRunning = readonly(isContextRunningFlag);
 
     /** Adds the given media handler to the list of available media handlers */
     function addMediaHandler(handler: IMediaHandler) {
@@ -45,6 +51,7 @@ export const useAudioStore = defineStore(Store.Audio, () => {
      */
     function closeContext() {
         if (audioContext.value) {
+            isContextRunningFlag.value = false;
             if (audioContext.value.state !== 'closed') {
                 audioContext.value.close();
                 console.info('audio context is closed now');
@@ -54,17 +61,20 @@ export const useAudioStore = defineStore(Store.Audio, () => {
         }
     }
 
-    /** Creates and resumes the audio context, if it's suspended.
-     * @remarks This should be called only on first user gesture, however an internal check prevents the audio context
+    /** Creates and resumes the audio context, if it's not yet running.
+     * @remarks This needs to be called only on first user gesture, however an internal check prevents the audio context
      * from repeated creation and resumption.
      */
     function resumeContext() {
-        createContext();
-        if (audioContext.value) {
-            if (audioContext.value.state === 'suspended') {
-                audioContext.value.resume().then(() => {
-                    console.info('audio context resumed');
-                });
+        if (!isContextRunningFlag.value) {
+            createContext();
+            if (audioContext.value) {
+                if (audioContext.value.state === 'suspended') {
+                    audioContext.value.resume().then(() => {
+                        console.info('audio context resumed');
+                        isContextRunningFlag.value = true;
+                    });
+                }
             }
         }
     }
@@ -91,5 +101,6 @@ export const useAudioStore = defineStore(Store.Audio, () => {
         removeMediaHandler,
         closeContext,
         resumeContext,
+        isContextRunning,
     };
 });

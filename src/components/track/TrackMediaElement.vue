@@ -411,7 +411,7 @@ watchEffect(() => {
 
 // --- Audio Metering Setup---
 
-const { context } = storeToRefs(audio);
+const { context, isContextRunning } = storeToRefs(audio);
 
 /** The optional audio source node, required when metering is requested
  */
@@ -430,11 +430,12 @@ watch(
         () => mediaElement.value,
         () => isEditable.value,
         () => isPaused.value /* only used as trigger */,
+        () => isContextRunning.value /* only used as trigger */,
     ],
     ([showLevelMeter, mediaUrl, newMediaElement, isEditable]) => {
         // Metering is only used in edit mode
         if (isEditable) {
-            if (context.value) {
+            if (context.value && isContextRunning.value) {
                 // Create the level meter and associated routing only when requested, and only for local files
                 if (
                     showLevelMeter &&
@@ -456,8 +457,8 @@ watch(
                     audioSource.value?.connect(context.value.destination);
                 }
             } else {
-                console.error(
-                    'Audio context is not available or not (yet) running',
+                console.warn(
+                    'Audio context is not available or not (yet) running. Audio Level Meter remains disconnected.',
                 );
             }
         } else {
