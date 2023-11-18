@@ -54,9 +54,9 @@ export const useAudioStore = defineStore(Store.Audio, () => {
             isContextRunningFlag.value = false;
             if (audioContext.value.state !== 'closed') {
                 audioContext.value.close();
-                console.info('audio context is closed now');
+                console.info('AudioContext is closed now');
             } else {
-                console.info('audio context was already closed');
+                console.info('AudioContext was already closed');
             }
         }
     }
@@ -71,8 +71,23 @@ export const useAudioStore = defineStore(Store.Audio, () => {
             if (audioContext.value) {
                 if (audioContext.value.state === 'suspended') {
                     audioContext.value.resume().then(() => {
-                        console.info('audio context resumed');
                         isContextRunningFlag.value = true;
+                        console.info('AudioContext resumed');
+
+                        // Write additional info. Cast to any is necessary,
+                        // as the type does not know about these properties
+                        console.info(
+                            'AudioContext base latency: ' +
+                                // eslint-disable-next-line
+                                (audioContext.value as any)?.baseLatency +
+                                'sec',
+                        );
+                        console.info(
+                            'AudioContext output latency: ' +
+                                // eslint-disable-next-line
+                                (audioContext.value as any)?.outputLatency +
+                                'sec',
+                        );
                     });
                 }
             }
@@ -83,7 +98,7 @@ export const useAudioStore = defineStore(Store.Audio, () => {
      */
     function createContext() {
         if (audioContext.value === null) {
-            console.info('audio context created');
+            console.info('AudioContext created');
             audioContext.value = new AudioContext({
                 latencyHint: 'interactive',
             });
