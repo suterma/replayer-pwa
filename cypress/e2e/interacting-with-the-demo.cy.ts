@@ -14,7 +14,10 @@ describe('interacting with the demo', () => {
 
     it('loads the track', () => {
         // ASSERT
-        cy.get('[data-cy="track-name"]').should('have.text', 'Not for Sale');
+        cy.get('[data-cy="track"] [data-cy="track-name"]').should(
+            'have.text',
+            'Not for Sale',
+        );
     });
 
     it('loads the cues', () => {

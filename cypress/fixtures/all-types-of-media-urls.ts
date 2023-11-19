@@ -16,8 +16,8 @@ export const mediaSourceUrls = [
     },
     {
         name: 'video (without CORS)',
-        url: 'https://images-assets.nasa.gov/video/Sentinel-6%20Launch%20Footage/Sentinel-6%20Launch%20Footage~small.mp4',
-        duration: 90,
+        url: 'https://dlmultimedia.esa.int/download/public/videos/2022/11/005/2211_005_BR_001.mp4',
+        duration: 283,
     },
     {
         name: 'YouTube',
