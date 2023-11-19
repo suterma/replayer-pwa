@@ -1,4 +1,4 @@
-## [2.0.1](https://github.com/suterma/replayer-pwa/compare/v2.0.0...v2.0.1) (2023-11-18)
+## [2.0.1](https://github.com/suterma/replayer-pwa/compare/v2.0.0...v2.0.1) (2023-11-19)
 
 Audio related bugfixes.
 
