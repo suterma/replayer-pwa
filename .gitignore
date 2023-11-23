@@ -31,6 +31,3 @@ cypress/downloads/
 
 # Keep the tasks inside the .vscode hidden folder
 !.vscode/tasks.json
-
-# To be explicitly provided on each platform
-public/css/platform.css
