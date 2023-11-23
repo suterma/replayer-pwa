@@ -1,4 +1,5 @@
 <template>
+    <StageMark></StageMark>
     <!-- The app menu, on the right, without bottom margin to not alter the layout of content below -->
     <section
         class="section has-background-none is-hidden-print is-pulled-right pb-0"
@@ -45,6 +46,7 @@
 <script setup lang="ts">
 import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
+import StageMark from '@/components/StageMark.vue';
 import ReplayerAd from '@/components/ReplayerAd.vue';
 import ErrorOverlay from '@/components/ErrorOverlay.vue';
 import { DialogWrapper } from 'vue3-promise-dialog';
