@@ -99,6 +99,9 @@ function handleAppUpdate() {
                 'Bugfix version (2.0.1): Audio related bugfixes.\r\n' +
                 updateText;
         }
+        if (compare(previousVersion, '2.0.2', '<')) {
+            updateText = 'Version 2.0.2: Minor bugfixes\r\n' + updateText;
+        }
 
         acknowledgeVersion(currentVersion, updateText).then(() => {
             app.updateAcknowledgedVersion(currentVersion);
