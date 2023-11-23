@@ -126,7 +126,16 @@
                                     Ogg Theora video</a
                                 >
                             </li>
-                            <li class="is-experimental">
+                            <li>
+                                <a
+                                    href="./#/play?media=https://download-media.srf.ch/world/video/sayhi/2023/10/sayhi_20231003_145252_2069202_v_webcast_h264_q60.mp4&title=%23SayHi2023+-+Tanz-Tutorial+zu+%C2%ABMier+fl%C3%BCged+los%C2%BB+von+Remo+Forrer&album=Play+SRF+%23SayHi&artist=Joram+Weber+%26+Lisa+Perissinotto&7.283=Begr%C3%BCssung&32.419=Verse+1a+Tutorial&64.406=Verse+1a+Music&85.982=Verse+1b+Tutorial&112.7=Verse+1b+Music&130.262=Verse+1c+Tutorial&151.823=Verse+1c+Music&170.194=Chorus+Tutorial&190.142=Chorus+Music&209.938=2nd+Verse+Tutorial&232.837=2nd+Verse+Music"
+                                    target="_blank"
+                                >
+                                    SRF (MPç video): #SayHi2023 - Tanz-Tutorial
+                                    zu «Mier flüged los» von Remo Forrer</a
+                                >
+                            </li>
+                            <li>
                                 <a
                                     href="./#/play?media=https://www.youtube.com/watch?v=USetyquP_dU&title=Crawling+Back+To+You+(Tom+Petty+Cover)&album=TELEFUNKEN+Live+From+The+Lab&artist=Szlachetka&0.0=Announcement&10.455=Piano+intro&63.697=Intro+Part+II&79.605=Verse+&112.158=Verse+2&143.779=Bridge&162.299=Instrumental&263.228=Verse+3&295.321=Refrain+(variation)&326.042=Guitar+solo&445.456=Refrain&477.8=Outro+%2B+Credits"
                                     target="_blank"
@@ -136,7 +145,7 @@
                                     (experimental)</a
                                 >
                             </li>
-                            <li class="is-experimental">
+                            <li>
                                 <a
                                     href="./#/play?media=https://www.youtube.com/watch?v=tR9FAtxBxUU&title=F%C3%BCr+immer+uf+di&album=Jodelcover&artist=Jodelklub+Edelweiss&3.581=Intro&24.206=Uf+Mueter's+Seel&70.078=Es+Glas...&99.315=Jodel&123.036=Zyt+wo+mir+no+blyybt..."
                                     target="_blank"
