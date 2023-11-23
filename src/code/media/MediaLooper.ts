@@ -18,7 +18,11 @@ export class MediaLooper implements IMediaLooper {
         // register for the required events
         media.onPausedChanged.subscribe((paused: boolean) => {
             if (!paused) {
+                // when playing, make sure to watch out of the next loop
                 this.scheduleNextTimeUpdateHandling();
+            } else {
+                // when paused, there is no need to schedule anything
+                this.cancelScheduleNextTimeUpdateHandling();
             }
         });
 
@@ -37,20 +41,30 @@ export class MediaLooper implements IMediaLooper {
 
     /** Schedules the next time update handling, with it's checking for due loops.
      * @remarks To minimize resource usage, this should be called only when necessary.
-     * This includes seek operations, play operations and, optionally, for safety, seldom periodic calls.
+     * This includes seek and play operations.
      */
     private scheduleNextTimeUpdateHandling() {
         this.cancelScheduleNextTimeUpdateHandling();
-        if (!this.isLoopFading && this._media.loop && this.isRangeAvailable()) {
+
+        // Is looping set, and we are not currently doing a loop end fade-out?
+        if (
+            !this.isLoopEndFadingOut &&
+            this._media.loop &&
+            this.isRangeAvailable()
+        ) {
             // Make sure we stay in the loop
-            const fadeInStart = this._loopStart
-                ? this._loopStart - this._media.fader.fadeInDuration
-                : null;
-            if (fadeInStart != null) {
-                if (this._media.currentTime < fadeInStart) {
-                    this._media.seekTo(fadeInStart);
-                }
-            }
+            //TODO is this really necessary??
+            // const fadeInStart = this._loopStart
+            //     ? this._loopStart - this._media.fader.fadeInDuration
+            //     : null;
+            // if (fadeInStart != null) {
+            //     if (this._media.currentTime < fadeInStart) {
+            //         this._media.seekTo(fadeInStart);
+            //         console.debug(
+            //             `MediaLooper::scheduleNextTimeUpdateHandling:seekTo: ${fadeInStart}`,
+            //         );
+            //     }
+            // }
 
             const loopEnd = this._loopEnd;
             const currentTime = this._media.currentTime;
@@ -82,7 +96,7 @@ export class MediaLooper implements IMediaLooper {
         }
     }
 
-    /** Gets the time remaining until of the loop range, with a safety margin applied for loop detection */
+    /** Gets the time remaining until of the end of the loop range, with a safety margin applied for loop detection */
     getSafeTimeout(currentTime: number, loopEnd: number): number {
         // Is the loop end at track end?
         // NOTE: The actual end of the track should not be reached, to avoid
@@ -170,8 +184,9 @@ export class MediaLooper implements IMediaLooper {
         );
     }
 
-    /** An internal flag to prevent repeated fade-outs when looping */
-    private isLoopFading = false;
+    /** Whether playback is currently fading out after the loop end has been reached.
+     * @remarks This is (an internal) flag to prevent re-triggering of fade-outs when looping */
+    private isLoopEndFadingOut = false;
 
     /** A safety margin for detecting the end of a track during playback
      * while looping
@@ -204,8 +219,8 @@ export class MediaLooper implements IMediaLooper {
         const timeout = this.getSafeTimeout(currentTime, end);
         if (timeout <= 0) {
             //Back to loop start (with fading)
-            if (!this.isLoopFading) {
-                this.isLoopFading = true;
+            if (!this.isLoopEndFadingOut) {
+                this.isLoopEndFadingOut = true;
 
                 // Determine whether fadeout would be after track end
                 // Typically happens for the last cue in a track
@@ -236,7 +251,7 @@ export class MediaLooper implements IMediaLooper {
                         // Reset loop fading last, because this prevents
                         // unnecessary reschedulings during the above seek
                         // and fade operations
-                        this.isLoopFading = false;
+                        this.isLoopEndFadingOut = false;
                     });
 
                 return true;

@@ -136,7 +136,7 @@ export interface IMediaHandler {
 
     // --- looping ---
 
-    /** Gets or sets whether to loop this track.
+    /** Gets or sets whether to loop this whole track.
      * @remarks This does not apply to compilation looping (looping over a set of tracks).
      */
     loop: boolean;
