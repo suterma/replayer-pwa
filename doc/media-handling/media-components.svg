@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.2" width="215.9mm" height="279.4mm" viewBox="0 0 21590 27940" preserveAspectRatio="xMidYMid" fill-rule="evenodd" stroke-width="28.222" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" xmlns:ooo="http://xml.openoffice.org/svg/export" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:presentation="http://sun.com/xmlns/staroffice/presentation" xmlns:smil="http://www.w3.org/2001/SMIL20/" xmlns:anim="urn:oasis:names:tc:opendocument:xmlns:animation:1.0" xml:space="preserve">
- <defs class="ClipPathGroup">
-  <clipPath id="presentation_clip_path" clipPathUnits="userSpaceOnUse">
-   <rect x="0" y="0" width="21590" height="27940"/>
-  </clipPath>
-  <clipPath id="presentation_clip_path_shrink" clipPathUnits="userSpaceOnUse">
-   <rect x="21" y="27" width="21547" height="27885"/>
-  </clipPath>
- </defs>
+<svg version="1.2" width="190.53mm" height="176.85mm" viewBox="1633 2904 19053 17685" preserveAspectRatio="xMidYMid" fill-rule="evenodd" stroke-width="28.222" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" xmlns:ooo="http://xml.openoffice.org/svg/export" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:presentation="http://sun.com/xmlns/staroffice/presentation" xmlns:smil="http://www.w3.org/2001/SMIL20/" xmlns:anim="urn:oasis:names:tc:opendocument:xmlns:animation:1.0" xml:space="preserve">
  <defs>
   <font id="EmbeddedFont_1" horiz-adv-x="2048">
    <font-face font-family="Arial embedded" units-per-em="2048" font-weight="normal" font-style="normal" ascent="1852" descent="423"/>
@@ -36,7 +28,6 @@
    <glyph unicode="a" horiz-adv-x="1060" d="M 414,-20 C 305,-20 224,9 169,66 114,123 87,202 87,302 87,414 124,500 198,560 271,620 390,652 554,656 L 797,660 797,719 C 797,807 778,870 741,908 704,946 645,965 565,965 484,965 426,951 389,924 352,897 330,853 323,793 L 135,810 C 166,1005 310,1102 569,1102 705,1102 807,1071 876,1009 945,946 979,856 979,738 L 979,272 C 979,219 986,179 1000,152 1014,125 1041,111 1080,111 1097,111 1117,113 1139,118 L 1139,6 C 1094,-5 1047,-10 1000,-10 933,-10 885,8 855,43 824,78 807,132 803,207 L 797,207 C 751,124 698,66 637,32 576,-3 501,-20 414,-20 Z M 455,115 C 521,115 580,130 631,160 682,190 723,231 753,284 782,336 797,390 797,445 L 797,534 600,530 C 515,529 451,520 408,504 364,488 330,463 307,430 284,397 272,353 272,299 272,240 288,195 320,163 351,131 396,115 455,115 Z"/>
    <glyph unicode="]" horiz-adv-x="424" d="M 16,-425 L 16,-296 249,-296 249,1355 16,1355 16,1484 423,1484 423,-425 16,-425 Z"/>
    <glyph unicode="[" horiz-adv-x="425" d="M 146,-425 L 146,1484 553,1484 553,1355 320,1355 320,-296 553,-296 553,-425 146,-425 Z"/>
-   <glyph unicode="Y" horiz-adv-x="1298" d="M 777,584 L 777,0 587,0 587,584 45,1409 255,1409 684,738 1111,1409 1321,1409 777,584 Z"/>
    <glyph unicode="W" horiz-adv-x="1932" d="M 1511,0 L 1283,0 1039,895 C 1023,951 1000,1051 969,1196 952,1119 937,1054 925,1002 913,950 822,616 652,0 L 424,0 9,1409 208,1409 461,514 C 491,402 519,287 544,168 560,241 579,321 600,408 621,495 713,828 877,1409 L 1060,1409 1305,532 C 1342,389 1372,267 1393,168 L 1402,203 C 1420,280 1435,342 1446,391 1457,439 1551,778 1727,1409 L 1926,1409 1511,0 Z"/>
    <glyph unicode="V" horiz-adv-x="1377" d="M 782,0 L 584,0 9,1409 210,1409 600,417 684,168 768,417 1156,1409 1357,1409 782,0 Z"/>
    <glyph unicode="U" horiz-adv-x="1192" d="M 731,-20 C 616,-20 515,1 429,43 343,85 276,146 229,226 182,306 158,401 158,512 L 158,1409 349,1409 349,528 C 349,399 382,302 447,235 512,168 607,135 730,135 857,135 955,170 1026,239 1096,308 1131,408 1131,541 L 1131,1409 1321,1409 1321,530 C 1321,416 1297,318 1249,235 1200,152 1132,89 1044,46 955,2 851,-20 731,-20 Z"/>
@@ -53,9 +44,13 @@
    <glyph unicode="D" horiz-adv-x="1218" d="M 1381,719 C 1381,574 1353,447 1296,338 1239,229 1159,145 1055,87 951,29 831,0 695,0 L 168,0 168,1409 634,1409 C 873,1409 1057,1349 1187,1230 1316,1110 1381,940 1381,719 Z M 1189,719 C 1189,894 1141,1027 1046,1119 950,1210 811,1256 630,1256 L 359,1256 359,153 673,153 C 776,153 867,176 946,221 1024,266 1084,332 1126,417 1168,502 1189,603 1189,719 Z"/>
    <glyph unicode="C" horiz-adv-x="1324" d="M 792,1274 C 636,1274 515,1224 428,1124 341,1023 298,886 298,711 298,538 343,400 434,295 524,190 646,137 800,137 997,137 1146,235 1245,430 L 1401,352 C 1343,231 1262,138 1157,75 1052,12 930,-20 791,-20 649,-20 526,10 423,69 319,128 240,212 186,322 131,431 104,561 104,711 104,936 165,1112 286,1239 407,1366 575,1430 790,1430 940,1430 1065,1401 1166,1342 1267,1283 1341,1196 1388,1081 L 1207,1021 C 1174,1103 1122,1166 1050,1209 977,1252 891,1274 792,1274 Z"/>
    <glyph unicode="A" horiz-adv-x="1377" d="M 1167,0 L 1006,412 364,412 202,0 4,0 579,1409 796,1409 1362,0 1167,0 Z M 685,1265 L 676,1237 C 659,1182 635,1111 602,1024 L 422,561 949,561 768,1026 C 749,1072 731,1124 712,1182 L 685,1265 Z"/>
+   <glyph unicode="@" horiz-adv-x="1747" d="M 1902,755 C 1902,631 1883,519 1845,419 1806,318 1753,241 1685,186 1616,131 1540,104 1455,104 1389,104 1338,119 1302,148 1266,177 1248,221 1248,280 L 1251,350 1245,350 C 1201,268 1147,207 1082,166 1017,125 946,104 871,104 766,104 685,138 628,206 570,274 541,368 541,489 541,598 563,700 606,794 649,888 709,963 786,1018 863,1073 949,1101 1043,1101 1189,1101 1289,1040 1344,919 L 1350,919 1389,1079 1545,1079 1429,573 C 1404,464 1392,379 1392,320 1392,257 1419,226 1473,226 1526,226 1576,249 1621,295 1666,341 1701,404 1727,485 1753,566 1766,655 1766,753 1766,872 1740,978 1689,1071 1638,1163 1564,1234 1467,1284 1370,1333 1257,1358 1128,1358 967,1358 824,1322 700,1251 576,1180 479,1077 408,943 337,808 302,658 302,491 302,362 328,249 381,151 433,52 509,-23 608,-76 707,-129 822,-155 954,-155 1051,-155 1149,-142 1248,-118 1347,-92 1450,-51 1557,7 L 1612,-105 C 1515,-163 1411,-207 1298,-238 1185,-268 1070,-283 954,-283 793,-283 653,-251 533,-188 412,-124 320,-33 257,85 193,202 161,338 161,491 161,678 203,847 286,1000 369,1153 484,1272 631,1357 778,1442 943,1484 1126,1484 1287,1484 1425,1454 1542,1394 1659,1333 1748,1248 1810,1138 1871,1028 1902,900 1902,755 Z M 1296,747 C 1296,815 1274,870 1230,912 1186,953 1127,974 1054,974 987,974 927,953 875,911 822,868 781,810 751,735 721,660 706,578 706,491 706,411 722,348 754,303 785,258 834,235 900,235 983,235 1060,270 1129,340 1198,410 1246,497 1273,602 1288,663 1296,712 1296,747 Z"/>
    <glyph unicode="&gt;" horiz-adv-x="1033" d="M 101,154 L 101,307 959,674 101,1040 101,1194 1096,776 1096,571 101,154 Z"/>
+   <glyph unicode="=" horiz-adv-x="1033" d="M 100,856 L 100,1004 1095,1004 1095,856 100,856 Z M 100,344 L 100,492 1095,492 1095,344 100,344 Z"/>
    <glyph unicode="&lt;" horiz-adv-x="1033" d="M 101,571 L 101,776 1096,1194 1096,1040 238,674 1096,307 1096,154 101,571 Z"/>
    <glyph unicode="/" horiz-adv-x="583" d="M 0,-20 L 411,1484 569,1484 162,-20 0,-20 Z"/>
+   <glyph unicode="." horiz-adv-x="213" d="M 187,0 L 187,219 382,219 382,0 187,0 Z"/>
+   <glyph unicode="&quot;" horiz-adv-x="583" d="M 618,966 L 476,966 456,1409 640,1409 618,966 Z M 249,966 L 108,966 87,1409 271,1409 249,966 Z"/>
    <glyph unicode=" " horiz-adv-x="556"/>
   </font>
  </defs>
@@ -105,9 +100,6 @@
    <glyph unicode=" " horiz-adv-x="476"/>
   </font>
  </defs>
- <defs class="TextShapeIndex">
-  <g ooo:slide="id1" ooo:id-list="id3 id4 id5 id6 id7 id8 id9 id10 id11 id12 id13 id14 id15 id16 id17 id18 id19 id20 id21"/>
- </defs>
  <defs class="EmbeddedBulletChars">
   <g id="bullet-char-template-57356" transform="scale(0.00048828125,-0.00048828125)">
    <path d="M 580,1141 L 1163,571 580,0 -4,571 580,1141 Z"/>
@@ -140,155 +132,141 @@
    <path d="M 173,740 C 173,903 231,1043 346,1159 462,1274 601,1332 765,1332 928,1332 1067,1274 1183,1159 1299,1043 1357,903 1357,740 1357,577 1299,437 1183,322 1067,206 928,148 765,148 601,148 462,206 346,322 231,437 173,577 173,740 Z"/>
   </g>
  </defs>
- <g>
-  <g id="id2" class="Master_Slide">
-   <g id="bg-id2" class="Background"/>
-   <g id="bo-id2" class="BackgroundObjects"/>
+ <g class="Page">
+  <g class="com.sun.star.drawing.CustomShape">
+   <g id="id3">
+    <rect class="BoundingBox" stroke="none" fill="none" x="12430" y="15287" width="6971" height="2859"/>
+    <path fill="rgb(107,94,155)" stroke="none" d="M 15915,18145 L 12430,18145 12430,15287 19400,15287 19400,18145 15915,18145 Z"/>
+    <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="423px" font-weight="400"><tspan class="TextPosition" x="14676" y="15797"><tspan fill="rgb(255,255,255)" stroke="none" style="white-space: pre">AUDIO Store</tspan></tspan></tspan></text>
+   </g>
   </g>
- </g>
- <g class="SlideGroup">
-  <g>
-   <g id="container-id1">
-    <g id="id1" class="Slide" clip-path="url(#presentation_clip_path)">
-     <g class="Page">
-      <g class="com.sun.star.drawing.CustomShape">
-       <g id="id3">
-        <rect class="BoundingBox" stroke="none" fill="none" x="13050" y="15287" width="6351" height="2859"/>
-        <path fill="rgb(107,94,155)" stroke="none" d="M 16225,18145 L 13050,18145 13050,15287 19400,15287 19400,18145 16225,18145 Z"/>
-        <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="423px" font-weight="400"><tspan class="TextPosition" x="14986" y="15797"><tspan fill="rgb(255,255,255)" stroke="none" style="white-space: pre">AUDIO Store</tspan></tspan></tspan></text>
-       </g>
-      </g>
-      <g class="com.sun.star.drawing.CustomShape">
-       <g id="id4">
-        <rect class="BoundingBox" stroke="none" fill="none" x="15605" y="2905" width="5081" height="2541"/>
-        <path fill="rgb(107,94,155)" stroke="none" d="M 18145,5445 L 15605,5445 15605,2905 20685,2905 20685,5445 18145,5445 Z"/>
-        <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="423px" font-weight="400"><tspan class="TextPosition" x="17156" y="3415"><tspan fill="rgb(255,255,255)" stroke="none" style="white-space: pre">APP Store</tspan></tspan></tspan></text>
-       </g>
-      </g>
-      <g class="com.sun.star.drawing.CustomShape">
-       <g id="id5">
-        <rect class="BoundingBox" stroke="none" fill="none" x="5443" y="5761" width="12718" height="7623"/>
-        <path fill="rgb(59,156,111)" stroke="none" d="M 11802,13382 L 5444,13382 5444,5762 18159,5762 18159,13382 11802,13382 Z"/>
-        <path fill="none" stroke="rgb(0,0,0)" d="M 11802,13382 L 5444,13382 5444,5762 18159,5762 18159,13382 11802,13382 Z"/>
-        <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="423px" font-weight="400"><tspan class="TextPosition" x="10682" y="6272"><tspan fill="rgb(255,255,255)" stroke="none" style="white-space: pre">Compilation</tspan></tspan></tspan></text>
-       </g>
-      </g>
-      <g class="TextShape">
-       <g id="id6">
-        <rect class="BoundingBox" stroke="none" fill="none" x="6080" y="6837" width="10827" height="5268"/>
-        <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="6330" y="7470"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">&lt;MediaTrack&gt;</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="6330" y="8097"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">    </tspan><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">&lt;TrackHeader/&gt;</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="6330" y="8724"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">    </tspan><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">&lt;TrackAudio/Video/YoutubeElement&gt;</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="6330" y="9351"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">        </tspan><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">&lt;AudioLevels/&gt;</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="6330" y="9978"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">        </tspan><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">Or other Visuals</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="6330" y="10605"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">    </tspan><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">&lt;/TrackAudio/Video/YoutubeElement&gt;</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="6330" y="11232"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">    </tspan><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">&lt;PlaybackWidget/&gt;</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="6330" y="11859"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">&lt;/MediaTrack&gt;</tspan></tspan></tspan></text>
-       </g>
-      </g>
-      <g class="com.sun.star.drawing.ConnectorShape">
-       <g id="id7">
-        <rect class="BoundingBox" stroke="none" fill="none" x="12430" y="3908" width="3252" height="535"/>
-        <path fill="none" stroke="rgb(255,64,0)" stroke-width="152" stroke-linejoin="round" d="M 15605,4175 L 12927,4175"/>
-        <path fill="rgb(255,64,0)" stroke="none" d="M 12963,4442 L 12430,4175 12963,3909 12963,4442 Z"/>
-        <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="635px" font-weight="400"><tspan class="TextPosition" x="12961" y="4396"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">retrieve</tspan></tspan></tspan></text>
-       </g>
-      </g>
-      <g class="com.sun.star.drawing.ConnectorShape">
-       <g id="id8">
-        <rect class="BoundingBox" stroke="none" fill="none" x="14189" y="8772" width="6500" height="8020"/>
-        <path fill="none" stroke="rgb(255,64,0)" stroke-width="152" stroke-linejoin="round" d="M 16712,8848 C 16712,14806 18091,11084 18181,16239"/>
-        <path fill="rgb(255,64,0)" stroke="none" d="M 18448,16256 L 18186,16791 17915,16260 18448,16256 Z"/>
-        <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="635px" font-weight="400"><tspan class="TextPosition" x="14189" y="13040"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">                         </tspan><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">provide</tspan></tspan></tspan></text>
-       </g>
-      </g>
-      <g class="TextShape">
-       <g id="id9">
-        <rect class="BoundingBox" stroke="none" fill="none" x="16240" y="3635" width="3811" height="1176"/>
-        <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="16490" y="4268"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">MediaURL[ ]</tspan></tspan></tspan></text>
-       </g>
-      </g>
-      <g class="com.sun.star.drawing.CustomShape">
-       <g id="id10">
-        <rect class="BoundingBox" stroke="none" fill="none" x="1633" y="8619" width="5813" height="1274"/>
-        <path fill="rgb(178,178,178)" stroke="none" d="M 2161,8620 L 2162,8620 C 2069,8620 1978,8630 1898,8648 1818,8667 1751,8694 1705,8726 1658,8758 1634,8794 1634,8831 L 1634,8989 1634,9147 1634,9363 1634,9521 1634,9679 1634,9680 C 1634,9717 1658,9753 1705,9785 1751,9817 1818,9844 1898,9863 1978,9881 2069,9891 2162,9891 L 2557,9891 2952,9891 3491,9891 3886,9891 4282,9891 4282,9891 C 4375,9891 4466,9881 4546,9863 4626,9844 4693,9817 4739,9785 4786,9753 4810,9717 4810,9680 L 4810,9521 4810,9363 4810,9147 7444,9243 4810,8831 4810,8831 4810,8831 C 4810,8794 4786,8758 4739,8726 4693,8694 4626,8667 4546,8648 4466,8630 4375,8620 4282,8620 L 3886,8620 3491,8620 2952,8620 2557,8620 2161,8620 Z"/>
-        <path fill="none" stroke="rgb(0,0,0)" d="M 2161,8620 L 2162,8620 C 2069,8620 1978,8630 1898,8648 1818,8667 1751,8694 1705,8726 1658,8758 1634,8794 1634,8831 L 1634,8989 1634,9147 1634,9363 1634,9521 1634,9679 1634,9680 C 1634,9717 1658,9753 1705,9785 1751,9817 1818,9844 1898,9863 1978,9881 2069,9891 2162,9891 L 2557,9891 2952,9891 3491,9891 3886,9891 4282,9891 4282,9891 C 4375,9891 4466,9881 4546,9863 4626,9844 4693,9817 4739,9785 4786,9753 4810,9717 4810,9680 L 4810,9521 4810,9363 4810,9147 7444,9243 4810,8831 4810,8831 4810,8831 C 4810,8794 4786,8758 4739,8726 4693,8694 4626,8667 4546,8648 4466,8630 4375,8620 4282,8620 L 3886,8620 3491,8620 2952,8620 2557,8620 2161,8620 Z"/>
-        <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Ubuntu" font-size="282px" font-weight="400"><tspan class="TextPosition" x="1895" y="9040"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">Visual enhancement, </tspan></tspan><tspan class="TextPosition" x="2100" y="9358"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">using the internal </tspan></tspan><tspan class="TextPosition" x="1854" y="9676"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">audio/other element.</tspan></tspan></tspan></text>
-       </g>
-      </g>
-      <g class="com.sun.star.drawing.CustomShape">
-       <g id="id11">
-        <rect class="BoundingBox" stroke="none" fill="none" x="1633" y="10524" width="4913" height="1274"/>
-        <path fill="rgb(178,178,178)" stroke="none" d="M 2161,10525 L 2162,10525 C 2069,10525 1978,10535 1898,10553 1818,10572 1751,10599 1705,10631 1658,10663 1634,10699 1634,10736 L 1634,10894 1634,11052 1634,11268 1634,11426 1634,11584 1634,11585 C 1634,11622 1658,11658 1705,11690 1751,11722 1818,11749 1898,11768 1978,11786 2069,11796 2162,11796 L 2557,11796 2952,11796 3491,11796 3886,11796 4282,11796 4282,11796 C 4375,11796 4466,11786 4546,11768 4626,11749 4693,11722 4739,11690 4786,11658 4810,11622 4810,11585 L 4810,11426 4810,11268 4810,11052 6544,10971 4810,10736 4810,10736 4810,10736 C 4810,10699 4786,10663 4739,10631 4693,10599 4626,10572 4546,10553 4466,10535 4375,10525 4282,10525 L 3886,10525 3491,10525 2952,10525 2557,10525 2161,10525 Z"/>
-        <path fill="none" stroke="rgb(0,0,0)" d="M 2161,10525 L 2162,10525 C 2069,10525 1978,10535 1898,10553 1818,10572 1751,10599 1705,10631 1658,10663 1634,10699 1634,10736 L 1634,10894 1634,11052 1634,11268 1634,11426 1634,11584 1634,11585 C 1634,11622 1658,11658 1705,11690 1751,11722 1818,11749 1898,11768 1978,11786 2069,11796 2162,11796 L 2557,11796 2952,11796 3491,11796 3886,11796 4282,11796 4282,11796 C 4375,11796 4466,11786 4546,11768 4626,11749 4693,11722 4739,11690 4786,11658 4810,11622 4810,11585 L 4810,11426 4810,11268 4810,11052 6544,10971 4810,10736 4810,10736 4810,10736 C 4810,10699 4786,10663 4739,10631 4693,10599 4626,10572 4546,10553 4466,10535 4375,10525 4282,10525 L 3886,10525 3491,10525 2952,10525 2557,10525 2161,10525 Z"/>
-        <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Ubuntu" font-size="282px" font-weight="400"><tspan class="TextPosition" x="1795" y="10945"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">The playback controls, </tspan></tspan><tspan class="TextPosition" x="2206" y="11263"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">using the media </tspan></tspan><tspan class="TextPosition" x="2733" y="11581"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">handler</tspan></tspan></tspan></text>
-       </g>
-      </g>
-      <g class="TextShape">
-       <g id="id12">
-        <rect class="BoundingBox" stroke="none" fill="none" x="13685" y="16017" width="5731" height="2760"/>
-        <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="13935" y="16650"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">Audio Context</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="13935" y="17277"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">MediaHandler [     ]</tspan></tspan></tspan></text>
-       </g>
-      </g>
-      <g class="com.sun.star.drawing.ConnectorShape">
-       <g id="id13">
-        <rect class="BoundingBox" stroke="none" fill="none" x="12665" y="8772" width="4124" height="3308"/>
-        <path fill="none" stroke="rgb(255,64,0)" stroke-width="152" stroke-linejoin="round" d="M 16712,8848 C 16712,10316 15530,10953 13166,11041"/>
-        <path fill="rgb(255,64,0)" stroke="none" d="M 13203,11306 L 12665,11050 13193,10773 13203,11306 Z"/>
-        <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="635px" font-weight="400"><tspan class="TextPosition" x="13651" y="11947"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">provide</tspan></tspan></tspan></text>
-       </g>
-      </g>
-      <g class="com.sun.star.drawing.CustomShape">
-       <g id="id14">
-        <rect class="BoundingBox" stroke="none" fill="none" x="5443" y="2904" width="6989" height="4295"/>
-        <path fill="rgb(178,178,178)" stroke="none" d="M 6605,2905 L 6605,2905 C 6401,2905 6201,2925 6025,2962 5848,2999 5701,3052 5600,3116 5498,3180 5444,3253 5444,3327 L 5444,3643 5444,3960 5444,4390 5444,4707 5444,5023 5444,5024 C 5444,5098 5498,5171 5600,5235 5701,5299 5848,5352 6025,5389 6201,5426 6401,5446 6605,5446 L 7955,7197 8345,5446 9528,5446 10398,5446 11268,5446 11269,5446 C 11473,5446 11673,5426 11849,5389 12026,5352 12173,5299 12274,5235 12376,5171 12430,5098 12430,5024 L 12430,4707 12430,4390 12430,3960 12430,3643 12430,3327 12430,3327 12430,3327 C 12430,3253 12376,3180 12274,3116 12173,3052 12026,2999 11849,2962 11673,2925 11473,2905 11269,2905 L 10398,2905 9528,2905 8345,2905 7475,2905 6605,2905 Z"/>
-        <path fill="none" stroke="rgb(0,0,0)" d="M 6605,2905 L 6605,2905 C 6401,2905 6201,2925 6025,2962 5848,2999 5701,3052 5600,3116 5498,3180 5444,3253 5444,3327 L 5444,3643 5444,3960 5444,4390 5444,4707 5444,5023 5444,5024 C 5444,5098 5498,5171 5600,5235 5701,5299 5848,5352 6025,5389 6201,5426 6401,5446 6605,5446 L 7955,7197 8345,5446 9528,5446 10398,5446 11268,5446 11269,5446 C 11473,5446 11673,5426 11849,5389 12026,5352 12173,5299 12274,5235 12376,5171 12430,5098 12430,5024 L 12430,4707 12430,4390 12430,3960 12430,3643 12430,3327 12430,3327 12430,3327 C 12430,3253 12376,3180 12274,3116 12173,3052 12026,2999 11849,2962 11673,2925 11473,2905 11269,2905 L 10398,2905 9528,2905 8345,2905 7475,2905 6605,2905 Z"/>
-        <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Ubuntu" font-size="282px" font-weight="400"><tspan class="TextPosition" x="6064" y="3324"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">Represents a playable track. The MediaTrack:</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Ubuntu" font-size="282px" font-weight="400"><tspan class="TextPosition" x="7324" y="3642"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">- retrieves the media URL</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Ubuntu" font-size="282px" font-weight="400"><tspan class="TextPosition" x="6327" y="3960"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">- creates an appropriate Track...Element, </tspan></tspan><tspan class="TextPosition" x="6028" y="4278"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">that provides back an IMediaHandler instance</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Ubuntu" font-size="282px" font-weight="400"><tspan class="TextPosition" x="7089" y="4596"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">- provides the IMediaHandler</tspan></tspan><tspan class="TextPosition" x="7756" y="4914"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre"> to the audio store</tspan></tspan></tspan></text>
-       </g>
-      </g>
-      <g class="com.sun.star.drawing.CustomShape">
-       <g id="id15">
-        <rect class="BoundingBox" stroke="none" fill="none" x="1633" y="4808" width="5354" height="3731"/>
-        <path fill="rgb(178,178,178)" stroke="none" d="M 2161,4809 L 2162,4809 C 2069,4809 1978,4833 1898,4880 1818,4926 1751,4993 1705,5073 1658,5153 1634,5244 1634,5337 L 1634,5732 1634,6127 1634,6666 1634,7061 1634,7457 1634,7457 C 1634,7550 1658,7641 1705,7721 1751,7801 1818,7868 1898,7914 1978,7961 2069,7985 2162,7985 L 2557,7985 2952,7985 3491,7985 3886,7985 4282,7985 4282,7985 C 4375,7985 4466,7961 4546,7914 4626,7868 4693,7801 4739,7721 4786,7641 4810,7550 4810,7457 L 6985,8537 4810,6666 4810,6127 4810,5732 4810,5336 4810,5337 4810,5337 C 4810,5244 4786,5153 4739,5073 4693,4993 4626,4926 4546,4880 4466,4833 4375,4809 4282,4809 L 3886,4809 3491,4809 2952,4809 2557,4809 2161,4809 Z"/>
-        <path fill="none" stroke="rgb(0,0,0)" d="M 2161,4809 L 2162,4809 C 2069,4809 1978,4833 1898,4880 1818,4926 1751,4993 1705,5073 1658,5153 1634,5244 1634,5337 L 1634,5732 1634,6127 1634,6666 1634,7061 1634,7457 1634,7457 C 1634,7550 1658,7641 1705,7721 1751,7801 1818,7868 1898,7914 1978,7961 2069,7985 2162,7985 L 2557,7985 2952,7985 3491,7985 3886,7985 4282,7985 4282,7985 C 4375,7985 4466,7961 4546,7914 4626,7868 4693,7801 4739,7721 4786,7641 4810,7550 4810,7457 L 6985,8537 4810,6666 4810,6127 4810,5732 4810,5336 4810,5337 4810,5337 C 4810,5244 4786,5153 4739,5073 4693,4993 4626,4926 4546,4880 4466,4833 4375,4809 4282,4809 L 3886,4809 3491,4809 2952,4809 2557,4809 2161,4809 Z"/>
-        <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Ubuntu" font-size="282px" font-weight="400"><tspan class="TextPosition" x="1840" y="5387"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">Internally creates and </tspan></tspan><tspan class="TextPosition" x="1861" y="5705"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">represents the actual </tspan></tspan><tspan class="TextPosition" x="2047" y="6023"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">HTML audio/video </tspan></tspan><tspan class="TextPosition" x="1954" y="6341"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">element or 3</tspan></tspan><tspan class="TextPosition" x="3588" y="6245"><tspan font-size="164px" fill="rgb(0,0,0)" stroke="none" style="white-space: pre">rd</tspan></tspan><tspan class="TextPosition" y="6341"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre"> party </tspan></tspan><tspan class="TextPosition" x="2045" y="6659"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">widget. Provides a </tspan></tspan><tspan class="TextPosition" x="2712" y="6977"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">suitable </tspan></tspan><tspan class="TextPosition" x="2282" y="7295"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">IMediaHandler </tspan></tspan><tspan class="TextPosition" x="2652" y="7613"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">instance.</tspan></tspan></tspan></text>
-       </g>
-      </g>
-      <g class="TextShape">
-       <g id="id16">
-        <rect class="BoundingBox" stroke="none" fill="none" x="4810" y="15605" width="8175" height="879"/>
-        <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="5060" y="16238"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">&lt;MultitrackPlaybackWidget/&gt;</tspan></tspan></tspan></text>
-       </g>
-      </g>
-      <g class="com.sun.star.drawing.ConnectorShape">
-       <g id="id17">
-        <rect class="BoundingBox" stroke="none" fill="none" x="8821" y="16407" width="9463" height="2924"/>
-        <path fill="none" stroke="rgb(255,64,0)" stroke-width="152" stroke-linejoin="round" d="M 8897,16483 C 8897,20143 16975,19705 18065,17873"/>
-        <path fill="rgb(255,64,0)" stroke="none" d="M 17774,17881 L 18186,17451 18283,18039 17774,17881 Z"/>
-        <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="635px" font-weight="400"><tspan class="TextPosition" x="12872" y="18048"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">uses</tspan></tspan></tspan></text>
-       </g>
-      </g>
-      <g class="com.sun.star.drawing.CustomShape">
-       <g id="id18">
-        <rect class="BoundingBox" stroke="none" fill="none" x="2269" y="16313" width="6354" height="1835"/>
-        <path fill="rgb(178,178,178)" stroke="none" d="M 3325,16875 L 3326,16875 C 3140,16875 2958,16885 2798,16903 2637,16922 2504,16949 2411,16981 2319,17013 2270,17049 2270,17086 L 2270,17244 2270,17402 2270,17618 2270,17776 2270,17934 2270,17935 C 2270,17972 2319,18008 2411,18040 2504,18072 2637,18099 2798,18118 2958,18136 3140,18146 3326,18146 L 4116,18146 4907,18146 5983,18146 6774,18146 7565,18146 7565,18146 C 7751,18146 7933,18136 8093,18118 8254,18099 8387,18072 8480,18040 8572,18008 8621,17972 8621,17935 L 8621,17776 8621,17618 8621,17402 8621,17244 8621,17086 8621,17086 8621,17086 C 8621,17049 8572,17013 8480,16981 8387,16949 8254,16922 8093,16903 7933,16885 7751,16875 7565,16875 L 5936,16314 5983,16875 4907,16875 4116,16875 3325,16875 Z"/>
-        <path fill="none" stroke="rgb(0,0,0)" d="M 3325,16875 L 3326,16875 C 3140,16875 2958,16885 2798,16903 2637,16922 2504,16949 2411,16981 2319,17013 2270,17049 2270,17086 L 2270,17244 2270,17402 2270,17618 2270,17776 2270,17934 2270,17935 C 2270,17972 2319,18008 2411,18040 2504,18072 2637,18099 2798,18118 2958,18136 3140,18146 3326,18146 L 4116,18146 4907,18146 5983,18146 6774,18146 7565,18146 7565,18146 C 7751,18146 7933,18136 8093,18118 8254,18099 8387,18072 8480,18040 8572,18008 8621,17972 8621,17935 L 8621,17776 8621,17618 8621,17402 8621,17244 8621,17086 8621,17086 8621,17086 C 8621,17049 8572,17013 8480,16981 8387,16949 8254,16922 8093,16903 7933,16885 7751,16875 7565,16875 L 5936,16314 5983,16875 4907,16875 4116,16875 3325,16875 Z"/>
-        <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Ubuntu" font-size="282px" font-weight="400"><tspan class="TextPosition" x="2685" y="17295"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">In a multitrack playback scenario, a suitable </tspan></tspan><tspan class="TextPosition" x="2852" y="17613"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">Widget may directly retrieve and use the </tspan></tspan><tspan class="TextPosition" x="3077" y="17931"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">media handlers from the audio store.</tspan></tspan></tspan></text>
-       </g>
-      </g>
-      <g class="Graphic">
-       <g id="id19">
-        <rect class="BoundingBox" stroke="none" fill="none" x="16382" y="8188" width="661" height="661"/>
-        <path fill="rgb(0,0,0)" stroke="none" d="M 16765,8427 C 16781,8436 16794,8449 16803,8465 16813,8481 16818,8499 16818,8518 16818,8537 16813,8555 16803,8571 16794,8587 16781,8600 16765,8609 16749,8619 16731,8624 16712,8624 16693,8624 16675,8619 16659,8609 16643,8600 16630,8587 16621,8571 16611,8555 16606,8537 16606,8518 16606,8499 16611,8481 16621,8465 16630,8449 16643,8436 16659,8427 16675,8417 16693,8412 16712,8412 16731,8412 16749,8417 16765,8427 Z M 16686,8472 C 16678,8477 16671,8484 16666,8492 16662,8500 16659,8509 16659,8518 16659,8527 16662,8536 16666,8544 16671,8552 16678,8559 16686,8564 16694,8568 16703,8571 16712,8571 16721,8571 16730,8568 16738,8564 16746,8559 16753,8552 16758,8544 16762,8536 16765,8527 16765,8518 16765,8509 16762,8500 16758,8492 16753,8484 16746,8477 16738,8472 16730,8468 16721,8465 16712,8465 16703,8465 16694,8468 16686,8472 Z M 16646,8771 L 16636,8701 C 16620,8694 16605,8685 16592,8675 L 16526,8701 C 16520,8704 16513,8701 16510,8696 L 16457,8604 C 16454,8599 16455,8591 16460,8587 L 16516,8544 16514,8518 16516,8492 16460,8449 C 16455,8445 16454,8437 16457,8432 L 16510,8340 C 16513,8335 16520,8332 16526,8335 L 16592,8361 C 16605,8351 16620,8342 16636,8335 L 16646,8265 C 16647,8259 16653,8254 16659,8254 L 16765,8254 C 16771,8254 16777,8259 16778,8265 L 16788,8335 C 16804,8342 16819,8351 16832,8361 L 16898,8335 C 16904,8332 16911,8335 16914,8340 L 16967,8432 C 16970,8437 16969,8445 16964,8449 L 16908,8492 16910,8518 16908,8544 16964,8587 C 16969,8591 16970,8599 16967,8604 L 16914,8696 C 16911,8701 16904,8704 16898,8701 L 16832,8675 C 16819,8685 16804,8694 16788,8701 L 16778,8771 C 16777,8777 16771,8782 16765,8782 L 16659,8782 C 16653,8782 16647,8777 16646,8771 Z M 16692,8307 L 16682,8376 C 16651,8382 16623,8399 16602,8423 L 16539,8395 16519,8430 16575,8470 C 16564,8501 16564,8535 16575,8566 L 16519,8607 16539,8641 16603,8614 C 16623,8637 16651,8654 16682,8660 L 16692,8729 16732,8729 16742,8660 C 16773,8654 16801,8637 16821,8614 L 16885,8641 16905,8607 16849,8566 C 16860,8535 16860,8501 16849,8470 L 16905,8430 16885,8395 16822,8423 C 16801,8399 16773,8382 16742,8376 L 16732,8307 16692,8307 Z"/>
-       </g>
-      </g>
-      <g class="Graphic">
-       <g id="id20">
-        <rect class="BoundingBox" stroke="none" fill="none" x="12005" y="10720" width="661" height="661"/>
-        <path fill="rgb(0,0,0)" stroke="none" d="M 12282,11314 C 12276,11314 12270,11309 12269,11303 L 12259,11233 C 12243,11226 12228,11217 12215,11207 L 12149,11233 C 12143,11236 12136,11233 12133,11228 L 12080,11136 C 12077,11131 12078,11123 12083,11119 L 12139,11076 12137,11050 12139,11024 12083,10981 C 12078,10977 12077,10969 12080,10964 L 12133,10872 C 12136,10867 12143,10864 12149,10867 L 12215,10893 C 12228,10883 12243,10874 12259,10867 L 12269,10797 C 12270,10791 12276,10786 12282,10786 L 12388,10786 C 12394,10786 12400,10791 12401,10797 L 12411,10867 C 12427,10874 12442,10883 12455,10893 L 12521,10867 C 12527,10864 12534,10867 12537,10872 L 12590,10964 C 12593,10969 12592,10977 12587,10981 L 12531,11024 12533,11050 12533,11055 C 12520,11052 12507,11050 12493,11050 12489,11050 12484,11050 12480,11051 12480,11034 12478,11018 12472,11002 L 12528,10962 12508,10927 12445,10955 C 12424,10931 12396,10914 12365,10908 L 12355,10839 12315,10839 12305,10908 C 12274,10914 12246,10931 12225,10955 L 12162,10927 12142,10962 12198,11002 C 12187,11033 12187,11067 12198,11098 L 12142,11139 12162,11173 12226,11146 C 12246,11169 12274,11186 12305,11192 L 12315,11261 12344,11261 C 12351,11281 12361,11299 12376,11314 L 12282,11314 Z M 12441,11050 C 12441,10992 12393,10944 12335,10944 12277,10944 12229,10992 12229,11050 12229,11108 12277,11156 12335,11156 12338,11156 12341,11156 12345,11155 12361,11110 12395,11076 12440,11060 12441,11056 12441,11053 12441,11050 Z M 12282,11050 C 12282,11021 12306,10997 12335,10997 12364,10997 12388,11021 12388,11050 12388,11079 12364,11103 12335,11103 12306,11103 12282,11079 12282,11050 Z M 12441,11129 L 12441,11288 12573,11208 12441,11129 Z"/>
-       </g>
-      </g>
-      <g class="Graphic">
-       <g id="id21">
-        <rect class="BoundingBox" stroke="none" fill="none" x="17856" y="16791" width="661" height="661"/>
-        <path fill="rgb(0,0,0)" stroke="none" d="M 18133,17385 C 18127,17385 18121,17380 18120,17374 L 18110,17304 C 18094,17297 18079,17288 18066,17278 L 18000,17304 C 17994,17307 17987,17304 17984,17299 L 17931,17207 C 17928,17202 17929,17194 17934,17190 L 17990,17147 17988,17121 17990,17095 17934,17052 C 17929,17048 17928,17040 17931,17035 L 17984,16943 C 17987,16938 17994,16935 18000,16938 L 18066,16964 C 18079,16954 18094,16945 18110,16938 L 18120,16868 C 18121,16862 18127,16857 18133,16857 L 18239,16857 C 18245,16857 18251,16862 18252,16868 L 18262,16938 C 18278,16945 18293,16954 18306,16964 L 18372,16938 C 18378,16935 18385,16938 18388,16943 L 18441,17035 C 18444,17040 18443,17048 18438,17052 L 18382,17095 18384,17121 18384,17126 C 18371,17123 18358,17121 18344,17121 18340,17121 18335,17121 18331,17122 18331,17105 18329,17089 18323,17073 L 18379,17033 18359,16998 18296,17026 C 18275,17002 18247,16985 18216,16979 L 18206,16910 18166,16910 18156,16979 C 18125,16985 18097,17002 18076,17026 L 18013,16998 17993,17033 18049,17073 C 18038,17104 18038,17138 18049,17169 L 17993,17210 18013,17244 18077,17217 C 18097,17240 18125,17257 18156,17263 L 18166,17332 18195,17332 C 18202,17352 18212,17370 18227,17385 L 18133,17385 Z M 18292,17121 C 18292,17063 18244,17015 18186,17015 18128,17015 18080,17063 18080,17121 18080,17179 18128,17227 18186,17227 18189,17227 18192,17227 18196,17226 18212,17181 18246,17147 18291,17131 18292,17127 18292,17124 18292,17121 Z M 18133,17121 C 18133,17092 18157,17068 18186,17068 18215,17068 18239,17092 18239,17121 18239,17150 18215,17174 18186,17174 18157,17174 18133,17150 18133,17121 Z M 18292,17200 L 18292,17359 18424,17279 18292,17200 Z"/>
-       </g>
-      </g>
-     </g>
-    </g>
+  <g class="com.sun.star.drawing.CustomShape">
+   <g id="id4">
+    <rect class="BoundingBox" stroke="none" fill="none" x="15605" y="2905" width="5081" height="2541"/>
+    <path fill="rgb(107,94,155)" stroke="none" d="M 18145,5445 L 15605,5445 15605,2905 20685,2905 20685,5445 18145,5445 Z"/>
+    <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="423px" font-weight="400"><tspan class="TextPosition" x="17156" y="3415"><tspan fill="rgb(255,255,255)" stroke="none" style="white-space: pre">APP Store</tspan></tspan></tspan></text>
+   </g>
+  </g>
+  <g class="com.sun.star.drawing.CustomShape">
+   <g id="id5">
+    <rect class="BoundingBox" stroke="none" fill="none" x="5443" y="5761" width="12718" height="7623"/>
+    <path fill="rgb(59,156,111)" stroke="none" d="M 11802,13382 L 5444,13382 5444,5762 18159,5762 18159,13382 11802,13382 Z"/>
+    <path fill="none" stroke="rgb(0,0,0)" d="M 11802,13382 L 5444,13382 5444,5762 18159,5762 18159,13382 11802,13382 Z"/>
+    <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="423px" font-weight="400"><tspan class="TextPosition" x="10682" y="6272"><tspan fill="rgb(255,255,255)" stroke="none" style="white-space: pre">Compilation</tspan></tspan></tspan></text>
+   </g>
+  </g>
+  <g class="TextShape">
+   <g id="id6">
+    <rect class="BoundingBox" stroke="none" fill="none" x="6080" y="6837" width="10827" height="5895"/>
+    <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="6330" y="7470"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">&lt;MediaTrack&gt;</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="6330" y="8097"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">    </tspan><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">&lt;TrackHeader/&gt;</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="6330" y="8724"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">    </tspan><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">&lt;Track...Element</tspan></tspan><tspan class="TextPosition" x="6330" y="9351"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">        @ready=&quot;useMediaHandler&quot;      &gt;</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="6330" y="9978"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">        </tspan><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">&lt;AudioLevels/&gt;</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="6330" y="10605"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">        </tspan><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">Or other Visuals</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="6330" y="11232"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">    </tspan><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">&lt;/</tspan><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">Track...Element&gt;</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="6330" y="11859"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">    </tspan><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">&lt;PlaybackWidget          /&gt;</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="6330" y="12486"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">&lt;/MediaTrack&gt;</tspan></tspan></tspan></text>
+   </g>
+  </g>
+  <g class="com.sun.star.drawing.ConnectorShape">
+   <g id="id7">
+    <rect class="BoundingBox" stroke="none" fill="none" x="13065" y="3908" width="2617" height="535"/>
+    <path fill="none" stroke="rgb(255,64,0)" stroke-width="152" stroke-linejoin="round" d="M 15605,4175 L 13562,4175"/>
+    <path fill="rgb(255,64,0)" stroke="none" d="M 13598,4442 L 13065,4175 13598,3909 13598,4442 Z"/>
+    <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="635px" font-weight="400"><tspan class="TextPosition" x="13279" y="4396"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">retrieve</tspan></tspan></tspan></text>
+   </g>
+  </g>
+  <g class="com.sun.star.drawing.ConnectorShape">
+   <g id="id8">
+    <rect class="BoundingBox" stroke="none" fill="none" x="13386" y="9432" width="6501" height="7360"/>
+    <path fill="none" stroke="rgb(255,64,0)" stroke-width="152" stroke-linejoin="round" d="M 15107,9508 C 15107,14971 17976,11572 18175,16254"/>
+    <path fill="rgb(255,64,0)" stroke="none" d="M 18441,16252 L 18186,16791 17908,16264 18441,16252 Z"/>
+    <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="635px" font-weight="400"><tspan class="TextPosition" x="13387" y="13370"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">                         </tspan><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">provide</tspan></tspan></tspan></text>
+   </g>
+  </g>
+  <g class="TextShape">
+   <g id="id9">
+    <rect class="BoundingBox" stroke="none" fill="none" x="16240" y="3635" width="3811" height="1176"/>
+    <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="16490" y="4268"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">MediaURL[ ]</tspan></tspan></tspan></text>
+   </g>
+  </g>
+  <g class="com.sun.star.drawing.CustomShape">
+   <g id="id10">
+    <rect class="BoundingBox" stroke="none" fill="none" x="1633" y="9254" width="5812" height="1274"/>
+    <path fill="rgb(178,178,178)" stroke="none" d="M 2161,9255 L 2162,9255 C 2069,9255 1978,9265 1898,9283 1818,9302 1751,9329 1705,9361 1658,9393 1634,9429 1634,9466 L 1634,9624 1634,9782 1634,9998 1634,10156 1634,10314 1634,10315 C 1634,10352 1658,10388 1705,10420 1751,10452 1818,10479 1898,10498 1978,10516 2069,10526 2162,10526 L 2557,10526 2952,10526 3491,10526 3886,10526 4282,10526 4282,10526 C 4375,10526 4466,10516 4546,10498 4626,10479 4693,10452 4739,10420 4786,10388 4810,10352 4810,10315 L 4810,10156 4810,9998 4810,9782 7443,9878 4810,9466 4810,9466 4810,9466 C 4810,9429 4786,9393 4739,9361 4693,9329 4626,9302 4546,9283 4466,9265 4375,9255 4282,9255 L 3886,9255 3491,9255 2952,9255 2557,9255 2161,9255 Z"/>
+    <path fill="none" stroke="rgb(0,0,0)" d="M 2161,9255 L 2162,9255 C 2069,9255 1978,9265 1898,9283 1818,9302 1751,9329 1705,9361 1658,9393 1634,9429 1634,9466 L 1634,9624 1634,9782 1634,9998 1634,10156 1634,10314 1634,10315 C 1634,10352 1658,10388 1705,10420 1751,10452 1818,10479 1898,10498 1978,10516 2069,10526 2162,10526 L 2557,10526 2952,10526 3491,10526 3886,10526 4282,10526 4282,10526 C 4375,10526 4466,10516 4546,10498 4626,10479 4693,10452 4739,10420 4786,10388 4810,10352 4810,10315 L 4810,10156 4810,9998 4810,9782 7443,9878 4810,9466 4810,9466 4810,9466 C 4810,9429 4786,9393 4739,9361 4693,9329 4626,9302 4546,9283 4466,9265 4375,9255 4282,9255 L 3886,9255 3491,9255 2952,9255 2557,9255 2161,9255 Z"/>
+    <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Ubuntu" font-size="282px" font-weight="400"><tspan class="TextPosition" x="1895" y="9675"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">Visual enhancement, </tspan></tspan><tspan class="TextPosition" x="2100" y="9993"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">using the internal </tspan></tspan><tspan class="TextPosition" x="1854" y="10311"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">audio/other element.</tspan></tspan></tspan></text>
+   </g>
+  </g>
+  <g class="com.sun.star.drawing.CustomShape">
+   <g id="id11">
+    <rect class="BoundingBox" stroke="none" fill="none" x="1633" y="11159" width="4913" height="1274"/>
+    <path fill="rgb(178,178,178)" stroke="none" d="M 2161,11160 L 2162,11160 C 2069,11160 1978,11170 1898,11188 1818,11207 1751,11234 1705,11266 1658,11298 1634,11334 1634,11371 L 1634,11529 1634,11687 1634,11903 1634,12061 1634,12219 1634,12220 C 1634,12257 1658,12293 1705,12325 1751,12357 1818,12384 1898,12403 1978,12421 2069,12431 2162,12431 L 2557,12431 2952,12431 3491,12431 3886,12431 4282,12431 4282,12431 C 4375,12431 4466,12421 4546,12403 4626,12384 4693,12357 4739,12325 4786,12293 4810,12257 4810,12220 L 4810,12061 4810,11903 4810,11687 6544,11606 4810,11371 4810,11371 4810,11371 C 4810,11334 4786,11298 4739,11266 4693,11234 4626,11207 4546,11188 4466,11170 4375,11160 4282,11160 L 3886,11160 3491,11160 2952,11160 2557,11160 2161,11160 Z"/>
+    <path fill="none" stroke="rgb(0,0,0)" d="M 2161,11160 L 2162,11160 C 2069,11160 1978,11170 1898,11188 1818,11207 1751,11234 1705,11266 1658,11298 1634,11334 1634,11371 L 1634,11529 1634,11687 1634,11903 1634,12061 1634,12219 1634,12220 C 1634,12257 1658,12293 1705,12325 1751,12357 1818,12384 1898,12403 1978,12421 2069,12431 2162,12431 L 2557,12431 2952,12431 3491,12431 3886,12431 4282,12431 4282,12431 C 4375,12431 4466,12421 4546,12403 4626,12384 4693,12357 4739,12325 4786,12293 4810,12257 4810,12220 L 4810,12061 4810,11903 4810,11687 6544,11606 4810,11371 4810,11371 4810,11371 C 4810,11334 4786,11298 4739,11266 4693,11234 4626,11207 4546,11188 4466,11170 4375,11160 4282,11160 L 3886,11160 3491,11160 2952,11160 2557,11160 2161,11160 Z"/>
+    <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Ubuntu" font-size="282px" font-weight="400"><tspan class="TextPosition" x="1795" y="11580"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">The playback controls, </tspan></tspan><tspan class="TextPosition" x="2631" y="11898"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">using the </tspan></tspan><tspan class="TextPosition" x="2282" y="12216"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">IMediaHandler</tspan></tspan></tspan></text>
+   </g>
+  </g>
+  <g class="TextShape">
+   <g id="id12">
+    <rect class="BoundingBox" stroke="none" fill="none" x="13685" y="16017" width="5731" height="2760"/>
+    <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="13935" y="16650"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">Audio Context</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="13935" y="17277"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">MediaHandler [     ]</tspan></tspan></tspan></text>
+   </g>
+  </g>
+  <g class="com.sun.star.drawing.ConnectorShape">
+   <g id="id13">
+    <rect class="BoundingBox" stroke="none" fill="none" x="12665" y="9432" width="2519" height="3258"/>
+    <path fill="none" stroke="rgb(255,64,0)" stroke-width="152" stroke-linejoin="round" d="M 15107,9508 C 15107,10910 14458,11452 13159,11586"/>
+    <path fill="rgb(255,64,0)" stroke="none" d="M 13211,11848 L 12665,11610 13183,11316 13211,11848 Z"/>
+    <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="635px" font-weight="400"><tspan class="TextPosition" x="12849" y="12557"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">provide</tspan></tspan></tspan></text>
+   </g>
+  </g>
+  <g class="com.sun.star.drawing.CustomShape">
+   <g id="id14">
+    <rect class="BoundingBox" stroke="none" fill="none" x="5444" y="2904" width="7624" height="4294"/>
+    <path fill="rgb(178,178,178)" stroke="none" d="M 6711,2905 L 6712,2905 C 6489,2905 6271,2925 6078,2962 5886,2999 5726,3052 5615,3116 5504,3180 5445,3253 5445,3327 L 5445,3643 5445,3960 5445,4390 5445,4707 5445,5023 5445,5024 C 5445,5098 5504,5171 5615,5235 5726,5299 5886,5352 6078,5389 6271,5426 6489,5446 6712,5446 L 7954,7196 8609,5446 9901,5446 10850,5446 11799,5446 11799,5446 C 12022,5446 12240,5426 12433,5389 12625,5352 12785,5299 12896,5235 13007,5171 13066,5098 13066,5024 L 13066,4707 13066,4390 13066,3960 13066,3643 13066,3327 13066,3327 13066,3327 C 13066,3253 13007,3180 12896,3116 12785,3052 12625,2999 12433,2962 12240,2925 12022,2905 11799,2905 L 10850,2905 9901,2905 8609,2905 7660,2905 6711,2905 Z"/>
+    <path fill="none" stroke="rgb(0,0,0)" d="M 6711,2905 L 6712,2905 C 6489,2905 6271,2925 6078,2962 5886,2999 5726,3052 5615,3116 5504,3180 5445,3253 5445,3327 L 5445,3643 5445,3960 5445,4390 5445,4707 5445,5023 5445,5024 C 5445,5098 5504,5171 5615,5235 5726,5299 5886,5352 6078,5389 6271,5426 6489,5446 6712,5446 L 7954,7196 8609,5446 9901,5446 10850,5446 11799,5446 11799,5446 C 12022,5446 12240,5426 12433,5389 12625,5352 12785,5299 12896,5235 13007,5171 13066,5098 13066,5024 L 13066,4707 13066,4390 13066,3960 13066,3643 13066,3327 13066,3327 13066,3327 C 13066,3253 13007,3180 12896,3116 12785,3052 12625,2999 12433,2962 12240,2925 12022,2905 11799,2905 L 10850,2905 9901,2905 8609,2905 7660,2905 6711,2905 Z"/>
+    <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Ubuntu" font-size="282px" font-weight="400"><tspan class="TextPosition" x="6722" y="3483"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">MediaTrack represents a playable track:</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Ubuntu" font-size="282px" font-weight="400"><tspan class="TextPosition" x="6810" y="3801"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">- retrieves the media URL for the track</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Ubuntu" font-size="282px" font-weight="400"><tspan class="TextPosition" x="6019" y="4119"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">- creates an appropriate Track...Element, collecting </tspan></tspan><tspan class="TextPosition" x="7234" y="4437"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">back an IMediaHandler instance</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Ubuntu" font-size="282px" font-weight="400"><tspan class="TextPosition" x="6226" y="4755"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">- provides the ImediaHandler </tspan><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">to the audio store</tspan></tspan></tspan></text>
+   </g>
+  </g>
+  <g class="com.sun.star.drawing.CustomShape">
+   <g id="id15">
+    <rect class="BoundingBox" stroke="none" fill="none" x="1633" y="5443" width="5399" height="3179"/>
+    <path fill="rgb(178,178,178)" stroke="none" d="M 2161,5444 L 2162,5444 C 2069,5444 1978,5468 1898,5515 1818,5561 1751,5628 1705,5708 1658,5788 1634,5879 1634,5972 L 1634,6367 1634,6762 1634,7301 1634,7696 1634,8092 1634,8092 C 1634,8185 1658,8276 1705,8356 1751,8436 1818,8503 1898,8549 1978,8596 2069,8620 2162,8620 L 2557,8620 2952,8620 3491,8620 3886,8620 4282,8620 4282,8620 C 4375,8620 4466,8596 4546,8549 4626,8503 4693,8436 4739,8356 4786,8276 4810,8185 4810,8092 L 7030,8459 4810,7301 4810,6762 4810,6367 4810,5971 4810,5972 4810,5972 C 4810,5879 4786,5788 4739,5708 4693,5628 4626,5561 4546,5515 4466,5468 4375,5444 4282,5444 L 3886,5444 3491,5444 2952,5444 2557,5444 2161,5444 Z"/>
+    <path fill="none" stroke="rgb(0,0,0)" d="M 2161,5444 L 2162,5444 C 2069,5444 1978,5468 1898,5515 1818,5561 1751,5628 1705,5708 1658,5788 1634,5879 1634,5972 L 1634,6367 1634,6762 1634,7301 1634,7696 1634,8092 1634,8092 C 1634,8185 1658,8276 1705,8356 1751,8436 1818,8503 1898,8549 1978,8596 2069,8620 2162,8620 L 2557,8620 2952,8620 3491,8620 3886,8620 4282,8620 4282,8620 C 4375,8620 4466,8596 4546,8549 4626,8503 4693,8436 4739,8356 4786,8276 4810,8185 4810,8092 L 7030,8459 4810,7301 4810,6762 4810,6367 4810,5971 4810,5972 4810,5972 C 4810,5879 4786,5788 4739,5708 4693,5628 4626,5561 4546,5515 4466,5468 4375,5444 4282,5444 L 3886,5444 3491,5444 2952,5444 2557,5444 2161,5444 Z"/>
+    <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Ubuntu" font-size="282px" font-weight="400"><tspan class="TextPosition" x="1840" y="6022"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">Internally creates and </tspan></tspan><tspan class="TextPosition" x="1861" y="6340"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">represents the actual </tspan></tspan><tspan class="TextPosition" x="2047" y="6658"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">HTML audio/video </tspan></tspan><tspan class="TextPosition" x="1954" y="6976"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">element or 3</tspan></tspan><tspan class="TextPosition" x="3588" y="6880"><tspan font-size="164px" fill="rgb(0,0,0)" stroke="none" style="white-space: pre">rd</tspan></tspan><tspan class="TextPosition" y="6976"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre"> party </tspan></tspan><tspan class="TextPosition" x="2045" y="7294"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">widget. Provides a </tspan></tspan><tspan class="TextPosition" x="2712" y="7612"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">suitable </tspan></tspan><tspan class="TextPosition" x="2282" y="7930"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">IMediaHandler </tspan></tspan><tspan class="TextPosition" x="2652" y="8248"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">instance.</tspan></tspan></tspan></text>
+   </g>
+  </g>
+  <g class="TextShape">
+   <g id="id16">
+    <rect class="BoundingBox" stroke="none" fill="none" x="4891" y="18780" width="8175" height="879"/>
+    <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="564px" font-weight="400"><tspan class="TextPosition" x="5141" y="19413"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">&lt;MultitrackPlaybackWidget/&gt;</tspan></tspan></tspan></text>
+   </g>
+  </g>
+  <g class="com.sun.star.drawing.ConnectorShape">
+   <g id="id17">
+    <rect class="BoundingBox" stroke="none" fill="none" x="8978" y="17375" width="9285" height="3214"/>
+    <path fill="none" stroke="rgb(255,64,0)" stroke-width="152" stroke-linejoin="round" d="M 18186,17451 C 18186,21511 10970,20593 9314,19922"/>
+    <path fill="rgb(255,64,0)" stroke="none" d="M 9243,20192 L 8978,19658 9564,19767 9243,20192 Z"/>
+    <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Arial, sans-serif" font-size="635px" font-weight="400"><tspan class="TextPosition" x="12913" y="19138"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">uses</tspan></tspan></tspan></text>
+   </g>
+  </g>
+  <g class="com.sun.star.drawing.CustomShape">
+   <g id="id18">
+    <rect class="BoundingBox" stroke="none" fill="none" x="2269" y="16874" width="6354" height="1822"/>
+    <path fill="rgb(178,178,178)" stroke="none" d="M 3325,16875 L 3326,16875 C 3140,16875 2958,16885 2798,16903 2637,16922 2504,16949 2411,16981 2319,17013 2270,17049 2270,17086 L 2270,17244 2270,17402 2270,17618 2270,17776 2270,17934 2270,17935 C 2270,17972 2319,18008 2411,18040 2504,18072 2637,18099 2798,18118 2958,18136 3140,18146 3326,18146 L 4116,18146 4907,18146 5983,18146 7319,18694 7565,18146 7565,18146 C 7751,18146 7933,18136 8093,18118 8254,18099 8387,18072 8480,18040 8572,18008 8621,17972 8621,17935 L 8621,17776 8621,17618 8621,17402 8621,17244 8621,17086 8621,17086 8621,17086 C 8621,17049 8572,17013 8480,16981 8387,16949 8254,16922 8093,16903 7933,16885 7751,16875 7565,16875 L 6774,16875 5983,16875 4907,16875 4116,16875 3325,16875 Z"/>
+    <path fill="none" stroke="rgb(0,0,0)" d="M 3325,16875 L 3326,16875 C 3140,16875 2958,16885 2798,16903 2637,16922 2504,16949 2411,16981 2319,17013 2270,17049 2270,17086 L 2270,17244 2270,17402 2270,17618 2270,17776 2270,17934 2270,17935 C 2270,17972 2319,18008 2411,18040 2504,18072 2637,18099 2798,18118 2958,18136 3140,18146 3326,18146 L 4116,18146 4907,18146 5983,18146 7319,18694 7565,18146 7565,18146 C 7751,18146 7933,18136 8093,18118 8254,18099 8387,18072 8480,18040 8572,18008 8621,17972 8621,17935 L 8621,17776 8621,17618 8621,17402 8621,17244 8621,17086 8621,17086 8621,17086 C 8621,17049 8572,17013 8480,16981 8387,16949 8254,16922 8093,16903 7933,16885 7751,16875 7565,16875 L 6774,16875 5983,16875 4907,16875 4116,16875 3325,16875 Z"/>
+    <text class="SVGTextShape"><tspan class="TextParagraph" font-family="Ubuntu" font-size="282px" font-weight="400"><tspan class="TextPosition" x="2685" y="17295"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">In a multitrack playback scenario, a suitable </tspan></tspan><tspan class="TextPosition" x="2852" y="17613"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">Widget may directly retrieve and use the </tspan></tspan><tspan class="TextPosition" x="3077" y="17931"><tspan fill="rgb(0,0,0)" stroke="none" style="white-space: pre">media handlers from the audio store.</tspan></tspan></tspan></text>
+   </g>
+  </g>
+  <g class="Graphic">
+   <g id="id19">
+    <rect class="BoundingBox" stroke="none" fill="none" x="14777" y="8848" width="661" height="661"/>
+    <path fill="rgb(0,0,0)" stroke="none" d="M 15160,9087 C 15176,9096 15189,9109 15198,9125 15208,9141 15213,9159 15213,9178 15213,9197 15208,9215 15198,9231 15189,9247 15176,9260 15160,9269 15144,9279 15126,9284 15107,9284 15088,9284 15070,9279 15054,9269 15038,9260 15025,9247 15016,9231 15006,9215 15001,9197 15001,9178 15001,9159 15006,9141 15016,9125 15025,9109 15038,9096 15054,9087 15070,9077 15088,9072 15107,9072 15126,9072 15144,9077 15160,9087 Z M 15081,9132 C 15073,9137 15066,9144 15061,9152 15057,9160 15054,9169 15054,9178 15054,9187 15057,9196 15061,9204 15066,9212 15073,9219 15081,9224 15089,9228 15098,9231 15107,9231 15116,9231 15125,9228 15133,9224 15141,9219 15148,9212 15153,9204 15157,9196 15160,9187 15160,9178 15160,9169 15157,9160 15153,9152 15148,9144 15141,9137 15133,9132 15125,9128 15116,9125 15107,9125 15098,9125 15089,9128 15081,9132 Z M 15041,9431 L 15031,9361 C 15015,9354 15000,9345 14987,9335 L 14921,9361 C 14915,9364 14908,9361 14905,9356 L 14852,9264 C 14849,9259 14850,9251 14855,9247 L 14911,9204 14909,9178 14911,9152 14855,9109 C 14850,9105 14849,9097 14852,9092 L 14905,9000 C 14908,8995 14915,8992 14921,8995 L 14987,9021 C 15000,9011 15015,9002 15031,8995 L 15041,8925 C 15042,8919 15048,8914 15054,8914 L 15160,8914 C 15166,8914 15172,8919 15173,8925 L 15183,8995 C 15199,9002 15214,9011 15227,9021 L 15293,8995 C 15299,8992 15306,8995 15309,9000 L 15362,9092 C 15365,9097 15364,9105 15359,9109 L 15303,9152 15305,9178 15303,9204 15359,9247 C 15364,9251 15365,9259 15362,9264 L 15309,9356 C 15306,9361 15299,9364 15293,9361 L 15227,9335 C 15214,9345 15199,9354 15183,9361 L 15173,9431 C 15172,9437 15166,9442 15160,9442 L 15054,9442 C 15048,9442 15042,9437 15041,9431 Z M 15087,8967 L 15077,9036 C 15046,9042 15018,9059 14997,9083 L 14934,9055 14914,9090 14970,9130 C 14959,9161 14959,9195 14970,9226 L 14914,9267 14934,9301 14998,9274 C 15018,9297 15046,9314 15077,9320 L 15087,9389 15127,9389 15137,9320 C 15168,9314 15196,9297 15216,9274 L 15280,9301 15300,9267 15244,9226 C 15255,9195 15255,9161 15244,9130 L 15300,9090 15280,9055 15217,9083 C 15196,9059 15168,9042 15137,9036 L 15127,8967 15087,8967 Z"/>
+   </g>
+  </g>
+  <g class="Graphic">
+   <g id="id20">
+    <rect class="BoundingBox" stroke="none" fill="none" x="12005" y="11280" width="661" height="661"/>
+    <path fill="rgb(0,0,0)" stroke="none" d="M 12282,11874 C 12276,11874 12270,11869 12269,11863 L 12259,11793 C 12243,11786 12228,11777 12215,11767 L 12149,11793 C 12143,11796 12136,11793 12133,11788 L 12080,11696 C 12077,11691 12078,11683 12083,11679 L 12139,11636 12137,11610 12139,11584 12083,11541 C 12078,11537 12077,11529 12080,11524 L 12133,11432 C 12136,11427 12143,11424 12149,11427 L 12215,11453 C 12228,11443 12243,11434 12259,11427 L 12269,11357 C 12270,11351 12276,11346 12282,11346 L 12388,11346 C 12394,11346 12400,11351 12401,11357 L 12411,11427 C 12427,11434 12442,11443 12455,11453 L 12521,11427 C 12527,11424 12534,11427 12537,11432 L 12590,11524 C 12593,11529 12592,11537 12587,11541 L 12531,11584 12533,11610 12533,11615 C 12520,11612 12507,11610 12493,11610 12489,11610 12484,11610 12480,11611 12480,11594 12478,11578 12472,11562 L 12528,11522 12508,11487 12445,11515 C 12424,11491 12396,11474 12365,11468 L 12355,11399 12315,11399 12305,11468 C 12274,11474 12246,11491 12225,11515 L 12162,11487 12142,11522 12198,11562 C 12187,11593 12187,11627 12198,11658 L 12142,11699 12162,11733 12226,11706 C 12246,11729 12274,11746 12305,11752 L 12315,11821 12344,11821 C 12351,11841 12361,11859 12376,11874 L 12282,11874 Z M 12441,11610 C 12441,11552 12393,11504 12335,11504 12277,11504 12229,11552 12229,11610 12229,11668 12277,11716 12335,11716 12338,11716 12341,11716 12345,11715 12361,11670 12395,11636 12440,11620 12441,11616 12441,11613 12441,11610 Z M 12282,11610 C 12282,11581 12306,11557 12335,11557 12364,11557 12388,11581 12388,11610 12388,11639 12364,11663 12335,11663 12306,11663 12282,11639 12282,11610 Z M 12441,11689 L 12441,11848 12573,11768 12441,11689 Z"/>
+   </g>
+  </g>
+  <g class="Graphic">
+   <g id="id21">
+    <rect class="BoundingBox" stroke="none" fill="none" x="17856" y="16791" width="661" height="661"/>
+    <path fill="rgb(0,0,0)" stroke="none" d="M 18133,17385 C 18127,17385 18121,17380 18120,17374 L 18110,17304 C 18094,17297 18079,17288 18066,17278 L 18000,17304 C 17994,17307 17987,17304 17984,17299 L 17931,17207 C 17928,17202 17929,17194 17934,17190 L 17990,17147 17988,17121 17990,17095 17934,17052 C 17929,17048 17928,17040 17931,17035 L 17984,16943 C 17987,16938 17994,16935 18000,16938 L 18066,16964 C 18079,16954 18094,16945 18110,16938 L 18120,16868 C 18121,16862 18127,16857 18133,16857 L 18239,16857 C 18245,16857 18251,16862 18252,16868 L 18262,16938 C 18278,16945 18293,16954 18306,16964 L 18372,16938 C 18378,16935 18385,16938 18388,16943 L 18441,17035 C 18444,17040 18443,17048 18438,17052 L 18382,17095 18384,17121 18384,17126 C 18371,17123 18358,17121 18344,17121 18340,17121 18335,17121 18331,17122 18331,17105 18329,17089 18323,17073 L 18379,17033 18359,16998 18296,17026 C 18275,17002 18247,16985 18216,16979 L 18206,16910 18166,16910 18156,16979 C 18125,16985 18097,17002 18076,17026 L 18013,16998 17993,17033 18049,17073 C 18038,17104 18038,17138 18049,17169 L 17993,17210 18013,17244 18077,17217 C 18097,17240 18125,17257 18156,17263 L 18166,17332 18195,17332 C 18202,17352 18212,17370 18227,17385 L 18133,17385 Z M 18292,17121 C 18292,17063 18244,17015 18186,17015 18128,17015 18080,17063 18080,17121 18080,17179 18128,17227 18186,17227 18189,17227 18192,17227 18196,17226 18212,17181 18246,17147 18291,17131 18292,17127 18292,17124 18292,17121 Z M 18133,17121 C 18133,17092 18157,17068 18186,17068 18215,17068 18239,17092 18239,17121 18239,17150 18215,17174 18186,17174 18157,17174 18133,17150 18133,17121 Z M 18292,17200 L 18292,17359 18424,17279 18292,17200 Z"/>
    </g>
   </g>
  </g>

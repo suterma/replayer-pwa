@@ -252,10 +252,6 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         }
     }
 
-    /** Click to load is never required with the YouTube IFrame player.
-     */
-    isClickToLoadRequired = false;
-
     /** @devdoc Metadata already has loaded when this handler is created
      */
     hasLoadedMetadata = true;

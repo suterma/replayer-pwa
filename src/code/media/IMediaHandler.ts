@@ -126,14 +126,6 @@ export interface IMediaHandler {
      */
     onDurationChanged: SubEvent<number>;
 
-    /** Flags, whether deferred loading (until a user play click event is handled)
-     * is required to further load the track media file data. The flag may be set once after the metadata was successfully loaded.
-     * @remarks When true, handling of a subsequent play action must first invoke a user-triggered load operation.
-     * @remarks This specific handling is currently required on (some?) iOS devices,
-     * because they only load data upon explicit user interaction.
-     */
-    isClickToLoadRequired: boolean;
-
     // --- looping ---
 
     /** Gets or sets whether to loop this whole track.

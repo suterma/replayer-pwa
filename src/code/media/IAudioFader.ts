@@ -3,7 +3,9 @@ import { SubEvent } from 'sub-events';
 /** @interface Defines an audio fader. This fader supports two concepts:
  * A master volume, that emulates a set, overall audio level, and
  * independent fading and mute operations, which internally
- * control the actually set audio level at the media element.
+ * control the actually set audio level on the media player.
+ * @remarks Visual fading indication like progress bars or brightness changes
+ * must be implemented elsewhere, but can use the provided onFadingChanged event.
  * @remarks This defines audio fade-in/out operations, for use during playback, including a muted state.
  * The goal is to free the actual player from fading handling.
  * Using this promise-based approach especially frees the using code from
@@ -13,7 +15,8 @@ import { SubEvent } from 'sub-events';
  * @remarks Also supports a master volume and a muted state that is applied on top of the fading volume changes.
  * @remarks Fading is only actually executed for non-zero fading durations.
  * For zero fading durations, the call immediately returns with a resolved promise, without any call to a fade operation.
- * This can be used as a convenient way to skip fadings.
+ * This can be used as a convenient way to skip fadings (thus e.g.
+ * immediately change the playback state).
  */
 export interface IAudioFader {
     //TODO couldnt we just use getter/setters with properties???
