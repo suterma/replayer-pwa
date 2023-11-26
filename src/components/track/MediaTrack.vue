@@ -1104,10 +1104,6 @@ function toNextCue() {
  * @devdoc Conditional event registration inside the template did not work.
  */
 function skipToPlayPause(): void {
-    // if (mediaHandler.value?.isClickToLoadRequired) {
-    //     // this play command will cause further loading
-    //     mediaHandler.value?.play();
-    // } else {
     if (isTrackLoaded.value) {
         if (!isActiveTrack.value) {
             trackPlay();
@@ -1115,7 +1111,6 @@ function skipToPlayPause(): void {
             togglePlayback();
         }
     }
-    // }
 }
 
 /** Sets this track as the active track (if loaded)

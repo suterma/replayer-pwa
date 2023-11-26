@@ -13,7 +13,7 @@ export interface IMediaHandler {
      */
     readonly id: string;
 
-    /** Destroys the instance by releasing resources.
+    /** Destroys the instance by releasing it's resources.
      */
     destroy(): void;
 
