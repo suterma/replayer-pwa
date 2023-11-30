@@ -192,6 +192,9 @@ export default defineComponent({
             mdiMusicNotePlus: mdiMusicNotePlus,
         };
     },
+    async mounted() {
+        this.registerLaunchQueue();
+    },
     methods: {
         ...mapActions(useAppStore, [
             'addDefaultTrack',
@@ -201,6 +204,39 @@ export default defineComponent({
             'updateTrackUrl',
         ]),
         ...mapActions(useMessageStore, ['pushError']),
+
+        /** Registers the consumer for files received via the launch queue
+         * @remarks These are handeled similar to when loaded via the file input
+         */
+        registerLaunchQueue() {
+            //TODO later fix typescript usage, once the FileSystemFileHandle is known
+            console.debug('MediaDropZone::registerLaunchQueue');
+            if (
+                'launchQueue' in window /*&& 'files' in LaunchParams.prototype*/
+            ) {
+                console.log('File Handling API is supported!');
+
+                (window as any).launchQueue.setConsumer(
+                    async (launchParams: { files: unknown }): Promise<void> => {
+                        const launchFiles =
+                            // eslint-disable-next-line no-undef
+                            launchParams.files as /*FileSystemFileHandle*/ [];
+                        for (const fileHandle of launchFiles) {
+                            const file: File = await (
+                                fileHandle as any
+                            ).getFile();
+                            this.loadMediaFile(file).then(() => {
+                                console.log(
+                                    `File '${file.name}' (from launch queue) handled`,
+                                );
+                            });
+                        }
+                    },
+                );
+            } else {
+                console.error('File Handling API is not supported!');
+            }
+        },
 
         openFile() {
             console.debug('MediaDropZone::openFile');
