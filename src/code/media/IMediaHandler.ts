@@ -2,7 +2,8 @@ import { SubEvent } from 'sub-events';
 import { IAudioFader } from './IAudioFader';
 
 /** @interface Defines a media handler.
- *  This handles transport, loop and volume operations for media sources like e.g. HTML media elements.
+ * This defines transport, loop and volume operations for media sources
+ * like e.g. HTML media elements or the YouTube IFrame player.
  */
 export interface IMediaHandler {
     // --- configuration and update ---
