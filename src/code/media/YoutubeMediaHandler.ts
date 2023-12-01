@@ -1,5 +1,5 @@
-import { IAudioFader } from './IAudioFader';
-import { IMediaHandler } from './IMediaHandler';
+import type { IAudioFader } from './IAudioFader';
+import type { IMediaHandler } from './IMediaHandler';
 import { SubEvent } from 'sub-events';
 import type { PlayerStateChangeCallback, Player } from '@vue-youtube/shared';
 import YouTubeFader from './YouTubeFader';

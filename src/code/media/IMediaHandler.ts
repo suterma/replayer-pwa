@@ -1,5 +1,5 @@
 import { SubEvent } from 'sub-events';
-import { IAudioFader } from './IAudioFader';
+import type { IAudioFader } from './IAudioFader';
 
 /** @interface Defines a media handler.
  * This defines transport, loop and volume operations for media sources

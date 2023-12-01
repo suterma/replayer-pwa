@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { FadingMode, IAudioFader } from './IAudioFader';
+import { FadingMode, type IAudioFader } from './IAudioFader';
 import { SubEvent } from 'sub-events';
 
 /** @class Implements an audio fader for a media element instance. This fader supports two concepts:

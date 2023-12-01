@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { FadingMode, IAudioFader } from './IAudioFader';
+import { FadingMode, type IAudioFader } from './IAudioFader';
 import { SubEvent } from 'sub-events';
 import type { Player } from '@vue-youtube/shared';
 import AudioFader from './AudioFader';

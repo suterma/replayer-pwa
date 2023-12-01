@@ -1,6 +1,6 @@
-import { IMediaHandler } from './IMediaHandler';
-import { ICueScheduler } from './ICueScheduler';
-import { ICue } from '@/store/compilation-types';
+import type { IMediaHandler } from './IMediaHandler';
+import type { ICueScheduler } from './ICueScheduler';
+import type { ICue } from '@/store/compilation-types';
 
 /** @class Implements scheduling cues in a track.
  */
