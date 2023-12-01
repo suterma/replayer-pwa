@@ -23,7 +23,7 @@
                 class="has-text-right is-italic has-opacity-half"
             >
                 <small
-                    ><span>App version: {{ version }} ({{ environment }}),</span
+                    ><span>App version: {{ version }} &#8212; </span
                     ><span> {{ git }}</span></small
                 >
             </p>
@@ -611,14 +611,11 @@ export default defineComponent({
     components: { WelcomeText, CollapsiblePanel },
     computed: {
         version(): string {
-            return '' + process.env.VUE_APP_VERSION;
+            return '' + import.meta.env.VITE_APP_VERSION;
         },
 
-        environment(): string {
-            return '' + process.env.NODE_ENV;
-        },
         git(): string {
-            return 'git version: ' + process.env.VUE_APP_GIT_VERSION;
+            return 'git version: ' + import.meta.env.VITE_APP_GIT_VERSION;
         },
     },
 });
