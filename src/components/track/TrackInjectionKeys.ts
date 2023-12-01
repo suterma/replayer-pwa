@@ -1,5 +1,5 @@
-import { IMeter } from '@/code/music/IMeter';
-import { InjectionKey, Ref } from 'vue';
+import type { IMeter } from '@/code/music/IMeter';
+import type { InjectionKey, Ref } from 'vue';
 
 /** @file A set of injection keys for providing track state to descendant components of a track,
  * @remarks Implements the app state architecture, for tracks. */

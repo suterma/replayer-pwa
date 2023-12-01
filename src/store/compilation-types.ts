@@ -1,4 +1,4 @@
-import { IMeter } from '@/code/music/IMeter';
+import type { IMeter } from '@/code/music/IMeter';
 import { v4 as uuidv4 } from 'uuid';
 
 export enum CompilationType {

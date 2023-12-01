@@ -1,9 +1,9 @@
 import {
     Compilation,
     Cue,
-    ICompilation,
-    ICue,
-    ITrack,
+    type ICompilation,
+    type ICue,
+    type ITrack,
     PlaybackMode,
     Track,
 } from '../compilation-types';
@@ -19,7 +19,7 @@ import { MediaBlob, MediaUrl } from '../types';
 import FileHandler from '../filehandler';
 import CompilationParser from '../../code/xml/XmlCompilationParser';
 import { useMessageStore } from '../messages';
-import { IMeter } from '@/code/music/IMeter';
+import type { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
 
 export const actions = {
