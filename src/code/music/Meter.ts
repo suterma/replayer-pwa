@@ -1,7 +1,7 @@
 import _ from 'lodash';
-import { ITimeSignature } from './ITimeSignature';
+import type { ITimeSignature } from './ITimeSignature';
 import { MetricalPosition } from './MetricalPosition';
-import { IMeter } from './IMeter';
+import type { IMeter } from './IMeter';
 import { TimeSignature } from './TimeSignature';
 
 /** @class Static functions for the musical meter

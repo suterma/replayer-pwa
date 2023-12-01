@@ -2,20 +2,20 @@ import {
     Compilation,
     Cue,
     DefaultTrackVolume,
-    ICompilation,
-    ICue,
-    ITrack,
+    type ICompilation,
+    type ICue,
+    type ITrack,
     Track,
 } from '../../store/compilation-types';
 import { v4 as uuidv4 } from 'uuid';
 import xml2js from 'xml2js';
 import { XmlCompilation } from '@/code/xml/XmlCompilation';
-import { LocationQuery } from 'vue-router';
+import type { LocationQuery } from 'vue-router';
 import CompilationHandler from '../../store/compilation-handler';
 import { TimeSignature } from '../music/TimeSignature';
-import { ITimeSignature } from '../music/ITimeSignature';
+import type { ITimeSignature } from '../music/ITimeSignature';
 import { Meter } from '../music/Meter';
-import { IMeter } from '../music/IMeter';
+import type { IMeter } from '../music/IMeter';
 
 /**
  * Provides static helper methods for parsing compilations from and to XML.

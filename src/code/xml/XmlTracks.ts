@@ -1,4 +1,4 @@
-import { ITrack, Track } from '@/store/compilation-types';
+import type { ITrack, Track } from '@/store/compilation-types';
 import { XmlTrack } from './XmlTrack';
 
 /** @class Implements an XML-Representation of a Tracks set

@@ -1,4 +1,4 @@
-import { ICue, Cue } from '@/store/compilation-types';
+import type { ICue, Cue } from '@/store/compilation-types';
 import { XmlCue } from './XmlCue';
 
 /** @class Implements an XML-Representation of a Cues set

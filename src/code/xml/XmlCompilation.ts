@@ -1,4 +1,4 @@
-import { ICompilation, PlaybackMode } from '@/store/compilation-types';
+import { type ICompilation, PlaybackMode } from '@/store/compilation-types';
 import { XmlTracks } from './XmlTracks';
 
 /** @class Implements an XML-Representation of a Compilation

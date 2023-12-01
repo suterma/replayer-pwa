@@ -1,4 +1,4 @@
-import { ITimeSignature } from './ITimeSignature';
+import type { ITimeSignature } from './ITimeSignature';
 
 /** @interface Defines a musical meter
  */
