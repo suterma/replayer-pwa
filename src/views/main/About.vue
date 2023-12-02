@@ -559,6 +559,16 @@
                         >, Integrate the YouTube Iframe Player into your Vue 2/3
                         app. (Released under the MIT License, by Techassi)
                     </li>
+                    <li>
+                        <a
+                            href="https://github.com/davidmyersdev/vite-plugin-node-polyfills"
+                            target="_blank"
+                        >
+                            vite-plugin-node-polyfills</a
+                        >, a Vite plugin to polyfill Node's Core Modules for
+                        browser environments. (Released under the MIT License,
+                        by David Myers)
+                    </li>
                 </ul>
             </div>
         </CollapsiblePanel>
