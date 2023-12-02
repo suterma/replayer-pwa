@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import CompilationHandler from '@/store/compilation-handler';
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, type PropType } from 'vue';
 
 const oneSubSecondDigitPlaceholder = '--:--.-';
 const twoSubSecondDigitPlaceholder = '--:--.--';

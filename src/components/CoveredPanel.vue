@@ -45,7 +45,7 @@
  * exposed functions
  */
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
-import { PropType, computed, ref } from 'vue';
+import { type PropType, computed, ref } from 'vue';
 import { nextTick } from 'process';
 import DismissiblePanel from '@/components/DismissiblePanel.vue';
 

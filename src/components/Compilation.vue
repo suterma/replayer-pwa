@@ -65,12 +65,12 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent } from 'vue';
+import { type PropType, defineComponent } from 'vue';
 import VueScrollTo from 'vue-scrollto';
 import {
     Compilation,
-    ITrack,
-    ICue,
+    type ITrack,
+    type ICue,
     TrackViewMode,
     PlaybackMode,
 } from '@/store/compilation-types';

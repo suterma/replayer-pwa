@@ -49,8 +49,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, PropType } from 'vue';
-import { Cue, ICue, PlaybackMode } from '@/store/compilation-types';
+import { computed, inject, type PropType } from 'vue';
+import { Cue, type ICue, PlaybackMode } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { useAppStore } from '@/store/app';

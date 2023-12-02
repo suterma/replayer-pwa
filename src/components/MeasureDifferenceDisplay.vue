@@ -11,7 +11,7 @@
 /** A display for a measure/beat value as a duration (measure difference) */
 
 import { Meter } from '@/code/music/Meter';
-import { computed, inject, PropType } from 'vue';
+import { computed, inject, type PropType } from 'vue';
 import { meterInjectionKey } from '@/components/track/TrackInjectionKeys';
 
 /** The musical meter */
