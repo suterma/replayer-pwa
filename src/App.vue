@@ -72,7 +72,7 @@ const { experimentalShowPositionInTrackHeader } = storeToRefs(settings);
 /** Check for and handle a new version */
 function handleAppUpdate() {
     // Check for and handle a new version
-    const currentVersion = process.env.VUE_APP_VERSION ?? '0.0.1';
+    const currentVersion = import.meta.env.VITE_APP_VERSION ?? '0.0.1';
     const previousVersion = app.acknowledgedVersion ?? currentVersion;
 
     if (currentVersion != previousVersion) {
