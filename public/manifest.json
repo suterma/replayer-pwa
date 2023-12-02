@@ -94,49 +94,49 @@
             "src": "/img/screenshot/Replayer-featured-graphic.png",
             "type": "image/png",
             "sizes": "2048x1040",
-            "platform": "narrow"
+            "form_factor": "wide"
         },
         {
             "label": "A device showing the playback view of Replayer",
             "src": "/img/screenshot/Phone-Screenshot1-iphone678plus.png",
             "type": "image/png",
             "sizes": "1410x2862",
-            "platform": "narrow"
+            "form_factor": "narrow"
         },
         {
             "label": "A device showing the settings view of Replayer",
             "src": "/img/screenshot/Phone-Screenshot2-iphone678plus.png",
             "type": "image/png",
             "sizes": "1410x2862",
-            "platform": "narrow"
+            "form_factor": "narrow"
         },
         {
             "label": "A device showing the playback view of Replayer",
             "src": "/img/screenshot/Phone-Screenshot1-iphone5se.png",
             "type": "image/png",
             "sizes": "748x1568",
-            "platform": "narrow"
+            "form_factor": "narrow"
         },
         {
             "label": "A device showing the settings view of Replayer",
             "src": "/img/screenshot/Phone-Screenshot2-iphone5se.png",
             "type": "image/png",
             "sizes": "748x1568",
-            "platform": "narrow"
+            "form_factor": "narrow"
         },
         {
             "label": "A device showing the settings view of Replayer",
             "src": "/img/screenshot/Tablet-screenshot1-ipad.png",
             "type": "image/png",
             "sizes": "2504x1752",
-            "platform": "wide"
+            "form_factor": "wide"
         },
         {
             "label": "A device showing the playback view of Replayer",
             "src": "/img/screenshot/Tablet-screenshot2-ipad.png",
             "type": "image/png",
             "sizes": "2504x1752",
-            "platform": "wide"
+            "form_factor": "wide"
         }
     ],
     "related_applications": [],
