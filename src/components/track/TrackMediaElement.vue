@@ -131,7 +131,7 @@
             :trackId="trackId"
             :cues="cues"
             :title="title"
-            :videoElement="(mediaElement as HTMLVideoElement)"
+            :videoElement="mediaElement as HTMLVideoElement"
             :disabled="!mediaElement"
         ></VideoTextTrackController>
     </div>
@@ -146,16 +146,16 @@ import {
     onDeactivated,
     onMounted,
     onUnmounted,
-    PropType,
-    Ref,
+    type PropType,
+    type Ref,
     ref,
     shallowRef,
-    ShallowRef,
+    type ShallowRef,
     watch,
     watchEffect,
 } from 'vue';
 
-import { IMediaHandler } from '@/code/media/IMediaHandler';
+import type { IMediaHandler } from '@/code/media/IMediaHandler';
 import HtmlMediaHandler from '@/code/media/HtmlMediaHandler';
 import { useAudioStore } from '@/store/audio';
 import { Subscription } from 'sub-events';
@@ -163,7 +163,7 @@ import { FadingMode } from '@/code/media/IAudioFader';
 import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMeter.vue';
 import VideoTextTrackController from '@/components/track/VideoTextTrackController.vue';
 import FileHandler from '@/store/filehandler';
-import { ICue } from '@/store/compilation-types';
+import type { ICue } from '@/store/compilation-types';
 import CoveredPanel from '@/components/CoveredPanel.vue';
 import TrackAudioPeaks from './TrackAudioPeaks.vue';
 import { useRoute } from 'vue-router';

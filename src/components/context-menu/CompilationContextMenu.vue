@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent } from 'vue';
+import { type PropType, defineComponent } from 'vue';
 import { Compilation } from '@/store/compilation-types';
 import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
 import { confirm, downloadCompilation } from '@/code/ui/dialogs';
