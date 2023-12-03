@@ -2,7 +2,10 @@
  * @jest-environment jsdom
  */
 
-import { LocationQuery } from 'vue-router';
+/**
+ * @jest-environment jsdom
+ */
+import type { LocationQuery } from 'vue-router';
 import CompilationParser from './XmlCompilationParser';
 
 describe('compilation-parser.ts', () => {
