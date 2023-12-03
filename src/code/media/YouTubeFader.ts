@@ -16,6 +16,8 @@ export default class YouTubeFader implements IAudioFader {
      */
     stepDuration = 16;
 
+    private static cancelOperationToken = 'CANCEL';
+
     /** Token for the currently running fade operation.
      * @remarks Allows an ongoing fading operation to determine whether it has been superseded
      * by a subsequent operation. This allows the first operation to reject the promise
@@ -109,8 +111,6 @@ export default class YouTubeFader implements IAudioFader {
 
     /** The maximum audio volume level */
     public static audioVolumeMax = 1;
-
-    private static cancelOperationToken = 'CANCEL';
 
     /** Resets the token for the currently running fade operation.
      * @remarks Allows operations to cancel themselves in favor of a subsequent operation.
