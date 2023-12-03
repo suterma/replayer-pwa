@@ -849,7 +849,7 @@ const props = defineProps({
      * @remarks Used overall in the compilation, not per track
      */
     playbackMode: {
-        type: String as () => PlaybackMode,
+        type: String as PropType<PlaybackMode>,
         required: true,
         default: PlaybackMode.PlayTrack,
     },

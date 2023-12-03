@@ -39,7 +39,7 @@
                     @update:isTrackPlayerFullScreen="
                         updateIsTrackPlayerFullScreen($event)
                     "
-                    :playbackMode="playbackMode"
+                    :playbackMode="typedPlaybackMode"
                     @update:playbackMode="updatePlaybackMode($event)"
                     :isFadingEnabled="isFadingEnabled"
                     @update:isFadingEnabled="updatedIsFadingEnabled($event)"
@@ -425,6 +425,14 @@ export default defineComponent({
         ]),
 
         ...mapState(useSettingsStore, ['preventScreenTimeout']),
+
+        /** Return a typed version of the playback mode
+         * @devdoc seems to be necessary as the media track can not accept the
+         * variant from the store
+         */
+        typedPlaybackMode(): PlaybackMode {
+            return this.playbackMode as PlaybackMode;
+        },
 
         /** Whether this compilation has any tracks.
          */

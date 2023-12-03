@@ -4,7 +4,6 @@
             @click="navigate"
             @keypress.enter="navigate"
             role="link"
-            :ref="clickRef"
             :title="title"
             :subTitle="subTitle"
             :iconPath="iconPath"

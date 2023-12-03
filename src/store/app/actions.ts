@@ -12,6 +12,7 @@ import { state } from './state';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
+//@ts-ignore (because the file-saver does not provide types)
 import FileSaver from 'file-saver';
 import PersistentStorage from '../persistent-storage';
 import JSZip from 'jszip';
