@@ -1,47 +1,14 @@
 {
-    "compilerOptions": {
-        //Support older versions (from iOS12)
-        "target": "es2015",
-        // downlevelIteration provides iteration support for es5 and below
-        "downlevelIteration": true,
-        "module": "ES6" /*ES6 is a.k.a ES2015*/,
-        "strict": true,
-        "declaration": true,
-        "jsx": "preserve",
-        // importHelpers results in smaller package size (import instead of inline helpers from tslib)
-        "importHelpers": true,
-        "moduleResolution": "node",
-        "experimentalDecorators": true,
-        "skipLibCheck": true,
-        "allowSyntheticDefaultImports": true,
-        "noUncheckedIndexedAccess": true,
-        "sourceMap": true,
-        "noUnusedParameters": true,
-        "strictNullChecks": true,
-        "noEmitOnError": true,
-        "noImplicitAny": true,
-        "noUnusedLocals": true,
-        "resolveJsonModule": true,
-        "esModuleInterop": true,
-        "baseUrl": ".",
-        //Note: the "node" types are not included because this project only targets the browser.
-        "types": ["webpack-env", "jest", "cypress", "@4tw/cypress-drag-drop"],
-        "paths": {
-            "@/*": ["src/*"]
-        },
-        // Since this actually runs only in browsers, we can use the DOM type definitions
-        "lib": ["es2015", "dom", "dom.iterable", "scripthost"]
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
     },
-    "include": [
-        "src/**/*.ts",
-        "src/**/*.tsx",
-        "src/**/*.vue",
-        "src/**/*.d.ts",
-        // folders for test code
-        "cypress/**/*.ts",
-        "tests/**/*.ts",
-        "tests/**/*.tsx"
-    ],
-    "exclude": ["node_modules"],
-    "files": ["./types/index.d.ts"],
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.vitest.json"
+    }
+  ]
 }

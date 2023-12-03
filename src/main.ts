@@ -16,9 +16,6 @@ console.debug('BASE_URL: ' + import.meta.env.BASE_URL);
 console.log('GIT_VERSION: ' + import.meta.env.VITE_APP_GIT_VERSION);
 console.log('GIT_AUTHOR_DATE: ' + import.meta.env.VITE_APP_GIT_AUTHOR_DATE);
 
-//TODO fix the pwa worker 
-...
-
 createApp(App)
     .use(createPinia())
     .use(router)

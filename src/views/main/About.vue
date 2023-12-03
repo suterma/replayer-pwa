@@ -560,6 +560,15 @@
                         browser environments. (Released under the MIT License,
                         by David Myers)
                     </li>
+                    <li>
+                        <a
+                            href="https://vite-pwa-org.netlify.app/"
+                            target="_blank"
+                        >
+                            PWA Vite Plugin</a
+                        >, PWA integrations for Vite and the ecosystem.
+                        (Released under the MIT License, by the vite-pwa team)
+                    </li>
                 </ul>
             </div>
         </CollapsiblePanel>
