@@ -1,7 +1,6 @@
 import { createApp, watch } from 'vue';
 import App from './App.vue';
 import { createPinia, storeToRefs } from 'pinia';
-import './registerServiceWorker';
 import router, { updateTitle } from './router';
 import VueScrollTo from 'vue-scrollto';
 import vClickOutside from 'click-outside-vue3';
@@ -9,10 +8,12 @@ import { PromiseDialog } from 'vue3-promise-dialog';
 import { useMessageStore } from './store/messages';
 import { useAppStore } from './store/app';
 
-console.log('App version: ' + process.env.VUE_APP_VERSION);
-console.log('Environment: ' + process.env.NODE_ENV);
-console.log('GIT_VERSION: ' + process.env.VUE_APP_GIT_VERSION);
-console.log('GIT_AUTHOR_DATE: ' + process.env.VUE_APP_GIT_AUTHOR_DATE);
+console.log('App version: ' + import.meta.env.VITE_APP_VERSION);
+console.log('MODE: ' + import.meta.env.MODE);
+console.log('NODE_ENV: ' + process.env.NODE_ENV);
+console.debug('BASE_URL: ' + import.meta.env.BASE_URL);
+console.log('GIT_VERSION: ' + import.meta.env.VITE_APP_GIT_VERSION);
+console.log('GIT_AUTHOR_DATE: ' + import.meta.env.VITE_APP_GIT_AUTHOR_DATE);
 
 createApp(App)
     .use(createPinia())

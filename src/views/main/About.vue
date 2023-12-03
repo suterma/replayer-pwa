@@ -242,15 +242,6 @@
                     </li>
                     <li>
                         <a
-                            href="https://github.com/yyx990803/register-service-worker"
-                            target="_blank"
-                            >register-service-worker</a
-                        >, a script to simplify service worker registration with
-                        hooks for common events. (Released under the MIT
-                        License, by Evan You)
-                    </li>
-                    <li>
-                        <a
                             href="https://github.com/zloirock/core-js"
                             target="_blank"
                             >core-js</a
