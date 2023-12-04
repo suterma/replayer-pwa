@@ -1,138 +1,137 @@
-// //TODO eanble test or rewrite them for vitest: https://vitest.dev/guide/migration.html#migrating-from-jest
-// import { MediaBlob } from '@/store/state-types';
-// import CompilationHandler from './compilation-handler';
-// import { expect } from '@jest/globals';
+import { expect, describe, it, beforeEach, afterEach } from 'vitest';
+import { MediaBlob } from './types';
+import CompilationHandler from './compilation-handler';
 
-// describe('CompilationHandler.ts', () => {
-//     let mediaBlobs = new Array<MediaBlob>();
+describe('CompilationHandler.ts', () => {
+    let mediaBlobs = new Array<MediaBlob>();
 
-//     beforeEach(() => {
-//         const dataBase64 = 'VEhJUyBJUyBUSEUgQU5TV0VSCg==';
-//         const arrayBuffer = Uint8Array.from(window.atob(dataBase64), (c) =>
-//             c.charCodeAt(0),
-//         );
-//         const firstBlob = new Blob([arrayBuffer], {
-//             type: 'application/pdf',
-//         });
+    beforeEach(() => {
+        const dataBase64 = 'VEhJUyBJUyBUSEUgQU5TV0VSCg==';
+        const arrayBuffer = Uint8Array.from(window.atob(dataBase64), (c) =>
+            c.charCodeAt(0),
+        );
+        const firstBlob = new Blob([arrayBuffer], {
+            type: 'application/pdf',
+        });
 
-//         mediaBlobs.push(new MediaBlob('first.name', firstBlob));
-//         mediaBlobs.push(new MediaBlob('second.name', firstBlob));
-//         mediaBlobs.push(new MediaBlob('third.name', firstBlob));
-//     });
+        mediaBlobs.push(new MediaBlob('first.name', firstBlob));
+        mediaBlobs.push(new MediaBlob('second.name', firstBlob));
+        mediaBlobs.push(new MediaBlob('third.name', firstBlob));
+    });
 
-//     afterEach(() => {
-//         mediaBlobs = new Array<MediaBlob>();
-//     });
+    afterEach(() => {
+        mediaBlobs = new Array<MediaBlob>();
+    });
 
-//     it('should not sort the blobs when no matching name is given', async () => {
-//         //Arrange
+    it('should not sort the blobs when no matching name is given', async () => {
+        //Arrange
 
-//         //Act
-//         const sortedMediaBlobs = CompilationHandler.sortByFirstFileName(
-//             mediaBlobs,
-//             'anyname',
-//         );
+        //Act
+        const sortedMediaBlobs = CompilationHandler.sortByFirstFileName(
+            mediaBlobs,
+            'anyname',
+        );
 
-//         //Assert
-//         //The order should be unchanged
-//         expect(sortedMediaBlobs[0]?.fileName).toBe('first.name');
-//         expect(sortedMediaBlobs[1]?.fileName).toBe('second.name');
-//         expect(sortedMediaBlobs[2]?.fileName).toBe('third.name');
-//     });
-//     it('should not sort the blobs when no name is given', async () => {
-//         //Arrange
+        //Assert
+        //The order should be unchanged
+        expect(sortedMediaBlobs[0]?.fileName).toBe('first.name');
+        expect(sortedMediaBlobs[1]?.fileName).toBe('second.name');
+        expect(sortedMediaBlobs[2]?.fileName).toBe('third.name');
+    });
+    it('should not sort the blobs when no name is given', async () => {
+        //Arrange
 
-//         //Act
-//         const sortedMediaBlobs = CompilationHandler.sortByFirstFileName(
-//             mediaBlobs,
-//             undefined,
-//         );
+        //Act
+        const sortedMediaBlobs = CompilationHandler.sortByFirstFileName(
+            mediaBlobs,
+            undefined,
+        );
 
-//         //Assert
-//         //The order should be unchanged
-//         expect(sortedMediaBlobs[0]?.fileName).toBe('first.name');
-//         expect(sortedMediaBlobs[1]?.fileName).toBe('second.name');
-//         expect(sortedMediaBlobs[2]?.fileName).toBe('third.name');
-//     });
-//     it('should sort the blobs in order for the given track name', async () => {
-//         //Arrange
+        //Assert
+        //The order should be unchanged
+        expect(sortedMediaBlobs[0]?.fileName).toBe('first.name');
+        expect(sortedMediaBlobs[1]?.fileName).toBe('second.name');
+        expect(sortedMediaBlobs[2]?.fileName).toBe('third.name');
+    });
+    it('should sort the blobs in order for the given track name', async () => {
+        //Arrange
 
-//         //Act
-//         const sortedMediaBlobs = CompilationHandler.sortByFirstFileName(
-//             mediaBlobs,
-//             'third.name',
-//         );
+        //Act
+        const sortedMediaBlobs = CompilationHandler.sortByFirstFileName(
+            mediaBlobs,
+            'third.name',
+        );
 
-//         //Assert
-//         expect(sortedMediaBlobs[0]?.fileName).toBe('third.name');
-//     });
-//     it('should sort the blobs in order for the given second track name', async () => {
-//         //Arrange
+        //Assert
+        expect(sortedMediaBlobs[0]?.fileName).toBe('third.name');
+    });
+    it('should sort the blobs in order for the given second track name', async () => {
+        //Arrange
 
-//         //Act
-//         const sortedMediaBlobs = CompilationHandler.sortByFirstFileName(
-//             mediaBlobs,
-//             'second.name',
-//         );
+        //Act
+        const sortedMediaBlobs = CompilationHandler.sortByFirstFileName(
+            mediaBlobs,
+            'second.name',
+        );
 
-//         //Assert
-//         expect(sortedMediaBlobs[0]?.fileName).toBe('second.name');
-//     });
-//     it('should sort the blobs in order for the given ending track name', async () => {
-//         //Arrange
+        //Assert
+        expect(sortedMediaBlobs[0]?.fileName).toBe('second.name');
+    });
+    it('should sort the blobs in order for the given ending track name', async () => {
+        //Arrange
 
-//         //Act
-//         const sortedMediaBlobs = CompilationHandler.sortByFirstFileName(
-//             mediaBlobs,
-//             'ird.name',
-//         );
+        //Act
+        const sortedMediaBlobs = CompilationHandler.sortByFirstFileName(
+            mediaBlobs,
+            'ird.name',
+        );
 
-//         //Assert
-//         expect(sortedMediaBlobs[0]?.fileName).toBe('third.name');
-//     });
+        //Assert
+        expect(sortedMediaBlobs[0]?.fileName).toBe('third.name');
+    });
 
-//     it('should sort the blobs in order for the given distorted track name', async () => {
-//         //Arrange
+    it('should sort the blobs in order for the given distorted track name', async () => {
+        //Arrange
 
-//         //Act
-//         const sortedMediaBlobs = CompilationHandler.sortByFirstFileName(
-//             mediaBlobs,
-//             '�third.name',
-//         );
+        //Act
+        const sortedMediaBlobs = CompilationHandler.sortByFirstFileName(
+            mediaBlobs,
+            '�third.name',
+        );
 
-//         //Assert
-//         expect(sortedMediaBlobs[0]?.fileName).toBe('third.name');
-//     });
+        //Assert
+        expect(sortedMediaBlobs[0]?.fileName).toBe('third.name');
+    });
 
-//     it('should resolve mixed case for lazy conversion', async () => {
-//         //Arrange
+    it('should resolve mixed case for lazy conversion', async () => {
+        //Arrange
 
-//         //Act
-//         const actual = CompilationHandler.getLazyFileName('SomeName');
+        //Act
+        const actual = CompilationHandler.getLazyFileName('SomeName');
 
-//         //Assert
-//         expect(actual).toEqual(CompilationHandler.getLazyFileName('somename'));
-//     });
-//     it('should resolve non-printable characters for lazy conversion', async () => {
-//         //Arrange
+        //Assert
+        expect(actual).toEqual(CompilationHandler.getLazyFileName('somename'));
+    });
+    it('should resolve non-printable characters for lazy conversion', async () => {
+        //Arrange
 
-//         //Act
-//         const actual = CompilationHandler.getLazyFileName('Some\rName');
+        //Act
+        const actual = CompilationHandler.getLazyFileName('Some\rName');
 
-//         //Assert
-//         expect(actual).toEqual(CompilationHandler.getLazyFileName('SOMEname'));
-//     });
-//     it('should resolve other non-printable characters for lazy conversion', async () => {
-//         //Arrange
+        //Assert
+        expect(actual).toEqual(CompilationHandler.getLazyFileName('SOMEname'));
+    });
+    it('should resolve other non-printable characters for lazy conversion', async () => {
+        //Arrange
 
-//         //Act
-//         const actual = CompilationHandler.getLazyFileName(
-//             '01 OuvertБre_pb.mp3',
-//         );
+        //Act
+        const actual = CompilationHandler.getLazyFileName(
+            '01 OuvertБre_pb.mp3',
+        );
 
-//         //Assert
-//         expect(actual).toEqual(
-//             CompilationHandler.getLazyFileName('01 Ouvertüre_pb.mp3'),
-//         );
-//     });
-// });
+        //Assert
+        expect(actual).toEqual(
+            CompilationHandler.getLazyFileName('01 Ouvertüre_pb.mp3'),
+        );
+    });
+});

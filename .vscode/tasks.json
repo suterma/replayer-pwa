@@ -33,5 +33,21 @@
                 "runOn": "folderOpen",
             }
         },
+        {
+            "label": "Run unit tests",
+            "type": "shell",
+            "command": "npm run test:unit",
+            "windows": {
+                "command": "npm run test:unit"
+            },
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "runOptions": {
+                "runOn": "folderOpen",
+            }
+        },
     ]
 }

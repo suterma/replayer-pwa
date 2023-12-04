@@ -159,7 +159,7 @@ export class Compilation implements ICompilation {
     Tracks: Array<ITrack> = new Array<ITrack>();
 
     /** Creates a new compilation
-     * @param playbackMode {playbackMode} - Playback mode. This is persisted in the application state for user convenience.
+     * @remarks Playback mode is persisted in the application state for user convenience.
      */
     constructor(
         mediaPath: string,
