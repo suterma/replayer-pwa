@@ -9,7 +9,6 @@ describe('testing the issue "Sortable Setlist #84" for regression', () => {
         // ARRANGE (make a clone of the track to have 2 of them)
         cy.visit('/#/edit');
         cy.get('.track [data-cy="dropdown-menu-trigger"]').click();
-        //cy.get('button.button[title="Track context menu"]').click();
         cy.get('[data-cy="dropdown-menu-item"]').contains('Clone').click();
 
         // ARRANGE (visit the setlist)
