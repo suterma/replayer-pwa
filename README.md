@@ -37,7 +37,7 @@ The full documentation is available at https://replayer.app/en/documentation
 
     # Manually
 
-    npm run cypress:open
+    npm run test:e2e:dev
 
 # Build
 
