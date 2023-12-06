@@ -1,6 +1,5 @@
 <template>
-    <div 
-    class="level is-mobile" :title='subTitle'>
+    <div class="level is-mobile" :title="subTitle">
         <div class="level-left">
             <div
                 class="level-item dropdown-item-icon is-borderless has-background-transparent pl-0 pr-0"
@@ -22,34 +21,30 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import ShortcutDisplay from '@/components/ShortcutDisplay.vue';
 /** A content for a menu item */
-export default defineComponent({
-    name: 'MenuItemContent',
-    components: { BaseIcon, ShortcutDisplay },
-    props: {
-        title: {
-            type: String,
-            required: true,
-        },
 
-        subTitle: {
-            type: String,
-            default: '',
-            required: false,
-        },
-        iconPath: {
-            type: String,
-            default: '',
-            required: false,
-        },
-        shortcut: {
-            type: String,
-            required: false,
-        },
+defineProps({
+    title: {
+        type: String,
+        required: true,
+    },
+
+    subTitle: {
+        type: String,
+        default: '',
+        required: false,
+    },
+    iconPath: {
+        type: String,
+        default: '',
+        required: false,
+    },
+    shortcut: {
+        type: String,
+        required: false,
     },
 });
 </script>
