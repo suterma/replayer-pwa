@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <!-- Replayer app version: %VITE_APP_VERSION% -->
         <!-- GIT_VERSION: %VITE_APP_GIT_VERSION% -->
-        <meta charset="UTF-8">
+        <meta charset="UTF-8" />
         <meta
             name="description"
             content="Replayer is a free, cue-based media player for rehearsals with playback music. By the click of a button, Replayer starts to play at predefined times in the audio or video file."
@@ -68,10 +68,7 @@
 
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-        <link
-            rel="apple-touch-icon"
-            href="/img/icons/apple-touch-icon.png"
-        />
+        <link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png" />
         <link
             rel="icon"
             type="image/png"
@@ -97,36 +94,6 @@
         <link rel="stylesheet" href="/css/replayer.css" />
     </head>
     <body>
-        <noscript>
-            <section class="hero is-danger has-text-centered">
-                <div class="hero-body">
-                    <p class="text-align">
-                        <strong
-                            >We're sorry but Replayer doesn't work properly without JavaScript enabled.
-                            Please enable it to continue.</strong
-                        >
-                    </p>
-                </div>
-            </section>
-
-            <section class="section">
-                <div class="container">
-                    <h1 class="title">Replayer</h1>
-
-                    <h3 class="subtitle">
-                        Your rehearsal / audition / performance on cue
-                    </h3>
-                    <div class="content">
-                        <p>
-                            Replayer is a free, cue-based media player for
-                            rehearsals with playback music. By the click of a
-                            button, Replayer starts to play at predefined times
-                            in the audio or video file.
-                        </p>
-                    </div>
-                </div>
-            </section>
-        </noscript>
         <div id="app">
             <!-- A splash screen (which is removed when the vue app is ready to display) -->
             <div class="modal is-active">
@@ -141,5 +108,39 @@
             </div>
         </div>
         <script type="module" src="/src/main.ts"></script>
+        <noscript>
+            <!-- In case of no script, show a modal in front of the loading spinner -->
+            <div class="modal is-active">
+                <div class="modal-background"></div>
+                <section class="hero is-fullheight">
+                    <div class="hero-body">
+                        <section class="section">
+                            <div class="notification is-danger">
+                                We're sorry but Replayer doesn't work properly
+                                without JavaScript enabled. Please enable it to
+                                continue.
+                            </div>
+                            <div class="container">
+                                <h1 class="title">Replayer</h1>
+
+                                <h3 class="subtitle">
+                                    Your rehearsal / audition / performance on
+                                    cue
+                                </h3>
+                                <div class="content">
+                                    <p>
+                                        Replayer is a free, cue-based media
+                                        player for rehearsals with playback
+                                        music. By the click of a button,
+                                        Replayer starts to play at predefined
+                                        times in the audio or video file.
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </noscript>
     </body>
 </html>
