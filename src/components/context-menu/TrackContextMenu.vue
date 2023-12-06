@@ -1,13 +1,15 @@
 <template>
-    <DropdownMenu title="Track context menu">
+    <DropdownMenu v-once>
+        <div class="dropdown-item is-hidden-mobile">
+            <p class="menu-label">Track</p>
+        </div>
         <DropdownMenuItem
-            v-if="track"
             title="Add multiple cues..."
             subTitle="(add cues using text lines)"
             @click="addMultipleCues()"
+            :iconPath="mdiFileDelimitedOutline"
         />
         <DropdownMenuItem
-            v-once
             title="Reassign cue shortcuts"
             subTitle="(first as seed, then incrementing)"
             @click="reassignCueShortcuts(trackId)"
@@ -15,21 +17,18 @@
         />
         <DropdownMenuItem
             v-experiment="experimentalAllowTrackSharingByLink"
-            v-if="track"
             title="Share..."
             subTitle="(allows to share a track)"
             @click="share()"
+            :iconPath="mdiShareVariant"
         />
-        <hr class="dropdown-divider" />
         <DropdownMenuItem
-            v-once
             title="Clone"
             subTitle="(with cues and media)"
             @click="cloneTrack(trackId)"
             :iconPath="mdiContentDuplicate"
         />
         <DropdownMenuItem
-            v-once
             title="Remove"
             subTitle="(remove the track from the compilation)"
             @click="remove()"
@@ -48,6 +47,8 @@ import {
     mdiContentDuplicate,
     mdiTrashCanOutline,
     mdiOrderNumericAscending,
+    mdiFileDelimitedOutline,
+    mdiShareVariant,
 } from '@mdi/js';
 import { addTextCues, confirm, shareTrack } from '@/code/ui/dialogs';
 import { ICue, ITrack } from '@/store/compilation-types';
@@ -87,6 +88,8 @@ export default defineComponent({
             mdiContentDuplicate: mdiContentDuplicate,
             mdiTransferDown: mdiTransferDown,
             mdiTransferUp: mdiTransferUp,
+            mdiFileDelimitedOutline: mdiFileDelimitedOutline,
+            mdiShareVariant: mdiShareVariant,
         };
     },
     methods: {

@@ -94,11 +94,10 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
     );
 
     /** EXPERIMENTAL: Whether to show a menu action for sharing a track via the Track API
-     * @remarks Default is false
      */
     const experimentalAllowTrackSharingByLink = useLocalStorage(
         'experimentalAllowTrackSharingByLink',
-        false,
+        true,
     );
 
     /** EXPERIMENTAL: Whether to show a menu for the multitrack view
@@ -153,7 +152,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         youTubeConsent.value = false;
         experimentalShowPositionInTrackHeader.value = false;
         experimentalShowEverythingEverywhereAllAtOnce.value = false;
-        experimentalAllowTrackSharingByLink.value = false;
+        experimentalAllowTrackSharingByLink.value = true;
         experimentalMultitrack.value = false;
         experimentalUseQueueCueMode.value = false;
         experimentalUseMeter.value = false;
