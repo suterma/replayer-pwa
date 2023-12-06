@@ -39,6 +39,10 @@ The full documentation is available at https://replayer.app/en/documentation
 
     npm run test:e2e:dev
 
+-   Run the vitest unit tests
+
+    npm run test:unit
+
 # Build
 
 This package currently runs best with node version 16. (node version 18 fails because of some dependencies that are not working with it.)
