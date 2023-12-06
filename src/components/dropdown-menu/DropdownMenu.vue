@@ -49,54 +49,34 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import NavButton from '@/components/buttons/NavButton.vue';
 import DismissiblePanel from '@/components/DismissiblePanel.vue';
 import { mdiDotsVertical } from '@mdi/js';
+import { ref } from 'vue';
 
 /** A drop down menu, with a slot for the menu items.
  */
-export default defineComponent({
-    name: 'DropdownMenu',
-    components: { NavButton, DismissiblePanel },
-    props: {
-        /* The menu title*/
-        title: {
-            type: String,
-            default: undefined,
-        },
-        iconPath: {
-            type: String,
-            default: mdiDotsVertical,
-        },
+defineProps({
+    /* The menu title*/
+    title: {
+        type: String,
+        default: undefined,
     },
-
-    data() {
-        return {
-            /** Whether the dropdown menu is shown as expanded.
-             */
-            isDropdownExpanded: false,
-
-            /** Icons from @mdi/js */
-            mdiDotsVertical: mdiDotsVertical,
-        };
-    },
-    methods: {
-        toggleDropdownExpanded() {
-            console.debug('DropdownMenu::toggleDropdownExpanded');
-
-            this.isDropdownExpanded = !this.isDropdownExpanded;
-        },
-        collapseDropdown() {
-            console.debug('DropdownMenu::collapseDropdown');
-            this.isDropdownExpanded = false;
-        },
-        expandDropdown() {
-            console.debug('DropdownMenu::expandDropdown');
-
-            this.isDropdownExpanded = true;
-        },
+    iconPath: {
+        type: String,
+        default: mdiDotsVertical,
     },
 });
+
+/** Whether the dropdown menu is shown as expanded.
+ */
+const isDropdownExpanded = ref(false);
+
+function toggleDropdownExpanded() {
+    isDropdownExpanded.value = !isDropdownExpanded.value;
+}
+function collapseDropdown() {
+    isDropdownExpanded.value = false;
+}
 </script>

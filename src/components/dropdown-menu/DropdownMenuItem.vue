@@ -15,39 +15,34 @@
     </button>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import MenuItemContent from '@/components/dropdown-menu/MenuItemContent.vue';
 /** An item for a Dropdown menu
  */
-export default defineComponent({
-    name: 'DropdownMenuItem',
-    components: { MenuItemContent },
-    props: {
-        title: {
-            type: String,
-            required: true,
-        },
-        shortcut: {
-            type: String,
-            required: false,
-        },
-        disabled: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
+defineProps({
+    title: {
+        type: String,
+        required: true,
+    },
+    shortcut: {
+        type: String,
+        required: false,
+    },
+    disabled: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
 
-        subTitle: {
-            type: String,
-            default: '',
-            required: false,
-        },
-        iconPath: {
-            type: String,
-            default: '',
-            required: false,
-        },
+    subTitle: {
+        type: String,
+        default: '',
+        required: false,
+    },
+    iconPath: {
+        type: String,
+        default: '',
+        required: false,
     },
 });
 </script>
