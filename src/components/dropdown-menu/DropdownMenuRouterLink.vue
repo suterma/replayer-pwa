@@ -4,7 +4,6 @@
             @click="navigate"
             @keypress.enter="navigate"
             role="link"
-            :ref="clickRef"
             :title="title"
             :subTitle="subTitle"
             :iconPath="iconPath"
@@ -28,11 +27,6 @@ const props = defineProps({
     },
     shortcut: {
         type: String,
-        required: false,
-    },
-    /** set a reference to the clickable button for the link*/
-    clickRef: {
-        type: Object,
         required: false,
     },
     subTitle: {
