@@ -29,11 +29,6 @@ const props = defineProps({
         type: String,
         required: false,
     },
-    /** set a reference to the clickable button for the link*/
-    clickRef: {
-        type: Object,
-        required: false,
-    },
     subTitle: {
         type: String,
         default: '',
