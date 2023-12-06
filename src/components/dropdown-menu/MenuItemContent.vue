@@ -1,5 +1,6 @@
 <template>
-    <div class="level is-mobile">
+    <div 
+    class="level is-mobile" :title='subTitle'>
         <div class="level-left">
             <div
                 class="level-item dropdown-item-icon is-borderless has-background-transparent pl-0 pr-0"
@@ -10,10 +11,6 @@
             <div class="level-item">
                 <div>
                     <span class="">{{ title }}</span>
-                    <br />
-                    <span class="has-opacity-half is-size-7">{{
-                        subTitle
-                    }}</span>
                 </div>
             </div>
         </div>
