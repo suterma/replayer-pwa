@@ -36,8 +36,8 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, Ref, computed, inject, ref } from 'vue';
-import { ICue, PlaybackMode } from '@/store/compilation-types';
+import { type PropType, type Ref, computed, inject, ref } from 'vue';
+import type { ICue, PlaybackMode } from '@/store/compilation-types';
 import CompilationHandler from '@/store/compilation-handler';
 import CueLevelEditor from '@/components/CueLevelEditor.vue';
 import { useAppStore } from '@/store/app';

@@ -23,7 +23,7 @@
                 class="has-text-right is-italic has-opacity-half"
             >
                 <small
-                    ><span>App version: {{ version }} ({{ environment }}),</span
+                    ><span>App version: {{ version }} &#8212; </span
                     ><span> {{ git }}</span></small
                 >
             </p>
@@ -239,15 +239,6 @@
                             >Vue Router</a
                         >, a the official router for Vue.js. (Released under the
                         MIT License, by the vuejs team)
-                    </li>
-                    <li>
-                        <a
-                            href="https://github.com/yyx990803/register-service-worker"
-                            target="_blank"
-                            >register-service-worker</a
-                        >, a script to simplify service worker registration with
-                        hooks for common events. (Released under the MIT
-                        License, by Evan You)
                     </li>
                     <li>
                         <a
@@ -559,6 +550,25 @@
                         >, Integrate the YouTube Iframe Player into your Vue 2/3
                         app. (Released under the MIT License, by Techassi)
                     </li>
+                    <li>
+                        <a
+                            href="https://github.com/davidmyersdev/vite-plugin-node-polyfills"
+                            target="_blank"
+                        >
+                            vite-plugin-node-polyfills</a
+                        >, a Vite plugin to polyfill Node's Core Modules for
+                        browser environments. (Released under the MIT License,
+                        by David Myers)
+                    </li>
+                    <li>
+                        <a
+                            href="https://vite-pwa-org.netlify.app/"
+                            target="_blank"
+                        >
+                            PWA Vite Plugin</a
+                        >, PWA integrations for Vite and the ecosystem.
+                        (Released under the MIT License, by the vite-pwa team)
+                    </li>
                 </ul>
             </div>
         </CollapsiblePanel>
@@ -611,14 +621,11 @@ export default defineComponent({
     components: { WelcomeText, CollapsiblePanel },
     computed: {
         version(): string {
-            return '' + process.env.VUE_APP_VERSION;
+            return '' + import.meta.env.VITE_APP_VERSION;
         },
 
-        environment(): string {
-            return '' + process.env.NODE_ENV;
-        },
         git(): string {
-            return 'git version: ' + process.env.VUE_APP_GIT_VERSION;
+            return 'git version: ' + import.meta.env.VITE_APP_GIT_VERSION;
         },
     },
 });

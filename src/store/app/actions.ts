@@ -1,9 +1,9 @@
 import {
     Compilation,
     Cue,
-    ICompilation,
-    ICue,
-    ITrack,
+    type ICompilation,
+    type ICue,
+    type ITrack,
     PlaybackMode,
     Track,
 } from '../compilation-types';
@@ -12,6 +12,7 @@ import { state } from './state';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
+//@ts-ignore (because the file-saver does not provide types)
 import FileSaver from 'file-saver';
 import PersistentStorage from '../persistent-storage';
 import JSZip from 'jszip';
@@ -19,7 +20,7 @@ import { MediaBlob, MediaUrl } from '../types';
 import FileHandler from '../filehandler';
 import CompilationParser from '../../code/xml/XmlCompilationParser';
 import { useMessageStore } from '../messages';
-import { IMeter } from '@/code/music/IMeter';
+import type { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
 
 export const actions = {

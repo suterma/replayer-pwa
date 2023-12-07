@@ -16,8 +16,9 @@
                                     class="input"
                                     :modelValue="props.meter?.TimeSignature"
                                     @update:modelValue="
-                              (value:ITimeSignature|null) =>   updateMeterWithTimeSignature(value)
-                            "
+                                        (value: ITimeSignature | null) =>
+                                            updateMeterWithTimeSignature(value)
+                                    "
                                     title="Time signature"
                                 >
                                 </TimeSignatureEditor>
@@ -39,7 +40,10 @@
                                 <TimeInput
                                     class="has-text-right"
                                     :modelValue="props.meter?.OriginTime"
-                                    @update:modelValue="(value:number|null) => updateMeterWithOriginTime(value)"
+                                    @update:modelValue="
+                                        (value: number | null) =>
+                                            updateMeterWithOriginTime(value)
+                                    "
                                     size="9"
                                 />
                             </p>
@@ -58,7 +62,10 @@
                     <p class="control">
                         <LabeledCheckbox
                             :modelValue="props.useMeasureNumbers"
-                            @update:modelValue="(value:boolean|null) => updateUseMeasureNumbers(value)"
+                            @update:modelValue="
+                                (value: boolean | null) =>
+                                    updateUseMeasureNumbers(value)
+                            "
                             label="Show measure numbers"
                             :disabled="!hasAllTempoValues"
                         ></LabeledCheckbox>
@@ -84,14 +91,14 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed, watch } from 'vue';
+import { type PropType, computed, watch } from 'vue';
 import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 import AdjustTimeButton from '@/components/buttons/AdjustTimeButton.vue';
-import { IMeter } from '@/code/music/IMeter';
+import type { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
-import { ITimeSignature } from '@/code/music/ITimeSignature';
+import type { ITimeSignature } from '@/code/music/ITimeSignature';
 
 /** A level-based Editor for tempo-related values
  * @remarks Shows a level with inputs for BPM, time signature etc., as level items

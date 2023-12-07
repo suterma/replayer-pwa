@@ -49,6 +49,7 @@ import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import StageMark from '@/components/StageMark.vue';
 import ReplayerAd from '@/components/ReplayerAd.vue';
 import ErrorOverlay from '@/components/ErrorOverlay.vue';
+//@ts-ignore (because the vue3-promise-dialog does not provide types)
 import { DialogWrapper } from 'vue3-promise-dialog';
 import { useSettingsStore } from '@/store/settings';
 import { useAppStore } from './store/app';
@@ -72,7 +73,7 @@ const { experimentalShowPositionInTrackHeader } = storeToRefs(settings);
 /** Check for and handle a new version */
 function handleAppUpdate() {
     // Check for and handle a new version
-    const currentVersion = process.env.VUE_APP_VERSION ?? '0.0.1';
+    const currentVersion = import.meta.env.VITE_APP_VERSION ?? '0.0.1';
     const previousVersion = app.acknowledgedVersion ?? currentVersion;
 
     if (currentVersion != previousVersion) {

@@ -174,10 +174,10 @@
  * This approach is chosen over the ...data pattern because the shortcut values can also change from a menu entry
  * in the track's dropdown menu.
  */
-import { PropType, computed, inject, ref, Ref } from 'vue';
+import { type PropType, computed, inject, ref, type Ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
-import { ICue, PlaybackMode } from '@/store/compilation-types';
+import type { ICue, PlaybackMode } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
 import AdjustTimeButton from '@/components/buttons/AdjustTimeButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';

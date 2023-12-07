@@ -139,7 +139,7 @@ import {
 } from '@/components/icons/BaseIcon.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { PlaybackMode } from '@/store/compilation-types';
-import { PropType, computed, inject } from 'vue';
+import { type PropType, computed, inject } from 'vue';
 import { Meter } from '@/code/music/Meter';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';

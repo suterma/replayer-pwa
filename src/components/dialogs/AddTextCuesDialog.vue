@@ -34,8 +34,8 @@
 </template>
 
 <script lang="ts">
-import { Cue, ICue, Track } from '@/store/compilation-types';
-import { PropType, defineComponent, ref } from 'vue';
+import { Cue, type ICue, Track } from '@/store/compilation-types';
+import { type PropType, defineComponent, ref } from 'vue';
 
 import { v4 as uuidv4 } from 'uuid';
 import ModalDialog from '@/components/dialogs/ModalDialog.vue';

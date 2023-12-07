@@ -1,9 +1,9 @@
 import {
     Cue,
     DefaultTrackVolume,
-    ICompilation,
-    ICue,
-    ITrack,
+    type ICompilation,
+    type ICue,
+    type ITrack,
     Track,
 } from './compilation-types';
 import { DefaultMathPrecision, TimeFormat, useSettingsStore } from './settings';
@@ -145,8 +145,8 @@ export default class CompilationHandler {
             (a.Time ?? 0) > (b.Time ?? 0)
                 ? 1
                 : (b.Time ?? 0) > (a.Time ?? 0)
-                ? -1
-                : 0,
+                  ? -1
+                  : 0,
         );
         return cues;
     }
@@ -503,8 +503,8 @@ export default class CompilationHandler {
             (a.Time ?? 0) > (b.Time ?? 0)
                 ? 1
                 : (b.Time ?? 0) > (a.Time ?? 0)
-                ? -1
-                : 0,
+                  ? -1
+                  : 0,
         );
     }
 

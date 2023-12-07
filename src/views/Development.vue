@@ -18,6 +18,7 @@
                 >
                 <TrackYouTubeElement
                     url="https://www.youtube.com/watch?v=32cSZUFNHrs"
+                    trackId="dev-track"
                 ></TrackYouTubeElement>
             </CollapsiblePanel>
         </div>
@@ -221,8 +222,8 @@ import { defineComponent } from 'vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import NavButton from '@/components/buttons/NavButton.vue';
-//import ControlKnob from '@slipmatio/control-knob';
-import ControlKnob from '@/components/control-knob';
+//@ts-ignore (because vue-peaks does not provide types)
+import ControlKnob from '@slipmatio/control-knob';
 import Knob from '@/components/buttons/Knob.vue';
 import { mdiPencil } from '@mdi/js';
 import {

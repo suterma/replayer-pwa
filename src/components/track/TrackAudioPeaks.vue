@@ -15,6 +15,7 @@
 </template>
 
 <script lang="ts">
+//@ts-ignore (because vue-peaks does not provide types)
 import { AudioPeaks } from 'vue-peaks';
 import 'vue-peaks/dist/style.css';
 import { defineComponent } from 'vue';

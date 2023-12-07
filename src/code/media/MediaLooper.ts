@@ -1,5 +1,5 @@
-import { IMediaHandler } from './IMediaHandler';
-import { IMediaLooper, LoopMode } from './IMediaLooper';
+import type { IMediaHandler } from './IMediaHandler';
+import { type IMediaLooper, LoopMode } from './IMediaLooper';
 
 /** @class Implements range looping for an {IMediaHandler}, including fading.
  * @remarks Implements audio fading at the loop boundaries, with the help of an {IAudioFader}.

@@ -22,9 +22,10 @@
 </template>
 
 <script lang="ts">
-import { ICue, Track } from '@/store/compilation-types';
-import { PropType, defineComponent } from 'vue';
-import { RouteLocationRaw } from 'vue-router';
+/* __placeholder__ */
+import type { ICue, Track } from '@/store/compilation-types';
+import { type PropType, defineComponent } from 'vue';
+import type { RouteLocationRaw } from 'vue-router';
 import ModalDialog from '@/components/dialogs/ModalDialog.vue';
 
 export default defineComponent({

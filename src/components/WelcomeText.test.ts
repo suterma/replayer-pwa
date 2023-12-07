@@ -1,7 +1,4 @@
-/**
- * @jest-environment jsdom
- */
-
+import { expect, describe, it } from 'vitest';
 import { shallowMount } from '@vue/test-utils';
 import WelcomeText from '@/components/WelcomeText.vue';
 

@@ -9,8 +9,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-//import ControlKnob from '@slipmatio/control-knob';
-import ControlKnob from '@/components/control-knob';
+//@ts-ignore (because vue-peaks does not provide types)
+import ControlKnob from '@slipmatio/control-knob';
 
 /** A Knob for manipulating values
  */

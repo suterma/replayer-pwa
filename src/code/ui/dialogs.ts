@@ -1,4 +1,5 @@
-import { Compilation, ICue, ITrack } from '@/store/compilation-types';
+import type { Compilation, ICue, ITrack } from '@/store/compilation-types';
+//@ts-ignore (because the vue3-promise-dialog does not provide types)
 import { openDialog } from 'vue3-promise-dialog';
 import ConfirmDialog from '../../components/dialogs/ConfirmDialog.vue';
 import NewVersionDialog from '../../components/dialogs/NewVersionDialog.vue';

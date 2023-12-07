@@ -231,13 +231,10 @@
                     "
                     :useMeasureNumbers="track.UseMeasureNumbers"
                     @update:useMeasureNumbers="
-                                (value: boolean | null) => {
-                                    app.updateUseMeasureNumbers(
-                                        track.Id,
-                                        value,
-                                    );
-                                }
-                            "
+                        (value: boolean | null) => {
+                            app.updateUseMeasureNumbers(track.Id, value);
+                        }
+                    "
                     ><template
                         #left-end
                         v-experiment="experimentalUseMeter"
@@ -680,8 +677,8 @@
  * @remarks Also handles the common replayer events for tracks
  */
 import {
-    PropType,
-    Ref,
+    type PropType,
+    type Ref,
     computed,
     provide,
     readonly,
@@ -690,7 +687,7 @@ import {
     watchEffect,
 } from 'vue';
 import {
-    ICue,
+    type ICue,
     TrackViewMode,
     PlaybackMode,
     Track,
@@ -733,13 +730,13 @@ import {
 } from './TrackInjectionKeys';
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
 import { Replayer } from '../CompilationKeyboardHandler.vue';
-import { IMediaHandler } from '@/code/media/IMediaHandler';
-import { IMediaLooper, LoopMode } from '@/code/media/IMediaLooper';
+import type { IMediaHandler } from '@/code/media/IMediaHandler';
+import { type IMediaLooper, LoopMode } from '@/code/media/IMediaLooper';
 import { MediaLooper } from '@/code/media/MediaLooper';
 import { FadingMode } from '@/code/media/IAudioFader';
 import { useTitle } from '@vueuse/core';
 import { useRoute } from 'vue-router';
-import { ICueScheduler } from '@/code/media/ICueScheduler';
+import type { ICueScheduler } from '@/code/media/ICueScheduler';
 import { CueScheduler } from '@/code/media/CueScheduler';
 
 const emit = defineEmits([
@@ -852,7 +849,7 @@ const props = defineProps({
      * @remarks Used overall in the compilation, not per track
      */
     playbackMode: {
-        type: String as () => PlaybackMode,
+        type: String as PropType<PlaybackMode>,
         required: true,
         default: PlaybackMode.PlayTrack,
     },

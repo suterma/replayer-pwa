@@ -5,7 +5,7 @@
 [![Build Status](https://dev.azure.com/suterma/replayer-pwa/_apis/build/status/suterma.replayer-pwa?branchName=main)](https://dev.azure.com/suterma/replayer-pwa/_build/latest?definitionId=1&branchName=main)
 
 [Replayer](https://replayer.app/) is a free, cue-based media player for rehearsals with playback music.
-By the click of a button, Replayer starts to play at predefined times in the audio file.
+By the click of a button, Replayer starts to play at predefined times in the audio or video file.
 
 ![Visual Functioning Overview](/public/img/screenshot/web-app-on-phone-stand.png)
 
@@ -33,10 +33,15 @@ The full documentation is available at https://replayer.app/en/documentation
 
 # Tests
 
-- Run the [Cypress End-To-End regression tests](/cypress/e2e/regression)
+-   Run the [Cypress End-To-End regression tests](/cypress/e2e/regression)
 
     # Manually
-    npm run cypress:open
+
+    npm run test:e2e:dev
+
+-   Run the vitest unit tests
+
+    npm run test:unit
 
 # Build
 
@@ -55,8 +60,6 @@ When using VSCode, in the Terminal (Powershell) do
     $env:NODE_OPTIONS="--openssl-legacy-provider"
 
 once before building.
-
-    
 
 # Roadmap
 

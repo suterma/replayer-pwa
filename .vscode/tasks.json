@@ -4,9 +4,9 @@
         {
             "label": "Serve App",
             "type": "shell",
-            "command": "npm run serve",
+            "command": "npm run dev",
             "windows": {
-                "command": "npm run serve"
+                "command": "npm run dev"
             },
             "group": "none",
             "presentation": {
@@ -20,9 +20,25 @@
         {
             "label": "Run cypress tests",
             "type": "shell",
-            "command": "npm run cypress:run",
+            "command": "npm run test:e2e",
             "windows": {
-                "command": "npm run cypress:run"
+                "command": "npm run test:e2e"
+            },
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "runOptions": {
+                "runOn": "folderOpen",
+            }
+        },
+        {
+            "label": "Run unit tests",
+            "type": "shell",
+            "command": "npm run test:unit",
+            "windows": {
+                "command": "npm run test:unit"
             },
             "group": "none",
             "presentation": {

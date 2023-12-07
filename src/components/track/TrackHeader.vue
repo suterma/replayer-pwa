@@ -137,7 +137,9 @@
                         <TimeInput
                             class="has-text-right"
                             :modelValue="trackPreRoll"
-                            @update:modelValue="(value:number|null) => updatePreRoll(value)"
+                            @update:modelValue="
+                                (value: number | null) => updatePreRoll(value)
+                            "
                             size="9"
                         />
                     </LabeledInput>
@@ -165,7 +167,9 @@
                         <MetricalEditor
                             differential
                             :modelValue="trackPreRoll"
-                            @update:modelValue="(value:number|null) => updatePreRoll(value)"
+                            @update:modelValue="
+                                (value: number | null) => updatePreRoll(value)
+                            "
                         >
                         </MetricalEditor>
                     </LabeledInput>
@@ -216,7 +220,14 @@
 <script setup lang="ts">
 /** A header for editing "beats per minute" track metadata
  */
-import { PropType, Ref, computed, inject, ref, watchEffect } from 'vue';
+import {
+    type PropType,
+    type Ref,
+    computed,
+    inject,
+    ref,
+    watchEffect,
+} from 'vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
@@ -232,7 +243,7 @@ import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import { TrackViewMode } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import { useAppStore } from '@/store/app';
-import { ITimeSignature } from '@/code/music/ITimeSignature';
+import type { ITimeSignature } from '@/code/music/ITimeSignature';
 import {
     isPlayingInjectionKey,
     useMeasureNumbersInjectionKey,

@@ -89,7 +89,7 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent } from 'vue';
+import { type PropType, defineComponent } from 'vue';
 import { Compilation } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';

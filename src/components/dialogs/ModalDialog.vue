@@ -7,7 +7,7 @@
                     data-cy="modal-form"
                     @submit.prevent="
                         $emit('submit');
-                        $close(this);
+                        closeDialog(true);
                     "
                 >
                     <header class="modal-card-head has-cropped-text">
@@ -30,7 +30,7 @@
                                         class="button"
                                         data-cy="cancel-button"
                                         :ref="clickRef"
-                                        @click.prevent="$close(this, false)"
+                                        @click.prevent="closeDialog(false)"
                                     >
                                         {{ cancelButtonText }}
                                     </button>
@@ -67,6 +67,8 @@ import { defineComponent, onMounted, onUnmounted } from 'vue';
 import { UseFocusTrap } from '@vueuse/integrations/useFocusTrap/component';
 import { Hotkey } from '@simolation/vue-hotkey';
 import { useAppStore } from '@/store/app';
+//@ts-ignore (because the vue3-promise-dialog does not provide types)
+import { closeDialog } from 'vue3-promise-dialog';
 
 export default defineComponent({
     name: 'ModalDialog',
@@ -106,7 +108,7 @@ export default defineComponent({
             app.useAppShortcuts = true;
         });
 
-        return {};
+        return { closeDialog };
     },
 });
 </script>

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
-import { ShallowRef, computed, ref, shallowRef, readonly } from 'vue';
+import { type ShallowRef, computed, ref, shallowRef, readonly } from 'vue';
 import { Store } from '..';
-import { IMediaHandler } from '@/code/media/IMediaHandler';
+import type { IMediaHandler } from '@/code/media/IMediaHandler';
 
 /**
  *  Defining the AudioContext

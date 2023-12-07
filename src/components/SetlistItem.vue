@@ -87,7 +87,7 @@
 <script setup lang="ts">
 /** A printable display of a track, with cue listing */
 
-import { PropType, computed, provide, readonly } from 'vue';
+import { type PropType, computed, provide, readonly } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import ArtistInfo from '@/components/ArtistInfo.vue';

@@ -62,12 +62,15 @@
 </template>
 
 <script setup lang="ts">
-import { PlayerError, PlayerStateChangeCallback } from '@vue-youtube/shared';
-import { usePlayer } from '@vue-youtube/core';
-import { ErrorEvent } from '@vue-youtube/shared';
 import {
-    PropType,
-    Ref,
+    PlayerError,
+    type PlayerStateChangeCallback,
+} from '@vue-youtube/shared';
+import { usePlayer } from '@vue-youtube/core';
+import type { ErrorEvent } from '@vue-youtube/shared';
+import {
+    type PropType,
+    type Ref,
     computed,
     onBeforeUnmount,
     ref,
@@ -77,11 +80,11 @@ import {
 import { getCurrentInstance } from 'vue';
 import { createManager } from '@vue-youtube/core';
 import type { Player } from '@vue-youtube/shared';
-import { IMediaHandler } from '@/code/media/IMediaHandler';
+import type { IMediaHandler } from '@/code/media/IMediaHandler';
 import YouTubeMediaHandler from '@/code/media/YoutubeMediaHandler';
 import YoutubeTextTrackController from '@/components/track/YoutubeTextTrackController.vue';
 import { useAudioStore } from '@/store/audio';
-import { ICue } from '@/store/compilation-types';
+import type { ICue } from '@/store/compilation-types';
 import { FadingMode } from '@/code/media/IAudioFader';
 import { Subscription } from 'sub-events';
 

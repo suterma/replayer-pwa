@@ -1,11 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
-        <!-- Replayer app version: <%= VUE_APP_VERSION %> -->
-        <meta charset="utf-8" />
+        <!-- Replayer app version: %VITE_APP_VERSION% -->
+        <!-- GIT_VERSION: %VITE_APP_GIT_VERSION% -->
+        <meta charset="UTF-8" />
         <meta
             name="description"
-            content="Replayer is a free, cue-based media player for rehearsals with playback music. By the click of a button, Replayer starts to play at predefined times in the audio file."
+            content="Replayer is a free, cue-based media player for rehearsals with playback music. By the click of a button, Replayer starts to play at predefined times in the audio or video file."
         />
         <!-- JSON-LD markup for SEO optimization. -->
         <script type="application/ld+json">
@@ -35,7 +36,7 @@
         <meta
             name="twitter:description"
             property="twitter:description"
-            content="Replayer is a free, cue-based media player for rehearsals with playback music. By the click of a button, Replayer starts to play at predefined times in the audio file."
+            content="Replayer is a free, cue-based media player for rehearsals with playback music. By the click of a button, Replayer starts to play at predefined times in the audio or video file."
         />
         <meta
             name="twitter:image"
@@ -58,7 +59,7 @@
         <meta property="og:url" content="https://web.replayer.app" />
         <meta
             property="og:description"
-            content="Replayer is a free, cue-based media player for rehearsals with playback music.By the click of a button, Replayer starts to play at predefined times in the audio file."
+            content="Replayer is a free, cue-based media player for rehearsals with playback music.By the click of a button, Replayer starts to play at predefined times in the audio or video file."
         />
         <meta
             property="og:image"
@@ -67,66 +68,32 @@
 
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-        <link
-            rel="apple-touch-icon"
-            href="<%= BASE_URL %>/img/icons/apple-touch-icon.png"
-        />
+        <link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png" />
         <link
             rel="icon"
             type="image/png"
             sizes="32x32"
-            href="<%= BASE_URL %>/img/icons/favicon-32x32.png"
+            href="/img/icons/favicon-32x32.png"
         />
         <link
             rel="icon"
             type="image/png"
             sizes="16x16"
-            href="<%= BASE_URL %>/img/icons/favicon-16x16.png"
+            href="/img/icons/favicon-16x16.png"
         />
-        <link rel="manifest" href="<%= BASE_URL %>manifest.json" />
+        <!-- <link rel="manifest" href="/manifest.json" /> -->
         <link
             rel="mask-icon"
-            href="<%= BASE_URL %>/img/icons/safari-pinned-tab.svg"
+            href="/img/icons/safari-pinned-tab.svg"
             color="#f89406"
         />
         <meta name="msapplication-TileColor" content="#da532c" />
         <!-- Theme color same as the player widget background to keep the Phone UI boring (non-distracting). -->
         <meta name="theme-color" content="#3a3f44" />
-        <title><%= htmlWebpackPlugin.options.title %></title>
-        <link rel="stylesheet" href="css/replayer.css" />
+        <title>Replayer</title>
+        <link rel="stylesheet" href="/css/replayer.css" />
     </head>
     <body>
-        <noscript>
-            <section class="hero is-danger has-text-centered">
-                <div class="hero-body">
-                    <p class="text-align">
-                        <strong
-                            >We're sorry but <%= htmlWebpackPlugin.options.title
-                            %> doesn't work properly without JavaScript enabled.
-                            Please enable it to continue.</strong
-                        >
-                    </p>
-                </div>
-            </section>
-
-            <section class="section">
-                <div class="container">
-                    <h1 class="title">Replayer</h1>
-
-                    <h3 class="subtitle">
-                        Your rehearsal / audition / performance on cue
-                    </h3>
-                    <div class="content">
-                        <p>
-                            Replayer is a free, cue-based media player for
-                            rehearsals with playback music. By the click of a
-                            button, Replayer starts to play at predefined times
-                            in the audio file.
-                        </p>
-                    </div>
-                </div>
-            </section>
-        </noscript>
         <div id="app">
             <!-- A splash screen (which is removed when the vue app is ready to display) -->
             <div class="modal is-active">
@@ -140,6 +107,40 @@
                 </section>
             </div>
         </div>
-        <!-- built files will be auto injected -->
+        <script type="module" src="/src/main.ts"></script>
+        <noscript>
+            <!-- In case of no script, show a modal in front of the loading spinner -->
+            <div class="modal is-active">
+                <div class="modal-background"></div>
+                <section class="hero is-fullheight">
+                    <div class="hero-body">
+                        <section class="section">
+                            <div class="notification is-danger">
+                                We're sorry but Replayer doesn't work properly
+                                without JavaScript enabled. Please enable it to
+                                continue.
+                            </div>
+                            <div class="container">
+                                <h1 class="title">Replayer</h1>
+
+                                <h3 class="subtitle">
+                                    Your rehearsal / audition / performance on
+                                    cue
+                                </h3>
+                                <div class="content">
+                                    <p>
+                                        Replayer is a free, cue-based media
+                                        player for rehearsals with playback
+                                        music. By the click of a button,
+                                        Replayer starts to play at predefined
+                                        times in the audio or video file.
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </noscript>
     </body>
 </html>

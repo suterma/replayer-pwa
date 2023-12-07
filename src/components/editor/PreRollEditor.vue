@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed } from 'vue';
+import { type PropType, computed } from 'vue';
 
 /** A field of large cue buttons for a track
  */

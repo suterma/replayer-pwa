@@ -1,10 +1,6 @@
-/**
- * @jest-environment jsdom
- */
-
-import { MediaBlob } from '@/store/state-types';
+import { expect, describe, it, beforeEach, afterEach } from 'vitest';
+import { MediaBlob } from './types';
 import CompilationHandler from './compilation-handler';
-import { expect } from '@jest/globals';
 
 describe('CompilationHandler.ts', () => {
     let mediaBlobs = new Array<MediaBlob>();

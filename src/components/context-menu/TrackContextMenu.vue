@@ -51,7 +51,7 @@ import {
     mdiShareVariant,
 } from '@mdi/js';
 import { addTextCues, confirm, shareTrack } from '@/code/ui/dialogs';
-import { ICue, ITrack } from '@/store/compilation-types';
+import { type ICue, type ITrack } from '@/store/compilation-types';
 import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { useSettingsStore } from '@/store/settings';

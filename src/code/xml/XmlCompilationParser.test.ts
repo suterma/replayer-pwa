@@ -1,8 +1,5 @@
-/**
- * @jest-environment jsdom
- */
-
-import { LocationQuery } from 'vue-router';
+import { expect, describe, it } from 'vitest';
+import type { LocationQuery } from 'vue-router';
 import CompilationParser from './XmlCompilationParser';
 
 describe('compilation-parser.ts', () => {

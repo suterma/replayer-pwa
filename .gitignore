@@ -31,3 +31,6 @@ cypress/downloads/
 
 # Keep the tasks inside the .vscode hidden folder
 !.vscode/tasks.json
+
+# development build output
+/dev-dist

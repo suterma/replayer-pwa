@@ -85,9 +85,9 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed } from 'vue';
+import { type PropType, computed } from 'vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
-import { ICue } from '@/store/compilation-types';
+import type { ICue } from '@/store/compilation-types';
 
 /** A YouTube Text controller, that transforms Replayer cues into
  * on-screen text cues on the video canvas

@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { FadingMode, IAudioFader } from './IAudioFader';
+import { FadingMode, type IAudioFader } from './IAudioFader';
 import { SubEvent } from 'sub-events';
 
 /** @class Implements an audio fader for a media element instance. This fader supports two concepts:
@@ -13,6 +13,8 @@ export default class AudioFader implements IAudioFader {
      * @devdoc This should be set to a value that produces small volume changes, that are barely audible
      */
     stepDuration = 16;
+
+    private static cancelOperationToken = 'CANCEL';
 
     /** Token for the currently running fade operation.
      * @remarks Allows an ongoing fading operation to determine whether it has been superseded
@@ -132,8 +134,6 @@ export default class AudioFader implements IAudioFader {
 
     /** The maximum audio volume level */
     public static audioVolumeMax = 1;
-
-    private static cancelOperationToken = 'CANCEL';
 
     /** Resets the token for the currently running fade operation.
      * @remarks Allows operations to cancel themselves in favor of a subsequent operation.

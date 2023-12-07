@@ -88,7 +88,7 @@
 
 <script lang="ts">
 import { Compilation } from '@/store/compilation-types';
-import { defineComponent, ref, PropType } from 'vue';
+import { defineComponent, ref, type PropType } from 'vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';

@@ -17,7 +17,7 @@
             <p>
                 Replayer is a free, cue-based media player for rehearsals with
                 playback music. <br />By the click of a button, Replayer starts
-                to play at predefined times in the audio file.
+                to play at predefined times in the audio or video file.
             </p>
         </div>
     </section>

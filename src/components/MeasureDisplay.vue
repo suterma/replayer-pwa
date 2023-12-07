@@ -12,7 +12,7 @@
  * @remarks The display value is calculated according to the set properties
  */
 import { Meter } from '@/code/music/Meter';
-import { computed, inject, PropType } from 'vue';
+import { computed, inject, type PropType } from 'vue';
 import { meterInjectionKey } from '@/components/track/TrackInjectionKeys';
 
 /** The musical meter */

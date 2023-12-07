@@ -1,4 +1,4 @@
-import { ICue } from '@/store/compilation-types';
+import type { ICue } from '@/store/compilation-types';
 
 /** @interface Defines scheduling cues in a track.
  * @remarks This defines a playlist for cue invocations.

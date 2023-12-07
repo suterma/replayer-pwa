@@ -3,8 +3,8 @@ import {
     createWebHashHistory,
     isNavigationFailure,
     NavigationFailureType,
-    RouteLocationNormalized,
-    RouteRecordRaw,
+    type RouteLocationNormalized,
+    type RouteRecordRaw,
 } from 'vue-router';
 import Main from '../views/Main.vue';
 import Reset from '../views/Reset.vue';

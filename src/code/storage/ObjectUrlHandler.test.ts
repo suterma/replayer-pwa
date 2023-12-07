@@ -1,20 +1,25 @@
-/**
- * @jest-environment jsdom
- */
-
+import {
+    describe,
+    it,
+    beforeEach,
+    afterEach,
+    expect,
+    vi,
+    type MockInstance,
+} from 'vitest';
 import { ObjectUrlHandler } from './ObjectUrlHandler';
 
 describe('ObjectUrlHandler.ts', () => {
     //https://stackoverflow.com/a/56643520
     beforeEach(() => {
-        URL.createObjectURL = jest.fn();
-        URL.revokeObjectURL = jest.fn();
+        URL.createObjectURL = vi.fn();
+        URL.revokeObjectURL = vi.fn();
     });
 
     afterEach(() => {
         //https://stackoverflow.com/a/60300568
-        (URL.createObjectURL as unknown as jest.Mock).mockReset();
-        (URL.revokeObjectURL as unknown as jest.Mock).mockReset();
+        (URL.createObjectURL as unknown as MockInstance).mockRestore();
+        (URL.revokeObjectURL as unknown as MockInstance).mockRestore();
     });
     it('should store a blob', async () => {
         //Arrange

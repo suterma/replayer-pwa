@@ -34,9 +34,10 @@
 </template>
 
 <script setup lang="ts">
-import { ITimeSignature } from '@/code/music/ITimeSignature';
+/* __placeholder__ */
+import type { ITimeSignature } from '@/code/music/ITimeSignature';
 import { TimeSignature } from '@/code/music/TimeSignature';
-import { PropType, computed } from 'vue';
+import { type PropType, computed } from 'vue';
 
 /** A field of large cue buttons for a track
  */

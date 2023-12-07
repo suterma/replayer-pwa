@@ -1,3 +1,4 @@
+import { expect, describe, it } from 'vitest';
 import { Cue } from '@/store/compilation-types';
 import { XmlCue } from './XmlCue';
 

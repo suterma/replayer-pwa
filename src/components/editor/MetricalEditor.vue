@@ -18,7 +18,7 @@
 import { Meter } from '@/code/music/Meter';
 import { MetricalPosition } from '@/code/music/MetricalPosition';
 import CompilationHandler from '@/store/compilation-handler';
-import { PropType, computed, inject } from 'vue';
+import { type PropType, computed, inject } from 'vue';
 import { meterInjectionKey } from '@/components/track/TrackInjectionKeys';
 
 /** An editor for the measure number

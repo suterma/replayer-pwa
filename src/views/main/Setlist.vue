@@ -132,7 +132,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ITrack } from '@/store/compilation-types';
+import { type ITrack } from '@/store/compilation-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import SetlistItem from '@/components/SetlistItem.vue';
 import { mdiDrag, mdiPrinterOutline } from '@mdi/js';

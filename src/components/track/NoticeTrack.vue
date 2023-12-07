@@ -14,7 +14,7 @@
 <script setup lang="ts">
 /** A track variant that displays text, fetched from an URL, and offers to close the display */
 
-import { PropType, computed, ref, watch } from 'vue';
+import { type PropType, computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import CompilationHandler from '@/store/compilation-handler';

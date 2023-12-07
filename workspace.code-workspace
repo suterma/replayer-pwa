@@ -9,25 +9,10 @@
         "prettier.tabWidth": 4,
         "editor.formatOnSave": true,
         "editor.detectIndentation": true,
-        "vetur.format.options.tabSize": 4,
         "editor.rulers": [
             80
         ],
         "editor.guides.indentation": true,
-        "cSpell.words": [
-            "borderless",
-            "Bulma",
-            "bulmaswatch",
-            "filehandler",
-            "fullhd",
-            "fullwidth",
-            "gapless",
-            "Overscroll",
-            "Replayer",
-            "semibold",
-            "simolation",
-            "slipmatio",
-        ],
         "javascript.preferences.quoteStyle": "single",
         "typescript.preferences.quoteStyle": "single",
         "html.completion.attributeDefaultValue": "singlequotes"

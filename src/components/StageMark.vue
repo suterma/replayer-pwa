@@ -20,6 +20,7 @@ const stageText = computed(() => {
 */
 
 .stage-mark {
+    z-index: 1;
     position: absolute;
     top: 0;
     right: 3rem;
