@@ -109,16 +109,14 @@
                             <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibility as possible -->
                             <ShortcutDisplay
                                 class="foreground"
-                                :shortcut="shortcut"
-                            >
+                            >{{ shortcut }}
                             </ShortcutDisplay>
                         </p>
                         <p class="level-item" v-else>
                             <!-- Just show a placeholder, taking up the usual vertical space -->
                             <ShortcutDisplay
                                 class="pl-0 pr-0 is-invisible"
-                                shortcut=" "
-                            >
+                             >
                             </ShortcutDisplay>
                         </p>
                     </div>

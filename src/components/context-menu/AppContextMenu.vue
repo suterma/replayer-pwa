@@ -8,7 +8,6 @@
         <DropdownMenuRouterLink
             to="/edit"
             title="Edit"
-            shortcut="F2"
             :keys="['f2']"
             :iconPath="mdiPencil"
         />
@@ -16,7 +15,6 @@
             <DropdownMenuRouterLink
                 to="/play"
                 title="Play"
-                shortcut="F3"
                 :keys="['f3']"
                 :iconPath="mdiPlay"
             />
@@ -27,7 +25,6 @@
                 <DropdownMenuRouterLink
                     to="/mix"
                     title="Mix"
-                    shortcut="F6"
                     :keys="['f6']"
                     :iconPath="mdiTuneVertical"
                 />
@@ -35,7 +32,6 @@
             <DropdownMenuRouterLink
                 to="/setlist"
                 title="Set list"
-                shortcut="F4"
                 :keys="['f4']"
                 :iconPath="mdiListBoxOutline"
             />
@@ -61,7 +57,6 @@
         <DropdownMenuRouterLink
             to="/about"
             title="About"
-            shortcut="F1"
             :keys="['f1']"
             :iconPath="mdiInformationOutline"
         />

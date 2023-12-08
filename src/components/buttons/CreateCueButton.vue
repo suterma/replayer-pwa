@@ -25,9 +25,8 @@
                 currentPositionDisplay
             }}</span>
             <ShortcutDisplay
-                shortcut="INSERT"
-                :class="{ 'is-invisible': !useShortcut }"
-            ></ShortcutDisplay>
+                 :class="{ 'is-invisible': !useShortcut }"
+            >INSERT</ShortcutDisplay>
         </button>
     </Hotkey>
 </template>

@@ -10,8 +10,8 @@
             :title="title"
             :subTitle="subTitle"
             :iconPath="iconPath"
-            :shortcut="shortcut"
             :disabled="isActiveRoute"
+            :shortcut='keys.join("+")'
         >
         </DropdownMenuItem>
     </router-link>
@@ -20,24 +20,21 @@
 </template>
 
 <script setup lang="ts">
-import { type PropType, computed } from 'vue';
+import {  computed } from 'vue';
 import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
 import { useRoute } from 'vue-router';
 import { Hotkey } from '@simolation/vue-hotkey';
 
 /** An item for a Dropdown menu
+ * @remarks Supports a global hotkey registration
  */
 const props = defineProps({
     title: {
         type: String,
         required: true,
     },
-    shortcut: {
-        type: String,
-        required: false,
-    },
      /**
-     * The hotkey keys.
+     * The hotkey keys, acting as keyboard shortcut.
      *
      * @example
      * ```vue
@@ -66,7 +63,6 @@ const props = defineProps({
         required: false,
         default: false,
     },
-
     to: {
         type: String,
         required: true,

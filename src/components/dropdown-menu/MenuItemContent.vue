@@ -14,8 +14,8 @@
             </div>
         </div>
         <div class="level-right">
-            <div class="level-item">
-                <ShortcutDisplay :shortcut="shortcut"></ShortcutDisplay>
+            <div class="level-item">       
+                <ShortcutDisplay><slot name='shortcut'></slot></ShortcutDisplay>
             </div>
         </div>
     </div>
@@ -31,7 +31,6 @@ defineProps({
         type: String,
         required: true,
     },
-
     subTitle: {
         type: String,
         default: '',
@@ -40,10 +39,6 @@ defineProps({
     iconPath: {
         type: String,
         default: '',
-        required: false,
-    },
-    shortcut: {
-        type: String,
         required: false,
     },
 });

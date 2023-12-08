@@ -7,11 +7,12 @@
             v-slot="{ clickRef }"
         >
             <DropdownMenuItem
-                title="Download... [CTRL+S]"
+                title="Download..."
                 subTitle="Save current compilation"
                 @click="download"
                 :ref="clickRef"
                 :iconPath="mdiTrayArrowDown"
+                shortcut='CTRL+S'
             />
         </Hotkey>
         <Hotkey
@@ -21,12 +22,13 @@
             v-slot="{ clickRef }"
         >
             <DropdownMenuItem
-                title="Close... [CTRL+X]"
+                title="Close..."
                 subTitle="Close current compilation"
                 @click="close"
                 :ref="clickRef"
                 :iconPath="mdiTrashCanOutline"
-            />
+                shortcut='CTRL+X'
+        />
         </Hotkey>
     </Teleport>
 </template>

@@ -7,11 +7,11 @@
         <MenuItemContent
             :title="title"
             :subTitle="subTitle"
-            :shortcut="shortcut"
             :iconPath="iconPath"
-            :disabled="disabled"
-        >
-        </MenuItemContent>
+            :disabled="disabled">
+
+            <template v-slot:shortcut>{{ shortcut }}</template>
+         </MenuItemContent>
     </button>
 </template>
 
@@ -33,7 +33,6 @@ defineProps({
         required: false,
         default: false,
     },
-
     subTitle: {
         type: String,
         default: '',
