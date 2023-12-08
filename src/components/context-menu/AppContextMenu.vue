@@ -5,67 +5,40 @@
         <div class="dropdown-item is-hidden-mobile">
             <p class="menu-label">View</p>
         </div>
-        <Hotkey
-            v-once
+        <DropdownMenuRouterLink
+            to="/edit"
+            title="Edit"
+            shortcut="F2"
             :keys="['f2']"
-            :excluded-elements="[]"
-            v-slot="{ clickRef }"
-        >
-            <DropdownMenuRouterLink
-                to="/edit"
-                title="Edit"
-                shortcut="F2"
-                :clickRef="clickRef"
-                :iconPath="mdiPencil"
-                :disabled="true"
-            />
-        </Hotkey>
+            :iconPath="mdiPencil"
+        />
         <template v-if="hasCompilation">
-            <Hotkey
-                v-once
+            <DropdownMenuRouterLink
+                to="/play"
+                title="Play"
+                shortcut="F3"
                 :keys="['f3']"
-                :excluded-elements="[]"
-                v-slot="{ clickRef }"
-            >
-                <DropdownMenuRouterLink
-                    to="/play"
-                    title="Play"
-                    shortcut="F3"
-                    :clickRef="clickRef"
-                    :iconPath="mdiPlay"
-                />
-            </Hotkey>
-            <Hotkey
+                :iconPath="mdiPlay"
+            />
+            <div
                 v-if="experimentalMultitrack"
-                :keys="['f6']"
-                :excluded-elements="[]"
-                v-slot="{ clickRef }"
-            >
-                <div v-experiment="experimentalMultitrack">
-                    <DropdownMenuRouterLink
-                        to="/mix"
-                        title="Mix"
-                        shortcut="F6"
-                        :clickRef="clickRef"
-                        :iconPath="mdiTuneVertical"
-                    />
-                </div>
-            </Hotkey>
-            <Hotkey
-                v-once
-                :keys="['f4']"
-                :excluded-elements="[]"
-                v-slot="{ clickRef }"
+                v-experiment="experimentalMultitrack"
             >
                 <DropdownMenuRouterLink
-                    v-once
-                    to="/setlist"
-                    title="Set list"
-                    shortcut="F4"
-                    :clickRef="clickRef"
-                    :iconPath="mdiListBoxOutline"
+                    to="/mix"
+                    title="Mix"
+                    shortcut="F6"
+                    :keys="['f6']"
+                    :iconPath="mdiTuneVertical"
                 />
-            </Hotkey>
+            </div>
+            <DropdownMenuRouterLink
+                to="/setlist"
+                title="Set list"
+                shortcut="F4"
+                :keys="['f4']"
+                :iconPath="mdiListBoxOutline"
+            />
             <hr class="dropdown-divider" />
             <div class="dropdown-item is-hidden-mobile">
                 <p class="menu-label">Compilation</p>
@@ -84,20 +57,14 @@
             title="Settings"
             :iconPath="mdiCogOutline"
         />
-        <Hotkey
-            v-once
+
+        <DropdownMenuRouterLink
+            to="/about"
+            title="About"
+            shortcut="F1"
             :keys="['f1']"
-            :excluded-elements="[]"
-            v-slot="{ clickRef }"
-        >
-            <DropdownMenuRouterLink
-                to="/about"
-                title="About"
-                shortcut="F1"
-                :clickRef="clickRef"
-                :iconPath="mdiInformationOutline"
-            />
-        </Hotkey>
+            :iconPath="mdiInformationOutline"
+        />
         <div id="appContextMenuBottom"></div>
     </DropdownMenu>
 </template>
@@ -106,7 +73,6 @@
 import { defineComponent } from 'vue';
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
 import DropdownMenuRouterLink from '@/components/dropdown-menu/DropdownMenuRouterLink.vue';
-import { Hotkey } from '@simolation/vue-hotkey';
 import {
     mdiMenu,
     mdiPlay,
@@ -127,7 +93,6 @@ export default defineComponent({
     components: {
         DropdownMenu,
         DropdownMenuRouterLink,
-        Hotkey,
     },
     props: {
         /** Whether a compilation is currently loaded */

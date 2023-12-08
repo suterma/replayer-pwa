@@ -1,9 +1,12 @@
 <template>
+
+<Hotkey :keys="keys" :excluded-elements="[]" v-slot="{ clickRef }" :disabled="disabled || !keys">
     <router-link :to="to" custom v-slot="{ navigate }">
         <DropdownMenuItem
             @click="navigate"
             @keypress.enter="navigate"
             role="link"
+            :ref='clickRef'
             :title="title"
             :subTitle="subTitle"
             :iconPath="iconPath"
@@ -12,12 +15,16 @@
         >
         </DropdownMenuItem>
     </router-link>
+</Hotkey>
+
 </template>
 
 <script setup lang="ts">
+import { type PropType, computed } from 'vue';
 import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
-import { computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { Hotkey } from '@simolation/vue-hotkey';
+
 /** An item for a Dropdown menu
  */
 const props = defineProps({
@@ -28,6 +35,21 @@ const props = defineProps({
     shortcut: {
         type: String,
         required: false,
+    },
+     /**
+     * The hotkey keys.
+     *
+     * @example
+     * ```vue
+     * <HotKey keys="['ctrl', 's']" @hotkey="action" />
+     * // or
+     * <HotKey :keys="['ctrl', 's']" @hotkey="action" />
+     * ```
+     */
+    keys: {
+        type: Array<string>,
+        required: false,
+        default: [],
     },
     subTitle: {
         type: String,
