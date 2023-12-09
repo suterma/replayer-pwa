@@ -8,6 +8,7 @@
         <DismissiblePanel
             @dismissed="collapseDropdown"
             :dismissible="isDropdownExpanded"
+            :hotkey="isDropdownExpanded"
         >
             <!-- dropdown-trigger -->
             <div class="dropdown-trigger">
