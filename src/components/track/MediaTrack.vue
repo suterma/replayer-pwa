@@ -40,7 +40,6 @@
                 :trackAlbum="track.Album"
                 :trackPreRoll="track.PreRoll"
                 :isTrackLoaded="isTrackLoaded"
-                :trackBeatsPerMinute="track.Meter?.BeatsPerMinute"
                 :isTrackMediaAvailable="isMediaAvailable"
                 :isActive="isActiveTrack"
                 :isFirst="isFirst"

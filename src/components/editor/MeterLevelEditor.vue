@@ -1,6 +1,31 @@
 <template>
     <div class="level is-mobile">
         <div class="level-left level-wrap">
+            <!-- BPM -->
+            <div class="level-item">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label is-single-line">BPM</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <p class="control">
+                                <BpmEditor
+                                    class="input"
+                                    :modelValue="props.meter?.BeatsPerMinute"
+                                    @update:modelValue="
+                                        (value: number | null) =>
+                                            updateMeterWithBpm(value)
+                                    "
+                                    placeholder="BPM"
+                                >
+                                </BpmEditor>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Time Signature -->
             <div class="level-item">
                 <div class="field is-horizontal">
@@ -93,6 +118,7 @@
 <script setup lang="ts">
 import { type PropType, computed, watch } from 'vue';
 import TimeSignatureEditor from '@/components/editor/TimeSignatureEditor.vue';
+import BpmEditor from '@/components/editor/BpmEditor.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 import AdjustTimeButton from '@/components/buttons/AdjustTimeButton.vue';
@@ -111,6 +137,12 @@ const emit = defineEmits([
 ]);
 
 const props = defineProps({
+    /** The beats per minute */
+    beatsPerMinute: {
+        type: null as unknown as PropType<number | null>,
+        required: true,
+        default: null,
+    },
     /** The musical meter */
     meter: {
         type: null as unknown as PropType<IMeter | null>,
@@ -130,6 +162,16 @@ const props = defineProps({
 const hasAllTempoValues = computed(() => {
     return Meter.isValid(props.meter);
 });
+
+function updateMeterWithBpm(beatsPerMinute: number | null): void {
+    const meter = new Meter(
+        props.meter?.TimeSignature ?? null,
+        beatsPerMinute,
+        props.meter?.OriginTime ?? null,
+    );
+
+    emit('update:meter', meter);
+}
 
 function updateMeterWithTimeSignature(
     timeSignature: ITimeSignature | null,

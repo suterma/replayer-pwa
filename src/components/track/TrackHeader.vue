@@ -102,27 +102,6 @@
                     ></ArtistLevelEditor>
                 </CoveredPanel>
 
-                <CoveredPanel
-                    :revealFor="[trackBeatsPerMinute]"
-                    title="Beats per minute value (BPM) for this track"
-                    class="level-item"
-                >
-                    <template #caption><span class="label">BPM</span></template>
-                    <LabeledInput label="BPM" title="BPM (Beats per minute)">
-                        <BpmEditor
-                            class="input"
-                            :modelValue="trackBeatsPerMinute"
-                            @change="
-                                updateBeatsPerMinute(
-                                    Number.parseFloat($event.target.value),
-                                )
-                            "
-                            placeholder="BPM"
-                        >
-                        </BpmEditor>
-                    </LabeledInput>
-                </CoveredPanel>
-
                 <!-- Pre-Roll (in time) (hide initially, as long as no cues are set) -->
                 <CoveredPanel
                     v-if="hasCues || trackPreRoll"
@@ -279,10 +258,6 @@ const props = defineProps({
         type: String,
         required: true,
     },
-    trackBeatsPerMinute: {
-        type: null as unknown as PropType<number | null>,
-        default: null,
-    },
     trackTimeSignature: {
         type: null as unknown as PropType<ITimeSignature | null>,
         default: null,
@@ -406,12 +381,6 @@ function updateAlbum(album: string) {
     const name = props.trackName;
     const artist = props.trackArtist;
     app.updateTrackData(trackId, name, artist, album);
-}
-
-/** Updates the track BPM */
-function updateBeatsPerMinute(beatsPerMinute: number) {
-    const trackId = props.trackId;
-    app.updateBeatsPerMinute(trackId, beatsPerMinute);
 }
 
 /** Updates the track pre-roll */
