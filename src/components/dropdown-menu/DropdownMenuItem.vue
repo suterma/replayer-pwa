@@ -8,10 +8,10 @@
             :title="title"
             :subTitle="subTitle"
             :iconPath="iconPath"
-            :disabled="disabled">
-
-            <template v-slot:shortcut>{{ shortcut }}</template>
-         </MenuItemContent>
+            :disabled="disabled"
+        >
+            <template v-if="shortcut" v-slot:shortcut>{{ shortcut }}</template>
+        </MenuItemContent>
     </button>
 </template>
 

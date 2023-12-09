@@ -14,8 +14,10 @@
             </div>
         </div>
         <div class="level-right">
-            <div class="level-item">       
-                <ShortcutDisplay><slot name='shortcut'></slot></ShortcutDisplay>
+            <div class="level-item">
+                <ShortcutDisplay v-if="slots.shortcut"
+                    ><slot name="shortcut"></slot
+                ></ShortcutDisplay>
             </div>
         </div>
     </div>
@@ -42,4 +44,7 @@ defineProps({
         required: false,
     },
 });
+
+import { useSlots } from 'vue';
+const slots = useSlots();
 </script>
