@@ -14,7 +14,7 @@ steps:
     # Building the package
     - script: |
           npm install
-          npm test:unit 
+          npm run test:unit 
           npm run build
       displayName: 'npm install and build'
     # Publishing the test results
