@@ -36,7 +36,7 @@
                                     </button>
                                 </Hotkey>
                             </p>
-                            <p class="control">
+                            <p v-if="!informational" class="control">
                                 <Hotkey
                                     :keys="['enter']"
                                     :excluded-elements="['textarea']"
@@ -93,8 +93,15 @@ export default defineComponent({
             default: 'Cancel',
         },
 
-        /** The affirmative action is required, no cancel is made button available */
+        /** The affirmative action is required, no cancel button is made available
+         * @remarks Can not be used in combination with "informational"
+         */
         required: Boolean,
+
+        /** The affirmative action is not available, only the cancel (as dismiss) button is made available
+         * @remarks Can not be used in combination with "required"
+         */
+        informational: Boolean,
     },
 
     setup() {

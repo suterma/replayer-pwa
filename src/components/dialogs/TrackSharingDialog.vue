@@ -1,53 +1,17 @@
 <template>
-    <ModalDialog submitButtonText="Done" wide>
-        <template #title>Share track '{{ track?.Name }}' via...</template>
+    <ModalDialog informational cancelButtonText="Dismiss" wide>
+        <template #title>Sharing track '{{ track?.Descriptor }}'</template>
         <template #body>
-            <div class="block">
-                <p>
-                    You are sharing the track metadata and the URL, not the
-                    media file itself.
-                </p>
-            </div>
-            <!-- <p
-                class="has-cropped-text"
-                title="A clickable link for using this track with Replayer"
-            >
-                <a :href="trackUrl" target="_blank">
-                    <span>{{ trackUrl }} </span>
-                </a>
-            </p> -->
-            <!-- //Sharing icons -->
             <div class="block">
                 <div class="level">
                     <div class="level-item has-text-centered">
                         <div>
                             <p
                                 class="control"
-                                title="Copy the link to this track (for use in Replayer)"
+                                title="Copy the Replayer link into the clipboard"
                             >
                                 <button
-                                    class="button is-clickable"
-                                    :disabled="!isSupported"
-                                    @click="startShare"
-                                >
-                                    {{
-                                        isSupported
-                                            ? 'Share'
-                                            : 'Web share is not supported in your browser'
-                                    }}
-                                </button>
-                            </p>
-                            <p class="heading">Copy link</p>
-                        </div>
-                    </div>
-                    <div class="level-item has-text-centered">
-                        <div>
-                            <p
-                                class="control"
-                                title="Copy the link to this track (for use in Replayer)"
-                            >
-                                <button
-                                    class="button is-clickable"
+                                    class="button is-clickable is-success"
                                     @click="copyLink()"
                                 >
                                     <BaseIcon v-once :path="mdiLink" />
@@ -60,71 +24,42 @@
                         <div>
                             <p
                                 class="control"
-                                title="Copy the link to this track (for use in Replayer)"
+                                title="Open the Replayer link in your email software"
                             >
                                 <button
-                                    class="button is-clickable"
-                                    @click="mailLink()"
+                                    class="button is-clickable is-success"
+                                    @click="emailLink()"
                                 >
-                                    <BaseIcon v-once :path="mdiLink" />
+                                    <BaseIcon v-once :path="mdiEmailOutline" />
                                 </button>
                             </p>
                             <p class="heading">E-mail link</p>
                         </div>
                     </div>
-                    <div class="level-item has-text-centered">
-                        <div>
-                            <p
-                                class="control"
-                                title="Share using your registered apps..."
-                            >
-                                <button
-                                    class="button is-clickable"
-                                    @click="startShare()"
-                                >
-                                    <BaseIcon v-once :path="mdiLink" />
-                                </button>
-                            </p>
-                            <p class="heading">Via app...</p>
-                        </div>
-                    </div>
-                    <div class="level-item has-text-centered">
-                        <div>
-                            <p class="title">3,456</p>
-                            <p class="heading">Copy link</p>
-                        </div>
-                    </div>
-                    <div class="level-item has-text-centered">
-                        <div>
-                            <p class="heading">Following</p>
-                            <p class="title">123</p>
-                        </div>
-                    </div>
-                    <div class="level-item has-text-centered">
-                        <div>
-                            <p class="heading">Followers</p>
-                            <p class="title">456K</p>
-                        </div>
-                    </div>
-                    <div class="level-item has-text-centered">
-                        <div>
-                            <p class="heading">Likes</p>
-                            <p class="title">789</p>
-                        </div>
-                    </div>
                 </div>
+            </div>
+            <div class="block">
+                <p>
+                    You are sharing the track metadata and the URL, not the
+                    media file itself.
+                </p>
             </div>
         </template>
     </ModalDialog>
 </template>
 
 <script setup lang="ts">
+/**
+ * A dialog for sharing a track API URL.
+ * @remarks This dialog is used only when the Web Share API is not available or not
+ * capable of sharing an URL
+ */
 import type { ICue, Track } from '@/store/compilation-types';
-import { type PropType, computed, ref } from 'vue';
+import { type PropType, computed } from 'vue';
 import { useRouter, type RouteLocationRaw } from 'vue-router';
 import ModalDialog from '@/components/dialogs/ModalDialog.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { mdiLink } from '@mdi/js';
+import { mdiLink, mdiEmailOutline } from '@mdi/js';
 import { useMessageStore } from '@/store/messages';
 import { useClipboard } from '@vueuse/core';
 
@@ -201,23 +136,16 @@ const trackUrl = computed(() => {
 const { copy } = useClipboard();
 function copyLink(): void {
     copy(trackUrl.value);
-    message.pushSuccess('Link copied!');
+    message.pushSuccess('Link copied to clipboard!');
 }
 
-/** System-supported sharing */
-
-import { isClient } from '@vueuse/shared';
-import { useShare } from '@vueuse/core';
-
-const options = ref({
-    title: 'Replayer link',
-    text: props.track?.Name,
-    url: isClient ? trackUrl.value : '',
-});
-
-const { share, isSupported } = useShare(options);
-
-function startShare() {
-    return share().catch((err) => err);
+/** Emails the Replayer link via a registered mail client
+ */
+function emailLink(): void {
+    window.open(
+        `mailto:?subject=Replayer link to ${props.track?.Descriptor}&body=${trackUrl.value}`,
+        '_blank',
+    );
+    message.pushSuccess('Link opened as email!');
 }
 </script>

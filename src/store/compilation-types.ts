@@ -78,7 +78,7 @@ export interface ITrack {
     /** The cues */
     Cues: Array<ICue>;
 
-    /** The number of cues
+    /** Gets the number of cues
      * @remarks This is a convenience getter for the Cues array
      */
     get CuesCount(): number;
@@ -96,6 +96,9 @@ export interface ITrack {
 
     /** The artist */
     Artist: string;
+
+    /** Gets a textual description of the track with track name, artist and album, if available */
+    get Descriptor(): string;
 
     /** The track's custom pre-roll duration, in [seconds]
      * @remarks If not set, the default pre-roll duration will be used
@@ -261,7 +264,24 @@ export class Track implements ITrack {
     Id = '';
     Cues: Array<ICue> = new Array<ICue>();
     get CuesCount(): number {
-        return this.Cues.length;
+        return this.Cues?.length ?? 0;
+    }
+    get Descriptor(): string {
+        let descriptor = '';
+        if (this.Name) {
+            descriptor = descriptor + this.Name;
+        } else {
+            descriptor = descriptor + 'Track';
+        }
+
+        if (this.Artist) {
+            descriptor = descriptor + ' by ' + this.Artist;
+        }
+        if (this.Album) {
+            descriptor = descriptor + ' on ' + this.Album;
+        }
+
+        return descriptor;
     }
     /**   @inheritdoc */
     Duration: number | null = null;

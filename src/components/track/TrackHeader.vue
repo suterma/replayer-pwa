@@ -26,10 +26,10 @@
                     expandedText="Click to collapse"
                     ><span
                         :class="{
-                            'is-invisible': isExpanded || cueCount == 0,
+                            'is-invisible': isExpanded || track.CuesCount == 0,
                         }"
                         class="tag is-warning is-rounded"
-                        >{{ cueCount }}</span
+                        >{{ track.CuesCount }}</span
                     ></CollapsibleButton
                 >
             </div>
@@ -40,14 +40,14 @@
                 <CoveredPanel ref="mediaDropZonePanel">
                     <template #caption>
                         <MediaSourceIndicator
-                            :source="trackUrl"
+                            :source="track?.Url"
                             :unavailable="!isTrackMediaAvailable"
                         >
                         </MediaSourceIndicator>
                     </template>
                     <MediaDropZone
-                        :replaceUrl="trackUrl"
-                        :trackId="trackId"
+                        :replaceUrl="track.Url"
+                        :trackId="track.Url"
                         ref="mediaDropZone"
                         @accepted="acceptedMedia()"
                     >
@@ -67,7 +67,7 @@
                         <StyledInput
                             class="input"
                             :class="{ 'has-text-success': isActive }"
-                            :modelValue="trackName"
+                            :modelValue="track?.Name"
                             @change="updateName($event.target.value)"
                             type="text"
                             placeholder="Track name"
@@ -78,7 +78,7 @@
                     </LabeledInput>
                 </div>
                 <CoveredPanel
-                    :revealFor="[trackArtist, trackAlbum]"
+                    :revealFor="[track?.Artist, track?.Album]"
                     title="Artist and Album for this track"
                     class="level-item"
                 >
@@ -87,13 +87,13 @@
                     >
 
                     <ArtistLevelEditor
-                        :artist="trackArtist"
+                        :artist="track.Artist"
                         @update:artist="
                             (value) => {
                                 updateArtist(value);
                             }
                         "
-                        :album="trackAlbum"
+                        :album="track.Album"
                         @update:album="
                             (value) => {
                                 updateAlbum(value);
@@ -104,8 +104,8 @@
 
                 <!-- Pre-Roll (in time) (hide initially, as long as no cues are set) -->
                 <CoveredPanel
-                    v-if="hasCues || trackPreRoll"
-                    :revealFor="[trackPreRoll]"
+                    v-if="hasCues || track?.PreRoll"
+                    :revealFor="[track.PreRoll]"
                     title="The custom pre-roll duration for in track in [seconds]"
                     class="level-item"
                 >
@@ -115,7 +115,7 @@
                     <LabeledInput label="Pre-roll">
                         <TimeInput
                             class="has-text-right"
-                            :modelValue="trackPreRoll"
+                            :modelValue="track.PreRoll"
                             @update:modelValue="
                                 (value: number | null) => updatePreRoll(value)
                             "
@@ -128,9 +128,9 @@
                     v-if="
                         experimentalUseMeter &&
                         useMeasureNumbers &&
-                        (hasCues || trackPreRoll)
+                        (hasCues || track.PreRoll)
                     "
-                    :revealFor="[trackPreRoll]"
+                    :revealFor="[track.PreRoll]"
                     title="The custom pre-roll duration in this track in [measures]"
                     class="level-item"
                 >
@@ -145,7 +145,7 @@
                     >
                         <MetricalEditor
                             differential
-                            :modelValue="trackPreRoll"
+                            :modelValue="track.PreRoll"
                             @update:modelValue="
                                 (value: number | null) => updatePreRoll(value)
                             "
@@ -159,8 +159,8 @@
                 <div class="level-item is-hidden-mobile">
                     <p class="is-size-7">
                         <ArtistInfo
-                            :album="trackAlbum"
-                            :artist="trackArtist"
+                            :album="track.Album"
+                            :artist="track.Artist"
                             style="max-width: 25vw"
                         />
                     </p>
@@ -186,8 +186,7 @@
                     v-if="isEditMode"
                     :isFirstTrack="isFirst"
                     :isLastTrack="isLast"
-                    :trackId="trackId"
-                    :trackName="trackName"
+                    :track="track"
                 ></TrackContextMenu>
             </div>
             <!-- Slot for additional level items -->
@@ -218,10 +217,9 @@ import LabeledInput from '@/components/editor/LabeledInput.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
-import { TrackViewMode } from '@/store/compilation-types';
+import { TrackViewMode, type ITrack } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import { useAppStore } from '@/store/app';
-import type { ITimeSignature } from '@/code/music/ITimeSignature';
 import {
     isPlayingInjectionKey,
     useMeasureNumbersInjectionKey,
@@ -232,35 +230,11 @@ import { storeToRefs } from 'pinia';
 const emit = defineEmits(['update:isExpanded', 'click']);
 
 const props = defineProps({
-    trackName: {
-        type: String,
+    track: {
+        type: Object as PropType<ITrack>,
         required: true,
     },
-    trackArtist: {
-        type: String,
-        required: true,
-    },
-    trackAlbum: {
-        type: String,
-        required: true,
-    },
-    trackPreRoll: {
-        type: null as unknown as PropType<number | null>,
-        required: false,
-        default: null,
-    },
-    trackId: {
-        type: String,
-        required: true,
-    },
-    trackUrl: {
-        type: String,
-        required: true,
-    },
-    trackTimeSignature: {
-        type: null as unknown as PropType<ITimeSignature | null>,
-        default: null,
-    },
+
     /** Whether this track is to be considered as the active track */
     isActive: {
         type: Boolean,
@@ -312,12 +286,6 @@ const props = defineProps({
         default: false,
     },
 
-    /** The number of cues in this track */
-    cueCount: {
-        type: Number,
-        required: true,
-    },
-
     /** The display mode of this track.
      * @devdoc Allows to reuse this component for more than one view mode.
      * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
@@ -359,32 +327,32 @@ watchEffect(() => {
 
 /** Updates the track name */
 function updateName(name: string) {
-    const trackId = props.trackId;
-    const artist = props.trackArtist;
-    const album = props.trackAlbum;
+    const trackId = props.track.Id;
+    const artist = props.track.Artist;
+    const album = props.track.Album;
 
     app.updateTrackData(trackId, name, artist, album);
 }
 
 /** Updates the track artist */
 function updateArtist(artist: string) {
-    const trackId = props.trackId;
-    const name = props.trackName;
-    const album = props.trackAlbum;
+    const trackId = props.track.Id;
+    const name = props.track.Name;
+    const album = props.track.Album;
     app.updateTrackData(trackId, name, artist, album);
 }
 
 /** Updates the track album */
 function updateAlbum(album: string) {
-    const trackId = props.trackId;
-    const name = props.trackName;
-    const artist = props.trackArtist;
+    const trackId = props.track.Id;
+    const name = props.track.Name;
+    const artist = props.track.Artist;
     app.updateTrackData(trackId, name, artist, album);
 }
 
 /** Updates the track pre-roll */
 function updatePreRoll(preRoll: number | null) {
-    const trackId = props.trackId;
+    const trackId = props.track.Id;
     app.updateTrackPreRoll(trackId, preRoll);
 }
 
@@ -394,7 +362,7 @@ const isEditMode = computed(() => {
 
 /** Whether this track has any cues */
 const hasCues = computed(() => {
-    return props.cueCount > 0;
+    return props.track?.CuesCount > 0;
 });
 
 /** Flag to indicate whether this track's player is currently playing
