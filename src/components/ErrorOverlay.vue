@@ -1,5 +1,10 @@
 <template>
-    <div :class="{ modal: true, 'is-active': hasErrorMessages }">
+    <div
+        :class="{
+            modal: true,
+            'is-active': hasErrorMessages | hasSuccessMessages,
+        }"
+    >
         <div class="modal-background"></div>
         <div class="modal-content">
             <div v-for="errorMessage in errorMessages" :key="errorMessage">
@@ -18,6 +23,25 @@
                     </div>
                 </div>
             </div>
+            <div
+                v-for="successMessage in successMessages"
+                :key="successMessage"
+            >
+                <div
+                    class="notification is-success"
+                    @click="dismissSuccess"
+                    data-cy="notification-success"
+                >
+                    <button
+                        class="delete is-large"
+                        aria-label="delete"
+                        @click="dismissSuccess"
+                    ></button>
+                    <div class="block">
+                        {{ successMessage }}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -31,7 +55,12 @@ export default defineComponent({
     name: 'ErrorOverlay',
     components: {},
     computed: {
-        ...mapState(useMessageStore, ['errorMessages', 'hasErrorMessages']),
+        ...mapState(useMessageStore, [
+            'successMessages',
+            'errorMessages',
+            'hasErrorMessages',
+            'hasSuccessMessages',
+        ]),
     },
     methods: {
         ...mapActions(useAppStore, [
@@ -39,9 +68,12 @@ export default defineComponent({
             'loadFromFile',
             'updateTrackUrl',
         ]),
-        ...mapActions(useMessageStore, ['popError']),
+        ...mapActions(useMessageStore, ['popError', 'popSuccess']),
         dismiss() {
             this.popError();
+        },
+        dismissSuccess() {
+            this.popSuccess();
         },
     },
 });

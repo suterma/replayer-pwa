@@ -38,6 +38,14 @@ export const useMessageStore = defineStore(Store.Messages, () => {
         errorMessageStack.value.push(message);
         console.error('ERROR: ' + message);
     }
+
+    /** Initiates the display of a success message by pushing the message onto the stack of success messages */
+    function pushSuccess(message: string): void {
+        successMessageStack.value.push(message);
+        console.debug('SUCCESS: ' + message);
+        setTimeout(popSuccess, 900);
+    }
+
     /** Ends the display of a previous progress message, by popping the message from the stack of progress messages */
     function popProgress(): void {
         const message = progressMessageStack.value.pop();
@@ -47,6 +55,11 @@ export const useMessageStore = defineStore(Store.Messages, () => {
     /** Ends the display of a previous error message, by popping the message from the stack of error messages */
     function popError(): void {
         errorMessageStack.value.pop();
+    }
+
+    /** Ends the display of a previous success message, by popping the message from the stack of success messages */
+    function popSuccess(): void {
+        successMessageStack.value.pop();
     }
 
     /** Ends the display any previous progress message, by clearing all messages from the stack of progress messages */
@@ -95,8 +108,8 @@ export const useMessageStore = defineStore(Store.Messages, () => {
             errorMessageStack.value.length > 0
         );
     });
-    /** Gets the latest (newest) success message from the stack */
 
+    /** Gets the latest (newest) success message from the stack */
     const successMessage = computed(() => {
         const successMessage =
             successMessageStack.value[successMessageStack.value.length - 1];
@@ -107,8 +120,8 @@ export const useMessageStore = defineStore(Store.Messages, () => {
     const successMessages = computed(() => {
         return successMessageStack.value;
     });
-    /** Whether any success message is available */
 
+    /** Whether any success message is available */
     const hasSuccessMessages = computed(() => {
         return (
             successMessageStack.value != null &&
@@ -119,8 +132,10 @@ export const useMessageStore = defineStore(Store.Messages, () => {
     return {
         pushProgress,
         pushError,
+        pushSuccess,
         popProgress,
         popError,
+        popSuccess,
         finishProgress,
 
         progressMessage,
