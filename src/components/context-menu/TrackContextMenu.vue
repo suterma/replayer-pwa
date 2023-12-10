@@ -116,8 +116,8 @@ import { useShare } from '@vueuse/core';
 import { TrackApi } from '@/code/api/TrackApi';
 
 const options = ref({
-    title: 'Replayer link',
-    text: props.track?.Name,
+    title: 'Replayer link to: ' + TrackApi.Descriptor(props.track),
+    text: TrackApi.Descriptor(props.track),
     url: isClient ? trackApiUrl.value : '',
 });
 
@@ -125,7 +125,7 @@ const { share, isSupported } = useShare(options);
 
 function startSharingTrack() {
     if (isSupported.value) {
-        // use the system's sharing via the Web Share API
+        // use the Web Share API
         console.debug(`sharing via the Web Share API`);
 
         return share()
@@ -134,7 +134,7 @@ function startSharingTrack() {
                     `TrackContextMenu::sharing via the Web Share API successfully done`,
                 );
             })
-            .catch((err) => console.error(err));
+            .catch((error) => console.log('Error sharing', error));
     } else {
         // use the explicit share dialog
         console.debug(`sharing via the app dialog`);
