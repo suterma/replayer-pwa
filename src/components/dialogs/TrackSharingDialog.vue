@@ -1,7 +1,7 @@
 <template>
     <ModalDialog informational cancelButtonText="Dismiss" wide>
         <template #title
-            >Sharing track '{{ Track.Descriptor(props.track) }}'</template
+            >Sharing track '{{ TrackApi.Descriptor(props.track) }}'</template
         >
         <template #body>
             <div class="block">
@@ -60,12 +60,12 @@ import { type PropType, computed } from 'vue';
 import { useRouter, type RouteLocationRaw } from 'vue-router';
 import ModalDialog from '@/components/dialogs/ModalDialog.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
+import { TrackApi } from '@/code/api/TrackApi';
 import { mdiLink, mdiEmailOutline } from '@mdi/js';
 import { useMessageStore } from '@/store/messages';
 import { useClipboard } from '@vueuse/core';
 import type { ICue } from '@/store/ICue';
 import type { ITrack } from '@/store/ITrack';
-import { Track } from '@/store/Track';
 
 const props = defineProps({
     track: {
@@ -84,53 +84,8 @@ defineExpose({
     },
 });
 
-/** Gets the timestamp of a cue as an object key
- * @devdoc Makes sure the numeric keys are not integers, to keep a more suitable order
- * later on when creating the API query parameters
- * Javascript unfortunately orders integer object keys as first
- */
-function getCueObjectKey(value: ICue): string {
-    if (!value.Time) {
-        return '0.0';
-    }
-    return value.Time.toString();
-}
-
-const router = useRouter();
-
-const trackUrl = computed(() => {
-    //Prepare track metadata
-    let apiQuery = {
-        media: props.track?.Url,
-        title: props.track?.Name,
-        album: props.track?.Album,
-        artist: props.track?.Artist,
-    };
-
-    //Add available cues
-    const cues = props.track?.Cues;
-    if (cues) {
-        apiQuery = Object.assign(
-            apiQuery,
-            ...cues.map((cue) => ({
-                [getCueObjectKey(cue)]: cue.Description,
-            })),
-        );
-    }
-    console.debug('TrackSharingDialog::trackUrl:apiQuery:', apiQuery);
-
-    //Build the URL
-    const route = {
-        name: 'Play',
-        query: apiQuery,
-    } as unknown as RouteLocationRaw;
-    return (
-        window.location.protocol +
-        '//' +
-        window.location.host +
-        window.location.pathname +
-        router.resolve(route).href
-    );
+const trackApiUrl = computed(() => {
+    return TrackApi.Url(props.track);
 });
 
 // --- Sharing ---
@@ -139,7 +94,7 @@ const trackUrl = computed(() => {
  */
 const { copy } = useClipboard();
 function copyLink(): void {
-    copy(trackUrl.value);
+    copy(trackApiUrl.value);
     message.pushSuccess('Link copied to clipboard!');
 }
 
@@ -147,9 +102,9 @@ function copyLink(): void {
  */
 function emailLink(): void {
     window.open(
-        `mailto:?subject=Replayer link to: ${Track.Descriptor(
+        `mailto:?subject=Replayer link to: ${TrackApi.Descriptor(
             props.track,
-        )}&body=${trackUrl.value}`,
+        )}&body=${trackApiUrl.value}`,
         '_blank',
     );
     message.pushSuccess('Link opened as email!');

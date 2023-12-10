@@ -107,63 +107,18 @@ function remove() {
 
 // --- System-supported sharing ---
 
-const router = useRouter();
-
-/** Gets the timestamp of a cue as an object key
- * @devdoc Makes sure the numeric keys are not integers, to keep a more suitable order
- * later on when creating the API query parameters
- * Javascript unfortunately orders integer object keys as first
- */
-function getCueObjectKey(value: ICue): string {
-    if (!value.Time) {
-        return '0.0';
-    }
-    return value.Time.toString();
-}
-
-const trackUrl = computed(() => {
-    //Prepare track metadata
-    let apiQuery = {
-        media: props.track?.Url,
-        title: props.track?.Name,
-        album: props.track?.Album,
-        artist: props.track?.Artist,
-    };
-
-    //Add available cues
-    const cues = props.track?.Cues;
-    if (cues) {
-        apiQuery = Object.assign(
-            apiQuery,
-            ...cues.map((cue) => ({
-                [getCueObjectKey(cue)]: cue.Description,
-            })),
-        );
-    }
-    console.debug('TrackSharingDialog::trackUrl:apiQuery:', apiQuery);
-
-    //Build the URL
-    const route = {
-        name: 'Play',
-        query: apiQuery,
-    } as unknown as RouteLocationRaw;
-    return (
-        window.location.protocol +
-        '//' +
-        window.location.host +
-        window.location.pathname +
-        router.resolve(route).href
-    );
+const trackApiUrl = computed(() => {
+    return TrackApi.Url(props.track);
 });
 
 import { isClient } from '@vueuse/shared';
 import { useShare } from '@vueuse/core';
-import { useRouter, type RouteLocationRaw } from 'vue-router';
+import { TrackApi } from '@/code/api/TrackApi';
 
 const options = ref({
     title: 'Replayer link',
     text: props.track?.Name,
-    url: isClient ? trackUrl.value : '',
+    url: isClient ? trackApiUrl.value : '',
 });
 
 const { share, isSupported } = useShare(options);
@@ -173,17 +128,23 @@ function startSharingTrack() {
         // use the system's sharing via the Web Share API
         console.debug(`sharing via the Web Share API`);
 
-        return share().catch((err) => console.error(err));
+        return share()
+            .then(() => {
+                console.debug(
+                    `TrackContextMenu::sharing via the Web Share API successfully done`,
+                );
+            })
+            .catch((err) => console.error(err));
     } else {
         // use the explicit share dialog
         console.debug(`sharing via the app dialog`);
         shareTrack(props.track).then((ok) => {
             if (ok) {
-                console.debug(`TrackHeader::sharing done`);
+                console.debug(
+                    `TrackContextMenu::sharing via the app dialog successfully done`,
+                );
             }
         });
     }
 }
 </script>
-import { type ITrack } from '@/store/ITrack'; import { type ICue } from
-'@/store/ICue';

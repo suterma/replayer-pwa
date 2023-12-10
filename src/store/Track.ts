@@ -80,27 +80,4 @@ export class Track implements ITrack {
         console.debug('Track::fromJson:'), track;
         return track;
     }
-
-    public static Descriptor(track: ITrack | undefined): string {
-        let descriptor = '';
-        if (track) {
-            if (track.Name) {
-                descriptor = descriptor + track.Name;
-            } else {
-                descriptor = descriptor + 'Track';
-            }
-            if (track.Artist || track.Album) {
-                descriptor = descriptor + ' — ';
-            }
-
-            if (track.Artist) {
-                descriptor = descriptor + ' by ' + track.Artist;
-            }
-            if (track.Album) {
-                descriptor = descriptor + ' on ' + track.Album;
-            }
-        }
-
-        return descriptor;
-    }
 }
