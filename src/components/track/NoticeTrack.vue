@@ -18,15 +18,15 @@ import { type PropType, computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import CompilationHandler from '@/store/compilation-handler';
-import { Track } from '@/store/compilation-types';
 import FileHandler from '@/store/filehandler';
 import CloseButton from '../buttons/CloseButton.vue';
+import type { ITrack } from '@/store/ITrack';
 
 const props = defineProps({
     /** The track to display
      */
     track: {
-        type: Object as PropType<Track>,
+        type: Object as PropType<ITrack>,
         required: true,
     },
 });

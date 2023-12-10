@@ -35,13 +35,13 @@
 
 <script lang="ts">
 import { type PropType, defineComponent } from 'vue';
-import { Compilation } from '@/store/compilation-types';
 import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
 import { confirm, downloadCompilation } from '@/code/ui/dialogs';
 import { Hotkey } from '@simolation/vue-hotkey';
 import { mdiTrashCanOutline, mdiTrayArrowDown } from '@mdi/js';
 import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
+import type { ICompilation } from '@/store/ICompilation';
 /** A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
@@ -49,7 +49,7 @@ export default defineComponent({
     components: { DropdownMenuItem, Hotkey },
     props: {
         compilation: {
-            type: Object as PropType<Compilation>,
+            type: Object as PropType<ICompilation>,
             required: true,
         },
     },

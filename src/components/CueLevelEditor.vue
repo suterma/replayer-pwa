@@ -176,8 +176,6 @@
  */
 import { type PropType, computed, inject, ref, type Ref } from 'vue';
 import { storeToRefs } from 'pinia';
-
-import type { ICue, PlaybackMode } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
 import AdjustTimeButton from '@/components/buttons/AdjustTimeButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
@@ -191,6 +189,8 @@ import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue'
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import { useSettingsStore } from '@/store/settings';
 import { useMeasureNumbersInjectionKey } from '@/components/track/TrackInjectionKeys';
+import type { ICue } from '@/store/ICue';
+import type { PlaybackMode } from '@/store/PlaybackMode';
 
 const emit = defineEmits(['click', 'play', 'adjust']);
 

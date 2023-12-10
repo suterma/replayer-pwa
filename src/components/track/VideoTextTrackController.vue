@@ -86,7 +86,7 @@
 <script setup lang="ts">
 import { type PropType, type Ref, computed, ref, watchEffect } from 'vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
-import type { ICue } from '@/store/compilation-types';
+import type { ICue } from '@/store/ICue';
 
 /** A VTT controller, that transforms Replayer cues into
  * VTT cues on a VTT track on a video player element

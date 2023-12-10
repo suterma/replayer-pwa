@@ -37,13 +37,14 @@
 
 <script setup lang="ts">
 import { type PropType, type Ref, computed, inject, ref } from 'vue';
-import type { ICue, PlaybackMode } from '@/store/compilation-types';
 import CompilationHandler from '@/store/compilation-handler';
 import CueLevelEditor from '@/components/CueLevelEditor.vue';
 import { useAppStore } from '@/store/app';
 import { currentPositionInjectionKey } from './track/TrackInjectionKeys';
 import { useRafFn } from '@vueuse/core';
 import { useElementVisibility } from '@vueuse/core';
+import type { ICue } from '@/store/ICue';
+import type { PlaybackMode } from '@/store/PlaybackMode';
 
 /** An set of Editors for for cues in a track.
  */

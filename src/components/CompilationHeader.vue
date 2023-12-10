@@ -90,7 +90,6 @@
 
 <script lang="ts">
 import { type PropType, defineComponent } from 'vue';
-import { Compilation } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
 import ArtistLevelEditor from '@/components/editor/ArtistLevelEditor.vue';
@@ -99,6 +98,7 @@ import CompilationContextMenu from '@/components/context-menu/CompilationContext
 import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { mdiPlus } from '@mdi/js';
+import type { ICompilation } from '@/store/ICompilation';
 
 /** A nav bar as header with a menu for a compilation
  */
@@ -113,7 +113,7 @@ export default defineComponent({
     },
     props: {
         compilation: {
-            type: Object as PropType<Compilation>,
+            type: Object as PropType<ICompilation>,
             required: true,
         },
         /** Whether this component show editable inputs for the contained data

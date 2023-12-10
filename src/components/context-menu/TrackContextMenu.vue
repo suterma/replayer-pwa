@@ -48,7 +48,6 @@ import {
     mdiShareVariant,
 } from '@mdi/js';
 import { addTextCues, confirm, shareTrack } from '@/code/ui/dialogs';
-import { type ICue, type ITrack } from '@/store/compilation-types';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { useSettingsStore } from '@/store/settings';
@@ -114,6 +113,8 @@ const trackApiUrl = computed(() => {
 import { isClient } from '@vueuse/shared';
 import { useShare } from '@vueuse/core';
 import { TrackApi } from '@/code/api/TrackApi';
+import type { ITrack } from '@/store/ITrack';
+import type { ICue } from '@/store/ICue';
 
 const options = ref({
     title: 'Replayer link to: ' + TrackApi.Descriptor(props.track),

@@ -84,9 +84,9 @@ import type { IMediaHandler } from '@/code/media/IMediaHandler';
 import YouTubeMediaHandler from '@/code/media/YoutubeMediaHandler';
 import YoutubeTextTrackController from '@/components/track/YoutubeTextTrackController.vue';
 import { useAudioStore } from '@/store/audio';
-import type { ICue } from '@/store/compilation-types';
 import { FadingMode } from '@/code/media/IAudioFader';
 import { Subscription } from 'sub-events';
+import type { ICue } from '@/store/ICue';
 
 /** A simple vue YouTube player, for a single track, using VueYoutube.
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playback.

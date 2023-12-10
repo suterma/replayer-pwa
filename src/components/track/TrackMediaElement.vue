@@ -163,7 +163,6 @@ import { FadingMode } from '@/code/media/IAudioFader';
 import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMeter.vue';
 import VideoTextTrackController from '@/components/track/VideoTextTrackController.vue';
 import FileHandler from '@/store/filehandler';
-import type { ICue } from '@/store/compilation-types';
 import CoveredPanel from '@/components/CoveredPanel.vue';
 import TrackAudioPeaks from './TrackAudioPeaks.vue';
 import { useRoute } from 'vue-router';
@@ -172,6 +171,7 @@ import { mdiWaveform } from '@mdi/js';
 import { useDocumentVisibility } from '@vueuse/core';
 import { useElementVisibility } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
+import type { ICue } from '@/store/ICue';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.

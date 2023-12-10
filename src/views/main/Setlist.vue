@@ -132,7 +132,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { type ITrack } from '@/store/compilation-types';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import SetlistItem from '@/components/SetlistItem.vue';
 import { mdiDrag, mdiPrinterOutline } from '@mdi/js';
@@ -140,6 +139,7 @@ import draggable from 'vuedraggable';
 import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { mapState } from 'pinia';
+import type { ITrack } from '@/store/ITrack';
 
 /** A printable display of a complete compilation, with a track and cue listing */
 export default defineComponent({

@@ -89,19 +89,18 @@
 
 import { type PropType, computed, provide, readonly } from 'vue';
 import { storeToRefs } from 'pinia';
-
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import TrackTitleName from '@/components/track/TrackTitleName.vue';
-import { Track } from '@/store/compilation-types';
 import { useSettingsStore } from '@/store/settings';
 import { meterInjectionKey } from './track/TrackInjectionKeys';
+import type { ITrack } from '@/store/ITrack';
 
 const props = defineProps({
     /** The track to show an item for */
     track: {
-        type: Object as PropType<Track>,
+        type: Object as PropType<ITrack>,
         required: true,
     },
     /** Whether to show the cues
