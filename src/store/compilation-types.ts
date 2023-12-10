@@ -78,6 +78,11 @@ export interface ITrack {
     /** The cues */
     Cues: Array<ICue>;
 
+    /** The number of cues
+     * @remarks This is a convenience getter for the Cues array
+     */
+    get CuesCount(): number;
+
     /** The playback volume for this track.
      * @remarks This can be set by the user, and is persisted.
      */
@@ -255,6 +260,9 @@ export class Track implements ITrack {
     Url = '';
     Id = '';
     Cues: Array<ICue> = new Array<ICue>();
+    get CuesCount(): number {
+        return this.Cues.length;
+    }
     /**   @inheritdoc */
     Duration: number | null = null;
     Volume: number;
