@@ -16,9 +16,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { DefaultTrackVolume } from '@/store/compilation-types';
 
 import Knob from '@/components/buttons/Knob.vue';
+import { DefaultTrackVolume } from '@/store/Track';
 
 /** A volume knob.
  */

@@ -1,5 +1,5 @@
 import { expect, describe, it } from 'vitest';
-import { Compilation } from './compilation-types';
+import { Compilation } from './Compilation';
 
 /** Tests the compilation types and their methods */
 describe('compilation-types.ts', () => {

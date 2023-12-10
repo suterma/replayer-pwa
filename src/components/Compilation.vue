@@ -67,13 +67,7 @@
 <script lang="ts">
 import { type PropType, defineComponent } from 'vue';
 import VueScrollTo from 'vue-scrollto';
-import {
-    Compilation,
-    type ITrack,
-    type ICue,
-    TrackViewMode,
-    PlaybackMode,
-} from '@/store/compilation-types';
+
 import MediaTrack from '@/components/track/MediaTrack.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import NoticeTrack from '@/components/track/NoticeTrack.vue';
@@ -84,6 +78,11 @@ import { mapWritableState, mapActions, mapState } from 'pinia';
 import { useAppStore } from '@/store/app';
 import NoSleep from 'nosleep.js';
 import { useSettingsStore } from '@/store/settings';
+import type { ICompilation } from '@/store/ICompilation';
+import { TrackViewMode } from '@/store/TrackViewMode';
+import { PlaybackMode } from '@/store/PlaybackMode';
+import type { ITrack } from '@/store/ITrack';
+import type { ICue } from '@/store/ICue';
 
 /** Displays the contained set of tracks according to the required mode.
  * @remarks Also handles the common replayer events for compilations
@@ -99,7 +98,7 @@ export default defineComponent({
         NoticeTrack,
     },
     props: {
-        compilation: Object as PropType<Compilation>,
+        compilation: Object as PropType<ICompilation>,
 
         /** The display mode of the contained tracks.
          * @devdoc Allows to reuse this component for more than one view.
@@ -513,3 +512,7 @@ export default defineComponent({
     width: 2.5em;
 }
 </style>
+import { type ITrack } from '@/store/ITrack'; import { TrackViewMode } from
+'@/store/TrackViewMode'; import { PlaybackMode } from '@/store/PlaybackMode';
+import { type ICue } from '@/store/ICue'; import { Compilation } from
+'@/store/Compilation';

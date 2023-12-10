@@ -679,12 +679,7 @@ import {
     watch,
     watchEffect,
 } from 'vue';
-import {
-    type ICue,
-    TrackViewMode,
-    PlaybackMode,
-    Track,
-} from '@/store/compilation-types';
+
 import OnConsent from '@/components/dialogs/OnConsent.vue';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import MeterLevelEditor from '@/components/editor/MeterLevelEditor.vue';
@@ -731,6 +726,10 @@ import { useTitle } from '@vueuse/core';
 import { useRoute } from 'vue-router';
 import type { ICueScheduler } from '@/code/media/ICueScheduler';
 import { CueScheduler } from '@/code/media/CueScheduler';
+import { TrackViewMode } from '@/store/TrackViewMode';
+import type { ICue } from '@/store/ICue';
+import { PlaybackMode } from '@/store/PlaybackMode';
+import type { ITrack } from '@/store/ITrack';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -776,7 +775,7 @@ const props = defineProps({
     /** The track to handle
      */
     track: {
-        type: Object as PropType<Track>,
+        type: Object as PropType<ITrack>,
         required: true,
     },
 
@@ -1755,3 +1754,6 @@ These are chosen for a nice visual fit in the header */
     }
 }
 </style>
+import { TrackViewMode } from '@/store/TrackViewMode'; import { PlaybackMode }
+from '@/store/PlaybackMode'; import { type ICue } from '@/store/ICue'; import {
+Track } from '@/store/Track';

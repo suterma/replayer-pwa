@@ -1,12 +1,9 @@
-import {
-    Compilation,
-    Cue,
-    DefaultTrackVolume,
-    type ICompilation,
-    type ICue,
-    type ITrack,
-    Track,
-} from '../../store/compilation-types';
+import { Cue } from '@/store/Cue';
+import { DefaultTrackVolume, Track } from '@/store/Track';
+import { Compilation } from '@/store/Compilation';
+import { type ICue } from '@/store/ICue';
+import { type ICompilation } from '@/store/ICompilation';
+import { type ITrack } from '@/store/ITrack';
 import { v4 as uuidv4 } from 'uuid';
 import xml2js from 'xml2js';
 import { XmlCompilation } from '@/code/xml/XmlCompilation';

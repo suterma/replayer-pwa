@@ -34,11 +34,13 @@
 </template>
 
 <script lang="ts">
-import { Cue, type ICue, Track } from '@/store/compilation-types';
 import { type PropType, defineComponent, ref } from 'vue';
 
 import { v4 as uuidv4 } from 'uuid';
 import ModalDialog from '@/components/dialogs/ModalDialog.vue';
+import type { ITrack } from '@/store/ITrack';
+import type { ICue } from '@/store/ICue';
+import { Cue } from '@/store/Cue';
 
 export default defineComponent({
     name: 'AddTextCuesDialog',
@@ -47,7 +49,7 @@ export default defineComponent({
     },
     props: {
         track: {
-            type: Object as PropType<Track>,
+            type: Object as PropType<ITrack>,
         },
     },
 
@@ -93,3 +95,5 @@ export default defineComponent({
     },
 });
 </script>
+import { type ICue } from '@/store/ICue'; import { Track } from '@/store/Track';
+import { Cue } from '@/store/Cue';

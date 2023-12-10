@@ -10,7 +10,8 @@ import {
 import { XmlTrack } from './XmlTrack';
 import { TimeSignature } from '../music/TimeSignature';
 import { Meter } from '../music/Meter';
-import { Track, type ICue } from '@/store/compilation-types';
+import { Track } from '@/store/Track';
+import { type ICue } from '@/store/ICue';
 
 describe('the XML mapping', function () {
     it('should return an initialized XmlTrack object', function () {

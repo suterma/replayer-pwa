@@ -1,5 +1,5 @@
 import { expect, describe, it } from 'vitest';
-import { Cue } from '@/store/compilation-types';
+import { Cue } from '@/store/Cue';
 import { XmlCue } from './XmlCue';
 
 describe('the XML mapping', function () {

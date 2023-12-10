@@ -56,12 +56,14 @@
 
 <script setup lang="ts">
 import { computed, inject, type PropType } from 'vue';
-import { Cue, type ICue, PlaybackMode } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { useAppStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
 import { currentPositionInjectionKey } from './track/TrackInjectionKeys';
+import type { ICue } from '@/store/ICue';
+import type { PlaybackMode } from '@/store/PlaybackMode';
+import { Cue } from '@/store/Cue';
 
 /** A single line bar with simple cue buttons for a track
  */

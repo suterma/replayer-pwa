@@ -1,11 +1,8 @@
-import {
-    Cue,
-    DefaultTrackVolume,
-    type ICompilation,
-    type ICue,
-    type ITrack,
-    Track,
-} from './compilation-types';
+import { Cue } from './Cue';
+import { DefaultTrackVolume, Track } from './Track';
+import { type ICue } from './ICue';
+import { type ICompilation } from './ICompilation';
+import { type ITrack } from './ITrack';
 import { DefaultMathPrecision, TimeFormat, useSettingsStore } from './settings';
 import { MediaBlob, MediaUrl } from './types';
 import { v4 as uuidv4 } from 'uuid';

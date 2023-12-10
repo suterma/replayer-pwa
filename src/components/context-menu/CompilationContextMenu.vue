@@ -12,7 +12,7 @@
                 @click="download"
                 :ref="clickRef"
                 :iconPath="mdiTrayArrowDown"
-                shortcut='CTRL+S'
+                shortcut="CTRL+S"
             />
         </Hotkey>
         <Hotkey
@@ -27,8 +27,8 @@
                 @click="close"
                 :ref="clickRef"
                 :iconPath="mdiTrashCanOutline"
-                shortcut='CTRL+X'
-        />
+                shortcut="CTRL+X"
+            />
         </Hotkey>
     </Teleport>
 </template>
@@ -85,3 +85,4 @@ export default defineComponent({
     },
 });
 </script>
+import { Compilation } from '@/store/Compilation';

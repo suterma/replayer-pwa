@@ -98,8 +98,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { PlaybackMode, DefaultTrackVolume } from '@/store/compilation-types';
-
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import PlaybackModeButton from '@/components/buttons/PlaybackModeButton.vue';
 import FadingToggler from '@/components/buttons/FadingToggler.vue';
@@ -113,6 +111,8 @@ import {
     mdiSkipNextOutline,
     mdiSkipNext,
 } from '@mdi/js';
+import { DefaultTrackVolume } from '@/store/Track';
+import type { PlaybackMode } from '@/store/PlaybackMode';
 
 /** A set of media controls, intended for use at the track level. Contains Buttons like previous/next track and cue, playback mode and a volume knob, arranged in a bar-like layout.
  */
@@ -334,3 +334,4 @@ export default defineComponent({
     },
 });
 </script>
+import { PlaybackMode } from '@/store/PlaybackMode';

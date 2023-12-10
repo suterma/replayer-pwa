@@ -17,7 +17,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { PlaybackMode } from '@/store/compilation-types';
 import {
     rTrackPlay,
     rTrackRepeat,
@@ -29,6 +28,7 @@ import {
 import { mdiPlaylistPlay } from '@mdi/js';
 import { mapState } from 'pinia';
 import { useSettingsStore } from '@/store/settings';
+import { PlaybackMode } from '@/store/PlaybackMode';
 
 /** A toggle switch for the playback mode
  * @remarks Handles and emits various states and event for playback control.
@@ -157,3 +157,4 @@ export default defineComponent({
     },
 });
 </script>
+import { PlaybackMode } from '@/store/PlaybackMode';

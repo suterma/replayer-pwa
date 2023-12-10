@@ -107,16 +107,13 @@
 
                         <p class="level-item" v-if="shortcut">
                             <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibility as possible -->
-                            <ShortcutDisplay
-                                class="foreground"
-                            >{{ shortcut }}
+                            <ShortcutDisplay class="foreground"
+                                >{{ shortcut }}
                             </ShortcutDisplay>
                         </p>
                         <p class="level-item" v-else>
                             <!-- Just show a placeholder, taking up the usual vertical space -->
-                            <ShortcutDisplay
-                                class="pl-0 pr-0 is-invisible"
-                             >
+                            <ShortcutDisplay class="pl-0 pr-0 is-invisible">
                             </ShortcutDisplay>
                         </p>
                     </div>
@@ -136,7 +133,6 @@ import {
     rTrackRepeatOnce,
 } from '@/components/icons/BaseIcon.vue';
 import CompilationHandler from '@/store/compilation-handler';
-import { PlaybackMode } from '@/store/compilation-types';
 import { type PropType, computed, inject } from 'vue';
 import { Meter } from '@/code/music/Meter';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
@@ -146,6 +142,7 @@ import {
     meterInjectionKey,
     useMeasureNumbersInjectionKey,
 } from '@/components/track/TrackInjectionKeys';
+import { PlaybackMode } from '@/store/PlaybackMode';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
@@ -394,3 +391,4 @@ const hasMeter = computed(() => {
     /* justify-content: stretch; */
 }
 </style>
+import { PlaybackMode } from '@/store/PlaybackMode';

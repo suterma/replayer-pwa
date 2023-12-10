@@ -185,3 +185,5 @@ function startSharingTrack() {
     }
 }
 </script>
+import { type ITrack } from '@/store/ITrack'; import { type ICue } from
+'@/store/ICue';

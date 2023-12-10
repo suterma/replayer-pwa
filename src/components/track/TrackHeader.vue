@@ -26,10 +26,11 @@
                     expandedText="Click to collapse"
                     ><span
                         :class="{
-                            'is-invisible': isExpanded || track.CuesCount == 0,
+                            'is-invisible':
+                                isExpanded || track.Cues.length == 0,
                         }"
                         class="tag is-warning is-rounded"
-                        >{{ track.CuesCount }}</span
+                        >{{ track.Cues.length }}</span
                     ></CollapsibleButton
                 >
             </div>
@@ -217,7 +218,6 @@ import LabeledInput from '@/components/editor/LabeledInput.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
-import { TrackViewMode, type ITrack } from '@/store/compilation-types';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import { useAppStore } from '@/store/app';
 import {
@@ -226,6 +226,8 @@ import {
 } from './TrackInjectionKeys';
 import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
+import type { ITrack } from '@/store/ITrack';
+import { TrackViewMode } from '@/store/TrackViewMode';
 
 const emit = defineEmits(['update:isExpanded', 'click']);
 
@@ -362,7 +364,7 @@ const isEditMode = computed(() => {
 
 /** Whether this track has any cues */
 const hasCues = computed(() => {
-    return props.track?.CuesCount > 0;
+    return props.track.Cues.length > 0;
 });
 
 /** Flag to indicate whether this track's player is currently playing
@@ -428,3 +430,5 @@ function acceptedMedia() {
     }
 }
 </style>
+import { type ITrack } from '@/store/ITrack'; import { TrackViewMode } from
+'@/store/TrackViewMode';

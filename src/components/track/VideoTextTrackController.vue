@@ -247,3 +247,4 @@ watchEffect(() => {
     font-size: 3em;
 }
 </style>
+import type { ICue } from '@/store/ICue';

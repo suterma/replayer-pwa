@@ -1,5 +1,6 @@
 import { MediaUrl } from '../types';
-import { Compilation, PlaybackMode } from '../compilation-types';
+import { Compilation } from '../Compilation';
+import { PlaybackMode } from '../PlaybackMode';
 import CompilationHandler from '../compilation-handler';
 import { useLocalStorage } from '@vueuse/core';
 import { ref } from 'vue';

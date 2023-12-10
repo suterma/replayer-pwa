@@ -1,6 +1,8 @@
 <template>
     <ModalDialog informational cancelButtonText="Dismiss" wide>
-        <template #title>Sharing track '{{ track?.Descriptor }}'</template>
+        <template #title
+            >Sharing track '{{ Track.Descriptor(props.track) }}'</template
+        >
         <template #body>
             <div class="block">
                 <div class="level">
@@ -54,7 +56,6 @@
  * @remarks This dialog is used only when the Web Share API is not available or not
  * capable of sharing an URL
  */
-import type { ICue, Track } from '@/store/compilation-types';
 import { type PropType, computed } from 'vue';
 import { useRouter, type RouteLocationRaw } from 'vue-router';
 import ModalDialog from '@/components/dialogs/ModalDialog.vue';
@@ -62,10 +63,13 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiLink, mdiEmailOutline } from '@mdi/js';
 import { useMessageStore } from '@/store/messages';
 import { useClipboard } from '@vueuse/core';
+import type { ICue } from '@/store/ICue';
+import type { ITrack } from '@/store/ITrack';
+import { Track } from '@/store/Track';
 
 const props = defineProps({
     track: {
-        type: Object as PropType<Track>,
+        type: Object as PropType<ITrack>,
     },
 });
 
@@ -143,7 +147,9 @@ function copyLink(): void {
  */
 function emailLink(): void {
     window.open(
-        `mailto:?subject=Replayer link to ${props.track?.Descriptor}&body=${trackUrl.value}`,
+        `mailto:?subject=Replayer link to: ${Track.Descriptor(
+            props.track,
+        )}&body=${trackUrl.value}`,
         '_blank',
     );
     message.pushSuccess('Link opened as email!');

@@ -52,7 +52,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Compilation from '@/components/Compilation.vue';
-import { TrackViewMode } from '@/store/compilation-types';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import WelcomeText from '@/components/WelcomeText.vue';
 import CompilationLoader from '@/components/CompilationLoader.vue';
@@ -61,6 +60,7 @@ import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
 import { mapState } from 'pinia';
 import { useAppStore } from '@/store/app';
+import { TrackViewMode } from '@/store/TrackViewMode';
 
 /** A view for playing an existing compilation */
 export default defineComponent({
@@ -105,3 +105,4 @@ export default defineComponent({
     },
 });
 </script>
+import { TrackViewMode } from '@/store/TrackViewMode';

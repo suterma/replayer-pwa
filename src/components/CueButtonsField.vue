@@ -50,12 +50,14 @@
 
 <script setup lang="ts">
 import { computed, inject, type PropType } from 'vue';
-import { Cue, type ICue, PlaybackMode } from '@/store/compilation-types';
 import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { useAppStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
 import { currentPositionInjectionKey } from './track/TrackInjectionKeys';
+import type { PlaybackMode } from '@/store/PlaybackMode';
+import type { ICue } from '@/store/ICue';
+import { Cue } from '@/store/Cue';
 
 /** A field of large cue buttons for a track
  */
@@ -164,3 +166,5 @@ function percentComplete(cue: ICue): number | null {
     }
 }
 </style>
+import { PlaybackMode } from '@/store/PlaybackMode'; import { type ICue } from
+'@/store/ICue'; import { Cue } from '@/store/Cue';

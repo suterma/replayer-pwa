@@ -1,12 +1,10 @@
-import {
-    Compilation,
-    Cue,
-    type ICompilation,
-    type ICue,
-    type ITrack,
-    PlaybackMode,
-    Track,
-} from '../compilation-types';
+import { Cue } from '../Cue';
+import { Track } from '../Track';
+import { Compilation } from '../Compilation';
+import { type ICue } from '../ICue';
+import { type ICompilation } from '../ICompilation';
+import { PlaybackMode } from '../PlaybackMode';
+import { type ITrack } from '../ITrack';
 import CompilationHandler from '../compilation-handler';
 import { state } from './state';
 import { v4 as uuidv4 } from 'uuid';

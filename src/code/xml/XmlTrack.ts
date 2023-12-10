@@ -1,4 +1,4 @@
-import type { ITrack } from '@/store/compilation-types';
+import type { ITrack } from '@/store/ITrack';
 import { XmlCues } from './XmlCues';
 import { XmlMeter } from './XmlMeter';
 

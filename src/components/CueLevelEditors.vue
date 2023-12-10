@@ -159,3 +159,5 @@ function percentComplete(cue: ICue): number | null {
     );
 }
 </script>
+import type { PlaybackMode } from '@/store/PlaybackMode'; import type { ICue }
+from '@/store/ICue';

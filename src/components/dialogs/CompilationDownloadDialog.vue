@@ -156,3 +156,4 @@ export default defineComponent({
     },
 });
 </script>
+import { Compilation } from '@/store/Compilation';
