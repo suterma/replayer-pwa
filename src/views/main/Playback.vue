@@ -41,10 +41,8 @@
                 </CollapsiblePanel>
             </div>
         </template>
-        <div class="section pl-0 pr-0 block" v-if="!hasCompilation">
-            <div class="content box">
-                <WelcomeText />
-            </div>
+        <div class="navbar is-fixed-bottom" v-if="!hasCompilation">
+            <WelcomeText />
         </div>
     </div>
 </template>
