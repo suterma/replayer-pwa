@@ -209,7 +209,6 @@ export default defineComponent({
          * @remarks These are handeled similar to when loaded via the file input
          */
         registerLaunchQueue() {
-            //TODO later fix typescript usage, once the FileSystemFileHandle is known
             console.debug('MediaDropZone::registerLaunchQueue');
             if (
                 'launchQueue' in window /*&& 'files' in LaunchParams.prototype*/
@@ -219,8 +218,7 @@ export default defineComponent({
                 (window as any).launchQueue.setConsumer(
                     async (launchParams: { files: unknown }): Promise<void> => {
                         const launchFiles =
-                            // eslint-disable-next-line no-undef
-                            launchParams.files as /*FileSystemFileHandle*/ [];
+                            launchParams.files as FileSystemFileHandle[];
                         for (const fileHandle of launchFiles) {
                             const file: File = await (
                                 fileHandle as any
