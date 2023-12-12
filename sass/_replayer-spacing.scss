@@ -62,3 +62,13 @@ for all screen sizes. Keeps the display compact */
 .track .block:not(:last-child) {
     margin-bottom: 0.5rem;
 }
+
+/************************************************************** 
+ * Specific spacing for general layout
+ **************************************************************/
+
+/* equal vertical spacing on top and below the footer*/
+.footer {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}

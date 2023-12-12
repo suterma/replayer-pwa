@@ -75,7 +75,7 @@
                             :placeholder="
                                 replaceUrl
                                     ? replaceUrl
-                                    : 'Paste an URL to a media file'
+                                    : 'Paste an URL to a media file or YouTube video'
                             "
                             v-focus
                             data-cy="input-url"

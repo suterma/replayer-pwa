@@ -6,18 +6,18 @@
                 <a href="https://replayer.app" target="_blank">Replayer</a> is a
                 free, cue-based media player for rehearsals with playback music.
                 By the click of a button, Replayer starts to play at predefined
-                times in the audio file.
+                times in the audio or video file.
             </p>
-            <WelcomeText />
 
-            <p class="">
+            <WelcomeText class="has-background-transparent">
                 <a
                     href="https://replayer.app/en/documentation/keyboard-shortcuts"
                     alt="Link to the Replayer app keyboard shortcuts"
                     target="_blank"
                     >Keyboard shortcuts...</a
-                >.
-            </p>
+                >
+            </WelcomeText>
+
             <p
                 title="App info"
                 class="has-text-right is-italic has-opacity-half"
