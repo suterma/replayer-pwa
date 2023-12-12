@@ -67,10 +67,15 @@
                             required
                             size="120"
                             inputmode="url"
-                            :title="replaceInfo"
+                            :title="
+                                replaceInfo +
+                                'The URL must begin with http:// or https://'
+                            "
                             v-model="url"
                             :placeholder="
-                                replaceUrl ? replaceUrl : 'Paste an URL'
+                                replaceUrl
+                                    ? replaceUrl
+                                    : 'Paste an URL to a media file'
                             "
                             v-focus
                             data-cy="input-url"
@@ -432,8 +437,8 @@ export default defineComponent({
         },
         replaceInfo(): string {
             return this.isReplacementMode
-                ? `Replace: '${this.replaceUrl}'. The URL must begin with http:// or https://`
-                : `The URL must begin with http:// or https://`;
+                ? `Replace: '${this.replaceUrl}'. `
+                : '';
         },
     },
 });
