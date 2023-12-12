@@ -9,14 +9,7 @@
                 times in the audio or video file.
             </p>
 
-            <WelcomeText class="has-background-transparent">
-                <a
-                    href="https://replayer.app/en/documentation/keyboard-shortcuts"
-                    alt="Link to the Replayer app keyboard shortcuts"
-                    target="_blank"
-                    >Keyboard shortcuts...</a
-                >
-            </WelcomeText>
+            <WelcomeText class="has-background-transparent"> </WelcomeText>
 
             <p
                 title="App info"
