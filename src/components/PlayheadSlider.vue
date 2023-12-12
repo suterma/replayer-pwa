@@ -13,7 +13,7 @@
                     <BaseIcon
                         v-once
                         :path="mdiRewind"
-                        class="has-text-warning is-align-self-flex-start"
+                        class="is-align-self-flex-start"
                     />
                     <!-- NOTE: As a update performance optimization,
                         the TimeDisplay component is not used, but the
@@ -21,7 +21,7 @@
                         of subSecond digits. This avoids
                         unnecessary update for actually non-distinctly displayed values. -->
                     <span
-                        class="has-text-left is-size-7 has-text-warning is-minimum-7-characters is-family-monospace"
+                        class="has-text-left is-size-7 is-minimum-7-characters is-family-monospace"
                         data-cy="current-time"
                         >{{ convertToDisplayTime(modelValue, 1) }}</span
                     >
@@ -35,7 +35,7 @@
                     ><span class="is-sr-only">Time slider</span>
                     <input
                         :disabled="disabled"
-                        class="slider is-fullwidth is-small is-slim is-circle is-warning"
+                        class="slider is-fullwidth is-slim"
                         :step="stepSize"
                         min="0"
                         id=""
@@ -59,7 +59,7 @@
                     <BaseIcon
                         v-once
                         :path="mdiFastForward"
-                        class="has-text-warning is-align-self-flex-end mr-0"
+                        class="is-align-self-flex-end mr-0"
                     />
                     <!-- NOTE: As a update performance optimization,
                         the TimeDisplay component is not used, but the
@@ -67,7 +67,7 @@
                         of subSecond digits. This avoids
                         unnecessary update for actually non-distinctly displayed values. -->
                     <span
-                        class="has-text-left is-size-7 has-text-warning is-minimum-7-characters is-family-monospace"
+                        class="has-text-left is-size-7 is-minimum-7-characters is-family-monospace"
                         data-cy="remaining-time"
                         >{{ convertToDisplayTime(remainingTime, 1) }}</span
                     >
@@ -171,33 +171,3 @@ export default defineComponent({
     },
 });
 </script>
-<style>
-.playhead-slider svg {
-    height: 20px !important;
-}
-.playhead-slider .button {
-    max-height: 40px;
-}
-
-.playhead-slider .button .icon:last-child:not(:first-child) {
-    margin-left: 0;
-    margin-right: 0;
-}
-
-/** Use a really small font for the time display */
-.playhead-slider .is-size-7.is-family-monospace {
-    padding-top: -0.4rem;
-    font-size: 0.65rem !important;
-}
-
-/** left seeker icon in line with the time text */
-.playhead-slider .level-right .icon svg {
-    padding-right: 0;
-    margin-right: -7px;
-}
-/** right seeker icon in line with the time text */
-.playhead-slider .level-left .icon svg {
-    padding-left: 0;
-    margin-left: +7px;
-}
-</style>

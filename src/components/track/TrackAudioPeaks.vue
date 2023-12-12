@@ -52,14 +52,14 @@ export default defineComponent({
                     /* container is provided and handled internally by AudioPeaks */
                     waveformColor: '#f89406' /*theme warning color*/,
                     playedWaveformColor: 'rgba(248,148,6,.67)',
-                    highlightColor: '#aaa',
+                    highlightColor: '#aaa' /*$text*/,
                     highlightOffset: 0,
                     axisGridlineColor: '#00000000' /* transparent */,
                     axisLabelColor: '#fafafa',
                 },
                 zoomview: {
                     /* container is provided and handled internally by AudioPeaks */
-                    waveformColor: '#aaa',
+                    waveformColor: '#aaa' /*$text*/,
                     playedWaveformColor:
                         '#707070' /* one-third darker (similar to the cue button progress darkening) */,
                     axisGridlineColor: '#00000000' /* transparent */,

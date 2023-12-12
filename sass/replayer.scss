@@ -39,6 +39,7 @@
 $slider-thumb-border: none !default;
 $slider-track-background: $border !default;
 @import '_replayer-slider.sass';
+@import '_replayer-slider-playhead.scss';
 
 /* Below: general application-specific add-ons/modifications to the Bulma CSS */
 
