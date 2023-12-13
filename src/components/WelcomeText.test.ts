@@ -5,6 +5,6 @@ import WelcomeText from '@/components/WelcomeText.vue';
 describe('WelcomeText.vue', () => {
     it('should render the text', () => {
         const wrapper = shallowMount(WelcomeText);
-        expect(wrapper.text()).toContain('Learn more...');
+        expect(wrapper.text()).toContain('How it works');
     });
 });
