@@ -21,7 +21,6 @@ export default defineComponent({
     name: 'CompilationLoader',
     mounted: function (): void {
         //Check whether a given compilation is to be loaded (by Track API)
-        //console.debug('CompilationLoader::mounted:route', this.$route);
         const query = this.$route?.query;
 
         //Handle a Track API Request (mandatory media is available)

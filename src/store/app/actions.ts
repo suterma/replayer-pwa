@@ -721,34 +721,44 @@ export const actions = {
      * @remarks This method can be called multiple times, each URL gets appropriately added to the current compilation
      * @remarks The resource does not need to support any CORS Headers, because it's only used as-is, as a media source
      * @param url - The URL to use
-     * @return A locally usable name, derived from the URL, which can be used to match the track to the stored media URL
+     * @return A promise to a locally usable name, derived from the URL, which can be used to match the track to the stored media URL
      */
     useMediaFromUrl(url: string): Promise<string> {
         const message = useMessageStore();
 
         return new Promise((resolve, reject) => {
-            if (
-                !(
-                    FileHandler.isValidHttpUrl(url) &&
-                    FileHandler.isSupportedMediaFileName(url)
-                )
-            ) {
-                message.popProgress();
+            if (!FileHandler.isSupportedMediaFileName(url)) {
+                //message.popProgress();
                 reject(
-                    `Provided input is not a valid media URL or is not supported: '${url}'. See the documentation for supported media types.`,
+                    `Not supported: '${url}'. Please select another media resource. See the documentation for supported media types.`,
                 );
+                // Still let the user to continue with adding the (other) tracks or data
+            }
+
+            if (!FileHandler.isValidHttpUrl(url)) {
+                //message.popProgress();
+                reject(
+                    `Not a valid media URL: '${url}'. Please select another media resource. See the documentation for supported media types.`,
+                );
+                // Still let the user to continue with adding the (other) tracks or data
             }
 
             message.pushProgress(`Using URL '${url}'...`);
-            const finalUrl = new URL(url);
-            const localResourceName =
-                FileHandler.getLocalResourceName(finalUrl);
 
-            this.addMediaUrl(new MediaUrl(localResourceName, url, null, null));
-            resolve(localResourceName);
+            // Follow redirects, if appliccable
+            let localResourceName = url;
+            try {
+                const finalUrl = new URL(url);
+                localResourceName = FileHandler.getLocalResourceName(finalUrl);
+            } finally {
+                this.addMediaUrl(
+                    new MediaUrl(localResourceName, url, null, null),
+                );
+                resolve(localResourceName);
 
-            //The action is done, so terminate the progress
-            message.popProgress();
+                //The action is done, so terminate the progress
+                message.popProgress();
+            }
         });
     },
 
