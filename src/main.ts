@@ -17,7 +17,7 @@ console.debug('BASE_URL: ' + import.meta.env.BASE_URL);
 console.log('GIT_VERSION: ' + import.meta.env.VITE_APP_GIT_VERSION);
 console.log('GIT_AUTHOR_DATE: ' + import.meta.env.VITE_APP_GIT_AUTHOR_DATE);
 
-const manager = createManager({
+const youtubeManager = createManager({
     deferLoading: {
         enabled: true,
         autoLoad: true,
@@ -30,7 +30,7 @@ createApp(App)
     .use(VueScrollTo)
     .use(vClickOutside)
     .use(PromiseDialog, {})
-    .use(manager)
+    .use(youtubeManager)
     .directive('focus', {
         mounted: (el) => el.focus(),
     })
