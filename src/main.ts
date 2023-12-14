@@ -8,6 +8,7 @@ import vClickOutside from 'click-outside-vue3';
 import { PromiseDialog } from 'vue3-promise-dialog';
 import { useMessageStore } from './store/messages';
 import { useAppStore } from './store/app';
+import { createManager } from '@vue-youtube/core';
 
 console.log('App version: ' + import.meta.env.VITE_APP_VERSION);
 console.log('MODE: ' + import.meta.env.MODE);
@@ -16,12 +17,20 @@ console.debug('BASE_URL: ' + import.meta.env.BASE_URL);
 console.log('GIT_VERSION: ' + import.meta.env.VITE_APP_GIT_VERSION);
 console.log('GIT_AUTHOR_DATE: ' + import.meta.env.VITE_APP_GIT_AUTHOR_DATE);
 
+const manager = createManager({
+    deferLoading: {
+        enabled: true,
+        autoLoad: true,
+    },
+});
+
 createApp(App)
     .use(createPinia())
     .use(router)
     .use(VueScrollTo)
     .use(vClickOutside)
     .use(PromiseDialog, {})
+    .use(manager)
     .directive('focus', {
         mounted: (el) => el.focus(),
     })

@@ -77,8 +77,6 @@ import {
     watch,
     watchEffect,
 } from 'vue';
-import { getCurrentInstance } from 'vue';
-import { createManager } from '@vue-youtube/core';
 import type { Player } from '@vue-youtube/shared';
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
 import YouTubeMediaHandler from '@/code/media/YoutubeMediaHandler';
@@ -146,21 +144,6 @@ const showVideo = ref(true);
 const smallVideo = ref(true);
 
 // --- player setup ---
-
-// Locally (instead of globally) register the create manager plugin.
-// This avoids vue instance pollution and
-// unnecessary data disclosure, when this component is not used.
-const youTubeManagerAlreadyExists =
-    document.querySelectorAll(
-        `script[src="https://www.youtube.com/player_api"]`,
-    ).length > 0;
-
-if (!youTubeManagerAlreadyExists) {
-    const app = getCurrentInstance();
-    if (app) {
-        app.appContext.app.use(createManager());
-    }
-}
 
 // Use a template ref to reference the target element
 const youtubePlayerElement = ref();
