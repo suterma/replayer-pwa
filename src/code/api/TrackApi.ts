@@ -1,7 +1,11 @@
 import router from '@/router';
 import type { ICue } from '@/store/ICue';
 import type { ITrack } from '@/store/ITrack';
-import { useRouter, type RouteLocationRaw } from 'vue-router';
+import { type RouteLocationRaw } from 'vue-router';
+import { isClient } from '@vueuse/shared';
+import { useShare } from '@vueuse/core';
+import { ref } from 'vue';
+import { shareTrack } from '@/code/ui/dialogs';
 
 /** @class Static functions for the Track API
  * @remarks Implements the API from
@@ -19,8 +23,6 @@ export class TrackApi {
         }
         return value.Time.toString();
     }
-
-    router = useRouter();
 
     /** Gets a Track API URL for the given track */
     public static Url(track: ITrack | undefined): string {
@@ -80,5 +82,25 @@ export class TrackApi {
         }
 
         return descriptor;
+    }
+
+    /** Initiates sharing of a track
+     * @remarks If supported, uses the Web Share API, otherwise an interal fallback
+     * dialog is presented to the user
+     */
+    public static startSharingTrack(track: ITrack) {
+        const options = ref({
+            title: 'Replayer link to: ' + TrackApi.Descriptor(track),
+            text: TrackApi.Descriptor(track),
+            url: isClient ? TrackApi.Url(track) : '',
+        });
+
+        const { share, isSupported } = useShare(options);
+
+        if (isSupported.value) {
+            share();
+        } else {
+            shareTrack(track);
+        }
     }
 }

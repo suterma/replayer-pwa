@@ -176,7 +176,14 @@
             <div class="level-item">
                 <!-- Slot for additional level items -->
                 <slot name="right-start"></slot>
-                SHARE
+                <NavButton
+                    v-if="experimentalAllowTrackSharingByLink"
+                    v-experiment="experimentalAllowTrackSharingByLink"
+                    title="Share..."
+                    :iconPath="mdiShareVariant"
+                    @click="TrackApi.startSharingTrack(props.track)"
+                    data-cy="button-track-share"
+                />
 
                 <PlaybackIndicator
                     :is-ready="!isTrackPlaying && isTrackLoaded"
@@ -209,6 +216,8 @@ import {
     ref,
     watchEffect,
 } from 'vue';
+import { TrackApi } from '@/code/api/TrackApi';
+import { mdiShareVariant } from '@mdi/js';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
@@ -220,6 +229,7 @@ import LabeledInput from '@/components/editor/LabeledInput.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
+import NavButton from '@/components/buttons/NavButton.vue';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import { useAppStore } from '@/store/app';
 import {
@@ -303,7 +313,8 @@ const props = defineProps({
 const app = useAppStore();
 
 const settings = useSettingsStore();
-const { experimentalUseMeter } = storeToRefs(settings);
+const { experimentalUseMeter, experimentalAllowTrackSharingByLink } =
+    storeToRefs(settings);
 
 const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
 

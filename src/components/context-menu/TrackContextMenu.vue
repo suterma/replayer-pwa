@@ -19,7 +19,7 @@
             v-experiment="experimentalAllowTrackSharingByLink"
             title="Share..."
             subTitle="(allows to share a track)"
-            @click="startSharingTrack()"
+            @click="TrackApi.startSharingTrack(props.track)"
             :iconPath="mdiShareVariant"
         />
         <DropdownMenuItem
@@ -47,11 +47,14 @@ import {
     mdiFileDelimitedOutline,
     mdiShareVariant,
 } from '@mdi/js';
-import { addTextCues, confirm, shareTrack } from '@/code/ui/dialogs';
+import { addTextCues, confirm } from '@/code/ui/dialogs';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { useSettingsStore } from '@/store/settings';
-import { ref, type PropType, computed } from 'vue';
+import { TrackApi } from '@/code/api/TrackApi';
+import { type PropType } from 'vue';
+import type { ICue } from '@/store/ICue';
+import type { ITrack } from '@/store/ITrack';
 
 /** A menu for a track
  */
@@ -102,37 +105,5 @@ function remove() {
             app.removeTrack(props.track.Id);
         }
     });
-}
-
-// --- System-supported sharing ---
-
-const trackApiUrl = computed(() => {
-    return TrackApi.Url(props.track);
-});
-
-import { isClient } from '@vueuse/shared';
-import { useShare } from '@vueuse/core';
-import { TrackApi } from '@/code/api/TrackApi';
-import type { ITrack } from '@/store/ITrack';
-import type { ICue } from '@/store/ICue';
-
-const options = ref({
-    title: 'Replayer link to: ' + TrackApi.Descriptor(props.track),
-    text: TrackApi.Descriptor(props.track),
-    url: isClient ? trackApiUrl.value : '',
-});
-
-const { share, isSupported } = useShare(options);
-
-/** Initiates sharing of a track
- * @remarks If supported, uses the Web Share API, otherwise an interal fallback
- * dialog is presented to the user
- */
-function startSharingTrack() {
-    if (isSupported.value) {
-        share();
-    } else {
-        shareTrack(props.track);
-    }
 }
 </script>
