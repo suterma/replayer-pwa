@@ -176,6 +176,8 @@
             <div class="level-item">
                 <!-- Slot for additional level items -->
                 <slot name="right-start"></slot>
+                SHARE
+
                 <PlaybackIndicator
                     :is-ready="!isTrackPlaying && isTrackLoaded"
                     :is-unloaded="!isTrackLoaded"

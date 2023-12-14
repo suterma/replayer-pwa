@@ -124,28 +124,15 @@ const options = ref({
 
 const { share, isSupported } = useShare(options);
 
+/** Initiates sharing of a track
+ * @remarks If supported, uses the Web Share API, otherwise an interal fallback
+ * dialog is presented to the user
+ */
 function startSharingTrack() {
     if (isSupported.value) {
-        // use the Web Share API
-        console.debug(`sharing via the Web Share API`);
-
-        return share()
-            .then(() => {
-                console.debug(
-                    `TrackContextMenu::sharing via the Web Share API successfully done`,
-                );
-            })
-            .catch((error) => console.log('Error sharing', error));
+        share();
     } else {
-        // use the explicit share dialog
-        console.debug(`sharing via the app dialog`);
-        shareTrack(props.track).then((ok) => {
-            if (ok) {
-                console.debug(
-                    `TrackContextMenu::sharing via the app dialog successfully done`,
-                );
-            }
-        });
+        shareTrack(props.track);
     }
 }
 </script>
