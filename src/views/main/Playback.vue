@@ -41,9 +41,16 @@
                 </CollapsiblePanel>
             </div>
         </template>
-        <div class="navbar is-fixed-bottom" v-if="!hasCompilation">
-            <WelcomeText />
-        </div>
+        <!-- The application footer -->
+        <footer class="footer navbar is-fixed-bottom" v-if="!hasCompilation">
+            <small>
+                <div class="content has-text-centered">
+                    <p>
+                        <FooterLinks />
+                    </p>
+                </div>
+            </small>
+        </footer>
     </div>
 </template>
 
@@ -51,7 +58,7 @@
 import { defineComponent } from 'vue';
 import Compilation from '@/components/Compilation.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
-import WelcomeText from '@/components/WelcomeText.vue';
+import FooterLinks from '@/components/FooterLinks.vue';
 import CompilationLoader from '@/components/CompilationLoader.vue';
 import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
 import MediaList from '@/components/MediaList.vue';
@@ -68,16 +75,11 @@ export default defineComponent({
         CompilationKeyboardHandler,
         MediaDropZone,
         CompilationLoader,
-        WelcomeText,
+        FooterLinks,
         CollapsiblePanel,
         MediaList,
     },
-    data() {
-        return {};
-    },
 
-    watch: {},
-    methods: {},
     computed: {
         ...mapState(useAppStore, [
             'compilation',
@@ -103,4 +105,3 @@ export default defineComponent({
     },
 });
 </script>
-import { TrackViewMode } from '@/store/TrackViewMode';

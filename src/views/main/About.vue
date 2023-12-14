@@ -8,9 +8,9 @@
                 By the click of a button, Replayer starts to play at predefined
                 times in the audio or video file.
             </p>
-
-            <WelcomeText class="has-background-transparent"> </WelcomeText>
-
+            <p>
+                <FooterLinks />
+            </p>
             <p
                 title="App info"
                 class="has-text-right is-italic has-opacity-half"
@@ -604,14 +604,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import WelcomeText from '@/components/WelcomeText.vue';
+import FooterLinks from '@/components/FooterLinks.vue';
 import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
 
 /** An About view
  */
 export default defineComponent({
     name: 'About',
-    components: { WelcomeText, CollapsiblePanel },
+    components: { FooterLinks, CollapsiblePanel },
     computed: {
         version(): string {
             return '' + import.meta.env.VITE_APP_VERSION;
