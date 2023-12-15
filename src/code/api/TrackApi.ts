@@ -44,7 +44,7 @@ export class TrackApi {
                 })),
             );
         }
-        console.debug('TrackSharingDialog::trackUrl:apiQuery:', apiQuery);
+        console.debug('TrackApi::Url:', apiQuery);
 
         //Build the URL
         const route = {
