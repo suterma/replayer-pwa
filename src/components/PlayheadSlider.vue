@@ -168,6 +168,65 @@ export default defineComponent({
                 this.trackDuration,
             );
         },
+        percentagePlayed(): string {
+            const played = CompilationHandler.calculatePlayedPercentage(
+                this.modelValue,
+                this.trackDuration,
+            );
+            return `${played}%`;
+        },
     },
 });
 </script>
+<style scoped lang="css">
+/** The color for the slider bar (Firefox)
+* @devdoc For Firefox (moz), see https://support.mozilla.org/en-US/questions/1308191 
+* These must stand separately from webkit, because otherwise they would disturb each other 
+*/
+input[type='range'].slider::-moz-range-track {
+    background: linear-gradient(
+        to right,
+        #707070
+            /* one-third darker (similar to the cue button progress darkening) */
+            0%,
+        #707070
+            /* one-third darker (similar to the cue button progress darkening) */
+            v-bind('percentagePlayed'),
+        #aaa /*$text*/ v-bind('percentagePlayed'),
+        #aaa /*$text*/ 100%
+    ) !important;
+}
+
+/** The color for the slider bar (Chrome and Webkit) 
+* @devdoc For webkit, see https://css-tricks.com/html5-meter-element/ 
+* @devdoc https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-meter-bar
+*/
+input[type='range'].slider::-webkit-slider-runnable-track {
+    background: linear-gradient(
+        to right,
+        #707070
+            /* one-third darker (similar to the cue button progress darkening) */
+            0%,
+        #707070
+            /* one-third darker (similar to the cue button progress darkening) */
+            v-bind('percentagePlayed'),
+        #aaa /*$text*/ v-bind('percentagePlayed'),
+        #aaa /*$text*/ 100%
+    ) !important;
+}
+input[type='range'].slider::-ms-track,
+input[type='range'].slider::-ms-fill-lower,
+input[type='range'].slider::-ms-fill-upper {
+    background: linear-gradient(
+        to right,
+        #707070
+            /* one-third darker (similar to the cue button progress darkening) */
+            0%,
+        #707070
+            /* one-third darker (similar to the cue button progress darkening) */
+            v-bind('percentagePlayed'),
+        #aaa /*$text*/ v-bind('percentagePlayed'),
+        #aaa /*$text*/ 100%
+    );
+}
+</style>

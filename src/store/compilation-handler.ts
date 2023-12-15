@@ -236,6 +236,20 @@ export default class CompilationHandler {
         } else return null;
     }
 
+    /** Calculates the already played percentage of the track.
+     * @param {number} currentPosition - the number of seconds already passed in the track
+     * @param {number | null} trackDuration - could be NaN or infinity, depending on the source
+     * @returns The remaining time or null if not applicable
+     */
+    static calculatePlayedPercentage(
+        currentPosition: number,
+        trackDuration: number | null,
+    ): number | null {
+        if (trackDuration != null && Number.isFinite(trackDuration)) {
+            return (currentPosition * 100) / trackDuration;
+        } else return null;
+    }
+
     /** Calculates the remaining time to the beginning of the given cue.
      * @param {number} currentPosition - the number of seconds already passed in the track
      * @param {ICue} cue - the cue to determine the playback progress for

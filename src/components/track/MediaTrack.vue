@@ -1754,6 +1754,3 @@ These are chosen for a nice visual fit in the header */
     }
 }
 </style>
-import { TrackViewMode } from '@/store/TrackViewMode'; import { PlaybackMode }
-from '@/store/PlaybackMode'; import { type ICue } from '@/store/ICue'; import {
-Track } from '@/store/Track';

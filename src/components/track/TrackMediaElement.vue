@@ -518,4 +518,3 @@ video.paused {
     animation-duration: 0s;
 }
 </style>
-import type { ICue } from '@/store/ICue';
