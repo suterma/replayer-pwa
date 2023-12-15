@@ -1,6 +1,5 @@
 import { expect, describe, it } from 'vitest';
 import { Compilation } from '@/store/Compilation';
-import { PlaybackMode } from '@/store/PlaybackMode';
 import { type ITrack } from '@/store/ITrack';
 import { XmlCompilation } from './XmlCompilation';
 

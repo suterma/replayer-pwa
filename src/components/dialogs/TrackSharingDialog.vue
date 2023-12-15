@@ -57,14 +57,12 @@
  * capable of sharing an URL
  */
 import { type PropType, computed } from 'vue';
-import { useRouter, type RouteLocationRaw } from 'vue-router';
 import ModalDialog from '@/components/dialogs/ModalDialog.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { TrackApi } from '@/code/api/TrackApi';
 import { mdiLink, mdiEmailOutline } from '@mdi/js';
 import { useMessageStore } from '@/store/messages';
 import { useClipboard } from '@vueuse/core';
-import type { ICue } from '@/store/ICue';
 import type { ITrack } from '@/store/ITrack';
 
 const props = defineProps({
@@ -98,15 +96,26 @@ function copyLink(): void {
     message.pushSuccess('Link copied to clipboard!');
 }
 
+/** Gets a mailto link
+ * @remarks Encodes content to avoid interference with the
+ * URL reseved characters and the mailto link
+ */
+function getMailtoLink(title: string, trackApiUrl: string): string {
+    const encodedTitle = encodeURIComponent(title);
+    const encodedUrl = encodeURIComponent(trackApiUrl);
+    return `mailto:?subject=Replayer link to: ${encodedTitle}&body=${encodedUrl}`;
+}
+
 /** Emails the Replayer link via a registered mail client
+ * @remarks Encodes content to avoid interference with the
+ * URL reseved characters and the mailto link
  */
 function emailLink(): void {
-    window.open(
-        `mailto:?subject=Replayer link to: ${TrackApi.Descriptor(
-            props.track,
-        )}&body=${trackApiUrl.value}`,
-        '_blank',
+    const mailto = getMailtoLink(
+        TrackApi.Descriptor(props.track),
+        trackApiUrl.value,
     );
+    window.open(mailto, '_blank');
     message.pushSuccess('Link opened as email!');
 }
 </script>
