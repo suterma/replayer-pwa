@@ -16,13 +16,6 @@
             :iconPath="mdiOrderNumericAscending"
         />
         <DropdownMenuItem
-            v-experiment="experimentalAllowTrackSharingByLink"
-            title="Share..."
-            subTitle="(allows to share a track)"
-            @click="TrackApi.startSharingTrack(props.track)"
-            :iconPath="mdiShareVariant"
-        />
-        <DropdownMenuItem
             title="Clone"
             subTitle="(with cues and media)"
             @click="app.cloneTrack(props.track.Id)"
@@ -45,13 +38,9 @@ import {
     mdiTrashCanOutline,
     mdiOrderNumericAscending,
     mdiFileDelimitedOutline,
-    mdiShareVariant,
 } from '@mdi/js';
 import { addTextCues, confirm } from '@/code/ui/dialogs';
-import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
-import { useSettingsStore } from '@/store/settings';
-import { TrackApi } from '@/code/api/TrackApi';
 import { type PropType } from 'vue';
 import type { ICue } from '@/store/ICue';
 import type { ITrack } from '@/store/ITrack';
@@ -72,9 +61,6 @@ const props = defineProps({
         required: true,
     },
 });
-const settings = useSettingsStore();
-const { experimentalAllowTrackSharingByLink } = storeToRefs(settings);
-
 const app = useAppStore();
 
 function addMultipleCues() {
