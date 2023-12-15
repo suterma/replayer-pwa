@@ -98,7 +98,9 @@ export class TrackApi {
         const { share, isSupported } = useShare(options);
 
         if (isSupported.value) {
-            share();
+            share().catch((error) =>
+                console.error('Error while sharing track: ', error),
+            );
         } else {
             shareTrack(track);
         }
