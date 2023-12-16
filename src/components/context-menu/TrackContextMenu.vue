@@ -25,7 +25,7 @@
                 title="Download media file"
                 subTitle="(to local file system)"
                 @click="app.cloneTrack(props.track.Id)"
-                :iconPath="mdiContentDuplicate"
+                :iconPath="mdiDownload"
             />
         </a>
         <DropdownMenuItem
@@ -51,6 +51,7 @@ import {
     mdiTrashCanOutline,
     mdiOrderNumericAscending,
     mdiFileDelimitedOutline,
+    mdiDownload,
 } from '@mdi/js';
 import { addTextCues, confirm } from '@/code/ui/dialogs';
 import { useAppStore } from '@/store/app';
