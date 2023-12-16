@@ -174,7 +174,7 @@
         <!-- Right side -->
         <div class="level-right is-justify-content-flex-end">
             <div class="level-item">
-                <!-- Slot for additional level items -->
+                <!-- Slot for additional level display items -->
                 <slot name="right-start"></slot>
                 <NavButton
                     v-if="experimentalAllowTrackSharingByLink"
@@ -184,6 +184,8 @@
                     @click="TrackApi.startSharingTrack(props.track)"
                     data-cy="button-track-share"
                 />
+                <!-- Slot for additional level action items -->
+                <slot name="right-action-items"></slot>
 
                 <PlaybackIndicator
                     :is-ready="!isTrackPlaying && isTrackLoaded"

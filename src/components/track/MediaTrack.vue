@@ -166,6 +166,8 @@
                             ></span>
                         </div>
                     </div>
+                </template>
+                <template v-slot:right-action-items>
                     <div class="level-item is-narrow mr-0 is-hidden-mobile">
                         <!-- NOTE: In edit mode, the volume button is displayed as part of the transport area, not in the header -->
                         <VolumeKnob
@@ -173,9 +175,8 @@
                             :disabled="!isTrackLoaded"
                             :modelValue="track.Volume"
                             @update:modelValue="updateVolume"
-                        />
-                    </div>
-                </template>
+                        /></div
+                ></template>
             </TrackHeader>
         </div>
 
