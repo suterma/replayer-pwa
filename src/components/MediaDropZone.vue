@@ -29,7 +29,6 @@
                     v-focus
                     type="file"
                     multiple
-                    name="fields[assetsFieldHandle][]"
                     id="assetsFieldHandle"
                     class="is-hidden"
                     @change="onChange"

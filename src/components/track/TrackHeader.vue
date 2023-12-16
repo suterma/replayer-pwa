@@ -48,7 +48,7 @@
                     </template>
                     <MediaDropZone
                         :replaceUrl="track.Url"
-                        :trackId="track.Url"
+                        :trackId="track.Id"
                         ref="mediaDropZone"
                         @accepted="acceptedMedia()"
                     >
