@@ -126,6 +126,20 @@ export default class FileHandler {
         return url.hostname;
     }
 
+    /** Returns whether the given file name (by it's extension) is a downloadable media file name by Replayer
+     * @remarks Downloadable are all online media files except YouTube URL's.
+     */
+    static isDownloadableMediaFileName(fileName: string | undefined): boolean {
+        if (
+            fileName &&
+            this.isSupportedMediaFileName(fileName) &&
+            !this.isYouTubeUrl(fileName)
+        ) {
+            return true;
+        }
+        return false;
+    }
+
     /** Returns whether this file is supported by Replayer, either by MIME type or the file name (by prefix/suffix) */
     static isSupportedFile(file: File): boolean {
         if (
