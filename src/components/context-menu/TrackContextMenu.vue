@@ -10,6 +10,7 @@
             :iconPath="mdiFileDelimitedOutline"
         />
         <DropdownMenuItem
+            :disabled="props.track.Cues.length < 1"
             title="Reassign cue shortcuts"
             subTitle="(first as seed, then incrementing)"
             @click="app.reassignCueShortcuts(props.track.Id)"
@@ -19,9 +20,14 @@
             :href="props.track.Url"
             download
             target="_blank"
-            v-if="FileHandler.isDownloadableMediaFileName(props.track.Url)"
+            :disabled="
+                !FileHandler.isDownloadableMediaFileName(props.track.Url)
+            "
         >
             <DropdownMenuItem
+                :disabled="
+                    !FileHandler.isDownloadableMediaFileName(props.track.Url)
+                "
                 title="Download media file"
                 subTitle="(to local file system)"
                 @click="app.cloneTrack(props.track.Id)"
