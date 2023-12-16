@@ -26,9 +26,6 @@
         aria-label="media player"
     ></nav>
 
-    <!-- The ad is only used for print outputs, to allow a printout recipient to explore the app. -->
-    <ReplayerAd class="is-print-only is-together-print is-scaled-50" />
-
     <div class="section is-hidden-print">
         <!-- A placeholder that invisibly extends the view bottom,
         taking into account the player widget.

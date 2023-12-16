@@ -41,8 +41,11 @@
                 </CollapsiblePanel>
             </div>
         </template>
-        <!-- The application footer -->
-        <footer class="footer navbar is-fixed-bottom" v-if="!hasCompilation">
+        <!-- The application footer (not for printout) -->
+        <footer
+            class="footer navbar is-fixed-bottom is-hidden-print"
+            v-if="!hasCompilation"
+        >
             <small>
                 <div class="content has-text-centered">
                     <p>

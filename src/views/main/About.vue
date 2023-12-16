@@ -1,13 +1,12 @@
 <template v-once>
     <div class="container">
-        <h1 class="title">About</h1>
-        <div class="content">
-            <p>
-                <a href="https://replayer.app" target="_blank">Replayer</a> is a
-                free, cue-based media player for rehearsals with playback music.
-                By the click of a button, Replayer starts to play at predefined
-                times in the audio or video file.
-            </p>
+        <!-- <h1 class="title">About</h1> -->
+        <!-- The ad is only used for the screen here, because on printouts, 
+            it's added at the end of the document. -->
+        <div class="block">
+            <ReplayerAd />
+        </div>
+        <div class="block">
             <p>
                 <FooterLinks />
             </p>
@@ -24,7 +23,7 @@
         </div>
         <CollapsiblePanel>
             <template #caption><h1 class="title is-3">API Demos</h1></template>
-            <div class="contentx">
+            <div>
                 <div class="block">
                     <h3 class="title is-5 mt-5">Track API Demo</h3>
                     <div class="content">
@@ -606,12 +605,13 @@
 import { defineComponent } from 'vue';
 import FooterLinks from '@/components/FooterLinks.vue';
 import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
+import ReplayerAd from '@/components/ReplayerAd.vue';
 
 /** An About view
  */
 export default defineComponent({
     name: 'About',
-    components: { FooterLinks, CollapsiblePanel },
+    components: { FooterLinks, CollapsiblePanel, ReplayerAd },
     computed: {
         version(): string {
             return '' + import.meta.env.VITE_APP_VERSION;
