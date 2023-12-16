@@ -15,6 +15,19 @@
             @click="app.reassignCueShortcuts(props.track.Id)"
             :iconPath="mdiOrderNumericAscending"
         />
+        <a
+            :href="props.track.Url"
+            download
+            target="_blank"
+            v-if="FileHandler.isDownloadableMediaFileName(props.track.Url)"
+        >
+            <DropdownMenuItem
+                title="Download media file"
+                subTitle="(to local file system)"
+                @click="app.cloneTrack(props.track.Id)"
+                :iconPath="mdiContentDuplicate"
+            />
+        </a>
         <DropdownMenuItem
             title="Clone"
             subTitle="(with cues and media)"
@@ -41,9 +54,10 @@ import {
 } from '@mdi/js';
 import { addTextCues, confirm } from '@/code/ui/dialogs';
 import { useAppStore } from '@/store/app';
-import { type PropType } from 'vue';
+import { computed, type PropType } from 'vue';
 import type { ICue } from '@/store/ICue';
 import type { ITrack } from '@/store/ITrack';
+import FileHandler from '@/store/filehandler';
 
 /** A menu for a track
  */
@@ -92,4 +106,14 @@ function remove() {
         }
     });
 }
+
+const isDownloadable = computed(() =>
+    FileHandler.isDownloadableMediaFileName(props.track.Url),
+);
 </script>
+<style scoped>
+/** Do not use the "external link" icon here */
+a[target='_blank']:after {
+    display: none;
+}
+</style>
