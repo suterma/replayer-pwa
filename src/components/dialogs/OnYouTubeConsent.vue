@@ -12,7 +12,8 @@
 </template>
 
 <script setup lang="ts">
-/** A mandatory YouTube consent dialog, that prevents usage of the slotted (YouTube) component without consent
+/** A "gate" component that prevents usage of the slotted (YouTube) component without consent.
+ *  Uses the {YouTubeConsentDialog} to aks for consent from the user
  */
 import { consentYouTube } from '@/code/ui/dialogs';
 import { onMounted } from 'vue';

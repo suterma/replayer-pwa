@@ -406,7 +406,7 @@
                     :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
                 ></TrackMediaElement>
                 <div v-if="CompilationHandler.isYoutubeVideoTrack(track)">
-                    <OnConsent>
+                    <OnYouTubeConsent>
                         <TrackYouTubeElement
                             :key="track.Id"
                             :title="track.Name"
@@ -417,7 +417,7 @@
                             @ready="useMediaHandler"
                             @click="setActiveTrack"
                         ></TrackYouTubeElement>
-                    </OnConsent>
+                    </OnYouTubeConsent>
                 </div>
             </div>
         </Transition>
@@ -681,7 +681,7 @@ import {
     watchEffect,
 } from 'vue';
 
-import OnConsent from '@/components/dialogs/OnConsent.vue';
+import OnYouTubeConsent from '@/components/dialogs/OnYouTubeConsent.vue';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import MeterLevelEditor from '@/components/editor/MeterLevelEditor.vue';
 import TrackMediaElement from '@/components/track/TrackMediaElement.vue';
