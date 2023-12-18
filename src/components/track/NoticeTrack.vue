@@ -1,6 +1,12 @@
 <template>
-    <Transition v-show="!closed" name="item-expand">
-        <div class="track is-together-print" :class="{}" data-cy="notice-track">
+    <Transition>
+        <div
+            v-show="!closed"
+            name="item-expand"
+            class="track is-together-print"
+            :class="{}"
+            data-cy="notice-track"
+        >
             <div class="notification is-size-7">
                 <span>
                     {{ textContent }}
