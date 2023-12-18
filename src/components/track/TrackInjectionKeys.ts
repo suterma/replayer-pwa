@@ -19,7 +19,6 @@ export const isPlayingInjectionKey = Symbol() as InjectionKey<
 
 /** A symbol for providing and injecting the exact current playhead position in the track.
  * @remarks This is provided readonly, updates must be emitted as events.
- * @devdoc //TODO later create also a display variant with a ready-made, preformatted and rounded value, to improve performance
  */
 export const currentPositionInjectionKey = Symbol() as InjectionKey<
     Ref<number | null>
