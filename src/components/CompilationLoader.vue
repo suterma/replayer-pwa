@@ -9,7 +9,7 @@ import { defineComponent } from 'vue';
 import { useAppStore } from '@/store/app';
 import { useMessageStore } from '@/store/messages';
 import { mapActions } from 'pinia';
-import XmlCompilationParser from '@/code/xml/XmlCompilationParser';
+import { TrackApi } from '@/code/api/TrackApi';
 
 /** A Loader for packages or tracks, from the URL
  * @remarks Implements the Track and Package API by loading items from the URL parameters
@@ -25,7 +25,7 @@ export default defineComponent({
 
         //Handle a Track API Request (mandatory media is available)
         if (query && query['media'] !== undefined) {
-            const track = XmlCompilationParser.parseFromUrlQuery(query);
+            const track = TrackApi.parseFromUrlQuery(query);
             if (track && track.Url) {
                 //Add the track, before the track media URL (to avoid the creation of a default track)
                 this.addTrack(track);

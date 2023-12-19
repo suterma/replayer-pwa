@@ -1,11 +1,15 @@
 import router from '@/router';
 import type { ICue } from '@/store/ICue';
 import type { ITrack } from '@/store/ITrack';
-import { type RouteLocationRaw } from 'vue-router';
+import { type LocationQuery, type RouteLocationRaw } from 'vue-router';
 import { isClient } from '@vueuse/shared';
 import { useShare } from '@vueuse/core';
 import { ref } from 'vue';
 import { shareTrack } from '@/code/ui/dialogs';
+import { Cue } from '@/store/Cue';
+import CompilationHandler from '@/store/compilation-handler';
+import { DefaultTrackVolume, Track } from '@/store/Track';
+import { v4 as uuidv4 } from 'uuid';
 
 /** @class Static functions for the Track API
  * @remarks Implements the API from
@@ -104,5 +108,73 @@ export class TrackApi {
         } else {
             shareTrack(track);
         }
+    }
+
+    /** Parses a new track from a URL query
+     * @remarks Assumes that the query follows the track API definition.
+     * See https://replayer.app/en/documentation/track-api
+     * @param query {LocationQuery} - The URL query to parse
+     * @devdoc Currently does not support shortcuts
+     */
+    public static parseFromUrlQuery(query: LocationQuery): ITrack | undefined {
+        const mediaUrl = TrackApi.getSingle(query.media);
+
+        if (mediaUrl) {
+            //Get the track metadata
+            const title = TrackApi.getSingle(query.title) ?? '';
+            const artist = TrackApi.getSingle(query.artist) ?? '';
+            const album = TrackApi.getSingle(query.album) ?? '';
+
+            //Get the cues if available
+            let cues = Array<ICue>();
+            for (const key in query) {
+                const time = parseFloat(key);
+                if (!isNaN(time)) {
+                    const description = TrackApi.getSingle(
+                        query[key],
+                    ) as string;
+                    const cueId = uuidv4();
+                    cues.push(new Cue(description, null, time, null, cueId));
+                }
+            }
+
+            cues = CompilationHandler.sortByTime(cues);
+
+            const trackId = uuidv4();
+            const newTrack = new Track(
+                title,
+                album,
+                artist,
+                null /* pre-roll */,
+                null /* meter */,
+                null,
+                mediaUrl,
+                trackId,
+                cues,
+                null,
+                DefaultTrackVolume,
+            );
+            return newTrack;
+        } else {
+            return undefined;
+        }
+    }
+
+    /** Gets a single item from either an array, or just the single value
+     * @remarks The items of the array are expected to be all of the same type T.
+     */
+    public static getSingle<T>(set: T | T[]): T {
+        return Array.isArray(set) ? (set[0] as T) : set;
+    }
+    /** Gets a set of items from either an array, or just the single value
+     * @remarks The items of the array are expected to be all of the same type T.
+     */
+    public static getSet<T>(set: T | T[]): T[] {
+        if (Array.isArray(set)) {
+            return set;
+        }
+        const arr = Array<T>();
+        arr.push(set);
+        return arr;
     }
 }

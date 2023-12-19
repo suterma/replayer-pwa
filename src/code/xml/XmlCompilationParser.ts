@@ -4,11 +4,8 @@ import { Compilation } from '@/store/Compilation';
 import { type ICue } from '@/store/ICue';
 import { type ICompilation } from '@/store/ICompilation';
 import { type ITrack } from '@/store/ITrack';
-import { v4 as uuidv4 } from 'uuid';
 import xml2js from 'xml2js';
 import { XmlCompilation } from '@/code/xml/XmlCompilation';
-import type { LocationQuery } from 'vue-router';
-import CompilationHandler from '../../store/compilation-handler';
 import { TimeSignature } from '../music/TimeSignature';
 import type { ITimeSignature } from '../music/ITimeSignature';
 import { Meter } from '../music/Meter';
@@ -198,73 +195,5 @@ export default abstract class XmlCompilationParser {
                     );
                 })
         );
-    }
-
-    /** Parses a new track from a query
-     * @remarks Assumes that the query follows the track API definition.
-     * See https://replayer.app/en/documentation/track-api
-     * @param query {LocationQuery} - The URL query to pars
-     * @devdoc Currently does not support shortcuts
-     */
-    public static parseFromUrlQuery(query: LocationQuery): ITrack | undefined {
-        const mediaUrl = XmlCompilationParser.getSingle(query.media);
-
-        if (mediaUrl) {
-            //Get the track metadata
-            const title = XmlCompilationParser.getSingle(query.title) ?? '';
-            const artist = XmlCompilationParser.getSingle(query.artist) ?? '';
-            const album = XmlCompilationParser.getSingle(query.album) ?? '';
-
-            //Get the cues if available
-            let cues = Array<ICue>();
-            for (const key in query) {
-                const time = parseFloat(key);
-                if (!isNaN(time)) {
-                    const description = XmlCompilationParser.getSingle(
-                        query[key],
-                    ) as string;
-                    const cueId = uuidv4();
-                    cues.push(new Cue(description, null, time, null, cueId));
-                }
-            }
-
-            cues = CompilationHandler.sortByTime(cues);
-
-            const trackId = uuidv4();
-            const newTrack = new Track(
-                title,
-                album,
-                artist,
-                null /* pre-roll */,
-                null /* meter */,
-                null,
-                mediaUrl,
-                trackId,
-                cues,
-                null,
-                DefaultTrackVolume,
-            );
-            return newTrack;
-        } else {
-            return undefined;
-        }
-    }
-
-    /** Gets a single item from either an array, or just the single value
-     * @remarks The items of the array are expected to be all of the same type T.
-     */
-    public static getSingle<T>(set: T | T[]): T {
-        return Array.isArray(set) ? (set[0] as T) : set;
-    }
-    /** Gets a set of items from either an array, or just the single value
-     * @remarks The items of the array are expected to be all of the same type T.
-     */
-    public static getSet<T>(set: T | T[]): T[] {
-        if (Array.isArray(set)) {
-            return set;
-        }
-        const arr = Array<T>();
-        arr.push(set);
-        return arr;
     }
 }
