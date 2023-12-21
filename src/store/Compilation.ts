@@ -59,6 +59,7 @@ export class Compilation implements ICompilation {
                     track.Album,
                     track.Artist,
                     track.PreRoll,
+                    track.PlayheadPosition,
                     track.Meter,
                     track.UseMeasureNumbers,
                     track.Url,

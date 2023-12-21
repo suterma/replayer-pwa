@@ -679,6 +679,9 @@ import {
     ref,
     watch,
     watchEffect,
+    onBeforeMount,
+    onMounted,
+    onUnmounted,
 } from 'vue';
 
 import OnYouTubeConsent from '@/components/dialogs/OnYouTubeConsent.vue';
@@ -723,7 +726,7 @@ import type { IMediaHandler } from '@/code/media/IMediaHandler';
 import { type IMediaLooper, LoopMode } from '@/code/media/IMediaLooper';
 import { MediaLooper } from '@/code/media/MediaLooper';
 import { FadingMode } from '@/code/media/IAudioFader';
-import { useTitle } from '@vueuse/core';
+import { useThrottleFn, useTitle } from '@vueuse/core';
 import { useRoute } from 'vue-router';
 import type { ICueScheduler } from '@/code/media/ICueScheduler';
 import { CueScheduler } from '@/code/media/CueScheduler';
@@ -912,10 +915,18 @@ function useMediaHandler(handler: IMediaHandler) {
     // register for the required events
     handler.onCurrentTimeChanged.subscribe((currentTime) => {
         currentPosition.value = currentTime;
+        throttledUpdatePlayheadPosition();
     });
 
     handler.onCanPlay.subscribe(() => {
         isTrackLoaded.value = true;
+
+        // provide the initial position once
+        if (initialPlayheadPosition) {
+            seekToSeconds(initialPlayheadPosition);
+            // never use again during track lifetime
+            initialPlayheadPosition = null;
+        }
     });
 
     handler.onDurationChanged.subscribe((duration) => {
@@ -927,6 +938,10 @@ function useMediaHandler(handler: IMediaHandler) {
     handler.onPausedChanged.subscribe((paused) => {
         removeCueScheduling();
         isTrackPlaying.value = !paused;
+        if (paused) {
+            // make sure any sharing uses the up-to-date position when paused
+            persistPlayheadPosition();
+        }
     });
 
     handler.onEnded.subscribe(() => {
@@ -934,8 +949,12 @@ function useMediaHandler(handler: IMediaHandler) {
         emit('trackEnded');
     });
 
-    handler.onSeekingChanged.subscribe(() => {
+    handler.onSeekingChanged.subscribe((seeking) => {
         removeCueScheduling();
+        if (!seeking) {
+            // make sure any sharing uses the up-to-date position after seeking
+            persistPlayheadPosition();
+        }
     });
 
     handler.fader.updateSettings(
@@ -961,6 +980,54 @@ function useMediaHandler(handler: IMediaHandler) {
     cueScheduler.value = new CueScheduler(handler);
 }
 
+// --- Persisted playback position ---
+
+/** Periodically persists the running playhead position
+ * @remarks Implements #132
+ */
+const throttledUpdatePlayheadPosition = useThrottleFn(() => {
+    persistPlayheadPosition();
+}, 3000 /* empirical value */);
+
+/** Persists the running playhead position
+ * @remarks Implements #132
+ * @devdoc Updates are only applied when mounted, to allow
+ * proper application of the initial position before mount
+ */
+function persistPlayheadPosition() {
+    if (props.track && isMounted) {
+        props.track.PlayheadPosition = currentPosition.value;
+        console.debug(
+            `Track(${props.track.Name})::PlayheadPosition:${props.track.PlayheadPosition}`,
+        );
+    }
+}
+
+/** Whether the component is currently mounted */
+const isMounted = ref(false);
+
+onMounted(() => {
+    isMounted.value = true;
+});
+onUnmounted(() => {
+    isMounted.value = false;
+});
+
+/** The initial playback position, to be applied once after the media is playable
+ * @remarks The value is retrieved once per component lifetime from
+ * the persistent storage
+ */
+let initialPlayheadPosition: number | null = null;
+
+onBeforeMount(() => {
+    // provide the initial position once
+    if (props.track?.PlayheadPosition) {
+        initialPlayheadPosition = props.track.PlayheadPosition;
+    }
+});
+
+// --- Transport ---
+
 /** The playback progress in the current track, in [seconds]
  * @remarks This is used for cue event handling within the set of cues, like creating a new cue at the current position
  */
@@ -974,6 +1041,8 @@ const currentPositionDisplay = computed(() =>
     CompilationHandler.convertToDisplayTime(currentPosition.value),
 );
 provide(currentPositionDisplayInjectionKey, readonly(currentPositionDisplay));
+
+// --- Track state ---
 
 /** Flag to indicate whether the player has it's track loaded.
  * @remarks This is used to toggle playback button states

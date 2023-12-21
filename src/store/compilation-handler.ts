@@ -117,7 +117,8 @@ export default class CompilationHandler {
             name,
             artist,
             album,
-            null,
+            null /*pre-roll*/,
+            null /*playhead position*/,
             null,
             null,
             trackUrl,
@@ -528,8 +529,8 @@ export default class CompilationHandler {
         compilation: ICompilation,
         cueId: string,
     ): ITrack | undefined {
-        return compilation?.Tracks?.find((t) =>
-            t.Cues.find((c) => c.Id === cueId),
+        return compilation?.Tracks?.find(
+            (t) => t.Cues?.find((c) => c.Id === cueId),
         );
     }
 

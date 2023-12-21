@@ -89,8 +89,10 @@ export default abstract class XmlCompilationParser {
                 XmlCompilationParser.FirstStringOf(xmlTrack.Name),
                 XmlCompilationParser.FirstStringOf(xmlTrack.Album),
                 XmlCompilationParser.FirstStringOf(xmlTrack.Artist),
-                XmlCompilationParser.FirstNumberOf(xmlTrack.PreRoll) ??
-                    null /** NOTE: the formerly used measure property is deprecated */,
+                XmlCompilationParser.FirstNumberOf(xmlTrack.PreRoll) ?? null,
+                XmlCompilationParser.FirstNumberOf(xmlTrack.PlayheadPosition) ??
+                    null,
+                /** NOTE: the formerly used measure property is deprecated */
                 XmlCompilationParser.parseFromXmlMeter(
                     xmlTrack.Meter ? xmlTrack.Meter[0] : null,
                 ),

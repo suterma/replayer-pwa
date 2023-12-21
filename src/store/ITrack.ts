@@ -25,6 +25,14 @@ export interface ITrack {
      */
     PreRoll: number | null;
 
+    /** The track's (coarse) playhead position, in [seconds]
+     * @remarks This is not necessarily the current position in the playing media.
+     * This value is intended to be sparsely updated only to keep a persisted
+     * value in case of sharing or app reloads.
+     * @remarks If not set, zero may be used
+     */
+    PlayheadPosition: number | null;
+
     /** The name of the track */
     Name: string;
 

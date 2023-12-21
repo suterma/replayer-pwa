@@ -13,6 +13,7 @@ export class Track implements ITrack {
     Album = '';
     Artist = '';
     PreRoll: number | null = null;
+    PlayheadPosition: number | null = null;
     Meter: IMeter | null = null;
     UseMeasureNumbers: boolean | null = null;
     Url = '';
@@ -36,6 +37,7 @@ export class Track implements ITrack {
         album: string,
         artist: string,
         preRoll: number | null,
+        playheadPosition: number | null,
         meter: IMeter | null,
         useMeasureNumbers: boolean | null,
         url: string,
@@ -48,6 +50,7 @@ export class Track implements ITrack {
         this.Album = album;
         this.Artist = artist;
         this.PreRoll = preRoll;
+        this.PlayheadPosition = playheadPosition;
         this.Meter = meter;
         this.UseMeasureNumbers = useMeasureNumbers;
         this.Url = url;
@@ -69,6 +72,7 @@ export class Track implements ITrack {
             obj.Album,
             obj.Artist,
             obj.PreRoll,
+            obj.PlayheadPosition,
             obj.Meter,
             obj.UseMeasureNumbers,
             obj.Url,
