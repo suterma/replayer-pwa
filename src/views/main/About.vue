@@ -123,7 +123,7 @@
                                     href="./#/play?media=https://download-media.srf.ch/world/video/sayhi/2023/10/sayhi_20231003_145252_2069202_v_webcast_h264_q60.mp4&title=%23SayHi2023+-+Tanz-Tutorial+zu+%C2%ABMier+fl%C3%BCged+los%C2%BB+von+Remo+Forrer&album=Play+SRF+%23SayHi&artist=Joram+Weber+%26+Lisa+Perissinotto&7.283=Begr%C3%BCssung&32.419=Verse+1a+Tutorial&64.406=Verse+1a+Music&85.982=Verse+1b+Tutorial&112.7=Verse+1b+Music&130.262=Verse+1c+Tutorial&151.823=Verse+1c+Music&170.194=Chorus+Tutorial&190.142=Chorus+Music&209.938=2nd+Verse+Tutorial&232.837=2nd+Verse+Music"
                                     target="_blank"
                                 >
-                                    SRF (MPç video): #SayHi2023 - Tanz-Tutorial
+                                    SRF (MP3 video): #SayHi2023 - Tanz-Tutorial
                                     zu «Mier flüged los» von Remo Forrer</a
                                 >
                             </li>
@@ -133,8 +133,7 @@
                                     target="_blank"
                                 >
                                     YouTube video: Szlachetka playing Crawling
-                                    Back To You (Tom Petty Cover)
-                                    (experimental)</a
+                                    Back To You (Tom Petty Cover)</a
                                 >
                             </li>
                             <li>
@@ -143,8 +142,7 @@
                                     target="_blank"
                                 >
                                     YouTube video: Jodelklub Edelweiss yodeling
-                                    Für Immer Uf Di (Patent Ochsner Cover)
-                                    (experimental)</a
+                                    Für Immer Uf Di (Patent Ochsner Cover)</a
                                 >
                             </li>
                         </ul>
