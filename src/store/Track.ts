@@ -29,6 +29,8 @@ export class Track implements ITrack {
      * @param album {string} - The album name, if any.
      * @param artist {string} - The artist name, if any.
      * @param url {string} - The online URL (starting with http(s)) or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
+     * @param preRoll {number | null} - The track's custom pre-roll duration, in [seconds]
+     * @param initialPlayheadPosition {number | null} - The track's initial playhead position, in [seconds]. The value will be applied once after a media resource with a player has been mounted.
      * @param duration {number | null} - Duration of the media associated with the track. This is not persisted, but set to a specific value once after a matching track has been loaded.
      * @param volume {volume} - Track volume. This is persisted in the application state for user convenience.
      */
@@ -37,7 +39,7 @@ export class Track implements ITrack {
         album: string,
         artist: string,
         preRoll: number | null,
-        playheadPosition: number | null,
+        initialPlayheadPosition: number | null,
         meter: IMeter | null,
         useMeasureNumbers: boolean | null,
         url: string,
@@ -50,7 +52,7 @@ export class Track implements ITrack {
         this.Album = album;
         this.Artist = artist;
         this.PreRoll = preRoll;
-        this.PlayheadPosition = playheadPosition;
+        this.PlayheadPosition = initialPlayheadPosition;
         this.Meter = meter;
         this.UseMeasureNumbers = useMeasureNumbers;
         this.Url = url;

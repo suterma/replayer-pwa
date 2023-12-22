@@ -20,6 +20,7 @@ describe('TrackApi.ts', () => {
             'testAlbum',
             'testArtist',
             5 /*pre-roll*/,
+            null /*playheadPosition*/,
             null /*meter*/,
             false /*useMeasureNumbers*/,
             'https://example.com/test.mp3',
