@@ -133,6 +133,7 @@ import { mdiSwapHorizontal, mdiMusicNotePlus } from '@mdi/js';
 import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { useMessageStore } from '@/store/messages';
+import { Route } from '@/router';
 
 /** Accepts input of files and URLs for tracks, by presenting a drop zone
  * (with file input) and a URL text box
@@ -289,10 +290,10 @@ export default defineComponent({
                         filesArray[0].name,
                     ))
             ) {
-                this.$router.push('play');
+                this.$router.push(Route.Play);
             } else {
                 //otherwise (for a new media file, for example), suggest editing it's track
-                this.$router.push('edit');
+                this.$router.push(Route.Edit);
             }
         },
 
@@ -384,11 +385,11 @@ export default defineComponent({
                             // Decide what to do with this new resource:
                             if (isUsingSingleMediaFile) {
                                 //If a single new media file has been loaded, the intention was most likely to edit it
-                                this.$router.push('edit');
+                                this.$router.push(Route.Edit);
                                 this.addDefaultTrack(this.url);
                             } else {
                                 //If a package has been loaded, the intention was most likely to play it
-                                this.$router.push('play');
+                                this.$router.push(Route.Play);
                             }
                         }
                     })

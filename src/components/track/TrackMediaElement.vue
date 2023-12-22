@@ -172,6 +172,7 @@ import { useDocumentVisibility } from '@vueuse/core';
 import { useElementVisibility } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import type { ICue } from '@/store/ICue';
+import { Route } from '@/router';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -264,7 +265,7 @@ const audioLevelMeterIsVisible = useElementVisibility(audioLevelMeter);
 
 const route = useRoute();
 const isEditable = computed(() => {
-    return route.name == 'Edit';
+    return route.name == Route.Edit;
 });
 
 // --- Media Setup ---

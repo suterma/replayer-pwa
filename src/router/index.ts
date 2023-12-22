@@ -159,7 +159,12 @@ function updateTitleForRoute(to: RouteLocationNormalized) {
     if (
         compilationTitle &&
         toName &&
-        ['Play', 'Edit', 'Mix', 'Setlist'].includes(toName)
+        [
+            Route.Play.toString(),
+            Route.Edit.toString(),
+            Route.Mix.toString(),
+            Route.Setlist.toString(),
+        ].includes(toName)
     ) {
         compilationInfo = ' | ' + compilationTitle;
     }

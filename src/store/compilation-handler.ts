@@ -507,19 +507,6 @@ export default class CompilationHandler {
         return mediaBlobs;
     }
 
-    /** Sorts the cues by their time, ascending
-     * @param cues - The cues to sort
-     * */
-    public static sortByTime(cues: ICue[]): ICue[] {
-        return cues.sort((a, b) =>
-            (a.Time ?? 0) > (b.Time ?? 0)
-                ? 1
-                : (b.Time ?? 0) > (a.Time ?? 0)
-                  ? -1
-                  : 0,
-        );
-    }
-
     /** Gets the the track, if any, in the compilation, which contains the
      * cue with the given cue Id.
      * @param compilation - The compilation, whose tracks are searched

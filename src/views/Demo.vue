@@ -4,6 +4,7 @@
 </template>
 
 <script lang="ts">
+import { Route } from '@/router';
 import { useAppStore } from '@/store/app';
 import { mapActions } from 'pinia';
 import { defineComponent } from 'vue';
@@ -17,7 +18,7 @@ export default defineComponent({
 
     mounted() {
         this.loadDemo();
-        this.$router.push('play');
+        this.$router.push(Route.Play);
     },
 
     methods: {

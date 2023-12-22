@@ -69,6 +69,7 @@ import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.
 import { mapState } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { TrackViewMode } from '@/store/TrackViewMode';
+import { Route } from '@/router';
 
 /** A view for playing an existing compilation */
 export default defineComponent({
@@ -93,10 +94,10 @@ export default defineComponent({
 
         /** Gets the track display mode */
         trackViewode(): TrackViewMode {
-            if (this.$route.name === 'Edit') {
+            if (this.$route.name === Route.Edit) {
                 return TrackViewMode.Edit;
             }
-            if (this.$route.name === 'Mix') {
+            if (this.$route.name === Route.Mix) {
                 return TrackViewMode.Mix;
             }
             return TrackViewMode.Play;

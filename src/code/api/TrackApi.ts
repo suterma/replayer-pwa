@@ -1,4 +1,4 @@
-import router from '@/router';
+import router, { Route } from '@/router';
 import type { ICue } from '@/store/ICue';
 import type { ITrack } from '@/store/ITrack';
 import { type LocationQuery, type RouteLocationRaw } from 'vue-router';
@@ -7,7 +7,6 @@ import { useShare } from '@vueuse/core';
 import { ref } from 'vue';
 import { shareTrack } from '@/code/ui/dialogs';
 import { Cue } from '@/store/Cue';
-import CompilationHandler from '@/store/compilation-handler';
 import { DefaultTrackVolume, Track } from '@/store/Track';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -52,7 +51,7 @@ export class TrackApi {
 
         //Build the URL
         const route = {
-            name: 'Play',
+            name: Route.Play,
             query: apiQuery,
         } as unknown as RouteLocationRaw;
         return (
@@ -60,6 +59,9 @@ export class TrackApi {
             '//' +
             window.location.host +
             window.location.pathname +
+            //TODO this call currently breaks tests by throwing an error
+            //ReferenceError: AudioNode is not defined
+            //Probably we should revisit routing usage here
             router.resolve(route).href
         );
     }
@@ -138,7 +140,7 @@ export class TrackApi {
                 }
             }
 
-            cues = CompilationHandler.sortByTime(cues);
+            cues = TrackApi.sortByTime(cues);
 
             const trackId = uuidv4();
             const newTrack = new Track(
@@ -159,6 +161,19 @@ export class TrackApi {
         } else {
             return undefined;
         }
+    }
+
+    /** Sorts the cues by their time, ascending
+     * @param cues - The cues to sort
+     * */
+    private static sortByTime(cues: ICue[]): ICue[] {
+        return cues.sort((a, b) =>
+            (a.Time ?? 0) > (b.Time ?? 0)
+                ? 1
+                : (b.Time ?? 0) > (a.Time ?? 0)
+                  ? -1
+                  : 0,
+        );
     }
 
     /** Gets a single item from either an array, or just the single value
