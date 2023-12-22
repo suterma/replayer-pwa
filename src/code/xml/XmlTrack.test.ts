@@ -1,12 +1,4 @@
-import {
-    describe,
-    it,
-    beforeEach,
-    afterEach,
-    expect,
-    vi,
-    type MockInstance,
-} from 'vitest'; // import { type ICue, Track } from '@/store/compilation-types';
+import { describe, it, expect } from 'vitest'; // import { type ICue, Track } from '@/store/compilation-types';
 import { XmlTrack } from './XmlTrack';
 import { TimeSignature } from '../music/TimeSignature';
 import { Meter } from '../music/Meter';
@@ -20,7 +12,8 @@ describe('the XML mapping', function () {
             'testName',
             'testAlbum',
             'testArtist',
-            0,
+            9,
+            15 /* initialPlayheadPosition */,
             new Meter(new TimeSignature(3, 4), 90, 0.1),
             false,
             'https://test.example.com?myfile.mp3',
@@ -36,6 +29,8 @@ describe('the XML mapping', function () {
         //Assert
         expect(target.Album).toBe(track.Album);
         expect(target.Artist).toBe(track.Artist);
+        expect(target.PreRoll).toBe(track.PreRoll);
+        expect(target.PlayheadPosition).toBe(track.PlayheadPosition);
         expect(target.Cues.Cue).toHaveLength(0);
         expect(target.Id).toBe(track.Id);
         expect(target.Meter?.BeatsPerMinute).toBe(track.Meter?.BeatsPerMinute);

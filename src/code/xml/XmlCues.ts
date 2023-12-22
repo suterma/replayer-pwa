@@ -1,4 +1,3 @@
-import type { Cue } from '@/store/Cue';
 import type { ICue } from '@/store/ICue';
 import { XmlCue } from './XmlCue';
 
@@ -11,9 +10,9 @@ export class XmlCues {
      */
     constructor(cues: ICue[] | undefined) {
         if (cues) {
-            cues.forEach((cue: Cue) => {
+            for (const cue of cues) {
                 this.Cue.push(new XmlCue(cue));
-            });
+            }
         }
     }
     /** The set of cues; will be rendered as an XML sequence

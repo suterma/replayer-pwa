@@ -30,7 +30,7 @@ export default abstract class XmlCompilationParser {
             '', //NOTE: URL will be set from calling code, with the standalone XML or ZIP file name
             XmlCompilationParser.FirstStringOf(xmlCompilation.Id),
             XmlCompilationParser.parseFromXmlTracks(
-                xmlCompilation.Tracks[0].Track,
+                xmlCompilation?.Tracks ? xmlCompilation?.Tracks[0].Track : null,
             ),
         );
     }
@@ -80,34 +80,40 @@ export default abstract class XmlCompilationParser {
 
     /** @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private static parseFromXmlTracks(xmlTracks: any): Array<ITrack> {
+    private static parseFromXmlTracks(xmlTracks: Array<any>): Array<ITrack> {
         const tracks = new Array<ITrack>();
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        xmlTracks.forEach((xmlTrack: any) => {
-            const track = new Track(
-                XmlCompilationParser.FirstStringOf(xmlTrack.Name),
-                XmlCompilationParser.FirstStringOf(xmlTrack.Album),
-                XmlCompilationParser.FirstStringOf(xmlTrack.Artist),
-                XmlCompilationParser.FirstNumberOf(xmlTrack.PreRoll) ?? null,
-                XmlCompilationParser.FirstNumberOf(xmlTrack.PlayheadPosition) ??
+        if (xmlTracks) {
+            xmlTracks.forEach((xmlTrack: any) => {
+                const track = new Track(
+                    XmlCompilationParser.FirstStringOf(xmlTrack.Name),
+                    XmlCompilationParser.FirstStringOf(xmlTrack.Album),
+                    XmlCompilationParser.FirstStringOf(xmlTrack.Artist),
+                    XmlCompilationParser.FirstNumberOf(xmlTrack.PreRoll) ??
+                        null,
+                    XmlCompilationParser.FirstNumberOf(
+                        xmlTrack.PlayheadPosition,
+                    ) ?? null,
+                    /** NOTE: the formerly used measure property is deprecated */
+                    XmlCompilationParser.parseFromXmlMeter(
+                        xmlTrack.Meter ? xmlTrack.Meter[0] : null,
+                    ),
+                    XmlCompilationParser.FirstBooleanOf(
+                        xmlTrack.useMeasureNumbers,
+                    ),
+                    XmlCompilationParser.FirstStringOf(xmlTrack.Url),
+                    XmlCompilationParser.FirstStringOf(xmlTrack.Id),
+                    XmlCompilationParser.parseFromXmlCues(
+                        xmlTrack.Cues ? xmlTrack.Cues[0].Cue : null,
+                    ),
                     null,
-                /** NOTE: the formerly used measure property is deprecated */
-                XmlCompilationParser.parseFromXmlMeter(
-                    xmlTrack.Meter ? xmlTrack.Meter[0] : null,
-                ),
-                XmlCompilationParser.FirstBooleanOf(xmlTrack.useMeasureNumbers),
-                XmlCompilationParser.FirstStringOf(xmlTrack.Url),
-                XmlCompilationParser.FirstStringOf(xmlTrack.Id),
-                XmlCompilationParser.parseFromXmlCues(
-                    xmlTrack.Cues ? xmlTrack.Cues[0].Cue : null,
-                ),
-                null,
-                XmlCompilationParser.FirstNumberOf(xmlTrack.Volume) ??
-                    DefaultTrackVolume,
-            );
-            tracks.push(track);
-        });
+                    XmlCompilationParser.FirstNumberOf(xmlTrack.Volume) ??
+                        DefaultTrackVolume,
+                );
+                tracks.push(track);
+            });
+        }
 
         return tracks;
     }

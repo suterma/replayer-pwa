@@ -1,116 +1,203 @@
 import { expect, describe, it } from 'vitest';
-import type { LocationQuery } from 'vue-router';
 import CompilationParser from './XmlCompilationParser';
+import { Compilation } from '@/store/Compilation';
+import { Track } from '@/store/Track';
+import type { ICue } from '@/store/ICue';
+import type { ITrack } from '@/store/ITrack';
 
-describe('compilation-parser.ts', () => {
-    it('should parse an undefined track when the query is empty', () => {
+describe('XmlCompilationParser.ts', () => {
+    it('should parse an empty compilation when the compilation is empty', async () => {
         //Arrange
-        const query = {} as LocationQuery;
-
+        const str = `
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <XmlCompilation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        </XmlCompilation>`;
+        const content = Buffer.from(str);
         //Act
-        const track = CompilationParser.parseFromUrlQuery(query);
+        const compilation =
+            await CompilationParser.handleAsXmlCompilation(content);
 
         //Assert
-        expect(track).toBeUndefined();
+        expect(compilation).toBeDefined();
+        expect(compilation.Tracks).toHaveLength(0);
     });
 
-    it('should parse a full query to a complete track', () => {
+    it('should parse a full compilation', async () => {
         //Arrange
-
-        const query = {
-            media: 'https://web.replayer.app/music/your-light-by-lidija-roos.mp3',
-            title: 'Your Light',
-            artist: 'Lidija Roos',
-            album: 'Not For Sale',
-            '6.49': 'Intro',
-        } as LocationQuery;
-
-        console.debug('jest', query);
-
+        const str = `
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <XmlCompilation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+          <Id>863b2f9a-f7eb-4e60-8e7a-0aca014f6737</Id>
+          <MediaPath/>
+          <Title>Willkomme dehei - Junior 2024</Title>
+          <Artist/>
+          <Album/>
+          <Tracks>
+            <Track>
+              <Id>96cc2214-5370-4c1c-8437-b25b91af72ef</Id>
+              <Artist/>
+              <PreRoll>4.035</PreRoll>
+              <Name>1. Party Party</Name>
+              <Album/>
+              <Url>01.mp3</Url>
+              <Meter>
+                <TimeSignature>
+                  <Numerator>4</Numerator>
+                  <Denominator>4</Denominator>
+                </TimeSignature>
+                <BeatsPerMinute>119</BeatsPerMinute>
+                <OriginTime>0</OriginTime>
+              </Meter>
+              <UseMeasureNumbers/>
+              <Volume>0.5</Volume>
+              <Cues>
+                <Cue>
+                  <Id>22666d08-4400-40a2-bf6b-fc9e30b998be</Id>
+                  <Description>Intro</Description>
+                  <Shortcut>10</Shortcut>
+                  <Time>2.018</Time>
+                </Cue>
+                <Cue>
+                  <Id>5fac1944-4d55-46ca-a824-4cacbc53e8b4</Id>
+                  <Description> Intro Album</Description>
+                  <Shortcut>11</Shortcut>
+                  <Time>34.287</Time>
+                </Cue>
+              </Cues>
+            </Track>
+            <Track>
+              <Id>848c5309-4152-4f75-a0bc-58f56a76dc2a</Id>
+              <Artist/>
+              <PreRoll>5.518</PreRoll>
+              <Name>2. Wäg vo dehei</Name>
+              <Album/>
+              <Url>02.mp3</Url>
+              <Meter>
+                <TimeSignature>
+                  <Numerator>2</Numerator>
+                  <Denominator>4</Denominator>
+                </TimeSignature>
+                <BeatsPerMinute>87</BeatsPerMinute>
+                <OriginTime>0</OriginTime>
+              </Meter>
+              <UseMeasureNumbers>true</UseMeasureNumbers>
+              <Volume>0.5</Volume>
+              <Cues>
+                <Cue>
+                  <Id>b3669b51-224b-4589-837d-7372f2ac17dc</Id>
+                  <Description>Intro</Description>
+                  <Shortcut>20</Shortcut>
+                  <Time>3.07</Time>
+                </Cue>
+                <Cue>
+                  <Id>9f8714fe-a964-4f02-9148-cd62f35a2f21</Id>
+                  <Description>Chorus (1)</Description>
+                  <Shortcut>22</Shortcut>
+                  <Time>23.449</Time>
+                </Cue>
+                <Cue>
+                  <Id>1b54dd4f-6594-4824-a20a-a729a0294c65</Id>
+                  <Description>Interlude (3)</Description>
+                  <Shortcut>28</Shortcut>
+                  <Time>176.553</Time>
+                </Cue>
+              </Cues>
+            </Track>
+          </Tracks>
+          <PlaybackMode>PlayTrack</PlaybackMode>
+        </XmlCompilation>        `;
+        const content = Buffer.from(str);
         //Act
-        const track = CompilationParser.parseFromUrlQuery(query);
+        const compilation =
+            await CompilationParser.handleAsXmlCompilation(content);
 
         //Assert
-        expect(track).toBeDefined();
-        expect(track?.Url).toBe(
-            'https://web.replayer.app/music/your-light-by-lidija-roos.mp3',
+        expect(compilation).toBeDefined();
+        expect(compilation.Tracks).toHaveLength(2);
+        const firstTrack = compilation.Tracks[0];
+        expect(firstTrack.Cues).toHaveLength(2);
+        expect(firstTrack.Artist).toBeFalsy(); // it's empty
+        expect(firstTrack.Album).toBeFalsy(); // it's empty
+        expect(firstTrack.Name).toBe('1. Party Party');
+        expect(firstTrack.Url).toBe('01.mp3');
+        const meter = firstTrack.Meter;
+        expect(meter).toBeDefined();
+        expect(meter?.TimeSignature).toBeDefined();
+        expect(meter?.TimeSignature?.Numerator).toBe(4);
+        expect(meter?.BeatsPerMinute).toBe(119);
+        expect(meter?.OriginTime).toBe(0);
+    });
+
+    it('should provide the playhead position', async () => {
+        //Arrange
+        const str = `
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <XmlCompilation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+          <Id>30c291f0-825c-40ca-a772-b17cdda8f937</Id>
+          <MediaPath/>
+          <Title>test</Title>
+          <Artist/>
+          <Album/>
+          <Tracks>
+            <Track>
+              <Id>4dbf78b7-0133-495f-8f71-de69708a9da6</Id>
+              <Artist/>
+              <PreRoll/>
+              <PlayheadPosition>12.7</PlayheadPosition>
+              <Name>test</Name>
+              <Album/>
+              <Url>test.mp3</Url>
+              <Meter/>
+              <UseMeasureNumbers/>
+              <Volume>0.5</Volume>
+              <Cues/>
+            </Track>
+          </Tracks>
+          <PlaybackMode>PlayTrack</PlaybackMode>
+        </XmlCompilation>        `;
+        const content = Buffer.from(str);
+        //Act
+        const compilation =
+            await CompilationParser.handleAsXmlCompilation(content);
+
+        //Assert
+        expect(compilation).toBeDefined();
+        expect(compilation.Tracks).toHaveLength(1);
+        const firstTrack = compilation.Tracks[0];
+        expect(firstTrack.PlayheadPosition).toBe(12.7);
+    });
+
+    it('should parse the playhead position', () => {
+        //Arrange
+        const testTrack = new Track(
+            'testName',
+            'testAlbum',
+            'testArtist',
+            0,
+            15.1,
+            null,
+            null,
+            'testUrl',
+            'testId',
+            new Array<ICue>(),
+            null,
+            1,
         );
-        expect(track?.Name).toBe('Your Light');
-        expect(track?.Artist).toBe('Lidija Roos');
-        expect(track?.Album).toBe('Not For Sale');
-        expect(track?.Duration).toBeNull(); //"Because a duration is only available after track loading in the player."
-        expect(track?.Cues).toBeDefined();
-        expect(track?.Cues).toHaveLength(1);
-        expect(track?.Cues[0]?.Description).toBe('Intro');
-        expect(track?.Cues[0]?.Time).toBe(6.49);
-        expect(track?.Cues[0]?.Id).toBeDefined();
-        expect(track?.Cues[0]?.Duration).toBeNull(); //"Because a duration is only available after track loading in the player."
-        expect(track?.Cues[0]?.Shortcut).toBeNull(); //because there is none
-    });
 
-    it('should parse multliple cues into a list', () => {
-        //Arrange
-
-        const query = {
-            media: 'https://web.replayer.app/music/your-light-by-lidija-roos.mp3',
-            6.49: 'Intro',
-            12.1: 'Intro2',
-        } as LocationQuery;
+        const testCompilation = new Compilation(
+            'testMediaPath',
+            'testTitle',
+            'testArtist',
+            'testAlbum',
+            'testUrl',
+            'testId',
+            new Array<ITrack>(testTrack),
+        );
 
         //Act
-        const track = CompilationParser.parseFromUrlQuery(query);
+        const actual = CompilationParser.convertToXml(testCompilation);
 
         //Assert
-        expect(track).toBeDefined();
-        expect(track?.Cues).toBeDefined();
-        expect(track?.Cues).toHaveLength(2);
-        expect(track?.Cues[0]?.Description).toBe('Intro');
-        expect(track?.Cues[0]?.Time).toBe(6.49);
-        expect(track?.Cues[0]?.Id).toBeDefined();
-        expect(track?.Cues[0]?.Duration).toBeNull(); //"Because a duration is only available after track loading in the player."
-        expect(track?.Cues[0]?.Shortcut).toBeNull(); //because there is none
-        expect(track?.Cues[1]?.Description).toBe('Intro2');
-        expect(track?.Cues[1]?.Time).toBe(12.1);
-        expect(track?.Cues[1]?.Id).toBeDefined();
-        expect(track?.Cues[1]?.Duration).toBeNull(); //"Because a duration is only available after track loading in the player."
-        expect(track?.Cues[1]?.Shortcut).toBeNull(); //because there is none
-    });
-
-    it('should parse a single cue with time 0 correctly', () => {
-        //Arrange
-
-        const query = {
-            media: 'https://web.replayer.app/music/your-light-by-lidija-roos.mp3',
-            0: 'Zero',
-        } as LocationQuery;
-
-        //Act
-        const track = CompilationParser.parseFromUrlQuery(query);
-
-        //Assert
-        expect(track).toBeDefined();
-        expect(track?.Cues).toBeDefined();
-        expect(track?.Cues).toHaveLength(1);
-        expect(track?.Cues[0]?.Time).toBe(0);
-        expect(track?.Cues[0]?.Description).toBe('Zero');
-    });
-
-    it('should parse multiple cues with an integer time correctly', () => {
-        //Arrange
-
-        const query = {
-            media: 'https://web.replayer.app/music/your-light-by-lidija-roos.mp3',
-            12: 'Twelve',
-            13: 'Thirteen',
-        } as LocationQuery;
-
-        //Act
-        const track = CompilationParser.parseFromUrlQuery(query);
-
-        //Assert
-        expect(track?.Cues[0]?.Time).toBe(12);
-        expect(track?.Cues[0]?.Description).toBe('Twelve');
-        expect(track?.Cues[1]?.Time).toBe(13);
-        expect(track?.Cues[1]?.Description).toBe('Thirteen');
+        expect(actual).toContain('<PlayheadPosition>15.1</PlayheadPosition>');
     });
 });
