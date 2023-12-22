@@ -35,6 +35,7 @@ export class TrackApi {
             title: track?.Name,
             album: track?.Album,
             artist: track?.Artist,
+            t: track?.PlayheadPosition,
         };
 
         //Add available cues
@@ -120,12 +121,14 @@ export class TrackApi {
      */
     public static parseFromUrlQuery(query: LocationQuery): ITrack | undefined {
         const mediaUrl = TrackApi.getSingle(query.media);
+        const time = TrackApi.getSingle(query.t);
 
         if (mediaUrl) {
             //Get the track metadata
             const title = TrackApi.getSingle(query.title) ?? '';
             const artist = TrackApi.getSingle(query.artist) ?? '';
             const album = TrackApi.getSingle(query.album) ?? '';
+            const initialPlayheadPosition = time ? parseFloat(time) : null;
 
             //Get the cues if available
             let cues = Array<ICue>();
@@ -148,8 +151,8 @@ export class TrackApi {
                 album,
                 artist,
                 null /* pre-roll */,
+                initialPlayheadPosition /* initialPlayheadPosition */,
                 null /* meter */,
-                null /* initialPlayheadPosition */,
                 null,
                 mediaUrl,
                 trackId,
