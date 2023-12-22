@@ -147,6 +147,7 @@ export class TrackApi {
                 artist,
                 null /* pre-roll */,
                 null /* meter */,
+                null /* initialPlayheadPosition */,
                 null,
                 mediaUrl,
                 trackId,

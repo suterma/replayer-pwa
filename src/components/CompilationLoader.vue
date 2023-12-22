@@ -29,7 +29,7 @@ export default defineComponent({
             if (track && track.Url) {
                 //Add the track, before the track media URL (to avoid the creation of a default track)
                 this.addTrack(track);
-                const firstCueId = track.Cues[0]?.Id;
+                const firstCueId = track.Cues?.[0]?.Id;
                 if (firstCueId) {
                     this.updateSelectedCueId(firstCueId);
                 }
