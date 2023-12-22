@@ -1,4 +1,7 @@
 import { describe, it, expect } from 'vitest';
+//TODO using the track API breaks tests by throwing an error
+// ReferenceError: AudioNode is not defined
+// when build for testing with vitest
 import { TrackApi } from './TrackApi';
 import { Track } from '@/store/Track';
 import { Cue } from '@/store/Cue';
