@@ -17,6 +17,14 @@ process.env.VITE_APP_GIT_AUTHOR_DATE = git('log -1 --format=%aI');
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    build: {
+        // Support older browser/os versions
+        // See https://replayer.app/en/documentation/compatibility-known-issues
+        // for officially supported versions
+        target: 'es2015',
+        // Since this is FOSS anyway, improve a possible debug experience
+        sourcemap: true,
+    },
     plugins: [
         vue(),
         VitePWA({
