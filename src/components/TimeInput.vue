@@ -5,9 +5,9 @@
         inputmode="decimal"
         :step="step"
         :value="modelValue"
-        @change="immediatelyUpdateTime($event)"
-        @paste="immediatelyUpdateTime($event)"
-        @input="debouncedHandler($event)"
+        @change="updateTime($event)"
+        @paste="updateTime($event)"
+        @input="debouncedUpdateTime($event)"
         placeholder="time [seconds]"
         size="5"
         data-cy="input-time-position"
@@ -15,9 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onBeforeUnmount, type PropType } from 'vue';
+import { type PropType } from 'vue';
 import CompilationHandler from '@/store/compilation-handler';
-import { debounce } from 'lodash-es';
+import { useDebounceFn } from '@vueuse/core';
 
 /** An input for a time value in [seconds]
  * @remarks Debounces on typed user input (not debouncing when using the spinner buttons)
@@ -36,31 +36,10 @@ const props = defineProps({
     },
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let debouncedHandler = null as any;
-
-onBeforeMount(() => {
-    debouncedHandler = debounce((event: Event): void => {
-        updateTime(event);
-    }, 600);
-});
-
-onBeforeUnmount(() => {
-    debouncedHandler.cancel();
-});
-
-/** Updates the set cue time immediately, canceling any running debounce */
-function immediatelyUpdateTime(event: Event) {
-    debouncedHandler.cancel();
-    updateTime(event);
-}
-
 /** Updates the set cue time after debouncing */
-function debouncedUpdateTime(event: Event) {
-    debouncedHandler = debounce(() => {
-        updateTime(event);
-    }, 600);
-}
+const debouncedUpdateTime = useDebounceFn((event: Event) => {
+    updateTime(event);
+}, 600);
 
 /** Updates the set cue time */
 function updateTime(event: Event) {
