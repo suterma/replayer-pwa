@@ -1,8 +1,9 @@
 import { fileURLToPath, URL } from 'node:url';
-import { defineConfig } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
+import { defineConfig, type PluginOption } from 'vite';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 //Setting the environment variables
 const child_process = require('child_process');
@@ -27,6 +28,9 @@ export default defineConfig({
     },
     plugins: [
         vue(),
+        // Watch and possible reduce bundle size with this visualizer:
+        // https://github.com/btd/rollup-plugin-visualizer
+        [visualizer() as PluginOption],
         VitePWA({
             registerType: 'prompt',
             devOptions: {

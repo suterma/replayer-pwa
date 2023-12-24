@@ -16,7 +16,7 @@ By the click of a button, Replayer starts to play at predefined times in the aud
 1. In the session, using Replayer on your portable computer, play any part of your set with the click of a cue button.
 1. Additionally, you can use a (bluetooth) numeric keypad, as a remote control
 
-Try the [demo in the browser](https://web.replayer.app/#demo)
+Try the <a href="https://web.replayer.app/#demo" target="_blank">demo in the browser</a>.
 
 # Latest release
 
@@ -29,17 +29,17 @@ Try the [demo in the browser](https://web.replayer.app/#demo)
 
 # Documentation
 
-The full documentation is available at https://replayer.app/en/documentation
+The full documentation is available at https://replayer.app/documentation
 
 # Tests
 
--   Run the [Cypress End-To-End regression tests](/cypress/e2e/regression)
+## End-to-end (with cypress)
 
-    # Manually
+Run the [Cypress End-To-End regression tests](/cypress/e2e/regression)
 
-    npm run test:e2e:dev
+## Unit tests
 
--   Run the vitest unit tests
+Run the vitest unit tests with:
 
     npm run test:unit
 
@@ -60,6 +60,14 @@ When using VSCode, in the Terminal (Powershell) do
     $env:NODE_OPTIONS="--openssl-legacy-provider"
 
 once before building.
+
+## Bundling
+
+Replayer uses [Vite](https://vitejs.dev/), with it's current default use of [Rollup](https://rollupjs.org/) as the [bundler for production](https://vitejs.dev/guide/why#why-bundle-for-production) builds.
+
+This means that optimizations for production buils need to leverage Rollup's options. This [Rollup bundle visualizer plugin](https://github.com/btd/rollup-plugin-visualizer) creates visual build statistics, whenever a production build is made.
+
+See the the latest bundle statistics in [./stats.html].
 
 # Roadmap
 

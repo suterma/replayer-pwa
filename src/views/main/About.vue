@@ -559,6 +559,15 @@
                         >, PWA integrations for Vite and the ecosystem.
                         (Released under the MIT License, by the vite-pwa team)
                     </li>
+                    <li>
+                        <a
+                            href="https://github.com/btd/rollup-plugin-visualizer"
+                            target="_blank"
+                            >Rollup Plugin Visualizer</a
+                        >, visualize and analyze your Rollup bundle to see which
+                        modules are taking up space. (Released under the MIT
+                        License, by Denis Bardadym)
+                    </li>
                 </ul>
             </div>
         </CollapsiblePanel>
