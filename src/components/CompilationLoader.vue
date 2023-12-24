@@ -29,9 +29,18 @@ export default defineComponent({
             if (track && track.Url) {
                 //Add the track, before the track media URL (to avoid the creation of a default track)
                 this.addTrack(track);
-                const firstCueId = track.Cues?.[0]?.Id;
-                if (firstCueId) {
-                    this.updateSelectedCueId(firstCueId);
+
+                // Select cue matching the initial playhead position (see #134)
+                const initialCueId = track.Cues?.find(
+                    (cue) => cue.Time == track.PlayheadPosition,
+                )?.Id;
+                if (initialCueId) {
+                    this.updateSelectedCueId(initialCueId);
+                } else {
+                    const firstCueId = track.Cues?.[0]?.Id;
+                    if (firstCueId) {
+                        this.updateSelectedCueId(firstCueId);
+                    }
                 }
                 //Now, after the track has been added, add the track's media URL
                 this.useMediaFromUrl(track.Url);
