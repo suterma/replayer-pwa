@@ -420,4 +420,3 @@ unintended manipulation of the YouTube player behind the container overlay */
     pointer-events: all;
 }
 </style>
-import type { ICue } from '@/store/ICue';
