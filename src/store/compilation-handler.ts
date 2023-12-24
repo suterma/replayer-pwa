@@ -7,7 +7,7 @@ import { DefaultMathPrecision, TimeFormat, useSettingsStore } from './settings';
 import { MediaBlob, MediaUrl } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import FileHandler from './filehandler';
-import _ from 'lodash';
+import { round } from 'lodash';
 
 /**
  * Provides compilation handling methods
@@ -187,7 +187,7 @@ export default class CompilationHandler {
     /** Rounds the given value to the Replayer default math precision for time values.
      */
     static roundTime(time: number): number {
-        return _.round(time, DefaultMathPrecision);
+        return round(time, DefaultMathPrecision);
     }
 
     /** Updates (recalculates) the durations of the given cues, by using the track duration for the last cue.

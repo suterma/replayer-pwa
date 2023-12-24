@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { floor } from 'lodash';
 import type { ITimeSignature } from './ITimeSignature';
 import { MetricalPosition } from './MetricalPosition';
 import type { IMeter } from './IMeter';
@@ -177,9 +177,9 @@ export class Meter implements IMeter {
 
             const beat = shiftedTime * beatsPerSecond;
 
-            const beatNumber = _.floor(beat);
+            const beatNumber = floor(beat);
 
-            const measureNumber = _.floor(
+            const measureNumber = floor(
                 beatNumber / meter.TimeSignature.Numerator +
                     1 /* Measures are index-one based */,
             );

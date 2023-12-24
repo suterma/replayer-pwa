@@ -17,7 +17,7 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import CompilationHandler from '@/store/compilation-handler';
-import _ from 'lodash';
+import { debounce } from 'lodash';
 
 /** An input for a time value in [seconds]
  * @remarks Debounces on typed user input (not debouncing when using the spinner buttons)
@@ -47,7 +47,7 @@ export default defineComponent({
     },
 
     created() {
-        this.debouncedHandler = _.debounce((event: Event): void => {
+        this.debouncedHandler = debounce((event: Event): void => {
             this.updateTime(event);
         }, 600);
     },
@@ -63,7 +63,7 @@ export default defineComponent({
 
         /** Updates the set cue time after debouncing */
         debouncedUpdateTime(event: Event) {
-            this.debouncedHandler = _.debounce(() => {
+            this.debouncedHandler = debounce(() => {
                 this.updateTime(event);
             }, 600);
         },
