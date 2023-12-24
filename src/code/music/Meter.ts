@@ -1,4 +1,4 @@
-import { floor } from 'lodash';
+import { floor } from 'lodash-es';
 import type { ITimeSignature } from './ITimeSignature';
 import { MetricalPosition } from './MetricalPosition';
 import type { IMeter } from './IMeter';

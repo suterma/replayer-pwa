@@ -7,7 +7,7 @@ import { DefaultMathPrecision, TimeFormat, useSettingsStore } from './settings';
 import { MediaBlob, MediaUrl } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import FileHandler from './filehandler';
-import { round } from 'lodash';
+import { round } from 'lodash-es';
 
 /**
  * Provides compilation handling methods
