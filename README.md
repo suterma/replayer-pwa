@@ -67,7 +67,7 @@ Replayer uses [Vite](https://vitejs.dev/), with it's current default use of [Rol
 
 This means that optimizations for production buils need to leverage Rollup's options. This [Rollup bundle visualizer plugin](https://github.com/btd/rollup-plugin-visualizer) creates visual build statistics, whenever a production build is made.
 
-See the the latest bundle statistics in [./stats.html].
+See the the latest bundle statistics in [stats.html](https://htmlpreview.github.io/?https://raw.githubusercontent.com/suterma/replayer-pwa/main/stats.html).
 
 # Roadmap
 
