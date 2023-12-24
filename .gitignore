@@ -34,3 +34,6 @@ cypress/downloads/
 
 # development build output
 /dev-dist
+
+# Bundling sizes of packages, useful for bundle size optimization efforts
+# stats.html
