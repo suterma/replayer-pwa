@@ -20,10 +20,10 @@
             >{{ typeText }}:&nbsp;
         </span>
         <span
-            class="media-source has-text-break-word is-indicator"
+            class="has-cropped-text is-indicator"
             :class="{ 'has-text-warning': unavailable }"
             data-cy="media-source"
-            >{{ mediaSource }}
+            ><span>{{ mediaSource }}</span>
 
             <template
                 v-if="

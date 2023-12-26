@@ -75,27 +75,3 @@ export default defineComponent({
     },
 });
 </script>
-<style lang="scss">
-/** For this list, make the media source indicator shrink with an ellipsis, from the left */
-.media-source.is-indicator {
-    max-width: calc(100vw - 192px);
-    overflow: hidden;
-    display: inline-block;
-    text-overflow: ellipsis;
-    direction: rtl;
-}
-
-/** from $tablet */
-@media screen and (min-width: 769px) {
-    .media-source.is-indicator {
-        max-width: calc(100vw - 260px);
-    }
-}
-
-/** from $desktop */
-@media screen and (min-width: 1024px) {
-    .media-source.is-indicator {
-        max-width: calc(100vw - 310px);
-    }
-}
-</style>
