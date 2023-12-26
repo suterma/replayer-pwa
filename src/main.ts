@@ -1,7 +1,7 @@
 import { createApp, watch } from 'vue';
 import App from './App.vue';
 import { createPinia, storeToRefs } from 'pinia';
-import router, { updateTitle } from './router';
+import router from './router';
 import VueScrollTo from 'vue-scrollto';
 import vClickOutside from 'click-outside-vue3';
 //@ts-ignore (because vue3-promise-dialog does not provide types)
@@ -9,6 +9,7 @@ import { PromiseDialog } from 'vue3-promise-dialog';
 import { useMessageStore } from './store/messages';
 import { useAppStore } from './store/app';
 import { createManager } from '@vue-youtube/core';
+import { useTitle } from '@vueuse/core';
 
 console.log('App version: ' + import.meta.env.VITE_APP_VERSION);
 console.log('MODE: ' + import.meta.env.MODE);
@@ -61,7 +62,11 @@ window.addEventListener('unhandledrejection', function (event) {
 
 // Handle the app title when the compilation title changes
 const app = useAppStore();
+const title = useTitle();
 const { compilationTitle } = storeToRefs(app);
 watch(compilationTitle, () => {
-    updateTitle();
+    const updatedTitle =
+        (compilationTitle.value ? compilationTitle.value + ' | ' : '') +
+        'Replayer';
+    title.value = updatedTitle;
 });

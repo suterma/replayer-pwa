@@ -998,7 +998,7 @@ function persistPlayheadPosition() {
     if (props.track && isMounted) {
         props.track.PlayheadPosition = currentPosition.value;
         console.debug(
-            `Track(${props.track.Name})::PlayheadPosition:${props.track.PlayheadPosition}`,
+            `MediaTrack(${props.track.Name})::PlayheadPosition:${props.track.PlayheadPosition}`,
         );
     }
 }
@@ -1273,7 +1273,7 @@ function goToSelectedCue() {
     /*Check for the active track here (again), because otherwise some event handling
             sequences might cause actions on non-active tracks too.*/
     if (isActiveTrack.value) {
-        console.debug(`Track(${props.track.Name})::goToSelectedCue`);
+        console.debug(`MediaTrack(${props.track.Name})::goToSelectedCue`);
         if (selectedCue.value) {
             const cueTime = selectedCue.value.Time;
 
@@ -1325,7 +1325,7 @@ function updateIsExpanded(expanded: boolean): void {
  * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
  */
 function cueClick(cue: ICue, togglePlayback = true) {
-    console.debug(`Track(${props.track.Name})::cueClick:cue:`, cue);
+    console.debug(`MediaTrack(${props.track.Name})::cueClick:cue:`, cue);
     if (cue.Time != null && Number.isFinite(cue.Time)) {
         // Handle cue as current or scheduled?
         if (
@@ -1347,7 +1347,7 @@ function cueClick(cue: ICue, togglePlayback = true) {
                     );
                 if (remainingTime) {
                     console.debug(
-                        `Track(${props.track.Name})::scheduling:remainingTime:`,
+                        `MediaTrack(${props.track.Name})::scheduling:remainingTime:`,
                         remainingTime,
                     );
                     cueScheduler.value
@@ -1360,7 +1360,7 @@ function cueClick(cue: ICue, togglePlayback = true) {
                         })
                         .catch((reason) => {
                             console.warn(
-                                `Track(${props.track.Name})::ScheduleCue:aborted:`,
+                                `MediaTrack(${props.track.Name})::ScheduleCue:aborted:`,
                                 reason,
                             );
                         });
@@ -1390,7 +1390,7 @@ function cueClick(cue: ICue, togglePlayback = true) {
  * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
  */
 function cuePlay(cue: ICue) {
-    console.debug(`Track(${props.track.Name})::cuePlay:cue:`, cue);
+    console.debug(`MediaTrack(${props.track.Name})::cuePlay:cue:`, cue);
     if (cue.Time != null && Number.isFinite(cue.Time)) {
         app.updateSelectedCueId(cue.Id);
 
@@ -1407,7 +1407,7 @@ function cuePlay(cue: ICue) {
  * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
  */
 function trackPlay() {
-    console.debug(`Track(${props.track.Name})::trackPlay`);
+    console.debug(`MediaTrack(${props.track.Name})::trackPlay`);
     app.updateSelectedTrackId(props.track.Id);
 
     //Set the position to the beginning and handle playback
@@ -1436,7 +1436,7 @@ defineExpose({
  */
 watch(isTrackPlaying, () => {
     console.debug(
-        `Track(${props.track.Name})::isTrackPlaying:`,
+        `MediaTrack(${props.track.Name})::isTrackPlaying:`,
         isTrackPlaying,
     );
     emit('isTrackPlaying', isTrackPlaying);
@@ -1477,10 +1477,13 @@ const preRollDuration = computed(() => {
 });
 
 /** The description of the currently playing cue
- * @remarks The implementation makes sure that at least always an empty string is returned.
- * Combined with an &nbsp;, this avoids layout flicker.
+ * @remarks The implementation makes sure that at least always an empty string
+ * is returned. If you add a neutral blank space character in HTML, this avoids
+ * layout flicker.
  */
 const playingCueDescription = computed(() => {
+    //TODO later use a properly generated description like from the CueButton
+    //(centralize the implementation there)
     const description = playingCue.value?.Description;
 
     if (description) {
@@ -1614,7 +1617,7 @@ watch(
     () => isActiveTrack.value,
     (isActive, wasActive) => {
         console.debug(
-            `Track(${props.track.Name})::isActiveTrack:val:`,
+            `MediaTrack(${props.track.Name})::isActiveTrack:val:`,
             isActive,
         );
 
@@ -1630,7 +1633,7 @@ watch(
  */
 watch(activeTrackId, (activeTrackId, previousTrackId) => {
     console.debug(
-        `Track(${props.track.Name})::activeTrack:activeTrackId:`,
+        `MediaTrack(${props.track.Name})::activeTrack:activeTrackId:`,
         activeTrackId,
         'prev:',
         previousTrackId,
@@ -1718,18 +1721,32 @@ watchEffect(() => {
 // --- document title
 
 const title = useTitle();
-const route = useRoute();
 
-/** Show the cue, track, route and app name in the document title */
+/** For an active track, show the cue, track and app name in the document title
+ * @devdoc This does unfortunately not work when only the track changes, and
+ * no named cue is playing on a newly active track. The reason for this is
+ * unknown.
+ * Thus, an additional title update is implemented at a parent component level.
+ */
 watchEffect(() => {
-    if (isActiveTrack.value) {
-        title.value =
+    const existingTitle = title.value;
+    let newTitle = 'Replayer';
+
+    if (isActiveTrack.value == true) {
+        newTitle =
             (playingCueDescription.value
                 ? playingCueDescription.value + ' | '
                 : '') +
             (props.track?.Name ? props.track?.Name + ' | ' : '') +
-            (route.name?.toString() ? route.name?.toString() + ' | ' : '') +
-            'Replayer';
+            newTitle;
+
+        if (existingTitle !== newTitle) {
+            console.debug(
+                `MediaTrack(${props.track.Name})::title.value:`,
+                newTitle,
+            );
+            title.value = newTitle;
+        }
     }
 });
 

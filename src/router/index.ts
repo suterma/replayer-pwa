@@ -3,15 +3,12 @@ import {
     createWebHashHistory,
     isNavigationFailure,
     NavigationFailureType,
-    type RouteLocationNormalized,
     type RouteRecordRaw,
 } from 'vue-router';
 import Main from '../views/Main.vue';
 import Reset from '../views/Reset.vue';
 import Demo from '../views/Demo.vue';
 import Development from '../views/Development.vue';
-import { useTitle } from '@vueuse/core';
-import { useAppStore } from '@/store/app';
 
 /** A set of route names. */
 export enum Route {
@@ -110,15 +107,6 @@ const router = createRouter({
     routes,
 });
 
-const title = useTitle('Starting');
-
-/**
- *  Show title according new route
- */
-useTitle(title, {
-    titleTemplate: '%s | Replayer',
-});
-
 /**
  *  Log changing of the route
  */
@@ -138,37 +126,5 @@ router.afterEach((to, from, failure) => {
         );
     }
 });
-
-/** Updates the document title, using the current route and compilation title */
-export function updateTitle(): void {
-    updateTitleForRoute(router.currentRoute.value);
-}
-
-router.afterEach((to) => {
-    // Update the title, only after navigation (pinia will be installed by now)
-    updateTitleForRoute(to);
-});
-
-/** Updates the document title, using the given route and compilation title */
-function updateTitleForRoute(to: RouteLocationNormalized) {
-    const toName = to.name?.toString();
-    //on some routes, also display the compilation title
-    let compilationInfo = '';
-    const app = useAppStore();
-    const compilationTitle = app.compilationTitle;
-    if (
-        compilationTitle &&
-        toName &&
-        [
-            Route.Play.toString(),
-            Route.Edit.toString(),
-            Route.Mix.toString(),
-            Route.Setlist.toString(),
-        ].includes(toName)
-    ) {
-        compilationInfo = ' | ' + compilationTitle;
-    }
-    title.value = `${toName}${compilationInfo}`;
-}
 
 export default router;
