@@ -1,5 +1,13 @@
 <template>
-    <div class="block" v-if="mediaElement && isEditable && showWaveformsOnEdit">
+    <div
+        class="block"
+        v-if="
+            mediaElement &&
+            isEditable &&
+            showWaveformsOnEdit &&
+            !FileHandler.isValidHttpUrl(mediaUrl)
+        "
+    >
         <!-- Waveforms are automatially only revealed for short audio files -->
         <CoveredPanel
             :revealFor="[isShortDuration && !props.enableVideo]"

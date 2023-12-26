@@ -12,6 +12,7 @@
 </template>
 
 <script lang="ts">
+import FileHandler from '@/store/filehandler';
 import { defineComponent } from 'vue';
 
 /** Display for a text, which shows a link instead, if the text is an URL
@@ -27,25 +28,9 @@ export default defineComponent({
     data() {
         return {};
     },
-    methods: {
-        isValidHttpUrl(text: string) {
-            let url;
-
-            try {
-                url = new URL(text);
-            } catch (_) {
-                return false;
-            }
-
-            return url.protocol === 'http:' || url.protocol === 'https:';
-        },
-    },
     computed: {
         isLinkText(): boolean {
-            if (!this.text) {
-                return false;
-            }
-            return this.isValidHttpUrl(this.text);
+            return FileHandler.isValidHttpUrl(this.text ?? '');
         },
     },
 });
