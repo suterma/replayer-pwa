@@ -133,7 +133,6 @@ import { type PropType, defineComponent } from 'vue';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import LabeledInput from '@/components/editor/LabeledInput.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
-import ArtistLevelEditor from '@/components/editor/ArtistLevelEditor.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import CompilationContextMenu from '@/components/context-menu/CompilationContextMenu.vue';
 import { mapActions } from 'pinia';
@@ -152,7 +151,6 @@ export default defineComponent({
         CompilationContextMenu,
         ArtistInfo,
         CoveredPanel,
-        ArtistLevelEditor,
     },
     props: {
         compilation: {

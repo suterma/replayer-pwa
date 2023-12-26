@@ -262,7 +262,6 @@ import CoveredPanel from '@/components/CoveredPanel.vue';
 import MediaSourceIndicator from '@/components/MediaSourceIndicator.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
-import ArtistLevelEditor from '@/components/editor/ArtistLevelEditor.vue';
 import LabeledInput from '@/components/editor/LabeledInput.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
