@@ -38,10 +38,12 @@ export default defineComponent({
         LinkableText,
     },
     props: {
+        /** The artist's name to display */
         artist: {
             type: String,
             required: true,
         },
+        /** The album's name to display */
         album: {
             type: String,
             required: true,

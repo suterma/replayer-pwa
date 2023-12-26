@@ -727,7 +727,6 @@ import { type IMediaLooper, LoopMode } from '@/code/media/IMediaLooper';
 import { MediaLooper } from '@/code/media/MediaLooper';
 import { FadingMode } from '@/code/media/IAudioFader';
 import { useThrottleFn, useTitle } from '@vueuse/core';
-import { useRoute } from 'vue-router';
 import type { ICueScheduler } from '@/code/media/ICueScheduler';
 import { CueScheduler } from '@/code/media/CueScheduler';
 import { TrackViewMode } from '@/store/TrackViewMode';
