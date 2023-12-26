@@ -9,6 +9,10 @@
         :excluded-elements="[]"
         v-slot="{ clickRef }"
     >
+        <!-- 
+            Triggered on click or by hotkey
+            @event adjustTime
+        -->
         <button
             class="button"
             title="Adjusts the time to the current playback time"
@@ -43,20 +47,21 @@ import {
     mdiTimerPlayOutline,
     mdiAppleKeyboardShift,
 } from '@mdi/js';
-/** A button that emits a click event, intended to ajust a time value to the current playback time.
+/** A button that emits a specific event, intended to set or ajust a time value.
  * Also handles a hotkey, when this is marked as selected (via isSelectedItem)
+ * @remarks The button does not actually handle time itself.
+ * @displayName Button to ajust a time value
  */
 export default defineComponent({
     name: 'AdjustTimeButton',
     components: { BaseIcon, ShortcutDisplay, Hotkey },
     emits: [
-        /** Occurs, when the cue should get adjusted to the the current playhead position.
-         */
+        /** Occurs, when the time should get adjusted */
         'adjustTime',
     ],
     props: {
-        /** Whether this button is for the globally selected item
-         * (The button should only execute the hotkey for the globally selected item ) */
+        /** Whether this button is used for the globally selected item
+         * @remarks The button should only execute the hotkey for the globally selected item */
         isSelectedItem: {
             type: Boolean,
             default: false,
