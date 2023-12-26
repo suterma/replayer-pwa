@@ -79,28 +79,64 @@
                     </LabeledInput>
                 </div>
                 <CoveredPanel
-                    :revealFor="[track?.Artist, track?.Album]"
-                    title="Artist and Album for this track"
+                    :revealFor="[track.Artist]"
+                    title="Artist name for this track"
                     class="level-item"
                 >
-                    <template #caption
-                        ><span class="label">Artist / Album</span></template
-                    >
+                    <template #caption>
+                        <span class="label">by</span>
+                    </template>
 
-                    <ArtistLevelEditor
-                        :artist="track.Artist"
-                        @update:artist="
-                            (value) => {
-                                updateArtist(value);
-                            }
-                        "
-                        :album="track.Album"
-                        @update:album="
-                            (value) => {
-                                updateAlbum(value);
-                            }
-                        "
-                    ></ArtistLevelEditor>
+                    <div class="field is-fullwidth">
+                        <p class="control is-expanded">
+                            <LabeledInput label="by">
+                                <StyledInput
+                                    class="input is-italic"
+                                    :modelValue="track.Artist"
+                                    @update:modelValue="
+                                        (value) => {
+                                            updateArtist(value);
+                                        }
+                                    "
+                                    type="text"
+                                    placeholder="Artist"
+                                    title="Artist"
+                                    data-cy="track-artist"
+                                    focusOnMounted
+                                >
+                                </StyledInput>
+                            </LabeledInput>
+                        </p>
+                    </div>
+                </CoveredPanel>
+                <CoveredPanel
+                    :revealFor="[track.Album]"
+                    title="Album name for this track"
+                    class="level-item"
+                >
+                    <template #caption><span class="label">on</span></template>
+
+                    <div class="field is-fullwidth">
+                        <p class="control is-expanded">
+                            <LabeledInput label="on">
+                                <StyledInput
+                                    class="input is-italic"
+                                    :modelValue="track.Album"
+                                    @update:modelValue="
+                                        (value) => {
+                                            updateAlbum(value);
+                                        }
+                                    "
+                                    type="text"
+                                    placeholder="Album"
+                                    title="Album"
+                                    data-cy="track-album"
+                                    focusOnMounted
+                                >
+                                </StyledInput>
+                            </LabeledInput>
+                        </p>
+                    </div>
                 </CoveredPanel>
 
                 <!-- Pre-Roll (in time) (hide initially, as long as no cues are set) -->

@@ -16,11 +16,14 @@
 </template>
 
 <script setup lang="ts">
-/** An input with a label
+/**
+ * An input with a label
  * @devdoc This is to be used for arbitrary inputs, with the bulma layout.
  */
 defineProps({
-    /** The label text */
+    /**
+     * The label text
+     */
     label: {
         type: String,
         required: false,

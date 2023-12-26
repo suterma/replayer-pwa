@@ -1,6 +1,6 @@
 <template>
     <!-- Level, also on mobile -->
-    <nav class="level is-mobile">
+    <nav class="level">
         <div class="level-left">
             <!-- Title and artist info is only used when set or in compilations with more than one track -->
             <!-- On small devices, only title is used -->
@@ -32,28 +32,68 @@
                     </div>
                 </div>
                 <CoveredPanel
-                    :revealFor="[compilation.Artist, compilation.Album]"
-                    title="Artist and Album for this compilation"
+                    :revealFor="[compilation.Artist]"
+                    title="Artist name for this compilation"
                 >
-                    <template #caption
-                        ><span class="has-opacity-half"
-                            >Artist / Album</span
-                        ></template
+                    <template #caption>
+                        <span class="label">by</span>
+                    </template>
+                    <div
+                        class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
                     >
-                    <ArtistLevelEditor
-                        :artist="compilation.Artist"
-                        @update:artist="
-                            (value) => {
-                                updateArtist(value);
-                            }
-                        "
-                        :album="compilation.Album"
-                        @update:album="
-                            (value) => {
-                                updateAlbum(value);
-                            }
-                        "
-                    ></ArtistLevelEditor>
+                        <div class="field is-fullwidth">
+                            <p class="control is-expanded">
+                                <LabeledInput label="by">
+                                    <StyledInput
+                                        class="input is-italic"
+                                        :modelValue="compilation.Artist"
+                                        @update:modelValue="
+                                            (value) => {
+                                                updateArtist(value);
+                                            }
+                                        "
+                                        type="text"
+                                        placeholder="Artist"
+                                        title="Artist"
+                                        data-cy="track-artist"
+                                        focusOnMounted
+                                    >
+                                    </StyledInput>
+                                </LabeledInput>
+                            </p>
+                        </div>
+                    </div>
+                </CoveredPanel>
+                <CoveredPanel
+                    :revealFor="[compilation.Album]"
+                    title="Album name for this compilation"
+                >
+                    <template #caption><span class="label">on</span></template>
+                    <div
+                        class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
+                    >
+                        <div class="field is-fullwidth">
+                            <p class="control is-expanded">
+                                <LabeledInput label="on">
+                                    <StyledInput
+                                        class="input is-italic"
+                                        :modelValue="compilation.Album"
+                                        @update:modelValue="
+                                            (value) => {
+                                                updateAlbum(value);
+                                            }
+                                        "
+                                        type="text"
+                                        placeholder="Album"
+                                        title="Album"
+                                        data-cy="track-album"
+                                        focusOnMounted
+                                    >
+                                    </StyledInput>
+                                </LabeledInput>
+                            </p>
+                        </div>
+                    </div>
                 </CoveredPanel>
             </template>
             <template v-else>
@@ -91,6 +131,7 @@
 <script lang="ts">
 import { type PropType, defineComponent } from 'vue';
 import ArtistInfo from '@/components/ArtistInfo.vue';
+import LabeledInput from '@/components/editor/LabeledInput.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
 import ArtistLevelEditor from '@/components/editor/ArtistLevelEditor.vue';
 import StyledInput from '@/components/StyledInput.vue';
@@ -100,12 +141,14 @@ import { useAppStore } from '@/store/app';
 import { mdiPlus } from '@mdi/js';
 import type { ICompilation } from '@/store/ICompilation';
 
-/** A nav bar as header with a menu for a compilation
+/**
+ * A nav bar as header with a menu for a compilation
  */
 export default defineComponent({
     name: 'CompilationHeader',
     components: {
         StyledInput,
+        LabeledInput,
         CompilationContextMenu,
         ArtistInfo,
         CoveredPanel,
