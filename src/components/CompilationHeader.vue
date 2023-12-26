@@ -191,4 +191,3 @@ export default defineComponent({
     }
 }
 </style>
-import { Compilation } from '@/store/Compilation';
