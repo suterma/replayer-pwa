@@ -1,5 +1,5 @@
 <template>
-    <DropdownMenu v-once>
+    <DropdownMenu v-memo="[props.track.Url]">
         <div class="dropdown-item is-hidden-mobile">
             <p class="menu-label">Track</p>
         </div>
@@ -20,14 +20,10 @@
             :href="props.track.Url"
             download
             target="_blank"
-            :disabled="
-                !FileHandler.isDownloadableMediaFileName(props.track.Url)
-            "
+            :disabled="!isDownloadable"
         >
             <DropdownMenuItem
-                :disabled="
-                    !FileHandler.isDownloadableMediaFileName(props.track.Url)
-                "
+                :disabled="!isDownloadable"
                 title="Download media file"
                 subTitle="(to local file system)"
                 @click="app.cloneTrack(props.track.Id)"
@@ -50,6 +46,9 @@
 </template>
 
 <script setup lang="ts">
+/** A menu for a track
+ * @devdoc The download menu item is only updated when the URL (the used media) changes
+ */
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
 import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
 import {
@@ -66,8 +65,6 @@ import type { ICue } from '@/store/ICue';
 import type { ITrack } from '@/store/ITrack';
 import FileHandler from '@/store/filehandler';
 
-/** A menu for a track
- */
 const props = defineProps({
     isFirstTrack: {
         type: Boolean,
