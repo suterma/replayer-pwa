@@ -97,26 +97,22 @@ export default class CompilationHandler {
             'CompilationHandler::createDefaultTrack:mediaUrl',
             resourceName,
         );
-        let name = null;
-        let artist = '';
-        let album = '';
+        let trackMetadata = { name: '', artist: '', album: '' };
         let trackUrl = resourceName;
 
         if (FileHandler.isValidHttpUrl(resourceName)) {
-            trackUrl = resourceName;
             const url = new URL(resourceName);
-            name = FileHandler.extractTrackNameFromUrl(url);
-            artist = FileHandler.extractArtistNameFromUrl(url);
-            album = FileHandler.extractAlbumNameFromUrl(url);
+            trackMetadata = FileHandler.extractTrackMetadataFromUrl(url);
         } else {
-            name = FileHandler.extractTrackNameFromFileName(resourceName);
+            trackMetadata.name =
+                FileHandler.extractTrackNameFromFileName(resourceName);
         }
 
         const trackId = uuidv4();
         const newTrack = new Track(
-            name,
-            artist,
-            album,
+            trackMetadata.name,
+            trackMetadata.album,
+            trackMetadata.artist,
             null /*pre-roll*/,
             null /*playhead position*/,
             null,

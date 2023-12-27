@@ -54,13 +54,22 @@ export default class FileHandler {
         return url.toString().replace(/^(https?:|)\/\//, '');
     }
 
-    /** Tries to infer a useful track name from the URL, by splitting on the path, if possible.
-     * @remarks can be used to get a human readable name for a Track, which originates from an URL
+    /** Tries to infer useful track metadata from the URL, by splitting the URL into parts, if possible.
+     * @remarks The artist is not guessed, it's always empty.
      */
-    static extractTrackNameFromUrl(url: URL): string {
+    static extractTrackMetadataFromUrl(url: URL): {
+        name: string;
+        artist: string;
+        album: string;
+    } {
         const fileName = this.extractFileNameFromUrl(url);
         const decodedFileName = decodeURI(fileName);
-        return FileHandler.removeExtension(decodedFileName);
+        const trackName = this.extractTrackNameFromFileName(decodedFileName);
+
+        // Tries to infer a useful album name from the URL, by using the second level domain name, if possible.
+        const album = url.hostname.split('.').reverse()[1] ?? '';
+
+        return { name: trackName, artist: '', album: album };
     }
 
     /** Tries to infer a useful track name from the file name.
@@ -84,25 +93,6 @@ export default class FileHandler {
         );
     }
 
-    /** Tries to infer a useful artist name from the URL, by using the second level domain name, if possible.
-     * @remarks can be used to get a human readable artist name for a Track, which originates from an URL
-     * @returns A guess for an artist name or the empty string.
-     */
-    static extractArtistNameFromUrl(url: URL): string {
-        return url.hostname.split('.').reverse()[1] ?? '';
-    }
-
-    /** Tries to infer a useful album name from the URL, by using the last path section, if possible.
-     * @remarks can be used to get a human readable album name for a Track, which originates from an URL
-     * @returns A guess for the album name or the empty string.
-     */
-    static extractAlbumNameFromUrl(url: URL): string {
-        const pathName = url.pathname;
-        const pathParts = pathName.split('/');
-        const albumName = pathParts.reverse()[1];
-        return albumName ?? '';
-    }
-
     static removeExtension(filename: string): string {
         const lastDotPosition = filename.lastIndexOf('.');
         if (lastDotPosition === -1) return filename;
@@ -111,7 +101,7 @@ export default class FileHandler {
 
     /** Tries to infer a correct file name from the URL, by splitting on the path, if possible.
      */
-    static extractFileNameFromUrl(url: URL): string {
+    private static extractFileNameFromUrl(url: URL): string {
         const pathName = url.pathname;
         const pathParts = pathName.split('/');
         const fileName = pathParts.pop(); //the latest item is considered a file name
