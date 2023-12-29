@@ -158,17 +158,6 @@ const videoId = computed(() => {
     return match && match[7]?.length == 11 ? match[7] : '';
 });
 
-/** Gets the start time from a possible media fragment
- * @remarks The used YouTube player does not support media fragments, thus
- * it gets rebuilt here.
- */
-const startAtTime = computed(() => {
-    const url = new URL(props.url);
-    const hash = url.hash;
-    const start = hash.substring(3);
-    return Number.parseFloat(start) ?? null;
-});
-
 const videoUrl = computed(() => {
     return instance.value?.getVideoUrl();
 });
@@ -197,7 +186,7 @@ const {
         // Setting the playlist to the one video enables looping the single video itself
         // See https://stackoverflow.com/a/25781957/79485
         playlist: videoId.value,
-        start: startAtTime.value,
+        start: 0 /** //TODO implement with a new property */,
         rel: 0,
     },
     cookie: true,
