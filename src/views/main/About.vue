@@ -145,6 +145,16 @@
                                     Für Immer Uf Di (Patent Ochsner Cover)</a
                                 >
                             </li>
+
+                            <li>
+                                <a
+                                    href="./#/play?media=https://lib.replayer.app/nasa-4k/13537_Apollo13ViewsMoon4K_YouTube4K.mp4&t=96.431"
+                                    target="_blank"
+                                >
+                                    MP4 video: at earth rise position (Credit:
+                                    NASA's Goddard Space Flight Center)</a
+                                >
+                            </li>
                         </ul>
                     </div>
                 </div>
