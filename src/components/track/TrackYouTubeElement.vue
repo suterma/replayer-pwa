@@ -128,8 +128,7 @@ const props = defineProps({
      */
     disabled: Boolean,
 
-    /** The YouTube video URL
-     * @remark This URL can point to an online resource or be a local object URL
+    /** The full YouTube video URL
      */
     url: {
         type: String,
@@ -148,12 +147,26 @@ const smallVideo = ref(true);
 // Use a template ref to reference the target element
 const youtubePlayerElement = ref();
 
+/** Gets the YouTube unique video id
+ * @remarks This id is extracted from the URL
+ */
 const videoId = computed(() => {
     //taken from https://stackoverflow.com/a/8260383/79485
     var regExp =
         /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
     var match = props.url.match(regExp);
     return match && match[7]?.length == 11 ? match[7] : '';
+});
+
+/** Gets the start time from a possible media fragment
+ * @remarks The used YouTube player does not support media fragments, thus
+ * it gets rebuilt here.
+ */
+const startAtTime = computed(() => {
+    const url = new URL(props.url);
+    const hash = url.hash;
+    const start = hash.substring(3);
+    return Number.parseFloat(start) ?? null;
 });
 
 const videoUrl = computed(() => {
@@ -184,6 +197,7 @@ const {
         // Setting the playlist to the one video enables looping the single video itself
         // See https://stackoverflow.com/a/25781957/79485
         playlist: videoId.value,
+        start: startAtTime.value,
         rel: 0,
     },
     cookie: true,

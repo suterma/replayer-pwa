@@ -51,6 +51,9 @@ export enum Replayer {
     FORWARD = 'forward',
     VOLUME_DOWN = 'volumedown',
     VOLUME_UP = 'volumeup',
+
+    /** Triggers terminal cleanup/persistence operations when the browser/tab closes/reloads */
+    CLEAN_UP = 'cleanup',
 }
 
 /** A keyboard handler, which translates specific keyboard events into global

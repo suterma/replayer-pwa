@@ -22,6 +22,7 @@
             @forward="forward"
             @volumedown="volumeDown"
             @volumeup="volumeUp"
+            @cleanup="persistPlayheadPosition"
         />
 
         <div class="block">
@@ -914,18 +915,10 @@ function useMediaHandler(handler: IMediaHandler) {
     // register for the required events
     handler.onCurrentTimeChanged.subscribe((currentTime) => {
         currentPosition.value = currentTime;
-        throttledUpdatePlayheadPosition();
     });
 
     handler.onCanPlay.subscribe(() => {
         isTrackLoaded.value = true;
-
-        // provide the initial position once
-        if (initialPlayheadPosition) {
-            seekToSeconds(initialPlayheadPosition);
-            // never use again during track lifetime
-            initialPlayheadPosition = null;
-        }
     });
 
     handler.onDurationChanged.subscribe((duration) => {
@@ -938,7 +931,7 @@ function useMediaHandler(handler: IMediaHandler) {
         removeCueScheduling();
         isTrackPlaying.value = !paused;
         if (paused) {
-            // make sure any sharing uses the up-to-date position when paused
+            // mmake sure we keep up-to-date persisted position when paused
             persistPlayheadPosition();
         }
     });
@@ -950,8 +943,9 @@ function useMediaHandler(handler: IMediaHandler) {
 
     handler.onSeekingChanged.subscribe((seeking) => {
         removeCueScheduling();
-        if (!seeking) {
-            // make sure any sharing uses the up-to-date position after seeking
+        if (!seeking && !isTrackPlaying.value) {
+            // make sure we keep up-to-date persisted position after seeking,
+            // but, for playback performance reasons, only when paused
             persistPlayheadPosition();
         }
     });
@@ -980,13 +974,6 @@ function useMediaHandler(handler: IMediaHandler) {
 }
 
 // --- Persisted playback position ---
-
-/** Periodically persists the running playhead position
- * @remarks Implements #132
- */
-const throttledUpdatePlayheadPosition = useThrottleFn(() => {
-    persistPlayheadPosition();
-}, 3000 /* empirical value */);
 
 /** Persists the running playhead position
  * @remarks Implements #132

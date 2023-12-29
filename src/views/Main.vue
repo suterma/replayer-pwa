@@ -42,6 +42,7 @@ import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { useAudioStore } from '@/store/audio';
+import { Replayer } from '@/components/CompilationKeyboardHandler.vue';
 
 /** A main view for the Replayer application
  * @remarks This main view works similar but distinct from keep-alive with router-view.
@@ -87,8 +88,8 @@ const routedToAbout = computed(() => {
 // --- resource and audio context handling
 
 /** Register a handler to handle page reloads and tab/browser exits
- * @devdoc Using the "unmounted" lifecycle event proved to be unreliable: Page reload in the Browser did not trigger "unmounted"
- * Using the window's onbeforeunload causes the cleanup to get reliably triggered at page reload
+ * @devdoc Using the "unmounted" lifecycle event proved to be unreliable: The Browser did not trigger "unmounted".
+ * Using the window's onbeforeunload causes the handler to get reliably triggered
  */
 onBeforeMount(() => {
     window.onbeforeunload = cleanUp;
@@ -100,6 +101,12 @@ const { showLevelMeter } = storeToRefs(settings);
 
 function cleanUp() {
     console.log('Main.vue::cleanUp...');
+
+    document.dispatchEvent(
+        new CustomEvent(Replayer.CLEAN_UP, {
+            detail: 'none',
+        }),
+    );
 
     //Make sure, no object URLs are remaining
     app.revokeAllMediaUrls();
