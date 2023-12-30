@@ -135,6 +135,15 @@ const props = defineProps({
         default: '',
         required: true,
     },
+
+    /** The start time
+     * @remark If set, the initial playback position is set to this time, in [seconds], after the resource can be played.
+     */
+    start: {
+        type: null as unknown as PropType<number | null>,
+        default: null,
+        required: false,
+    },
 });
 
 // --- visibility ---
@@ -186,7 +195,9 @@ const {
         // Setting the playlist to the one video enables looping the single video itself
         // See https://stackoverflow.com/a/25781957/79485
         playlist: videoId.value,
-        start: 0 /** //TODO implement with a new property */,
+        start: Math.round(
+            props.start ?? 0,
+        ) /* MUST be an integer number, otherwise the video starts from the beginning */,
         rel: 0,
     },
     cookie: true,
