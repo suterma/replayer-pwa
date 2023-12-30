@@ -30,6 +30,7 @@
                 id="dropdown-menu"
                 role="menu"
                 @click="collapseDropdown()"
+                v-if="isDropdownExpanded || renderClosed"
             >
                 <div class="dropdown-content" ref="target">
                     <template v-if="title">
@@ -67,6 +68,13 @@ defineProps({
     iconPath: {
         type: String,
         default: mdiDotsVertical,
+    },
+    /** Whether to render the closed menu
+     * @remarks Set to true to handle shortcuts or other features on the closed menu / menu entries
+     */
+    renderClosed: {
+        type: Boolean,
+        default: false,
     },
 });
 

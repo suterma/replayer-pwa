@@ -1,5 +1,5 @@
 <template>
-    <DropdownMenu ref="dropdownMenu" :iconPath="mdiMenu">
+    <DropdownMenu ref="dropdownMenu" :iconPath="mdiMenu" :renderClosed="true">
         <div id="appContextMenuTop"></div>
         <!-- The compilation-related views are only available when any is loaded -->
         <div class="dropdown-item is-hidden-mobile">
