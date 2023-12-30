@@ -85,6 +85,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     updateCurrentTime(): void {
         const currentTime = this.currentTime;
+        this.debugLog(`updateCurrentTime:${currentTime}`);
         this.onCurrentTimeChanged.emit(currentTime);
         if (this._player.getPlayerState() == PlayerState.PLAYING) {
             window.requestAnimationFrame(() => this.updateCurrentTime());
@@ -198,13 +199,13 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     /** Flag, whether the player is currently playing
      * @remarks When the player was playing, any buffering event still is
-     * considered as playing
+     * considered as playing.
+     * @devdoc The current time is only updated, when a meaningful position
+     * is available.
      */
     private _isPlaying = false;
 
     handleStateChange(state: PlayerState): void {
-        this.updateCurrentTime();
-
         console.debug(
             `YouTubeMediaHandler::onStateChange:${PlayerState[state]}`,
         );
@@ -216,10 +217,12 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                 break;
             case PlayerState.ENDED:
                 /* occurs when the video has ended */
+                this.updateCurrentTime();
                 this._isPlaying = false;
                 this.onEnded.emit();
                 break;
             case PlayerState.PLAYING:
+                this.updateCurrentTime();
                 if (!this._isPlaying) {
                     this._isPlaying = true;
                     //Upon reception of this event, playback has already started. Fade-in is required if not yet ongoing.
@@ -232,6 +235,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                 }
                 break;
             case PlayerState.PAUSED:
+                this.updateCurrentTime();
                 this._isPlaying = false;
                 this.onPausedChanged.emit(true);
                 //Upon reception of this event, playback has already paused.
@@ -242,6 +246,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                 // NOTE: Buffering does not affect the reported playback state
                 break;
             case PlayerState.VIDEO_CUED:
+                this.updateCurrentTime();
                 this._isPlaying = false;
                 this.onPausedChanged.emit(true);
                 this.onCanPlay.emit();

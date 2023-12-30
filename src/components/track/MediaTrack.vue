@@ -396,6 +396,7 @@
                     :key="track.Id"
                     :title="track.Name"
                     :mediaUrl="mediaUrl"
+                    :start="track.PlayheadPosition"
                     :trackId="track.Id"
                     :cues="track.Cues"
                     :trackPreRoll="track.PreRoll"
@@ -412,6 +413,7 @@
                             :key="track.Id"
                             :title="track.Name"
                             :url="mediaUrl"
+                            :start="track.PlayheadPosition"
                             :trackId="track.Id"
                             :cues="track.Cues"
                             :trackPreRoll="track.PreRoll"
@@ -999,25 +1001,13 @@ onUnmounted(() => {
     isMounted.value = false;
 });
 
-/** The initial playback position, to be applied once after the media is playable
- * @remarks The value is retrieved once per component lifetime from
- * the persistent storage
- */
-let initialPlayheadPosition: number | null = null;
-
-onBeforeMount(() => {
-    // provide the initial position once
-    if (props.track?.PlayheadPosition) {
-        initialPlayheadPosition = props.track.PlayheadPosition;
-    }
-});
-
 // --- Transport ---
 
 /** The playback progress in the current track, in [seconds]
  * @remarks This is used for cue event handling within the set of cues, like creating a new cue at the current position
+ * @devdoc Start with the initial playhead position, which might be non-zero already
  */
-const currentPosition = ref(0);
+const currentPosition = ref(props.track.PlayheadPosition ?? 0);
 provide(currentPositionInjectionKey, readonly(currentPosition));
 
 /** The playback progress in the current track, as a readonly, formatted, displayable text

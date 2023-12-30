@@ -195,9 +195,8 @@ const {
         // Setting the playlist to the one video enables looping the single video itself
         // See https://stackoverflow.com/a/25781957/79485
         playlist: videoId.value,
-        start: Math.round(
-            props.start ?? 0,
-        ) /* MUST be an integer number, otherwise the video starts from the beginning */,
+        // MUST be an integer number, otherwise the video starts from the beginning
+        start: props.start ? Math.round(props.start) : undefined,
         rel: 0,
     },
     cookie: true,
