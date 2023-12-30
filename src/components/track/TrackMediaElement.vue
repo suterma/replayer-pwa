@@ -136,10 +136,8 @@
         <VideoTextTrackController
             v-model="showVideo"
             v-model:smallVideo="smallVideo"
-            :trackId="trackId"
             :cues="cues"
-            :title="title"
-            :videoElement="mediaElement as HTMLVideoElement"
+            :videoElement="videoElement"
             :disabled="!mediaElement"
         ></VideoTextTrackController>
     </div>
@@ -303,6 +301,13 @@ const audio = useAudioStore();
  * @devdoc Note: the element is only available after the component has been mouted
  */
 const mediaElement: ShallowRef<HTMLMediaElement | null> = shallowRef(null);
+
+/** The mediaElement casted as concrete HTMLVideoElement
+ * @devdoc This allows proper use in the template
+ */
+const videoElement = computed(() => {
+    return mediaElement?.value as HTMLVideoElement | null;
+});
 
 watch(mediaElement, async (newMediaElement, oldMediaElement) => {
     if (oldMediaElement !== null) {

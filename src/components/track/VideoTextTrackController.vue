@@ -88,7 +88,7 @@ import { type PropType, type Ref, computed, ref, watchEffect } from 'vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 import type { ICue } from '@/store/ICue';
 
-/** A VTT controller, that transforms Replayer cues into
+/** A VTT controller, that toggles video properties and transforms Replayer cues into
  * VTT cues on a VTT track on a video player element
  */
 
@@ -106,19 +106,6 @@ const props = defineProps({
         type: Boolean,
         required: false,
         default: true,
-    },
-    /** The title of the track */
-    title: {
-        type: String,
-        default: '',
-        required: false,
-    },
-    /** The track id
-     * @remarks Used to have a unique id on the encapsulated video element
-     */
-    trackId: {
-        type: String,
-        required: true,
     },
 
     /** The cues to show
@@ -147,8 +134,6 @@ const largeCaptions = ref(true);
 const centerPosition = ref(true);
 
 // --- VTT creation ---
-
-//TODO EXPERIMENTAL: Create VTT track
 
 /** The smallest amount of time that is resolved within the VTT's percision */
 const TemporalEpsilon = 0.001;
@@ -247,4 +232,3 @@ watchEffect(() => {
     font-size: 3em;
 }
 </style>
-import type { ICue } from '@/store/ICue';

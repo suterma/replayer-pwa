@@ -269,7 +269,6 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     /** Sets the media source URL.
      */
     set mediaSourceUrl(url: string) {
-        //TODO implement
         //Only update the media element, when a source is actually available
         //Otherwise the element throws an avoidable error
         if (url) {

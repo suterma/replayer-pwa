@@ -126,14 +126,12 @@ function cueAdjust(cue: ICue) {
 /** Determines whether this cue is currently selected
  * @remarks Note: only one cue in a compilation may be selected */
 function isCueSelected(cue: ICue): boolean {
-    //TODO use via provide/inject
     return app.selectedCueId === cue.Id;
 }
 
 /** Determines whether this cue is scheduled
  * @remarks Note: only one cue in a compilation may be scheduled */
 function isCueScheduled(cue: ICue): boolean {
-    //TODO use via provide/inject
     return app.scheduledCueId === cue.Id;
 }
 

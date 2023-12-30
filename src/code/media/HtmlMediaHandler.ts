@@ -320,17 +320,6 @@ export default class HtmlMediaHandler implements IMediaHandler {
                 this.hasLoadedMetadata = true;
                 this.hasLoadedData = true;
                 this.updateDuration(this._media.duration);
-
-                //Apply the currently known position to the player. It could be non-zero already.
-                // //TODO probably use a specific initalPosition property for this
-                // const position = currentPosition?.value;
-                // if (
-                //     position !== null &&
-                //     position !== undefined &&
-                //     Number.isFinite(position)
-                // ) {
-                //     seekToSeconds(position);
-                // }
             }
         }
 

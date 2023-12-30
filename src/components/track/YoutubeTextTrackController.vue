@@ -32,52 +32,8 @@
                         </div>
                     </div>
                 </div>
-                <!-- Caption toggler -->
-                <!-- //TODO later implement the youtube captions -->
-                <!-- <div class="level-item has-text-left">
-                    <div class="field is-horizontal">
-                        <div class="field-body">
-                            <div class="field">
-                                <p class="control">
-                                    <LabeledCheckbox
-                                        v-model="showCaptions"
-                                        label="Show cue captions"
-                                    ></LabeledCheckbox>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-                <!-- Caption size toggler -->
-                <!-- <div class="level-item has-text-left">
-                    <div class="field is-horizontal">
-                        <div class="field-body">
-                            <div class="field">
-                                <p class="control">
-                                    <LabeledCheckbox
-                                        v-model="largeCaptions"
-                                        label="Large cue captions"
-                                    ></LabeledCheckbox>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-                <!-- Position toggler -->
-                <!-- <div class="level-item has-text-left">
-                    <div class="field is-horizontal">
-                        <div class="field-body">
-                            <div class="field">
-                                <p class="control">
-                                    <LabeledCheckbox
-                                        v-model="centerPosition"
-                                        label="Center"
-                                    ></LabeledCheckbox>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
+                <!-- NOTE: YouTube's TOC do not allow content overlays, 
+                     thus no captions are implemented here -->
             </template>
         </div>
         <div class="level-right"></div>
@@ -89,9 +45,7 @@ import { type PropType, computed } from 'vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 import type { ICue } from '@/store/ICue';
 
-/** A YouTube Text controller, that transforms Replayer cues into
- * on-screen text cues on the video canvas
- * //TODO currently, this only toggles the video
+/** A YouTube controller, that toggles the video properties
  */
 
 const props = defineProps({
@@ -109,34 +63,7 @@ const props = defineProps({
         required: false,
         default: true,
     },
-    /** The title of the track */
-    title: {
-        type: String,
-        default: '',
-        required: false,
-    },
-    /** The track id
-     * @remarks Used to have a unique id on the encapsulated video element
-     */
-    trackId: {
-        type: String,
-        required: true,
-    },
-
-    /** The cues to show
-     * @remarks The cue descriptions are shown as VTT cues.
-     */
-    cues: Array as PropType<Array<ICue>>,
 });
-
-// --- VTT state ---
-
-// const showCaptions = ref(true);
-// const largeCaptions = ref(true);
-
-// --- styling and position (NOTE: VTTRegion is not available on Chrome and other browsers)
-
-//const centerPosition = ref(true);
 
 // --- visibility ---
 
@@ -159,14 +86,3 @@ const vModelSmallVideo = computed<boolean>({
     },
 });
 </script>
-
-<style>
-/* ::cue {
-    background-color: #00000088;
-}
-::cue(.large) {
-    background-color: #00000088;
-    font-size: 3em;
-} */
-</style>
-import type { ICue } from '@/store/ICue';

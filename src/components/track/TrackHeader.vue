@@ -329,8 +329,6 @@ const props = defineProps({
     },
 
     /** Whether the media source is available
-     * @remarks For a file: whether the resource is in the media store
-     * @remarks For an URL: //TODO implement
      */
     isTrackMediaAvailable: {
         type: Boolean,

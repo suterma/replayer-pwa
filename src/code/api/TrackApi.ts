@@ -60,9 +60,6 @@ export class TrackApi {
             '//' +
             window.location.host +
             window.location.pathname +
-            //TODO this call currently breaks tests by throwing an error
-            // ReferenceError: AudioNode is not defined
-            // when build for testing with vitest
             router.resolve(route).href
         );
     }
