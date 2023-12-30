@@ -983,27 +983,17 @@ function useMediaHandler(handler: IMediaHandler) {
  * proper application of the initial position before mount
  */
 function persistPlayheadPosition() {
-    if (props.track && isMounted) {
+    if (props.track) {
         props.track.PlayheadPosition = currentPosition.value;
-        console.debug(
-            `MediaTrack(${props.track.Name})::PlayheadPosition:${props.track.PlayheadPosition}`,
-        );
+        // console.debug(
+        //     `MediaTrack(${props.track.Name})::PlayheadPosition:${props.track.PlayheadPosition}`,
+        // );
     }
 }
 
-/** Whether the component is currently mounted */
-const isMounted = ref(false);
-
-onMounted(() => {
-    isMounted.value = true;
-});
-onUnmounted(() => {
-    isMounted.value = false;
-});
-
 // --- Transport ---
 
-/** The playback progress in the current track, in [seconds]
+/** The (precise) playback progress in the current track, in [seconds]
  * @remarks This is used for cue event handling within the set of cues, like creating a new cue at the current position
  * @devdoc Start with the initial playhead position, which might be non-zero already
  */
@@ -1411,10 +1401,10 @@ defineExpose({
 /** Handles changes in whether this track is playing.
  */
 watch(isTrackPlaying, () => {
-    console.debug(
-        `MediaTrack(${props.track.Name})::isTrackPlaying:`,
-        isTrackPlaying,
-    );
+    // console.debug(
+    //     `MediaTrack(${props.track.Name})::isTrackPlaying:`,
+    //     isTrackPlaying,
+    // );
     emit('isTrackPlaying', isTrackPlaying);
 });
 

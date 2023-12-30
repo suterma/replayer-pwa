@@ -230,9 +230,9 @@ export default class FileHandler {
             }
         }
 
-        console.debug(
-            `filehandler::isSupportedMediaFileName:fileName:'${fileName}' is isSupportedMedia?:'${isSupportedMediaFileName}'`,
-        );
+        // console.debug(
+        //     `filehandler::isSupportedMediaFileName:fileName:'${fileName}' is isSupportedMedia?:'${isSupportedMediaFileName}'`,
+        // );
         return isSupportedMediaFileName;
     }
 
