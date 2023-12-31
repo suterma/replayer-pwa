@@ -1,5 +1,5 @@
 <template>
-    <div class="compilation" v-if="compilation" data-cy="compilation">
+    <div v-if="compilation" class="compilation" data-cy="compilation">
         <!-- Handle all relevant Replayer events for the compilation level -->
         <ReplayerEventHandler
             @tonextcue="toNextCue"
@@ -9,7 +9,7 @@
 
         <CompilationHeader
             :compilation="compilation"
-            :isEditable="isEditable"
+            :is-editable="isEditable"
         />
 
         <div
@@ -20,44 +20,44 @@
         >
             <template v-for="track in textTracks" :key="track.Id">
                 <NoticeTrack
-                    class="block"
                     :id="'track-' + track.Id"
+                    class="block"
                     :track="track"
                 >
                 </NoticeTrack>
             </template>
             <template v-for="(track, index) in tracks" :key="track.Id">
                 <MediaTrack
+                    :id="'track-' + track.Id"
+                    :ref="'track-' + track.Id"
                     class="block"
                     :track="track"
-                    :ref="'track-' + track.Id"
-                    :id="'track-' + track.Id"
-                    :viewMode="trackViewode"
-                    :isTrackPlayerFullScreen="
+                    :view-mode="trackViewode"
+                    :is-track-player-full-screen="
                         isTrackPlayerFullScreen && !isEditable
                     "
-                    @update:isTrackPlayerFullScreen="
-                        updateIsTrackPlayerFullScreen($event)
-                    "
-                    :playbackMode="typedPlaybackMode"
-                    @update:playbackMode="updatePlaybackMode($event)"
-                    :isFadingEnabled="isFadingEnabled"
-                    @update:isFadingEnabled="updatedIsFadingEnabled($event)"
-                    :isPreRollEnabled="isPreRollEnabled"
-                    @update:isPreRollEnabled="updatedIsPreRollEnabled($event)"
-                    :hasPreviousTrack="index > 0 || isLoopingPlaybackMode"
-                    :hasNextTrack="
+                    :playback-mode="typedPlaybackMode"
+                    :is-fading-enabled="isFadingEnabled"
+                    :is-pre-roll-enabled="isPreRollEnabled"
+                    :has-previous-track="index > 0 || isLoopingPlaybackMode"
+                    :has-next-track="
                         index < (tracks?.length ?? 0) - 1 ||
                         isLoopingPlaybackMode
                     "
-                    :isOnlyMediaTrack="hasSingleMediaTrack"
-                    :isFirst="isFirstTrack(track.Id)"
-                    :isLast="isLastTrack(track.Id)"
-                    @previousTrack="
+                    :is-only-media-track="hasSingleMediaTrack"
+                    :is-first="isFirstTrack(track.Id)"
+                    :is-last="isLastTrack(track.Id)"
+                    @update:is-track-player-full-screen="
+                        updateIsTrackPlayerFullScreen($event)
+                    "
+                    @update:playback-mode="updatePlaybackMode($event)"
+                    @update:is-fading-enabled="updatedIsFadingEnabled($event)"
+                    @update:is-pre-roll-enabled="updatedIsPreRollEnabled($event)"
+                    @previous-track="
                         toPreviousTrack(track.Id, isLoopingPlaybackMode)
                     "
-                    @nextTrack="toNextTrack(track.Id, isLoopingPlaybackMode)"
-                    @trackEnded="continueAfterTrack(track.Id)"
+                    @next-track="toNextTrack(track.Id, isLoopingPlaybackMode)"
+                    @track-ended="continueAfterTrack(track.Id)"
                 />
             </template>
         </div>

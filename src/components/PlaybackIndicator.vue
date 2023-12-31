@@ -9,7 +9,7 @@
             'has-text-grey': isReady && !isUnavailable,
         }"
         :title="indication"
-        :iconPath="isUnavailable ? mdiAlert : mdiCircle"
+        :icon-path="isUnavailable ? mdiAlert : mdiCircle"
     >
     </NavButton>
 </template>

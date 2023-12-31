@@ -1,11 +1,11 @@
 <template>
     <CollapsibleButton
         class="is-nav"
-        :modelValue="modelValue"
-        @update:modelValue="(value) => (modelValue = value)"
-        collapsedText="Click to expand "
-        expandedText="Click to collapse"
-        :iconPath="iconPath"
+        :model-value="modelValue"
+        collapsed-text="Click to expand "
+        expanded-text="Click to collapse"
+        :icon-path="iconPath"
+        @update:model-value="(value) => (modelValue = value)"
         ><span><slot name="caption"></slot></span
     ></CollapsibleButton>
     <template v-if="modelValue"><slot></slot></template>

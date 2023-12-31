@@ -4,7 +4,7 @@
         :class="{
             'is-inactive': !modelValue,
         }"
-        :isEngaged="modelValue"
+        :is-engaged="modelValue"
         engaged-label="fading is on"
         disengaged-label="fading is off"
         @click="togglePlaybackMode()"

@@ -13,17 +13,17 @@
 
             <!-- Expander -->
             <div
-                class="level-item is-narrow"
                 v-if="isEditMode && !(/*is single track*/ (isFirst && isLast))"
+                class="level-item is-narrow"
             >
                 <CollapsibleButton
                     v-if="canCollapse"
                     class="is-nav has-text-warning"
-                    :modelValue="isExpanded"
-                    @update:modelValue="toggleExpanded"
+                    :model-value="isExpanded"
                     title="Track"
-                    collapsedText="Click to expand / edit cues"
-                    expandedText="Click to collapse"
+                    collapsed-text="Click to expand / edit cues"
+                    expanded-text="Click to collapse"
+                    @update:model-value="toggleExpanded"
                     ><span
                         :class="{
                             'is-invisible':
@@ -47,9 +47,9 @@
                         </MediaSourceIndicator>
                     </template>
                     <MediaDropZone
-                        :replaceUrl="track.Url"
-                        :trackId="track.Id"
                         ref="mediaDropZone"
+                        :replace-url="track.Url"
+                        :track-id="track.Id"
                         @accepted="acceptedMedia()"
                     >
                     </MediaDropZone>
@@ -68,18 +68,18 @@
                         <StyledInput
                             class="input"
                             :class="{ 'has-text-success': isActive }"
-                            :modelValue="track?.Name"
-                            @change="updateName($event.target.value)"
+                            :model-value="track?.Name"
                             type="text"
                             placeholder="Track name"
                             title="Track name"
                             data-cy="track-name-input"
-                            :focusOnMounted="isActive"
+                            :focus-on-mounted="isActive"
+                            @change="updateName($event.target.value)"
                         />
                     </LabeledInput>
                 </div>
                 <CoveredPanel
-                    :revealFor="[track.Artist]"
+                    :reveal-for="[track.Artist]"
                     title="Artist name for this track"
                     class="level-item"
                 >
@@ -92,17 +92,17 @@
                             <LabeledInput label="by">
                                 <StyledInput
                                     class="input is-italic"
-                                    :modelValue="track.Artist"
-                                    @update:modelValue="
-                                        (value) => {
-                                            updateArtist(value);
-                                        }
-                                    "
+                                    :model-value="track.Artist"
                                     type="text"
                                     placeholder="Artist"
                                     title="Artist"
                                     data-cy="track-artist"
-                                    focusOnMounted
+                                    focus-on-mounted
+                                    @update:model-value="
+                                        (value) => {
+                                            updateArtist(value);
+                                        }
+                                    "
                                 >
                                 </StyledInput>
                             </LabeledInput>
@@ -110,7 +110,7 @@
                     </div>
                 </CoveredPanel>
                 <CoveredPanel
-                    :revealFor="[track.Album]"
+                    :reveal-for="[track.Album]"
                     title="Album name for this track"
                     class="level-item"
                 >
@@ -121,17 +121,17 @@
                             <LabeledInput label="on">
                                 <StyledInput
                                     class="input is-italic"
-                                    :modelValue="track.Album"
-                                    @update:modelValue="
-                                        (value) => {
-                                            updateAlbum(value);
-                                        }
-                                    "
+                                    :model-value="track.Album"
                                     type="text"
                                     placeholder="Album"
                                     title="Album"
                                     data-cy="track-album"
-                                    focusOnMounted
+                                    focus-on-mounted
+                                    @update:model-value="
+                                        (value) => {
+                                            updateAlbum(value);
+                                        }
+                                    "
                                 >
                                 </StyledInput>
                             </LabeledInput>
@@ -142,7 +142,7 @@
                 <!-- Pre-Roll (in time) (hide initially, as long as no cues are set) -->
                 <CoveredPanel
                     v-if="hasCues || track?.PreRoll"
-                    :revealFor="[track.PreRoll]"
+                    :reveal-for="[track.PreRoll]"
                     title="The custom pre-roll duration for in track in [seconds]"
                     class="level-item"
                 >
@@ -152,11 +152,11 @@
                     <LabeledInput label="Pre-roll">
                         <TimeInput
                             class="has-text-right"
-                            :modelValue="track.PreRoll"
-                            @update:modelValue="
+                            :model-value="track.PreRoll"
+                            size="9"
+                            @update:model-value="
                                 (value: number | null) => updatePreRoll(value)
                             "
-                            size="9"
                         />
                     </LabeledInput>
                 </CoveredPanel>
@@ -167,7 +167,7 @@
                         useMeasureNumbers &&
                         (hasCues || track.PreRoll)
                     "
-                    :revealFor="[track.PreRoll]"
+                    :reveal-for="[track.PreRoll]"
                     title="The custom pre-roll duration in this track in [measures]"
                     class="level-item"
                 >
@@ -182,8 +182,8 @@
                     >
                         <MetricalEditor
                             differential
-                            :modelValue="track.PreRoll"
-                            @update:modelValue="
+                            :model-value="track.PreRoll"
+                            @update:model-value="
                                 (value: number | null) => updatePreRoll(value)
                             "
                         >
@@ -216,9 +216,9 @@
                     v-if="experimentalAllowTrackSharingByLink"
                     v-experiment="experimentalAllowTrackSharingByLink"
                     title="Share..."
-                    :iconPath="mdiShareVariant"
-                    @click="TrackApi.startSharingTrack(props.track)"
+                    :icon-path="mdiShareVariant"
                     data-cy="button-track-share"
+                    @click="TrackApi.startSharingTrack(props.track)"
                 />
                 <!-- Slot for additional level action items -->
                 <slot name="right-action-items"></slot>
@@ -232,8 +232,8 @@
 
                 <TrackContextMenu
                     v-if="isEditMode"
-                    :isFirstTrack="isFirst"
-                    :isLastTrack="isLast"
+                    :is-first-track="isFirst"
+                    :is-last-track="isLast"
                     :track="track"
                 ></TrackContextMenu>
             </div>

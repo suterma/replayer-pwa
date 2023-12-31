@@ -1,7 +1,7 @@
 <template>
     <ModalDialog
-        submitButtonText="Download"
-        :submitButtonDisabled="!compilationTitle"
+        submit-button-text="Download"
+        :submit-button-disabled="!compilationTitle"
         @submit="download()"
     >
         <template #title>Download compilation as...</template>
@@ -10,10 +10,10 @@
                 <label class="label">Compilation title*</label>
                 <div class="control has-icons-right">
                     <input
+                        v-focus
                         class="input"
                         :class="{ 'is-danger': !compilationTitle }"
                         type="text"
-                        v-focus
                         placeholder="Compilation title"
                         :value="compilationTitle"
                         @change="
@@ -28,8 +28,8 @@
                         "
                     />
                     <span
-                        class="icon is-small is-right"
                         v-show="!compilationTitle"
+                        class="icon is-small is-right"
                     >
                         <i class="fas fa-exclamation-triangle"></i>
                     </span>
@@ -45,11 +45,11 @@
                 <div class="control">
                     <label class="radio">
                         <input
+                            v-model="isDownloadZip"
                             type="radio"
                             name="downloadType"
                             class="mr-1"
-                            v-model="isDownloadZip"
-                            v-bind:value="true"
+                            :value="true"
                             checked
                             data-cy="radio-download-zip"
                         />
@@ -66,11 +66,11 @@
                 <div class="control">
                     <label class="radio">
                         <input
+                            v-model="isDownloadZip"
                             type="radio"
                             name="downloadType"
                             class="mr-1"
-                            v-model="isDownloadZip"
-                            v-bind:value="false"
+                            :value="false"
                             data-cy="radio-download-xml"
                         />
                         <span class="has-text-weight-bold">XML</span>

@@ -2,13 +2,13 @@
     <!-- Let the disabled attribute go to the label and input element: -->
     <label class="checkbox" :disabled="disabled ? true : null">
         <input
-            type="checkbox"
             v-model.number="vModel"
+            type="checkbox"
             tabindex="0"
             :disabled="disabled"
         />
         {{ label }}
-        <span class="has-opacity-half is-size-7" v-if="hint">
+        <span v-if="hint" class="has-opacity-half is-size-7">
             ({{ hint }})</span
         >
     </label>

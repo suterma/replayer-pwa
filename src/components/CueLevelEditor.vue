@@ -11,15 +11,15 @@
                                 :time="cue.Time"
                                 :shortcut="cue.Shortcut"
                                 :duration="cue.Duration"
-                                :playbackMode="playbackMode"
-                                @click="cueClick()"
+                                :playback-mode="playbackMode"
                                 minified
-                                :hasCuePassed="hasCuePassed"
-                                :isCueAhead="isCueAhead"
-                                :percentComplete="percentComplete"
-                                :isCueSelected="isCueSelected"
-                                :isCueScheduled="isCueScheduled"
-                                hasAddonsRight
+                                :has-cue-passed="hasCuePassed"
+                                :is-cue-ahead="isCueAhead"
+                                :percent-complete="percentComplete"
+                                :is-cue-selected="isCueSelected"
+                                :is-cue-scheduled="isCueScheduled"
+                                has-addons-right
+                                @click="cueClick()"
                             />
                         </p>
                         <!-- Cue Description -->
@@ -29,15 +29,15 @@
                         >
                             <input
                                 ref="cueDescription"
+                                v-focus
                                 class="input"
                                 type="text"
                                 inputmode="text"
                                 :value="cue.Description"
-                                @change="updateDescription($event)"
-                                @input="updateDescription($event)"
                                 :placeholder="cuePlaceholder"
                                 size="320"
-                                v-focus
+                                @change="updateDescription($event)"
+                                @input="updateDescription($event)"
                             />
                         </p>
                     </div>
@@ -57,37 +57,37 @@
                             <TimeInput
                                 class="input has-text-right"
                                 title="Time of this cue"
-                                :modelValue="props.cue.Time"
-                                @update:modelValue="updateCueTime"
+                                :model-value="props.cue.Time"
                                 size="9"
+                                @update:model-value="updateCueTime"
                             />
                         </p>
                         <div
-                            v-experiment="experimentalUseMeter"
                             v-if="useMeasureNumbers"
+                            v-experiment="experimentalUseMeter"
                             class="control"
                         >
                             <button class="button is-indicator">
                                 <MeasureDisplay
-                                    :modelValue="props.cue.Time"
+                                    :model-value="props.cue.Time"
                                 ></MeasureDisplay>
                             </button>
                         </div>
                         <div
-                            v-experiment="experimentalUseMeter"
                             v-if="useMeasureNumbers"
+                            v-experiment="experimentalUseMeter"
                             class="control"
                         >
                             <MetricalEditor
-                                :modelValue="props.cue.Time"
-                                @update:modelValue="updateCueTime"
+                                :model-value="props.cue.Time"
+                                @update:model-value="updateCueTime"
                             >
                             </MetricalEditor>
                         </div>
                         <div class="control">
                             <AdjustTimeButton
-                                @adjustTime="$emit('adjust')"
-                                :isSelectedItem="isCueSelected"
+                                :is-selected-item="isCueSelected"
+                                @adjust-time="$emit('adjust')"
                             ></AdjustTimeButton>
                         </div>
                     </div>
@@ -114,17 +114,17 @@
                         class="level-item is-flex-shrink-1 is-narrow"
                         title="Duration (until next cue)"
                     >
-                        <TimeDisplay :modelValue="cue.Duration"> </TimeDisplay>
+                        <TimeDisplay :model-value="cue.Duration"> </TimeDisplay>
                     </div>
 
                     <div
                         v-if="useMeasureNumbers"
-                        class="level-item is-flex-shrink-1"
                         v-experiment="experimentalUseMeter"
+                        class="level-item is-flex-shrink-1"
                     >
                         <button class="button is-indicator">
                             <MeasureDifferenceDisplay
-                                :modelValue="cue.Duration"
+                                :model-value="cue.Duration"
                             ></MeasureDifferenceDisplay>
                         </button>
                     </div>
@@ -140,10 +140,10 @@
                                     type="text"
                                     inputmode="numeric"
                                     :value="cue.Shortcut"
-                                    @change="updateShortcut($event)"
-                                    @input="updateShortcut($event)"
                                     placeholder="shortcut"
                                     size="9"
+                                    @change="updateShortcut($event)"
+                                    @input="updateShortcut($event)"
                                 />
                             </p>
                         </div>

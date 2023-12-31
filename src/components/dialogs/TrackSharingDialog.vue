@@ -1,5 +1,5 @@
 <template>
-    <ModalDialog informational cancelButtonText="Dismiss" wide>
+    <ModalDialog informational cancel-button-text="Dismiss" wide>
         <template #title
             >Sharing track '{{ TrackApi.Descriptor(props.track) }}'</template
         >

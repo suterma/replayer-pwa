@@ -4,7 +4,7 @@
         :class="{
             'is-inactive': !isMuted,
         }"
-        :isEngaged="isMuted"
+        :is-engaged="isMuted"
         engaged-label="Unmute"
         disengaged-label="Mute"
         >M

@@ -30,21 +30,21 @@
             <!-- Track header for editing, including artist info, expansion-toggler and adaptive spacing -->
             <!-- NOTE: The @click handler on the header component only handles clicks on otherwise non-interactive elements -->
             <TrackHeader
-                :displayMode="viewMode"
-                :isExpanded="isExpanded"
-                @update:isExpanded="updateIsExpanded"
-                :canCollapse="!isOnlyMediaTrack"
+                :display-mode="viewMode"
+                :is-expanded="isExpanded"
+                :can-collapse="!isOnlyMediaTrack"
                 :track="track"
-                :isTrackLoaded="isTrackLoaded"
-                :isTrackMediaAvailable="isMediaAvailable"
-                :isActive="isActiveTrack"
-                :isFirst="isFirst"
-                :isLast="isLast"
+                :is-track-loaded="isTrackLoaded"
+                :is-track-media-available="isMediaAvailable"
+                :is-active="isActiveTrack"
+                :is-first="isFirst"
+                :is-last="isLast"
+                @update:is-expanded="updateIsExpanded"
                 @click="skipToPlayPause"
             >
                 <template
-                    v-slot:left-start
                     v-if="isMixable || isPlayable || isEditable"
+                    #left-start
                 >
                     <div class="level-item is-narrow">
                         <PlayPauseButton
@@ -54,7 +54,7 @@
                                 'is-clickable': isTrackLoaded,
                                 'has-cursor-not-allowed': !isTrackLoaded,
                             }"
-                            :isLoading="isFading !== FadingMode.None"
+                            :is-loading="isFading !== FadingMode.None"
                             data-cy="toggle-playback"
                             @click="skipToPlayPause"
                         />
@@ -64,11 +64,11 @@
                         <div
                             v-if="!isEditable"
                             class="is-flex-shrink-1 ml-3"
-                            @click="skipToPlayPause"
                             :class="{
                                 'is-clickable': isTrackLoaded,
                                 'has-cursor-not-allowed': !isTrackLoaded,
                             }"
+                            @click="skipToPlayPause"
                         >
                             <p
                                 class="title is-4"
@@ -85,27 +85,27 @@
                         <template v-if="isMixable">
                             <SoloButton
                                 :disabled="!canPlay"
-                                :isSoloed="isSoloed"
-                                @click="toggleSolo()"
+                                :is-soloed="isSoloed"
                                 data-cy="solo"
+                                @click="toggleSolo()"
                             />
                             <MuteButton
                                 :disabled="!canPlay"
-                                :isMuted="isMuted"
-                                @click="toggleMute()"
+                                :is-muted="isMuted"
                                 data-cy="mute"
+                                @click="toggleMute()"
                             />
                             <SelectButton
                                 :disabled="!canPlay"
-                                :isSelected="isActiveTrack"
-                                @click="setActiveTrack()"
+                                :is-selected="isActiveTrack"
                                 data-cy="select"
+                                @click="setActiveTrack()"
                             />
                         </template>
                     </div>
                 </template>
 
-                <template v-slot:left-additional>
+                <template #left-additional>
                     <span
                         v-if="isPlayable && track.Meter?.BeatsPerMinute"
                         class="is-size-7 level-item is-hidden-mobile is-narrow has-opacity-half"
@@ -127,7 +127,7 @@
                     </span>
                 </template>
 
-                <template v-slot:right-start>
+                <template #right-start>
                     <!-- NOTE: As a component update performance optimization, 
                 the numeric value is truncated to one decimal digit, as displayed, avoiding
                 unnecessary update for actually non-distinctly displayed values. -->
@@ -135,8 +135,8 @@
                         v-if="experimentalShowPositionInTrackHeader"
                         v-experiment="experimentalShowPositionInTrackHeader"
                         class="level-item is-narrow is-size-7"
-                        :modelValue="Math.floor(currentPosition * 10) / 10"
-                        :subSecondDigits="1"
+                        :model-value="Math.floor(currentPosition * 10) / 10"
+                        :sub-second-digits="1"
                     ></TimeDisplay>
 
                     <!-- NOTE: In edit mode, the time is displayed as part of the transport area, not in the header -->
@@ -145,12 +145,12 @@
                     <TimeDisplay
                         v-if="isPlayable"
                         class="level-item is-narrow is-hidden-mobile is-size-7"
-                        :modelValue="
+                        :model-value="
                             remainingTime
                                 ? Math.ceil(remainingTime * 10) / 10
                                 : null
                         "
-                        :subSecondDigits="1"
+                        :sub-second-digits="1"
                     ></TimeDisplay>
 
                     <!-- Placeholder for the audio level meter (used for teleporting from the player component) -->
@@ -168,14 +168,14 @@
                         </div>
                     </div>
                 </template>
-                <template v-slot:right-action-items>
+                <template #right-action-items>
                     <div class="level-item is-narrow mr-0 is-hidden-mobile">
                         <!-- NOTE: In edit mode, the volume button is displayed as part of the transport area, not in the header -->
                         <VolumeKnob
                             v-if="!isEditable"
                             :disabled="!isTrackLoaded"
-                            :modelValue="track.Volume"
-                            @update:modelValue="updateVolume"
+                            :model-value="track.Volume"
+                            @update:model-value="updateVolume"
                         /></div
                 ></template>
             </TrackHeader>
@@ -184,25 +184,25 @@
         <!-- The buttons field (for a single track in play mode) -->
         <div
             v-if="isPlayable && isOnlyMediaTrack && hasCues"
-            class="block transition-in-place"
             :key="track.Id"
+            class="block transition-in-place"
         >
             <CueButtonsField
                 :disabled="!canPlay"
-                :playbackMode="playbackMode"
+                :playback-mode="playbackMode"
+                :cues="track.Cues"
                 @click="
                     (cue) => {
                         cueClick(cue);
                     }
                 "
-                :cues="track.Cues"
             ></CueButtonsField>
         </div>
 
         <!-- The meter and cue level editors and playback bar (in edit mode for an expanded track)
          -->
         <Transition name="item-expand">
-            <div class="block" v-if="isEditable && isExpanded">
+            <div v-if="isEditable && isExpanded" class="block">
                 <!-- @devdoc: MeterLevelEditor does not use the provide/inject pattern, 
                     although it is used for the track's descendant components otherwise,
                     because I have experienced problems with the reactivity inside MeterLevelEditor.
@@ -211,12 +211,13 @@
                     v-if="experimentalUseMeter && isEditable"
                     v-experiment="experimentalUseMeter"
                     :meter="track.Meter"
+                    :use-measure-numbers="track.UseMeasureNumbers"
                     @update:meter="
                         (value: any /*IMeter*/): void => {
                             app.updateMeter(track.Id, value);
                         }
                     "
-                    @adjustOriginTime="
+                    @adjust-origin-time="
                         () => {
                             app.updateTrackOriginTime(
                                 track.Id,
@@ -224,16 +225,15 @@
                             );
                         }
                     "
-                    :useMeasureNumbers="track.UseMeasureNumbers"
-                    @update:useMeasureNumbers="
+                    @update:use-measure-numbers="
                         (value: boolean | null) => {
                             app.updateUseMeasureNumbers(track.Id, value);
                         }
                     "
                     ><template
+                        v-if="hasMeter && track.UseMeasureNumbers"
                         #left-end
                         v-experiment="experimentalUseMeter"
-                        v-if="hasMeter && track.UseMeasureNumbers"
                     >
                         <div class="level-item">
                             <div class="field is-horizontal">
@@ -247,7 +247,7 @@
                                         <p class="control">
                                             <button class="button is-indicator">
                                                 <MeasureDisplay
-                                                    :modelValue="
+                                                    :model-value="
                                                         currentPosition
                                                     "
                                                 ></MeasureDisplay>
@@ -270,7 +270,7 @@
                                         <p class="control">
                                             <MetricalEditor
                                                 v-model="currentPosition"
-                                                @update:modelValue="
+                                                @update:model-value="
                                                     (position) =>
                                                         seekToSeconds(position)
                                                 "
@@ -289,14 +289,14 @@
         <!-- Main container -->
         <Transition name="item-expand">
             <div
-                class="block levels"
                 v-if="isEditable && isExpanded"
+                class="block levels"
                 data-cy="cue-editors"
             >
                 <CueLevelEditors
                     :cues="cues"
                     :disabled="!canPlay"
-                    :playbackMode="playbackMode"
+                    :playback-mode="playbackMode"
                     @click="cueClick"
                     @play="cuePlay"
                 >
@@ -320,9 +320,9 @@
                         <CreateCueButton
                             :disabled="!canPlay"
                             class="mb-0"
-                            :isActiveTrack="isActiveTrack"
-                            @createNewCue="createNewCue()"
+                            :is-active-track="isActiveTrack"
                             data-cy="insert-cue"
+                            @create-new-cue="createNewCue()"
                         ></CreateCueButton>
                     </div>
                 </div>
@@ -331,12 +331,12 @@
                     <PlayheadSlider
                         :disabled="!canPlay"
                         class="is-fullwidth ml-4-tablet mr-4-tablet"
-                        :modelValue="currentPosition ?? 0"
-                        @update:modelValue="
+                        :model-value="currentPosition ?? 0"
+                        :track-duration="track.Duration"
+                        @update:model-value="
                             (position) => seekToSeconds(position)
                         "
                         @seek="(seconds) => seek(seconds)"
-                        :trackDuration="track.Duration"
                     >
                         <!-- On mobile, the text is cropped at full width minus seek buttons, because of the level's automatic stacking,
                                     on lager viewports the text is cropped to not exceed the dynamic playhead slider -->
@@ -359,20 +359,20 @@
                     <div class="level-item is-justify-content-flex-end">
                         <MediaControlsBar
                             :disabled="!canPlay"
-                            :hideStopButton="true"
-                            :hideTrackNavigation="true"
-                            :hideCueNavigation="true"
-                            :hidePreRollToggler="hidePreRollToggler"
-                            :hideFadingToggler="hideFadingToggler"
-                            :playbackMode="playbackMode"
-                            @update:playbackMode="updatedPlaybackMode"
-                            :isFadingEnabled="isFadingEnabled"
-                            @update:isFadingEnabled="updatedIsFadingEnabled"
-                            :isPreRollEnabled="isPreRollEnabled"
-                            @update:isPreRollEnabled="updatedIsPreRollEnabled"
+                            :hide-stop-button="true"
+                            :hide-track-navigation="true"
+                            :hide-cue-navigation="true"
+                            :hide-pre-roll-toggler="hidePreRollToggler"
+                            :hide-fading-toggler="hideFadingToggler"
+                            :playback-mode="playbackMode"
+                            :is-fading-enabled="isFadingEnabled"
+                            :is-pre-roll-enabled="isPreRollEnabled"
                             :volume="track.Volume"
+                            :hide-play-pause-button="true"
+                            @update:playback-mode="updatedPlaybackMode"
+                            @update:is-fading-enabled="updatedIsFadingEnabled"
+                            @update:is-pre-roll-enabled="updatedIsPreRollEnabled"
                             @update:volume="updateVolume"
-                            :hidePlayPauseButton="true"
                         >
                         </MediaControlsBar>
                     </div>
@@ -382,7 +382,7 @@
 
         <Transition name="item-expand">
             <!-- Hide the waveform and Video for non-expanded track during edit, save screen real estate -->
-            <div class="block" v-show="!isEditable || isExpanded">
+            <div v-show="!isEditable || isExpanded" class="block">
                 <!-- //TODO currently the mediaUrl is not using the optimized
                 variant, because otherwise the track is not correctly loaded
                 after it has become the active track ( gets
@@ -392,20 +392,20 @@
                         CompilationHandler.isVideoTrack(track) ||
                         CompilationHandler.isAudioTrack(track)
                     "
-                    :enableVideo="CompilationHandler.isVideoTrack(track)"
                     :key="track.Id"
+                    :enable-video="CompilationHandler.isVideoTrack(track)"
                     :title="track.Name"
-                    :mediaUrl="mediaUrl"
+                    :media-url="mediaUrl"
                     :start="track.PlayheadPosition"
-                    :trackId="track.Id"
+                    :track-id="track.Id"
                     :cues="track.Cues"
-                    :trackPreRoll="track.PreRoll"
+                    :track-pre-roll="track.PreRoll"
+                    :show-level-meter="showLevelMeter"
+                    :show-waveforms-on-edit="showWaveformsOnEdit"
+                    :show-overview-waveform-on-edit="showOverviewWaveformOnEdit"
+                    :level-meter-size-is-large="levelMeterSizeIsLarge"
                     @ready="useMediaHandler"
                     @click="setActiveTrack"
-                    :showLevelMeter="showLevelMeter"
-                    :showWaveformsOnEdit="showWaveformsOnEdit"
-                    :showOverviewWaveformOnEdit="showOverviewWaveformOnEdit"
-                    :levelMeterSizeIsLarge="levelMeterSizeIsLarge"
                 ></TrackMediaElement>
                 <div v-if="CompilationHandler.isYoutubeVideoTrack(track)">
                     <OnYouTubeConsent>
@@ -414,9 +414,9 @@
                             :title="track.Name"
                             :url="mediaUrl"
                             :start="track.PlayheadPosition"
-                            :trackId="track.Id"
+                            :track-id="track.Id"
                             :cues="track.Cues"
-                            :trackPreRoll="track.PreRoll"
+                            :track-pre-roll="track.PreRoll"
                             @ready="useMediaHandler"
                             @click="setActiveTrack"
                         ></TrackYouTubeElement>
@@ -431,7 +431,7 @@
             on the track state as a performance optimizations
             -->
         <template v-if="mediaUrl">
-            <div class="block" v-if="isPlayable">
+            <div v-if="isPlayable" class="block">
                 <Teleport to="#media-player" :disabled="isEditable">
                     <Transition :name="skipTransitionName">
                         <!-- 
@@ -444,6 +444,7 @@
                                 (isPlayable && isActiveTrack) ||
                                 (isEditable && isExpanded)
                             "
+                            :key="track.Id"
                             :class="{
                                 section: isPlayable || isMixable,
                                 'has-background-grey-dark':
@@ -455,7 +456,6 @@
                                     isPlayable ||
                                     isMixable /* because in playback  or mix view, the players are replaced in place, not expanded */,
                             }"
-                            :key="track.Id"
                             :disabled="!canPlay"
                         >
                             <!-- 
@@ -488,20 +488,20 @@
                                     >
                                         <!-- Offer the full screen, but not for a single track  -->
                                         <CollapsibleButton
-                                            :modelValue="
+                                            :model-value="
                                                 isTrackPlayerFullScreen
                                             "
+                                            title="toggle full-screen mode"
+                                            collapsed-chevron-direction="up"
                                             @click="
                                                 toggleTrackPlayerFullScreen()
                                             "
-                                            title="toggle full-screen mode"
-                                            collapsedChevronDirection="up"
                                         ></CollapsibleButton>
                                         <p
+                                            title="toggle full-screen mode"
                                             @click="
                                                 toggleTrackPlayerFullScreen()
                                             "
-                                            title="toggle full-screen mode"
                                         >
                                             <!-- Use smaller title in collapsed state, use regular size (4) when full screen -->
                                             <span
@@ -536,14 +536,14 @@
                                     <div class="level-item">
                                         <PlayheadSlider
                                             class="is-fullwidth"
-                                            :modelValue="currentPosition ?? 0"
-                                            @update:modelValue="
+                                            :model-value="currentPosition ?? 0"
+                                            :track-duration="track.Duration"
+                                            :disabled="!canPlay"
+                                            @update:model-value="
                                                 (position) =>
                                                     seekToSeconds(position)
                                             "
                                             @seek="(seconds) => seek(seconds)"
-                                            :trackDuration="track.Duration"
-                                            :disabled="!canPlay"
                                         >
                                             <!-- On mobile, the text is cropped at full width minus seek buttons, because of the level's automatic stacking,
                                     on lager viewports the text is strictly cropped to 129px -->
@@ -568,55 +568,55 @@
                                         class="level-item is-justify-content-flex-end"
                                     >
                                         <MediaControlsBar
-                                            :hideStopButton="true"
-                                            @stop="stop()"
-                                            :hideTrackNavigation="false"
-                                            :hasPreviousTrack="hasPreviousTrack"
-                                            @previousTrack="
-                                                $emit('previousTrack')
-                                            "
-                                            :hasPreviousCue="hasPreviousCue"
-                                            @previousCue="toPreviousCue()"
-                                            :hasNextCue="hasNextCue"
-                                            @nextCue="toNextCue()"
-                                            :hasNextTrack="hasNextTrack"
-                                            @nextTrack="$emit('nextTrack')"
-                                            :playbackMode="playbackMode"
-                                            @update:playbackMode="
-                                                updatedPlaybackMode
-                                            "
-                                            :isFadingEnabled="isFadingEnabled"
-                                            @update:isFadingEnabled="
-                                                updatedIsFadingEnabled
-                                            "
-                                            :isPreRollEnabled="isPreRollEnabled"
-                                            @update:isPreRollEnabled="
-                                                updatedIsPreRollEnabled
-                                            "
+                                            :hide-stop-button="true"
+                                            :hide-track-navigation="false"
+                                            :has-previous-track="hasPreviousTrack"
+                                            :has-previous-cue="hasPreviousCue"
+                                            :has-next-cue="hasNextCue"
+                                            :has-next-track="hasNextTrack"
+                                            :playback-mode="playbackMode"
+                                            :is-fading-enabled="isFadingEnabled"
+                                            :is-pre-roll-enabled="isPreRollEnabled"
                                             :volume="track.Volume"
-                                            @update:volume="updateVolume"
-                                            @seek="(seconds) => seek(seconds)"
-                                            :isFading="
+                                            :is-fading="
                                                 isFading !== FadingMode.None
                                             "
-                                            @togglePlaying="skipToPlayPause()"
-                                            :hidePlayPauseButton="false"
-                                            :hidePreRollToggler="
+                                            :hide-play-pause-button="false"
+                                            :hide-pre-roll-toggler="
                                                 hidePreRollToggler
                                             "
-                                            :hideFadingToggler="
+                                            :hide-fading-toggler="
                                                 hideFadingToggler
                                             "
                                             :disabled="!canPlay"
                                             data-cy="media-controls-bar"
+                                            @stop="stop()"
+                                            @previous-track="
+                                                $emit('previousTrack')
+                                            "
+                                            @previous-cue="toPreviousCue()"
+                                            @next-cue="toNextCue()"
+                                            @next-track="$emit('nextTrack')"
+                                            @update:playback-mode="
+                                                updatedPlaybackMode
+                                            "
+                                            @update:is-fading-enabled="
+                                                updatedIsFadingEnabled
+                                            "
+                                            @update:is-pre-roll-enabled="
+                                                updatedIsPreRollEnabled
+                                            "
+                                            @update:volume="updateVolume"
+                                            @seek="(seconds) => seek(seconds)"
+                                            @toggle-playing="skipToPlayPause()"
                                         >
                                             <PlaybackIndicator
-                                                :isReady="
+                                                :is-ready="
                                                     !isTrackPlaying &&
                                                     isTrackLoaded
                                                 "
-                                                :isUnloaded="!isTrackLoaded"
-                                                :isUnavailable="
+                                                :is-unloaded="!isTrackLoaded"
+                                                :is-unavailable="
                                                     !isMediaAvailable
                                                 "
                                                 data-cy="playback-indicator"
@@ -636,24 +636,24 @@
                                 "
                             >
                                 <CueButtonsBar
-                                    :playbackMode="playbackMode"
+                                    :playback-mode="playbackMode"
+                                    :cues="track.Cues"
                                     @click="
                                         (cue) => {
                                             cueClick(cue);
                                         }
                                     "
-                                    :cues="track.Cues"
                                 ></CueButtonsBar>
                             </nav>
                             <nav v-if="isTrackPlayerFullScreen">
                                 <CueButtonsField
-                                    :playbackMode="playbackMode"
+                                    :playback-mode="playbackMode"
+                                    :cues="track.Cues"
                                     @click="
                                         (cue) => {
                                             cueClick(cue);
                                         }
                                     "
-                                    :cues="track.Cues"
                                 ></CueButtonsField>
                             </nav>
                         </div>

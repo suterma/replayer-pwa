@@ -21,7 +21,6 @@ import { Hotkey } from '@simolation/vue-hotkey';
 export default defineComponent({
     name: 'DismissiblePanel',
     components: { Hotkey },
-    emits: ['dismissed'],
     props: {
         /** Whether this controls actually handles the dismissal and emits the dismissed event. Default is <c>true</c> */
         dismissible: {
@@ -36,6 +35,7 @@ export default defineComponent({
             default: false,
         },
     },
+    emits: ['dismissed'],
     methods: {
         dismissed(): void {
             if (this.dismissible) {

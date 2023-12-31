@@ -1,5 +1,5 @@
 <template>
-    <NavButton :title="title" :iconPath="mdiClose" @click="close()"
+    <NavButton :title="title" :icon-path="mdiClose" @click="close()"
         ><slot></slot
     ></NavButton>
 </template>
@@ -14,7 +14,6 @@ import { mdiClose } from '@mdi/js';
  */
 export default defineComponent({
     name: 'CloseButton',
-    emits: ['close', 'update:modelValue'],
     components: { NavButton },
     props: {
         /** Whether this represents the closed state. */
@@ -29,6 +28,7 @@ export default defineComponent({
             default: 'Close',
         },
     },
+    emits: ['close', 'update:modelValue'],
 
     data() {
         return {

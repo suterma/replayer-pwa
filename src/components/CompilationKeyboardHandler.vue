@@ -24,9 +24,9 @@
         />
     </template>
     <KeyResponseOverlay
-        :keyText="key"
         ref="keyResponseOverlay"
-        :displayTimeout="keyboardShortcutTimeout"
+        :key-text="key"
+        :display-timeout="keyboardShortcutTimeout"
     />
 </template>
 

@@ -11,7 +11,7 @@
                 <span>
                     {{ textContent }}
                 </span>
-                <CloseButton class="top-right" v-model="closed"> </CloseButton>
+                <CloseButton v-model="closed" class="top-right"> </CloseButton>
             </div>
         </div>
     </Transition>

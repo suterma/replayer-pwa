@@ -18,7 +18,7 @@
                 >
                 <TrackYouTubeElement
                     url="https://www.youtube.com/watch?v=32cSZUFNHrs"
-                    trackId="dev-track"
+                    track-id="dev-track"
                 ></TrackYouTubeElement>
             </CollapsiblePanel>
         </div>
@@ -100,16 +100,16 @@
             <label class="label">Selected Cue Id ({{ selectedCueId }})</label>
             <div class="control">
                 <input
+                    v-model="selectedCueId"
                     class="input"
                     type="text"
-                    v-model="selectedCueId"
                     placeholder="Selected Cue Id"
                 />
             </div>
         </div>
         <div
-            class="field"
             v-if="compilation.Tracks[0] && compilation.Tracks[0].Cues[0]"
+            class="field"
         >
             <label class="label"
                 >Description of first cue of first track ({{
@@ -118,9 +118,9 @@
             >
             <div class="control">
                 <input
+                    v-model="compilation.Tracks[0].Cues[0].Description"
                     class="input"
                     type="text"
-                    v-model="compilation.Tracks[0].Cues[0].Description"
                     placeholder="Description of first cue of first track"
                 />
             </div>
@@ -174,11 +174,11 @@
         <BaseIcon v-once :path="rTrackRepeatOnce" />
         <BaseIcon v-once :path="rRepeatVariant" />
         <BaseIcon v-once :path="rShuffleVariant" />
-        <NavButton :iconPath="mdiPencil" title="some test title" />
+        <NavButton :icon-path="mdiPencil" title="some test title" />
         <CollapsibleButton
             v-model="isExpanded"
-            collapsedText="Show 11 somethings"
-            expandedText="Hide all this stuff"
+            collapsed-text="Show 11 somethings"
+            expanded-text="Hide all this stuff"
         />
         (Is expanded: {{ isExpanded }})
 
@@ -192,9 +192,9 @@
 
     <ControlKnob id="knob1" v-model="knobValue" />
     <ControlKnob
-        class="button is-knob is-unselectable"
         id="knob2"
         v-model="knobValue"
+        class="button is-knob is-unselectable"
         :options="{
             imageSize: 40,
             hideDefaultValue: false,
@@ -214,7 +214,7 @@
             valueTextClass: 'has-text-warning',
             valueArchClass: 'has-text-warning',
         }"
-    /><Knob :minValue="0" :maxValue="50" v-model="knobValue"></Knob>
+    /><Knob v-model="knobValue" :min-value="0" :max-value="50"></Knob>
 </template>
 
 <script lang="ts">

@@ -1,12 +1,12 @@
 <template>
     <NavButton
-        :iconClass="navIconClass"
+        :icon-class="navIconClass"
         aria-haspopup="true"
         aria-controls="dropdown-menu"
         :title="titleText"
-        :iconPath="mdiChevronDown"
-        @click="toggleExpanded()"
+        :icon-path="mdiChevronDown"
         :disabled="disabled"
+        @click="toggleExpanded()"
         ><slot></slot
     ></NavButton>
 </template>
@@ -21,7 +21,6 @@ import { mdiChevronDown } from '@mdi/js';
  */
 export default defineComponent({
     name: 'CollapsibleButton',
-    emits: ['update:modelValue'],
     components: { NavButton },
     props: {
         /** Whether this represents the expanded state. */
@@ -54,22 +53,13 @@ export default defineComponent({
          */
         disabled: Boolean,
     },
+    emits: ['update:modelValue'],
 
     data() {
         return {
             /** Icons from @mdi/js */
             mdiChevronDown: mdiChevronDown,
         };
-    },
-
-    methods: {
-        toggleExpanded() {
-            const requestedModelValue = !this.modelValue;
-            console.debug(
-                `CollapsibleButton::toggleExpanded:requestedModelValue:${requestedModelValue}`,
-            );
-            this.$emit('update:modelValue', requestedModelValue);
-        },
     },
     computed: {
         titleText(): string {
@@ -89,6 +79,16 @@ export default defineComponent({
                     ? 'down'
                     : this.collapsedChevronDirection)
             );
+        },
+    },
+
+    methods: {
+        toggleExpanded() {
+            const requestedModelValue = !this.modelValue;
+            console.debug(
+                `CollapsibleButton::toggleExpanded:requestedModelValue:${requestedModelValue}`,
+            );
+            this.$emit('update:modelValue', requestedModelValue);
         },
     },
 });

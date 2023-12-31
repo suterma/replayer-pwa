@@ -5,12 +5,12 @@
         inputmode="decimal"
         :step="step"
         :value="modelValue"
-        @change="updateTime($event)"
-        @paste="updateTime($event)"
-        @input="debouncedUpdateTime($event)"
         placeholder="time [seconds]"
         size="5"
         data-cy="input-time-position"
+        @change="updateTime($event)"
+        @paste="updateTime($event)"
+        @input="debouncedUpdateTime($event)"
     />
 </template>
 

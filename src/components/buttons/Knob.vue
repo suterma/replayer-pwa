@@ -1,7 +1,7 @@
 <template>
     <ControlKnob
-        class="is-knob is-unselectable"
         v-model="value"
+        class="is-knob is-unselectable"
         :options="knobOptions"
     >
     </ControlKnob>

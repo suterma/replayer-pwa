@@ -1,11 +1,11 @@
 <template>
     <input
+        v-model.number="vModel"
         class="input bpm has-text-right"
         type="number"
         inputmode="numeric"
         step="1"
         :min="minimumValue"
-        v-model.number="vModel"
         size="3"
         data-cy="input-measure"
         :placeholder="placeholder"

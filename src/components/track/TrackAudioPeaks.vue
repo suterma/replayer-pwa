@@ -1,6 +1,6 @@
 <template>
-    <AudioPeaks :options="options" :mediaElement="mediaElement">
-        <template #overview v-if="!showOverview">
+    <AudioPeaks :options="options" :media-element="mediaElement">
+        <template v-if="!showOverview" #overview>
             <template />
             <!-- Using an empty template on a slot 
          prevents the default content --></template

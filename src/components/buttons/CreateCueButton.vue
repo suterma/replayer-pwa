@@ -3,19 +3,19 @@
                 Creating a cue should also work when invoked from inside a 
                 textbox, thus explicitly no elements are excluded.-->
     <Hotkey
+        v-slot="{ clickRef }"
         :disabled="!useShortcut || disabled"
         :keys="['insert']"
         :excluded-elements="[]"
-        v-slot="{ clickRef }"
     >
         <button
+            :ref="clickRef"
             class="button is-warning is-outlined"
             :class="$attrs.class"
-            @click="emit('createNewCue')"
-            :ref="clickRef"
             title="Add a cue now (at the current playback time)!"
             :disabled="disabled"
             data-cy="insert-cue"
+            @click="emit('createNewCue')"
         >
             <BaseIcon v-once :path="mdiPlus" />
             <!-- On large screens also show an indicative text -->

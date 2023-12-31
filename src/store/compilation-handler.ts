@@ -98,7 +98,7 @@ export default class CompilationHandler {
             resourceName,
         );
         let trackMetadata = { name: '', artist: '', album: '' };
-        let trackUrl = resourceName;
+        const trackUrl = resourceName;
 
         if (FileHandler.isValidHttpUrl(resourceName)) {
             const url = new URL(resourceName);

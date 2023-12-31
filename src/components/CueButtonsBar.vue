@@ -14,16 +14,16 @@
             :shortcut="prefixCue.Shortcut"
             :duration="prefixCue.Duration"
             :description="prefixCue.Description"
-            :playbackMode="playbackMode"
-            hasAddonsRight
+            :playback-mode="playbackMode"
+            has-addons-right
             minified
-            showText
-            :hasCuePassed="hasCuePassed(prefixCue)"
-            :isCueAhead="isCueAhead(prefixCue)"
-            :percentComplete="percentComplete(prefixCue)"
+            show-text
+            :has-cue-passed="hasCuePassed(prefixCue)"
+            :is-cue-ahead="isCueAhead(prefixCue)"
+            :percent-complete="percentComplete(prefixCue)"
             virtual
-            :isCueSelected="isCueSelected(prefixCue)"
-            :isCueScheduled="isCueScheduled(prefixCue)"
+            :is-cue-selected="isCueSelected(prefixCue)"
+            :is-cue-scheduled="isCueScheduled(prefixCue)"
             @click="cueClicked"
         >
         </CueButton>
@@ -38,15 +38,15 @@
                 :shortcut="cue.Shortcut"
                 :duration="cue.Duration"
                 :description="cue.Description"
-                :playbackMode="playbackMode"
-                hasAddonsRight
+                :playback-mode="playbackMode"
+                has-addons-right
                 minified
-                showText
-                :hasCuePassed="hasCuePassed(cue)"
-                :isCueAhead="isCueAhead(cue)"
-                :percentComplete="percentComplete(cue)"
-                :isCueSelected="isCueSelected(cue)"
-                :isCueScheduled="isCueScheduled(cue)"
+                show-text
+                :has-cue-passed="hasCuePassed(cue)"
+                :is-cue-ahead="isCueAhead(cue)"
+                :percent-complete="percentComplete(cue)"
+                :is-cue-selected="isCueSelected(cue)"
+                :is-cue-scheduled="isCueScheduled(cue)"
                 @click="cueClicked"
             >
             </CueButton>

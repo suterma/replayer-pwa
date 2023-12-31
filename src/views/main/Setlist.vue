@@ -22,26 +22,26 @@
                         <div class="control">
                             <label class="checkbox mr-4">
                                 <input
-                                    type="checkbox"
                                     v-model="showNumbering"
+                                    type="checkbox"
                                 />
                                 show numbering
                             </label>
                             <label class="checkbox mr-4">
-                                <input type="checkbox" v-model="showCues" />
+                                <input v-model="showCues" type="checkbox" />
                                 show cues
                             </label>
                             <label class="checkbox mr-4">
                                 <input
-                                    type="checkbox"
                                     v-model="showMediaSource"
+                                    type="checkbox"
                                 />
                                 show media source
                             </label>
                             <label class="checkbox mr-4">
                                 <input
-                                    type="checkbox"
                                     v-model="printTracksOnNewPage"
+                                    type="checkbox"
                                 />
                                 each track on a new page
                             </label>
@@ -53,14 +53,12 @@
 
         <!-- When not each track is on a new page, show the compilation only once -->
 
-        <h1 class="title is-3" v-if="!printTracksOnNewPage">
+        <h1 v-if="!printTracksOnNewPage" class="title is-3">
             {{ compilation.Title }}
         </h1>
         <table class="table is-fullwidth">
             <draggable
                 v-model="orderedTracks"
-                @start="drag = true"
-                @end="drag = false"
                 handle=".handle"
                 ghost-class="drag-ghost"
                 drag-class="drag"
@@ -73,28 +71,30 @@
                     name: !drag ? 'flip-list' : null,
                 }"
                 data-cy="track-list"
+                @start="drag = true"
+                @end="drag = false"
             >
                 <template #item="{ element, index }">
                     <tr class="is-together-print" data-cy="track-list-item">
                         <td>
                             <!-- When each track is on a new page, also show the compilation each time -->
 
-                            <h1 class="title is-3" v-if="printTracksOnNewPage">
+                            <h1 v-if="printTracksOnNewPage" class="title is-3">
                                 <span> {{ compilation.Title }}</span>
                             </h1>
                             <SetlistItem
                                 :track="element"
-                                :showCues="showCues"
-                                :showMediaSource="showMediaSource"
+                                :show-cues="showCues"
+                                :show-media-source="showMediaSource"
                             >
                                 <!-- The track index (as part of the title) -->
-                                <span class="mr-2" v-if="showNumbering"
+                                <span v-if="showNumbering" class="mr-2"
                                     >{{ index + 1 }})&nbsp;</span
                                 >
                                 <template #title-end
                                     ><BaseIcon
-                                        class="grabbable handle is-hidden-print"
                                         v-once
+                                        class="grabbable handle is-hidden-print"
                                         :path="mdiDrag"
                                         title="Drag and drop to reorder"
                                         data-cy="drag-handle"

@@ -3,18 +3,18 @@
     <!-- Let the attributes fall through the input element: -->
     <input
         v-bind="$attrs"
-        :value="modelValue"
         ref="styled-input"
+        :value="modelValue"
+        type="text"
+        inputmode="text"
+        :placeholder="placeholder"
+        tabindex="0"
         @input="
             $emit(
                 'update:modelValue',
                 ($event.target as HTMLInputElement).value,
             )
         "
-        type="text"
-        inputmode="text"
-        :placeholder="placeholder"
-        tabindex="0"
     />
 </template>
 
@@ -27,7 +27,6 @@ import { defineComponent } from 'vue';
 export default defineComponent({
     name: 'StyledInput',
     components: {},
-    emits: ['update:modelValue'],
     props: {
         /* The input text */
         modelValue: {
@@ -48,6 +47,7 @@ export default defineComponent({
             default: false,
         },
     },
+    emits: ['update:modelValue'],
     mounted: function (): void {
         if (this.focusOnMounted) {
             // Since the input might not be rendered until the next DOM update,

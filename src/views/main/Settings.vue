@@ -26,11 +26,11 @@
                     <div class="select">
                         <select v-model.number="timeFormat">
                             <!-- TimeFormat.Iso8601Extended -->
-                            <option v-bind:value="1">
+                            <option :value="1">
                                 hh:mm:ss.zzz (ISO 8601 extended)
                             </option>
                             <!-- TimeFormat.DecimalSeconds -->
-                            <option v-bind:value="2">
+                            <option :value="2">
                                 sss.zzz (Decimal seconds)
                             </option>
                         </select>
@@ -51,8 +51,8 @@
                 </div>
                 <div class="control">
                     <LabeledCheckbox
-                        :disabled="!showWaveformsOnEdit"
                         v-model="showOverviewWaveformOnEdit"
+                        :disabled="!showWaveformsOnEdit"
                         label="Additionally show a waveform for the whole track (for local media only)"
                         hint="Uses more more resources"
                     ></LabeledCheckbox>
@@ -69,8 +69,8 @@
 
                 <div class="control">
                     <LabeledCheckbox
-                        :disabled="!showLevelMeter"
                         v-model="levelMeterSizeIsLarge"
+                        :disabled="!showLevelMeter"
                         label="Use large audio level meters"
                         hint="Level meters are full width"
                     ></LabeledCheckbox>
@@ -94,25 +94,25 @@
                         <div class="control">
                             <div class="select">
                                 <select v-model.number="defaultPreRollDuration">
-                                    <option v-bind:value="0">
+                                    <option :value="0">
                                         no pre-roll
                                     </option>
-                                    <option v-bind:value="0.667">
+                                    <option :value="0.667">
                                         0.66 seconds (1 beat @ 90 BPM)
                                     </option>
-                                    <option v-bind:value="1.333">
+                                    <option :value="1.333">
                                         1.33 seconds (2 beats @ 90 BPM)
                                     </option>
-                                    <option v-bind:value="2.0">
+                                    <option :value="2.0">
                                         2.00 seconds (3 beats @ 90 BPM)
                                     </option>
-                                    <option v-bind:value="2.667">
+                                    <option :value="2.667">
                                         2.66 seconds (4 beats @ 90 BPM)
                                     </option>
-                                    <option v-bind:value="4.0">
+                                    <option :value="4.0">
                                         4.00 seconds (6 beats @ 90 BPM)
                                     </option>
-                                    <option v-bind:value="5.333">
+                                    <option :value="5.333">
                                         5.33 seconds (8 beats @ 90 BPM)
                                     </option>
                                 </select>
@@ -135,29 +135,29 @@
                         <div class="control">
                             <div class="select">
                                 <select v-model.number="fadeInDuration">
-                                    <option v-bind:value="0">no fading</option>
-                                    <option v-bind:value="20">
+                                    <option :value="0">no fading</option>
+                                    <option :value="20">
                                         20 milliseconds
                                     </option>
-                                    <option v-bind:value="50">
+                                    <option :value="50">
                                         50 milliseconds
                                     </option>
-                                    <option v-bind:value="100">
+                                    <option :value="100">
                                         100 milliseconds
                                     </option>
-                                    <option v-bind:value="200">
+                                    <option :value="200">
                                         200 milliseconds
                                     </option>
-                                    <option v-bind:value="500">
+                                    <option :value="500">
                                         500 milliseconds
                                     </option>
-                                    <option v-bind:value="1000">
+                                    <option :value="1000">
                                         1 seconds
                                     </option>
-                                    <option v-bind:value="2000">
+                                    <option :value="2000">
                                         2 seconds
                                     </option>
-                                    <option v-bind:value="5000">
+                                    <option :value="5000">
                                         5 seconds
                                     </option>
                                 </select>
@@ -176,29 +176,29 @@
                         <div class="control">
                             <div class="select">
                                 <select v-model.number="fadeOutDuration">
-                                    <option v-bind:value="0">no fading</option>
-                                    <option v-bind:value="20">
+                                    <option :value="0">no fading</option>
+                                    <option :value="20">
                                         20 milliseconds
                                     </option>
-                                    <option v-bind:value="50">
+                                    <option :value="50">
                                         50 milliseconds
                                     </option>
-                                    <option v-bind:value="100">
+                                    <option :value="100">
                                         100 milliseconds
                                     </option>
-                                    <option v-bind:value="200">
+                                    <option :value="200">
                                         200 milliseconds
                                     </option>
-                                    <option v-bind:value="500">
+                                    <option :value="500">
                                         500 milliseconds
                                     </option>
-                                    <option v-bind:value="1000">
+                                    <option :value="1000">
                                         1 seconds
                                     </option>
-                                    <option v-bind:value="2000">
+                                    <option :value="2000">
                                         2 seconds
                                     </option>
-                                    <option v-bind:value="5000">
+                                    <option :value="5000">
                                         5 seconds
                                     </option>
                                 </select>
@@ -244,16 +244,16 @@
                 <div class="control">
                     <div class="select">
                         <select v-model.number="keyboardShortcutTimeout">
-                            <option v-bind:value="500">
+                            <option :value="500">
                                 Fast (500 milliseconds)
                             </option>
-                            <option v-bind:value="1000">
+                            <option :value="1000">
                                 Medium (1 second)
                             </option>
-                            <option v-bind:value="2000">
+                            <option :value="2000">
                                 Slow (2 seconds)
                             </option>
-                            <option v-bind:value="5000">
+                            <option :value="5000">
                                 Molto Grave (5 seconds)
                             </option>
                         </select>

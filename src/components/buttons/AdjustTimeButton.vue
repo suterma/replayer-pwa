@@ -4,21 +4,21 @@
                 invoked from inside a 
                 textbox, thus explicitly no elements are excluded.-->
     <Hotkey
+        v-slot="{ clickRef }"
         :disabled="!isSelectedItem"
         :keys="['shift', 'insert']"
         :excluded-elements="[]"
-        v-slot="{ clickRef }"
     >
         <!-- 
             Triggered on click or by hotkey
             @event adjustTime
         -->
         <button
+            :ref="clickRef"
             class="button"
             title="Adjusts the time to the current playback time"
-            @click="$emit('adjustTime')"
-            :ref="clickRef"
             data-cy="adjust-time"
+            @click="$emit('adjustTime')"
         >
             <BaseIcon
                 :path="isSelectedItem ? mdiTimerPlay : mdiTimerPlayOutline"
@@ -55,10 +55,6 @@ import {
 export default defineComponent({
     name: 'AdjustTimeButton',
     components: { BaseIcon, ShortcutDisplay, Hotkey },
-    emits: [
-        /** Occurs, when the time should get adjusted */
-        'adjustTime',
-    ],
     props: {
         /** Whether this button is used for the globally selected item
          * @remarks The button should only execute the hotkey for the globally selected item */
@@ -68,6 +64,10 @@ export default defineComponent({
             required: false,
         },
     },
+    emits: [
+        /** Occurs, when the time should get adjusted */
+        'adjustTime',
+    ],
     data() {
         return {
             /** Icons from @mdi/js */

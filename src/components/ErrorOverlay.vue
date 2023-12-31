@@ -10,8 +10,8 @@
             <div v-for="errorMessage in errorMessages" :key="errorMessage">
                 <div
                     class="notification is-danger"
-                    @click="dismiss"
                     data-cy="notification-danger"
+                    @click="dismiss"
                 >
                     <button
                         class="delete is-large"
@@ -29,8 +29,8 @@
             >
                 <div
                     class="notification is-success"
-                    @click="dismissSuccess"
                     data-cy="notification-success"
+                    @click="dismissSuccess"
                 >
                     <button
                         class="delete is-large"

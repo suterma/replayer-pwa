@@ -1,8 +1,8 @@
 <template>
     <div
-        class="field has-addons is-justify-content-center"
         v-for="[fileName, mediaUrl] in mediaUrls"
         :key="fileName"
+        class="field has-addons is-justify-content-center"
     >
         <p class="control">
             <button
@@ -13,7 +13,7 @@
                 <!-- <BaseIcon v-once :path="mdiMusicNotePlus" /> -->
                 <span>Use</span>
                 <MediaSourceIndicator
-                    :mediaUrl="mediaUrl"
+                    :media-url="mediaUrl"
                     :source="fileName"
                     show-size
                     show-type

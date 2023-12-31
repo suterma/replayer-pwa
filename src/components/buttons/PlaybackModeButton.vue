@@ -1,5 +1,5 @@
 <template>
-    <button class="button" @click="togglePlaybackMode()" :title="modeTitle">
+    <button class="button" :title="modeTitle" @click="togglePlaybackMode()">
         <BaseIcon v-if="isPlaybackTrack" :path="rTrackPlay" />
         <BaseIcon v-if="isPlaybackLoopTrack" :path="rTrackRepeat" />
         <BaseIcon v-if="isPlaybackCue" :path="rTrackPlayOnce" />
@@ -36,7 +36,6 @@ import { PlaybackMode } from '@/store/PlaybackMode';
 export default defineComponent({
     name: 'PlaybackModeButton',
     components: { BaseIcon },
-    emits: ['update:modelValue'],
     props: {
         /** The playback mode
          * @remarks Implements a two-way binding
@@ -47,6 +46,7 @@ export default defineComponent({
             required: true,
         },
     },
+    emits: ['update:modelValue'],
     data() {
         return {
             /** Icons from BaseIcon.vue */

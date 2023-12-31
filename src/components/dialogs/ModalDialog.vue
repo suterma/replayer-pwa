@@ -22,14 +22,14 @@
                         <div class="field is-grouped">
                             <p v-if="!required" class="control">
                                 <Hotkey
+                                    v-slot="{ clickRef }"
                                     :keys="['esc']"
                                     :excluded-elements="[]"
-                                    v-slot="{ clickRef }"
                                 >
                                     <button
+                                        :ref="clickRef"
                                         class="button"
                                         data-cy="cancel-button"
-                                        :ref="clickRef"
                                         @click.prevent="closeDialog(false)"
                                     >
                                         {{ cancelButtonText }}
@@ -38,17 +38,17 @@
                             </p>
                             <p v-if="!informational" class="control">
                                 <Hotkey
+                                    v-slot="{ clickRef }"
                                     :keys="['enter']"
                                     :excluded-elements="['textarea']"
-                                    v-slot="{ clickRef }"
                                 >
                                     <button
+                                        :ref="clickRef"
+                                        v-focus
                                         type="submit"
                                         class="button is-success"
                                         data-cy="submit-button"
-                                        :ref="clickRef"
                                         :disabled="submitButtonDisabled"
-                                        v-focus
                                     >
                                         {{ submitButtonText }}
                                     </button>
@@ -76,7 +76,6 @@ export default defineComponent({
         UseFocusTrap,
         Hotkey,
     },
-    emits: ['submit'],
     props: {
         submitButtonText: {
             type: String,
@@ -103,6 +102,7 @@ export default defineComponent({
          */
         informational: Boolean,
     },
+    emits: ['submit'],
 
     setup() {
         /** Temporarily pause the use of the global app shortcuts in favor of typical

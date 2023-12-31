@@ -6,9 +6,9 @@
         }"
     >
         <DismissiblePanel
-            @dismissed="collapseDropdown"
             :dismissible="isDropdownExpanded"
             :hotkey="isDropdownExpanded"
+            @dismissed="collapseDropdown"
         >
             <!-- dropdown-trigger -->
             <div class="dropdown-trigger">
@@ -18,21 +18,21 @@
                     aria-haspopup="true"
                     aria-controls="dropdown-menu"
                     :title="title"
-                    :iconPath="iconPath"
-                    @click="toggleDropdownExpanded()"
+                    :icon-path="iconPath"
                     data-cy="dropdown-menu-trigger"
+                    @click="toggleDropdownExpanded()"
                 />
             </div>
             <!-- z-index must be larger than the fixed footer -->
             <div
+                v-if="isDropdownExpanded || renderClosed"
+                id="dropdown-menu"
                 style="z-index: 3"
                 class="dropdown-menu is-unselectable"
-                id="dropdown-menu"
                 role="menu"
                 @click="collapseDropdown()"
-                v-if="isDropdownExpanded || renderClosed"
             >
-                <div class="dropdown-content" ref="target">
+                <div ref="target" class="dropdown-content">
                     <template v-if="title">
                         <!-- HINT: Because of 'is-static', this should not be clickable, but unfortunately I was not able to prevent this yet -->
                         <div

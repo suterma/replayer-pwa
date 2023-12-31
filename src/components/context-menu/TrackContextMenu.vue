@@ -5,16 +5,16 @@
         </div>
         <DropdownMenuItem
             title="Add multiple cues..."
-            subTitle="(add cues using text lines)"
+            sub-title="(add cues using text lines)"
+            :icon-path="mdiFileDelimitedOutline"
             @click="addMultipleCues()"
-            :iconPath="mdiFileDelimitedOutline"
         />
         <DropdownMenuItem
             :disabled="props.track.Cues.length < 1"
             title="Reassign cue shortcuts"
-            subTitle="(first as seed, then incrementing)"
+            sub-title="(first as seed, then incrementing)"
+            :icon-path="mdiOrderNumericAscending"
             @click="app.reassignCueShortcuts(props.track.Id)"
-            :iconPath="mdiOrderNumericAscending"
         />
         <a
             :href="props.track.Url"
@@ -25,22 +25,22 @@
             <DropdownMenuItem
                 :disabled="!isDownloadable"
                 title="Download media file"
-                subTitle="(to local file system)"
+                sub-title="(to local file system)"
+                :icon-path="mdiDownload"
                 @click="app.cloneTrack(props.track.Id)"
-                :iconPath="mdiDownload"
             />
         </a>
         <DropdownMenuItem
             title="Clone"
-            subTitle="(with cues and media)"
+            sub-title="(with cues and media)"
+            :icon-path="mdiContentDuplicate"
             @click="app.cloneTrack(props.track.Id)"
-            :iconPath="mdiContentDuplicate"
         />
         <DropdownMenuItem
             title="Remove"
-            subTitle="(remove the track from the compilation)"
+            sub-title="(remove the track from the compilation)"
+            :icon-path="mdiTrashCanOutline"
             @click="remove()"
-            :iconPath="mdiTrashCanOutline"
         />
     </DropdownMenu>
 </template>

@@ -6,13 +6,13 @@
         <!-- In playback/mix view, do not require the CTRL modifier -->
         <!-- In edit view, the CTRL modifier helps disambiguate
          between other uses of the shortcut keys-->
-        <CompilationKeyboardHandler :requireCtrlModifier="isEditMode" />
+        <CompilationKeyboardHandler :require-ctrl-modifier="isEditMode" />
 
         <!-- Show a loading panel, similar to the edit view, but not in edit mode -->
         <Compilation
             v-if="hasCompilation"
             :compilation="compilation"
-            :trackViewode="trackViewode"
+            :track-viewode="trackViewode"
         />
 
         <div v-else class="section pl-0 pr-0 block">
@@ -22,11 +22,11 @@
             </p>
         </div>
         <div
-            class="section pt-6 pl-0 pr-0 block"
             v-if="isEditMode || !hasCompilation"
+            class="section pt-6 pl-0 pr-0 block"
         >
             <!-- Offer the demo only when no compilation/track is shown -->
-            <MediaDropZone :offerDemo="!hasCompilation" />
+            <MediaDropZone :offer-demo="!hasCompilation" />
         </div>
         <template v-if="isEditMode && hasAvailableMedia">
             <div class="has-text-centered block">
@@ -43,8 +43,8 @@
         </template>
         <!-- The application footer (not for printout) -->
         <footer
-            class="footer navbar is-fixed-bottom is-hidden-print"
             v-if="!hasCompilation"
+            class="footer navbar is-fixed-bottom is-hidden-print"
         >
             <small>
                 <div class="content has-text-centered">

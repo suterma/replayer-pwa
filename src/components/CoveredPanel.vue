@@ -3,30 +3,30 @@
     that is currently revealed explicitly (for editing purposes). This way, only ever
     one hotkey is registered on the page. Multiple registered same hotkeys are not possible-->
     <DismissiblePanel
-        @dismissed="cover"
         :dismissible="dismissible"
         :hotkey="!isCovered && !hasContentToRevealFor"
+        @dismissed="cover"
     >
         <CollapsibleButton
             v-show="isCovered"
             class="is-nav"
-            :modelValue="isRevelationRequested"
-            @update:modelValue="() => reveal()"
-            collapsedText="Click to reveal"
+            :model-value="isRevelationRequested"
+            collapsed-text="Click to reveal"
             :title="title"
             v-bind="$attrs"
             :disabled="disabled"
+            @update:model-value="() => reveal()"
             ><span><slot name="caption"></slot></span
         ></CollapsibleButton>
         <!-- Transition for the revealing action. 
         Uses an additional element to make sure that there is a single root within the transition slot -->
         <Transition name="item-expand-right">
             <div
-                class="transition-in-place"
                 v-if="!isCovered"
-                :title="title"
                 v-bind="$attrs"
                 ref="slotContainer"
+                class="transition-in-place"
+                :title="title"
             >
                 <slot></slot>
             </div>

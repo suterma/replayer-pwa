@@ -6,11 +6,11 @@
     >
         <MenuItemContent
             :title="title"
-            :subTitle="subTitle"
-            :iconPath="iconPath"
+            :sub-title="subTitle"
+            :icon-path="iconPath"
             :disabled="disabled"
         >
-            <template v-if="shortcut" v-slot:shortcut>{{ shortcut }}</template>
+            <template v-if="shortcut" #shortcut>{{ shortcut }}</template>
         </MenuItemContent>
     </button>
 </template>

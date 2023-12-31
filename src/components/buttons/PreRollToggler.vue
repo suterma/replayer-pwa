@@ -4,7 +4,7 @@
         :class="{
             'is-inactive': !modelValue,
         }"
-        :isEngaged="modelValue"
+        :is-engaged="modelValue"
         engaged-label="pre-roll is on"
         disengaged-label="pre-roll is off"
         @click="togglePreRollMode()"

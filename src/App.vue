@@ -4,7 +4,7 @@
     <section
         class="section has-background-none is-hidden-print is-pulled-right pb-0"
     >
-        <AppContextMenu :hasCompilation="hasCompilation"></AppContextMenu>
+        <AppContextMenu :has-compilation="hasCompilation"></AppContextMenu>
     </section>
     <!-- The routed view section -->
     <!-- NOTE: the same audio context is reused for all playback operations and
@@ -20,9 +20,9 @@
     <!-- The bottom nav bar, used for the media player widget for the active track 
         plus the compilation-wide transport in mix mode -->
     <nav
+        id="media-player"
         class="navbar is-fixed-bottom has-background-grey-dark is-hidden-print"
         role="form"
-        id="media-player"
         aria-label="media player"
     ></nav>
 

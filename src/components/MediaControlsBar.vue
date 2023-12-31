@@ -4,9 +4,9 @@
             v-if="hasSecondTrack && !hideTrackNavigation"
             class="button"
             :disabled="!hasPreviousTrack || disabled"
-            @click="toPreviousTrack()"
             title="skip to previous track"
             data-cy="previous-track"
+            @click="toPreviousTrack()"
         >
             <BaseIcon v-once :path="mdiSkipPrevious" />
         </button>
@@ -14,9 +14,9 @@
             v-if="!hideCueNavigation"
             class="button"
             :disabled="!hasPreviousCue || disabled"
-            @click="toPreviousCue()"
             title="skip to previous cue"
             data-cy="previous-cue"
+            @click="toPreviousCue()"
         >
             <BaseIcon v-once :path="mdiSkipPreviousOutline" />
         </button>
@@ -26,9 +26,9 @@
             v-if="!hideStopButton"
             class="button is-hidden-mobile"
             :disabled="disabled"
-            @click="stop()"
             title="Stop"
             data-cy="stop"
+            @click="stop()"
         >
             <BaseIcon v-once :path="mdiStop" />
         </button>
@@ -37,10 +37,10 @@
             v-if="!hidePlayPauseButton"
             class="is-success"
             :disabled="disabled"
-            :isLoading="isFading"
-            @click="togglePlayback()"
+            :is-loading="isFading"
             title="Play from current position"
             data-cy="toggle-playback"
+            @click="togglePlayback()"
         />
         <slot name="after-play"></slot>
 
@@ -48,9 +48,9 @@
             v-if="!hideCueNavigation"
             class="button"
             :disabled="!hasNextCue || disabled"
-            @click="toNextCue()"
             title="skip to next cue"
             data-cy="next-cue"
+            @click="toNextCue()"
         >
             <BaseIcon v-once :path="mdiSkipNextOutline" />
         </button>
@@ -59,38 +59,38 @@
             v-if="hasSecondTrack && !hideTrackNavigation"
             class="button"
             :disabled="!hasNextTrack || disabled"
-            @click="toNextTrack()"
             title="skip to next track"
             data-cy="next-track"
+            @click="toNextTrack()"
         >
             <BaseIcon v-once :path="mdiSkipNext" />
         </button>
 
         <PlaybackModeButton
-            :modelValue="playbackMode"
-            @update:modelValue="updatePlaybackMode"
+            :model-value="playbackMode"
             data-cy="toggle-playback-mode"
+            @update:model-value="updatePlaybackMode"
         />
 
         <PreRollToggler
             v-if="!hidePreRollToggler"
-            :modelValue="isPreRollEnabled"
-            @update:modelValue="updatedIsPreRollEnabled"
+            :model-value="isPreRollEnabled"
             data-cy="toggle-preroll-mode"
+            @update:model-value="updatedIsPreRollEnabled"
         />
 
         <FadingToggler
             v-if="!hideFadingToggler"
-            :modelValue="isFadingEnabled"
-            @update:modelValue="updatedIsFadingEnabled"
+            :model-value="isFadingEnabled"
             data-cy="toggle-fading-mode"
+            @update:model-value="updatedIsFadingEnabled"
         />
 
         <VolumeKnob
             v-if="!hideVolumeButton"
             :disabled="disabled"
-            :modelValue="volume"
-            @update:modelValue="updateVolume"
+            :model-value="volume"
+            @update:model-value="updateVolume"
         />
         <slot></slot>
     </div>
@@ -126,25 +126,6 @@ export default defineComponent({
         BaseIcon,
         VolumeKnob,
     },
-    emits: [
-        /** Emitted, when the stop button is clicked
-         */
-        'stop',
-        'previousCue',
-        'previousTrack',
-        'nextCue',
-        'nextTrack',
-        /** Emitted when the user wants to toggle the playing (true) or the paused (false) state
-         */
-        'togglePlaying',
-        'update:playbackMode',
-        'update:isFadingEnabled',
-        'update:isPreRollEnabled',
-        'update:volume',
-        /** Emitted at a seek button click, with the amount of seconds as argument (can also be negative)
-         */
-        'seek',
-    ],
     props: {
         /** Whether the media is currently fading
          * @remarks Controls the display of the player, to hint the fading action
@@ -265,6 +246,25 @@ export default defineComponent({
             default: false,
         },
     },
+    emits: [
+        /** Emitted, when the stop button is clicked
+         */
+        'stop',
+        'previousCue',
+        'previousTrack',
+        'nextCue',
+        'nextTrack',
+        /** Emitted when the user wants to toggle the playing (true) or the paused (false) state
+         */
+        'togglePlaying',
+        'update:playbackMode',
+        'update:isFadingEnabled',
+        'update:isPreRollEnabled',
+        'update:volume',
+        /** Emitted at a seek button click, with the amount of seconds as argument (can also be negative)
+         */
+        'seek',
+    ],
     data() {
         return {
             /** Icons from @mdi/js */
@@ -275,6 +275,16 @@ export default defineComponent({
             mdiSkipNext: mdiSkipNext,
         };
     },
+    computed: {
+        /** Whether the compilation has a second track at all
+         * @remarks If there is just one track, next and previous track buttons can be omitted
+         */
+        hasSecondTrack(): boolean {
+            return this.hasPreviousTrack || this.hasNextTrack;
+        },
+    },
+
+    watch: {},
     methods: {
         stop(): void {
             this.$emit('stop');
@@ -320,16 +330,6 @@ export default defineComponent({
          */
         updateVolume(volume: number): void {
             this.$emit('update:volume', volume);
-        },
-    },
-
-    watch: {},
-    computed: {
-        /** Whether the compilation has a second track at all
-         * @remarks If there is just one track, next and previous track buttons can be omitted
-         */
-        hasSecondTrack(): boolean {
-            return this.hasPreviousTrack || this.hasNextTrack;
         },
     },
 });

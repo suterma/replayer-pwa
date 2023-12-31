@@ -7,8 +7,8 @@
                 <button
                     :disabled="disabled"
                     class="button is-outlined is-inverted p-0 pr-2 is-multiline"
-                    @click="seek(-5)"
                     title="Current time: click to rewind"
+                    @click="seek(-5)"
                 >
                     <BaseIcon
                         v-once
@@ -34,16 +34,16 @@
                 <label
                     ><span class="is-sr-only">Time slider</span>
                     <input
+                        id=""
                         :disabled="disabled"
                         class="slider is-fullwidth is-slim"
                         :step="stepSize"
                         min="0"
-                        id=""
                         :max="trackDuration ?? 0"
                         :value="modelValue"
+                        type="range"
                         @change="onValueChange"
                         @input="onValueChange"
-                        type="range"
                 /></label>
             </div>
         </div>
@@ -53,8 +53,8 @@
                 <button
                     :disabled="disabled"
                     class="button is-outlined is-inverted p-0 pl-2 is-multiline"
-                    @click="seek(+5)"
                     title="Remaining time: click to forward"
+                    @click="seek(+5)"
                 >
                     <BaseIcon
                         v-once
@@ -87,13 +87,6 @@ import CompilationHandler from '@/store/compilation-handler';
  */
 export default defineComponent({
     name: 'PlayheadSlider',
-    emits: [
-        'update:modelValue',
-
-        /** Emitted at a seek button click, with the amount of seconds as argument (can also be negative)
-         */
-        'seek',
-    ],
     components: { BaseIcon },
     props: {
         /** Whether to show the component in a disabled state
@@ -136,12 +129,34 @@ export default defineComponent({
             default: true,
         },
     },
+    emits: [
+        'update:modelValue',
+
+        /** Emitted at a seek button click, with the amount of seconds as argument (can also be negative)
+         */
+        'seek',
+    ],
     data() {
         return {
             /** Icons from @mdi/js */
             mdiRewind: mdiRewind,
             mdiFastForward: mdiFastForward,
         };
+    },
+    computed: {
+        remainingTime(): number | null {
+            return CompilationHandler.calculateRemainingTime(
+                this.modelValue,
+                this.trackDuration,
+            );
+        },
+        percentagePlayed(): string {
+            const played = CompilationHandler.calculatePlayedPercentage(
+                this.modelValue,
+                this.trackDuration,
+            );
+            return `${played}%`;
+        },
     },
     methods: {
         onValueChange(e: Event): void {
@@ -159,21 +174,6 @@ export default defineComponent({
                 value,
                 subSecondDigits,
             );
-        },
-    },
-    computed: {
-        remainingTime(): number | null {
-            return CompilationHandler.calculateRemainingTime(
-                this.modelValue,
-                this.trackDuration,
-            );
-        },
-        percentagePlayed(): string {
-            const played = CompilationHandler.calculatePlayedPercentage(
-                this.modelValue,
-                this.trackDuration,
-            );
-            return `${played}%`;
         },
     },
 });

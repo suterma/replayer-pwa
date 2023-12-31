@@ -4,7 +4,7 @@
         :class="{
             'is-inactive': !isSoloed,
         }"
-        :isEngaged="isSoloed"
+        :is-engaged="isSoloed"
         engaged-label=""
         disengaged-label="Listen solo"
         >S

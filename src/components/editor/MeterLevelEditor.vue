@@ -12,12 +12,12 @@
                             <p class="control">
                                 <BpmEditor
                                     class="input"
-                                    :modelValue="props.meter?.BeatsPerMinute"
-                                    @update:modelValue="
+                                    :model-value="props.meter?.BeatsPerMinute"
+                                    placeholder="BPM"
+                                    @update:model-value="
                                         (value: number | null) =>
                                             updateMeterWithBpm(value)
                                     "
-                                    placeholder="BPM"
                                 >
                                 </BpmEditor>
                             </p>
@@ -39,12 +39,12 @@
                             <p class="control">
                                 <TimeSignatureEditor
                                     class="input"
-                                    :modelValue="props.meter?.TimeSignature"
-                                    @update:modelValue="
+                                    :model-value="props.meter?.TimeSignature"
+                                    title="Time signature"
+                                    @update:model-value="
                                         (value: ITimeSignature | null) =>
                                             updateMeterWithTimeSignature(value)
                                     "
-                                    title="Time signature"
                                 >
                                 </TimeSignatureEditor>
                             </p>
@@ -64,17 +64,17 @@
                             <p class="control">
                                 <TimeInput
                                     class="has-text-right"
-                                    :modelValue="props.meter?.OriginTime"
-                                    @update:modelValue="
+                                    :model-value="props.meter?.OriginTime"
+                                    size="9"
+                                    @update:model-value="
                                         (value: number | null) =>
                                             updateMeterWithOriginTime(value)
                                     "
-                                    size="9"
                                 />
                             </p>
                             <p class="control is-hidden-mobile">
                                 <AdjustTimeButton
-                                    @adjustTime="$emit('adjustOriginTime')"
+                                    @adjust-time="$emit('adjustOriginTime')"
                                 ></AdjustTimeButton>
                             </p>
                         </div>
@@ -86,13 +86,13 @@
                 <div class="field">
                     <p class="control">
                         <LabeledCheckbox
-                            :modelValue="props.useMeasureNumbers"
-                            @update:modelValue="
+                            :model-value="props.useMeasureNumbers"
+                            label="Show measure numbers"
+                            :disabled="!hasAllTempoValues"
+                            @update:model-value="
                                 (value: boolean | null) =>
                                     updateUseMeasureNumbers(value)
                             "
-                            label="Show measure numbers"
-                            :disabled="!hasAllTempoValues"
                         ></LabeledCheckbox>
                     </p>
                 </div>

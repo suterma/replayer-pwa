@@ -4,13 +4,13 @@
         class="button is-nav is-rounded"
         :class="{ 'is-static': disabled, 'has-cursor-not-allowed': disabled }"
         :disabled="disabled ? true : null"
-        :modelValue="volume"
-        @update:modelValue="updateVolume"
-        :minValue="0"
-        :maxValue="1"
-        valueClass="has-text-light"
-        rimClass="has-text-grey-light"
+        :model-value="volume"
+        :min-value="0"
+        :max-value="1"
+        value-class="has-text-light"
+        rim-class="has-text-grey-light"
         data-cy="volume"
+        @update:model-value="updateVolume"
     />
 </template>
 
@@ -27,7 +27,6 @@ export default defineComponent({
     components: {
         Knob,
     },
-    emits: ['update:volume'],
     props: {
         /** The volume in the range [0..1]
          * @remarks Implements a two-way binding */
@@ -40,6 +39,7 @@ export default defineComponent({
          */
         disabled: Boolean,
     },
+    emits: ['update:volume'],
 
     methods: {
         /** Handle a volume update

@@ -1,5 +1,5 @@
 <template>
-    <DropdownMenu ref="dropdownMenu" :iconPath="mdiMenu" :renderClosed="true">
+    <DropdownMenu ref="dropdownMenu" :icon-path="mdiMenu" :render-closed="true">
         <div id="appContextMenuTop"></div>
         <!-- The compilation-related views are only available when any is loaded -->
         <div class="dropdown-item is-hidden-mobile">
@@ -9,14 +9,14 @@
             to="/edit"
             title="Edit"
             :keys="['f2']"
-            :iconPath="mdiPencil"
+            :icon-path="mdiPencil"
         />
         <template v-if="hasCompilation">
             <DropdownMenuRouterLink
                 to="/play"
                 title="Play"
                 :keys="['f3']"
-                :iconPath="mdiPlay"
+                :icon-path="mdiPlay"
             />
             <div
                 v-if="experimentalMultitrack"
@@ -26,14 +26,14 @@
                     to="/mix"
                     title="Mix"
                     :keys="['f6']"
-                    :iconPath="mdiTuneVertical"
+                    :icon-path="mdiTuneVertical"
                 />
             </div>
             <DropdownMenuRouterLink
                 to="/setlist"
                 title="Set list"
                 :keys="['f4']"
-                :iconPath="mdiListBoxOutline"
+                :icon-path="mdiListBoxOutline"
             />
             <hr class="dropdown-divider" />
             <div class="dropdown-item is-hidden-mobile">
@@ -51,14 +51,14 @@
             v-once
             to="/settings"
             title="Settings"
-            :iconPath="mdiCogOutline"
+            :icon-path="mdiCogOutline"
         />
 
         <DropdownMenuRouterLink
             to="/about"
             title="About"
             :keys="['f1']"
-            :iconPath="mdiInformationOutline"
+            :icon-path="mdiInformationOutline"
         />
         <div id="appContextMenuBottom"></div>
     </DropdownMenu>

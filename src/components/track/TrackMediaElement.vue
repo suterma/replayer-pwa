@@ -1,16 +1,16 @@
 <template>
     <div
-        class="block"
         v-if="
             mediaElement &&
             isEditable &&
             showWaveformsOnEdit &&
             !FileHandler.isValidHttpUrl(mediaUrl)
         "
+        class="block"
     >
         <!-- Waveforms are automatially only revealed for short audio files -->
         <CoveredPanel
-            :revealFor="[isShortDuration && !props.enableVideo]"
+            :reveal-for="[isShortDuration && !props.enableVideo]"
             :dismissible="false"
             :disabled="disabled || !mediaElement || !audioSource"
             title="Waveform"
@@ -22,8 +22,8 @@
             <TrackAudioPeaks
                 v-if="mediaElement"
                 :key="mediaUrl"
-                :mediaElement="mediaElement"
-                :showOverview="showOverviewWaveformOnEdit"
+                :media-element="mediaElement"
+                :show-overview="showOverviewWaveformOnEdit"
             ></TrackAudioPeaks>
         </CoveredPanel>
     </div>
@@ -43,10 +43,10 @@
             }"
         >
             <video
-                controls
                 :id="mediaElementId"
-                :src="mediaUrlWithFragment"
                 ref="mediaElement"
+                controls
+                :src="mediaUrlWithFragment"
                 class="video"
                 :class="{
                     'is-small': smallVideo,
@@ -57,8 +57,8 @@
                     'fade-out': isFading == FadingMode.FadeOut,
                     'fade-in': isFading == FadingMode.FadeIn,
                 }"
-                @click="$emit('click')"
                 title="Click to play/pause"
+                @click="$emit('click')"
             ></video>
         </div>
     </template>
@@ -66,8 +66,8 @@
         <!-- use the audio element -->
         <audio
             :id="mediaElementId"
-            :src="mediaUrlWithFragment"
             ref="mediaElement"
+            :src="mediaUrlWithFragment"
             class="video"
             :class="{
                 'is-small': smallVideo,
@@ -78,8 +78,8 @@
                 'fade-out': isFading == FadingMode.FadeOut,
                 'fade-in': isFading == FadingMode.FadeIn,
             }"
-            @click="$emit('click')"
             title="Click to play/pause"
+            @click="$emit('click')"
         ></audio>
     </template>
     <!-- NOTE: the rendering of the AudioLevelMeter _might_ affect badly the 
@@ -112,9 +112,9 @@
             ref="audioLevelMeter"
             :vertical="false"
             :disabled="disabled || isPaused"
-            :audioSource="audioSource"
-            :audioContext="context"
-            :showText="false"
+            :audio-source="audioSource"
+            :audio-context="context"
+            :show-text="false"
             :running="!isPaused && isAppVisible && audioLevelMeterIsVisible"
         >
         </AudioLevelMeter>
@@ -123,9 +123,9 @@
                 ref="audioLevelMeter"
                 :vertical="true"
                 :disabled="disabled || isPaused"
-                :audioSource="audioSource"
-                :audioContext="context"
-                :showText="false"
+                :audio-source="audioSource"
+                :audio-context="context"
+                :show-text="false"
                 :running="!isPaused && isAppVisible && audioLevelMeterIsVisible"
             >
             </AudioLevelMeter>
@@ -137,7 +137,7 @@
             v-model="showVideo"
             v-model:smallVideo="smallVideo"
             :cues="cues"
-            :videoElement="videoElement"
+            :video-element="videoElement"
             :disabled="!mediaElement"
         ></VideoTextTrackController>
     </div>

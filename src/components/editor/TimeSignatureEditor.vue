@@ -3,13 +3,13 @@
     <div class="is-flex is-justify-content-space-between">
         <!-- Let the attributes fall through the input element: -->
         <input
-            class="input time-signature has-text-right"
             v-bind="$attrs"
+            v-model.number="vModelNumerator"
+            class="input time-signature has-text-right"
             type="number"
             inputmode="numeric"
             step="1"
             min="1"
-            v-model.number="vModelNumerator"
             size="2"
             data-cy="input-timeSignatureNumerator"
             tabindex="0"
@@ -18,13 +18,13 @@
         <span class="mt-2">/</span>
         <!-- Let the attributes fall through the input element: -->
         <input
-            class="input time-signature has-text-right"
             v-bind="$attrs"
+            v-model.number="vModelDenominator"
+            class="input time-signature has-text-right"
             type="number"
             inputmode="numeric"
             step="1"
             min="1"
-            v-model.number="vModelDenominator"
             size="2"
             data-cy="input-timeSignatureDenominator"
             tabindex="0"

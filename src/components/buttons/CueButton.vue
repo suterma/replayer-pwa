@@ -66,10 +66,10 @@
                     <div class="level-left">
                         <div class="level-item mr-3">
                             <MeasureDisplay
-                                v-experiment="true"
                                 v-if="hasMeter && useMeasureNumbers"
+                                v-experiment="true"
                                 class="has-opacity-half foreground"
-                                :modelValue="time"
+                                :model-value="time"
                                 :meter="meter"
                             ></MeasureDisplay>
                             <!-- NOTE: As a component update performance optimization, 
@@ -78,8 +78,8 @@
                             <TimeDisplay
                                 v-else
                                 class="has-opacity-half foreground"
-                                :modelValue="time"
-                                :subSecondDigits="1"
+                                :model-value="time"
+                                :sub-second-digits="1"
                             ></TimeDisplay>
                         </div>
                     </div>
@@ -90,28 +90,28 @@
 
                         <p class="level-item mr-3 is-hidden-touch">
                             <MeasureDifferenceDisplay
-                                v-experiment="true"
                                 v-if="hasMeter && useMeasureNumbers"
+                                v-experiment="true"
                                 class="has-opacity-half foreground"
-                                :modelValue="duration"
+                                :model-value="duration"
                                 :meter="meter"
                             ></MeasureDifferenceDisplay>
                             <!-- Use a right position for Durations, to keep them as much out of visibility as possible -->
                             <TimeDisplay
                                 v-else
                                 class="has-opacity-half foreground"
-                                :modelValue="duration"
-                                :subSecondDigits="1"
+                                :model-value="duration"
+                                :sub-second-digits="1"
                             ></TimeDisplay>
                         </p>
 
-                        <p class="level-item" v-if="shortcut">
+                        <p v-if="shortcut" class="level-item">
                             <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibility as possible -->
                             <ShortcutDisplay class="foreground"
                                 >{{ shortcut }}
                             </ShortcutDisplay>
                         </p>
-                        <p class="level-item" v-else>
+                        <p v-else class="level-item">
                             <!-- Just show a placeholder, taking up the usual vertical space -->
                             <ShortcutDisplay class="pl-0 pr-0 is-invisible">
                             </ShortcutDisplay>

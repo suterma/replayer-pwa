@@ -2,13 +2,13 @@
     <slot></slot>
     <!-- Let the attributes fall through the input element: -->
     <input
-        class="input bpm has-text-right"
         v-bind="$attrs"
+        v-model.number="vModel"
+        class="input bpm has-text-right"
         type="number"
         inputmode="numeric"
         step="1"
         min="0"
-        v-model.number="vModel"
         size="3"
         data-cy="input-beatsPerMinute"
         :placeholder="placeholder"

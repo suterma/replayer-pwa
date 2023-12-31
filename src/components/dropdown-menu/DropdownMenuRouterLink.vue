@@ -1,17 +1,17 @@
 <template>
 
-<Hotkey :keys="keys" :excluded-elements="[]" v-slot="{ clickRef }" :disabled="disabled || !keys">
-    <router-link :to="to" custom v-slot="{ navigate }">
+<Hotkey v-slot="{ clickRef }" :keys="keys" :excluded-elements="[]" :disabled="disabled || !keys">
+    <router-link v-slot="{ navigate }" :to="to" custom>
         <DropdownMenuItem
-            @click="navigate"
-            @keypress.enter="navigate"
-            role="link"
             :ref='clickRef'
+            role="link"
             :title="title"
-            :subTitle="subTitle"
-            :iconPath="iconPath"
+            :sub-title="subTitle"
+            :icon-path="iconPath"
             :disabled="isActiveRoute"
             :shortcut='keys.join("+")'
+            @click="navigate"
+            @keypress.enter="navigate"
         >
         </DropdownMenuItem>
     </router-link>

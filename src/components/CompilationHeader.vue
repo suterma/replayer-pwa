@@ -23,16 +23,16 @@
                                         compilation.Tracks.length > 1)
                                 "
                                 class="input title is-3"
-                                :modelValue="compilation.Title"
-                                @change="updateTitle($event.target.value)"
+                                :model-value="compilation.Title"
                                 placeholder="Compilation title"
                                 title="Compilation title"
+                                @change="updateTitle($event.target.value)"
                             />
                         </p>
                     </div>
                 </div>
                 <CoveredPanel
-                    :revealFor="[compilation.Artist]"
+                    :reveal-for="[compilation.Artist]"
                     title="Artist name for this compilation"
                 >
                     <template #caption>
@@ -46,17 +46,17 @@
                                 <LabeledInput label="by">
                                     <StyledInput
                                         class="input is-italic"
-                                        :modelValue="compilation.Artist"
-                                        @update:modelValue="
-                                            (value) => {
-                                                updateArtist(value);
-                                            }
-                                        "
+                                        :model-value="compilation.Artist"
                                         type="text"
                                         placeholder="Artist"
                                         title="Artist"
                                         data-cy="track-artist"
-                                        focusOnMounted
+                                        focus-on-mounted
+                                        @update:model-value="
+                                            (value) => {
+                                                updateArtist(value);
+                                            }
+                                        "
                                     >
                                     </StyledInput>
                                 </LabeledInput>
@@ -65,7 +65,7 @@
                     </div>
                 </CoveredPanel>
                 <CoveredPanel
-                    :revealFor="[compilation.Album]"
+                    :reveal-for="[compilation.Album]"
                     title="Album name for this compilation"
                 >
                     <template #caption><span class="label">on</span></template>
@@ -77,17 +77,17 @@
                                 <LabeledInput label="on">
                                     <StyledInput
                                         class="input is-italic"
-                                        :modelValue="compilation.Album"
-                                        @update:modelValue="
-                                            (value) => {
-                                                updateAlbum(value);
-                                            }
-                                        "
+                                        :model-value="compilation.Album"
                                         type="text"
                                         placeholder="Album"
                                         title="Album"
                                         data-cy="track-album"
-                                        focusOnMounted
+                                        focus-on-mounted
+                                        @update:model-value="
+                                            (value) => {
+                                                updateAlbum(value);
+                                            }
+                                        "
                                     >
                                     </StyledInput>
                                 </LabeledInput>

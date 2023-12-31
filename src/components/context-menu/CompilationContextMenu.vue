@@ -2,32 +2,32 @@
     <Teleport to="#appContextMenuCompilation">
         <Hotkey
             v-once
+            v-slot="{ clickRef }"
             :keys="['ctrl', 's']"
             :excluded-elements="[]"
-            v-slot="{ clickRef }"
         >
             <DropdownMenuItem
-                title="Download..."
-                subTitle="Save current compilation"
-                @click="download"
                 :ref="clickRef"
-                :iconPath="mdiTrayArrowDown"
+                title="Download..."
+                sub-title="Save current compilation"
+                :icon-path="mdiTrayArrowDown"
                 shortcut="CTRL+S"
+                @click="download"
             />
         </Hotkey>
         <Hotkey
             v-once
+            v-slot="{ clickRef }"
             :keys="['ctrl', 'x']"
             :excluded-elements="[]"
-            v-slot="{ clickRef }"
         >
             <DropdownMenuItem
-                title="Close..."
-                subTitle="Close current compilation"
-                @click="close"
                 :ref="clickRef"
-                :iconPath="mdiTrashCanOutline"
+                title="Close..."
+                sub-title="Close current compilation"
+                :icon-path="mdiTrashCanOutline"
                 shortcut="CTRL+X"
+                @click="close"
             />
         </Hotkey>
     </Teleport>

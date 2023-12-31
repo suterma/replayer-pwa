@@ -4,7 +4,7 @@
         :class="{
             'is-inactive': !isSelected,
         }"
-        :isEngaged="isSelected"
+        :is-engaged="isSelected"
         engaged-label=""
         disengaged-label="Select"
         >SEL

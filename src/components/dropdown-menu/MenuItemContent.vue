@@ -2,8 +2,8 @@
     <div class="level is-mobile" :title="subTitle">
         <div class="level-left">
             <div
-                class="level-item dropdown-item-icon is-borderless has-background-transparent pl-0 pr-0"
                 v-if="iconPath"
+                class="level-item dropdown-item-icon is-borderless has-background-transparent pl-0 pr-0"
             >
                 <BaseIcon :path="iconPath" />
             </div>

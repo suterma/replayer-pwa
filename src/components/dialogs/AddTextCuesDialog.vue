@@ -1,15 +1,15 @@
 <template>
-    <ModalDialog submitButtonText="Add" wide>
+    <ModalDialog submit-button-text="Add" wide>
         <template #title>Adding cues for '{{ track?.Name }}' from...</template>
         <template #body>
             <div class="control">
                 <textarea
+                    v-model="cueText"
+                    v-focus
                     class="textarea is-size-7"
                     placeholder="Description,Time[seconds],Shortcut"
-                    v-model="cueText"
                     rows="8"
                     autocomplete="off"
-                    v-focus
                 ></textarea>
             </div>
 

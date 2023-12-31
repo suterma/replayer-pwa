@@ -39,7 +39,7 @@
         <span v-if="track.Duration !== null" class="is-size-7">
             (<TimeDisplay
                 class="is-size-7"
-                :modelValue="track.Duration"
+                :model-value="track.Duration"
             ></TimeDisplay
             >)
         </span>
@@ -52,8 +52,8 @@
                 <th class="is-size-7">Description</th>
                 <th class="is-size-7">Time</th>
                 <th
-                    v-experiment="experimentalUseMeter"
                     v-if="props.track.UseMeasureNumbers"
+                    v-experiment="experimentalUseMeter"
                     class="is-size-7"
                 >
                     Measure
@@ -71,13 +71,13 @@
                     {{ cue.Description }}
                 </td>
                 <td>
-                    <TimeDisplay :modelValue="cue.Time"></TimeDisplay>
+                    <TimeDisplay :model-value="cue.Time"></TimeDisplay>
                 </td>
                 <td
-                    v-experiment="experimentalUseMeter"
                     v-if="props.track.UseMeasureNumbers"
+                    v-experiment="experimentalUseMeter"
                 >
-                    <MeasureDisplay :modelValue="cue.Time"></MeasureDisplay>
+                    <MeasureDisplay :model-value="cue.Time"></MeasureDisplay>
                 </td>
             </tr>
         </tbody>

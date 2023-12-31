@@ -26,15 +26,15 @@
                 @keydown.enter="openFile()"
             >
                 <input
+                    id="assetsFieldHandle"
+                    ref="file"
                     v-focus
                     type="file"
                     multiple
-                    id="assetsFieldHandle"
                     class="is-hidden"
-                    @change="onChange"
-                    ref="file"
                     :accept="acceptedFiles"
                     data-cy="input-file"
+                    @change="onChange"
                 />
                 <template v-if="isReplacementMode">
                     <BaseIcon v-once :path="mdiSwapHorizontal" />
@@ -60,6 +60,8 @@
                     <p class="control">
                         <!-- The URL is required for form submit -->
                         <input
+                            v-model="url"
+                            v-focus
                             class="input"
                             type="url"
                             pattern="^https?://.+$"
@@ -70,13 +72,11 @@
                                 replaceInfo +
                                 'The URL must begin with http:// or https://'
                             "
-                            v-model="url"
                             :placeholder="
                                 replaceUrl
                                     ? replaceUrl
                                     : 'Paste an URL to a media file or YouTube video'
                             "
-                            v-focus
                             data-cy="input-url"
                         />
                     </p>

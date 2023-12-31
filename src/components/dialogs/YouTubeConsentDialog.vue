@@ -1,5 +1,5 @@
 <template>
-    <ModalDialog submitButtonText="Accept" data-cy="youtube-consent">
+    <ModalDialog submit-button-text="Accept" data-cy="youtube-consent">
         <template #title>Connecting to YouTube...</template>
         <template #body>
             <p>

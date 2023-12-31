@@ -14,13 +14,13 @@
                 /** using an overlay is not allowed per https://developers.google.com/youtube/terms/required-minimum-functionality#overlays-and-frames */
                 'use-overlay-icon': false,
             }"
+            title="Click to play/pause"
             @click="
                 {
                     $emit('click');
                     mediaHandler?.play();
                 }
             "
-            title="Click to play/pause"
         >
             <div
                 class="video youtube"
@@ -53,7 +53,7 @@
         <YoutubeTextTrackController
             v-model="showVideo"
             v-model:smallVideo="smallVideo"
-            :trackId="trackId"
+            :track-id="trackId"
             :cues="cues"
             :title="title"
             :disabled="isLoading"
