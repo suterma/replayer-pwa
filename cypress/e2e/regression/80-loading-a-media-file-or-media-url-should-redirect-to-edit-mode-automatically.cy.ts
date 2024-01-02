@@ -7,7 +7,7 @@ describe('testing the issue "Loading a media file or media URL should redirect t
         );
 
         // ASSERT
-        cy.hash().should('eq', '#/edit', { matchCase: false });
+        cy.hash().should('eq', '#/Edit', { matchCase: false });
     });
     it('should go to edit mode after media load (without CORS Header)', () => {
         // ACT
@@ -16,6 +16,6 @@ describe('testing the issue "Loading a media file or media URL should redirect t
         );
 
         // ASSERT
-        cy.hash().should('eq', '#/edit', { matchCase: false });
+        cy.hash().should('eq', '#/Edit', { matchCase: false });
     });
 });

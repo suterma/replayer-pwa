@@ -14,7 +14,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
             cy.get('button[data-cy="toggle-playback"]').first().click();
             cy.get('input[type=range]')
                 .as('range')
-                .invoke('val', 10)
+                .invoke('val', cuePosition)
                 .trigger('change');
 
             // ACT (allow the seek operation to execute, then should be at least the desired seek position)
@@ -25,13 +25,23 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
                 .first()
                 .click();
 
-            // ASSERT (that the cue was updated.)
+            // ASSERT (that the cue was updated)
+            let allowedCuePositionTolerance = 0;
+            // For YouTube, the position can be slightly off, and also early, see
+            // https://developers.google.com/youtube/player_parameters#start
+            if (mediaSourceUrl.url.startsWith('https://www.youtube.com/')) {
+                allowedCuePositionTolerance = 0.5;
+            }
             cy.get(
                 '[data-cy="cue-editors"] input[type=number][data-cy="input-time-position"]',
             )
                 .invoke('val') // call the val() method to extract the value
                 .then((val) => +(val ?? '')) // convert it to a number
-                .should('be.least', 10); // also compare it to a number
+                .should(
+                    'be.within',
+                    cuePosition - allowedCuePositionTolerance,
+                    cuePosition + allowedCuePositionTolerance,
+                ); // also compare it to a number
             //Because it starts to play, it will eventually be greater than the set value}
         });
     });
