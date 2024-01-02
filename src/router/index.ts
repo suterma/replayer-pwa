@@ -12,15 +12,15 @@ import Development from '../views/Development.vue';
 
 /** A set of route names. */
 export enum Route {
-    Play = 'Play',
-    Edit = 'Edit',
-    Mix = 'Mix',
-    Setlist = 'Setlist',
-    Settings = 'Settings',
-    Reset = 'Reset',
-    Demo = 'Demo',
-    About = 'About',
-    Development = 'Development',
+    Play = 'play',
+    Edit = 'edit',
+    Mix = 'mix',
+    Setlist = 'setlist',
+    Settings = 'settings',
+    Reset = 'reset',
+    Demo = 'demo',
+    About = 'about',
+    Development = 'dev',
 }
 
 /** The app routes

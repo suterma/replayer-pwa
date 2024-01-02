@@ -43,19 +43,33 @@ declare namespace Cypress {
         loadMediaUrl(url: string): void;
         loadFile(path: string): void;
         loadEmpty(): void;
+
+        /** Visit the given url
+         * @remark This is a safe and simplified overload of cypress's own
+         * visit function. This overload fixes interference of the
+         * service worker with cypress's handling of the
+         * the page's load event.
+         * @see https://github.com/cypress-io/cypress/issues/16192#issuecomment-870421667
+         * @param url The URL to visit. If relative uses baseUrl
+         */
+        load(url: string): Cypress.Chainable<Cypress.AUTWindow>;
+
         consentIfYouTube(url: string): void;
     }
 }
 
 Cypress.Commands.add('loadDemo', (): void => {
-    cy.visit('/');
+    visitWithoutServiceWorker('/');
     cy.contains('Try the demo').click();
-    cy.hash().should('eq', '#/play');
+    // ASSERT that the demo is loaded
+    cy.get('.compilation span.title.is-3').contains(
+        'Demo Compilation (Featuring Lidija Roos)',
+    );
 });
 
 /** Loads the given media url using the application's dedicated input field */
 Cypress.Commands.add('loadMediaUrl', (url): void => {
-    cy.visit('/');
+    visitWithoutServiceWorker('/');
     cy.get('input[data-cy="input-url"]')
         .type(url)
         .get('button[type="submit"]')
@@ -66,13 +80,20 @@ Cypress.Commands.add('loadMediaUrl', (url): void => {
  * @param {string} path - The path to the file in the fixtures
  */
 Cypress.Commands.add('loadFile', (path): void => {
-    cy.visit('/');
+    visitWithoutServiceWorker('/');
     cy.get('input[data-cy="input-file"]').selectFile(path, { force: true });
 });
 
 Cypress.Commands.add('loadEmpty', (): void => {
-    cy.visit('/');
+    visitWithoutServiceWorker('/');
 });
+
+Cypress.Commands.add(
+    'load',
+    (url: string): Cypress.Chainable<Cypress.AUTWindow> => {
+        return visitWithoutServiceWorker(url);
+    },
+);
 
 /** Consents to the YouTube consent dialog, if it's a YouTube URL
  * @param {string} url - The resource URL
@@ -84,3 +105,21 @@ Cypress.Commands.add('consentIfYouTube', (url): void => {
             .click();
     }
 });
+
+/** Visit the given url
+ * @remark This is a safe and simplified overload of cypress's own
+ * visit function. This overload fixes interference of the
+ * service worker with cypress's handling of the
+ * the page's load event. It specifically changes the onBeforeLoad option.
+ * @see https://github.com/cypress-io/cypress/issues/16192#issuecomment-870421667
+ * @param url The URL to visit. If relative uses baseUrl
+ */
+function visitWithoutServiceWorker(
+    url: string,
+): Cypress.Chainable<Cypress.AUTWindow> {
+    return cy.visit(url, {
+        onBeforeLoad(win) {
+            delete (win.navigator as any).__proto__.serviceWorker;
+        },
+    });
+}

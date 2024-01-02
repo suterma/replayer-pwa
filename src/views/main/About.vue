@@ -496,16 +496,6 @@
                     </li>
                     <li>
                         <a
-                            href="https://github.com/4teamwork/cypress-drag-drop"
-                            target="_blank"
-                        >
-                            cypress-drag-drop</a
-                        >, a Cypress child command for drag'n'drop support.
-                        (Released under the GPLv3 License, by Fabasoft 4teamwork
-                        AG).
-                    </li>
-                    <li>
-                        <a
                             href="https://w3c.github.io/uievents/tools/key-event-viewer.html"
                             target="_blank"
                         >

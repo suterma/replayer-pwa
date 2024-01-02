@@ -4,7 +4,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
     describe('testing the issue "Loop does not work directly after app start #73" for regression', () => {
         it(`should loop for the "loop track" play mode (using an  ${mediaSourceUrl.name} source)`, () => {
             // ARRANGE (set loop track play mode)
-            cy.visit(`/#/play?media=${mediaSourceUrl.url}`);
+            cy.load(`/#/play?media=${mediaSourceUrl.url}`);
             cy.consentIfYouTube(mediaSourceUrl.url);
 
             cy.get('button[data-cy="toggle-playback-mode"]').click();
@@ -31,13 +31,13 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
 
         it(`should loop for the "loop track" play mode even after an app restart (using an  ${mediaSourceUrl.name} source)`, () => {
             // ARRANGE (set loop track play mode)
-            cy.visit(`/#/play?media=${mediaSourceUrl.url}`);
+            cy.load(`/#/play?media=${mediaSourceUrl.url}`);
             cy.consentIfYouTube(mediaSourceUrl.url);
 
             cy.get('button[data-cy="toggle-playback-mode"]').click();
 
             // ACT restart
-            cy.visit('/');
+            cy.loadEmpty();
 
             // ACT (go to the end and wait for a loop)
             cy.get('button[data-cy="toggle-playback"]').first().click();
@@ -61,7 +61,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
 
         it(`should loop for the "loop cue" play mode (using a ${mediaSourceUrl.name} source)`, () => {
             // ARRANGE (set cue track play mode)
-            cy.visit(
+            cy.load(
                 `/#/play?${mediaSourceUrl.duration - 2.0}=ending-cue&media=${
                     mediaSourceUrl.url
                 }`,

@@ -2,7 +2,7 @@
 describe('testing the issue "Loading a compilation from a file or URL should redirect to PLAY mode automatically #81" for regression', () => {
     beforeEach(() => {
         cy.loadEmpty();
-        cy.visit('#/edit');
+        cy.load('#/edit');
     });
 
     it('should go to play mode after ZIP compilation load', () => {
@@ -29,7 +29,7 @@ describe('testing the issue "Loading a compilation from a file or URL should red
         cy.loadFile('cypress/fixtures/your-light-by-lidija-roos.zip');
 
         // ASSERT
-        cy.hash().should('eq', '#/play');
+        cy.hash().should('eq', '#/play', { matchCase: false });
     });
 
     it('should replace an existing compilation entirely, when a new compilation is loaded', () => {
@@ -38,7 +38,7 @@ describe('testing the issue "Loading a compilation from a file or URL should red
         cy.get('[data-cy="compilation"]').contains('your light by lidija roos');
 
         // ACT (add a new compilation from URL via URL input)
-        cy.visit('/#/edit');
+        cy.load('/#/edit');
         cy.get('[data-cy="input-url"]').click();
         cy.get('[data-cy="input-url"]').type(
             'https://lib.replayer.app/anechoic-voices/Anechoic%20Voices.zip',
