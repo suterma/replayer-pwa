@@ -2,14 +2,14 @@
     <ToggleButton
         class="button"
         :class="{
-            'is-inactive': !modelValue,
+            'is-inactive': !model,
         }"
-        :is-engaged="modelValue"
+        :is-engaged="model"
         engaged-label="fading is on"
         disengaged-label="fading is off"
         @click="togglePlaybackMode()"
     >
-        <BaseIcon v-if="modelValue" :path="mdiNetworkStrength4" />
+        <BaseIcon v-if="model" :path="mdiNetworkStrength4" />
         <BaseIcon v-else :path="mdiNetworkStrengthOutline" />
     </ToggleButton>
 </template>
@@ -21,17 +21,11 @@ import { mdiNetworkStrength4, mdiNetworkStrengthOutline } from '@mdi/js';
 
 /** A toggle button for the fading state
  */
-const props = defineProps({
-    modelValue: {
-        type: Boolean,
-        required: true,
-        default: false,
-    },
-});
+const model = defineModel({ default: false, required: true });
 
 const emit = defineEmits(['update:modelValue']);
 
 function togglePlaybackMode() {
-    emit('update:modelValue', !props.modelValue);
+    emit('update:modelValue', !model.value);
 }
 </script>

@@ -10,36 +10,32 @@
     </button>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-
+<script setup lang="ts">
 /** A simple toggle button with an engaged and disengaged state
  */
-export default defineComponent({
-    name: 'Toggle',
+defineProps({
+    isEngaged: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
 
-    props: {
-        isEngaged: {
-            type: Boolean,
-            required: true,
-            default: false,
-        },
-        engagedLabel: {
-            type: String,
-            required: false,
-            default: '',
-        },
-        disengagedLabel: {
-            type: String,
-            required: false,
-            default: '',
-        },
+    engagedLabel: {
+        type: String,
+        required: false,
+        default: '',
+    },
 
-        text: {
-            type: String,
-            required: false,
-            default: '',
-        },
+    disengagedLabel: {
+        type: String,
+        required: false,
+        default: '',
+    },
+
+    text: {
+        type: String,
+        required: false,
+        default: '',
     },
 });
 </script>

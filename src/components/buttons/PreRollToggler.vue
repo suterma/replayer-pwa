@@ -2,14 +2,14 @@
     <ToggleButton
         class="button"
         :class="{
-            'is-inactive': !modelValue,
+            'is-inactive': !model,
         }"
-        :is-engaged="modelValue"
+        :is-engaged="model"
         engaged-label="pre-roll is on"
         disengaged-label="pre-roll is off"
         @click="togglePreRollMode()"
     >
-        <BaseIcon v-if="modelValue" :path="mdiRayEndArrow" />
+        <BaseIcon v-if="model" :path="mdiRayEndArrow" />
         <BaseIcon v-else :path="mdiRayVertex" />
     </ToggleButton>
 </template>
@@ -21,17 +21,11 @@ import { mdiRayEndArrow, mdiRayVertex } from '@mdi/js';
 
 /** A toggle button for the pre-roll state
  */
-const props = defineProps({
-    modelValue: {
-        type: Boolean,
-        required: true,
-        default: false,
-    },
-});
+const model = defineModel({ default: false, required: true });
 
 const emit = defineEmits(['update:modelValue']);
 
 function togglePreRollMode() {
-    emit('update:modelValue', !props.modelValue);
+    emit('update:modelValue', !model.value);
 }
 </script>
