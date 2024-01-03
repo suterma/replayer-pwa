@@ -1,10 +1,9 @@
 <template>
-    <Transition>
+    <Transition name="item-expand">
         <div
-            v-show="!closed"
+            v-if="!closed"
             name="item-expand"
             class="track is-together-print"
-            :class="{}"
             data-cy="notice-track"
         >
             <div class="notification is-size-7">
