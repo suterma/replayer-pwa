@@ -28,7 +28,7 @@ export default defineComponent({
             default: 'Close',
         },
     },
-    emits: ['close', 'update:modelValue'],
+    emits: ['update:modelValue'],
 
     data() {
         return {
@@ -39,7 +39,6 @@ export default defineComponent({
 
     methods: {
         close() {
-            this.$emit('close');
             this.$emit('update:modelValue', true);
         },
     },

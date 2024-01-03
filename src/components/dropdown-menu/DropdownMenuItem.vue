@@ -26,6 +26,7 @@ defineProps({
     },
     shortcut: {
         type: String,
+        default: undefined,
         required: false,
     },
     disabled: {
