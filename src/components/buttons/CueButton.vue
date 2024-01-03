@@ -162,10 +162,12 @@ const props = defineProps({
     time: {
         type: null as unknown as PropType<number | null>,
         required: false,
+        default: null,
     },
     duration: {
         type: null as unknown as PropType<number | null>,
         required: false,
+        default: null,
     },
 
     /** Determines whether playback of the given cue has already passed
@@ -191,10 +193,12 @@ const props = defineProps({
     description: {
         type: String,
         required: false,
+        default: undefined,
     },
     shortcut: {
         type: null as unknown as PropType<string | null>,
         required: false,
+        default: null,
     },
 
     /** Whether this cue is currently selected
@@ -391,4 +395,3 @@ const hasMeter = computed(() => {
     /* justify-content: stretch; */
 }
 </style>
-import { PlaybackMode } from '@/store/PlaybackMode';
