@@ -394,8 +394,9 @@
                     In the play view, the player widget is only shown for the active track
                     In the edit view, the player widgets are shown for all expanded tracks
                     In the mix view a dedicated mix widget is shown (defined as separate div) -->
+                        <!-- NOTE: A v-show is used instead of a v-if to keep the media players permanently in the DOM. -->
                         <div
-                            v-if="
+                            v-show="
                                 (isMixable && isActiveTrack) ||
                                 (isPlayable && isActiveTrack) ||
                                 (isEditable && isExpanded)
@@ -1257,7 +1258,7 @@ function volumeUp() {
 
 /** Updates the volume of this track, regardless of whether it is the active track */
 function updateVolume(volume: number) {
-    app.updateTrackVolume(props.track.Id, volume);
+    app.updateTrackVolume(props.track?.Id, volume);
     mediaHandler.value?.fader.setVolume(volume);
 }
 

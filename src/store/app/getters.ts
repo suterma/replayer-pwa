@@ -31,12 +31,12 @@ export const getters = {
      */
     hasSingleMediaTrack: computed(() => {
         return (
-            state.compilation.value?.Tracks.filter(
+            state.compilation.value?.Tracks?.filter(
                 (track) =>
                     CompilationHandler.isAudioTrack(track) ||
                     CompilationHandler.isYoutubeVideoTrack(track) ||
                     CompilationHandler.isVideoTrack(track),
-            ).length == 1
+            )?.length == 1
         );
     }),
 
@@ -66,7 +66,7 @@ export const getters = {
 
     /** Gets the set of media tracks */
     mediaTracks: computed(() => {
-        return state.compilation.value?.Tracks.filter(
+        return state.compilation.value?.Tracks?.filter(
             (track) =>
                 CompilationHandler.isAudioTrack(track) ||
                 CompilationHandler.isYoutubeVideoTrack(track) ||
@@ -76,7 +76,7 @@ export const getters = {
 
     /** Gets the set of text tracks */
     textTracks: computed(() => {
-        return state.compilation.value?.Tracks.filter((track) =>
+        return state.compilation.value?.Tracks?.filter((track) =>
             CompilationHandler.isTextTrack(track),
         );
     }),
@@ -105,7 +105,7 @@ export const getters = {
 
         const single = getters.hasSingleMediaTrack;
         if (single.value) {
-            return state.compilation.value?.Tracks.filter(
+            return state.compilation.value?.Tracks?.filter(
                 (track) =>
                     CompilationHandler.isAudioTrack(track) ||
                     CompilationHandler.isVideoTrack(track) ||
