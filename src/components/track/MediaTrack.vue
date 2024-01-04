@@ -585,99 +585,101 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Offer the cue buttons depending on the situation. -->
-                            <div v-if="isTrackPlayerFullScreen" class="block">
-                                <CueButtonsField
-                                    :playback-mode="playbackMode"
-                                    :cues="track.Cues"
-                                    @click="
-                                        (cue) => {
-                                            cueClick(cue);
-                                        }
+                            <div class="block">
+                                <!-- Offer the cue buttons depending on the situation. -->
+                                <div v-if="isTrackPlayerFullScreen">
+                                    <CueButtonsField
+                                        :playback-mode="playbackMode"
+                                        :cues="track.Cues"
+                                        @click="
+                                            (cue) => {
+                                                cueClick(cue);
+                                            }
+                                        "
+                                    ></CueButtonsField>
+                                </div>
+                                <div
+                                    v-if="
+                                        (!isOnlyMediaTrack &&
+                                            !isTrackPlayerFullScreen &&
+                                            isPlayable) ||
+                                        (!isTrackPlayerFullScreen && isMixable)
                                     "
-                                ></CueButtonsField>
-                            </div>
-                            <div
-                                v-if="
-                                    (!isOnlyMediaTrack &&
-                                        !isTrackPlayerFullScreen &&
-                                        isPlayable) ||
-                                    (!isTrackPlayerFullScreen && isMixable)
-                                "
-                                class="block"
-                            >
-                                <CueButtonsBar
-                                    :playback-mode="playbackMode"
-                                    :cues="track.Cues"
-                                    @click="
-                                        (cue) => {
-                                            cueClick(cue);
-                                        }
-                                    "
-                                ></CueButtonsBar>
-                            </div>
+                                >
+                                    <CueButtonsBar
+                                        :playback-mode="playbackMode"
+                                        :cues="track.Cues"
+                                        @click="
+                                            (cue) => {
+                                                cueClick(cue);
+                                            }
+                                        "
+                                    ></CueButtonsBar>
+                                </div>
 
-                            <!-- The media viewport -->
-                            <!-- Hide the waveform and Video for non-expanded track during edit, save screen real estate -->
-                            <div
-                                v-show="!isEditable || isExpanded"
-                                class="block"
-                            >
-                                <!-- //TODO currently the mediaUrl is not using the optimized
+                                <!-- The media viewport -->
+                                <!-- Hide the waveform and Video for non-expanded track during edit, save screen real estate -->
+                                <!-- //TODO make a proper distance, (using block?), but only if there is content to display -->
+                                <div v-show="!isEditable || isExpanded">
+                                    <!-- //TODO currently the mediaUrl is not using the optimized
                 variant, because otherwise the track is not correctly loaded
                 after it has become the active track ( gets
                 play-request-was-interrupted) -->
-                                <TrackMediaElement
-                                    v-if="
-                                        CompilationHandler.isVideoTrack(
-                                            track,
-                                        ) ||
-                                        CompilationHandler.isAudioTrack(track)
-                                    "
-                                    :key="track.Id"
-                                    :enable-video="
-                                        CompilationHandler.isVideoTrack(track)
-                                    "
-                                    :title="track.Name"
-                                    :media-url="mediaUrl"
-                                    :start="track.PlayheadPosition"
-                                    :track-id="track.Id"
-                                    :cues="track.Cues"
-                                    :track-pre-roll="track.PreRoll"
-                                    :show-level-meter="showLevelMeter"
-                                    :show-waveforms-on-edit="
-                                        showWaveformsOnEdit
-                                    "
-                                    :show-overview-waveform-on-edit="
-                                        showOverviewWaveformOnEdit
-                                    "
-                                    :level-meter-size-is-large="
-                                        levelMeterSizeIsLarge
-                                    "
-                                    @ready="useMediaHandler"
-                                    @click="setActiveTrack"
-                                ></TrackMediaElement>
-                                <div
-                                    v-if="
-                                        CompilationHandler.isYoutubeVideoTrack(
-                                            track,
-                                        )
-                                    "
-                                >
-                                    <OnYouTubeConsent>
-                                        <TrackYouTubeElement
-                                            :key="track.Id"
-                                            :title="track.Name"
-                                            :url="mediaUrl"
-                                            :start="track.PlayheadPosition"
-                                            :track-id="track.Id"
-                                            :cues="track.Cues"
-                                            :track-pre-roll="track.PreRoll"
-                                            @ready="useMediaHandler"
-                                            @click="setActiveTrack"
-                                        ></TrackYouTubeElement>
-                                    </OnYouTubeConsent>
+                                    <TrackMediaElement
+                                        v-if="
+                                            CompilationHandler.isVideoTrack(
+                                                track,
+                                            ) ||
+                                            CompilationHandler.isAudioTrack(
+                                                track,
+                                            )
+                                        "
+                                        :key="track.Id"
+                                        :enable-video="
+                                            CompilationHandler.isVideoTrack(
+                                                track,
+                                            )
+                                        "
+                                        :title="track.Name"
+                                        :media-url="mediaUrl"
+                                        :start="track.PlayheadPosition"
+                                        :track-id="track.Id"
+                                        :cues="track.Cues"
+                                        :track-pre-roll="track.PreRoll"
+                                        :show-level-meter="showLevelMeter"
+                                        :show-waveforms-on-edit="
+                                            showWaveformsOnEdit
+                                        "
+                                        :show-overview-waveform-on-edit="
+                                            showOverviewWaveformOnEdit
+                                        "
+                                        :level-meter-size-is-large="
+                                            levelMeterSizeIsLarge
+                                        "
+                                        @ready="useMediaHandler"
+                                        @click="setActiveTrack"
+                                    ></TrackMediaElement>
+                                    <div
+                                        v-if="
+                                            CompilationHandler.isYoutubeVideoTrack(
+                                                track,
+                                            )
+                                        "
+                                    >
+                                        <OnYouTubeConsent>
+                                            <TrackYouTubeElement
+                                                :key="track.Id"
+                                                :title="track.Name"
+                                                :url="mediaUrl"
+                                                :start="track.PlayheadPosition"
+                                                :track-id="track.Id"
+                                                :cues="track.Cues"
+                                                :track-pre-roll="track.PreRoll"
+                                                @ready="useMediaHandler"
+                                                @click="setActiveTrack"
+                                            ></TrackYouTubeElement>
+                                        </OnYouTubeConsent>
+                                    </div>
                                 </div>
                             </div>
                         </div>
