@@ -371,7 +371,9 @@
                             :hide-play-pause-button="true"
                             @update:playback-mode="updatedPlaybackMode"
                             @update:is-fading-enabled="updatedIsFadingEnabled"
-                            @update:is-pre-roll-enabled="updatedIsPreRollEnabled"
+                            @update:is-pre-roll-enabled="
+                                updatedIsPreRollEnabled
+                            "
                             @update:volume="updateVolume"
                         >
                         </MediaControlsBar>
@@ -380,58 +382,12 @@
             </nav>
         </Transition>
 
-        <Transition name="item-expand">
-            <!-- Hide the waveform and Video for non-expanded track during edit, save screen real estate -->
-            <div v-show="!isEditable || isExpanded" class="block">
-                <!-- //TODO currently the mediaUrl is not using the optimized
-                variant, because otherwise the track is not correctly loaded
-                after it has become the active track ( gets
-                play-request-was-interrupted) -->
-                <TrackMediaElement
-                    v-if="
-                        CompilationHandler.isVideoTrack(track) ||
-                        CompilationHandler.isAudioTrack(track)
-                    "
-                    :key="track.Id"
-                    :enable-video="CompilationHandler.isVideoTrack(track)"
-                    :title="track.Name"
-                    :media-url="mediaUrl"
-                    :start="track.PlayheadPosition"
-                    :track-id="track.Id"
-                    :cues="track.Cues"
-                    :track-pre-roll="track.PreRoll"
-                    :show-level-meter="showLevelMeter"
-                    :show-waveforms-on-edit="showWaveformsOnEdit"
-                    :show-overview-waveform-on-edit="showOverviewWaveformOnEdit"
-                    :level-meter-size-is-large="levelMeterSizeIsLarge"
-                    @ready="useMediaHandler"
-                    @click="setActiveTrack"
-                ></TrackMediaElement>
-                <div v-if="CompilationHandler.isYoutubeVideoTrack(track)">
-                    <OnYouTubeConsent>
-                        <TrackYouTubeElement
-                            :key="track.Id"
-                            :title="track.Name"
-                            :url="mediaUrl"
-                            :start="track.PlayheadPosition"
-                            :track-id="track.Id"
-                            :cues="track.Cues"
-                            :track-pre-roll="track.PreRoll"
-                            @ready="useMediaHandler"
-                            @click="setActiveTrack"
-                        ></TrackYouTubeElement>
-                    </OnYouTubeConsent>
-                </div>
-            </div>
-        </Transition>
-
-        <!-- The audio player widget (with controls) but only once the source is available from the store
+        <!-- The media player widget (with controls) but only once the source is available from the store
             Note: The mediaUrl property (the actual src attribute in the underlying media
-            element) is also depending 
-            on the track state as a performance optimizations
+            element) is also depending on the track state as a performance optimizations
             -->
         <template v-if="mediaUrl">
-            <div v-if="isPlayable" class="block">
+            <div class="block">
                 <Teleport to="#media-player" :disabled="isEditable">
                     <Transition :name="skipTransitionName">
                         <!-- 
@@ -469,7 +425,7 @@
                             <!-- 
                         In full screen, this level is at the top, and not visually separated from the cues -->
 
-                            <nav
+                            <div
                                 v-if="isPlayable"
                                 class="level has-breakpoint-desktop"
                                 :class="{
@@ -570,13 +526,17 @@
                                         <MediaControlsBar
                                             :hide-stop-button="true"
                                             :hide-track-navigation="false"
-                                            :has-previous-track="hasPreviousTrack"
+                                            :has-previous-track="
+                                                hasPreviousTrack
+                                            "
                                             :has-previous-cue="hasPreviousCue"
                                             :has-next-cue="hasNextCue"
                                             :has-next-track="hasNextTrack"
                                             :playback-mode="playbackMode"
                                             :is-fading-enabled="isFadingEnabled"
-                                            :is-pre-roll-enabled="isPreRollEnabled"
+                                            :is-pre-roll-enabled="
+                                                isPreRollEnabled
+                                            "
                                             :volume="track.Volume"
                                             :is-fading="
                                                 isFading !== FadingMode.None
@@ -624,16 +584,28 @@
                                         </MediaControlsBar>
                                     </div>
                                 </div>
-                            </nav>
+                            </div>
 
                             <!-- Offer the cue buttons depending on the situation. -->
-                            <nav
+                            <div v-if="isTrackPlayerFullScreen" class="block">
+                                <CueButtonsField
+                                    :playback-mode="playbackMode"
+                                    :cues="track.Cues"
+                                    @click="
+                                        (cue) => {
+                                            cueClick(cue);
+                                        }
+                                    "
+                                ></CueButtonsField>
+                            </div>
+                            <div
                                 v-if="
                                     (!isOnlyMediaTrack &&
                                         !isTrackPlayerFullScreen &&
                                         isPlayable) ||
                                     (!isTrackPlayerFullScreen && isMixable)
                                 "
+                                class="block"
                             >
                                 <CueButtonsBar
                                     :playback-mode="playbackMode"
@@ -644,18 +616,70 @@
                                         }
                                     "
                                 ></CueButtonsBar>
-                            </nav>
-                            <nav v-if="isTrackPlayerFullScreen">
-                                <CueButtonsField
-                                    :playback-mode="playbackMode"
-                                    :cues="track.Cues"
-                                    @click="
-                                        (cue) => {
-                                            cueClick(cue);
-                                        }
+                            </div>
+
+                            <!-- The media viewport -->
+                            <!-- Hide the waveform and Video for non-expanded track during edit, save screen real estate -->
+                            <div
+                                v-show="!isEditable || isExpanded"
+                                class="block"
+                            >
+                                <!-- //TODO currently the mediaUrl is not using the optimized
+                variant, because otherwise the track is not correctly loaded
+                after it has become the active track ( gets
+                play-request-was-interrupted) -->
+                                <TrackMediaElement
+                                    v-if="
+                                        CompilationHandler.isVideoTrack(
+                                            track,
+                                        ) ||
+                                        CompilationHandler.isAudioTrack(track)
                                     "
-                                ></CueButtonsField>
-                            </nav>
+                                    :key="track.Id"
+                                    :enable-video="
+                                        CompilationHandler.isVideoTrack(track)
+                                    "
+                                    :title="track.Name"
+                                    :media-url="mediaUrl"
+                                    :start="track.PlayheadPosition"
+                                    :track-id="track.Id"
+                                    :cues="track.Cues"
+                                    :track-pre-roll="track.PreRoll"
+                                    :show-level-meter="showLevelMeter"
+                                    :show-waveforms-on-edit="
+                                        showWaveformsOnEdit
+                                    "
+                                    :show-overview-waveform-on-edit="
+                                        showOverviewWaveformOnEdit
+                                    "
+                                    :level-meter-size-is-large="
+                                        levelMeterSizeIsLarge
+                                    "
+                                    @ready="useMediaHandler"
+                                    @click="setActiveTrack"
+                                ></TrackMediaElement>
+                                <div
+                                    v-if="
+                                        CompilationHandler.isYoutubeVideoTrack(
+                                            track,
+                                        )
+                                    "
+                                >
+                                    <OnYouTubeConsent>
+                                        <TrackYouTubeElement
+                                            :key="track.Id"
+                                            :title="track.Name"
+                                            :url="mediaUrl"
+                                            :start="track.PlayheadPosition"
+                                            :track-id="track.Id"
+                                            :cues="track.Cues"
+                                            :track-pre-roll="track.PreRoll"
+                                            @ready="useMediaHandler"
+                                            @click="setActiveTrack"
+                                        ></TrackYouTubeElement>
+                                    </OnYouTubeConsent>
+                                </div>
+                            </div>
                         </div>
                     </Transition>
                 </Teleport>
@@ -682,9 +706,6 @@ import {
     ref,
     watch,
     watchEffect,
-    onBeforeMount,
-    onMounted,
-    onUnmounted,
 } from 'vue';
 
 import OnYouTubeConsent from '@/components/dialogs/OnYouTubeConsent.vue';
@@ -729,7 +750,6 @@ import type { IMediaHandler } from '@/code/media/IMediaHandler';
 import { type IMediaLooper, LoopMode } from '@/code/media/IMediaLooper';
 import { MediaLooper } from '@/code/media/MediaLooper';
 import { FadingMode } from '@/code/media/IAudioFader';
-import { useThrottleFn, useTitle } from '@vueuse/core';
 import type { ICueScheduler } from '@/code/media/ICueScheduler';
 import { CueScheduler } from '@/code/media/CueScheduler';
 import { TrackViewMode } from '@/store/TrackViewMode';
