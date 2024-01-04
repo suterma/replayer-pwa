@@ -756,6 +756,7 @@ import { TrackViewMode } from '@/store/TrackViewMode';
 import type { ICue } from '@/store/ICue';
 import { PlaybackMode } from '@/store/PlaybackMode';
 import type { ITrack } from '@/store/ITrack';
+import { useTitle } from '@vueuse/core';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
