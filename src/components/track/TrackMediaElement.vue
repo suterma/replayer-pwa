@@ -45,6 +45,7 @@
             <video
                 :id="mediaElementId"
                 ref="mediaElement"
+                :key="trackId"
                 controls
                 :src="mediaUrlWithFragment"
                 class="video"
@@ -67,6 +68,7 @@
         <audio
             :id="mediaElementId"
             ref="mediaElement"
+            :key="trackId"
             :src="mediaUrlWithFragment"
             class="video"
             :class="{
@@ -110,6 +112,7 @@
         <AudioLevelMeter
             v-if="levelMeterSizeIsLarge"
             ref="audioLevelMeter"
+            :key="trackId"
             :vertical="false"
             :disabled="disabled || isPaused"
             :audio-source="audioSource"
@@ -121,6 +124,7 @@
         <Teleport v-else :to="`#track-${trackId}-HeaderLevelPlaceholder`">
             <AudioLevelMeter
                 ref="audioLevelMeter"
+                :key="trackId"
                 :vertical="true"
                 :disabled="disabled || isPaused"
                 :audio-source="audioSource"
@@ -389,7 +393,7 @@ onUnmounted(() => {
 });
 
 const mediaElementId = computed(() => {
-    return 'video-track-' + props.trackId;
+    return 'media-track-' + props.trackId;
 });
 
 // --- visual fading ---
