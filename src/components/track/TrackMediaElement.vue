@@ -425,11 +425,24 @@ const fadeOutDuration = computed(() => {
 
 // --- Transport ---
 
-/** Returns the appliccable mediaUrl with a possible fragment for the start time */
-const mediaUrlWithFragment = computed(() => {
-    const fragment = props.start ? '#t=' + props.start : '';
-    return props.mediaUrl + fragment;
-});
+/** The appliccable mediaUrl with a possible fragment for the start time */
+const mediaUrlWithFragment = ref('');
+
+/** Handles initial and changed mediaUrl's
+ * @remarks The change of the start property is explicitly only handeled
+ * together with the change of the media URL. Otherwise, each start change
+ * would trigger an actual URL update. This would disturb playback handling.
+ */
+watch(
+    () => props.mediaUrl,
+    (mediaUrl) => {
+        if (mediaUrl) {
+            const fragment = props.start ? '#t=' + props.start : '';
+            mediaUrlWithFragment.value = props.mediaUrl + fragment;
+        }
+    },
+    { immediate: true /* to handle it at least once after mount time */ },
+);
 
 watchEffect(() => {
     const fader = mediaHandler.value?.fader;
