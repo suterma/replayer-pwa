@@ -399,8 +399,7 @@
                             v-show="
                                 (isMixable && isActiveTrack) ||
                                 (isPlayable && isActiveTrack) ||
-                                (isEditable && isExpanded) ||
-                                true
+                                (isEditable && isExpanded)
                             "
                             :key="track.Id"
                             :class="{
