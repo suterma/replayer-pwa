@@ -53,19 +53,6 @@ export class MediaLooper implements IMediaLooper {
             this.isRangeAvailable()
         ) {
             // Make sure we stay in the loop
-            //TODO is this really necessary??
-            // const fadeInStart = this._loopStart
-            //     ? this._loopStart - this._media.fader.fadeInDuration
-            //     : null;
-            // if (fadeInStart != null) {
-            //     if (this._media.currentTime < fadeInStart) {
-            //         this._media.seekTo(fadeInStart);
-            //         console.debug(
-            //             `MediaLooper::scheduleNextTimeUpdateHandling:seekTo: ${fadeInStart}`,
-            //         );
-            //     }
-            // }
-
             const loopEnd = this._loopEnd;
             const currentTime = this._media.currentTime;
             if (loopEnd != null) {

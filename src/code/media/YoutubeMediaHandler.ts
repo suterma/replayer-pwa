@@ -324,8 +324,6 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         return this._durationSeconds;
     }
 
-    //TODO Apply the currently known position to the player. It could be non-zero already.
-
     onDurationChanged: SubEvent<number> = new SubEvent();
 
     // --- track looping ---
