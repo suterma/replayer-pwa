@@ -68,7 +68,7 @@
 .list-move, /* apply transition to moving elements */
 .list-enter-active,
 .list-leave-active {
-    transition: all 0.3s ease;
+    transition: all $replayer-transition-duration ease;
 }
 
 /** **********************************************************
@@ -128,7 +128,7 @@
  to keep the background non-fading */
 .slide-fade-left-leave-to nav {
     opacity: 0;
-    transition: all 0.3s ease;
+    transition: all $replayer-transition-duration ease;
 }
 
 .slide-fade-left-enter-from {
@@ -147,7 +147,7 @@
  to keep the background non-fading */
 .slide-fade-right-leave-to nav {
     opacity: 0;
-    transition: all 0.3s ease;
+    transition: all $replayer-transition-duration ease;
 }
 .slide-fade-right-enter-from {
     opacity: 1;

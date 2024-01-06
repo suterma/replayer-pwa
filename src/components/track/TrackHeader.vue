@@ -278,7 +278,7 @@ import { storeToRefs } from 'pinia';
 import type { ITrack } from '@/store/ITrack';
 import { TrackViewMode } from '@/store/TrackViewMode';
 
-const emit = defineEmits(['update:isExpanded', 'click']);
+const emit = defineEmits(['update:isExpanded']);
 
 const props = defineProps({
     track: {
@@ -478,5 +478,3 @@ function acceptedMedia() {
     }
 }
 </style>
-import { type ITrack } from '@/store/ITrack'; import { TrackViewMode } from
-'@/store/TrackViewMode';

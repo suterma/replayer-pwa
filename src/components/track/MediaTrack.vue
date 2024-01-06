@@ -40,7 +40,6 @@
                 :is-first="isFirst"
                 :is-last="isLast"
                 @update:is-expanded="updateIsExpanded"
-                @click="skipToPlayPause"
             >
                 <template
                     v-if="isMixable || isPlayable || isEditable"
@@ -68,7 +67,7 @@
                                 'is-clickable': isTrackLoaded,
                                 'has-cursor-not-allowed': !isTrackLoaded,
                             }"
-                            @click="skipToPlayPause"
+                            @click="setActiveTrack()"
                         >
                             <p
                                 class="title is-4"
@@ -716,6 +715,7 @@ import {
     watch,
     watchEffect,
 } from 'vue';
+import { nextTick } from 'process';
 
 import OnYouTubeConsent from '@/components/dialogs/OnYouTubeConsent.vue';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
@@ -1154,14 +1154,28 @@ function toNextCue() {
 
 /** Skips to this track (if loaded)
  * @remarks If the track is not loaded, does nothing.
- * If the track is not yet the active track, tries to activate the track (which will autoplay).
+ * If the track is not yet the active track, tries to activate the track and play.
  * If it's the active track, just toggles play/pause
  * @devdoc Conditional event registration inside the template did not work.
  */
 function skipToPlayPause(): void {
     if (isTrackLoaded.value) {
         if (!isActiveTrack.value) {
-            trackPlay();
+            app.updateSelectedTrackId(props.track.Id);
+
+            // Since the track's viewport might be hidden in the DOM,
+            // let it first become un-hidden.
+            nextTick(() => {
+                // To account for the slide-in transition wait the
+                // complete transition duration
+                // This delay prevents error messages for video tracks, when the video
+                // element hast the native controls enabled,
+                // but is not completely visible yet
+                setTimeout(
+                    () => mediaHandler.value?.play(),
+                    300 /*replayer-transition-duration*/,
+                );
+            });
         } else {
             togglePlayback();
         }
@@ -1396,21 +1410,6 @@ function cuePlay(cue: ICue) {
         } else {
             mediaHandler.value?.playFrom(cue.Time);
         }
-    }
-}
-
-/** Handles the play event of a button, by immediately restarting playback at the beginning of the track (instead of toggling)
- * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
- */
-function trackPlay() {
-    console.debug(`MediaTrack(${props.track.Name})::trackPlay`);
-    app.updateSelectedTrackId(props.track.Id);
-
-    //Set the position to the beginning and handle playback
-    if (isTrackPlaying.value) {
-        seekToSeconds(0); //keep playing
-    } else {
-        mediaHandler.value?.playFrom(0);
     }
 }
 

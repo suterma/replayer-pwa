@@ -28,7 +28,7 @@ const youtubeManager = createManager({
 createApp(App)
     .use(createPinia())
     .use(router)
-    .use(VueScrollTo)
+    .use(VueScrollTo, { duration: 300 /* replayer-transition-duration */ })
     .use(vClickOutside)
     .use(PromiseDialog, {})
     .use(youtubeManager)

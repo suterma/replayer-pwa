@@ -8,7 +8,9 @@
 */
 
 /* stronger shadow, for better visibility with the dark bulma slate theme*/
-$shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 100%), 0 0 0 1px rgb(10 10 10 / 2%);
+$shadow:
+    0 0.5em 1em -0.125em rgb(10 10 10 / 100%),
+    0 0 0 1px rgb(10 10 10 / 2%);
 
 /* Use mobile-style navbar always
 (navbar is currently only used for the player controls in the bottom nav bar)*/
@@ -20,3 +22,5 @@ $navbar-item-hover-background-color: inherit;
 
 /* The width for the surrounding border of tracks */
 $track-border-width: 5px;
+
+$replayer-transition-duration: 300ms;
