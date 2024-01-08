@@ -400,14 +400,15 @@
                                 (isPlayable && isActiveTrack) ||
                                 (isEditable && isExpanded)
                             "
+                            ref="playerWidget"
                             :key="track.Id"
                             :class="{
                                 section: isPlayable || isMixable,
                                 'has-background-grey-dark':
-                                    isPlayable || isMixable,
-                                'is-fullscreen': isTrackPlayerFullScreen,
-                                'has-player-navbar-fixed-top':
-                                    isTrackPlayerFullScreen,
+                                    (isPlayable || isMixable) && !isFullscreen,
+                                'has-background-grey-darker': isFullscreen,
+                                'is-fullscreen': isFullscreen,
+                                'has-player-navbar-fixed-top': isFullscreen,
                                 'transition-in-place':
                                     isPlayable ||
                                     isMixable /* because in playback  or mix view, the players are replaced in place, not expanded */,
@@ -415,22 +416,22 @@
                             :disabled="!canPlay"
                         >
                             <!-- 
-                        Track playback bar (In play mode, this contains:
-                        - a slot for the expander icon (if not the only track)
-                        - The title (with artist info)
-                        - the play/pause button
-                        - a smaller slider
-                        - a standard set of transport controls, including cue and track skipping
+                            Track playback bar (In play mode, this contains:
+                            - a slot for the expander icon (if not the only track)
+                            - The title (with artist info)
+                            - the play/pause button
+                            - a smaller slider
+                            - a standard set of transport controls, including cue and track skipping
                          -->
                             <!-- 
-                        In full screen, this level is at the top, and not visually separated from the cues -->
+                            In full screen, this level is at the top, and not visually separated from the cues -->
 
                             <div
                                 v-if="isPlayable"
                                 class="level has-breakpoint-desktop"
                                 :class="{
-                                    'section navbar is-fixed-top has-background-grey-dark is-shadowless is-borderless':
-                                        isTrackPlayerFullScreen,
+                                    'section navbar is-fixed-top has-background-grey-darker is-shadowless is-borderless':
+                                        isFullscreen,
                                 }"
                             >
                                 <!-- Left side (with expander, title and artist of the currently playing track; not shown for a single track) -->
@@ -444,30 +445,22 @@
                                     >
                                         <!-- Offer the full screen, but not for a single track  -->
                                         <CollapsibleButton
-                                            :model-value="
-                                                isTrackPlayerFullScreen
-                                            "
+                                            :model-value="isFullscreen"
                                             title="toggle full-screen mode"
                                             collapsed-chevron-direction="up"
-                                            @click="
-                                                toggleTrackPlayerFullScreen()
-                                            "
+                                            @click="toggle"
                                         ></CollapsibleButton>
                                         <p
                                             title="toggle full-screen mode"
-                                            @click="
-                                                toggleTrackPlayerFullScreen()
-                                            "
+                                            @click="toggle"
                                         >
                                             <!-- Use smaller title in collapsed state, use regular size (4) when full screen -->
                                             <span
                                                 :class="{
                                                     'has-text-success':
                                                         isActiveTrack,
-                                                    'is-size-4':
-                                                        isTrackPlayerFullScreen,
-                                                    'is-size-5':
-                                                        !isTrackPlayerFullScreen,
+                                                    'is-size-4': isFullscreen,
+                                                    'is-size-5': !isFullscreen,
                                                 }"
                                             >
                                                 <TrackTitleName
@@ -594,7 +587,7 @@
                                         CompilationHandler.isAudioTrack(track),
                                 }"
                             >
-                                <div v-if="isTrackPlayerFullScreen">
+                                <div v-if="isFullscreen">
                                     <CueButtonsField
                                         :playback-mode="playbackMode"
                                         :cues="track.Cues"
@@ -608,9 +601,9 @@
                                 <div
                                     v-if="
                                         (!isOnlyMediaTrack &&
-                                            !isTrackPlayerFullScreen &&
+                                            !isFullscreen &&
                                             isPlayable) ||
-                                        (!isTrackPlayerFullScreen && isMixable)
+                                        (!isFullscreen && isMixable)
                                     "
                                 >
                                     <CueButtonsBar
@@ -716,7 +709,7 @@ import {
     watchEffect,
 } from 'vue';
 import { nextTick } from 'process';
-
+import { useFullscreen } from '@vueuse/core';
 import OnYouTubeConsent from '@/components/dialogs/OnYouTubeConsent.vue';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import MeterLevelEditor from '@/components/editor/MeterLevelEditor.vue';
@@ -1120,15 +1113,6 @@ const {
     activeTrackId,
 } = storeToRefs(app);
 
-/// -- full-screen display ---
-
-function toggleTrackPlayerFullScreen(): void {
-    isTrackPlayerFullScreen.value = !isTrackPlayerFullScreen.value;
-}
-
-/** Whether to show the track player widget in full screen mode */
-const isTrackPlayerFullScreen = ref(false);
-
 /// --- Transport ---
 
 /** Stops playback and removes any selected or next cue
@@ -1433,18 +1417,6 @@ watch(isTrackPlaying, () => {
     emit('isTrackPlaying', isTrackPlaying);
 });
 
-/** Handles the overflow style for fullscreen
- * @remarks Removes a potentially visible scrollbar in the fullscreen view
- */
-watch(
-    () => props.isTrackPlayerFullScreen,
-    (isFullScreen) => {
-        document.documentElement.style.overflowY = isFullScreen
-            ? 'clip'
-            : 'auto';
-    },
-);
-
 /** Whether all required values for the use of the measure number as position are available.
  */
 const hasMeter = computed(() => Meter.isValid(props.track.Meter));
@@ -1658,6 +1630,24 @@ watch(activeTrackId, (activeTrackId, previousTrackId) => {
     }
 });
 
+/// --- fullscreen ---
+
+const playerWidget = ref<HTMLElement | null>(null);
+const { isFullscreen, exit, toggle } = useFullscreen(playerWidget);
+
+/** Handles the overflow style for fullscreen
+ * @remarks Removes a potentially visible scrollbar in the fullscreen view
+ */
+watch(
+    isActiveTrack,
+    (isActiveTrack) => {
+        if (!isActiveTrack) {
+            exit();
+        }
+    },
+    { immediate: true },
+);
+
 // --- looping ---
 
 watchEffect(() => {
@@ -1790,7 +1780,7 @@ function removeCueScheduling(): void {
     }
 }
 
-/** A div that occupies full screen */
+/** The (player-widget) div that occupies full screen */
 .is-fullscreen {
     position: fixed;
     top: 0;
@@ -1798,6 +1788,7 @@ function removeCueScheduling(): void {
     bottom: 0;
     right: 0;
     overflow: auto;
+    background-color: rebeccapurple;
 }
 
 .is-fullwidth {
