@@ -778,11 +778,6 @@ const emit = defineEmits([
      */
     'nextTrack',
 
-    /** Occurs, when the next track should be set as the active track
-     * @remarks allows track navigation from within a track.
-     */
-    'update:isTrackPlayerFullScreen',
-
     /** Occurs, when this track starts playing.
      */
     'isTrackPlaying',
@@ -865,12 +860,6 @@ const props = defineProps({
     viewMode: {
         type: String as () => TrackViewMode,
         default: TrackViewMode.Play,
-    },
-
-    /** Whether to show the track player widget in full screen mode */
-    isTrackPlayerFullScreen: {
-        type: Boolean,
-        default: false,
     },
 
     /** The playback mode
@@ -1131,9 +1120,16 @@ const {
     activeTrackId,
 } = storeToRefs(app);
 
+/// -- full-screen display ---
+
 function toggleTrackPlayerFullScreen(): void {
-    emit('update:isTrackPlayerFullScreen', !props.isTrackPlayerFullScreen);
+    isTrackPlayerFullScreen.value = !isTrackPlayerFullScreen.value;
 }
+
+/** Whether to show the track player widget in full screen mode */
+const isTrackPlayerFullScreen = ref(false);
+
+/// --- Transport ---
 
 /** Stops playback and removes any selected or next cue
  * @remarks Does not assert whether this is the active track.

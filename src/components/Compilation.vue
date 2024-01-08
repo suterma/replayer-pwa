@@ -33,9 +33,6 @@
                     class="block"
                     :track="track"
                     :view-mode="trackViewode"
-                    :is-track-player-full-screen="
-                        isTrackPlayerFullScreen && !isEditable
-                    "
                     :playback-mode="typedPlaybackMode"
                     :is-fading-enabled="isFadingEnabled"
                     :is-pre-roll-enabled="isPreRollEnabled"
@@ -47,12 +44,11 @@
                     :is-only-media-track="hasSingleMediaTrack"
                     :is-first="isFirstTrack(track.Id)"
                     :is-last="isLastTrack(track.Id)"
-                    @update:is-track-player-full-screen="
-                        updateIsTrackPlayerFullScreen($event)
-                    "
                     @update:playback-mode="updatePlaybackMode($event)"
                     @update:is-fading-enabled="updatedIsFadingEnabled($event)"
-                    @update:is-pre-roll-enabled="updatedIsPreRollEnabled($event)"
+                    @update:is-pre-roll-enabled="
+                        updatedIsPreRollEnabled($event)
+                    "
                     @previous-track="
                         toPreviousTrack(track.Id, isLoopingPlaybackMode)
                     "
@@ -112,13 +108,6 @@ export default defineComponent({
     },
     data() {
         return {
-            /** Whether to show the track player widget in full screen mode
-             * @remarks This should apply to all tracks player widgets of a compilation
-             * @remarks For layout reasons, a track should not be displayed in full screen,
-             * when it's in editing mode.
-             */
-            isTrackPlayerFullScreen: false,
-
             /** The wake lock fill-in that can prevent screen timeout */
             noSleep: new NoSleep(),
 
@@ -208,10 +197,6 @@ export default defineComponent({
                     cancelable: false,
                 });
             }
-        },
-
-        updateIsTrackPlayerFullScreen(isFullScreen: boolean): void {
-            this.isTrackPlayerFullScreen = isFullScreen;
         },
 
         updatePlaybackMode(playbackMode: PlaybackMode): void {
