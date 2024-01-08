@@ -47,6 +47,8 @@
                 ref="mediaElement"
                 :key="trackId"
                 controls
+                playsInline
+                preload="metadata"
                 :src="mediaUrlWithFragment"
                 class="video"
                 :class="{
@@ -69,6 +71,7 @@
             :id="mediaElementId"
             ref="mediaElement"
             :key="trackId"
+            preload="metadata"
             :src="mediaUrlWithFragment"
             class="video"
             :class="{
