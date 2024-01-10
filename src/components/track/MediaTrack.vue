@@ -408,10 +408,7 @@
                             :class="{
                                 section: isPlayable || isMixable,
                                 'has-background-grey-dark':
-                                    (isPlayable || isMixable) && !isFullscreen,
-                                'has-background-grey-darker': isFullscreen,
-                                'is-fullscreen': isFullscreen,
-                                'has-player-navbar-fixed-top': isFullscreen,
+                                    isPlayable || isMixable,
                                 'transition-in-place':
                                     isPlayable ||
                                     isMixable /* because in playback  or mix view, the players are replaced in place, not expanded */,
@@ -432,10 +429,6 @@
                             <div
                                 v-if="isPlayable"
                                 class="level has-breakpoint-desktop"
-                                :class="{
-                                    'section navbar is-fixed-top has-background-grey-darker is-shadowless is-borderless':
-                                        isFullscreen,
-                                }"
                             >
                                 <!-- Left side (with expander, title and artist of the currently playing track; not shown for a single track) -->
                                 <div v-if="isOnlyMediaTrack" class="level-left">
@@ -453,10 +446,7 @@
                                             collapsed-chevron-direction="up"
                                             @click="toggle"
                                         ></CollapsibleButton>
-                                        <p
-                                            title="toggle full-screen mode"
-                                            @click="toggle"
-                                        >
+                                        <p>
                                             <!-- Use smaller title in collapsed state, use regular size (4) when full screen -->
                                             <span
                                                 :class="{
