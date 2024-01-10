@@ -385,10 +385,14 @@
             Note: The mediaUrl property (the actual src attribute in the underlying media
             element) is also depending on the track state as a performance optimizations
             -->
-        <template v-if="mediaUrl">
-            <div class="block">
-                <Teleport to="#media-player" :disabled="isEditable">
-                    <Transition :name="skipTransitionName">
+        <div v-if="mediaUrl" class="block">
+            <Teleport to="#media-player" :disabled="isEditable">
+                <Transition :name="skipTransitionName">
+                    <!-- The player widget for a track may be full screen only for the active track -->
+                    <FullscreenPanel
+                        ref="fullscreenPanel"
+                        v-slot="{ isFullscreen, toggle }"
+                    >
                         <!-- 
                     In the play view, the player widget is only shown for the active track
                     In the edit view, the player widgets are shown for all expanded tracks
@@ -400,7 +404,6 @@
                                 (isPlayable && isActiveTrack) ||
                                 (isEditable && isExpanded)
                             "
-                            ref="playerWidget"
                             :key="track.Id"
                             :class="{
                                 section: isPlayable || isMixable,
@@ -682,10 +685,10 @@
                                 </div>
                             </div>
                         </div>
-                    </Transition>
-                </Teleport>
-            </div>
-        </template>
+                    </FullscreenPanel>
+                </Transition>
+            </Teleport>
+        </div>
     </div>
 </template>
 
@@ -709,7 +712,6 @@ import {
     watchEffect,
 } from 'vue';
 import { nextTick } from 'process';
-import { useFullscreen } from '@vueuse/core';
 import OnYouTubeConsent from '@/components/dialogs/OnYouTubeConsent.vue';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import MeterLevelEditor from '@/components/editor/MeterLevelEditor.vue';
@@ -733,6 +735,7 @@ import CompilationHandler from '@/store/compilation-handler';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import VolumeKnob from '@/components/VolumeKnob.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
+import FullscreenPanel from '@/components/FullscreenPanel.vue';
 import TrackTitleName from '@/components/track/TrackTitleName.vue';
 import ArtistInfo from '@/components/ArtistInfo.vue';
 import { useSettingsStore } from '@/store/settings';
@@ -1632,17 +1635,18 @@ watch(activeTrackId, (activeTrackId, previousTrackId) => {
 
 /// --- fullscreen ---
 
-const playerWidget = ref<HTMLElement | null>(null);
-const { isFullscreen, exit, toggle } = useFullscreen(playerWidget);
+const fullscreenPanel = ref(null);
 
-/** Handles the overflow style for fullscreen
- * @remarks Removes a potentially visible scrollbar in the fullscreen view
- */
+/** Forces the fullscreen exit when this is no more the active track */
 watch(
     isActiveTrack,
     (isActiveTrack) => {
         if (!isActiveTrack) {
-            exit();
+            (
+                fullscreenPanel.value as never as InstanceType<
+                    typeof FullscreenPanel
+                >
+            )?.exit();
         }
     },
     { immediate: true },
