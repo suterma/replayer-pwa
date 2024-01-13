@@ -207,7 +207,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     handleStateChange(state: PlayerState): void {
         console.debug(
-            `YouTubeMediaHandler::onStateChange:${PlayerState[state]}`,
+            `YouTubeMediaHandler(${this._id})::onStateChange:${PlayerState[state]}`,
         );
 
         switch (state) {
