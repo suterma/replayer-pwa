@@ -639,7 +639,9 @@
                                     :track-id="track.Id"
                                     :cues="track.Cues"
                                     :track-pre-roll="track.PreRoll"
-                                    :show-level-meter="showLevelMeter"
+                                    :show-level-meter-for-edit="
+                                        showLevelMeterForEdit
+                                    "
                                     :show-waveforms-on-edit="
                                         showWaveformsOnEdit
                                     "
@@ -1055,7 +1057,7 @@ const {
     fadeOutDuration,
     addFadeInPreRoll,
     defaultPreRollDuration,
-    showLevelMeter,
+    showLevelMeterForEdit,
     experimentalShowPositionInTrackHeader,
     showWaveformsOnEdit,
     showOverviewWaveformOnEdit,

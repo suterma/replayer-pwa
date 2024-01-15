@@ -103,7 +103,7 @@
     <div
         v-if="
             isEditable &&
-            showLevelMeter &&
+            showLevelMeterForEdit &&
             audioSource &&
             context &&
             context.state == 'running' &&
@@ -258,7 +258,7 @@ const props = defineProps({
     /** Whether to show the audio level meter
      * @remarks Default is true
      */
-    showLevelMeter: Boolean,
+    showLevelMeterForEdit: Boolean,
 
     /** Whether to show the waveforms (in the edit view)
      */
@@ -468,26 +468,26 @@ const audioSource: ShallowRef<InstanceType<
     typeof MediaElementAudioSourceNode
 > | null> = shallowRef(null);
 
-/** Watch the showLevelMeter setting and media url changes, and act accordingly
+/** Watch the showLevelMeterForEdit setting and media url changes, and act accordingly
  * @remarks This handles the audio setup for metering
  * @devdoc Handle the value also immediately at mount time
  */
 watch(
     [
-        () => props.showLevelMeter,
+        () => props.showLevelMeterForEdit,
         () => props.mediaUrl,
         () => mediaElement.value,
         () => isEditable.value,
         () => isPaused.value /* only used as trigger */,
         () => isContextRunning.value /* only used as trigger */,
     ],
-    ([showLevelMeter, mediaUrl, newMediaElement, isEditable]) => {
+    ([showLevelMeterForEdit, mediaUrl, newMediaElement, isEditable]) => {
         // Metering is only used in edit mode
         if (isEditable) {
             if (context.value && isContextRunning.value) {
                 // Create the level meter and associated routing only when requested, and only for local files
                 if (
-                    showLevelMeter &&
+                    showLevelMeterForEdit &&
                     mediaUrl &&
                     newMediaElement &&
                     !FileHandler.isValidHttpUrl(mediaUrl)

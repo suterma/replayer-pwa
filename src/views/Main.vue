@@ -97,7 +97,7 @@ onBeforeMount(() => {
 
 const app = useAppStore();
 const audio = useAudioStore();
-const { showLevelMeter } = storeToRefs(settings);
+const { showLevelMeterForEdit } = storeToRefs(settings);
 
 function cleanUp() {
     console.log('Main.vue::cleanUp...');
@@ -123,7 +123,7 @@ function cleanUp() {
  * Audio context handling throughout the application reflects this.
  */
 function resumeAudioContext() {
-    if (showLevelMeter.value && routedToEdit.value) {
+    if (showLevelMeterForEdit.value && routedToEdit.value) {
         audio.resumeContext();
     }
 }

@@ -61,8 +61,8 @@
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
-                        v-model="showLevelMeter"
-                        label="Show audio level meters (for local media only)"
+                        v-model="showLevelMeterForEdit"
+                        label="Show audio level meters in the edit view (for local media only)"
                         hint="Uses more resources, not working on some devices"
                     ></LabeledCheckbox>
                 </div>
@@ -70,7 +70,7 @@
                 <div class="control">
                     <LabeledCheckbox
                         v-model="levelMeterSizeIsLarge"
-                        :disabled="!showLevelMeter"
+                        :disabled="!showLevelMeterForEdit"
                         label="Use large audio level meters"
                         hint="Level meters are full width"
                     ></LabeledCheckbox>
@@ -336,7 +336,7 @@ const {
     fadeOutDuration,
     addFadeInPreRoll,
     defaultPreRollDuration,
-    showLevelMeter,
+    showLevelMeterForEdit,
     keyboardShortcutTimeout,
     timeFormat,
     showWaveformsOnEdit,
