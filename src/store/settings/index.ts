@@ -58,9 +58,9 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
     const defaultPreRollDuration = useLocalStorage('defaultPreRollDuration', 0);
 
     /** Whether to show the audio level meter
-     * @remarks Default is true
+     * @remarks Default is false
      */
-    const showLevelMeter = useLocalStorage('showLevelMeter', true);
+    const showLevelMeter = useLocalStorage('showLevelMeter', false);
 
     /** A timeout duration, used for the mnemonic build-up as well as the keyboard shortcut display timeout
      */
@@ -144,7 +144,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         fadeOutDuration.value = 500;
         addFadeInPreRoll.value = true;
         defaultPreRollDuration.value = 0;
-        showLevelMeter.value = true;
+        showLevelMeter.value = false;
         keyboardShortcutTimeout.value = 1000;
         timeFormat.value = TimeFormat.Iso8601Extended;
         showWaveformsOnEdit.value = true;

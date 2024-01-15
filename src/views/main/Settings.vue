@@ -94,9 +94,7 @@
                         <div class="control">
                             <div class="select">
                                 <select v-model.number="defaultPreRollDuration">
-                                    <option :value="0">
-                                        no pre-roll
-                                    </option>
+                                    <option :value="0">no pre-roll</option>
                                     <option :value="0.667">
                                         0.66 seconds (1 beat @ 90 BPM)
                                     </option>
@@ -136,12 +134,8 @@
                             <div class="select">
                                 <select v-model.number="fadeInDuration">
                                     <option :value="0">no fading</option>
-                                    <option :value="20">
-                                        20 milliseconds
-                                    </option>
-                                    <option :value="50">
-                                        50 milliseconds
-                                    </option>
+                                    <option :value="20">20 milliseconds</option>
+                                    <option :value="50">50 milliseconds</option>
                                     <option :value="100">
                                         100 milliseconds
                                     </option>
@@ -151,15 +145,9 @@
                                     <option :value="500">
                                         500 milliseconds
                                     </option>
-                                    <option :value="1000">
-                                        1 seconds
-                                    </option>
-                                    <option :value="2000">
-                                        2 seconds
-                                    </option>
-                                    <option :value="5000">
-                                        5 seconds
-                                    </option>
+                                    <option :value="1000">1 seconds</option>
+                                    <option :value="2000">2 seconds</option>
+                                    <option :value="5000">5 seconds</option>
                                 </select>
                             </div>
                         </div>
@@ -177,12 +165,8 @@
                             <div class="select">
                                 <select v-model.number="fadeOutDuration">
                                     <option :value="0">no fading</option>
-                                    <option :value="20">
-                                        20 milliseconds
-                                    </option>
-                                    <option :value="50">
-                                        50 milliseconds
-                                    </option>
+                                    <option :value="20">20 milliseconds</option>
+                                    <option :value="50">50 milliseconds</option>
                                     <option :value="100">
                                         100 milliseconds
                                     </option>
@@ -192,15 +176,9 @@
                                     <option :value="500">
                                         500 milliseconds
                                     </option>
-                                    <option :value="1000">
-                                        1 seconds
-                                    </option>
-                                    <option :value="2000">
-                                        2 seconds
-                                    </option>
-                                    <option :value="5000">
-                                        5 seconds
-                                    </option>
+                                    <option :value="1000">1 seconds</option>
+                                    <option :value="2000">2 seconds</option>
+                                    <option :value="5000">5 seconds</option>
                                 </select>
                             </div>
                         </div>
@@ -247,12 +225,8 @@
                             <option :value="500">
                                 Fast (500 milliseconds)
                             </option>
-                            <option :value="1000">
-                                Medium (1 second)
-                            </option>
-                            <option :value="2000">
-                                Slow (2 seconds)
-                            </option>
+                            <option :value="1000">Medium (1 second)</option>
+                            <option :value="2000">Slow (2 seconds)</option>
                             <option :value="5000">
                                 Molto Grave (5 seconds)
                             </option>
