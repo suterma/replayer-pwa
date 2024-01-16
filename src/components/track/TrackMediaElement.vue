@@ -345,10 +345,10 @@ function destroyHandler(video: HTMLMediaElement): void {
         mediaHandler.value.pause();
 
         // cancel the internal event handlers
-        onPauseChangedSubsription.cancel();
-        onSeekingChangedSubsription.cancel();
-        onDurationChangedSubsription.cancel();
-        onFadingChangedSubsription.cancel();
+        onPauseChangedSubsription?.cancel();
+        onSeekingChangedSubsription?.cancel();
+        onDurationChangedSubsription?.cancel();
+        onFadingChangedSubsription?.cancel();
 
         if (video) {
             video.removeAttribute('src'); // empty resource

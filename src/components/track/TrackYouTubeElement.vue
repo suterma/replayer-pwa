@@ -221,7 +221,7 @@ function createAndEmitHandler(
     onStateChange: (...cb: PlayerStateChangeCallback[]) => void,
     player: Player,
 ): IMediaHandler {
-    const handler = new YouTubeMediaHandler(
+    const mediaHandler = new YouTubeMediaHandler(
         onStateChange,
         player,
         //TODO use track volume
@@ -229,21 +229,23 @@ function createAndEmitHandler(
         props.trackId,
     ) as IMediaHandler;
 
+    audio.addMediaHandler(mediaHandler);
+    emit('ready', mediaHandler);
     console.log('TrackYouTubeElement:ready');
-    emit('ready', handler);
-    audio.addMediaHandler(handler);
 
     // Internally handle some events of our own
-    onPauseChangedSubsription = handler.onPausedChanged.subscribe((paused) => {
-        isPaused.value = paused;
-    });
-    onFadingChangedSubsription = handler.fader.onFadingChanged.subscribe(
+    onPauseChangedSubsription = mediaHandler.onPausedChanged.subscribe(
+        (paused) => {
+            isPaused.value = paused;
+        },
+    );
+    onFadingChangedSubsription = mediaHandler.fader.onFadingChanged.subscribe(
         (fading) => {
             isFading.value = fading;
         },
     );
 
-    return handler;
+    return mediaHandler;
 }
 
 const isPaused = ref(true);
@@ -260,8 +262,8 @@ onBeforeUnmount(() => {
 /** Properly destroy the handler, and abandon the YouTube player, including it's handlers */
 function destroyHandler(): void {
     // cancel the internal event handlers
-    onPauseChangedSubsription.cancel();
-    onFadingChangedSubsription.cancel();
+    onPauseChangedSubsription?.cancel();
+    onFadingChangedSubsription?.cancel();
 
     if (mediaHandler.value) {
         audio.removeMediaHandler(mediaHandler.value);
@@ -270,11 +272,10 @@ function destroyHandler(): void {
         mediaHandler.value = null;
     }
 
-    if (instance.value) {
-        instance.value.stopVideo();
-        instance.value.destroy();
-        instance.value = undefined;
-    }
+    instance.value?.stopVideo();
+    instance.value?.destroy();
+    instance.value = undefined;
+
     console.log('TrackYouTubeElement:destroyed');
 }
 
