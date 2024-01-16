@@ -20,9 +20,9 @@ import { useFullscreen } from '@vueuse/core';
 import { onMounted, ref } from 'vue';
 
 const container = ref<HTMLElement | null>(null);
+const hasNative = ref(false);
 
 /// --- assume fullscreen API ---
-const hasNative = ref(true);
 let { isFullscreen, exit, toggle } = useFullscreen(container);
 
 /// --- fallback to emulation if API not available ---
@@ -31,7 +31,7 @@ onMounted(() => {
     const hasNativeFullscreen = containerElement?.requestFullscreen;
     hasNative.value = hasNativeFullscreen != undefined;
 
-    if (!hasNative) {
+    if (!hasNative.value) {
         console.log('Providing Fullscreen API fallback features');
         isFullscreen = ref(false);
         toggle = () => {
