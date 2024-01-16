@@ -6,6 +6,9 @@
             'is-active-track': isActiveTrack,
             'is-inactive-track': !isActiveTrack,
             'is-editable': isEditable,
+            'is-audio': isAudioTrack,
+            'is-video': isVideoTrack,
+            'is-youtube-video': isYoutubeVideoTrack,
         }"
         data-cy="track"
     >
@@ -420,7 +423,7 @@
                             - a slot for the expander icon (if not the only track)
                             - The title (with artist info)
                             - the play/pause button
-                            - a smaller slider
+                            - a smaller slider (hiddeon on mobile for videos)
                             - a standard set of transport controls, including cue and track skipping
                          -->
                             <!-- 
@@ -428,7 +431,12 @@
 
                             <div
                                 v-if="isPlayable"
-                                class="level has-breakpoint-desktop"
+                                class="widget level has-breakpoint-desktop"
+                                :class="{
+                                    'is-audio': isAudioTrack,
+                                    'is-video': isVideoTrack,
+                                    'is-youtube-video': isYoutubeVideoTrack,
+                                }"
                             >
                                 <!-- Left side (with expander, title and artist of the currently playing track; not shown for a single track) -->
                                 <div v-if="isOnlyMediaTrack" class="level-left">
@@ -475,7 +483,9 @@
 
                                 <!-- Right side -->
                                 <div class="level-right">
-                                    <div class="level-item">
+                                    <div
+                                        class="level-item is-hidden-mobile-when-video"
+                                    >
                                         <PlayheadSlider
                                             class="is-fullwidth"
                                             :model-value="currentPosition ?? 0"
@@ -576,8 +586,7 @@
                             <div
                                 class="block"
                                 :class="{
-                                    'next-is-empty':
-                                        CompilationHandler.isAudioTrack(track),
+                                    'next-is-empty': isAudioTrack,
                                 }"
                             >
                                 <div v-if="isFullscreen">
@@ -623,16 +632,9 @@
                 after it has become the active track ( gets
                 play-request-was-interrupted) -->
                                 <TrackMediaElement
-                                    v-if="
-                                        CompilationHandler.isVideoTrack(
-                                            track,
-                                        ) ||
-                                        CompilationHandler.isAudioTrack(track)
-                                    "
+                                    v-if="isVideoTrack || isAudioTrack"
                                     :key="track.Id"
-                                    :enable-video="
-                                        CompilationHandler.isVideoTrack(track)
-                                    "
+                                    :enable-video="isVideoTrack"
                                     :title="track.Name"
                                     :media-url="mediaUrl"
                                     :start="track.PlayheadPosition"
@@ -654,13 +656,7 @@
                                     @ready="useMediaHandler"
                                     @click="setActiveTrack"
                                 ></TrackMediaElement>
-                                <div
-                                    v-if="
-                                        CompilationHandler.isYoutubeVideoTrack(
-                                            track,
-                                        )
-                                    "
-                                >
+                                <div v-if="isYoutubeVideoTrack">
                                     <OnYouTubeConsent>
                                         <!-- The YouTube player must get recreated on teleportation changes, 
                                             thus the usePlayerPanel is added to the key -->
@@ -1019,6 +1015,16 @@ const currentPositionDisplay = computed(() =>
 provide(currentPositionDisplayInjectionKey, readonly(currentPositionDisplay));
 
 // --- Track state ---
+
+const isAudioTrack = computed(() =>
+    CompilationHandler.isAudioTrack(props.track),
+);
+const isVideoTrack = computed(() =>
+    CompilationHandler.isVideoTrack(props.track),
+);
+const isYoutubeVideoTrack = computed(() =>
+    CompilationHandler.isYoutubeVideoTrack(props.track),
+);
 
 /** Flag to indicate whether the player has it's track loaded.
  * @remarks This is used to toggle playback button states
@@ -1751,8 +1757,8 @@ function removeCueScheduling(): void {
 <style lang="scss" scoped>
 /* Track player widget specific styles*/
 
-/* NOTE: class 'next-is-empty' is a trick to avoid extra bottom margin 
-         for this block, when it's not the last, 
+/* NOTE: class 'next-is-empty' is a trick to avoid extra bottom margin
+         for this block, when it's not the last,
          but the last with actually visible content */
 #media-player-panel .section .block.next-is-empty {
     margin-bottom: 0;
@@ -1824,6 +1830,13 @@ function removeCueScheduling(): void {
     }
     .is-editable .playhead-slider .has-cropped-text {
         max-width: calc(100vw - 640px);
+    }
+}
+
+/** Hide the widget track slider for video content, when used in the media player panel, on mobile devices */
+@media screen and (max-width: 768px) {
+    #media-player-panel .widget.is-video .is-hidden-mobile-when-video {
+        display: none;
     }
 }
 </style>
