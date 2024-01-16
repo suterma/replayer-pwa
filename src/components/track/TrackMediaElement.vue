@@ -142,7 +142,6 @@
     <div v-if="isParentMounted && mediaUrl && props.enableVideo" class="block">
         <VideoTextTrackController
             v-model="showVideo"
-            v-model:smallVideo="smallVideo"
             :cues="cues"
             :video-element="videoElement"
             :disabled="!mediaElement"
@@ -270,12 +269,19 @@ const props = defineProps({
 
     /** Whether the audio level meter size is large */
     levelMeterSizeIsLarge: Boolean,
+
+    /** Whether to show a height-limited video canvas
+     */
+    smallVideo: {
+        type: Boolean,
+        default: true,
+        required: false,
+    },
 });
 
 // --- visibility ---
 
 const showVideo = ref(true);
-const smallVideo = ref(true);
 const visibility = useDocumentVisibility();
 const isAppVisible = computed(() => {
     return visibility.value === 'visible';

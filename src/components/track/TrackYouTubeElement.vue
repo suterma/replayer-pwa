@@ -52,7 +52,6 @@
     <div v-if="url && !hasNotAllowedError" class="block">
         <YoutubeTextTrackController
             v-model="showVideo"
-            v-model:smallVideo="smallVideo"
             :track-id="trackId"
             :cues="cues"
             :title="title"
@@ -144,12 +143,19 @@ const props = defineProps({
         default: null,
         required: false,
     },
+
+    /** Whether to show a height-limited video canvas
+     */
+    smallVideo: {
+        type: Boolean,
+        default: true,
+        required: false,
+    },
 });
 
 // --- visibility ---
 
 const showVideo = ref(true);
-const smallVideo = ref(true);
 
 // --- player setup ---
 

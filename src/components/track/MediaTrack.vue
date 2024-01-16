@@ -653,6 +653,7 @@
                                     :level-meter-size-is-large="
                                         levelMeterSizeIsLarge
                                     "
+                                    :small-video="!isFullscreen"
                                     @ready="useMediaHandler"
                                     @click="setActiveTrack"
                                 ></TrackMediaElement>
@@ -668,6 +669,7 @@
                                             :track-id="track.Id"
                                             :cues="track.Cues"
                                             :track-pre-roll="track.PreRoll"
+                                            :small-video="!isFullscreen"
                                             @ready="useMediaHandler"
                                             @click="setActiveTrack"
                                         ></TrackYouTubeElement>

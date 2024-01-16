@@ -17,21 +17,6 @@
                 </div>
             </div>
             <template v-if="props.modelValue">
-                <!-- Video size toggler -->
-                <div class="level-item has-text-left">
-                    <div class="field is-horizontal">
-                        <div class="field-body">
-                            <div class="field">
-                                <p class="control">
-                                    <LabeledCheckbox
-                                        v-model="vModelSmallVideo"
-                                        label="Limit video height"
-                                    ></LabeledCheckbox>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <!-- Caption toggler -->
                 <div class="level-item has-text-left">
                     <div class="field is-horizontal">
@@ -40,7 +25,7 @@
                                 <p class="control">
                                     <LabeledCheckbox
                                         v-model="showCaptions"
-                                        label="Show cue captions"
+                                        label="Captions"
                                     ></LabeledCheckbox>
                                 </p>
                             </div>
@@ -48,7 +33,7 @@
                     </div>
                 </div>
                 <!-- Size toggler -->
-                <div class="level-item has-text-left">
+                <div class="level-item has-text-left is-hidden-mobile">
                     <div class="field is-horizontal">
                         <div class="field-body">
                             <div class="field">
@@ -63,7 +48,7 @@
                     </div>
                 </div>
                 <!-- Position toggler -->
-                <div class="level-item has-text-left">
+                <div class="level-item has-text-left is-hidden-mobile">
                     <div class="field is-horizontal">
                         <div class="field-body">
                             <div class="field">
@@ -152,7 +137,7 @@ const vModel = computed<boolean>({
         emit('update:modelValue', value);
     },
 });
-const vModelSmallVideo = computed<boolean>({
+const smallVideo = computed<boolean>({
     get(): boolean {
         return props.smallVideo;
     },

@@ -16,34 +16,16 @@
                     </div>
                 </div>
             </div>
-            <template v-if="props.modelValue">
-                <!-- Video size toggler -->
-                <div class="level-item has-text-left">
-                    <div class="field is-horizontal">
-                        <div class="field-body">
-                            <div class="field">
-                                <p class="control">
-                                    <LabeledCheckbox
-                                        v-model="vModelSmallVideo"
-                                        label="Limit video height"
-                                    ></LabeledCheckbox>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- NOTE: YouTube's TOC do not allow content overlays, 
+            <!-- NOTE: YouTube's TOC do not allow content overlays, 
                      thus no captions are implemented here -->
-            </template>
         </div>
         <div class="level-right"></div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { type PropType, computed } from 'vue';
+import { computed } from 'vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
-import type { ICue } from '@/store/ICue';
 
 /** A YouTube controller, that toggles the video properties
  */
@@ -75,14 +57,6 @@ const vModel = computed<boolean>({
     },
     set(value): void {
         emit('update:modelValue', value);
-    },
-});
-const vModelSmallVideo = computed<boolean>({
-    get(): boolean {
-        return props.smallVideo;
-    },
-    set(value): void {
-        emit('update:smallVideo', value);
     },
 });
 </script>
