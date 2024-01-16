@@ -1,14 +1,10 @@
 <template>
-    <div
-        ref="container"
-        :class="{ 'has-background-grey-darker': isFullscreen }"
-    >
+    <div ref="container">
         <slot
             :is-fullscreen="isFullscreen"
             :toggle="toggle"
             :exit="exit"
         ></slot>
-        ..//TODO use the backdrop for the background color
     </div>
 </template>
 <script setup lang="ts">
@@ -32,12 +28,3 @@ defineExpose({
     exit,
 });
 </script>
-
-<!-- 'has-background-grey-darker': isFullscreen,
-'is-fullscreen': isFullscreen,
-'has-player-navbar-fixed-top': isFullscreen,
-
-:class="{
-    'section navbar is-fixed-top has-background-grey-darker is-shadowless is-borderless':
-        isFullscreen,
-}" -->

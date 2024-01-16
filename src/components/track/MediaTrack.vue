@@ -410,11 +410,11 @@
                             :key="track.Id"
                             :class="{
                                 section: isPlayable || isMixable,
-                                'has-background-grey-dark':
-                                    isPlayable || isMixable,
                                 'transition-in-place':
                                     isPlayable ||
                                     isMixable /* because in playback  or mix view, the players are replaced in place, not expanded */,
+                                'has-background-grey-dark': !isFullscreen,
+                                'has-background-black': isFullscreen,
                             }"
                             :disabled="!canPlay"
                         >
