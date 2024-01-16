@@ -414,7 +414,7 @@
                                     isPlayable ||
                                     isMixable /* because in playback  or mix view, the players are replaced in place, not expanded */,
                                 'has-background-grey-dark': !isFullscreen,
-                                'has-background-black': isFullscreen,
+                                'is-fullscreen': isFullscreen,
                             }"
                             :disabled="!canPlay"
                         >
@@ -1791,17 +1791,6 @@ function removeCueScheduling(): void {
     .level-right {
         flex-basis: auto;
     }
-}
-
-/** The (player-widget) div that occupies full screen */
-.is-fullscreen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    overflow: auto;
-    background-color: rebeccapurple;
 }
 
 .is-fullwidth {

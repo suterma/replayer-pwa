@@ -12532,6 +12532,26 @@ while also keeping the original with.
 }
 
 /** **********************************************************
+ * Fullscreen styles
+**************************************************************
+*/
+/** A div that occupies full screen (not necessarily in native fullscreen mode) */
+.is-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: auto;
+}
+
+/** A div that occupies full screen (not necessarily in native fullscreen mode) */
+.is-fullscreen,
+.is-fullscreen::backdrop {
+  background-color: hsl(0, 0%, 14%);
+}
+
+/** **********************************************************
  * Explicit cursors
 **************************************************************
 */
