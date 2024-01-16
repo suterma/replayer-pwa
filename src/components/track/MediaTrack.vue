@@ -1824,6 +1824,7 @@ function removeCueScheduling(): void {
 
 /** Hide the widget track slider for video content, when used in the media player panel, on mobile devices */
 @media screen and (max-width: 768px) {
+    #media-player-panel .widget.is-youtube-video .is-hidden-mobile-when-video,
     #media-player-panel .widget.is-video .is-hidden-mobile-when-video {
         display: none;
     }
