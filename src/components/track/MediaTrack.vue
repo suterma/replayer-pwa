@@ -386,7 +386,7 @@
             element) is also depending on the track state as a performance optimizations
             -->
         <div v-if="mediaUrl" class="block">
-            <Teleport to="#media-player" :disabled="isEditable">
+            <Teleport to="#media-player-panel" :disabled="!usePlayerPanel">
                 <Transition :name="skipTransitionName">
                     <!-- The player widget for a track may be full screen only for the active track -->
                     <FullscreenPanel
@@ -662,8 +662,10 @@
                                     "
                                 >
                                     <OnYouTubeConsent>
+                                        <!-- The YouTube player must get recreated on teleportation changes, 
+                                            thus the usePlayerPanel is added to the key -->
                                         <TrackYouTubeElement
-                                            :key="track.Id"
+                                            :key="track.Id + usePlayerPanel"
                                             :title="track.Name"
                                             :url="mediaUrl"
                                             :start="track.PlayheadPosition"
@@ -754,6 +756,7 @@ import type { ICue } from '@/store/ICue';
 import { PlaybackMode } from '@/store/PlaybackMode';
 import type { ITrack } from '@/store/ITrack';
 import { useTitle } from '@vueuse/core';
+import router, { Route } from '@/router';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -1625,6 +1628,14 @@ watch(activeTrackId, (activeTrackId, previousTrackId) => {
     }
 });
 
+/// --- player panel usage ---
+
+/** Whether to use the dedicated player panel for the player
+ */
+const usePlayerPanel = computed(() => {
+    return router.currentRoute.value.name === Route.Play;
+});
+
 /// --- fullscreen ---
 
 const fullscreenPanel = ref(null);
@@ -1743,7 +1754,7 @@ function removeCueScheduling(): void {
 /* NOTE: class 'next-is-empty' is a trick to avoid extra bottom margin 
          for this block, when it's not the last, 
          but the last with actually visible content */
-#media-player .section .block.next-is-empty {
+#media-player-panel .section .block.next-is-empty {
     margin-bottom: 0;
 }
 
