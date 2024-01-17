@@ -49,5 +49,21 @@
                 "runOn": "folderOpen",
             }
         },
+        {
+            "label": "Run lint",
+            "type": "shell",
+            "command": "npm run lint",
+            "windows": {
+                "command": "npm run lint"
+            },
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "runOptions": {
+                "runOn": "folderOpen",
+            }
+        },
     ]
 }
