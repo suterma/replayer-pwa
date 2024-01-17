@@ -398,7 +398,7 @@
                 <!-- The player widget for a track may be full screen only for the active track -->
                 <FullscreenPanel
                     ref="fullscreenPanel"
-                    v-slot="{ isFullscreen, toggle }"
+                    v-slot="{ isFullscreen, hasNative, toggle }"
                 >
                     <Transition :name="skipTransitionName">
                         <!-- 
@@ -453,9 +453,17 @@
                                         class="level-item is-justify-content-left has-cropped-text"
                                     >
                                         <!-- Offer the full screen, but not for a single track  -->
-                                        <CollapsibleButton
+                                        <FullscreenToggler
+                                            v-if="hasNative"
                                             :model-value="isFullscreen"
-                                            title="toggle full-screen mode"
+                                            title="toggle full-page mode"
+                                            collapsed-chevron-direction="up"
+                                            @click="toggle"
+                                        ></FullscreenToggler>
+                                        <CollapsibleButton
+                                            v-else
+                                            :model-value="isFullscreen"
+                                            title="toggle full-page mode"
                                             collapsed-chevron-direction="up"
                                             @click="toggle"
                                         ></CollapsibleButton>
@@ -722,6 +730,7 @@ import MediaControlsBar from '@/components/MediaControlsBar.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import CreateCueButton from '@/components/buttons/CreateCueButton.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
+import FullscreenToggler from '@/components/buttons/FullscreenToggler.vue';
 import MuteButton from '@/components/buttons/MuteButton.vue';
 import SoloButton from '@/components/buttons/SoloButton.vue';
 import SelectButton from '@/components/buttons/SelectButton.vue';
