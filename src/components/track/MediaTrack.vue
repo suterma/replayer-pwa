@@ -235,9 +235,11 @@
                     ><template
                         v-if="hasMeter && track.UseMeasureNumbers"
                         #left-end
-                        v-experiment="experimentalUseMeter"
                     >
-                        <div class="level-item">
+                        <div
+                            v-experiment="experimentalUseMeter"
+                            class="level-item"
+                        >
                             <div class="field is-horizontal">
                                 <div class="field-label is-normal">
                                     <label class="label is-single-line"
@@ -260,7 +262,10 @@
                             </div>
                         </div>
 
-                        <div class="level-item">
+                        <div
+                            v-experiment="experimentalUseMeter"
+                            class="level-item"
+                        >
                             <div class="field is-horizontal">
                                 <div class="field-label is-normal">
                                     <label class="label is-single-line"

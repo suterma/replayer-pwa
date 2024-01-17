@@ -233,7 +233,10 @@ const props = defineProps({
     /** The cues to show
      * @remarks The cue descriptions are shown as VTT cues.
      */
-    cues: Array as PropType<Array<ICue>>,
+    cues: {
+        type: Array as PropType<Array<ICue>>,
+        required: true,
+    },
 
     /** The custom pre-roll duration in this track. Default is zero. */
     trackPreRoll: {

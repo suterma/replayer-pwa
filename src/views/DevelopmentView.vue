@@ -214,7 +214,11 @@
             valueTextClass: 'has-text-warning',
             valueArchClass: 'has-text-warning',
         }"
-    /><Knob v-model="knobValue" :min-value="0" :max-value="50"></Knob>
+    /><RotaryKnob
+        v-model="knobValue"
+        :min-value="0"
+        :max-value="50"
+    ></RotaryKnob>
 </template>
 
 <script lang="ts">
@@ -224,7 +228,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import NavButton from '@/components/buttons/NavButton.vue';
 //@ts-ignore (because vue-peaks does not provide types)
 import ControlKnob from '@slipmatio/control-knob';
-import Knob from '@/components/buttons/Knob.vue';
+import RotaryKnob from '@/components/buttons/RotaryKnob.vue';
 import { mdiPencil } from '@mdi/js';
 import {
     rTrackPlay,
@@ -240,14 +244,14 @@ import TrackYouTubeElement from '@/components/track/TrackYouTubeElement.vue';
 import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
 
 export default defineComponent({
-    name: 'Development',
+    name: 'DevelopmentView',
     components: {
         CollapsibleButton,
         BaseIcon,
         NavButton,
         ControlKnob,
         TrackYouTubeElement,
-        Knob,
+        RotaryKnob,
         CollapsiblePanel,
     },
     data() {
@@ -266,6 +270,17 @@ export default defineComponent({
             rTrackRepeatOnce: rTrackRepeatOnce,
         };
     },
+    computed: {
+        ...mapState(useAppStore, ['hasCompilation']),
+        ...mapWritableState(useAppStore, ['compilation', 'selectedCueId']),
+        firstCueOfFirstTrack(): string | null {
+            return this.compilation?.Tracks[0]?.Cues[0]?.Description ?? null;
+        },
+
+        bpmOfFirstTrack(): number | null {
+            return this.compilation.Tracks[0]?.Meter?.BeatsPerMinute ?? null;
+        },
+    },
     methods: {
         writeDebug() {
             console.debug('Just a debug log with an object', { some: 'data' });
@@ -281,17 +296,6 @@ export default defineComponent({
         },
         throwException() {
             throw 'Something bad happened!';
-        },
-    },
-    computed: {
-        ...mapState(useAppStore, ['hasCompilation']),
-        ...mapWritableState(useAppStore, ['compilation', 'selectedCueId']),
-        firstCueOfFirstTrack(): string | null {
-            return this.compilation?.Tracks[0]?.Cues[0]?.Description ?? null;
-        },
-
-        bpmOfFirstTrack(): number | null {
-            return this.compilation.Tracks[0]?.Meter?.BeatsPerMinute ?? null;
         },
     },
 });

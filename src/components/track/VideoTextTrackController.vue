@@ -85,18 +85,14 @@ const props = defineProps({
         required: false,
         default: true,
     },
-    /** Whether to show the video in a small canvas.
-     */
-    smallVideo: {
-        type: Boolean,
-        required: false,
-        default: true,
-    },
 
     /** The cues to show
      * @remarks The cue descriptions are shown as VTT cues.
      */
-    cues: Array as PropType<Array<ICue>>,
+    cues: {
+        type: Array as PropType<Array<ICue>>,
+        required: true,
+    },
 
     /** Video element to use
      * @devdoc Note: the element is only available after the component has been mouted
@@ -127,7 +123,7 @@ const cueTextTrack: Ref<TextTrack | null> = ref(null);
 
 // --- visibility ---
 
-const emit = defineEmits(['update:modelValue', 'update:smallVideo']);
+const emit = defineEmits(['update:modelValue']);
 
 const vModel = computed<boolean>({
     get(): boolean {
@@ -135,14 +131,6 @@ const vModel = computed<boolean>({
     },
     set(value): void {
         emit('update:modelValue', value);
-    },
-});
-const smallVideo = computed<boolean>({
-    get(): boolean {
-        return props.smallVideo;
-    },
-    set(value): void {
-        emit('update:smallVideo', value);
     },
 });
 

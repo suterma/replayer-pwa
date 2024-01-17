@@ -1,4 +1,4 @@
-import { expect, describe, it, beforeEach, afterEach } from 'vitest';
+import { expect, describe, it } from 'vitest';
 import FileHandler from './filehandler';
 
 describe('filehandler.ts', () => {

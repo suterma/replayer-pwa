@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-lone-template -->
 <template>
     <AudioPeaks :options="options" :media-element="mediaElement">
         <template v-if="!showOverview" #overview>

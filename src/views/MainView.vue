@@ -2,40 +2,40 @@
     <!-- NOTE: the same audio context is reused for all playback operations and
          must be resumed once in the main view lifetime, when used.  -->
     <div @click="resumeAudioContext()">
-        <Playback
+        <PlaybackView
             v-show="
                 routedToPlayback ||
                 experimentalShowEverythingEverywhereAllAtOnce
             "
-        ></Playback>
+        ></PlaybackView>
         <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
-        <Setlist
+        <SetlistView
             v-show="
                 routedToSetlist || experimentalShowEverythingEverywhereAllAtOnce
             "
-        ></Setlist>
+        ></SetlistView>
         <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
-        <Settings
+        <SettingsView
             v-show="
                 routedToSettings ||
                 experimentalShowEverythingEverywhereAllAtOnce
             "
-        ></Settings>
+        ></SettingsView>
         <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
-        <About
+        <AboutView
             v-show="
                 routedToAbout || experimentalShowEverythingEverywhereAllAtOnce
             "
-        ></About>
+        ></AboutView>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import Playback from '@/views/main/Playback.vue';
-import Setlist from '@/views/main/Setlist.vue';
-import Settings from '@/views/main/Settings.vue';
-import About from '@/views/main/About.vue';
+import PlaybackView from '@/views/main/PlaybackView.vue';
+import SetlistView from '@/views/main/SetlistView.vue';
+import SettingsView from '@/views/main/SettingsView.vue';
+import AboutView from '@/views/main/AboutView.vue';
 import { computed, onBeforeMount } from 'vue';
 import { Route } from '@/router';
 import { useSettingsStore } from '@/store/settings';

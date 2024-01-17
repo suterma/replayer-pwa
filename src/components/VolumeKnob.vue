@@ -1,5 +1,5 @@
 <template>
-    <Knob
+    <RotaryKnob
         title="Drag, scroll or use the arrow keys to change volume"
         class="button is-nav is-rounded"
         :class="{ 'is-static': disabled, 'has-cursor-not-allowed': disabled }"
@@ -17,7 +17,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import Knob from '@/components/buttons/Knob.vue';
+import RotaryKnob from '@/components/buttons/RotaryKnob.vue';
 import { DefaultTrackVolume } from '@/store/Track';
 
 /** A volume knob.
@@ -25,7 +25,7 @@ import { DefaultTrackVolume } from '@/store/Track';
 export default defineComponent({
     name: 'VolumeKnob',
     components: {
-        Knob,
+        RotaryKnob,
     },
     props: {
         /** The volume in the range [0..1]

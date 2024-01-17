@@ -13,7 +13,7 @@ import { defineComponent } from 'vue';
  * @remarks Just loads the demo compilation and navigates to the play view.
  */
 export default defineComponent({
-    name: 'Demo',
+    name: 'DemoView',
     components: {},
 
     mounted() {

@@ -617,7 +617,7 @@ import ReplayerAd from '@/components/ReplayerAd.vue';
 /** An About view
  */
 export default defineComponent({
-    name: 'About',
+    name: 'AboutView',
     components: { FooterLinks, CollapsiblePanel, ReplayerAd },
     computed: {
         version(): string {

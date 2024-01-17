@@ -5,10 +5,10 @@ import {
     NavigationFailureType,
     type RouteRecordRaw,
 } from 'vue-router';
-import Main from '../views/Main.vue';
-import Reset from '../views/Reset.vue';
-import Demo from '../views/Demo.vue';
-import Development from '../views/Development.vue';
+import MainView from '../views/MainView.vue';
+import ResetView from '../views/ResetView.vue';
+import DemoView from '../views/DemoView.vue';
+import DevelopmentView from '../views/DevelopmentView.vue';
 
 /** A set of route names. */
 export enum Route {
@@ -38,7 +38,7 @@ const routes: Array<RouteRecordRaw> = [
          */
         path: '/play',
         name: Route.Play,
-        component: Main,
+        component: MainView,
     },
     {
         /** The route to the edit mode
@@ -47,7 +47,7 @@ const routes: Array<RouteRecordRaw> = [
          */
         path: '/edit',
         name: Route.Edit,
-        component: Main,
+        component: MainView,
     },
     {
         /** The route to the mix mode
@@ -56,7 +56,7 @@ const routes: Array<RouteRecordRaw> = [
          */
         path: '/mix',
         name: Route.Mix,
-        component: Main,
+        component: MainView,
     },
     {
         /** The route to the set list
@@ -65,7 +65,7 @@ const routes: Array<RouteRecordRaw> = [
          */
         path: '/setlist',
         name: Route.Setlist,
-        component: Main,
+        component: MainView,
     },
     {
         /** The route to the settings
@@ -74,12 +74,12 @@ const routes: Array<RouteRecordRaw> = [
          */
         path: '/settings',
         name: Route.Settings,
-        component: Main,
+        component: MainView,
     },
     {
         path: '/reset',
         name: Route.Reset,
-        component: Reset,
+        component: ResetView,
     },
     {
         /** The route to about
@@ -88,17 +88,17 @@ const routes: Array<RouteRecordRaw> = [
          */
         path: '/about',
         name: Route.About,
-        component: Main,
+        component: MainView,
     },
     {
         path: '/demo',
         name: Route.Demo,
-        component: Demo,
+        component: DemoView,
     },
     {
         path: '/dev',
         name: Route.Development,
-        component: Development,
+        component: DevelopmentView,
     },
 ];
 

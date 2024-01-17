@@ -12,22 +12,38 @@ import { defineComponent } from 'vue';
 //@ts-ignore (because vue-peaks does not provide types)
 import ControlKnob from '@slipmatio/control-knob';
 
-/** A Knob for manipulating values
+/** A rotary know for manipulating values
  */
 export default defineComponent({
-    name: 'Knob',
+    name: 'RotaryKnob',
     components: { ControlKnob },
     props: {
         modelValue: {
             type: Number,
             required: true,
         },
-        maxValue: Number,
-        minValue: Number,
+        maxValue: {
+            type: Number,
+            required: false,
+            default: Number.MAX_VALUE,
+        },
+        minValue: {
+            type: Number,
+            required: false,
+            default: Number.MIN_VALUE,
+        },
         /** Class of the outer rim (outline of the knob) */
-        rimClass: String,
+        rimClass: {
+            type: String,
+            required: false,
+            default: '',
+        },
         /** Class of the value-part of the rim, including the text (value of the knob) */
-        valueClass: String,
+        valueClass: {
+            type: String,
+            required: false,
+            default: '',
+        },
     },
     emits: ['update:modelValue'],
     computed: {

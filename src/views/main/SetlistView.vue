@@ -143,7 +143,7 @@ import type { ITrack } from '@/store/ITrack';
 
 /** A printable display of a complete compilation, with a track and cue listing */
 export default defineComponent({
-    name: 'Setlist',
+    name: 'SetlistView',
     components: {
         BaseIcon,
         SetlistItem,

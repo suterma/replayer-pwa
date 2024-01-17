@@ -44,7 +44,6 @@
 import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';
 import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import StageMark from '@/components/StageMark.vue';
-import ReplayerAd from '@/components/ReplayerAd.vue';
 import ErrorOverlay from '@/components/ErrorOverlay.vue';
 //@ts-ignore (because the vue3-promise-dialog does not provide types)
 import { DialogWrapper } from 'vue3-promise-dialog';

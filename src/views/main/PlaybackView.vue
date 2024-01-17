@@ -73,7 +73,7 @@ import { Route } from '@/router';
 
 /** A view for playing an existing compilation */
 export default defineComponent({
-    name: 'Playback',
+    name: 'PlaybackView',
     components: {
         Compilation,
         CompilationKeyboardHandler,
