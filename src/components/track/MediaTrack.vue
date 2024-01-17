@@ -395,12 +395,12 @@
             -->
         <div v-if="mediaUrl" class="block">
             <Teleport to="#media-player-panel" :disabled="!usePlayerPanel">
-                <Transition :name="skipTransitionName">
-                    <!-- The player widget for a track may be full screen only for the active track -->
-                    <FullscreenPanel
-                        ref="fullscreenPanel"
-                        v-slot="{ isFullscreen, toggle }"
-                    >
+                <!-- The player widget for a track may be full screen only for the active track -->
+                <FullscreenPanel
+                    ref="fullscreenPanel"
+                    v-slot="{ isFullscreen, toggle }"
+                >
+                    <Transition :name="skipTransitionName">
                         <!-- 
                     In the play view, the player widget is only shown for the active track
                     In the edit view, the player widgets are shown for all expanded tracks
@@ -682,8 +682,8 @@
                                 </div>
                             </div>
                         </div>
-                    </FullscreenPanel>
-                </Transition>
+                    </Transition>
+                </FullscreenPanel>
             </Teleport>
         </div>
     </div>
