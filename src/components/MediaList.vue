@@ -57,6 +57,9 @@ export default defineComponent({
             mdiTrashCanOutline: mdiTrashCanOutline,
         };
     },
+    computed: {
+        ...mapState(useAppStore, ['mediaUrls']),
+    },
     methods: {
         ...mapActions(useAppStore, ['addDefaultTrack', 'discardMediaUrl']),
 
@@ -69,9 +72,6 @@ export default defineComponent({
             console.debug('MediaList::discard:source', mediaUrl);
             this.discardMediaUrl(mediaUrl);
         },
-    },
-    computed: {
-        ...mapState(useAppStore, ['mediaUrls']),
     },
 });
 </script>

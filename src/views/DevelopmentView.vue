@@ -13,20 +13,6 @@
             <CollapsiblePanel>
                 <template #caption
                     ><h1 class="title has-text-danger">
-                        Youtube via Mediaelement.js
-                    </h1></template
-                >
-                <TrackYouTubeElement
-                    url="https://www.youtube.com/watch?v=32cSZUFNHrs"
-                    track-id="dev-track"
-                ></TrackYouTubeElement>
-            </CollapsiblePanel>
-        </div>
-
-        <div class="block">
-            <CollapsiblePanel>
-                <template #caption
-                    ><h1 class="title has-text-danger">
                         Spotify embedding
                     </h1></template
                 >
@@ -240,7 +226,6 @@ import {
 } from '@/components/icons/BaseIcon.vue';
 import { useAppStore } from '@/store/app';
 import { mapState, mapWritableState } from 'pinia';
-import TrackYouTubeElement from '@/components/track/TrackYouTubeElement.vue';
 import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
 
 export default defineComponent({
@@ -250,7 +235,6 @@ export default defineComponent({
         BaseIcon,
         NavButton,
         ControlKnob,
-        TrackYouTubeElement,
         RotaryKnob,
         CollapsiblePanel,
     },

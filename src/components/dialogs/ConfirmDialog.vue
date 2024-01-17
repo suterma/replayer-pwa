@@ -16,8 +16,14 @@ export default defineComponent({
     name: 'ConfirmDialog',
     components: { ModalDialog },
     props: {
-        question: String,
-        header: String,
+        question: {
+            type: String,
+            required: true,
+        },
+        header: {
+            type: String,
+            required: true,
+        },
     },
     setup() {
         /** NOTE: Returning the returnValue function is required by vue3-promise-dialog */

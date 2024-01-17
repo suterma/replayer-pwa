@@ -197,6 +197,23 @@ export default defineComponent({
             mdiMusicNotePlus: mdiMusicNotePlus,
         };
     },
+    computed: {
+        acceptedFiles(): string {
+            return FileHandler.acceptedFileList;
+        },
+        /** Determines whether this control is in the replacement mode */
+        isReplacementMode(): boolean {
+            if (this.replaceUrl && this.replaceUrl.length > 0) {
+                return true;
+            }
+            return false;
+        },
+        replaceInfo(): string {
+            return this.isReplacementMode
+                ? `Replace: '${this.replaceUrl}'. `
+                : '';
+        },
+    },
     async mounted() {
         this.registerLaunchQueue();
     },
@@ -422,23 +439,6 @@ export default defineComponent({
             url: string,
         ) {
             this.updateTrackUrl(trackId, url);
-        },
-    },
-    computed: {
-        acceptedFiles(): string {
-            return FileHandler.acceptedFileList;
-        },
-        /** Determines whether this control is in the replacement mode */
-        isReplacementMode(): boolean {
-            if (this.replaceUrl && this.replaceUrl.length > 0) {
-                return true;
-            }
-            return false;
-        },
-        replaceInfo(): string {
-            return this.isReplacementMode
-                ? `Replace: '${this.replaceUrl}'. `
-                : '';
         },
     },
 });

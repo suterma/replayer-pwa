@@ -92,6 +92,20 @@ export const actions = {
         this.updateSelectedCueId(cueId);
     },
 
+    /** Update current playhead position for the given track
+     *  @remarks Implements #132
+     *  @remarks Updates the persistently stored playback position.
+     */
+    updatePlayheadPosition(trackId: string, time: number): void {
+        const matchingTrack = CompilationHandler.getTrackById(
+            state.compilation.value.Tracks,
+            trackId,
+        );
+        if (matchingTrack) {
+            matchingTrack.PlayheadPosition = time;
+        }
+    },
+
     /** Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.
      */
     addCue(trackId: string, cue: ICue): void {

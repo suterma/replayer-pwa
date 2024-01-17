@@ -988,22 +988,6 @@ function useMediaHandler(handler: IMediaHandler) {
     cueScheduler.value = new CueScheduler(handler);
 }
 
-// --- Persisted playback position ---
-
-/** Persists the running playhead position
- * @remarks Implements #132
- * @devdoc Updates are only applied when mounted, to allow
- * proper application of the initial position before mount
- */
-function persistPlayheadPosition() {
-    if (props.track) {
-        props.track.PlayheadPosition = currentPosition.value;
-        // console.debug(
-        //     `MediaTrack(${props.track.Name})::PlayheadPosition:${props.track.PlayheadPosition}`,
-        // );
-    }
-}
-
 // --- Transport ---
 
 /** The (precise) playback progress in the current track, in [seconds]
@@ -1123,6 +1107,18 @@ const {
     mediaUrls,
     activeTrackId,
 } = storeToRefs(app);
+
+// --- Persisted playback position ---
+
+/** Persists the running playhead position
+ * @remarks Implements #132
+ * @devdoc Updates are only applied when mounted, to allow
+ * proper application of the initial position before mount
+ */
+
+function persistPlayheadPosition() {
+    app.updatePlayheadPosition(props.track.Id, currentPosition.value);
+}
 
 /// --- Transport ---
 
