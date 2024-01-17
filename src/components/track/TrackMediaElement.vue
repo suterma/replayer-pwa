@@ -457,13 +457,15 @@ watch(
 );
 
 watchEffect(() => {
-    const fader = mediaHandler.value?.fader;
-    if (fader) {
-        fader.preRollDuration = props.trackPreRoll ?? 0;
-    } else {
-        console.warn(
-            `Pre-roll of '${props.trackPreRoll}' can not be applied; no fader available.`,
-        );
+    if (props.trackPreRoll != null) {
+        const fader = mediaHandler.value?.fader;
+        if (fader) {
+            fader.preRollDuration = props.trackPreRoll ?? 0;
+        } else {
+            console.warn(
+                `Pre-roll of '${props.trackPreRoll}' can not be applied; no fader available.`,
+            );
+        }
     }
 });
 
