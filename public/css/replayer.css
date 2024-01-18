@@ -11660,7 +11660,17 @@ for all screen sizes. Keeps the display compact */
  * For the playback widget in the media player panel, keep the controls compact
  **************************************************************/
 /* keep vertical spacing between the controls smaller, on smaller devices */
-@media screen and (max-width: 769px) {
+@media screen and (max-width: 1216px) {
+  #media-player-panel .block:not(:last-child),
+  #media-player-panel .level:not(:last-child) {
+    margin-bottom: 1.5rem;
+  }
+  #media-player-panel .level-right {
+    margin-top: 1.5rem;
+  }
+}
+/* keep vertical spacing between the controls smaller, on smaller devices */
+@media screen and (max-width: 1024px) {
   #media-player-panel .block:not(:last-child),
   #media-player-panel .level:not(:last-child) {
     margin-bottom: 0.75rem;
