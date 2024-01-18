@@ -102,6 +102,7 @@ export default defineComponent({
     props: {
         compilation: {
             type: Object as PropType<ICompilation>,
+            required: true,
         },
     },
     setup() {
@@ -114,6 +115,18 @@ export default defineComponent({
             returnValue,
             isDownloadZip,
         };
+    },
+
+    computed: {
+        compilationTitle(): string {
+            return this.compilation?.Title ?? '';
+        },
+
+        proposedFileName(): string {
+            return CompilationHandler.getCompilationFileName(
+                this.compilation?.Title,
+            );
+        },
     },
 
     methods: {
@@ -140,18 +153,6 @@ export default defineComponent({
             } else {
                 return this.downloadRexFile();
             }
-        },
-    },
-
-    computed: {
-        compilationTitle(): string {
-            return this.compilation?.Title ?? '';
-        },
-
-        proposedFileName(): string {
-            return CompilationHandler.getCompilationFileName(
-                this.compilation?.Title,
-            );
         },
     },
 });

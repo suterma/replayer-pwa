@@ -68,6 +68,7 @@ import type { ITrack } from '@/store/ITrack';
 const props = defineProps({
     track: {
         type: Object as PropType<ITrack>,
+        required: true,
     },
 });
 

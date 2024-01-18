@@ -13,8 +13,8 @@ export default defineComponent({
     name: 'NewVersionDialog',
     components: { ModalDialog },
     props: {
-        version: String,
-        updateText: String,
+        version: { type: String, required: true },
+        updateText: { type: String, required: true },
     },
 
     setup() {

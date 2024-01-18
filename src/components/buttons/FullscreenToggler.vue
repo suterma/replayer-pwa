@@ -21,7 +21,7 @@ import { mdiFullscreen, mdiFullscreenExit } from '@mdi/js';
 
 /** A toggle button for the fading state
  */
-const model = defineModel({ required: true });
+const modelValue = defineModel({ type: Boolean, required: true });
 
 const emit = defineEmits(['update:modelValue']);
 </script>
