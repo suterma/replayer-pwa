@@ -6,6 +6,7 @@
     >
         <AppContextMenu :has-compilation="hasCompilation"></AppContextMenu>
     </section>
+
     <!-- The routed view section -->
     <!-- NOTE: the same audio context is reused for all playback operations and
          must be resumed once in the app lifetime, when used. 
@@ -21,6 +22,7 @@
     in some view modes -->
     <nav
         id="media-player-panel"
+        ref="mediaPlayerPanel"
         class="navbar is-fixed-bottom has-background-grey-dark is-hidden-print"
         role="form"
         aria-label="media player"
@@ -28,15 +30,13 @@
 
     <div class="section is-hidden-print">
         <!-- A placeholder that invisibly extends the view bottom,
-        taking into account the player widget.
+        taking into account the vertical size of the media player panel.
         An additional surrounding section is used as an additional spacer
         to make it visually clear that no more content is available below.
         -->
-        <div class="has-player-navbar-fixed-bottom"></div>
-        <!-- A placeholder that invisibly extends the bottom for the experimental content in the fixed bottom bar -->
         <div
-            v-experiment="experimentalShowPositionInTrackHeader"
-            style="height: 224px"
+            :style="{ height: mediaPlayerPanelHeight + 'px' }"
+            class="has-player-navbar-fixed-bottom"
         ></div>
     </div>
 </template>
@@ -51,18 +51,16 @@ import { useSettingsStore } from '@/store/settings';
 import { useAppStore } from './store/app';
 import { acknowledgeVersion } from './code/ui/dialogs';
 import { compare } from 'compare-versions';
-import { onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useElementSize } from '@vueuse/core';
 
 onMounted(() => {
     handleAppUpdate();
 });
 
 const app = useAppStore();
-const settings = useSettingsStore();
-
 const { hasCompilation } = storeToRefs(app);
-const { experimentalShowPositionInTrackHeader } = storeToRefs(settings);
 
 // --- app state ---
 
@@ -109,6 +107,13 @@ function handleAppUpdate() {
 
     console.debug('App.vue::handleAppUpdate done.');
 }
+
+// --- bottom navbar spacing ---
+const mediaPlayerPanel = ref();
+const { height } = useElementSize(mediaPlayerPanel);
+const mediaPlayerPanelHeight = computed(() => {
+    return height.value;
+});
 </script>
 <!-- HINT: Uncomment to display the HTML structure for review -->
 <!--

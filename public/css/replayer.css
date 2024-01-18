@@ -10642,62 +10642,6 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   }
 }
 /*************************************************************
- * Player widget layout (to be used for the widget audio player)
-**************************************************************
-*/
-/* Handling the fixed navbar for a view with a (widget) player specifically */
-/* Depending on the screen size, consider the stacked level items of the widget player */
-/* Note: Pixel counts are taken from the player widget section, by manual evaluation
-   plus 1em grace space */
-.has-player-navbar-fixed-bottom {
-  padding-bottom: calc(230px + 1em);
-}
-
-@media screen and (min-width: 340px) {
-  .has-player-navbar-bottom-top {
-    padding-bottom: calc(230px + 1em);
-  }
-}
-@media screen and (min-width: 424px) {
-  .has-player-navbar-bottom-top {
-    padding-bottom: calc(190px + 1em);
-  }
-}
-@media screen and (min-width: 769px) {
-  .has-player-navbar-bottom-top {
-    padding-bottom: calc(140px + 1em);
-  }
-}
-@media screen and (min-width: 1024px) {
-  .has-player-navbar-bottom-top {
-    padding-bottom: calc(152px + 1em);
-  }
-}
-.has-player-navbar-fixed-top {
-  padding-top: calc(230px + 1em);
-}
-
-@media screen and (min-width: 340px) {
-  .has-player-navbar-fixed-top {
-    padding-top: calc(230px + 1em);
-  }
-}
-@media screen and (min-width: 424px) {
-  .has-player-navbar-fixed-top {
-    padding-top: calc(190px + 1em);
-  }
-}
-@media screen and (min-width: 769px) {
-  .has-player-navbar-fixed-top {
-    padding-top: calc(140px + 1em);
-  }
-}
-@media screen and (min-width: 1024px) {
-  .has-player-navbar-fixed-top {
-    padding-top: calc(152px + 1em);
-  }
-}
-/*************************************************************
  * Cue playback / player styles
  * These styles are based on the slate bulmaswatch theme and borrow variables from there
 **************************************************************

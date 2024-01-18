@@ -33,9 +33,13 @@ export const useMessageStore = defineStore(Store.Messages, () => {
         console.log('PROGRESS: ' + message);
     }
 
-    /** Initiates the display of an error message by pushing the message onto the stack of error messages */
+    /** Initiates the display of an error message by pushing the message onto the stack of error messages
+     * @remarks certain irrelevant or unclear messages are omitted for the display
+     */
     function pushError(message: string): void {
-        errorMessageStack.value.push(message);
+        if (message != 'undefined: undefined') {
+            errorMessageStack.value.push(message);
+        }
         console.error('ERROR: ' + message);
     }
 

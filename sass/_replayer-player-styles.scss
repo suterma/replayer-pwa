@@ -1,70 +1,6 @@
 @charset "utf-8";
 
 /*************************************************************
- * Player widget layout (to be used for the widget audio player)
-**************************************************************
-*/
-/* Handling the fixed navbar for a view with a (widget) player specifically */
-/* Depending on the screen size, consider the stacked level items of the widget player */
-/* Note: Pixel counts are taken from the player widget section, by manual evaluation
-   plus 1em grace space */
-
-// Fixed at bottom
-.has-player-navbar-fixed-bottom {
-    padding-bottom: calc(230px + 1em);
-}
-
-@media screen and (min-width: 340px /* mobile */) {
-    .has-player-navbar-bottom-top {
-        padding-bottom: calc(230px + 1em);
-    }
-}
-
-@media screen and (min-width: 424px /* when the max count of media controls break */) {
-    .has-player-navbar-bottom-top {
-        padding-bottom: calc(190px + 1em);
-    }
-}
-
-@media screen and (min-width: 769px /* tablet */) {
-    .has-player-navbar-bottom-top {
-        padding-bottom: calc(140px + 1em);
-    }
-}
-@media screen and (min-width: 1024px) {
-    .has-player-navbar-bottom-top {
-        padding-bottom: calc(152px + 1em);
-    }
-}
-// Fixed at top
-.has-player-navbar-fixed-top {
-    padding-top: calc(230px + 1em);
-}
-
-@media screen and (min-width: 340px /* mobile */) {
-    .has-player-navbar-fixed-top {
-        padding-top: calc(230px + 1em);
-    }
-}
-
-@media screen and (min-width: 424px /* when the max count of media controls break */) {
-    .has-player-navbar-fixed-top {
-        padding-top: calc(190px + 1em);
-    }
-}
-
-@media screen and (min-width: 769px /* tablet */) {
-    .has-player-navbar-fixed-top {
-        padding-top: calc(140px + 1em);
-    }
-}
-@media screen and (min-width: 1024px) {
-    .has-player-navbar-fixed-top {
-        padding-top: calc(152px + 1em);
-    }
-}
-
-/*************************************************************
  * Cue playback / player styles
  * These styles are based on the slate bulmaswatch theme and borrow variables from there
 **************************************************************
@@ -120,7 +56,9 @@ button.cue.button.is-selected.is-success {
 /* In the cues bar, due to tighter spacing, remove the left and right box shadow*/
 
 .cue-buttons-bar.buttons button.cue.button.is-selected.is-success {
-    box-shadow: 0 -0.2em 0 0 $success, 0 0.2em 0 0 $success;
+    box-shadow:
+        0 -0.2em 0 0 $success,
+        0 0.2em 0 0 $success;
 }
 
 /* Make the scheduled cue visually outstanding
