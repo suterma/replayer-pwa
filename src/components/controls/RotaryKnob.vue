@@ -10,7 +10,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 //@ts-ignore (because vue-peaks does not provide types)
-import ControlKnob from '@slipmatio/control-knob';
+import ControlKnob from '@/components/controls/ControlKnob.vue';
 
 /** A rotary know for manipulating values
  */

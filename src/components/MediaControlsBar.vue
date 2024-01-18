@@ -102,7 +102,7 @@ import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import PlaybackModeButton from '@/components/buttons/PlaybackModeButton.vue';
 import FadingToggler from '@/components/buttons/FadingToggler.vue';
 import PreRollToggler from '@/components/buttons/PreRollToggler.vue';
-import VolumeKnob from '@/components/VolumeKnob.vue';
+import VolumeKnob from '@/components/controls/VolumeKnob.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import {
     mdiSkipPrevious,

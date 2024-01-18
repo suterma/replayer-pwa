@@ -17,7 +17,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import RotaryKnob from '@/components/buttons/RotaryKnob.vue';
+import RotaryKnob from '@/components/controls/RotaryKnob.vue';
 import { DefaultTrackVolume } from '@/store/Track';
 
 /** A volume knob.

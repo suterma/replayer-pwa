@@ -739,7 +739,7 @@ import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
-import VolumeKnob from '@/components/VolumeKnob.vue';
+import VolumeKnob from '@/components/controls/VolumeKnob.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import FullscreenPanel from '@/components/FullscreenPanel.vue';
 import TrackTitleName from '@/components/track/TrackTitleName.vue';

@@ -213,8 +213,8 @@ import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import NavButton from '@/components/buttons/NavButton.vue';
 //@ts-ignore (because vue-peaks does not provide types)
-import ControlKnob from '@slipmatio/control-knob';
-import RotaryKnob from '@/components/buttons/RotaryKnob.vue';
+import ControlKnob from '@/components/controls/ControlKnob.vue';
+import RotaryKnob from '@/components/controls/RotaryKnob.vue';
 import { mdiPencil } from '@mdi/js';
 import {
     rTrackPlay,
