@@ -1,5 +1,5 @@
 <template>
-    <div class="level is-mobile">
+    <div v-if="extraVideoControls" class="level is-mobile">
         <div class="level-left level-wrap">
             <!-- Video toggler -->
             <div class="level-item has-text-left">
@@ -26,6 +26,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
+import { useSettingsStore } from '@/store/settings';
+import { storeToRefs } from 'pinia';
 
 /** A YouTube controller, that toggles the video properties
  */
@@ -59,4 +61,9 @@ const vModel = computed<boolean>({
         emit('update:modelValue', value);
     },
 });
+
+// --- settings ---
+
+const settings = useSettingsStore();
+const { extraVideoControls } = storeToRefs(settings);
 </script>

@@ -134,6 +134,10 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
      */
     const youTubeConsent = useLocalStorage('youTubeConsent', false);
 
+    /** Whether to show extra video controls
+     */
+    const extraVideoControls = useLocalStorage('extraVideoControls', false);
+
     /** EXPERIMENTAL: Whether to show meter editors/display
      * @remarks Default is false
      */
@@ -153,6 +157,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         showWaveformsOnEdit.value = true;
         showOverviewWaveformOnEdit.value = false;
         youTubeConsent.value = false;
+        extraVideoControls.value = false;
         experimentalShowPositionInTrackHeader.value = false;
         experimentalShowEverythingEverywhereAllAtOnce.value = false;
         experimentalAllowTrackSharingByLink.value = true;
@@ -174,6 +179,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         showWaveformsOnEdit,
         showOverviewWaveformOnEdit,
         youTubeConsent,
+        extraVideoControls,
         experimentalShowPositionInTrackHeader,
         experimentalShowEverythingEverywhereAllAtOnce,
         experimentalAllowTrackSharingByLink,

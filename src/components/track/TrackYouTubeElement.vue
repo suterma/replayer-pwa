@@ -49,15 +49,16 @@
             instead, without Replayer.
         </p>
     </div>
-    <div v-if="url && !hasNotAllowedError" class="block">
-        <YoutubeTextTrackController
-            v-model="showVideo"
-            :track-id="trackId"
-            :cues="cues"
-            :title="title"
-            :disabled="isLoading"
-        ></YoutubeTextTrackController>
-    </div>
+
+    <YoutubeTextTrackController
+        v-if="url && !hasNotAllowedError"
+        class="block"
+        v-model="showVideo"
+        :track-id="trackId"
+        :cues="cues"
+        :title="title"
+        :disabled="isLoading"
+    ></YoutubeTextTrackController>
 </template>
 
 <script setup lang="ts">

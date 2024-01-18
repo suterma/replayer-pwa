@@ -139,14 +139,14 @@
         </Teleport>
     </div>
 
-    <div v-if="isParentMounted && mediaUrl && props.enableVideo" class="block">
-        <VideoTextTrackController
-            v-model="showVideo"
-            :cues="cues"
-            :video-element="videoElement"
-            :disabled="!mediaElement"
-        ></VideoTextTrackController>
-    </div>
+    <VideoTextTrackController
+        v-if="isParentMounted && mediaUrl && props.enableVideo"
+        class="block"
+        v-model="showVideo"
+        :cues="cues"
+        :video-element="videoElement"
+        :disabled="!mediaElement"
+    ></VideoTextTrackController>
 </template>
 
 <script setup lang="ts">

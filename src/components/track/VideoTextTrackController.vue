@@ -1,5 +1,5 @@
 <template>
-    <div class="level is-mobile">
+    <div v-if="extraVideoControls" class="level is-mobile">
         <div class="level-left level-wrap">
             <!-- Video toggler -->
             <div class="level-item has-text-left">
@@ -72,6 +72,8 @@
 import { type PropType, type Ref, computed, ref, watchEffect } from 'vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 import type { ICue } from '@/store/ICue';
+import { useSettingsStore } from '@/store/settings';
+import { storeToRefs } from 'pinia';
 
 /** A VTT controller, that toggles video properties and transforms Replayer cues into
  * VTT cues on a VTT track on a video player element
@@ -194,6 +196,11 @@ watchEffect(() => {
         }
     }
 });
+
+// --- settings ---
+
+const settings = useSettingsStore();
+const { extraVideoControls } = storeToRefs(settings);
 </script>
 
 <style>

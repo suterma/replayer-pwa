@@ -208,6 +208,15 @@
                     ></LabeledCheckbox>
                 </div>
             </div>
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="extraVideoControls"
+                        label="Show extra video controls"
+                        hint="Controls for video display and captions style"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
         </div>
 
         <div class="box">
@@ -342,6 +351,7 @@ const {
     showWaveformsOnEdit,
     showOverviewWaveformOnEdit,
     youTubeConsent,
+    extraVideoControls,
     experimentalShowPositionInTrackHeader,
     experimentalShowEverythingEverywhereAllAtOnce,
     experimentalAllowTrackSharingByLink,
