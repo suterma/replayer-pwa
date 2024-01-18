@@ -72,3 +72,19 @@ for all screen sizes. Keeps the display compact */
     padding-top: 3rem;
     padding-bottom: 3rem;
 }
+
+/************************************************************** 
+ * For the playback widget in the media player panel, keep the controls compact
+ **************************************************************/
+
+/* keep vertical spacing between the controls smaller, on smaller devices */
+@media screen and (max-width: $tablet) {
+    #media-player-panel .block:not(:last-child),
+    #media-player-panel .level:not(:last-child) {
+        margin-bottom: 0.75rem /*equals smallest section horizontal padding*/;
+    }
+
+    #media-player-panel .level-right {
+        margin-top: 0.75rem /*equals smallest section horizontal padding*/;
+    }
+}
