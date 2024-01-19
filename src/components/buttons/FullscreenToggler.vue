@@ -1,6 +1,5 @@
 <template>
     <ToggleButton
-        class="button"
         :class="{
             'is-inactive': !modelValue,
         }"
