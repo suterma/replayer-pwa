@@ -364,6 +364,8 @@
                 </div>
                 <div class="level-right">
                     <div class="level-item is-justify-content-flex-end">
+                        <!-- Currently, the user is expected to use the track list to navigate between tracks. 
+                             Thus the track navigation is alwas hidden -->
                         <MediaControlsBar
                             :disabled="!canPlay"
                             :hide-stop-button="true"
@@ -420,6 +422,7 @@
                                     isMixable /* because in playback  or mix view, the players are replaced in place, not expanded */,
                                 'has-background-grey-dark': !isFullscreen,
                                 'is-fullscreen': isFullscreen,
+                                'is-single-media-track': isOnlyMediaTrack,
                             }"
                             :disabled="!canPlay"
                         >
@@ -443,16 +446,13 @@
                                     'is-youtube-video': isYoutubeVideoTrack,
                                 }"
                             >
-                                <!-- Left side (with expander, title and artist of the currently playing track; not shown for a single track) -->
-                                <div v-if="isOnlyMediaTrack" class="level-left">
-                                    <!-- empty placeholder -->
-                                </div>
-                                <div v-else class="level-left">
+                                <!-- Left side (with expander, title and artist of the currently playing track) -->
+                                <div class="level-left">
                                     <!-- Title and Artist of the currently playing track-->
                                     <div
                                         class="level-item is-justify-content-left has-cropped-text"
                                     >
-                                        <!-- Offer the full screen, but not for a single track  -->
+                                        <!-- Offer the full screen-->
                                         <FullscreenToggler
                                             v-if="hasNative"
                                             :model-value="isFullscreen"
@@ -532,9 +532,11 @@
                                     <div
                                         class="level-item is-justify-content-flex-end"
                                     >
+                                        <!-- Currently, the user is expected to use the track list to navigate between tracks. 
+                                            Thus the track navigation is alwas hidden -->
                                         <MediaControlsBar
                                             :hide-stop-button="true"
-                                            :hide-track-navigation="false"
+                                            :hide-track-navigation="true"
                                             :has-previous-track="
                                                 hasPreviousTrack
                                             "
@@ -1783,13 +1785,15 @@ function removeCueScheduling(): void {
     .level-left {
         // The value for the basis have been empirically found to work best on
         // Google Chrome, Brave and Firefox, on Ubuntu
-        flex-basis: calc(100% - 686px);
+        // for the given set of playback controls
+        // (slider, next/previous cue, playback mode, pre-roll toggler, fading toggler, volume knob, playback indicator)
+        flex-basis: calc(100% - 606px);
         .level-item {
             flex-shrink: 1;
         }
     }
     .level-right {
-        flex-basis: 686px;
+        flex-basis: 606px;
         .level-item {
             flex-shrink: 1;
         }
@@ -1809,16 +1813,18 @@ function removeCueScheduling(): void {
     width: 100%;
 }
 
-/**
+/*******************************************************************************
 * Specific width for track sliders depending on breakpoints
 * @remarks This allows the use of cropped text for the
-* cue description with dynamic width */
+* cue description with dynamic width 
+*******************************************************************************/
+//.track .is-single-media-track {
 @media screen and (max-width: 768px) {
     /** in Play mode */
     .playhead-slider .has-cropped-text {
         max-width: calc(100vw - 150px);
     }
-
+    /** in Edit mode */
     .is-editable .playhead-slider .has-cropped-text {
         max-width: calc(100vw - 150px);
     }
@@ -1829,12 +1835,17 @@ function removeCueScheduling(): void {
     .playhead-slider .has-cropped-text {
         max-width: 129px;
     }
+    /** in Edit mode */
     .is-editable .playhead-slider .has-cropped-text {
         max-width: calc(100vw - 640px);
     }
 }
+//}
 
-/** Hide the widget track slider for video content, when used in the media player panel, on mobile devices */
+/*******************************************************************************
+ * Hide the widget track slider for video content, 
+ * when used in the media player panel, on mobile devices 
+ ******************************************************************************/
 @media screen and (max-width: 768px) {
     #media-player-panel .widget.is-youtube-video .is-hidden-mobile-when-video,
     #media-player-panel .widget.is-video .is-hidden-mobile-when-video {
@@ -1842,6 +1853,7 @@ function removeCueScheduling(): void {
     }
 }
 </style>
+<!-- non-scoped -->
 <style lang="scss">
 /** Specific styles for a vertical level in the header (if used there).
 These are chosen for a nice visual fit in the header */

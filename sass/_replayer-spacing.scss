@@ -74,10 +74,10 @@ for all screen sizes. Keeps the display compact */
 }
 
 /************************************************************** 
- * For the playback widget in the media player panel, keep the controls compact
+ * For the playback widget in the media player panel, keep the widget rows compact
  **************************************************************/
 
-/* keep vertical spacing between the controls smaller, on smaller devices */
+/* keep vertical spacing/stacking between the widget rows smaller, on smaller devices */
 @media screen and (max-width: $widescreen) {
     #media-player-panel .block:not(:last-child),
     #media-player-panel .level:not(:last-child) {
@@ -85,19 +85,19 @@ for all screen sizes. Keeps the display compact */
             /*equals second-smallest section horizontal padding*/;
     }
 
-    #media-player-panel .level-right {
-        margin-top: 1.5rem /*equals second-smallest section horizontal padding*/;
+    #media-player-panel .widget.level > .level-right {
+        //margin-top: 1.5rem /*equals second-smallest section horizontal padding*/;
     }
 }
 
-/* keep vertical spacing between the controls smaller, on smaller devices */
+/* keep vertical spacing/stacking between the widget rows smaller, on smaller devices */
 @media screen and (max-width: $desktop) {
     #media-player-panel .block:not(:last-child),
     #media-player-panel .level:not(:last-child) {
         margin-bottom: 0.75rem /*equals smallest section horizontal padding*/;
     }
 
-    #media-player-panel .level-right {
-        margin-top: 0.75rem /*equals smallest section horizontal padding*/;
+    #media-player-panel .widget.level > .level-right {
+        // margin-top: 0.75rem /*equals smallest section horizontal padding*/;
     }
 }
