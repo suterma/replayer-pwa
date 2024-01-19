@@ -1,10 +1,5 @@
 <template>
-    <button
-        :class="{
-            button: true,
-        }"
-        :title="isEngaged ? engagedLabel : disengagedLabel"
-    >
+    <button class="button" :title="isEngaged ? engagedLabel : disengagedLabel">
         {{ text }}
         <slot></slot>
     </button>
