@@ -120,6 +120,7 @@ function visitWithoutServiceWorker(
     return cy.visit(url, {
         onBeforeLoad(win) {
             delete (win.navigator as any).__proto__.serviceWorker;
+            delete (win.navigator as any).serviceWorker;
         },
     });
 }
