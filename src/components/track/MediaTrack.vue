@@ -467,7 +467,8 @@
                                             collapsed-chevron-direction="up"
                                             @click="toggle"
                                         ></CollapsibleButton>
-                                        <p>
+                                        <!-- Keep some distance to the fullscreen button -->
+                                        <p class="ml-3">
                                             <!-- Use smaller title in collapsed state, use regular size (4) when full screen -->
                                             <span
                                                 :class="{
