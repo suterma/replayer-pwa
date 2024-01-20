@@ -141,8 +141,8 @@
 
     <VideoTextTrackController
         v-if="isParentMounted && mediaUrl && props.enableVideo"
-        class="block"
         v-model="showVideo"
+        class="block"
         :cues="cues"
         :video-element="videoElement"
         :disabled="!mediaElement"

@@ -52,8 +52,8 @@
 
     <YoutubeTextTrackController
         v-if="url && !hasNotAllowedError"
-        class="block"
         v-model="showVideo"
+        class="block"
         :track-id="trackId"
         :cues="cues"
         :title="title"

@@ -35,7 +35,7 @@
         to make it visually clear that no more content is available below.
         -->
         <div
-            :style="{ height: mediaPlayerPanelHeight + 'px' }"
+            :style="{ height: navbarCompensationHeight + 'px' }"
             class="has-player-navbar-fixed-bottom"
         ></div>
     </div>
@@ -53,7 +53,7 @@ import { acknowledgeVersion } from './code/ui/dialogs';
 import { compare } from 'compare-versions';
 import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useElementSize } from '@vueuse/core';
+import { refDebounced, useElementSize } from '@vueuse/core';
 
 onMounted(() => {
     handleAppUpdate();
@@ -111,9 +111,17 @@ function handleAppUpdate() {
 // --- bottom navbar spacing ---
 const mediaPlayerPanel = ref();
 const { height } = useElementSize(mediaPlayerPanel);
-const mediaPlayerPanelHeight = computed(() => {
+const mediaPlayerPanelComputedHeight = computed(() => {
     return height.value;
 });
+/** The body height compensation for the fixed navbar.
+ * @remark Debounced to prevent excess updates
+ * @devdoc Debouncing also solves a update loop error
+ */
+const navbarCompensationHeight = refDebounced(
+    mediaPlayerPanelComputedHeight,
+    300 /*replayer-transition-duration*/,
+);
 </script>
 <!-- HINT: Uncomment to display the HTML structure for review -->
 <!--
