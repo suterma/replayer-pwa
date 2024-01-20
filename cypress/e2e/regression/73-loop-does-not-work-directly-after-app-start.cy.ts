@@ -7,7 +7,10 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
             cy.load(`/#/play?media=${mediaSourceUrl.url}`);
             cy.consentIfYouTube(mediaSourceUrl.url);
 
-            cy.get('button[data-cy="toggle-playback-mode"]').click();
+            cy.get('.button[data-cy="toggle-playback-mode"]')
+                .filter(':visible')
+                .first()
+                .click();
 
             // ACT (go to the end and wait for a loop)
             cy.get('button[data-cy="toggle-playback"]').first().click();
@@ -34,7 +37,10 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
             cy.load(`/#/play?media=${mediaSourceUrl.url}`);
             cy.consentIfYouTube(mediaSourceUrl.url);
 
-            cy.get('button[data-cy="toggle-playback-mode"]').click();
+            cy.get('.button[data-cy="toggle-playback-mode"]')
+                .filter(':visible')
+                .first()
+                .click();
 
             // ACT restart
             cy.loadEmpty();
@@ -68,7 +74,9 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
             );
             cy.consentIfYouTube(mediaSourceUrl.url);
 
-            cy.get('button[data-cy="toggle-playback-mode"]')
+            cy.get('.button[data-cy="toggle-playback-mode"]')
+                .filter(':visible')
+                .first()
                 .click()
                 .click()
                 .click();
@@ -96,6 +104,8 @@ describe('testing the issue "Loop does not work directly after app start #73", f
             .click();
         // ARRANGE (set loop compilation play mode)
         cy.get('.button[data-cy="toggle-playback-mode"]')
+            .filter(':visible')
+            .first()
             .click()
             .click()
             .click()
@@ -103,6 +113,8 @@ describe('testing the issue "Loop does not work directly after app start #73", f
 
         // ACT (go to the ending and wait for a move to the subsequent track)
         cy.get('input[type=range]')
+            .filter(':visible')
+            .first()
             .as('range')
             .invoke('val', 2)
             .trigger('change');
@@ -111,9 +123,8 @@ describe('testing the issue "Loop does not work directly after app start #73", f
         cy.wait(4000);
 
         // ASSERT (that the first track was selected next)
-        cy.get('nav#media-player-panel [data-cy="track-name"]').should(
-            'have.text',
-            'female',
-        );
+        cy.get('nav#media-player-panel [data-cy="track-name"]')
+            .filter(':visible')
+            .should('have.text', 'female');
     });
 });
