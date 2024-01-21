@@ -97,6 +97,11 @@ function handleAppUpdate() {
         if (compare(previousVersion, '2.0.2', '<')) {
             updateText = 'Version 2.0.2: Minor bugfixes\r\n' + updateText;
         }
+        if (compare(previousVersion, '2.1.0', '<')) {
+            updateText =
+                'Version 2.1.0: fullscreen mode, simplified video usage, audio level meter off by default\r\n' +
+                updateText;
+        }
 
         acknowledgeVersion(currentVersion, updateText).then(() => {
             app.updateAcknowledgedVersion(currentVersion);

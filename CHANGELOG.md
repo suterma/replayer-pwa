@@ -1,3 +1,18 @@
+## [2.1.0](https://github.com/suterma/replayer-pwa/compare/v2.0.2...v2.1.0) (2023-01-21)
+
+This release mainly adds a fullscreen mode, specifically useful with video content.
+
+## What's Changed
+
+-   127 upgrade to newest vue environment by @suterma in https://github.com/suterma/replayer-pwa/pull/128
+-   Added fullscreen mode
+-   Simplified video usage
+-   Set audio level meter off by default
+-   Switched CI to vite
+-   Improved experimental sharing
+
+**Full Changelog**: https://github.com/suterma/replayer-pwa/compare/v2.0.2...v2.1.0
+
 ## [2.0.2](https://github.com/suterma/replayer-pwa/compare/v2.0.1...v2.0.2) (2023-11-23)
 
 Minor bugfixes.
