@@ -32,7 +32,6 @@ export default defineConfig({
         // https://github.com/btd/rollup-plugin-visualizer
         [visualizer() as PluginOption],
         VitePWA({
-            registerType: 'prompt',
             devOptions: {
                 enabled: true,
             },
