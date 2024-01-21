@@ -100,7 +100,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
      */
     const experimentalAllowTrackSharingByLink = useLocalStorage(
         'experimentalAllowTrackSharingByLink',
-        true,
+        false,
     );
 
     /** EXPERIMENTAL: Whether to show a menu for the multitrack view
@@ -160,7 +160,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         extraVideoControls.value = false;
         experimentalShowPositionInTrackHeader.value = false;
         experimentalShowEverythingEverywhereAllAtOnce.value = false;
-        experimentalAllowTrackSharingByLink.value = true;
+        experimentalAllowTrackSharingByLink.value = false;
         experimentalMultitrack.value = false;
         experimentalUseQueueCueMode.value = false;
         experimentalUseMeter.value = false;
