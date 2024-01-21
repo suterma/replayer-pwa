@@ -17,33 +17,31 @@
  * See https://caniuse.com/fullscreen
  */
 import { useFullscreen } from '@vueuse/core';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 
 const container = ref<HTMLElement | null>(null);
-const hasNative = ref(false);
+const hasNative = ref(document.fullscreenEnabled);
 
-/// --- assume fullscreen API ---
+/// --- fullscreen API ---
 let { isFullscreen, exit, toggle } = useFullscreen(container);
 
-/// --- fallback to emulation if API not available ---
-onMounted(() => {
-    const containerElement = container.value;
-    const hasNativeFullscreen = containerElement?.requestFullscreen;
-    hasNative.value = hasNativeFullscreen != undefined;
-
-    if (!hasNative.value) {
-        console.log('Providing Fullscreen API fallback features');
-        isFullscreen = ref(false);
-        toggle = () => {
-            isFullscreen.value = !isFullscreen.value;
-            return Promise.resolve();
-        };
-        exit = () => {
-            isFullscreen.value = false;
-            return Promise.resolve();
-        };
-    }
-});
+if (!hasNative.value) {
+    // set a fallback for the already assumed functions
+    console.log('Providing Fullscreen API fallback features');
+    isFullscreen = ref(false);
+    toggle = () => {
+        isFullscreen.value = !isFullscreen.value;
+        console.log('Fullscreen API fallback state: ' + isFullscreen.value);
+        return Promise.resolve();
+    };
+    exit = () => {
+        isFullscreen.value = false;
+        console.log(
+            'Fullscreen API fallback exit state: ' + isFullscreen.value,
+        );
+        return Promise.resolve();
+    };
+}
 
 defineExpose({
     /** A parent component can exit fullscreen */
