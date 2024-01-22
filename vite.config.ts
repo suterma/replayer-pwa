@@ -40,7 +40,7 @@ export default defineConfig({
                 globPatterns: ['**/*.{js,css,html,ico,png,webp,svg}'],
             },
             manifest: {
-                name: 'Replayer: Rehearse with playback music',
+                name: 'Replayer',
                 short_name: 'Replayer',
                 lang: 'en-US',
                 description:
