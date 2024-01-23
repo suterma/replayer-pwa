@@ -38,6 +38,33 @@ export default defineConfig({
             workbox: {
                 // Replayer has more than just the js, css and html in the dist folder
                 globPatterns: ['**/*.{js,css,html,ico,png,webp,svg}'],
+
+                importScripts: ['sw-next-message.js'],
+                runtimeCaching: [
+                    {
+                        handler: ({ event }) => {
+                            const dataPromise = event.request.formData();
+                            event.waitUntil(
+                                (async function () {
+                                    // defined in sw-next-message.js
+                                    await nextMessage('share-ready');
+                                    const client = await self.clients.get(
+                                        event.resultingClientId,
+                                    );
+
+                                    const formData = await dataPromise;
+                                    client.postMessage({
+                                        images: formData.getAll('images') || [],
+                                        uri: '/share',
+                                    });
+                                })(),
+                            );
+                            return Response.redirect('/share');
+                        },
+                        urlPattern: '/share',
+                        method: 'POST',
+                    },
+                ],
             },
             manifest: {
                 name: 'Replayer',
@@ -174,6 +201,7 @@ export default defineConfig({
                         ],
                     },
                 },
+
                 file_handlers: [
                     {
                         action: '/#/edit',
