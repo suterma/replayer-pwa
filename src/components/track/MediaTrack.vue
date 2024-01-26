@@ -612,6 +612,7 @@
                                     <CueButtonsField
                                         :playback-mode="playbackMode"
                                         :cues="track.Cues"
+                                        :disabled="!canPlay"
                                         @click="
                                             (cue) => {
                                                 cueClick(cue);
@@ -630,6 +631,7 @@
                                     <CueButtonsBar
                                         :playback-mode="playbackMode"
                                         :cues="track.Cues"
+                                        :disabled="!canPlay"
                                         @click="
                                             (cue) => {
                                                 cueClick(cue);
