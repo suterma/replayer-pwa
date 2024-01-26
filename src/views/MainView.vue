@@ -42,7 +42,7 @@ import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { useAudioStore } from '@/store/audio';
-import { Replayer } from '@/components/CompilationKeyboardHandler.vue';
+import { Replayer } from '@/components/Replayer';
 
 /** A main view for the Replayer application
  * @remarks This main view works similar but distinct from keep-alive with router-view.

@@ -1,4 +1,5 @@
 <template>
+    <!-- Display area for messages -->
     <div
         :class="{
             modal: true,
@@ -44,6 +45,33 @@
             </div>
         </div>
     </div>
+
+    <!-- Unobtrusive display area for keyboard input feedback -->
+    <div
+        :class="{
+            modal: true,
+            'is-active': hasInputFeedbackMessage,
+        }"
+    >
+        <div
+            v-if="hasInputFeedbackMessage"
+            data-cy="notification-input-feedback"
+        >
+            <div class="has-text-centered">
+                <!-- Note: use a large font for good visibility of the displayed info -->
+                <!-- Note2: Zero margin bottom is to avoid a visible scrollbar -->
+                <div class="tags has-addons has-opacity-half is-size-1 mb-0">
+                    <span
+                        class="tag is-large is-white is-size-1 is-family-monospace"
+                        >{{ inputFeedbackMessage.split('|')[0] }}</span
+                    >
+                    <span class="tag is-dark is-large is-size-1">{{
+                        inputFeedbackMessage.split('|')[1]
+                    }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script lang="ts">
 import { useAppStore } from '@/store/app';
@@ -60,6 +88,8 @@ export default defineComponent({
             'errorMessages',
             'hasErrorMessages',
             'hasSuccessMessages',
+            'inputFeedbackMessage',
+            'hasInputFeedbackMessage',
         ]),
     },
     methods: {

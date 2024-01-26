@@ -759,7 +759,7 @@ import {
     useMeasureNumbersInjectionKey,
 } from './TrackInjectionKeys';
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
-import { Replayer } from '../CompilationKeyboardHandler.vue';
+import { Replayer } from '../Replayer';
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
 import { type IMediaLooper, LoopMode } from '@/code/media/IMediaLooper';
 import { MediaLooper } from '@/code/media/MediaLooper';

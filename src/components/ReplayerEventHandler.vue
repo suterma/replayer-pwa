@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Replayer } from '@/components/CompilationKeyboardHandler.vue';
+import { Replayer } from './Replayer';
 
 /** An event handler for Replayer events.
  * @remarks Registers/Deregisters to the global Replayer events and emits them as Vue events to the parent component.
