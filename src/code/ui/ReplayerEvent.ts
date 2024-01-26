@@ -1,5 +1,5 @@
 /** A set of Replayer events that are emitted by this Keyboard handler */
-export enum Replayer {
+export enum ReplayerEvent {
     BACK_TO_CUE = 'backtocue',
     TO_NEXT_CUE = 'tonextcue',
     TO_PREV_CUE = 'topreviouscue',

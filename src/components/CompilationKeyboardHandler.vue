@@ -30,7 +30,7 @@ import { GlobalEvents } from 'vue-global-events';
 import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
-import { Replayer } from './Replayer';
+import { ReplayerEvent } from '@/code/ui/ReplayerEvent';
 import { ref } from 'vue';
 import { useMessageStore } from '@/store/messages';
 
@@ -92,7 +92,7 @@ function handleKey(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
         DisplayKeyAndAction(event, 'back to cue');
-        document.dispatchEvent(new Event(Replayer.BACK_TO_CUE));
+        document.dispatchEvent(new Event(ReplayerEvent.BACK_TO_CUE));
     }
     //Next cue?
     else if (event.key === '*') {
@@ -113,7 +113,7 @@ function handleKey(event: KeyboardEvent) {
         if (mnemonic.value) {
             DisplayDataAndAction(mnemonic.value, 'mnemonic invoking');
             document.dispatchEvent(
-                new CustomEvent(Replayer.TO_MNEMONIC_CUE, {
+                new CustomEvent(ReplayerEvent.TO_MNEMONIC_CUE, {
                     detail: mnemonic.value,
                 }),
             );
@@ -153,21 +153,21 @@ function togglePlayback(event: KeyboardEvent) {
         return;
     }
     DisplayKeyAndAction(event, 'play/pause');
-    document.dispatchEvent(new Event(Replayer.TOGGLE_PLAYBACK));
+    document.dispatchEvent(new Event(ReplayerEvent.TOGGLE_PLAYBACK));
 }
 /** Rewinds 5 seconds
  * @remarks This handler does accept repetitive events
  */
 function rewind(event: KeyboardEvent) {
     DisplayKeyAndAction(event, 'rewind 5 sec');
-    document.dispatchEvent(new Event(Replayer.REWIND));
+    document.dispatchEvent(new Event(ReplayerEvent.REWIND));
 }
 /** Forwards 5 seconds
  * @remarks This handler does accept repetitive events
  */
 function forward(event: KeyboardEvent) {
     DisplayKeyAndAction(event, 'forward 5 sec');
-    document.dispatchEvent(new Event(Replayer.FORWARD));
+    document.dispatchEvent(new Event(ReplayerEvent.FORWARD));
 }
 
 /** Selects the previous cue
@@ -176,7 +176,7 @@ function forward(event: KeyboardEvent) {
 function previousCue(event: KeyboardEvent) {
     event.preventDefault();
     DisplayKeyAndAction(event, 'to previous cue');
-    document.dispatchEvent(new Event(Replayer.TO_PREV_CUE));
+    document.dispatchEvent(new Event(ReplayerEvent.TO_PREV_CUE));
 }
 /** Selects the next cue
  * @remarks This handler does accept repetitive events
@@ -184,7 +184,7 @@ function previousCue(event: KeyboardEvent) {
 function nextCue(event: KeyboardEvent) {
     event.preventDefault();
     DisplayKeyAndAction(event, 'to next cue');
-    document.dispatchEvent(new Event(Replayer.TO_NEXT_CUE));
+    document.dispatchEvent(new Event(ReplayerEvent.TO_NEXT_CUE));
 }
 
 /** Decreases the playback volume
@@ -192,14 +192,14 @@ function nextCue(event: KeyboardEvent) {
  */
 function volumeDown(event: KeyboardEvent) {
     DisplayKeyAndAction(event, 'volume down');
-    document.dispatchEvent(new Event(Replayer.VOLUME_DOWN));
+    document.dispatchEvent(new Event(ReplayerEvent.VOLUME_DOWN));
 }
 /** Increases the playback volume
  * @remarks This handler does accept repetitive events
  */
 function volumeUp(event: KeyboardEvent) {
     DisplayKeyAndAction(event, 'volume up');
-    document.dispatchEvent(new Event(Replayer.VOLUME_UP));
+    document.dispatchEvent(new Event(ReplayerEvent.VOLUME_UP));
 }
 
 // --- message display ---

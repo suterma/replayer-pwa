@@ -42,7 +42,7 @@ import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { useAudioStore } from '@/store/audio';
-import { Replayer } from '@/components/Replayer';
+import { ReplayerEvent } from '@/code/ui/ReplayerEvent';
 
 /** A main view for the Replayer application
  * @remarks This main view works similar but distinct from keep-alive with router-view.
@@ -103,7 +103,7 @@ function cleanUp() {
     console.log('Main.vue::cleanUp...');
 
     document.dispatchEvent(
-        new CustomEvent(Replayer.CLEAN_UP, {
+        new CustomEvent(ReplayerEvent.CLEAN_UP, {
             detail: 'none',
         }),
     );

@@ -759,7 +759,7 @@ import {
     useMeasureNumbersInjectionKey,
 } from './TrackInjectionKeys';
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
-import { Replayer } from '../Replayer';
+import { ReplayerEvent } from '@/code/ui/ReplayerEvent';
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
 import { type IMediaLooper, LoopMode } from '@/code/media/IMediaLooper';
 import { MediaLooper } from '@/code/media/MediaLooper';
@@ -1144,11 +1144,11 @@ function stop(): void {
 }
 
 function toPreviousCue() {
-    document.dispatchEvent(new Event(Replayer.TO_PREV_CUE));
+    document.dispatchEvent(new Event(ReplayerEvent.TO_PREV_CUE));
 }
 
 function toNextCue() {
-    document.dispatchEvent(new Event(Replayer.TO_NEXT_CUE));
+    document.dispatchEvent(new Event(ReplayerEvent.TO_NEXT_CUE));
 }
 
 /** Skips to this track (if loaded)
@@ -1867,3 +1867,4 @@ These are chosen for a nice visual fit in the header */
     }
 }
 </style>
+../../code/ui/Replayer
