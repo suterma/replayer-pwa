@@ -426,6 +426,9 @@
                             }"
                             :disabled="!canPlay"
                         >
+                            <!-- The messages need to be shown inside the native fullscren element; otherwise they would get hidden below -->
+                            <MessageOverlay v-if="isFullscreen && hasNative" />
+
                             <!-- 
                             Track playback bar (In play mode, this contains:
                             - a slot for the expander icon (if not the only track)
@@ -772,6 +775,7 @@ import { PlaybackMode } from '@/store/PlaybackMode';
 import type { ITrack } from '@/store/ITrack';
 import { useTitle } from '@vueuse/core';
 import router, { Route } from '@/router';
+import MessageOverlay from '@/components/MessageOverlay.vue';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track

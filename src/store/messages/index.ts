@@ -1,8 +1,9 @@
 import { defineStore, storeToRefs } from 'pinia';
 import { useDebounceFn, useLocalStorage } from '@vueuse/core';
-import { computed, ref } from 'vue';
+import { type Ref, computed, ref } from 'vue';
 import { Store } from '..';
 import { useSettingsStore } from '../settings';
+import type { InputFeedback } from './InputFeedback';
 
 /** A store for messages, that are to be displayed.
  * @devdoc This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores
@@ -136,19 +137,17 @@ export const useMessageStore = defineStore(Store.Messages, () => {
 
     /// --- input feedback ---
 
-    /** An input feedback message, used for providing feedback about the input
-     * @remarks Input feedback messages are not persisted over app restarts
+    /** An input feedback, used for providing feedback about the input
+     * @remarks Input feedbacks are not persisted over app restarts
      */
-    const inputFeedbackMessage = ref('');
+    const inputFeedback: Ref<InputFeedback | null> = ref(null);
 
-    /** Initiates the display of an input feedback message
-     * @remarks Maintains a message for the given data and the associated action for a short duration
-     * These messages are not stacked.
+    /** Initiates the presentation of an input feedback
+     * @remarks Maintains the given data for a short duration
+     * These items are not stacked.
      */
-    function pushInputFeedback(data: string, action: string): void {
-        const message = data + '|' + action;
-        inputFeedbackMessage.value = message;
-        console.debug('INPUT: ' + message);
+    function pushInputFeedback(feedback: InputFeedback): void {
+        inputFeedback.value = feedback;
         debouncedFn();
     }
 
@@ -156,15 +155,12 @@ export const useMessageStore = defineStore(Store.Messages, () => {
     const { keyboardShortcutTimeout } = storeToRefs(settings);
 
     const debouncedFn = useDebounceFn(() => {
-        inputFeedbackMessage.value = '';
+        inputFeedback.value = null;
     }, keyboardShortcutTimeout);
 
-    /** Whether any input feedback message is available */
-    const hasInputFeedbackMessage = computed(() => {
-        return (
-            inputFeedbackMessage.value != null &&
-            inputFeedbackMessage.value.length > 0
-        );
+    /** Whether any input feedback is available */
+    const hasInputFeedback = computed(() => {
+        return inputFeedback.value !== null;
     });
 
     return {
@@ -186,7 +182,7 @@ export const useMessageStore = defineStore(Store.Messages, () => {
         successMessage,
         successMessages,
         hasSuccessMessages,
-        inputFeedbackMessage,
-        hasInputFeedbackMessage,
+        inputFeedback,
+        hasInputFeedback,
     };
 });
