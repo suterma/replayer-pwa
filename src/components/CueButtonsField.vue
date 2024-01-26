@@ -45,6 +45,12 @@
             >
             </CueButton>
         </template>
+        <CreateCueButton
+            class="mb-0"
+            :is-active-track="isActiveTrack"
+            data-cy="insert-cue"
+            @create-new-cue="createNewCue()"
+        ></CreateCueButton>
     </div>
 </template>
 
@@ -58,6 +64,7 @@ import { currentPositionInjectionKey } from './track/TrackInjectionKeys';
 import type { PlaybackMode } from '@/store/PlaybackMode';
 import type { ICue } from '@/store/ICue';
 import { Cue } from '@/store/Cue';
+import CreateCueButton from '@/components/buttons/CreateCueButton.vue';
 
 /** A field of large cue buttons for a track
  */

@@ -24,9 +24,9 @@
             <span class="is-minimum-7-characters is-family-monospace">{{
                 currentPositionDisplay
             }}</span>
-            <ShortcutDisplay
-                 :class="{ 'is-invisible': !useShortcut }"
-            >INSERT</ShortcutDisplay>
+            <ShortcutDisplay :class="{ 'is-invisible': !useShortcut }"
+                >INSERT</ShortcutDisplay
+            >
         </button>
     </Hotkey>
 </template>
@@ -49,7 +49,10 @@ const emit = defineEmits([
 ]);
 
 const props = defineProps({
-    /** Whether this is the active track */
+    /** Whether this is the active track
+     * @remarks Together with the disabled state, this determines whether the
+     * default hotkey is enabled.
+     */
     isActiveTrack: {
         type: Boolean,
         required: true,
