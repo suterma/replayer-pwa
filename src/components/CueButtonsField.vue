@@ -5,6 +5,10 @@
             v-if="prefixCue.Duration ?? 0 > 0"
             :id="prefixCue.Id"
             class="is-flex-grow-1 is-flex-shrink-5"
+            :class="{
+                'is-success': isCueSelected(prefixCue),
+                'is-warning': !isCueSelected(prefixCue),
+            }"
             :disabled="disabled || !Number.isFinite(prefixCue.Time)"
             :time="prefixCue.Time"
             :shortcut="prefixCue.Shortcut"
@@ -29,6 +33,10 @@
             <CueButton
                 :id="cue.Id"
                 class="is-flex-grow-1"
+                :class="{
+                    'is-success': isCueSelected(cue),
+                    'is-warning': !isCueSelected(cue),
+                }"
                 :disabled="disabled || !Number.isFinite(cue.Time)"
                 :time="cue.Time"
                 :shortcut="cue.Shortcut"
@@ -47,60 +55,66 @@
             >
             </CueButton>
         </template>
-        <!-- A custom cue button as a create cue button -->
-        <CueButton
+        <!-- Create Cue (With Hotkey, for the active track) -->
+        <Hotkey
             v-if="isActiveTrack"
-            :id="track.Id + '-inline-delete-cue'"
-            class="is-flex-grow-1 is-flex-shrink-5 is-outlined"
-            title="Delete the selected cue"
-            :disabled="disabled || !canDeleteCue"
-            :time="selectedCue?.Time"
-            shortcut="DELETE"
-            description="DELETE"
-            :playback-mode="playbackMode"
-            has-addons-right
-            virtual
-            show-text
-            :icon-path-override="mdiTrashCanOutline"
-            :has-cue-passed="false"
-            :is-cue-ahead="true"
-            :percent-complete="0"
-            :is-cue-selected="false"
-            :is-cue-scheduled="false"
-            data-cy="delete-cue"
-            @click="deleteSelectedCue"
-        >
-        </CueButton>
-        <CueButton
-            v-if="isActiveTrack"
-            :id="track.Id + '-inline-insert-cue'"
-            class="is-flex-grow-1 is-flex-shrink-5 is-warning is-outlined"
-            title="Add a cue now (at the current playback time)!"
+            v-slot="{ clickRef }"
             :disabled="disabled || !canCreateCue"
-            :time="currentPosition"
-            shortcut="INSERT"
-            description="INSERT"
-            :playback-mode="playbackMode"
-            has-addons-right
-            virtual
-            show-text
-            :icon-path-override="mdiPlus"
-            :has-cue-passed="false"
-            :is-cue-ahead="true"
-            :percent-complete="0"
-            :is-cue-selected="false"
-            :is-cue-scheduled="false"
-            data-cy="insert-cue"
-            @click="createNewCue"
-        ></CueButton>
-        <!-- <CreateCueButton
+            :keys="['insert']"
+        >
+            <CueButton
+                v-if="isActiveTrack"
+                :id="track.Id + '-inline-insert-cue'"
+                :ref="clickRef"
+                class="is-flex-grow-1 is-flex-shrink-5 is-warning is-outlined"
+                title="Add a cue now (at the current playback time)!"
+                :disabled="disabled || !canCreateCue"
+                :time="currentPosition"
+                shortcut="INSERT"
+                description="Cue"
+                :playback-mode="PlaybackMode.PlayCue"
+                has-addons-right
+                show-text
+                :icon-path-override="mdiPlus"
+                :has-cue-passed="false"
+                :is-cue-ahead="true"
+                :percent-complete="0"
+                :is-cue-selected="false"
+                :is-cue-scheduled="false"
+                data-cy="insert-cue"
+                @click="createNewCue"
+            ></CueButton>
+        </Hotkey>
+        <!-- Delete Cue (With Hotkey, for the active track) -->
+        <Hotkey
             v-if="isActiveTrack"
-            class="mb-0 is-multiline"
+            v-slot="{ clickRef }"
             :disabled="disabled || !canDeleteCue"
-            :is-active-track="isActiveTrack"
-            data-cy="insert-cue"
-            @create-new-cue="createNewCue()"
-        ></CreateCueButton> -->
+            :keys="['del']"
+        >
+            <CueButton
+                :id="track.Id + '-inline-delete-cue'"
+                :ref="clickRef"
+                class="is-flex-grow-1 is-flex-shrink-5 is-info is-colorless is-outlined"
+                title="Delete the selected cue"
+                :disabled="disabled || !canDeleteCue"
+                :time="selectedCue?.Time"
+                shortcut="DELETE"
+                description="Trash selected"
+                :playback-mode="PlaybackMode.PlayCue"
+                has-addons-right
+                show-text
+                :icon-path-override="mdiTrashCanOutline"
+                :has-cue-passed="false"
+                :is-cue-ahead="true"
+                :percent-complete="0"
+                :is-cue-selected="false"
+                :is-cue-scheduled="false"
+                data-cy="delete-cue"
+                @click="deleteSelectedCue"
+            >
+            </CueButton>
+        </Hotkey>
     </div>
 </template>
 
@@ -114,12 +128,12 @@ import {
     currentPositionInjectionKey,
     isPlayingInjectionKey,
 } from './track/TrackInjectionKeys';
-import type { PlaybackMode } from '@/store/PlaybackMode';
+import { PlaybackMode } from '@/store/PlaybackMode';
 import type { ICue } from '@/store/ICue';
 import { Cue } from '@/store/Cue';
-import CreateCueButton from '@/components/buttons/CreateCueButton.vue';
 import type { ITrack } from '@/store/ITrack';
 import { mdiTrashCanOutline, mdiPlus } from '@mdi/js';
+import { Hotkey } from '@simolation/vue-hotkey';
 
 /** A field of large cue buttons for a track
  */

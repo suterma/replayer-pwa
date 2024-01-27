@@ -10954,15 +10954,11 @@ It affects the immediate children.
 */
 @supports not ((-webkit-touch-callout: none) and (not (translate: none))) {
   /* First, for a gapped buttons group,  
-   * remove the original bulma margin from the grouped buttons 
-   * NOTE: Implemented also for blocks of lists of buttons
-   */
-  .buttons.has-gap .button,
-  .buttons.has-gap .buttons {
+   * remove the original bulma margin from the grouped buttons */
+  .buttons.has-gap .button {
     margin-bottom: 0;
   }
-  .buttons.has-gap .button:not(:last-child):not(.is-fullwidth),
-  .buttons.has-gap .buttons:not(:last-child):not(.is-fullwidth) {
+  .buttons.has-gap .button:not(:last-child):not(.is-fullwidth) {
     margin-right: 0;
   }
   .buttons.has-gap:last-child {
@@ -10971,7 +10967,6 @@ It affects the immediate children.
   /* Then, instead of the margin, add a consistent gap 
    * of the same size between the grouped buttons
    */
-  .buttons.button.has-gap,
   .buttons.buttons.has-gap {
     gap: 0.5rem;
   }
@@ -11067,10 +11062,10 @@ fieldset[disabled] .button:hover {
 }
 
 /*************************************************************
- * "Virtual" Buttons for "placeholder-leading cues"
+ * "Colorless" Buttons for special cues
 **************************************************************/
-/** A virtual button should also have the default appearance (including similar brightness) except the coloring */
-.button.is-virtual {
+/** A colorless button should also have the default appearance (including similar brightness) except the coloring */
+.button.is-colorless {
   filter: grayscale(100%) !important;
 }
 

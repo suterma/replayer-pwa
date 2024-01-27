@@ -3,9 +3,8 @@
         class="button cue has-text-left"
         :class="{
             'is-multiline': !minified,
+            'is-colorless': virtual,
             'is-virtual': virtual,
-            'is-warning': !isCueSelected,
-            'is-success': isCueSelected,
             'is-selected': isCueSelected,
             'is-scheduled': isCueScheduled,
         }"
@@ -44,12 +43,12 @@
                 <span
                     v-if="minified && !virtual"
                     class="has-text-weight-semibold foreground is-size-7"
-                    >{{ cueDisplayDescription }}</span
+                    >{{ description }}</span
                 >
                 <span
                     v-if="!minified && !virtual"
                     class="ml-2 has-text-weight-semibold foreground"
-                    >{{ cueDisplayDescription }}</span
+                    >{{ description }}</span
                 ></template
             >
             <BaseIcon
@@ -141,7 +140,7 @@ import {
     rTrackRepeatOnce,
 } from '@/components/icons/BaseIcon.vue';
 import CompilationHandler from '@/store/compilation-handler';
-import { type PropType, computed, inject } from 'vue';
+import { type PropType, computed, inject, type VNodeRef } from 'vue';
 import { Meter } from '@/code/music/Meter';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
@@ -284,7 +283,7 @@ const cueDisplayDescription = computed(() => {
             return CompilationHandler.convertToDisplayTime(props.time, 1);
         }
     }
-    return 'here';
+    return '';
 });
 
 /** The width offset for the progress-bar

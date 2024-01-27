@@ -156,11 +156,11 @@ fieldset[disabled] .button:hover {
 }
 
 /*************************************************************
- * "Virtual" Buttons for "placeholder-leading cues"
+ * "Colorless" Buttons for special cues
 **************************************************************/
 
-/** A virtual button should also have the default appearance (including similar brightness) except the coloring */
-.button.is-virtual {
+/** A colorless button should also have the default appearance (including similar brightness) except the coloring */
+.button.is-colorless {
     filter: grayscale(100%) !important;
 }
 
