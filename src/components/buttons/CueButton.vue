@@ -9,7 +9,7 @@
             'is-selected': isCueSelected,
             'is-scheduled': isCueScheduled,
         }"
-        :title="cueTitle"
+        :title="'Play from ' + cueDisplayDescription"
         data-cy="cue-button"
     >
         <!-- Use the full width of the button for the inside content
@@ -30,21 +30,27 @@
             <!-- first line (Do not use a level here, this has only complicated things for smaller widths so far)-->
             <BaseIcon
                 v-if="!isTrackPlaying"
-                :path="mdiPlay"
+                :path="iconPathOverride ?? mdiPlay"
                 class="foreground"
             />
-            <BaseIcon v-else :path="mdiPause" class="foreground" />
+            <BaseIcon
+                v-else
+                :path="iconPathOverride ?? mdiPause"
+                class="foreground"
+            />
 
             <!-- Text depending on variant -->
-            <span
-                v-if="minified && !virtual"
-                class="has-text-weight-semibold foreground is-size-7"
-                >{{ cueText }}</span
-            >
-            <span
-                v-if="!minified && !virtual"
-                class="ml-2 has-text-weight-semibold foreground"
-                >{{ cueText }}</span
+            <template v-if="showText">
+                <span
+                    v-if="minified && !virtual"
+                    class="has-text-weight-semibold foreground is-size-7"
+                    >{{ cueDisplayDescription }}</span
+                >
+                <span
+                    v-if="!minified && !virtual"
+                    class="ml-2 has-text-weight-semibold foreground"
+                    >{{ cueDisplayDescription }}</span
+                ></template
             >
             <BaseIcon
                 v-if="isCueLooping"
@@ -86,9 +92,11 @@
 
                     <!-- Right side -->
                     <div class="level-right">
-                        <!-- For layout reasons, only render this when used, on desktop and larger screens -->
-
-                        <p class="level-item mr-3 is-hidden-touch">
+                        <!-- For layout space reasons, only render this when requested and only on desktop and larger screens -->
+                        <p
+                            class="level-item mr-3 is-hidden-touch"
+                            v-if="showDuration"
+                        >
                             <MeasureDifferenceDisplay
                                 v-if="hasMeter && useMeasureNumbers"
                                 v-experiment="true"
@@ -170,6 +178,12 @@ const props = defineProps({
         default: null,
     },
 
+    /** The icon to use, if any. If not set, the common play/pause icons are used. */
+    iconPathOverride: {
+        type: String,
+        default: null,
+    },
+
     /** Determines whether playback of the given cue has already passed
      * @remarks Is used for visual indication of playback progress
      */
@@ -227,6 +241,12 @@ const props = defineProps({
     /** Whether a text based on the description or time is shown on the button.
      */
     showText: Boolean,
+
+    /** Whether to show the cue duration.
+     * @remarks The duration is always hidden on smaller devices
+     */
+    showDuration: Boolean,
+
     /** Whether the button has addons at it's right side. This determines progress bar styling.
      * @remarks This can be used when the button is part of a button group.
      * @remarks The progress bar radius at the right side must be removed for fully progressed cues.
@@ -241,16 +261,17 @@ const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
 
 //TODO try to simiplify the progress with it's own control. Does this affect layouting performance positively
 
-/** Flag to indicate whether this track's player is currently playing
+/** Indicates whether this track's player is currently playing
  * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
  */
 const isTrackPlaying = inject(isPlayingInjectionKey);
 
-/** The title for this cue, usable as tooltip
+/** The description of the position of this cue, with fallback if the cue does
+ * not have a set description.
  */
-const cueTitle = computed(() => {
+const cueDisplayDescription = computed(() => {
     if (props.description) {
-        return `Play from ${props.description}`;
+        return props.description;
     } else if (props.time != undefined) {
         if (
             meter != undefined &&
@@ -258,32 +279,12 @@ const cueTitle = computed(() => {
             Meter.isValid(meter.value) &&
             useMeasureNumbers?.value
         ) {
-            return `Play from ${Meter.toMeasureDisplay(
-                props.time,
-                meter.value,
-            )}`;
+            return Meter.toMeasureDisplay(props.time, meter.value);
         } else {
-            return `Play from ${CompilationHandler.convertToDisplayTime(
-                props.time,
-                1,
-            )}`;
+            return CompilationHandler.convertToDisplayTime(props.time, 1);
         }
     }
-    return `Play from here`;
-});
-
-/** The text for this cue, usable as label
- * @remarks Minified cues never have a text, to save spaces
- */
-const cueText = computed(() => {
-    if (!props.showText) {
-        return '';
-    }
-    if (props.description) {
-        return props.description;
-    } else {
-        return cueTitle.value;
-    }
+    return 'here';
 });
 
 /** The width offset for the progress-bar

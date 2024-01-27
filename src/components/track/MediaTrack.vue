@@ -192,7 +192,8 @@
             <CueButtonsField
                 :disabled="!canPlay"
                 :playback-mode="playbackMode"
-                :cues="track.Cues"
+                :track="track"
+                :is-active-track="isActiveTrack"
                 @click="
                     (cue) => {
                         cueClick(cue);
@@ -611,8 +612,9 @@
                                 <div v-if="isFullscreen">
                                     <CueButtonsField
                                         :playback-mode="playbackMode"
-                                        :cues="track.Cues"
+                                        :track="track"
                                         :disabled="!canPlay"
+                                        :is-active-track="isActiveTrack"
                                         @click="
                                             (cue) => {
                                                 cueClick(cue);

@@ -14,6 +14,7 @@
             has-addons-right
             virtual
             show-text
+            show-duration
             :has-cue-passed="hasCuePassed(prefixCue)"
             :is-cue-ahead="isCueAhead(prefixCue)"
             :percent-complete="percentComplete(prefixCue)"
@@ -24,7 +25,7 @@
         </CueButton>
         <!-- Using the v-for on a template instead of the actual component saves unnecessary renderings. 
              See https://stackoverflow.com/a/76074016/79485 -->
-        <template v-for="cue in cues" :key="cue.Id">
+        <template v-for="cue in track.Cues" :key="cue.Id">
             <CueButton
                 :id="cue.Id"
                 class="is-flex-grow-1"
@@ -36,6 +37,7 @@
                 :playback-mode="playbackMode"
                 has-addons-right
                 show-text
+                show-duration
                 :has-cue-passed="hasCuePassed(cue)"
                 :is-cue-ahead="isCueAhead(cue)"
                 :percent-complete="percentComplete(cue)"
@@ -45,12 +47,60 @@
             >
             </CueButton>
         </template>
-        <CreateCueButton
-            class="mb-0"
+        <!-- A custom cue button as a create cue button -->
+        <CueButton
+            v-if="isActiveTrack"
+            :id="track.Id + '-inline-delete-cue'"
+            class="is-flex-grow-1 is-flex-shrink-5 is-outlined"
+            title="Delete the selected cue"
+            :disabled="disabled || !canDeleteCue"
+            :time="selectedCue?.Time"
+            shortcut="DELETE"
+            description="DELETE"
+            :playback-mode="playbackMode"
+            has-addons-right
+            virtual
+            show-text
+            :icon-path-override="mdiTrashCanOutline"
+            :has-cue-passed="false"
+            :is-cue-ahead="true"
+            :percent-complete="0"
+            :is-cue-selected="false"
+            :is-cue-scheduled="false"
+            data-cy="delete-cue"
+            @click="deleteSelectedCue"
+        >
+        </CueButton>
+        <CueButton
+            v-if="isActiveTrack"
+            :id="track.Id + '-inline-insert-cue'"
+            class="is-flex-grow-1 is-flex-shrink-5 is-warning is-outlined"
+            title="Add a cue now (at the current playback time)!"
+            :disabled="disabled || !canCreateCue"
+            :time="currentPosition"
+            shortcut="INSERT"
+            description="INSERT"
+            :playback-mode="playbackMode"
+            has-addons-right
+            virtual
+            show-text
+            :icon-path-override="mdiPlus"
+            :has-cue-passed="false"
+            :is-cue-ahead="true"
+            :percent-complete="0"
+            :is-cue-selected="false"
+            :is-cue-scheduled="false"
+            data-cy="insert-cue"
+            @click="createNewCue"
+        ></CueButton>
+        <!-- <CreateCueButton
+            v-if="isActiveTrack"
+            class="mb-0 is-multiline"
+            :disabled="disabled || !canDeleteCue"
             :is-active-track="isActiveTrack"
             data-cy="insert-cue"
             @create-new-cue="createNewCue()"
-        ></CreateCueButton>
+        ></CreateCueButton> -->
     </div>
 </template>
 
@@ -60,11 +110,16 @@ import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { useAppStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
-import { currentPositionInjectionKey } from './track/TrackInjectionKeys';
+import {
+    currentPositionInjectionKey,
+    isPlayingInjectionKey,
+} from './track/TrackInjectionKeys';
 import type { PlaybackMode } from '@/store/PlaybackMode';
 import type { ICue } from '@/store/ICue';
 import { Cue } from '@/store/Cue';
 import CreateCueButton from '@/components/buttons/CreateCueButton.vue';
+import type { ITrack } from '@/store/ITrack';
+import { mdiTrashCanOutline, mdiPlus } from '@mdi/js';
 
 /** A field of large cue buttons for a track
  */
@@ -72,14 +127,18 @@ import CreateCueButton from '@/components/buttons/CreateCueButton.vue';
 const emit = defineEmits(['click']);
 
 const props = defineProps({
-    /** The cues to show
+    /** The track, for which to show the cues
      */
-    cues: Array as PropType<Array<ICue>>,
+    track: {
+        type: Object as PropType<ITrack>,
+        required: true,
+    },
 
     /** Whether to show the component in a disabled state
      * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
      */
     disabled: Boolean,
+
     /** The playback mode
      * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
      */
@@ -87,7 +146,64 @@ const props = defineProps({
         type: String as () => PlaybackMode,
         required: true,
     },
+
+    /** Whether this is the active track
+     * @remarks Determines whether the
+     * create cue button is shown in the field.
+     */
+    isActiveTrack: {
+        type: Boolean,
+        required: true,
+    },
 });
+
+// --- cue edit features ---
+
+const currentPosition = inject(currentPositionInjectionKey);
+
+/** Handles the request for a new cue by creating one for the current time
+ */
+function createNewCue(): void {
+    if (currentPosition?.value != null) {
+        app.addCueAtTime(props.track.Id, currentPosition.value);
+    } else
+        throw new Error('currentPosition must be available for adding a cue');
+}
+
+/** Handles the request for deletion of the currently selected cue.
+ */
+function deleteSelectedCue(): void {
+    const cueId = selectedCueId.value;
+    app.deleteCue(cueId);
+}
+
+/** Whether a cue can be deleted
+ * @remarks Only a selected cue without a description can be deleted,
+ * only when playback is paused and
+ * only when the current playhead time matches
+ * the selected cue's time
+ */
+const canDeleteCue = computed(() => {
+    return (
+        !isTrackPlaying?.value &&
+        selectedCue.value &&
+        !selectedCue.value?.Description &&
+        selectedCue.value.Time == currentPosition?.value
+    );
+});
+
+/** Whether a cue can be created
+ */
+const canCreateCue = computed(() => {
+    return selectedCue.value?.Time != currentPosition?.value;
+});
+
+/** Indicates whether this track's player is currently playing
+ * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
+ */
+const isTrackPlaying = inject(isPlayingInjectionKey);
+
+// --- cue display and handling ---
 
 /** A static cue id for the prefix cue */
 const prefixCueButtonId = 'prefix';
@@ -103,9 +219,9 @@ function cueClicked(event: PointerEvent): void {
     if (clickedCueId === prefixCueButtonId) {
         emit('click', prefixCue.value);
     } else {
-        if (props.cues) {
+        if (props.track.Cues) {
             const clickedCue = CompilationHandler.getCueById(
-                props.cues,
+                props.track.Cues,
                 clickedCueId,
             );
             if (clickedCue) {
@@ -121,13 +237,13 @@ const prefixCue = computed(() => {
         'the Beginning',
         '',
         0,
-        props.cues?.[0]?.Time ?? null,
+        props.track.Cues?.[0]?.Time ?? null,
         prefixCueButtonId,
     );
 });
 
 const app = useAppStore();
-const { selectedCueId, scheduledCueId } = storeToRefs(app);
+const { selectedCueId, scheduledCueId, selectedCue } = storeToRefs(app);
 
 /** Determines whether this cue is currently selected
  * @remarks Note: only one cue in a compilation may be selected */
@@ -140,8 +256,6 @@ function isCueSelected(cue: ICue): boolean {
 function isCueScheduled(cue: ICue): boolean {
     return scheduledCueId.value === cue.Id;
 }
-
-const currentPosition = inject(currentPositionInjectionKey);
 
 /** Determines whether playback of the given cue has already passed
  * @remarks Is used for visual indication of playback progress
@@ -171,5 +285,3 @@ function percentComplete(cue: ICue): number | null {
     }
 }
 </style>
-import { PlaybackMode } from '@/store/PlaybackMode'; import { type ICue } from
-'@/store/ICue'; import { Cue } from '@/store/Cue';

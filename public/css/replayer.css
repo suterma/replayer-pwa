@@ -10954,11 +10954,15 @@ It affects the immediate children.
 */
 @supports not ((-webkit-touch-callout: none) and (not (translate: none))) {
   /* First, for a gapped buttons group,  
-   * remove the original bulma margin from the grouped buttons */
-  .buttons.has-gap .button {
+   * remove the original bulma margin from the grouped buttons 
+   * NOTE: Implemented also for blocks of lists of buttons
+   */
+  .buttons.has-gap .button,
+  .buttons.has-gap .buttons {
     margin-bottom: 0;
   }
-  .buttons.has-gap .button:not(:last-child):not(.is-fullwidth) {
+  .buttons.has-gap .button:not(:last-child):not(.is-fullwidth),
+  .buttons.has-gap .buttons:not(:last-child):not(.is-fullwidth) {
     margin-right: 0;
   }
   .buttons.has-gap:last-child {
@@ -10967,6 +10971,7 @@ It affects the immediate children.
   /* Then, instead of the margin, add a consistent gap 
    * of the same size between the grouped buttons
    */
+  .buttons.button.has-gap,
   .buttons.buttons.has-gap {
     gap: 0.5rem;
   }
