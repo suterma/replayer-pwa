@@ -9,6 +9,10 @@
             v-if="prefixCue.Duration ?? 0 > 0"
             :id="prefixCue.Id"
             class="is-flex-grow-1 is-flex-shrink-5"
+            :class="{
+                'is-success': isCueSelected(prefixCue),
+                'is-warning': !isCueSelected(prefixCue),
+            }"
             :disabled="disabled || !Number.isFinite(prefixCue.Time)"
             :time="prefixCue.Time"
             :shortcut="prefixCue.Shortcut"
@@ -33,6 +37,10 @@
             <CueButton
                 :id="cue.Id"
                 class="is-flex-grow-1 has-cropped-text"
+                :class="{
+                    'is-success': isCueSelected(cue),
+                    'is-warning': !isCueSelected(cue),
+                }"
                 :disabled="disabled || !Number.isFinite(cue.Time)"
                 :time="cue.Time"
                 :shortcut="cue.Shortcut"

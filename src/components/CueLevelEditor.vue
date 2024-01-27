@@ -8,6 +8,10 @@
                     <div class="field has-addons">
                         <p class="control">
                             <CueButton
+                                :class="{
+                                    'is-success': isCueSelected,
+                                    'is-warning': !isCueSelected,
+                                }"
                                 :time="cue.Time"
                                 :shortcut="cue.Shortcut"
                                 :duration="cue.Duration"
