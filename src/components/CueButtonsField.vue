@@ -67,7 +67,7 @@
                 v-if="isActiveTrack"
                 :id="track.Id + '-inline-insert-cue'"
                 :ref="clickRef"
-                class="is-flex-grow-1 is-flex-shrink-5 is-warning is-outlined"
+                class="is-flex-grow-0 is-flex-shrink-5 is-warning is-outlined"
                 title="Add a cue now (at the current playback time)!"
                 :disabled="disabled || !canCreateCue"
                 :time="currentPosition"
@@ -97,7 +97,7 @@
             <CueButton
                 :id="track.Id + '-inline-delete-cue'"
                 :ref="clickRef"
-                class="is-flex-grow-1 is-flex-shrink-5 is-info is-colorless is-outlined"
+                class="is-flex-grow-0 is-flex-shrink-5 is-info is-colorless is-outlined"
                 title="Delete the selected cue"
                 :disabled="disabled || !canDeleteCue"
                 :time="selectedCue?.Time"

@@ -10,6 +10,7 @@
         }"
         :title="'Play from ' + cueDisplayDescription"
         data-cy="cue-button"
+        :disabled="disabled"
     >
         <!-- Use the full width of the button for the inside content
         This causes the icon and description to start from the left side, 
@@ -93,8 +94,8 @@
                     <div class="level-right">
                         <!-- For layout space reasons, only render this when requested and only on desktop and larger screens -->
                         <p
-                            class="level-item mr-3 is-hidden-touch"
                             v-if="showDuration"
+                            class="level-item mr-3 is-hidden-touch"
                         >
                             <MeasureDifferenceDisplay
                                 v-if="hasMeter && useMeasureNumbers"
@@ -112,7 +113,11 @@
                             ></TimeDisplay>
                         </p>
 
-                        <p v-if="shortcut" class="level-item">
+                        <p
+                            v-if="shortcut"
+                            class="level-item"
+                            :class="{ 'is-invisible': disabled }"
+                        >
                             <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibility as possible -->
                             <ShortcutDisplay class="foreground"
                                 >{{ shortcut }}
@@ -213,6 +218,9 @@ const props = defineProps({
         required: false,
         default: null,
     },
+
+    /** Whether this cue is disabled  */
+    disabled: Boolean,
 
     /** Whether this cue is currently selected
      * @remarks Note: only one cue in a compilation may be selected */
