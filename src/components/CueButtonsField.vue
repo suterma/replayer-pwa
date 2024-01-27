@@ -55,37 +55,6 @@
             >
             </CueButton>
         </template>
-        <!-- Create Cue (With Hotkey, for the active track) -->
-        <Hotkey
-            v-if="isActiveTrack"
-            v-slot="{ clickRef }"
-            :disabled="disabled || !canCreateCue"
-            :keys="['insert']"
-            @hotkey="message.pushInputFeedback('INSERT', 'Cue')"
-        >
-            <CueButton
-                v-if="isActiveTrack"
-                :id="track.Id + '-inline-insert-cue'"
-                :ref="clickRef"
-                class="is-flex-grow-0 is-flex-shrink-5 is-warning is-outlined"
-                title="Add a cue now (at the current playback time)!"
-                :disabled="disabled || !canCreateCue"
-                :time="currentPosition"
-                shortcut="INSERT"
-                description="Cue"
-                :playback-mode="PlaybackMode.PlayCue"
-                has-addons-right
-                show-text
-                :icon-path-override="mdiPlus"
-                :has-cue-passed="false"
-                :is-cue-ahead="true"
-                :percent-complete="0"
-                :is-cue-selected="false"
-                :is-cue-scheduled="false"
-                data-cy="insert-cue"
-                @click="createNewCue"
-            ></CueButton>
-        </Hotkey>
         <!-- Delete Cue (With Hotkey, for the active track) -->
         <Hotkey
             v-if="isActiveTrack"
@@ -117,11 +86,42 @@
             >
             </CueButton>
         </Hotkey>
+        <!-- Create Cue (With Hotkey, for the active track) -->
+        <Hotkey
+            v-if="isActiveTrack"
+            v-slot="{ clickRef }"
+            :disabled="disabled || !canCreateCue"
+            :keys="['insert']"
+            @hotkey="message.pushInputFeedback('INSERT', 'Cue')"
+        >
+            <CueButton
+                v-if="isActiveTrack"
+                :id="track.Id + '-inline-insert-cue'"
+                :ref="clickRef"
+                class="is-flex-grow-1 is-flex-shrink-5 is-warning is-outlined"
+                title="Add a cue now (at the current playback time)!"
+                :disabled="disabled || !canCreateCue"
+                :time="currentPosition"
+                shortcut="INSERT"
+                description="Cue"
+                :playback-mode="PlaybackMode.PlayCue"
+                has-addons-right
+                show-text
+                :icon-path-override="mdiPlus"
+                :has-cue-passed="false"
+                :is-cue-ahead="true"
+                :percent-complete="0"
+                :is-cue-selected="false"
+                :is-cue-scheduled="false"
+                data-cy="insert-cue"
+                @click="createNewCue"
+            ></CueButton>
+        </Hotkey>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, inject, type PropType } from 'vue';
+import { computed, inject, nextTick, type PropType } from 'vue';
 import CueButton from '@/components/buttons/CueButton.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { useAppStore } from '@/store/app';
@@ -182,9 +182,14 @@ const currentPosition = inject(currentPositionInjectionKey);
  */
 function createNewCue(): void {
     if (currentPosition?.value != null) {
-        app.addCueAtTime(props.track.Id, currentPosition.value);
-    } else
-        throw new Error('currentPosition must be available for adding a cue');
+        const cueId = app.addCueAtTime(props.track.Id, currentPosition.value);
+
+        // focus the new cue button (to keep the focus from staying with the Add-Cue button)
+        nextTick(() => {
+            const element = document.getElementById(cueId);
+            element?.focus();
+        });
+    }
 }
 
 /** Handles the request for deletion of the currently selected cue.

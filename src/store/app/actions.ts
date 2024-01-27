@@ -72,8 +72,9 @@ export const actions = {
 
     /** Adds a new cue with the given time
      * @remarks Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.
+     * @return The id of the new cue
      */
-    addCueAtTime(trackId: string, time: number): void {
+    addCueAtTime(trackId: string, time: number): string {
         const roundedTime = CompilationHandler.roundTime(time);
         const nextShortcut = CompilationHandler.getNextShortcut(
             state.compilation.value,
@@ -90,6 +91,7 @@ export const actions = {
 
         this.addCue(trackId, cue);
         this.updateSelectedCueId(cueId);
+        return cueId;
     },
 
     /** Update current playhead position for the given track
