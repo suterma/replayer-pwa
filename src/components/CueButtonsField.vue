@@ -205,7 +205,10 @@ const canDeleteCue = computed(() => {
         !isTrackPlaying?.value &&
         selectedCue.value &&
         !selectedCue.value?.Description &&
-        selectedCue.value.Time == currentPosition?.value
+        CompilationHandler.areSimilar(
+            selectedCue.value.Time,
+            currentPosition?.value,
+        )
     );
 });
 

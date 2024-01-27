@@ -186,6 +186,28 @@ export default class CompilationHandler {
         return round(time, DefaultMathPrecision);
     }
 
+    /** Determines whether two time positions are not more than the Replayer default precision apart.
+     * @remarks This is useful to compare two timestamps of a cue time and a playhead position.
+     * @remarks If any of the numbers is not finite, the comparison returns false
+     */
+    static areSimilar(
+        a: number | null | undefined,
+        b: number | null | undefined,
+    ): boolean {
+        if (
+            a === null ||
+            a === undefined ||
+            b === null ||
+            b === undefined ||
+            !Number.isFinite(a) ||
+            !Number.isFinite(b)
+        ) {
+            // comprison can not be done, assume difference
+            return false;
+        }
+        return a <= b + DefaultMathPrecision && a >= b - DefaultMathPrecision;
+    }
+
     /** Updates (recalculates) the durations of the given cues, by using the track duration for the last cue.
      * @remarks Note the following:
      * - the cues with a null time are not used
@@ -512,8 +534,8 @@ export default class CompilationHandler {
         compilation: ICompilation,
         cueId: string,
     ): ITrack | undefined {
-        return compilation?.Tracks?.find(
-            (t) => t.Cues?.find((c) => c.Id === cueId),
+        return compilation?.Tracks?.find((t) =>
+            t.Cues?.find((c) => c.Id === cueId),
         );
     }
 
