@@ -56,7 +56,7 @@
                         <span class="has-text-weight-bold">ZIP</span>
                         <span class="has-opacity-half is-size-7">
                             (<span class="is-family-monospace"
-                                >{{ proposedFileName }}.rez</span
+                                >{{ proposedFileName }}.zip</span
                             >), including provided media files
                         </span>
                     </label>
@@ -76,8 +76,8 @@
                         <span class="has-text-weight-bold">XML</span>
                         <span class="has-opacity-half is-size-7">
                             (<span class="is-family-monospace"
-                                >{{ proposedFileName }}.rex</span
-                            >), using media file names / URLs only
+                                >{{ proposedFileName }}.xml</span
+                            >), using media file names / URL's only
                         </span>
                     </label>
                 </div>
@@ -132,8 +132,8 @@ export default defineComponent({
     methods: {
         ...mapActions(useAppStore, [
             'updateCompilationData',
-            'downloadRezPackage',
-            'downloadRexFile',
+            'downloadZipPackage',
+            'downloadXmlFile',
         ]),
 
         /** Updates the compilation title */
@@ -149,12 +149,11 @@ export default defineComponent({
          */
         async download(): Promise<void> {
             if (this.isDownloadZip) {
-                return this.downloadRezPackage();
+                return this.downloadZipPackage();
             } else {
-                return this.downloadRexFile();
+                return this.downloadXmlFile();
             }
         },
     },
 });
 </script>
-import { Compilation } from '@/store/Compilation';

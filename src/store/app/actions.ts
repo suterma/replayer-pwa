@@ -914,28 +914,28 @@ export const actions = {
         state.compilation.value.Album = album;
     },
 
-    /** Initiates the download of the current compilation as a single XML (.rex) file
+    /** Initiates the download of the current compilation as a single XML (.xml) file
      */
-    downloadRexFile(): void {
+    downloadXmlFile(): void {
         const message = useMessageStore();
 
-        message.pushProgress(`Downloading REX file...`);
+        message.pushProgress(`Downloading XML file...`);
 
         const xml = CompilationParser.convertToXml(state.compilation.value);
         const blob = new Blob([xml], {
             type: 'text/xml;charset=utf-8',
         });
-        FileSaver.saveAs(blob, `${state.compilation.value?.Title}.rex`);
+        FileSaver.saveAs(blob, `${state.compilation.value?.Title}.xml`);
 
         message.popProgress();
     },
 
-    /** Initiates the download of the current compilation as a ZIP (.rez) package
+    /** Initiates the download of the current compilation as a ZIP (.zip) package
      */
-    downloadRezPackage(): void {
+    downloadZipPackage(): void {
         const message = useMessageStore();
 
-        message.pushProgress(`Downloading REZ file...`);
+        message.pushProgress(`Downloading ZIP file...`);
 
         //Get the XML first
         const xml = CompilationParser.convertToXml(state.compilation.value);
@@ -948,18 +948,18 @@ export const actions = {
         PersistentStorage.retrieveAllMediaBlobs().then((mediaBlobs) => {
             //Pack everything into the ZIP file
             const zip = new JSZip();
-            zip.file(`${state.compilation.value?.Title}.rex`, blob);
+            zip.file(`${state.compilation.value?.Title}.zip`, blob);
 
             mediaBlobs.forEach((mediaBlob) => {
                 zip.file(mediaBlob.fileName, mediaBlob.blob);
             });
 
-            //Save as the REZ package
+            //Save as the ZIP package
             zip.generateAsync({ type: 'blob' })
                 .then(function (content) {
                     FileSaver.saveAs(
                         content,
-                        `${state.compilation.value?.Title}.rez`,
+                        `${state.compilation.value?.Title}.zip`,
                     );
                 })
                 .finally(() => {
