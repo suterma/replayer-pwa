@@ -3,7 +3,7 @@ import { useDebounceFn, useLocalStorage } from '@vueuse/core';
 import { type Ref, computed, ref } from 'vue';
 import { Store } from '..';
 import { useSettingsStore } from '../settings';
-import type { InputFeedback } from './InputFeedback';
+import { InputFeedback } from './InputFeedback';
 
 /** A store for messages, that are to be displayed.
  * @devdoc This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores
@@ -145,9 +145,12 @@ export const useMessageStore = defineStore(Store.Messages, () => {
     /** Initiates the presentation of an input feedback
      * @remarks Maintains the given data for a short duration
      * These items are not stacked.
+     * @param data The input data. Typically a single or multiple letters, representing received keyboard input.
+     * @param action A very short description of the action that the input data represents
+     * or what the system expects next, like a terminating key.
      */
-    function pushInputFeedback(feedback: InputFeedback): void {
-        inputFeedback.value = feedback;
+    function pushInputFeedback(data: string, action: string): void {
+        inputFeedback.value = new InputFeedback(data, action);
         debouncedFn();
     }
 

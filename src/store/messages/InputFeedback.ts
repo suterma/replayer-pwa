@@ -8,7 +8,7 @@ export class InputFeedback {
      */
     Data = '';
     /** A very short description of the action that the input data represents
-     * or what the system expects next, like a terminating key-
+     * or what the system expects next, like a terminating key.
      */
     Action = '';
 

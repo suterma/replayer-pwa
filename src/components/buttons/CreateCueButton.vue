@@ -7,6 +7,7 @@
         :disabled="!useShortcut || disabled"
         :keys="['insert']"
         :excluded-elements="[]"
+        @hotkey="message.pushInputFeedback('INSERT', 'Cue')"
     >
         <button
             :ref="clickRef"
@@ -41,6 +42,7 @@ import { Hotkey } from '@simolation/vue-hotkey';
 import { mdiPlus } from '@mdi/js';
 import { computed, inject } from 'vue';
 import { currentPositionDisplayInjectionKey } from '../track/TrackInjectionKeys';
+import { useMessageStore } from '@/store/messages';
 
 const emit = defineEmits([
     /** Occurs, when a new cue should get created at the current playhead position.
@@ -62,9 +64,12 @@ const props = defineProps({
      */
     disabled: Boolean,
 });
+
 const useShortcut = computed(() => {
     return props.isActiveTrack && !props.disabled;
 });
+
+const message = useMessageStore();
 
 const currentPositionDisplay = inject(currentPositionDisplayInjectionKey);
 </script>

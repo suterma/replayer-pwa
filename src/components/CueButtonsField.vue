@@ -61,6 +61,7 @@
             v-slot="{ clickRef }"
             :disabled="disabled || !canCreateCue"
             :keys="['insert']"
+            @hotkey="message.pushInputFeedback('INSERT', 'Cue')"
         >
             <CueButton
                 v-if="isActiveTrack"
@@ -91,6 +92,7 @@
             v-slot="{ clickRef }"
             :disabled="disabled || !canDeleteCue"
             :keys="['del']"
+            @hotkey="message.pushInputFeedback('DELETE', 'Trash selected')"
         >
             <CueButton
                 :id="track.Id + '-inline-delete-cue'"
@@ -134,6 +136,7 @@ import { Cue } from '@/store/Cue';
 import type { ITrack } from '@/store/ITrack';
 import { mdiTrashCanOutline, mdiPlus } from '@mdi/js';
 import { Hotkey } from '@simolation/vue-hotkey';
+import { useMessageStore } from '@/store/messages';
 
 /** A field of large cue buttons for a track
  */
@@ -216,6 +219,8 @@ const canCreateCue = computed(() => {
  * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
  */
 const isTrackPlaying = inject(isPlayingInjectionKey);
+
+const message = useMessageStore();
 
 // --- cue display and handling ---
 

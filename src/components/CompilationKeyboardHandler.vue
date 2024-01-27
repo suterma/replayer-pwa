@@ -218,6 +218,6 @@ const message = useMessageStore();
 
 /** Displays the given data and the associated action for a short duration */
 function DisplayDataAndAction(data: string, action: string) {
-    message.pushInputFeedback(new InputFeedback(data, action));
+    message.pushInputFeedback(data, action);
 }
 </script>

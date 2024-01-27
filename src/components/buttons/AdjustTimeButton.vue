@@ -8,6 +8,7 @@
         :disabled="!isSelectedItem"
         :keys="['shift', 'insert']"
         :excluded-elements="[]"
+        @hotkey="message.pushInputFeedback('SHIFT+INSERT', 'Adjust')"
     >
         <!-- 
             Triggered on click or by hotkey
@@ -37,8 +38,7 @@
     </Hotkey>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import ShortcutDisplay from '@/components/ShortcutDisplay.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
@@ -47,34 +47,27 @@ import {
     mdiTimerPlayOutline,
     mdiAppleKeyboardShift,
 } from '@mdi/js';
+import { useMessageStore } from '@/store/messages';
 /** A button that emits a specific event, intended to set or ajust a time value.
  * Also handles a hotkey, when this is marked as selected (via isSelectedItem)
  * @remarks The button does not actually handle time itself.
  * @displayName Button to ajust a time value
  */
-export default defineComponent({
-    name: 'AdjustTimeButton',
-    components: { BaseIcon, ShortcutDisplay, Hotkey },
-    props: {
-        /** Whether this button is used for the globally selected item
-         * @remarks The button should only execute the hotkey for the globally selected item */
-        isSelectedItem: {
-            type: Boolean,
-            default: false,
-            required: false,
-        },
-    },
-    emits: [
-        /** Occurs, when the time should get adjusted */
-        'adjustTime',
-    ],
-    data() {
-        return {
-            /** Icons from @mdi/js */
-            mdiTimerPlay: mdiTimerPlay,
-            mdiTimerPlayOutline: mdiTimerPlayOutline,
-            mdiAppleKeyboardShift: mdiAppleKeyboardShift,
-        };
+
+const props = defineProps({
+    /** Whether this button is used for the globally selected item
+     * @remarks The button should only execute the hotkey for the globally selected item */
+    isSelectedItem: {
+        type: Boolean,
+        default: false,
+        required: false,
     },
 });
+
+const emit = defineEmits([
+    /** Occurs, when the time should get adjusted */
+    'adjustTime',
+]);
+
+const message = useMessageStore();
 </script>
