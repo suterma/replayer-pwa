@@ -12,7 +12,7 @@
         <CoveredPanel
             :reveal-for="[isShortDuration && !props.enableVideo]"
             :dismissible="false"
-            :disabled="disabled || !mediaElement || !audioSource"
+            :disabled="disabled || !(mediaElement || audioSource)"
             title="Waveform"
         >
             <template #caption
