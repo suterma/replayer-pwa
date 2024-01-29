@@ -143,7 +143,7 @@ import { mdiPlay, mdiPause } from '@mdi/js';
 import {
     rTrackPlayOnce,
     rTrackRepeatOnce,
-} from '@/components/icons/BaseIcon.vue';
+} from '@/components/icons/ReplayerIcon';
 import CompilationHandler from '@/store/compilation-handler';
 import { type PropType, computed, inject, type VNodeRef } from 'vue';
 import { Meter } from '@/code/music/Meter';

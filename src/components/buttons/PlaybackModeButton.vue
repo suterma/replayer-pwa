@@ -24,7 +24,7 @@ import {
     rShuffleVariant,
     rTrackPlayOnce,
     rTrackRepeatOnce,
-} from '@/components/icons/BaseIcon.vue';
+} from '@/components/icons/ReplayerIcon';
 import { mdiPlaylistPlay } from '@mdi/js';
 import { mapState } from 'pinia';
 import { useSettingsStore } from '@/store/settings';

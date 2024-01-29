@@ -223,7 +223,7 @@ import {
     rShuffleVariant,
     rTrackPlayOnce,
     rTrackRepeatOnce,
-} from '@/components/icons/BaseIcon.vue';
+} from '@/components/icons/ReplayerIcon';
 import { useAppStore } from '@/store/app';
 import { mapState, mapWritableState } from 'pinia';
 import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
