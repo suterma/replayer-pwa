@@ -61,7 +61,7 @@
                             <TimeInput
                                 class="input has-text-right"
                                 title="Time of this cue"
-                                :model-value="props.cue.Time"
+                                :model-value="cueTime"
                                 size="9"
                                 @update:model-value="updateCueTime"
                             />
@@ -73,7 +73,7 @@
                         >
                             <button class="button is-indicator">
                                 <MeasureDisplay
-                                    :model-value="props.cue.Time"
+                                    :model-value="cueTime"
                                 ></MeasureDisplay>
                             </button>
                         </div>
@@ -83,7 +83,7 @@
                             class="control"
                         >
                             <MetricalEditor
-                                :model-value="props.cue.Time"
+                                :model-value="cueTime"
                                 @update:model-value="updateCueTime"
                             >
                             </MetricalEditor>
@@ -105,7 +105,7 @@
                         >
                             <span class="input is-static has-opacity-half">
                                 <!-- Display the cue time, with just 1 decimal digit -->
-                                {{ (props.cue.Time ?? 0).toFixed(1) }}</span
+                                {{ (cueTime ?? 0).toFixed(1) }}</span
                             >
                         </p>
                     </div>
@@ -251,13 +251,14 @@ const props = defineProps({
 
 const app = useAppStore();
 
+const cueTime = computed(() => props.cue.Time);
+
 /** Updates the set cue description */
 function updateDescription(event: Event) {
     const cueId = props.cue.Id;
     const shortcut = props.cue.Shortcut;
-    const time = props.cue.Time;
     const description = (event.target as HTMLInputElement).value;
-    app.updateCueData(cueId, description, shortcut, time);
+    app.updateCueData(cueId, description, shortcut, cueTime.value);
 }
 
 /** Deletes the cue */
@@ -284,9 +285,8 @@ function updateCueTime(time: number | null) {
 function updateShortcut(event: Event) {
     const cueId = props.cue.Id;
     const description = props.cue.Description;
-    const time = props.cue.Time;
     const shortcut = (event.target as HTMLInputElement).value;
-    app.updateCueData(cueId, description, shortcut, time);
+    app.updateCueData(cueId, description, shortcut, cueTime.value);
 }
 
 /** Handles the click event of the cue button */
