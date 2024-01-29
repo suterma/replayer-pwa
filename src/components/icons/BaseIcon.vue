@@ -1,6 +1,6 @@
 <template>
     <i class="icon mdi mdi-24px">
-        <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+        <svg viewBox="0 0 24 24">
             <path fill="currentColor" :d="path" />
         </svg>
     </i>
