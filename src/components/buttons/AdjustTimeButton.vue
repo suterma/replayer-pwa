@@ -10,10 +10,6 @@
         :excluded-elements="[]"
         @hotkey="message.pushInputFeedback('SHIFT+INSERT', 'Adjust')"
     >
-        <!-- 
-            Triggered on click or by hotkey
-            @event adjustTime
-        -->
         <button
             :ref="clickRef"
             class="button"
@@ -33,21 +29,25 @@
             <slot></slot>
             <!-- On large screens also show an indicative text -->
             <span class="is-hidden-touch has-opacity-half">Adjust</span>
-            <ShortcutDisplay :class="{ 'is-invisible': !isSelectedItem }">
+
+            <!-- NOTE: For performance reasons, this shortcut display is implemented inline, not using the ShortcutDisplay SFC -->
+            <span
+                :class="{ 'is-invisible': !isSelectedItem }"
+                class="is-hidden-mobile ml-2 tag is-light is-outlined has-opacity-third is-family-monospace is-uppercase has-text-weight-bold"
+            >
                 <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
                 <i class="icon mdi mdi-24px mr-1">
                     <svg viewBox="0 0 24 24">
                         <path fill="currentColor" :d="mdiAppleKeyboardShift" />
                     </svg>
                 </i>
-                + INSERT</ShortcutDisplay
+                + INSERT</span
             >
         </button>
     </Hotkey>
 </template>
 
 <script setup lang="ts">
-import ShortcutDisplay from '@/components/ShortcutDisplay.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
 import {
     mdiTimerPlay,
