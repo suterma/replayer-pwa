@@ -7,16 +7,12 @@
                 <div class="level-item">
                     <div class="field has-addons">
                         <p class="control">
-                            <CueButton
+                            <CueButtonSimplified
                                 :class="{
                                     'is-success': isCueSelected,
                                     'is-warning': !isCueSelected,
                                 }"
-                                :time="cue.Time"
-                                :shortcut="cue.Shortcut"
-                                :duration="cue.Duration"
                                 :playback-mode="playbackMode"
-                                minified
                                 :has-cue-passed="hasCuePassed"
                                 :is-cue-ahead="isCueAhead"
                                 :percent-complete="percentComplete"
@@ -180,7 +176,7 @@
  */
 import { type PropType, computed, inject, ref, type Ref } from 'vue';
 import { storeToRefs } from 'pinia';
-import CueButton from '@/components/buttons/CueButton.vue';
+import CueButtonSimplified from '@/components/buttons/CueButtonSimplified.vue';
 import AdjustTimeButton from '@/components/buttons/AdjustTimeButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
@@ -410,5 +406,3 @@ input[type='text'] {
     }
 }
 </style>
-import type { PlaybackMode } from '@/store/PlaybackMode'; import type { ICue }
-from '@/store/ICue';
