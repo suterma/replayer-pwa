@@ -21,9 +21,15 @@
             data-cy="adjust-time"
             @click="$emit('adjustTime')"
         >
-            <BaseIcon
-                :path="isSelectedItem ? mdiTimerPlay : mdiTimerPlayOutline"
-            />
+            <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
+            <i class="icon mdi mdi-24px">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        fill="currentColor"
+                        :d="isSelectedItem ? mdiTimerPlay : mdiTimerPlayOutline"
+                    />
+                </svg>
+            </i>
             <slot></slot>
             <!-- On large screens also show an indicative text -->
             <span class="is-hidden-touch has-opacity-half">Adjust</span>
@@ -31,7 +37,12 @@
                 class="is-hidden-mobile"
                 :class="{ 'is-invisible': !isSelectedItem }"
             >
-                <BaseIcon v-once :path="mdiAppleKeyboardShift" class="mr-1" />
+                <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
+                <i class="icon mdi mdi-24px mr-1">
+                    <svg viewBox="0 0 24 24">
+                        <path fill="currentColor" :d="mdiAppleKeyboardShift" />
+                    </svg>
+                </i>
                 + INSERT</ShortcutDisplay
             >
         </button>
@@ -40,7 +51,6 @@
 
 <script setup lang="ts">
 import ShortcutDisplay from '@/components/ShortcutDisplay.vue';
-import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { Hotkey } from '@simolation/vue-hotkey';
 import {
     mdiTimerPlay,

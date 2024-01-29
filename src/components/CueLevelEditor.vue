@@ -187,7 +187,6 @@ import { type PropType, computed, inject, ref, type Ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import CueButton from '@/components/buttons/CueButton.vue';
 import AdjustTimeButton from '@/components/buttons/AdjustTimeButton.vue';
-import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import IfMedia from '@/components/IfMedia.vue';
