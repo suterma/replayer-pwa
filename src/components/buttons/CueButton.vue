@@ -27,18 +27,19 @@
                 }"
                 :style="progressStyle"
             ></span>
-            <!-- first line (Do not use a level here, this has only complicated things for smaller widths so far)-->
-            <BaseIcon
-                v-if="!isTrackPlaying"
-                :path="iconPathOverride ?? mdiPlay"
-                class="foreground"
-            />
-            <BaseIcon
-                v-else
-                :path="iconPathOverride ?? mdiPause"
-                class="foreground"
-            />
-
+            <!-- First line (Do not use a level here, this has only complicated things for smaller widths so far)-->
+            <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
+            <i class="icon mdi mdi-24px foreground">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        fill="currentColor"
+                        :d="
+                            iconPathOverride ??
+                            (isTrackPlaying ? mdiPause : mdiPlay)
+                        "
+                    />
+                </svg>
+            </i>
             <!-- Text depending on variant -->
             <template v-if="showText">
                 <span
@@ -52,17 +53,22 @@
                     >{{ description }}</span
                 ></template
             >
-            <BaseIcon
-                v-if="isCueLooping"
-                :path="rTrackRepeatOnce"
-                class="ml-2 mr-2 foreground"
-            />
-            <BaseIcon
-                v-else-if="isCuePlay"
-                :path="rTrackPlayOnce"
-                class="ml-2 mr-2 foreground"
-            />
-            <BaseIcon v-else path="" class="ml-2 mr-2 foreground" />
+            <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
+            <i class="icon mdi mdi-24px ml-2 mr-2 foreground">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        v-if="isCueLooping"
+                        fill="currentColor"
+                        :d="rTrackRepeatOnce"
+                    />
+                    <path
+                        v-else-if="isCuePlay"
+                        fill="currentColor"
+                        :d="rTrackPlayOnce"
+                    />
+                    <path v-else fill="currentColor" d="" />
+                </svg>
+            </i>
 
             <!-- second line, if not minified (use a horizontal level also on mobile)-->
             <template v-if="!minified">
@@ -136,7 +142,6 @@
 </template>
 
 <script setup lang="ts">
-import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from '../TimeDisplay.vue';
 import ShortcutDisplay from '../ShortcutDisplay.vue';
 import { mdiPlay, mdiPause } from '@mdi/js';
@@ -310,11 +315,6 @@ const progressBarWidthOffset = computed(() => {
  * For performance reasons, the style is only effectively calculated when the cue is currently played
  */
 const progressStyle = computed(() => {
-    if (!Number.isFinite(props.time)) {
-        return {
-            display: 'none',
-        };
-    }
     if (
         !props.hasCuePassed &&
         !props.isCueAhead &&

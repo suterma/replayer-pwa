@@ -7,11 +7,12 @@
                 <div class="level-item">
                     <div class="field has-addons">
                         <p class="control">
-                            <CueButtonSimplified
+                            <CueButton
                                 :class="{
                                     'is-success': isCueSelected,
                                     'is-warning': !isCueSelected,
                                 }"
+                                minified
                                 :playback-mode="playbackMode"
                                 :has-cue-passed="hasCuePassed"
                                 :is-cue-ahead="isCueAhead"
@@ -156,7 +157,15 @@
                 <div class="field">
                     <p class="control" title="Trash this cue">
                         <button class="button" @click="deleteThisCue()">
-                            <BaseIcon v-once :path="mdiTrashCanOutline" />
+                            <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
+                            <i class="icon mdi mdi-24px">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        fill="currentColor"
+                                        :d="mdiTrashCanOutline"
+                                    />
+                                </svg>
+                            </i>
                         </button>
                     </p>
                 </div>
@@ -176,7 +185,7 @@
  */
 import { type PropType, computed, inject, ref, type Ref } from 'vue';
 import { storeToRefs } from 'pinia';
-import CueButtonSimplified from '@/components/buttons/CueButtonSimplified.vue';
+import CueButton from '@/components/buttons/CueButton.vue';
 import AdjustTimeButton from '@/components/buttons/AdjustTimeButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
