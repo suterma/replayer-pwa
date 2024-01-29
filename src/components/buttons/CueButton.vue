@@ -120,18 +120,12 @@
                         </p>
 
                         <p
-                            v-if="shortcut"
                             class="level-item"
                             :class="{ 'is-invisible': disabled }"
                         >
                             <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibility as possible -->
-                            <ShortcutDisplay class="foreground"
+                            <ShortcutDisplay v-if="shortcut" class="foreground"
                                 >{{ shortcut }}
-                            </ShortcutDisplay>
-                        </p>
-                        <p v-else class="level-item">
-                            <!-- Just show a placeholder, taking up the usual vertical space -->
-                            <ShortcutDisplay class="pl-0 pr-0 is-invisible">
                             </ShortcutDisplay>
                         </p>
                     </div>
