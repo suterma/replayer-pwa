@@ -1,3 +1,6 @@
+// NOTE: using the .js ending (instead of .ts) solves this issue
+// with referencing modules:
+// https://github.com/cypress-io/cypress/issues/23552#issuecomment-1456477053
 import { defineConfig } from 'cypress';
 
 export default defineConfig({
