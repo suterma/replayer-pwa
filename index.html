@@ -90,10 +90,23 @@
         <meta name="msapplication-TileColor" content="#da532c" />
         <!-- Theme color same as the player widget background to keep the Phone UI boring (non-distracting). -->
         <meta name="theme-color" content="#3a3f44" />
-        <title>Replayer is a free, cue-based media player for rehearsals with playback music.</title>
+        <title>
+            Replayer is a free, cue-based media player for rehearsals with
+            playback music.
+        </title>
         <link rel="stylesheet" href="/css/replayer.css" />
     </head>
     <body>
+        <!-- An indicator for a busy navigation. Will be triggered outside VueJs's vDOM in the router -->
+        <div id="navigationIndicator" class="modal">
+            <div class="modal-background has-opacity-half"></div>
+            <section class="section has-text-centered">
+                <div class="container">
+                    <h1 class="title">Loading ...</h1>
+                    <progress class="progress" max="100"></progress>
+                </div>
+            </section>
+        </div>
         <div id="app">
             <!-- A splash screen (which is removed when the vue app is ready to display) -->
             <div class="modal is-active">
@@ -138,10 +151,13 @@
                                     </p>
                                 </div>
 
-
-                                <footer class="footer has-background-transparent">
+                                <footer
+                                    class="footer has-background-transparent"
+                                >
                                     <div class="level">
-                                        <div class="level-item has-text-centered">
+                                        <div
+                                            class="level-item has-text-centered"
+                                        >
                                             <a
                                                 href="https://replayer.app#how-it-works"
                                                 alt="Link to the Replayer app website with the how it works section"
@@ -149,7 +165,9 @@
                                                 >How it works...</a
                                             >.
                                         </div>
-                                        <div class="level-item has-text-centered">
+                                        <div
+                                            class="level-item has-text-centered"
+                                        >
                                             <a
                                                 href="https://replayer.app/documentation"
                                                 alt="Link to the Replayer app documentation"
@@ -157,15 +175,19 @@
                                                 >Documentation...</a
                                             >.
                                         </div>
-                                        <div class="level-item has-text-centered">
+                                        <div
+                                            class="level-item has-text-centered"
+                                        >
                                             <a
                                                 href="https://replayer.app/documentation/media-formats"
                                                 alt="Link to the Replayer app documentation about media formats"
                                                 target="_blank"
                                                 >Supported media formats...</a
                                             >.
-                                        </div>                                    
-                                        <div class="level-item has-text-centered">
+                                        </div>
+                                        <div
+                                            class="level-item has-text-centered"
+                                        >
                                             <a
                                                 href="https://replayer.app/privacy-policy"
                                                 alt="Link to the Replayer app privacy policy"

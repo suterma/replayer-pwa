@@ -9,6 +9,7 @@ import MainView from '../views/MainView.vue';
 import ResetView from '../views/ResetView.vue';
 import DemoView from '../views/DemoView.vue';
 import DevelopmentView from '../views/DevelopmentView.vue';
+import { nextTick } from 'process';
 
 /** A set of route names. */
 export enum Route {
@@ -125,6 +126,22 @@ router.afterEach((to, from, failure) => {
             `Changed route from ${from.path?.toString()} to ${to.path?.toString()}`,
         );
     }
+});
+
+// --- navigation busy indication
+
+router.beforeResolve(async () => {
+    document.getElementById('navigationIndicator')?.classList.add('is-active');
+    // defer the resolution just so that the real DOM can handle the class update
+    await new Promise((resolve) => {
+        setTimeout(resolve, 1);
+    });
+});
+
+router.afterEach(() => {
+    document
+        .getElementById('navigationIndicator')
+        ?.classList.remove('is-active');
 });
 
 export default router;
