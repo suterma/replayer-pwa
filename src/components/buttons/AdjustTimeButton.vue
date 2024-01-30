@@ -38,7 +38,11 @@
                 <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
                 <i class="icon mdi mdi-24px mr-1">
                     <svg viewBox="0 0 24 24">
-                        <path fill="currentColor" :d="mdiAppleKeyboardShift" />
+                        <path
+                            v-once
+                            fill="currentColor"
+                            :d="mdiAppleKeyboardShift"
+                        />
                     </svg>
                 </i>
                 + INSERT</span

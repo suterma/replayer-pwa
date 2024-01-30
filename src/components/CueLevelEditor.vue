@@ -161,6 +161,7 @@
                             <i class="icon mdi mdi-24px">
                                 <svg viewBox="0 0 24 24">
                                     <path
+                                        v-once
                                         fill="currentColor"
                                         :d="mdiTrashCanOutline"
                                     />
