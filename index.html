@@ -97,20 +97,10 @@
         <link rel="stylesheet" href="/css/replayer.css" />
     </head>
     <body>
-        <!-- An indicator for a busy navigation. Will be triggered outside VueJs's vDOM in the router -->
-        <div id="navigationIndicator" class="modal">
-            <div class="modal-background has-opacity-half"></div>
-            <section class="section has-text-centered">
-                <div class="container">
-                    <h1 class="title">Loading ...</h1>
-                    <progress class="progress" max="100"></progress>
-                </div>
-            </section>
-        </div>
         <div id="app">
             <!-- A splash screen (which is removed when the vue app is ready to display) -->
             <div class="modal is-active">
-                <div class="modal-background"></div>
+                <div class="modal-background has-opacity-half"></div>
 
                 <section class="section has-text-centered">
                     <div class="container">

@@ -6,7 +6,7 @@
             'is-active': hasErrorMessages | hasSuccessMessages,
         }"
     >
-        <div class="modal-background"></div>
+        <div class="modal-background has-opacity-half"></div>
         <div class="modal-content">
             <div v-for="errorMessage in errorMessages" :key="errorMessage">
                 <div

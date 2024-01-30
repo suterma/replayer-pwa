@@ -1,6 +1,6 @@
 <template>
     <div :class="{ modal: true, 'is-active': hasProgressMessage }">
-        <div class="modal-background"></div>
+        <div class="modal-background has-opacity-half"></div>
         <div class="modal-content">
             <progress class="progress" max="100"></progress>
 

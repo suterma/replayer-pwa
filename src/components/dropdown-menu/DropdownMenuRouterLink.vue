@@ -1,29 +1,32 @@
 <template>
-
-<Hotkey v-slot="{ clickRef }" :keys="keys" :excluded-elements="[]" :disabled="disabled || !keys">
-    <router-link v-slot="{ navigate }" :to="to" custom>
+    <Hotkey
+        v-slot="{ clickRef }"
+        :keys="keys"
+        :excluded-elements="[]"
+        :disabled="disabled || !keys"
+    >
         <DropdownMenuItem
-            :ref='clickRef'
+            :ref="clickRef"
             role="link"
             :title="title"
             :sub-title="subTitle"
             :icon-path="iconPath"
             :disabled="isActiveRoute"
-            :shortcut='keys.join("+")'
+            :shortcut="keys.join('+')"
             @click="navigate"
             @keypress.enter="navigate"
         >
         </DropdownMenuItem>
-    </router-link>
-</Hotkey>
-
+    </Hotkey>
 </template>
 
 <script setup lang="ts">
-import {  computed } from 'vue';
+import { computed } from 'vue';
 import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { Hotkey } from '@simolation/vue-hotkey';
+import { useMessageStore } from '@/store/messages';
+import { nextTick } from 'process';
 
 /** An item for a Dropdown menu
  * @remarks Supports a global hotkey registration
@@ -33,7 +36,7 @@ const props = defineProps({
         type: String,
         required: true,
     },
-     /**
+    /**
      * The hotkey keys, acting as keyboard shortcut.
      *
      * @example
@@ -75,5 +78,23 @@ const route = useRoute();
  */
 const isActiveRoute = computed(() => {
     return route.path == props.to;
+});
+
+// --- deferred routing (with indication) ---
+
+const router = useRouter();
+const message = useMessageStore();
+
+function navigate() {
+    message.pushProgress('Loading...');
+    // let the progress indication show up first
+    nextTick(() => {
+        router.push(props.to);
+    });
+}
+
+router.afterEach(() => {
+    const message = useMessageStore();
+    message.finishProgress();
 });
 </script>
