@@ -426,15 +426,6 @@
                     </li>
                     <li>
                         <a
-                            href="https://github.com/focus-trap/focus-trap"
-                            target="_blank"
-                        >
-                            focus-trap</a
-                        >, trap focus within a DOM node. (Released under the MIT
-                        License, by Stefan Cameron)
-                    </li>
-                    <li>
-                        <a
                             href="https://github.com/slipmatio/control-knob"
                             target="_blank"
                             >control-knob</a
