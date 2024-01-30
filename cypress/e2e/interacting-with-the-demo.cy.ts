@@ -25,7 +25,7 @@ describe('interacting with the demo', () => {
         cy.get('[data-cy="cue-button"]').should('have.length', 11);
         cy.get('.cue span.has-text-weight-semibold.foreground').should(
             'have.text',
-            'Intro (with Guitar Solo)Verse 1BridgeRefrain "Not for Sale"Bridge 2Verse 2Refrain "Not for Sale"Rap PartBridge (Guitar Solo)Refrain "Not for Sale" soft styleOutro',
+            'Intro (with Guitar Solo)Verse 1BridgeRefrain "Not for Sale"Bridge 2Verse 2Refrain "Not for Sale"Rap PartBridge (Guitar Solo)Refrain "Not for Sale" soft styleOutroCue',
         );
     });
 
