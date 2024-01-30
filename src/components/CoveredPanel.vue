@@ -120,7 +120,7 @@ const hasContentToRevealFor = computed(() => {
         // simple thruthiness check for others
         return item ? true : false;
     });
-    return hasContent.length > 0 ?? false;
+    return hasContent?.length ?? 0 > 0;
 });
 
 /** Whether the panel is actually covered. */

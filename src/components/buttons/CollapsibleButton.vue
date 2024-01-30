@@ -85,9 +85,6 @@ export default defineComponent({
     methods: {
         toggleExpanded() {
             const requestedModelValue = !this.modelValue;
-            console.debug(
-                `CollapsibleButton::toggleExpanded:requestedModelValue:${requestedModelValue}`,
-            );
             this.$emit('update:modelValue', requestedModelValue);
         },
     },
