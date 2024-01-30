@@ -6,7 +6,7 @@ import { defineConfig, type PluginOption } from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 
 //Setting the environment variables
-const child_process = require('child_process');
+import child_process from 'child_process';
 function git(command: string) {
     return child_process
         .execSync(`git ${command}`, { encoding: 'utf8' })
