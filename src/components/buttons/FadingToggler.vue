@@ -21,7 +21,7 @@ import { mdiNetworkStrength4, mdiNetworkStrengthOutline } from '@mdi/js';
 
 /** A toggle button for the fading state
  */
-const model = defineModel({ default: false, required: true });
+const model = defineModel({ type: Boolean, default: false, required: true });
 
 const emit = defineEmits(['update:modelValue']);
 

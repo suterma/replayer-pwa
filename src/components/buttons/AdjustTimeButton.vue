@@ -1,8 +1,8 @@
 <template>
     <!-- Adjust time (With Hotkey for a selected item)
-                Adjusting a time value should also work when this hotkey is
-                invoked from inside a 
-                textbox, thus explicitly no elements are excluded.-->
+        Adjusting a time value should also work when this hotkey is
+        invoked from inside a 
+        textbox, thus explicitly no elements are excluded.-->
     <Hotkey
         v-slot="{ clickRef }"
         :disabled="!isSelectedItem"
@@ -65,7 +65,7 @@ import { useMessageStore } from '@/store/messages';
  * @displayName Button to ajust a time value
  */
 
-const props = defineProps({
+defineProps({
     /** Whether this button is used for the globally selected item
      * @remarks The button should only execute the hotkey for the globally selected item */
     isSelectedItem: {
@@ -75,7 +75,7 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits([
+defineEmits([
     /** Occurs, when the time should get adjusted */
     'adjustTime',
 ]);

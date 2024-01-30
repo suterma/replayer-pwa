@@ -86,7 +86,10 @@ function cover() {
 const props = defineProps({
     /** The values to reveal this panel for, if any of them are set
      */
-    revealFor: Array as PropType<Array<unknown>>,
+    revealFor: {
+        type: Array as PropType<Array<unknown> | undefined>,
+        default: undefined,
+    },
 
     /** The title
      * @remarks This text is show as title for the label in both the covered and the revealed state

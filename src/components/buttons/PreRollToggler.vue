@@ -21,7 +21,7 @@ import { mdiRayEndArrow, mdiRayVertex } from '@mdi/js';
 
 /** A toggle button for the pre-roll state
  */
-const model = defineModel({ default: false, required: true });
+const model = defineModel({ type: Boolean, default: false, required: true });
 
 const emit = defineEmits(['update:modelValue']);
 

@@ -38,6 +38,7 @@
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace Cypress {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface Chainable<Subject = any> {
         loadDemo(): void;
         loadMediaUrl(url: string): void;

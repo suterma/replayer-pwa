@@ -81,7 +81,7 @@ const emit = defineEmits(['click']);
 const props = defineProps({
     /** The cues to show
      */
-    cues: Array as PropType<Array<ICue>>,
+    cues: { type: Array as PropType<Array<ICue>>, required: true },
 
     /** Whether to show the component in a disabled state
      * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.

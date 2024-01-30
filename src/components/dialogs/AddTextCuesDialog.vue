@@ -50,6 +50,7 @@ export default defineComponent({
     props: {
         track: {
             type: Object as PropType<ITrack>,
+            required: true,
         },
     },
 
@@ -95,5 +96,3 @@ export default defineComponent({
     },
 });
 </script>
-import { type ICue } from '@/store/ICue'; import { Track } from '@/store/Track';
-import { Cue } from '@/store/Cue';

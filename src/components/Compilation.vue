@@ -94,7 +94,7 @@ export default defineComponent({
         NoticeTrack,
     },
     props: {
-        compilation: Object as PropType<ICompilation>,
+        compilation: { type: Object as PropType<ICompilation>, required: true },
 
         /** The display mode of the contained tracks.
          * @devdoc Allows to reuse this component for more than one view.
@@ -124,6 +124,130 @@ export default defineComponent({
             mdiRotateLeftVariant: mdiRotateLeftVariant,
             mdiRotateRightVariant: mdiRotateRightVariant,
         };
+    },
+
+    computed: {
+        ...mapState(useAppStore, [
+            'selectedCueId',
+            'nextCueId',
+            'activeTrackId',
+            'hasSingleMediaTrack',
+            'textTracks',
+            'mediaTracks',
+        ]),
+        ...mapWritableState(useAppStore, [
+            'playbackMode',
+            'isFadingEnabled',
+            'isPreRollEnabled',
+        ]),
+
+        ...mapState(useSettingsStore, ['preventScreenTimeout']),
+
+        /** Return a typed version of the playback mode
+         * @devdoc seems to be necessary as the media track can not accept the
+         * variant from the store
+         */
+        typedPlaybackMode(): PlaybackMode {
+            return this.playbackMode as PlaybackMode;
+        },
+
+        /** Whether this compilation has any tracks.
+         */
+        hasTracks(): boolean {
+            if (this.tracks && this.tracks.length > 0) {
+                return true;
+            }
+            return false;
+        },
+
+        /** Whether the tracks are currently in a shuffled order.
+         */
+        isTracksShuffled(): boolean {
+            return this.playbackMode === PlaybackMode.ShuffleCompilation;
+        },
+
+        /** Whether the PlaybackMode is looping the tracks
+         * in the compilation.
+         * @remarks These are PlaybackMode.ShuffleCompilation
+         * and PlaybackMode.ShuffleCompilation
+         */
+        isLoopingPlaybackMode(): boolean {
+            return (
+                this.playbackMode === PlaybackMode.ShuffleCompilation ||
+                this.playbackMode === PlaybackMode.LoopCompilation
+            );
+        },
+
+        /** Whether the edit mode is active
+         * @remarks For simplicity, the header is shown as editable, as long as the tracks are editable, too.
+         */
+        isEditable(): boolean {
+            return this.trackViewode === TrackViewMode.Edit;
+        },
+
+        /** Whether the mix mode is active
+         */
+        isMixable(): boolean {
+            return this.trackViewode === TrackViewMode.Mix;
+        },
+
+        /** The currently available media tracks in the compilation
+         * @remarks The order may also be shuffled, depending on the PlaybackMode
+         */
+        tracks(): Array<ITrack> | undefined {
+            const tracks = this.mediaTracks as Array<ITrack> | undefined;
+            //Deterministically shuffle if required
+            if (tracks && this.isTracksShuffled) {
+                return CompilationHandler.shuffle(tracks, this.shuffleSeed);
+            }
+            return tracks;
+        },
+
+        /** Returns all cues from all media tracks in the current compilation */
+        allCues(): Array<ICue> {
+            return CompilationHandler.getAllCues(this.tracks);
+        },
+    },
+    watch: {
+        /** Handle scrolling to the changed active track.
+         * @remarks This is intentionally only invoked on when the active track changes (and it's not the only audio track).
+         * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
+         */
+        activeTrackId(trackId: string | null) {
+            if (trackId && !this.hasSingleMediaTrack) {
+                console.debug('scrolling to activated track ', trackId);
+                this.$nextTick(() => {
+                    this.scrollToTrack(trackId);
+                });
+            }
+        },
+
+        /** Handle scrolling to the active track, when the display mode changes.
+         * @remarks This is intentionally only invoked on when the display mode changes (and it's not the only track).
+         */
+        trackViewode() {
+            const trackId = this.activeTrackId;
+            if (trackId && !this.hasSingleMediaTrack) {
+                console.debug('scrolling to mode-changed track ', trackId);
+                this.$nextTick(() => {
+                    if (trackId != null) {
+                        this.scrollToTrack(trackId);
+                    }
+                });
+            }
+        },
+
+        /** Updates the shuffle seed if required by a playback mode change.
+         */
+        isTracksShuffled(isShuffled: boolean) {
+            if (isShuffled) {
+                this.shuffleSeed = ++this.shuffleSeed;
+                console.debug(
+                    'Compilation::playbackMode:shuffleSeed',
+                    this.shuffleSeed,
+                );
+            }
+        },
     },
     /**
      * @remarks Implements #26 in a simple way, as soon as a compilation is shown (disregarding the actual selection of a track)
@@ -350,129 +474,6 @@ export default defineComponent({
                 return this.tracks[this.tracks.length - 1]?.Id === trackId;
             }
             return false;
-        },
-    },
-    watch: {
-        /** Handle scrolling to the changed active track.
-         * @remarks This is intentionally only invoked on when the active track changes (and it's not the only audio track).
-         * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
-         */
-        activeTrackId(trackId: string | null) {
-            if (trackId && !this.hasSingleMediaTrack) {
-                console.debug('scrolling to activated track ', trackId);
-                this.$nextTick(() => {
-                    this.scrollToTrack(trackId);
-                });
-            }
-        },
-
-        /** Handle scrolling to the active track, when the display mode changes.
-         * @remarks This is intentionally only invoked on when the display mode changes (and it's not the only track).
-         */
-        trackViewode() {
-            const trackId = this.activeTrackId;
-            if (trackId && !this.hasSingleMediaTrack) {
-                console.debug('scrolling to mode-changed track ', trackId);
-                this.$nextTick(() => {
-                    if (trackId != null) {
-                        this.scrollToTrack(trackId);
-                    }
-                });
-            }
-        },
-
-        /** Updates the shuffle seed if required by a playback mode change.
-         */
-        isTracksShuffled(isShuffled: boolean) {
-            if (isShuffled) {
-                this.shuffleSeed = ++this.shuffleSeed;
-                console.debug(
-                    'Compilation::playbackMode:shuffleSeed',
-                    this.shuffleSeed,
-                );
-            }
-        },
-    },
-    computed: {
-        ...mapState(useAppStore, [
-            'selectedCueId',
-            'nextCueId',
-            'activeTrackId',
-            'hasSingleMediaTrack',
-            'textTracks',
-            'mediaTracks',
-        ]),
-        ...mapWritableState(useAppStore, [
-            'playbackMode',
-            'isFadingEnabled',
-            'isPreRollEnabled',
-        ]),
-
-        ...mapState(useSettingsStore, ['preventScreenTimeout']),
-
-        /** Return a typed version of the playback mode
-         * @devdoc seems to be necessary as the media track can not accept the
-         * variant from the store
-         */
-        typedPlaybackMode(): PlaybackMode {
-            return this.playbackMode as PlaybackMode;
-        },
-
-        /** Whether this compilation has any tracks.
-         */
-        hasTracks(): boolean {
-            if (this.tracks && this.tracks.length > 0) {
-                return true;
-            }
-            return false;
-        },
-
-        /** Whether the tracks are currently in a shuffled order.
-         */
-        isTracksShuffled(): boolean {
-            return this.playbackMode === PlaybackMode.ShuffleCompilation;
-        },
-
-        /** Whether the PlaybackMode is looping the tracks
-         * in the compilation.
-         * @remarks These are PlaybackMode.ShuffleCompilation
-         * and PlaybackMode.ShuffleCompilation
-         */
-        isLoopingPlaybackMode(): boolean {
-            return (
-                this.playbackMode === PlaybackMode.ShuffleCompilation ||
-                this.playbackMode === PlaybackMode.LoopCompilation
-            );
-        },
-
-        /** Whether the edit mode is active
-         * @remarks For simplicity, the header is shown as editable, as long as the tracks are editable, too.
-         */
-        isEditable(): boolean {
-            return this.trackViewode === TrackViewMode.Edit;
-        },
-
-        /** Whether the mix mode is active
-         */
-        isMixable(): boolean {
-            return this.trackViewode === TrackViewMode.Mix;
-        },
-
-        /** The currently available media tracks in the compilation
-         * @remarks The order may also be shuffled, depending on the PlaybackMode
-         */
-        tracks(): Array<ITrack> | undefined {
-            const tracks = this.mediaTracks as Array<ITrack> | undefined;
-            //Deterministically shuffle if required
-            if (tracks && this.isTracksShuffled) {
-                return CompilationHandler.shuffle(tracks, this.shuffleSeed);
-            }
-            return tracks;
-        },
-
-        /** Returns all cues from all media tracks in the current compilation */
-        allCues(): Array<ICue> {
-            return CompilationHandler.getAllCues(this.tracks);
         },
     },
 });

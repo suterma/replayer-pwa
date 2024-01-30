@@ -144,7 +144,7 @@ import {
     rTrackRepeatOnce,
 } from '@/components/icons/ReplayerIcon';
 import CompilationHandler from '@/store/compilation-handler';
-import { type PropType, computed, inject, type VNodeRef } from 'vue';
+import { type PropType, computed, inject } from 'vue';
 import { Meter } from '@/code/music/Meter';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
