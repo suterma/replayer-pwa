@@ -124,9 +124,13 @@
                             :class="{ 'is-invisible': disabled }"
                         >
                             <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibility as possible -->
-                            <ShortcutDisplay v-if="shortcut" class="foreground"
-                                >{{ shortcut }}
-                            </ShortcutDisplay>
+                            <!-- NOTE: For performance reasons, this shortcut display is implemented inline, not using the ShortcutDisplay SFC -->
+                            <span
+                                v-if="shortcut"
+                                class="is-hidden-mobile ml-2 tag is-light is-outlined has-opacity-third is-family-monospace is-uppercase has-text-weight-bold foreground"
+                            >
+                                {{ shortcut }}</span
+                            >
                         </p>
                     </div>
                 </span>
