@@ -135,21 +135,6 @@ export const useMessageStore = defineStore(Store.Messages, () => {
         );
     });
 
-    /// --- navigation feedback ---
-
-    /** Initiates the presentation of navigation feedback
-     * @devdoc Tries to decouple the visual from the vDOM update process
-     * to keep the visual showing through it
-     */
-    function showNavigationIndication(): void {
-        pushProgress('Loading...');
-    }
-    /** Terminates the presentation of navigation feedback
-     */
-    function hideNavigationIndication(): void {
-        finishProgress();
-    }
-
     /// --- input feedback ---
 
     /** An input feedback, used for providing feedback about the input
@@ -190,8 +175,6 @@ export const useMessageStore = defineStore(Store.Messages, () => {
         popError,
         popSuccess,
         finishProgress,
-        showNavigationIndication,
-        hideNavigationIndication,
 
         progressMessage,
         progressMessages,

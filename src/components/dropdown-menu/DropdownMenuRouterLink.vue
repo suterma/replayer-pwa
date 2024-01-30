@@ -86,7 +86,7 @@ const router = useRouter();
 const message = useMessageStore();
 
 function navigate() {
-    message.pushProgress('Loading...');
+    message.pushProgress('');
     // let the progress indication show up first
     nextTick(() => {
         router.push(props.to);

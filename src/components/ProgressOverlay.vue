@@ -1,11 +1,18 @@
 <template>
     <div :class="{ modal: true, 'is-active': hasProgressMessage }">
-        <div class="modal-background has-opacity-half"></div>
-        <div class="modal-content">
-            <progress class="progress" max="100"></progress>
-
-            <div class="has-text-centered">
-                {{ progressMessage }}
+        <div class="modal-background"></div>
+        <div class="modal-content is-loading">
+            <!-- Show the message and a horzontal progress -->
+            <template v-if="progressMessage">
+                <progress class="progress" max="100">
+                    <div class="has-text-centered">
+                        {{ progressMessage }}
+                    </div>
+                </progress>
+            </template>
+            <!-- Alternatively, just show a spinner -->
+            <div v-else class="has-text-centered">
+                <div class="button is-loading is-ghost is-large"></div>
             </div>
         </div>
     </div>

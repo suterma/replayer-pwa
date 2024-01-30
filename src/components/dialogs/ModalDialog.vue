@@ -1,7 +1,7 @@
 <template>
     <UseFocusTrap>
         <div class="modal is-active">
-            <div class="modal-background has-opacity-half"></div>
+            <div class="modal-background"></div>
             <div class="modal-card" :class="{ 'is-wide': wide }">
                 <form
                     data-cy="modal-form"
