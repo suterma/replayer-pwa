@@ -10,15 +10,10 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import { useMessageStore } from '@/store/messages';
-import { mapState } from 'pinia';
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 /** A simple overlay display of the latest application progress message, if any */
-export default defineComponent({
-    name: 'ProgressOverlay',
-    computed: {
-        ...mapState(useMessageStore, ['progressMessage', 'hasProgressMessage']),
-    },
-});
+import { useMessageStore } from '@/store/messages';
+import { storeToRefs } from 'pinia';
+const message = useMessageStore();
+const { progressMessage, hasProgressMessage } = storeToRefs(message);
 </script>
