@@ -30,8 +30,8 @@
         "format": "prettier --write src/"
     },
     "dependencies": {
-        "@mdi/js": "^7.0.96",
-        "@simolation/vue-hotkey": "^2.0.0",
+        "@mdi/js": "^7.4.47",
+        "@simolation/vue-hotkey": "^2.0.1",
         "@vue-youtube/core": "^0.0.6",
         "@vueuse/components": "^9.13.0",
         "@vueuse/core": "^9.13.0",
