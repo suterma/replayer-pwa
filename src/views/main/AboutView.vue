@@ -559,6 +559,14 @@
                         modules are taking up space. (Released under the MIT
                         License, by Denis Bardadym)
                     </li>
+                    <li>
+                        <a
+                            href="https://github.com/focus-trap/focus-trap"
+                            target="_blank"
+                            >focus-trap</a
+                        >, trap focus within a DOM node. (Released under the MIT
+                        License, by Stefan Cameron)
+                    </li>
                 </ul>
             </div>
         </CollapsiblePanel>
