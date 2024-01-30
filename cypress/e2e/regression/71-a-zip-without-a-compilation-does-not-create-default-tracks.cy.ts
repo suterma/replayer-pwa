@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 describe('testing the issue "71-a-zip-without-a-compilation-does-not-create-default-tracks" for regression', () => {
     it('should not add a default track when replacing a file', () => {
         cy.loadDemo();

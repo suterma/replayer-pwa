@@ -20,6 +20,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
                 .trigger('change');
 
             //Wait potentially slow loading of media
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
             cy.wait(4000);
 
             // ASSERT (that the loop occurred, and track is still playing)
@@ -53,6 +54,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
                 .trigger('change');
 
             //Wait potentially slow loading of media
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
             cy.wait(4000);
 
             // ASSERT (that the loop occurred, and track is still playing)
@@ -74,6 +76,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
             );
             cy.consentIfYouTube(mediaSourceUrl.url);
 
+            // eslint-disable-next-line cypress/unsafe-to-chain-command
             cy.get('.button[data-cy="toggle-playback-mode"]')
                 .filter(':visible')
                 .first()
@@ -85,6 +88,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
             cy.get('button[title="Play from ending-cue"]').click();
 
             //Wait potentially slow loading of media
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
             cy.wait(4000);
 
             // ASSERT (that the loop occurred)
@@ -103,6 +107,7 @@ describe('testing the issue "Loop does not work directly after app start #73", f
             .eq(1 /*second track*/)
             .click();
         // ARRANGE (set loop compilation play mode)
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.get('.button[data-cy="toggle-playback-mode"]')
             .filter(':visible')
             .first()
@@ -120,6 +125,7 @@ describe('testing the issue "Loop does not work directly after app start #73", f
             .trigger('change');
 
         //Wait potentially slow loading of media
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(4000);
 
         // ASSERT (that the first track was selected next)

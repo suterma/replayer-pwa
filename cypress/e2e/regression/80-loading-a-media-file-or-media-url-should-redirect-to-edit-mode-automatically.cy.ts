@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 describe('testing the issue "Loading a media file or media URL should redirect to edit mode automatically #80" for regression', () => {
     it('should go to edit mode after media load (with CORS Header)', () => {
         // ACT

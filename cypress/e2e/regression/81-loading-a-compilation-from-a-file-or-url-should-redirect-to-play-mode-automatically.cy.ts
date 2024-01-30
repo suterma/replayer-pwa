@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 describe('testing the issue "Loading a compilation from a file or URL should redirect to PLAY mode automatically #81" for regression', () => {
     beforeEach(() => {
         cy.loadEmpty();

@@ -1,5 +1,3 @@
-/* eslint-disable jest/expect-expect */
-
 describe('testing the issue "Invalid URLs should be rejected in the UI #82" for regression', () => {
     it('should reject an invalid protocol', () => {
         // ACT

@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 describe('loading and displaying of text content with the issue "98-add-support-for-text-files-in-zip-compilations"', () => {
     beforeEach(() => {});
 

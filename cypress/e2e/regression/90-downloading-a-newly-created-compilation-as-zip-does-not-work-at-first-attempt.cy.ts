@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 describe('testing the issue "90-downloading-a-newly-created-compilation-as-zip-does-not-work-at-first-attempt" for regression', () => {
     beforeEach(() => {
         cy.loadDemo();

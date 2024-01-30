@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 describe('interacting with the demo', () => {
     beforeEach(() => {
         cy.loadDemo();

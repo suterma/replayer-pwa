@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 describe('text files in packages (zip-compilations)', () => {
     it('must get displayed', () => {
         // ARRANGE
