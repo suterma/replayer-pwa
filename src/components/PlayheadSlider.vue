@@ -16,14 +16,11 @@
                         class="is-align-self-flex-start"
                     />
                     <!-- NOTE: As a update performance optimization,
-                        the TimeDisplay component is not used, but the
-                        value is directly computed with the desired number
-                        of subSecond digits. This avoids
-                        unnecessary update for actually non-distinctly displayed values. -->
+                        the TimeDisplay SFC component is not used. -->
                     <span
                         class="has-text-left is-size-7 is-minimum-7-characters is-family-monospace"
                         data-cy="current-time"
-                        >{{ convertToDisplayTime(modelValue, 1) }}</span
+                        >{{ convertToDisplayTime(modelValue) }}</span
                     >
                 </button>
             </div>
@@ -62,14 +59,11 @@
                         class="is-align-self-flex-end mr-0"
                     />
                     <!-- NOTE: As a update performance optimization,
-                        the TimeDisplay component is not used, but the
-                        value is directly computed with the desired number
-                        of subSecond digits. This avoids
-                        unnecessary update for actually non-distinctly displayed values. -->
+                        the TimeDisplay SFC component is not used. -->
                     <span
                         class="has-text-left is-size-7 is-minimum-7-characters is-family-monospace"
                         data-cy="remaining-time"
-                        >{{ convertToDisplayTime(remainingTime, 1) }}</span
+                        >{{ convertToDisplayTime(remainingTime) }}</span
                     >
                 </button>
             </div>
@@ -166,14 +160,8 @@ export default defineComponent({
         seek(seconds: number): void {
             this.$emit('seek', seconds);
         },
-        convertToDisplayTime(
-            value: number | null,
-            subSecondDigits: number,
-        ): string {
-            return CompilationHandler.convertToDisplayTime(
-                value,
-                subSecondDigits,
-            );
+        convertToDisplayTime(value: number | null): string {
+            return CompilationHandler.convertToDisplayTime(value, 1);
         },
     },
 });

@@ -84,15 +84,13 @@
                                 :model-value="time"
                                 :meter="meter"
                             ></MeasureDisplay>
-                            <!-- NOTE: As a component update performance optimization, 
-                            the numeric value is truncated to one decimal digit, as displayed, avoiding
-                            unnecessary update for actually non-distinctly displayed values. -->
-                            <TimeDisplay
-                                v-else
-                                class="has-opacity-half foreground"
-                                :model-value="time"
-                                :sub-second-digits="1"
-                            ></TimeDisplay>
+                            <!-- NOTE: As a update performance optimization,
+                                 the TimeDisplay SFC component is not used. -->
+                            <span
+                                class="has-text-left is-size-7 is-minimum-7-characters is-family-monospace has-opacity-half foreground"
+                                data-cy="remaining-time"
+                                >{{ cueDisplayTime }}</span
+                            >
                         </div>
                     </div>
 
@@ -111,12 +109,13 @@
                                 :meter="meter"
                             ></MeasureDifferenceDisplay>
                             <!-- Use a right position for Durations, to keep them as much out of visibility as possible -->
-                            <TimeDisplay
-                                v-else
-                                class="has-opacity-half foreground"
-                                :model-value="duration"
-                                :sub-second-digits="1"
-                            ></TimeDisplay>
+                            <!-- NOTE: As a update performance optimization,
+                                 the TimeDisplay SFC component is not used. -->
+                            <span
+                                class="has-text-left is-size-7 is-minimum-7-characters is-family-monospace has-opacity-half foreground"
+                                data-cy="remaining-time"
+                                >{{ cueDisplayDuration }}</span
+                            >
                         </p>
 
                         <p
@@ -290,10 +289,18 @@ const cueDisplayDescription = computed(() => {
         ) {
             return Meter.toMeasureDisplay(props.time, meter.value);
         } else {
-            return CompilationHandler.convertToDisplayTime(props.time, 1);
+            return cueDisplayTime;
         }
     }
     return '';
+});
+
+const cueDisplayTime = computed(() => {
+    return CompilationHandler.convertToDisplayTime(props.time, 1);
+});
+
+const cueDisplayDuration = computed(() => {
+    return CompilationHandler.convertToDisplayTime(props.duration, 1);
 });
 
 /** The width offset for the progress-bar

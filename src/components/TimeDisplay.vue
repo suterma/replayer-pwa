@@ -8,10 +8,6 @@
 import CompilationHandler from '@/store/compilation-handler';
 import { defineComponent, type PropType } from 'vue';
 
-const oneSubSecondDigitPlaceholder = '--:--.-';
-const twoSubSecondDigitPlaceholder = '--:--.--';
-const threeSubSecondDigitPlaceholder = '--:--.---';
-
 /** A display for a time value in the h:mm:ss.z format
  */
 export default defineComponent({
@@ -34,19 +30,10 @@ export default defineComponent({
          * @remarks Omits the hour part, if not applicable
          */
         currentDisplayTime(value: number | null): string {
-            if (Number.isFinite(value)) {
-                return CompilationHandler.convertToDisplayTime(
-                    this.modelValue,
-                    this.subSecondDigits,
-                );
-            } else {
-                if (this.subSecondDigits === 3) {
-                    return threeSubSecondDigitPlaceholder;
-                } else if (this.subSecondDigits === 2) {
-                    return twoSubSecondDigitPlaceholder;
-                }
-                return oneSubSecondDigitPlaceholder;
-            }
+            return CompilationHandler.convertToDisplayTime(
+                value,
+                this.subSecondDigits,
+            );
         },
     },
 });

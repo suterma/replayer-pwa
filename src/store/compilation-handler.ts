@@ -349,31 +349,47 @@ export default class CompilationHandler {
         return '';
     }
 
-    /** Converts the total seconds into a displayable format,
-     * according to the application settings,
+    public static oneSubSecondDigitPlaceholder = '--:--.-';
+    public static twoSubSecondDigitPlaceholder = '--:--.--';
+    public static threeSubSecondDigitPlaceholder = '--:--.---';
+
+    /** Converts the given seconds into a displayable time format,
+     * according to the "timeformat" application settings,
      * if a suitable input value is provided.
+     * @remarks Omits the hour part, if not applicable
      * @param subSecondDigits - The number of digits for the sub-second precision. Should be 1, 2, or 3 (default).
-     * @return The display representation or the empty string.
+     * @return The display representation or a placeholder.
      */
     public static convertToDisplayTime(
         seconds: number | null | undefined,
         subSecondDigits = 3,
     ): string {
-        const settings = useSettingsStore();
-        const timeFormat = settings.timeFormat;
+        if (
+            seconds !== null &&
+            seconds !== undefined &&
+            Number.isFinite(seconds)
+        ) {
+            const settings = useSettingsStore();
+            const timeFormat = settings.timeFormat;
 
-        if (timeFormat == TimeFormat.Iso8601Extended) {
-            return this.convertSecondsToIso8601Extended(
-                seconds,
-                subSecondDigits,
-            );
-        } else if (timeFormat == TimeFormat.DecimalSeconds) {
-            return this.convertSecondsToDecimalSeconds(
-                seconds,
-                subSecondDigits,
-            );
+            if (timeFormat == TimeFormat.Iso8601Extended) {
+                return this.convertSecondsToIso8601Extended(
+                    seconds,
+                    subSecondDigits,
+                );
+            } else if (timeFormat == TimeFormat.DecimalSeconds) {
+                return this.convertSecondsToDecimalSeconds(
+                    seconds,
+                    subSecondDigits,
+                );
+            }
         }
-        return '';
+        if (subSecondDigits === 3) {
+            return CompilationHandler.threeSubSecondDigitPlaceholder;
+        } else if (subSecondDigits === 2) {
+            return CompilationHandler.twoSubSecondDigitPlaceholder;
+        }
+        return CompilationHandler.oneSubSecondDigitPlaceholder;
     }
 
     /** Gets a lazy variant of the given file name, for better non-literal matching in case of special characters.
