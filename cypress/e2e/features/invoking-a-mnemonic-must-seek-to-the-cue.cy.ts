@@ -2,6 +2,7 @@ describe('invoking cue mnemonic', () => {
     it('should select the track', () => {
         cy.loadFile('cypress/fixtures/2-tracks-with-anechoic-voices.rex');
         cy.contains('2 tracks with anechoic voices');
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000); /* to have the tracks loaded*/
 
         // ACT (invoke the mnemonic)
@@ -16,6 +17,7 @@ describe('invoking cue mnemonic', () => {
     it('should select the track and seek to the cue position', () => {
         cy.loadFile('cypress/fixtures/2-tracks-with-anechoic-voices.rex');
         cy.contains('2 tracks with anechoic voices');
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000); /* to have the tracks loaded*/
 
         // ACT (invoke the mnemonic)

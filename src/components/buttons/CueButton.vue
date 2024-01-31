@@ -141,7 +141,6 @@
 
 <script setup lang="ts">
 import TimeDisplay from '../TimeDisplay.vue';
-import ShortcutDisplay from '../ShortcutDisplay.vue';
 import { mdiPlay, mdiPause } from '@mdi/js';
 import {
     rTrackPlayOnce,
