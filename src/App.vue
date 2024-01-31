@@ -28,17 +28,21 @@
         aria-label="media player"
     ></nav>
 
-    <div class="section is-hidden-print">
+    <section class="is-hidden-print">
         <!-- A placeholder that invisibly extends the view bottom,
         taking into account the vertical size of the media player panel.
-        An additional surrounding section is used as an additional spacer
+        An additional margin is used as an additional spacer
         to make it visually clear that no more content is available below.
+        The min-height is the empirically determined minimal value.        
         -->
         <div
-            :style="{ height: navbarCompensationHeight + 'px' }"
-            class="has-player-navbar-fixed-bottom"
+            class="has-player-navbar-fixed-bottom mt-6"
+            :style="{
+                'min-height': '153px',
+                height: navbarCompensationHeight + 'px',
+            }"
         ></div>
-    </div>
+    </section>
 </template>
 <script setup lang="ts">
 import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';
@@ -116,9 +120,17 @@ function handleAppUpdate() {
 // --- bottom navbar spacing ---
 const mediaPlayerPanel = ref();
 const { height } = useElementSize(mediaPlayerPanel);
+
+/** A computed compensation height, using a fixed value as a fallback.
+ * @devdoc Some devices, notably older iOS devices can not get the panel
+ * height (equals zero), thus a useful default is assumed instead.
+ */
 const mediaPlayerPanelComputedHeight = computed(() => {
-    return height.value;
+    return height.value
+        ? height.value
+        : 205 /*empirically determined useful max height*/;
 });
+
 /** The body height compensation for the fixed navbar.
  * @remark Debounced to prevent excess updates
  * @devdoc Debouncing also solves a update loop error
