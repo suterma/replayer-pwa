@@ -84,10 +84,6 @@ for all screen sizes. Keeps the display compact */
         margin-bottom: 1.5rem
             /*equals second-smallest section horizontal padding*/;
     }
-
-    #media-player-panel .widget.level > .level-right {
-        //margin-top: 1.5rem /*equals second-smallest section horizontal padding*/;
-    }
 }
 
 /* keep vertical spacing/stacking between the widget rows smaller, on smaller devices */
@@ -96,8 +92,9 @@ for all screen sizes. Keeps the display compact */
     #media-player-panel .level:not(:last-child) {
         margin-bottom: 0.75rem /*equals smallest section horizontal padding*/;
     }
+}
 
-    #media-player-panel .widget.level > .level-right {
-        // margin-top: 0.75rem /*equals smallest section horizontal padding*/;
-    }
+/** Reset the Bulma navbar container height for the player area*/
+.navbar > #media-player-panel.container {
+    min-height: 0;
 }

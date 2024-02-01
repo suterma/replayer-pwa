@@ -35,16 +35,18 @@
             ></div>
         </section>
     </div>
-    <!-- The bottom nav bar, used as a panel for the media player widget
-    in some view modes -->
-    <!-- //TODO apply a container around it -->
+    <!-- The bottom nav bar, used as a media player panel
+        for the media player widget in some view modes -->
     <nav
-        id="media-player-panel"
-        ref="mediaPlayerPanel"
         class="navbar is-fixed-bottom has-background-grey-dark is-hidden-print"
-        role="form"
-        aria-label="media player"
-    ></nav>
+    >
+        <div
+            id="media-player-panel"
+            ref="mediaPlayerPanel"
+            class="container is-fullhd"
+            aria-label="media player"
+        ></div>
+    </nav>
 </template>
 <script setup lang="ts">
 import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';
@@ -142,6 +144,7 @@ const navbarCompensationHeight = refDebounced(
     300 /*replayer-transition-duration*/,
 );
 </script>
+
 <!-- HINT: Uncomment to display the HTML structure for review -->
 <!--
 <style type="css">

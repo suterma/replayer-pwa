@@ -11621,6 +11621,11 @@ for all screen sizes. Keeps the display compact */
     margin-bottom: 0.75rem;
   }
 }
+/** Reset the Bulma navbar container height for the player area*/
+.navbar > #media-player-panel.container {
+  min-height: 0;
+}
+
 /*************************************************************
  * Transitions for the Replayer
 **************************************************************
