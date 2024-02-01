@@ -72,6 +72,13 @@
             @update:model-value="updatePlaybackMode"
         />
 
+        <PlaybackModeMenu
+            :model-value="playbackMode"
+            :hasSecondTrack="hasSecondTrack"
+            data-cy="toggle-playback-mode"
+            @update:model-value="updatePlaybackMode"
+        />
+
         <PreRollToggler
             v-if="!hidePreRollToggler"
             :model-value="isPreRollEnabled"
@@ -100,6 +107,7 @@
 import { defineComponent } from 'vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import PlaybackModeButton from '@/components/buttons/PlaybackModeButton.vue';
+import PlaybackModeMenu from '@/components/context-menu/PlaybackModeMenu.vue';
 import FadingToggler from '@/components/buttons/FadingToggler.vue';
 import PreRollToggler from '@/components/buttons/PreRollToggler.vue';
 import VolumeKnob from '@/components/controls/VolumeKnob.vue';
@@ -121,6 +129,7 @@ export default defineComponent({
     components: {
         PlayPauseButton,
         PlaybackModeButton,
+        PlaybackModeMenu,
         FadingToggler,
         PreRollToggler,
         BaseIcon,

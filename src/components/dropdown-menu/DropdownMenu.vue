@@ -3,6 +3,7 @@
         class="dropdown is-right"
         :class="{
             'is-active': isDropdownExpanded,
+            'is-up': isMenuTooLow,
         }"
     >
         <DismissiblePanel
@@ -55,7 +56,8 @@
 import NavButton from '@/components/buttons/NavButton.vue';
 import DismissiblePanel from '@/components/DismissiblePanel.vue';
 import { mdiDotsVertical } from '@mdi/js';
-import { ref } from 'vue';
+import { useElementBounding, useWindowSize } from '@vueuse/core';
+import { computed, ref } from 'vue';
 
 /** A drop down menu, with a slot for the menu items.
  */
@@ -88,4 +90,12 @@ function toggleDropdownExpanded() {
 function collapseDropdown() {
     isDropdownExpanded.value = false;
 }
+
+const target = ref();
+
+const { bottom } = useElementBounding(target);
+const { height } = useWindowSize();
+const isMenuTooLow = computed(() => {
+    return bottom.value >= height.value;
+});
 </script>
