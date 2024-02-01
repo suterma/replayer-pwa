@@ -1,25 +1,43 @@
 <template>
-    <StageMark></StageMark>
-    <!-- The app menu, on the right, without bottom margin to not alter the layout of content below -->
-    <section
-        class="section has-background-none is-hidden-print is-pulled-right pb-0"
-    >
-        <AppContextMenu :has-compilation="hasCompilation"></AppContextMenu>
-    </section>
+    <div class="container is-fullhd">
+        <StageMark></StageMark>
+        <!-- The app menu, on the right, without bottom margin to not alter the layout of content below -->
+        <section
+            class="section has-background-none is-hidden-print is-pulled-right pb-0"
+        >
+            <AppContextMenu :has-compilation="hasCompilation"></AppContextMenu>
+        </section>
 
-    <!-- The routed view section -->
-    <!-- NOTE: the same audio context is reused for all playback operations and
+        <!-- The routed view section -->
+        <!-- NOTE: the same audio context is reused for all playback operations and
          must be resumed once in the app lifetime, when used. 
          This is solved here globally for simplicity -->
-    <section class="section">
-        <router-view></router-view>
-        <ProgressOverlay />
-        <MessageOverlay />
-        <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
-    </section>
+        <section class="section">
+            <router-view></router-view>
+            <ProgressOverlay />
+            <MessageOverlay />
+            <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
+        </section>
 
+        <section class="is-hidden-print">
+            <!-- A placeholder that invisibly extends the view bottom,
+        taking into account the vertical size of the media player panel.
+        An additional margin is used as an additional spacer
+        to make it visually clear that no more content is available below.
+        The min-height is the empirically determined minimal value.        
+        -->
+            <div
+                class="mt-6"
+                :style="{
+                    'min-height': '153px',
+                    height: navbarCompensationHeight + 'px',
+                }"
+            ></div>
+        </section>
+    </div>
     <!-- The bottom nav bar, used as a panel for the media player widget
     in some view modes -->
+    <!-- //TODO apply a container around it -->
     <nav
         id="media-player-panel"
         ref="mediaPlayerPanel"
@@ -27,22 +45,6 @@
         role="form"
         aria-label="media player"
     ></nav>
-
-    <section class="is-hidden-print">
-        <!-- A placeholder that invisibly extends the view bottom,
-        taking into account the vertical size of the media player panel.
-        An additional margin is used as an additional spacer
-        to make it visually clear that no more content is available below.
-        The min-height is the empirically determined minimal value.        
-        -->
-        <div
-            class="mt-6"
-            :style="{
-                'min-height': '153px',
-                height: navbarCompensationHeight + 'px',
-            }"
-        ></div>
-    </section>
 </template>
 <script setup lang="ts">
 import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';
