@@ -939,9 +939,9 @@ export const actions = {
 
         message.pushProgress(`Downloading ZIP file...`);
 
-        //Get the XML first
+        //Get the XML file
         const xml = CompilationParser.convertToXml(state.compilation.value);
-        const blob = new Blob([xml], {
+        const xmlBlob = new Blob([xml], {
             type: 'text/xml;charset=utf-8',
         });
 
@@ -950,8 +950,7 @@ export const actions = {
         PersistentStorage.retrieveAllMediaBlobs().then((mediaBlobs) => {
             //Pack everything into the ZIP file
             const zip = new JSZip();
-            zip.file(`${state.compilation.value?.Title}.zip`, blob);
-
+            zip.file(`${state.compilation.value?.Title}.xml`, xmlBlob);
             mediaBlobs.forEach((mediaBlob) => {
                 zip.file(mediaBlob.fileName, mediaBlob.blob);
             });
