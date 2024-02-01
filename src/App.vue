@@ -36,7 +36,7 @@
         The min-height is the empirically determined minimal value.        
         -->
         <div
-            class="has-player-navbar-fixed-bottom mt-6"
+            class="mt-6"
             :style="{
                 'min-height': '153px',
                 height: navbarCompensationHeight + 'px',
