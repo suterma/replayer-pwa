@@ -101,10 +101,10 @@ export default defineComponent({
                     title += 'Queue cue (EXPERIMENTAL)';
                     break;
                 case PlaybackMode.LoopCompilation:
-                    title += 'Loop compilation';
+                    title += 'Loop all';
                     break;
                 case PlaybackMode.ShuffleCompilation:
-                    title += 'Shuffle compilation';
+                    title += 'Shuffle all';
                     break;
                 default:
                     break;

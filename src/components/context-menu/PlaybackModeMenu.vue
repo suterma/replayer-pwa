@@ -136,9 +136,9 @@ function modeText(mode: PlaybackMode) {
         case PlaybackMode.QueueCue:
             return 'Queue cue (EXPERIMENTAL)';
         case PlaybackMode.LoopCompilation:
-            return 'Loop compilation';
+            return 'Loop all';
         case PlaybackMode.ShuffleCompilation:
-            return 'Shuffle compilation';
+            return 'Shuffle all';
         default:
             return '';
     }

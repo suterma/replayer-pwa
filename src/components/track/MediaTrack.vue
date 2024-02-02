@@ -371,6 +371,8 @@
                             :disabled="!canPlay"
                             :hide-stop-button="true"
                             :hide-track-navigation="true"
+                            :has-previous-track="hasPreviousTrack"
+                            :has-next-track="hasNextTrack"
                             :hide-cue-navigation="true"
                             :hide-pre-roll-toggler="hidePreRollToggler"
                             :hide-fading-toggler="hideFadingToggler"
