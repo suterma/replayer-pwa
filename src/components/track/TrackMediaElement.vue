@@ -494,36 +494,38 @@ watch(
         () => isContextRunning.value /* only used as trigger */,
     ],
     ([showLevelMeterForEdit, mediaUrl, newMediaElement, isEditable]) => {
-        // Metering is only used in edit mode
-        if (isEditable) {
-            if (context.value && isContextRunning.value) {
-                // Create the level meter and associated routing only when requested, and only for local files
-                if (
-                    showLevelMeterForEdit &&
-                    mediaUrl &&
-                    newMediaElement &&
-                    !FileHandler.isValidHttpUrl(mediaUrl)
-                ) {
-                    if (audioSource.value === null) {
-                        audioSource.value =
-                            context.value.createMediaElementSource(
-                                newMediaElement,
-                            );
+        if (showLevelMeterForEdit) {
+            // Metering is only used in edit mode
+            if (isEditable) {
+                if (context.value && isContextRunning.value) {
+                    // Create the level meter and associated routing only when requested, and only for local files
+                    if (
+                        showLevelMeterForEdit &&
+                        mediaUrl &&
+                        newMediaElement &&
+                        !FileHandler.isValidHttpUrl(mediaUrl)
+                    ) {
+                        if (audioSource.value === null) {
+                            audioSource.value =
+                                context.value.createMediaElementSource(
+                                    newMediaElement,
+                                );
+                        }
+                        audioSource.value.connect(context.value.destination);
+                    } else {
+                        //NOTE: a MediaElementAudioSourceNode can not get destroyed, so this will be reused if later required
+                        //See https://stackoverflow.com/a/38631334/79485
+                        audioSource.value?.disconnect(/* from analyser */);
+                        audioSource.value?.connect(context.value.destination);
                     }
-                    audioSource.value.connect(context.value.destination);
                 } else {
-                    //NOTE: a MediaElementAudioSourceNode can not get destroyed, so this will be reused if later required
-                    //See https://stackoverflow.com/a/38631334/79485
-                    audioSource.value?.disconnect(/* from analyser */);
-                    audioSource.value?.connect(context.value.destination);
+                    console.warn(
+                        'Audio context is not available or not (yet) running. Audio Level Meter remains disconnected.',
+                    );
                 }
             } else {
-                console.warn(
-                    'Audio context is not available or not (yet) running. Audio Level Meter remains disconnected.',
-                );
+                console.debug('Track is not editable');
             }
-        } else {
-            console.debug('Track is not editable');
         }
     },
     { immediate: true },
