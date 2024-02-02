@@ -275,6 +275,17 @@
                     ></LabeledCheckbox>
                 </div>
             </div>
+
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="experimentalUsePlaybackModeDropdownMenu"
+                        label="Show playback mode drop down menu"
+                        hint="This is an alternative to the playback mode toggler"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
+
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
@@ -357,6 +368,7 @@ const {
     experimentalAllowTrackSharingByLink,
     experimentalMultitrack,
     experimentalUseQueueCueMode,
+    experimentalUsePlaybackModeDropdownMenu,
     experimentalUseMeter,
 } = storeToRefs(settings);
 

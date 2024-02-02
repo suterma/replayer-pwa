@@ -1,6 +1,8 @@
 <template>
     <div data-cy="media-controls-bar">
         <PlaybackModeMenu
+            v-if="experimentalUsePlaybackModeDropdownMenu"
+            class="is-experimental"
             :model-value="playbackMode"
             :hasSecondTrack="hasSecondTrack"
             data-cy="toggle-playback-mode"
@@ -121,6 +123,8 @@ import {
 } from '@mdi/js';
 import { DefaultTrackVolume } from '@/store/Track';
 import type { PlaybackMode } from '@/store/PlaybackMode';
+import { useSettingsStore } from '@/store/settings';
+import { mapState } from 'pinia';
 
 /** A set of media controls, intended for use at the track level. Contains Buttons like previous/next track and cue, playback mode and a volume knob, arranged in a bar-like layout.
  */
@@ -291,6 +295,9 @@ export default defineComponent({
         hasSecondTrack(): boolean {
             return this.hasPreviousTrack || this.hasNextTrack;
         },
+        ...mapState(useSettingsStore, [
+            'experimentalUsePlaybackModeDropdownMenu',
+        ]),
     },
 
     watch: {},

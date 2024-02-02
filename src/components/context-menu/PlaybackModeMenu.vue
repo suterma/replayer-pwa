@@ -3,6 +3,7 @@
         class="is-slim"
         :icon-path="currentModeIcon"
         :render-closed="true"
+        :title="currentModeTitle"
     >
         <!-- <DropdownMenuItem
             v-for="mode in Object.values(PlaybackMode)"
@@ -119,8 +120,7 @@ const settings = useSettingsStore();
 const { experimentalUseQueueCueMode } = storeToRefs(settings);
 
 const currentModeTitle = computed(() => {
-    let title = 'Current mode: ' + modeText(props.modelValue);
-    return (title += ' (click to change)');
+    return 'Current mode: ' + modeText(props.modelValue);
 });
 
 function modeText(mode: PlaybackMode) {

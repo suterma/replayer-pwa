@@ -119,6 +119,14 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         false,
     );
 
+    /** EXPERIMENTAL: Playback mode dropdown menu
+     * @remarks Default is false
+     */
+    const experimentalUsePlaybackModeDropdownMenu = useLocalStorage(
+        'experimentalUsePlaybackModeDropdownMenu',
+        false,
+    );
+
     /** Whether to show the waveforms (on edit view)
      */
     const showWaveformsOnEdit = useLocalStorage('showWaveformsOnEdit', true);
@@ -163,6 +171,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalAllowTrackSharingByLink.value = false;
         experimentalMultitrack.value = false;
         experimentalUseQueueCueMode.value = false;
+        experimentalUsePlaybackModeDropdownMenu.value = false;
         experimentalUseMeter.value = false;
     }
 
@@ -185,6 +194,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalAllowTrackSharingByLink,
         experimentalMultitrack,
         experimentalUseQueueCueMode,
+        experimentalUsePlaybackModeDropdownMenu,
         experimentalUseMeter,
         $reset,
     };

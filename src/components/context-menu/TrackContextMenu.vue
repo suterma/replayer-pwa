@@ -1,5 +1,5 @@
 <template>
-    <DropdownMenu v-memo="[props.track.Url]">
+    <DropdownMenu v-memo="[props.track.Url]" title="Track context menu">
         <div class="dropdown-item is-hidden-mobile">
             <p class="menu-label">Track</p>
         </div>
