@@ -1604,10 +1604,10 @@ const isActiveTrack = computed(() => activeTrackId.value === props.track.Id);
 watch(
     () => isActiveTrack.value,
     (isActive, wasActive) => {
-        console.debug(
-            `MediaTrack(${props.track.Name})::isActiveTrack:val:`,
-            isActive,
-        );
+        // console.debug(
+        //     `MediaTrack(${props.track.Name})::isActiveTrack:val:`,
+        //     isActive,
+        // );
 
         // Pause this track, when it's no more active track
         if (wasActive === true && isActive === false) {
@@ -1621,43 +1621,46 @@ watch(
  * In edit mode, keep the default transition, as no horizontal slides are used
  * In other modes, slide according to the track index
  */
-watch(activeTrackId, (activeTrackId, previousTrackId) => {
-    // console.debug(
-    //     `MediaTrack(${props.track.Name})::activeTrack:activeTrackId:`,
-    //     activeTrackId,
-    //     'prev:',
-    //     previousTrackId,
-    // );
+watch(
+    [activeTrackId, isEditable],
+    ([activeTrackId, newIsEditable], [previousTrackId]) => {
+        // console.debug(
+        //     `MediaTrack(${props.track.Name})::activeTrack:activeTrackId:`,
+        //     activeTrackId,
+        //     'prev:',
+        //     previousTrackId,
+        // );
 
-    if (isEditable) {
-        skipTransitionName.value = 'item-expand';
-    } else if (activeTrackId != null && previousTrackId != null) {
-        const indexOfActive = CompilationHandler.getIndexOfTrackById(
-            //Because of the possible shuffling, the tracks computed property is not used
-            compilation.value.Tracks,
-            activeTrackId,
-        );
+        if (newIsEditable) {
+            skipTransitionName.value = 'item-expand';
+        } else if (activeTrackId != null && previousTrackId != null) {
+            const indexOfActive = CompilationHandler.getIndexOfTrackById(
+                //Because of the possible shuffling, the tracks computed property is not used
+                compilation.value.Tracks,
+                activeTrackId,
+            );
 
-        const indexOfPrevious = CompilationHandler.getIndexOfTrackById(
-            compilation.value.Tracks,
-            previousTrackId,
-        );
+            const indexOfPrevious = CompilationHandler.getIndexOfTrackById(
+                compilation.value.Tracks,
+                previousTrackId,
+            );
 
-        if (indexOfActive == indexOfPrevious + 1) {
-            // exactly next
-            skipTransitionName.value = 'slide-left';
-        } else if (indexOfActive == indexOfPrevious - 1) {
-            // exactly previous
-            skipTransitionName.value = 'slide-right';
-        } else if (indexOfActive > indexOfPrevious) {
-            // later than next
-            skipTransitionName.value = 'slide-fade-left';
-        } else if (indexOfActive < indexOfPrevious) {
-            // earlier than previous
-            skipTransitionName.value = 'slide-fade-right';
+            if (indexOfActive == indexOfPrevious + 1) {
+                // exactly next
+                skipTransitionName.value = 'slide-left';
+            } else if (indexOfActive == indexOfPrevious - 1) {
+                // exactly previous
+                skipTransitionName.value = 'slide-right';
+            } else if (indexOfActive > indexOfPrevious) {
+                // later than next
+                skipTransitionName.value = 'slide-fade-left';
+            } else if (indexOfActive < indexOfPrevious) {
+                // earlier than previous
+                skipTransitionName.value = 'slide-fade-right';
+            }
         }
-    }
-});
+    },
+);
 
 /// --- player panel usage ---
 
