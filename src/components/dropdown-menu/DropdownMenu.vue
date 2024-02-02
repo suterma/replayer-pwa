@@ -49,7 +49,12 @@
 import NavButton from '@/components/buttons/NavButton.vue';
 import DismissiblePanel from '@/components/DismissiblePanel.vue';
 import { mdiDotsVertical } from '@mdi/js';
-import { useElementBounding, useWindowSize } from '@vueuse/core';
+import {
+    refDebounced,
+    refThrottled,
+    useElementBounding,
+    useWindowSize,
+} from '@vueuse/core';
 import { computed, ref } from 'vue';
 
 /** A drop down menu, with a slot for the menu items.
@@ -85,13 +90,32 @@ function collapseDropdown() {
 }
 
 const target = ref();
-
 const { bottom, right } = useElementBounding(target);
 const { height, width } = useWindowSize();
-const isMenuTooLow = computed(() => {
-    return bottom.value > height.value;
-});
-const isMenuTooRight = computed(() => {
-    return right.value > width.value;
-});
+
+/** Checks the position for the menu
+ * @remark Debounced to prevent excess updates
+ */
+const isMenuTooLow = refThrottled(
+    computed(() => {
+        return (
+            bottom.value >
+            height.value - 40 /* avoid menu very close to border or scrollbar */
+        );
+    }),
+    300 /*replayer-transition-duration*/,
+);
+
+/** Checks the position for the menu
+ * @remark Debounced to prevent excess updates
+ */
+const isMenuTooRight = refThrottled(
+    computed(() => {
+        return (
+            right.value >
+            width.value - 40 /* avoid menu very close to border or scrollbar */
+        );
+    }),
+    300 /*replayer-transition-duration*/,
+);
 </script>
