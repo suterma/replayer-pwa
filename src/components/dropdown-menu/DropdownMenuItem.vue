@@ -2,6 +2,7 @@
     <button
         class="dropdown-item"
         :disabled="disabled"
+        :class="{ 'is-active': isActive }"
         data-cy="dropdown-menu-item"
     >
         <MenuItemContent
@@ -10,7 +11,9 @@
             :icon-path="iconPath"
             :disabled="disabled"
         >
-            <template v-if="shortcut" #shortcut>{{ shortcut }}</template>
+            <template v-if="shortcut && !isActive" #shortcut>{{
+                shortcut
+            }}</template>
         </MenuItemContent>
     </button>
 </template>
@@ -30,6 +33,11 @@ defineProps({
         required: false,
     },
     disabled: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
+    isActive: {
         type: Boolean,
         required: false,
         default: false,

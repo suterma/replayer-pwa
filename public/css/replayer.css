@@ -11164,6 +11164,7 @@ button.dropdown-item {
  *  supporting proper accessibility,
  *  without visual interference of typical button styling
  */
+a.dropdown-item,
 button.dropdown-item {
   border: none;
   background-color: #3a3f44;
@@ -11176,6 +11177,18 @@ button.dropdown-item {
   color: hsl(0, 0%, 98%);
 }
 
+/* Disabled items should be dimmed. Hovering should not be visible */
+a.dropdown-item:disabled,
+button.dropdown-item:disabled {
+  opacity: 50%;
+  cursor: not-allowed;
+}
+
+a.dropdown-item:disabled:hover,
+button.dropdown-item:disabled:hover {
+  background-color: inherit;
+}
+
 /* Hovered dropdown item with better suited contrast for a dark theme */
 a.dropdown-item:hover,
 button.dropdown-item:hover {
@@ -11183,11 +11196,17 @@ button.dropdown-item:hover {
   color: hsl(0, 0%, 98%);
 }
 
-/* Hovered active dropdown item with better suited contrast for a dark theme */
+/* Active dropdown item with better suited contrast for a dark theme */
 a.dropdown-item.is-active,
 button.dropdown-item.is-active {
   background-color: hsl(0, 0%, 96%);
   color: #202328;
+}
+
+/* Active disabled dropdown keep their background */
+a.dropdown-item.is-active:disabled,
+button.dropdown-item.is-active:disabled {
+  background-color: hsl(0, 0%, 96%);
 }
 
 .dropdown-content {
@@ -11213,16 +11232,6 @@ button.dropdown-item.is-active {
 .router-link-active:focus .dropdown-item,
 .router-link-active:focus-within .dropdown-item {
   background-color: #272b30;
-}
-
-/* Disabled items should be dimmed. Hovering should not be visible */
-button.dropdown-item:disabled {
-  opacity: 50%;
-  cursor: not-allowed;
-}
-
-button.dropdown-item:disabled:hover {
-  background-color: #3a3f44;
 }
 
 /*************************************************************
