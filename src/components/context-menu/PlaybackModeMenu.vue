@@ -1,5 +1,9 @@
 <template>
-    <DropdownMenu :icon-path="currentModeIcon" :render-closed="true">
+    <DropdownMenu
+        class="is-slim"
+        :icon-path="currentModeIcon"
+        :render-closed="true"
+    >
         <!-- <DropdownMenuItem
             v-for="mode in Object.values(PlaybackMode)"
             :key="mode"

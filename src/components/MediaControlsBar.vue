@@ -1,5 +1,12 @@
 <template>
     <div data-cy="media-controls-bar">
+        <PlaybackModeMenu
+            :model-value="playbackMode"
+            :hasSecondTrack="hasSecondTrack"
+            data-cy="toggle-playback-mode"
+            @update:model-value="updatePlaybackMode"
+        />
+
         <button
             v-if="hasSecondTrack && !hideTrackNavigation"
             class="button"
@@ -68,13 +75,6 @@
 
         <PlaybackModeButton
             :model-value="playbackMode"
-            data-cy="toggle-playback-mode"
-            @update:model-value="updatePlaybackMode"
-        />
-
-        <PlaybackModeMenu
-            :model-value="playbackMode"
-            :hasSecondTrack="hasSecondTrack"
             data-cy="toggle-playback-mode"
             @update:model-value="updatePlaybackMode"
         />
@@ -343,4 +343,3 @@ export default defineComponent({
     },
 });
 </script>
-import { PlaybackMode } from '@/store/PlaybackMode';

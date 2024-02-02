@@ -1,9 +1,11 @@
 <template>
     <div
-        class="dropdown is-right"
+        class="dropdown"
         :class="{
             'is-active': isDropdownExpanded,
             'is-up': isMenuTooLow,
+            'is-left': !isMenuTooRight,
+            'is-right': isMenuTooRight,
         }"
     >
         <DismissiblePanel
@@ -93,9 +95,12 @@ function collapseDropdown() {
 
 const target = ref();
 
-const { bottom } = useElementBounding(target);
-const { height } = useWindowSize();
+const { bottom, right } = useElementBounding(target);
+const { height, width } = useWindowSize();
 const isMenuTooLow = computed(() => {
-    return bottom.value >= height.value;
+    return bottom.value > height.value;
+});
+const isMenuTooRight = computed(() => {
+    return right.value > width.value;
 });
 </script>

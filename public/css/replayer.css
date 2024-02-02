@@ -11113,22 +11113,52 @@ fieldset[disabled] .button:hover {
 }
 
 /*************************************************************
- * Dropdown stylings
+ * Dropdown layout stylings
+**************************************************************
+*/
+/* A slim variant for a dropdown menu */
+.dropdown.is-slim .dropdown-menu {
+  width: auto;
+  min-width: auto;
+}
+
+/* A slim variant for dropdown items */
+.dropdown.is-slim .dropdown-menu button.dropdown-item {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+/* No wide right padding, the area is used by an icon */
+a.dropdown-item,
+button.dropdown-item {
+  padding-right: 1em;
+}
+
+/* Icons are spaced similarly to a button */
+.dropdown-item-icon {
+  padding-bottom: calc(0.5em - 1px);
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: calc(0.5em - 1px);
+}
+
+/* The alignment should be left always (No LTR support) */
+.dropdown-content {
+  text-align: left;
+}
+
+/* header menu items are shorter */
+.dropdown-item.is-header {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/*************************************************************
+ * Dropdown color stylings
  * These styles are based on a the "slate" bulmaswatch theme and borrow variables from there,
  * creating a matching visual experience for these dropdowns
 **************************************************************
 */
-/* Dropdown menu should encompass max menu item content by default */
-.dropdown-menu {
-  width: max-content;
-}
-
-/* The menus should not be very narrow to have fewer word-breaking for longer entries*/
-.dropdown-menu {
-  /* wider than the 12 rem default*/
-  min-width: 15rem;
-}
-
 /** Button styles for dropdown menu items. 
  *  This makes buttons usable as dropdown items, 
  *  supporting proper accessibility,
@@ -11146,12 +11176,6 @@ button.dropdown-item {
   color: hsl(0, 0%, 98%);
 }
 
-/* No wide right padding, the area is used by an icon */
-a.dropdown-item,
-button.dropdown-item {
-  padding-right: 1em;
-}
-
 /* Hovered dropdown item with better suited contrast for a dark theme */
 a.dropdown-item:hover,
 button.dropdown-item:hover {
@@ -11166,23 +11190,10 @@ button.dropdown-item.is-active {
   color: #202328;
 }
 
-/* Icons are spaced similarly to a button */
-.dropdown-item-icon {
-  padding-bottom: calc(0.5em - 1px);
-  padding-left: 1em;
-  padding-right: 1em;
-  padding-top: calc(0.5em - 1px);
-}
-
 .dropdown-content {
   border-color: #52575c;
   border-width: 1px;
   border-style: solid;
-}
-
-/* The alignment should be left always (No LTR support) */
-.dropdown-content {
-  text-align: left;
 }
 
 /* divider similar to menu border */
@@ -11193,12 +11204,6 @@ button.dropdown-item.is-active {
 /* static menu items are not clickable */
 .dropdown-item.is-static {
   pointer-events: none;
-}
-
-/* header menu items are shorter */
-.dropdown-item.is-header {
-  padding-top: 0;
-  padding-bottom: 0;
 }
 
 /* Indicate the active item
