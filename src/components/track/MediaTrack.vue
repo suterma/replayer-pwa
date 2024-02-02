@@ -1070,7 +1070,7 @@ const isFading = ref(FadingMode.None);
 const isExpanded = ref(false); //TODO fix?
 
 /** The visual transition to use for skipping track */
-const skipTransitionName = ref('slide-left');
+const skipTransitionName = ref('item-expand');
 
 const settings = useSettingsStore();
 const {
@@ -1439,10 +1439,6 @@ defineExpose({
 /** Handles changes in whether this track is playing.
  */
 watch(isTrackPlaying, () => {
-    // console.debug(
-    //     `MediaTrack(${props.track.Name})::isTrackPlaying:`,
-    //     isTrackPlaying,
-    // );
     emit('isTrackPlaying', isTrackPlaying);
 });
 
@@ -1622,16 +1618,20 @@ watch(
 
 /** Handles active track id changes.
  * @remarks Used to determine the requested player widget transition.
+ * In edit mode, keep the default transition, as no horizontal slides are used
+ * In other modes, slide according to the track index
  */
 watch(activeTrackId, (activeTrackId, previousTrackId) => {
-    console.debug(
-        `MediaTrack(${props.track.Name})::activeTrack:activeTrackId:`,
-        activeTrackId,
-        'prev:',
-        previousTrackId,
-    );
+    // console.debug(
+    //     `MediaTrack(${props.track.Name})::activeTrack:activeTrackId:`,
+    //     activeTrackId,
+    //     'prev:',
+    //     previousTrackId,
+    // );
 
-    if (activeTrackId != null && previousTrackId != null) {
+    if (isEditable) {
+        skipTransitionName.value = 'item-expand';
+    } else if (activeTrackId != null && previousTrackId != null) {
         const indexOfActive = CompilationHandler.getIndexOfTrackById(
             //Because of the possible shuffling, the tracks computed property is not used
             compilation.value.Tracks,
@@ -1877,4 +1877,3 @@ These are chosen for a nice visual fit in the header */
     }
 }
 </style>
-../../code/ui/Replayer

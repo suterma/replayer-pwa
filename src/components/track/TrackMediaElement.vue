@@ -14,6 +14,7 @@
             :dismissible="false"
             :disabled="disabled || !(mediaElement || audioSource)"
             title="Waveform"
+            transition-name="item-expand"
         >
             <template #caption
                 ><span class="has-opacity-half">

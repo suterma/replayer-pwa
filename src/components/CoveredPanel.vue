@@ -20,7 +20,7 @@
         ></CollapsibleButton>
         <!-- Transition for the revealing action. 
         Uses an additional element to make sure that there is a single root within the transition slot -->
-        <Transition name="item-expand-right">
+        <Transition :name="transitionName">
             <div
                 v-if="!isCovered"
                 v-bind="$attrs"
@@ -89,6 +89,14 @@ const props = defineProps({
     revealFor: {
         type: Array as PropType<Array<unknown> | undefined>,
         default: undefined,
+    },
+
+    /** The name of the transition to use for revealing
+     * @remarks Default is "item-expand-right"
+     *  */
+    transitionName: {
+        type: String,
+        default: 'item-expand-right',
     },
 
     /** The title
