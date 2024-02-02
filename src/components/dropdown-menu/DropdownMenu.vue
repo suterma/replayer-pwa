@@ -49,12 +49,7 @@
 import NavButton from '@/components/buttons/NavButton.vue';
 import DismissiblePanel from '@/components/DismissiblePanel.vue';
 import { mdiDotsVertical } from '@mdi/js';
-import {
-    refDebounced,
-    refThrottled,
-    useElementBounding,
-    useWindowSize,
-} from '@vueuse/core';
+import { refThrottled, useElementBounding, useWindowSize } from '@vueuse/core';
 import { computed, ref } from 'vue';
 
 /** A drop down menu, with a slot for the menu items.
