@@ -32,6 +32,7 @@
                     </div>
                 </div>
                 <CoveredPanel
+                    v-if="compilation.Title"
                     :reveal-for="[compilation.Artist]"
                     title="Artist name for this compilation"
                 >
@@ -65,6 +66,7 @@
                     </div>
                 </CoveredPanel>
                 <CoveredPanel
+                    v-if="compilation.Title"
                     :reveal-for="[compilation.Album]"
                     title="Album name for this compilation"
                 >
