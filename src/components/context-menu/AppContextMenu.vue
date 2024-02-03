@@ -70,8 +70,7 @@
     </DropdownMenu>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
 import DropdownMenuRouterLink from '@/components/dropdown-menu/DropdownMenuRouterLink.vue';
 import {
@@ -81,42 +80,21 @@ import {
     mdiListBoxOutline,
     mdiCogOutline,
     mdiInformationOutline,
-    mdiFlaskOutline,
     mdiTuneVertical,
 } from '@mdi/js';
-import { mapState } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { useSettingsStore } from '@/store/settings';
 
 /** A nav bar as header with a menu for a compilation
  */
-export default defineComponent({
-    name: 'AppContextMenu',
-    components: {
-        DropdownMenu,
-        DropdownMenuRouterLink,
-    },
-    props: {
-        /** Whether a compilation is currently loaded */
-        hasCompilation: {
-            type: Boolean,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            /** Icons from @mdi/js */
-            mdiMenu: mdiMenu,
-            mdiPlay: mdiPlay,
-            mdiPencil: mdiPencil,
-            mdiListBoxOutline: mdiListBoxOutline,
-            mdiCogOutline: mdiCogOutline,
-            mdiInformationOutline: mdiInformationOutline,
-            mdiFlaskOutline: mdiFlaskOutline,
-            mdiTuneVertical: mdiTuneVertical,
-        };
-    },
-    computed: {
-        ...mapState(useSettingsStore, ['experimentalMultitrack']),
+defineProps({
+    /** Whether a compilation is currently loaded */
+    hasCompilation: {
+        type: Boolean,
+        required: true,
     },
 });
+
+const settings = useSettingsStore();
+const { experimentalMultitrack } = storeToRefs(settings);
 </script>
