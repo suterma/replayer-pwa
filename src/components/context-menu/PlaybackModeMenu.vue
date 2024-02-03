@@ -1,5 +1,6 @@
 <template>
     <DropdownMenu
+        right
         class="is-slim"
         :icon-path="currentModeIcon"
         :render-closed="true"

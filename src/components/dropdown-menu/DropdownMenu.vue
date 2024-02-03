@@ -50,11 +50,11 @@ import NavButton from '@/components/buttons/NavButton.vue';
 import DismissiblePanel from '@/components/DismissiblePanel.vue';
 import { mdiDotsVertical } from '@mdi/js';
 import { refThrottled, useElementBounding, useWindowSize } from '@vueuse/core';
-import { computed, ref } from 'vue';
+import { computed, mergeProps, ref } from 'vue';
 
 /** A drop down menu, with a slot for the menu items.
  */
-defineProps({
+const props = defineProps({
     /* The menu title*/
     title: {
         type: String,
@@ -64,6 +64,37 @@ defineProps({
         type: String,
         default: mdiDotsVertical,
     },
+
+    /** Whether to render the menu as left-opening
+     * @remarks Without direction, the menu opens according to the available space
+     */
+    left: {
+        type: Boolean,
+        default: false,
+    },
+
+    /** Whether to render the menu as right-opening
+     * @remarks Without direction, the menu opens according to the available space
+     */
+    right: {
+        type: Boolean,
+        default: false,
+    },
+    /** Whether to render the menu as up-opening
+     * @remarks Without direction, the menu opens according to the available space
+     */
+    up: {
+        type: Boolean,
+        default: false,
+    },
+    /** Whether to render the menu as down-opening
+     * @remarks Without direction, the menu opens according to the available space
+     */
+    down: {
+        type: Boolean,
+        default: false,
+    },
+
     /** Whether to render the closed menu
      * @remarks Set to true to handle shortcuts or other features on the closed menu / menu entries
      */
@@ -93,6 +124,9 @@ const { height, width } = useWindowSize();
  */
 const isMenuTooLow = refThrottled(
     computed(() => {
+        if (props.up) {
+            return true;
+        }
         return (
             bottom.value >
             height.value - 40 /* avoid menu very close to border or scrollbar */
@@ -106,6 +140,9 @@ const isMenuTooLow = refThrottled(
  */
 const isMenuTooRight = refThrottled(
     computed(() => {
+        if (props.left) {
+            return true;
+        }
         return (
             right.value >
             width.value - 40 /* avoid menu very close to border or scrollbar */
