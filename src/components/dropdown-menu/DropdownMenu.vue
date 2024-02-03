@@ -30,7 +30,7 @@
             <div
                 v-if="isDropdownExpanded || renderClosed"
                 id="dropdown-menu"
-                style="z-index: 3"
+                style="z-index: 4"
                 class="dropdown-menu is-unselectable"
                 role="menu"
                 @click="collapseDropdown()"
@@ -127,6 +127,9 @@ const isMenuTooLow = refThrottled(
         if (props.up) {
             return true;
         }
+        if (props.down) {
+            return false;
+        }
         return (
             bottom.value >
             height.value - 40 /* avoid menu very close to border or scrollbar */
@@ -142,6 +145,9 @@ const isMenuTooRight = refThrottled(
     computed(() => {
         if (props.left) {
             return true;
+        }
+        if (props.right) {
+            return false;
         }
         return (
             right.value >
