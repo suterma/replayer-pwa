@@ -3,6 +3,8 @@
         :icon-path="mdiMenu"
         :render-closed="true"
         title="Application context menu"
+        left
+        down
     >
         <div id="appContextMenuTop"></div>
         <!-- The compilation-related views are only available when any is loaded -->
