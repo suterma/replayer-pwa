@@ -18,7 +18,7 @@
             @click="$emit('adjustTime')"
         >
             <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
-            <i class="icon mdi mdi-24px">
+            <i class="icon mdi">
                 <svg viewBox="0 0 24 24">
                     <path
                         fill="currentColor"
@@ -36,7 +36,7 @@
                 class="is-hidden-mobile ml-2 tag is-light is-outlined has-opacity-third is-family-monospace is-uppercase has-text-weight-bold"
             >
                 <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
-                <i class="icon mdi mdi-24px mr-1">
+                <i class="icon mdi mr-1">
                     <svg viewBox="0 0 24 24">
                         <path
                             v-once

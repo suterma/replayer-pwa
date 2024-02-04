@@ -675,12 +675,14 @@ export default class CompilationHandler {
 
     /** Gets a usable file name (without extension), for a download operation,
      * from a compilation title
-     * @param compilationTitle - the compilation title to derive a file name from
+     * @param compilation - the compilation to derive a file name from
      */
-    public static getCompilationFileName(
-        compilationTitle: string | null | undefined,
-    ): string {
-        return compilationTitle?.trim() ?? '';
+    public static getCompilationFileName(compilation: ICompilation): string {
+        return (
+            (compilation?.Title?.trim() ?? '') +
+            (compilation?.Artist ? ' by ' + compilation.Artist.trim() : '') +
+            (compilation?.Album ? ' on ' + compilation.Album.trim() : '')
+        );
     }
 
     /** Determines whether playback of the given cue has already passed

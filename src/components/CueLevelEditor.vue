@@ -158,7 +158,7 @@
                     <p class="control" title="Trash this cue">
                         <button class="button" @click="deleteThisCue()">
                             <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
-                            <i class="icon mdi mdi-24px">
+                            <i class="icon mdi">
                                 <svg viewBox="0 0 24 24">
                                     <path
                                         v-once

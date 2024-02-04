@@ -29,7 +29,7 @@
             ></span>
             <!-- First line (Do not use a level here, this has only complicated things for smaller widths so far)-->
             <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
-            <i class="icon mdi mdi-24px foreground">
+            <i class="icon mdi foreground">
                 <svg viewBox="0 0 24 24">
                     <path
                         fill="currentColor"
@@ -54,7 +54,7 @@
                 ></template
             >
             <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
-            <i class="icon mdi mdi-24px ml-2 mr-2 foreground">
+            <i class="icon mdi ml-2 mr-2 foreground">
                 <svg viewBox="0 0 24 24">
                     <path
                         v-if="isCueLooping"
