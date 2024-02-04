@@ -1,6 +1,7 @@
 import { useLocalStorage } from '@vueuse/core';
 import { defineStore } from 'pinia';
 import { Store } from '..';
+import { ref } from 'vue';
 
 /** The precision for time display
  * @remarks Does not affect the application's internal precision when handling time values.
@@ -151,6 +152,11 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
      */
     const experimentalUseMeter = useLocalStorage('experimentalUseMeter', false);
 
+    /** EXPERIMENTAL: Whether to hide the stage mark
+     * @remarks This is not persisted to keep the user still informed after any restart
+     */
+    const experimentalHideStageMark = ref(false);
+
     /** Returns the settings to their default value */
     function $reset() {
         levelMeterSizeIsLarge.value = false;
@@ -173,6 +179,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalUseQueueCueMode.value = false;
         experimentalUsePlaybackModeDropdownMenu.value = false;
         experimentalUseMeter.value = false;
+        experimentalHideStageMark.value = false;
     }
 
     return {
@@ -196,6 +203,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalUseQueueCueMode,
         experimentalUsePlaybackModeDropdownMenu,
         experimentalUseMeter,
+        experimentalHideStageMark,
         $reset,
     };
 });

@@ -1,7 +1,11 @@
 <template>
-    <div class="stage-mark has-text-warning">{{ stageText }}</div>
+    <div v-if="!experimentalHideStageMark" class="stage-mark has-text-warning">
+        {{ stageText }}
+    </div>
 </template>
 <script setup lang="ts">
+import { useSettingsStore } from '@/store/settings';
+import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 
 /** A watermark with the name of the current stage (empty on production)
@@ -12,6 +16,9 @@ const stageText = computed(() => {
     const host = location.host;
     return host == 'web.replayer.app' ? '' : host;
 });
+
+const settings = useSettingsStore();
+const { experimentalHideStageMark } = storeToRefs(settings);
 </script>
 <style>
 /** **********************************************************

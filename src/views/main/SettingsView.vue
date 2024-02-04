@@ -333,6 +333,16 @@
                     ></LabeledCheckbox>
                 </div>
             </div>
+
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="experimentalHideStageMark"
+                        label="Hide stage mark"
+                        hint="Useful for documentation purposes"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -370,6 +380,7 @@ const {
     experimentalUseQueueCueMode,
     experimentalUsePlaybackModeDropdownMenu,
     experimentalUseMeter,
+    experimentalHideStageMark,
 } = storeToRefs(settings);
 
 const router = useRouter();
