@@ -462,14 +462,14 @@
                                         <FullscreenToggler
                                             v-if="hasNative"
                                             :model-value="isFullscreen"
-                                            title="toggle full-page mode"
+                                            title="Toggle full-screen mode"
                                             collapsed-chevron-direction="up"
                                             @click="toggle"
                                         ></FullscreenToggler>
                                         <CollapsibleButton
                                             v-else
                                             :model-value="isFullscreen"
-                                            title="toggle full-page mode"
+                                            title="Toggle full-page mode"
                                             collapsed-chevron-direction="up"
                                             @click="toggle"
                                         ></CollapsibleButton>
