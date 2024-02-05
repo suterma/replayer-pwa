@@ -279,17 +279,17 @@ const isTrackPlaying = inject(isPlayingInjectionKey);
 const cueDisplayDescription = computed(() => {
     if (props.description) {
         return props.description;
-    } else if (props.time != undefined) {
+    }
+    if (props.time !== null) {
         if (
-            meter != undefined &&
-            meter.value != null &&
+            meter !== undefined &&
+            meter.value !== null &&
             Meter.isValid(meter.value) &&
             useMeasureNumbers?.value
         ) {
             return Meter.toMeasureDisplay(props.time, meter.value);
-        } else {
-            return cueDisplayTime;
         }
+        return cueDisplayTime.value;
     }
     return '';
 });
