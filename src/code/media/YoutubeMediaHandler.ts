@@ -85,7 +85,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     updateCurrentTime(): void {
         const currentTime = this.currentTime;
-        //this.debugLog(`updateCurrentTime:${currentTime}`);
+        this.debugLog(`updateCurrentTime:${currentTime}`);
         this.onCurrentTimeChanged.emit(currentTime);
         if (this._player.getPlayerState() == PlayerState.PLAYING) {
             window.requestAnimationFrame(() => this.updateCurrentTime());

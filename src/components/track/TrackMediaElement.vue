@@ -199,12 +199,6 @@ import { Route } from '@/router';
 const emit = defineEmits(['ready', 'click']);
 
 const props = defineProps({
-    /** The title of the track */
-    title: {
-        type: String,
-        default: '',
-        required: false,
-    },
     /** The media file URL
      * @remark This URL can point to an online resource or be a local object URL
      */
@@ -214,7 +208,7 @@ const props = defineProps({
         required: false,
     },
 
-    /** The start time
+    /** The initial playback position
      * @remark If set, the initial playback position is set to this time, in [seconds], after the resource can be played.
      */
     start: {

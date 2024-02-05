@@ -87,7 +87,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
             this.onPausedChanged.emit(false);
         };
 
-        media.ontimeupdate = () => this.handleTimeUpdate();
+        media.ontimeupdate = () => this.updateCurrentTime();
         media.onended = () => this.handleEnded();
     }
 
@@ -122,6 +122,17 @@ export default class HtmlMediaHandler implements IMediaHandler {
 
         // fader
         this.fader.destroy();
+    }
+
+    /// --- updating time (repeated when playing) ---
+
+    updateCurrentTime(): void {
+        const currentTime = this.currentTime;
+        this.debugLog(`updateCurrentTime:${currentTime}`);
+        this.onCurrentTimeChanged.emit(currentTime);
+        if (!this.paused) {
+            window.requestAnimationFrame(() => this.updateCurrentTime());
+        }
     }
 
     // --- fading ---
@@ -169,12 +180,6 @@ export default class HtmlMediaHandler implements IMediaHandler {
 
     get duration(): number {
         return this._media.duration;
-    }
-
-    /** Handles the time update event of the audio element
-     */
-    private handleTimeUpdate(/*event: Event*/): void {
-        this.onCurrentTimeChanged.emit(this.currentTime);
     }
 
     /** Handles the track end event of the audio element, by providing it further as event.
