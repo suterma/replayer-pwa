@@ -2,7 +2,7 @@
     <div class="cue-buttons-field buttons has-gap is-fullwidth">
         <!-- A virtual cue button as prefix, when the first cue is not at the zero position -->
         <CueButton
-            v-if="prefixCue.Duration ?? 0 > 0"
+            v-if="(prefixCue.Duration ?? 0 > 0) && showInitialZeroTimeCue"
             :id="prefixCue.Id"
             class="is-flex-grow-1 is-flex-shrink-5"
             :class="{
@@ -139,6 +139,7 @@ import type { ITrack } from '@/store/ITrack';
 import { mdiTrashCanOutline, mdiPlus } from '@mdi/js';
 import { Hotkey } from '@simolation/vue-hotkey';
 import { useMessageStore } from '@/store/messages';
+import { useSettingsStore } from '@/store/settings';
 
 /** A field of large cue buttons for a track
  */
@@ -270,6 +271,9 @@ const prefixCue = computed(() => {
         prefixCueButtonId,
     );
 });
+
+const settings = useSettingsStore();
+const { showInitialZeroTimeCue } = storeToRefs(settings);
 
 const app = useAppStore();
 const { selectedCueId, scheduledCueId, selectedCue } = storeToRefs(app);

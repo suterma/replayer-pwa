@@ -79,6 +79,19 @@
         </div>
 
         <div class="box">
+            <h3 class="subtitle">Display (Play)</h3>
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="showInitialZeroTimeCue"
+                        label="Show an initial cue at the beginning of a track"
+                        hint="Helps  initial navigating to the start of a track"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
+        </div>
+
+        <div class="box">
             <h3 class="subtitle">Audio</h3>
 
             <!-- Default pre-roll duration -->
@@ -361,6 +374,7 @@ const settings = useSettingsStore();
 
 const {
     levelMeterSizeIsLarge,
+    showInitialZeroTimeCue,
     preventScreenTimeout,
     fadeInDuration,
     fadeOutDuration,
