@@ -660,7 +660,6 @@
                                     v-if="isVideoTrack || isAudioTrack"
                                     :key="track.Id"
                                     :enable-video="isVideoTrack"
-                                    :title="track.Name"
                                     :media-url="mediaUrl"
                                     :start="track.PlayheadPosition"
                                     :track-id="track.Id"
