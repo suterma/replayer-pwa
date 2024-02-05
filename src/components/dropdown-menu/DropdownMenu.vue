@@ -26,21 +26,26 @@
                     @click="toggleDropdownExpanded()"
                 />
             </div>
-            <!-- z-index must be larger than the fixed footer -->
-            <div
-                v-if="isDropdownExpanded || renderClosed"
-                id="dropdown-menu"
-                style="z-index: 4"
-                class="dropdown-menu is-unselectable"
-                role="menu"
-                @click="collapseDropdown()"
-            >
-                <div ref="target" class="dropdown-content">
-                    <slot>
-                        <!-- The menu items -->
-                    </slot>
+            <!-- Transition for the revealing action. 
+                Uses an additional element to make sure that there is a single root within the transition slot -->
+            <Transition name="item-expand">
+                <!-- z-index must be larger than the fixed footer -->
+                <div
+                    v-if="isDropdownExpanded || renderClosed"
+                    v-show="isDropdownExpanded"
+                    id="dropdown-menu"
+                    style="z-index: 4"
+                    class="dropdown-menu is-unselectable transition-in-place"
+                    role="menu"
+                    @click="collapseDropdown()"
+                >
+                    <div ref="target" class="dropdown-content">
+                        <slot>
+                            <!-- The menu items -->
+                        </slot>
+                    </div>
                 </div>
-            </div>
+            </Transition>
         </DismissiblePanel>
     </div>
 </template>
@@ -50,7 +55,7 @@ import NavButton from '@/components/buttons/NavButton.vue';
 import DismissiblePanel from '@/components/DismissiblePanel.vue';
 import { mdiDotsVertical } from '@mdi/js';
 import { refThrottled, useElementBounding, useWindowSize } from '@vueuse/core';
-import { computed, mergeProps, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 /** A drop down menu, with a slot for the menu items.
  */
