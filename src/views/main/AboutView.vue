@@ -22,206 +22,220 @@
             <hr />
         </div>
         <CollapsiblePanel>
-            <template #caption><h1 class="title is-3">API Demos</h1></template>
-            <div>
-                <div class="block">
-                    <h3 class="title is-5 mt-5">Track API Demo</h3>
-                    <div class="content">
-                        <ul>
-                            <li>
-                                <a
-                                    href="./#/play?media=https://lib.replayer.app/your-light-by-lidija-roos.mp3&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&0.0=Intro&17.2=Verse+1&33.98=Verse+1b&49.21=Refrain&64.87=Verse+2&82.4=Verse+2b&100.89=Refrain&112.88=Refrain+Repeat&129.65=Brigde+%2B+Solo&149.86=Refrain+Reprise&161.86=Verse+3b&178.46=Refrain+Variations&224.51=Fade+Out"
-                                    target="_blank"
-                                >
-                                    MP3 audio, Your Light by Lidija Roos</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/edit?media=https://lib.replayer.app/your-light-by-lidija-roos.mp3&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&0.0=Intro&17.2=Verse+1&33.98=Verse+1b&49.21=Refrain&64.87=Verse+2&82.4=Verse+2b&100.89=Refrain&112.88=Refrain+Repeat&129.65=Brigde+%2B+Solo&149.86=Refrain+Reprise&161.86=Verse+3b&178.46=Refrain+Variations&224.51=Fade+Out"
-                                    target="_blank"
-                                >
-                                    MP3 audio, Your Light by Lidija Roos (Edit
-                                    Mode)</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?media=https://lib.replayer.app/as-a-child-by-lidja-roos.aiff&title=As+A+Child+(AIFF)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
-                                    target="_blank"
-                                >
-                                    AIFF audio, with only 1 cue</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?media=https://lib.replayer.app/decisions-by-lidija-roos.ogg"
-                                    target="_blank"
-                                >
-                                    OGG Vorbis audio, without metadata</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?media=https://lib.replayer.app/eyes-have-not-seen-by-lidija-roos.flac&title=Eyes+Have+Not+Seen&album=Not+For+Sale&artist=Lidija+Roos&0.0="
-                                    target="_blank"
-                                >
-                                    FLAC audio</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?media=https://lib.replayer.app/psalm-4-38-by-lidija-roos.wav&title=Psalm+4.38+(WAV)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
-                                    target="_blank"
-                                >
-                                    WAV audio</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?media=https://lib.replayer.app/the-gift-by-lidija-roos.m4a&title=The+Gift+(AAC)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
-                                    target="_blank"
-                                >
-                                    AAC audio</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?media=https://previews.cambridge-mt.com/ImAlright_Full_Preview.mp3&title=I'm+Allright&album='Mixing+Secrets'+Free+Multitrack+Download+Library+by+Mike+Senior&artist=Angels+in+Amplifiers"
-                                    target="_blank"
-                                >
-                                    Angels In Amplifiers, Full Preview Mix</a
-                                >, from the 'Mixing Secrets' Free Multitrack
-                                Download Library by Mike Senior
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?media=https://lib.replayer.app/nasa-4k/13537_Apollo13ViewsMoon4K_YouTube4K.mp4&title=Apollo+13+Views+of+the+Moon+in+4K+(online,+715+MB)&album=https://svs.gsfc.nasa.gov/13537&artist=NASA's+Goddard+Space+Flight+Center&0.755=Intro&12.771=Sunrise&18.875=Lunar+terrain&39.065=Craters&65.374=Crater&83.432=Crater+2&96.431=Earth+rise&120.341=Trajectory&133.114=Full+moon+%26+outro"
-                                    target="_blank"
-                                >
-                                    MP4 video</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?media=https://lib.replayer.app/nasa-4k/2023_Moon_Phase_North_Up_YouTubeHD.webm&title=Moon+Phases+2023+(North+Up,+YouTubeHD)&album=&artist=NASA's+Scientific+Visualization+Studio&0.0=January&25.1=February&47.383=March&72.085=April&96.058=May&120.798=June&144.763=July&169.755=August&194.203=September&218.403=October&243.082=November&267.325=December"
-                                    target="_blank"
-                                >
-                                    WebM video</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?media=https://lib.replayer.app/nasa-4k/JPL-20170404-CASSINf-0001-1280x540.ogv&title=Cassini's+Grand+Finale(1280x540)&album=&artist=NASA/Jet+Propulsion+Laboratory-Caltech&0.0=Intro&46.9=Launch+and+Lift-Off&62.2=Arrival+at+Saturn&76.057=Arrival+at+Titian&117.128=The+last+assignment&166.273=Final+orbit"
-                                    target="_blank"
-                                >
-                                    Ogg Theora video</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?media=https://download-media.srf.ch/world/video/sayhi/2023/10/sayhi_20231003_145252_2069202_v_webcast_h264_q60.mp4&title=%23SayHi2023+-+Tanz-Tutorial+zu+%C2%ABMier+fl%C3%BCged+los%C2%BB+von+Remo+Forrer&album=Play+SRF+%23SayHi&artist=Joram+Weber+%26+Lisa+Perissinotto&7.283=Begr%C3%BCssung&32.419=Verse+1a+Tutorial&64.406=Verse+1a+Music&85.982=Verse+1b+Tutorial&112.7=Verse+1b+Music&130.262=Verse+1c+Tutorial&151.823=Verse+1c+Music&170.194=Chorus+Tutorial&190.142=Chorus+Music&209.938=2nd+Verse+Tutorial&232.837=2nd+Verse+Music"
-                                    target="_blank"
-                                >
-                                    SRF (MP3 video): #SayHi2023 - Tanz-Tutorial
-                                    zu «Mier flüged los» von Remo Forrer</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?media=https://www.youtube.com/watch?v=USetyquP_dU&title=Crawling+Back+To+You+(Tom+Petty+Cover)&album=TELEFUNKEN+Live+From+The+Lab&artist=Szlachetka&0.0=Announcement&10.455=Piano+intro&63.697=Intro+Part+II&79.605=Verse+&112.158=Verse+2&143.779=Bridge&162.299=Instrumental&263.228=Verse+3&295.321=Refrain+(variation)&326.042=Guitar+solo&445.456=Refrain&477.8=Outro+%2B+Credits"
-                                    target="_blank"
-                                >
-                                    YouTube video: Szlachetka playing Crawling
-                                    Back To You (Tom Petty Cover)</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?media=https://www.youtube.com/watch?v=tR9FAtxBxUU&title=F%C3%BCr+immer+uf+di&album=Jodelcover&artist=Jodelklub+Edelweiss&3.581=Intro&24.206=Uf+Mueter's+Seel&70.078=Es+Glas...&99.315=Jodel&123.036=Zyt+wo+mir+no+blyybt..."
-                                    target="_blank"
-                                >
-                                    YouTube video: Jodelklub Edelweiss yodeling
-                                    Für Immer Uf Di (Patent Ochsner Cover)</a
-                                >
-                            </li>
+            <template #caption> <h1 class="title is-3">API Demos</h1></template>
+            <template #default="{ modelValue }">
+                <Transition name="item-expand">
+                    <div v-if="modelValue">
+                        <div class="block">
+                            <h3 class="title is-5 mt-5">Track API Demo</h3>
+                            <div class="content">
+                                <ul>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://lib.replayer.app/your-light-by-lidija-roos.mp3&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&0.0=Intro&17.2=Verse+1&33.98=Verse+1b&49.21=Refrain&64.87=Verse+2&82.4=Verse+2b&100.89=Refrain&112.88=Refrain+Repeat&129.65=Brigde+%2B+Solo&149.86=Refrain+Reprise&161.86=Verse+3b&178.46=Refrain+Variations&224.51=Fade+Out"
+                                            target="_blank"
+                                        >
+                                            MP3 audio, Your Light by Lidija
+                                            Roos</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/edit?media=https://lib.replayer.app/your-light-by-lidija-roos.mp3&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&0.0=Intro&17.2=Verse+1&33.98=Verse+1b&49.21=Refrain&64.87=Verse+2&82.4=Verse+2b&100.89=Refrain&112.88=Refrain+Repeat&129.65=Brigde+%2B+Solo&149.86=Refrain+Reprise&161.86=Verse+3b&178.46=Refrain+Variations&224.51=Fade+Out"
+                                            target="_blank"
+                                        >
+                                            MP3 audio, Your Light by Lidija Roos
+                                            (Edit Mode)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://lib.replayer.app/as-a-child-by-lidja-roos.aiff&title=As+A+Child+(AIFF)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
+                                            target="_blank"
+                                        >
+                                            AIFF audio, with only 1 cue</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://lib.replayer.app/decisions-by-lidija-roos.ogg"
+                                            target="_blank"
+                                        >
+                                            OGG Vorbis audio, without
+                                            metadata</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://lib.replayer.app/eyes-have-not-seen-by-lidija-roos.flac&title=Eyes+Have+Not+Seen&album=Not+For+Sale&artist=Lidija+Roos&0.0="
+                                            target="_blank"
+                                        >
+                                            FLAC audio</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://lib.replayer.app/psalm-4-38-by-lidija-roos.wav&title=Psalm+4.38+(WAV)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
+                                            target="_blank"
+                                        >
+                                            WAV audio</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://lib.replayer.app/the-gift-by-lidija-roos.m4a&title=The+Gift+(AAC)&album=Not+For+Sale&artist=Lidija+Roos&0.0="
+                                            target="_blank"
+                                        >
+                                            AAC audio</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://previews.cambridge-mt.com/ImAlright_Full_Preview.mp3&title=I'm+Allright&album='Mixing+Secrets'+Free+Multitrack+Download+Library+by+Mike+Senior&artist=Angels+in+Amplifiers"
+                                            target="_blank"
+                                        >
+                                            Angels In Amplifiers, Full Preview
+                                            Mix</a
+                                        >, from the 'Mixing Secrets' Free
+                                        Multitrack Download Library by Mike
+                                        Senior
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://lib.replayer.app/nasa-4k/13537_Apollo13ViewsMoon4K_YouTube4K.mp4&title=Apollo+13+Views+of+the+Moon+in+4K+(online,+715+MB)&album=https://svs.gsfc.nasa.gov/13537&artist=NASA's+Goddard+Space+Flight+Center&0.755=Intro&12.771=Sunrise&18.875=Lunar+terrain&39.065=Craters&65.374=Crater&83.432=Crater+2&96.431=Earth+rise&120.341=Trajectory&133.114=Full+moon+%26+outro"
+                                            target="_blank"
+                                        >
+                                            MP4 video</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://lib.replayer.app/nasa-4k/2023_Moon_Phase_North_Up_YouTubeHD.webm&title=Moon+Phases+2023+(North+Up,+YouTubeHD)&album=&artist=NASA's+Scientific+Visualization+Studio&0.0=January&25.1=February&47.383=March&72.085=April&96.058=May&120.798=June&144.763=July&169.755=August&194.203=September&218.403=October&243.082=November&267.325=December"
+                                            target="_blank"
+                                        >
+                                            WebM video</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://lib.replayer.app/nasa-4k/JPL-20170404-CASSINf-0001-1280x540.ogv&title=Cassini's+Grand+Finale(1280x540)&album=&artist=NASA/Jet+Propulsion+Laboratory-Caltech&0.0=Intro&46.9=Launch+and+Lift-Off&62.2=Arrival+at+Saturn&76.057=Arrival+at+Titian&117.128=The+last+assignment&166.273=Final+orbit"
+                                            target="_blank"
+                                        >
+                                            Ogg Theora video</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://download-media.srf.ch/world/video/sayhi/2023/10/sayhi_20231003_145252_2069202_v_webcast_h264_q60.mp4&title=%23SayHi2023+-+Tanz-Tutorial+zu+%C2%ABMier+fl%C3%BCged+los%C2%BB+von+Remo+Forrer&album=Play+SRF+%23SayHi&artist=Joram+Weber+%26+Lisa+Perissinotto&7.283=Begr%C3%BCssung&32.419=Verse+1a+Tutorial&64.406=Verse+1a+Music&85.982=Verse+1b+Tutorial&112.7=Verse+1b+Music&130.262=Verse+1c+Tutorial&151.823=Verse+1c+Music&170.194=Chorus+Tutorial&190.142=Chorus+Music&209.938=2nd+Verse+Tutorial&232.837=2nd+Verse+Music"
+                                            target="_blank"
+                                        >
+                                            SRF (MP3 video): #SayHi2023 -
+                                            Tanz-Tutorial zu «Mier flüged los»
+                                            von Remo Forrer</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://www.youtube.com/watch?v=USetyquP_dU&title=Crawling+Back+To+You+(Tom+Petty+Cover)&album=TELEFUNKEN+Live+From+The+Lab&artist=Szlachetka&0.0=Announcement&10.455=Piano+intro&63.697=Intro+Part+II&79.605=Verse+&112.158=Verse+2&143.779=Bridge&162.299=Instrumental&263.228=Verse+3&295.321=Refrain+(variation)&326.042=Guitar+solo&445.456=Refrain&477.8=Outro+%2B+Credits"
+                                            target="_blank"
+                                        >
+                                            YouTube video: Szlachetka playing
+                                            Crawling Back To You (Tom Petty
+                                            Cover)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://www.youtube.com/watch?v=tR9FAtxBxUU&title=F%C3%BCr+immer+uf+di&album=Jodelcover&artist=Jodelklub+Edelweiss&3.581=Intro&24.206=Uf+Mueter's+Seel&70.078=Es+Glas...&99.315=Jodel&123.036=Zyt+wo+mir+no+blyybt..."
+                                            target="_blank"
+                                        >
+                                            YouTube video: Jodelklub Edelweiss
+                                            yodeling Für Immer Uf Di (Patent
+                                            Ochsner Cover)</a
+                                        >
+                                    </li>
 
-                            <li>
-                                <a
-                                    href="./#/play?media=https://lib.replayer.app/nasa-4k/13537_Apollo13ViewsMoon4K_YouTube4K.mp4&t=96.431"
-                                    target="_blank"
-                                >
-                                    MP4 video: at earth rise position (Credit:
-                                    NASA's Goddard Space Flight Center)</a
-                                >
-                            </li>
-                        </ul>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://lib.replayer.app/nasa-4k/13537_Apollo13ViewsMoon4K_YouTube4K.mp4&t=96.431"
+                                            target="_blank"
+                                        >
+                                            MP4 video: at earth rise position
+                                            (Credit: NASA's Goddard Space Flight
+                                            Center)</a
+                                        >
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="block">
+                            <h3 class="title is-5">Package API Demo</h3>
+                            <div class="content">
+                                <ul>
+                                    <li>
+                                        <a
+                                            href="./#/play?package=https://lib.replayer.app/demo-compilation-featuring-lidija-roos.rez"
+                                            target="_blank"
+                                        >
+                                            ZIP (.rez) compressed package, with
+                                            1 track</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?package=https://lib.replayer.app/Demo%20Compilation%20featuring%20Lidija%20Roos%20%28online%20resources%20of%20multiple%20types%29.rex"
+                                            target="_blank"
+                                        >
+                                            XML (.rex) package, with 5 online
+                                            tracks</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?package=https://lib.replayer.app/Test-Compilation%20featuring%20Lidija%20Roos%20%28WAV%20files%20in%20various%20sizes%29.rez"
+                                            target="_blank"
+                                        >
+                                            Large ZIP (.rez) package (115MB),
+                                            with WAV files of various sizes</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?package=https://lib.replayer.app/nasa-4k/13537_Apollo13ViewsMoon4K_YouTube4K.rex"
+                                            target="_blank"
+                                        >
+                                            Small XML (.rex) package (4k), with
+                                            one large linked video (.mp4, 715MB)
+                                            and a small linked text file.</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?package=https://lib.replayer.app/nasa-4k/Moonlight%20%28Clair%20de%20Lune%29.rez"
+                                            target="_blank"
+                                        >
+                                            Large ZIP (.rez) package (327MB),
+                                            with one large included video (.mp4,
+                                            327MB) and a small included text
+                                            file.</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?package=https://lib.replayer.app/test/audio-test-tracks.rez"
+                                            target="_blank"
+                                        >
+                                            Small ZIP (.rez) package (28k), with
+                                            22 audio test tracks, including sine
+                                            chirps and noise.</a
+                                        >
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="block">
-                    <h3 class="title is-5">Package API Demo</h3>
-                    <div class="content">
-                        <ul>
-                            <li>
-                                <a
-                                    href="./#/play?package=https://lib.replayer.app/demo-compilation-featuring-lidija-roos.rez"
-                                    target="_blank"
-                                >
-                                    ZIP (.rez) compressed package, with 1
-                                    track</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?package=https://lib.replayer.app/Demo%20Compilation%20featuring%20Lidija%20Roos%20%28online%20resources%20of%20multiple%20types%29.rex"
-                                    target="_blank"
-                                >
-                                    XML (.rex) package, with 5 online tracks</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?package=https://lib.replayer.app/Test-Compilation%20featuring%20Lidija%20Roos%20%28WAV%20files%20in%20various%20sizes%29.rez"
-                                    target="_blank"
-                                >
-                                    Large ZIP (.rez) package (115MB), with WAV
-                                    files of various sizes</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?package=https://lib.replayer.app/nasa-4k/13537_Apollo13ViewsMoon4K_YouTube4K.rex"
-                                    target="_blank"
-                                >
-                                    Small XML (.rex) package (4k), with one
-                                    large linked video (.mp4, 715MB) and a small
-                                    linked text file.</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?package=https://lib.replayer.app/nasa-4k/Moonlight%20%28Clair%20de%20Lune%29.rez"
-                                    target="_blank"
-                                >
-                                    Large ZIP (.rez) package (327MB), with one
-                                    large included video (.mp4, 327MB) and a
-                                    small included text file.</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="./#/play?package=https://lib.replayer.app/test/audio-test-tracks.rez"
-                                    target="_blank"
-                                >
-                                    Small ZIP (.rez) package (28k), with 22
-                                    audio test tracks, including sine chirps and
-                                    noise.</a
-                                >
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+                </Transition>
+            </template>
         </CollapsiblePanel>
         <hr />
 
