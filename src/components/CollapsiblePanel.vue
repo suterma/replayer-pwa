@@ -8,9 +8,24 @@
         @update:model-value="(value) => (modelValue = value)"
         ><span><slot name="caption"></slot></span
     ></CollapsibleButton>
-    <template v-if="modelValue"><slot></slot></template>
+    <!-- Transition for the revealing action. 
+        Uses an additional element to make sure that there is a single root within the transition slot -->
+    <Transition :name="transitionName">
+        <template v-if="modelValue"
+            ><slot :modelValue="modelValue"></slot
+        ></template>
+    </Transition>
 </template>
 <script setup lang="ts">
+/** A panel with an expander button that controls the expansion state of the slotted content.
+ * @remarks the v-if directive is used, completely omitting collapsed content, if not displayed.
+ *
+ * @remarks Works similar to the "CoveredPanel" component, with some differences:
+ * - The caption and icon is always shown.
+ * - A parent component can explicitly cover and reveal the content via
+ * exposed functions
+ */
+
 /** A panel with an expander button that controls the expansion state of the slotted content.
  * @remarks the v-if directive is used, completely omitting collapsed content, if not displayed.
  */
@@ -26,8 +41,20 @@ defineProps({
         type: String,
         default: mdiChevronDown,
     },
+    /** The name of the transition to use for revealing
+     * @remarks Default is "item-expand"
+     *  */
+    transitionName: {
+        type: String,
+        default: 'item-expand',
+    },
 });
 
 /** Whether to show this panel as expanded */
 const modelValue = ref(false);
+
+defineExpose({
+    /** A parent component can handle expansion fullscreen */
+    modelValue,
+});
 </script>
