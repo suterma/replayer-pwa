@@ -126,10 +126,15 @@ export default class HtmlMediaHandler implements IMediaHandler {
 
     /// --- updating time (repeated when playing) ---
 
+    /** Keeper for the last emitted current time, to avoid multiple equal outputs. */
+    private lastEmittedCurrentTime: number | null = null;
     updateCurrentTime(): void {
         const currentTime = this.currentTime;
-        this.debugLog(`updateCurrentTime:${currentTime}`);
-        this.onCurrentTimeChanged.emit(currentTime);
+        if (currentTime !== this.lastEmittedCurrentTime) {
+            //this.debugLog(`updateCurrentTime:${currentTime}`);
+            this.onCurrentTimeChanged.emit(currentTime);
+            this.lastEmittedCurrentTime = currentTime;
+        }
         if (!this.paused) {
             window.requestAnimationFrame(() => this.updateCurrentTime());
         }
