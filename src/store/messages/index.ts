@@ -83,7 +83,7 @@ export const useMessageStore = defineStore(Store.Messages, () => {
 
     /** Gets the progress messages from the stack */
     const progressMessages = computed(() => {
-        return errorMessageStack.value;
+        return progressMessageStack.value;
     });
 
     /** Whether any progress message is available */
@@ -166,6 +166,12 @@ export const useMessageStore = defineStore(Store.Messages, () => {
         return inputFeedback.value !== null;
     });
 
+    /** Whether the application is busy while updating the route
+     * @remarks This is used to visually indicate the busy routing state.
+     * It's different from the progress state, visually and technically
+     */
+    const isBusyRouting = ref(false);
+
     return {
         pushProgress,
         pushError,
@@ -187,5 +193,6 @@ export const useMessageStore = defineStore(Store.Messages, () => {
         hasSuccessMessages,
         inputFeedback,
         hasInputFeedback,
+        isBusyRouting,
     };
 });

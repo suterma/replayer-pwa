@@ -153,6 +153,19 @@
             </button>
         </div>
 
+        <h2 class="subtitle has-text-danger">Message test buttons</h2>
+        <div class="buttons">
+            <button
+                class="button is-success"
+                @click="message.pushProgress('Some progress')"
+            >
+                Set progress
+            </button>
+            <button class="button is-success" @click="message.popProgress()">
+                Reset progress
+            </button>
+        </div>
+
         <h1 class="title has-text-danger">Icons test</h1>
         <BaseIcon v-once :path="rTrackPlay" />
         <BaseIcon v-once :path="rTrackRepeat" />
@@ -207,8 +220,8 @@
     ></RotaryKnob>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { computed, defineComponent, ref } from 'vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import NavButton from '@/components/buttons/NavButton.vue';
@@ -225,62 +238,37 @@ import {
     rTrackRepeatOnce,
 } from '@/components/icons/ReplayerIcon';
 import { useAppStore } from '@/store/app';
-import { mapState, mapWritableState } from 'pinia';
+import { storeToRefs } from 'pinia';
 import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
+import { useMessageStore } from '@/store/messages';
 
-export default defineComponent({
-    name: 'DevelopmentView',
-    components: {
-        CollapsibleButton,
-        BaseIcon,
-        NavButton,
-        ControlKnob,
-        RotaryKnob,
-        CollapsiblePanel,
-    },
-    data() {
-        return {
-            isExpanded: false,
-            isOn: false,
-            knobValue: 0,
+const isExpanded = ref(false);
+const knobValue = ref(0);
 
-            /** Icons from @mdi/js */
-            mdiPencil: mdiPencil,
-            rTrackPlay: rTrackPlay,
-            rTrackRepeat: rTrackRepeat,
-            rRepeatVariant: rRepeatVariant,
-            rShuffleVariant: rShuffleVariant,
-            rTrackPlayOnce: rTrackPlayOnce,
-            rTrackRepeatOnce: rTrackRepeatOnce,
-        };
-    },
-    computed: {
-        ...mapState(useAppStore, ['hasCompilation']),
-        ...mapWritableState(useAppStore, ['compilation', 'selectedCueId']),
-        firstCueOfFirstTrack(): string | null {
-            return this.compilation?.Tracks[0]?.Cues[0]?.Description ?? null;
-        },
+const message = useMessageStore();
+const {} = storeToRefs(message);
 
-        bpmOfFirstTrack(): number | null {
-            return this.compilation.Tracks[0]?.Meter?.BeatsPerMinute ?? null;
-        },
-    },
-    methods: {
-        writeDebug() {
-            console.debug('Just a debug log with an object', { some: 'data' });
-        },
-        writeLog() {
-            console.log('Just a log');
-        },
-        writeWarnLog() {
-            console.warn('A warning');
-        },
-        writeErrorLog() {
-            console.error('Something dangerous');
-        },
-        throwException() {
-            throw 'Something bad happened!';
-        },
-    },
+const app = useAppStore();
+
+const { compilation, selectedCueId } = storeToRefs(app);
+
+const firstCueOfFirstTrack = computed(() => {
+    return compilation.value?.Tracks[0]?.Cues[0]?.Description ?? null;
 });
+
+function writeDebug() {
+    console.debug('Just a debug log with an object', { some: 'data' });
+}
+function writeLog() {
+    console.log('Just a log');
+}
+function writeWarnLog() {
+    console.warn('A warning');
+}
+function writeErrorLog() {
+    console.error('Something dangerous');
+}
+function throwException() {
+    throw 'Something bad happened!';
+}
 </script>

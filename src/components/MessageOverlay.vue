@@ -3,7 +3,7 @@
     <div
         :class="{
             modal: true,
-            'is-active': hasErrorMessages | hasSuccessMessages,
+            'is-active': hasErrorMessages || hasSuccessMessages,
         }"
     >
         <div class="modal-background"></div>
@@ -12,12 +12,12 @@
                 <div
                     class="notification is-danger"
                     data-cy="notification-danger"
-                    @click="dismiss"
+                    @click="dismissError"
                 >
                     <button
                         class="delete is-large"
                         aria-label="delete"
-                        @click="dismiss"
+                        @click="dismissError"
                     ></button>
                     <div class="block">
                         {{ errorMessage }}
@@ -69,39 +69,55 @@
             </div>
         </div>
     </div>
+
+    <!-- display area for progress display -->
+    <div :class="{ modal: true, 'is-active': hasProgressMessage }">
+        <div class="modal-background"></div>
+        <div class="modal-content is-loading">
+            <!-- Show the message and a horzontal progress -->
+            <div class="has-text-centered">
+                {{ progressMessage }}
+            </div>
+            <progress class="progress" max="100"></progress>
+        </div>
+    </div>
+
+    <!-- display area for busy routing indicator -->
+    <div :class="{ modal: true, 'is-active': isBusyRouting }">
+        <div class="modal-background"></div>
+        <div class="modal-content is-loading">
+            <!--  just show a spinner -->
+            <div class="has-text-centered">
+                <div class="button is-loading is-ghost is-large"></div>
+            </div>
+        </div>
+    </div>
 </template>
-<script lang="ts">
-import { useAppStore } from '@/store/app';
+
+<script setup lang="ts">
+/** A simple overlay display of the latest application error messages and other
+ * feedback */
+import { storeToRefs } from 'pinia';
 import { useMessageStore } from '@/store/messages';
-import { mapActions, mapState } from 'pinia';
-import { defineComponent } from 'vue';
-/** A simple overlay display of the latest application error message, if any */
-export default defineComponent({
-    name: 'MessageOverlay',
-    components: {},
-    computed: {
-        ...mapState(useMessageStore, [
-            'successMessages',
-            'errorMessages',
-            'hasErrorMessages',
-            'hasSuccessMessages',
-            'inputFeedback',
-            'hasInputFeedback',
-        ]),
-    },
-    methods: {
-        ...mapActions(useAppStore, [
-            'addDefaultTrack',
-            'loadFromFile',
-            'updateTrackUrl',
-        ]),
-        ...mapActions(useMessageStore, ['popError', 'popSuccess']),
-        dismiss() {
-            this.popError();
-        },
-        dismissSuccess() {
-            this.popSuccess();
-        },
-    },
-});
+
+const message = useMessageStore();
+const {
+    progressMessage,
+    hasProgressMessage,
+    errorMessages,
+    hasErrorMessages,
+    inputFeedback,
+    hasInputFeedback,
+    successMessages,
+    hasSuccessMessages,
+    isBusyRouting,
+} = storeToRefs(message);
+
+function dismissError() {
+    message.popError();
+}
+
+function dismissSuccess() {
+    message.popSuccess();
+}
 </script>

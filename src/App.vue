@@ -14,7 +14,6 @@
          This is solved here globally for simplicity -->
         <section class="section">
             <router-view></router-view>
-            <ProgressOverlay />
             <MessageOverlay />
             <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
         </section>
@@ -50,7 +49,6 @@
 </template>
 <script setup lang="ts">
 import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';
-import ProgressOverlay from '@/components/ProgressOverlay.vue';
 import StageMark from '@/components/StageMark.vue';
 import MessageOverlay from '@/components/MessageOverlay.vue';
 //@ts-ignore (because the vue3-promise-dialog does not provide types)

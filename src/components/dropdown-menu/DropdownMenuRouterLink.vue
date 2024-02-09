@@ -28,6 +28,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { Hotkey } from '@simolation/vue-hotkey';
 import { useMessageStore } from '@/store/messages';
 import { nextTick } from 'process';
+import { storeToRefs } from 'pinia';
 
 /** An item for a Dropdown menu
  * @remarks Supports a global hotkey registration
@@ -86,8 +87,10 @@ const isActiveRoute = computed(() => {
 const router = useRouter();
 const message = useMessageStore();
 
+const { isBusyRouting } = storeToRefs(message);
+
 function navigate() {
-    message.pushProgress('');
+    isBusyRouting.value = true;
     // let the progress indication show up first
     nextTick(() => {
         router.push(props.to);
@@ -95,7 +98,6 @@ function navigate() {
 }
 
 router.afterEach(() => {
-    const message = useMessageStore();
-    message.finishProgress();
+    isBusyRouting.value = false;
 });
 </script>
