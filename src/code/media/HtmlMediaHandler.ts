@@ -85,9 +85,10 @@ export default class HtmlMediaHandler implements IMediaHandler {
             }
 
             this.onPausedChanged.emit(false);
+            this.repeatUpdateCurrentTime();
         };
 
-        media.ontimeupdate = () => this.updateCurrentTime();
+        media.ontimeupdate = () => this.singleUpdateCurrentTime();
         media.onended = () => this.handleEnded();
     }
 
@@ -128,15 +129,25 @@ export default class HtmlMediaHandler implements IMediaHandler {
 
     /** Keeper for the last emitted current time, to avoid multiple equal outputs. */
     private lastEmittedCurrentTime: number | null = null;
-    updateCurrentTime(): void {
+
+    /** Emits a one-shot update with the current time
+     */
+    singleUpdateCurrentTime(): void {
         const currentTime = this.currentTime;
         if (currentTime !== this.lastEmittedCurrentTime) {
             //this.debugLog(`updateCurrentTime:${currentTime}`);
             this.onCurrentTimeChanged.emit(currentTime);
             this.lastEmittedCurrentTime = currentTime;
         }
+    }
+
+    /** Repeatedly emits an update with the current time
+     * @remarks This is only repeated during ongoing playback.
+     */
+    repeatUpdateCurrentTime(): void {
+        this.singleUpdateCurrentTime();
         if (!this.paused) {
-            window.requestAnimationFrame(() => this.updateCurrentTime());
+            window.requestAnimationFrame(() => this.repeatUpdateCurrentTime());
         }
     }
 
