@@ -137,12 +137,6 @@ const emit = defineEmits([
 ]);
 
 const props = defineProps({
-    /** The beats per minute */
-    beatsPerMinute: {
-        type: null as unknown as PropType<number | null>,
-        required: true,
-        default: null,
-    },
     /** The musical meter */
     meter: {
         type: null as unknown as PropType<IMeter | null>,
