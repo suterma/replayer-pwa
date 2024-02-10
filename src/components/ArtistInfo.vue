@@ -11,7 +11,6 @@
                 >
             </template>
         </span>
-        <!-- <br /> -->
         <span class="is-single-line">
             <template v-if="album">
                 <span class="has-opacity-half">on&nbsp;</span>
@@ -23,8 +22,7 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import LinkableText from './LinkableText.vue';
 
 /** Displays a track's artist info, namely the artist's name and the album the track appears on.
@@ -32,22 +30,17 @@ import LinkableText from './LinkableText.vue';
  * To actually constrain the width, use e.g. "style="max-width: 25vw" on the component.
  * See also https://css-tricks.com/snippets/css/a-guide-to-flexbox/
  */
-export default defineComponent({
-    name: 'ArtistInfo',
-    components: {
-        LinkableText,
+
+defineProps({
+    /** The artist's name to display */
+    artist: {
+        type: String,
+        required: true,
     },
-    props: {
-        /** The artist's name to display */
-        artist: {
-            type: String,
-            required: true,
-        },
-        /** The album's name to display */
-        album: {
-            type: String,
-            required: true,
-        },
+    /** The album's name to display */
+    album: {
+        type: String,
+        required: true,
     },
 });
 </script>
