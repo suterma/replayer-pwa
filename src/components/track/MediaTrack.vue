@@ -110,13 +110,14 @@
                 <template #left-additional>
                     <span
                         v-if="isPlayable && track.Meter?.BeatsPerMinute"
-                        class="is-size-7 level-item is-hidden-mobile is-narrow has-opacity-half"
+                        class="is-size-7 level-item is-hidden-mobile is-narrow"
                     >
-                        <span>{{ track.Meter?.BeatsPerMinute }}&nbsp;BPM</span>
+                        <span class="has-opacity-half">BPM:&nbsp;</span>
+                        <span>{{ track.Meter?.BeatsPerMinute }}</span>
                     </span>
                     <span
                         v-if="isPlayable && track.Meter?.TimeSignature"
-                        class="is-size-7 level-item is-hidden-mobile is-narrow has-opacity-half"
+                        class="is-size-7 level-item is-hidden-mobile is-narrow"
                     >
                         <span
                             ><sup>{{
