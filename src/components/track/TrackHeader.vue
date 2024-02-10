@@ -37,7 +37,6 @@
 
             <!-- The edit part -->
             <template v-if="isEditMode">
-                <!-- <div class="level-item"> -->
                 <CoveredPanel ref="mediaDropZonePanel">
                     <template #caption>
                         <MediaSourceIndicator
@@ -54,7 +53,6 @@
                     >
                     </MediaDropZone>
                 </CoveredPanel>
-                <!-- </div> -->
 
                 <!-- Title (make it wide)-->
                 <div class="level-item is-flex-grow-1">

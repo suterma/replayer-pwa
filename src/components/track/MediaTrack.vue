@@ -108,26 +108,11 @@
                 </template>
 
                 <template #left-additional>
-                    <span
-                        v-if="isPlayable && track.Meter?.BeatsPerMinute"
+                    <MeterDisplay
+                        v-if="isPlayable"
                         class="is-size-7 level-item is-hidden-mobile is-narrow"
-                    >
-                        <span class="has-opacity-half">BPM:&nbsp;</span>
-                        <span>{{ track.Meter?.BeatsPerMinute }}</span>
-                    </span>
-                    <span
-                        v-if="isPlayable && track.Meter?.TimeSignature"
-                        class="is-size-7 level-item is-hidden-mobile is-narrow"
-                    >
-                        <span
-                            ><sup>{{
-                                track.Meter?.TimeSignature.Numerator
-                            }}</sup
-                            >/<sub>{{
-                                track.Meter?.TimeSignature.Denominator
-                            }}</sub></span
-                        >
-                    </span>
+                        :meter="track.Meter"
+                    ></MeterDisplay>
                 </template>
 
                 <template #right-start>
@@ -453,9 +438,9 @@
                                     'is-youtube-video': isYoutubeVideoTrack,
                                 }"
                             >
-                                <!-- Left side (with expander, title and artist of the currently playing track) -->
+                                <!-- Left side (with expander, title and artist etc... of the currently playing track) -->
                                 <div class="level-left">
-                                    <!-- Title and Artist of the currently playing track-->
+                                    <!-- Title of the currently playing track-->
                                     <div
                                         class="level-item is-justify-content-left has-cropped-text"
                                     >
@@ -475,6 +460,7 @@
                                             @click="toggle"
                                         ></CollapsibleButton>
                                         <!-- Keep some distance to the fullscreen button -->
+
                                         <p class="ml-3">
                                             <!-- Use smaller title in collapsed state, use regular size (4) when full screen -->
                                             <span
@@ -489,16 +475,25 @@
                                                     :name="track.Name"
                                                 ></TrackTitleName>
                                             </span>
-                                            <!-- Artist info-->
-                                            <span class="is-size-7"
-                                                >&nbsp;
-                                                <!--nbsp as placeholder to keep layout when no artist info -->
-                                                <ArtistDisplay
-                                                    :artist="track.Artist"
-                                                    :album="track.Album"
-                                                />
-                                            </span>
                                         </p>
+                                    </div>
+                                    <!-- Artist etc... of the currently playing track-->
+                                    <div
+                                        class="level-item is-justify-content-left"
+                                    >
+                                        <!-- Artist info-->
+                                        <div class="is-size-7">
+                                            <ArtistDisplay
+                                                :artist="track.Artist"
+                                                :album="track.Album"
+                                            />
+                                        </div>
+                                        <!-- Artist info-->
+                                        <div class="is-size-7">
+                                            <MeterDisplay
+                                                :meter="track.Meter"
+                                            ></MeterDisplay>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -782,6 +777,7 @@ import type { ITrack } from '@/store/ITrack';
 import { useTitle } from '@vueuse/core';
 import router, { Route } from '@/router';
 import MessageOverlay from '@/components/MessageOverlay.vue';
+import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
