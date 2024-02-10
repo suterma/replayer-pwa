@@ -498,7 +498,3 @@ export default defineComponent({
     width: 2.5em;
 }
 </style>
-import { type ITrack } from '@/store/ITrack'; import { TrackViewMode } from
-'@/store/TrackViewMode'; import { PlaybackMode } from '@/store/PlaybackMode';
-import { type ICue } from '@/store/ICue'; import { Compilation } from
-'@/store/Compilation';

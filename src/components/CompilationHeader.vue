@@ -111,7 +111,7 @@
                 </div>
                 <div class="level-item">
                     <p class="is-size-7">
-                        <ArtistInfo
+                        <ArtistDisplay
                             :album="compilation.Album"
                             :artist="compilation.Artist"
                         />
@@ -132,7 +132,7 @@
 
 <script lang="ts">
 import { type PropType, defineComponent } from 'vue';
-import ArtistInfo from '@/components/ArtistInfo.vue';
+import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 import LabeledInput from '@/components/editor/LabeledInput.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
 import StyledInput from '@/components/StyledInput.vue';
@@ -151,7 +151,7 @@ export default defineComponent({
         StyledInput,
         LabeledInput,
         CompilationContextMenu,
-        ArtistInfo,
+        ArtistDisplay,
         CoveredPanel,
     },
     props: {

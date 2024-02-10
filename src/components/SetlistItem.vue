@@ -18,7 +18,7 @@
             <div class="level-item is-hidden-mobile">
                 <span v-if="track.Artist || track.Album" class="is-size-7 ml-2">
                     <!-- Artist info (should not take too much width, and hide on small displays anyways)-->
-                    <ArtistInfo
+                    <ArtistDisplay
                         :artist="track.Artist"
                         :album="track.Album"
                         style="max-width: 50vw"
@@ -89,7 +89,7 @@
 
 import { type PropType, computed, provide, readonly } from 'vue';
 import { storeToRefs } from 'pinia';
-import ArtistInfo from '@/components/ArtistInfo.vue';
+import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import TrackTitleName from '@/components/track/TrackTitleName.vue';

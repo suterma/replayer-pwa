@@ -195,7 +195,7 @@
                 <!-- Artist info (should not take too much width, and hide on small displays anyways)-->
                 <div class="level-item is-hidden-mobile">
                     <p class="is-size-7">
-                        <ArtistInfo
+                        <ArtistDisplay
                             :album="track.Album"
                             :artist="track.Artist"
                             style="max-width: 25vw"
@@ -267,7 +267,7 @@ import StyledInput from '@/components/StyledInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import NavButton from '@/components/buttons/NavButton.vue';
-import ArtistInfo from '@/components/ArtistInfo.vue';
+import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 import { useAppStore } from '@/store/app';
 import {
     isPlayingInjectionKey,

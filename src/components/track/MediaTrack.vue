@@ -493,7 +493,7 @@
                                             <span class="is-size-7"
                                                 >&nbsp;
                                                 <!--nbsp as placeholder to keep layout when no artist info -->
-                                                <ArtistInfo
+                                                <ArtistDisplay
                                                     :artist="track.Artist"
                                                     :album="track.Album"
                                                 />
@@ -755,7 +755,7 @@ import VolumeKnob from '@/components/controls/VolumeKnob.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import FullscreenPanel from '@/components/FullscreenPanel.vue';
 import TrackTitleName from '@/components/track/TrackTitleName.vue';
-import ArtistInfo from '@/components/ArtistInfo.vue';
+import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
