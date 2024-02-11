@@ -3,7 +3,7 @@
         v-slot="{ clickRef }"
         :keys="keys"
         :excluded-elements="[]"
-        :disabled="disabled || !keys"
+        :disabled="disabled || keys.length == 0"
     >
         <DropdownMenuItem
             :ref="clickRef"

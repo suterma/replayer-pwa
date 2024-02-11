@@ -69,7 +69,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         /** The route to the settings
-         * @remarks The /setlist route serves as some form of alias.
+         * @remarks The /settings route serves as some form of alias.
          * A real routing alias is not used to distinguish the menu entries for these routes
          */
         path: '/settings',
