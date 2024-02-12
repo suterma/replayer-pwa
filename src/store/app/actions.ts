@@ -70,6 +70,19 @@ export const actions = {
         }
     },
 
+    /** Updates the track playback rate
+     * @remarks Also updates the persistent store of the compilation
+     */
+    updateTrackPlaybackRate(trackId: string, playbackRate: number): void {
+        const track = CompilationHandler.getTrackById(
+            state.compilation.value.Tracks,
+            trackId,
+        );
+        if (track) {
+            track.PlaybackRate = playbackRate;
+        }
+    },
+
     /** Adds a new cue with the given time
      * @remarks Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.
      * @return The id of the new cue

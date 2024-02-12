@@ -3,7 +3,7 @@ import type { ITrack } from './ITrack';
 import { CompilationType } from './CompilationType';
 import type { ICompilation } from './ICompilation';
 import { Cue } from './Cue';
-import { DefaultTrackVolume, Track } from './Track';
+import { DefaultTrackPlaybackRate, DefaultTrackVolume, Track } from './Track';
 
 /** Implements a Replayer Compilation, consisting of a set of tracks with their cues.
  *  @inheritdoc */
@@ -60,7 +60,7 @@ export class Compilation implements ICompilation {
                     track.Artist,
                     track.PreRoll,
                     track.PlayheadPosition,
-                    track.PlaybackRate,
+                    track.PlaybackRate ?? DefaultTrackPlaybackRate,
                     track.Meter,
                     track.UseMeasureNumbers,
                     track.Url,
