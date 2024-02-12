@@ -576,7 +576,7 @@ export default class CompilationHandler {
         cueId: string | null,
     ): ICue | null {
         const cue = compilation.Tracks.flatMap((track) => track.Cues).find(
-            (cue) => cue.Id === cueId,
+            (cue) => cue?.Id === cueId,
         );
 
         return cue ?? null;
@@ -588,7 +588,7 @@ export default class CompilationHandler {
      * @returns The cue; or null, if no cue id is provided or the selected cue is can not be found.
      * */
     public static getCueById(cues: ICue[], cueId: string | null): ICue | null {
-        const cue = cues.find((cue) => cue.Id === cueId);
+        const cue = cues.find((cue) => cue?.Id === cueId);
         return cue ?? null;
     }
 

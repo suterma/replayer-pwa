@@ -1,7 +1,10 @@
+import { DefaultTrackPlaybackRate } from '@/store/Track';
 import AudioFader from './AudioFader';
 import type { IAudioFader } from './IAudioFader';
 import type { IMediaHandler } from './IMediaHandler';
 import { SubEvent } from 'sub-events';
+import type { IPlaybackRateController } from './IPlaybackRateController';
+import HtmlMediaPlaybackRateController from './HtmlMediaPlaybackRateController';
 
 /** @class Implements a playback handler for a {HTMLMediaElement}.
  * @remarks This handles transport/loop and volume operations for audio sources (HTML media elements).
@@ -12,25 +15,33 @@ export default class HtmlMediaHandler implements IMediaHandler {
     // --- internals ---
 
     private _fader: IAudioFader;
+    private _playbackRateController: IPlaybackRateController;
 
     /** The {HTMLMediaElement} instance to act upon */
     private _media: HTMLMediaElement;
 
     /** @constructor
      * @param {HTMLMediaElement} media - The media element to act upon
-     * @param {number} masterVolume - The overall volume of the output. Can be used to control the output volume in addition to fadings. (Default: 1, representing full scale)
+     * @param {number} masterVolume - The overall volume of the output. Can be used to control the output volume in addition to fadings. (Default: 1, representing 0 dBFS)
+     * @param {number} playbackRate - The playback rate. (Default: 1, representing normal speed)
      * @param {string} id - The unique id
      */
     constructor(
         media: HTMLMediaElement,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         masterVolume: number = 1,
+        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+        playbackRate: number = DefaultTrackPlaybackRate,
 
         id = '',
     ) {
         this._media = media;
         this._id = id ? id : 'handler-' + media.id;
         this._fader = new AudioFader(media, masterVolume);
+        this._playbackRateController = new HtmlMediaPlaybackRateController(
+            media,
+            DefaultTrackPlaybackRate,
+        );
 
         //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
         media.onloadeddata = () => {
@@ -401,5 +412,13 @@ export default class HtmlMediaHandler implements IMediaHandler {
     }
     set loop(value: boolean) {
         this._media.loop = value;
+    }
+
+    // --- rate changing ---
+
+    /** Gets the playback rate controller
+     */
+    get playbackRateController(): IPlaybackRateController {
+        return this._playbackRateController;
     }
 }

@@ -944,7 +944,7 @@ function useMediaHandler(handler: IMediaHandler) {
     // initialize
     console.debug('MediaTrack::useMediaHandler:id', handler.id);
     handler.fader.setVolume(props.track.Volume);
-    handler.playbackRate = props.track.PlaybackRate;
+    handler.playbackRateController.playbackRate = props.track.PlaybackRate;
 
     // register for the required events
     handler.onCurrentTimeChanged.subscribe((currentTime) => {
@@ -1000,6 +1000,10 @@ function useMediaHandler(handler: IMediaHandler) {
 
     handler.fader.onVolumeChanged.subscribe((volume) => {
         updateVolume(volume);
+    });
+
+    handler.playbackRateController.onPlaybackRateChanged.subscribe((rate) => {
+        app.updateTrackPlaybackRate(props.track?.Id, rate);
     });
 
     mediaHandler.value = handler;

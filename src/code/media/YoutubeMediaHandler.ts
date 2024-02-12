@@ -5,6 +5,9 @@ import type { PlayerStateChangeCallback, Player } from '@vue-youtube/shared';
 import YouTubeFader from './YouTubeFader';
 import { PlayerState } from '@vue-youtube/core';
 import { nextTick } from 'process';
+import type { IPlaybackRateController } from './IPlaybackRateController';
+import YouTubePlaybackRateController from './YouTubePlaybackRateController';
+import { DefaultTrackPlaybackRate } from '@/store/Track';
 
 /** @class Implements a playback handler for a YouTube IFrame player with VueYoutube.
  * @remarks This handles transport/loop and volume operations for the audio.
@@ -15,6 +18,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     // --- internals ---
 
     private _fader: IAudioFader;
+    private _playbackRateController: IPlaybackRateController;
 
     /** The YouTube player instance to act upon */
     private _player: Player;
@@ -34,6 +38,10 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         this._player = player;
         this._id = 'youtube-media-handler-' + (id ? id : player.getVideoUrl());
         this._fader = new YouTubeFader(player, masterVolume);
+        this._playbackRateController = new YouTubePlaybackRateController(
+            player,
+            DefaultTrackPlaybackRate,
+        );
 
         onStateChange((event) => {
             this.handleStateChange(event.data);
@@ -344,5 +352,13 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         this._isLooping = value;
         // NOTE: This handler maintains a playlist of one, so looping executes always on it's own track
         this._player.setLoop(value);
+    }
+
+    // --- rate changing ---
+
+    /** Gets the playback rate controller
+     */
+    get playbackRateController(): IPlaybackRateController {
+        return this._playbackRateController;
     }
 }

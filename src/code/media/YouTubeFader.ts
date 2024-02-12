@@ -29,7 +29,7 @@ export default class YouTubeFader implements IAudioFader {
     private _muted = false;
 
     /** @constructor
-     * @param {Player} audio - The YouTube player instance to act upon
+     * @param {Player} player - The YouTube player instance to act upon
      * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
      * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
      * @param {number} preRollDuration - The amount of time to the seek backwards before a play operation. (Default: zero)
@@ -37,7 +37,7 @@ export default class YouTubeFader implements IAudioFader {
      * @param {number} masterVolume - The overall volume of the output. Can be used to control the output volume in addition to fadings. (Default: 1, representing full scale)
      */
     constructor(
-        audio: Player,
+        player: Player,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         fadeInDuration: number = 1000,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
@@ -49,7 +49,7 @@ export default class YouTubeFader implements IAudioFader {
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         masterVolume: number = 1,
     ) {
-        this.audio = audio;
+        this.player = player;
         this.fadeInDuration = fadeInDuration;
         this.fadeOutDuration = fadeOutDuration;
         this.preRollDuration = preRollDuration;
@@ -89,7 +89,7 @@ export default class YouTubeFader implements IAudioFader {
         }
     }
     /** The YouTube player instance to act upon */
-    audio: Player;
+    player: Player;
     /** The fade-in duration in [milliseconds] (zero means no fading)*/
     fadeInDuration;
     /** The fade-out duration in [milliseconds] (zero means no fading)*/
@@ -199,9 +199,9 @@ export default class YouTubeFader implements IAudioFader {
             offset = offset + this.effectiveFadeInDuration / 1000;
         }
 
-        const time = this.audio.getCurrentTime();
+        const time = this.player.getCurrentTime();
         const target = Math.max(0, time - offset);
-        this.audio.seekTo(target, true);
+        this.player.seekTo(target, true);
     }
 
     // --- volume ---
@@ -259,7 +259,7 @@ export default class YouTubeFader implements IAudioFader {
      * @devdoc The YouTube player uses a range between 0 and 100
      */
     private set audioVolume(volume: number) {
-        this.audio.setVolume(this.limited(volume) * 100);
+        this.player.setVolume(this.limited(volume) * 100);
     }
 
     /** Internally gets the YouTube player volume, with the
@@ -267,7 +267,7 @@ export default class YouTubeFader implements IAudioFader {
      * @devdoc The YouTube player uses a range between 0 and 100
      */
     private get audioVolume() {
-        return this.limited(this.audio.getVolume() / 100);
+        return this.limited(this.player.getVolume() / 100);
     }
 
     /** @devdoc The actually applied output volume might be lower than the master volume, when a fade out is in progress. */
