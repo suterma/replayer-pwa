@@ -1,5 +1,5 @@
 <template>
-    <span>
+    <span v-if="meter">
         <span v-if="meter?.BeatsPerMinute" class="is-single-line mr-3">
             <span class="has-opacity-half">BPM:&nbsp;</span>
             <span>{{ meter?.BeatsPerMinute }}</span>
@@ -27,7 +27,8 @@ defineProps({
     /** The track's meter */
     meter: {
         type: Object as PropType<IMeter | null>,
-        required: true,
+        required: false,
+        default: null,
     },
 });
 </script>
