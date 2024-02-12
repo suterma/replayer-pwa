@@ -144,7 +144,7 @@ describe('XmlCompilationParser.ts', () => {
               <Artist/>
               <PreRoll/>
               <PlayheadPosition>12.7</PlayheadPosition>
-              <Name>test</Name>
+               <Name>test</Name>
               <Album/>
               <Url>test.mp3</Url>
               <Meter/>
@@ -165,6 +165,45 @@ describe('XmlCompilationParser.ts', () => {
         expect(compilation.Tracks).toHaveLength(1);
         const firstTrack = compilation.Tracks[0];
         expect(firstTrack.PlayheadPosition).toBe(12.7);
+    });
+
+    it('should provide the playback rate', async () => {
+        //Arrange
+        const str = `
+      <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+      <XmlCompilation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <Id>30c291f0-825c-40ca-a772-b17cdda8f937</Id>
+        <MediaPath/>
+        <Title>test</Title>
+        <Artist/>
+        <Album/>
+        <Tracks>
+          <Track>
+            <Id>4dbf78b7-0133-495f-8f71-de69708a9da6</Id>
+            <Artist/>
+            <PreRoll/>
+            <PlaybackRate>1.25</PlaybackRate>,
+            <Name>test</Name>
+            <Album/>
+            <Url>test.mp3</Url>
+            <Meter/>
+            <UseMeasureNumbers/>
+            <Volume>0.5</Volume>
+            <Cues/>
+          </Track>
+        </Tracks>
+        <PlaybackMode>PlayTrack</PlaybackMode>
+      </XmlCompilation>        `;
+        const content = Buffer.from(str);
+        //Act
+        const compilation =
+            await CompilationParser.handleAsXmlCompilation(content);
+
+        //Assert
+        expect(compilation).toBeDefined();
+        expect(compilation.Tracks).toHaveLength(1);
+        const firstTrack = compilation.Tracks[0];
+        expect(firstTrack.PlaybackRate).toBe(1.25);
     });
 
     it('should parse the playhead position', () => {
@@ -199,5 +238,40 @@ describe('XmlCompilationParser.ts', () => {
 
         //Assert
         expect(actual).toContain('<PlayheadPosition>15.1</PlayheadPosition>');
+    });
+
+    it('should parse the playback rate', () => {
+        //Arrange
+        const testTrack = new Track(
+            'testName',
+            'testAlbum',
+            'testArtist',
+            0,
+            15.1,
+            0.75,
+            null,
+            null,
+            'testUrl',
+            'testId',
+            new Array<ICue>(),
+            null,
+            1,
+        );
+
+        const testCompilation = new Compilation(
+            'testMediaPath',
+            'testTitle',
+            'testArtist',
+            'testAlbum',
+            'testUrl',
+            'testId',
+            new Array<ITrack>(testTrack),
+        );
+
+        //Act
+        const actual = CompilationParser.convertToXml(testCompilation);
+
+        //Assert
+        expect(actual).toContain('<PlaybackRate>0.75</PlaybackRate>');
     });
 });

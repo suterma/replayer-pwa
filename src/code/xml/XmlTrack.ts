@@ -14,6 +14,7 @@ export class XmlTrack {
         this.Artist = track.Artist;
         this.PreRoll = track.PreRoll;
         this.PlayheadPosition = track.PlayheadPosition;
+        this.PlaybackRate = track.PlaybackRate;
         this.Name = track.Name;
         this.Album = track.Album;
         this.Url = track.Url;
@@ -27,6 +28,7 @@ export class XmlTrack {
     Artist: string;
     PreRoll: number | null;
     PlayheadPosition: number | null;
+    PlaybackRate: number;
     Name: string;
     Album: string;
     Url: string;

@@ -5,6 +5,9 @@ import type { ICue } from './ICue';
 /** The default track volume */
 export const DefaultTrackVolume = 0.5;
 
+/** The default track playback rate */
+export const DefaultTrackPlaybackRate = 1;
+
 /** Implements a Replayer track
  *  @inheritdoc */
 
@@ -14,6 +17,9 @@ export class Track implements ITrack {
     Artist = '';
     PreRoll: number | null = null;
     PlayheadPosition: number | null = null;
+
+    /**   @inheritdoc */
+    PlaybackRate: number = DefaultTrackPlaybackRate;
     Meter: IMeter | null = null;
     UseMeasureNumbers: boolean | null = null;
     Url = '';
@@ -22,7 +28,7 @@ export class Track implements ITrack {
 
     /**   @inheritdoc */
     Duration: number | null = null;
-    Volume: number;
+    Volume: number = DefaultTrackVolume;
 
     /** Creates a new track
      * @param name {string} - The name for the track.
@@ -31,8 +37,9 @@ export class Track implements ITrack {
      * @param url {string} - The online URL (starting with http(s)) or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
      * @param preRoll {number | null} - The track's custom pre-roll duration, in [seconds]
      * @param initialPlayheadPosition {number | null} - The track's initial playhead position, in [seconds]. The value will be applied once after a media resource with a player has been mounted.
+     * @param playbackRate {number} - The track's playback rate.
      * @param duration {number | null} - Duration of the media associated with the track. This is not persisted, but set to a specific value once after a matching track has been loaded.
-     * @param volume {volume} - Track volume. This is persisted in the application state for user convenience.
+     * @param volume {volume} - Track volume.
      */
     constructor(
         name: string,
@@ -40,6 +47,7 @@ export class Track implements ITrack {
         artist: string,
         preRoll: number | null,
         initialPlayheadPosition: number | null,
+        playbackRate: number,
         meter: IMeter | null,
         useMeasureNumbers: boolean | null,
         url: string,
@@ -53,6 +61,7 @@ export class Track implements ITrack {
         this.Artist = artist;
         this.PreRoll = preRoll;
         this.PlayheadPosition = initialPlayheadPosition;
+        this.PlaybackRate = playbackRate;
         this.Meter = meter;
         this.UseMeasureNumbers = useMeasureNumbers;
         this.Url = url;
@@ -75,6 +84,7 @@ export class Track implements ITrack {
             obj.Artist,
             obj.PreRoll,
             obj.PlayheadPosition,
+            obj.PlaybackRate ?? DefaultTrackPlaybackRate,
             obj.Meter,
             obj.UseMeasureNumbers,
             obj.Url,

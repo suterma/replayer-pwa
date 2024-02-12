@@ -34,6 +34,9 @@ export interface ITrack {
      */
     PlayheadPosition: number | null;
 
+    /** The rate at which the track's media is being played back. A value of 1.0, the default, indicates normal speed. */
+    PlaybackRate: number;
+
     /** The name of the track */
     Name: string;
 

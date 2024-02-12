@@ -14,6 +14,7 @@ describe('the XML mapping', function () {
             'testArtist',
             9,
             15 /* initialPlayheadPosition */,
+            0.75 /* playbackRate */,
             new Meter(new TimeSignature(3, 4), 90, 0.1),
             false,
             'https://test.example.com?myfile.mp3',
@@ -31,6 +32,7 @@ describe('the XML mapping', function () {
         expect(target.Artist).toBe(track.Artist);
         expect(target.PreRoll).toBe(track.PreRoll);
         expect(target.PlayheadPosition).toBe(track.PlayheadPosition);
+        expect(target.PlaybackRate).toBe(track.PlaybackRate);
         expect(target.Cues.Cue).toHaveLength(0);
         expect(target.Id).toBe(track.Id);
         expect(target.Meter?.BeatsPerMinute).toBe(track.Meter?.BeatsPerMinute);
