@@ -4,7 +4,7 @@
         :render-closed="false"
         title="Media context menu"
         left
-        down
+        up
     >
         <DropdownMenuItem title="Speed" sub-title="Change playback speed">
             <input

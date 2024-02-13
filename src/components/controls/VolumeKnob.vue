@@ -14,39 +14,31 @@
     />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-
+<script setup lang="ts">
 import RotaryKnob from '@/components/controls/RotaryKnob.vue';
 import { DefaultTrackVolume } from '@/store/Track';
 
 /** A volume knob.
  */
-export default defineComponent({
-    name: 'VolumeKnob',
-    components: {
-        RotaryKnob,
-    },
-    props: {
-        /** The volume in the range [0..1]
-         * @remarks Implements a two-way binding */
-        volume: {
-            type: Number,
-            default: DefaultTrackVolume,
-        },
 
-        /** Whether to show the component in a disabled state
-         */
-        disabled: Boolean,
+defineProps({
+    /** The volume in the range [0..1]
+     * @remarks Implements a two-way binding */
+    volume: {
+        type: Number,
+        default: DefaultTrackVolume,
     },
-    emits: ['update:volume'],
 
-    methods: {
-        /** Handle a volume update
-         */
-        updateVolume(volume: number): void {
-            this.$emit('update:volume', volume);
-        },
-    },
+    /** Whether to show the component in a disabled state
+     */
+    disabled: Boolean,
 });
+
+const emit = defineEmits(['update:volume']);
+
+/** Handle a volume update
+ */
+function updateVolume(volume: number): void {
+    emit('update:volume', volume);
+}
 </script>
