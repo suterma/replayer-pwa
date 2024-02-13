@@ -31,7 +31,6 @@
                 <label
                     ><span class="is-sr-only">Time slider</span>
                     <input
-                        id=""
                         :disabled="disabled"
                         class="slider is-fullwidth is-slim"
                         :step="stepSize"
