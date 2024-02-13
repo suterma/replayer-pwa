@@ -40,15 +40,12 @@
 
 <script setup lang="ts">
 import { type PropType } from 'vue';
-import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
 import MenuItemContent from '@/components/dropdown-menu/MenuItemContent.vue';
-import SpeedKnob from '@/components/controls/SpeedKnob.vue';
-
 import { mdiCog } from '@mdi/js';
-
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
 import { DefaultPlaybackRate } from '@/store/Track';
+import SpeedKnob from '../controls/SpeedKnob.vue';
 /** A nav bar as header with a menu for a compilation
  */
 
