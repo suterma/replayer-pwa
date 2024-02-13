@@ -3,19 +3,38 @@
         :icon-path="mdiCog"
         :render-closed="false"
         title="Media context menu"
-        left
         up
+        left
     >
-        <DropdownMenuItem title="Speed" sub-title="Change playback speed">
-            <input
-                type="range"
-                min="0.25"
-                max="4"
-                step=".05"
-                :value="handler.playbackRateController.playbackRate"
-                @update="updatePlaybackRate($event.target.value)"
-            />
-        </DropdownMenuItem>
+        <div class="dropdown-item" data-cy="dropdown-menu-item">
+            <MenuItemContent title="Speed">
+                <template #right-item>
+                    <div class="button is-nav is-indicator">
+                        <span
+                            >{{
+                                props.handler.playbackRateController
+                                    .playbackRate
+                            }}x</span
+                        >
+                    </div>
+                    <button
+                        :disabled="
+                            props.handler.playbackRateController.playbackRate ==
+                            DefaultPlaybackRate
+                        "
+                        class="button"
+                        @click="updatePlaybackRate(DefaultPlaybackRate)"
+                    >
+                        Reset
+                    </button>
+                    <SpeedKnob
+                        :model-value="
+                            props.handler.playbackRateController.playbackRate
+                        "
+                        @update:model-value="updatePlaybackRate"
+                /></template>
+            </MenuItemContent>
+        </div>
     </DropdownMenu>
 </template>
 
@@ -23,9 +42,13 @@
 import { type PropType } from 'vue';
 import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
+import MenuItemContent from '@/components/dropdown-menu/MenuItemContent.vue';
+import SpeedKnob from '@/components/controls/SpeedKnob.vue';
+
 import { mdiCog } from '@mdi/js';
 
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
+import { DefaultPlaybackRate } from '@/store/Track';
 /** A nav bar as header with a menu for a compilation
  */
 

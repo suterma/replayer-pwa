@@ -12,7 +12,7 @@
             :sub-title="subTitle"
             :icon-path="iconPath"
             :disabled="isActiveRoute"
-            :isActive="isActiveRoute"
+            :is-active="isActiveRoute"
             :shortcut="keys.join('+')"
             @click="navigate"
             @keypress.enter="navigate"

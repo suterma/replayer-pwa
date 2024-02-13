@@ -16,6 +16,7 @@
         </div>
         <div class="level-right">
             <div class="level-item">
+                <slot name="right-item"></slot>
                 <ShortcutDisplay v-if="slots.shortcut"
                     ><slot name="shortcut"></slot
                 ></ShortcutDisplay>
