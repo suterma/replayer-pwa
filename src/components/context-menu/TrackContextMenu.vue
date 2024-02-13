@@ -8,13 +8,13 @@
         <div class="dropdown-item is-hidden-mobile">
             <p class="menu-label">Track</p>
         </div>
-        <DropdownMenuItem
+        <DropdownMenuButton
             title="Add multiple cues..."
             sub-title="(add cues using text lines)"
             :icon-path="mdiFileDelimitedOutline"
             @click="addMultipleCues()"
         />
-        <DropdownMenuItem
+        <DropdownMenuButton
             :disabled="props.track.Cues.length < 1"
             title="Reassign cue shortcuts"
             sub-title="(first as seed, then incrementing)"
@@ -27,7 +27,7 @@
             target="_blank"
             :disabled="!isDownloadable"
         >
-            <DropdownMenuItem
+            <DropdownMenuButton
                 :disabled="!isDownloadable"
                 title="Download media file"
                 sub-title="(to local file system)"
@@ -35,13 +35,13 @@
                 @click="app.cloneTrack(props.track.Id)"
             />
         </a>
-        <DropdownMenuItem
+        <DropdownMenuButton
             title="Clone"
             sub-title="(with cues and media)"
             :icon-path="mdiContentDuplicate"
             @click="app.cloneTrack(props.track.Id)"
         />
-        <DropdownMenuItem
+        <DropdownMenuButton
             title="Remove"
             sub-title="(remove the track from the compilation)"
             :icon-path="mdiTrashCanOutline"
@@ -55,7 +55,7 @@
  * @devdoc The download menu item is only updated when the URL (the used media) changes
  */
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
-import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
+import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
 import {
     mdiContentDuplicate,
     mdiTrashCanOutline,

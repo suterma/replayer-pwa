@@ -374,6 +374,13 @@
                             "
                             @update:volume="updateVolume"
                         >
+                            <template #after-play>
+                                <MediaContextMenu
+                                    v-if="mediaHandler"
+                                    :handler="mediaHandler"
+                                    class="is-experimental"
+                                />
+                            </template>
                         </MediaControlsBar>
                     </div>
                 </div>
@@ -584,6 +591,13 @@
                                             @seek="(seconds) => seek(seconds)"
                                             @toggle-playing="skipToPlayPause()"
                                         >
+                                            <template #start>
+                                                <MediaContextMenu
+                                                    v-if="mediaHandler"
+                                                    :handler="mediaHandler"
+                                                    class="is-experimental"
+                                                />
+                                            </template>
                                             <PlaybackIndicator
                                                 :is-ready="
                                                     !isTrackPlaying &&
@@ -734,6 +748,7 @@ import TrackHeader from '@/components/track/TrackHeader.vue';
 import CueButtonsBar from '@/components/CueButtonsBar.vue';
 import CueButtonsField from '@/components/CueButtonsField.vue';
 import MediaControlsBar from '@/components/MediaControlsBar.vue';
+import MediaContextMenu from '@/components/context-menu/MediaContextMenu.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import CreateCueButton from '@/components/buttons/CreateCueButton.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';

@@ -1,10 +1,12 @@
 <template>
     <div data-cy="media-controls-bar">
+        <slot name="start"></slot>
+
         <PlaybackModeMenu
             v-if="experimentalUsePlaybackModeDropdownMenu"
             class="is-experimental"
             :model-value="playbackMode"
-            :hasSecondTrack="hasSecondTrack"
+            :has-second-track="hasSecondTrack"
             data-cy="toggle-playback-mode"
             @update:model-value="updatePlaybackMode"
         />

@@ -5,7 +5,7 @@
         :excluded-elements="[]"
         :disabled="disabled || keys.length == 0"
     >
-        <DropdownMenuItem
+        <DropdownMenuButton
             :ref="clickRef"
             role="link"
             :title="title"
@@ -17,13 +17,13 @@
             @click="navigate"
             @keypress.enter="navigate"
         >
-        </DropdownMenuItem>
+        </DropdownMenuButton>
     </Hotkey>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
+import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Hotkey } from '@simolation/vue-hotkey';
 import { useMessageStore } from '@/store/messages';

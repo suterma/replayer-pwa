@@ -6,7 +6,7 @@
             :keys="['ctrl', 's']"
             :excluded-elements="[]"
         >
-            <DropdownMenuItem
+            <DropdownMenuButton
                 :ref="clickRef"
                 title="Download..."
                 sub-title="Save current compilation"
@@ -21,7 +21,7 @@
             :keys="['ctrl', 'x']"
             :excluded-elements="[]"
         >
-            <DropdownMenuItem
+            <DropdownMenuButton
                 :ref="clickRef"
                 title="Close..."
                 sub-title="Close current compilation"
@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { type PropType, defineComponent } from 'vue';
-import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
+import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
 import { confirm, downloadCompilation } from '@/code/ui/dialogs';
 import { Hotkey } from '@simolation/vue-hotkey';
 import { mdiTrashCanOutline, mdiTrayArrowDown } from '@mdi/js';
@@ -46,7 +46,7 @@ import type { ICompilation } from '@/store/ICompilation';
  */
 export default defineComponent({
     name: 'CompilationContextMenu',
-    components: { DropdownMenuItem, Hotkey },
+    components: { DropdownMenuButton, Hotkey },
     props: {
         compilation: {
             type: Object as PropType<ICompilation>,

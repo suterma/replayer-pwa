@@ -6,7 +6,7 @@
         :render-closed="true"
         :title="currentModeTitle"
     >
-        <!-- <DropdownMenuItem
+        <!-- <DropdownMenuButton
             v-for="mode in Object.values(PlaybackMode)"
             :key="mode"
             :title="modeText(mode)"
@@ -16,7 +16,7 @@
            @click="emit('update:modelValue', mode)"
         /> -->
 
-        <DropdownMenuItem
+        <DropdownMenuButton
             :key="PlaybackMode.PlayTrack"
             :title="modeText(PlaybackMode.PlayTrack)"
             :icon-path="modeIcon(PlaybackMode.PlayTrack)"
@@ -24,7 +24,7 @@
             :isActive="PlaybackMode.PlayTrack == props.modelValue"
             @click="emit('update:modelValue', PlaybackMode.PlayTrack)"
         />
-        <DropdownMenuItem
+        <DropdownMenuButton
             :key="PlaybackMode.LoopTrack"
             :title="modeText(PlaybackMode.LoopTrack)"
             :icon-path="modeIcon(PlaybackMode.LoopTrack)"
@@ -32,7 +32,7 @@
             :isActive="PlaybackMode.LoopTrack == props.modelValue"
             @click="emit('update:modelValue', PlaybackMode.LoopTrack)"
         />
-        <DropdownMenuItem
+        <DropdownMenuButton
             :key="PlaybackMode.PlayCue"
             :title="modeText(PlaybackMode.PlayCue)"
             :icon-path="modeIcon(PlaybackMode.PlayCue)"
@@ -40,7 +40,7 @@
             :isActive="PlaybackMode.PlayCue == props.modelValue"
             @click="emit('update:modelValue', PlaybackMode.PlayCue)"
         />
-        <DropdownMenuItem
+        <DropdownMenuButton
             :key="PlaybackMode.LoopCue"
             :title="modeText(PlaybackMode.LoopCue)"
             :icon-path="modeIcon(PlaybackMode.LoopCue)"
@@ -48,7 +48,7 @@
             :isActive="PlaybackMode.LoopCue == props.modelValue"
             @click="emit('update:modelValue', PlaybackMode.LoopCue)"
         />
-        <DropdownMenuItem
+        <DropdownMenuButton
             v-if="experimentalUseQueueCueMode"
             class="is-experimental"
             :key="PlaybackMode.QueueCue"
@@ -58,7 +58,7 @@
             :isActive="PlaybackMode.QueueCue == props.modelValue"
             @click="emit('update:modelValue', PlaybackMode.QueueCue)"
         />
-        <DropdownMenuItem
+        <DropdownMenuButton
             v-if="hasSecondTrack"
             :key="PlaybackMode.LoopCompilation"
             :title="modeText(PlaybackMode.LoopCompilation)"
@@ -67,7 +67,7 @@
             :isActive="PlaybackMode.LoopCompilation == props.modelValue"
             @click="emit('update:modelValue', PlaybackMode.LoopCompilation)"
         />
-        <DropdownMenuItem
+        <DropdownMenuButton
             v-if="hasSecondTrack"
             :key="PlaybackMode.ShuffleCompilation"
             :title="modeText(PlaybackMode.ShuffleCompilation)"
@@ -81,7 +81,7 @@
 
 <script setup lang="ts">
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
-import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
+import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
 import { PlaybackMode } from '@/store/PlaybackMode';
 import {
     rTrackPlay,
