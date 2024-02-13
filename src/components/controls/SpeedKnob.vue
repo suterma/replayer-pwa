@@ -8,6 +8,7 @@
         :min-value="-2"
         :max-value="+2"
         value-class="has-text-light"
+        rim-class="has-text-grey-light"
         data-cy="speed"
         @update:model-value="updateSpeed"
     />

@@ -116,39 +116,9 @@
                 </template>
 
                 <template #right-start>
-                    <!-- <input
-                        class="slider is-fullwidth is-slim"
-                        min="0.25"
-                        max="4"
-                        step="0.05"
-                        :value="props.track.PlaybackRate"
-                        type="range"
-                        @change="updatePlaybackRate"
-                        @input="updatePlaybackRate"
-                    /> -->
-                    <div class="is-experimental">
-                        {{ props.track.PlaybackRate }}x
-                        <RotaryKnob
-                            title="Drag or scroll to change speed"
-                            class="button is-nav is-rounded"
-                            :class="{
-                                'is-static': !isTrackLoaded,
-                                'has-cursor-not-allowed': !isTrackLoaded,
-                            }"
-                            :disabled="!isTrackLoaded ? true : null"
-                            :model-value="props.track.PlaybackRate"
-                            :min-value="0.25"
-                            :max-value="4"
-                            value-class="has-text-light"
-                            rim-class="has-text-grey-light"
-                            data-cy="speed"
-                            @update:model-value="updatePlaybackRate"
-                        />
-                    </div>
-
                     <!-- NOTE: As a component update performance optimization, 
-                the numeric value is truncated to one decimal digit, as displayed, avoiding
-                unnecessary update for actually non-distinctly displayed values. -->
+                    the numeric value is truncated to one decimal digit, as displayed, avoiding
+                    unnecessary update for actually non-distinctly displayed values. -->
                     <TimeDisplay
                         v-if="experimentalShowPositionInTrackHeader"
                         v-experiment="experimentalShowPositionInTrackHeader"
@@ -792,7 +762,6 @@ import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import VolumeKnob from '@/components/controls/VolumeKnob.vue';
-import RotaryKnob from '@/components/controls/RotaryKnob.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import FullscreenPanel from '@/components/FullscreenPanel.vue';
 import TrackTitleName from '@/components/track/TrackTitleName.vue';
