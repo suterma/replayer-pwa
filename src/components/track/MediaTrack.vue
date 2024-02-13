@@ -116,6 +116,36 @@
                 </template>
 
                 <template #right-start>
+                    <!-- <input
+                        class="slider is-fullwidth is-slim"
+                        min="0.25"
+                        max="4"
+                        step="0.05"
+                        :value="props.track.PlaybackRate"
+                        type="range"
+                        @change="updatePlaybackRate"
+                        @input="updatePlaybackRate"
+                    /> -->
+                    <div class="is-experimental">
+                        {{ props.track.PlaybackRate }}x
+                        <RotaryKnob
+                            title="Drag or scroll to change speed"
+                            class="button is-nav is-rounded"
+                            :class="{
+                                'is-static': !isTrackLoaded,
+                                'has-cursor-not-allowed': !isTrackLoaded,
+                            }"
+                            :disabled="!isTrackLoaded ? true : null"
+                            :model-value="props.track.PlaybackRate"
+                            :min-value="0.25"
+                            :max-value="4"
+                            value-class="has-text-light"
+                            rim-class="has-text-grey-light"
+                            data-cy="speed"
+                            @update:model-value="updatePlaybackRate"
+                        />
+                    </div>
+
                     <!-- NOTE: As a component update performance optimization, 
                 the numeric value is truncated to one decimal digit, as displayed, avoiding
                 unnecessary update for actually non-distinctly displayed values. -->
@@ -688,7 +718,7 @@
                                         levelMeterSizeIsLarge
                                     "
                                     :small-video="!isFullscreen"
-                                    @ready="useMediaHandler"
+                                    @ready="takeMediaHandler"
                                     @click="setActiveTrack"
                                 ></TrackMediaElement>
                                 <div v-if="isYoutubeVideoTrack">
@@ -704,7 +734,7 @@
                                             :cues="track.Cues"
                                             :track-pre-roll="track.PreRoll"
                                             :small-video="!isFullscreen"
-                                            @ready="useMediaHandler"
+                                            @ready="takeMediaHandler"
                                             @click="setActiveTrack"
                                         ></TrackYouTubeElement>
                                     </OnYouTubeConsent>
@@ -762,6 +792,7 @@ import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import VolumeKnob from '@/components/controls/VolumeKnob.vue';
+import RotaryKnob from '@/components/controls/RotaryKnob.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import FullscreenPanel from '@/components/FullscreenPanel.vue';
 import TrackTitleName from '@/components/track/TrackTitleName.vue';
@@ -955,7 +986,7 @@ const mediaLooper: Ref<IMediaLooper | null> = ref(null);
 const cueScheduler: Ref<ICueScheduler | null> = ref(null);
 
 /** Updates the media handler for this track, with the emitted one from the underlying component */
-function useMediaHandler(handler: IMediaHandler) {
+function takeMediaHandler(handler: IMediaHandler) {
     // initialize
     console.debug('MediaTrack::useMediaHandler:id', handler.id);
     handler.fader.setVolume(props.track.Volume);
@@ -1299,6 +1330,14 @@ function volumeUp() {
 function updateVolume(volume: number) {
     app.updateTrackVolume(props.track?.Id, volume);
     mediaHandler.value?.fader.setVolume(volume);
+}
+
+/** Updates the playback rate of this track, regardless of whether it is the active track */
+function updatePlaybackRate(rate: number) {
+    app.updateTrackPlaybackRate(props.track?.Id, rate);
+    if (mediaHandler.value) {
+        mediaHandler.value.playbackRateController.playbackRate = rate;
+    }
 }
 
 /** Pauses playback and seeks to the currently selected cue's position, but only
