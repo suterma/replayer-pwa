@@ -1,5 +1,5 @@
 import { Cue } from './Cue';
-import { DefaultTrackVolume, Track } from './Track';
+import { DefaultPlaybackRate, DefaultTrackVolume, Track } from './Track';
 import { type ICue } from './ICue';
 import { type ICompilation } from './ICompilation';
 import { type ITrack } from './ITrack';
@@ -115,6 +115,7 @@ export default class CompilationHandler {
             trackMetadata.artist,
             null /*pre-roll*/,
             null /*playhead position*/,
+            DefaultPlaybackRate,
             null,
             null,
             trackUrl,

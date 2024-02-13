@@ -1,4 +1,4 @@
-import { DefaultTrackPlaybackRate } from '@/store/Track';
+import { DefaultPlaybackRate } from '@/store/Track';
 import { SubEvent } from 'sub-events';
 import type { IPlaybackRateController } from './IPlaybackRateController';
 
@@ -17,7 +17,7 @@ export default class HtmlMediaPlaybackRateController
     constructor(
         media: HTMLMediaElement,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        playbackRate: number = DefaultTrackPlaybackRate,
+        playbackRate: number = DefaultPlaybackRate,
     ) {
         this._media = media;
         this._media.playbackRate = playbackRate;

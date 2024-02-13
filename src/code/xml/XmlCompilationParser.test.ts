@@ -1,7 +1,7 @@
 import { expect, describe, it } from 'vitest';
 import CompilationParser from './XmlCompilationParser';
 import { Compilation } from '@/store/Compilation';
-import { Track } from '@/store/Track';
+import { DefaultPlaybackRate, DefaultTrackVolume, Track } from '@/store/Track';
 import type { ICue } from '@/store/ICue';
 import type { ITrack } from '@/store/ITrack';
 
@@ -214,13 +214,14 @@ describe('XmlCompilationParser.ts', () => {
             'testArtist',
             0,
             15.1,
+            DefaultPlaybackRate,
             null,
             null,
             'testUrl',
             'testId',
             new Array<ICue>(),
             null,
-            1,
+            DefaultTrackVolume,
         );
 
         const testCompilation = new Compilation(

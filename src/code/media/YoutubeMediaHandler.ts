@@ -7,7 +7,7 @@ import { PlayerState } from '@vue-youtube/core';
 import { nextTick } from 'process';
 import type { IPlaybackRateController } from './IPlaybackRateController';
 import YouTubePlaybackRateController from './YouTubePlaybackRateController';
-import { DefaultTrackPlaybackRate } from '@/store/Track';
+import { DefaultPlaybackRate } from '@/store/Track';
 
 /** @class Implements a playback handler for a YouTube IFrame player with VueYoutube.
  * @remarks This handles transport/loop and volume operations for the audio.
@@ -40,7 +40,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         this._fader = new YouTubeFader(player, masterVolume);
         this._playbackRateController = new YouTubePlaybackRateController(
             player,
-            DefaultTrackPlaybackRate,
+            DefaultPlaybackRate,
         );
 
         onStateChange((event) => {

@@ -1,4 +1,4 @@
-import { DefaultTrackPlaybackRate } from '@/store/Track';
+import { DefaultPlaybackRate } from '@/store/Track';
 import { SubEvent } from 'sub-events';
 import type { IPlaybackRateController } from './IPlaybackRateController';
 import { type Player } from '@vue-youtube/core';
@@ -18,7 +18,7 @@ export default class YouTubePlaybackRateController
     constructor(
         player: Player,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        playbackRate: number = DefaultTrackPlaybackRate,
+        playbackRate: number = DefaultPlaybackRate,
     ) {
         this._player = player;
         this.playbackRate = playbackRate;

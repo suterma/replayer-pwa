@@ -6,7 +6,7 @@ import type { ICue } from './ICue';
 export const DefaultTrackVolume = 0.5;
 
 /** The default track playback rate */
-export const DefaultTrackPlaybackRate = 1;
+export const DefaultPlaybackRate = 1;
 
 /** Implements a Replayer track
  *  @inheritdoc */
@@ -19,7 +19,7 @@ export class Track implements ITrack {
     PlayheadPosition: number | null = null;
 
     /**   @inheritdoc */
-    PlaybackRate: number = DefaultTrackPlaybackRate;
+    PlaybackRate: number = DefaultPlaybackRate;
     Meter: IMeter | null = null;
     UseMeasureNumbers: boolean | null = null;
     Url = '';
@@ -84,7 +84,7 @@ export class Track implements ITrack {
             obj.Artist,
             obj.PreRoll,
             obj.PlayheadPosition,
-            obj.PlaybackRate ?? DefaultTrackPlaybackRate,
+            obj.PlaybackRate ?? DefaultPlaybackRate,
             obj.Meter,
             obj.UseMeasureNumbers,
             obj.Url,

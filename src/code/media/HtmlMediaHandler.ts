@@ -1,4 +1,4 @@
-import { DefaultTrackPlaybackRate } from '@/store/Track';
+import { DefaultPlaybackRate } from '@/store/Track';
 import AudioFader from './AudioFader';
 import type { IAudioFader } from './IAudioFader';
 import type { IMediaHandler } from './IMediaHandler';
@@ -31,7 +31,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         masterVolume: number = 1,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        playbackRate: number = DefaultTrackPlaybackRate,
+        playbackRate: number = DefaultPlaybackRate,
 
         id = '',
     ) {
@@ -40,7 +40,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
         this._fader = new AudioFader(media, masterVolume);
         this._playbackRateController = new HtmlMediaPlaybackRateController(
             media,
-            DefaultTrackPlaybackRate,
+            playbackRate,
         );
 
         //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
