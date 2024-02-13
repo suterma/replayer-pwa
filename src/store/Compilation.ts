@@ -60,7 +60,7 @@ export class Compilation implements ICompilation {
                     track.Artist,
                     track.PreRoll,
                     track.PlayheadPosition,
-                    track.PlaybackRate ?? DefaultPlaybackRate,
+                    track.PlaybackRate,
                     track.Meter,
                     track.UseMeasureNumbers,
                     track.Url,
