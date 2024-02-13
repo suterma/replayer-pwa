@@ -1,5 +1,5 @@
 <template>
-    <RotaryKnob
+    <ValueKnob
         title="Drag, scroll or use the arrow keys to change volume"
         class="button is-nav is-rounded"
         :class="{ 'is-static': disabled, 'has-cursor-not-allowed': disabled }"
@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import RotaryKnob from '@/components/controls/RotaryKnob.vue';
+import ValueKnob from '@/components/controls/ValueKnob.vue';
 import { DefaultTrackVolume } from '@/store/Track';
 
 /** A volume knob.

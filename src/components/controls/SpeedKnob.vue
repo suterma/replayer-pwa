@@ -1,5 +1,5 @@
 <template>
-    <RotaryKnob
+    <ValueKnob
         title="Drag or scroll to change speed"
         class="button is-nav is-rounded"
         :class="{ 'is-static': disabled, 'has-cursor-not-allowed': disabled }"
@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import RotaryKnob from '@/components/controls/RotaryKnob.vue';
+import ValueKnob from '@/components/controls/ValueKnob.vue';
 import { DefaultPlaybackRate } from '@/store/Track';
 
 /** A speed control knob.

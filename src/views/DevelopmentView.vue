@@ -213,21 +213,17 @@
             valueTextClass: 'has-text-warning',
             valueArchClass: 'has-text-warning',
         }"
-    /><RotaryKnob
-        v-model="knobValue"
-        :min-value="0"
-        :max-value="50"
-    ></RotaryKnob>
+    /><ValueKnob v-model="knobValue" :min-value="0" :max-value="50"></ValueKnob>
 </template>
 
 <script setup lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, ref } from 'vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import NavButton from '@/components/buttons/NavButton.vue';
 //@ts-ignore (because vue-peaks does not provide types)
 import ControlKnob from '@/components/controls/ControlKnob.vue';
-import RotaryKnob from '@/components/controls/RotaryKnob.vue';
+import ValueKnob from '@/components/controls/ValueKnob.vue';
 import { mdiPencil } from '@mdi/js';
 import {
     rTrackPlay,
