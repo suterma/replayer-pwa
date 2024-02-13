@@ -10,6 +10,7 @@
             <div class="level-item">
                 <div>
                     <span class="">{{ title }}</span>
+                    <slot></slot>
                 </div>
             </div>
         </div>

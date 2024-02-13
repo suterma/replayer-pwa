@@ -6,11 +6,7 @@
         left
         down
     >
-        <DropdownMenuButton
-            title="Speed"
-            sub-title="Change playback speed"
-            :icon-path="mdiCog"
-        >
+        <DropdownMenuItem title="Speed" sub-title="Change playback speed">
             <input
                 type="range"
                 min="0.25"
@@ -19,13 +15,13 @@
                 :value="handler.playbackRateController.playbackRate"
                 @update="updatePlaybackRate($event.target.value)"
             />
-        </DropdownMenuButton>
+        </DropdownMenuItem>
     </DropdownMenu>
 </template>
 
 <script setup lang="ts">
 import { type PropType } from 'vue';
-import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
+import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
 import { mdiCog } from '@mdi/js';
 
