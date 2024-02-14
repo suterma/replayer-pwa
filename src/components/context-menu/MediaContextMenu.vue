@@ -10,10 +10,11 @@
             <MenuItemContent title="Speed">
                 <template #right-item>
                     <div class="button is-nav is-indicator">
-                        <span
+                        <span class="is-family-monospace"
                             >{{
-                                props.handler.playbackRateController
-                                    .playbackRate
+                                props.handler.playbackRateController.playbackRate.toFixed(
+                                    2,
+                                )
                             }}x</span
                         >
                     </div>
@@ -28,10 +29,10 @@
                         Reset
                     </button>
                     <SpeedKnob
-                        :model-value="
+                        :speed="
                             props.handler.playbackRateController.playbackRate
                         "
-                        @update:model-value="updatePlaybackRate"
+                        @update:speed="updatePlaybackRate"
                 /></template>
             </MenuItemContent>
         </div>
