@@ -11654,6 +11654,7 @@ for all screen sizes. Keeps the display compact */
 .fade-leave-active,
 .item-expand-leave-active,
 .item-expand-right-leave-active,
+.item-expand-up-leave-active,
 .list-leave-active {
   z-index: -1;
 }
@@ -11668,6 +11669,7 @@ for all screen sizes. Keeps the display compact */
 .fade-leave-active.transition-in-place,
 .item-expand-leave-active.transition-in-place,
 .item-expand-right-leave-active.transition-in-place,
+.item-expand-up-leave-active.transition-in-place,
 .list-leave-active.transition-in-place {
   position: absolute;
 }
@@ -11683,6 +11685,7 @@ for all screen sizes. Keeps the display compact */
 .navbar.is-fixed-bottom .fade-leave-active.transition-in-place,
 .navbar.is-fixed-bottom .item-expand-leave-active.transition-in-place,
 .navbar.is-fixed-bottom .item-expand-right-leave-active.transition-in-place,
+.navbar.is-fixed-bottom .item-expand-down-leave-active.transition-in-place,
 .navbar.is-fixed-bottom .list-leave-active.transition-in-place {
   bottom: 0;
   left: 0;
@@ -11694,6 +11697,8 @@ for all screen sizes. Keeps the display compact */
 .item-expand-leave-active,
 .item-expand-right-enter-active,
 .item-expand-right-leave-active,
+.item-expand-up-enter-active,
+.item-expand-up-leave-active,
 .slide-left-enter-active,
 .slide-left-leave-active,
 .slide-right-enter-active,
@@ -11728,6 +11733,17 @@ for all screen sizes. Keeps the display compact */
   opacity: 0;
   transform-origin: left;
   transform: scaleX(0) translateX(-50%);
+}
+
+/** **********************************************************
+ * Transition for expanding a single item (bottom up)
+**************************************************************
+*/
+.item-expand-up-enter-from,
+.item-expand-up-leave-to {
+  opacity: 0;
+  transform-origin: bottom;
+  transform: scaleY(0) translateY(50%);
 }
 
 /** **********************************************************

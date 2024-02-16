@@ -3,9 +3,10 @@
         class="dropdown"
         :class="{
             'is-active': isDropdownExpanded,
-            'is-up': isMenuTooLow,
-            'is-left': !isMenuTooRight,
-            'is-right': isMenuTooRight,
+            'is-up': isMenuForcedUp,
+            'is-down': !isMenuForcedUp,
+            'is-left': !isMenuForcedLeft,
+            'is-right': isMenuForcedLeft,
         }"
     >
         <DismissiblePanel
@@ -20,6 +21,7 @@
                     style="z-index: 1"
                     aria-haspopup="true"
                     aria-controls="dropdown-menu"
+                    ref="button"
                     :title="title"
                     :icon-path="iconPath"
                     data-cy="dropdown-menu-trigger"
@@ -28,7 +30,9 @@
             </div>
             <!-- Transition for the revealing action. 
                 Uses an additional element to make sure that there is a single root within the transition slot -->
-            <Transition name="item-expand">
+            <Transition
+                :name="isMenuForcedUp ? 'item-expand-up' : 'item-expand'"
+            >
                 <!-- z-index must be larger than the fixed footer -->
                 <div
                     v-if="isDropdownExpanded || renderClosed"
@@ -37,9 +41,10 @@
                     style="z-index: 4"
                     class="dropdown-menu is-unselectable transition-in-place"
                     role="menu"
+                    ref="menu"
                     @click="collapseDropdown()"
                 >
-                    <div ref="target" class="dropdown-content">
+                    <div class="dropdown-content">
                         <slot>
                             <!-- The menu items -->
                         </slot>
@@ -53,7 +58,7 @@
 <script setup lang="ts">
 import NavButton from '@/components/buttons/NavButton.vue';
 import DismissiblePanel from '@/components/DismissiblePanel.vue';
-import { mdiDotsVertical } from '@mdi/js';
+import { mdiDotsVertical, mdiPrinterPosPause } from '@mdi/js';
 import { refThrottled, useElementBounding, useWindowSize } from '@vueuse/core';
 import { computed, ref } from 'vue';
 
@@ -120,25 +125,26 @@ function collapseDropdown() {
     isDropdownExpanded.value = false;
 }
 
-const target = ref();
-const { bottom, right } = useElementBounding(target);
+const button = ref();
+const { bottom, right, top, left } = useElementBounding(button);
+const menu = ref();
+//const { bottom, right, top, left } = useElementBounding(menu);
 const { height, width } = useWindowSize();
 
 /** Checks the position for the menu
  * @remark Debounced to prevent excess updates
  */
-const isMenuTooLow = refThrottled(
+const isMenuForcedUp = refThrottled(
     computed(() => {
-        if (props.up) {
-            return true;
+        // When no direction required, just use the one with the most space
+        if (!props.up && !props.down) {
+            const spaceAboveMenuButton = top.value;
+            const spaceBelowMenuButton = height.value - bottom.value;
+
+            return spaceAboveMenuButton > spaceBelowMenuButton;
         }
-        if (props.down) {
-            return false;
-        }
-        return (
-            bottom.value >
-            height.value - 40 /* avoid menu very close to border or scrollbar */
-        );
+
+        return props.up && !props.down;
     }),
     300 /*replayer-transition-duration*/,
 );
@@ -146,18 +152,17 @@ const isMenuTooLow = refThrottled(
 /** Checks the position for the menu
  * @remark Debounced to prevent excess updates
  */
-const isMenuTooRight = refThrottled(
+const isMenuForcedLeft = refThrottled(
     computed(() => {
-        if (props.left) {
-            return true;
+        // When no direction required, just use the one with the most space
+        if (!props.left && !props.right) {
+            const spaceLeftOfMenuButton = left.value;
+            const spaceRightOfMenuButton = width.value - right.value;
+
+            return spaceLeftOfMenuButton > spaceRightOfMenuButton;
         }
-        if (props.right) {
-            return false;
-        }
-        return (
-            right.value >
-            width.value - 40 /* avoid menu very close to border or scrollbar */
-        );
+
+        return props.left && !props.right;
     }),
     300 /*replayer-transition-duration*/,
 );
