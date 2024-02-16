@@ -378,6 +378,7 @@
                                 <MediaContextMenu
                                     v-if="mediaHandler"
                                     :handler="mediaHandler"
+                                    :track="track"
                                     class="is-experimental"
                                 />
                             </template>
@@ -595,6 +596,7 @@
                                                 <MediaContextMenu
                                                     v-if="mediaHandler"
                                                     :handler="mediaHandler"
+                                                    :track="track"
                                                     class="is-experimental"
                                                 />
                                             </template>

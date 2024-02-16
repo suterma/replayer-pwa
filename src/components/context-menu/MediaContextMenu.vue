@@ -16,6 +16,22 @@
                             }}x</span
                         >
                     </div>
+
+                    <div
+                        v-if="track.Meter?.BeatsPerMinute"
+                        class="button is-nav is-indicator"
+                    >
+                        <span>BPM:&nbsp;</span>
+                        <span
+                            >~{{
+                                Math.round(
+                                    track.Meter.BeatsPerMinute *
+                                        props.handler.playbackRateController
+                                            .playbackRate,
+                                )
+                            }}</span
+                        >
+                    </div>
                     <button
                         :disabled="
                             props.handler.playbackRateController.playbackRate ==
@@ -45,12 +61,17 @@ import { mdiCog } from '@mdi/js';
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
 import { DefaultPlaybackRate } from '@/store/Track';
 import SpeedKnob from '../controls/SpeedKnob.vue';
+import type { ITrack } from '@/store/ITrack';
 /** A nav bar as header with a menu for a compilation
  */
 
 const props = defineProps({
     handler: {
         type: Object as PropType<IMediaHandler>,
+        required: true,
+    },
+    track: {
+        type: Object as PropType<ITrack>,
         required: true,
     },
 });
