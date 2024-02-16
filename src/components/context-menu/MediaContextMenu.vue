@@ -19,7 +19,7 @@
 
                     <div
                         v-if="track.Meter?.BeatsPerMinute"
-                        class="button is-nav is-indicator"
+                        class="button is-nav is-indicator is-hidden-mobile"
                     >
                         <span>BPM:&nbsp;</span>
                         <span
