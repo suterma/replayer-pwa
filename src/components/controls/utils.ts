@@ -39,11 +39,12 @@ export function changeToControlAngle(
     return controlAngleChange;
 }
 
+/** Converts the given control angle into a numeric value */
 export function controlAngleToValue(
     minValue: number,
     maxValue: number,
     controlAngle: number,
-) {
+): number {
     let controlPercentage: number;
     const controlRange = MAX_ANGLE - MIN_ANGLE;
     const valueRange = maxValue - minValue;
@@ -57,11 +58,12 @@ export function controlAngleToValue(
     return minValue + valueRange * controlPercentage;
 }
 
+/** Converts the numeric value into a control angle */
 export function valueToControlAngle(
     minValue: number,
     maxValue: number,
     value: number,
-) {
+): number {
     let valuePercentage: number;
     const controlRange = MAX_ANGLE - MIN_ANGLE;
     const valueRange = maxValue - minValue;

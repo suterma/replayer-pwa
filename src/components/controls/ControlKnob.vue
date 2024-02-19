@@ -176,43 +176,48 @@ function getEventY(event: TouchEvent | MouseEvent): number {
 function moveListener(event: TouchEvent | MouseEvent) {
     mouseMoved.value = true;
     if (mouseIsDown.value) {
-        currentY = getEventY(event);
-        let direction: 'up' | 'down';
-        const curYchange = prevY - currentY;
-
-        if (curYchange < 0) {
-            direction = 'down';
-        } else {
-            direction = 'up';
-        }
-
-        if (
-            prevY !== currentY &&
-            ((direction === 'up' && controlAngle.value < MAX_ANGLE) ||
-                (direction === 'down' && controlAngle.value > MIN_ANGLE))
-        ) {
-            const change = changeToControlAngle(
-                prevY,
-                curYchange,
-                shiftModifier.value,
-            );
-
-            if (controlAngle.value + change < MIN_ANGLE) {
-                controlAngle.value = MIN_ANGLE;
-            } else if (controlAngle.value + change > MAX_ANGLE) {
-                controlAngle.value = MAX_ANGLE;
-            } else {
-                controlAngle.value += change;
-            }
-
-            vModel.value = controlAngleToValue(
-                knobMinValue,
-                knobMaxValue,
-                controlAngle.value,
-            );
-        }
-        prevY = currentY;
+        handleVerticalMove(event);
     }
+}
+
+/** Handles a vertical mouse or touch move by converting it into a new control angle and model value */
+function handleVerticalMove(event: TouchEvent | MouseEvent) {
+    currentY = getEventY(event);
+    let direction: 'up' | 'down';
+    const curYchange = prevY - currentY;
+
+    if (curYchange < 0) {
+        direction = 'down';
+    } else {
+        direction = 'up';
+    }
+
+    if (
+        prevY !== currentY &&
+        ((direction === 'up' && controlAngle.value < MAX_ANGLE) ||
+            (direction === 'down' && controlAngle.value > MIN_ANGLE))
+    ) {
+        const change = changeToControlAngle(
+            prevY,
+            curYchange,
+            shiftModifier.value,
+        );
+
+        if (controlAngle.value + change < MIN_ANGLE) {
+            controlAngle.value = MIN_ANGLE;
+        } else if (controlAngle.value + change > MAX_ANGLE) {
+            controlAngle.value = MAX_ANGLE;
+        } else {
+            controlAngle.value += change;
+        }
+
+        vModel.value = controlAngleToValue(
+            knobMinValue,
+            knobMaxValue,
+            controlAngle.value,
+        );
+    }
+    prevY = currentY;
 }
 
 const debouncedMoveListener = leadingDebounce(moveListener);
