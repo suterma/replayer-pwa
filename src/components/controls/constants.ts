@@ -6,3 +6,10 @@ export const HALF_VIEWBOX = IMAGE_VIEWBOX / 2;
 export const MIN_ANGLE = 120;
 /** The angle in [deg], representing the maximum value */
 export const MAX_ANGLE = 420;
+
+/** A drag direction
+ * */
+export enum DragDirection {
+    vertical = 'vertical',
+    horizontal = 'horizontal',
+}

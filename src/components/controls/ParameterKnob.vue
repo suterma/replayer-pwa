@@ -10,6 +10,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import ControlKnob from '@/components/controls/ControlKnob.vue';
+import { DragDirection } from './constants';
 
 /** A rotary knob for manipulating a parameeter value in a range around zero.
  */
@@ -68,6 +69,7 @@ const knobOptions = computed(() => {
         svgClass: props.valueClass,
         valueTextClass: props.valueClass,
         valueArchClass: props.rimClass,
+        dragDirection: DragDirection.horizontal,
     };
 });
 

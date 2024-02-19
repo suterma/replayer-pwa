@@ -1,6 +1,12 @@
 <!-- Taken from slipmatio /control-knob (MIT-Licensed) -->
 <script setup lang="ts">
-import { HALF_VIEWBOX, MAX_ANGLE, MIN_ANGLE, RADIUS } from './constants';
+import {
+    HALF_VIEWBOX,
+    MAX_ANGLE,
+    MIN_ANGLE,
+    RADIUS,
+    DragDirection,
+} from './constants';
 import {
     changeToControlAngle,
     controlAngleToValue,
@@ -41,6 +47,8 @@ interface Props {
         tickClass?: string;
         valueTextClass?: string;
         passiveEvents?: boolean;
+        /** The used direction of the drag movement to control the value. Vertical is the default. */
+        dragDirection?: DragDirection;
     };
 }
 
@@ -91,6 +99,10 @@ const passiveEvents =
     props.options?.passiveEvents === undefined
         ? false
         : props.options?.passiveEvents;
+const dragDirection =
+    props.options?.dragDirection === undefined
+        ? DragDirection.vertical
+        : props.options?.dragDirection;
 
 const startValue = vModel.value;
 
@@ -147,7 +159,9 @@ const valueArch = computed(
         `M ${rimStartX} ${rimStartY} A ${RADIUS} ${RADIUS} 0 ${largeArch.value} ${sweep.value} ${valueEndX.value} ${valueEndY.value}`,
 );
 
+/** The previous y position (for vertical movement, x position for horizontal movement) */
 let prevY = 0;
+/** The current y position (for vertical movement, x position for horizontal movement) */
 let currentY = 0;
 const mouseIsDown = ref(false);
 const mouseIsOver = ref(false);
@@ -165,9 +179,29 @@ const downListener = (event: MouseEvent | TouchEvent) => {
 /** Gets the y coordinate associated with the event */
 function getEventY(event: TouchEvent | MouseEvent): number {
     if (window.TouchEvent && event instanceof TouchEvent) {
-        return event.touches[0].pageY;
+        switch (dragDirection) {
+            case DragDirection.vertical:
+                return event.touches[0].pageY;
+            case DragDirection.horizontal:
+                return event.touches[0].pageX;
+            default:
+                throw new Error(
+                    'Drag direction ' + dragDirection + ' is not supported.',
+                );
+        }
     } else if (event instanceof MouseEvent) {
-        currentY = event.clientY;
+        switch (dragDirection) {
+            case DragDirection.vertical:
+                currentY = event.clientY;
+                break;
+            case DragDirection.horizontal:
+                currentY = event.clientX;
+                break;
+            default:
+                throw new Error(
+                    'Drag direction ' + dragDirection + ' is not supported.',
+                );
+        }
         return currentY;
     }
     return 0;
@@ -176,15 +210,29 @@ function getEventY(event: TouchEvent | MouseEvent): number {
 function moveListener(event: TouchEvent | MouseEvent) {
     mouseMoved.value = true;
     if (mouseIsDown.value) {
-        handleVerticalMove(event);
+        handleMove(event);
     }
 }
 
-/** Handles a vertical mouse or touch move by converting it into a new control angle and model value */
-function handleVerticalMove(event: TouchEvent | MouseEvent) {
+/** Handles a mouse or touch move by converting it into a new control angle and model value */
+function handleMove(event: TouchEvent | MouseEvent) {
     currentY = getEventY(event);
     let direction: 'up' | 'down';
-    const curYchange = prevY - currentY;
+    let curYchange: number;
+
+    switch (dragDirection) {
+        case DragDirection.vertical:
+            curYchange = prevY - currentY;
+            break;
+        case DragDirection.horizontal:
+            //flip movement direction for horizontal
+            curYchange = -prevY + currentY;
+            break;
+        default:
+            throw new Error(
+                'Drag direction ' + dragDirection + ' is not supported.',
+            );
+    }
 
     if (curYchange < 0) {
         direction = 'down';
