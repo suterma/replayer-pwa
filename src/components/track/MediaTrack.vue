@@ -379,7 +379,6 @@
                                     v-if="mediaHandler"
                                     :handler="mediaHandler"
                                     :track="track"
-                                    class="is-experimental"
                                 />
                             </template>
                         </MediaControlsBar>
@@ -597,7 +596,6 @@
                                                     v-if="mediaHandler"
                                                     :handler="mediaHandler"
                                                     :track="track"
-                                                    class="is-experimental"
                                                 />
                                             </template>
                                             <PlaybackIndicator
