@@ -39,6 +39,12 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         false,
     );
 
+    /** Whether to show an add cue button in the play view (in full screen mode)  */
+    const showAddCueButtonInPlayView = useLocalStorage(
+        'showAddCueButtonInPlayView',
+        true,
+    );
+
     /** Whether to always keep the screen lit while a track is in use
      * @remarks Default is false
      */
@@ -167,6 +173,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
     function $reset() {
         levelMeterSizeIsLarge.value = false;
         showInitialZeroTimeCue.value = false;
+        showAddCueButtonInPlayView.value = true;
         preventScreenTimeout.value = true;
         fadeInDuration.value = 1000;
         fadeOutDuration.value = 500;
@@ -192,6 +199,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
     return {
         levelMeterSizeIsLarge,
         showInitialZeroTimeCue,
+        showAddCueButtonInPlayView,
         preventScreenTimeout,
         fadeInDuration,
         fadeOutDuration,

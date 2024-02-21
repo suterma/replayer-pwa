@@ -85,7 +85,17 @@
                     <LabeledCheckbox
                         v-model="showInitialZeroTimeCue"
                         label="Show an initial cue at the beginning of a track"
-                        hint="Helps  initial navigating to the start of a track"
+                        hint="Helps initial navigating to the start of a track"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="showAddCueButtonInPlayView"
+                        label="Show an add cue button (in full screen mode)"
+                        hint="Allows to quickly add or remove cues during playback"
                     ></LabeledCheckbox>
                 </div>
             </div>
@@ -375,6 +385,7 @@ const settings = useSettingsStore();
 const {
     levelMeterSizeIsLarge,
     showInitialZeroTimeCue,
+    showAddCueButtonInPlayView,
     preventScreenTimeout,
     fadeInDuration,
     fadeOutDuration,

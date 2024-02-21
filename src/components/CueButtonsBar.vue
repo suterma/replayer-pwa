@@ -6,7 +6,7 @@
         <!-- Note: Do not crop the (non-existing) text in virtual cue buttons
              Also, leave the existing flex-grow, to allow them to fill single lines, but allow to shrink -->
         <CueButton
-            v-if="prefixCue.Duration ?? 0 > 0"
+            v-if="(prefixCue.Duration ?? 0 > 0) && showInitialZeroTimeCue"
             :id="prefixCue.Id"
             class="is-flex-grow-1 is-flex-shrink-5"
             :class="{
@@ -72,6 +72,7 @@ import { currentPositionInjectionKey } from './track/TrackInjectionKeys';
 import type { ICue } from '@/store/ICue';
 import type { PlaybackMode } from '@/store/PlaybackMode';
 import { Cue } from '@/store/Cue';
+import { useSettingsStore } from '@/store/settings';
 
 /** A single line bar with simple cue buttons for a track
  */
@@ -132,6 +133,9 @@ const prefixCue = computed(() => {
         prefixCueButtonId,
     );
 });
+
+const settings = useSettingsStore();
+const { showInitialZeroTimeCue } = storeToRefs(settings);
 
 const app = useAppStore();
 const { selectedCueId, scheduledCueId } = storeToRefs(app);
