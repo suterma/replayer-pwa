@@ -3,7 +3,12 @@ import { DefaultPlaybackRate, DefaultTrackVolume, Track } from './Track';
 import { type ICue } from './ICue';
 import { type ICompilation } from './ICompilation';
 import { type ITrack } from './ITrack';
-import { DefaultMathPrecision, TimeFormat, useSettingsStore } from './settings';
+import {
+    DefaultMathPrecision,
+    DefaultMathPrecisionAbsolute,
+    TimeFormat,
+    useSettingsStore,
+} from './settings';
 import { MediaBlob, MediaUrl } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import FileHandler from './filehandler';
@@ -187,7 +192,7 @@ export default class CompilationHandler {
         return round(time, DefaultMathPrecision);
     }
 
-    /** Determines whether two time positions are not more than the Replayer default precision apart.
+    /** Determines whether two time positions are not more than twice (as a grace range) the Replayer default precision apart.
      * @remarks This is useful to compare two timestamps of a cue time and a playhead position.
      * @remarks If any of the numbers is not finite, the comparison returns false
      */
@@ -206,7 +211,10 @@ export default class CompilationHandler {
             // comprison can not be done, assume difference
             return false;
         }
-        return a <= b + DefaultMathPrecision && a >= b - DefaultMathPrecision;
+        return (
+            a <= b + 2 * DefaultMathPrecisionAbsolute &&
+            a >= b - 2 * DefaultMathPrecisionAbsolute
+        );
     }
 
     /** Updates (recalculates) the durations of the given cues, by using the track duration for the last cue.

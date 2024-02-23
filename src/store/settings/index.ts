@@ -9,7 +9,11 @@ import { ref } from 'vue';
  */
 export const TimeDisplayDecimalPlaces = 1;
 
-/** The default precision for time handling and time calculations
+/** The default precision, as absolute value, for time handling and time calculations
+ */
+export const DefaultMathPrecisionAbsolute = 0.001;
+
+/** The default precision, in digits after the decimal point, for time handling and time calculations
  * @remarks Prevents the use of overly lengthy number values, which are not relevant for music playback.
  */
 export const DefaultMathPrecision = 3;
