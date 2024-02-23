@@ -108,6 +108,10 @@ function handleAppUpdate() {
                 'Version 2.1.0: fullscreen mode, simplified video usage, audio level meter off by default\r\n' +
                 updateText;
         }
+        if (compare(previousVersion, '2.2.0', '<')) {
+            updateText =
+                'Version 2.2.0: playback speed can be changed\r\n' + updateText;
+        }
 
         acknowledgeVersion(currentVersion, updateText).then(() => {
             app.updateAcknowledgedVersion(currentVersion);
