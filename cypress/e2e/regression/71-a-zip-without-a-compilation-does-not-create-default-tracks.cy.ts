@@ -19,7 +19,7 @@ describe('testing the issue "71-a-zip-without-a-compilation-does-not-create-defa
 
     it('should not add a default track when replacing an URL', () => {
         cy.loadMediaUrl(
-            'https://lib.replayer.app/decisions-by-lidija-roos.ogg',
+            'https://lib.replayer.app/demo/decisions-by-lidija-roos.ogg',
         );
         cy.visit('/#edit');
 
@@ -27,7 +27,7 @@ describe('testing the issue "71-a-zip-without-a-compilation-does-not-create-defa
         // Note: There are currently two media source displays existing, depending on the viewport width. Take the shown one.
         cy.get('[data-cy="media-source"]').filter(':visible').click();
         cy.get('[data-cy="track"] [data-cy="input-url"]').type(
-            'https://lib.replayer.app/your-light-by-lidija-roos.mp3',
+            'https://lib.replayer.app/demo/your-light-by-lidija-roos.mp3',
         );
         cy.get('[data-cy="track"] [data-cy="submit-source"]').click();
         // ASSERT that there is just the expected amount of tracks (no additional default track)
@@ -38,7 +38,7 @@ describe('testing the issue "71-a-zip-without-a-compilation-does-not-create-defa
 
     it('should add a default track when loading a media resource from an URL', () => {
         cy.loadMediaUrl(
-            'https://lib.replayer.app/decisions-by-lidija-roos.ogg',
+            'https://lib.replayer.app/demo/decisions-by-lidija-roos.ogg',
         );
 
         // ASSERT that there is a single track and it contains the given source and no cues
@@ -47,7 +47,7 @@ describe('testing the issue "71-a-zip-without-a-compilation-does-not-create-defa
             cy.wrap($tracks)
                 .get('[data-cy="media-source"]')
                 .contains(
-                    'https://lib.replayer.app/decisions-by-lidija-roos.ogg',
+                    'https://lib.replayer.app/demo/decisions-by-lidija-roos.ogg',
                 );
             cy.wrap($tracks).get('[data-cy="cue"]').should('not.exist');
         });
@@ -92,7 +92,7 @@ describe('testing the issue "71-a-zip-without-a-compilation-does-not-create-defa
 
     it('should not add a default track when loading a ZIP compilation', () => {
         cy.loadMediaUrl(
-            'https://lib.replayer.app/demo-compilation-featuring-lidija-roos.rez',
+            'https://lib.replayer.app/demo/demo-compilation-featuring-lidija-roos.zip',
         );
         cy.visit('/#edit');
 

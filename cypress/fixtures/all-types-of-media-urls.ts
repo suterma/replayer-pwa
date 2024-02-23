@@ -1,7 +1,7 @@
 export const mediaSourceUrls = [
     {
         name: 'audio (with CORS enabled)',
-        url: 'https://lib.replayer.app/decisions-by-lidija-roos.ogg',
+        url: 'https://lib.replayer.app/demo/decisions-by-lidija-roos.ogg',
         duration: 182.1,
     },
     {

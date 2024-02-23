@@ -7,7 +7,7 @@ describe('testing the issue "Loading a compilation from a file or URL should red
     it('should go to play mode after ZIP compilation load', () => {
         // ACT
         cy.loadMediaUrl(
-            'https://lib.replayer.app/demo-compilation-featuring-lidija-roos.rez',
+            'https://lib.replayer.app/demo/demo-compilation-featuring-lidija-roos.zip',
         );
 
         // ASSERT
@@ -16,7 +16,7 @@ describe('testing the issue "Loading a compilation from a file or URL should red
     it('should go to play mode after XML compilation load', () => {
         // ACT
         cy.loadMediaUrl(
-            'https://lib.replayer.app/Demo%20Compilation%20featuring%20Lidija%20Roos%20%28online%20resources%20of%20multiple%20types%29.rex',
+            'https://lib.replayer.app/demo/Demo%20Compilation%20featuring%20Lidija%20Roos%20%28online%20resources%20of%20multiple%20types%29.rex',
         );
 
         // ASSERT

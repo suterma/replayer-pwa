@@ -12,7 +12,7 @@ describe('loading and displaying of text content with the issue "98-add-support-
     });
 
     it('shows the text note after loading an URL', () => {
-        cy.loadMediaUrl('https://lib.replayer.app/README.txt');
+        cy.loadMediaUrl('https://lib.replayer.app/demo/README.txt');
         cy.get('[data-cy="notice-track"]')
             .contains('This library is mainly used for testing purposes.')
             .click();

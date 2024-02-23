@@ -129,7 +129,7 @@ describe('testing the issue "Loop does not work directly after app start #73", f
         cy.wait(4000);
 
         // ASSERT (that the first track was selected next)
-        cy.get('nav#media-player-panel [data-cy="track-name"]')
+        cy.get('#media-player-panel [data-cy="track-name"]')
             .filter(':visible')
             .should('have.text', 'female');
     });

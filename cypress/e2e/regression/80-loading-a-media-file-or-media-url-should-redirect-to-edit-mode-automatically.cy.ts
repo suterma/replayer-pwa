@@ -2,7 +2,7 @@ describe('testing the issue "Loading a media file or media URL should redirect t
     it('should go to edit mode after media load (with CORS Header)', () => {
         // ACT
         cy.loadMediaUrl(
-            'https://lib.replayer.app/your-light-by-lidija-roos.mp3',
+            'https://lib.replayer.app/demo/your-light-by-lidija-roos.mp3',
         );
 
         // ASSERT

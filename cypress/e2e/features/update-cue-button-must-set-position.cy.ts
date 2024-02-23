@@ -1,4 +1,5 @@
 import { mediaSourceUrls } from './../../fixtures/all-types-of-media-urls';
+import { DefaultMathPrecisionAbsolute } from './../../../src/store/settings';
 
 mediaSourceUrls.forEach((mediaSourceUrl) => {
     describe('the cue update button', () => {
@@ -26,7 +27,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
                 .click();
 
             // ASSERT (that the cue was updated)
-            let allowedCuePositionTolerance = 0;
+            let allowedCuePositionTolerance = DefaultMathPrecisionAbsolute;
             // For YouTube, the position can be slightly off, and also early, see
             // https://developers.google.com/youtube/player_parameters#start
             if (mediaSourceUrl.url.startsWith('https://www.youtube.com/')) {
