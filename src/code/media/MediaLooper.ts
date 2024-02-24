@@ -15,72 +15,21 @@ export class MediaLooper implements IMediaLooper {
     constructor(media: IMediaHandler) {
         this._media = media;
 
-        // register for the required events
-        media.onPausedChanged.subscribe((paused: boolean) => {
-            if (!paused) {
-                // when playing, make sure to watch out of the next loop
-                this.scheduleNextTimeUpdateHandling();
-            } else {
-                // when paused, there is no need to schedule anything
-                this.cancelScheduleNextTimeUpdateHandling();
-            }
-        });
-
-        media.onSeeked.subscribe(() => {
-            this.scheduleNextTimeUpdateHandling();
-        });
-    }
-
-    /** Cancels an exsiting set next time for an update handling
-     */
-    private cancelScheduleNextTimeUpdateHandling() {
-        if (this.timeoutHandle) {
-            clearTimeout(this.timeoutHandle);
-        }
-    }
-
-    /** Schedules the next time update handling, with it's checking for due loops.
-     * @remarks To minimize resource usage, this should be called only when necessary.
-     * This includes seek and play operations.
-     */
-    private scheduleNextTimeUpdateHandling() {
-        this.cancelScheduleNextTimeUpdateHandling();
-
-        // Is looping set, and we are not currently doing a loop end fade-out?
-        if (
-            !this.isLoopEndFadingOut &&
-            this._media.loop &&
-            this.isRangeAvailable()
-        ) {
-            // Make sure we stay in the loop
-            const loopEnd = this._loopEnd;
-            const currentTime = this._media.currentTime;
-            if (loopEnd != null) {
-                const timeout = this.getSafeTimeout(currentTime, loopEnd);
-                console.debug(
-                    `MediaLooper::scheduleNextTimeUpdateHandling:timeout: ${timeout}`,
+        media.onCurrentTimeChanged.subscribe((currentTime) => {
+            if (
+                this._loopStart !== null &&
+                this._loopEnd !== null &&
+                Number.isFinite(this._loopStart) &&
+                Number.isFinite(this._loopEnd) /*this.isRangeAvailable()*/
+            ) {
+                this.handleLoop(
+                    currentTime,
+                    this._loopStart,
+                    this._loopEnd,
+                    this._loopMode,
                 );
-                if (timeout <= 0) {
-                    //due or overdue, handle immediately
-                    console.debug(
-                        `MediaLooper::scheduleNextTimeUpdateHandling:looping`,
-                    );
-                    this.handleLoop(
-                        currentTime,
-                        this.loopStart ?? 0,
-                        this.loopEnd ?? 0,
-                        this.LoopMode,
-                    );
-                } else {
-                    console.debug(
-                        `MediaLooper::scheduleNextTimeUpdateHandling:rescheduling`,
-                    );
-                    this.timeoutHandle = setTimeout(() => {
-                        this.scheduleNextTimeUpdateHandling();
-                    }, timeout * 1000);
-                }
             }
-        }
+        });
     }
 
     /** Gets the time remaining until of the end of the loop range, with a safety margin applied for loop detection */
@@ -119,19 +68,13 @@ export class MediaLooper implements IMediaLooper {
         //Make sure that looping at least at the end does occurr,
         //even if the loop end is set beyond the track end
         this._media.loop = true;
-
-        if (isDirty) {
-            this.scheduleNextTimeUpdateHandling();
-        }
     }
+
     RemoveLoop(): void {
-        this.cancelScheduleNextTimeUpdateHandling();
         this._loopStart = null;
         this._loopEnd = null;
         this._media.loop = false;
     }
-
-    private timeoutHandle: NodeJS.Timeout | null = null;
 
     /** The media handler to act upon */
     private _media: IMediaHandler;
@@ -171,8 +114,8 @@ export class MediaLooper implements IMediaLooper {
         );
     }
 
-    /** Whether playback is currently fading out after the loop end has been reached.
-     * @remarks This is (an internal) flag to prevent re-triggering of fade-outs when looping */
+    /** Whether playback is currently handling the loop end / fading out after the loop end has been reached.
+     * @remarks This is (an internal) flag to prevent re-triggering of loops / fade-outs when looping */
     private isLoopEndFadingOut = false;
 
     /** A safety margin for detecting the end of a track during playback
@@ -194,7 +137,6 @@ export class MediaLooper implements IMediaLooper {
      * @param {number} start - The start of the loop in [seconds]
      * @param {number} end - The end of the loop in [seconds]
      * @param {LoopMode} loopMode - how to handle the possible loop
-     * @returns {boolean} whether looping has been executed (with preceding fading if required)
      */
     handleLoop(
         currentTime: number,
@@ -208,42 +150,34 @@ export class MediaLooper implements IMediaLooper {
             //Back to loop start (with fading)
             if (!this.isLoopEndFadingOut) {
                 this.isLoopEndFadingOut = true;
+                if (this._media.fader.isFadingEnabled) {
+                    // Determine whether fadeout would be after track end
+                    // Typically happens for the last cue in a track
+                    const fadeEnd =
+                        end + this._media.fader.fadeOutDuration / 1000;
+                    const safeTrackEnd =
+                        this._media.duration -
+                        this.trackDurationSafetyMarginSeconds;
+                    const immediateFadeOutRequired = fadeEnd >= safeTrackEnd;
 
-                // Determine whether fadeout would be after track end
-                // Typically happens for the last cue in a track
-                const fadeEnd = end + this._media.fader.fadeOutDuration / 1000;
-                const safeTrackEnd =
-                    this._media.duration -
-                    this.trackDurationSafetyMarginSeconds;
-                const immediateFadeOutRequired = fadeEnd >= safeTrackEnd;
-
-                this._media.fader
-                    .fadeOut(immediateFadeOutRequired)
-                    .finally(() => {
-                        this._media.seekTo(start);
-                        if (loopMode === LoopMode.Recurring) {
-                            // Wait until the seek operation has executed
-                            // NOTE: A nextTick operation seems not to work here
-                            // with all media handlers.
-                            // Maybe, on a later version, the seek operation
-                            // could be implemented as a promise,
-                            // then use a promise-based approach
-                            window.setTimeout(() => {
+                    this._media.fader
+                        .fadeOut(immediateFadeOutRequired)
+                        .finally(() => {
+                            this._media.seekTo(start);
+                            if (loopMode === LoopMode.Once) {
+                                this._media.pause();
+                            } else {
                                 this._media.fader.fadeIn();
-                                this.scheduleNextTimeUpdateHandling();
-                            }, 1);
-                        } else {
-                            this._media.pause();
-                        }
-                        // Reset loop fading last, because this prevents
-                        // unnecessary reschedulings during the above seek
-                        // and fade operations
-                        this.isLoopEndFadingOut = false;
-                    });
-
-                return true;
+                            }
+                            this.isLoopEndFadingOut = false;
+                        });
+                } else {
+                    //no fading
+                    this._media.seek(start - end);
+                }
             }
+        } else {
+            this.isLoopEndFadingOut = false;
         }
-        return false;
     }
 }

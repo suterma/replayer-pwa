@@ -222,9 +222,11 @@ export default class AudioFader implements IAudioFader {
             offset = offset + this.effectiveFadeInDuration / 1000;
         }
 
-        const time = this.audio.currentTime;
-        const target = Math.max(0, time - offset);
-        this.audio.currentTime = target;
+        if (offset) {
+            const time = this.audio.currentTime;
+            const target = Math.max(0, time - offset);
+            this.audio.currentTime = target;
+        }
     }
 
     // --- volume ---
