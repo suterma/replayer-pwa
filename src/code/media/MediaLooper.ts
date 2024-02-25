@@ -1,3 +1,4 @@
+import type { Subscription } from 'sub-events';
 import type { IMediaHandler } from './IMediaHandler';
 import { type IMediaLooper, LoopMode } from './IMediaLooper';
 
@@ -14,22 +15,6 @@ export class MediaLooper implements IMediaLooper {
      */
     constructor(media: IMediaHandler) {
         this._media = media;
-
-        media.onCurrentTimeChanged.subscribe((currentTime) => {
-            console.debug(
-                'MediaLooper::onCurrentTimeChanged:currentTime',
-                currentTime,
-            );
-
-            if (this._isLoopDefined) {
-                this.handleLoop(
-                    currentTime,
-                    this._loopStart as number,
-                    this._loopEnd as number,
-                    this._loopMode,
-                );
-            }
-        });
     }
 
     /** Gets the time remaining until of the end of the loop range, with a safety margin applied for loop detection */
@@ -38,8 +23,9 @@ export class MediaLooper implements IMediaLooper {
         // NOTE: The actual end of the track should not be reached, to avoid
         // unintended premature looping without proper loop and fadeout handling.
         const isAtTrackEnd =
+            this._mediaDuration &&
             loopEnd >=
-            this._media.duration - this.trackDurationSafetyMarginSeconds;
+                this._mediaDuration - this.trackDurationSafetyMarginSeconds;
 
         if (isAtTrackEnd) {
             return (
@@ -64,25 +50,54 @@ export class MediaLooper implements IMediaLooper {
             this._loopEnd = end;
             isDirty = true;
         }
+        if (this._mediaDuration !== this._media.duration) {
+            this._mediaDuration = this._media.duration;
+            isDirty = true;
+        }
 
         if (isDirty) {
             this._isLoopDefined = this.isRangeAvailable();
         }
 
-        //Make sure that looping at least at the end does occurr,
-        //even if the loop end is set beyond the track end
-        this._media.loop = true;
+        // Handle the loop, according to the assertion
+        if (this._isLoopDefined) {
+            //Make sure that looping at least at the end does occurr,
+            //even if the loop end is set beyond the track end
+            this._media.loop = true;
+
+            this._onCurrentTimeChangedSubscription =
+                this._media.onCurrentTimeChanged.subscribe((currentTime) => {
+                    this.handleLoop(
+                        currentTime,
+                        this._loopStart as number,
+                        this._loopEnd as number,
+                        this._loopMode,
+                    );
+                });
+
+            console.debug(
+                'MediaLooper::SetLoop:subscribed',
+                this._onCurrentTimeChangedSubscription,
+            );
+        } else {
+            this.RemoveLoop();
+        }
     }
 
     RemoveLoop(): void {
+        this._onCurrentTimeChangedSubscription?.cancel();
         this._loopStart = null;
         this._loopEnd = null;
         this._media.loop = false;
         this._isLoopDefined = false;
+        console.debug('MediaLooper::RemoveLoop:removed');
     }
 
     /** The media handler to act upon */
     private _media: IMediaHandler;
+
+    /** The subscription to the time update */
+    private _onCurrentTimeChangedSubscription: Subscription | null = null;
 
     /** The loop start */
     private _loopStart: number | null = null;
@@ -111,6 +126,9 @@ export class MediaLooper implements IMediaLooper {
 
     /** An internal flag to quickly determine whether a loop is well defined (boundaries are properly set) */
     private _isLoopDefined: boolean = false;
+
+    /** An internal keeper to quickly determine the media duration. Is updated on loop changes. */
+    private _mediaDuration: number = 0;
 
     /** Determines whether the looping range is well defined (boundaries are properly set) */
     private isRangeAvailable() {
@@ -152,46 +170,52 @@ export class MediaLooper implements IMediaLooper {
         end: number,
         loopMode: LoopMode,
     ): void {
-        //Is a ranged loop due because the end of the loop range has been reached?
-        const timeout = this.getSafeTimeout(currentTime, end);
-        if (timeout <= 0) {
-            console.debug('MediaLooper::handleLoop:timeout-detected', timeout);
-            //Back to loop start (with fading)
-            if (!this.isLoopEndFadingOut) {
-                this.isLoopEndFadingOut = true;
-                if (this._media.fader.isFadingEnabled) {
-                    // Determine whether fadeout would be after track end
-                    // Typically happens for the last cue in a track
-                    const fadeEnd =
-                        end + this._media.fader.fadeOutDuration / 1000;
-                    const safeTrackEnd =
-                        this._media.duration -
-                        this.trackDurationSafetyMarginSeconds;
-                    const immediateFadeOutRequired = fadeEnd >= safeTrackEnd;
+        if (this._isLoopDefined) {
+            //Is a ranged loop due because the end of the loop range has been reached?
+            const timeout = this.getSafeTimeout(currentTime, end);
+            if (timeout <= 0) {
+                // console.debug(
+                //     'MediaLooper::handleLoop:timeout-detected',
+                //     timeout,
+                // );
+                //Back to loop start (with fading)
+                if (!this.isLoopEndFadingOut) {
+                    this.isLoopEndFadingOut = true;
+                    if (this._media.fader.isFadingEnabled) {
+                        // Determine whether fadeout would be after track end
+                        // Typically happens for the last cue in a track
+                        const fadeEnd =
+                            end + this._media.fader.fadeOutDuration / 1000;
+                        const safeTrackEnd =
+                            this._media.duration -
+                            this.trackDurationSafetyMarginSeconds;
+                        const immediateFadeOutRequired =
+                            fadeEnd >= safeTrackEnd;
 
-                    this._media.fader
-                        .fadeOut(immediateFadeOutRequired)
-                        .finally(() => {
-                            this._media.seekTo(start);
-                            if (loopMode === LoopMode.Once) {
-                                this._media.pause();
-                            } else {
-                                this._media.fader.fadeIn();
-                            }
-                            this.isLoopEndFadingOut = false;
-                        });
-                } else {
-                    //no fading
-                    const offset = start - end;
-                    console.debug(
-                        'MediaLooper::handleLoop:no-fading:offset:',
-                        offset,
-                    );
-                    this._media.seek(offset);
+                        this._media.fader
+                            .fadeOut(immediateFadeOutRequired)
+                            .finally(() => {
+                                this._media.seekTo(start);
+                                if (loopMode === LoopMode.Once) {
+                                    this._media.pause();
+                                } else {
+                                    this._media.fader.fadeIn();
+                                }
+                                this.isLoopEndFadingOut = false;
+                            });
+                    } else {
+                        //no fading
+                        const offset = start - end;
+                        // console.debug(
+                        //     'MediaLooper::handleLoop:no-fading:offset:',
+                        //     offset,
+                        // );
+                        this._media.seek(offset);
+                    }
                 }
+            } else {
+                this.isLoopEndFadingOut = false;
             }
-        } else {
-            this.isLoopEndFadingOut = false;
         }
     }
 }
