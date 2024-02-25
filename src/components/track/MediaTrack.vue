@@ -1801,8 +1801,8 @@ watchEffect(() => {
 /** Removes the cue scheduling
  */
 function removeCueScheduling(): void {
-    app.updateScheduledCueId(CompilationHandler.EmptyId);
-    cueScheduler.value?.RemoveSchedule();
+    // app.updateScheduledCueId(CompilationHandler.EmptyId);
+    // cueScheduler.value?.RemoveSchedule();
 }
 </script>
 

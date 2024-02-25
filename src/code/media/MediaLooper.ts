@@ -16,16 +16,16 @@ export class MediaLooper implements IMediaLooper {
         this._media = media;
 
         media.onCurrentTimeChanged.subscribe((currentTime) => {
-            if (
-                this._loopStart !== null &&
-                this._loopEnd !== null &&
-                Number.isFinite(this._loopStart) &&
-                Number.isFinite(this._loopEnd) /*this.isRangeAvailable()*/
-            ) {
+            console.debug(
+                'MediaLooper::onCurrentTimeChanged:currentTime',
+                currentTime,
+            );
+
+            if (this._isLoopDefined) {
                 this.handleLoop(
                     currentTime,
-                    this._loopStart,
-                    this._loopEnd,
+                    this._loopStart as number,
+                    this._loopEnd as number,
                     this._loopMode,
                 );
             }
@@ -65,6 +65,10 @@ export class MediaLooper implements IMediaLooper {
             isDirty = true;
         }
 
+        if (isDirty) {
+            this._isLoopDefined = this.isRangeAvailable();
+        }
+
         //Make sure that looping at least at the end does occurr,
         //even if the loop end is set beyond the track end
         this._media.loop = true;
@@ -74,6 +78,7 @@ export class MediaLooper implements IMediaLooper {
         this._loopStart = null;
         this._loopEnd = null;
         this._media.loop = false;
+        this._isLoopDefined = false;
     }
 
     /** The media handler to act upon */
@@ -104,6 +109,9 @@ export class MediaLooper implements IMediaLooper {
         return this._media.loop;
     }
 
+    /** An internal flag to quickly determine whether a loop is well defined (boundaries are properly set) */
+    private _isLoopDefined: boolean = false;
+
     /** Determines whether the looping range is well defined (boundaries are properly set) */
     private isRangeAvailable() {
         return (
@@ -132,7 +140,7 @@ export class MediaLooper implements IMediaLooper {
     loopDetectionSafetyMarginSeconds = 0;
 
     /** Handles looping for the given timings
-     * @remarks Determines whether a loop is deemed required due to the timings and returns a boolean accordingly
+     * @remarks Determines whether a loop is deemed required due to the timings
      * @param {number} currentTime - The time to decide looping on
      * @param {number} start - The start of the loop in [seconds]
      * @param {number} end - The end of the loop in [seconds]
@@ -143,10 +151,11 @@ export class MediaLooper implements IMediaLooper {
         start: number,
         end: number,
         loopMode: LoopMode,
-    ): boolean {
+    ): void {
         //Is a ranged loop due because the end of the loop range has been reached?
         const timeout = this.getSafeTimeout(currentTime, end);
         if (timeout <= 0) {
+            console.debug('MediaLooper::handleLoop:timeout-detected', timeout);
             //Back to loop start (with fading)
             if (!this.isLoopEndFadingOut) {
                 this.isLoopEndFadingOut = true;
@@ -173,7 +182,12 @@ export class MediaLooper implements IMediaLooper {
                         });
                 } else {
                     //no fading
-                    this._media.seek(start - end);
+                    const offset = start - end;
+                    console.debug(
+                        'MediaLooper::handleLoop:no-fading:offset:',
+                        offset,
+                    );
+                    this._media.seek(offset);
                 }
             }
         } else {
