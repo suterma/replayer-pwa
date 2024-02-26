@@ -68,14 +68,16 @@ export interface IMediaHandler {
 
     /** Seeks forward or backward, for the given amount of seconds, if the media is loaded and the position is valid.
      * @param {number} seconds - amount of time, in [seconds], to seek
+     * @returns {Promise<void>} Promise - resolves when the seek operation has finished
      */
-    seek(seconds: number): void;
+    seek(seconds: number): Promise<void>;
 
     /** Seeks to the given time position, if the media is loaded and the position is valid.
      * @remarks Immediately also advertises the new temporal position
      * @param {number} seconds - the temporal position, in [seconds], to seek to
+     * @returns {Promise<void>} Promise - resolves when the seek operation has finished
      */
-    seekTo(seconds: number): void;
+    seekTo(seconds: number): Promise<void>;
 
     /** Initiates a fade-out operation, then sets the state to paused */
     pause(): void;

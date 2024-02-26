@@ -220,18 +220,32 @@ export default class HtmlMediaHandler implements IMediaHandler {
         return this._media.currentTime;
     }
 
-    seekTo(seconds: number): void {
-        if (!this.hasLoadedMetadata) return;
-        if (this.currentTime === seconds) {
-            return;
+    seekTo(seconds: number): Promise<void> {
+        if (
+            this.hasLoadedMetadata &&
+            this.currentTime !== seconds &&
+            Number.isFinite(seconds)
+        ) {
+            return new Promise((resolve) => {
+                this._media.addEventListener(
+                    'seeked',
+                    function () {
+                        resolve();
+                    },
+                    { once: true },
+                );
+                this._media.currentTime = seconds;
+            });
         }
-        if (Number.isFinite(seconds)) {
-            this._media.currentTime = seconds;
-        }
+        return Promise.resolve();
     }
 
-    seek(seconds: number): void {
-        this.seekTo(this.currentTime + seconds);
+    /** Seeks forward or backward, for the given amount of seconds, if the media is loaded and the position is valid.
+     * @param {number} seconds - amount of time, in [seconds], to seek
+     * @returns {Promise<void>} Promise - resolves when the seek operation has finished
+     */
+    seek(seconds: number): Promise<void> {
+        return this.seekTo(this.currentTime + seconds);
     }
 
     playFrom(position: number): void {

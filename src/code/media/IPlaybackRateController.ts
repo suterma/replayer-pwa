@@ -3,7 +3,7 @@ import { SubEvent } from 'sub-events';
 /** @interface Defines a playback rate controller.
  */
 export interface IPlaybackRateController {
-    /** Gets or sets the media playback rate
+    /** Gets or sets the media playback rate, as a factor.
      */
     playbackRate: number;
 

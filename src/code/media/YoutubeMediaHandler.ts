@@ -163,10 +163,13 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         return this._player.getCurrentTime();
     }
 
-    seekTo(seconds: number): void {
-        if (!this.hasLoadedMetadata) return;
+    /**
+     * @returns {Promise<void>} Promise - always resolved, immediately, or after 300ms, as the YouTube player does not support seek events.
+     */
+    seekTo(seconds: number): Promise<void> {
+        if (!this.hasLoadedMetadata) return Promise.resolve();
         if (this.currentTime === seconds) {
-            return;
+            return Promise.resolve();
         }
         if (Number.isFinite(seconds)) {
             console.debug(
@@ -177,11 +180,18 @@ export default class YouTubeMediaHandler implements IMediaHandler {
             this._player.seekTo(seconds, true);
             this.onSeekingChanged.emit(false);
             this.onSeeked.emit(seconds);
+            return new Promise((resolve) => setTimeout(resolve, 300));
+        } else {
+            return Promise.resolve();
         }
     }
 
-    seek(seconds: number): void {
-        this.seekTo(this.currentTime + seconds);
+    /** Seeks forward or backward, for the given amount of seconds, if the media is loaded and the position is valid.
+     * @param {number} seconds - amount of time, in [seconds], to seek
+     * @returns {Promise<void>} Promise - always resolved immediately, or after 300ms, as the YouTube player does not support seek events.
+     */
+    seek(seconds: number): Promise<void> {
+        return this.seekTo(this.currentTime + seconds);
     }
 
     playFrom(position: number): void {

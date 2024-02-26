@@ -28,7 +28,11 @@ export class MediaLooper implements IMediaLooper {
         });
 
         media.onSeeked.subscribe(() => {
-            if (this._isPaused) this.scheduleNextTimeUpdateHandling();
+            if (!this._isPaused) this.scheduleNextTimeUpdateHandling();
+        });
+
+        media.playbackRateController.onPlaybackRateChanged.subscribe(() => {
+            if (!this._isPaused) this.scheduleNextTimeUpdateHandling();
         });
     }
 
@@ -59,27 +63,31 @@ export class MediaLooper implements IMediaLooper {
             const currentTime = this._media.currentTime;
             if (loopEnd != null) {
                 const timeout = this.getSafeTimeout(currentTime, loopEnd);
-                console.debug(
-                    `MediaLooper::scheduleNextTimeUpdateHandling:timeout: ${timeout}`,
-                );
+                // console.debug(
+                //     `MediaLooper::scheduleNextTimeUpdateHandling:timeout: ${timeout}`,
+                // );
                 if (timeout <= 0) {
                     //due or overdue, handle immediately
                     console.debug(
                         `MediaLooper::scheduleNextTimeUpdateHandling:looping`,
                     );
-                    this.handleLoop(
-                        currentTime,
+                    this.doLoop(
                         this.loopStart ?? 0,
                         this.loopEnd ?? 0,
                         this.LoopMode,
                     );
                 } else {
-                    console.debug(
-                        `MediaLooper::scheduleNextTimeUpdateHandling:rescheduling`,
+                    this.timeoutHandle = setTimeout(
+                        () => {
+                            this.scheduleNextTimeUpdateHandling();
+                        },
+                        (timeout * 1000) /
+                            this._media.playbackRateController.playbackRate,
                     );
-                    this.timeoutHandle = setTimeout(() => {
-                        this.scheduleNextTimeUpdateHandling();
-                    }, timeout * 1000);
+                    console.debug(
+                        `MediaLooper::scheduleNextTimeUpdateHandling:rescheduled`,
+                        timeout,
+                    );
                 }
             }
         }
@@ -90,9 +98,10 @@ export class MediaLooper implements IMediaLooper {
         // Is the loop end at track end?
         // NOTE: The actual end of the track should not be reached, to avoid
         // unintended premature looping without proper loop and fadeout handling.
+        const mediaDuration = this._media.duration;
         const isAtTrackEnd =
-            loopEnd >=
-            this._media.duration - this.trackDurationSafetyMarginSeconds;
+            mediaDuration &&
+            loopEnd >= mediaDuration - this.trackDurationSafetyMarginSeconds;
 
         if (isAtTrackEnd) {
             return (
@@ -100,7 +109,7 @@ export class MediaLooper implements IMediaLooper {
             );
         }
 
-        return loopEnd - currentTime - this.loopDetectionSafetyMarginSeconds;
+        return loopEnd - currentTime;
     }
 
     SetLoop(start: number, end: number, mode: LoopMode): void {
@@ -187,68 +196,49 @@ export class MediaLooper implements IMediaLooper {
      */
     trackDurationSafetyMarginSeconds = 0.1;
 
-    /** A safety margin for detecting scheduling due loops
-     * @remarks This value was empirically determined.
-     * It's dependent of CPU power and timing accurracy
-     */
-    loopDetectionSafetyMarginSeconds = 0;
-
-    /** Handles looping for the given timings
+    /** Executes a due loop for the given timings
      * @remarks Determines whether a loop is deemed required due to the timings and returns a boolean accordingly
-     * @param {number} currentTime - The time to decide looping on
      * @param {number} start - The start of the loop in [seconds]
      * @param {number} end - The end of the loop in [seconds]
      * @param {LoopMode} loopMode - how to handle the possible loop
      */
-    handleLoop(
-        currentTime: number,
-        start: number,
-        end: number,
-        loopMode: LoopMode,
-    ): void {
-        //Is a ranged loop due because the end of the loop range has been reached?
-        const timeout = this.getSafeTimeout(currentTime, end);
-        if (timeout <= 0) {
-            //Back to loop start (with fading)
-            if (!this.isLoopEndFadingOut) {
-                this.isLoopEndFadingOut = true;
-                // Determine whether fadeout would be after track end
-                // Typically happens for the last cue in a track
-                const fadeEnd = end + this._media.fader.fadeOutDuration / 1000;
-                const safeTrackEnd =
-                    this._media.duration -
-                    this.trackDurationSafetyMarginSeconds;
-                const immediateFadeOutRequired = fadeEnd >= safeTrackEnd;
+    doLoop(start: number, end: number, loopMode: LoopMode): void {
+        //Back to loop start (with fading)
+        if (!this.isLoopEndFadingOut) {
+            this.isLoopEndFadingOut = true;
 
-                this._media.fader
-                    .fadeOut(immediateFadeOutRequired)
-                    .finally(() => {
-                        const offset = start - end;
-                        console.debug(
-                            'MediaLooper::handleLoop:offset:',
-                            offset,
-                        );
-                        this._media.seek(offset);
-                        if (loopMode === LoopMode.Recurring) {
-                            // Wait until the seek operation has executed
-                            // NOTE: A nextTick operation seems not to work here
-                            // with all media handlers.
-                            // Maybe, on a later version, the seek operation
-                            // could be implemented as a promise,
-                            // then use a promise-based approach
-                            window.setTimeout(() => {
-                                this._media.fader.fadeIn();
-                                this.scheduleNextTimeUpdateHandling();
-                            }, 1);
-                        } else {
-                            this._media.pause();
-                        }
-                        // Reset loop fading last, because this prevents
-                        // unnecessary reschedulings during the above seek
-                        // and fade operations
-                        this.isLoopEndFadingOut = false;
-                    });
-            }
+            // Determine whether fadeout would be after track end
+            // Typically happens for the last cue in a track
+            const fadeEnd = end + this._media.fader.fadeOutDuration / 1000;
+            const safeTrackEnd =
+                this._media.duration - this.trackDurationSafetyMarginSeconds;
+            const immediateFadeOutRequired = fadeEnd >= safeTrackEnd;
+
+            this._media.fader.fadeOut(immediateFadeOutRequired).finally(() => {
+                //Determine the actual offset required
+                const fadeInPreRoll =
+                    this._media.fader.isFadingEnabled &&
+                    this._media.fader.addFadeInPreRoll &&
+                    loopMode === LoopMode.Recurring
+                        ? this._media.fader.fadeInDuration / 1000
+                        : 0;
+                const offset = start - end - fadeInPreRoll;
+
+                //Seek the offset
+                this._media.seek(offset).then(() => {
+                    // Reset loop fading last, because this prevents
+                    // unnecessary reschedulings during the above seek
+                    // and fade operations
+                    this.isLoopEndFadingOut = false;
+
+                    if (loopMode === LoopMode.Recurring) {
+                        this._media.fader.fadeIn();
+                        this.scheduleNextTimeUpdateHandling();
+                    } else {
+                        this._media.pause();
+                    }
+                });
+            });
         }
     }
 }
