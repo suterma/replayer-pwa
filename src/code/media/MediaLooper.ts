@@ -28,7 +28,8 @@ export class MediaLooper implements IMediaLooper {
         });
 
         media.onSeeked.subscribe(() => {
-            if (!this._isPaused) this.scheduleNextTimeUpdateHandling();
+            if (!this._isPaused && !this.isLoopEndFadingOut)
+                this.scheduleNextTimeUpdateHandling();
         });
 
         media.playbackRateController.onPlaybackRateChanged.subscribe(() => {
@@ -41,6 +42,7 @@ export class MediaLooper implements IMediaLooper {
     private cancelScheduleNextTimeUpdateHandling() {
         if (this.timeoutHandle) {
             clearTimeout(this.timeoutHandle);
+            this.timeoutHandle = null;
         }
     }
 
@@ -63,14 +65,11 @@ export class MediaLooper implements IMediaLooper {
             const currentTime = this._media.currentTime;
             if (loopEnd != null) {
                 const timeout = this.getSafeTimeout(currentTime, loopEnd);
-                // console.debug(
-                //     `MediaLooper::scheduleNextTimeUpdateHandling:timeout: ${timeout}`,
-                // );
+                console.debug(
+                    `MediaLooper::scheduleNextTimeUpdateHandling:timeout: ${timeout}`,
+                );
                 if (timeout <= 0) {
                     //due or overdue, handle immediately
-                    console.debug(
-                        `MediaLooper::scheduleNextTimeUpdateHandling:looping`,
-                    );
                     this.doLoop(
                         this.loopStart ?? 0,
                         this.loopEnd ?? 0,
@@ -207,38 +206,56 @@ export class MediaLooper implements IMediaLooper {
         if (!this.isLoopEndFadingOut) {
             this.isLoopEndFadingOut = true;
 
-            // Determine whether fadeout would be after track end
-            // Typically happens for the last cue in a track
-            const fadeEnd = end + this._media.fader.fadeOutDuration / 1000;
-            const safeTrackEnd =
-                this._media.duration - this.trackDurationSafetyMarginSeconds;
-            const immediateFadeOutRequired = fadeEnd >= safeTrackEnd;
-
-            this._media.fader.fadeOut(immediateFadeOutRequired).finally(() => {
-                //Determine the actual offset required
-                const fadeInPreRoll =
-                    this._media.fader.isFadingEnabled &&
-                    this._media.fader.addFadeInPreRoll &&
-                    loopMode === LoopMode.Recurring
-                        ? this._media.fader.fadeInDuration / 1000
-                        : 0;
-                const offset = start - end - fadeInPreRoll;
-
-                //Seek the offset
+            //Handle the special case of uninterrupted, continuous loop
+            if (
+                loopMode === LoopMode.Recurring &&
+                !this._media.fader.isFadingEnabled
+            ) {
+                console.debug(`MediaLooper::doLoop:fast`);
+                const offset = start - end;
                 this._media.seek(offset).then(() => {
-                    // Reset loop fading last, because this prevents
-                    // unnecessary reschedulings during the above seek
-                    // and fade operations
+                    console.debug(`MediaLooper::doLoop:seeked`);
                     this.isLoopEndFadingOut = false;
-
-                    if (loopMode === LoopMode.Recurring) {
-                        this._media.fader.fadeIn();
-                        this.scheduleNextTimeUpdateHandling();
-                    } else {
-                        this._media.pause();
-                    }
+                    this.scheduleNextTimeUpdateHandling();
                 });
-            });
+            } else {
+                console.debug(`MediaLooper::doLoop:faded`);
+                // Determine whether fadeout would be after track end
+                // Typically happens for the last cue in a track
+                const fadeEnd = end + this._media.fader.fadeOutDuration / 1000;
+                const safeTrackEnd =
+                    this._media.duration -
+                    this.trackDurationSafetyMarginSeconds;
+                const immediateFadeOutRequired = fadeEnd >= safeTrackEnd;
+
+                this._media.fader
+                    .fadeOut(immediateFadeOutRequired)
+                    .finally(() => {
+                        //Determine the actual offset required
+                        const fadeInPreRoll =
+                            this._media.fader.isFadingEnabled &&
+                            this._media.fader.addFadeInPreRoll &&
+                            loopMode === LoopMode.Recurring
+                                ? this._media.fader.fadeInDuration / 1000
+                                : 0;
+                        const offset = start - end - fadeInPreRoll;
+
+                        this._media.seek(offset).then(() => {
+                            // Reset loop fading just before next scheduling,
+                            // because this prevents
+                            // unnecessary reschedulings during the above seek
+                            // and fade operations
+                            this.isLoopEndFadingOut = false;
+
+                            if (loopMode === LoopMode.Recurring) {
+                                this._media.fader.fadeIn();
+                                this.scheduleNextTimeUpdateHandling();
+                            } else {
+                                this._media.pause();
+                            }
+                        });
+                    });
+            }
         }
     }
 }
