@@ -68,7 +68,7 @@ export class MediaLooper implements IMediaLooper {
                 console.debug(
                     `MediaLooper::scheduleNextTimeUpdateHandling:timeout: ${timeout}`,
                 );
-                if (timeout <= 0) {
+                if (timeout <= 0 + this.nonReschedulingMargin) {
                     //due or overdue, handle immediately
                     this.doLoop(
                         this.loopStart ?? 0,
@@ -188,12 +188,28 @@ export class MediaLooper implements IMediaLooper {
      * @remarks This is (an internal) flag to prevent re-triggering of fade-outs when looping */
     private isLoopEndFadingOut = false;
 
+    /** The range for which a too short loop timer is not rescheduled.
+     * @remarks Experience has shown, that small rescheduling near the end of the
+     * actual loop end worsen the loop timing. These are prevented within
+     * this margin.
+     */
+    private nonReschedulingMargin = 0.3;
+
     /** A safety margin for detecting the end of a track during playback
      * while looping
      * @remarks This value was empirically determined.
      * It's dependent of CPU power and timing accurracy
      */
-    trackDurationSafetyMarginSeconds = 0.1;
+    private trackDurationSafetyMarginSeconds = 0.1;
+
+    /** A measured duration for the seek operation when executing a loop
+     * in [seconds]. This is used
+     * to compensate the seek target with, to have the loop start accounted for
+     * this duration
+     * @remarks This value is measured at each executed loop. The set value
+     * is a reasonable default.
+     */
+    private loopSeekingDurationToCompensate = 0.01;
 
     /** Executes a due loop for the given timings
      * @remarks Determines whether a loop is deemed required due to the timings and returns a boolean accordingly
@@ -202,7 +218,6 @@ export class MediaLooper implements IMediaLooper {
      * @param {LoopMode} loopMode - how to handle the possible loop
      */
     doLoop(start: number, end: number, loopMode: LoopMode): void {
-        const tLoopHandlingStart = performance.now();
         //Back to loop start (with fading)
         if (!this.isLoopEndFadingOut) {
             this.isLoopEndFadingOut = true;
@@ -212,17 +227,20 @@ export class MediaLooper implements IMediaLooper {
                 loopMode === LoopMode.Recurring &&
                 !this._media.fader.isFadingEnabled
             ) {
+                const tLoopHandlingStart = performance.now();
                 console.debug(`MediaLooper::doLoop:fast`);
-                const offset = start - end;
-                this._media.seek(offset).then(() => {
-                    console.debug(`MediaLooper::doLoop:seeked`);
-                    this.isLoopEndFadingOut = false;
-                    this.scheduleNextTimeUpdateHandling();
-                    const tLoopHandlingFinish = performance.now();
-                    console.log(
-                        `Call to do fast looping took ${tLoopHandlingFinish - tLoopHandlingStart} milliseconds.`,
-                    );
-                });
+                this._media
+                    .seekTo(start + this.loopSeekingDurationToCompensate)
+                    .then(() => {
+                        this.isLoopEndFadingOut = false;
+                        const tLoopHandlingFinish = performance.now();
+                        this.scheduleNextTimeUpdateHandling();
+                        this.loopSeekingDurationToCompensate =
+                            (tLoopHandlingFinish - tLoopHandlingStart) / 1000;
+                        console.log(
+                            `Call to do fast looping took ${this.loopSeekingDurationToCompensate * 1000} milliseconds.`,
+                        );
+                    });
             } else {
                 console.debug(`MediaLooper::doLoop:faded`);
                 // Determine whether fadeout would be after track end
@@ -236,6 +254,7 @@ export class MediaLooper implements IMediaLooper {
                 this._media.fader
                     .fadeOut(immediateFadeOutRequired)
                     .finally(() => {
+                        const tLoopHandlingStart = performance.now();
                         //Determine the actual offset required
                         const fadeInPreRoll =
                             this._media.fader.isFadingEnabled &&
@@ -243,26 +262,33 @@ export class MediaLooper implements IMediaLooper {
                             loopMode === LoopMode.Recurring
                                 ? this._media.fader.fadeInDuration / 1000
                                 : 0;
-                        const offset = start - end - fadeInPreRoll;
+                        this._media
+                            .seekTo(
+                                start -
+                                    fadeInPreRoll +
+                                    this.loopSeekingDurationToCompensate,
+                            )
+                            .then(() => {
+                                // Reset loop fading just before next scheduling,
+                                // because this prevents
+                                // unnecessary reschedulings during the above seek
+                                // and fade operations
+                                this.isLoopEndFadingOut = false;
+                                const tLoopHandlingFinish = performance.now();
+                                this.loopSeekingDurationToCompensate =
+                                    (tLoopHandlingFinish - tLoopHandlingStart) /
+                                    1000;
+                                console.log(
+                                    `Call to do faded looping took ${this.loopSeekingDurationToCompensate * 1000} milliseconds.`,
+                                );
 
-                        this._media.seek(offset).then(() => {
-                            // Reset loop fading just before next scheduling,
-                            // because this prevents
-                            // unnecessary reschedulings during the above seek
-                            // and fade operations
-                            this.isLoopEndFadingOut = false;
-                            const tLoopHandlingFinish = performance.now();
-                            console.log(
-                                `Call to do faded looping took ${tLoopHandlingFinish - tLoopHandlingStart} milliseconds.`,
-                            );
-
-                            if (loopMode === LoopMode.Recurring) {
-                                this._media.fader.fadeIn();
-                                this.scheduleNextTimeUpdateHandling();
-                            } else {
-                                this._media.pause();
-                            }
-                        });
+                                if (loopMode === LoopMode.Recurring) {
+                                    this._media.fader.fadeIn();
+                                    this.scheduleNextTimeUpdateHandling();
+                                } else {
+                                    this._media.pause();
+                                }
+                            });
                     });
             }
         }
