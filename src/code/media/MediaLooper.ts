@@ -202,6 +202,7 @@ export class MediaLooper implements IMediaLooper {
      * @param {LoopMode} loopMode - how to handle the possible loop
      */
     doLoop(start: number, end: number, loopMode: LoopMode): void {
+        const tLoopHandlingStart = performance.now();
         //Back to loop start (with fading)
         if (!this.isLoopEndFadingOut) {
             this.isLoopEndFadingOut = true;
@@ -217,6 +218,10 @@ export class MediaLooper implements IMediaLooper {
                     console.debug(`MediaLooper::doLoop:seeked`);
                     this.isLoopEndFadingOut = false;
                     this.scheduleNextTimeUpdateHandling();
+                    const tLoopHandlingFinish = performance.now();
+                    console.log(
+                        `Call to do fast looping took ${tLoopHandlingFinish - tLoopHandlingStart} milliseconds.`,
+                    );
                 });
             } else {
                 console.debug(`MediaLooper::doLoop:faded`);
@@ -246,6 +251,10 @@ export class MediaLooper implements IMediaLooper {
                             // unnecessary reschedulings during the above seek
                             // and fade operations
                             this.isLoopEndFadingOut = false;
+                            const tLoopHandlingFinish = performance.now();
+                            console.log(
+                                `Call to do faded looping took ${tLoopHandlingFinish - tLoopHandlingStart} milliseconds.`,
+                            );
 
                             if (loopMode === LoopMode.Recurring) {
                                 this._media.fader.fadeIn();
