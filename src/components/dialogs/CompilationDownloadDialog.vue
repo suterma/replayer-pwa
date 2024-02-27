@@ -166,11 +166,6 @@ export default defineComponent({
             required: true,
         },
     },
-    data() {
-        return {
-            mdiFlashTriangleOutline: mdiFlashTriangleOutline,
-        };
-    },
     setup() {
         /** NOTE: Returning the returnValue function is required by vue3-promise-dialog */
         function returnValue() {
@@ -180,6 +175,11 @@ export default defineComponent({
         return {
             returnValue,
             isDownloadZip,
+        };
+    },
+    data() {
+        return {
+            mdiFlashTriangleOutline: mdiFlashTriangleOutline,
         };
     },
 

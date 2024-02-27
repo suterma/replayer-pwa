@@ -12,7 +12,7 @@
         Uses an additional element to make sure that there is a single root within the transition slot -->
     <Transition :name="transitionName">
         <template v-if="modelValue"
-            ><slot :modelValue="modelValue"></slot
+            ><slot :model-value="modelValue"></slot
         ></template>
     </Transition>
 </template>

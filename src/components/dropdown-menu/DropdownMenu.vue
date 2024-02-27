@@ -18,10 +18,10 @@
             <div class="dropdown-trigger">
                 <!-- z-index must be larger than for h1 (but less then the fixed footer) -->
                 <NavButton
+                    ref="button"
                     style="z-index: 1"
                     aria-haspopup="true"
                     aria-controls="dropdown-menu"
-                    ref="button"
                     :title="title"
                     :icon-path="iconPath"
                     data-cy="dropdown-menu-trigger"
@@ -38,10 +38,10 @@
                     v-if="isDropdownExpanded || renderClosed"
                     v-show="isDropdownExpanded"
                     id="dropdown-menu"
+                    ref="menu"
                     style="z-index: 4"
                     class="dropdown-menu is-unselectable transition-in-place"
                     role="menu"
-                    ref="menu"
                     @click="collapseDropdown()"
                 >
                     <div class="dropdown-content">
