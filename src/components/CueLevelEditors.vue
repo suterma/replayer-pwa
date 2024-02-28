@@ -9,7 +9,13 @@
          is used instead, with some pause/resume for the event handling applied.
         -->
     <div ref="transitionGroup">
-        <TransitionGroup :name="animation">
+        <TransitionGroup
+            :name="animation"
+            @before-enter="pause"
+            @after-enter="resume"
+            @before-leave="pause"
+            @after-leave="resume"
+        >
             <CueLevelEditor
                 v-for="cue in cues"
                 :key="cue.Id"
@@ -30,12 +36,12 @@
 </template>
 
 <script setup lang="ts">
-import { type PropType, computed, inject, ref } from 'vue';
+import { type PropType, computed, inject, ref, type Ref } from 'vue';
 import CompilationHandler from '@/store/compilation-handler';
 import CueLevelEditor from '@/components/CueLevelEditor.vue';
 import { useAppStore } from '@/store/app';
 import { currentPositionInjectionKey } from './track/TrackInjectionKeys';
-import { useElementVisibility } from '@vueuse/core';
+import { useElementVisibility, useRafFn } from '@vueuse/core';
 import type { ICue } from '@/store/ICue';
 import type { PlaybackMode } from '@/store/PlaybackMode';
 
@@ -82,6 +88,13 @@ const animation = computed(() => {
 
 const currentPosition = inject(currentPositionInjectionKey);
 
+/** Throttling (and pausing during transition) the position update handling
+ * to keep the UI more responsive overall*/
+const currentPositionThrottled: Ref<number | null> = ref(null);
+const { pause, resume } = useRafFn(() => {
+    currentPositionThrottled.value = currentPosition?.value ?? null;
+});
+
 const app = useAppStore();
 
 /** Handles the click event of the cue button */
@@ -126,18 +139,21 @@ function isCueScheduled(cue: ICue): boolean {
  * @param cue - the cue to determine the playback progress for
  */
 function hasCuePassed(cue: ICue): boolean {
-    return CompilationHandler.hasCuePassed(cue, currentPosition?.value);
+    return CompilationHandler.hasCuePassed(cue, currentPositionThrottled.value);
 }
 /** Determines whether playback of the given cue has not yet started
  * @param cue - the cue to determine the playback progress for
  */
 function isCueAhead(cue: ICue): boolean {
-    return CompilationHandler.isCueAhead(cue, currentPosition?.value);
+    return CompilationHandler.isCueAhead(cue, currentPositionThrottled.value);
 }
 /** The playback progress within the given cue, in [percent], or null if not applicable
  * @param cue - the cue to determine the playback progress for
  */
 function percentComplete(cue: ICue): number | null {
-    return CompilationHandler.percentComplete(cue, currentPosition?.value);
+    return CompilationHandler.percentComplete(
+        cue,
+        currentPositionThrottled.value,
+    );
 }
 </script>
