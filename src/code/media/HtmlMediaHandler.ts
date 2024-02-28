@@ -230,7 +230,6 @@ export default class HtmlMediaHandler implements IMediaHandler {
                 this._media.addEventListener(
                     'seeked',
                     function () {
-                        console.debug('HtmlMediaHandler::seekTo:seeked');
                         resolve();
                     },
                     { once: true },
