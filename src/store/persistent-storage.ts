@@ -1,6 +1,8 @@
 import { set, entries, del, clear } from 'idb-keyval';
 import { MediaBlob } from './types';
 import { Store } from '.';
+import { useSettingsStore } from './settings';
+import { useMessageStore } from './messages';
 
 /**
  * Provides simplified access to persistent storage for blobs within the Replayer app. This
@@ -30,24 +32,38 @@ export default class PersistentStorage {
     }
 
     /** Retrieves media blob data from the persistent store
+     * @remarks In case of an error, as many blobs as possilbe are returned, but
+     * the set might also be empty.
      * @devdoc The indexed db is used for blob data, as recommended.
      */
     static retrieveAllMediaBlobs(): Promise<MediaBlob[]> {
         console.debug('PersistentStorage::retrieveAllMediaBlobs');
-        return (entries() as Promise<[IDBValidKey, Blob][]>).then((entries) => {
-            const mediaBlobs = new Array<MediaBlob>();
+        return (entries() as Promise<[IDBValidKey, Blob][]>)
+            .then((entries) => {
+                const mediaBlobs = new Array<MediaBlob>();
+                entries.forEach((item) => {
+                    const key = item[0].toString();
+                    try {
+                        const blob = item[1];
+                        if (key.startsWith(Store.MediaBlob)) {
+                            const fileName = key.slice(Store.MediaBlob.length);
+                            mediaBlobs.push(new MediaBlob(fileName, blob));
+                        }
+                    } catch (error) {
+                        console.warn(
+                            `The blob for key '${key}' could not be retrieved from the persistent blob storage. The media must get provided separately by the user.`,
+                            error,
+                        );
+                    }
+                });
 
-            entries.forEach((item) => {
-                const key = item[0].toString();
-                const blob = item[1];
-                if (key.startsWith(Store.MediaBlob)) {
-                    const fileName = key.slice(Store.MediaBlob.length);
-                    mediaBlobs.push(new MediaBlob(fileName, blob));
-                }
+                return mediaBlobs;
+            })
+            .catch((errorMessage: string) => {
+                const message = useMessageStore();
+                message.pushError(errorMessage);
+                return new Array<MediaBlob>();
             });
-
-            return mediaBlobs;
-        });
     }
 
     /** Removes the given media blob data from the persistent store
