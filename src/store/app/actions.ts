@@ -406,6 +406,10 @@ export const actions = {
 
     /** Adds a blob as a media source, using a name and a blob  */
     addMediaBlob(mediaBlob: MediaBlob): void {
+        console.debug(
+            'actions::addMediaBlob::mediaBlob.fileName',
+            mediaBlob.fileName,
+        );
         const objectUrl = ObjectUrlHandler.createObjectURL(
             mediaBlob.blob,
             mediaBlob.fileName,
@@ -416,16 +420,7 @@ export const actions = {
             new MediaUrl(mediaBlob.fileName, objectUrl, blobSize, mediaType),
         );
         //Store persistently, but after committing, to keep the process faster
-        try {
-            // NOTE: blob storage is not reliably available
-            // Especially on some older iOS devices only some/small files can be stored
-            PersistentStorage.storeMediaBlob(mediaBlob);
-        } catch (error) {
-            console.warn(
-                `The blob for fileName '${mediaBlob.fileName}' could not be stored in the persistent blob storage. The media must get loaded again after application restart`,
-                error,
-            );
-        }
+        PersistentStorage.storeMediaBlob(mediaBlob);
     },
 
     /** Loads a single file or package from an URL

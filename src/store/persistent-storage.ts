@@ -1,4 +1,4 @@
-import { get, set, entries, del, clear } from 'idb-keyval';
+import { set, entries, del, clear } from 'idb-keyval';
 import { MediaBlob } from './types';
 import { Store } from '.';
 
@@ -16,13 +16,24 @@ export default class PersistentStorage {
             'PersistentStorage::storeMediaBlob:fileName',
             data.fileName,
         );
-        set(Store.MediaBlob + data.fileName, data.blob);
+
+        try {
+            // NOTE: blob storage is not guaranteed to be available
+            // Especially on some older iOS devices only some/small files can be stored
+            set(Store.MediaBlob + data.fileName, data.blob);
+        } catch (error) {
+            console.warn(
+                `The blob for fileName '${data.fileName}' could not be stored in the persistent blob storage. The media must get loaded again after application restart`,
+                error,
+            );
+        }
     }
 
     /** Retrieves media blob data from the persistent store
      * @devdoc The indexed db is used for blob data, as recommended.
      */
     static retrieveAllMediaBlobs(): Promise<MediaBlob[]> {
+        console.debug('PersistentStorage::retrieveAllMediaBlobs');
         return (entries() as Promise<[IDBValidKey, Blob][]>).then((entries) => {
             const mediaBlobs = new Array<MediaBlob>();
 
@@ -38,21 +49,12 @@ export default class PersistentStorage {
             return mediaBlobs;
         });
     }
-    /** Retrieves the given media blob data from the persistent store
-     * @devdoc The indexed db is used for blob data, as recommended.
-     */
-    static retrieveMediaBlob(fileName: string): Promise<MediaBlob> {
-        return (get(Store.MediaBlob + fileName) as Promise<Blob>).then(
-            (blob) => {
-                return new MediaBlob(fileName, blob);
-            },
-        );
-    }
 
     /** Removes the given media blob data from the persistent store
      * @devdoc The indexed db is used for blob data, as recommended.
      */
     static removeMediaBlob(fileName: string): Promise<void> {
+        console.debug('PersistentStorage::removeMediaBlob');
         return del(Store.MediaBlob + fileName);
     }
 
@@ -60,6 +62,7 @@ export default class PersistentStorage {
      * @devdoc The indexed db is used for blob data, as recommended.
      */
     static removeAllMediaBlob(): Promise<void> {
+        console.debug('PersistentStorage::removeAllMediaBlob');
         return clear();
     }
 }
