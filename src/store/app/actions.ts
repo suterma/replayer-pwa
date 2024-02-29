@@ -431,6 +431,7 @@ export const actions = {
      * @return A locally usable name, derived from the URL, which can be used to match the track to the stored media file
      */
     loadFromUrl(url: string): Promise<string> {
+        console.debug('actions::loadFromUrl::url', url);
         const message = useMessageStore();
 
         return new Promise((resolve, reject) => {
@@ -498,22 +499,24 @@ export const actions = {
                         this.loadFromFile(file)
                             .then(() => {
                                 resolve(localResourceName);
-                                //The action is done, so terminate the progress
-                                message.popProgress();
                             })
                             .catch((errorMessage: string) => {
-                                message.popProgress();
                                 reject(
                                     `Loading from the received resource file has failed for URL: '${url}' with the message: '${errorMessage}'`,
                                 );
+                            })
+                            .finally(() => {
+                                message.popProgress();
                             });
                     });
                 })
                 .catch((errorMessage: string) => {
-                    message.popProgress();
                     reject(
                         `Fetch has failed for URL: '${url}' with the message: '${errorMessage}'. Maybe the file is too large or the server does not allow CORS. If any of this is the case, manually download the resource and load it from the file system.`,
                     );
+                })
+                .finally(() => {
+                    message.popProgress();
                 });
         });
     },
@@ -757,8 +760,8 @@ export const actions = {
      * @return A promise to a locally usable name, derived from the URL, which can be used to match the track to the stored media URL
      */
     useMediaFromUrl(url: string): Promise<string> {
+        console.debug('actions::useMediaFromUrl::url', url);
         const message = useMessageStore();
-
         return new Promise((resolve, reject) => {
             if (!FileHandler.isSupportedMediaFileName(url)) {
                 //message.popProgress();

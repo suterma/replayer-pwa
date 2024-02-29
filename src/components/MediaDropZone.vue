@@ -384,9 +384,17 @@ export default defineComponent({
                 // Try to load the assumed type
                 const load = (url: string) => {
                     if (isUsingSingleMediaFile) {
-                        return this.useMediaFromUrl(url);
+                        return this.useMediaFromUrl(url).catch(
+                            (errorMessage: string) => {
+                                this.pushError(errorMessage);
+                            },
+                        );
                     } else {
-                        return this.loadFromUrl(url);
+                        return this.loadFromUrl(url).catch(
+                            (errorMessage: string) => {
+                                this.pushError(errorMessage);
+                            },
+                        );
                     }
                 };
                 load(this.url)

@@ -52,7 +52,11 @@ export default defineComponent({
         }
         //Handle a Package API Request (mandatory package is available)
         if (query && query['package']) {
-            this.loadFromUrl(query['package'] as string);
+            this.loadFromUrl(query['package'] as string).catch(
+                (errorMessage: string) => {
+                    this.pushError(errorMessage);
+                },
+            );
         }
         this.removeQuery();
     },

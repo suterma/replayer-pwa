@@ -957,7 +957,7 @@ const cueScheduler: Ref<ICueScheduler | null> = ref(null);
 /** Updates the media handler for this track, with the emitted one from the underlying component */
 function takeMediaHandler(handler: IMediaHandler) {
     // initialize
-    console.debug('MediaTrack::useMediaHandler:id', handler.id);
+    console.debug('MediaTrack::takeMediaHandler:id', handler.id);
     handler.fader.setVolume(props.track.Volume);
     handler.playbackRateController.playbackRate = props.track.PlaybackRate;
 
