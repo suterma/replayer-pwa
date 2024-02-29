@@ -1,3 +1,5 @@
+const URL = window.URL || window.webkitURL;
+
 /** @class Static functions for storage handling
  * @remarks This is just a wrapper, with some logging functions, suited for better storage debugging handling
  * @devdoc This handles the webkit variant as well
@@ -8,12 +10,14 @@ export class ObjectUrlHandler {
         blob: Blob,
         identifier: string | null,
     ): string {
-        const url = window.URL
-            ? window.URL.createObjectURL(blob)
-            : window.webkitURL.createObjectURL(blob);
+        console.debug(
+            'ObjectUrlHandler::createObjectUrl:creating-for:id:' +
+                `'${identifier}'`,
+        );
+        const url = URL.createObjectURL(blob);
         console.log(
-            'ObjectUrlHandler::createObjectUrl:url/id:' +
-                `'${url}'/'${identifier}''`,
+            'ObjectUrlHandler::createObjectUrl:created-for:url/id:' +
+                `'${url}'/'${identifier}'`,
         );
         return url;
     }
@@ -21,8 +25,6 @@ export class ObjectUrlHandler {
     /** Revokes an object URL, plus writes a log */
     public static revokeObjectURL(url: string): void {
         console.log('ObjectUrlHandler::revokeObjectURL:url:' + `'${url}'`);
-        return window.URL
-            ? window.URL.revokeObjectURL(url)
-            : window.webkitURL.revokeObjectURL(url);
+        return URL.revokeObjectURL(url);
     }
 }
