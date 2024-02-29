@@ -56,9 +56,13 @@ const message = useMessageStore();
 onerror = (_event, _source, _lineno, _colno, error) => {
     message.pushError(`${error?.name}: ${error?.message}`);
 };
-window.addEventListener('unhandledrejection', function (event) {
-    message.pushError(`${event?.reason}`);
-});
+window.addEventListener(
+    'unhandledrejection',
+    function (event: PromiseRejectionEvent) {
+        console.error(event?.reason, event);
+        message.pushError(event?.reason);
+    },
+);
 
 // Handle the app title when the compilation title changes
 const app = useAppStore();
