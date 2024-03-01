@@ -458,11 +458,11 @@ watch(
                 mediaUrlWithFragment.value = props.mediaUrl;
             } else {
                 const fragment = props.start ? '#t=' + props.start : '';
-                const url = props.mediaUrl + fragment;
+                const fragmentedUrl = props.mediaUrl + fragment;
                 console.debug(
-                    `Applying url '${url}' as mediaUrlWithFragment for trackId '${props.trackId}' at start '${props.start}'`,
+                    `Applying url '${fragmentedUrl}' as mediaUrlWithFragment for trackId '${props.trackId}' at start '${props.start}'`,
                 );
-                mediaUrlWithFragment.value = props.mediaUrl + fragment;
+                mediaUrlWithFragment.value = fragmentedUrl;
             }
         }
     },
