@@ -277,6 +277,10 @@ const props = defineProps({
     },
 });
 
+console.debug(
+    `TrackMediaElement:setup:using mediaUrl '${props.mediaUrl}' for trackId '${props.trackId}' at start '${props.start}'`,
+);
+
 // --- visibility ---
 
 const showVideo = ref(true);
@@ -445,6 +449,10 @@ watch(
     (mediaUrl) => {
         if (mediaUrl) {
             const fragment = props.start ? '#t=' + props.start : '';
+            const url = props.mediaUrl + fragment;
+            console.debug(
+                `Applying url '${url}' as mediaUrlWithFragment for trackId '${props.trackId}' at start '${props.start}'`,
+            );
             mediaUrlWithFragment.value = props.mediaUrl + fragment;
         }
     },
