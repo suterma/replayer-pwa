@@ -112,6 +112,9 @@ function handleAppUpdate() {
             updateText =
                 'Version 2.2.0: playback speed can be changed\r\n' + updateText;
         }
+        if (compare(previousVersion, '2.2.1', '<')) {
+            updateText = 'Version 2.2.1: minor bugfixes\r\n' + updateText;
+        }
 
         acknowledgeVersion(currentVersion, updateText).then(() => {
             app.updateAcknowledgedVersion(currentVersion);
