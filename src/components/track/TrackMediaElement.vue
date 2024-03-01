@@ -436,24 +436,34 @@ const fadeOutDuration = computed(() => {
 
 // --- Transport ---
 
-/** The appliccable mediaUrl with a possible fragment for the start time */
+/** The applicable mediaUrl with a possible fragment for the start time
+ */
 const mediaUrlWithFragment = ref('');
 
-/** Handles initial and changed mediaUrl's
+/** Handles initial and changed mediaUrls. Applies a fragment to allow
+ * ranged loading.
+ * @remarks See https://replayer.app/de/blog/using-media-fragments-to-start-playback-from-a-specific-point-in-time
  * @remarks The change of the start property is explicitly only handeled
  * together with the change of the media URL. Otherwise, each start change
  * would trigger an actual URL update. This would disturb playback handling.
+ * @remarks The fragment is not applied to blob URLs because this has created
+ * issues with iOS/WebKit, giving
+ * "The operation couldn’t be completed. (WebKitBlobResource error 1.)".
  */
 watch(
     () => props.mediaUrl,
     (mediaUrl) => {
         if (mediaUrl) {
-            const fragment = props.start ? '#t=' + props.start : '';
-            const url = props.mediaUrl + fragment;
-            console.debug(
-                `Applying url '${url}' as mediaUrlWithFragment for trackId '${props.trackId}' at start '${props.start}'`,
-            );
-            mediaUrlWithFragment.value = props.mediaUrl + fragment;
+            if (mediaUrl.startsWith('blob:')) {
+                mediaUrlWithFragment.value = props.mediaUrl;
+            } else {
+                const fragment = props.start ? '#t=' + props.start : '';
+                const url = props.mediaUrl + fragment;
+                console.debug(
+                    `Applying url '${url}' as mediaUrlWithFragment for trackId '${props.trackId}' at start '${props.start}'`,
+                );
+                mediaUrlWithFragment.value = props.mediaUrl + fragment;
+            }
         }
     },
     { immediate: true /* to handle it at least once after mount time */ },
