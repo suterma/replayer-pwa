@@ -1,7 +1,6 @@
 import { set, entries, del, clear } from 'idb-keyval';
 import { MediaBlob } from './types';
 import { Store } from '.';
-import { useSettingsStore } from './settings';
 import { useMessageStore } from './messages';
 
 /**
