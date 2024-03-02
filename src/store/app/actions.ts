@@ -537,6 +537,9 @@ export const actions = {
                 }' (${FileHandler.AsMegabytes(file.size)}MB)`,
             );
             if (FileHandler.isSupportedPackageFile(file)) {
+                console.debug(
+                    `Browser supports JSZip arraybuffer: ${JSZip.support.arraybuffer}; uint8array: ${JSZip.support.uint8array}; blob: ${JSZip.support.blob}; nodebuffer: ${JSZip.support.nodebuffer}`,
+                );
                 // 1) read the Blob
                 JSZip.loadAsync(file)
                     .then(
@@ -652,6 +655,9 @@ export const actions = {
                                             }
                                             message.popProgress();
                                         })
+                                        .catch((errorMessage: string) => {
+                                            console.error(errorMessage);
+                                        })
                                         .finally(() => {
                                             message.popProgress();
                                         });
@@ -664,6 +670,9 @@ export const actions = {
                             );
                         },
                     )
+                    .catch((errorMessage: string) => {
+                        reject(errorMessage);
+                    })
                     .finally(() => {
                         message.popProgress();
                         resolve();
@@ -676,6 +685,9 @@ export const actions = {
                         .then((compilation) => {
                             compilation.Url = file.name;
                             this.replaceCompilation(compilation);
+                        })
+                        .catch((errorMessage: string) => {
+                            reject(errorMessage);
                         })
                         .finally(() => {
                             message.popProgress();
