@@ -27,6 +27,7 @@
                 <Transition name="item-expand">
                     <div v-if="modelValue">
                         <div class="block">
+                            <!-- NOTE: These links use the blank target, to actually cause a reload. Just changing the URL does not trigger a track/package API reload -->
                             <h3 class="title is-5 mt-5">Track API Demo</h3>
                             <div class="content">
                                 <ul>
