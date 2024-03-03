@@ -39,7 +39,12 @@ export const useMessageStore = defineStore(Store.Messages, () => {
      * @remarks certain irrelevant or unclear messages are omitted for the display
      */
     function pushError(message: string): void {
-        if (message != 'undefined: undefined') {
+        if (
+            message != null &&
+            message != 'null' &&
+            message != '' &&
+            message != 'undefined: undefined'
+        ) {
             errorMessageStack.value.push(message);
         }
         console.error('ERROR: ' + message);
