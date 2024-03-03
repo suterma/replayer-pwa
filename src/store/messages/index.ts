@@ -4,6 +4,7 @@ import { type Ref, computed, ref } from 'vue';
 import { Store } from '..';
 import { useSettingsStore } from '../settings';
 import { InputFeedback } from './InputFeedback';
+import { nextTick } from 'process';
 
 /** A store for messages, that are to be displayed.
  * @devdoc This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores
@@ -29,10 +30,18 @@ export const useMessageStore = defineStore(Store.Messages, () => {
         new Array<string>(),
     );
 
-    /** Initiates the display of a progress message by pushing the message onto the stack of progress messages */
-    function pushProgress(message: string): void {
-        progressMessageStack.value.push(message);
-        console.log('PROGRESS: ' + message);
+    /** Initiates the display of a progress message by pushing the message onto the stack of progress messages
+     * @remarks Resolves at next tick, after the message had the chance to get displayed
+     * in the real DOM.
+     */
+    function pushProgress(message: string): Promise<void> {
+        return new Promise((resolve) => {
+            progressMessageStack.value.push(message);
+            console.log('PROGRESS: ' + message);
+            nextTick(() => {
+                resolve();
+            });
+        });
     }
 
     /** Initiates the display of an error message by pushing the message onto the stack of error messages

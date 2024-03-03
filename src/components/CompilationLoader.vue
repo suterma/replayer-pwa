@@ -27,6 +27,10 @@ export default defineComponent({
         if (query && query['media'] !== undefined) {
             const track = TrackApi.parseFromUrlQuery(query);
             if (track && track.Url) {
+                console.log(
+                    'CompilationLoader::mounted:adding track from URL:',
+                    track.Url,
+                );
                 //Add the track, before the track media URL (to avoid the creation of a default track)
                 this.addTrack(track);
 
@@ -51,12 +55,15 @@ export default defineComponent({
             }
         }
         //Handle a Package API Request (mandatory package is available)
-        if (query && query['package']) {
-            this.loadFromUrl(query['package'] as string).catch(
-                (errorMessage: string) => {
-                    this.pushError(errorMessage);
-                },
+        const packageUrl = query['package'] as string;
+        if (query && packageUrl) {
+            console.log(
+                'CompilationLoader::mounted:adding package from URL:',
+                packageUrl,
             );
+            this.loadFromUrl(packageUrl).catch((errorMessage: string) => {
+                this.pushError(errorMessage);
+            });
         }
         this.removeQuery();
     },

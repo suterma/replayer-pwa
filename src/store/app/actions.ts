@@ -20,6 +20,7 @@ import CompilationParser from '../../code/xml/XmlCompilationParser';
 import { useMessageStore } from '../messages';
 import type { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
+import { nextTick } from 'process';
 
 export const actions = {
     /** Updates the currently selected cue Id, for application-wide handling
@@ -440,84 +441,85 @@ export const actions = {
                 reject(`Provided input is not a valid URL: '${url}'`);
             }
 
-            message.pushProgress(`Loading URL '${url}'...`);
-            // HINT: Replayer expects CORS to be allowed here (no no-cors).
-            // If the origin server doesn’t include the suitable
-            // Access-Control-Allow-Origin response header, the request will fail
-            fetch(url, {
-                method: 'GET',
-            })
-                .then((response) => {
-                    //Use the final (possibly redirected URL for the next time)
-                    console.debug('LOAD_FROM_URL::response', response);
-
-                    //Get the possibly redirected url
-                    let finalUrl: URL;
-                    if (response.redirected) {
-                        finalUrl = new URL(response.url);
-                    } else {
-                        finalUrl = new URL(url);
-                    }
-
-                    if (
-                        response.status ===
-                        0 /* opaque response, in case no-cors would have been used */
-                    ) {
-                        message.popProgress();
-                        reject(
-                            `Fetch has failed for URL: '${url}' due to disallowed CORS by the server. Please manually download the resource and load it from the file system.`,
-                        );
-                    } else if (!response.ok) {
-                        message.popProgress();
-                        reject(
-                            `Network response while fetching URL '${url}' was not 200 OK, but: '${response.status} ${response.statusText}'`,
-                        );
-                    }
-
-                    response.blob().then((blob) => {
-                        const mimeType = FileHandler.getResponseMimeType(
-                            finalUrl,
-                            response,
-                        );
-
-                        //Check whether MIME Type is supported
-                        if (!FileHandler.isSupportedMimeType(mimeType)) {
-                            message.popProgress();
-                            reject(
-                                `Content MIME type '${mimeType}' is not supported`,
+            message.pushProgress(`Loading URL '${url}'...`).then(() => {
+                // HINT: Replayer expects CORS to be allowed here (no no-cors).
+                // If the origin server doesn’t include the suitable
+                // Access-Control-Allow-Origin response header, the request will fail
+                fetch(url, {
+                    method: 'GET',
+                })
+                    .then((response) => {
+                        //Use the final (possibly redirected URL)
+                        if (response.redirected) {
+                            console.debug(
+                                `The GET request was redirected from fetch URL '${url}' to response URL '${response.url}'`,
                             );
                         }
-                        const localResourceName =
-                            FileHandler.getLocalResourceName(finalUrl);
-                        const file = new File(
-                            [blob],
-                            localResourceName /* as name */,
-                            {
-                                type: mimeType ?? undefined,
-                            },
+                        message.pushProgress(
+                            `Loading data from response URL '${response.url}'...`,
                         );
-                        this.loadFromFile(file)
-                            .then(() => {
-                                resolve(localResourceName);
-                            })
-                            .catch((errorMessage: string) => {
-                                reject(
-                                    `Loading from the received resource file has failed for URL: '${url}' with the message: '${errorMessage}'`,
-                                );
-                            })
-                            .finally(() => {
+
+                        if (
+                            response.status ===
+                            0 /* opaque response, in case no-cors would have been used */
+                        ) {
+                            message.popProgress();
+                            reject(
+                                `Fetch has failed for URL: '${response.url}' due to disallowed CORS by the server. Please manually download the resource and load it from the file system.`,
+                            );
+                        } else if (!response.ok) {
+                            message.popProgress();
+                            reject(
+                                `Network response while fetching URL '${response.url}' was not 200 OK, but: '${response.status} ${response.statusText}'`,
+                            );
+                        }
+
+                        response.blob().then((blob) => {
+                            const responseUrl = new URL(response.url);
+                            const mimeType = FileHandler.getResponseMimeType(
+                                responseUrl,
+                                response,
+                            );
+
+                            //Check whether MIME Type is supported
+                            if (!FileHandler.isSupportedMimeType(mimeType)) {
                                 message.popProgress();
-                            });
+                                reject(
+                                    `Content MIME type '${mimeType}' is not supported`,
+                                );
+                            }
+                            const localResourceName =
+                                FileHandler.getLocalResourceName(responseUrl);
+                            const file = new File(
+                                [blob],
+                                localResourceName /* as name */,
+                                {
+                                    type: mimeType ?? undefined,
+                                },
+                            );
+                            this.loadFromFile(file)
+                                .then(() => {
+                                    resolve(localResourceName);
+                                })
+                                .catch((errorMessage: string) => {
+                                    reject(
+                                        `Loading from the received resource file has failed for URL: '${responseUrl}' with the message: '${errorMessage}'`,
+                                    );
+                                })
+                                .finally(() => {
+                                    message.popProgress();
+                                });
+                        });
+                    })
+                    .catch((errorMessage: string) => {
+                        reject(
+                            `Fetch has failed for URL: '${url}' with the message: '${errorMessage}'. Maybe the file is too large or the server does not allow CORS. If any of this is the case, manually download the resource and load it from the file system.`,
+                        );
+                    })
+                    .finally(() => {
+                        message.popProgress();
                     });
-                })
-                .catch((errorMessage: string) => {
-                    reject(
-                        `Fetch has failed for URL: '${url}' with the message: '${errorMessage}'. Maybe the file is too large or the server does not allow CORS. If any of this is the case, manually download the resource and load it from the file system.`,
-                    );
-                })
-                .finally(() => {
-                    message.popProgress();
-                });
+            });
         });
     },
 
