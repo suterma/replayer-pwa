@@ -18,16 +18,13 @@ export default class PersistentStorage {
             data.fileName,
         );
 
-        try {
-            // NOTE: blob storage is not guaranteed to be available
-            // Especially on some older iOS devices only some/small files can be stored
-            set(Store.MediaBlob + data.fileName, data.blob);
-        } catch (error) {
-            console.warn(
-                `The blob for fileName '${data.fileName}' could not be stored in the persistent blob storage. The media must get loaded again after application restart`,
-                error,
-            );
-        }
+        // NOTE: blob storage is not guaranteed to be available
+        // Especially on some older iOS devices only some/small files can be stored
+        set(Store.MediaBlob + data.fileName, data.blob).catch(
+            (errorMessage: string) => {
+                useMessageStore().pushError(errorMessage);
+            },
+        );
     }
 
     /** Retrieves media blob data from the persistent store
@@ -59,8 +56,7 @@ export default class PersistentStorage {
                 return mediaBlobs;
             })
             .catch((errorMessage: string) => {
-                const message = useMessageStore();
-                message.pushError(errorMessage);
+                useMessageStore().pushError(errorMessage);
                 return new Array<MediaBlob>();
             });
     }
@@ -70,7 +66,9 @@ export default class PersistentStorage {
      */
     static removeMediaBlob(fileName: string): Promise<void> {
         console.debug('PersistentStorage::removeMediaBlob');
-        return del(Store.MediaBlob + fileName);
+        return del(Store.MediaBlob + fileName).catch((errorMessage: string) => {
+            useMessageStore().pushError(errorMessage);
+        });
     }
 
     /** Removes all media blob data from the persistent store
@@ -78,6 +76,8 @@ export default class PersistentStorage {
      */
     static removeAllMediaBlob(): Promise<void> {
         console.debug('PersistentStorage::removeAllMediaBlob');
-        return clear();
+        return clear().catch((errorMessage: string) => {
+            useMessageStore().pushError(errorMessage);
+        });
     }
 }
