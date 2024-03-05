@@ -20,7 +20,6 @@ import CompilationParser from '../../code/xml/XmlCompilationParser';
 import { useMessageStore } from '../messages';
 import type { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
-import { nextTick } from 'process';
 
 export const actions = {
     /** Updates the currently selected cue Id, for application-wide handling
@@ -523,8 +522,9 @@ export const actions = {
         });
     },
 
-    /** Loads a single file or package from the local file system
-     * @remarks The item might be a package or single file of any supported content.
+    /** Loads a single file or package from a file
+     * @remarks The file might have been downloaded or stem from the local file
+     * syste. I might be a package or a single file of any supported content.
      * @remarks This method can be called multiple times, each resource gets appropriately added to the current compilation
      * @param file - The file to use
      */
@@ -533,11 +533,10 @@ export const actions = {
         const message = useMessageStore();
 
         return new Promise((resolve, reject) => {
-            message.pushProgress(
-                `Loading file '${file.name}' '${
-                    file.type
-                }' (${FileHandler.AsMegabytes(file.size)}MB)`,
-            );
+            const loadingFileMessage = `Loading file '${file.name}' ${
+                file.type
+            } (${FileHandler.AsMegabytes(file.size)}MB)`;
+            message.pushProgress(loadingFileMessage);
             if (FileHandler.isSupportedPackageFile(file)) {
                 console.debug(
                     `Browser supports JSZip arraybuffer: ${JSZip.support.arraybuffer}; uint8array: ${JSZip.support.uint8array}; blob: ${JSZip.support.blob}; nodebuffer: ${JSZip.support.nodebuffer}`,
@@ -587,7 +586,15 @@ export const actions = {
                                         `Processing ZIP entry: ${zipEntry.name}`,
                                     );
                                     zipEntry
-                                        .async('nodebuffer')
+                                        .async(
+                                            'nodebuffer',
+                                            function updateCallback(metadata) {
+                                                message.pushProgressWithPercentage(
+                                                    `Processing ZIP entry: ${zipEntry.name}`,
+                                                    metadata.percent,
+                                                );
+                                            },
+                                        )
                                         .then((content: Buffer): void => {
                                             //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
                                             const zipEntryName =
@@ -612,7 +619,9 @@ export const actions = {
                                                         );
                                                     })
                                                     .finally(() => {
-                                                        message.popProgress();
+                                                        message.popProgress(
+                                                            `Processing content for ZIP entry '${zipEntryName}'...`,
+                                                        );
                                                     });
                                             } else if (
                                                 FileHandler.isSupportedMediaFileName(
@@ -631,7 +640,9 @@ export const actions = {
                                                         mediaBlob.fileName,
                                                     );
                                                 }
-                                                message.popProgress();
+                                                message.popProgress(
+                                                    `Processing content for ZIP entry '${zipEntryName}'...`,
+                                                );
                                             } else if (
                                                 FileHandler.isSupportedPackageFileName(
                                                     zipEntryName,
@@ -643,6 +654,9 @@ export const actions = {
                                                 console.debug(
                                                     `ZIP: Not processing package file '${zipEntryName}' within package: '${file.name}'`,
                                                 );
+                                                message.popProgress(
+                                                    `Processing content for ZIP entry '${zipEntryName}'...`,
+                                                );
                                             } else if (
                                                 FileHandler.isPath(zipEntryName)
                                             ) {
@@ -650,18 +664,25 @@ export const actions = {
                                                 console.debug(
                                                     `ZIP: Not processing path '${zipEntryName}' within package: '${file.name}'`,
                                                 );
+                                                message.popProgress(
+                                                    `Processing content for ZIP entry '${zipEntryName}'...`,
+                                                );
                                             } else {
                                                 console.warn(
                                                     `ZIP: Unknown content type for file '${zipEntryName}' within package: '${file.name}'`,
                                                 );
+                                                message.popProgress(
+                                                    `Processing content for ZIP entry '${zipEntryName}'...`,
+                                                );
                                             }
-                                            message.popProgress();
                                         })
                                         .catch((errorMessage: string) => {
                                             console.error(errorMessage);
                                         })
                                         .finally(() => {
-                                            message.popProgress();
+                                            message.popProgress(
+                                                `Processing ZIP entry: ${zipEntry.name}`,
+                                            );
                                         });
                                 },
                             );
@@ -676,7 +697,7 @@ export const actions = {
                         reject(errorMessage);
                     })
                     .finally(() => {
-                        message.popProgress();
+                        message.popProgress(loadingFileMessage);
                         resolve();
                     });
             } else if (FileHandler.isXmlFile(file)) {
@@ -692,7 +713,7 @@ export const actions = {
                             reject(errorMessage);
                         })
                         .finally(() => {
-                            message.popProgress();
+                            message.popProgress(loadingFileMessage);
                             resolve();
                         });
                 };
@@ -708,10 +729,10 @@ export const actions = {
                 reader.readAsText(file);
             } else if (FileHandler.isSupportedMediaFile(file)) {
                 this.addMediaBlob(new MediaBlob(file.name, file));
-                message.popProgress();
+                message.popProgress(loadingFileMessage);
                 resolve();
             } else {
-                message.popProgress();
+                message.popProgress(loadingFileMessage);
                 reject(
                     `Unsupported content type for file '${file.name}', content was not processed.`,
                 );

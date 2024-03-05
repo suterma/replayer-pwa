@@ -75,7 +75,10 @@
         <div class="modal-background"></div>
         <div class="modal-content is-loading">
             <!-- Show the message and a horzontal progress -->
-            <div class="has-text-centered">
+            <div
+                class="has-text-centered"
+                v-for="progressMessage in progressMessages"
+            >
                 {{ progressMessage }}
             </div>
             <progress class="progress" max="100"></progress>
@@ -102,7 +105,7 @@ import { useMessageStore } from '@/store/messages';
 
 const message = useMessageStore();
 const {
-    progressMessage,
+    progressMessages,
     hasProgressMessage,
     errorMessages,
     hasErrorMessages,

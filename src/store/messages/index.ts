@@ -44,6 +44,34 @@ export const useMessageStore = defineStore(Store.Messages, () => {
         });
     }
 
+    /** Initiates the display of a progress message by pushing the message onto the stack of progress messages
+     * @remarks Resolves at next tick, after the message had the chance to get displayed
+     * in the real DOM.
+     */
+    function pushProgressWithPercentage(
+        message: string,
+        percent: number,
+    ): Promise<void> {
+        return new Promise((resolve) => {
+            const messageWithProgress = `${message} | ${percent.toFixed(2)}%`;
+
+            const existingProgressIndex = progressMessageStack.value.findIndex(
+                (element) => element.startsWith(message),
+            );
+
+            if (existingProgressIndex >= 0) {
+                progressMessageStack.value[existingProgressIndex] =
+                    messageWithProgress;
+            } else {
+                progressMessageStack.value.push(messageWithProgress);
+            }
+            console.log('PROGRESS: ' + messageWithProgress);
+            nextTick(() => {
+                resolve();
+            });
+        });
+    }
+
     /** Initiates the display of an error message by pushing the message onto the stack of error messages
      * @remarks certain irrelevant or unclear messages are omitted for the display
      */
@@ -67,9 +95,17 @@ export const useMessageStore = defineStore(Store.Messages, () => {
     }
 
     /** Ends the display of a previous progress message, by popping the message from the stack of progress messages */
-    function popProgress(): void {
-        const message = progressMessageStack.value.pop();
-        console.debug('POP_PROGRESS: ' + message);
+    function popProgress(message: string = ''): void {
+        if (message) {
+            // remove those messages
+            progressMessageStack.value = progressMessageStack.value.filter(
+                (e) => !e.startsWith(message),
+            );
+            console.debug('POP_PROGRESS: ' + message);
+        } else {
+            const poppedMessage = progressMessageStack.value.pop();
+            console.debug('POP_PROGRESS: ' + poppedMessage);
+        }
     }
 
     /** Ends the display of a previous error message, by popping the message from the stack of error messages */
@@ -188,6 +224,7 @@ export const useMessageStore = defineStore(Store.Messages, () => {
 
     return {
         pushProgress,
+        pushProgressWithPercentage,
         pushError,
         pushSuccess,
         pushInputFeedback,
