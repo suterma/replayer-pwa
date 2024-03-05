@@ -75,13 +75,19 @@
         <div class="modal-background"></div>
         <div class="modal-content is-loading">
             <!-- Show the message and a horzontal progress -->
-            <div
-                class="has-text-centered"
-                v-for="progressMessage in progressMessages"
-            >
-                {{ progressMessage }}
-            </div>
-            <progress class="progress" max="100"></progress>
+            <template v-for="progressMessage in progressMessages">
+                <div class="has-text-centered">
+                    {{ progressMessage.Message }}
+                    <!-- Show progress with percentage, if available -->
+                    <progress
+                        v-if="progressMessage.Percentage"
+                        class="progress"
+                        max="100"
+                        :value="progressMessage.Percentage"
+                    ></progress>
+                    <progress v-else class="progress" max="100"></progress>
+                </div>
+            </template>
         </div>
     </div>
 

@@ -20,6 +20,7 @@ import CompilationParser from '../../code/xml/XmlCompilationParser';
 import { useMessageStore } from '../messages';
 import type { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
+import { ProgressMessage } from '../messages/ProgressMessage';
 
 export const actions = {
     /** Updates the currently selected cue Id, for application-wide handling
@@ -440,7 +441,8 @@ export const actions = {
                 reject(`Provided input is not a valid URL: '${url}'`);
             }
 
-            message.pushProgress(`Loading URL '${url}'...`).then(() => {
+            const loadingUrlMessage = `Loading URL '${url}'...`;
+            message.pushProgress(loadingUrlMessage).then(() => {
                 // HINT: Replayer expects CORS to be allowed here (no no-cors).
                 // If the origin server doesn’t include the suitable
                 // Access-Control-Allow-Origin response header, the request will fail
@@ -454,61 +456,66 @@ export const actions = {
                                 `The GET request was redirected from fetch URL '${url}' to response URL '${response.url}'`,
                             );
                         }
-                        message.pushProgress(
-                            `Loading data from response URL '${response.url}'...`,
-                        );
+                        const LoadingDataMessage = `Loading data from response URL '${response.url}'...`;
+                        message.pushProgress(LoadingDataMessage);
 
                         if (
                             response.status ===
                             0 /* opaque response, in case no-cors would have been used */
                         ) {
-                            message.popProgress();
+                            message.popProgress(LoadingDataMessage);
                             reject(
                                 `Fetch has failed for URL: '${response.url}' due to disallowed CORS by the server. Please manually download the resource and load it from the file system.`,
                             );
                         } else if (!response.ok) {
-                            message.popProgress();
+                            message.popProgress(LoadingDataMessage);
                             reject(
                                 `Network response while fetching URL '${response.url}' was not 200 OK, but: '${response.status} ${response.statusText}'`,
                             );
                         }
 
-                        response.blob().then((blob) => {
-                            const responseUrl = new URL(response.url);
-                            const mimeType = FileHandler.getResponseMimeType(
-                                responseUrl,
-                                response,
-                            );
-
-                            //Check whether MIME Type is supported
-                            if (!FileHandler.isSupportedMimeType(mimeType)) {
-                                message.popProgress();
-                                reject(
-                                    `Content MIME type '${mimeType}' is not supported`,
-                                );
-                            }
-                            const localResourceName =
-                                FileHandler.getLocalResourceName(responseUrl);
-                            const file = new File(
-                                [blob],
-                                localResourceName /* as name */,
-                                {
-                                    type: mimeType ?? undefined,
-                                },
-                            );
-                            this.loadFromFile(file)
-                                .then(() => {
-                                    resolve(localResourceName);
-                                })
-                                .catch((errorMessage: string) => {
-                                    reject(
-                                        `Loading from the received resource file has failed for URL: '${responseUrl}' with the message: '${errorMessage}'`,
+                        response
+                            .blob()
+                            .then((blob) => {
+                                const responseUrl = new URL(response.url);
+                                const mimeType =
+                                    FileHandler.getResponseMimeType(
+                                        responseUrl,
+                                        response,
                                     );
-                                })
-                                .finally(() => {
-                                    message.popProgress();
-                                });
-                        });
+
+                                //Check whether MIME Type is supported
+                                if (
+                                    !FileHandler.isSupportedMimeType(mimeType)
+                                ) {
+                                    reject(
+                                        `Content MIME type '${mimeType}' is not supported`,
+                                    );
+                                }
+                                const localResourceName =
+                                    FileHandler.getLocalResourceName(
+                                        responseUrl,
+                                    );
+                                const file = new File(
+                                    [blob],
+                                    localResourceName /* as name */,
+                                    {
+                                        type: mimeType ?? undefined,
+                                    },
+                                );
+                                this.loadFromFile(file)
+                                    .then(() => {
+                                        resolve(localResourceName);
+                                    })
+                                    .catch((errorMessage: string) => {
+                                        reject(
+                                            `Loading from the received resource file has failed for URL: '${responseUrl}' with the message: '${errorMessage}'`,
+                                        );
+                                    });
+                            })
+                            .finally(() => {
+                                message.popProgress(LoadingDataMessage);
+                            });
                     })
                     .catch((errorMessage: string) => {
                         reject(
@@ -516,7 +523,7 @@ export const actions = {
                         );
                     })
                     .finally(() => {
-                        message.popProgress();
+                        message.popProgress(loadingUrlMessage);
                     });
             });
         });
@@ -582,16 +589,17 @@ export const actions = {
                             processables.forEach(
                                 (zipEntry: JSZip.JSZipObject): void => {
                                     //Set the progress message, before using any of the async functions
-                                    message.pushProgress(
-                                        `Processing ZIP entry: ${zipEntry.name}`,
-                                    );
+                                    const processEntryMessage = `Processing ZIP entry: ${zipEntry.name}`;
+                                    message.pushProgress(processEntryMessage);
                                     zipEntry
                                         .async(
                                             'nodebuffer',
                                             function updateCallback(metadata) {
                                                 message.pushProgressWithPercentage(
-                                                    `Processing ZIP entry: ${zipEntry.name}`,
-                                                    metadata.percent,
+                                                    new ProgressMessage(
+                                                        processEntryMessage,
+                                                        metadata.percent,
+                                                    ),
                                                 );
                                             },
                                         )
@@ -599,10 +607,6 @@ export const actions = {
                                             //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
                                             const zipEntryName =
                                                 zipEntry.name.normalize();
-                                            message.pushProgress(
-                                                `Processing content for ZIP entry '${zipEntryName}'...`,
-                                            );
-
                                             if (
                                                 FileHandler.isXmlFileName(
                                                     zipEntryName,
@@ -610,19 +614,12 @@ export const actions = {
                                             ) {
                                                 CompilationParser.handleAsXmlCompilation(
                                                     content,
-                                                )
-                                                    .then((compilation) => {
-                                                        compilation.Url =
-                                                            file.name;
-                                                        this.replaceCompilation(
-                                                            compilation,
-                                                        );
-                                                    })
-                                                    .finally(() => {
-                                                        message.popProgress(
-                                                            `Processing content for ZIP entry '${zipEntryName}'...`,
-                                                        );
-                                                    });
+                                                ).then((compilation) => {
+                                                    compilation.Url = file.name;
+                                                    this.replaceCompilation(
+                                                        compilation,
+                                                    );
+                                                });
                                             } else if (
                                                 FileHandler.isSupportedMediaFileName(
                                                     zipEntryName,
@@ -640,9 +637,6 @@ export const actions = {
                                                         mediaBlob.fileName,
                                                     );
                                                 }
-                                                message.popProgress(
-                                                    `Processing content for ZIP entry '${zipEntryName}'...`,
-                                                );
                                             } else if (
                                                 FileHandler.isSupportedPackageFileName(
                                                     zipEntryName,
@@ -654,9 +648,6 @@ export const actions = {
                                                 console.debug(
                                                     `ZIP: Not processing package file '${zipEntryName}' within package: '${file.name}'`,
                                                 );
-                                                message.popProgress(
-                                                    `Processing content for ZIP entry '${zipEntryName}'...`,
-                                                );
                                             } else if (
                                                 FileHandler.isPath(zipEntryName)
                                             ) {
@@ -664,15 +655,9 @@ export const actions = {
                                                 console.debug(
                                                     `ZIP: Not processing path '${zipEntryName}' within package: '${file.name}'`,
                                                 );
-                                                message.popProgress(
-                                                    `Processing content for ZIP entry '${zipEntryName}'...`,
-                                                );
                                             } else {
                                                 console.warn(
                                                     `ZIP: Unknown content type for file '${zipEntryName}' within package: '${file.name}'`,
-                                                );
-                                                message.popProgress(
-                                                    `Processing content for ZIP entry '${zipEntryName}'...`,
                                                 );
                                             }
                                         })

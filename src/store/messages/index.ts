@@ -5,6 +5,7 @@ import { Store } from '..';
 import { useSettingsStore } from '../settings';
 import { InputFeedback } from './InputFeedback';
 import { nextTick } from 'process';
+import { ProgressMessage } from './ProgressMessage';
 
 /** A store for messages, that are to be displayed.
  * @devdoc This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores
@@ -15,7 +16,7 @@ export const useMessageStore = defineStore(Store.Messages, () => {
      * @remarks Progress messages are not persisted over app restarts
      * @remarks during ongoing work, the stack is non-empty
      */
-    const progressMessageStack = ref(new Array<string>());
+    const progressMessageStack = ref(new Array<ProgressMessage>());
 
     /** An application error message stack, used for error indication
      * @remarks Error messages are not persisted over app restarts
@@ -36,7 +37,7 @@ export const useMessageStore = defineStore(Store.Messages, () => {
      */
     function pushProgress(message: string): Promise<void> {
         return new Promise((resolve) => {
-            progressMessageStack.value.push(message);
+            progressMessageStack.value.push(new ProgressMessage(message));
             console.log('PROGRESS: ' + message);
             nextTick(() => {
                 resolve();
@@ -49,23 +50,21 @@ export const useMessageStore = defineStore(Store.Messages, () => {
      * in the real DOM.
      */
     function pushProgressWithPercentage(
-        message: string,
-        percent: number,
+        progress: ProgressMessage,
     ): Promise<void> {
         return new Promise((resolve) => {
-            const messageWithProgress = `${message} | ${percent.toFixed(2)}%`;
-
-            const existingProgressIndex = progressMessageStack.value.findIndex(
-                (element) => element.startsWith(message),
+            const index = progressMessageStack.value.findIndex(
+                (element) => element.Message == progress.Message,
             );
 
-            if (existingProgressIndex >= 0) {
-                progressMessageStack.value[existingProgressIndex] =
-                    messageWithProgress;
+            if (index >= 0) {
+                progressMessageStack.value[index] = progress;
             } else {
-                progressMessageStack.value.push(messageWithProgress);
+                progressMessageStack.value.push(progress);
             }
-            console.log('PROGRESS: ' + messageWithProgress);
+            console.log(
+                `PROGRESS: ${progress.Message} | ${progress.Percentage}%`,
+            );
             nextTick(() => {
                 resolve();
             });
@@ -97,9 +96,9 @@ export const useMessageStore = defineStore(Store.Messages, () => {
     /** Ends the display of a previous progress message, by popping the message from the stack of progress messages */
     function popProgress(message: string = ''): void {
         if (message) {
-            // remove those messages
+            // remove exactly those messages
             progressMessageStack.value = progressMessageStack.value.filter(
-                (e) => !e.startsWith(message),
+                (e) => !(e.Message == message),
             );
             console.debug('POP_PROGRESS: ' + message);
         } else {
