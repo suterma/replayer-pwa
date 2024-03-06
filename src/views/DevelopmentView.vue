@@ -164,6 +164,20 @@
             <button class="button is-success" @click="message.popProgress()">
                 Reset progress
             </button>
+
+            <button
+                class="button is-success"
+                @click="
+                    message.pushProgressWithPercentage(
+                        new ProgressMessage(
+                            'Some other, percentage-valued progress with a very long text',
+                            50,
+                        ),
+                    )
+                "
+            >
+                Set progress percentage
+            </button>
         </div>
 
         <h1 class="title has-text-danger">Icons test</h1>
@@ -237,12 +251,12 @@ import { useAppStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
 import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
 import { useMessageStore } from '@/store/messages';
+import { ProgressMessage } from '@/store/messages/ProgressMessage';
 
 const isExpanded = ref(false);
 const knobValue = ref(0);
 
 const message = useMessageStore();
-const {} = storeToRefs(message);
 
 const app = useAppStore();
 

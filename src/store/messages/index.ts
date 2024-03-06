@@ -5,7 +5,7 @@ import { Store } from '..';
 import { useSettingsStore } from '../settings';
 import { InputFeedback } from './InputFeedback';
 import { nextTick } from 'process';
-import { ProgressMessage } from './ProgressMessage';
+import { ProgressMessage } from '@/store/messages/ProgressMessage';
 
 /** A store for messages, that are to be displayed.
  * @devdoc This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores

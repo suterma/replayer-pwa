@@ -74,8 +74,29 @@
     <div :class="{ modal: true, 'is-active': hasProgressMessage }">
         <div class="modal-background"></div>
         <div class="modal-content is-loading">
+            <!-- //TODO test: For percentage progress the message and a small indicator on one line -->
+            <template
+                v-for="progressMessage in progressMessages"
+                :key="progressMessage.Message"
+            >
+                <div class="has-text-centered">
+                    <span>{{ progressMessage.Message }}</span>
+                    <!-- Show progress with percentage, if available -->
+                    <progress
+                        v-if="progressMessage.Percentage"
+                        class="progress is-indicator"
+                        style="width: 1rem"
+                        max="100"
+                        :value="progressMessage.Percentage"
+                    ></progress>
+                </div>
+            </template>
+
             <!-- Show the message and a horzontal progress -->
-            <template v-for="progressMessage in progressMessages">
+            <template
+                v-for="progressMessage in progressMessages"
+                :key="progressMessage.Message"
+            >
                 <div class="has-text-centered">
                     {{ progressMessage.Message }}
                     <!-- Show progress with percentage, if available -->

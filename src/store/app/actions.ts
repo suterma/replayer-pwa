@@ -20,7 +20,7 @@ import CompilationParser from '../../code/xml/XmlCompilationParser';
 import { useMessageStore } from '../messages';
 import type { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
-import { ProgressMessage } from '../messages/ProgressMessage';
+import { ProgressMessage } from '@/store/messages/ProgressMessage';
 
 export const actions = {
     /** Updates the currently selected cue Id, for application-wide handling
