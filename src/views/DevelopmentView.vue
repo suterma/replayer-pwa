@@ -157,7 +157,14 @@
         <div class="buttons">
             <button
                 class="button is-success"
-                @click="message.pushProgress('Some progress')"
+                @click="
+                    {
+                        message.pushProgress('Some progress');
+                        message.pushProgress(
+                            'Some more progress with quite a lenghty description that is also too long for the wide version of the progress text space',
+                        );
+                    }
+                "
             >
                 Set progress
             </button>
@@ -170,10 +177,16 @@
                 @click="
                     message.pushProgressWithPercentage(
                         new ProgressMessage(
-                            'Some other, percentage-valued progress with a very long text',
-                            50,
+                            'Some percentage-valued progress with a very long text and some special / slash characters to simulate a path',
+                            75,
                         ),
-                    )
+                    );
+                    message.pushProgressWithPercentage(
+                        new ProgressMessage(
+                            'Some other, percentage-valued progress with a very long text',
+                            33,
+                        ),
+                    );
                 "
             >
                 Set progress percentage

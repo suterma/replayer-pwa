@@ -6,9 +6,10 @@ export class ProgressMessage {
     Percentage = 0;
 
     /** Creates a new progress message.
+     * @param [percentage=0] The value is rounded to the nearest integer.
      */
     constructor(message: string, percentage: number = 0) {
         this.Message = message;
-        this.Percentage = percentage;
+        this.Percentage = Math.round(percentage);
     }
 }

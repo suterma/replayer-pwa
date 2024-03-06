@@ -21,6 +21,7 @@
 @import '_replayer-flexbox-helpers.scss';
 @import '_replayer-level-helpers.scss';
 @import '_replayer-button.scss';
+@import '_replayer-circular-progress.scss';
 
 @import '_replayer-dropdown.scss';
 @import '_replayer-input.scss';
@@ -276,6 +277,11 @@ while also keeping the original with.
 * @remarks By default, titles only have a default color, not affected by the text color helper */
 .has-text-success .title {
     color: $success;
+}
+
+/** A colorless item should also have the default appearance (including similar brightness) except the coloring */
+.is-colorless {
+    filter: grayscale(100%) !important;
 }
 
 /*************************************************************

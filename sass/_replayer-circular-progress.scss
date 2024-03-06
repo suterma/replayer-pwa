@@ -1,0 +1,63 @@
+/*************************************************************
+ * Circular progress
+ * Taken from https://gist.github.com/nicbet/49a681d036ab8c2886e3419a6e8c6efb
+**************************************************************
+*/
+
+$step: 1;
+$loops: round(100 / $step);
+$increment: calc(360 / $loops);
+$half: round($loops / 2);
+$backColor: $background;
+
+.progress-circle {
+    position: relative;
+    float: left;
+    width: $size-normal;
+    height: $size-normal;
+    border: none;
+    border-radius: 50%;
+
+    @each $name, $pair in $colors {
+        $color: nth($pair, 1);
+        &.is-#{$name} {
+            background-color: $color;
+            @for $i from 0 through $loops {
+                &.is-#{$i * $step} {
+                    @if $i < $half {
+                        $nextDeg: 90deg + ($increment * $i);
+                        background-image: linear-gradient(
+                                90deg,
+                                $backColor 50%,
+                                transparent 50%,
+                                transparent
+                            ),
+                            linear-gradient(
+                                $nextDeg,
+                                $color 50%,
+                                $backColor 50%,
+                                $backColor
+                            );
+                    } @else {
+                        $nextDeg: -90deg + ($increment * ($i - $half));
+                        background-image: linear-gradient(
+                                $nextDeg,
+                                $color 50%,
+                                transparent 50%,
+                                transparent
+                            ),
+                            linear-gradient(
+                                270deg,
+                                $color 50%,
+                                $backColor 50%,
+                                $backColor
+                            );
+                    }
+                }
+                &[value='#{$i}'] {
+                    @extend .is-#{$i};
+                }
+            }
+        }
+    }
+}

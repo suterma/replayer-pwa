@@ -74,41 +74,46 @@
     <div :class="{ modal: true, 'is-active': hasProgressMessage }">
         <div class="modal-background"></div>
         <div class="modal-content is-loading">
-            <!-- //TODO test: For percentage progress the message and a small indicator on one line -->
-            <template
-                v-for="progressMessage in progressMessages"
-                :key="progressMessage.Message"
-            >
-                <div class="has-text-centered">
-                    <span>{{ progressMessage.Message }}</span>
-                    <!-- Show progress with percentage, if available -->
-                    <progress
-                        v-if="progressMessage.Percentage"
-                        class="progress is-indicator"
-                        style="width: 1rem"
-                        max="100"
-                        :value="progressMessage.Percentage"
-                    ></progress>
-                </div>
-            </template>
+            <div>
+                <template
+                    v-for="progressMessage in progressMessages"
+                    :key="progressMessage.Message"
+                >
+                    <!-- Show a level with circular indicator for progess with percentage -->
+                    <template v-if="progressMessage.Percentage">
+                        <div class="level is-mobile has-cropped-text mb-0">
+                            <div
+                                class="level-left"
+                                style="max-width: calc(100% - 1.5em)"
+                            >
+                                <div class="level-item">
+                                    <span>{{ progressMessage.Message }}</span>
+                                </div>
+                            </div>
 
-            <!-- Show the message and a horzontal progress -->
-            <template
-                v-for="progressMessage in progressMessages"
-                :key="progressMessage.Message"
-            >
-                <div class="has-text-centered">
-                    {{ progressMessage.Message }}
-                    <!-- Show progress with percentage, if available -->
-                    <progress
-                        v-if="progressMessage.Percentage"
-                        class="progress"
-                        max="100"
-                        :value="progressMessage.Percentage"
-                    ></progress>
-                    <progress v-else class="progress" max="100"></progress>
-                </div>
-            </template>
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <div
+                                        class="progress-circle is-success is-colorless"
+                                        :value="progressMessage.Percentage"
+                                        max="100"
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <!-- For text-only progress show a line and separate marquee -->
+                    <template v-else>
+                        <div class="has-cropped-text">
+                            <span>{{ progressMessage.Message }}</span>
+                        </div>
+                        <progress
+                            class="progress is-indicator"
+                            max="100"
+                        ></progress>
+                    </template>
+                </template>
+            </div>
         </div>
     </div>
 
