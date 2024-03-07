@@ -200,7 +200,8 @@ export default defineConfig({
             include: ['stream', 'util', 'timers'],
             // Whether to polyfill specific globals.
             globals: {
-                Buffer: true,
+                // Node-like buffer; currently not used
+                //Buffer: true,
             },
         }),
     ],

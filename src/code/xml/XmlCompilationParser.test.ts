@@ -12,10 +12,9 @@ describe('XmlCompilationParser.ts', () => {
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <XmlCompilation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         </XmlCompilation>`;
-        const content = Buffer.from(str);
+
         //Act
-        const compilation =
-            await CompilationParser.handleAsXmlCompilation(content);
+        const compilation = await CompilationParser.handleAsXmlCompilation(str);
 
         //Assert
         expect(compilation).toBeDefined();
@@ -106,10 +105,9 @@ describe('XmlCompilationParser.ts', () => {
           </Tracks>
           <PlaybackMode>PlayTrack</PlaybackMode>
         </XmlCompilation>        `;
-        const content = Buffer.from(str);
+
         //Act
-        const compilation =
-            await CompilationParser.handleAsXmlCompilation(content);
+        const compilation = await CompilationParser.handleAsXmlCompilation(str);
 
         //Assert
         expect(compilation).toBeDefined();
@@ -155,10 +153,9 @@ describe('XmlCompilationParser.ts', () => {
           </Tracks>
           <PlaybackMode>PlayTrack</PlaybackMode>
         </XmlCompilation>        `;
-        const content = Buffer.from(str);
+
         //Act
-        const compilation =
-            await CompilationParser.handleAsXmlCompilation(content);
+        const compilation = await CompilationParser.handleAsXmlCompilation(str);
 
         //Assert
         expect(compilation).toBeDefined();
@@ -194,10 +191,9 @@ describe('XmlCompilationParser.ts', () => {
         </Tracks>
         <PlaybackMode>PlayTrack</PlaybackMode>
       </XmlCompilation>        `;
-        const content = Buffer.from(str);
+
         //Act
-        const compilation =
-            await CompilationParser.handleAsXmlCompilation(content);
+        const compilation = await CompilationParser.handleAsXmlCompilation(str);
 
         //Assert
         expect(compilation).toBeDefined();

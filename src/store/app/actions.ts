@@ -618,7 +618,7 @@ export const actions = {
                                         );
                                     zipEntry
                                         .async(
-                                            'nodebuffer',
+                                            'blob',
                                             function updateCallback(metadata) {
                                                 message.pushProgressWithPercentage(
                                                     new ProgressMessage(
@@ -628,7 +628,7 @@ export const actions = {
                                                 );
                                             },
                                         )
-                                        .then((content: Buffer): void => {
+                                        .then((content: Blob): void => {
                                             //See https://stackoverflow.com/questions/69177720/javascript-compare-two-strings-with-actually-different-encoding about normalize
                                             const zipEntryName =
                                                 zipEntry.name.normalize();
@@ -637,13 +637,16 @@ export const actions = {
                                                     zipEntryName,
                                                 )
                                             ) {
-                                                CompilationParser.handleAsXmlCompilation(
-                                                    content,
-                                                ).then((compilation) => {
-                                                    compilation.Url = file.name;
-                                                    this.replaceCompilation(
-                                                        compilation,
-                                                    );
+                                                content.text().then((text) => {
+                                                    CompilationParser.handleAsXmlCompilation(
+                                                        text,
+                                                    ).then((compilation) => {
+                                                        compilation.Url =
+                                                            file.name;
+                                                        this.replaceCompilation(
+                                                            compilation,
+                                                        );
+                                                    });
                                                 });
                                             } else if (
                                                 FileHandler.isSupportedMediaFileName(
@@ -722,8 +725,9 @@ export const actions = {
             } else if (FileHandler.isXmlFile(file)) {
                 const reader = new FileReader();
                 reader.onload = () => {
-                    const content = Buffer.from(reader.result as string);
-                    CompilationParser.handleAsXmlCompilation(content)
+                    CompilationParser.handleAsXmlCompilation(
+                        reader.result as string,
+                    )
                         .then((compilation) => {
                             compilation.Url = file.name;
                             this.replaceCompilation(compilation);

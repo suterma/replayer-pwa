@@ -188,10 +188,10 @@ export default abstract class XmlCompilationParser {
         return timeSignature;
     }
 
-    /** Handles the given Buffer as having XML content and parses it into the compilation meta data
+    /** Handles the given Blob as having XML content and parses it into the compilation meta data
      */
     public static handleAsXmlCompilation(
-        content: Buffer,
+        content: string,
     ): Promise<ICompilation> {
         console.debug('CompilationParser::handleAsXmlCompilation');
         return (

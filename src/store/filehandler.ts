@@ -481,13 +481,13 @@ export default class FileHandler {
         );
     }
 
-    /** Handles the given filename and buffer as having media content and converts it into a MediaBlob
+    /** Handles the given filename and blob as having media content and converts it into a MediaBlob
      * @remarks Guesses the MIME type from the file name extension
      * @devdoc This is used when a file is read from the ZIP package and not yet available as blob
      */
     public static handleAsMediaContent(
         mediaFileName: string,
-        content: Buffer,
+        content: Blob,
     ): MediaBlob {
         console.debug('CompilationParser::handleAsMediaContent');
         const blob = new Blob([content], {
