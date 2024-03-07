@@ -73,8 +73,8 @@
     <!-- display area for progress display -->
     <div :class="{ modal: true, 'is-active': hasProgressMessage }">
         <div class="modal-background"></div>
-        <div class="modal-content is-loading">
-            <div>
+        <div class="modal-card">
+            <section class="modal-card-body has-background-transparent">
                 <template
                     v-for="progressMessage in progressMessages"
                     :key="progressMessage.Message"
@@ -113,7 +113,7 @@
                         ></progress>
                     </template>
                 </template>
-            </div>
+            </section>
         </div>
     </div>
 

@@ -57,14 +57,14 @@ export const useMessageStore = defineStore(Store.Messages, () => {
                 (element) => element.Message == progress.Message,
             );
 
+            // This message was reported previously?
             if (index >= 0) {
                 progressMessageStack.value[index] = progress;
             } else {
+                console.log('PROGRESS: ' + progress.Message);
                 progressMessageStack.value.push(progress);
             }
-            console.log(
-                `PROGRESS: ${progress.Message} | ${progress.Percentage}%`,
-            );
+
             nextTick(() => {
                 resolve();
             });

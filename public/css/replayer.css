@@ -15677,11 +15677,11 @@ while also keeping the original with.
 
 /* A transparent background, usable e.g. in a box */
 .has-background-transparent {
-  background-color: transparent;
+  background-color: transparent !important;
 }
 
 .has-background-none {
-  background: none;
+  background: none !important;
 }
 
 /* Selection Colors */
