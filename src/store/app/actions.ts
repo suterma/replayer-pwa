@@ -533,12 +533,13 @@ export const actions = {
                         )
                         .finally(() => message.popProgress(loadingUrlMessage));
                 })
-                .catch((errorMessage: string) =>
+                .catch((errorMessage: string) => {
                     reject(
                         `Fetching failed for URL: '${url}' with the message: '${errorMessage}'. Maybe the server is offline.`,
-                    ),
-                )
-                .finally(() => message.popProgress(loadingUrlMessage));
+                    );
+                    // Popped here, not in finally because the successful path leads to popping inside the fetch continuation
+                    message.popProgress(loadingUrlMessage);
+                });
         });
     },
 
