@@ -555,24 +555,8 @@ export const actions = {
                             //For performance reasons, explicitly process only expected files
                             const processables = zip.filter(
                                 (relativePath /*, file*/) => {
-                                    console.debug(
-                                        'Filtering relativePath: ',
+                                    return FileHandler.isProcessableFileName(
                                         relativePath,
-                                    );
-                                    if (
-                                        FileHandler.isMacOsxResourceFork(
-                                            relativePath,
-                                        )
-                                    ) {
-                                        return false;
-                                    }
-                                    return (
-                                        FileHandler.isSupportedCompilationFileName(
-                                            relativePath,
-                                        ) ||
-                                        FileHandler.isSupportedMediaFileName(
-                                            relativePath,
-                                        )
                                     );
                                 },
                             );
@@ -586,11 +570,38 @@ export const actions = {
                                 },
                             );
 
+                            //Handle compilation first, then by ascending file size.
+                            //This should get usable content as fast as possible
+                            processables.sort((zipEntryA, zipEntryB) => {
+                                if (
+                                    FileHandler.isSupportedCompilationFileName(
+                                        zipEntryA.name,
+                                    )
+                                ) {
+                                    return 2 /* compilation first */;
+                                }
+                                if (
+                                    FileHandler.isTextFileName(zipEntryA.name)
+                                ) {
+                                    return 1 /* text second */;
+                                }
+                                // others somewhat arbitrarily by name (lenght is not available here)
+                                return zipEntryA.name.localeCompare(
+                                    zipEntryB.name,
+                                );
+                            });
+
+                            const extractingProgressMessage = 'Extracting...';
+                            message.pushProgress(extractingProgressMessage);
+                            const processableCount = processables.length;
+                            let processedCount = 0;
                             processables.forEach(
                                 (zipEntry: JSZip.JSZipObject): void => {
                                     //Set the progress message, before using any of the async functions
-                                    const processEntryMessage = `Processing ZIP entry: ${zipEntry.name}`;
-                                    message.pushProgress(processEntryMessage);
+                                    const processEntryMessage =
+                                        FileHandler.getAllAfterLastSlash(
+                                            zipEntry.name,
+                                        );
                                     zipEntry
                                         .async(
                                             'nodebuffer',
@@ -665,9 +676,20 @@ export const actions = {
                                             console.error(errorMessage);
                                         })
                                         .finally(() => {
+                                            // Remove message for this item
                                             message.popProgress(
-                                                `Processing ZIP entry: ${zipEntry.name}`,
+                                                processEntryMessage,
                                             );
+                                            // Remove overall message on last item
+                                            processedCount++;
+                                            if (
+                                                processedCount >=
+                                                processableCount
+                                            ) {
+                                                message.popProgress(
+                                                    extractingProgressMessage,
+                                                );
+                                            }
                                         });
                                 },
                             );

@@ -1,3 +1,4 @@
+import { file } from 'jszip';
 import { MediaBlob, RezMimeTypes } from './types';
 
 /**
@@ -234,6 +235,22 @@ export default class FileHandler {
         //     `filehandler::isSupportedMediaFileName:fileName:'${fileName}' is isSupportedMedia?:'${isSupportedMediaFileName}'`,
         // );
         return isSupportedMediaFileName;
+    }
+
+    /** Returns whether the given file name (by prefix/suffix) is a processable file by Replayer
+     * @remarks Processable are all supported files of any type (compilations, media, including text)
+     */
+    static isProcessableFileName(fileName: string | undefined): boolean {
+        if (fileName) {
+            if (FileHandler.isMacOsxResourceFork(fileName)) {
+                return false;
+            }
+            return (
+                FileHandler.isSupportedCompilationFileName(fileName) ||
+                FileHandler.isSupportedMediaFileName(fileName)
+            );
+        }
+        return false;
     }
 
     /** Returns whether the given URL is for a YouTube video
