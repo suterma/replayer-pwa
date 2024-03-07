@@ -511,38 +511,34 @@ export const actions = {
                                         .then(() => {
                                             resolve(localResourceName);
                                         })
-                                        .catch((errorMessage: string) => {
+                                        .catch((errorMessage: string) =>
                                             reject(
                                                 `Loading from the received resource file has failed for URL: '${responseUrl}' with the message: '${errorMessage}'`,
-                                            );
-                                        });
+                                            ),
+                                        );
                                 })
-                                .catch((errorMessage: string) => {
+                                .catch((errorMessage: string) =>
                                     reject(
                                         `Receiving data from URL: '${response.url}' failed with the message: '${errorMessage}'`,
-                                    );
-                                })
-                                .finally(() => {
-                                    message.popProgress(LoadingDataMessage);
-                                });
+                                    ),
+                                )
+                                .finally(() =>
+                                    message.popProgress(LoadingDataMessage),
+                                );
                         })
-                        .catch((errorMessage: string) => {
+                        .catch((errorMessage: string) =>
                             reject(
                                 `Fetch has failed for URL: '${url}' with the message: '${errorMessage}'. Maybe the file is too large or the server does not allow CORS. If any of this is the case, manually download the resource and load it from the file system.`,
-                            );
-                        })
-                        .finally(() => {
-                            message.popProgress(loadingUrlMessage);
-                        });
+                            ),
+                        )
+                        .finally(() => message.popProgress(loadingUrlMessage));
                 })
-                .catch((errorMessage: string) => {
+                .catch((errorMessage: string) =>
                     reject(
                         `Fetching failed for URL: '${url}' with the message: '${errorMessage}'. Maybe the server is offline.`,
-                    );
-                })
-                .finally(() => {
-                    message.popProgress(loadingUrlMessage);
-                });
+                    ),
+                )
+                .finally(() => message.popProgress(loadingUrlMessage));
         });
     },
 
@@ -689,9 +685,9 @@ export const actions = {
                                                 );
                                             }
                                         })
-                                        .catch((errorMessage: string) => {
-                                            console.error(errorMessage);
-                                        })
+                                        .catch((errorMessage: string) =>
+                                            console.error(errorMessage),
+                                        )
                                         .finally(() => {
                                             // Remove message for this item
                                             message.popProgress(
@@ -717,9 +713,7 @@ export const actions = {
                             );
                         },
                     )
-                    .catch((errorMessage: string) => {
-                        reject(errorMessage);
-                    })
+                    .catch((errorMessage: string) => reject(errorMessage))
                     .finally(() => {
                         message.popProgress(loadingFileMessage);
                         resolve();
@@ -733,9 +727,7 @@ export const actions = {
                             compilation.Url = file.name;
                             this.replaceCompilation(compilation);
                         })
-                        .catch((errorMessage: string) => {
-                            reject(errorMessage);
-                        })
+                        .catch((errorMessage: string) => reject(errorMessage))
                         .finally(() => {
                             message.popProgress(loadingFileMessage);
                             resolve();
