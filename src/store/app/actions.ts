@@ -517,6 +517,11 @@ export const actions = {
                                             );
                                         });
                                 })
+                                .catch((errorMessage: string) => {
+                                    reject(
+                                        `Receiving data from URL: '${response.url}' failed with the message: '${errorMessage}'`,
+                                    );
+                                })
                                 .finally(() => {
                                     message.popProgress(LoadingDataMessage);
                                 });
