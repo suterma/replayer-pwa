@@ -4,6 +4,7 @@ import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig, type PluginOption } from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
+import replace from '@rollup/plugin-replace';
 
 //Setting the environment variables
 import child_process from 'child_process';
@@ -31,6 +32,15 @@ export default defineConfig({
         // Watch and possible reduce bundle size with this visualizer:
         // https://github.com/btd/rollup-plugin-visualizer
         [visualizer() as PluginOption],
+        replace({
+            /** Exclamation mark followed by a line feed (new line)
+             * within comments are upsetting WebKit on iPadOS
+             * See https://github.com/feross/buffer/issues/357
+             */
+            '/*!': '/* ',
+            // Only if followed by a new line
+            delimiters: ['', '[\n]'],
+        }),
         VitePWA({
             devOptions: {
                 enabled: true,
