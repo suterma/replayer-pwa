@@ -55,6 +55,32 @@ export default class FileHandler {
         return url.toString().replace(/^(https?:|)\/\//, '');
     }
 
+    /** Reads the blob content as text.
+     * @devdoc This does intentionally not use Blob.text()
+     * because there is no polyfill readily available in vite.
+     * At least some iPadOS devices do not have Blob.text() method implmented
+     */
+    static ReadAsText(content: Blob): Promise<String> {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = function () {
+                const text = reader.result;
+                if (typeof text === 'string') {
+                    resolve(text);
+                } else {
+                    reject('The given blob can not be read as text');
+                }
+            };
+            reader.onabort = function (/*event: ProgressEvent*/) {
+                reject('Reading the given blob has been aborted');
+            };
+            reader.onerror = function (/*event: ProgressEvent*/) {
+                reject(`Reading the given blob failed due to an error`);
+            };
+            reader.readAsText(content);
+        });
+    }
+
     /** Tries to infer useful track metadata from the URL, by splitting the URL into parts, if possible.
      * @remarks The artist is not guessed, it's always empty.
      */

@@ -620,23 +620,15 @@ export const actions = {
                                                         zipEntryName,
                                                     )
                                                 ) {
-                                                    content
-                                                        .text()
-                                                        .then((text) => {
-                                                            CompilationParser.handleAsXmlCompilation(
-                                                                text,
-                                                            ).then(
-                                                                (
-                                                                    compilation,
-                                                                ) => {
-                                                                    compilation.Url =
-                                                                        file.name;
-                                                                    this.replaceCompilation(
-                                                                        compilation,
-                                                                    );
-                                                                },
-                                                            );
-                                                        });
+                                                    CompilationParser.handleAsXmlCompilation(
+                                                        content,
+                                                    ).then((compilation) => {
+                                                        compilation.Url =
+                                                            file.name;
+                                                        this.replaceCompilation(
+                                                            compilation,
+                                                        );
+                                                    });
                                                 } else if (
                                                     FileHandler.isSupportedMediaFileName(
                                                         zipEntryName,
@@ -718,31 +710,16 @@ export const actions = {
                         resolve();
                     });
             } else if (FileHandler.isXmlFile(file)) {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    CompilationParser.handleAsXmlCompilation(
-                        reader.result as string,
-                    )
-                        .then((compilation) => {
-                            compilation.Url = file.name;
-                            this.replaceCompilation(compilation);
-                        })
-                        .catch((errorMessage: string) => reject(errorMessage))
-                        .finally(() => {
-                            message.popProgress(loadingFileMessage);
-                            resolve();
-                        });
-                };
-                reader.onerror = (): void => {
-                    console.error(
-                        'Failed to read file ' +
-                            file.name +
-                            ': ' +
-                            reader.error,
-                    );
-                    reader.abort(); // (...does this do anything useful in an onerror handler?)
-                };
-                reader.readAsText(file);
+                CompilationParser.handleAsXmlCompilation(file)
+                    .then((compilation) => {
+                        compilation.Url = file.name;
+                        this.replaceCompilation(compilation);
+                    })
+                    .catch((errorMessage: string) => reject(errorMessage))
+                    .finally(() => {
+                        message.popProgress(loadingFileMessage);
+                        resolve();
+                    });
             } else if (FileHandler.isSupportedMediaFile(file)) {
                 this.addMediaBlob(new MediaBlob(file.name, file));
                 message.popProgress(loadingFileMessage);

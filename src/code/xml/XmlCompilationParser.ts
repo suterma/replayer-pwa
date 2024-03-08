@@ -10,6 +10,7 @@ import { TimeSignature } from '../music/TimeSignature';
 import type { ITimeSignature } from '../music/ITimeSignature';
 import { Meter } from '../music/Meter';
 import type { IMeter } from '../music/IMeter';
+import FileHandler from '@/store/filehandler';
 
 /**
  * Provides static helper methods for parsing compilations from and to XML.
@@ -190,20 +191,22 @@ export default abstract class XmlCompilationParser {
 
     /** Handles the given Blob as having XML content and parses it into the compilation meta data
      */
-    public static handleAsXmlCompilation(
-        content: string,
+    public static async handleAsXmlCompilation(
+        content: Blob,
     ): Promise<ICompilation> {
         console.debug('CompilationParser::handleAsXmlCompilation');
-        return (
-            xml2js
-                .parseStringPromise(content /*, options */)
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                .then((result: any) => {
-                    console.debug('Parsed XML compilation: ', result);
-                    return XmlCompilationParser.parseFromXmlCompilation(
-                        result.XmlCompilation,
-                    );
-                })
-        );
+        return FileHandler.ReadAsText(content).then((text) => {
+            return (
+                xml2js
+                    .parseStringPromise(text /*, options */)
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    .then((text: any) => {
+                        console.debug('Parsed XML compilation: ', text);
+                        return XmlCompilationParser.parseFromXmlCompilation(
+                            text.XmlCompilation,
+                        );
+                    })
+            );
+        });
     }
 }
