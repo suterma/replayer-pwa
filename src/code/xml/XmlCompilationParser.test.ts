@@ -8,10 +8,17 @@ import type { ITrack } from '@/store/ITrack';
 describe('XmlCompilationParser.ts', () => {
     it('should parse an empty compilation when the compilation is empty', async () => {
         //Arrange
-        const str = `
+        const str = new Blob(
+            [
+                `
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <XmlCompilation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        </XmlCompilation>`;
+        </XmlCompilation>`,
+            ],
+            {
+                type: 'text/plain',
+            },
+        );
 
         //Act
         const compilation = await CompilationParser.handleAsXmlCompilation(str);
@@ -23,9 +30,12 @@ describe('XmlCompilationParser.ts', () => {
 
     it('should parse a full compilation', async () => {
         //Arrange
-        const str = `
+
+        const str = new Blob(
+            [
+                `
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-        <XmlCompilation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+          <XmlCompilation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
           <Id>863b2f9a-f7eb-4e60-8e7a-0aca014f6737</Id>
           <MediaPath/>
           <Title>Willkomme dehei - Junior 2024</Title>
@@ -104,8 +114,12 @@ describe('XmlCompilationParser.ts', () => {
             </Track>
           </Tracks>
           <PlaybackMode>PlayTrack</PlaybackMode>
-        </XmlCompilation>        `;
-
+        </XmlCompilation>`,
+            ],
+            {
+                type: 'text/plain',
+            },
+        );
         //Act
         const compilation = await CompilationParser.handleAsXmlCompilation(str);
 
@@ -128,7 +142,9 @@ describe('XmlCompilationParser.ts', () => {
 
     it('should provide the playhead position', async () => {
         //Arrange
-        const str = `
+        const str = new Blob(
+            [
+                `
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <XmlCompilation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
           <Id>30c291f0-825c-40ca-a772-b17cdda8f937</Id>
@@ -152,7 +168,12 @@ describe('XmlCompilationParser.ts', () => {
             </Track>
           </Tracks>
           <PlaybackMode>PlayTrack</PlaybackMode>
-        </XmlCompilation>        `;
+        </XmlCompilation>        `,
+            ],
+            {
+                type: 'text/plain',
+            },
+        );
 
         //Act
         const compilation = await CompilationParser.handleAsXmlCompilation(str);
@@ -166,31 +187,38 @@ describe('XmlCompilationParser.ts', () => {
 
     it('should provide the playback rate', async () => {
         //Arrange
-        const str = `
-      <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-      <XmlCompilation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <Id>30c291f0-825c-40ca-a772-b17cdda8f937</Id>
-        <MediaPath/>
-        <Title>test</Title>
-        <Artist/>
-        <Album/>
-        <Tracks>
-          <Track>
-            <Id>4dbf78b7-0133-495f-8f71-de69708a9da6</Id>
-            <Artist/>
-            <PreRoll/>
-            <PlaybackRate>1.25</PlaybackRate>,
-            <Name>test</Name>
-            <Album/>
-            <Url>test.mp3</Url>
-            <Meter/>
-            <UseMeasureNumbers/>
-            <Volume>0.5</Volume>
-            <Cues/>
-          </Track>
-        </Tracks>
-        <PlaybackMode>PlayTrack</PlaybackMode>
-      </XmlCompilation>        `;
+        const str = new Blob(
+            [
+                `
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <XmlCompilation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+          <Id>30c291f0-825c-40ca-a772-b17cdda8f937</Id>
+          <MediaPath/>
+          <Title>test</Title>
+          <Artist/>
+          <Album/>
+          <Tracks>
+            <Track>
+              <Id>4dbf78b7-0133-495f-8f71-de69708a9da6</Id>
+              <Artist/>
+              <PreRoll/>
+              <PlaybackRate>1.25</PlaybackRate>,
+              <Name>test</Name>
+              <Album/>
+              <Url>test.mp3</Url>
+              <Meter/>
+              <UseMeasureNumbers/>
+              <Volume>0.5</Volume>
+              <Cues/>
+            </Track>
+          </Tracks>
+          <PlaybackMode>PlayTrack</PlaybackMode>
+        </XmlCompilation>        `,
+            ],
+            {
+                type: 'text/xml',
+            },
+        );
 
         //Act
         const compilation = await CompilationParser.handleAsXmlCompilation(str);
