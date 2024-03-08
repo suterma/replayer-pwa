@@ -4,10 +4,10 @@ import { SubEvent } from 'sub-events';
 import type { PlayerStateChangeCallback, Player } from '@vue-youtube/shared';
 import YouTubeFader from './YouTubeFader';
 import { PlayerState } from '@vue-youtube/core';
-import { nextTick } from 'process';
 import type { IPlaybackRateController } from './IPlaybackRateController';
 import YouTubePlaybackRateController from './YouTubePlaybackRateController';
 import { DefaultPlaybackRate } from '@/store/Track';
+import { nextTick } from 'vue';
 
 /** @class Implements a playback handler for a YouTube IFrame player with VueYoutube.
  * @remarks This handles transport/loop and volume operations for the audio.

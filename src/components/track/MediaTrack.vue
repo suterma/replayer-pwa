@@ -736,8 +736,8 @@ import {
     ref,
     watch,
     watchEffect,
+    nextTick,
 } from 'vue';
-import { nextTick } from 'process';
 import OnYouTubeConsent from '@/components/dialogs/OnYouTubeConsent.vue';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
 import MeterLevelEditor from '@/components/editor/MeterLevelEditor.vue';

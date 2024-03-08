@@ -22,12 +22,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, nextTick } from 'vue';
 import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Hotkey } from '@simolation/vue-hotkey';
 import { useMessageStore } from '@/store/messages';
-import { nextTick } from 'process';
 import { storeToRefs } from 'pinia';
 
 /** An item for a Dropdown menu

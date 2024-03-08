@@ -207,17 +207,10 @@ export default defineConfig({
         }),
         /** Configure the node polyfills for use with vite.
          * @remarks See https://github.com/davidmyersdev/vite-plugin-node-polyfills
-         * @devdoc stream is used with JSZip
-         * @devdoc Buffer is currently not used (With JSZip, Replayer uses blob)
+         * @devdoc HINT: stream is used with JSZip
+         * @devdoc HINT: Buffer is currently not used (With JSZip, Replayer uses blob)
          */
-        nodePolyfills({
-            // To add only specific polyfills, add them here. If no option is passed, adds all polyfills
-            include: ['stream', 'util', 'timers'],
-            // Whether to polyfill specific globals.
-            globals: {
-                Buffer: false, // can be 'true', 'build', 'dev', or false
-            },
-        }),
+        nodePolyfills(),
     ],
     resolve: {
         alias: {
