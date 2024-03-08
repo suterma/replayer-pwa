@@ -61,7 +61,6 @@
         "xml2js": "^0.6.2"
     },
     "devDependencies": {
-        "@rollup/plugin-replace": "^5.0.5",
         "@rushstack/eslint-patch": "^1.7.2",
         "@tsconfig/node18": "^18.2.2",
         "@types/jsdom": "^21.1.6",

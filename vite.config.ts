@@ -36,15 +36,6 @@ export default defineConfig({
         // Watch and possible reduce bundle size with this visualizer:
         // https://github.com/btd/rollup-plugin-visualizer
         [visualizer() as PluginOption],
-        replace({
-            /** Exclamation mark followed by a line feed (new line)
-             * within comments are upsetting WebKit on iPadOS
-             * See https://github.com/feross/buffer/issues/357
-             */
-            '/*!': '/* ',
-            // Only if followed by a new line
-            delimiters: ['', '[\n]'],
-        }),
         VitePWA({
             devOptions: {
                 enabled: true,
