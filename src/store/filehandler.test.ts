@@ -1,5 +1,6 @@
 import { expect, describe, it } from 'vitest';
 import FileHandler from './filehandler';
+import JSZip from 'jszip';
 
 describe('filehandler.ts', () => {
     it('should parse a MT-Cambrige URL into useful track metadata', async () => {
@@ -62,5 +63,36 @@ describe('filehandler.ts', () => {
         );
         expect(trackMetadata.artist).toBe('');
         expect(trackMetadata.album).toBe('srf');
+    });
+
+    it('should sort the JSZip files in guessed ascending order', async () => {
+        // Arrange
+        const zip = new JSZip();
+        zip.file('Hello.txt', 'Hello World\n');
+        zip.file('Hello.xml', '<xml>');
+
+        // Act
+        const actualFileNameOrder: string[] = [];
+        zip.generateAsync({ type: 'blob' }).then((file) => {
+            JSZip.loadAsync(file).then((zip: JSZip) => {
+                const processables = zip.filter(() => true);
+                processables
+                    .sort(FileHandler.compareZipEntries)
+                    .forEach((zipEntry: JSZip.JSZipObject): void => {
+                        actualFileNameOrder.push(zipEntry.name);
+                    });
+
+                // Assert
+
+                //TODO fix
+                expect(actualFileNameOrder[0]).toBe('Hello.xml');
+                expect(actualFileNameOrder[1]).toBe('Hello.xml');
+                expect(actualFileNameOrder[2]).toBe('Hello.xmlcc');
+                expect(actualFileNameOrder[2]).toBeUndefined;
+            });
+        });
+
+        //TODO how to test using async await?
+        expect(actualFileNameOrder[2]).toBe('Hello.xmlcc');
     });
 });

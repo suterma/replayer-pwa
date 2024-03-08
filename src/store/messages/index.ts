@@ -76,10 +76,11 @@ export const useMessageStore = defineStore(Store.Messages, () => {
      */
     function pushError(message: string): void {
         if (
-            message != null &&
-            message != 'null' &&
-            message != '' &&
-            message != 'undefined: undefined'
+            message !== 'null' &&
+            message !== undefined &&
+            message !== null &&
+            message !== '' &&
+            message !== 'undefined: undefined'
         ) {
             errorMessageStack.value.push(message);
         }

@@ -1,3 +1,4 @@
+import type JSZip from 'jszip';
 import { MediaBlob, RezMimeTypes } from './types';
 
 /**
@@ -189,7 +190,7 @@ export default class FileHandler {
     static isSupportedPackageFileName(fileName: string | undefined): boolean {
         let isSupportedPackageFileName = false;
         if (fileName) {
-            const fileExtension = fileName.split('.').pop()?.toLowerCase();
+            const fileExtension = this.getFileExtension(fileName);
             if (fileExtension) {
                 if (['zip', 'rez' /*replayer zip*/].includes(fileExtension)) {
                     isSupportedPackageFileName = true;
@@ -250,6 +251,63 @@ export default class FileHandler {
             );
         }
         return false;
+    }
+
+    /** A comparison function for ordered file extraction from a ZIP package/archive
+     * @remarks This is intended to produce the compilation first, then by guessed ascending file size
+     */
+    static compareZipEntries(
+        zipEntryA: JSZip.JSZipObject,
+        zipEntryB: JSZip.JSZipObject,
+    ): number {
+        const fileExtensionA = FileHandler.getFileExtension(zipEntryA.name);
+        const fileExtensionB = FileHandler.getFileExtension(zipEntryB.name);
+
+        // both equally defined or both undefined
+        if (fileExtensionA === fileExtensionB) {
+            return 0;
+        }
+
+        // only one is undefined
+        if (
+            (fileExtensionA === null ||
+                fileExtensionA === undefined ||
+                fileExtensionA === '') &&
+            fileExtensionB
+        ) {
+            return -1;
+        } else if (
+            fileExtensionA &&
+            (fileExtensionB === null ||
+                fileExtensionB === undefined ||
+                fileExtensionB === '')
+        ) {
+            return 1;
+        } else if (fileExtensionA && fileExtensionB) {
+            // both are defined, but they are not equal
+            const priority = [
+                /* unknown is possibly larger */
+                'mp3',
+                'txt',
+                /* xml with highest priority */
+                'xml',
+                'rex',
+            ];
+
+            const priorityA = priority.indexOf(fileExtensionA);
+            const priorityB = priority.indexOf(fileExtensionB);
+
+            if (priorityA < priorityB) {
+                return -1;
+            }
+            if (priorityA > priorityB) {
+                return 1;
+            }
+
+            // others somewhat arbitrarily by file name (lenght is not guessed)
+            return zipEntryA.name.localeCompare(zipEntryB.name);
+        }
+        return 0;
     }
 
     /** Returns whether the given URL is for a YouTube video
@@ -399,11 +457,17 @@ export default class FileHandler {
         return mimeType;
     }
 
+    /** Gets the file extension (part after the last dot) of a filename
+     */
+    static getFileExtension(fileName: string): string | undefined {
+        return fileName?.split('.').pop()?.toLowerCase();
+    }
+
     /** Gets a guessed MIME type from a filename, using an expected extension
      * @remarks Applies some educated guess
      */
     static getFileMimeType(fileName: string): string | undefined {
-        const fileExtension = fileName?.split('.').pop()?.toLowerCase();
+        const fileExtension = this.getFileExtension(fileName);
         console.debug(
             'CompilationParser::getFileMimeType:fileExtension',
             fileExtension,
