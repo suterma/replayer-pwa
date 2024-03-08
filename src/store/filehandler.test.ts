@@ -65,34 +65,95 @@ describe('filehandler.ts', () => {
         expect(trackMetadata.album).toBe('srf');
     });
 
-    it('should sort the JSZip files in guessed ascending order', async () => {
+    it('zip entry sorting should offer the Compilation XML always first, with regard to a text file', async () => {
         // Arrange
         const zip = new JSZip();
         zip.file('Hello.txt', 'Hello World\n');
-        zip.file('Hello.xml', '<xml>');
+        zip.file('Compilation.xml', '<xml></xml>');
+        const file = await zip.generateAsync({ type: 'blob' });
+        const archive = await JSZip.loadAsync(file);
 
         // Act
         const actualFileNameOrder: string[] = [];
-        zip.generateAsync({ type: 'blob' }).then((file) => {
-            JSZip.loadAsync(file).then((zip: JSZip) => {
-                const processables = zip.filter(() => true);
-                processables
-                    .sort(FileHandler.compareZipEntries)
-                    .forEach((zipEntry: JSZip.JSZipObject): void => {
-                        actualFileNameOrder.push(zipEntry.name);
-                    });
-
-                // Assert
-
-                //TODO fix
-                expect(actualFileNameOrder[0]).toBe('Hello.xml');
-                expect(actualFileNameOrder[1]).toBe('Hello.xml');
-                expect(actualFileNameOrder[2]).toBe('Hello.xmlcc');
-                expect(actualFileNameOrder[2]).toBeUndefined;
+        archive
+            .filter(() => true)
+            .sort(FileHandler.compareZipEntries)
+            .forEach((zipEntry: JSZip.JSZipObject): void => {
+                actualFileNameOrder.push(zipEntry.name);
             });
-        });
 
-        //TODO how to test using async await?
-        expect(actualFileNameOrder[2]).toBe('Hello.xmlcc');
+        // Assert
+        expect(actualFileNameOrder[0]).toBe('Compilation.xml');
+        expect(actualFileNameOrder[1]).toBe('Hello.txt');
+    });
+
+    it('zip entry sorting should offer the Compilation XML always first, with regard to a mp3 file', async () => {
+        // Arrange
+        const zip = new JSZip();
+        zip.file('01.mp3', 'audio');
+        zip.file('Compilation.xml', '<xml></xml>');
+        const file = await zip.generateAsync({ type: 'blob' });
+        const archive = await JSZip.loadAsync(file);
+
+        // Act
+        const actualFileNameOrder: string[] = [];
+        archive
+            .filter(() => true)
+            .sort(FileHandler.compareZipEntries)
+            .forEach((zipEntry: JSZip.JSZipObject): void => {
+                actualFileNameOrder.push(zipEntry.name);
+            });
+
+        // Assert
+        expect(actualFileNameOrder[0]).toBe('Compilation.xml');
+        expect(actualFileNameOrder[1]).toBe('01.mp3');
+    });
+
+    it('zip entry sorting should offer the Compilation XML always first, with regard to an arbitrary file', async () => {
+        // Arrange
+        const zip = new JSZip();
+        zip.file('draw.cdr', 'corel draw');
+        zip.file('Compilation.xml', '<xml></xml>');
+        const file = await zip.generateAsync({ type: 'blob' });
+        const archive = await JSZip.loadAsync(file);
+
+        // Act
+        const actualFileNameOrder: string[] = [];
+        archive
+            .filter(() => true)
+            .sort(FileHandler.compareZipEntries)
+            .forEach((zipEntry: JSZip.JSZipObject): void => {
+                actualFileNameOrder.push(zipEntry.name);
+            });
+
+        // Assert
+        expect(actualFileNameOrder[0]).toBe('Compilation.xml');
+        expect(actualFileNameOrder[1]).toBe('draw.cdr');
+    });
+
+    it('zip entry sorting should offer the music files alphabetically sorted', async () => {
+        // Arrange
+        const zip = new JSZip();
+        zip.file('02.mp3', 'audio');
+        zip.file('Intro.mp3', 'audio');
+        zip.file('Solo.mp3', 'audio');
+        zip.file('01.mp3', 'audio');
+        const file = await zip.generateAsync({ type: 'blob' });
+        const archive = await JSZip.loadAsync(file);
+
+        // Act
+        const actualFileNameOrder: string[] = [];
+        archive
+            .filter(() => true)
+            .sort(FileHandler.compareZipEntries)
+            .forEach((zipEntry: JSZip.JSZipObject): void => {
+                actualFileNameOrder.push(zipEntry.name);
+            });
+
+        // Assert
+        expect(actualFileNameOrder[0]).toBe('01.mp3');
+        expect(actualFileNameOrder[1]).toBe('02.mp3');
+        expect(actualFileNameOrder[2]).toBe('Intro.mp3');
+        expect(actualFileNameOrder[3]).toBe('Solo.mp3');
     });
 });

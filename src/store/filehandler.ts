@@ -265,7 +265,8 @@ export default class FileHandler {
 
         // both equally defined or both undefined
         if (fileExtensionA === fileExtensionB) {
-            return 0;
+            // somewhat arbitrarily by file name (lenght is not guessed)
+            return zipEntryA.name.localeCompare(zipEntryB.name);
         }
 
         // only one is undefined
@@ -298,14 +299,11 @@ export default class FileHandler {
             const priorityB = priority.indexOf(fileExtensionB);
 
             if (priorityA < priorityB) {
-                return -1;
-            }
-            if (priorityA > priorityB) {
                 return 1;
             }
-
-            // others somewhat arbitrarily by file name (lenght is not guessed)
-            return zipEntryA.name.localeCompare(zipEntryB.name);
+            if (priorityA > priorityB) {
+                return -1;
+            }
         }
         return 0;
     }
