@@ -26,6 +26,10 @@ export default defineConfig({
         target: 'es2015',
         // Since this is FOSS anyway, improve a possible debug experience
         sourcemap: true,
+
+        // Minification has resulted in parsing problems on iPadOS
+        //TODO remove, when fixed
+        minify: false,
     },
     plugins: [
         vue(),
