@@ -58,7 +58,7 @@
 <script setup lang="ts">
 import NavButton from '@/components/buttons/NavButton.vue';
 import DismissiblePanel from '@/components/DismissiblePanel.vue';
-import { mdiDotsVertical, mdiPrinterPosPause } from '@mdi/js';
+import { mdiDotsVertical } from '@mdi/js';
 import { refThrottled, useElementBounding, useWindowSize } from '@vueuse/core';
 import { computed, ref } from 'vue';
 
@@ -126,9 +126,13 @@ function collapseDropdown() {
 }
 
 const button = ref();
-const { bottom, right, top, left } = useElementBounding(button);
+const {
+    bottom: bottomBoundary,
+    right: rightBoundary,
+    top: topBoundary,
+    left: leftBoundary,
+} = useElementBounding(button);
 const menu = ref();
-//const { bottom, right, top, left } = useElementBounding(menu);
 const { height, width } = useWindowSize();
 
 /** Checks the position for the menu
@@ -138,8 +142,8 @@ const isMenuForcedUp = refThrottled(
     computed(() => {
         // When no direction required, just use the one with the most space
         if (!props.up && !props.down) {
-            const spaceAboveMenuButton = top.value;
-            const spaceBelowMenuButton = height.value - bottom.value;
+            const spaceAboveMenuButton = topBoundary.value;
+            const spaceBelowMenuButton = height.value - bottomBoundary.value;
 
             return spaceAboveMenuButton > spaceBelowMenuButton;
         }
@@ -156,8 +160,8 @@ const isMenuForcedLeft = refThrottled(
     computed(() => {
         // When no direction required, just use the one with the most space
         if (!props.left && !props.right) {
-            const spaceLeftOfMenuButton = left.value;
-            const spaceRightOfMenuButton = width.value - right.value;
+            const spaceLeftOfMenuButton = leftBoundary.value;
+            const spaceRightOfMenuButton = width.value - rightBoundary.value;
 
             return spaceLeftOfMenuButton > spaceRightOfMenuButton;
         }

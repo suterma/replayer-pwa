@@ -1301,14 +1301,6 @@ function updateVolume(volume: number) {
     mediaHandler.value?.fader.setVolume(volume);
 }
 
-/** Updates the playback rate of this track, regardless of whether it is the active track */
-function updatePlaybackRate(rate: number) {
-    app.updateTrackPlaybackRate(props.track?.Id, rate);
-    if (mediaHandler.value) {
-        mediaHandler.value.playbackRateController.playbackRate = rate;
-    }
-}
-
 /** Pauses playback and seeks to the currently selected cue's position, but only
  * if this track is the active track (i.e. the selected cue is within this track)
  */

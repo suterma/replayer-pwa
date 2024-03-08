@@ -1,4 +1,3 @@
-import { file } from 'jszip';
 import { MediaBlob, RezMimeTypes } from './types';
 
 /**
