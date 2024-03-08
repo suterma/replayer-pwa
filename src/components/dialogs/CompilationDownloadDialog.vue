@@ -146,7 +146,6 @@ import CompilationHandler from '@/store/compilation-handler';
 import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
 import ModalDialog from '@/components/dialogs/ModalDialog.vue';
-import CoveredPanel from '@/components/CoveredPanel.vue';
 import LabeledInput from '@/components/editor/LabeledInput.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import type { ICompilation } from '@/store/ICompilation';
@@ -156,7 +155,6 @@ export default defineComponent({
     name: 'CompilationDownloadDialog',
     components: {
         ModalDialog,
-        CoveredPanel,
         LabeledInput,
         StyledInput,
     },
