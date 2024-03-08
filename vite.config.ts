@@ -4,7 +4,6 @@ import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig, type PluginOption } from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
-import replace from '@rollup/plugin-replace';
 
 //Setting the environment variables
 import child_process from 'child_process';
