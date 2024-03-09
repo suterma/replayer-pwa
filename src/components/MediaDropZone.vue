@@ -225,7 +225,11 @@ export default defineComponent({
             'loadFromUrl',
             'updateTrackUrl',
         ]),
-        ...mapActions(useMessageStore, ['pushError']),
+        ...mapActions(useMessageStore, [
+            'pushError',
+            'pushProgress',
+            'popProgress',
+        ]),
 
         /** Registers the consumer for files received via the launch queue
          * @remarks These are handeled similar to when loaded via the file input
@@ -241,16 +245,29 @@ export default defineComponent({
                     async (launchParams: { files: unknown }): Promise<void> => {
                         const launchFiles =
                             launchParams.files as FileSystemFileHandle[];
+
+                        const lauchQueueMessage = `Loading a total of ${launchFiles.length} files from the launch queue`;
+                        this.pushProgress(lauchQueueMessage);
+
+                        const files = new Array<File>();
                         for (const fileHandle of launchFiles) {
                             const file: File = await (
                                 fileHandle as any
                             ).getFile();
-                            this.loadMediaFile(file).then(() => {
-                                console.log(
-                                    `File '${file.name}' (from launch queue) handled`,
-                                );
-                            });
+                            files.push(file);
                         }
+                        this.loadMediaFiles(files)
+                            .then(() => {
+                                console.log(
+                                    `Totally ${files.length} files (from launch queue) loaded.`,
+                                );
+                            })
+                            .catch((errorMessage: string) =>
+                                this.pushError(errorMessage),
+                            )
+                            .finally(() => {
+                                this.popProgress(lauchQueueMessage);
+                            });
                     },
                 );
             } else {
