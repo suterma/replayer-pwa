@@ -10,13 +10,19 @@ import { useMessageStore } from './store/messages';
 import { useAppStore } from './store/app';
 import { createManager } from '@vue-youtube/core';
 import { useTitle } from '@vueuse/core';
+import chalk from 'chalk';
 
-console.log('App version: ' + import.meta.env.VITE_APP_VERSION);
-console.log('MODE: ' + import.meta.env.MODE);
-console.log('NODE_ENV: ' + process.env.NODE_ENV);
-console.debug('BASE_URL: ' + import.meta.env.BASE_URL);
-console.log('GIT_VERSION: ' + import.meta.env.VITE_APP_GIT_VERSION);
-console.log('GIT_AUTHOR_DATE: ' + import.meta.env.VITE_APP_GIT_AUTHOR_DATE);
+const appInfo = chalk.bold.hex('#f89406'); // Replayer cue color (bulma warning)
+console.log(
+    appInfo(`Replayer app version: ${import.meta.env.VITE_APP_VERSION}`),
+);
+console.log(appInfo(`MODE: ${import.meta.env.MODE}`));
+console.log(appInfo(`NODE_ENV: ${process.env.NODE_ENV}`));
+console.debug(appInfo(`BASE_URL: ${import.meta.env.BASE_URL}`));
+console.log(appInfo(`GIT_VERSION: ${import.meta.env.VITE_APP_GIT_VERSION}`));
+console.log(
+    appInfo(`GIT_AUTHOR_DATE: ${import.meta.env.VITE_APP_GIT_AUTHOR_DATE}`),
+);
 
 const youtubeManager = createManager({
     deferLoading: {

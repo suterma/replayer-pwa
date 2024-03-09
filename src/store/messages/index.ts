@@ -219,11 +219,35 @@ export const useMessageStore = defineStore(Store.Messages, () => {
         return inputFeedback.value !== null;
     });
 
+    /// --- busy routing feedback ---
+
     /** Whether the application is busy while updating the route
      * @remarks This is used to visually indicate the busy routing state.
      * It's different from the progress state, visually and technically
      */
     const isBusyRouting = ref(false);
+
+    /** Initiates the display of the busy routing indication
+     * @remarks Resolves at next tick, after the message had the chance to get displayed
+     * in the real DOM.
+     */
+    function setBusyRouting(): Promise<void> {
+        return new Promise((resolve) => {
+            isBusyRouting.value = true;
+
+            //NOTE: Vue's nextTick seems not to work here
+            setTimeout(() => {
+                resolve();
+            }, 0);
+        });
+    }
+    /** Removes the display of the busy routing indication
+     */
+    function unsetBusyRouting(): void {
+        isBusyRouting.value = false;
+    }
+
+    /// --- store access ---
 
     return {
         pushProgress,
@@ -235,6 +259,8 @@ export const useMessageStore = defineStore(Store.Messages, () => {
         popError,
         popSuccess,
         finishProgress,
+        setBusyRouting,
+        unsetBusyRouting,
 
         progressMessage,
         progressMessages,

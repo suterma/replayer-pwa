@@ -588,7 +588,7 @@ export const actions = {
                                 this.discardCompilation();
                             }
 
-                            const extractingProgressMessage = 'Extracting...';
+                            const extractingProgressMessage = 'Loading...';
                             message.pushProgress(extractingProgressMessage);
                             const processableCount = processables.length;
                             let processedCount = 0;

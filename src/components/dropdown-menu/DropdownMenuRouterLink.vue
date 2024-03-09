@@ -22,12 +22,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick } from 'vue';
+import { computed } from 'vue';
 import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Hotkey } from '@simolation/vue-hotkey';
 import { useMessageStore } from '@/store/messages';
-import { storeToRefs } from 'pinia';
 
 /** An item for a Dropdown menu
  * @remarks Supports a global hotkey registration
@@ -86,17 +85,13 @@ const isActiveRoute = computed(() => {
 const router = useRouter();
 const message = useMessageStore();
 
-const { isBusyRouting } = storeToRefs(message);
-
 function navigate() {
-    isBusyRouting.value = true;
-    // let the progress indication show up first
-    nextTick(() => {
+    message.setBusyRouting().then(() => {
         router.push(props.to);
     });
 }
 
 router.afterEach(() => {
-    isBusyRouting.value = false;
+    message.unsetBusyRouting();
 });
 </script>
