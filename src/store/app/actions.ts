@@ -387,13 +387,13 @@ export const actions = {
     },
 
     /** Replaces the current compilation with a new one
-     * @remarks If there is only a single track, this track becomes the active track.
-     * For single-track compilations this causes the widget player to be shown immediately. Does not set the selected cue.
-     * @remarks Removes all data from the previous compilation, including media URL's, by closing/discarding it.
+     * @remarks If there is only a single track  in the new compilation,
+     * this track becomes the active track. For single-track compilations
+     * this causes the widget player to be shown immediately.
+     * Does not set the selected cue.
+     * @remarks Does not remove any existing media. If required, this must be done separately.
      */
     replaceCompilation(compilation: ICompilation): void {
-        this.discardCompilation();
-
         state.compilation.value = compilation;
 
         /* Set active track (if just one is available), like in MutationTypes.UPDATE_SELECTED_TRACK_ID */
@@ -575,7 +575,6 @@ export const actions = {
                                 },
                             );
 
-                            //Determine whether the ZIP file contains an existing compilation xml file
                             const hasIncludedCompilation = processables.some(
                                 (zipFile /*, file*/) => {
                                     return FileHandler.isSupportedCompilationFileName(
@@ -583,6 +582,11 @@ export const actions = {
                                     );
                                 },
                             );
+
+                            if (hasIncludedCompilation) {
+                                // Make a clean slate for the new compilation
+                                this.discardCompilation();
+                            }
 
                             const extractingProgressMessage = 'Extracting...';
                             message.pushProgress(extractingProgressMessage);

@@ -545,9 +545,6 @@ export default class FileHandler {
         const isXmlFileName =
             fileName.toLowerCase().endsWith('.rex') ||
             fileName.toLowerCase().endsWith('.xml');
-        console.debug(
-            `filehandler::isXmlFileName:fileName:'${fileName}' is XML?:'${isXmlFileName}'`,
-        );
         return isXmlFileName;
     }
 
