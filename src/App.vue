@@ -115,6 +115,10 @@ function handleAppUpdate() {
         if (compare(previousVersion, '2.2.1', '<')) {
             updateText = 'Version 2.2.1: minor bugfixes\r\n' + updateText;
         }
+        if (compare(previousVersion, '2.2.2', '<')) {
+            updateText = 'Version 2.2.1: Storage bugfixes\r\n' + updateText;
+            indexedDB.deleteDatabase('keyval-store');
+        }
 
         acknowledgeVersion(currentVersion, updateText).then(() => {
             app.updateAcknowledgedVersion(currentVersion);

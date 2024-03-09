@@ -42,7 +42,6 @@
         "compare-versions": "^6.0.0",
         "file-saver": "^2.0.5",
         "focus-trap": "^7.5.4",
-        "idb-keyval": "^6.2.1",
         "jszip": "^3.10.1",
         "konva": "^9.3.2",
         "lodash-es": "^4.17.21",

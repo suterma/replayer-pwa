@@ -21,6 +21,7 @@ onBeforeMount(() => {
     // To make really sure
     localStorage.clear();
     indexedDB.deleteDatabase('keyval-store');
+    indexedDB.deleteDatabase('localforage');
 
     router.push('/');
 });

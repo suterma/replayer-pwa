@@ -348,12 +348,12 @@
                     </li>
                     <li>
                         <a
-                            href="https://github.com/jakearchibald/idb-keyval"
+                            href="https://github.com/localForage/localForage"
                             target="_blank"
-                            >IDB-Keyval</a
-                        >, a super-simple-small promise-based keyval store
-                        implemented with IndexedDB. (Released under the MIT
-                        License, by Jake Archibald)
+                            >localForage</a
+                        >, a fast and simple storage library for JavaScript.
+                        (Released under the Apache-2.0 license, by Matthew Riley
+                        MacPherson and Thodoris Greasidis)
                     </li>
                     <li>
                         <a

@@ -1,8 +1,7 @@
-import { set, entries, del, clear } from 'idb-keyval';
 import { MediaBlob } from './types';
 import { Store } from '.';
 import { useMessageStore } from './messages';
-
+import localForage from 'localforage';
 /**
  * Provides simplified access to persistent storage for blobs within the Replayer app. This
  * allows to keep the media files, available over
@@ -19,12 +18,11 @@ export default class PersistentStorage {
         );
 
         // NOTE: blob storage is not guaranteed to be available
-        // Especially on some older iOS devices only some/small files can be stored
-        set(Store.MediaBlob + data.fileName, data.blob).catch(
-            (errorMessage: string) => {
+        localForage
+            .setItem(Store.MediaBlob + data.fileName, data.blob)
+            .catch((errorMessage: string) => {
                 useMessageStore().pushError(errorMessage);
-            },
-        );
+            });
     }
 
     /** Retrieves media blob data from the persistent store
@@ -34,29 +32,28 @@ export default class PersistentStorage {
      */
     static retrieveAllMediaBlobs(): Promise<MediaBlob[]> {
         console.debug('PersistentStorage::retrieveAllMediaBlobs');
-        return (entries() as Promise<[IDBValidKey, Blob][]>)
-            .then((entries) => {
-                const mediaBlobs = new Array<MediaBlob>();
-                entries.forEach((item) => {
-                    const key = item[0].toString();
-                    try {
-                        const blob = item[1];
-                        if (key.startsWith(Store.MediaBlob)) {
-                            const fileName = key.slice(Store.MediaBlob.length);
-                            mediaBlobs.push(new MediaBlob(fileName, blob));
-                        }
-                    } catch (error) {
-                        console.warn(
-                            `The blob for key '${key}' could not be retrieved from the persistent blob storage. The media must get provided separately by the user.`,
-                            error,
-                        );
-                    }
-                });
+        const mediaBlobs = new Array<MediaBlob>();
 
-                return mediaBlobs;
+        return localForage
+            .iterate((value, key) => {
+                try {
+                    if (key.startsWith(Store.MediaBlob)) {
+                        const fileName = key.slice(Store.MediaBlob.length);
+                        mediaBlobs.push(new MediaBlob(fileName, value as Blob));
+                    }
+                } catch (error) {
+                    console.warn(
+                        `The blob for key '${key}' could not be retrieved from the persistent blob storage. The media must get provided separately by the user.`,
+                        error,
+                    );
+                }
             })
-            .catch((errorMessage: string) => {
-                useMessageStore().pushError(errorMessage);
+            .then(() => mediaBlobs)
+            .catch((error) => {
+                console.warn(
+                    `Some blob data could not be retrieved from the persistent storage. The media must get provided separately by the user.`,
+                    error,
+                );
                 return new Array<MediaBlob>();
             });
     }
@@ -66,9 +63,11 @@ export default class PersistentStorage {
      */
     static removeMediaBlob(fileName: string): Promise<void> {
         console.debug('PersistentStorage::removeMediaBlob');
-        return del(Store.MediaBlob + fileName).catch((errorMessage: string) => {
-            useMessageStore().pushError(errorMessage);
-        });
+        return localForage
+            .removeItem(Store.MediaBlob + fileName)
+            .catch((errorMessage: string) => {
+                useMessageStore().pushError(errorMessage);
+            });
     }
 
     /** Removes all media blob data from the persistent store
@@ -76,7 +75,7 @@ export default class PersistentStorage {
      */
     static removeAllMediaBlob(): Promise<void> {
         console.debug('PersistentStorage::removeAllMediaBlob');
-        return clear().catch((errorMessage: string) => {
+        return localForage.clear().catch((errorMessage: string) => {
             useMessageStore().pushError(errorMessage);
         });
     }
