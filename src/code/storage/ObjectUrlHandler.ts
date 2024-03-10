@@ -16,8 +16,8 @@ export class ObjectUrlHandler {
         );
         const url = URL.createObjectURL(blob);
         console.log(
-            'ObjectUrlHandler::createObjectUrl:created-for:url/id:' +
-                `'${url}'/'${identifier}'`,
+            'ObjectUrlHandler::createObjectUrl:created-for:url / id:' +
+                `'${url}' / '${identifier}'`,
         );
         return url;
     }

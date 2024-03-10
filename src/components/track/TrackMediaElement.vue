@@ -340,6 +340,7 @@ const isFading = ref(FadingMode.None);
 let onPauseChangedSubsription: Subscription;
 let onSeekingChangedSubsription: Subscription;
 let onDurationChangedSubsription: Subscription;
+let onCanPlaySubsription: Subscription;
 let onFadingChangedSubsription: Subscription;
 
 const mediaHandler: Ref<IMediaHandler | null> = ref(null);
@@ -356,6 +357,7 @@ function destroyHandler(video: HTMLMediaElement): void {
         onPauseChangedSubsription?.cancel();
         onSeekingChangedSubsription?.cancel();
         onDurationChangedSubsription?.cancel();
+        onCanPlaySubsription?.cancel();
         onFadingChangedSubsription?.cancel();
 
         if (video) {
@@ -386,6 +388,14 @@ function createAndEmitHandler(video: HTMLMediaElement): IMediaHandler {
             mediaDuration.value = duration;
         },
     );
+    onCanPlaySubsription = handler.onCanPlay.subscribe(() => {
+        if (isInitialPositionToBeApplied) {
+            handler.seekTo(props.start ?? 0);
+            console.log('onCanPlaySubsription:seekTo', props.start ?? 0);
+            isInitialPositionToBeApplied = false;
+        }
+    });
+
     onFadingChangedSubsription = handler.fader.onFadingChanged.subscribe(
         (fading) => {
             isFading.value = fading;
@@ -436,33 +446,49 @@ const fadeOutDuration = computed(() => {
 
 // --- Transport ---
 
+/** Whether the initial position needs to be applied. The initial
+ * position should get applied only once for each new media URL.
+ */
+let isInitialPositionToBeApplied = true;
+
 /** The applicable mediaUrl with a possible fragment for the start time
  */
 const mediaUrlWithFragment = ref('');
 
-/** Handles initial and changed mediaUrls. Applies a fragment to allow
- * ranged loading.
+/** Whether media fragments can be used to set the initial starting position.
+ * @remarks See https://replayer.app/de/blog/using-media-fragments-to-start-playback-from-a-specific-point-in-time
+ * @remarks For online URL's this always works. However for blob URL's, there are issues
+ * with iOS/WebKit, giving "The operation couldn’t be completed. (WebKitBlobResource error 1.)"
+ * when media fragments are applied to blob URL's.
+ */
+function canUseMediaFragment(): boolean {
+    return !props.mediaUrl.startsWith('blob:');
+}
+
+/** Handles initial and changed mediaUrls.
+ * @remarks For online URL's,
+ * applies a fragment to allow ranged loading and as the initial playback position.
+ * For blob URL's, the start position must be applied explicitly after loading
  * @remarks See https://replayer.app/de/blog/using-media-fragments-to-start-playback-from-a-specific-point-in-time
  * @remarks The change of the start property is explicitly only handeled
  * together with the change of the media URL. Otherwise, each start change
  * would trigger an actual URL update. This would disturb playback handling.
- * @remarks The fragment is not applied to blob URLs because this has created
- * issues with iOS/WebKit, giving
- * "The operation couldn’t be completed. (WebKitBlobResource error 1.)".
  */
 watch(
     () => props.mediaUrl,
     (mediaUrl) => {
         if (mediaUrl) {
-            if (mediaUrl.startsWith('blob:')) {
-                mediaUrlWithFragment.value = props.mediaUrl;
-            } else {
+            isInitialPositionToBeApplied = true;
+            if (canUseMediaFragment()) {
                 const fragment = props.start ? '#t=' + props.start : '';
                 const fragmentedUrl = props.mediaUrl + fragment;
                 console.debug(
                     `Applying url '${fragmentedUrl}' as mediaUrlWithFragment for trackId '${props.trackId}' at start '${props.start}'`,
                 );
                 mediaUrlWithFragment.value = fragmentedUrl;
+                isInitialPositionToBeApplied = false;
+            } else {
+                mediaUrlWithFragment.value = props.mediaUrl;
             }
         }
     },
