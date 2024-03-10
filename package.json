@@ -44,6 +44,7 @@
         "focus-trap": "^7.5.4",
         "jszip": "^3.10.1",
         "konva": "^9.3.2",
+        "localforage": "^1.10.0",
         "lodash-es": "^4.17.21",
         "nosleep.js": "^0.12.0",
         "pinia": "^2.1.7",
