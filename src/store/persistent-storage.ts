@@ -36,26 +36,13 @@ export default class PersistentStorage {
 
         return localForage
             .iterate((value, key) => {
-                try {
-                    if (key.startsWith(Store.MediaBlob)) {
-                        const fileName = key.slice(Store.MediaBlob.length);
-                        mediaBlobs.push(new MediaBlob(fileName, value as Blob));
-                    }
-                } catch (error) {
-                    console.warn(
-                        `The blob for key '${key}' could not be retrieved from the persistent blob storage. The media must get provided separately by the user.`,
-                        error,
-                    );
+                if (key.startsWith(Store.MediaBlob)) {
+                    const fileName = key.slice(Store.MediaBlob.length);
+                    console.debug(`PersistentStorage::iterate:${fileName}`);
+                    mediaBlobs.push(new MediaBlob(fileName, value as Blob));
                 }
             })
-            .then(() => mediaBlobs)
-            .catch((error) => {
-                console.warn(
-                    `Some blob data could not be retrieved from the persistent storage. The media must get provided separately by the user.`,
-                    error,
-                );
-                return new Array<MediaBlob>();
-            });
+            .then(() => mediaBlobs);
     }
 
     /** Removes the given media blob data from the persistent store

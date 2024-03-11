@@ -222,11 +222,11 @@ export default defineComponent({
 
         /** Initiates the download of the current compilation with the chosen target type
          */
-        async download(): Promise<void> {
+        download(): void {
             if (this.isDownloadZip) {
-                return this.downloadZipPackage();
+                this.downloadZipPackage();
             } else {
-                return this.downloadXmlFile();
+                this.downloadXmlFile();
             }
         },
     },

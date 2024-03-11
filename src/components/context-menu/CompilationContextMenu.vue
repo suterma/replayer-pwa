@@ -78,7 +78,7 @@ export default defineComponent({
         download() {
             downloadCompilation(this.compilation).then((ok) => {
                 if (ok) {
-                    console.debug(`CompilationContextMenu::download done`);
+                    console.debug(`CompilationContextMenu::download initiated`);
                 }
             });
         },

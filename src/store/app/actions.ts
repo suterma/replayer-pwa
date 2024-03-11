@@ -989,34 +989,49 @@ export const actions = {
     downloadZipPackage(): void {
         const message = useMessageStore();
 
-        message.pushProgress(`Downloading ZIP file...`);
-
-        //Get the XML file
-        const xml = CompilationParser.convertToXml(state.compilation.value);
-        const xmlBlob = new Blob([xml], {
-            type: 'text/xml;charset=utf-8',
-        });
-
-        //Then get the blobs from the storage
-        //(which should actually be the matching media blobs for the compilation)
-        PersistentStorage.retrieveAllMediaBlobs().then((mediaBlobs) => {
-            //Pack everything into the ZIP file
-            const zip = new JSZip();
-            zip.file(`${state.compilation.value?.Title}.xml`, xmlBlob);
-            mediaBlobs.forEach((mediaBlob) => {
-                zip.file(mediaBlob.fileName, mediaBlob.blob);
-            });
-
-            //Save as the ZIP package
-            zip.generateAsync({ type: 'blob' })
-                .then(function (content) {
-                    FileSaver.saveAs(
-                        content,
-                        `${state.compilation.value?.Title}.zip`,
+        const downloadMessage = `Downloading ZIP file for '${state.compilation.value?.Title}'...`;
+        message.pushProgress(downloadMessage).then(() => {
+            //Get the blobs from the storage
+            //(which should actually be the matching media blobs for the compilation)
+            PersistentStorage.retrieveAllMediaBlobs()
+                //Pack everything into the ZIP file
+                .then((mediaBlobs) => {
+                    //Add the XML compilation
+                    console.debug('actions::pack-xml');
+                    const xml = CompilationParser.convertToXml(
+                        state.compilation.value,
                     );
+                    const xmlBlob = new Blob([xml], {
+                        type: 'text/xml;charset=utf-8',
+                    });
+
+                    //Add the blobs
+                    const zip = new JSZip();
+                    zip.file(`${state.compilation.value?.Title}.xml`, xmlBlob);
+                    mediaBlobs.forEach((mediaBlob) => {
+                        console.debug(
+                            `actions::pack-blob for ${mediaBlob.fileName}`,
+                        );
+                        zip.file(mediaBlob.fileName, mediaBlob.blob);
+                    });
+
+                    //Save as the ZIP package
+                    zip.generateAsync({ type: 'blob' })
+                        .then(function (content) {
+                            FileSaver.saveAs(
+                                content,
+                                `${state.compilation.value?.Title}.zip`,
+                            );
+                        })
+                        .finally(() => {
+                            message.popProgress(downloadMessage);
+                        });
                 })
-                .finally(() => {
-                    message.popProgress();
+                .catch(() => {
+                    useMessageStore().pushError(
+                        `Some media files are not available from the persistent storage. Alternatively, download an XML compilation (without media files).`,
+                    );
+                    message.popProgress(downloadMessage);
                 });
         });
     },

@@ -60,6 +60,8 @@ import { compare } from 'compare-versions';
 import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { refDebounced, useElementSize } from '@vueuse/core';
+import Compilation from './components/Compilation.vue';
+import CompilationHandler from './store/compilation-handler';
 
 onMounted(() => {
     handleAppUpdate();
@@ -117,6 +119,7 @@ function handleAppUpdate() {
         }
         if (compare(previousVersion, '2.2.2', '<')) {
             updateText = 'Version 2.2.1: Storage bugfixes\r\n' + updateText;
+            useAppStore().discardCompilation();
             indexedDB.deleteDatabase('keyval-store');
         }
 
