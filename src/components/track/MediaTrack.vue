@@ -125,20 +125,25 @@
                         class="level-item is-narrow is-size-7"
                         :model-value="Math.floor(currentPosition * 10) / 10"
                         :sub-second-digits="1"
+                        title="Current time"
                     ></TimeDisplay>
 
                     <!-- NOTE: In edit mode, the time is displayed as part of the transport area, not in the header -->
                     <!-- NOTE: In mix mode, the time display is not needed on individual tracks -->
                     <!-- NOTE: In playback mode, the currently remaining time is shown, to indicate any ongoing playback action -->
+                    <!-- NOTE: As a component update performance optimization, 
+                    the numeric value is truncated to one decimal digit, as displayed, avoiding
+                    unnecessary update for actually non-distinctly displayed values. -->
                     <TimeDisplay
                         v-if="isPlayable"
                         class="level-item is-narrow is-hidden-mobile is-size-7"
                         :model-value="
-                            remainingTime
+                            remainingTime != null
                                 ? Math.ceil(remainingTime * 10) / 10
                                 : null
                         "
                         :sub-second-digits="1"
+                        title="Remaining time"
                     ></TimeDisplay>
 
                     <!-- Placeholder for the audio level meter (used for teleporting from the player component) -->
@@ -1463,13 +1468,10 @@ watch(isTrackPlaying, () => {
 const hasMeter = computed(() => Meter.isValid(props.track.Meter));
 
 const remainingTime = computed(() => {
-    if (currentPosition.value) {
-        return CompilationHandler.calculateRemainingTime(
-            currentPosition.value,
-            trackDuration.value,
-        );
-    }
-    return trackDuration.value;
+    return CompilationHandler.calculateRemainingTime(
+        currentPosition.value,
+        trackDuration.value,
+    );
 });
 
 /** Calculate the custom pre-roll for this track */
