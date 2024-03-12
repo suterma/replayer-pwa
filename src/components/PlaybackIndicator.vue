@@ -1,6 +1,6 @@
 <template>
     <NavButton
-        class="is-indicator"
+        class="is-indicator is-nav"
         :class="{
             'has-text-warning': isUnavailable,
             'has-text-dark': isUnloaded,
@@ -10,6 +10,7 @@
         }"
         :title="indication"
         :icon-path="isUnavailable ? mdiAlert : mdiCircle"
+        @click="showIndication()"
     >
     </NavButton>
 </template>
@@ -21,6 +22,7 @@ import NavButton from '@/components/buttons/NavButton.vue';
 import { mdiAlert, mdiCircle } from '@mdi/js';
 import { computed, inject } from 'vue';
 import { isPlayingInjectionKey } from './track/TrackInjectionKeys';
+import { useMessageStore } from '@/store/messages';
 
 const props = defineProps({
     /** Whether the indicator should convey the ready state */
@@ -45,7 +47,7 @@ const props = defineProps({
 
 const indication = computed(() => {
     if (props.isUnavailable) {
-        return 'Track media is unavailable. Please replace it.';
+        return 'Track media is unavailable. Please replace it in the editor.';
     } else if (isTrackPlaying?.value) {
         return 'Track is playing';
     } else if (props.isReady) {
@@ -56,6 +58,14 @@ const indication = computed(() => {
 
     return 'Track is in an unknown state';
 });
+
+const message = useMessageStore();
+
+function showIndication() {
+    if (props.isUnavailable) {
+        message.pushError(indication.value);
+    } else message.pushSuccess(indication.value);
+}
 
 /** Flag to indicate whether this track's player is currently playing
  */
