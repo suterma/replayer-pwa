@@ -4,7 +4,7 @@
         class="control is-flex is-align-items-center"
         :title="
             unavailable
-                ? `Track media '${mediaSource}' is unavailable. Please replace it.`
+                ? `Track media '${mediaSource}' is unavailable. Please reload or replace it in the editor.`
                 : mediaSource
         "
     >
