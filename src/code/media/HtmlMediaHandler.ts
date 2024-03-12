@@ -99,7 +99,12 @@ export default class HtmlMediaHandler implements IMediaHandler {
             this.repeatUpdateCurrentTime();
         };
 
-        media.ontimeupdate = () => this.singleUpdateCurrentTime();
+        media.ontimeupdate = () => {
+            // NOTE: When playing, the repeated update is running
+            if (this.paused) {
+                this.singleUpdateCurrentTime();
+            }
+        };
         media.onended = () => this.handleEnded();
     }
 
