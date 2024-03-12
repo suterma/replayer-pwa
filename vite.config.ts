@@ -26,9 +26,8 @@ export default defineConfig({
         // Since this is FOSS anyway, improve a possible debug experience
         sourcemap: true,
 
-        // Minification has resulted in parsing problems on iPadOS
-        //TODO remove, when fixed
-        minify: false,
+        // NOTE: It seems that minification has resulted in parsing problems on iPadOS
+        minify: true,
     },
     plugins: [
         vue(),
