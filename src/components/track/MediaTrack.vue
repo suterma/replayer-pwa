@@ -34,7 +34,7 @@
             <!-- NOTE: The @click handler on the header component only handles clicks on otherwise non-interactive elements -->
             <TrackHeader
                 :display-mode="viewMode"
-                :is-expanded="isExpanded"
+                v-model:is-expanded="isExpanded"
                 :can-collapse="!isOnlyMediaTrack"
                 :track="track"
                 :is-track-loaded="isTrackLoaded"
@@ -42,7 +42,6 @@
                 :is-active="isActiveTrack"
                 :is-first="isFirst"
                 :is-last="isLast"
-                @update:is-expanded="updateIsExpanded"
             >
                 <template
                     v-if="isMixable || isPlayable || isEditable"
@@ -1351,12 +1350,6 @@ function updatedIsFadingEnabled(isFadingEnabled: boolean): void {
  */
 function updatedIsPreRollEnabled(isPreRollEnabled: boolean): void {
     emit('update:isPreRollEnabled', isPreRollEnabled);
-}
-
-/** Handle isExpanded update
- */
-function updateIsExpanded(expanded: boolean): void {
-    isExpanded.value = expanded;
 }
 
 /** Handles the click of a cue button, by seeking to it and, optionally, toggling playback

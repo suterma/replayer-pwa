@@ -60,8 +60,6 @@ import { compare } from 'compare-versions';
 import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { refDebounced, useElementSize } from '@vueuse/core';
-import Compilation from './components/Compilation.vue';
-import CompilationHandler from './store/compilation-handler';
 
 onMounted(() => {
     handleAppUpdate();
