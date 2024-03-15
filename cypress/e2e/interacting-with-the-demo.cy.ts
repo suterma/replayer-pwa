@@ -32,7 +32,7 @@ describe('interacting with the demo', () => {
         // ASSERT
         cy.get('.track button.button.is-nav.is-indicator').should(
             'have.attr',
-            'title',
+            'data-cy',
             'Track is loaded and ready to play',
         );
     });
@@ -44,7 +44,7 @@ describe('interacting with the demo', () => {
         // ASSERT
         cy.get('.track button.button.is-nav.is-indicator').should(
             'have.attr',
-            'title',
+            'data-cy',
             'Track is playing',
         );
     });

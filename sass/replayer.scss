@@ -35,6 +35,7 @@
 @import '_replayer-spacing.scss';
 @import '_replayer-transitions.scss';
 @import '_replayer-drag.scss';
+@import '_replayer-tooltip.scss';
 
 /* Slider (from bulma-slider) without border for the thumb*/
 $slider-thumb-border: none !default;
@@ -43,12 +44,10 @@ $slider-track-background: $border !default;
 @import '_replayer-slider-playhead.scss';
 
 /* Below: general application-specific add-ons/modifications to the Bulma CSS */
-
 /*************************************************************
  * Overscroll / scrollbar handling
 **************************************************************
 */
-
 /* Disable overscroll page refresh */
 html,
 body {

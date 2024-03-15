@@ -1,0 +1,35 @@
+@charset "utf-8";
+
+/*************************************************************
+ * Custom Replayer tooltip
+ * Basic implementation taken from 
+ * Bulma Tooltip (from https://bulma-tooltip.netlify.app/)
+**************************************************************
+*/
+
+$tooltip-background-opacity: 0.71;
+$tooltip-radius: $radius;
+$tooltip-background-color: $dark;
+$tooltip-color: $text;
+@import '../node_modules/@creativebulma/bulma-tooltip/src/sass/index.sass';
+
+/*top-left position*/
+
+[data-tooltip]:not(.is-loading).has-tooltip-top.has-tooltip-left::before,
+[data-tooltip]:not(.is-disabled).has-tooltip-top.has-tooltip-left::before,
+[data-tooltip]:not([disabled]).has-tooltip-tops.has-tooltip-left::before {
+    top: 0;
+    right: auto;
+    bottom: auto;
+    left: 0;
+    transform: translate(-100%, -100%);
+}
+
+/* Border arount tooltips*/
+[data-tooltip]:not(.is-loading)::before,
+[data-tooltip]:not(.is-disabled)::before,
+[data-tooltip]:not([disabled])::before {
+    border-color: $text;
+    border-width: 1px;
+    border-style: solid;
+}

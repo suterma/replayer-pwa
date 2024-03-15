@@ -1,16 +1,19 @@
 <template>
     <NavButton
-        class="is-indicator is-nav"
+        class="is-indicator is-nav has-tooltip-top has-tooltip-left has-tooltip-multiline has-tooltip-text-centered"
         :class="{
-            'has-text-warning': isUnavailable,
+            'has-text-warning has-tooltip-warning': isUnavailable,
             'has-text-dark': isUnloaded,
-            'has-text-success': isTrackPlaying && !isUnavailable,
+            'has-text-success has-tooltip-success':
+                isTrackPlaying && !isUnavailable,
             'has-text-grey-dark': isReady && isUnavailable,
             'has-text-grey': isReady && !isUnavailable,
+            'has-tooltip-active': isActiveTooltip,
         }"
-        :title="indication"
+        :data-tooltip="indication"
+        :data-cy="indication"
         :icon-path="isUnavailable ? mdiAlert : mdiCircle"
-        @click="showIndication()"
+        @click="showTooltip()"
     >
     </NavButton>
 </template>
@@ -20,7 +23,7 @@
  */
 import NavButton from '@/components/buttons/NavButton.vue';
 import { mdiAlert, mdiCircle } from '@mdi/js';
-import { computed, inject } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { isPlayingInjectionKey } from './track/TrackInjectionKeys';
 import { useMessageStore } from '@/store/messages';
 
@@ -61,10 +64,13 @@ const indication = computed(() => {
 
 const message = useMessageStore();
 
-function showIndication() {
-    if (props.isUnavailable) {
-        message.pushError(indication.value);
-    } else message.pushSuccess(indication.value);
+const isActiveTooltip = ref(false);
+
+function showTooltip() {
+    isActiveTooltip.value = true;
+    setTimeout(() => {
+        isActiveTooltip.value = false;
+    }, 1500);
 }
 
 /** Flag to indicate whether this track's player is currently playing

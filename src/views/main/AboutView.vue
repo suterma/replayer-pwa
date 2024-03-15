@@ -582,6 +582,14 @@
                         >, trap focus within a DOM node. (Released under the MIT
                         License, by Stefan Cameron)
                     </li>
+                    <li>
+                        <a
+                            href="https://github.com/CreativeBulma/bulma-tooltip"
+                            target="_blank"
+                            >bulma-tooltip </a
+                        >, easily display a tooltip. (Released under the MIT
+                        License, by CreativeBulma)
+                    </li>
                 </ul>
             </div>
         </CollapsiblePanel>
