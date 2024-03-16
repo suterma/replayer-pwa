@@ -14932,6 +14932,8 @@ to not displace them visually when the border around the single dragged item is 
  * Bulma Tooltip (from https://bulma-tooltip.netlify.app/)
 **************************************************************
 */
+/* Change some properties distinguish tooltips from other content*/
+/* Default colors more to the Replayer theme*/
 [data-tooltip]:not(.is-loading), [data-tooltip]:not(.is-disabled), [data-tooltip]:not([disabled]) {
   cursor: pointer;
   overflow: visible;
@@ -14951,7 +14953,7 @@ to not displace them visually when the border around the single dragged item is 
   visibility: hidden;
   z-index: 1020;
   background: rgba(32, 35, 40, 0.71);
-  border-radius: 4px;
+  border-radius: 20px;
   content: attr(data-tooltip);
   padding: 0.5rem 1rem;
   text-overflow: ellipsis;
@@ -15236,7 +15238,7 @@ to not displace them visually when the border around the single dragged item is 
   visibility: visible;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-fade::before, [data-tooltip]:not(.is-loading).has-tooltip-fade::after, [data-tooltip]:not(.is-disabled).has-tooltip-fade::before, [data-tooltip]:not(.is-disabled).has-tooltip-fade::after, [data-tooltip]:not([disabled]).has-tooltip-fade::before, [data-tooltip]:not([disabled]).has-tooltip-fade::after {
-  transition: opacity 0.3s linear, visibility 0.3s linear;
+  transition: opacity 200ms linear, visibility 200ms linear;
 }
 @media screen and (max-width: 768px) {
   [data-tooltip]:not(.is-loading).has-tooltip-top-mobile.has-tooltip-arrow::after, [data-tooltip]:not(.is-disabled).has-tooltip-top-mobile.has-tooltip-arrow::after, [data-tooltip]:not([disabled]).has-tooltip-top-mobile.has-tooltip-arrow::after {
@@ -16465,7 +16467,7 @@ span[data-tooltip].has-tooltip-danger {
   transform: translate(-100%, -100%);
 }
 
-/* Border arount tooltips*/
+/* Border around tooltips*/
 [data-tooltip]:not(.is-loading)::before,
 [data-tooltip]:not(.is-disabled)::before,
 [data-tooltip]:not([disabled])::before {

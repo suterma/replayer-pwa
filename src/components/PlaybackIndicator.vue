@@ -1,6 +1,6 @@
 <template>
     <NavButton
-        class="is-indicator is-nav has-tooltip-top has-tooltip-left has-tooltip-multiline has-tooltip-text-centered"
+        class="is-indicator is-nav has-tooltip-left has-tooltip-multiline has-tooltip-text-centered has-tooltip-fade"
         :class="{
             'has-text-warning has-tooltip-warning': isUnavailable,
             'has-text-dark': isUnloaded,
@@ -25,7 +25,6 @@ import NavButton from '@/components/buttons/NavButton.vue';
 import { mdiAlert, mdiCircle } from '@mdi/js';
 import { computed, inject, ref } from 'vue';
 import { isPlayingInjectionKey } from './track/TrackInjectionKeys';
-import { useMessageStore } from '@/store/messages';
 
 const props = defineProps({
     /** Whether the indicator should convey the ready state */
@@ -61,8 +60,6 @@ const indication = computed(() => {
 
     return 'Track is in an unknown state';
 });
-
-const message = useMessageStore();
 
 const isActiveTooltip = ref(false);
 
