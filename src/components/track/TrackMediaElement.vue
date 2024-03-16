@@ -391,7 +391,7 @@ function createAndEmitHandler(video: HTMLMediaElement): IMediaHandler {
     onCanPlaySubsription = handler.onCanPlay.subscribe(() => {
         if (isInitialPositionToBeApplied) {
             handler.seekTo(props.start ?? 0);
-            console.log('onCanPlaySubsription:seekTo', props.start ?? 0);
+            console.debug('onCanPlaySubsription:seekTo', props.start ?? 0);
             isInitialPositionToBeApplied = false;
         }
     });
