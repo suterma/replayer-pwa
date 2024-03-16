@@ -11,10 +11,11 @@
             'has-tooltip-active': isActiveTooltip,
             'has-tooltip-inactive': isInactiveTooltip,
         }"
+        ref="indicator"
         :data-tooltip="indication"
         :data-cy="indication"
         :icon-path="isUnavailable ? mdiAlert : mdiCircle"
-        @click="toggleTooltip()"
+        @touchstart="toggleTooltip()"
     >
     </NavButton>
 </template>
@@ -24,8 +25,9 @@
  */
 import NavButton from '@/components/buttons/NavButton.vue';
 import { mdiAlert, mdiCircle } from '@mdi/js';
-import { computed, inject, ref } from 'vue';
+import { computed, inject, ref, watchEffect } from 'vue';
 import { isPlayingInjectionKey } from './track/TrackInjectionKeys';
+import { useElementHover } from '@vueuse/core';
 
 const props = defineProps({
     /** Whether the indicator should convey the ready state */
@@ -62,8 +64,21 @@ const indication = computed(() => {
     return 'Track is in an unknown state';
 });
 
+// --- tooltip handling ---
+
+// const indicator = ref();
+// const isHovered = useElementHover(indicator);
+
 const isActiveTooltip = ref(false);
 const isInactiveTooltip = ref(false);
+
+// watchEffect(() => {
+//     if (!isHovered.value) {
+//         console.debug('NOT Hovered');
+//         isActiveTooltip.value = false;
+//         isInactiveTooltip.value = false;
+//     }
+// });
 
 function toggleTooltip() {
     isActiveTooltip.value = !isActiveTooltip.value;
