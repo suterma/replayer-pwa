@@ -14941,7 +14941,7 @@ to not displace them visually when the border around the single dragged item is 
 }
 [data-tooltip]:not(.is-loading)::before, [data-tooltip]:not(.is-disabled)::before, [data-tooltip]:not([disabled])::before {
   box-sizing: border-box;
-  color: #aaa;
+  color: hsl(0, 0%, 100%);
   display: inline-block;
   font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-size: 0.85rem;
@@ -14952,7 +14952,7 @@ to not displace them visually when the border around the single dragged item is 
   position: absolute;
   visibility: hidden;
   z-index: 1020;
-  background: rgba(32, 35, 40, 0.71);
+  background: #202328;
   border-radius: 20px;
   content: attr(data-tooltip);
   padding: 0.5rem 1rem;
@@ -14971,7 +14971,7 @@ to not displace them visually when the border around the single dragged item is 
 }
 [data-tooltip]:not(.is-loading).has-tooltip-arrow::after, [data-tooltip]:not(.is-disabled).has-tooltip-arrow::after, [data-tooltip]:not([disabled]).has-tooltip-arrow::after {
   box-sizing: border-box;
-  color: #aaa;
+  color: hsl(0, 0%, 100%);
   display: inline-block;
   font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-size: 0.85rem;
@@ -14985,7 +14985,7 @@ to not displace them visually when the border around the single dragged item is 
   content: "";
   border-style: solid;
   border-width: 6px;
-  border-color: rgba(32, 35, 40, 0.71) transparent transparent transparent;
+  border-color: #202328 transparent transparent transparent;
   margin-bottom: -5px;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-arrow.has-tooltip-arrow::after, [data-tooltip]:not(.is-disabled).has-tooltip-arrow.has-tooltip-arrow::after, [data-tooltip]:not([disabled]).has-tooltip-arrow.has-tooltip-arrow::after {
@@ -14997,7 +14997,7 @@ to not displace them visually when the border around the single dragged item is 
   margin-right: auto;
   margin-bottom: auto;
   margin-left: -5px;
-  border-color: rgba(32, 35, 40, 0.71) transparent transparent transparent;
+  border-color: #202328 transparent transparent transparent;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-bottom.has-tooltip-arrow::after, [data-tooltip]:not(.is-disabled).has-tooltip-bottom.has-tooltip-arrow::after, [data-tooltip]:not([disabled]).has-tooltip-bottom.has-tooltip-arrow::after {
   top: auto;
@@ -15008,7 +15008,7 @@ to not displace them visually when the border around the single dragged item is 
   margin-right: auto;
   margin-bottom: -5px;
   margin-left: -5px;
-  border-color: transparent transparent rgba(32, 35, 40, 0.71) transparent;
+  border-color: transparent transparent #202328 transparent;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-bottom::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom::before, [data-tooltip]:not([disabled]).has-tooltip-bottom::before {
   top: auto;
@@ -15028,7 +15028,7 @@ to not displace them visually when the border around the single dragged item is 
   margin-right: auto;
   margin-bottom: -6px;
   margin-left: -5px;
-  border-color: transparent transparent transparent rgba(32, 35, 40, 0.71);
+  border-color: transparent transparent transparent #202328;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-left::before, [data-tooltip]:not(.is-disabled).has-tooltip-left::before, [data-tooltip]:not([disabled]).has-tooltip-left::before {
   top: auto;
@@ -15046,7 +15046,7 @@ to not displace them visually when the border around the single dragged item is 
   margin-right: -6px;
   margin-bottom: -6px;
   margin-left: auto;
-  border-color: transparent rgba(32, 35, 40, 0.71) transparent transparent;
+  border-color: transparent #202328 transparent transparent;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-right::before, [data-tooltip]:not(.is-disabled).has-tooltip-right::before, [data-tooltip]:not([disabled]).has-tooltip-right::before {
   top: auto;
@@ -15074,163 +15074,163 @@ to not displace them visually when the border around the single dragged item is 
   text-align: right;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-white::after, [data-tooltip]:not(.is-disabled).has-tooltip-white::after, [data-tooltip]:not([disabled]).has-tooltip-white::after {
-  border-color: rgba(255, 255, 255, 0.71) transparent transparent transparent !important;
+  border-color: white transparent transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-white.has-tooltip-bottom::after, [data-tooltip]:not(.is-disabled).has-tooltip-white.has-tooltip-bottom::after, [data-tooltip]:not([disabled]).has-tooltip-white.has-tooltip-bottom::after {
-  border-color: transparent transparent rgba(255, 255, 255, 0.71) transparent !important;
+  border-color: transparent transparent white transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-white.has-tooltip-left::after, [data-tooltip]:not(.is-disabled).has-tooltip-white.has-tooltip-left::after, [data-tooltip]:not([disabled]).has-tooltip-white.has-tooltip-left::after {
-  border-color: transparent transparent transparent rgba(255, 255, 255, 0.71) !important;
+  border-color: transparent transparent transparent white !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-white.has-tooltip-right::after, [data-tooltip]:not(.is-disabled).has-tooltip-white.has-tooltip-right::after, [data-tooltip]:not([disabled]).has-tooltip-white.has-tooltip-right::after {
-  border-color: transparent rgba(255, 255, 255, 0.71) transparent transparent !important;
+  border-color: transparent white transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-white:before, [data-tooltip]:not(.is-disabled).has-tooltip-white:before, [data-tooltip]:not([disabled]).has-tooltip-white:before {
-  background-color: rgba(255, 255, 255, 0.71);
+  background-color: white;
   color: hsl(0, 0%, 4%);
 }
 [data-tooltip]:not(.is-loading).has-tooltip-black::after, [data-tooltip]:not(.is-disabled).has-tooltip-black::after, [data-tooltip]:not([disabled]).has-tooltip-black::after {
-  border-color: rgba(10, 10, 10, 0.71) transparent transparent transparent !important;
+  border-color: #0a0a0a transparent transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-black.has-tooltip-bottom::after, [data-tooltip]:not(.is-disabled).has-tooltip-black.has-tooltip-bottom::after, [data-tooltip]:not([disabled]).has-tooltip-black.has-tooltip-bottom::after {
-  border-color: transparent transparent rgba(10, 10, 10, 0.71) transparent !important;
+  border-color: transparent transparent #0a0a0a transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-black.has-tooltip-left::after, [data-tooltip]:not(.is-disabled).has-tooltip-black.has-tooltip-left::after, [data-tooltip]:not([disabled]).has-tooltip-black.has-tooltip-left::after {
-  border-color: transparent transparent transparent rgba(10, 10, 10, 0.71) !important;
+  border-color: transparent transparent transparent #0a0a0a !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-black.has-tooltip-right::after, [data-tooltip]:not(.is-disabled).has-tooltip-black.has-tooltip-right::after, [data-tooltip]:not([disabled]).has-tooltip-black.has-tooltip-right::after {
-  border-color: transparent rgba(10, 10, 10, 0.71) transparent transparent !important;
+  border-color: transparent #0a0a0a transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-black:before, [data-tooltip]:not(.is-disabled).has-tooltip-black:before, [data-tooltip]:not([disabled]).has-tooltip-black:before {
-  background-color: rgba(10, 10, 10, 0.71);
+  background-color: #0a0a0a;
   color: hsl(0, 0%, 100%);
 }
 [data-tooltip]:not(.is-loading).has-tooltip-light::after, [data-tooltip]:not(.is-disabled).has-tooltip-light::after, [data-tooltip]:not([disabled]).has-tooltip-light::after {
-  border-color: rgba(245, 245, 245, 0.71) transparent transparent transparent !important;
+  border-color: whitesmoke transparent transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-light.has-tooltip-bottom::after, [data-tooltip]:not(.is-disabled).has-tooltip-light.has-tooltip-bottom::after, [data-tooltip]:not([disabled]).has-tooltip-light.has-tooltip-bottom::after {
-  border-color: transparent transparent rgba(245, 245, 245, 0.71) transparent !important;
+  border-color: transparent transparent whitesmoke transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-light.has-tooltip-left::after, [data-tooltip]:not(.is-disabled).has-tooltip-light.has-tooltip-left::after, [data-tooltip]:not([disabled]).has-tooltip-light.has-tooltip-left::after {
-  border-color: transparent transparent transparent rgba(245, 245, 245, 0.71) !important;
+  border-color: transparent transparent transparent whitesmoke !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-light.has-tooltip-right::after, [data-tooltip]:not(.is-disabled).has-tooltip-light.has-tooltip-right::after, [data-tooltip]:not([disabled]).has-tooltip-light.has-tooltip-right::after {
-  border-color: transparent rgba(245, 245, 245, 0.71) transparent transparent !important;
+  border-color: transparent whitesmoke transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-light:before, [data-tooltip]:not(.is-disabled).has-tooltip-light:before, [data-tooltip]:not([disabled]).has-tooltip-light:before {
-  background-color: rgba(245, 245, 245, 0.71);
+  background-color: whitesmoke;
   color: rgba(0, 0, 0, 0.7);
 }
 [data-tooltip]:not(.is-loading).has-tooltip-dark::after, [data-tooltip]:not(.is-disabled).has-tooltip-dark::after, [data-tooltip]:not([disabled]).has-tooltip-dark::after {
-  border-color: rgba(32, 35, 40, 0.71) transparent transparent transparent !important;
+  border-color: #202328 transparent transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-dark.has-tooltip-bottom::after, [data-tooltip]:not(.is-disabled).has-tooltip-dark.has-tooltip-bottom::after, [data-tooltip]:not([disabled]).has-tooltip-dark.has-tooltip-bottom::after {
-  border-color: transparent transparent rgba(32, 35, 40, 0.71) transparent !important;
+  border-color: transparent transparent #202328 transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-dark.has-tooltip-left::after, [data-tooltip]:not(.is-disabled).has-tooltip-dark.has-tooltip-left::after, [data-tooltip]:not([disabled]).has-tooltip-dark.has-tooltip-left::after {
-  border-color: transparent transparent transparent rgba(32, 35, 40, 0.71) !important;
+  border-color: transparent transparent transparent #202328 !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-dark.has-tooltip-right::after, [data-tooltip]:not(.is-disabled).has-tooltip-dark.has-tooltip-right::after, [data-tooltip]:not([disabled]).has-tooltip-dark.has-tooltip-right::after {
-  border-color: transparent rgba(32, 35, 40, 0.71) transparent transparent !important;
+  border-color: transparent #202328 transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-dark:before, [data-tooltip]:not(.is-disabled).has-tooltip-dark:before, [data-tooltip]:not([disabled]).has-tooltip-dark:before {
-  background-color: rgba(32, 35, 40, 0.71);
+  background-color: #202328;
   color: #fff;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-primary::after, [data-tooltip]:not(.is-disabled).has-tooltip-primary::after, [data-tooltip]:not([disabled]).has-tooltip-primary::after {
-  border-color: rgba(82, 87, 92, 0.71) transparent transparent transparent !important;
+  border-color: #52575c transparent transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-primary.has-tooltip-bottom::after, [data-tooltip]:not(.is-disabled).has-tooltip-primary.has-tooltip-bottom::after, [data-tooltip]:not([disabled]).has-tooltip-primary.has-tooltip-bottom::after {
-  border-color: transparent transparent rgba(82, 87, 92, 0.71) transparent !important;
+  border-color: transparent transparent #52575c transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-primary.has-tooltip-left::after, [data-tooltip]:not(.is-disabled).has-tooltip-primary.has-tooltip-left::after, [data-tooltip]:not([disabled]).has-tooltip-primary.has-tooltip-left::after {
-  border-color: transparent transparent transparent rgba(82, 87, 92, 0.71) !important;
+  border-color: transparent transparent transparent #52575c !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-primary.has-tooltip-right::after, [data-tooltip]:not(.is-disabled).has-tooltip-primary.has-tooltip-right::after, [data-tooltip]:not([disabled]).has-tooltip-primary.has-tooltip-right::after {
-  border-color: transparent rgba(82, 87, 92, 0.71) transparent transparent !important;
+  border-color: transparent #52575c transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-primary:before, [data-tooltip]:not(.is-disabled).has-tooltip-primary:before, [data-tooltip]:not([disabled]).has-tooltip-primary:before {
-  background-color: rgba(82, 87, 92, 0.71);
+  background-color: #52575c;
   color: #fff;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-link::after, [data-tooltip]:not(.is-disabled).has-tooltip-link::after, [data-tooltip]:not([disabled]).has-tooltip-link::after {
-  border-color: rgba(250, 250, 250, 0.71) transparent transparent transparent !important;
+  border-color: #fafafa transparent transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-link.has-tooltip-bottom::after, [data-tooltip]:not(.is-disabled).has-tooltip-link.has-tooltip-bottom::after, [data-tooltip]:not([disabled]).has-tooltip-link.has-tooltip-bottom::after {
-  border-color: transparent transparent rgba(250, 250, 250, 0.71) transparent !important;
+  border-color: transparent transparent #fafafa transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-link.has-tooltip-left::after, [data-tooltip]:not(.is-disabled).has-tooltip-link.has-tooltip-left::after, [data-tooltip]:not([disabled]).has-tooltip-link.has-tooltip-left::after {
-  border-color: transparent transparent transparent rgba(250, 250, 250, 0.71) !important;
+  border-color: transparent transparent transparent #fafafa !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-link.has-tooltip-right::after, [data-tooltip]:not(.is-disabled).has-tooltip-link.has-tooltip-right::after, [data-tooltip]:not([disabled]).has-tooltip-link.has-tooltip-right::after {
-  border-color: transparent rgba(250, 250, 250, 0.71) transparent transparent !important;
+  border-color: transparent #fafafa transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-link:before, [data-tooltip]:not(.is-disabled).has-tooltip-link:before, [data-tooltip]:not([disabled]).has-tooltip-link:before {
-  background-color: rgba(250, 250, 250, 0.71);
+  background-color: #fafafa;
   color: #52575c;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-info::after, [data-tooltip]:not(.is-disabled).has-tooltip-info::after, [data-tooltip]:not([disabled]).has-tooltip-info::after {
-  border-color: rgba(62, 142, 208, 0.71) transparent transparent transparent !important;
+  border-color: #3e8ed0 transparent transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-info.has-tooltip-bottom::after, [data-tooltip]:not(.is-disabled).has-tooltip-info.has-tooltip-bottom::after, [data-tooltip]:not([disabled]).has-tooltip-info.has-tooltip-bottom::after {
-  border-color: transparent transparent rgba(62, 142, 208, 0.71) transparent !important;
+  border-color: transparent transparent #3e8ed0 transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-info.has-tooltip-left::after, [data-tooltip]:not(.is-disabled).has-tooltip-info.has-tooltip-left::after, [data-tooltip]:not([disabled]).has-tooltip-info.has-tooltip-left::after {
-  border-color: transparent transparent transparent rgba(62, 142, 208, 0.71) !important;
+  border-color: transparent transparent transparent #3e8ed0 !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-info.has-tooltip-right::after, [data-tooltip]:not(.is-disabled).has-tooltip-info.has-tooltip-right::after, [data-tooltip]:not([disabled]).has-tooltip-info.has-tooltip-right::after {
-  border-color: transparent rgba(62, 142, 208, 0.71) transparent transparent !important;
+  border-color: transparent #3e8ed0 transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-info:before, [data-tooltip]:not(.is-disabled).has-tooltip-info:before, [data-tooltip]:not([disabled]).has-tooltip-info:before {
-  background-color: rgba(62, 142, 208, 0.71);
+  background-color: #3e8ed0;
   color: #fff;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-success::after, [data-tooltip]:not(.is-disabled).has-tooltip-success::after, [data-tooltip]:not([disabled]).has-tooltip-success::after {
-  border-color: rgba(98, 196, 98, 0.71) transparent transparent transparent !important;
+  border-color: #62c462 transparent transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-success.has-tooltip-bottom::after, [data-tooltip]:not(.is-disabled).has-tooltip-success.has-tooltip-bottom::after, [data-tooltip]:not([disabled]).has-tooltip-success.has-tooltip-bottom::after {
-  border-color: transparent transparent rgba(98, 196, 98, 0.71) transparent !important;
+  border-color: transparent transparent #62c462 transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-success.has-tooltip-left::after, [data-tooltip]:not(.is-disabled).has-tooltip-success.has-tooltip-left::after, [data-tooltip]:not([disabled]).has-tooltip-success.has-tooltip-left::after {
-  border-color: transparent transparent transparent rgba(98, 196, 98, 0.71) !important;
+  border-color: transparent transparent transparent #62c462 !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-success.has-tooltip-right::after, [data-tooltip]:not(.is-disabled).has-tooltip-success.has-tooltip-right::after, [data-tooltip]:not([disabled]).has-tooltip-success.has-tooltip-right::after {
-  border-color: transparent rgba(98, 196, 98, 0.71) transparent transparent !important;
+  border-color: transparent #62c462 transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-success:before, [data-tooltip]:not(.is-disabled).has-tooltip-success:before, [data-tooltip]:not([disabled]).has-tooltip-success:before {
-  background-color: rgba(98, 196, 98, 0.71);
+  background-color: #62c462;
   color: #fff;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-warning::after, [data-tooltip]:not(.is-disabled).has-tooltip-warning::after, [data-tooltip]:not([disabled]).has-tooltip-warning::after {
-  border-color: rgba(248, 148, 6, 0.71) transparent transparent transparent !important;
+  border-color: #f89406 transparent transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-warning.has-tooltip-bottom::after, [data-tooltip]:not(.is-disabled).has-tooltip-warning.has-tooltip-bottom::after, [data-tooltip]:not([disabled]).has-tooltip-warning.has-tooltip-bottom::after {
-  border-color: transparent transparent rgba(248, 148, 6, 0.71) transparent !important;
+  border-color: transparent transparent #f89406 transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-warning.has-tooltip-left::after, [data-tooltip]:not(.is-disabled).has-tooltip-warning.has-tooltip-left::after, [data-tooltip]:not([disabled]).has-tooltip-warning.has-tooltip-left::after {
-  border-color: transparent transparent transparent rgba(248, 148, 6, 0.71) !important;
+  border-color: transparent transparent transparent #f89406 !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-warning.has-tooltip-right::after, [data-tooltip]:not(.is-disabled).has-tooltip-warning.has-tooltip-right::after, [data-tooltip]:not([disabled]).has-tooltip-warning.has-tooltip-right::after {
-  border-color: transparent rgba(248, 148, 6, 0.71) transparent transparent !important;
+  border-color: transparent #f89406 transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-warning:before, [data-tooltip]:not(.is-disabled).has-tooltip-warning:before, [data-tooltip]:not([disabled]).has-tooltip-warning:before {
-  background-color: rgba(248, 148, 6, 0.71);
+  background-color: #f89406;
   color: #fff;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-danger::after, [data-tooltip]:not(.is-disabled).has-tooltip-danger::after, [data-tooltip]:not([disabled]).has-tooltip-danger::after {
-  border-color: rgba(238, 95, 91, 0.71) transparent transparent transparent !important;
+  border-color: #ee5f5b transparent transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-danger.has-tooltip-bottom::after, [data-tooltip]:not(.is-disabled).has-tooltip-danger.has-tooltip-bottom::after, [data-tooltip]:not([disabled]).has-tooltip-danger.has-tooltip-bottom::after {
-  border-color: transparent transparent rgba(238, 95, 91, 0.71) transparent !important;
+  border-color: transparent transparent #ee5f5b transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-danger.has-tooltip-left::after, [data-tooltip]:not(.is-disabled).has-tooltip-danger.has-tooltip-left::after, [data-tooltip]:not([disabled]).has-tooltip-danger.has-tooltip-left::after {
-  border-color: transparent transparent transparent rgba(238, 95, 91, 0.71) !important;
+  border-color: transparent transparent transparent #ee5f5b !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-danger.has-tooltip-right::after, [data-tooltip]:not(.is-disabled).has-tooltip-danger.has-tooltip-right::after, [data-tooltip]:not([disabled]).has-tooltip-danger.has-tooltip-right::after {
-  border-color: transparent rgba(238, 95, 91, 0.71) transparent transparent !important;
+  border-color: transparent #ee5f5b transparent transparent !important;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-danger:before, [data-tooltip]:not(.is-disabled).has-tooltip-danger:before, [data-tooltip]:not([disabled]).has-tooltip-danger:before {
-  background-color: rgba(238, 95, 91, 0.71);
+  background-color: #ee5f5b;
   color: #fff;
 }
 [data-tooltip]:not(.is-loading):hover::before, [data-tooltip]:not(.is-loading):hover::after, [data-tooltip]:not(.is-loading).has-tooltip-active::before, [data-tooltip]:not(.is-loading).has-tooltip-active::after, [data-tooltip]:not(.is-disabled):hover::before, [data-tooltip]:not(.is-disabled):hover::after, [data-tooltip]:not(.is-disabled).has-tooltip-active::before, [data-tooltip]:not(.is-disabled).has-tooltip-active::after, [data-tooltip]:not([disabled]):hover::before, [data-tooltip]:not([disabled]):hover::after, [data-tooltip]:not([disabled]).has-tooltip-active::before, [data-tooltip]:not([disabled]).has-tooltip-active::after {
@@ -15250,7 +15250,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: auto;
     margin-left: -5px;
-    border-color: rgba(32, 35, 40, 0.71) transparent transparent transparent;
+    border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-mobile::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-mobile::before, [data-tooltip]:not([disabled]).has-tooltip-top-mobile::before {
     top: 0;
@@ -15273,7 +15273,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: auto;
     margin-left: -5px;
-    border-color: rgba(32, 35, 40, 0.71) transparent transparent transparent;
+    border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-tablet::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-tablet::before, [data-tooltip]:not([disabled]).has-tooltip-top-tablet::before {
     top: 0;
@@ -15296,7 +15296,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: auto;
     margin-left: -5px;
-    border-color: rgba(32, 35, 40, 0.71) transparent transparent transparent;
+    border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-tablet-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-tablet-only::before, [data-tooltip]:not([disabled]).has-tooltip-top-tablet-only::before {
     top: 0;
@@ -15319,7 +15319,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: auto;
     margin-left: -5px;
-    border-color: rgba(32, 35, 40, 0.71) transparent transparent transparent;
+    border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-touch::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-touch::before, [data-tooltip]:not([disabled]).has-tooltip-top-touch::before {
     top: 0;
@@ -15342,7 +15342,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: auto;
     margin-left: -5px;
-    border-color: rgba(32, 35, 40, 0.71) transparent transparent transparent;
+    border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-desktop::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-desktop::before, [data-tooltip]:not([disabled]).has-tooltip-top-desktop::before {
     top: 0;
@@ -15365,7 +15365,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: auto;
     margin-left: -5px;
-    border-color: rgba(32, 35, 40, 0.71) transparent transparent transparent;
+    border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-desktop-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-desktop-only::before, [data-tooltip]:not([disabled]).has-tooltip-top-desktop-only::before {
     top: 0;
@@ -15388,7 +15388,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: auto;
     margin-left: -5px;
-    border-color: rgba(32, 35, 40, 0.71) transparent transparent transparent;
+    border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-until-widescreen::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-until-widescreen::before, [data-tooltip]:not([disabled]).has-tooltip-top-until-widescreen::before {
     top: 0;
@@ -15411,7 +15411,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: auto;
     margin-left: -5px;
-    border-color: rgba(32, 35, 40, 0.71) transparent transparent transparent;
+    border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-widescreen::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-widescreen::before, [data-tooltip]:not([disabled]).has-tooltip-top-widescreen::before {
     top: 0;
@@ -15434,7 +15434,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: auto;
     margin-left: -5px;
-    border-color: rgba(32, 35, 40, 0.71) transparent transparent transparent;
+    border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-widescreen-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-widescreen-only::before, [data-tooltip]:not([disabled]).has-tooltip-top-widescreen-only::before {
     top: 0;
@@ -15457,7 +15457,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: auto;
     margin-left: -5px;
-    border-color: rgba(32, 35, 40, 0.71) transparent transparent transparent;
+    border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-until-fullhd::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-until-fullhd::before, [data-tooltip]:not([disabled]).has-tooltip-top-until-fullhd::before {
     top: 0;
@@ -15480,7 +15480,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: auto;
     margin-left: -5px;
-    border-color: rgba(32, 35, 40, 0.71) transparent transparent transparent;
+    border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-fullhd::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-fullhd::before, [data-tooltip]:not([disabled]).has-tooltip-top-fullhd::before {
     top: 0;
@@ -15503,7 +15503,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: -6px;
     margin-bottom: -6px;
     margin-left: auto;
-    border-color: transparent rgba(32, 35, 40, 0.71) transparent transparent;
+    border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-mobile::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-mobile::before, [data-tooltip]:not([disabled]).has-tooltip-right-mobile::before {
     top: auto;
@@ -15524,7 +15524,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: -6px;
     margin-bottom: -6px;
     margin-left: auto;
-    border-color: transparent rgba(32, 35, 40, 0.71) transparent transparent;
+    border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-tablet::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-tablet::before, [data-tooltip]:not([disabled]).has-tooltip-right-tablet::before {
     top: auto;
@@ -15545,7 +15545,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: -6px;
     margin-bottom: -6px;
     margin-left: auto;
-    border-color: transparent rgba(32, 35, 40, 0.71) transparent transparent;
+    border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-tablet-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-tablet-only::before, [data-tooltip]:not([disabled]).has-tooltip-right-tablet-only::before {
     top: auto;
@@ -15566,7 +15566,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: -6px;
     margin-bottom: -6px;
     margin-left: auto;
-    border-color: transparent rgba(32, 35, 40, 0.71) transparent transparent;
+    border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-touch::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-touch::before, [data-tooltip]:not([disabled]).has-tooltip-right-touch::before {
     top: auto;
@@ -15587,7 +15587,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: -6px;
     margin-bottom: -6px;
     margin-left: auto;
-    border-color: transparent rgba(32, 35, 40, 0.71) transparent transparent;
+    border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-desktop::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-desktop::before, [data-tooltip]:not([disabled]).has-tooltip-right-desktop::before {
     top: auto;
@@ -15608,7 +15608,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: -6px;
     margin-bottom: -6px;
     margin-left: auto;
-    border-color: transparent rgba(32, 35, 40, 0.71) transparent transparent;
+    border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-desktop-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-desktop-only::before, [data-tooltip]:not([disabled]).has-tooltip-right-desktop-only::before {
     top: auto;
@@ -15629,7 +15629,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: -6px;
     margin-bottom: -6px;
     margin-left: auto;
-    border-color: transparent rgba(32, 35, 40, 0.71) transparent transparent;
+    border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-until-widescreen::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-until-widescreen::before, [data-tooltip]:not([disabled]).has-tooltip-right-until-widescreen::before {
     top: auto;
@@ -15650,7 +15650,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: -6px;
     margin-bottom: -6px;
     margin-left: auto;
-    border-color: transparent rgba(32, 35, 40, 0.71) transparent transparent;
+    border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-widescreen::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-widescreen::before, [data-tooltip]:not([disabled]).has-tooltip-right-widescreen::before {
     top: auto;
@@ -15671,7 +15671,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: -6px;
     margin-bottom: -6px;
     margin-left: auto;
-    border-color: transparent rgba(32, 35, 40, 0.71) transparent transparent;
+    border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-widescreen-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-widescreen-only::before, [data-tooltip]:not([disabled]).has-tooltip-right-widescreen-only::before {
     top: auto;
@@ -15692,7 +15692,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: -6px;
     margin-bottom: -6px;
     margin-left: auto;
-    border-color: transparent rgba(32, 35, 40, 0.71) transparent transparent;
+    border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-until-fullhd::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-until-fullhd::before, [data-tooltip]:not([disabled]).has-tooltip-right-until-fullhd::before {
     top: auto;
@@ -15713,7 +15713,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: -6px;
     margin-bottom: -6px;
     margin-left: auto;
-    border-color: transparent rgba(32, 35, 40, 0.71) transparent transparent;
+    border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-fullhd::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-fullhd::before, [data-tooltip]:not([disabled]).has-tooltip-right-fullhd::before {
     top: auto;
@@ -15734,7 +15734,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -5px;
     margin-left: -5px;
-    border-color: transparent transparent rgba(32, 35, 40, 0.71) transparent;
+    border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-mobile::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-mobile::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-mobile::before {
     top: auto;
@@ -15756,7 +15756,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -5px;
     margin-left: -5px;
-    border-color: transparent transparent rgba(32, 35, 40, 0.71) transparent;
+    border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-tablet::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-tablet::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-tablet::before {
     top: auto;
@@ -15778,7 +15778,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -5px;
     margin-left: -5px;
-    border-color: transparent transparent rgba(32, 35, 40, 0.71) transparent;
+    border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-tablet-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-tablet-only::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-tablet-only::before {
     top: auto;
@@ -15800,7 +15800,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -5px;
     margin-left: -5px;
-    border-color: transparent transparent rgba(32, 35, 40, 0.71) transparent;
+    border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-touch::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-touch::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-touch::before {
     top: auto;
@@ -15822,7 +15822,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -5px;
     margin-left: -5px;
-    border-color: transparent transparent rgba(32, 35, 40, 0.71) transparent;
+    border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-desktop::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-desktop::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-desktop::before {
     top: auto;
@@ -15844,7 +15844,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -5px;
     margin-left: -5px;
-    border-color: transparent transparent rgba(32, 35, 40, 0.71) transparent;
+    border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-desktop-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-desktop-only::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-desktop-only::before {
     top: auto;
@@ -15866,7 +15866,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -5px;
     margin-left: -5px;
-    border-color: transparent transparent rgba(32, 35, 40, 0.71) transparent;
+    border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-until-widescreen::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-until-widescreen::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-until-widescreen::before {
     top: auto;
@@ -15888,7 +15888,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -5px;
     margin-left: -5px;
-    border-color: transparent transparent rgba(32, 35, 40, 0.71) transparent;
+    border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-widescreen::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-widescreen::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-widescreen::before {
     top: auto;
@@ -15910,7 +15910,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -5px;
     margin-left: -5px;
-    border-color: transparent transparent rgba(32, 35, 40, 0.71) transparent;
+    border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-widescreen-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-widescreen-only::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-widescreen-only::before {
     top: auto;
@@ -15932,7 +15932,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -5px;
     margin-left: -5px;
-    border-color: transparent transparent rgba(32, 35, 40, 0.71) transparent;
+    border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-until-fullhd::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-until-fullhd::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-until-fullhd::before {
     top: auto;
@@ -15954,7 +15954,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -5px;
     margin-left: -5px;
-    border-color: transparent transparent rgba(32, 35, 40, 0.71) transparent;
+    border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-fullhd::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-fullhd::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-fullhd::before {
     top: auto;
@@ -15976,7 +15976,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -6px;
     margin-left: -5px;
-    border-color: transparent transparent transparent rgba(32, 35, 40, 0.71);
+    border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-mobile::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-mobile::before, [data-tooltip]:not([disabled]).has-tooltip-left-mobile::before {
     top: auto;
@@ -15996,7 +15996,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -6px;
     margin-left: -5px;
-    border-color: transparent transparent transparent rgba(32, 35, 40, 0.71);
+    border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-tablet::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-tablet::before, [data-tooltip]:not([disabled]).has-tooltip-left-tablet::before {
     top: auto;
@@ -16016,7 +16016,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -6px;
     margin-left: -5px;
-    border-color: transparent transparent transparent rgba(32, 35, 40, 0.71);
+    border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-tablet-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-tablet-only::before, [data-tooltip]:not([disabled]).has-tooltip-left-tablet-only::before {
     top: auto;
@@ -16036,7 +16036,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -6px;
     margin-left: -5px;
-    border-color: transparent transparent transparent rgba(32, 35, 40, 0.71);
+    border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-touch::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-touch::before, [data-tooltip]:not([disabled]).has-tooltip-left-touch::before {
     top: auto;
@@ -16056,7 +16056,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -6px;
     margin-left: -5px;
-    border-color: transparent transparent transparent rgba(32, 35, 40, 0.71);
+    border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-desktop::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-desktop::before, [data-tooltip]:not([disabled]).has-tooltip-left-desktop::before {
     top: auto;
@@ -16076,7 +16076,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -6px;
     margin-left: -5px;
-    border-color: transparent transparent transparent rgba(32, 35, 40, 0.71);
+    border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-desktop-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-desktop-only::before, [data-tooltip]:not([disabled]).has-tooltip-left-desktop-only::before {
     top: auto;
@@ -16096,7 +16096,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -6px;
     margin-left: -5px;
-    border-color: transparent transparent transparent rgba(32, 35, 40, 0.71);
+    border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-until-widescreen::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-until-widescreen::before, [data-tooltip]:not([disabled]).has-tooltip-left-until-widescreen::before {
     top: auto;
@@ -16116,7 +16116,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -6px;
     margin-left: -5px;
-    border-color: transparent transparent transparent rgba(32, 35, 40, 0.71);
+    border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-widescreen::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-widescreen::before, [data-tooltip]:not([disabled]).has-tooltip-left-widescreen::before {
     top: auto;
@@ -16136,7 +16136,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -6px;
     margin-left: -5px;
-    border-color: transparent transparent transparent rgba(32, 35, 40, 0.71);
+    border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-widescreen-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-widescreen-only::before, [data-tooltip]:not([disabled]).has-tooltip-left-widescreen-only::before {
     top: auto;
@@ -16156,7 +16156,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -6px;
     margin-left: -5px;
-    border-color: transparent transparent transparent rgba(32, 35, 40, 0.71);
+    border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-until-fullhd::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-until-fullhd::before, [data-tooltip]:not([disabled]).has-tooltip-left-until-fullhd::before {
     top: auto;
@@ -16176,7 +16176,7 @@ to not displace them visually when the border around the single dragged item is 
     margin-right: auto;
     margin-bottom: -6px;
     margin-left: -5px;
-    border-color: transparent transparent transparent rgba(32, 35, 40, 0.71);
+    border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-fullhd::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-fullhd::before, [data-tooltip]:not([disabled]).has-tooltip-left-fullhd::before {
     top: auto;
@@ -16468,14 +16468,6 @@ span[data-tooltip].has-tooltip-danger {
 }
 
 /* Border around tooltips*/
-[data-tooltip]:not(.is-loading)::before,
-[data-tooltip]:not(.is-disabled)::before,
-[data-tooltip]:not([disabled])::before {
-  border-color: #aaa;
-  border-width: 1px;
-  border-style: solid;
-}
-
 /* Slider (from bulma-slider) without border for the thumb*/
 input[type=range].slider {
   appearance: none;

@@ -8,15 +8,13 @@
 */
 
 /* Change some properties distinguish tooltips from other content*/
-$tooltip-background-opacity: 0.71;
-//$tooltip-radius: $radius;
+$tooltip-background-opacity: 1;
 $tooltip-radius: 20px;
 $tooltip-animation-duration: 200ms;
 $animation-transition-timing-function: ease;
 
 /* Default colors more to the Replayer theme*/
 $tooltip-background-color: $dark;
-$tooltip-color: $text;
 
 @import '../node_modules/@creativebulma/bulma-tooltip/src/sass/index.sass';
 
@@ -33,10 +31,10 @@ $tooltip-color: $text;
 }
 
 /* Border around tooltips*/
-[data-tooltip]:not(.is-loading)::before,
-[data-tooltip]:not(.is-disabled)::before,
-[data-tooltip]:not([disabled])::before {
-    border-color: $text;
-    border-width: 1px;
-    border-style: solid;
-}
+// [data-tooltip]:not(.is-loading)::before,
+// [data-tooltip]:not(.is-disabled)::before,
+// [data-tooltip]:not([disabled])::before {
+//     border-color: $text;
+//     border-width: 1px;
+//     border-style: solid;
+// }
