@@ -9,7 +9,6 @@
             'has-text-grey-dark': isReady && isUnavailable,
             'has-text-grey': isReady && !isUnavailable,
             'has-tooltip-active': isActiveTooltip,
-            'has-tooltip-inactive': isInactiveTooltip,
         }"
         ref="indicator"
         :data-tooltip="indication"
@@ -27,7 +26,6 @@ import NavButton from '@/components/buttons/NavButton.vue';
 import { mdiAlert, mdiCircle } from '@mdi/js';
 import { computed, inject, ref, watchEffect } from 'vue';
 import { isPlayingInjectionKey } from './track/TrackInjectionKeys';
-import { useElementHover } from '@vueuse/core';
 
 const props = defineProps({
     /** Whether the indicator should convey the ready state */
@@ -70,7 +68,6 @@ const indication = computed(() => {
 // const isHovered = useElementHover(indicator);
 
 const isActiveTooltip = ref(false);
-const isInactiveTooltip = ref(false);
 
 // watchEffect(() => {
 //     if (!isHovered.value) {
@@ -82,10 +79,8 @@ const isInactiveTooltip = ref(false);
 
 function toggleTooltip() {
     isActiveTooltip.value = !isActiveTooltip.value;
-    isInactiveTooltip.value = !isInactiveTooltip.value;
     setTimeout(() => {
         isActiveTooltip.value = false;
-        isInactiveTooltip.value = false;
     }, 1500);
 }
 
