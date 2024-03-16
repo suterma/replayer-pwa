@@ -1,5 +1,5 @@
 <template>
-    <button class="button" :title="modeTitle" @click="togglePlaybackMode()">
+    <button class="button" v-tooltip="modeTitle" @click="togglePlaybackMode()">
         <BaseIcon v-if="isPlaybackTrack" :path="rTrackPlay" />
         <BaseIcon v-if="isPlaybackLoopTrack" :path="rTrackRepeat" />
         <BaseIcon v-if="isPlaybackCue" :path="rTrackPlayOnce" />
@@ -109,7 +109,7 @@ export default defineComponent({
                 default:
                     break;
             }
-            return (title += ' (click to toggle)');
+            return (title += '\r\n(click to toggle)');
         },
         ...mapState(useSettingsStore, ['experimentalUseQueueCueMode']),
     },
@@ -157,4 +157,3 @@ export default defineComponent({
     },
 });
 </script>
-import { PlaybackMode } from '@/store/PlaybackMode';

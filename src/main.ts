@@ -13,6 +13,7 @@ import { useTitle } from '@vueuse/core';
 import chalk from 'chalk';
 import { ExperimentDirective } from './directives/ExperimentDirective';
 import { FocusDirective } from './directives/FocusDirective';
+import { TooltipDirective } from './directives/TooltipDirective';
 
 const appInfo = chalk.bold.hex('#f89406'); // Replayer cue color (bulma warning)
 console.log(
@@ -42,6 +43,7 @@ createApp(App)
     .use(youtubeManager)
     .directive('focus', FocusDirective)
     .directive('experiment', ExperimentDirective)
+    .directive('tooltip', TooltipDirective)
     .mount('#app');
 
 // Show general errors (including unhandled promises)
