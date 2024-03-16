@@ -16467,7 +16467,16 @@ span[data-tooltip].has-tooltip-danger {
   transform: translate(-100%, -100%);
 }
 
-/* Border around tooltips*/
+/* Explicitly set a tooltip inactive, even when hovered*/
+[data-tooltip]:not(.is-loading).has-tooltip-inactive::before,
+[data-tooltip]:not(.is-loading).has-tooltip-inactive::after,
+[data-tooltip]:not(.is-disabled).has-tooltip-inactive::before,
+[data-tooltip]:not(.is-disabled).has-tooltip-inactive::after,
+[data-tooltip]:not([disabled]).has-tooltip-inactive::before,
+[data-tooltip]:not([disabled]).has-tooltip-inactive::after {
+  visibility: hidden !important;
+}
+
 /* Slider (from bulma-slider) without border for the thumb*/
 input[type=range].slider {
   appearance: none;

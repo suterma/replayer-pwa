@@ -1,6 +1,6 @@
 <template>
     <NavButton
-        class="is-indicator is-nav has-tooltip-left has-tooltip-multiline has-tooltip-text-centered has-tooltip-fade"
+        class="is-indicator is-nav has-tooltip-left has-tooltip-arrow has-tooltip-multiline has-tooltip-text-centered has-tooltip-fade"
         :class="{
             'has-text-warning has-tooltip-warning': isUnavailable,
             'has-text-dark': isUnloaded,
@@ -9,11 +9,12 @@
             'has-text-grey-dark': isReady && isUnavailable,
             'has-text-grey': isReady && !isUnavailable,
             'has-tooltip-active': isActiveTooltip,
+            'has-tooltip-inactive': isInactiveTooltip,
         }"
         :data-tooltip="indication"
         :data-cy="indication"
         :icon-path="isUnavailable ? mdiAlert : mdiCircle"
-        @click="showTooltip()"
+        @click="toggleTooltip()"
     >
     </NavButton>
 </template>
@@ -62,11 +63,14 @@ const indication = computed(() => {
 });
 
 const isActiveTooltip = ref(false);
+const isInactiveTooltip = ref(false);
 
-function showTooltip() {
-    isActiveTooltip.value = true;
+function toggleTooltip() {
+    isActiveTooltip.value = !isActiveTooltip.value;
+    isInactiveTooltip.value = !isInactiveTooltip.value;
     setTimeout(() => {
         isActiveTooltip.value = false;
+        isInactiveTooltip.value = false;
     }, 1500);
 }
 

@@ -30,7 +30,7 @@ $tooltip-background-color: $dark;
     transform: translate(-100%, -100%);
 }
 
-/* Border around tooltips*/
+///* Border around tooltips*/
 // [data-tooltip]:not(.is-loading)::before,
 // [data-tooltip]:not(.is-disabled)::before,
 // [data-tooltip]:not([disabled])::before {
@@ -38,3 +38,14 @@ $tooltip-background-color: $dark;
 //     border-width: 1px;
 //     border-style: solid;
 // }
+
+/* Explicitly set a tooltip inactive, even when hovered*/
+[data-tooltip]:not(.is-loading).has-tooltip-inactive::before,
+[data-tooltip]:not(.is-loading).has-tooltip-inactive::after,
+[data-tooltip]:not(.is-disabled).has-tooltip-inactive::before,
+[data-tooltip]:not(.is-disabled).has-tooltip-inactive::after,
+[data-tooltip]:not([disabled]).has-tooltip-inactive::before,
+[data-tooltip]:not([disabled]).has-tooltip-inactive::after {
+    // opacity: 0;
+    visibility: hidden !important;
+}

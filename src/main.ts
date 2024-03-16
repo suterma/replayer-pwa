@@ -11,6 +11,7 @@ import { useAppStore } from './store/app';
 import { createManager } from '@vue-youtube/core';
 import { useTitle } from '@vueuse/core';
 import chalk from 'chalk';
+import { ExperimentDirective } from './directives/ExperimentDirective';
 
 const appInfo = chalk.bold.hex('#f89406'); // Replayer cue color (bulma warning)
 console.log(
@@ -41,20 +42,7 @@ createApp(App)
     .directive('focus', {
         mounted: (el) => el.focus(),
     })
-    .directive('experiment', (el: HTMLElement, binding) => {
-        // this will be called for both `mounted` and `updated`
-        if (binding.value) {
-            el.classList.add('is-experimental');
-            el.title = 'EXPERIMENTAL - use with caution ';
-        } else {
-            // NOTE: This does not remove the element from the DOM/VDOM,
-            // it will actually run the full vue lifecycle.
-            // If it should not be rendered, additionally use the v-if directive
-            // NOTE: using el.remove(); would not help here, since the element
-            // would already have been added to the DOM
-            el.style.display = 'none';
-        }
-    })
+    .directive('experiment', ExperimentDirective)
     .mount('#app');
 
 // Show general errors (including unhandled promises)
