@@ -1,5 +1,8 @@
 import type { DirectiveBinding } from 'vue';
 
+/** A directive that shows a red border around the element,
+ * if the directive's value is set to true; otherwise, it's hidden*
+ */
 export function ExperimentDirective(
     el: HTMLElement,
     binding: DirectiveBinding<any>,

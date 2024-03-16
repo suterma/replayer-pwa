@@ -12,6 +12,7 @@ import { createManager } from '@vue-youtube/core';
 import { useTitle } from '@vueuse/core';
 import chalk from 'chalk';
 import { ExperimentDirective } from './directives/ExperimentDirective';
+import { FocusDirective } from './directives/FocusDirective';
 
 const appInfo = chalk.bold.hex('#f89406'); // Replayer cue color (bulma warning)
 console.log(
@@ -39,9 +40,7 @@ createApp(App)
     .use(vClickOutside)
     .use(PromiseDialog, {})
     .use(youtubeManager)
-    .directive('focus', {
-        mounted: (el) => el.focus(),
-    })
+    .directive('focus', FocusDirective)
     .directive('experiment', ExperimentDirective)
     .mount('#app');
 
