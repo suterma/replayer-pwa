@@ -1,5 +1,5 @@
 <template>
-    <button class="button" v-tooltip="modeTitle" @click="togglePlaybackMode()">
+    <button v-tooltip="modeTitle" class="button" @click="togglePlaybackMode()">
         <BaseIcon v-if="isPlaybackTrack" :path="rTrackPlay" />
         <BaseIcon v-if="isPlaybackLoopTrack" :path="rTrackRepeat" />
         <BaseIcon v-if="isPlaybackCue" :path="rTrackPlayOnce" />

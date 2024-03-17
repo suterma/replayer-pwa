@@ -1,5 +1,7 @@
 <template>
     <NavButton
+        ref="indicator"
+        v-tooltip="indication"
         class="is-indicator is-nav"
         :class="{
             'has-text-warning has-tooltip-warning': isUnavailable,
@@ -9,8 +11,6 @@
             'has-text-grey-dark': isReady && isUnavailable,
             'has-text-grey': isReady && !isUnavailable,
         }"
-        ref="indicator"
-        v-tooltip="indication"
         :data-cy="indication"
         :icon-path="isUnavailable ? mdiAlert : mdiCircle"
     >
@@ -22,7 +22,7 @@
  */
 import NavButton from '@/components/buttons/NavButton.vue';
 import { mdiAlert, mdiCircle } from '@mdi/js';
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, inject } from 'vue';
 import { isPlayingInjectionKey } from './track/TrackInjectionKeys';
 
 const props = defineProps({

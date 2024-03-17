@@ -33,8 +33,8 @@
             <!-- Track header for editing, including artist info, expansion-toggler and adaptive spacing -->
             <!-- NOTE: The @click handler on the header component only handles clicks on otherwise non-interactive elements -->
             <TrackHeader
-                :display-mode="viewMode"
                 v-model:is-expanded="isExpanded"
+                :display-mode="viewMode"
                 :can-collapse="!isOnlyMediaTrack"
                 :track="track"
                 :is-track-loaded="isTrackLoaded"
