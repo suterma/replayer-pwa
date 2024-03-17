@@ -15238,7 +15238,7 @@ to not displace them visually when the border around the single dragged item is 
   visibility: visible;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-fade::before, [data-tooltip]:not(.is-loading).has-tooltip-fade::after, [data-tooltip]:not(.is-disabled).has-tooltip-fade::before, [data-tooltip]:not(.is-disabled).has-tooltip-fade::after, [data-tooltip]:not([disabled]).has-tooltip-fade::before, [data-tooltip]:not([disabled]).has-tooltip-fade::after {
-  transition: opacity 200ms linear, visibility 200ms linear;
+  transition: opacity 200ms ease, visibility 200ms ease;
 }
 @media screen and (max-width: 768px) {
   [data-tooltip]:not(.is-loading).has-tooltip-top-mobile.has-tooltip-arrow::after, [data-tooltip]:not(.is-disabled).has-tooltip-top-mobile.has-tooltip-arrow::after, [data-tooltip]:not([disabled]).has-tooltip-top-mobile.has-tooltip-arrow::after {
@@ -16475,6 +16475,13 @@ span[data-tooltip].has-tooltip-danger {
 [data-tooltip]:not([disabled]).has-tooltip-inactive::before,
 [data-tooltip]:not([disabled]).has-tooltip-inactive::after {
   visibility: hidden !important;
+}
+
+/* Make the tooltips as small as the text allows */
+[data-tooltip]:not(.is-loading).has-tooltip-multiline::before,
+[data-tooltip]:not(.is-disabled).has-tooltip-multiline::before,
+[data-tooltip]:not([disabled]).has-tooltip-multiline::before {
+  width: max-content;
 }
 
 /* Slider (from bulma-slider) without border for the thumb*/

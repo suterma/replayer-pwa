@@ -1,6 +1,6 @@
 <template>
     <NavButton
-        class="is-indicator is-nav has-tooltip-left has-tooltip-arrow has-tooltip-multiline has-tooltip-text-centered has-tooltip-fade"
+        class="is-indicator is-nav"
         :class="{
             'has-text-warning has-tooltip-warning': isUnavailable,
             'has-text-dark': isUnloaded,
@@ -8,13 +8,11 @@
                 isTrackPlaying && !isUnavailable,
             'has-text-grey-dark': isReady && isUnavailable,
             'has-text-grey': isReady && !isUnavailable,
-            'has-tooltip-active': isActiveTooltip,
         }"
         ref="indicator"
-        :data-tooltip="indication"
+        v-tooltip="indication"
         :data-cy="indication"
         :icon-path="isUnavailable ? mdiAlert : mdiCircle"
-        @touchstart="toggleTooltip()"
     >
     </NavButton>
 </template>
@@ -61,28 +59,6 @@ const indication = computed(() => {
 
     return 'Track is in an unknown state';
 });
-
-// --- tooltip handling ---
-
-// const indicator = ref();
-// const isHovered = useElementHover(indicator);
-
-const isActiveTooltip = ref(false);
-
-// watchEffect(() => {
-//     if (!isHovered.value) {
-//         console.debug('NOT Hovered');
-//         isActiveTooltip.value = false;
-//         isInactiveTooltip.value = false;
-//     }
-// });
-
-function toggleTooltip() {
-    isActiveTooltip.value = !isActiveTooltip.value;
-    setTimeout(() => {
-        isActiveTooltip.value = false;
-    }, 1500);
-}
 
 /** Flag to indicate whether this track's player is currently playing
  */

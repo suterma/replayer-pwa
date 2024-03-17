@@ -11,7 +11,7 @@
 $tooltip-background-opacity: 1;
 $tooltip-radius: 20px;
 $tooltip-animation-duration: 200ms;
-$animation-transition-timing-function: ease;
+$tooltip-animation-transition-timing-function: ease;
 
 /* Default colors more to the Replayer theme*/
 $tooltip-background-color: $dark;
@@ -48,4 +48,12 @@ $tooltip-background-color: $dark;
 [data-tooltip]:not([disabled]).has-tooltip-inactive::after {
     // opacity: 0;
     visibility: hidden !important;
+}
+
+/* Make the tooltips as small as the text allows */
+
+[data-tooltip]:not(.is-loading).has-tooltip-multiline::before,
+[data-tooltip]:not(.is-disabled).has-tooltip-multiline::before,
+[data-tooltip]:not([disabled]).has-tooltip-multiline::before {
+    width: max-content;
 }
