@@ -161,7 +161,10 @@
                     </div>
                 </template>
                 <template #right-action-items>
-                    <div class="level-item is-narrow mr-0 is-hidden-mobile">
+                    <div
+                        class="level-item is-narrow mr-0 is-hidden-mobile"
+                        v-tooltip="volumeDeciBelFullScaleDisplay"
+                    >
                         <!-- NOTE: In edit mode, the volume button is displayed as part of the transport area, not in the header -->
                         <VolumeKnob
                             v-if="!isEditable"
@@ -1791,6 +1794,20 @@ function removeCueScheduling(): void {
     // app.updateScheduledCueId(CompilationHandler.EmptyId);
     // cueScheduler.value?.RemoveSchedule();
 }
+
+// --- value display ---
+
+/** A displayable volume in [dBFS]
+ * @remarks Shows 1 digit after the decimal point for values close to zero
+ */
+const volumeDeciBelFullScaleDisplay = computed(() => {
+    const deciBels = 20 * Math.log10(props.track.Volume);
+
+    if (deciBels > -10) {
+        return deciBels.toFixed(1) + ' dBFS';
+    }
+    return deciBels.toFixed(0) + ' dBFS';
+});
 </script>
 
 <style lang="scss" scoped>
