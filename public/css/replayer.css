@@ -14965,7 +14965,7 @@ to not displace them visually when the border around the single dragged item is 
   bottom: auto;
   left: 50%;
   top: 0;
-  margin-top: -5px;
+  margin-top: -9px;
   margin-bottom: auto;
   transform: translate(-50%, -100%);
 }
@@ -14984,19 +14984,19 @@ to not displace them visually when the border around the single dragged item is 
   z-index: 1020;
   content: "";
   border-style: solid;
-  border-width: 6px;
+  border-width: 10px;
   border-color: #202328 transparent transparent transparent;
-  margin-bottom: -5px;
+  margin-bottom: -9px;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-arrow.has-tooltip-arrow::after, [data-tooltip]:not(.is-disabled).has-tooltip-arrow.has-tooltip-arrow::after, [data-tooltip]:not([disabled]).has-tooltip-arrow.has-tooltip-arrow::after {
   top: 0;
   right: auto;
   bottom: auto;
   left: 50%;
-  margin-top: -5px;
+  margin-top: -9px;
   margin-right: auto;
   margin-bottom: auto;
-  margin-left: -5px;
+  margin-left: -9px;
   border-color: #202328 transparent transparent transparent;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-bottom.has-tooltip-arrow::after, [data-tooltip]:not(.is-disabled).has-tooltip-bottom.has-tooltip-arrow::after, [data-tooltip]:not([disabled]).has-tooltip-bottom.has-tooltip-arrow::after {
@@ -15006,8 +15006,8 @@ to not displace them visually when the border around the single dragged item is 
   left: 50%;
   margin-top: auto;
   margin-right: auto;
-  margin-bottom: -5px;
-  margin-left: -5px;
+  margin-bottom: -9px;
+  margin-left: -9px;
   border-color: transparent transparent #202328 transparent;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-bottom::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom::before, [data-tooltip]:not([disabled]).has-tooltip-bottom::before {
@@ -15016,7 +15016,7 @@ to not displace them visually when the border around the single dragged item is 
   bottom: 0;
   left: 50%;
   margin-top: auto;
-  margin-bottom: -5px;
+  margin-bottom: -9px;
   transform: translate(-50%, 100%);
 }
 [data-tooltip]:not(.is-loading).has-tooltip-left.has-tooltip-arrow::after, [data-tooltip]:not(.is-disabled).has-tooltip-left.has-tooltip-arrow::after, [data-tooltip]:not([disabled]).has-tooltip-left.has-tooltip-arrow::after {
@@ -15026,15 +15026,15 @@ to not displace them visually when the border around the single dragged item is 
   left: 0;
   margin-top: auto;
   margin-right: auto;
-  margin-bottom: -6px;
-  margin-left: -5px;
+  margin-bottom: -10px;
+  margin-left: -9px;
   border-color: transparent transparent transparent #202328;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-left::before, [data-tooltip]:not(.is-disabled).has-tooltip-left::before, [data-tooltip]:not([disabled]).has-tooltip-left::before {
   top: auto;
   right: auto;
   bottom: 50%;
-  left: -5px;
+  left: -9px;
   transform: translate(-100%, 50%);
 }
 [data-tooltip]:not(.is-loading).has-tooltip-right.has-tooltip-arrow::after, [data-tooltip]:not(.is-disabled).has-tooltip-right.has-tooltip-arrow::after, [data-tooltip]:not([disabled]).has-tooltip-right.has-tooltip-arrow::after {
@@ -15043,14 +15043,14 @@ to not displace them visually when the border around the single dragged item is 
   bottom: 50%;
   left: auto;
   margin-top: auto;
-  margin-right: -6px;
-  margin-bottom: -6px;
+  margin-right: -10px;
+  margin-bottom: -10px;
   margin-left: auto;
   border-color: transparent #202328 transparent transparent;
 }
 [data-tooltip]:not(.is-loading).has-tooltip-right::before, [data-tooltip]:not(.is-disabled).has-tooltip-right::before, [data-tooltip]:not([disabled]).has-tooltip-right::before {
   top: auto;
-  right: -5px;
+  right: -9px;
   bottom: 50%;
   left: auto;
   margin-top: auto;
@@ -15246,10 +15246,10 @@ to not displace them visually when the border around the single dragged item is 
     right: auto;
     bottom: auto;
     left: 50%;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-right: auto;
     margin-bottom: auto;
-    margin-left: -5px;
+    margin-left: -9px;
     border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-mobile::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-mobile::before, [data-tooltip]:not([disabled]).has-tooltip-top-mobile::before {
@@ -15258,7 +15258,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: auto;
     left: 50%;
     top: 0;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-bottom: auto;
     transform: translate(-50%, -100%);
   }
@@ -15269,10 +15269,10 @@ to not displace them visually when the border around the single dragged item is 
     right: auto;
     bottom: auto;
     left: 50%;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-right: auto;
     margin-bottom: auto;
-    margin-left: -5px;
+    margin-left: -9px;
     border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-tablet::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-tablet::before, [data-tooltip]:not([disabled]).has-tooltip-top-tablet::before {
@@ -15281,7 +15281,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: auto;
     left: 50%;
     top: 0;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-bottom: auto;
     transform: translate(-50%, -100%);
   }
@@ -15292,10 +15292,10 @@ to not displace them visually when the border around the single dragged item is 
     right: auto;
     bottom: auto;
     left: 50%;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-right: auto;
     margin-bottom: auto;
-    margin-left: -5px;
+    margin-left: -9px;
     border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-tablet-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-tablet-only::before, [data-tooltip]:not([disabled]).has-tooltip-top-tablet-only::before {
@@ -15304,7 +15304,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: auto;
     left: 50%;
     top: 0;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-bottom: auto;
     transform: translate(-50%, -100%);
   }
@@ -15315,10 +15315,10 @@ to not displace them visually when the border around the single dragged item is 
     right: auto;
     bottom: auto;
     left: 50%;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-right: auto;
     margin-bottom: auto;
-    margin-left: -5px;
+    margin-left: -9px;
     border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-touch::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-touch::before, [data-tooltip]:not([disabled]).has-tooltip-top-touch::before {
@@ -15327,7 +15327,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: auto;
     left: 50%;
     top: 0;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-bottom: auto;
     transform: translate(-50%, -100%);
   }
@@ -15338,10 +15338,10 @@ to not displace them visually when the border around the single dragged item is 
     right: auto;
     bottom: auto;
     left: 50%;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-right: auto;
     margin-bottom: auto;
-    margin-left: -5px;
+    margin-left: -9px;
     border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-desktop::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-desktop::before, [data-tooltip]:not([disabled]).has-tooltip-top-desktop::before {
@@ -15350,7 +15350,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: auto;
     left: 50%;
     top: 0;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-bottom: auto;
     transform: translate(-50%, -100%);
   }
@@ -15361,10 +15361,10 @@ to not displace them visually when the border around the single dragged item is 
     right: auto;
     bottom: auto;
     left: 50%;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-right: auto;
     margin-bottom: auto;
-    margin-left: -5px;
+    margin-left: -9px;
     border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-desktop-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-desktop-only::before, [data-tooltip]:not([disabled]).has-tooltip-top-desktop-only::before {
@@ -15373,7 +15373,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: auto;
     left: 50%;
     top: 0;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-bottom: auto;
     transform: translate(-50%, -100%);
   }
@@ -15384,10 +15384,10 @@ to not displace them visually when the border around the single dragged item is 
     right: auto;
     bottom: auto;
     left: 50%;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-right: auto;
     margin-bottom: auto;
-    margin-left: -5px;
+    margin-left: -9px;
     border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-until-widescreen::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-until-widescreen::before, [data-tooltip]:not([disabled]).has-tooltip-top-until-widescreen::before {
@@ -15396,7 +15396,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: auto;
     left: 50%;
     top: 0;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-bottom: auto;
     transform: translate(-50%, -100%);
   }
@@ -15407,10 +15407,10 @@ to not displace them visually when the border around the single dragged item is 
     right: auto;
     bottom: auto;
     left: 50%;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-right: auto;
     margin-bottom: auto;
-    margin-left: -5px;
+    margin-left: -9px;
     border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-widescreen::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-widescreen::before, [data-tooltip]:not([disabled]).has-tooltip-top-widescreen::before {
@@ -15419,7 +15419,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: auto;
     left: 50%;
     top: 0;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-bottom: auto;
     transform: translate(-50%, -100%);
   }
@@ -15430,10 +15430,10 @@ to not displace them visually when the border around the single dragged item is 
     right: auto;
     bottom: auto;
     left: 50%;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-right: auto;
     margin-bottom: auto;
-    margin-left: -5px;
+    margin-left: -9px;
     border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-widescreen-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-widescreen-only::before, [data-tooltip]:not([disabled]).has-tooltip-top-widescreen-only::before {
@@ -15442,7 +15442,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: auto;
     left: 50%;
     top: 0;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-bottom: auto;
     transform: translate(-50%, -100%);
   }
@@ -15453,10 +15453,10 @@ to not displace them visually when the border around the single dragged item is 
     right: auto;
     bottom: auto;
     left: 50%;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-right: auto;
     margin-bottom: auto;
-    margin-left: -5px;
+    margin-left: -9px;
     border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-until-fullhd::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-until-fullhd::before, [data-tooltip]:not([disabled]).has-tooltip-top-until-fullhd::before {
@@ -15465,7 +15465,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: auto;
     left: 50%;
     top: 0;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-bottom: auto;
     transform: translate(-50%, -100%);
   }
@@ -15476,10 +15476,10 @@ to not displace them visually when the border around the single dragged item is 
     right: auto;
     bottom: auto;
     left: 50%;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-right: auto;
     margin-bottom: auto;
-    margin-left: -5px;
+    margin-left: -9px;
     border-color: #202328 transparent transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-top-fullhd::before, [data-tooltip]:not(.is-disabled).has-tooltip-top-fullhd::before, [data-tooltip]:not([disabled]).has-tooltip-top-fullhd::before {
@@ -15488,7 +15488,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: auto;
     left: 50%;
     top: 0;
-    margin-top: -5px;
+    margin-top: -9px;
     margin-bottom: auto;
     transform: translate(-50%, -100%);
   }
@@ -15500,14 +15500,14 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 50%;
     left: auto;
     margin-top: auto;
-    margin-right: -6px;
-    margin-bottom: -6px;
+    margin-right: -10px;
+    margin-bottom: -10px;
     margin-left: auto;
     border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-mobile::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-mobile::before, [data-tooltip]:not([disabled]).has-tooltip-right-mobile::before {
     top: auto;
-    right: -5px;
+    right: -9px;
     bottom: 50%;
     left: auto;
     margin-top: auto;
@@ -15521,14 +15521,14 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 50%;
     left: auto;
     margin-top: auto;
-    margin-right: -6px;
-    margin-bottom: -6px;
+    margin-right: -10px;
+    margin-bottom: -10px;
     margin-left: auto;
     border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-tablet::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-tablet::before, [data-tooltip]:not([disabled]).has-tooltip-right-tablet::before {
     top: auto;
-    right: -5px;
+    right: -9px;
     bottom: 50%;
     left: auto;
     margin-top: auto;
@@ -15542,14 +15542,14 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 50%;
     left: auto;
     margin-top: auto;
-    margin-right: -6px;
-    margin-bottom: -6px;
+    margin-right: -10px;
+    margin-bottom: -10px;
     margin-left: auto;
     border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-tablet-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-tablet-only::before, [data-tooltip]:not([disabled]).has-tooltip-right-tablet-only::before {
     top: auto;
-    right: -5px;
+    right: -9px;
     bottom: 50%;
     left: auto;
     margin-top: auto;
@@ -15563,14 +15563,14 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 50%;
     left: auto;
     margin-top: auto;
-    margin-right: -6px;
-    margin-bottom: -6px;
+    margin-right: -10px;
+    margin-bottom: -10px;
     margin-left: auto;
     border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-touch::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-touch::before, [data-tooltip]:not([disabled]).has-tooltip-right-touch::before {
     top: auto;
-    right: -5px;
+    right: -9px;
     bottom: 50%;
     left: auto;
     margin-top: auto;
@@ -15584,14 +15584,14 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 50%;
     left: auto;
     margin-top: auto;
-    margin-right: -6px;
-    margin-bottom: -6px;
+    margin-right: -10px;
+    margin-bottom: -10px;
     margin-left: auto;
     border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-desktop::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-desktop::before, [data-tooltip]:not([disabled]).has-tooltip-right-desktop::before {
     top: auto;
-    right: -5px;
+    right: -9px;
     bottom: 50%;
     left: auto;
     margin-top: auto;
@@ -15605,14 +15605,14 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 50%;
     left: auto;
     margin-top: auto;
-    margin-right: -6px;
-    margin-bottom: -6px;
+    margin-right: -10px;
+    margin-bottom: -10px;
     margin-left: auto;
     border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-desktop-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-desktop-only::before, [data-tooltip]:not([disabled]).has-tooltip-right-desktop-only::before {
     top: auto;
-    right: -5px;
+    right: -9px;
     bottom: 50%;
     left: auto;
     margin-top: auto;
@@ -15626,14 +15626,14 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 50%;
     left: auto;
     margin-top: auto;
-    margin-right: -6px;
-    margin-bottom: -6px;
+    margin-right: -10px;
+    margin-bottom: -10px;
     margin-left: auto;
     border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-until-widescreen::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-until-widescreen::before, [data-tooltip]:not([disabled]).has-tooltip-right-until-widescreen::before {
     top: auto;
-    right: -5px;
+    right: -9px;
     bottom: 50%;
     left: auto;
     margin-top: auto;
@@ -15647,14 +15647,14 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 50%;
     left: auto;
     margin-top: auto;
-    margin-right: -6px;
-    margin-bottom: -6px;
+    margin-right: -10px;
+    margin-bottom: -10px;
     margin-left: auto;
     border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-widescreen::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-widescreen::before, [data-tooltip]:not([disabled]).has-tooltip-right-widescreen::before {
     top: auto;
-    right: -5px;
+    right: -9px;
     bottom: 50%;
     left: auto;
     margin-top: auto;
@@ -15668,14 +15668,14 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 50%;
     left: auto;
     margin-top: auto;
-    margin-right: -6px;
-    margin-bottom: -6px;
+    margin-right: -10px;
+    margin-bottom: -10px;
     margin-left: auto;
     border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-widescreen-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-widescreen-only::before, [data-tooltip]:not([disabled]).has-tooltip-right-widescreen-only::before {
     top: auto;
-    right: -5px;
+    right: -9px;
     bottom: 50%;
     left: auto;
     margin-top: auto;
@@ -15689,14 +15689,14 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 50%;
     left: auto;
     margin-top: auto;
-    margin-right: -6px;
-    margin-bottom: -6px;
+    margin-right: -10px;
+    margin-bottom: -10px;
     margin-left: auto;
     border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-until-fullhd::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-until-fullhd::before, [data-tooltip]:not([disabled]).has-tooltip-right-until-fullhd::before {
     top: auto;
-    right: -5px;
+    right: -9px;
     bottom: 50%;
     left: auto;
     margin-top: auto;
@@ -15710,14 +15710,14 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 50%;
     left: auto;
     margin-top: auto;
-    margin-right: -6px;
-    margin-bottom: -6px;
+    margin-right: -10px;
+    margin-bottom: -10px;
     margin-left: auto;
     border-color: transparent #202328 transparent transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-right-fullhd::before, [data-tooltip]:not(.is-disabled).has-tooltip-right-fullhd::before, [data-tooltip]:not([disabled]).has-tooltip-right-fullhd::before {
     top: auto;
-    right: -5px;
+    right: -9px;
     bottom: 50%;
     left: auto;
     margin-top: auto;
@@ -15732,8 +15732,8 @@ to not displace them visually when the border around the single dragged item is 
     left: 50%;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -5px;
-    margin-left: -5px;
+    margin-bottom: -9px;
+    margin-left: -9px;
     border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-mobile::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-mobile::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-mobile::before {
@@ -15742,7 +15742,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 0;
     left: 50%;
     margin-top: auto;
-    margin-bottom: -5px;
+    margin-bottom: -9px;
     transform: translate(-50%, 100%);
   }
 }
@@ -15754,8 +15754,8 @@ to not displace them visually when the border around the single dragged item is 
     left: 50%;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -5px;
-    margin-left: -5px;
+    margin-bottom: -9px;
+    margin-left: -9px;
     border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-tablet::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-tablet::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-tablet::before {
@@ -15764,7 +15764,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 0;
     left: 50%;
     margin-top: auto;
-    margin-bottom: -5px;
+    margin-bottom: -9px;
     transform: translate(-50%, 100%);
   }
 }
@@ -15776,8 +15776,8 @@ to not displace them visually when the border around the single dragged item is 
     left: 50%;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -5px;
-    margin-left: -5px;
+    margin-bottom: -9px;
+    margin-left: -9px;
     border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-tablet-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-tablet-only::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-tablet-only::before {
@@ -15786,7 +15786,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 0;
     left: 50%;
     margin-top: auto;
-    margin-bottom: -5px;
+    margin-bottom: -9px;
     transform: translate(-50%, 100%);
   }
 }
@@ -15798,8 +15798,8 @@ to not displace them visually when the border around the single dragged item is 
     left: 50%;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -5px;
-    margin-left: -5px;
+    margin-bottom: -9px;
+    margin-left: -9px;
     border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-touch::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-touch::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-touch::before {
@@ -15808,7 +15808,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 0;
     left: 50%;
     margin-top: auto;
-    margin-bottom: -5px;
+    margin-bottom: -9px;
     transform: translate(-50%, 100%);
   }
 }
@@ -15820,8 +15820,8 @@ to not displace them visually when the border around the single dragged item is 
     left: 50%;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -5px;
-    margin-left: -5px;
+    margin-bottom: -9px;
+    margin-left: -9px;
     border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-desktop::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-desktop::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-desktop::before {
@@ -15830,7 +15830,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 0;
     left: 50%;
     margin-top: auto;
-    margin-bottom: -5px;
+    margin-bottom: -9px;
     transform: translate(-50%, 100%);
   }
 }
@@ -15842,8 +15842,8 @@ to not displace them visually when the border around the single dragged item is 
     left: 50%;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -5px;
-    margin-left: -5px;
+    margin-bottom: -9px;
+    margin-left: -9px;
     border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-desktop-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-desktop-only::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-desktop-only::before {
@@ -15852,7 +15852,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 0;
     left: 50%;
     margin-top: auto;
-    margin-bottom: -5px;
+    margin-bottom: -9px;
     transform: translate(-50%, 100%);
   }
 }
@@ -15864,8 +15864,8 @@ to not displace them visually when the border around the single dragged item is 
     left: 50%;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -5px;
-    margin-left: -5px;
+    margin-bottom: -9px;
+    margin-left: -9px;
     border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-until-widescreen::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-until-widescreen::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-until-widescreen::before {
@@ -15874,7 +15874,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 0;
     left: 50%;
     margin-top: auto;
-    margin-bottom: -5px;
+    margin-bottom: -9px;
     transform: translate(-50%, 100%);
   }
 }
@@ -15886,8 +15886,8 @@ to not displace them visually when the border around the single dragged item is 
     left: 50%;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -5px;
-    margin-left: -5px;
+    margin-bottom: -9px;
+    margin-left: -9px;
     border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-widescreen::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-widescreen::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-widescreen::before {
@@ -15896,7 +15896,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 0;
     left: 50%;
     margin-top: auto;
-    margin-bottom: -5px;
+    margin-bottom: -9px;
     transform: translate(-50%, 100%);
   }
 }
@@ -15908,8 +15908,8 @@ to not displace them visually when the border around the single dragged item is 
     left: 50%;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -5px;
-    margin-left: -5px;
+    margin-bottom: -9px;
+    margin-left: -9px;
     border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-widescreen-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-widescreen-only::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-widescreen-only::before {
@@ -15918,7 +15918,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 0;
     left: 50%;
     margin-top: auto;
-    margin-bottom: -5px;
+    margin-bottom: -9px;
     transform: translate(-50%, 100%);
   }
 }
@@ -15930,8 +15930,8 @@ to not displace them visually when the border around the single dragged item is 
     left: 50%;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -5px;
-    margin-left: -5px;
+    margin-bottom: -9px;
+    margin-left: -9px;
     border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-until-fullhd::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-until-fullhd::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-until-fullhd::before {
@@ -15940,7 +15940,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 0;
     left: 50%;
     margin-top: auto;
-    margin-bottom: -5px;
+    margin-bottom: -9px;
     transform: translate(-50%, 100%);
   }
 }
@@ -15952,8 +15952,8 @@ to not displace them visually when the border around the single dragged item is 
     left: 50%;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -5px;
-    margin-left: -5px;
+    margin-bottom: -9px;
+    margin-left: -9px;
     border-color: transparent transparent #202328 transparent;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-bottom-fullhd::before, [data-tooltip]:not(.is-disabled).has-tooltip-bottom-fullhd::before, [data-tooltip]:not([disabled]).has-tooltip-bottom-fullhd::before {
@@ -15962,7 +15962,7 @@ to not displace them visually when the border around the single dragged item is 
     bottom: 0;
     left: 50%;
     margin-top: auto;
-    margin-bottom: -5px;
+    margin-bottom: -9px;
     transform: translate(-50%, 100%);
   }
 }
@@ -15974,15 +15974,15 @@ to not displace them visually when the border around the single dragged item is 
     left: 0;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -6px;
-    margin-left: -5px;
+    margin-bottom: -10px;
+    margin-left: -9px;
     border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-mobile::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-mobile::before, [data-tooltip]:not([disabled]).has-tooltip-left-mobile::before {
     top: auto;
     right: auto;
     bottom: 50%;
-    left: -5px;
+    left: -9px;
     transform: translate(-100%, 50%);
   }
 }
@@ -15994,15 +15994,15 @@ to not displace them visually when the border around the single dragged item is 
     left: 0;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -6px;
-    margin-left: -5px;
+    margin-bottom: -10px;
+    margin-left: -9px;
     border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-tablet::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-tablet::before, [data-tooltip]:not([disabled]).has-tooltip-left-tablet::before {
     top: auto;
     right: auto;
     bottom: 50%;
-    left: -5px;
+    left: -9px;
     transform: translate(-100%, 50%);
   }
 }
@@ -16014,15 +16014,15 @@ to not displace them visually when the border around the single dragged item is 
     left: 0;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -6px;
-    margin-left: -5px;
+    margin-bottom: -10px;
+    margin-left: -9px;
     border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-tablet-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-tablet-only::before, [data-tooltip]:not([disabled]).has-tooltip-left-tablet-only::before {
     top: auto;
     right: auto;
     bottom: 50%;
-    left: -5px;
+    left: -9px;
     transform: translate(-100%, 50%);
   }
 }
@@ -16034,15 +16034,15 @@ to not displace them visually when the border around the single dragged item is 
     left: 0;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -6px;
-    margin-left: -5px;
+    margin-bottom: -10px;
+    margin-left: -9px;
     border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-touch::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-touch::before, [data-tooltip]:not([disabled]).has-tooltip-left-touch::before {
     top: auto;
     right: auto;
     bottom: 50%;
-    left: -5px;
+    left: -9px;
     transform: translate(-100%, 50%);
   }
 }
@@ -16054,15 +16054,15 @@ to not displace them visually when the border around the single dragged item is 
     left: 0;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -6px;
-    margin-left: -5px;
+    margin-bottom: -10px;
+    margin-left: -9px;
     border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-desktop::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-desktop::before, [data-tooltip]:not([disabled]).has-tooltip-left-desktop::before {
     top: auto;
     right: auto;
     bottom: 50%;
-    left: -5px;
+    left: -9px;
     transform: translate(-100%, 50%);
   }
 }
@@ -16074,15 +16074,15 @@ to not displace them visually when the border around the single dragged item is 
     left: 0;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -6px;
-    margin-left: -5px;
+    margin-bottom: -10px;
+    margin-left: -9px;
     border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-desktop-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-desktop-only::before, [data-tooltip]:not([disabled]).has-tooltip-left-desktop-only::before {
     top: auto;
     right: auto;
     bottom: 50%;
-    left: -5px;
+    left: -9px;
     transform: translate(-100%, 50%);
   }
 }
@@ -16094,15 +16094,15 @@ to not displace them visually when the border around the single dragged item is 
     left: 0;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -6px;
-    margin-left: -5px;
+    margin-bottom: -10px;
+    margin-left: -9px;
     border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-until-widescreen::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-until-widescreen::before, [data-tooltip]:not([disabled]).has-tooltip-left-until-widescreen::before {
     top: auto;
     right: auto;
     bottom: 50%;
-    left: -5px;
+    left: -9px;
     transform: translate(-100%, 50%);
   }
 }
@@ -16114,15 +16114,15 @@ to not displace them visually when the border around the single dragged item is 
     left: 0;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -6px;
-    margin-left: -5px;
+    margin-bottom: -10px;
+    margin-left: -9px;
     border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-widescreen::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-widescreen::before, [data-tooltip]:not([disabled]).has-tooltip-left-widescreen::before {
     top: auto;
     right: auto;
     bottom: 50%;
-    left: -5px;
+    left: -9px;
     transform: translate(-100%, 50%);
   }
 }
@@ -16134,15 +16134,15 @@ to not displace them visually when the border around the single dragged item is 
     left: 0;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -6px;
-    margin-left: -5px;
+    margin-bottom: -10px;
+    margin-left: -9px;
     border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-widescreen-only::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-widescreen-only::before, [data-tooltip]:not([disabled]).has-tooltip-left-widescreen-only::before {
     top: auto;
     right: auto;
     bottom: 50%;
-    left: -5px;
+    left: -9px;
     transform: translate(-100%, 50%);
   }
 }
@@ -16154,15 +16154,15 @@ to not displace them visually when the border around the single dragged item is 
     left: 0;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -6px;
-    margin-left: -5px;
+    margin-bottom: -10px;
+    margin-left: -9px;
     border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-until-fullhd::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-until-fullhd::before, [data-tooltip]:not([disabled]).has-tooltip-left-until-fullhd::before {
     top: auto;
     right: auto;
     bottom: 50%;
-    left: -5px;
+    left: -9px;
     transform: translate(-100%, 50%);
   }
 }
@@ -16174,15 +16174,15 @@ to not displace them visually when the border around the single dragged item is 
     left: 0;
     margin-top: auto;
     margin-right: auto;
-    margin-bottom: -6px;
-    margin-left: -5px;
+    margin-bottom: -10px;
+    margin-left: -9px;
     border-color: transparent transparent transparent #202328;
   }
   [data-tooltip]:not(.is-loading).has-tooltip-left-fullhd::before, [data-tooltip]:not(.is-disabled).has-tooltip-left-fullhd::before, [data-tooltip]:not([disabled]).has-tooltip-left-fullhd::before {
     top: auto;
     right: auto;
     bottom: 50%;
-    left: -5px;
+    left: -9px;
     transform: translate(-100%, 50%);
   }
 }
@@ -16456,32 +16456,20 @@ span[data-tooltip].has-tooltip-danger {
   border-bottom: none;
 }
 
-/*top-left position*/
-[data-tooltip]:not(.is-loading).has-tooltip-top.has-tooltip-left::before,
-[data-tooltip]:not(.is-disabled).has-tooltip-top.has-tooltip-left::before,
-[data-tooltip]:not([disabled]).has-tooltip-tops.has-tooltip-left::before {
-  top: 0;
-  right: auto;
-  bottom: auto;
-  left: 0;
-  transform: translate(-100%, -100%);
-}
-
-/* Explicitly set a tooltip inactive, even when hovered*/
-[data-tooltip]:not(.is-loading).has-tooltip-inactive::before,
-[data-tooltip]:not(.is-loading).has-tooltip-inactive::after,
-[data-tooltip]:not(.is-disabled).has-tooltip-inactive::before,
-[data-tooltip]:not(.is-disabled).has-tooltip-inactive::after,
-[data-tooltip]:not([disabled]).has-tooltip-inactive::before,
-[data-tooltip]:not([disabled]).has-tooltip-inactive::after {
-  visibility: hidden !important;
-}
-
-/* Make the tooltips as small as the text allows */
+/* Make the tooltips as narrow as the text allows */
 [data-tooltip]:not(.is-loading).has-tooltip-multiline::before,
 [data-tooltip]:not(.is-disabled).has-tooltip-multiline::before,
 [data-tooltip]:not([disabled]).has-tooltip-multiline::before {
   width: max-content;
+}
+
+/* Arrow should make full contact even on fully round corner
+* (Currently only implemented on left position)
+*/
+[data-tooltip]:not(.is-loading).has-tooltip-left.has-tooltip-arrow::after,
+[data-tooltip]:not(.is-disabled).has-tooltip-left.has-tooltip-arrow::after,
+[data-tooltip]:not([disabled]).has-tooltip-left.has-tooltip-arrow::after {
+  left: -4px;
 }
 
 /* Slider (from bulma-slider) without border for the thumb*/

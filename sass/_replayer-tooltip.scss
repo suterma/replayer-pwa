@@ -12,48 +12,36 @@ $tooltip-background-opacity: 1;
 $tooltip-radius: 20px;
 $tooltip-animation-duration: 200ms;
 $tooltip-animation-transition-timing-function: ease;
+$tooltip-arrow-size: 10px;
 
 /* Default colors more to the Replayer theme*/
 $tooltip-background-color: $dark;
 
 @import '../node_modules/@creativebulma/bulma-tooltip/src/sass/index.sass';
 
-/*top-left position*/
-
-[data-tooltip]:not(.is-loading).has-tooltip-top.has-tooltip-left::before,
-[data-tooltip]:not(.is-disabled).has-tooltip-top.has-tooltip-left::before,
-[data-tooltip]:not([disabled]).has-tooltip-tops.has-tooltip-left::before {
-    top: 0;
-    right: auto;
-    bottom: auto;
-    left: 0;
-    transform: translate(-100%, -100%);
-}
-
-///* Border around tooltips*/
-// [data-tooltip]:not(.is-loading)::before,
-// [data-tooltip]:not(.is-disabled)::before,
-// [data-tooltip]:not([disabled])::before {
-//     border-color: $text;
-//     border-width: 1px;
-//     border-style: solid;
+// /*additional top-left position*/
+// [data-tooltip]:not(.is-loading).has-tooltip-top.has-tooltip-left::before,
+// [data-tooltip]:not(.is-disabled).has-tooltip-top.has-tooltip-left::before,
+// [data-tooltip]:not([disabled]).has-tooltip-tops.has-tooltip-left::before {
+//     top: 0;
+//     right: auto;
+//     bottom: auto;
+//     left: 0;
+//     transform: translate(-100%, -100%);
 // }
 
-/* Explicitly set a tooltip inactive, even when hovered*/
-[data-tooltip]:not(.is-loading).has-tooltip-inactive::before,
-[data-tooltip]:not(.is-loading).has-tooltip-inactive::after,
-[data-tooltip]:not(.is-disabled).has-tooltip-inactive::before,
-[data-tooltip]:not(.is-disabled).has-tooltip-inactive::after,
-[data-tooltip]:not([disabled]).has-tooltip-inactive::before,
-[data-tooltip]:not([disabled]).has-tooltip-inactive::after {
-    // opacity: 0;
-    visibility: hidden !important;
-}
-
-/* Make the tooltips as small as the text allows */
-
+/* Make the tooltips as narrow as the text allows */
 [data-tooltip]:not(.is-loading).has-tooltip-multiline::before,
 [data-tooltip]:not(.is-disabled).has-tooltip-multiline::before,
 [data-tooltip]:not([disabled]).has-tooltip-multiline::before {
     width: max-content;
+}
+
+/* Arrow should make full contact even on fully round corner
+* (Currently only implemented on left position)
+*/
+[data-tooltip]:not(.is-loading).has-tooltip-left.has-tooltip-arrow::after,
+[data-tooltip]:not(.is-disabled).has-tooltip-left.has-tooltip-arrow::after,
+[data-tooltip]:not([disabled]).has-tooltip-left.has-tooltip-arrow::after {
+    left: -4px;
 }

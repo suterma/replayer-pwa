@@ -302,16 +302,6 @@
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
-                        v-model="experimentalUsePlaybackModeDropdownMenu"
-                        label="Show playback mode drop down menu"
-                        hint="This is an alternative to the playback mode toggler"
-                    ></LabeledCheckbox>
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <LabeledCheckbox
                         v-model="experimentalShowEverythingEverywhereAllAtOnce"
                         label="Show everything everywhere all at once"
                         hint="Shows all playback views simultaneously, suitable for debugging purposes"
@@ -403,7 +393,6 @@ const {
     experimentalAllowTrackSharingByLink,
     experimentalMultitrack,
     experimentalUseQueueCueMode,
-    experimentalUsePlaybackModeDropdownMenu,
     experimentalUseMeter,
     experimentalHideStageMark,
 } = storeToRefs(settings);

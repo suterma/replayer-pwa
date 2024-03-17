@@ -2,15 +2,6 @@
     <div data-cy="media-controls-bar">
         <slot name="start"></slot>
 
-        <PlaybackModeMenu
-            v-if="experimentalUsePlaybackModeDropdownMenu"
-            class="is-experimental"
-            :model-value="playbackMode"
-            :has-second-track="hasSecondTrack"
-            data-cy="toggle-playback-mode"
-            @update:model-value="updatePlaybackMode"
-        />
-
         <button
             v-if="hasSecondTrack && !hideTrackNavigation"
             class="button"
@@ -77,8 +68,9 @@
             <BaseIcon v-once :path="mdiSkipNext" />
         </button>
 
-        <PlaybackModeButton
+        <PlaybackModeMenu
             :model-value="playbackMode"
+            :has-second-track="hasSecondTrack"
             data-cy="toggle-playback-mode"
             @update:model-value="updatePlaybackMode"
         />
@@ -110,7 +102,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
-import PlaybackModeButton from '@/components/buttons/PlaybackModeButton.vue';
 import PlaybackModeMenu from '@/components/context-menu/PlaybackModeMenu.vue';
 import FadingToggler from '@/components/buttons/FadingToggler.vue';
 import PreRollToggler from '@/components/buttons/PreRollToggler.vue';
@@ -125,8 +116,6 @@ import {
 } from '@mdi/js';
 import { DefaultTrackVolume } from '@/store/Track';
 import type { PlaybackMode } from '@/store/PlaybackMode';
-import { useSettingsStore } from '@/store/settings';
-import { mapState } from 'pinia';
 
 /** A set of media controls, intended for use at the track level. Contains Buttons like previous/next track and cue, playback mode and a volume knob, arranged in a bar-like layout.
  */
@@ -134,7 +123,6 @@ export default defineComponent({
     name: 'MediaControlsBar',
     components: {
         PlayPauseButton,
-        PlaybackModeButton,
         PlaybackModeMenu,
         FadingToggler,
         PreRollToggler,
@@ -297,9 +285,6 @@ export default defineComponent({
         hasSecondTrack(): boolean {
             return this.hasPreviousTrack || this.hasNextTrack;
         },
-        ...mapState(useSettingsStore, [
-            'experimentalUsePlaybackModeDropdownMenu',
-        ]),
     },
 
     watch: {},
