@@ -27,4 +27,12 @@ export default class AudioUtil {
             }
         }
     }
+
+    /** Get a representation of the input value as dBFS, where
+     * full scale is the value 1.
+     */
+    public static getDeciBelFullScale(value: number): number {
+        const deciBels = 20 * Math.log10(value);
+        return deciBels;
+    }
 }

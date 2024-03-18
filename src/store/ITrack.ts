@@ -6,7 +6,7 @@ export interface ITrack {
     /** The cues */
     Cues: Array<ICue>;
 
-    /** The playback volume for this track.
+    /** The playback volume for this track in the range of [0..1].
      * @remarks This can be set by the user, and is persisted.
      */
     Volume: number;
