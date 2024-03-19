@@ -4,6 +4,7 @@
         class="is-knob is-unselectable"
         :options="knobOptions"
     >
+        <slot></slot>
     </ControlKnob>
 </template>
 

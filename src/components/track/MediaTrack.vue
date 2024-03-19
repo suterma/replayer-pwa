@@ -161,16 +161,13 @@
                     </div>
                 </template>
                 <template #right-action-items>
-                    <div
-                        class="level-item is-narrow mr-0 is-hidden-mobile"
-                        v-tooltip="volumeDeciBelFullScaleDisplay"
-                    >
+                    <div class="level-item is-narrow mr-0 is-hidden-mobile">
                         <!-- NOTE: In edit mode, the volume button is displayed as part of the transport area, not in the header -->
                         <VolumeKnob
                             v-if="!isEditable"
                             :disabled="!isTrackLoaded"
-                            :model-value="track.Volume"
-                            @update:model-value="updateVolume"
+                            :volume="track.Volume"
+                            @update:volume="updateVolume"
                         /></div
                 ></template>
             </TrackHeader>
@@ -800,7 +797,6 @@ import { useTitle } from '@vueuse/core';
 import router, { Route } from '@/router';
 import MessageOverlay from '@/components/MessageOverlay.vue';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
-import AudioUtil from '@/code/media/AudioUtil';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -1795,20 +1791,6 @@ function removeCueScheduling(): void {
     // app.updateScheduledCueId(CompilationHandler.EmptyId);
     // cueScheduler.value?.RemoveSchedule();
 }
-
-// --- value display ---
-
-/** A displayable volume in [dBFS]
- * @remarks Shows 1 digit after the decimal point for values close to zero
- */
-const volumeDeciBelFullScaleDisplay = computed(() => {
-    const deciBels = AudioUtil.getDeciBelFullScale(props.track.Volume);
-
-    if (deciBels > -10) {
-        return deciBels.toFixed(1) + ' dBFS';
-    }
-    return deciBels.toFixed(0) + ' dBFS';
-});
 </script>
 
 <style lang="scss" scoped>

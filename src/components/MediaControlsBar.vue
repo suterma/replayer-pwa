@@ -92,8 +92,8 @@
         <VolumeKnob
             v-if="!hideVolumeButton"
             :disabled="disabled"
-            :model-value="volume"
-            @update:model-value="updateVolume"
+            :volume="volume"
+            @update:volume="updateVolume"
         />
         <slot></slot>
     </div>

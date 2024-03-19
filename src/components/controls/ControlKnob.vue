@@ -448,6 +448,7 @@ onBeforeUnmount(() => {
         @focus="hasFocus = true"
         @blur="hasFocus = false"
     >
+        <slot></slot>
         <circle
             :cx="HALF_VIEWBOX"
             :cy="HALF_VIEWBOX"
