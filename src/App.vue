@@ -60,6 +60,7 @@ import { compare } from 'compare-versions';
 import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { refDebounced, useElementSize } from '@vueuse/core';
+import PersistentStorage from './store/persistent-storage';
 
 onMounted(() => {
     handleAppUpdate();
@@ -116,9 +117,8 @@ function handleAppUpdate() {
             updateText = 'Version 2.2.1: minor bugfixes\r\n' + updateText;
         }
         if (compare(previousVersion, '2.2.2', '<')) {
-            updateText = 'Version 2.2.1: Storage bugfixes\r\n' + updateText;
-            useAppStore().discardCompilation();
-            indexedDB.deleteDatabase('keyval-store');
+            updateText = 'Version 2.2.2: Storage bugfixes\r\n' + updateText;
+            PersistentStorage.convertFilesToBlobs();
         }
 
         acknowledgeVersion(currentVersion, updateText).then(() => {

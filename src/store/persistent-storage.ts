@@ -2,11 +2,27 @@ import { MediaBlob } from './types';
 import { Store } from '.';
 import { useMessageStore } from './messages';
 import localForage from 'localforage';
+
+/**
+ * Configure the store
+ * @devdoc This currently uses localforage for storage and retrieval, but for
+ * compatibility with the formerly used idb-keyval, the database name and the
+ * store name are configured to match those of idb-keyval */
+
+localForage.config({
+    name: 'keyval-store',
+    storeName: 'keyval',
+    description: 'Replayer media storage',
+});
+
 /**
  * Provides simplified access to persistent storage for blobs within the Replayer app. This
  * allows to keep the media files, available over
  * web app restarts.
- * @devdoc Implements a module as described in https://www.typescriptlang.org/docs/handbook/modules.html */
+ * @devdoc Implements a module as described in https://www.typescriptlang.org/docs/handbook/modules.html
+ * @devdoc This currently uses localforage for storage and retrieval, but for
+ * compatibility with the formerly used idb-keyval, the database name and the
+ * store name are configured to match those of idb-keyval */
 export default class PersistentStorage {
     /** Persistently stores media blob data for later retrieval
      * @devdoc The indexed db is used for blob data, as recommended for large data.
@@ -65,5 +81,13 @@ export default class PersistentStorage {
         return localForage.clear().catch((errorMessage: string) => {
             useMessageStore().pushError(errorMessage);
         });
+    }
+
+    /** On-time update function for release 2.2.2, converting the formerly used
+     * files to blobs
+     */
+    static convertFilesToBlobs(): void {
+        //TODO convert
+        //throw new ("Not supp")
     }
 }
