@@ -118,7 +118,6 @@ function handleAppUpdate() {
         }
         if (compare(previousVersion, '2.2.2', '<')) {
             updateText = 'Version 2.2.2: Storage bugfixes\r\n' + updateText;
-            PersistentStorage.convertFilesToBlobs();
         }
 
         acknowledgeVersion(currentVersion, updateText).then(() => {

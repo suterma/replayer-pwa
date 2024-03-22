@@ -82,12 +82,4 @@ export default class PersistentStorage {
             useMessageStore().pushError(errorMessage);
         });
     }
-
-    /** On-time update function for release 2.2.2, converting the formerly used
-     * files to blobs
-     */
-    static convertFilesToBlobs(): void {
-        //TODO convert
-        //throw new ("Not supp")
-    }
 }
