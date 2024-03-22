@@ -24,12 +24,10 @@ import AudioUtil from '@/code/media/AudioUtil';
 import ValueKnob from '@/components/controls/ValueKnob.vue';
 import { DefaultTrackVolume } from '@/store/Track';
 import { computed } from 'vue';
-import { computed } from 'vue';
 
 /** A volume knob.
  */
 
-const props = defineProps({
 const props = defineProps({
     /** The volume in the range [0..1]
      * @remarks Implements a two-way binding */
@@ -57,11 +55,11 @@ function updateVolume(volume: number): void {
  * @remarks Shows 1 digit after the decimal point for values close to zero
  */
 const volumeDeciBelFullScaleDisplay = computed(() => {
-    const deciBels = 20 * Math.log10(props.volume);
+    const dBFS = AudioUtil.getDeciBelFullScale(props.volume);
 
-    if (deciBels > -10) {
-        return deciBels.toFixed(1) + ' dBFS';
+    if (dBFS > -10) {
+        return dBFS.toFixed(1) + ' dBFS';
     }
-    return deciBels.toFixed(0) + ' dBFS';
+    return dBFS.toFixed(0) + ' dBFS';
 });
 </script>
