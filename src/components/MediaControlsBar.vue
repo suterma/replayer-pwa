@@ -1,5 +1,5 @@
 <template>
-    <div data-cy="media-controls-bar">
+    <div class="media-controls-bar" data-cy="media-controls-bar">
         <slot name="start"></slot>
 
         <button

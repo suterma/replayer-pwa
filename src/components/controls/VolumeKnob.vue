@@ -1,8 +1,10 @@
 <template>
-    <div v-tooltip:[isActive]="volumeDeciBelFullScaleDisplay">
+    <button
+        class="button is-nav pl-0 pr-0"
+        v-tooltip:[isActive]="volumeDeciBelFullScaleDisplay"
+    >
         <ValueKnob
             title="Drag, scroll or use the arrow keys to change volume"
-            class="button is-nav is-rounded"
             :class="{
                 'is-static': disabled,
                 'has-cursor-not-allowed': disabled,
@@ -19,7 +21,7 @@
             @mouseover="onMouseOver($event)"
             @mouseleave="onMouseLeave($event)"
         />
-    </div>
+    </button>
 </template>
 
 <script setup lang="ts">

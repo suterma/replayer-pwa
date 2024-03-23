@@ -1812,13 +1812,13 @@ function removeCueScheduling(): void {
         // Google Chrome, Brave and Firefox, on Ubuntu
         // for the given set of playback controls
         // (slider, next/previous cue, playback mode, pre-roll toggler, fading toggler, volume knob, playback indicator)
-        flex-basis: calc(100% - 606px);
+        flex-basis: calc(100% - 620px);
         .level-item {
             flex-shrink: 1;
         }
     }
     .level-right {
-        flex-basis: 606px;
+        flex-basis: 620px;
         .level-item {
             flex-shrink: 1;
         }
