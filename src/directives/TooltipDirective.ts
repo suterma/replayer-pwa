@@ -15,5 +15,18 @@ export function TooltipDirective(
         'has-tooltip-text-centered',
         'has-tooltip-fade',
     );
+
+    // Handle the active/inactive state
+    const isActive = binding.arg as unknown as boolean | null;
+    if (isActive === true) {
+        el.classList.add('has-tooltip-active');
+        el.classList.remove('has-tooltip-inactive');
+    } else if (isActive === false) {
+        el.classList.remove('has-tooltip-active');
+        el.classList.add('has-tooltip-inactive');
+    } else {
+        el.classList.remove('has-tooltip-inactive');
+        el.classList.remove('has-tooltip-active');
+    }
     el.setAttribute('data-tooltip', binding.value);
 }

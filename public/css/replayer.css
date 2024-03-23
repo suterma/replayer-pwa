@@ -16472,6 +16472,22 @@ span[data-tooltip].has-tooltip-danger {
   left: -4px;
 }
 
+/* Hide the tooltips when the (hovered) element is active (pressed)
+*/
+[data-tooltip]:hover:active.is-hover-only::before,
+[data-tooltip]:hover:active.is-hover-only::after {
+  visibility: hidden;
+}
+
+/* Hide the tooltips upon request (opposite of isActive)
+*/
+[data-tooltip]:active.has-tooltip-inactive::before,
+[data-tooltip]:active.has-tooltip-inactive::after,
+[data-tooltip]:hover.has-tooltip-inactive::before,
+[data-tooltip]:hover.has-tooltip-inactive::after {
+  visibility: hidden;
+}
+
 /* Slider (from bulma-slider) without border for the thumb*/
 input[type=range].slider {
   appearance: none;

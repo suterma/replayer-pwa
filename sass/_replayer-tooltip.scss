@@ -45,3 +45,19 @@ $tooltip-background-color: $dark;
 [data-tooltip]:not([disabled]).has-tooltip-left.has-tooltip-arrow::after {
     left: -4px;
 }
+
+/* Hide the tooltips when the (hovered) element is active (pressed)
+*/
+[data-tooltip]:hover:active.is-hover-only::before,
+[data-tooltip]:hover:active.is-hover-only::after {
+    visibility: hidden;
+}
+
+/* Hide the tooltips upon request (opposite of isActive)
+*/
+[data-tooltip]:active.has-tooltip-inactive::before,
+[data-tooltip]:active.has-tooltip-inactive::after,
+[data-tooltip]:hover.has-tooltip-inactive::before,
+[data-tooltip]:hover.has-tooltip-inactive::after {
+    visibility: hidden;
+}

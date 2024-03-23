@@ -53,7 +53,14 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits([
+    /** The model value has changed */
+    'update:modelValue',
+    /** The drag state has changed
+     * @remarks When true: the user is manipulating the knob by a darg gesture
+     */
+    'update:drag',
+]);
 
 const vModel = computed<number>({
     get() {
@@ -174,6 +181,7 @@ const downListener = (event: MouseEvent | TouchEvent) => {
     mouseMoved.value = false;
     prevY = getEventY(event);
     preventScrolling(event);
+    emit('update:drag', mouseIsDown.value);
 };
 
 /** Gets the y coordinate associated with the event */
@@ -284,6 +292,7 @@ function preventScrolling(
 
 const upListener = () => {
     mouseIsDown.value = false;
+    emit('update:drag', mouseIsDown.value);
 };
 
 function resetValue() {
