@@ -9,12 +9,26 @@ export function TooltipDirective(
     binding: DirectiveBinding<any>,
 ) {
     el.classList.add(
-        'has-tooltip-left',
         'has-tooltip-arrow',
         'has-tooltip-multiline',
         'has-tooltip-text-centered',
         'has-tooltip-fade',
     );
+
+    if (binding.modifiers.top) {
+        // none, default with bulma-tooltip
+    } else if (binding.modifiers.right) {
+        el.classList.add('has-tooltip-right');
+    } else if (binding.modifiers.bottom) {
+        el.classList.add('has-tooltip-bottom');
+    } else {
+        //default with Replayer
+        el.classList.add('has-tooltip-left');
+    }
+
+    if (binding.modifiers.hover) {
+        el.classList.add('is-hover-only');
+    }
 
     // Handle the active/inactive state
     const isActive = binding.arg as unknown as boolean | null;

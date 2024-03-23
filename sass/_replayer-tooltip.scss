@@ -52,6 +52,10 @@ $tooltip-background-color: $dark;
 [data-tooltip]:hover:active.is-hover-only::after {
     visibility: hidden;
 }
+[data-tooltip]:hover:focus-within.is-hover-only::before,
+[data-tooltip]:hover:focus-within.is-hover-only::after {
+    visibility: hidden;
+}
 
 /* Hide the tooltips upon request (opposite of isActive)
 */

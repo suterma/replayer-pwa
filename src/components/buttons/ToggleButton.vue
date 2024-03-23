@@ -1,5 +1,8 @@
 <template>
-    <button class="button" :title="isEngaged ? engagedLabel : disengagedLabel">
+    <button
+        class="button"
+        v-tooltip.top="isEngaged ? engagedLabel : disengagedLabel"
+    >
         {{ text }}
         <slot></slot>
     </button>

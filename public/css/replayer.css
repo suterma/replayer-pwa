@@ -16479,6 +16479,11 @@ span[data-tooltip].has-tooltip-danger {
   visibility: hidden;
 }
 
+[data-tooltip]:hover:focus-within.is-hover-only::before,
+[data-tooltip]:hover:focus-within.is-hover-only::after {
+  visibility: hidden;
+}
+
 /* Hide the tooltips upon request (opposite of isActive)
 */
 [data-tooltip]:active.has-tooltip-inactive::before,

@@ -4,7 +4,7 @@
         class="is-slim"
         :icon-path="currentModeIcon"
         :render-closed="true"
-        :title="currentModeTitle"
+        v-tooltip.top.hover="currentModeTitle"
     >
         <!-- <DropdownMenuButton
             v-for="mode in Object.values(PlaybackMode)"
