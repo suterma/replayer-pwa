@@ -60,7 +60,6 @@ import { compare } from 'compare-versions';
 import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { refDebounced, useElementSize } from '@vueuse/core';
-import PersistentStorage from './store/persistent-storage';
 
 onMounted(() => {
     handleAppUpdate();

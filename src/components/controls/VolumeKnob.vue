@@ -1,7 +1,7 @@
 <template>
     <button
-        class="button is-nav pl-0 pr-0"
         v-tooltip:[isActive]="volumeDeciBelFullScaleDisplay"
+        class="button is-nav pl-0 pr-0"
     >
         <ValueKnob
             title="Drag, scroll or use the arrow keys to change volume"
@@ -28,7 +28,7 @@
 import AudioUtil from '@/code/media/AudioUtil';
 import ValueKnob from '@/components/controls/ValueKnob.vue';
 import { DefaultTrackVolume } from '@/store/Track';
-import { computed, ref, type Ref } from 'vue';
+import { computed, ref } from 'vue';
 
 /** A volume knob.
  */
@@ -93,12 +93,12 @@ function updateDrag(drag: boolean): void {
 }
 
 /** Set the hovered value, but only if no mouse button is pressed */
-function onMouseOver(event: MouseEvent) {
+function onMouseOver(event: MouseEvent): void {
     hovered.value = event.buttons == 0;
 }
 
 /** Reset the hovered value */
-function onMouseLeave(event: MouseEvent) {
+function onMouseLeave(_event: MouseEvent): void {
     hovered.value = false;
 }
 
