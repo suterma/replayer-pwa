@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2024 Marcel Suter - Replayer
+ *
+ * This source code is licensed under the AGPL license found in the
+ * LICENSE file in the root of this projects source tree.
+ */
+
 import { expect, describe, it, beforeEach, afterEach } from 'vitest';
 import { MediaBlob } from './types';
 import CompilationHandler from './compilation-handler';

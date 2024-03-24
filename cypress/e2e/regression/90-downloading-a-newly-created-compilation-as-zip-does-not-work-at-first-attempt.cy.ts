@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2024 Marcel Suter - Replayer
+ *
+ * This source code is licensed under the AGPL license found in the
+ * LICENSE file in the root of this projects source tree.
+ */
+
 describe('testing the issue "90-downloading-a-newly-created-compilation-as-zip-does-not-work-at-first-attempt" for regression', () => {
     beforeEach(() => {
         cy.loadDemo();

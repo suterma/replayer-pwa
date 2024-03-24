@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2024 Marcel Suter - Replayer
+ *
+ * This source code is licensed under the AGPL license found in the
+ * LICENSE file in the root of this projects source tree.
+ */
+
 /** A position using a musical meter (a time representation using measures and beats).
  *  */
 export class MetricalPosition {

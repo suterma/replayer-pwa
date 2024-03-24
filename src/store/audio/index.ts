@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2024 Marcel Suter - Replayer
+ *
+ * This source code is licensed under the AGPL license found in the
+ * LICENSE file in the root of this projects source tree.
+ */
+
 import { defineStore } from 'pinia';
 import { type ShallowRef, computed, ref, shallowRef, readonly } from 'vue';
 import { Store } from '..';

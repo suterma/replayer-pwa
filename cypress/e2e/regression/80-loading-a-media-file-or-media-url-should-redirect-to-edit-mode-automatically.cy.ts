@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2024 Marcel Suter - Replayer
+ *
+ * This source code is licensed under the AGPL license found in the
+ * LICENSE file in the root of this projects source tree.
+ */
+
 describe('testing the issue "Loading a media file or media URL should redirect to edit mode automatically #80" for regression', () => {
     it('should go to edit mode after media load (with CORS Header)', () => {
         // ACT

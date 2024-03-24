@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2024 Marcel Suter - Replayer
+ *
+ * This source code is licensed under the AGPL license found in the
+ * LICENSE file in the root of this projects source tree.
+ */
+
 import { v4 as uuidv4 } from 'uuid';
 import { FadingMode, type IAudioFader } from './IAudioFader';
 import { SubEvent } from 'sub-events';

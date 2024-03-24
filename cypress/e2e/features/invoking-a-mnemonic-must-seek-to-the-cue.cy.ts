@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2024 Marcel Suter - Replayer
+ *
+ * This source code is licensed under the AGPL license found in the
+ * LICENSE file in the root of this projects source tree.
+ */
+
 describe('invoking cue mnemonic', () => {
     it('should select the track', () => {
         cy.loadFile('cypress/fixtures/2-tracks-with-anechoic-voices.rex');

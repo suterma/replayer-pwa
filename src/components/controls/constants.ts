@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2024 Marcel Suter - Replayer
+ *
+ * This source code is licensed under the AGPL license found in the
+ * LICENSE file in the root of this projects source tree.
+ */
+
 // Taken from slipmatio /control-knob (MIT-Licensed)
 export const RADIUS = 40;
 export const IMAGE_VIEWBOX = 100;

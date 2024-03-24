@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2024 Marcel Suter - Replayer
+ *
+ * This source code is licensed under the AGPL license found in the
+ * LICENSE file in the root of this projects source tree.
+ */
+
 /** A set of Replayer events that are emitted by this Keyboard handler */
 export enum ReplayerEvent {
     BACK_TO_CUE = 'backtocue',

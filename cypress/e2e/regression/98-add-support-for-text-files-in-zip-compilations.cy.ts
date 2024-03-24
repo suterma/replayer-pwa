@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2024 Marcel Suter - Replayer
+ *
+ * This source code is licensed under the AGPL license found in the
+ * LICENSE file in the root of this projects source tree.
+ */
+
 describe('loading and displaying of text content with the issue "98-add-support-for-text-files-in-zip-compilations"', () => {
     beforeEach(() => {});
 

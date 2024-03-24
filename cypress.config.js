@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2024 Marcel Suter - Replayer
+ *
+ * This source code is licensed under the AGPL license found in the
+ * LICENSE file in the root of this projects source tree.
+ */
+
 // NOTE: using the .js ending (instead of .ts) solves this issue
 // with referencing modules:
 // https://github.com/cypress-io/cypress/issues/23552#issuecomment-1456477053

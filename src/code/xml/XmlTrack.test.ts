@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2024 Marcel Suter - Replayer
+ *
+ * This source code is licensed under the AGPL license found in the
+ * LICENSE file in the root of this projects source tree.
+ */
+
 import { describe, it, expect } from 'vitest'; // import { type ICue, Track } from '@/store/compilation-types';
 import { XmlTrack } from './XmlTrack';
 import { TimeSignature } from '../music/TimeSignature';

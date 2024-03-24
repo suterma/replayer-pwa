@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2024 Marcel Suter - Replayer
+ *
+ * This source code is licensed under the AGPL license found in the
+ * LICENSE file in the root of this projects source tree.
+ */
+
 /** @interface Defines features for looping ranges in a media.
  * @remarks This defines looping of a temporal range, for use during playback.
  * Intentionally, no volume control is defined with regards to looping.

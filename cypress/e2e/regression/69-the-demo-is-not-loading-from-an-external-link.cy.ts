@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2024 Marcel Suter - Replayer
+ *
+ * This source code is licensed under the AGPL license found in the
+ * LICENSE file in the root of this projects source tree.
+ */
+
 describe('testing the issue "69-the-demo-is-not-loading-from-an-external-link" for regression', () => {
     it('should load the demo as from the website', () => {
         // ACT
