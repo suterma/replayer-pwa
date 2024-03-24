@@ -1,3 +1,9 @@
+<!--
+ * Copyright (c) 2024 Marcel Suter - Replayer
+ *
+ * This source code is licensed under the AGPL license found in the
+ * LICENSE file in the root of this projects source tree.
+-->
 <template>
     <!-- NOTE: the same audio context is reused for all playback operations and
          must be resumed once in the main view lifetime, when used.  -->

@@ -24,6 +24,13 @@ module.exports = {
             files: ['cypress/e2e/**/*.{cy,spec}.{js,ts,jsx,tsx}'],
             extends: ['plugin:cypress/recommended'],
         },
+        {
+            /** Ignore specific files for fixing with "license-header" because the fixer messes up the files */
+            files: ['env.d.ts', '**/*.vue'],
+            rules: {
+                'license-header/header': 0,
+            },
+        },
     ],
     parserOptions: {
         ecmaVersion: 'latest',
