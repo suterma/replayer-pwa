@@ -98,7 +98,8 @@ function onMouseOver(event: MouseEvent): void {
 }
 
 /** Reset the hovered value */
-function onMouseLeave(_event: MouseEvent): void {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function onMouseLeave(event: MouseEvent): void {
     hovered.value = false;
 }
 
