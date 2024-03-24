@@ -5,6 +5,9 @@ import type { IMediaHandler } from './IMediaHandler';
 import { SubEvent } from 'sub-events';
 import type { IPlaybackRateController } from './IPlaybackRateController';
 import HtmlMediaPlaybackRateController from './HtmlMediaPlaybackRateController';
+import chalk from 'chalk';
+
+const mediaHandlerDebug = chalk.hex('#62c462'); // Replayer success color (bulma warning)
 
 /** @class Implements a playback handler for a {HTMLMediaElement}.
  * @remarks This handles transport/loop and volume operations for audio sources (HTML media elements).
@@ -123,8 +126,10 @@ export default class HtmlMediaHandler implements IMediaHandler {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     debugLog(message: string, ...optionalParams: any[]): void {
         console.debug(
-            `HtmlMediaHandler(${this._id})::${message}:`,
-            optionalParams,
+            mediaHandlerDebug(
+                `HtmlMediaHandler(${this._media.id})::${message}:`,
+                optionalParams,
+            ),
         );
     }
 
