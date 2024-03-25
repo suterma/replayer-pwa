@@ -143,11 +143,12 @@ export default class HtmlMediaHandler implements IMediaHandler {
     public destroy(): void {
         // self
         this.onPausedChanged.cancelAll();
-        this.onPausedChanged.cancelAll();
         this.onSeekingChanged.cancelAll();
         this.onSeeked.cancelAll();
         this.onCurrentTimeChanged.cancelAll();
         this.onEnded.cancelAll();
+        this.onCanPlay.cancelAll();
+        this.onDurationChanged.cancelAll();
 
         // fader
         this.fader.destroy();
@@ -160,7 +161,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
 
     /** Emits a one-shot update with the current time
      */
-    singleUpdateCurrentTime(): void {
+    private singleUpdateCurrentTime(): void {
         const currentTime = this.currentTime;
         if (currentTime !== this.lastEmittedCurrentTime) {
             //this.debugLog(`updateCurrentTime:${currentTime}`);
@@ -172,7 +173,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
     /** Repeatedly emits an update with the current time
      * @remarks This is only repeated during ongoing playback.
      */
-    repeatUpdateCurrentTime(): void {
+    private repeatUpdateCurrentTime(): void {
         this.singleUpdateCurrentTime();
         if (!this.paused) {
             window.requestAnimationFrame(() => this.repeatUpdateCurrentTime());
@@ -196,7 +197,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
     onEnded: SubEvent<void> = new SubEvent();
 
     /** Pauses playback, with fading if configured. */
-    pause(): void {
+    public pause(): void {
         this.debugLog(`pause`);
         if (!this.paused) {
             this._fader
@@ -209,7 +210,8 @@ export default class HtmlMediaHandler implements IMediaHandler {
         }
     }
 
-    stop(): void {
+    public stop(): void {
+        this.debugLog(`pause`);
         this._media.pause();
         this._fader.cancel();
         this._fader.reset();
@@ -228,8 +230,8 @@ export default class HtmlMediaHandler implements IMediaHandler {
 
     /** Handles the track end event of the audio element, by providing it further as event.
      */
-    handleEnded(): void {
-        console.debug('HtmlMediaHandler::handleEnded');
+    private handleEnded(): void {
+        this.debugLog(`handleEnded`);
         this.onEnded.emit();
     }
 
@@ -237,7 +239,8 @@ export default class HtmlMediaHandler implements IMediaHandler {
         return this._media.currentTime;
     }
 
-    seekTo(seconds: number): Promise<void> {
+    public seekTo(seconds: number): Promise<void> {
+        this.debugLog(`seekTo`);
         if (
             this.hasLoadedMetadata &&
             this.currentTime !== seconds &&
@@ -261,20 +264,24 @@ export default class HtmlMediaHandler implements IMediaHandler {
      * @param {number} seconds - amount of time, in [seconds], to seek
      * @returns {Promise<void>} Promise - resolves when the seek operation has finished
      */
-    seek(seconds: number): Promise<void> {
+    public seek(seconds: number): Promise<void> {
+        this.debugLog(`seek`);
         return this.seekTo(this.currentTime + seconds);
     }
 
-    playFrom(position: number): void {
+    public playFrom(position: number): void {
+        this.debugLog(`playFrom:${position}`);
         this.seekTo(position);
         this.play();
     }
 
-    play(): void {
+    public play(): void {
+        this.debugLog(`play`);
         this._media.play();
     }
 
-    togglePlayback(): void {
+    public togglePlayback(): void {
+        this.debugLog(`togglePlayback`);
         if (this.paused) {
             this.play();
         } else {
@@ -282,7 +289,8 @@ export default class HtmlMediaHandler implements IMediaHandler {
         }
     }
 
-    pauseAndSeekTo(position: number): void {
+    public pauseAndSeekTo(position: number): void {
+        this.debugLog(`pauseAndSeekTo:${position}`);
         this._fader.fadeOut().finally(() => {
             this.pause();
             this.seekTo(position);
@@ -351,22 +359,10 @@ export default class HtmlMediaHandler implements IMediaHandler {
      */
     isClickToLoadRequired = false;
 
-    /** Handles the load event of the audio element
-     * @remarks Since loading is usually in progress now, this also resets the isClickToLoadRequired flag, unless
-     * it is specifically detected, that further loading needs to be triggered
-     */
-    handleLoadedData(): void {
-        this.isClickToLoadRequired = false;
-        const readyState = this._media.readyState;
-
-        this.debugLog(`handleLoadedData:readyState:${readyState}`);
-        this.handleReadyState(readyState);
-    }
-
     /** If changed, updates the internal duration and emits the durationChanged event
      * @param {number} duration - could be NaN or infinity, depending on the source
      */
-    updateDuration(duration: number): void {
+    private updateDuration(duration: number): void {
         if (this._durationSeconds !== duration) {
             this._durationSeconds = duration;
             this.onDurationChanged.emit(this._durationSeconds);
@@ -376,7 +372,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
     /** Handles the current ready state of the {HTMLMediaElement}'s media, with regard to playability
      * @remarks Decides, whether deferred loading is required.
      */
-    handleReadyState(readyState: number): void {
+    private handleReadyState(readyState: number): void {
         //Enough of the media resource has been retrieved that the metadata attributes are initialized?
         if (readyState >= HTMLMediaElement.HAVE_METADATA) {
             if (!this.hasLoadedMetadata && !this.hasLoadedData) {
@@ -386,14 +382,8 @@ export default class HtmlMediaHandler implements IMediaHandler {
             }
         }
 
-        //Special flag handling, when not  automatically loading further now
-        this.debugLog(`handleReadyState:buffered:`, this._media.buffered);
         this.debugLog(
-            `handleReadyState:buffered.length:`,
-            this._media.buffered.length,
-        );
-        this.debugLog(
-            `handleReadyState:networkState:${this._media.networkState}`,
+            `handleReadyState:readyState;${readyState};buffered:${this._media.buffered};buffered.length:${this._media.buffered.length};networkState:${this._media.networkState}`,
         );
 
         // When having metadata, while network is idle, but nothing is buffered at this moment,
