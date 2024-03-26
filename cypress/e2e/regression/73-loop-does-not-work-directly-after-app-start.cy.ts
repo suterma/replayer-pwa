@@ -16,7 +16,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
 
             // Select the loop track mode
             cy.get(
-                'div[data-cy="select-playbackmode"] button[data-cy="toggle-playbackmode"]',
+                'div[data-cy="select-playback-mode"] button[data-cy="dropdown-menu-trigger"]',
             ).click();
             cy.get('button[data-cy="select-loop-track"]').click();
 
@@ -38,7 +38,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
                 .should('be.lessThan', 5); // also compare it to a number
             cy.get(
                 '[data-cy="media-controls-bar"] [data-cy="playback-indicator"]',
-            ).should('have.attr', 'title', 'Track is playing');
+            ).should('have.attr', 'data-tooltip', 'Track is playing');
         });
 
         it(`should loop for the "loop track" play mode even after an app restart (using an  ${mediaSourceUrl.name} source)`, () => {
@@ -48,7 +48,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
 
             // Select the loop track mode
             cy.get(
-                'div[data-cy="select-playbackmode"] button[data-cy="toggle-playbackmode"]',
+                'div[data-cy="select-playback-mode"] button[data-cy="dropdown-menu-trigger"]',
             ).click();
             cy.get('button[data-cy="select-loop-track"]').click();
 
@@ -73,7 +73,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
                 .should('be.lessThan', 5); // also compare it to a number
             cy.get(
                 '[data-cy="media-controls-bar"] [data-cy="playback-indicator"]',
-            ).should('have.attr', 'title', 'Track is playing');
+            ).should('have.attr', 'data-tooltip', 'Track is playing');
         });
 
         it(`should loop for the "loop cue" play mode (using a ${mediaSourceUrl.name} source)`, () => {
@@ -87,7 +87,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
 
             // Select the loop cue mode
             cy.get(
-                'div[data-cy="select-playbackmode"] button[data-cy="toggle-playbackmode"]',
+                'div[data-cy="select-playback-mode"] button[data-cy="dropdown-menu-trigger"]',
             ).click();
             cy.get('button[data-cy="select-loop-cue"]').click();
 
@@ -101,7 +101,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
             // ASSERT (that the loop occurred)
             cy.get(
                 '[data-cy="media-controls-bar"] [data-cy="playback-indicator"]',
-            ).should('have.attr', 'title', 'Track is playing');
+            ).should('have.attr', 'data-tooltip', 'Track is playing');
         });
     });
 });
@@ -116,13 +116,17 @@ describe('testing the issue "Loop does not work directly after app start #73", f
 
         // Select the loop compilation mode
         cy.get(
-            'div[data-cy="select-playbackmode"] button[data-cy="toggle-playbackmode"]',
-        ).click();
-        cy.get('button[data-cy="select-loop-compilation"]').click();
+            'div[data-cy="select-playback-mode"] button[data-cy="dropdown-menu-trigger"]',
+        )
+            .filter(':visible') // because here, the two track have their own menu
+            .click();
+        cy.get('button[data-cy="select-loop-compilation"]')
+            .filter(':visible') // because here, the two track have their own menu
+            .click();
 
         // ACT (go to the ending and wait for a move to the subsequent track)
         cy.get('input[type=range]')
-            .filter(':visible')
+            .filter(':visible') // because here, the two track have their own menu
             .first()
             .as('range')
             .invoke('val', 2)
