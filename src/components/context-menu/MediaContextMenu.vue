@@ -3,6 +3,7 @@
         :icon-path="mdiCog"
         :render-closed="false"
         title="Media context menu"
+        data-cy="context-menu-media"
     >
         <div class="dropdown-item" data-cy="dropdown-menu-item">
             <MenuItemContent title="Speed">

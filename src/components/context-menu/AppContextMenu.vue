@@ -5,6 +5,7 @@
         title="Application context menu"
         left
         down
+        data-cy="context-menu-app"
     >
         <div id="appContextMenuTop"></div>
         <!-- The compilation-related views are only available when any is loaded -->

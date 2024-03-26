@@ -5,6 +5,7 @@
         class="is-slim"
         :icon-path="currentModeIcon"
         :render-closed="true"
+        data-cy="context-menu-playbackmode"
     >
         <!-- <DropdownMenuButton
             v-for="mode in Object.values(PlaybackMode)"
@@ -22,6 +23,7 @@
             :icon-path="modeIcon(PlaybackMode.PlayTrack)"
             :disabled="PlaybackMode.PlayTrack == props.modelValue"
             :is-active="PlaybackMode.PlayTrack == props.modelValue"
+            data-cy="select-play-track"
             @click="emit('update:modelValue', PlaybackMode.PlayTrack)"
         />
         <DropdownMenuButton
@@ -30,6 +32,7 @@
             :icon-path="modeIcon(PlaybackMode.LoopTrack)"
             :disabled="PlaybackMode.LoopTrack == props.modelValue"
             :is-active="PlaybackMode.LoopTrack == props.modelValue"
+            data-cy="select-loop-track"
             @click="emit('update:modelValue', PlaybackMode.LoopTrack)"
         />
         <DropdownMenuButton
@@ -38,6 +41,7 @@
             :icon-path="modeIcon(PlaybackMode.PlayCue)"
             :disabled="PlaybackMode.PlayCue == props.modelValue"
             :is-active="PlaybackMode.PlayCue == props.modelValue"
+            data-cy="select-play-cue"
             @click="emit('update:modelValue', PlaybackMode.PlayCue)"
         />
         <DropdownMenuButton
@@ -46,6 +50,7 @@
             :icon-path="modeIcon(PlaybackMode.LoopCue)"
             :disabled="PlaybackMode.LoopCue == props.modelValue"
             :is-active="PlaybackMode.LoopCue == props.modelValue"
+            data-cy="select-loop-cue"
             @click="emit('update:modelValue', PlaybackMode.LoopCue)"
         />
         <DropdownMenuButton
@@ -56,6 +61,7 @@
             :icon-path="modeIcon(PlaybackMode.QueueCue)"
             :disabled="PlaybackMode.QueueCue == props.modelValue"
             :is-active="PlaybackMode.QueueCue == props.modelValue"
+            data-cy="select-queue-cue"
             @click="emit('update:modelValue', PlaybackMode.QueueCue)"
         />
         <DropdownMenuButton
@@ -65,6 +71,7 @@
             :icon-path="modeIcon(PlaybackMode.LoopCompilation)"
             :disabled="PlaybackMode.LoopCompilation == props.modelValue"
             :is-active="PlaybackMode.LoopCompilation == props.modelValue"
+            data-cy="select-loop-compilation"
             @click="emit('update:modelValue', PlaybackMode.LoopCompilation)"
         />
         <DropdownMenuButton
@@ -74,6 +81,7 @@
             :icon-path="modeIcon(PlaybackMode.ShuffleCompilation)"
             :disabled="PlaybackMode.ShuffleCompilation == props.modelValue"
             :is-active="PlaybackMode.ShuffleCompilation == props.modelValue"
+            data-cy="select-shuffle-compilation"
             @click="emit('update:modelValue', PlaybackMode.ShuffleCompilation)"
         />
     </DropdownMenu>

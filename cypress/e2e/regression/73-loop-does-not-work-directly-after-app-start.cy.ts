@@ -14,10 +14,11 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
             cy.load(`/#/play?media=${mediaSourceUrl.url}`);
             cy.consentIfYouTube(mediaSourceUrl.url);
 
-            cy.get('.button[data-cy="toggle-playback-mode"]')
-                .filter(':visible')
-                .first()
-                .click();
+            // Select the loop track mode
+            cy.get(
+                'div[data-cy="select-playbackmode"] button[data-cy="toggle-playbackmode"]',
+            ).click();
+            cy.get('button[data-cy="select-loop-track"]').click();
 
             // ACT (go to the end and wait for a loop)
             cy.get('button[data-cy="toggle-playback"]').first().click();
@@ -45,10 +46,11 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
             cy.load(`/#/play?media=${mediaSourceUrl.url}`);
             cy.consentIfYouTube(mediaSourceUrl.url);
 
-            cy.get('.button[data-cy="toggle-playback-mode"]')
-                .filter(':visible')
-                .first()
-                .click();
+            // Select the loop track mode
+            cy.get(
+                'div[data-cy="select-playbackmode"] button[data-cy="toggle-playbackmode"]',
+            ).click();
+            cy.get('button[data-cy="select-loop-track"]').click();
 
             // ACT restart
             cy.loadEmpty();
@@ -83,13 +85,11 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
             );
             cy.consentIfYouTube(mediaSourceUrl.url);
 
-            // eslint-disable-next-line cypress/unsafe-to-chain-command
-            cy.get('.button[data-cy="toggle-playback-mode"]')
-                .filter(':visible')
-                .first()
-                .click()
-                .click()
-                .click();
+            // Select the loop cue mode
+            cy.get(
+                'div[data-cy="select-playbackmode"] button[data-cy="toggle-playbackmode"]',
+            ).click();
+            cy.get('button[data-cy="select-loop-cue"]').click();
 
             // ACT (press the ending cue and wait for a loop)
             cy.get('button[title="Play from ending-cue"]').click();
@@ -113,15 +113,12 @@ describe('testing the issue "Loop does not work directly after app start #73", f
         cy.get('button[data-cy="toggle-playback"]')
             .eq(1 /*second track*/)
             .click();
-        // ARRANGE (set loop compilation play mode)
-        // eslint-disable-next-line cypress/unsafe-to-chain-command
-        cy.get('.button[data-cy="toggle-playback-mode"]')
-            .filter(':visible')
-            .first()
-            .click()
-            .click()
-            .click()
-            .click();
+
+        // Select the loop compilation mode
+        cy.get(
+            'div[data-cy="select-playbackmode"] button[data-cy="toggle-playbackmode"]',
+        ).click();
+        cy.get('button[data-cy="select-loop-compilation"]').click();
 
         // ACT (go to the ending and wait for a move to the subsequent track)
         cy.get('input[type=range]')

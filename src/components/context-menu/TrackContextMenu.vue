@@ -4,6 +4,7 @@
         title="Track context menu"
         left
         down
+        data-cy="context-menu-track"
     >
         <div class="dropdown-item is-hidden-mobile">
             <p class="menu-label">Track</p>

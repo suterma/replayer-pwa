@@ -71,7 +71,7 @@
         <PlaybackModeMenu
             :model-value="playbackMode"
             :has-second-track="hasSecondTrack"
-            data-cy="toggle-playback-mode"
+            data-cy="select-playback-mode"
             @update:model-value="updatePlaybackMode"
         />
 
