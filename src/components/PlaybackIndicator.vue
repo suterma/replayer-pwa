@@ -11,7 +11,6 @@
             'has-text-grey-dark': isReady && isUnavailable,
             'has-text-grey': isReady && !isUnavailable,
         }"
-        :data-cy="indication"
         :icon-path="isUnavailable ? mdiAlert : mdiCircle"
     >
     </NavButton>
