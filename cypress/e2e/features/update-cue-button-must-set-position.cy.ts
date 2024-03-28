@@ -6,7 +6,6 @@
  */
 
 import { mediaSourceUrls } from './../../fixtures/all-types-of-media-urls';
-import { DefaultMathPrecisionAbsolute } from './../../../src/store/settings';
 
 mediaSourceUrls.forEach((mediaSourceUrl) => {
     describe('the cue update button', () => {
