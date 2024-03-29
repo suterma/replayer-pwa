@@ -16,7 +16,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
 
             // Select the loop track mode
             cy.get(
-                'div[data-cy="select-playback-mode"] button[data-cy="dropdown-menu-trigger"]',
+                'div[data-cy="context-menu-media"] button[data-cy="dropdown-menu-trigger"]',
             ).click();
             cy.get('button[data-cy="select-loop-track"]').click();
 
@@ -48,7 +48,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
 
             // Select the loop track mode
             cy.get(
-                'div[data-cy="select-playback-mode"] button[data-cy="dropdown-menu-trigger"]',
+                'div[data-cy="context-menu-media"] button[data-cy="dropdown-menu-trigger"]',
             ).click();
             cy.get('button[data-cy="select-loop-track"]').click();
 
@@ -87,7 +87,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
 
             // Select the loop cue mode
             cy.get(
-                'div[data-cy="select-playback-mode"] button[data-cy="dropdown-menu-trigger"]',
+                'div[data-cy="context-menu-media"] button[data-cy="dropdown-menu-trigger"]',
             ).click();
             cy.get('button[data-cy="select-loop-cue"]').click();
 
@@ -116,7 +116,7 @@ describe('testing the issue "Loop does not work directly after app start #73", f
 
         // Select the loop compilation mode
         cy.get(
-            'div[data-cy="select-playback-mode"] button[data-cy="dropdown-menu-trigger"]',
+            'div[data-cy="context-menu-media"] button[data-cy="dropdown-menu-trigger"]',
         )
             .filter(':visible') // because here, the two track have their own menu
             .click();
