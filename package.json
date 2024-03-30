@@ -1,6 +1,6 @@
 {
     "name": "replayer",
-    "version": "2.2.1",
+    "version": "2.3.0",
     "description": "Replayer is a free, cue-based media player for rehearsals with playback music. By the click of a button, Replayer starts to play at predefined times in the audio or video file.",
     "homepage": "https://replayer.app",
     "main": "./public/index.html",

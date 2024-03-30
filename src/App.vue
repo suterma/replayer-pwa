@@ -121,8 +121,10 @@ function handleAppUpdate() {
         if (compare(previousVersion, '2.2.1', '<')) {
             updateText = 'Version 2.2.1: minor bugfixes\r\n' + updateText;
         }
-        if (compare(previousVersion, '2.2.2', '<')) {
-            updateText = 'Version 2.2.2: Storage bugfixes\r\n' + updateText;
+        if (compare(previousVersion, '2.3.0', '<')) {
+            updateText =
+                'Version 2.3.0: Storage bugfixes and minor UI improvements\r\n' +
+                updateText;
         }
 
         acknowledgeVersion(currentVersion, updateText).then(() => {

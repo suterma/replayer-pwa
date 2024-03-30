@@ -1,3 +1,23 @@
+## [2.3.0](https://github.com/suterma/replayer-pwa/compare/v2.1.0...v2.3.0) (2023-03-30)
+
+This release adds a playback rate setting, fixes some storage issues and implements various UI improvements.
+
+## What's Changed
+
+-   Improved download dialog
+-   Initial cue is optional
+-   Improved time update handling
+-   Improved menu display
+-   Improved artist display
+-   Fixed keyboard handling for menus
+-   Added playback rate handling
+-   Internally improved media looping
+-   Improved storage handling for blobs/files, including more precise error handling
+-   Removed fragment usage for blobs, due to issues on iPadOS devices
+-   Improved ZIP loading progress display
+
+**Full Changelog**: (https://github.com/suterma/replayer-pwa/compare/v2.1.0...v2.3.0)
+
 ## [2.1.0](https://github.com/suterma/replayer-pwa/compare/v2.0.2...v2.1.0) (2023-01-21)
 
 This release mainly adds a fullscreen mode, specifically useful with video content.
