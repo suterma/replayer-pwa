@@ -123,6 +123,35 @@ export const useAudioStore = defineStore(Store.Audio, () => {
         return audioContext.value;
     });
 
+    // --- Multitrack feature ---
+
+    /** Toggles the solo state for all tracks
+     */
+    function toggleSolo() {
+        //TODO
+    }
+
+    /** Toggles the mute state for all tracks
+     */
+    function toggleMute() {
+        //TODO
+    }
+
+    /** Whether all tracks have their media resource loaded */
+    const isAllTrackLoaded = computed(() => {
+        return true; //TODO
+    });
+
+    /** Whether all tracks are soloed */
+    const isAllTrackSoloed = computed(() => {
+        return false; //TODO
+    });
+
+    /** Whether all tracks are muted */
+    const isAllTrackMuted = computed(() => {
+        return false; //TODO
+    });
+
     return {
         context,
         mediaHandlers,
@@ -130,6 +159,13 @@ export const useAudioStore = defineStore(Store.Audio, () => {
         removeMediaHandler,
         closeContext,
         resumeContext,
+
+        toggleSolo,
+        toggleMute,
+        isAllTrackLoaded,
+        isAllTrackSoloed,
+        isAllTrackMuted,
+
         isContextRunning,
     };
 });

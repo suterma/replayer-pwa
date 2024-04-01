@@ -56,12 +56,177 @@
                     @track-ended="continueAfterTrack(track.Id)"
                 />
             </template>
+            <!-- separate Pseudo-Track with "Master" Controls for the Mixer -->
+            <template v-if="isMixable">
+                <hr />
+                <div class="track is-together-print" data-cy="master-track">
+                    <!-- Level, also on mobile 
+                NOTE: The 100% width is necessary to keep the level's right items fully a the end of the available space. -->
+                    <div style="width: 100%" class="level is-mobile">
+                        <!-- Left side -->
+                        <div class="level-left">
+                            <div
+                                class="level-item is-justify-content-flex-start"
+                            >
+                                <SoloButton
+                                    :disabled="!isAllTrackLoaded"
+                                    :isSoloed="isAllTrackSoloed"
+                                    @click="multitrackHandler?.toggleSolo()"
+                                    data-cy="solo-all"
+                                    title="Solo ALL"
+                                />
+                                <MuteButton
+                                    :disabled="!isAllTrackLoaded"
+                                    :isMuted="isAllTrackMuted"
+                                    @click="multitrackHandler?.toggleMute()"
+                                    data-cy="mute-all"
+                                    title="Mute ALL"
+                                />
+                            </div>
+                            <div
+                                class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
+                            >
+                                <ToggleButton
+                                    class="button is-primary"
+                                    :class="{
+                                        'is-inactive': !showVertical,
+                                    }"
+                                    :isEngaged="showVertical"
+                                    engaged-label="show Horizontal"
+                                    disengaged-label="show Vertical"
+                                    @click="toggleVertical($event)"
+                                >
+                                    <BaseIcon
+                                        v-if="!showVertical"
+                                        :path="mdiRotateLeftVariant"
+                                    />
+                                    <BaseIcon
+                                        v-else
+                                        :path="mdiRotateRightVariant"
+                                        :style="{
+                                            transform: 'rotate(' + 90 + 'deg)',
+                                        }"
+                                    />
+                                </ToggleButton>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
         </div>
+        <!-- Multi-track-Controller -->
+        <Teleport to="#media-player">
+            <div class="section has-background-grey-dark" v-if="isMixable">
+                <!-- 
+                Track playback bar (In mix mode, this contains:
+                - a wide slider
+                - the play/pause/mute/solo combo
+                - a set of transport controls
+                    -->
+                <nav class="level is-editable is-unselectable">
+                    <div class="level-left">
+                        <div class="level-item is-justify-content-flex-start">
+                            <SoloButton
+                                :disabled="!isAllTrackLoaded"
+                                :isSoloed="isAllTrackSoloed"
+                                @click="multitrackHandler?.toggleSolo()"
+                                data-cy="mute"
+                            />
+                            <MuteButton
+                                :disabled="!isAllTrackLoaded"
+                                :isMuted="isAllTrackMuted"
+                                @click="multitrackHandler?.toggleMute()"
+                                data-cy="mute"
+                            />
+                        </div>
+                        <div
+                            class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
+                        >
+                            <ToggleButton
+                                class="button is-primary"
+                                :class="{
+                                    'is-inactive': !showVertical,
+                                }"
+                                :isEngaged="showVertical"
+                                engaged-label="show Horizontal"
+                                disengaged-label="show Vertical"
+                                @click="toggleVertical($event)"
+                            >
+                                <BaseIcon
+                                    v-if="!showVertical"
+                                    :path="mdiRotateLeftVariant"
+                                />
+                                <BaseIcon
+                                    v-else
+                                    :path="mdiRotateRightVariant"
+                                    :style="{
+                                        transform: 'rotate(' + 90 + 'deg)',
+                                    }"
+                                />
+                            </ToggleButton>
+                        </div>
+                    </div>
+
+                    <!-- A central level item. Margins are set to provide nice-looking spacing at all widths -->
+                    <div class="level-item mt-4-mobile">
+                        <PlayheadSlider
+                            class="is-fullwidth"
+                            :modelValue="getMultitrackPosition.position"
+                            @update:modelValue="
+                                (position) =>
+                                    multitrackHandler?.seekToSeconds(position)
+                            "
+                            @seek="
+                                (seconds) => multitrackHandler?.seek(seconds)
+                            "
+                            :trackDuration="
+                                multitrackHandler?.getAllTrackDuration()
+                            "
+                        >
+                        </PlayheadSlider>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item is-justify-content-flex-end">
+                            <button class="button is-nav is-indicator">
+                                <TimeDisplay
+                                    :modelValue="getMultitrackPosition.position"
+                                    :subSecondDigits="1"
+                                ></TimeDisplay>
+                            </button>
+                            <!-- Sync Time display -->
+                            <!-- //TODO make this display a setting -->
+                            <button class="button is-nav is-indicator">
+                                <span
+                                    class="is-minimum-7-characters is-family-monospace has-text-info"
+                                    title="Click to synch tracks"
+                                    >({{
+                                        getMultitrackPosition.range?.toFixed(6)
+                                    }}s)</span
+                                >
+                            </button>
+                            <button
+                                class="button is-info"
+                                @click="multitrackHandler?.synchTracks"
+                            >
+                                Synch
+                            </button>
+                            <PlaybackIndicator
+                                :isReady="!isAllPlaying && isAllTrackLoaded"
+                                :isPlaying="isAllPlaying"
+                                :isUnloaded="!isAllTrackLoaded"
+                                :isUnavailable="!isAllMediaAvailable"
+                                data-cy="playback-indicator"
+                            />
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </Teleport>
     </div>
 </template>
 
-<script lang="ts">
-import { type PropType, defineComponent } from 'vue';
+<script setup lang="ts">
+import { type PropType, defineComponent, ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
 import VueScrollTo from 'vue-scrollto';
 
 import MediaTrack from '@/components/track/MediaTrack.vue';
@@ -70,7 +235,7 @@ import NoticeTrack from '@/components/track/NoticeTrack.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { mdiRotateLeftVariant, mdiRotateRightVariant } from '@mdi/js';
-import { mapWritableState, mapActions, mapState } from 'pinia';
+import { mapWritableState, mapActions, mapState, storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import NoSleep from 'nosleep.js';
 import { useSettingsStore } from '@/store/settings';
@@ -84,16 +249,7 @@ import type { ICue } from '@/store/ICue';
  * @remarks Also handles the common replayer events for compilations
  * @remarks Also supports shuffling of tracks
  */
-export default defineComponent({
-    // eslint-disable-next-line vue/multi-word-component-names
-    name: 'Compilation',
-    components: {
-        MediaTrack,
-        ReplayerEventHandler,
-        CompilationHeader,
-        NoticeTrack,
-    },
-    props: {
+const props = defineProps({
         compilation: { type: Object as PropType<ICompilation>, required: true },
 
         /** The display mode of the contained tracks.
@@ -105,194 +261,209 @@ export default defineComponent({
             default: TrackViewMode.Play,
             required: false,
         },
-    },
-    data() {
-        return {
+    });
+
             /** The wake lock fill-in that can prevent screen timeout */
-            noSleep: new NoSleep(),
+const noSleep:NoSleep =  new NoSleep();
 
             /** A seed for the deterministic shuffling (until next shuffling is requested)
              * @remarks Reshuffling occurs when the PlaybackMode is toggled to ShuffleCompilation.
              * @devdoc This allows to keep the shuffled order.
              */
-            shuffleSeed: 1,
+    let         shuffleSeed:number = 1;
 
             /** Whether to show the track in a vertical orientation */
-            showVertical: false,
+   const          showVertical = ref(false);
 
-            /** Icons from @mdi/js */
-            mdiRotateLeftVariant: mdiRotateLeftVariant,
-            mdiRotateRightVariant: mdiRotateRightVariant,
-        };
-    },
+const app = useAppStore();
 
-    computed: {
-        ...mapState(useAppStore, [
-            'selectedCueId',
-            'nextCueId',
-            'activeTrackId',
-            'hasSingleMediaTrack',
-            'textTracks',
-            'mediaTracks',
-        ]),
-        ...mapWritableState(useAppStore, [
-            'playbackMode',
-            'isFadingEnabled',
-            'isPreRollEnabled',
-        ]),
+const { selectedCueId,
+            nextCueId,
+            activeTrackId,
+            hasSingleMediaTrack,
+            textTracks,
+            mediaTracks,
+            playbackMode,
+            isFadingEnabled,
+            isPreRollEnabled,
+} = storeToRefs(app);
 
-        ...mapState(useSettingsStore, ['preventScreenTimeout']),
+
+
+const settings = useSettingsStore();
+const {preventScreenTimeout} = storeToRefs(settings);
+
 
         /** Return a typed version of the playback mode
          * @devdoc seems to be necessary as the media track can not accept the
          * variant from the store
          */
-        typedPlaybackMode(): PlaybackMode {
-            return this.playbackMode as PlaybackMode;
-        },
+         const typedPlaybackMode = computed(() => playbackMode as unknown as PlaybackMode);
+
+                 /** Whether the tracks are currently in a shuffled order.
+         */
+        const isTracksShuffled = computed (() =>
+        typedPlaybackMode.value === PlaybackMode.ShuffleCompilation
+        );
+
+
+                 /** The currently available media tracks in the compilation
+         * @remarks The order may also be shuffled, depending on the PlaybackMode
+         */
+        const tracks = computed(() =>{
+            const tracks = mediaTracks.value as Array<ITrack> | undefined;
+            //Deterministically shuffle if required
+            if (tracks && isTracksShuffled.value) {
+                return CompilationHandler.shuffle(tracks, shuffleSeed);
+            }
+            return tracks;
+        });
+
 
         /** Whether this compilation has any tracks.
          */
-        hasTracks(): boolean {
-            if (this.tracks && this.tracks.length > 0) {
+         const hasTracks = computed(() => {
+            if (mediaTracks.value && mediaTracks.value.length > 0) {
                 return true;
             }
             return false;
-        },
-
-        /** Whether the tracks are currently in a shuffled order.
-         */
-        isTracksShuffled(): boolean {
-            return this.playbackMode === PlaybackMode.ShuffleCompilation;
-        },
+         });
 
         /** Whether the PlaybackMode is looping the tracks
          * in the compilation.
          * @remarks These are PlaybackMode.ShuffleCompilation
          * and PlaybackMode.ShuffleCompilation
          */
-        isLoopingPlaybackMode(): boolean {
+        const isLoopingPlaybackMode = computed(()=>{
             return (
-                this.playbackMode === PlaybackMode.ShuffleCompilation ||
-                this.playbackMode === PlaybackMode.LoopCompilation
+                typedPlaybackMode.value === PlaybackMode.ShuffleCompilation ||
+                typedPlaybackMode.value === PlaybackMode.LoopCompilation
             );
-        },
+        });
 
         /** Whether the edit mode is active
          * @remarks For simplicity, the header is shown as editable, as long as the tracks are editable, too.
          */
-        isEditable(): boolean {
-            return this.trackViewode === TrackViewMode.Edit;
-        },
+         const isEditable = computed(()=>{
+            props.trackViewode === TrackViewMode.Edit;
+        });
+
 
         /** Whether the mix mode is active
          */
-        isMixable(): boolean {
-            return this.trackViewode === TrackViewMode.Mix;
-        },
-
-        /** The currently available media tracks in the compilation
-         * @remarks The order may also be shuffled, depending on the PlaybackMode
-         */
-        tracks(): Array<ITrack> | undefined {
-            const tracks = this.mediaTracks as Array<ITrack> | undefined;
-            //Deterministically shuffle if required
-            if (tracks && this.isTracksShuffled) {
-                return CompilationHandler.shuffle(tracks, this.shuffleSeed);
-            }
-            return tracks;
-        },
+         const isMixable = computed(()=>{
+            props.trackViewode === TrackViewMode.Mix;
+        });
 
         /** Returns all cues from all media tracks in the current compilation */
-        allCues(): Array<ICue> {
-            return CompilationHandler.getAllCues(this.tracks);
-        },
-    },
-    watch: {
-        /** Handle scrolling to the changed active track.
+        const allCues = computed(()=>{
+            CompilationHandler.getAllCues(tracks.value);
+        });
+
+                /** Handle scrolling to the changed active track.
          * @remarks This is intentionally only invoked on when the active track changes (and it's not the only audio track).
          * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
          */
-        activeTrackId(trackId: string | null) {
-            if (trackId && !this.hasSingleMediaTrack) {
+        watch(
+    () => activeTrackId,
+    (trackId) => {
+
+            if (trackId && !hasSingleMediaTrack) {
                 console.debug('scrolling to activated track ', trackId);
-                this.$nextTick(() => {
-                    this.scrollToTrack(trackId);
+                nextTick(() => {
+                    scrollToTrack(trackId);
                 });
             }
-        },
+
+    },
+    { immediate: true /* to handle it at least once after mount time */ },
+);
 
         /** Handle scrolling to the active track, when the display mode changes.
          * @remarks This is intentionally only invoked on when the display mode changes (and it's not the only track).
          */
-        trackViewode() {
-            const trackId = this.activeTrackId;
-            if (trackId && !this.hasSingleMediaTrack) {
+         watch(
+    () => props.trackViewode,
+    () => {
+        const trackId = activeTrackId;
+
+
+            if (trackId && !hasSingleMediaTrack) {
                 console.debug('scrolling to mode-changed track ', trackId);
-                this.$nextTick(() => {
+                nextTick(() => {
                     if (trackId != null) {
-                        this.scrollToTrack(trackId);
+                    scrollToTrack(trackId);
                     }
                 });
             }
-        },
+
+    },
+    { immediate: true /* to handle it at least once after mount time */ },
+);
 
         /** Updates the shuffle seed if required by a playback mode change.
          */
-        isTracksShuffled(isShuffled: boolean) {
-            if (isShuffled) {
-                this.shuffleSeed = ++this.shuffleSeed;
+         watch(
+    () => isTracksShuffled,
+    (isShuffled) => {
+        if (isShuffled) {
+                shuffleSeed = ++shuffleSeed;
                 console.debug(
                     'Compilation::playbackMode:shuffleSeed',
-                    this.shuffleSeed,
+                    shuffleSeed,
                 );
             }
-        },
+
     },
+    { immediate: true /* to handle it at least once after mount time */ },
+);
+
+
     /**
      * @remarks Implements #26 in a simple way, as soon as a compilation is shown (disregarding the actual selection of a track)
      */
-    mounted(): void {
-        this.activateWakeLock();
-    },
-    unmounted(): void {
-        this.deactivateWakeLock();
-    },
 
-    methods: {
-        ...mapActions(useAppStore, [
-            'updateSelectedCueId',
-            'updateScheduledCueId',
-        ]),
+     onMounted(() => {
+        activateWakeLock();
+
+});
+
+onUnmounted(() => {
+    deactivateWakeLock();
+
+});
+
+
+
 
         /** Activates the wake lock (if enabled in settings)
          * @remarks Implements https://github.com/suterma/replayer-pwa/issues/26
          * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
          */
-        activateWakeLock(): void {
-            if (this.preventScreenTimeout) {
-                if (!this.noSleep.isEnabled) {
-                    this.noSleep.enable().catch((error) => {
+        function activateWakeLock(): void {
+            if (preventScreenTimeout) {
+                if (!noSleep.isEnabled) {
+                    noSleep.enable().catch((error) => {
                         console.warn(
                             `Swallowed error for failed WakeLock promise: ${error.name}, ${error.message}`,
                         );
                     });
                 }
             }
-        },
+        };
         /** Deactivates the wake lock
          * @devdoc Uses a wake-lock fill in, because this feature is not yet available on all browsers
          */
-        deactivateWakeLock(): void {
-            if (this.noSleep.isEnabled) {
-                this.noSleep.disable();
+        function deactivateWakeLock(): void {
+            if (noSleep.isEnabled) {
+                noSleep.disable();
             }
-        },
+        };
 
         /** Visually scrolls to the given track, making it visually at the top of
          * the view.
          */
-        scrollToTrack(trackId: string) {
+        function scrollToTrack(trackId: string) {
             if (trackId) {
                 const trackElement = document.getElementById(
                     'track-' + trackId,
@@ -307,11 +478,11 @@ export default defineComponent({
                     cancelable: false,
                 });
             }
-        },
+        }
 
-        toggleVertical(event: Event): void {
-            this.showVertical = !this.showVertical;
-            if (this.showVertical) {
+        function toggleVertical(event: Event): void {
+            showVertical.value  = !showVertical.value;
+            if (showVertical.value) {
                 VueScrollTo.scrollTo(event.target, {
                     /** Always scroll, make it on top of the view */
                     force: true,
@@ -321,95 +492,99 @@ export default defineComponent({
                     cancelable: false,
                 });
             }
-        },
+        };
 
-        updatePlaybackMode(playbackMode: PlaybackMode): void {
+        function updatePlaybackMode(mode: PlaybackMode): void {
             //omit the modes that affect more than one track
-            if (this.hasSingleMediaTrack) {
+            if (hasSingleMediaTrack.value) {
                 if (
-                    playbackMode === PlaybackMode.LoopCompilation ||
-                    playbackMode === PlaybackMode.ShuffleCompilation
+                    mode === PlaybackMode.LoopCompilation ||
+                    mode === PlaybackMode.ShuffleCompilation
                 ) {
-                    playbackMode = PlaybackMode.PlayTrack;
+                    mode = PlaybackMode.PlayTrack;
                 }
             }
 
-            this.playbackMode = playbackMode;
-        },
+            playbackMode.value = mode;
+        };
 
         /** Handle fading enabled updated
          */
-        updatedIsFadingEnabled(isFadingEnabled: boolean): void {
-            this.isFadingEnabled = isFadingEnabled;
-        },
+        function updatedIsFadingEnabled(enabled: boolean): void {
+            isFadingEnabled.value = enabled;
+        };
 
         /** Handle pre-roll enabled updated
          */
-        updatedIsPreRollEnabled(isPreRollEnabled: boolean): void {
-            this.isPreRollEnabled = isPreRollEnabled;
-        },
+        function updatedIsPreRollEnabled(enabled: boolean): void {
+            isPreRollEnabled.value = enabled;
+        };
 
         /** Moves playback to the previous track
          * @param trackId - The Id of the track to use the previous of
          * @param loop - When true, and the previous track is not defined, the last track is used.
          */
-        toPreviousTrack(trackId: string, loop = false): void {
-            if (this.tracks) {
+        function toPreviousTrack(trackId: string, loop = false): void {
+                        //TODO maybe use a method with the media handers in the audio store to skip to the next track
+
+            if (tracks.value) {
                 const prevTrackId = CompilationHandler.getPreviousTrackById(
-                    this.tracks,
+                    tracks.value,
                     trackId,
                     loop,
                 )?.Id;
                 if (prevTrackId) {
-                    this.getTrackInstance(prevTrackId).skipToPlayPause();
+                    getTrackInstance(prevTrackId).skipToPlayPause();
                 }
             }
-        },
+        };
+
         /** Moves playback to the next track
          * @remarks Optionally supports looping back to the beginning, if the end was reached.
          * @param trackId - The Id of the track to use the next of
          * @param loop - When true, and the next track is not defined, the first track is used.
          */
-        toNextTrack(trackId: string, loop = false): void {
+        function toNextTrack(trackId: string, loop = false): void {
+            //TODO maybe use a method with the media handers in the audio store to skip to the next track
             console.debug('toNextTrack', trackId);
-            if (this.tracks) {
+            if (tracks.value) {
                 const nextTrackId = CompilationHandler.getNextTrackById(
-                    this.tracks,
+                    tracks.value,
                     trackId,
                     loop,
                 )?.Id;
                 if (nextTrackId) {
-                    this.getTrackInstance(nextTrackId).skipToPlayPause();
+                    getTrackInstance(nextTrackId).skipToPlayPause();
                 }
             }
-        },
+        };
 
         /** Handles the playback mode after a track has ended. Implement the compilation loop and shuffle modes.
          */
-        continueAfterTrack(trackId: string): void {
+        function continueAfterTrack(trackId: string): void {
             console.debug('continueAfterTrack', trackId);
-            if (this.hasTracks) {
+            if (hasTracks.value) {
                 if (
-                    this.playbackMode === PlaybackMode.LoopCompilation ||
-                    this.playbackMode === PlaybackMode.ShuffleCompilation
+                    playbackMode.value === PlaybackMode.LoopCompilation ||
+                    playbackMode.value === PlaybackMode.ShuffleCompilation
                 ) {
-                    this.toNextTrack(trackId, true);
+                    toNextTrack(trackId, true);
                 }
             }
-        },
+        };
 
         /** Gets a reference to the track component instance.
          * @devdoc $ref's are non-reactive, see https://v3.vuejs.org/api/special-attributes.html#ref
          * Thus, referencing an instance after it has been removed from the DOM (e.g. by v-if)
          * does not work, even after it's rendered again later.
          */
-        getTrackInstance(trackId: string): InstanceType<typeof MediaTrack> {
-            const trackRef = 'track-' + trackId;
-            const track = (this.$refs[trackRef] as never)[0] as InstanceType<
-                typeof MediaTrack
-            >;
-            return track;
-        },
+        // function getTrackInstance(trackId: string): InstanceType<typeof MediaTrack> {
+        //     const trackRef = 'track-' + trackId;
+        //     const track = ($refs[trackRef] as never)[0] as InstanceType<
+        //         typeof MediaTrack
+        //     >;
+        //     return track;
+        // };
 
         /** Selects the previous cue, if any. Otherwise, loop to the last cue */
         toPreviousCue() {
