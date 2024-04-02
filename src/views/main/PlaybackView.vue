@@ -14,19 +14,22 @@
          between other uses of the shortcut keys-->
         <CompilationKeyboardHandler :require-ctrl-modifier="isEditMode" />
 
-        <!-- Show a loading panel, similar to the edit view, but not in edit mode -->
+        <!-- If available, show the compilation -->
         <Compilation
             v-if="hasCompilation"
             :compilation="compilation"
             :track-viewode="trackViewode"
         />
 
+        <!-- Otherwise, show the claim -->
         <div v-else class="section pl-0 pr-0 block">
             <p class="has-text-centered">
                 Replayer is a free, cue-based media player for rehearsals with
                 playback music.
             </p>
         </div>
+
+        <!--During edit or when nothing yet loaded, offer the drop zone -->
         <div
             v-if="isEditMode || !hasCompilation"
             class="section pt-6 pl-0 pr-0 block"
@@ -34,6 +37,8 @@
             <!-- Offer the demo only when no compilation/track is shown -->
             <MediaDropZone :offer-demo="!hasCompilation" />
         </div>
+
+        <!--During edit, with available media, offer the media list -->
         <template v-if="isEditMode && hasAvailableMedia">
             <div class="has-text-centered block">
                 <CollapsiblePanel>
