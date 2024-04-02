@@ -55,6 +55,8 @@
             <!-- separate Pseudo-Track with "Master" Controls for the Mixer -->
             <template v-if="isMixable">
                 <hr />
+                <MasterTrack id="track-master" class="block"> </MasterTrack>
+                //TODO move the below features into the master track component
                 <div class="track is-together-print" data-cy="master-track">
                     <!-- Level, also on mobile 
                 NOTE: The 100% width is necessary to keep the level's right items fully a the end of the available space. -->
@@ -231,6 +233,7 @@ import {
 import VueScrollTo from 'vue-scrollto';
 //TODO maybe the multitrack master track should go into it's own component...
 import MediaTrack from '@/components/track/MediaTrack.vue';
+import MasterTrack from '@/components/track/MasterTrack.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import NoticeTrack from '@/components/track/NoticeTrack.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
