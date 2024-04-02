@@ -71,14 +71,14 @@
                                     :is-soloed="isAllTrackSoloed"
                                     title="Solo ALL"
                                     data-cy="solo-all"
-                                    @click="audio.toggleSolo()"
+                                    @click="multitrack.toggleSolo()"
                                 />
                                 <MuteButton
                                     :disabled="!isAllTrackLoaded"
                                     :is-muted="isAllTrackMuted"
                                     data-cy="mute-all"
                                     title="Mute ALL"
-                                    @click="audio.toggleMute()"
+                                    @click="multitrack.toggleMute()"
                                 />
                             </div>
                             <div
@@ -128,13 +128,13 @@
                                 :disabled="!isAllTrackLoaded"
                                 :is-soloed="isAllTrackSoloed"
                                 data-cy="mute"
-                                @click="audio.toggleSolo()"
+                                @click="multitrack.toggleSolo()"
                             />
                             <MuteButton
                                 :disabled="!isAllTrackLoaded"
                                 :is-muted="isAllTrackMuted"
                                 data-cy="mute"
-                                @click="audio.toggleMute()"
+                                @click="multitrack.toggleMute()"
                             />
                         </div>
                         <div
@@ -169,12 +169,13 @@
                     <div class="level-item mt-4-mobile">
                         <PlayheadSlider
                             class="is-fullwidth"
-                            :model-value="audio.getMultitrackPosition"
-                            :track-duration="audio.getAllTrackDuration"
+                            :model-value="multitrack.getMultitrackPosition"
+                            :track-duration="multitrack.getAllTrackDuration"
                             @update:model-value="
-                                (position) => audio.seekAllToSeconds(position)
+                                (position) =>
+                                    multitrack.seekAllToSeconds(position)
                             "
-                            @seek="(seconds) => audio.seekAll(seconds)"
+                            @seek="(seconds) => multitrack.seekAll(seconds)"
                         >
                         </PlayheadSlider>
                     </div>
@@ -182,7 +183,9 @@
                         <div class="level-item is-justify-content-flex-end">
                             <button class="button is-nav is-indicator">
                                 <TimeDisplay
-                                    :model-value="audio.getMultitrackPosition"
+                                    :model-value="
+                                        multitrack.getMultitrackPosition
+                                    "
                                     :sub-second-digits="1"
                                 ></TimeDisplay>
                             </button>
@@ -193,7 +196,7 @@
                                     class="is-minimum-7-characters is-family-monospace has-text-info"
                                     title="Click to synch tracks"
                                     >({{
-                                        audio.getMultitrackPositionRange?.toFixed(
+                                        multitrack.getMultitrackPositionRange?.toFixed(
                                             6,
                                         )
                                     }}s)</span
@@ -201,7 +204,7 @@
                             </button>
                             <button
                                 class="button is-info"
-                                @click="audio.synchTracks()"
+                                @click="multitrack.synchTracks()"
                             >
                                 Synch
                             </button>
@@ -253,7 +256,7 @@ import type { ICompilation } from '@/store/ICompilation';
 import { TrackViewMode } from '@/store/TrackViewMode';
 import { PlaybackMode } from '@/store/PlaybackMode';
 import type { ITrack } from '@/store/ITrack';
-import { useAudioStore } from '@/store/audio';
+import { useMultitrackStore } from '@/store/multitrack';
 
 /** Displays the contained set of tracks according to the required mode.
  * @remarks Also handles the common replayer events for compilations
@@ -618,14 +621,15 @@ function toMnemonicCue(event: Event) {
 }
 
 // --- Multitrack ---
-const audio = useAudioStore();
+
+const multitrack = useMultitrackStore();
 const {
     isAllTrackLoaded,
     isAllTrackMuted,
     isAllTrackSoloed,
     isAllPlaying,
     isAllMediaAvailable,
-} = storeToRefs(audio);
+} = storeToRefs(multitrack);
 </script>
 <style type="css">
 .tracks.vertical {

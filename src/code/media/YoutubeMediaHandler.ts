@@ -333,25 +333,14 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     /** The duration of the track
      * @remarks Is only available after the video has been initially loaded
      */
-    _durationSeconds: number | null = null;
+    _duration: number | null = null;
 
-    /** If changed, updates the internal duration and emits the durationChanged event
+    /** Emits the durationChanged event
      * @param {number} duration - could be NaN or infinity, depending on the source
      */
     updateDuration(duration: number): void {
-        //console.debug('TrackYoutubeElement::updateDuration:duration', duration);
-
-        if (this._durationSeconds !== duration) {
-            this._durationSeconds = duration;
-            this.onDurationChanged.emit(duration);
-        }
-    }
-
-    /** Gets the duration of the track
-     * @remarks Is only available after loading of the track's media source
-     */
-    get durationSeconds(): number | null {
-        return this._durationSeconds;
+        console.debug('TrackYoutubeElement::updateDuration:duration', duration);
+        this.onDurationChanged.emit(duration);
     }
 
     onDurationChanged: SubEvent<number> = new SubEvent();

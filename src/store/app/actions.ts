@@ -161,20 +161,17 @@ export const actions = {
      * calculates the durations of all cues, including the last one.
      * @remarks No ordering is done with this operation
      * @remarks The calculated durations are only valid as long as the cues, their times, and the track does not change
-     * @param {number} trackDurationSeconds - could be NaN or infinity, depending on the source
+     * @param {number} trackDuration - the track duratin in [seconds]. Could be NaN or infinity, depending on the source.
      */
-    updateDurations(trackId: string, trackDurationSeconds: number): void {
+    updateDurations(trackId: string, trackDuration: number): void {
         const track = CompilationHandler.getTrackById(
             state.compilation.value.Tracks,
             trackId,
         );
 
         if (track) {
-            track.Duration = trackDurationSeconds;
-            CompilationHandler.updateCueDurations(
-                track.Cues,
-                trackDurationSeconds,
-            );
+            track.Duration = trackDuration;
+            CompilationHandler.updateCueDurations(track.Cues, trackDuration);
         }
     },
 

@@ -6,7 +6,14 @@
  */
 
 import { defineStore } from 'pinia';
-import { type ShallowRef, computed, ref, shallowRef, readonly } from 'vue';
+import {
+    type ShallowRef,
+    computed,
+    shallowRef,
+    readonly,
+    shallowReactive,
+    reactive,
+} from 'vue';
 import { Store } from '..';
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
 
@@ -25,9 +32,9 @@ export const useAudioStore = defineStore(Store.Audio, () => {
 
     /** The media handlers the application can work with
      * @remarks Each media handler belongs to a track in the compilation
+     * @devdoc shallowReactive is used over shallowRev to watch the array entries at the top level, not just the array itself.
      */
-
-    const mediaHandlers = ref(new Array<IMediaHandler>());
+    const mediaHandlers = reactive(new Array<IMediaHandler>());
 
     /** Internal flag, whether the audio context currently can be considered as running. */
     const isContextRunningFlag = shallowRef(false);
@@ -37,15 +44,15 @@ export const useAudioStore = defineStore(Store.Audio, () => {
 
     /** Adds the given media handler to the list of available media handlers */
     function addMediaHandler(handler: IMediaHandler) {
-        mediaHandlers.value.push(handler);
+        mediaHandlers.push(handler);
     }
     /** Removes the given media handler from the list of available media handler, by the id attribute */
     function removeMediaHandlerById(handlerId: string) {
-        const removeIndex = mediaHandlers.value
+        const removeIndex = mediaHandlers
             .map((handler) => handler.id)
             .indexOf(handlerId);
 
-        ~removeIndex && mediaHandlers.value.splice(removeIndex, 1);
+        ~removeIndex && mediaHandlers.splice(removeIndex, 1);
     }
 
     /** Removes the given media handler from the list of available media handler */
@@ -123,83 +130,6 @@ export const useAudioStore = defineStore(Store.Audio, () => {
         return audioContext.value;
     });
 
-    // --- Multitrack feature ---
-
-    /** Toggles the solo state for all tracks
-     */
-    function toggleSolo() {
-        //TODO
-    }
-
-    /** Toggles the mute state for all tracks
-     */
-    function toggleMute() {
-        //TODO
-    }
-
-    /** Seeks all track to the given position
-     */
-    function seekAllToSeconds(position: number) {
-        //TODO
-    }
-
-    /** Seeks all track by the given timespan in [seconds]
-     */
-    function seekAll(seconds: number) {
-        //TODO
-    }
-
-    /** Forcibly synchronizes playback of all tracks
-     */
-    function synchTracks() {
-        //TODO
-    }
-
-    /** Whether all tracks have their media resource loaded */
-    const isAllTrackLoaded = computed(() => {
-        return true; //TODO
-    });
-
-    /** Whether all tracks are soloed */
-    const isAllTrackSoloed = computed(() => {
-        return false; //TODO
-    });
-
-    /** Whether all tracks are muted */
-    const isAllTrackMuted = computed(() => {
-        return false; //TODO
-    });
-
-    /** Whether all tracks are playing */
-    const isAllPlaying = computed(() => {
-        return false; //TODO
-    });
-
-    /** Whether the media resources for tracks are available */
-    const isAllMediaAvailable = computed(() => {
-        return false; //TODO
-    });
-
-    /** Gets the track duration of all tracks
-     * @remarks The minimum track duration is used
-     */
-    const getAllTrackDuration = computed(() => {
-        return 0; //TODO
-    });
-
-    /** Gets the track position of all tracks
-     * @remarks The average track position is used
-     */
-    const getMultitrackPosition = computed(() => {
-        return 0; //TODO
-    });
-
-    /** Gets the range of the track positions of all tracks from the last getMultitrackPosition call
-     */
-    const getMultitrackPositionRange = computed(() => {
-        return 0; //TODO
-    });
-
     return {
         context,
         mediaHandlers,
@@ -207,21 +137,6 @@ export const useAudioStore = defineStore(Store.Audio, () => {
         removeMediaHandler,
         closeContext,
         resumeContext,
-
-        toggleSolo,
-        toggleMute,
-        seekAllToSeconds,
-        seekAll,
-        synchTracks,
-        isAllTrackLoaded,
-        isAllTrackSoloed,
-        isAllTrackMuted,
-        isAllPlaying,
-        isAllMediaAvailable,
-        getAllTrackDuration,
-        getMultitrackPosition,
-        getMultitrackPositionRange,
-
         isContextRunning,
     };
 });

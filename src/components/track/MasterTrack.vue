@@ -20,14 +20,31 @@
                     class="level-left level-wrap is-justify-content-flex-start"
                 >
                     <!-- Slot for prepending level items -->
-                    <div data-v-9b701c96="" class="level-item is-narrow">
-                        <button
-                            data-v-9b701c96=""
-                            class="button is-clickable"
-                            title="Play"
-                            data-cy="toggle-playback"
-                        ></button
-                        ><!-- Title input --><!-- The title is the only header element that should shrink (break on words) if necessary -->
+                    <div class="level-item is-narrow">
+                        <PlayPauseButton
+                            :disabled="!isAllTrackLoaded"
+                            :class="{
+                                'is-success': isAllTrackLoaded,
+                                'is-clickable': isAllTrackLoaded,
+                                'has-cursor-not-allowed': !isAllTrackLoaded,
+                            }"
+                            :is-loading="isAnyFading"
+                            data-cy="toggle-playback-master"
+                            @click="multitrack.togglePlaybackAll"
+                        />
+
+                        isAllTrackLoaded :{{ isAllTrackLoaded }} isAllTrackMuted
+                        :{{ isAllTrackMuted }} isAllTrackSoloed :
+                        {{ isAllTrackSoloed }} isAllPlaying :
+                        {{ isAllPlaying }}
+
+                        isAllPaused :
+                        {{ isAllPaused }}
+                        isAllMediaAvailable:
+                        {{ isAllMediaAvailable }} isAnyFading :
+                        {{ isAnyFading }}
+
+                        <!-- Title input --><!-- The title is the only header element that should shrink (break on words) if necessary -->
                         <div
                             data-v-9b701c96=""
                             class="is-flex-shrink-1 ml-3 is-clickable"
@@ -730,7 +747,27 @@
 </template>
 
 <script setup lang="ts">
+import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
+import { useMultitrackStore } from '@/store/multitrack';
+import { storeToRefs } from 'pinia';
+import { isPlayingInjectionKey } from './TrackInjectionKeys';
+import { provide, readonly } from 'vue';
+
 /** Displays a master track div with a title, and controls for it.
  * @displayName MasterTrack
  */
+
+// --- Multitrack ---
+const multitrack = useMultitrackStore();
+const {
+    isAllTrackLoaded,
+    isAllTrackMuted,
+    isAllTrackSoloed,
+    isAllPlaying,
+    isAllPaused,
+    isAllMediaAvailable,
+    isAnyFading,
+} = storeToRefs(multitrack);
+
+provide(isPlayingInjectionKey, readonly(isAllPlaying));
 </script>

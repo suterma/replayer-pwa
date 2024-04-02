@@ -359,14 +359,12 @@ export default class HtmlMediaHandler implements IMediaHandler {
      */
     isClickToLoadRequired = false;
 
-    /** If changed, updates the internal duration and emits the durationChanged event
+    /** Emits the durationChanged event
      * @param {number} duration - could be NaN or infinity, depending on the source
      */
     private updateDuration(duration: number): void {
-        if (this._durationSeconds !== duration) {
-            this._durationSeconds = duration;
-            this.onDurationChanged.emit(this._durationSeconds);
-        }
+        this.debugLog('updateDuration:duration', duration);
+        this.onDurationChanged.emit(duration);
     }
 
     /** Handles the current ready state of the {HTMLMediaElement}'s media, with regard to playability
@@ -410,18 +408,6 @@ export default class HtmlMediaHandler implements IMediaHandler {
             // Finally, this will then further load and play the track media
             this.onCanPlay.emit();
         }
-    }
-
-    /** The duration of the track
-     * @remarks Is only available after loading of the track's media source
-     */
-    _durationSeconds: number | null = null;
-
-    /** Gets the duration of the track
-     * @remarks Is only available after loading of the track's media source
-     */
-    get durationSeconds(): number | null {
-        return this._durationSeconds;
     }
 
     onDurationChanged: SubEvent<number> = new SubEvent();

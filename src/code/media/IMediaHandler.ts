@@ -57,7 +57,8 @@ export interface IMediaHandler {
      */
     readonly paused: boolean;
 
-    /** Gets the media duration. Might be a non-finite number, if data is not available.
+    /** Gets the media duration, in [seconds].
+     * @remarks Might be a non-finite number, if data is not (yet) available.
      */
     get duration(): number;
 
@@ -119,12 +120,6 @@ export interface IMediaHandler {
     /** Gets or sets the media source URL
      */
     mediaSourceUrl: string;
-
-    /** Gets the duration of the current track, in [seconds]
-     * @remarks This is only available after successful load of the media metadata.
-     * Could be NaN or infinity, depending on the source
-     */
-    readonly durationSeconds: number | null;
 
     /** Emitted when the media data has loaded enough to start playback
      * @devdoc This is emitted separately from the data loading state and events, since the underlying
