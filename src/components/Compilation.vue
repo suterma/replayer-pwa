@@ -205,13 +205,13 @@
                             >
                                 Synch
                             </button>
-                            <PlaybackIndicator
+                            <!-- <PlaybackIndicator
                                 :is-ready="!isAllPlaying && isAllTrackLoaded"
                                 :is-playing="isAllPlaying"
                                 :is-unloaded="!isAllTrackLoaded"
                                 :is-unavailable="!isAllMediaAvailable"
                                 data-cy="playback-indicator"
-                            />
+                            /> -->
                         </div>
                     </div>
                 </nav>
@@ -240,7 +240,6 @@ import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
-import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
 import SoloButton from '@/components/buttons/SoloButton.vue';
 import MuteButton from '@/components/buttons/MuteButton.vue';
