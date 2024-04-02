@@ -137,6 +137,24 @@ export const useAudioStore = defineStore(Store.Audio, () => {
         //TODO
     }
 
+    /** Seeks all track to the given position
+     */
+    function seekAllToSeconds(position: number) {
+        //TODO
+    }
+
+    /** Seeks all track by the given timespan in [seconds]
+     */
+    function seekAll(seconds: number) {
+        //TODO
+    }
+
+    /** Forcibly synchronizes playback of all tracks
+     */
+    function synchTracks() {
+        //TODO
+    }
+
     /** Whether all tracks have their media resource loaded */
     const isAllTrackLoaded = computed(() => {
         return true; //TODO
@@ -152,6 +170,36 @@ export const useAudioStore = defineStore(Store.Audio, () => {
         return false; //TODO
     });
 
+    /** Whether all tracks are playing */
+    const isAllPlaying = computed(() => {
+        return false; //TODO
+    });
+
+    /** Whether the media resources for tracks are available */
+    const isAllMediaAvailable = computed(() => {
+        return false; //TODO
+    });
+
+    /** Gets the track duration of all tracks
+     * @remarks The minimum track duration is used
+     */
+    const getAllTrackDuration = computed(() => {
+        return 0; //TODO
+    });
+
+    /** Gets the track position of all tracks
+     * @remarks The average track position is used
+     */
+    const getMultitrackPosition = computed(() => {
+        return 0; //TODO
+    });
+
+    /** Gets the range of the track positions of all tracks from the last getMultitrackPosition call
+     */
+    const getMultitrackPositionRange = computed(() => {
+        return 0; //TODO
+    });
+
     return {
         context,
         mediaHandlers,
@@ -162,9 +210,17 @@ export const useAudioStore = defineStore(Store.Audio, () => {
 
         toggleSolo,
         toggleMute,
+        seekAllToSeconds,
+        seekAll,
+        synchTracks,
         isAllTrackLoaded,
         isAllTrackSoloed,
         isAllTrackMuted,
+        isAllPlaying,
+        isAllMediaAvailable,
+        getAllTrackDuration,
+        getMultitrackPosition,
+        getMultitrackPositionRange,
 
         isContextRunning,
     };
