@@ -355,14 +355,20 @@
                 </div>
                 <div class="level-right">
                     <div class="level-item is-justify-content-flex-end">
-                        <!-- Currently, the user is expected to use the track list to navigate between tracks. 
-                             Thus the track navigation is alwas hidden -->
                         <MediaControlsBar
                             :disabled="!canPlay"
                             :hide-stop-button="true"
-                            :hide-track-navigation="true"
-                            :has-previous-track="hasPreviousTrack"
-                            :has-next-track="hasNextTrack"
+                            :hide-track-navigation="false"
+                            :has-previous-track="
+                                !isFirst ||
+                                playbackMode === PlaybackMode.LoopCompilation ||
+                                playbackMode === PlaybackMode.ShuffleCompilation
+                            "
+                            :has-next-track="
+                                !isLast ||
+                                playbackMode === PlaybackMode.LoopCompilation ||
+                                playbackMode === PlaybackMode.ShuffleCompilation
+                            "
                             :hide-cue-navigation="true"
                             :hide-pre-roll-toggler="hidePreRollToggler"
                             :hide-fading-toggler="hideFadingToggler"
@@ -546,17 +552,25 @@
                                     <div
                                         class="level-item is-justify-content-flex-end"
                                     >
-                                        <!-- Currently, the user is expected to use the track list to navigate between tracks. 
-                                            Thus the track navigation is alwas hidden -->
                                         <MediaControlsBar
                                             :hide-stop-button="true"
-                                            :hide-track-navigation="true"
+                                            :hide-track-navigation="false"
                                             :has-previous-track="
-                                                hasPreviousTrack
+                                                !isFirst ||
+                                                playbackMode ===
+                                                    PlaybackMode.LoopCompilation ||
+                                                playbackMode ===
+                                                    PlaybackMode.ShuffleCompilation
+                                            "
+                                            :has-next-track="
+                                                !isLast ||
+                                                playbackMode ===
+                                                    PlaybackMode.LoopCompilation ||
+                                                playbackMode ===
+                                                    PlaybackMode.ShuffleCompilation
                                             "
                                             :has-previous-cue="hasPreviousCue"
                                             :has-next-cue="hasNextCue"
-                                            :has-next-track="hasNextTrack"
                                             :playback-mode="playbackMode"
                                             :is-fading-enabled="isFadingEnabled"
                                             :is-pre-roll-enabled="
@@ -841,20 +855,6 @@ const props = defineProps({
         required: true,
     },
 
-    /** Whether this track has a previous track
-     */
-    hasPreviousTrack: {
-        type: Boolean,
-        default: false,
-    },
-
-    /** Whether this track has a next track to skip to
-     */
-    hasNextTrack: {
-        type: Boolean,
-        default: false,
-    },
-
     /** Whether this is the only track in the compilation
      * @remarks Is used to visually omit some unnecessary items for a compilation with just a single track
      */
@@ -863,13 +863,13 @@ const props = defineProps({
         default: false,
     },
 
-    /** Whether this track is the first track in the set of tracks */
+    /** Whether this track is the first track in the set of (possibly shuffled) media tracks */
     isFirst: {
         type: Boolean,
         required: true,
     },
 
-    /** Whether this track is the last track in the set of tracks */
+    /** Whether this track is the last track in the set of (possibly shuffled) media tracks */
     isLast: {
         type: Boolean,
         required: true,

@@ -33,18 +33,13 @@
                     :ref="'track-' + track.Id"
                     class="block"
                     :track="track"
-                    :view-mode="trackViewode"
+                    :view-mode="trackViewode as TrackViewMode"
                     :playback-mode="playbackMode as PlaybackMode"
                     :is-fading-enabled="isFadingEnabled"
                     :is-pre-roll-enabled="isPreRollEnabled"
-                    :has-previous-track="index > 0 || isLoopingPlaybackMode"
-                    :has-next-track="
-                        index < (tracks?.length ?? 0) - 1 ||
-                        isLoopingPlaybackMode
-                    "
                     :is-only-media-track="hasSingleMediaTrack"
-                    :is-first="isFirstTrack(track.Id)"
-                    :is-last="isLastTrack(track.Id)"
+                    :is-first="index === 0"
+                    :is-last="index === (tracks?.length ?? 0) - 1"
                     @update:playback-mode="updatePlaybackMode($event)"
                     @update:is-fading-enabled="updatedIsFadingEnabled($event)"
                     @update:is-pre-roll-enabled="
@@ -303,18 +298,10 @@ const {
 const settings = useSettingsStore();
 const { preventScreenTimeout } = storeToRefs(settings);
 
-/** Return a typed version of the playback mode
- * @devdoc seems to be necessary as the media track can not accept the
- * variant from the store
- */
-const typedPlaybackMode = computed(
-    () => playbackMode as unknown as PlaybackMode,
-);
-
 /** Whether the tracks are currently in a shuffled order.
  */
 const isTracksShuffled = computed(
-    () => typedPlaybackMode.value === PlaybackMode.ShuffleCompilation,
+    () => playbackMode.value === PlaybackMode.ShuffleCompilation,
 );
 
 /** The currently available media tracks in the compilation
@@ -345,8 +332,8 @@ const hasTracks = computed(() => {
  */
 const isLoopingPlaybackMode = computed(() => {
     return (
-        typedPlaybackMode.value === PlaybackMode.ShuffleCompilation ||
-        typedPlaybackMode.value === PlaybackMode.LoopCompilation
+        playbackMode.value === PlaybackMode.ShuffleCompilation ||
+        playbackMode.value === PlaybackMode.LoopCompilation
     );
 });
 
@@ -626,22 +613,6 @@ function toMnemonicCue(event: Event) {
     // if (matchingCue) {
     //     this.updateSelectedCueId(matchingCue.Id);
     // }
-}
-
-/** Whether this track is the first track in the set of tracks */
-function isFirstTrack(trackId: string): boolean {
-    if (tracks.value != undefined) {
-        return tracks.value[0]?.Id === trackId;
-    }
-    return false;
-}
-
-/** Whether this track is the last track in the set of tracks */
-function isLastTrack(trackId: string): boolean {
-    if (tracks.value != undefined) {
-        return tracks.value[tracks.value.length - 1]?.Id === trackId;
-    }
-    return false;
 }
 
 // --- Multitrack ---
