@@ -13,6 +13,7 @@ import {
     shallowRef,
     readonly,
     watch,
+    watchEffect,
 } from 'vue';
 import { Store } from '..';
 import { useAudioStore } from '../audio';
@@ -78,9 +79,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     }
 
     /** Whether all tracks have their media resource loaded */
-    const isAllTrackLoaded = computed(() =>
-        mediaHandlers.value.every((handler) => handler.hasLoadedMetadata),
-    );
+    const isAllTrackLoaded = ref(true);
 
     /** Whether all tracks are soloed */
     const isAllTrackSoloed = computed(() => {
@@ -93,23 +92,14 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     });
 
     /** Whether all tracks are playing */
-    const isAllPlaying = computed(() => {
-        return mediaHandlers.value.every((handler) => !handler.paused);
-    });
+    const isAllPlaying = ref(false);
 
     /** Whether all tracks are paused */
-    const isAllPaused = computed(() => {
-        console.log('isAllPaused');
-        return mediaHandlers.value.every((handler) => handler.paused);
-
-        //        mediaHandlers.value.every((handler) => handler.paused),
-    });
+    const isAllPaused = ref(true);
 
     /** Whether any track is fading */
     //    const isAnyFading = ref(false);
-    const isAnyFading = computed(() =>
-        mediaHandlers.value.some((handler) => handler.fader.fading),
-    );
+    const isAnyFading = ref(false);
 
     /** Whether the media resources for tracks are available */
     const isAllMediaAvailable = computed(() =>
@@ -160,28 +150,54 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
 
     // --- watch the handlers ---
 
-    // let _fadingSubscriptons: Subscription[] = new Array<Subscription>();
+    ...//TODO handle all other events like these, then clean up the mess
 
-    /** Watch all media handlers, and react on their relevant events */
-    // watch(
-    //     () => mediaHandlers,
-    //     (newMediaHandlers) => {
-    //         debugger;
+    let _pausedSubscriptons: Subscription[] = new Array<Subscription>();
+    let _fadingSubscriptons: Subscription[] = new Array<Subscription>();
 
-    //         _fadingSubscriptons.forEach((subscription) => {
-    //             subscription.cancel();
-    //         });
+    /** Watch the media handler set, and react on their relevant events */
+    watch(
+        () => mediaHandlers.value.length,
+        () => {
+            //TODO later optimize these subscriptions
+            _pausedSubscriptons.forEach((subscription) => {
+                subscription.cancel();
+            });
+            _fadingSubscriptons.forEach((subscription) => {
+                subscription.cancel();
+            });
 
-    //         newMediaHandlers.value.forEach((handler) => {
-    //             debugger;
+            audio.mediaHandlers.forEach((handler) => {
+                _pausedSubscriptons.push(
+                    handler.onPausedChanged.subscribe(updatePauseChanged),
+                );
+                _fadingSubscriptons.push(
+                    handler.fader.onFadingChanged.subscribe(
+                        updateFadingChanged,
+                    ),
+                );
+            });
+        },
+        {
+            immediate: true /* to handle it at least once after mount time */,
+            deep: false,
+        },
+    );
 
-    //             _fadingSubscriptons.push(
-    //                 handler.fader.onFadingChanged.subscribe(updateIsAnyFading),
-    //             );
-    //         });
-    //     },
-    //     { immediate: true /* to handle it at least once after mount time */ },
-    // );
+    function updatePauseChanged() {
+        isAllPlaying.value = mediaHandlers.value.every(
+            (handler) => !handler.paused,
+        );
+        isAllPaused.value = mediaHandlers.value.every(
+            (handler) => handler.paused,
+        );
+    }
+
+    function updateFadingChanged() {
+        isAnyFading.value = mediaHandlers.value.some(
+            (handler) => handler.fader.fading,
+        );
+    }
 
     return {
         toggleSolo,

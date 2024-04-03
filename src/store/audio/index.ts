@@ -6,13 +6,7 @@
  */
 
 import { defineStore } from 'pinia';
-import {
-    type ShallowRef,
-    computed,
-    shallowRef,
-    readonly,
-    shallowReactive,
-} from 'vue';
+import { type ShallowRef, shallowRef, readonly, reactive } from 'vue';
 import { Store } from '..';
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
 
@@ -35,7 +29,7 @@ export const useAudioStore = defineStore(Store.Audio, () => {
      * @devdoc shallowReactive is used over shallowRef to watch the array
      * entries at the top level, not just the array itself.
      */
-    const mediaHandlers = shallowReactive(new Array<IMediaHandler>());
+    const mediaHandlers = reactive(new Array<IMediaHandler>());
 
     /** Internal flag, whether the audio context currently can be considered as running. */
     const isContextRunningFlag = shallowRef(false);
