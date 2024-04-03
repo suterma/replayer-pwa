@@ -12,7 +12,6 @@ import {
     shallowRef,
     readonly,
     shallowReactive,
-    reactive,
 } from 'vue';
 import { Store } from '..';
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
@@ -23,7 +22,8 @@ import type { IMediaHandler } from '@/code/media/IMediaHandler';
  */
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 
-/** A store for audio-related global state */
+/** A store for audio-related global state. Maintains the Web Audio API context
+ * and the set of IMediaHandlers for each track in Replayer */
 export const useAudioStore = defineStore(Store.Audio, () => {
     /** The audio context to use for the lifetime of the app instance
      * @devdoc Does get destroyed only after document unload, but this is good enough I guess.
@@ -32,9 +32,10 @@ export const useAudioStore = defineStore(Store.Audio, () => {
 
     /** The media handlers the application can work with
      * @remarks Each media handler belongs to a track in the compilation
-     * @devdoc shallowReactive is used over shallowRev to watch the array entries at the top level, not just the array itself.
+     * @devdoc shallowReactive is used over shallowRef to watch the array
+     * entries at the top level, not just the array itself.
      */
-    const mediaHandlers = reactive(new Array<IMediaHandler>());
+    const mediaHandlers = shallowReactive(new Array<IMediaHandler>());
 
     /** Internal flag, whether the audio context currently can be considered as running. */
     const isContextRunningFlag = shallowRef(false);
@@ -42,22 +43,21 @@ export const useAudioStore = defineStore(Store.Audio, () => {
     /** Readonly flag, whether the audio context currently can be considered as running. */
     const isContextRunning = readonly(isContextRunningFlag);
 
-    /** Adds the given media handler to the list of available media handlers */
+    /** Adds the given media handler to the set of available media handlers
+     * @remark Handlers need to have a unique id, which is used to identify the internal set entry
+     */
     function addMediaHandler(handler: IMediaHandler) {
         mediaHandlers.push(handler);
     }
-    /** Removes the given media handler from the list of available media handler, by the id attribute */
-    function removeMediaHandlerById(handlerId: string) {
-        const removeIndex = mediaHandlers
-            .map((handler) => handler.id)
-            .indexOf(handlerId);
+
+    /** Removes the given media handler from the set of available media handler
+     * @remark internally uses the handler id to identify the internal set entry
+     */
+    function removeMediaHandler(handler: IMediaHandler) {
+        const handlerId = handler.id;
+        const removeIndex = mediaHandlers.map((h) => h.id).indexOf(handlerId);
 
         ~removeIndex && mediaHandlers.splice(removeIndex, 1);
-    }
-
-    /** Removes the given media handler from the list of available media handler */
-    function removeMediaHandler(handler: IMediaHandler) {
-        removeMediaHandlerById(handler.id);
     }
 
     /** Closes the audio context.
@@ -126,12 +126,8 @@ export const useAudioStore = defineStore(Store.Audio, () => {
         }
     }
 
-    const context = computed(() => {
-        return audioContext.value;
-    });
-
     return {
-        context,
+        audioContext,
         mediaHandlers,
         addMediaHandler,
         removeMediaHandler,

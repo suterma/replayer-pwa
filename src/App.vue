@@ -15,9 +15,6 @@
         </section>
 
         <!-- The routed view section -->
-        <!-- NOTE: the same audio context is reused for all playback operations and
-         must be resumed once in the app lifetime, when used. 
-         This is solved here globally for simplicity -->
         <section class="section">
             <router-view></router-view>
             <MessageOverlay />

@@ -106,8 +106,8 @@
             isEditable &&
             showLevelMeterForEdit &&
             audioSource &&
-            context &&
-            context.state == 'running' &&
+            audioContext &&
+            audioContext.state == 'running' &&
             isParentMounted &&
             mediaUrl
         "
@@ -120,7 +120,7 @@
             :vertical="false"
             :disabled="disabled || isPaused"
             :audio-source="audioSource"
-            :audio-context="context"
+            :audio-context="audioContext"
             :show-text="false"
             :running="!isPaused && isAppVisible && audioLevelMeterIsVisible"
         >
@@ -132,7 +132,7 @@
                 :vertical="true"
                 :disabled="disabled || isPaused"
                 :audio-source="audioSource"
-                :audio-context="context"
+                :audio-context="audioContext"
                 :show-text="false"
                 :running="!isPaused && isAppVisible && audioLevelMeterIsVisible"
             >
@@ -510,7 +510,7 @@ watchEffect(() => {
 
 // --- Audio Metering Setup---
 
-const { context, isContextRunning } = storeToRefs(audio);
+const { audioContext, isContextRunning } = storeToRefs(audio);
 
 /** The optional audio source node, required when metering is requested
  */
@@ -535,7 +535,7 @@ watch(
         if (showLevelMeterForEdit) {
             // Metering is only used in edit mode
             if (isEditable) {
-                if (context.value && isContextRunning.value) {
+                if (audioContext.value && isContextRunning.value) {
                     // Create the level meter and associated routing only when requested, and only for local files
                     if (
                         showLevelMeterForEdit &&
@@ -545,16 +545,20 @@ watch(
                     ) {
                         if (audioSource.value === null) {
                             audioSource.value =
-                                context.value.createMediaElementSource(
+                                audioContext.value.createMediaElementSource(
                                     newMediaElement,
                                 );
                         }
-                        audioSource.value.connect(context.value.destination);
+                        audioSource.value.connect(
+                            audioContext.value.destination,
+                        );
                     } else {
                         //NOTE: a MediaElementAudioSourceNode can not get destroyed, so this will be reused if later required
                         //See https://stackoverflow.com/a/38631334/79485
                         audioSource.value?.disconnect(/* from analyser */);
-                        audioSource.value?.connect(context.value.destination);
+                        audioSource.value?.connect(
+                            audioContext.value.destination,
+                        );
                     }
                 } else {
                     console.warn(
