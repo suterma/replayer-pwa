@@ -6,7 +6,13 @@
  */
 
 import { defineStore } from 'pinia';
-import { type ShallowRef, shallowRef, readonly, reactive } from 'vue';
+import {
+    type ShallowRef,
+    shallowRef,
+    readonly,
+    shallowReactive,
+    shallowReadonly,
+} from 'vue';
 import { Store } from '..';
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
 
@@ -26,8 +32,11 @@ export const useAudioStore = defineStore(Store.Audio, () => {
 
     /** The media handlers the application can work with
      * @remarks Each media handler belongs to a track in the compilation
+     * @devdoc It's not necessary to have the handlers themselves reactive, thus the
+     * set is only shallow reactive
      */
-    const mediaHandlers = reactive(new Map<string, IMediaHandler>());
+    const mediaHandlers = shallowReactive(new Set<IMediaHandler>());
+    const readonlyMediaHandlers = shallowReadonly(mediaHandlers);
 
     /** Internal flag, whether the audio context currently can be considered as running. */
     const isContextRunningFlag = shallowRef(false);
@@ -39,14 +48,14 @@ export const useAudioStore = defineStore(Store.Audio, () => {
      * @remark Handlers need to have a unique id, which is used to identify the internal set entry
      */
     function addMediaHandler(handler: IMediaHandler) {
-        mediaHandlers.set(handler.id, handler);
+        mediaHandlers.add(handler);
     }
 
     /** Removes the given media handler from the set of available media handlers
      * @remark internally uses the handler id to identify the internal set entry
      */
     function removeMediaHandler(handler: IMediaHandler) {
-        mediaHandlers.delete(handler.id);
+        mediaHandlers.delete(handler);
     }
 
     /** Closes the audio context.
@@ -117,7 +126,10 @@ export const useAudioStore = defineStore(Store.Audio, () => {
 
     return {
         audioContext,
-        mediaHandlers,
+        /** The set of media handlers
+         * @remarks Externally exposing the media handler set as immutable.
+         * To update the set, use the add/remove actions */
+        mediaHandlers: readonlyMediaHandlers,
         addMediaHandler,
         removeMediaHandler,
         closeContext,

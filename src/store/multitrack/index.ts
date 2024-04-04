@@ -161,44 +161,79 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     const _fadingSubscriptons: Subscription[] = new Array<Subscription>();
 
     /** Watch the media handler set, and react on their relevant events */
-    ..//TODO how to better react on media handler set changes, without just watching the length...
     watch(
-        () => audio.mediaHandlers.size,
-        () => {
+        () => audio.mediaHandlers,
+        (newMediaHandlers, oldMediaHandlers) => {
             console.debug(
-                'Multitrack::watch:mediaHandlers.size',
-                audio.mediaHandlers.size,
+                `Multitrack::watch:mediaHandlers.size:old=${oldMediaHandlers?.size}:new=${newMediaHandlers.size}`,
             );
-            //TODO later optimize these subscriptions
-            _pausedSubscriptons.forEach((subscription) => {
-                subscription.cancel();
-            });
-            _fadingSubscriptons.forEach((subscription) => {
-                subscription.cancel();
+
+            // get the incoming (new except old)
+            const incoming = new Set(newMediaHandlers);
+            oldMediaHandlers?.forEach((item) => {
+                incoming.delete(item);
             });
 
-            audio.mediaHandlers.forEach((handler) => {
+            // get the outgoing (old except new)
+            const outgoing = new Set(oldMediaHandlers);
+            newMediaHandlers?.forEach((item) => {
+                outgoing.delete(item);
+            });
+
+            const outgoingIds = new Set<string>();
+            outgoing.forEach((item) => {
+                outgoingIds.add(item.id);
+            });
+
+            // console.debug(
+            //     'Multitrack::watch:mediaHandlers.incoming',
+            //     incoming.toString(),
+            // );
+            // console.debug(
+            //     'Multitrack::watch:mediaHandlers.outgoing',
+            //     outgoing.toString(),
+            // );
+
+            //TODO later optimize these subscriptions
+            _pausedSubscriptons.forEach((subscription) => {
+                //if (subscription.name && outgoingIds.has(subscription.name)) {
+                subscription.cancel();
+                //}
+            });
+            _fadingSubscriptons.forEach((subscription) => {
+                //if (subscription.name && outgoingIds.has(subscription.name)) {
+                subscription.cancel();
+                //}
+            });
+
+            //incoming.forEach((handler) => {
+            newMediaHandlers.forEach((handler) => {
                 _pausedSubscriptons.push(
-                    handler.onPausedChanged.subscribe(updatePauseChanged),
+                    handler.onPausedChanged.subscribe(updatePauseChanged, {
+                        name: handler.id,
+                    }),
                 );
                 _fadingSubscriptons.push(
                     handler.fader.onFadingChanged.subscribe(
                         updateFadingChanged,
+                        {
+                            name: handler.id,
+                        },
                     ),
                 );
             });
         },
         {
             immediate: true /* to handle it at least once after mount time */,
-            deep: false,
+            deep: true /** Also watch for updates of mediaHandlers's entry set */,
         },
     );
 
     function updatePauseChanged(paused: boolean) {
         if (paused) {
             isAllPlaying.value = false;
-            for (const [, value] of audio.mediaHandlers) {
-                if (!value.paused) {
+            for (const media of audio.mediaHandlers) {
+                if (!media.paused) {
                     isAllPaused.value = false;
                     return;
                 }
@@ -206,8 +241,8 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
             isAllPaused.value = true;
         } else {
             isAllPaused.value = false;
-            for (const [, value] of audio.mediaHandlers) {
-                if (value.paused) {
+            for (const media of audio.mediaHandlers) {
+                if (media.paused) {
                     isAllPlaying.value = false;
                     return;
                 }
