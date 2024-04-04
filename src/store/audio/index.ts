@@ -26,10 +26,8 @@ export const useAudioStore = defineStore(Store.Audio, () => {
 
     /** The media handlers the application can work with
      * @remarks Each media handler belongs to a track in the compilation
-     * @devdoc shallowReactive is used over shallowRef to watch the array
-     * entries at the top level, not just the array itself.
      */
-    const mediaHandlers = reactive(new Array<IMediaHandler>());
+    const mediaHandlers = reactive(new Map<string, IMediaHandler>());
 
     /** Internal flag, whether the audio context currently can be considered as running. */
     const isContextRunningFlag = shallowRef(false);
@@ -41,17 +39,14 @@ export const useAudioStore = defineStore(Store.Audio, () => {
      * @remark Handlers need to have a unique id, which is used to identify the internal set entry
      */
     function addMediaHandler(handler: IMediaHandler) {
-        mediaHandlers.push(handler);
+        mediaHandlers.set(handler.id, handler);
     }
 
-    /** Removes the given media handler from the set of available media handler
+    /** Removes the given media handler from the set of available media handlers
      * @remark internally uses the handler id to identify the internal set entry
      */
     function removeMediaHandler(handler: IMediaHandler) {
-        const handlerId = handler.id;
-        const removeIndex = mediaHandlers.map((h) => h.id).indexOf(handlerId);
-
-        ~removeIndex && mediaHandlers.splice(removeIndex, 1);
+        mediaHandlers.delete(handler.id);
     }
 
     /** Closes the audio context.

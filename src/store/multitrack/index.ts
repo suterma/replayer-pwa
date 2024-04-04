@@ -5,19 +5,12 @@
  * LICENSE file in the root of this projects source tree.
  */
 
-import { defineStore, storeToRefs } from 'pinia';
-import {
-    type ShallowRef,
-    computed,
-    ref,
-    shallowRef,
-    readonly,
-    watch,
-    watchEffect,
-} from 'vue';
+import { defineStore } from 'pinia';
+import { computed, ref, watch } from 'vue';
 import { Store } from '..';
 import { useAudioStore } from '../audio';
 import { Subscription } from 'sub-events';
+import { FadingMode } from '@/code/media/IAudioFader';
 
 /** A store for multitrack audio-related global state
  * @remarks This uses and extends the audio store, specifically for a
@@ -25,7 +18,6 @@ import { Subscription } from 'sub-events';
  */
 export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     const audio = useAudioStore();
-    const { mediaHandlers } = storeToRefs(audio);
 
     /** Toggles the solo state for all tracks
      */
@@ -63,12 +55,12 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         // Decide whether to play or pause all
         if (isAllPaused.value) {
             synchTracks(); //then
-            mediaHandlers.value.forEach((handler) => {
+            audio.mediaHandlers.forEach((handler) => {
                 handler.play();
             });
             //audio.mediaHandlers.every((handler) => handler.togglePlayback());
         } else {
-            mediaHandlers.value.forEach((handler) => {
+            audio.mediaHandlers.forEach((handler) => {
                 handler.pause();
             });
 
@@ -101,51 +93,64 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     //    const isAnyFading = ref(false);
     const isAnyFading = ref(false);
 
-    /** Whether the media resources for tracks are available */
-    const isAllMediaAvailable = computed(() =>
-        mediaHandlers.value.every((handler) => handler.mediaSourceUrl),
-    );
+    /** Whether the media resources for all tracks are available */
+    const isAllMediaAvailable = computed(() => {
+        audio.mediaHandlers.forEach((handler) => {
+            if (!handler.mediaSourceUrl) {
+                return false;
+            }
+        });
+        return true;
+    });
 
     /** Gets the track duration of all tracks
      * @remarks The minimum track duration is used
      */
     const getAllTrackDuration = computed((): number => {
-        if (!mediaHandlers.value.length) {
-            return NaN;
-        }
-        return mediaHandlers.value.reduce((prev, curr) =>
-            prev.duration < curr.duration ? prev : curr,
-        ).currentTime;
+        let duration = NaN;
+        audio.mediaHandlers.forEach((handler) => {
+            if (handler.duration < duration) {
+                duration = handler.duration;
+            }
+        });
+
+        return duration;
     });
 
-    /** Gets the track position of all tracks
+    /** Gets the playback position (current time) of all tracks
      * @remarks The average track position is used
      */
     const getMultitrackPosition = computed((): number => {
-        if (!mediaHandlers.value.length) {
+        let currentTime = 0;
+        let count = 0;
+        audio.mediaHandlers.forEach((handler) => {
+            currentTime += handler.currentTime;
+            count++;
+        });
+
+        if (count === 0) {
             return NaN;
         }
-        return (
-            mediaHandlers.value.reduce(
-                (total, next) => total + next.currentTime,
-                0,
-            ) / mediaHandlers.value.length
-        );
+
+        return currentTime / count;
     });
 
     /** Gets the range of the track positions of all tracks from the last getMultitrackPosition call
      */
     const getMultitrackPositionRange = computed((): number => {
-        if (!mediaHandlers.value.length) {
+        //TODO do not use this average
+        let currentTime = 0;
+        let count = 0;
+        audio.mediaHandlers.forEach((handler) => {
+            currentTime += handler.currentTime;
+            count++;
+        });
+
+        if (count === 0) {
             return NaN;
         }
-        const minimum = mediaHandlers.value.reduce((prev, curr) =>
-            prev.currentTime < curr.currentTime ? prev : curr,
-        ).currentTime;
-        const maximum: number = mediaHandlers.value.reduce((prev, curr) =>
-            prev.currentTime > curr.currentTime ? prev : curr,
-        ).currentTime;
-        return maximum - minimum;
+
+        return currentTime / count;
     });
 
     // --- watch the handlers ---
@@ -157,8 +162,12 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
 
     /** Watch the media handler set, and react on their relevant events */
     watch(
-        () => mediaHandlers.value.length,
+        () => audio.mediaHandlers.size,
         () => {
+            console.debug(
+                'Multitrack::watch:mediaHandlers.size',
+                audio.mediaHandlers.size,
+            );
             //TODO later optimize these subscriptions
             _pausedSubscriptons.forEach((subscription) => {
                 subscription.cancel();
@@ -184,19 +193,40 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         },
     );
 
-    function updatePauseChanged() {
-        isAllPlaying.value = mediaHandlers.value.every(
-            (handler) => !handler.paused,
-        );
-        isAllPaused.value = mediaHandlers.value.every(
-            (handler) => handler.paused,
-        );
+    function updatePauseChanged(paused: boolean) {
+        if (paused) {
+            isAllPlaying.value = false;
+            for (const [, value] of audio.mediaHandlers) {
+                if (!value.paused) {
+                    isAllPaused.value = false;
+                    return;
+                }
+            }
+            isAllPaused.value = true;
+        } else {
+            isAllPaused.value = false;
+            for (const [, value] of audio.mediaHandlers) {
+                if (value.paused) {
+                    isAllPlaying.value = false;
+                    return;
+                }
+            }
+            isAllPlaying.value = true;
+        }
     }
 
-    function updateFadingChanged() {
-        isAnyFading.value = mediaHandlers.value.some(
-            (handler) => handler.fader.fading,
-        );
+    function updateFadingChanged(fading: FadingMode) {
+        if (fading != FadingMode.None) {
+            isAnyFading.value = true;
+            return;
+        }
+        audio.mediaHandlers.forEach((handler) => {
+            if (handler.fader.fading) {
+                isAllPlaying.value = true;
+                return;
+            }
+        });
+        isAnyFading.value = false;
     }
 
     return {
