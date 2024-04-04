@@ -565,8 +565,6 @@ watch(
                         'Audio context is not available or not (yet) running. Audio Level Meter remains disconnected.',
                     );
                 }
-            } else {
-                console.debug('Track is not editable');
             }
         }
     },

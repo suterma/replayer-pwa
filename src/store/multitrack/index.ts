@@ -150,10 +150,10 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
 
     // --- watch the handlers ---
 
-    ...//TODO handle all other events like these, then clean up the mess
+    //TODO handle all other events like these, then clean up the mess
 
-    let _pausedSubscriptons: Subscription[] = new Array<Subscription>();
-    let _fadingSubscriptons: Subscription[] = new Array<Subscription>();
+    const _pausedSubscriptons: Subscription[] = new Array<Subscription>();
+    const _fadingSubscriptons: Subscription[] = new Array<Subscription>();
 
     /** Watch the media handler set, and react on their relevant events */
     watch(

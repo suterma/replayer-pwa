@@ -30,7 +30,7 @@
                             }"
                             :is-loading="isAnyFading"
                             data-cy="toggle-playback-master"
-                            @click="multitrack.togglePlaybackAll"
+                            @click="multitrack.togglePlaybackAll()"
                         />
 
                         isAllTrackLoaded :{{ isAllTrackLoaded }} isAllTrackMuted
