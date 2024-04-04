@@ -154,6 +154,14 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         this._fader.reset();
     }
 
+    get canPlay(): boolean {
+        return this._canPlay;
+    }
+
+    /** Whether the media data has loaded enough to start playback.
+     */
+    _canPlay = false;
+
     /** Gets the paused state.
      * @remarks Paused is anything except playing or buffering.
      * @remarks During fading, the playback state is not considered as paused.
@@ -278,6 +286,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
             case PlayerState.VIDEO_CUED:
                 this.updateCurrentTime();
                 this._isPlaying = false;
+                this._canPlay = true;
                 this.onPausedChanged.emit(true);
                 this.onCanPlay.emit();
                 break;

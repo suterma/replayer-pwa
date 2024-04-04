@@ -68,6 +68,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
         };
 
         media.oncanplay = () => {
+            this._canPlay = true;
             this.debugLog(`oncanplay`);
             this.onCanPlay.emit();
         };
@@ -216,6 +217,14 @@ export default class HtmlMediaHandler implements IMediaHandler {
         this._fader.cancel();
         this._fader.reset();
     }
+
+    get canPlay(): boolean {
+        return this._canPlay;
+    }
+
+    /** Whether the media data has loaded enough to start playback.
+     */
+    _canPlay = false;
 
     /** Gets the paused state.
      * @remarks During fading, the playback state is not considered as paused.

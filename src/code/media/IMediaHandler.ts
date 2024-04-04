@@ -127,6 +127,10 @@ export interface IMediaHandler {
      */
     onCanPlay: SubEvent<void>;
 
+    /** Whether the media data has loaded enough to start playback.
+     */
+    readonly canPlay: boolean;
+
     /** Whether the media metadata has loaded. Duration is available now.
      */
     readonly hasLoadedMetadata: boolean;

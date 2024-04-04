@@ -33,16 +33,22 @@
                             @click="multitrack.togglePlaybackAll()"
                         />
 
-                        isAllTrackLoaded :{{ isAllTrackLoaded }} isAllTrackMuted
-                        :{{ isAllTrackMuted }} isAllTrackSoloed :
-                        {{ isAllTrackSoloed }} isAllPlaying :
-                        {{ isAllPlaying }}
+                        isAllTrackLoaded :{{ isAllTrackLoaded }} <br />
+                        isAllTrackMuted :{{ isAllTrackMuted }} <br />
+                        isAllTrackSoloed : {{ isAllTrackSoloed }} <br />
+                        isAllPlaying : {{ isAllPlaying }} <br />
+                        isAllPaused : {{ isAllPaused }} <br />
+                        isAllMediaAvailable: {{ isAllMediaAvailable }} <br />
+                        isAnyFading : {{ isAnyFading }} <br />
+                        allTrackDuration : {{ allTrackDuration }}<br />
+                        currentTime : {{ currentTime }}<br />
 
-                        isAllPaused :
-                        {{ isAllPaused }}
-                        isAllMediaAvailable:
-                        {{ isAllMediaAvailable }} isAnyFading :
-                        {{ isAnyFading }}
+                        <button
+                            class="button"
+                            @click="multitrack.seekAllToSeconds(0)"
+                        >
+                            Zero
+                        </button>
 
                         <!-- Title input --><!-- The title is the only header element that should shrink (break on words) if necessary -->
                         <div
@@ -767,6 +773,8 @@ const {
     isAllPaused,
     isAllMediaAvailable,
     isAnyFading,
+    allTrackDuration,
+    currentTime,
 } = storeToRefs(multitrack);
 
 provide(isPlayingInjectionKey, readonly(isAllPlaying));
