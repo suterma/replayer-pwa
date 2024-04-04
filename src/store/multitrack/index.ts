@@ -161,6 +161,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     const _fadingSubscriptons: Subscription[] = new Array<Subscription>();
 
     /** Watch the media handler set, and react on their relevant events */
+    ..//TODO how to better react on media handler set changes, without just watching the length...
     watch(
         () => audio.mediaHandlers.size,
         () => {
