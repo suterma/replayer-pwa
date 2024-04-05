@@ -50,12 +50,12 @@
                     <div class="level-item is-narrow">
                         <!-- Routing controls only when mixable -->
                         <template v-if="isMixable">
-                            <!-- <SelectButton
+                            <SelectButton
                                 :disabled="!canPlay"
                                 :is-selected="isActiveTrack"
                                 data-cy="select"
                                 @click="setActiveTrack()"
-                            /> -->
+                            />
                             <SoloButton
                                 :disabled="!canPlay"
                                 :is-soloed="isSoloed"

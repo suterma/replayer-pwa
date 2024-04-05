@@ -37,8 +37,6 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         audio.mediaHandlers.forEach((handler) => {
             handler.seekTo(position);
         });
-        //then
-        //synchTracks();
     }
 
     /** Seeks all track by the given timespan in [seconds]
@@ -47,14 +45,13 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         audio.mediaHandlers.forEach((handler) => {
             handler.seek(seconds);
         });
-        //then
-        //synchTracks();
     }
 
     /** Forcibly synchronizes playback of all tracks
      */
     function synchTracks() {
-        //TODO
+        const targetTime = currentTime.value;
+        seekAllToSeconds(targetTime);
     }
 
     /** Starts synchronous playback of all tracks
@@ -62,18 +59,14 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     function togglePlaybackAll() {
         // Decide whether to play or pause all
         if (isAllPaused.value) {
-            synchTracks(); //then
+            synchTracks();
             audio.mediaHandlers.forEach((handler) => {
                 handler.play();
             });
-            //audio.mediaHandlers.every((handler) => handler.togglePlayback());
         } else {
             audio.mediaHandlers.forEach((handler) => {
                 handler.pause();
             });
-
-            //            audio.mediaHandlers.every((handler) => handler.pause());
-            //then
             synchTracks();
         }
     }

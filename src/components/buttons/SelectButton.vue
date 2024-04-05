@@ -8,14 +8,15 @@
         engaged-label="Selected"
         disengaged-label="Select"
     >
-        <BaseIcon v-if="isSelected" :path="mdiBorderRadius" />
+        <BaseIcon v-if="isSelected" :path="mdiSquareRounded" />
+        <BaseIcon v-else :path="mdiSquareRoundedOutline" />
     </ToggleButton>
 </template>
 
 <script setup lang="ts">
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { mdiBorderRadius, mdiCheckboxBlankOutline } from '@mdi/js';
+import { mdiSquareRounded, mdiSquareRoundedOutline } from '@mdi/js';
 
 /** A toggle button for the select state
  */

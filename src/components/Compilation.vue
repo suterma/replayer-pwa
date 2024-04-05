@@ -56,65 +56,11 @@
             <template v-if="isMixable">
                 <hr />
                 <MasterTrack id="track-master" class="block"> </MasterTrack>
-                //TODO move the below features into the master track component
-                <div class="track is-together-print" data-cy="master-track">
-                    <!-- Level, also on mobile 
-                NOTE: The 100% width is necessary to keep the level's right items fully a the end of the available space. -->
-                    <div style="width: 100%" class="level is-mobile">
-                        <!-- Left side -->
-                        <div class="level-left">
-                            <div
-                                class="level-item is-justify-content-flex-start"
-                            >
-                                <SoloButton
-                                    :disabled="!isAllTrackLoaded"
-                                    :is-soloed="isAllTrackSoloed"
-                                    title="Solo ALL"
-                                    data-cy="solo-all"
-                                    @click="multitrack.toggleSolo()"
-                                />
-                                <MuteButton
-                                    :disabled="!isAllTrackLoaded"
-                                    :is-muted="isAllTrackMuted"
-                                    data-cy="mute-all"
-                                    title="Mute ALL"
-                                    @click="multitrack.toggleMute()"
-                                />
-                            </div>
-                            <div
-                                class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
-                            >
-                                <ToggleButton
-                                    class="button is-primary"
-                                    :class="{
-                                        'is-inactive': !showVertical,
-                                    }"
-                                    :is-engaged="showVertical"
-                                    engaged-label="show Horizontal"
-                                    disengaged-label="show Vertical"
-                                    @click="toggleVertical($event)"
-                                >
-                                    <BaseIcon
-                                        v-if="!showVertical"
-                                        :path="mdiRotateLeftVariant"
-                                    />
-                                    <BaseIcon
-                                        v-else
-                                        :path="mdiRotateRightVariant"
-                                        :style="{
-                                            transform: 'rotate(' + 90 + 'deg)',
-                                        }"
-                                    />
-                                </ToggleButton>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </template>
         </div>
         <!-- Multi-track-Controller -->
         <Teleport to="#media-player-panel">
-            <div v-if="isMixable" class="section has-background-grey-dark">
+            <div v-if="isMixable" class="section has-background-grey-dark pb-0">
                 <!-- 
                 Track playback bar (In mix mode, this contains:
                 - a wide slider
@@ -124,6 +70,17 @@
                 <nav class="level is-editable is-unselectable">
                     <div class="level-left">
                         <div class="level-item is-justify-content-flex-start">
+                            <PlayPauseButton
+                                :disabled="!isAllTrackLoaded"
+                                :class="{
+                                    'is-success': isAllTrackLoaded,
+                                    'is-clickable': isAllTrackLoaded,
+                                    'has-cursor-not-allowed': !isAllTrackLoaded,
+                                }"
+                                :is-loading="isAnyFading"
+                                data-cy="toggle-playback-master"
+                                @click="multitrack.togglePlaybackAll()"
+                            />
                             <SoloButton
                                 :disabled="!isAllTrackLoaded"
                                 :is-soloed="isAllTrackSoloed"
@@ -169,8 +126,8 @@
                     <div class="level-item mt-4-mobile">
                         <PlayheadSlider
                             class="is-fullwidth"
-                            :model-value="multitrack.getMultitrackPosition"
-                            :track-duration="multitrack.getAllTrackDuration"
+                            :model-value="currentTime"
+                            :track-duration="allTrackDuration"
                             @update:model-value="
                                 (position) =>
                                     multitrack.seekAllToSeconds(position)
@@ -183,9 +140,7 @@
                         <div class="level-item is-justify-content-flex-end">
                             <button class="button is-nav is-indicator">
                                 <TimeDisplay
-                                    :model-value="
-                                        multitrack.getMultitrackPosition
-                                    "
+                                    :model-value="currentTime"
                                     :sub-second-digits="1"
                                 ></TimeDisplay>
                             </button>
@@ -208,13 +163,13 @@
                             >
                                 Synch
                             </button>
-                            <!-- <PlaybackIndicator
+                            <PlaybackIndicator
                                 :is-ready="!isAllPlaying && isAllTrackLoaded"
-                                :is-playing="isAllPlaying"
+                                :is-track-playing="isAllPlaying"
                                 :is-unloaded="!isAllTrackLoaded"
                                 :is-unavailable="!isAllMediaAvailable"
-                                data-cy="playback-indicator"
-                            /> -->
+                                data-cy="playback-indicator-all"
+                            />
                         </div>
                     </div>
                 </nav>
@@ -243,6 +198,8 @@ import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
+import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
+import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
 import SoloButton from '@/components/buttons/SoloButton.vue';
 import MuteButton from '@/components/buttons/MuteButton.vue';
@@ -627,8 +584,12 @@ const {
     isAllTrackLoaded,
     isAllTrackMuted,
     isAllTrackSoloed,
+    isAnyFading,
     isAllPlaying,
     isAllMediaAvailable,
+    getMultitrackPositionRange,
+    allTrackDuration,
+    currentTime,
 } = storeToRefs(multitrack);
 </script>
 <style type="css">

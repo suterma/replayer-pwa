@@ -33,41 +33,6 @@
                             @click="multitrack.togglePlaybackAll()"
                         />
 
-                        isAllTrackLoaded :{{ isAllTrackLoaded }} <br />
-                        isAllTrackMuted :{{ isAllTrackMuted }} <br />
-                        isAllTrackSoloed : {{ isAllTrackSoloed }} <br />
-                        isAllPlaying : {{ isAllPlaying }} <br />
-                        isAllPaused : {{ isAllPaused }} <br />
-                        isAllMediaAvailable: {{ isAllMediaAvailable }} <br />
-                        isAnyFading : {{ isAnyFading }} <br />
-                        allTrackDuration : {{ allTrackDuration }}<br />
-                        currentTime : {{ currentTime }}<br />
-
-                        <button
-                            class="button"
-                            @click="multitrack.seekAllToSeconds(0)"
-                        >
-                            Zero
-                        </button>
-
-                        <!-- Title input --><!-- The title is the only header element that should shrink (break on words) if necessary -->
-                        <div
-                            data-v-9b701c96=""
-                            class="is-flex-shrink-1 ml-3 is-clickable"
-                        >
-                            <p
-                                data-v-9b701c96=""
-                                class="title is-4"
-                                title="17.mp3"
-                            >
-                                <span
-                                    data-v-9b701c96=""
-                                    class="has-text-weight-light"
-                                    data-cy="track-name"
-                                    >MASTER</span
-                                >
-                            </p>
-                        </div>
                         <!-- Routing controls only when mixable --><button
                             data-v-8441256a=""
                             data-v-9b701c96=""
@@ -82,15 +47,17 @@
                             data-cy="mute"
                             data-tooltip="Mute"
                         >
-                            M</button
-                        ><button
-                            data-v-9b701c96=""
-                            class="button is-primary is-inactive has-tooltip-arrow has-tooltip-multiline has-tooltip-text-centered has-tooltip-fade"
-                            data-cy="select"
-                            data-tooltip="Select"
-                        >
-                            SEL
+                            M
                         </button>
+                        <div class="is-flex-shrink-1 ml-3 is-clickable">
+                            <p class="title is-4" title="MASTER">
+                                <span
+                                    class="has-text-weight-light"
+                                    data-cy="track-name-master"
+                                    >MASTER</span
+                                >
+                            </p>
+                        </div>
                     </div>
                     <!-- Expander --><!--v-if--><!-- The edit part --><!-- Artist info (should not take too much width, and hide on small displays anyways)-->
                     <div data-v-1ea64311="" class="level-item is-hidden-mobile">
