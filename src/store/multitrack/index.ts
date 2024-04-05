@@ -123,21 +123,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
 
     /** Gets the range of the track positions of all tracks from the last getMultitrackPosition call
      */
-    const getMultitrackPositionRange = computed((): number => {
-        //TODO do not use this average
-        let currentTime = 0;
-        let count = 0;
-        audio.mediaHandlers.forEach((handler) => {
-            currentTime += handler.currentTime;
-            count++;
-        });
-
-        if (count === 0) {
-            return NaN;
-        }
-
-        return currentTime / count;
-    });
+    const getMultitrackPositionRange = ref(NaN);
 
     // --- watch the handlers ---
 
@@ -152,101 +138,96 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     /** Watch the media handler set, and react on their relevant events */
     watch(
         () => audio.mediaHandlers,
-        (newMediaHandlers, oldMediaHandlers) => {
+        (mediaHandlers) => {
             console.debug(
-                `Multitrack::watch:mediaHandlers.size:old=${oldMediaHandlers?.size}:new=${newMediaHandlers.size}`,
+                `Multitrack::watch:mediaHandlers.size:${mediaHandlers?.size}`,
             );
 
-            // // get the incoming (new except old)
-            // const incoming = new Set(newMediaHandlers);
-            // oldMediaHandlers?.forEach((item) => {
-            //     incoming.delete(item);
-            // });
+            //NOTE: The old and new media handlers are the same object, as
+            //mentioned here: https://github.com/vuejs/vue/issues/2164#issuecomment-2038959990
 
-            // // get the outgoing (old except new)
-            // const outgoing = new Set(oldMediaHandlers);
-            // newMediaHandlers?.forEach((item) => {
-            //     outgoing.delete(item);
-            // });
-
-            // const outgoingIds = new Set<string>();
-            // outgoing.forEach((item) => {
-            //     outgoingIds.add(item.id);
-            // });
-
-            // console.debug(
-            //     'Multitrack::watch:mediaHandlers.incoming',
-            //     incoming.toString(),
-            // );
-            // console.debug(
-            //     'Multitrack::watch:mediaHandlers.outgoing',
-            //     outgoing.toString(),
-            // );
-
-            //TODO later optimize these subscriptions
+            // Get the current handler id's (for comparison with subscription names)
+            const handlerIds = new Set<string>();
+            mediaHandlers.forEach((handler) => {
+                handlerIds.add(handler.id);
+            });
+            // Remove all subscriptions that are not in the current set
             _pausedSubscriptons.forEach((subscription) => {
-                //if (subscription.name && outgoingIds.has(subscription.name)) {
-                subscription.cancel();
-                //}
+                if (subscription.name && !handlerIds.has(subscription.name)) {
+                    subscription.cancel();
+                }
             });
             _fadingSubscriptons.forEach((subscription) => {
-                //if (subscription.name && outgoingIds.has(subscription.name)) {
-                subscription.cancel();
-                //}
+                if (subscription.name && !handlerIds.has(subscription.name)) {
+                    subscription.cancel();
+                }
             });
             _canPlaySubscriptons.forEach((subscription) => {
-                //if (subscription.name && outgoingIds.has(subscription.name)) {
-                subscription.cancel();
-                //}
+                if (subscription.name && !handlerIds.has(subscription.name)) {
+                    subscription.cancel();
+                }
             });
             _durationSubscriptons.forEach((subscription) => {
-                //if (subscription.name && outgoingIds.has(subscription.name)) {
-                subscription.cancel();
-                //}
+                if (subscription.name && !handlerIds.has(subscription.name)) {
+                    subscription.cancel();
+                }
             });
             _positionSubscriptons.forEach((subscription) => {
-                //if (subscription.name && outgoingIds.has(subscription.name)) {
-                subscription.cancel();
-                //}
+                if (subscription.name && !handlerIds.has(subscription.name)) {
+                    subscription.cancel();
+                }
             });
 
-            //incoming.forEach((handler) => {
-            newMediaHandlers.forEach((handler) => {
-                _pausedSubscriptons.push(
-                    handler.onPausedChanged.subscribe(updatePauseChanged, {
-                        name: handler.id,
-                    }),
-                );
-                _fadingSubscriptons.push(
-                    handler.fader.onFadingChanged.subscribe(
-                        updateFadingChanged,
-                        {
+            // Add missing subscriptions
+            mediaHandlers.forEach((handler) => {
+                if (!_pausedSubscriptons.some((s) => s.name === handler.id)) {
+                    _pausedSubscriptons.push(
+                        handler.onPausedChanged.subscribe(updatePauseChanged, {
                             name: handler.id,
-                        },
-                    ),
-                );
-                _canPlaySubscriptons.push(
-                    handler.onCanPlay.subscribe(updateCanPlayChanged, {
-                        name: handler.id,
-                    }),
-                );
-                _durationSubscriptons.push(
-                    handler.onDurationChanged.subscribe(updateDurationChanged, {
-                        name: handler.id,
-                    }),
-                );
-                _positionSubscriptons.push(
-                    handler.onCurrentTimeChanged.subscribe(
-                        updateCurrentTimeChanged,
-                        {
+                        }),
+                    );
+                }
+                if (!_fadingSubscriptons.some((s) => s.name === handler.id)) {
+                    _fadingSubscriptons.push(
+                        handler.fader.onFadingChanged.subscribe(
+                            updateFadingChanged,
+                            {
+                                name: handler.id,
+                            },
+                        ),
+                    );
+                }
+                if (!_canPlaySubscriptons.some((s) => s.name === handler.id)) {
+                    _canPlaySubscriptons.push(
+                        handler.onCanPlay.subscribe(updateCanPlayChanged, {
                             name: handler.id,
-                        },
-                    ),
-                );
+                        }),
+                    );
+                }
+                if (!_durationSubscriptons.some((s) => s.name === handler.id)) {
+                    _durationSubscriptons.push(
+                        handler.onDurationChanged.subscribe(
+                            updateDurationChanged,
+                            {
+                                name: handler.id,
+                            },
+                        ),
+                    );
+                }
+                if (!_positionSubscriptons.some((s) => s.name === handler.id)) {
+                    _positionSubscriptons.push(
+                        handler.onCurrentTimeChanged.subscribe(
+                            updateCurrentTimeChanged,
+                            {
+                                name: handler.id,
+                            },
+                        ),
+                    );
+                }
             });
         },
         {
-            immediate: true /* to handle it at least once after mount time */,
+            immediate: true /* to handle it right after mount time */,
             deep: true /** Also watch for updates of mediaHandlers's entry set */,
         },
     );
@@ -311,15 +292,8 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         allTrackDuration.value = duration;
     }
 
-    function updateCurrentTimeChanged(time: number) {
-        // if (Number.isNaN(currentTime.value)) {
-        //     currentTime.value = time;
-        // } else {
-        //     // calculate some super-simple form of running average
-        //     //TODO improve
-        //     let averageTime = (currentTime.value + time) / 2;
-        //     currentTime.value = averageTime;
-        // }
+    //TODO maybe throttle this to 30 FPS or so
+    function updateCurrentTimeChanged() {
         const times = new Array<number>();
         audio.mediaHandlers.forEach((handler) => {
             if (Number.isFinite(handler.currentTime)) {
@@ -329,6 +303,9 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         if (times.length === 0) {
             currentTime.value = NaN;
         }
+        const min = Math.min(...times);
+        const max = Math.max(...times);
+        getMultitrackPositionRange.value = max - min;
         const sum = times.reduce((a, c) => a + c, 0);
         const avg = sum / times.length;
         currentTime.value = avg;
