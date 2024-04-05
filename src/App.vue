@@ -5,7 +5,13 @@
  * LICENSE file in the root of this projects source tree.
 -->
 <template>
-    <div class="container is-fullhd">
+    <!-- Use the full width for a navigable channel arrangement the mix view, 
+        and a more accessible narrower blog style width for all other content -->
+    <div
+        :class="{
+            'container is-fullhd': router.currentRoute.value.name != 'mix',
+        }"
+    >
         <StageMark></StageMark>
         <!-- The app menu, on the right, without bottom margin to not alter the layout of content below -->
         <section
@@ -46,7 +52,9 @@
         <div
             id="media-player-panel"
             ref="mediaPlayerPanel"
-            class="container is-fullhd"
+            :class="{
+                'container is-fullhd': router.currentRoute.value.name != 'mix',
+            }"
             aria-label="media player"
         ></div>
     </nav>

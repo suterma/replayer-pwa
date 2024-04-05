@@ -48,7 +48,29 @@
                     #left-start
                 >
                     <div class="level-item is-narrow">
+                        <!-- Routing controls only when mixable -->
+                        <template v-if="isMixable">
+                            <!-- <SelectButton
+                                :disabled="!canPlay"
+                                :is-selected="isActiveTrack"
+                                data-cy="select"
+                                @click="setActiveTrack()"
+                            /> -->
+                            <SoloButton
+                                :disabled="!canPlay"
+                                :is-soloed="isSoloed"
+                                data-cy="solo"
+                                @click="toggleSolo()"
+                            />
+                            <MuteButton
+                                :disabled="!canPlay"
+                                :is-muted="isMuted"
+                                data-cy="mute"
+                                @click="toggleMute()"
+                            />
+                        </template>
                         <PlayPauseButton
+                            v-else
                             :disabled="!canPlay"
                             :class="{
                                 'is-success': isActiveTrack,
@@ -81,28 +103,6 @@
                                 ></TrackTitleName>
                             </p>
                         </div>
-
-                        <!-- Routing controls only when mixable -->
-                        <template v-if="isMixable">
-                            <SoloButton
-                                :disabled="!canPlay"
-                                :is-soloed="isSoloed"
-                                data-cy="solo"
-                                @click="toggleSolo()"
-                            />
-                            <MuteButton
-                                :disabled="!canPlay"
-                                :is-muted="isMuted"
-                                data-cy="mute"
-                                @click="toggleMute()"
-                            />
-                            <SelectButton
-                                :disabled="!canPlay"
-                                :is-selected="isActiveTrack"
-                                data-cy="select"
-                                @click="setActiveTrack()"
-                            />
-                        </template>
                     </div>
                 </template>
 
@@ -402,7 +402,7 @@
             element) is also depending on the track state as a performance optimizations
             -->
         <div v-if="mediaUrl" class="block">
-            <Teleport to="#media-player-panel" :disabled="!usePlayerPanel">
+            <Teleport to="#media-player-panel">
                 <!-- The player widget for a track may be full screen only for the active track -->
                 <FullscreenPanel
                     ref="fullscreenPanel"
