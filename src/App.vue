@@ -15,7 +15,8 @@
         </section>
 
         <!-- The routed view section -->
-        <section class="section">
+        <!-- To facilitate route-specific styles, the route name is provided as it's own class -->
+        <section class="section route" :class="router.currentRoute.value.name">
             <router-view></router-view>
             <MessageOverlay />
             <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
@@ -63,6 +64,7 @@ import { compare } from 'compare-versions';
 import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { refDebounced, useElementSize } from '@vueuse/core';
+import { useRouter } from 'vue-router';
 
 onMounted(() => {
     handleAppUpdate();
@@ -70,6 +72,7 @@ onMounted(() => {
 
 const app = useAppStore();
 const { hasCompilation } = storeToRefs(app);
+const router = useRouter();
 
 // --- app state ---
 

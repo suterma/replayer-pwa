@@ -1880,9 +1880,9 @@ function removeCueScheduling(): void {
 </style>
 <!-- non-scoped -->
 <style lang="scss">
-/** Specific styles for a vertical level in the header (if used there).
-These are chosen for a nice visual fit in the header */
-.track-header {
+/** Specific styles for a vertical level in the header (if used there),
+in the edit view. These are chosen for a nice visual fit in the header */
+.route.edit .track-header {
     .audio-level-container {
         meter.audio-level-meter {
             max-width: 40px;

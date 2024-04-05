@@ -103,18 +103,18 @@
          The solution for this is using a v-if instead of disableing. -->
     <div
         v-if="
-            isEditable &&
-            showLevelMeterForEdit &&
+            ((isEditable && showLevelMeterForEdit) || isMixable) &&
             audioSource &&
             audioContext &&
-            audioContext.state == 'running' &&
+            isContextRunning &&
             isParentMounted &&
             mediaUrl
         "
         class="block"
     >
+        <!-- Show possibly large meters only on edit -->
         <AudioLevelMeter
-            v-if="levelMeterSizeIsLarge"
+            v-if="levelMeterSizeIsLarge && isEditable"
             ref="audioLevelMeter"
             :key="trackId"
             :vertical="false"
@@ -158,7 +158,6 @@ import {
     onBeforeUnmount,
     onDeactivated,
     onMounted,
-    onUnmounted,
     type PropType,
     type Ref,
     ref,
@@ -296,6 +295,9 @@ const audioLevelMeterIsVisible = useElementVisibility(audioLevelMeter);
 const route = useRoute();
 const isEditable = computed(() => {
     return route.name == Route.Edit;
+});
+const isMixable = computed(() => {
+    return route.name == Route.Mix;
 });
 
 // --- Media Setup ---
