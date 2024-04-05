@@ -346,7 +346,7 @@ let onFadingChangedSubsription: Subscription;
 const mediaHandler: Ref<IMediaHandler | null> = ref(null);
 
 /** Properly destroy the handler, and abandon the video element, including it's handlers */
-function destroyHandler(video: HTMLMediaElement): void {
+function destroyHandler(mediaElement: HTMLMediaElement): void {
     if (mediaHandler.value) {
         audio.removeMediaHandler(mediaHandler.value);
         //properly destroy the audio element and the audio context
@@ -359,12 +359,12 @@ function destroyHandler(video: HTMLMediaElement): void {
         onDurationChangedSubsription?.cancel();
         onCanPlaySubsription?.cancel();
         onFadingChangedSubsription?.cancel();
-
-        if (video) {
-            video.removeAttribute('src'); // empty resource
-        }
-        console.log('TrackMediaElement:destroyed');
     }
+
+    if (mediaElement) {
+        mediaElement.removeAttribute('src'); // empty resource
+    }
+    console.log('TrackMediaElement:destroyed');
 }
 
 function createAndEmitHandler(video: HTMLMediaElement): IMediaHandler {
@@ -407,7 +407,8 @@ function createAndEmitHandler(video: HTMLMediaElement): IMediaHandler {
 
 /** Teardown of the element and handler.
  */
-onUnmounted(() => {
+onBeforeUnmount(() => {
+    console.debug('TrackMediaElement:onBeforeUnmount');
     if (mediaElement.value) {
         destroyHandler(mediaElement.value);
     }
