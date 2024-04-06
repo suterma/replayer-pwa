@@ -8,8 +8,7 @@
         engaged-label="Selected"
         disengaged-label="Select"
     >
-        <BaseIcon v-if="isSelected" :path="mdiSquareRounded" />
-        <BaseIcon v-else :path="mdiSquareRoundedOutline" />
+        <slot></slot>
     </ToggleButton>
 </template>
 
