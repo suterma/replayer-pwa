@@ -11,6 +11,8 @@ import { Store } from '..';
 import { useAudioStore } from '../audio';
 import { Subscription } from 'sub-events';
 import { FadingMode } from '@/code/media/IAudioFader';
+import { Reading } from './Reading';
+import { useThrottleFn } from '@vueuse/core';
 
 /** A store for multitrack audio-related global state
  * @remarks This uses and extends the audio store, specifically for a
@@ -285,23 +287,57 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         allTrackDuration.value = duration;
     }
 
-    //TODO maybe throttle this to 30 FPS or so
-    function updateCurrentTimeChanged() {
-        const times = new Array<number>();
+    /** Updates the common current time indication for all tracks.
+     * @remarks Implements a throttling to at most 10 FPS
+     */
+    const updateCurrentTimeChanged = useThrottleFn(() => {
+        slowUpdateCurrentTime();
+        //TODO remove slow test code
+    }, 2100);
+
+    //TODO for test, later remove
+    const syncWait = (ms: number) => {
+        const end = Date.now() + ms;
+        while (Date.now() < end) continue;
+    };
+
+    /** Updates the common current time indication for all tracks.
+     * @remarks Corrects for the time passed from the first reading until all
+     * readings are aggregated.
+     */
+    function slowUpdateCurrentTime() {
+        const readings = new Array<Reading<number>>();
         audio.mediaHandlers.forEach((handler) => {
-            if (Number.isFinite(handler.currentTime)) {
-                times.push(handler.currentTime);
+            const currentTime = handler.currentTime;
+            const timestamp = performance.now() /*in [seconds]*/ / 1000;
+            if (Number.isFinite(currentTime)) {
+                readings.push(new Reading(timestamp, currentTime));
+
+                //TODO test
+                syncWait(50);
             }
         });
-        if (times.length === 0) {
+        if (readings.length === 0) {
             currentTime.value = NaN;
         }
-        const min = Math.min(...times);
-        const max = Math.max(...times);
-        getMultitrackPositionRange.value = max - min;
+        // unskew the the readings
+        console.debug('Multitrack:slowUpdateCurrentTime:readings:', readings);
+        const times = new Array<number>(readings.length);
+        let index = 0;
+        const now = performance.now() /*in [seconds]*/ / 1000;
+        readings.forEach((reading) => {
+            times[index++] = reading.Value + (now - reading.Timestamp);
+        });
+
+        // The times now are most truthful readings with regard to the current moment in time
+        // Now provide the average current time as fast as possible
         const sum = times.reduce((a, c) => a + c, 0);
         const avg = sum / times.length;
         currentTime.value = avg;
+
+        const min = Math.min(...times);
+        const max = Math.max(...times);
+        getMultitrackPositionRange.value = max - min;
     }
 
     return {
