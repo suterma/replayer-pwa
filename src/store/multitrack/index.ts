@@ -19,6 +19,14 @@ import { useThrottleFn } from '@vueuse/core';
  * multitrack playback scenario
  */
 export const useMultitrackStore = defineStore(Store.Multitrack, () => {
+    /** A converstion ratio
+     * @remarks Used for converting the performance timestamps, which are
+     * in [milliseconds] to [seconds]
+     */
+    const millisecondsPerSecond = 1000;
+
+    const testSkewMilliseconds = 0;
+
     const audio = useAudioStore();
 
     /** Toggles the solo state for all tracks
@@ -34,10 +42,22 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     }
 
     /** Seeks all track to the given position
+     * @remarks  For any currently playing media,
+     * corrects for the time passed since the origin of the method
      */
     function seekAllToSeconds(position: number) {
+        const originTime = performance.now();
         audio.mediaHandlers.forEach((handler) => {
-            handler.seekTo(position);
+            let offset = 0;
+            if (!handler.paused) {
+                offset =
+                    (performance.now() - originTime) / millisecondsPerSecond;
+            }
+            handler.seekTo(position + offset);
+            console.debug(`Multitrack::seekAllToSeconds:offset:${offset}`);
+
+            //TODO test
+            syncWait(testSkewMilliseconds);
         });
     }
 
@@ -46,32 +66,73 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     function seekAll(seconds: number) {
         audio.mediaHandlers.forEach((handler) => {
             handler.seek(seconds);
+
+            //TODO test
+            syncWait(testSkewMilliseconds);
         });
     }
 
     /** Forcibly synchronizes playback of all tracks
      */
     function synchTracks() {
-        const targetTime = currentTime.value;
+        // get up-to date value
+        slowUpdateCurrentTime();
+        let targetTime = currentTime.value;
+        //if (isAllPlaying.value) {
+        // empirically determined compensation for the seek duration
+        const playbackOffset = 0.105;
+        targetTime += playbackOffset;
+        //  }
         seekAllToSeconds(targetTime);
+        console.debug(`Multitrack::synchTracks:targetTime:${targetTime}`);
     }
 
     /** Starts synchronous playback of all tracks
+     * @remarks  For any newly playing media,
+     * corrects for the time passed since the origin of the method
+     * @remarks Also, after the operation ended, executes an additional synch
      */
     function togglePlaybackAll() {
+        if (afterFadeSynchHandle) {
+            clearTimeout(afterFadeSynchHandle);
+            afterFadeSynchHandle = null;
+        }
+        let maxFadeTime = 0;
         // Decide whether to play or pause all
         if (isAllPaused.value) {
-            synchTracks();
+            synchTracks(); // while still paused
+            const originTime = performance.now();
             audio.mediaHandlers.forEach((handler) => {
+                let offset =
+                    (performance.now() - originTime) / millisecondsPerSecond;
+
+                handler.seek(offset);
+                console.debug(`Multitrack::togglePlaybackAll:offset:${offset}`);
                 handler.play();
+                maxFadeTime = Math.max(
+                    maxFadeTime,
+                    handler.fader.fadeInDuration,
+                );
+                //TODO test
+                syncWait(testSkewMilliseconds);
             });
         } else {
             audio.mediaHandlers.forEach((handler) => {
                 handler.pause();
+                maxFadeTime = Math.max(
+                    maxFadeTime,
+                    handler.fader.fadeOutDuration,
+                );
+                //TODO test
+                syncWait(testSkewMilliseconds);
             });
-            synchTracks();
         }
+        afterFadeSynchHandle = setTimeout(synchTracks, maxFadeTime);
     }
+
+    /** A handle to the current synch after a play/pause operation.
+     * Will be set to null when cancelled, to indicate the cancel status. */
+    let afterFadeSynchHandle: NodeJS.Timeout | null = null;
 
     /** Whether all tracks have their media resource loaded */
     const isAllTrackLoaded = ref(false);
@@ -302,19 +363,23 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     };
 
     /** Updates the common current time indication for all tracks.
-     * @remarks Corrects for the time passed from the first reading until all
+     * @remarks  For any currently playing media,
+     * corrects for the time passed from the first reading until all
      * readings are aggregated.
      */
     function slowUpdateCurrentTime() {
         const readings = new Array<Reading<number>>();
         audio.mediaHandlers.forEach((handler) => {
             const currentTime = handler.currentTime;
-            const timestamp = performance.now() /*in [seconds]*/ / 1000;
+            let timestamp = NaN;
+            if (!handler.paused) {
+                timestamp = performance.now() / millisecondsPerSecond;
+            }
             if (Number.isFinite(currentTime)) {
                 readings.push(new Reading(timestamp, currentTime));
 
                 //TODO test
-                syncWait(50);
+                syncWait(testSkewMilliseconds);
             }
         });
         if (readings.length === 0) {
@@ -324,10 +389,16 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         console.debug('Multitrack:slowUpdateCurrentTime:readings:', readings);
         const times = new Array<number>(readings.length);
         let index = 0;
-        const now = performance.now() /*in [seconds]*/ / 1000;
         readings.forEach((reading) => {
-            times[index++] = reading.Value + (now - reading.Timestamp);
+            if (!Number.isNaN(reading.Timestamp)) {
+                const now = performance.now() / millisecondsPerSecond;
+                times[index++] = reading.Value + (now - reading.Timestamp);
+            } else {
+                times[index++] = reading.Value;
+            }
         });
+
+        console.debug('Multitrack:slowUpdateCurrentTime:times:', times);
 
         // The times now are most truthful readings with regard to the current moment in time
         // Now provide the average current time as fast as possible
