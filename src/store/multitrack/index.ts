@@ -25,7 +25,17 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      */
     const millisecondsPerSecond = 1000;
 
-    const testSkewMilliseconds = 50;
+    const testSkewMilliseconds = 0; //50;
+
+    /** The maximum track timing deviation allowed, in [seconds],
+     * before an auto-sync operation executed
+     * @remarks The value is chosen to keep sync errors mostly inaudible
+     * @remarks See https://sengpielaudio.com/calculator-soundpath.htm for
+     * details.
+     * A value of 15 milliseconds represents a distance of 5 meters at room temperature.
+     * This value might be considered typical for a small stage or rehearsal romm.
+     */
+    const maxTrackTimeDeviation = 0.015;
 
     /** A predetermined compensation offset for the sync operation
      * @remarks This value is updated each time;
@@ -84,7 +94,8 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     function synchTracks() {
         const originTime = performance.now();
         // get up-to date value
-        let targetTime = updateCurrentTime();
+        const { avg } = updateCurrentTime();
+        let targetTime = avg;
         //if (isAllPlaying.value) {
         // empirically determined compensation for the seek duration
         const playbackOffset = 0.105;
@@ -115,7 +126,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         let maxFadeTime = 0;
         // Decide whether to play or pause all
         if (isAllPaused.value) {
-            synchTracks(); // while still paused
+            //synchTracks(); // while still paused
             const originTime = performance.now();
             audio.mediaHandlers.forEach((handler) => {
                 let offset =
@@ -196,9 +207,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      */
     const getMultitrackPositionRange = ref(NaN);
 
-    // --- watch the handlers ---
-
-    //TODO handle all other events like these, then clean up the mess
+    // --- subscribe to the events of the handlers ---
 
     const _pausedSubscriptons: Subscription[] = new Array<Subscription>();
     const _fadingSubscriptons: Subscription[] = new Array<Subscription>();
@@ -303,13 +312,18 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         },
     );
 
+    // --- handle the subscriptions ---
+
+    /**
+     * @devdoc This method is optimized for early termination
+     */
     function updatePauseChanged(paused: boolean) {
         if (paused) {
             isAllPlaying.value = false;
             for (const media of audio.mediaHandlers) {
                 if (!media.paused) {
                     isAllPaused.value = false;
-                    return;
+                    return; // as early as possible
                 }
             }
             isAllPaused.value = true;
@@ -318,27 +332,33 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
             for (const media of audio.mediaHandlers) {
                 if (media.paused) {
                     isAllPlaying.value = false;
-                    return;
+                    return; // as early as possible
                 }
             }
             isAllPlaying.value = true;
         }
     }
 
+    /**
+     * @devdoc This method is optimized for early termination
+     */
     function updateFadingChanged(fading: FadingMode) {
         if (fading != FadingMode.None) {
             isAnyFading.value = true;
-            return;
+            return; // as early as possible
         }
         audio.mediaHandlers.forEach((handler) => {
             if (handler.fader.fading) {
                 isAllPlaying.value = true;
-                return;
+                return; // as early as possible
             }
         });
         isAnyFading.value = false;
     }
 
+    /**
+     * @devdoc All handlers need to be checked every time
+     */
     function updateCanPlayChanged() {
         for (const media of audio.mediaHandlers) {
             if (!media.canPlay) {
@@ -364,24 +384,36 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     }
 
     /** Updates the common current time indication for all tracks.
-     * @remarks Implements a throttling
+     * @remarks Also triggers a sync operation
+     * @devdoc To keep system load low, just use a simple pass-thru
      */
-    // const updateCurrentTimeChanged = useThrottleFn(() => {
-    //     updateCurrentTime();
-    //     //TODO remove slow test code
-    // }, 16);
-
-    const updateCurrentTimeChanged = useThrottleFn((time) => {
-        //TODO test this simple version of pass-thru
-        //Is it enough for work??
+    function updateCurrentTimeChanged(time: number) {
         currentTime.value = time;
-    });
+        console.debug(`Multitrack::updateCurrentTimeChanged:time:${time}`);
+        autoSync();
+    }
 
-    //TODO for test, later remove
-    const syncWait = (ms: number) => {
-        const end = Date.now() + ms;
-        while (Date.now() < end) continue;
-    };
+    /** Updates the common current time indication for all tracks.
+     * Additionally, during continued playback, triggers a sync if the time range
+     * is high
+     * @remarks Implements a throttling (on the trailing edge only)
+     *  to keep the system load low
+     */
+    const autoSync = useThrottleFn(
+        () => {
+            const { avg, range } = updateCurrentTime();
+            console.debug(`Multitrack::autoSync:avg:${avg}:range:${range}`);
+
+            if (isAllPlaying.value === true && isAnyFading.value === false) {
+                if (range > 0.16) {
+                    synchTracks();
+                }
+            }
+        },
+        5000,
+        /*trailing: */ true,
+        /*leading: */ false,
+    );
 
     /** Updates the multitrack current time, based on all tracks.
      * @remarks  For any currently playing media,
@@ -389,7 +421,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      * readings have been gathered.
      * @returns The obtained multitrack current time
      */
-    function updateCurrentTime(): number {
+    function updateCurrentTime(): { avg: number; range: number } {
         const readings = new Array<Reading<number>>();
         audio.mediaHandlers.forEach((handler) => {
             let timestamp = performance.now() / millisecondsPerSecond;
@@ -408,7 +440,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         });
         if (readings.length === 0) {
             currentTime.value = NaN;
-            return NaN;
+            return { avg: NaN, range: NaN };
         } else {
             // unskew the the readings
             console.debug('Multitrack:updateCurrentTime:readings:', readings);
@@ -433,11 +465,18 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
 
             const min = Math.min(...times);
             const max = Math.max(...times);
-            getMultitrackPositionRange.value = max - min;
+            const range = max - min;
+            getMultitrackPositionRange.value = range;
 
-            return avg;
+            return { avg, range };
         }
     }
+
+    //TODO for test, later remove
+    const syncWait = (ms: number) => {
+        const end = Date.now() + ms;
+        while (Date.now() < end) continue;
+    };
 
     return {
         toggleSolo,
