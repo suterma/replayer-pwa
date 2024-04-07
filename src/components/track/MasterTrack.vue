@@ -91,8 +91,8 @@
                         >
                             <div data-v-9b701c96="" class="is-clickable">
                                 <span
-                                    data-v-9b701c96=""
                                     id="track-d70eeaab-0731-4a46-bac9-42eb7faa2238-HeaderLevelPlaceholder"
+                                    data-v-9b701c96=""
                                 ></span>
                             </div>
                         </div>
@@ -209,11 +209,11 @@
                                 <!-- A virtual cue button as prefix, when the first cue is not at the zero position --><!-- Note: Do not crop the (non-existing) text in virtual cue buttons
              Also, leave the existing flex-grow, to allow them to fill single lines, but allow to shrink --><!--v-if--><!-- Using the v-for on a template instead of the actual component saves unnecessary renderings. 
              See https://stackoverflow.com/a/76074016/79485 --><button
+                                    id="ed06b4b4-d7a9-4a48-9ae4-cc521f5b2063"
                                     data-v-c6a7496b=""
                                     class="button cue has-text-left is-flex-grow-1 has-cropped-text is-warning"
                                     title="Play from Vers 1"
                                     data-cy="cue-button"
-                                    id="ed06b4b4-d7a9-4a48-9ae4-cc521f5b2063"
                                 >
                                     <!-- Use the full width of the button for the inside content
         This causes the icon and description to start from the left side, 
@@ -256,11 +256,11 @@
                                         ><!-- second line, if not minified (use a horizontal level also on mobile)--><!--v-if--></span
                                     ></button
                                 ><button
+                                    id="f54dcd24-dfba-41fe-a259-a2c6b3141966"
                                     data-v-c6a7496b=""
                                     class="button cue has-text-left is-flex-grow-1 has-cropped-text is-warning"
                                     title="Play from Vers 2"
                                     data-cy="cue-button"
-                                    id="f54dcd24-dfba-41fe-a259-a2c6b3141966"
                                 >
                                     <!-- Use the full width of the button for the inside content
         This causes the icon and description to start from the left side, 
@@ -303,11 +303,11 @@
                                         ><!-- second line, if not minified (use a horizontal level also on mobile)--><!--v-if--></span
                                     ></button
                                 ><button
+                                    id="2734de68-840c-4427-958a-b179e64eb682"
                                     data-v-c6a7496b=""
                                     class="button cue has-text-left is-flex-grow-1 has-cropped-text is-warning"
                                     title="Play from Pre-Chorus (1)"
                                     data-cy="cue-button"
-                                    id="2734de68-840c-4427-958a-b179e64eb682"
                                 >
                                     <!-- Use the full width of the button for the inside content
         This causes the icon and description to start from the left side, 
@@ -350,11 +350,11 @@
                                         ><!-- second line, if not minified (use a horizontal level also on mobile)--><!--v-if--></span
                                     ></button
                                 ><button
+                                    id="f6177347-04cb-4a75-8ab3-8eb3eb11b791"
                                     data-v-c6a7496b=""
                                     class="button cue has-text-left is-flex-grow-1 has-cropped-text is-warning"
                                     title="Play from Chorus (1) A/T"
                                     data-cy="cue-button"
-                                    id="f6177347-04cb-4a75-8ab3-8eb3eb11b791"
                                 >
                                     <!-- Use the full width of the button for the inside content
         This causes the icon and description to start from the left side, 
@@ -397,11 +397,11 @@
                                         ><!-- second line, if not minified (use a horizontal level also on mobile)--><!--v-if--></span
                                     ></button
                                 ><button
+                                    id="2f57b55d-979a-4eb8-9ca8-46b8c66bc1b2"
                                     data-v-c6a7496b=""
                                     class="button cue has-text-left is-flex-grow-1 has-cropped-text is-warning"
                                     title="Play from Vers 3 (1) Solo"
                                     data-cy="cue-button"
-                                    id="2f57b55d-979a-4eb8-9ca8-46b8c66bc1b2"
                                 >
                                     <!-- Use the full width of the button for the inside content
         This causes the icon and description to start from the left side, 
@@ -444,11 +444,11 @@
                                         ><!-- second line, if not minified (use a horizontal level also on mobile)--><!--v-if--></span
                                     ></button
                                 ><button
+                                    id="29c0ea81-beb3-4246-aaee-69b9d317b472"
                                     data-v-c6a7496b=""
                                     class="button cue has-text-left is-flex-grow-1 has-cropped-text is-warning"
                                     title="Play from Vers 3 (2) Solo+Chor"
                                     data-cy="cue-button"
-                                    id="29c0ea81-beb3-4246-aaee-69b9d317b472"
                                 >
                                     <!-- Use the full width of the button for the inside content
         This causes the icon and description to start from the left side, 
@@ -491,11 +491,11 @@
                                         ><!-- second line, if not minified (use a horizontal level also on mobile)--><!--v-if--></span
                                     ></button
                                 ><button
+                                    id="8bcda48a-6f66-42ff-ba7f-63bdb5883df4"
                                     data-v-c6a7496b=""
                                     class="button cue has-text-left is-flex-grow-1 has-cropped-text is-warning"
                                     title="Play from Pre-Chorus (2)"
                                     data-cy="cue-button"
-                                    id="8bcda48a-6f66-42ff-ba7f-63bdb5883df4"
                                 >
                                     <!-- Use the full width of the button for the inside content
         This causes the icon and description to start from the left side, 
@@ -538,11 +538,11 @@
                                         ><!-- second line, if not minified (use a horizontal level also on mobile)--><!--v-if--></span
                                     ></button
                                 ><button
+                                    id="54507200-e42b-4be5-939a-e3fb3b586a4c"
                                     data-v-c6a7496b=""
                                     class="button cue has-text-left is-flex-grow-1 has-cropped-text is-warning"
                                     title="Play from Chorus (2) A/T"
                                     data-cy="cue-button"
-                                    id="54507200-e42b-4be5-939a-e3fb3b586a4c"
                                 >
                                     <!-- Use the full width of the button for the inside content
         This causes the icon and description to start from the left side, 
@@ -585,11 +585,11 @@
                                         ><!-- second line, if not minified (use a horizontal level also on mobile)--><!--v-if--></span
                                     ></button
                                 ><button
+                                    id="e4150703-581b-4cf5-9e72-6bfa7056f329"
                                     data-v-c6a7496b=""
                                     class="button cue has-text-left is-flex-grow-1 has-cropped-text is-warning"
                                     title="Play from Coda (1) A/T"
                                     data-cy="cue-button"
-                                    id="e4150703-581b-4cf5-9e72-6bfa7056f329"
                                 >
                                     <!-- Use the full width of the button for the inside content
         This causes the icon and description to start from the left side, 
@@ -632,11 +632,11 @@
                                         ><!-- second line, if not minified (use a horizontal level also on mobile)--><!--v-if--></span
                                     ></button
                                 ><button
+                                    id="028e3aa1-61cf-4497-a8a5-a7e7c6225623"
                                     data-v-c6a7496b=""
                                     class="button cue has-text-left is-flex-grow-1 has-cropped-text is-warning"
                                     title="Play from Coda (2) A/T"
                                     data-cy="cue-button"
-                                    id="028e3aa1-61cf-4497-a8a5-a7e7c6225623"
                                 >
                                     <!-- Use the full width of the button for the inside content
         This causes the icon and description to start from the left side, 
@@ -688,8 +688,8 @@
                 variant, because otherwise the track is not correctly loaded
                 after it has become the active track ( gets
                 play-request-was-interrupted) --><!--v-if--><!-- use the audio element --><audio
-                            data-v-497415ac=""
                             id="media-track-d70eeaab-0731-4a46-bac9-42eb7faa2238"
+                            data-v-497415ac=""
                             preload="metadata"
                             src="blob:http://localhost:5173/e094cf08-4fbe-4462-8205-dc5c49fe6e34"
                             class="video is-small paused"

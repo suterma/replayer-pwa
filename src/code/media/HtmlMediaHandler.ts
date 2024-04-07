@@ -249,12 +249,12 @@ export default class HtmlMediaHandler implements IMediaHandler {
     }
 
     public seekTo(seconds: number): Promise<void> {
-        this.debugLog(`seekTo`);
         if (
             this.hasLoadedMetadata &&
             this.currentTime !== seconds &&
             Number.isFinite(seconds)
         ) {
+            this.debugLog(`seekTo`, seconds);
             return new Promise((resolve) => {
                 this._media.addEventListener(
                     'seeked',

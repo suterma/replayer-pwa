@@ -159,7 +159,7 @@
                             </button>
                             <button
                                 class="button is-info"
-                                @click="multitrack.synchTracks()"
+                                @click="multitrack.syncTracks()"
                             >
                                 Synch
                             </button>

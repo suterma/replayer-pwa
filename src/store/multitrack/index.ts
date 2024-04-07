@@ -25,7 +25,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      */
     const millisecondsPerSecond = 1000;
 
-    const testSkewMilliseconds = 0; //50;
+    const testSkewMilliseconds = 50; //50;
 
     /** The maximum track timing deviation allowed, in [seconds],
      * before an auto-sync operation executed
@@ -88,10 +88,39 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         });
     }
 
+    /** Updates the common current time indication for all tracks and,
+     *  during continued playback, triggers a sync if the time range
+     * is high
+     * @remarks Implements a throttling, with timeout, to keep the system load low and outside the playback start/stop/fading events
+     */
+    const syncOnPlayback = useThrottleFn(() => {
+        const { avg, range } = updateCurrentTime();
+        return;
+        //TODO test currently do not use
+        //console.debug(`Multitrack::autoSync:avg:${avg}:range:${range}`);
+
+        if (isAllPlaying.value === true && isAnyFading.value === false) {
+            if (range > maxTrackTimeDeviation) {
+                //synch tracks outside the possible UI event loop
+                setTimeout(() => {
+                    if (
+                        isAllPlaying.value === true &&
+                        isAnyFading.value === false
+                    ) {
+                        syncTracks();
+                    }
+                }, 1);
+            }
+        }
+    }, 3000);
+
     /** Forcibly synchronizes playback of all tracks
      * @remarks Maintains an offset to compensate for the runtime of this method
      */
-    function synchTracks() {
+
+    ...// todo put all this code into a semaphore, so that each method
+    //can only execute once
+    function syncTracks() {
         const originTime = performance.now();
         // get up-to date value
         const { avg } = updateCurrentTime();
@@ -126,10 +155,9 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         let maxFadeTime = 0;
         // Decide whether to play or pause all
         if (isAllPaused.value) {
-            //synchTracks(); // while still paused
             const originTime = performance.now();
             audio.mediaHandlers.forEach((handler) => {
-                let offset =
+                const offset =
                     (performance.now() - originTime) / millisecondsPerSecond;
 
                 handler.seek(offset);
@@ -153,7 +181,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
                 syncWait(testSkewMilliseconds);
             });
         }
-        afterFadeSynchHandle = setTimeout(synchTracks, maxFadeTime);
+        //afterFadeSynchHandle = setTimeout(syncOnPlayback, maxFadeTime);
     }
 
     /** A handle to the current synch after a play/pause operation.
@@ -314,6 +342,32 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
 
     // --- handle the subscriptions ---
 
+    // /** Sync after playback stops */
+    // watch(
+    //     () => isAllPaused,
+    //     (paused) => {
+    //         if (paused) {
+    //             syncTracks();
+    //         }
+    //     },
+    //     {
+    //         immediate: true /* to handle it right after mount time */,
+    //     },
+    // );
+
+    // /** Sync after playback start, after fade-in has finised */
+    // watch(
+    //     () => isAnyFading,
+    //     (isAnyFading) => {
+    //         if (!isAnyFading) {
+    //             syncTracks();
+    //         }
+    //     },
+    //     {
+    //         immediate: true /* to handle it right after mount time */,
+    //     },
+    // );
+
     /**
      * @devdoc This method is optimized for early termination
      */
@@ -327,6 +381,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
                 }
             }
             isAllPaused.value = true;
+            syncTracks(); // immediately
         } else {
             isAllPaused.value = false;
             for (const media of audio.mediaHandlers) {
@@ -336,6 +391,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
                 }
             }
             isAllPlaying.value = true;
+            //syncOnPlayback();
         }
     }
 
@@ -349,7 +405,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         }
         audio.mediaHandlers.forEach((handler) => {
             if (handler.fader.fading) {
-                isAllPlaying.value = true;
+                isAnyFading.value = true;
                 return; // as early as possible
             }
         });
@@ -389,37 +445,15 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      */
     function updateCurrentTimeChanged(time: number) {
         currentTime.value = time;
-        console.debug(`Multitrack::updateCurrentTimeChanged:time:${time}`);
-        autoSync();
+        //console.debug(`Multitrack::updateCurrentTimeChanged:time:${time}`);
+        syncOnPlayback();
     }
-
-    /** Updates the common current time indication for all tracks.
-     * Additionally, during continued playback, triggers a sync if the time range
-     * is high
-     * @remarks Implements a throttling (on the trailing edge only)
-     *  to keep the system load low
-     */
-    const autoSync = useThrottleFn(
-        () => {
-            const { avg, range } = updateCurrentTime();
-            console.debug(`Multitrack::autoSync:avg:${avg}:range:${range}`);
-
-            if (isAllPlaying.value === true && isAnyFading.value === false) {
-                if (range > 0.16) {
-                    synchTracks();
-                }
-            }
-        },
-        5000,
-        /*trailing: */ true,
-        /*leading: */ false,
-    );
 
     /** Updates the multitrack current time, based on all tracks.
      * @remarks  For any currently playing media,
      * this method corrects for the time passed from the first reading until all
      * readings have been gathered.
-     * @returns The obtained multitrack current time
+     * @returns The average and range value of the multitrack current time in [seconds]
      */
     function updateCurrentTime(): { avg: number; range: number } {
         const readings = new Array<Reading<number>>();
@@ -446,8 +480,8 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
             console.debug('Multitrack:updateCurrentTime:readings:', readings);
             const times = new Array<number>(readings.length);
             let index = 0;
+            const now = performance.now() / millisecondsPerSecond;
             readings.forEach((reading) => {
-                const now = performance.now() / millisecondsPerSecond;
                 if (!Number.isNaN(reading.Timestamp)) {
                     times[index++] = reading.Value + (now - reading.Timestamp);
                 } else {
@@ -483,7 +517,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         toggleMute,
         seekAllToSeconds,
         seekAll,
-        synchTracks,
+        syncTracks,
         togglePlaybackAll,
         isAllTrackLoaded,
         isAllTrackSoloed,
