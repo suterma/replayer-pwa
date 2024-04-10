@@ -63,37 +63,11 @@
             <div v-if="isMixable" class="section has-background-grey-dark pb-0">
                 <!-- 
                 Track playback bar (In mix mode, this contains:
-                - a wide slider
-                - the play/pause/mute/solo combo
+                - a wide slider             
                 - a set of transport controls
                     -->
                 <nav class="level is-editable is-unselectable">
                     <div class="level-left">
-                        <div class="level-item is-justify-content-flex-start">
-                            <PlayPauseButton
-                                :disabled="!isAllTrackLoaded"
-                                :class="{
-                                    'is-success': isAllTrackLoaded,
-                                    'is-clickable': isAllTrackLoaded,
-                                    'has-cursor-not-allowed': !isAllTrackLoaded,
-                                }"
-                                :is-loading="isAnyFading"
-                                data-cy="toggle-playback-master"
-                                @click="multitrack.togglePlaybackAll()"
-                            />
-                            <SoloButton
-                                :disabled="!isAllTrackLoaded"
-                                :is-soloed="isAllTrackSoloed"
-                                data-cy="mute"
-                                @click="multitrack.toggleSolo()"
-                            />
-                            <MuteButton
-                                :disabled="!isAllTrackLoaded"
-                                :is-muted="isAllTrackMuted"
-                                data-cy="mute"
-                                @click="multitrack.toggleMute()"
-                            />
-                        </div>
                         <div
                             class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
                         >
@@ -146,10 +120,13 @@
                             </button>
                             <!-- Sync Time display -->
                             <!-- //TODO make this display a setting -->
-                            <button class="button is-nav is-indicator">
+                            <button
+                                class="button is-nav"
+                                @click="multitrack.updateCurrentTime()"
+                            >
                                 <span
                                     class="is-minimum-7-characters is-family-monospace has-text-info"
-                                    title="Click to synch tracks"
+                                    title="Click to update time display"
                                     >({{
                                         multitrack.getMultitrackPositionRange?.toFixed(
                                             6,
@@ -159,6 +136,7 @@
                             </button>
                             <button
                                 class="button is-info"
+                                title="Click to synch tracks"
                                 @click="multitrack.syncTracks()"
                             >
                                 Synch
@@ -198,11 +176,8 @@ import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
-import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
-import SoloButton from '@/components/buttons/SoloButton.vue';
-import MuteButton from '@/components/buttons/MuteButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiRotateLeftVariant, mdiRotateRightVariant } from '@mdi/js';
 import { storeToRefs } from 'pinia';

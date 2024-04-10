@@ -24,14 +24,6 @@ import { computed, inject } from 'vue';
 import { isPlayingInjectionKey } from './track/TrackInjectionKeys';
 
 const props = defineProps({
-    /** Whether this track's player is currently playing
-     * @remarks This can also be provided via injection
-     */
-    isTrackPlaying: {
-        type: Boolean,
-        default: false,
-        required: false,
-    },
     /** Whether the indicator should convey the ready state */
     isReady: {
         type: Boolean,
@@ -55,7 +47,7 @@ const props = defineProps({
 const indication = computed(() => {
     if (props.isUnavailable) {
         return 'Track media is unavailable. Please reload or replace it in the editor.';
-    } else if (isPlaying.value) {
+    } else if (isPlaying?.value) {
         return 'Track is playing';
     } else if (props.isReady) {
         return 'Track is loaded and ready to play';
@@ -66,13 +58,9 @@ const indication = computed(() => {
     return 'Track is in an unknown state';
 });
 
-/** Flag to indicate whether this track's player is currently playing
+/** Flag to indicate whether this track is currently playing
  */
-const isTrackPlaying = inject(isPlayingInjectionKey);
-
-const isPlaying = computed(() => {
-    return isTrackPlaying?.value || props.isTrackPlaying;
-});
+const isPlaying = inject(isPlayingInjectionKey);
 </script>
 <style scoped>
 .is-indicator {

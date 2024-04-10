@@ -63,25 +63,6 @@
                                     >{{ track.Cues.length }}</span
                                 ></SelectButton
                             >
-                            <!-- 
-                            <CollapsibleButton
-                                v-if="canCollapse"
-                                class="is-nav has-text-warning"
-                                :model-value="isExpanded"
-                                title="Track"
-                                collapsed-text="Click to expand / edit cues"
-                                expanded-text="Click to collapse"
-                                @update:model-value="toggleExpanded"
-                                ><span
-                                    :class="{
-                                        'is-invisible':
-                                            isExpanded ||
-                                            track.Cues.length == 0,
-                                    }"
-                                    class="tag is-warning is-rounded"
-                                    >{{ track.Cues.length }}</span
-                                ></CollapsibleButton
-                            > -->
                             <SoloButton
                                 :disabled="!canPlay"
                                 :is-soloed="isSoloed"

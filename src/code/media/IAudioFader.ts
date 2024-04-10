@@ -95,7 +95,7 @@ export interface IAudioFader {
      */
     set preRollDuration(duration: number);
 
-    /** Gets the fading state.
+    /** Gets the fading state, which is true for any kind of fading.
      */
     get fading(): boolean;
 

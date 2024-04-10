@@ -118,18 +118,12 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      * @remarks Maintains an offset to compensate for the runtime of this method
      */
 
-    ...// todo put all this code into a semaphore, so that each method
-    //can only execute once
     function syncTracks() {
         const originTime = performance.now();
         // get up-to date value
         const { avg } = updateCurrentTime();
         let targetTime = avg;
-        //if (isAllPlaying.value) {
-        // empirically determined compensation for the seek duration
-        const playbackOffset = 0.105;
         targetTime += synchPlaybackOffset;
-        //  }
         seekAllToSeconds(targetTime);
 
         // update the synch-offset with a very primitive running average
@@ -148,35 +142,36 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      * @remarks Also, after the operation ended, executes an additional synch
      */
     function togglePlaybackAll() {
-        if (afterFadeSynchHandle) {
-            clearTimeout(afterFadeSynchHandle);
-            afterFadeSynchHandle = null;
-        }
-        let maxFadeTime = 0;
+        // if (afterFadeSynchHandle) {
+        //     clearTimeout(afterFadeSynchHandle);
+        //     afterFadeSynchHandle = null;
+        // }
+        //let maxFadeTime = 0;
         // Decide whether to play or pause all
         if (isAllPaused.value) {
             const originTime = performance.now();
-            audio.mediaHandlers.forEach((handler) => {
+            audio.mediaHandlers.forEach(async (handler) => {
                 const offset =
                     (performance.now() - originTime) / millisecondsPerSecond;
 
-                handler.seek(offset);
                 console.debug(`Multitrack::togglePlaybackAll:offset:${offset}`);
                 handler.play();
-                maxFadeTime = Math.max(
-                    maxFadeTime,
-                    handler.fader.fadeInDuration,
-                );
+                // maxFadeTime = Math.max(
+                //     maxFadeTime,
+                //     handler.fader.fadeInDuration,
+                // );
                 //TODO test
-                syncWait(testSkewMilliseconds);
+                //syncWait(testSkewMilliseconds);
+
+                ..//TODO                move all stuff from the compilation to the master track, then (optionally) teleport the master track to the playback widget area
             });
         } else {
             audio.mediaHandlers.forEach((handler) => {
                 handler.pause();
-                maxFadeTime = Math.max(
-                    maxFadeTime,
-                    handler.fader.fadeOutDuration,
-                );
+                // maxFadeTime = Math.max(
+                //     maxFadeTime,
+                //     handler.fader.fadeOutDuration,
+                // );
                 //TODO test
                 syncWait(testSkewMilliseconds);
             });
@@ -186,7 +181,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
 
     /** A handle to the current synch after a play/pause operation.
      * Will be set to null when cancelled, to indicate the cancel status. */
-    let afterFadeSynchHandle: NodeJS.Timeout | null = null;
+    //let afterFadeSynchHandle: NodeJS.Timeout | null = null;
 
     /** Whether all tracks have their media resource loaded */
     const isAllTrackLoaded = ref(false);
@@ -399,7 +394,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      * @devdoc This method is optimized for early termination
      */
     function updateFadingChanged(fading: FadingMode) {
-        if (fading != FadingMode.None) {
+        if (fading === FadingMode.FadeIn || fading === FadingMode.FadeOut) {
             isAnyFading.value = true;
             return; // as early as possible
         }
@@ -446,7 +441,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     function updateCurrentTimeChanged(time: number) {
         currentTime.value = time;
         //console.debug(`Multitrack::updateCurrentTimeChanged:time:${time}`);
-        syncOnPlayback();
+        //syncOnPlayback();
     }
 
     /** Updates the multitrack current time, based on all tracks.
@@ -518,6 +513,10 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         seekAllToSeconds,
         seekAll,
         syncTracks,
+        /** Updates the current time, with an average from all currently playing tracks.
+         * Also calculates the min-max range of the times.
+         */
+        updateCurrentTime,
         togglePlaybackAll,
         isAllTrackLoaded,
         isAllTrackSoloed,
