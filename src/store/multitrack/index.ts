@@ -6,7 +6,7 @@
  */
 
 import { defineStore } from 'pinia';
-import { computed, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { Store } from '..';
 import { useAudioStore } from '../audio';
 import { Subscription } from 'sub-events';
@@ -24,8 +24,6 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      * in [milliseconds] to [seconds]
      */
     const millisecondsPerSecond = 1000;
-
-    const testSkewMilliseconds = 50; //50;
 
     /** The maximum track timing deviation allowed, in [seconds],
      * before an auto-sync operation executed
@@ -61,20 +59,19 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      * @remarks  For any currently playing media,
      * corrects for the time passed since the origin of the method
      */
-    function seekAllToSeconds(position: number) {
+    async function seekAllToSeconds(position: number) {
         const originTime = performance.now();
+        const seeks: Promise<void>[] = [];
         audio.mediaHandlers.forEach((handler) => {
             let offset = 0;
             if (!handler.paused) {
                 offset =
                     (performance.now() - originTime) / millisecondsPerSecond;
             }
-            handler.seekTo(position + offset);
-            console.debug(`Multitrack::seekAllToSeconds:offset:${offset}`);
-
-            //TODO test
-            syncWait(testSkewMilliseconds);
+            seeks.push(handler.seekTo(position + offset));
+            //console.debug(`Multitrack::seekAllToSeconds:offset:${offset}`);
         });
+        await Promise.all(seeks);
     }
 
     /** Seeks all track by the given timespan in [seconds]
@@ -82,58 +79,34 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     function seekAll(seconds: number) {
         audio.mediaHandlers.forEach((handler) => {
             handler.seek(seconds);
-
-            //TODO test
-            syncWait(testSkewMilliseconds);
         });
     }
-
-    /** Updates the common current time indication for all tracks and,
-     *  during continued playback, triggers a sync if the time range
-     * is high
-     * @remarks Implements a throttling, with timeout, to keep the system load low and outside the playback start/stop/fading events
-     */
-    const syncOnPlayback = useThrottleFn(() => {
-        const { avg, range } = updateCurrentTime();
-        return;
-        //TODO test currently do not use
-        //console.debug(`Multitrack::autoSync:avg:${avg}:range:${range}`);
-
-        if (isAllPlaying.value === true && isAnyFading.value === false) {
-            if (range > maxTrackTimeDeviation) {
-                //synch tracks outside the possible UI event loop
-                setTimeout(() => {
-                    if (
-                        isAllPlaying.value === true &&
-                        isAnyFading.value === false
-                    ) {
-                        syncTracks();
-                    }
-                }, 1);
-            }
-        }
-    }, 3000);
 
     /** Forcibly synchronizes playback of all tracks
      * @remarks Maintains an offset to compensate for the runtime of this method
      */
 
-    function syncTracks() {
+    async function syncTracks() {
         const originTime = performance.now();
         // get up-to date value
         const { avg } = updateCurrentTime();
         let targetTime = avg;
         targetTime += synchPlaybackOffset;
-        seekAllToSeconds(targetTime);
+        await seekAllToSeconds(targetTime);
+
+        // update after the sync
+        nextTick(() => {
+            updateCurrentTime();
+        });
 
         // update the synch-offset with a very primitive running average
         synchPlaybackOffset =
             (synchPlaybackOffset + (performance.now() - originTime)) /
             (2 * millisecondsPerSecond);
 
-        console.debug(
-            `Multitrack::synchTracks:targetTime:${targetTime}:synchPlaybackOffset:${synchPlaybackOffset}`,
-        );
+        //Hardcode fix
+        //TODO try to calculate this value, probably is device/CPU/track count dependent
+        synchPlaybackOffset = synchPlaybackOffset + 0.07;
     }
 
     /** Starts synchronous playback of all tracks
@@ -142,39 +115,17 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      * @remarks Also, after the operation ended, executes an additional synch
      */
     function togglePlaybackAll() {
-        // if (afterFadeSynchHandle) {
-        //     clearTimeout(afterFadeSynchHandle);
-        //     afterFadeSynchHandle = null;
-        // }
-        //let maxFadeTime = 0;
         // Decide whether to play or pause all
         if (isAllPaused.value) {
             const originTime = performance.now();
             audio.mediaHandlers.forEach(async (handler) => {
-                const offset =
-                    (performance.now() - originTime) / millisecondsPerSecond;
-
-                console.debug(`Multitrack::togglePlaybackAll:offset:${offset}`);
                 handler.play();
-                // maxFadeTime = Math.max(
-                //     maxFadeTime,
-                //     handler.fader.fadeInDuration,
-                // );
-                //TODO test
-                //syncWait(testSkewMilliseconds);
             });
         } else {
             audio.mediaHandlers.forEach((handler) => {
                 handler.pause();
-                // maxFadeTime = Math.max(
-                //     maxFadeTime,
-                //     handler.fader.fadeOutDuration,
-                // );
-                //TODO test
-                syncWait(testSkewMilliseconds);
             });
         }
-        //afterFadeSynchHandle = setTimeout(syncOnPlayback, maxFadeTime);
     }
 
     /** A handle to the current synch after a play/pause operation.
@@ -336,30 +287,36 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     // --- handle the subscriptions ---
 
     // /** Sync after playback stops */
-    // watch(
-    //     () => isAllPaused,
-    //     (paused) => {
-    //         if (paused) {
-    //             syncTracks();
-    //         }
-    //     },
-    //     {
-    //         immediate: true /* to handle it right after mount time */,
-    //     },
-    // );
+    watch(
+        () => isAllPaused.value,
+        (paused, wasPaused) => {
+            if (paused && !wasPaused) {
+                nextTick(() => {
+                    syncTracks();
+                });
+            }
+        },
+        {
+            immediate: true /* to handle it right after mount time */,
+        },
+    );
 
-    // /** Sync after playback start, after fade-in has finised */
-    // watch(
-    //     () => isAnyFading,
-    //     (isAnyFading) => {
-    //         if (!isAnyFading) {
-    //             syncTracks();
-    //         }
-    //     },
-    //     {
-    //         immediate: true /* to handle it right after mount time */,
-    //     },
-    // );
+    // /** Sync after playback start */
+    watch(
+        () => isAllPlaying.value,
+        (playing, wasPlaying) => {
+            if (playing && !wasPlaying) {
+                // A short delay seems to work best for sync after playback start
+                // 300ms was determined optimal on Chromium on Linux
+                setTimeout(() => {
+                    syncTracks();
+                }, 300);
+            }
+        },
+        {
+            immediate: true /* to handle it right after mount time */,
+        },
+    );
 
     /**
      * @devdoc This method is optimized for early termination
@@ -374,7 +331,6 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
                 }
             }
             isAllPaused.value = true;
-            syncTracks(); // immediately
         } else {
             isAllPaused.value = false;
             for (const media of audio.mediaHandlers) {
@@ -460,9 +416,6 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
             }
             if (Number.isFinite(trackCurrentTime)) {
                 readings.push(new Reading(timestamp, trackCurrentTime));
-
-                //TODO test
-                syncWait(testSkewMilliseconds);
             }
         });
         if (readings.length === 0) {
@@ -498,12 +451,6 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
             return { avg, range };
         }
     }
-
-    //TODO for test, later remove
-    const syncWait = (ms: number) => {
-        const end = Date.now() + ms;
-        while (Date.now() < end) continue;
-    };
 
     return {
         toggleSolo,
