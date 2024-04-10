@@ -1,20 +1,10 @@
 <template>
     <div class="track is-together-print block" data-cy="track-master">
-        <!-- Handle all track-relevant events here
-        Note: A check for the active track is done in the handler methods. 
-        A v-if here would work, but would register the events not in a useful order. -->
-        <div data-v-9b701c96="">
-            <!-- ReplayerEventHandler --><!-- this should get removed, but empty templates are not allowed -->
-        </div>
         <div class="block">
             <!-- Each track is an item in a list and contains all the cues --><!-- Track header for editing, including artist info, expansion-toggler and adaptive spacing --><!-- NOTE: The @click handler on the header component only handles clicks on otherwise non-interactive elements --><!-- Header level with wrap for items in the left part.
          Using flex-start on the level, to cause the left and right parts to both 
          begin at the same, upper vertical position -->
-            <div
-                data-v-1ea64311=""
-                data-v-9b701c96=""
-                class="track-header level is-mobile is-align-items-flex-start"
-            >
+            <div class="track-header level is-mobile is-align-items-flex-start">
                 <!-- Left side -->
                 <div
                     class="level-left level-wrap is-justify-content-flex-start"
@@ -95,6 +85,30 @@
                         >
                             Synch
                         </button>
+
+                        <ToggleButton
+                            class="button is-primary"
+                            :class="{
+                                'is-inactive': !showVertical,
+                            }"
+                            :is-engaged="showVertical"
+                            engaged-label="show horizontal tracks"
+                            disengaged-label="show vertical tracks"
+                            @click="toggleVertical($event)"
+                        >
+                            <BaseIcon
+                                v-if="!showVertical"
+                                :path="mdiRotateLeftVariant"
+                            />
+                            <BaseIcon
+                                v-else
+                                :path="mdiRotateRightVariant"
+                                :style="{
+                                    transform: 'rotate(' + 90 + 'deg)',
+                                }"
+                            />
+                        </ToggleButton>
+
                         <PlaybackIndicator
                             :is-ready="!isAllPlaying && isAllTrackLoaded"
                             :is-track-playing="isAllPlaying"
@@ -103,7 +117,6 @@
                             data-cy="playback-indicator-all"
                         />
                     </div>
-                    <!-- Slot for additional level items -->
                 </div>
             </div>
         </div>
@@ -116,8 +129,13 @@ import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import { useMultitrackStore } from '@/store/multitrack';
 import { storeToRefs } from 'pinia';
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
-import { provide, readonly } from 'vue';
+import { provide, readonly, ref } from 'vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
+import ToggleButton from '@/components/buttons/ToggleButton.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
+import { mdiRotateLeftVariant, mdiRotateRightVariant } from '@mdi/js';
+import VueScrollTo from 'vue-scrollto';
+import { useStyleTag } from '@vueuse/core';
 
 /** Displays a master track div with a title, and controls for it.
  * @displayName MasterTrack
@@ -138,4 +156,53 @@ const {
 } = storeToRefs(multitrack);
 
 provide(isPlayingInjectionKey, readonly(isAllPlaying));
+
+// --- vertical display ---
+
+const {
+    load,
+    unload,
+    /** Whether to show the track in a vertical orientation */
+    isLoaded: showVertical,
+} = useStyleTag(
+    `
+.tracks {
+    /* background-color: darkslategray; */
+    max-width: calc(100vh - 200px);
+    min-width: calc(100vh - 200px);
+    transform: rotate(-90deg) translate(calc(-100vh + 200px), 0);
+    transform-origin: top left;
+    overflow-y: auto;
+}
+/** Rotate knobs back to their upright position */
+.tracks .track .is-knob {
+    transform: rotate(+90deg);
+}
+
+/** Rotate buttons back to their upright position */
+.tracks .track .button {
+    transform: rotate(+90deg);
+    width: 2.5em;
+}
+`,
+    { /*Do not load the style initially*/ immediate: false },
+);
+
+function toggleVertical(event: Event): void {
+    if (showVertical.value) {
+        unload();
+    } else {
+        load();
+    }
+    if (showVertical.value) {
+        VueScrollTo.scrollTo(event.target, {
+            /** Always scroll, make it on top of the view */
+            force: true,
+            /** empirical value */
+            offset: 0,
+            /** Avoid interference with the key press overlay */
+            cancelable: false,
+        });
+    }
+}
 </script>

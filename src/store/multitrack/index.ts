@@ -162,8 +162,6 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
                 // );
                 //TODO test
                 //syncWait(testSkewMilliseconds);
-
-                ..//TODO                move all stuff from the compilation to the master track, then (optionally) teleport the master track to the playback widget area
             });
         } else {
             audio.mediaHandlers.forEach((handler) => {

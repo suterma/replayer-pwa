@@ -13,12 +13,7 @@
             :is-editable="isEditable"
         />
 
-        <div
-            class="tracks"
-            :class="{
-                vertical: showVertical && isMixable,
-            }"
-        >
+        <div class="tracks">
             <template v-for="track in textTracks" :key="track.Id">
                 <NoticeTrack
                     :id="'track-' + track.Id"
@@ -64,37 +59,9 @@
                 <!-- 
                 Track playback bar (In mix mode, this contains:
                 - a wide slider             
-                - a set of transport controls
                     -->
                 <nav class="level is-editable is-unselectable">
-                    <div class="level-left">
-                        <div
-                            class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
-                        >
-                            <ToggleButton
-                                class="button is-primary"
-                                :class="{
-                                    'is-inactive': !showVertical,
-                                }"
-                                :is-engaged="showVertical"
-                                engaged-label="show Horizontal"
-                                disengaged-label="show Vertical"
-                                @click="toggleVertical($event)"
-                            >
-                                <BaseIcon
-                                    v-if="!showVertical"
-                                    :path="mdiRotateLeftVariant"
-                                />
-                                <BaseIcon
-                                    v-else
-                                    :path="mdiRotateRightVariant"
-                                    :style="{
-                                        transform: 'rotate(' + 90 + 'deg)',
-                                    }"
-                                />
-                            </ToggleButton>
-                        </div>
-                    </div>
+                    <div class="level-left"></div>
 
                     <!-- A central level item. Margins are set to provide nice-looking spacing at all widths -->
                     <div class="level-item mt-4-mobile">
@@ -111,44 +78,9 @@
                         </PlayheadSlider>
                     </div>
                     <div class="level-right">
-                        <div class="level-item is-justify-content-flex-end">
-                            <button class="button is-nav is-indicator">
-                                <TimeDisplay
-                                    :model-value="currentTime"
-                                    :sub-second-digits="1"
-                                ></TimeDisplay>
-                            </button>
-                            <!-- Sync Time display -->
-                            <!-- //TODO make this display a setting -->
-                            <button
-                                class="button is-nav"
-                                @click="multitrack.updateCurrentTime()"
-                            >
-                                <span
-                                    class="is-minimum-7-characters is-family-monospace has-text-info"
-                                    title="Click to update time display"
-                                    >({{
-                                        multitrack.getMultitrackPositionRange?.toFixed(
-                                            6,
-                                        )
-                                    }}s)</span
-                                >
-                            </button>
-                            <button
-                                class="button is-info"
-                                title="Click to synch tracks"
-                                @click="multitrack.syncTracks()"
-                            >
-                                Synch
-                            </button>
-                            <PlaybackIndicator
-                                :is-ready="!isAllPlaying && isAllTrackLoaded"
-                                :is-track-playing="isAllPlaying"
-                                :is-unloaded="!isAllTrackLoaded"
-                                :is-unavailable="!isAllMediaAvailable"
-                                data-cy="playback-indicator-all"
-                            />
-                        </div>
+                        <div
+                            class="level-item is-justify-content-flex-end"
+                        ></div>
                     </div>
                 </nav>
             </div>
@@ -159,7 +91,6 @@
 <script setup lang="ts">
 import {
     type PropType,
-    ref,
     computed,
     watch,
     nextTick,
@@ -216,9 +147,6 @@ const noSleep: NoSleep = new NoSleep();
  * @devdoc This allows to keep the shuffled order.
  */
 let shuffleSeed: number = 1;
-
-/** Whether to show the track in a vertical orientation */
-const showVertical = ref(false);
 
 const app = useAppStore();
 
@@ -396,20 +324,6 @@ function scrollToTrack(trackId: string) {
     }
 }
 
-function toggleVertical(event: Event): void {
-    showVertical.value = !showVertical.value;
-    if (showVertical.value) {
-        VueScrollTo.scrollTo(event.target, {
-            /** Always scroll, make it on top of the view */
-            force: true,
-            /** empirical value */
-            offset: 0,
-            /** Avoid interference with the key press overlay */
-            cancelable: false,
-        });
-    }
-}
-
 function updatePlaybackMode(mode: PlaybackMode): void {
     //omit the modes that affect more than one track
     if (hasSingleMediaTrack.value) {
@@ -567,23 +481,3 @@ const {
     currentTime,
 } = storeToRefs(multitrack);
 </script>
-<style type="css">
-.tracks.vertical {
-    /* background-color: darkslategray; */
-    max-width: calc(100vh - 200px);
-    min-width: calc(100vh - 200px);
-    transform: rotate(-90deg) translate(calc(-100vh + 200px), 0);
-    transform-origin: top left;
-    overflow-y: auto;
-}
-/** Rotate knobs back to their upright position */
-.tracks.vertical .track .is-knob {
-    transform: rotate(+90deg);
-}
-
-/** Rotate buttons back to their upright position */
-.tracks.vertical .track .button {
-    transform: rotate(+90deg);
-    width: 2.5em;
-}
-</style>
