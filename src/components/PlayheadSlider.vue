@@ -6,7 +6,7 @@
             <div class="level-item">
                 <button
                     :disabled="disabled"
-                    class="button is-outlined is-inverted p-0 pr-2 is-multiline"
+                    class="button is-primary is-inactive pr-2 pl-2 mr-2 is-multiline"
                     title="Current time: click to rewind"
                     @click="seek(-5)"
                 >
@@ -48,7 +48,7 @@
             <div class="level-item">
                 <button
                     :disabled="disabled"
-                    class="button is-outlined is-inverted p-0 pl-2 is-multiline"
+                    class="button is-primary is-inactive pr-2 pl-2 ml-2 is-multiline"
                     title="Remaining time: click to forward"
                     @click="seek(+5)"
                 >

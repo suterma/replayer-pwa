@@ -50,11 +50,26 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- A central level item. Margins are set to provide nice-looking spacing at all widths -->
+                <div class="level-item mt-4-mobile">
+                    <PlayheadSlider
+                        class="is-fullwidth"
+                        :model-value="currentTime"
+                        :track-duration="allTrackDuration"
+                        @update:model-value="
+                            (position: number): void =>
+                                multitrack.seekAllToSeconds(position)
+                        "
+                        @seek="
+                            (seconds: number): void =>
+                                multitrack.seekAll(seconds)
+                        "
+                    >
+                    </PlayheadSlider>
+                </div>
                 <!-- Right side -->
-                <div
-                    data-v-1ea64311=""
-                    class="level-right is-justify-content-flex-end"
-                >
+                <div class="level-right">
                     <div class="level-item">
                         <button class="button is-nav is-indicator">
                             <TimeDisplay
@@ -136,6 +151,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiRotateLeftVariant, mdiRotateRightVariant } from '@mdi/js';
 import VueScrollTo from 'vue-scrollto';
 import { useStyleTag } from '@vueuse/core';
+import PlayheadSlider from '@/components/PlayheadSlider.vue';
 
 /** Displays a master track div with a title, and controls for it.
  * @displayName MasterTrack
