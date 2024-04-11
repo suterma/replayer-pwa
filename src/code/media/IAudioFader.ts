@@ -134,6 +134,11 @@ export interface IAudioFader {
      */
     readonly onVolumeChanged: SubEvent<number>;
 
+    /** Emits a changed muted state.
+     * @param {boolean} muted - the changed muted state
+     */
+    readonly onMutedChanged: SubEvent<boolean>;
+
     /** Emits a changed fading state.
      * @param {FadingMode} fading - kind of fading operation that is currently ongoing
      */

@@ -71,7 +71,7 @@
                             />
                             <MuteButton
                                 :disabled="!canPlay"
-                                :is-muted="isMuted"
+                                :is-muted="mediaHandler?.fader.muted ?? false"
                                 data-cy="mute"
                                 @click="toggleMute()"
                             />
@@ -1082,10 +1082,6 @@ const trackDuration: Ref<number | null> = ref(null);
 const isTrackPlaying = ref(false);
 provide(isPlayingInjectionKey, readonly(isTrackPlaying));
 
-/** Flag to indicate whether the audio is currently muted
- */
-const isMuted = ref(false); //TODO fix?
-
 /** Flag to indicate whether the track's audio is currently playing solo
  */
 const isSoloed = ref(false); //TODO fix?
@@ -1237,10 +1233,13 @@ function setActiveTrack(): void {
  */
 function toggleMute(mute: boolean | null = null): void {
     if (isTrackLoaded.value) {
-        if (mute === null) {
-            isMuted.value = !isMuted.value; //TODO later fix by using the media handle
-        } else {
-            isMuted.value = mute; //TODO later fix by using the media handle
+        if (mediaHandler.value) {
+            if (mute === null) {
+                mediaHandler.value.fader.muted =
+                    !mediaHandler.value?.fader.muted;
+            } else {
+                mediaHandler.value.fader.muted = mute;
+            }
         }
     }
 }
@@ -1289,7 +1288,7 @@ function seek(seconds: number): void {
 
 /** Seeks to the position, in [seconds], with emitting an event */
 function seekToSeconds(seconds: number): void {
-    mediaHandler.value?.seekTo(seconds);
+    mediaHandler.value?.seekTo(seconds, /* waitOnCanPlay */ false);
 }
 
 /** Handles the volume down command if this is the active track */

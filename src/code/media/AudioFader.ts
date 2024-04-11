@@ -252,6 +252,8 @@ export default class AudioFader implements IAudioFader {
         );
     }
 
+    onMutedChanged: SubEvent<boolean> = new SubEvent();
+
     /** Gets the muted state.
      */
     get muted(): boolean {
@@ -261,10 +263,10 @@ export default class AudioFader implements IAudioFader {
     /** Sets the muted state.
      */
     set muted(value: boolean) {
-        this._muted = value;
+        console.debug(`AudioFader::muted:value:${value}`);
 
-        // Immediately apply the muting
-        this.audioVolume = this.getVolume();
+        this._muted = value;
+        this.onMutedChanged.emit(value);
     }
 
     /** Gets the master audio volume, with the possible muted state (but not a possibly ongoing fade-in/fade-out) observed

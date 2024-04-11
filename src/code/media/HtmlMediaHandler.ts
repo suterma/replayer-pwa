@@ -248,7 +248,10 @@ export default class HtmlMediaHandler implements IMediaHandler {
         return this._media.currentTime;
     }
 
-    public seekTo(seconds: number): Promise<void> {
+    /**
+     * @inheritDoc
+     */
+    public seekTo(seconds: number, waitOnCanPlay = false): Promise<void> {
         if (
             this.hasLoadedMetadata &&
             this.currentTime !== seconds &&
@@ -257,7 +260,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
             this.debugLog(`seekTo`, seconds);
             return new Promise((resolve) => {
                 this._media.addEventListener(
-                    'seeked',
+                    waitOnCanPlay ? 'canplay' : 'seeked',
                     function () {
                         resolve();
                     },

@@ -50,39 +50,13 @@
             <!-- separate Pseudo-Track with "Master" Controls for the Mixer -->
             <template v-if="isMixable">
                 <hr />
-                <MasterTrack id="track-master" class="block"> </MasterTrack>
+                <MasterTrack class="block"> </MasterTrack>
             </template>
         </div>
         <!-- Multi-track-Controller -->
         <Teleport to="#media-player-panel">
             <div v-if="isMixable" class="section has-background-grey-dark pb-0">
-                <!-- 
-                Track playback bar (In mix mode, this contains:
-                - a wide slider             
-                    -->
-                <nav class="level is-editable is-unselectable">
-                    <div class="level-left"></div>
-
-                    <!-- A central level item. Margins are set to provide nice-looking spacing at all widths -->
-                    <div class="level-item mt-4-mobile">
-                        <PlayheadSlider
-                            class="is-fullwidth"
-                            :model-value="currentTime"
-                            :track-duration="allTrackDuration"
-                            @update:model-value="
-                                (position) =>
-                                    multitrack.seekAllToSeconds(position)
-                            "
-                            @seek="(seconds) => multitrack.seekAll(seconds)"
-                        >
-                        </PlayheadSlider>
-                    </div>
-                    <div class="level-right">
-                        <div
-                            class="level-item is-justify-content-flex-end"
-                        ></div>
-                    </div>
-                </nav>
+                <MasterTrack name="MASTER"> </MasterTrack>
             </div>
         </Teleport>
     </div>
@@ -98,19 +72,12 @@ import {
     onUnmounted,
 } from 'vue';
 import VueScrollTo from 'vue-scrollto';
-//TODO maybe the multitrack master track should go into it's own component...
 import MediaTrack from '@/components/track/MediaTrack.vue';
 import MasterTrack from '@/components/track/MasterTrack.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import NoticeTrack from '@/components/track/NoticeTrack.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
-import PlayheadSlider from '@/components/PlayheadSlider.vue';
-import TimeDisplay from '@/components/TimeDisplay.vue';
-import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
-import ToggleButton from '@/components/buttons/ToggleButton.vue';
-import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { mdiRotateLeftVariant, mdiRotateRightVariant } from '@mdi/js';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import NoSleep from 'nosleep.js';
@@ -119,7 +86,6 @@ import type { ICompilation } from '@/store/ICompilation';
 import { TrackViewMode } from '@/store/TrackViewMode';
 import { PlaybackMode } from '@/store/PlaybackMode';
 import type { ITrack } from '@/store/ITrack';
-import { useMultitrackStore } from '@/store/multitrack';
 
 /** Displays the contained set of tracks according to the required mode.
  * @remarks Also handles the common replayer events for compilations
@@ -213,11 +179,6 @@ const isEditable = computed(() => {
  */
 const isMixable = computed(() => {
     return props.trackViewode === TrackViewMode.Mix;
-});
-
-/** Returns all cues from all media tracks in the current compilation */
-const allCues = computed(() => {
-    return CompilationHandler.getAllCues(tracks.value);
 });
 
 /** Handle scrolling to the changed active track.
@@ -465,19 +426,4 @@ function toMnemonicCue(event: Event) {
     //     this.updateSelectedCueId(matchingCue.Id);
     // }
 }
-
-// --- Multitrack ---
-
-const multitrack = useMultitrackStore();
-const {
-    isAllTrackLoaded,
-    isAllTrackMuted,
-    isAllTrackSoloed,
-    isAnyFading,
-    isAllPlaying,
-    isAllMediaAvailable,
-    getMultitrackPositionRange,
-    allTrackDuration,
-    currentTime,
-} = storeToRefs(multitrack);
 </script>

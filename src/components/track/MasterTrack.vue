@@ -12,39 +12,37 @@
                     <!-- Slot for prepending level items -->
                     <div class="level-item is-narrow">
                         <PlayPauseButton
-                            :disabled="!isAllTrackLoaded"
+                            :disabled="!canAllPlay"
                             :class="{
-                                'is-success': isAllTrackLoaded,
-                                'is-clickable': isAllTrackLoaded,
-                                'has-cursor-not-allowed': !isAllTrackLoaded,
+                                'is-success': canAllPlay,
+                                'is-clickable': canAllPlay,
+                                'has-cursor-not-allowed': !canAllPlay,
                             }"
                             :is-loading="isAnyFading"
                             data-cy="toggle-playback-master"
                             @click="multitrack.togglePlaybackAll()"
                         />
 
-                        <!-- Routing controls only when mixable --><button
-                            data-v-8441256a=""
-                            data-v-9b701c96=""
+                        <!-- Routing controls -->
+                        <button
                             class="button is-warning is-yellow is-inactive has-tooltip-arrow has-tooltip-multiline has-tooltip-text-centered has-tooltip-fade"
                             data-cy="solo"
                             data-tooltip="Listen solo"
                         >
-                            S</button
-                        ><button
-                            data-v-9b701c96=""
-                            class="button is-danger is-inactive has-tooltip-arrow has-tooltip-multiline has-tooltip-text-centered has-tooltip-fade"
-                            data-cy="mute"
-                            data-tooltip="Mute"
-                        >
-                            M
+                            S
                         </button>
+                        <MuteButton
+                            :disabled="!canAllPlay"
+                            :is-muted="isAllMuted"
+                            data-cy="mute-master"
+                            @click="multitrack.toggleAllMute()"
+                        />
                         <div class="is-flex-shrink-1 ml-3 is-clickable">
                             <p class="title is-4" title="MASTER">
                                 <span
                                     class="has-text-weight-light"
                                     data-cy="track-name-master"
-                                    >MASTER</span
+                                    >{{ name }}</span
                                 >
                             </p>
                         </div>
@@ -58,11 +56,11 @@
                         :model-value="currentTime"
                         :track-duration="allTrackDuration"
                         @update:model-value="
-                            (position: number): void =>
+                            (position: number): Promise<void> =>
                                 multitrack.seekAllToSeconds(position)
                         "
                         @seek="
-                            (seconds: number): void =>
+                            (seconds: number): Promise<void> =>
                                 multitrack.seekAll(seconds)
                         "
                     >
@@ -87,9 +85,7 @@
                                 class="is-minimum-7-characters is-family-monospace has-text-info"
                                 title="Click to update time display"
                                 >({{
-                                    multitrack.getMultitrackPositionRange?.toFixed(
-                                        6,
-                                    )
+                                    multitrack.timeSpreading?.toFixed(6)
                                 }}s)</span
                             >
                         </button>
@@ -125,9 +121,9 @@
                         </ToggleButton>
 
                         <PlaybackIndicator
-                            :is-ready="!isAllPlaying && isAllTrackLoaded"
+                            :is-ready="!isAllPlaying && canAllPlay"
                             :is-track-playing="isAllPlaying"
-                            :is-unloaded="!isAllTrackLoaded"
+                            :is-unloaded="!canAllPlay"
                             :is-unavailable="!isAllMediaAvailable"
                             data-cy="playback-indicator-all"
                         />
@@ -152,16 +148,25 @@ import { mdiRotateLeftVariant, mdiRotateRightVariant } from '@mdi/js';
 import VueScrollTo from 'vue-scrollto';
 import { useStyleTag } from '@vueuse/core';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
+import MuteButton from '../buttons/MuteButton.vue';
 
 /** Displays a master track div with a title, and controls for it.
  * @displayName MasterTrack
  */
+const props = defineProps({
+    /** The name to use for the master track
+     */
+    name: {
+        type: String,
+        required: false,
+    },
+});
 
 // --- Multitrack ---
 const multitrack = useMultitrackStore();
 const {
-    isAllTrackLoaded,
-    isAllTrackMuted,
+    canAllPlay,
+    isAllMuted,
     isAllTrackSoloed,
     isAllPlaying,
     isAllPaused,
