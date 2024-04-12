@@ -1297,7 +1297,7 @@ function seek(seconds: number): void {
 
 /** Seeks to the position, in [seconds], with emitting an event */
 function seekToSeconds(seconds: number): void {
-    mediaHandler.value?.seekTo(seconds, /* waitOnCanPlay */ false);
+    mediaHandler.value?.seekTo(seconds);
 }
 
 /** Handles the volume down command if this is the active track */

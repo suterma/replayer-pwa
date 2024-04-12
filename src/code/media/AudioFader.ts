@@ -235,22 +235,6 @@ export default class AudioFader implements IAudioFader {
         }
     }
 
-    // --- volume ---
-
-    volumeDown(): number {
-        return this.setVolume(
-            Math.max(this.masterVolume * 0.71, AudioFader.audioVolumeMin),
-        );
-    }
-    volumeUp(): number {
-        return this.setVolume(
-            Math.max(
-                Math.min(this.masterVolume * 1.41, 1),
-                AudioFader.audioVolumeMin,
-            ),
-        );
-    }
-
     // --- mute/solo ---
 
     onMutedChanged: SubEvent<boolean> = new SubEvent();
@@ -316,6 +300,20 @@ export default class AudioFader implements IAudioFader {
     }
 
     // --- volume ---
+
+    volumeDown(): number {
+        return this.setVolume(
+            Math.max(this.masterVolume * 0.71, AudioFader.audioVolumeMin),
+        );
+    }
+    volumeUp(): number {
+        return this.setVolume(
+            Math.max(
+                Math.min(this.masterVolume * 1.41, 1),
+                AudioFader.audioVolumeMin,
+            ),
+        );
+    }
 
     /** Gets the master audio volume, with the possible muted and soloed state (but not a possibly ongoing fade-in/fade-out) observed
      * @remarks A muted state returns the min volume.
