@@ -157,6 +157,11 @@ export interface IAudioFader {
      */
     readonly onMutedChanged: SubEvent<boolean>;
 
+    /** Emits a changed soloed state.
+     * @param {boolean} soloed - the changed soloed state
+     */
+    readonly onSoloedChanged: SubEvent<boolean>;
+
     /** Emits a changed fading state.
      * @param {FadingMode} fading - kind of fading operation that is currently ongoing
      */

@@ -24,13 +24,12 @@
                         />
 
                         <!-- Routing controls -->
-                        <button
-                            class="button is-warning is-yellow is-inactive has-tooltip-arrow has-tooltip-multiline has-tooltip-text-centered has-tooltip-fade"
-                            data-cy="solo"
-                            data-tooltip="Listen solo"
-                        >
-                            S
-                        </button>
+                        <SoloButton
+                            :disabled="!canAllPlay"
+                            :is-soloed="isAllSoloed"
+                            data-cy="solo-master"
+                            @click="multitrack.toggleAllSolo()"
+                        />
                         <MuteButton
                             :disabled="!canAllPlay"
                             :is-muted="isAllMuted"
@@ -148,6 +147,7 @@ import { mdiRotateLeftVariant, mdiRotateRightVariant } from '@mdi/js';
 import VueScrollTo from 'vue-scrollto';
 import { useStyleTag } from '@vueuse/core';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
+import SoloButton from '../buttons/SoloButton.vue';
 import MuteButton from '../buttons/MuteButton.vue';
 
 /** Displays a master track div with a title, and controls for it.
@@ -167,7 +167,7 @@ const multitrack = useMultitrackStore();
 const {
     canAllPlay,
     isAllMuted,
-    isAllTrackSoloed,
+    isAllSoloed,
     isAllPlaying,
     isAllPaused,
     isAllMediaAvailable,

@@ -36,6 +36,10 @@ export const useAudioStore = defineStore(Store.Audio, () => {
      * set is only shallow reactive
      */
     const mediaHandlers = shallowReactive(new Set<IMediaHandler>());
+
+    /** The exposed, readonly media handlers the application can work with
+     * @remarks Each media handler belongs to a track in the compilation
+     */
     const readonlyMediaHandlers = shallowReadonly(mediaHandlers);
 
     /** Internal flag, whether the audio context currently can be considered as running. */

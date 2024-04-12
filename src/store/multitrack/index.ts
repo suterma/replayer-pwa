@@ -51,14 +51,24 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
 
     /** Toggles the solo state for all tracks
      */
-    function toggleSolo() {
-        //TODO
+    function toggleAllSolo() {
+        const isSoloed = !isAllSoloed.value;
+        isAllSoloed.value = isSoloed;
+        console.debug(`Multitrack::toggleAllSolo:isSoloed:${isSoloed}`);
+
+        audio.mediaHandlers.forEach((handler) => {
+            handler.fader.soloed = isSoloed;
+            handler.fader.anySoloed = isSoloed === true;
+        });
+
+        isAnySoloed.value = isSoloed;
     }
 
     /** Toggles the mute state for all tracks
      */
     function toggleAllMute() {
         const isMuted = !isAllMuted.value;
+        isAllMuted.value = isMuted;
         console.debug(`Multitrack::toggleAllMute:isMuted:${isMuted}`);
 
         audio.mediaHandlers.forEach((handler) => {
@@ -147,13 +157,16 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      */
     const canAllPlay = ref(false);
 
-    /** Whether all tracks are soloed */
-    const isAllTrackSoloed = computed(() => {
-        return false; //TODO
-    });
-
     /** Whether all tracks are muted */
     const isAllMuted = ref(false);
+
+    /** Whether all tracks are soloed */
+    const isAllSoloed = ref(false);
+
+    /** Whether any track is soloed.
+     * @remarks Facilitates solo handling for non-soloed tracks.
+     */
+    const isAnySoloed = ref(false);
 
     /** Whether all tracks are playing */
     const isAllPlaying = ref(false);
@@ -193,6 +206,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     const _pausedSubscriptons: Subscription[] = new Array<Subscription>();
     const _fadingSubscriptons: Subscription[] = new Array<Subscription>();
     const _mutedSubscriptions: Subscription[] = new Array<Subscription>();
+    const _soloedSubscriptions: Subscription[] = new Array<Subscription>();
     const _canPlaySubscriptons: Subscription[] = new Array<Subscription>();
     const _durationSubscriptons: Subscription[] = new Array<Subscription>();
     const _positionSubscriptons: Subscription[] = new Array<Subscription>();
@@ -229,6 +243,11 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
                     subscription.cancel();
                 }
             });
+            _soloedSubscriptions.forEach((subscription) => {
+                if (subscription.name && !handlerIds.has(subscription.name)) {
+                    subscription.cancel();
+                }
+            });
             _canPlaySubscriptons.forEach((subscription) => {
                 if (subscription.name && !handlerIds.has(subscription.name)) {
                     subscription.cancel();
@@ -259,6 +278,17 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
                     _mutedSubscriptions.push(
                         handler.fader.onMutedChanged.subscribe(
                             updateMutedChanged,
+                            {
+                                name: handler.id,
+                            },
+                        ),
+                    );
+                }
+
+                if (!_soloedSubscriptions.some((s) => s.name === handler.id)) {
+                    _soloedSubscriptions.push(
+                        handler.fader.onSoloedChanged.subscribe(
+                            updateSoloedChanged,
                             {
                                 name: handler.id,
                             },
@@ -408,6 +438,28 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     /**
      * @devdoc All handlers need to be checked every time
      */
+    function updateSoloedChanged(_soloed: boolean): void {
+        let anySoloed = false;
+        let allSoloed = true;
+        for (const media of audio.mediaHandlers) {
+            if (media.fader.soloed) {
+                anySoloed = true;
+            } else {
+                allSoloed = false;
+            }
+        }
+        isAllSoloed.value = allSoloed;
+        isAnySoloed.value = anySoloed;
+
+        // Provide back the resulting any soloed state, for proper silencing
+        for (const media of audio.mediaHandlers) {
+            media.fader.anySoloed = anySoloed;
+        }
+    }
+
+    /**
+     * @devdoc All handlers need to be checked every time
+     */
     function updateCanPlayChanged() {
         for (const media of audio.mediaHandlers) {
             if (!media.canPlay) {
@@ -497,7 +549,11 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     }
 
     return {
-        toggleSolo,
+        /** Toggles the solo state for all tracks
+         */
+        toggleAllSolo,
+        /** Toggles the mute state for all tracks
+         */
         toggleAllMute,
         /** Seeks all tracks to the given position
          * @param {number} position - the temporal position, in [seconds], to seek to
@@ -516,7 +572,15 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
          * can play.
          */
         canAllPlay,
-        isAllTrackSoloed,
+        /** Whether all tracks are soloed.
+         */
+        isAllSoloed,
+        /** Whether any track is soloed.
+         * @remarks Facilitates solo handling for non-soloed tracks.
+         */
+        isAnySoloed,
+        /** Whether all tracks are muted.
+         */
         isAllMuted,
         isAllPlaying,
         isAllPaused,

@@ -1032,6 +1032,10 @@ function takeMediaHandler(handler: IMediaHandler) {
         isMuted.value = muted;
     });
 
+    handler.fader.onSoloedChanged.subscribe((soloed) => {
+        isSoloed.value = soloed;
+    });
+
     handler.playbackRateController.onPlaybackRateChanged.subscribe((rate) => {
         app.updateTrackPlaybackRate(props.track?.Id, rate);
     });
@@ -1246,7 +1250,7 @@ function toggleMute(mute: boolean | null = null): void {
     }
 }
 
-/** Whether this track is the active track in the set of tracks */
+/** Whether this track is muted */
 const isMuted = ref(false);
 
 /** Toggles the solo state of this track
@@ -1266,8 +1270,8 @@ function toggleSolo(solo: boolean | null = null): void {
     }
 }
 
-/** Flag to indicate whether the track's audio is currently playing solo
- */
+/** Whether this track is soloed */
+
 const isSoloed = ref(false);
 
 // --- transport ---

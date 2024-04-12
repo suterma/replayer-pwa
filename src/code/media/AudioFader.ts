@@ -76,6 +76,8 @@ export default class AudioFader implements IAudioFader {
             if (
                 !this.fading &&
                 !this.muted &&
+                !this.anySoloed &&
+                !this.soloed &&
                 !this.audio.paused &&
                 /** Seeking seems to cause volume changes, thus omitted here */
                 !this.audio.seeking
@@ -272,6 +274,8 @@ export default class AudioFader implements IAudioFader {
         this.onMutedChanged.emit(value);
     }
 
+    onSoloedChanged: SubEvent<boolean> = new SubEvent();
+
     /** The soloed state */
     private _soloed = false;
 
@@ -287,7 +291,11 @@ export default class AudioFader implements IAudioFader {
         console.debug(`AudioFader::soloed:value:${value}`);
 
         this._soloed = value;
-        //TODO implement the soloed state
+        if (value) {
+            this.anySoloed = true;
+        }
+        this.audio.volume = this.getVolume();
+        this.onSoloedChanged.emit(value);
     }
 
     /** The any soloed state */
@@ -303,18 +311,19 @@ export default class AudioFader implements IAudioFader {
      */
     set anySoloed(value: boolean) {
         console.debug(`AudioFader::anySoloed:value:${value}`);
-
         this._anySoloed = value;
-        //TODO implement the soloed state
+        this.audio.volume = this.getVolume();
     }
 
     // --- volume ---
 
-    /** Gets the master audio volume, with the possible muted state (but not a possibly ongoing fade-in/fade-out) observed
+    /** Gets the master audio volume, with the possible muted and soloed state (but not a possibly ongoing fade-in/fade-out) observed
+     * @remarks A muted state returns the min volume.
+     * @remarks A non-soloed and any-(other)-soloed state returns the min volume.
      * @returns A value between 0 (zero) and 1 (representing full scale), while observing the muted state.
      */
     private getVolume(): number {
-        if (!this.muted) {
+        if (!this.muted && (this.soloed || !this.anySoloed)) {
             return this.masterVolume;
         } else {
             return AudioFader.audioVolumeMin;
