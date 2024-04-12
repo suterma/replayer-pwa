@@ -5,7 +5,7 @@
  * LICENSE file in the root of this projects source tree.
 -->
 <template v-once>
-    <div class="container">
+    <div>
         <!-- <h1 class="title">About</h1> -->
         <!-- The ad is only used for the screen here, because on printouts, 
             it's added at the end of the document. -->

@@ -9,7 +9,8 @@
         and a more accessible narrower blog style width for all other content -->
     <div
         :class="{
-            'container is-fullhd': router.currentRoute.value.name != 'mix',
+            'container is-fullhd':
+                router.currentRoute.value.name != 'mix' && !useWideContentWidth,
         }"
     >
         <StageMark></StageMark>
@@ -53,7 +54,9 @@
             id="media-player-panel"
             ref="mediaPlayerPanel"
             :class="{
-                'container is-fullhd': router.currentRoute.value.name != 'mix',
+                'container is-fullhd':
+                    router.currentRoute.value.name != 'mix' &&
+                    !useWideContentWidth,
             }"
             aria-label="media player"
         ></div>
@@ -80,6 +83,8 @@ onMounted(() => {
 
 const app = useAppStore();
 const { hasCompilation } = storeToRefs(app);
+const settings = useSettingsStore();
+const { useWideContentWidth } = storeToRefs(settings);
 const router = useRouter();
 
 // --- app state ---

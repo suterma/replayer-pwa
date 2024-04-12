@@ -57,9 +57,14 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
     );
 
     /** Whether to always keep the screen lit while a track is in use
-     * @remarks Default is false
+     * @remarks Default is true
      */
     const preventScreenTimeout = useLocalStorage('preventScreenTimeout', true);
+
+    /** Whether to use a wide content width
+     * @remarks Default is false
+     */
+    const useWideContentWidth = useLocalStorage('useWideContentWidth', false);
 
     /** The fade-in duration in [milliseconds]. Use zero for no fading.
      * @remarks Default is 1000
@@ -178,6 +183,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         showInitialZeroTimeCue.value = false;
         showAddCueButtonInPlayView.value = true;
         preventScreenTimeout.value = true;
+        useWideContentWidth.value = false;
         fadeInDuration.value = 1000;
         fadeOutDuration.value = 500;
         addFadeInPreRoll.value = true;
@@ -203,6 +209,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         showInitialZeroTimeCue,
         showAddCueButtonInPlayView,
         preventScreenTimeout,
+        useWideContentWidth,
         fadeInDuration,
         fadeOutDuration,
         addFadeInPreRoll,
