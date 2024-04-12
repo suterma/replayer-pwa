@@ -5,8 +5,6 @@
             'is-inactive': !isMuted,
         }"
         :is-engaged="isMuted"
-        engaged-label="Unmute"
-        disengaged-label="Mute"
         >M
     </ToggleButton>
 </template>

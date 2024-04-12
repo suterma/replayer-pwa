@@ -266,6 +266,7 @@ export default class AudioFader implements IAudioFader {
         console.debug(`AudioFader::muted:value:${value}`);
 
         this._muted = value;
+        this.audio.volume = this.getVolume();
         this.onMutedChanged.emit(value);
     }
 

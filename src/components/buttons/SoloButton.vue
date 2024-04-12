@@ -5,8 +5,6 @@
             'is-inactive': !isSoloed,
         }"
         :is-engaged="isSoloed"
-        engaged-label=""
-        disengaged-label="Listen solo"
         >S
     </ToggleButton>
 </template>

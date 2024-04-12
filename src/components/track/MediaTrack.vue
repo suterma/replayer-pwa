@@ -71,7 +71,7 @@
                             />
                             <MuteButton
                                 :disabled="!canPlay"
-                                :is-muted="mediaHandler?.fader.muted ?? false"
+                                :is-muted="isMuted"
                                 data-cy="mute"
                                 @click="toggleMute()"
                             />
@@ -1028,6 +1028,10 @@ function takeMediaHandler(handler: IMediaHandler) {
         updateVolume(volume);
     });
 
+    handler.fader.onMutedChanged.subscribe((muted) => {
+        isMuted.value = muted;
+    });
+
     handler.playbackRateController.onPlaybackRateChanged.subscribe((rate) => {
         app.updateTrackPlaybackRate(props.track?.Id, rate);
     });
@@ -1081,10 +1085,6 @@ const trackDuration: Ref<number | null> = ref(null);
  */
 const isTrackPlaying = ref(false);
 provide(isPlayingInjectionKey, readonly(isTrackPlaying));
-
-/** Flag to indicate whether the track's audio is currently playing solo
- */
-const isSoloed = ref(false); //TODO fix?
 
 /** Indicates the kind of current fading */
 const isFading = ref(FadingMode.None);
@@ -1227,6 +1227,8 @@ function setActiveTrack(): void {
     }
 }
 
+// --- mute/solo ---
+
 /** Toggles the muted state of this track
  * @remarks If the track is not loaded, does nothing.
  * @param mute - If null or not given, toggles the muted state. When given, sets to the specified state.
@@ -1244,6 +1246,9 @@ function toggleMute(mute: boolean | null = null): void {
     }
 }
 
+/** Whether this track is the active track in the set of tracks */
+const isMuted = ref(false);
+
 /** Toggles the solo state of this track
  * @remarks If the track is not loaded, does nothing.
  * @param solo - If null or not given, toggles the soloed state. When given, sets to the specified state.
@@ -1260,12 +1265,11 @@ function toggleSolo(solo: boolean | null = null): void {
     }
 }
 
-/** Toggles the playback state, if this is the active track */
-function togglePlayback() {
-    if (isActiveTrack.value) {
-        mediaHandler.value?.togglePlayback();
-    }
-}
+/** Flag to indicate whether the track's audio is currently playing solo
+ */
+const isSoloed = ref(false);
+
+// --- transport ---
 
 /** Rewinds 5 seconds, if this is the active track */
 function rewind() {
@@ -1337,6 +1341,15 @@ function goToSelectedCue() {
                 }
             }
         }
+    }
+}
+
+// --- playback ---
+
+/** Toggles the playback state, if this is the active track */
+function togglePlayback() {
+    if (isActiveTrack.value) {
+        mediaHandler.value?.togglePlayback();
     }
 }
 
