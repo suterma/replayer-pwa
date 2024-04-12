@@ -30,9 +30,6 @@ export default class AudioFader implements IAudioFader {
      */
     operationToken = AudioFader.cancelOperationToken;
 
-    /** The muted state */
-    private _muted = false;
-
     /** @constructor
      * @param {HTMLAudioElement} audio - The audio element to act upon
      * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
@@ -252,15 +249,20 @@ export default class AudioFader implements IAudioFader {
         );
     }
 
+    // --- mute/solo ---
+
     onMutedChanged: SubEvent<boolean> = new SubEvent();
 
-    /** Gets the muted state.
+    /** The muted state */
+    private _muted = false;
+
+    /** @inheritdoc
      */
     get muted(): boolean {
         return this._muted;
     }
 
-    /** Sets the muted state.
+    /** @inheritdoc
      */
     set muted(value: boolean) {
         console.debug(`AudioFader::muted:value:${value}`);
@@ -269,6 +271,44 @@ export default class AudioFader implements IAudioFader {
         this.audio.volume = this.getVolume();
         this.onMutedChanged.emit(value);
     }
+
+    /** The soloed state */
+    private _soloed = false;
+
+    /** @inheritdoc
+     */
+    get soloed(): boolean {
+        return this._soloed;
+    }
+
+    /** @inheritdoc
+     */
+    set soloed(value: boolean) {
+        console.debug(`AudioFader::soloed:value:${value}`);
+
+        this._soloed = value;
+        //TODO implement the soloed state
+    }
+
+    /** The any soloed state */
+    private _anySoloed = false;
+
+    /** @inheritdoc
+     */
+    get anySoloed(): boolean {
+        return this._anySoloed;
+    }
+
+    /** @inheritdoc
+     */
+    set anySoloed(value: boolean) {
+        console.debug(`AudioFader::anySoloed:value:${value}`);
+
+        this._anySoloed = value;
+        //TODO implement the soloed state
+    }
+
+    // --- volume ---
 
     /** Gets the master audio volume, with the possible muted state (but not a possibly ongoing fade-in/fade-out) observed
      * @returns A value between 0 (zero) and 1 (representing full scale), while observing the muted state.

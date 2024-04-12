@@ -1252,15 +1252,16 @@ const isMuted = ref(false);
 /** Toggles the solo state of this track
  * @remarks If the track is not loaded, does nothing.
  * @param solo - If null or not given, toggles the soloed state. When given, sets to the specified state.
- * @param isAnySoloed - Provides, whether any track in the compilation is currently soloed. This is required to determine the muting of non-soloed tracks.
  */
 function toggleSolo(solo: boolean | null = null): void {
-    //TODO later fix by using the media handle
     if (isTrackLoaded.value) {
-        if (solo === null) {
-            isSoloed.value = !isSoloed.value;
-        } else {
-            isSoloed.value = solo;
+        if (mediaHandler.value) {
+            if (solo === null) {
+                mediaHandler.value.fader.soloed =
+                    !mediaHandler.value?.fader.soloed;
+            } else {
+                mediaHandler.value.fader.soloed = solo;
+            }
         }
     }
 }
