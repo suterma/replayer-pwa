@@ -47,11 +47,6 @@
                     @track-ended="continueAfterTrack(track.Id)"
                 />
             </template>
-            <!-- separate Pseudo-Track with "Master" Controls for the Mixer -->
-            <template v-if="isMixable">
-                <hr />
-                <MasterTrack class="block"> </MasterTrack>
-            </template>
         </div>
         <!-- Multi-track-Controller -->
         <Teleport to="#media-player-panel">
