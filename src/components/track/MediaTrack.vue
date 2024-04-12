@@ -409,7 +409,7 @@
             element) is also depending on the track state as a performance optimizations
             -->
         <div v-if="mediaUrl" class="block">
-            <Teleport to="#media-player-panel">
+            <Teleport to="#media-player-panel" :disabled="isEditable">
                 <!-- The player widget for a track may be full screen only for the active track -->
                 <FullscreenPanel
                     ref="fullscreenPanel"
