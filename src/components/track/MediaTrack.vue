@@ -1094,7 +1094,7 @@ provide(isPlayingInjectionKey, readonly(isTrackPlaying));
 const isFading = ref(FadingMode.None);
 
 /** Whether the cues are currently expanded for editing */
-const isExpanded = ref(false); //TODO fix?
+const isExpanded = ref(false);
 
 /** The visual transition to use for skipping track */
 const skipTransitionName = ref('item-expand');

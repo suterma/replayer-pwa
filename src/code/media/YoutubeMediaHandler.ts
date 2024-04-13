@@ -13,7 +13,7 @@ import YouTubeFader from './YouTubeFader';
 import { PlayerState } from '@vue-youtube/core';
 import type { IPlaybackRateController } from './IPlaybackRateController';
 import YouTubePlaybackRateController from './YouTubePlaybackRateController';
-import { DefaultPlaybackRate } from '@/store/Track';
+import { DefaultPlaybackRate, DefaultTrackVolume } from '@/store/Track';
 import { nextTick } from 'vue';
 import chalk from 'chalk';
 
@@ -35,19 +35,16 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     /** @constructor
      * @param {Player} player - The YouTube player instance to act upon
-     * @param {number} masterVolume - The overall volume of the output. Can be used to control the output volume in addition to fadings. (Default: 1, representing full scale)
      * @param {string} id - The unique id for this handler
      */
     constructor(
         onStateChange: (...cb: PlayerStateChangeCallback[]) => void,
         player: Player,
-        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        masterVolume: number = 1,
         id: string,
     ) {
         this._player = player;
         this._id = 'youtube-media-handler-' + (id ? id : player.getVideoUrl());
-        this._fader = new YouTubeFader(player, masterVolume);
+        this._fader = new YouTubeFader(player, DefaultTrackVolume);
         this._playbackRateController = new YouTubePlaybackRateController(
             player,
             DefaultPlaybackRate,

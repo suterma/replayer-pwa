@@ -390,7 +390,6 @@ function createAndEmitHandler(video: HTMLMediaElement): IMediaHandler {
             mediaDuration.value = duration;
         },
     );
-    //TODO should we handle initial position on YouTube too
     onCanPlaySubsription = handler.onCanPlay.subscribe(() => {
         if (isInitialPositionToBeApplied) {
             handler.seekTo(props.start ?? 0);

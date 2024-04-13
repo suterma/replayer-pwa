@@ -74,8 +74,7 @@
                                 :sub-second-digits="1"
                             ></TimeDisplay>
                         </button>
-                        <!-- Sync Time display -->
-                        <!-- //TODO make this display a setting -->
+                        <!-- Updatedable time spreading display -->
                         <button
                             class="button is-nav"
                             @click="multitrack.updateCurrentTime()"
@@ -105,7 +104,7 @@
                                     'is-warning':
                                         multitrack.timeSpreading >
                                         Multitrack.MaxTrackTimeDeviation,
-                                    'is-error':
+                                    'is-danger':
                                         multitrack.timeSpreading >
                                         Multitrack.MaxTrackTimeDeviation * 2,
                                 }"
