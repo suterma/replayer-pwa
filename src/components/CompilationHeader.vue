@@ -7,7 +7,7 @@
             <template
                 v-if="
                     isEditable &&
-                    (compilation.hasLabels || compilation.Tracks.length > 1)
+                    (compilation.hasLabels() || compilation.Tracks.length > 1)
                 "
             >
                 <!-- Display in edit view, when there is a Title or more than one track -->
