@@ -48,7 +48,36 @@
                     #left-start
                 >
                     <div class="level-item is-narrow">
+                        <!-- Routing controls only when mixable -->
+                        <template v-if="isMixable">
+                            <SelectButton
+                                :disabled="!canPlay"
+                                :is-selected="isActiveTrack"
+                                data-cy="select"
+                                @click="setActiveTrack()"
+                                ><span
+                                    :class="{
+                                        'is-invisible': track.Cues.length == 0,
+                                    }"
+                                    class="has-text-warning"
+                                    >{{ track.Cues.length }}</span
+                                ></SelectButton
+                            >
+                            <SoloButton
+                                :disabled="!canPlay"
+                                :is-soloed="isSoloed"
+                                data-cy="solo"
+                                @click="toggleSolo()"
+                            />
+                            <MuteButton
+                                :disabled="!canPlay"
+                                :is-muted="isMuted"
+                                data-cy="mute"
+                                @click="toggleMute()"
+                            />
+                        </template>
                         <PlayPauseButton
+                            v-else
                             :disabled="!canPlay"
                             :class="{
                                 'is-success': isActiveTrack,
@@ -57,7 +86,7 @@
                             }"
                             :is-loading="isFading !== FadingMode.None"
                             data-cy="toggle-playback"
-                            @click="skipToPlayPause"
+                            @click="skipToPlayPause()"
                         />
 
                         <!-- Title input -->
@@ -81,28 +110,6 @@
                                 ></TrackTitleName>
                             </p>
                         </div>
-
-                        <!-- Routing controls only when mixable -->
-                        <template v-if="isMixable">
-                            <SoloButton
-                                :disabled="!canPlay"
-                                :is-soloed="isSoloed"
-                                data-cy="solo"
-                                @click="toggleSolo()"
-                            />
-                            <MuteButton
-                                :disabled="!canPlay"
-                                :is-muted="isMuted"
-                                data-cy="mute"
-                                @click="toggleMute()"
-                            />
-                            <SelectButton
-                                :disabled="!canPlay"
-                                :is-selected="isActiveTrack"
-                                data-cy="select"
-                                @click="setActiveTrack()"
-                            />
-                        </template>
                     </div>
                 </template>
 
@@ -355,14 +362,20 @@
                 </div>
                 <div class="level-right">
                     <div class="level-item is-justify-content-flex-end">
-                        <!-- Currently, the user is expected to use the track list to navigate between tracks. 
-                             Thus the track navigation is alwas hidden -->
                         <MediaControlsBar
                             :disabled="!canPlay"
                             :hide-stop-button="true"
-                            :hide-track-navigation="true"
-                            :has-previous-track="hasPreviousTrack"
-                            :has-next-track="hasNextTrack"
+                            :hide-track-navigation="false"
+                            :has-previous-track="
+                                !isFirst ||
+                                playbackMode === PlaybackMode.LoopCompilation ||
+                                playbackMode === PlaybackMode.ShuffleCompilation
+                            "
+                            :has-next-track="
+                                !isLast ||
+                                playbackMode === PlaybackMode.LoopCompilation ||
+                                playbackMode === PlaybackMode.ShuffleCompilation
+                            "
                             :hide-cue-navigation="true"
                             :hide-pre-roll-toggler="hidePreRollToggler"
                             :hide-fading-toggler="hideFadingToggler"
@@ -396,7 +409,7 @@
             element) is also depending on the track state as a performance optimizations
             -->
         <div v-if="mediaUrl" class="block">
-            <Teleport to="#media-player-panel" :disabled="!usePlayerPanel">
+            <Teleport to="#media-player-panel" :disabled="isEditable">
                 <!-- The player widget for a track may be full screen only for the active track -->
                 <FullscreenPanel
                     ref="fullscreenPanel"
@@ -546,17 +559,25 @@
                                     <div
                                         class="level-item is-justify-content-flex-end"
                                     >
-                                        <!-- Currently, the user is expected to use the track list to navigate between tracks. 
-                                            Thus the track navigation is alwas hidden -->
                                         <MediaControlsBar
                                             :hide-stop-button="true"
-                                            :hide-track-navigation="true"
+                                            :hide-track-navigation="false"
                                             :has-previous-track="
-                                                hasPreviousTrack
+                                                !isFirst ||
+                                                playbackMode ===
+                                                    PlaybackMode.LoopCompilation ||
+                                                playbackMode ===
+                                                    PlaybackMode.ShuffleCompilation
+                                            "
+                                            :has-next-track="
+                                                !isLast ||
+                                                playbackMode ===
+                                                    PlaybackMode.LoopCompilation ||
+                                                playbackMode ===
+                                                    PlaybackMode.ShuffleCompilation
                                             "
                                             :has-previous-cue="hasPreviousCue"
                                             :has-next-cue="hasNextCue"
-                                            :has-next-track="hasNextTrack"
                                             :playback-mode="playbackMode"
                                             :is-fading-enabled="isFadingEnabled"
                                             :is-pre-roll-enabled="
@@ -766,7 +787,7 @@ import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import VolumeKnob from '@/components/controls/VolumeKnob.vue';
-import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
+import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import FullscreenPanel from '@/components/FullscreenPanel.vue';
 import TrackTitleName from '@/components/track/TrackTitleName.vue';
 import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
@@ -841,20 +862,6 @@ const props = defineProps({
         required: true,
     },
 
-    /** Whether this track has a previous track
-     */
-    hasPreviousTrack: {
-        type: Boolean,
-        default: false,
-    },
-
-    /** Whether this track has a next track to skip to
-     */
-    hasNextTrack: {
-        type: Boolean,
-        default: false,
-    },
-
     /** Whether this is the only track in the compilation
      * @remarks Is used to visually omit some unnecessary items for a compilation with just a single track
      */
@@ -863,13 +870,13 @@ const props = defineProps({
         default: false,
     },
 
-    /** Whether this track is the first track in the set of tracks */
+    /** Whether this track is the first track in the set of (possibly shuffled) media tracks */
     isFirst: {
         type: Boolean,
         required: true,
     },
 
-    /** Whether this track is the last track in the set of tracks */
+    /** Whether this track is the last track in the set of (possibly shuffled) media tracks */
     isLast: {
         type: Boolean,
         required: true,
@@ -1021,6 +1028,14 @@ function takeMediaHandler(handler: IMediaHandler) {
         updateVolume(volume);
     });
 
+    handler.fader.onMutedChanged.subscribe((muted) => {
+        isMuted.value = muted;
+    });
+
+    handler.fader.onSoloedChanged.subscribe((soloed) => {
+        isSoloed.value = soloed;
+    });
+
     handler.playbackRateController.onPlaybackRateChanged.subscribe((rate) => {
         app.updateTrackPlaybackRate(props.track?.Id, rate);
     });
@@ -1075,19 +1090,11 @@ const trackDuration: Ref<number | null> = ref(null);
 const isTrackPlaying = ref(false);
 provide(isPlayingInjectionKey, readonly(isTrackPlaying));
 
-/** Flag to indicate whether the audio is currently muted
- */
-const isMuted = ref(false); //TODO fix?
-
-/** Flag to indicate whether the track's audio is currently playing solo
- */
-const isSoloed = ref(false); //TODO fix?
-
 /** Indicates the kind of current fading */
 const isFading = ref(FadingMode.None);
 
 /** Whether the cues are currently expanded for editing */
-const isExpanded = ref(false); //TODO fix?
+const isExpanded = ref(false);
 
 /** The visual transition to use for skipping track */
 const skipTransitionName = ref('item-expand');
@@ -1224,42 +1231,50 @@ function setActiveTrack(): void {
     }
 }
 
+// --- mute/solo ---
+
 /** Toggles the muted state of this track
  * @remarks If the track is not loaded, does nothing.
  * @param mute - If null or not given, toggles the muted state. When given, sets to the specified state.
  */
 function toggleMute(mute: boolean | null = null): void {
     if (isTrackLoaded.value) {
-        if (mute === null) {
-            isMuted.value = !isMuted.value; //TODO later fix by using the media handle
-        } else {
-            isMuted.value = mute; //TODO later fix by using the media handle
+        if (mediaHandler.value) {
+            if (mute === null) {
+                mediaHandler.value.fader.muted =
+                    !mediaHandler.value?.fader.muted;
+            } else {
+                mediaHandler.value.fader.muted = mute;
+            }
         }
     }
 }
+
+/** Whether this track is muted */
+const isMuted = ref(false);
 
 /** Toggles the solo state of this track
  * @remarks If the track is not loaded, does nothing.
  * @param solo - If null or not given, toggles the soloed state. When given, sets to the specified state.
- * @param isAnySoloed - Provides, whether any track in the compilation is currently soloed. This is required to determine the muting of non-soloed tracks.
  */
 function toggleSolo(solo: boolean | null = null): void {
-    //TODO later fix by using the media handle
     if (isTrackLoaded.value) {
-        if (solo === null) {
-            isSoloed.value = !isSoloed.value;
-        } else {
-            isSoloed.value = solo;
+        if (mediaHandler.value) {
+            if (solo === null) {
+                mediaHandler.value.fader.soloed =
+                    !mediaHandler.value?.fader.soloed;
+            } else {
+                mediaHandler.value.fader.soloed = solo;
+            }
         }
     }
 }
 
-/** Toggles the playback state, if this is the active track */
-function togglePlayback() {
-    if (isActiveTrack.value) {
-        mediaHandler.value?.togglePlayback();
-    }
-}
+/** Whether this track is soloed */
+
+const isSoloed = ref(false);
+
+// --- transport ---
 
 /** Rewinds 5 seconds, if this is the active track */
 function rewind() {
@@ -1331,6 +1346,15 @@ function goToSelectedCue() {
                 }
             }
         }
+    }
+}
+
+// --- playback ---
+
+/** Toggles the playback state, if this is the active track */
+function togglePlayback() {
+    if (isActiveTrack.value) {
+        mediaHandler.value?.togglePlayback();
     }
 }
 
@@ -1880,9 +1904,9 @@ function removeCueScheduling(): void {
 </style>
 <!-- non-scoped -->
 <style lang="scss">
-/** Specific styles for a vertical level in the header (if used there).
-These are chosen for a nice visual fit in the header */
-.track-header {
+/** Specific styles for a vertical level in the header (if used there),
+in the edit view. These are chosen for a nice visual fit in the header */
+.route.edit .track-header {
     .audio-level-container {
         meter.audio-level-meter {
             max-width: 40px;

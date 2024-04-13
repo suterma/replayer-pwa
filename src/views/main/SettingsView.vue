@@ -5,7 +5,7 @@
  * LICENSE file in the root of this projects source tree.
 -->
 <template>
-    <div class="container">
+    <div>
         <h1 class="title">Settings</h1>
 
         <div class="box">
@@ -41,6 +41,15 @@
                             </option>
                         </select>
                     </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="useWideContentWidth"
+                        label="Use wide content width"
+                        hint="Optimizes screen area usage"
+                    ></LabeledCheckbox>
                 </div>
             </div>
         </div>
@@ -383,6 +392,7 @@ const {
     showInitialZeroTimeCue,
     showAddCueButtonInPlayView,
     preventScreenTimeout,
+    useWideContentWidth,
     fadeInDuration,
     fadeOutDuration,
     addFadeInPreRoll,

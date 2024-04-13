@@ -236,13 +236,13 @@ export default defineComponent({
             default: false,
         },
 
-        /** Whether the playing track has a previous track
+        /** Whether this track has a previous track to skip to
          */
         hasPreviousTrack: {
             type: Boolean,
             default: false,
         },
-        /** Whether the playing track has a next track
+        /** Whether the playing track has a next track to skip to
          */
         hasNextTrack: {
             type: Boolean,

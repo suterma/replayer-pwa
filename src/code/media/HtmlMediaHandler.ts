@@ -68,6 +68,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
         };
 
         media.oncanplay = () => {
+            this._canPlay = true;
             this.debugLog(`oncanplay`);
             this.onCanPlay.emit();
         };
@@ -217,6 +218,14 @@ export default class HtmlMediaHandler implements IMediaHandler {
         this._fader.reset();
     }
 
+    get canPlay(): boolean {
+        return this._canPlay;
+    }
+
+    /** Whether the media data has loaded enough to start playback.
+     */
+    _canPlay = false;
+
     /** Gets the paused state.
      * @remarks During fading, the playback state is not considered as paused.
      */
@@ -239,16 +248,19 @@ export default class HtmlMediaHandler implements IMediaHandler {
         return this._media.currentTime;
     }
 
-    public seekTo(seconds: number): Promise<void> {
-        this.debugLog(`seekTo`);
+    /**
+     * @inheritDoc
+     */
+    public seekTo(seconds: number, waitOnCanPlay = false): Promise<void> {
         if (
             this.hasLoadedMetadata &&
             this.currentTime !== seconds &&
             Number.isFinite(seconds)
         ) {
+            this.debugLog(`seekTo`, seconds);
             return new Promise((resolve) => {
                 this._media.addEventListener(
-                    'seeked',
+                    waitOnCanPlay ? 'canplay' : 'seeked',
                     function () {
                         resolve();
                     },
@@ -359,14 +371,12 @@ export default class HtmlMediaHandler implements IMediaHandler {
      */
     isClickToLoadRequired = false;
 
-    /** If changed, updates the internal duration and emits the durationChanged event
+    /** Emits the durationChanged event
      * @param {number} duration - could be NaN or infinity, depending on the source
      */
     private updateDuration(duration: number): void {
-        if (this._durationSeconds !== duration) {
-            this._durationSeconds = duration;
-            this.onDurationChanged.emit(this._durationSeconds);
-        }
+        this.debugLog('updateDuration:duration', duration);
+        this.onDurationChanged.emit(duration);
     }
 
     /** Handles the current ready state of the {HTMLMediaElement}'s media, with regard to playability
@@ -410,18 +420,6 @@ export default class HtmlMediaHandler implements IMediaHandler {
             // Finally, this will then further load and play the track media
             this.onCanPlay.emit();
         }
-    }
-
-    /** The duration of the track
-     * @remarks Is only available after loading of the track's media source
-     */
-    _durationSeconds: number | null = null;
-
-    /** Gets the duration of the track
-     * @remarks Is only available after loading of the track's media source
-     */
-    get durationSeconds(): number | null {
-        return this._durationSeconds;
     }
 
     onDurationChanged: SubEvent<number> = new SubEvent();

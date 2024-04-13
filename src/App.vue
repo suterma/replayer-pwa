@@ -5,7 +5,14 @@
  * LICENSE file in the root of this projects source tree.
 -->
 <template>
-    <div class="container is-fullhd">
+    <!-- Use the full width for a navigable channel arrangement the mix view, 
+        and a more accessible narrower blog style width for all other content -->
+    <div
+        :class="{
+            'container is-fullhd':
+                router.currentRoute.value.name != 'mix' && !useWideContentWidth,
+        }"
+    >
         <StageMark></StageMark>
         <!-- The app menu, on the right, without bottom margin to not alter the layout of content below -->
         <section
@@ -15,10 +22,8 @@
         </section>
 
         <!-- The routed view section -->
-        <!-- NOTE: the same audio context is reused for all playback operations and
-         must be resumed once in the app lifetime, when used. 
-         This is solved here globally for simplicity -->
-        <section class="section">
+        <!-- To facilitate route-specific styles, the route name is provided as it's own class -->
+        <section class="section route" :class="router.currentRoute.value.name">
             <router-view></router-view>
             <MessageOverlay />
             <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
@@ -48,14 +53,18 @@
         <div
             id="media-player-panel"
             ref="mediaPlayerPanel"
-            class="container is-fullhd"
+            :class="{
+                'container is-fullhd':
+                    router.currentRoute.value.name != 'mix' &&
+                    !useWideContentWidth,
+            }"
             aria-label="media player"
         ></div>
     </nav>
 </template>
 <script setup lang="ts">
 import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';
-import StageMark from '@/components/StageMark.vue';
+import StageMark from '@/components/indicators/StageMark.vue';
 import MessageOverlay from '@/components/MessageOverlay.vue';
 //@ts-ignore (because the vue3-promise-dialog does not provide types)
 import { DialogWrapper } from 'vue3-promise-dialog';
@@ -66,6 +75,7 @@ import { compare } from 'compare-versions';
 import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { refDebounced, useElementSize } from '@vueuse/core';
+import { useRouter } from 'vue-router';
 
 onMounted(() => {
     handleAppUpdate();
@@ -73,6 +83,9 @@ onMounted(() => {
 
 const app = useAppStore();
 const { hasCompilation } = storeToRefs(app);
+const settings = useSettingsStore();
+const { useWideContentWidth } = storeToRefs(settings);
+const router = useRouter();
 
 // --- app state ---
 

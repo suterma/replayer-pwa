@@ -165,6 +165,14 @@ fieldset[disabled] .button:hover {
 }
 
 /*************************************************************
+ * "Yellow" Buttons for Soloing
+**************************************************************/
+
+.button.is-warning.is-yellow {
+    filter: hue-rotate(20deg) !important;
+}
+
+/*************************************************************
  * "inactive" Buttons for actionable items
 **************************************************************/
 

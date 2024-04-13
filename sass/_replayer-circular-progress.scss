@@ -8,7 +8,7 @@ $step: 1;
 $loops: round(100 / $step);
 $increment: calc(360 / $loops);
 $half: round($loops / 2);
-$backColor: $background;
+$backColor: $black;
 
 .progress-circle {
     position: relative;

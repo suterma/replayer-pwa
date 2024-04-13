@@ -17,6 +17,8 @@ export enum Store {
     Messages = 'MESSAGES',
     /** A store for the application state */
     App = 'APP',
-    /** A store for the audio context an related state */
+    /** A store for audio-related global state */
     Audio = 'AUDIO',
+    /** A store for multitrack audio-related global state */
+    Multitrack = 'MULTITRACK',
 }

@@ -6,7 +6,13 @@
  */
 
 import { defineStore } from 'pinia';
-import { type ShallowRef, computed, ref, shallowRef, readonly } from 'vue';
+import {
+    type ShallowRef,
+    shallowRef,
+    readonly,
+    shallowReactive,
+    shallowReadonly,
+} from 'vue';
 import { Store } from '..';
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
 
@@ -16,7 +22,8 @@ import type { IMediaHandler } from '@/code/media/IMediaHandler';
  */
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 
-/** A store for audio-related global state */
+/** A store for audio-related global state. Maintains the Web Audio API context
+ * and the set of IMediaHandlers for each track in Replayer */
 export const useAudioStore = defineStore(Store.Audio, () => {
     /** The audio context to use for the lifetime of the app instance
      * @devdoc Does get destroyed only after document unload, but this is good enough I guess.
@@ -25,9 +32,15 @@ export const useAudioStore = defineStore(Store.Audio, () => {
 
     /** The media handlers the application can work with
      * @remarks Each media handler belongs to a track in the compilation
+     * @devdoc It's not necessary to have the handlers themselves reactive, thus the
+     * set is only shallow reactive
      */
+    const mediaHandlers = shallowReactive(new Set<IMediaHandler>());
 
-    const mediaHandlers = ref(new Array<IMediaHandler>());
+    /** The exposed, readonly media handlers the application can work with
+     * @remarks Each media handler belongs to a track in the compilation
+     */
+    const readonlyMediaHandlers = shallowReadonly(mediaHandlers);
 
     /** Internal flag, whether the audio context currently can be considered as running. */
     const isContextRunningFlag = shallowRef(false);
@@ -35,22 +48,31 @@ export const useAudioStore = defineStore(Store.Audio, () => {
     /** Readonly flag, whether the audio context currently can be considered as running. */
     const isContextRunning = readonly(isContextRunningFlag);
 
-    /** Adds the given media handler to the list of available media handlers */
+    /** Adds the given media handler to the set of available media handlers
+     * @remarks Handlers need to have a unique id, which is used to identify the
+     * internal set entry.
+     * NOTE: The id refers to a track, thus a redundant entry, by id, would be a
+     * duplicated handler for the same track. A possibly already exsting handler
+     * with the same id is destroyed and removed before the new handler is added.
+     */
     function addMediaHandler(handler: IMediaHandler) {
-        mediaHandlers.value.push(handler);
-    }
-    /** Removes the given media handler from the list of available media handler, by the id attribute */
-    function removeMediaHandlerById(handlerId: string) {
-        const removeIndex = mediaHandlers.value
-            .map((handler) => handler.id)
-            .indexOf(handlerId);
+        // find and possibly remove pre-existing handler for the same track
+        const existingHandler = [...mediaHandlers].find(
+            (h) => h.id == handler.id,
+        );
+        if (existingHandler) {
+            removeMediaHandler(existingHandler);
+        }
 
-        ~removeIndex && mediaHandlers.value.splice(removeIndex, 1);
+        mediaHandlers.add(handler);
     }
 
-    /** Removes the given media handler from the list of available media handler */
+    /** Removes the given media handler from the set of available media handlers
+     * @remarks internally uses the handler id to identify the internal set entry
+     */
     function removeMediaHandler(handler: IMediaHandler) {
-        removeMediaHandlerById(handler.id);
+        handler.destroy();
+        mediaHandlers.delete(handler);
     }
 
     /** Closes the audio context.
@@ -119,13 +141,12 @@ export const useAudioStore = defineStore(Store.Audio, () => {
         }
     }
 
-    const context = computed(() => {
-        return audioContext.value;
-    });
-
     return {
-        context,
-        mediaHandlers,
+        audioContext,
+        /** The set of media handlers
+         * @remarks Externally exposing the media handler set as immutable.
+         * To update the set, use the add/remove actions */
+        mediaHandlers: readonlyMediaHandlers,
         addMediaHandler,
         removeMediaHandler,
         closeContext,

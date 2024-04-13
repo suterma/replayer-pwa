@@ -13,8 +13,11 @@ import YouTubeFader from './YouTubeFader';
 import { PlayerState } from '@vue-youtube/core';
 import type { IPlaybackRateController } from './IPlaybackRateController';
 import YouTubePlaybackRateController from './YouTubePlaybackRateController';
-import { DefaultPlaybackRate } from '@/store/Track';
+import { DefaultPlaybackRate, DefaultTrackVolume } from '@/store/Track';
 import { nextTick } from 'vue';
+import chalk from 'chalk';
+
+const mediaHandlerDebug = chalk.hex('#62c462'); // Replayer success color (bulma warning)
 
 /** @class Implements a playback handler for a YouTube IFrame player with VueYoutube.
  * @remarks This handles transport/loop and volume operations for the audio.
@@ -32,19 +35,16 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     /** @constructor
      * @param {Player} player - The YouTube player instance to act upon
-     * @param {number} masterVolume - The overall volume of the output. Can be used to control the output volume in addition to fadings. (Default: 1, representing full scale)
      * @param {string} id - The unique id for this handler
      */
     constructor(
         onStateChange: (...cb: PlayerStateChangeCallback[]) => void,
         player: Player,
-        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        masterVolume: number = 1,
         id: string,
     ) {
         this._player = player;
         this._id = 'youtube-media-handler-' + (id ? id : player.getVideoUrl());
-        this._fader = new YouTubeFader(player, masterVolume);
+        this._fader = new YouTubeFader(player, DefaultTrackVolume);
         this._playbackRateController = new YouTubePlaybackRateController(
             player,
             DefaultPlaybackRate,
@@ -60,6 +60,8 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
             // The duration is available already, because the player is ready, when this constructor is called
             this.updateDuration(player.getDuration());
+            this.updateCurrentTime();
+            this.onCanPlay.emit();
         });
         this.debugLog('created');
     }
@@ -77,8 +79,10 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     debugLog(message: string, ...optionalParams: any[]): void {
         console.debug(
-            `YouTubeMediaHandler(${this._id})::${message}:`,
-            optionalParams,
+            mediaHandlerDebug(
+                `YouTubeMediaHandler(${this._id})::${message}:`,
+                optionalParams,
+            ),
         );
     }
 
@@ -154,6 +158,14 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         this._fader.reset();
     }
 
+    get canPlay(): boolean {
+        return this._canPlay;
+    }
+
+    /** Whether the media data has loaded enough to start playback.
+     */
+    _canPlay = false;
+
     /** Gets the paused state.
      * @remarks Paused is anything except playing or buffering.
      * @remarks During fading, the playback state is not considered as paused.
@@ -171,9 +183,11 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     }
 
     /**
+     * @inheritDoc
+     * @param {boolean} waitOnCanPlay - optional, not handled, as the YouTube player does not support seek events.
      * @returns {Promise<void>} Promise - always resolved, immediately, or after 300ms, as the YouTube player does not support seek events.
      */
-    seekTo(seconds: number): Promise<void> {
+    seekTo(seconds: number, waitOnCanPlay = false): Promise<void> {
         if (!this.hasLoadedMetadata) return Promise.resolve();
         if (this.currentTime === seconds) {
             return Promise.resolve();
@@ -278,6 +292,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
             case PlayerState.VIDEO_CUED:
                 this.updateCurrentTime();
                 this._isPlaying = false;
+                this._canPlay = true;
                 this.onPausedChanged.emit(true);
                 this.onCanPlay.emit();
                 break;
@@ -330,28 +345,12 @@ export default class YouTubeMediaHandler implements IMediaHandler {
      */
     onCanPlay: SubEvent<void> = new SubEvent();
 
-    /** The duration of the track
-     * @remarks Is only available after the video has been initially loaded
-     */
-    _durationSeconds: number | null = null;
-
-    /** If changed, updates the internal duration and emits the durationChanged event
+    /** Emits the durationChanged event
      * @param {number} duration - could be NaN or infinity, depending on the source
      */
     updateDuration(duration: number): void {
-        //console.debug('TrackYoutubeElement::updateDuration:duration', duration);
-
-        if (this._durationSeconds !== duration) {
-            this._durationSeconds = duration;
-            this.onDurationChanged.emit(duration);
-        }
-    }
-
-    /** Gets the duration of the track
-     * @remarks Is only available after loading of the track's media source
-     */
-    get durationSeconds(): number | null {
-        return this._durationSeconds;
+        console.debug('TrackYoutubeElement::updateDuration:duration', duration);
+        this.onDurationChanged.emit(duration);
     }
 
     onDurationChanged: SubEvent<number> = new SubEvent();

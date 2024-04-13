@@ -5,7 +5,7 @@
  * LICENSE file in the root of this projects source tree.
 -->
 <template>
-    <div class="container">
+    <div>
         <h1 class="title is-hidden-print">Set list</h1>
         <div class="box is-hidden-print">
             <div class="field">

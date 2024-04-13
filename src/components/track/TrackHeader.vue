@@ -254,10 +254,10 @@ import {
 } from 'vue';
 import { TrackApi } from '@/code/api/TrackApi';
 import { mdiShareVariant } from '@mdi/js';
-import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
+import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
-import MediaSourceIndicator from '@/components/MediaSourceIndicator.vue';
+import MediaSourceIndicator from '@/components/indicators/MediaSourceIndicator.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import LabeledInput from '@/components/editor/LabeledInput.vue';

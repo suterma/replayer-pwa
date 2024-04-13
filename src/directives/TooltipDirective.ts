@@ -39,6 +39,7 @@ export function TooltipDirective(
 
     // Handle the active/inactive state
     const isActive = binding.arg as unknown as boolean | null;
+    const value = binding.value;
     if (isActive === true) {
         el.classList.add('has-tooltip-active');
         el.classList.remove('has-tooltip-inactive');
@@ -49,5 +50,9 @@ export function TooltipDirective(
         el.classList.remove('has-tooltip-inactive');
         el.classList.remove('has-tooltip-active');
     }
-    el.setAttribute('data-tooltip', binding.value);
+    if (value) {
+        el.setAttribute('data-tooltip', value);
+    } else {
+        el.removeAttribute('data-tooltip');
+    }
 }

@@ -66,6 +66,7 @@ export default defineComponent({
                     axisGridlineColor: '#00000000' /* transparent */,
                     axisLabelColor: '#fafafa',
                 },
+                // This context is only used for waveform calculation, not for playback
                 webAudio: { audioContext: new AudioContext() },
                 zoomLevels: [256],
                 playheadColor: '#fafafa',

@@ -30,9 +30,6 @@ export default class AudioFader implements IAudioFader {
      */
     operationToken = AudioFader.cancelOperationToken;
 
-    /** The muted state */
-    private _muted = false;
-
     /** @constructor
      * @param {HTMLAudioElement} audio - The audio element to act upon
      * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
@@ -79,6 +76,8 @@ export default class AudioFader implements IAudioFader {
             if (
                 !this.fading &&
                 !this.muted &&
+                !this.anySoloed &&
+                !this.soloed &&
                 !this.audio.paused &&
                 /** Seeking seems to cause volume changes, thus omitted here */
                 !this.audio.seeking
@@ -236,6 +235,70 @@ export default class AudioFader implements IAudioFader {
         }
     }
 
+    // --- mute/solo ---
+
+    onMutedChanged: SubEvent<boolean> = new SubEvent();
+
+    /** The muted state */
+    private _muted = false;
+
+    /** @inheritdoc
+     */
+    get muted(): boolean {
+        return this._muted;
+    }
+
+    /** @inheritdoc
+     */
+    set muted(value: boolean) {
+        console.debug(`AudioFader::muted:value:${value}`);
+
+        this._muted = value;
+        this.audio.volume = this.getVolume();
+        this.onMutedChanged.emit(value);
+    }
+
+    onSoloedChanged: SubEvent<boolean> = new SubEvent();
+
+    /** The soloed state */
+    private _soloed = false;
+
+    /** @inheritdoc
+     */
+    get soloed(): boolean {
+        return this._soloed;
+    }
+
+    /** @inheritdoc
+     */
+    set soloed(value: boolean) {
+        console.debug(`AudioFader::soloed:value:${value}`);
+
+        this._soloed = value;
+        if (value) {
+            this.anySoloed = true;
+        }
+        this.audio.volume = this.getVolume();
+        this.onSoloedChanged.emit(value);
+    }
+
+    /** The any soloed state */
+    private _anySoloed = false;
+
+    /** @inheritdoc
+     */
+    get anySoloed(): boolean {
+        return this._anySoloed;
+    }
+
+    /** @inheritdoc
+     */
+    set anySoloed(value: boolean) {
+        console.debug(`AudioFader::anySoloed:value:${value}`);
+        this._anySoloed = value;
+        this.audio.volume = this.getVolume();
+    }
+
     // --- volume ---
 
     volumeDown(): number {
@@ -252,26 +315,13 @@ export default class AudioFader implements IAudioFader {
         );
     }
 
-    /** Gets the muted state.
-     */
-    get muted(): boolean {
-        return this._muted;
-    }
-
-    /** Sets the muted state.
-     */
-    set muted(value: boolean) {
-        this._muted = value;
-
-        // Immediately apply the muting
-        this.audioVolume = this.getVolume();
-    }
-
-    /** Gets the master audio volume, with the possible muted state (but not a possibly ongoing fade-in/fade-out) observed
+    /** Gets the master audio volume, with the possible muted and soloed state (but not a possibly ongoing fade-in/fade-out) observed
+     * @remarks A muted state returns the min volume.
+     * @remarks A non-soloed and any-(other)-soloed state returns the min volume.
      * @returns A value between 0 (zero) and 1 (representing full scale), while observing the muted state.
      */
     private getVolume(): number {
-        if (!this.muted) {
+        if (!this.muted && (this.soloed || !this.anySoloed)) {
             return this.masterVolume;
         } else {
             return AudioFader.audioVolumeMin;

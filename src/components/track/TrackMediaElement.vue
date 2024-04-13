@@ -103,24 +103,24 @@
          The solution for this is using a v-if instead of disableing. -->
     <div
         v-if="
-            isEditable &&
-            showLevelMeterForEdit &&
+            ((isEditable && showLevelMeterForEdit) || isMixable) &&
             audioSource &&
-            context &&
-            context.state == 'running' &&
+            audioContext &&
+            isContextRunning &&
             isParentMounted &&
             mediaUrl
         "
         class="block"
     >
+        <!-- Show possibly large meters only on edit -->
         <AudioLevelMeter
-            v-if="levelMeterSizeIsLarge"
+            v-if="levelMeterSizeIsLarge && isEditable"
             ref="audioLevelMeter"
             :key="trackId"
             :vertical="false"
             :disabled="disabled || isPaused"
             :audio-source="audioSource"
-            :audio-context="context"
+            :audio-context="audioContext"
             :show-text="false"
             :running="!isPaused && isAppVisible && audioLevelMeterIsVisible"
         >
@@ -132,7 +132,7 @@
                 :vertical="true"
                 :disabled="disabled || isPaused"
                 :audio-source="audioSource"
-                :audio-context="context"
+                :audio-context="audioContext"
                 :show-text="false"
                 :running="!isPaused && isAppVisible && audioLevelMeterIsVisible"
             >
@@ -158,7 +158,6 @@ import {
     onBeforeUnmount,
     onDeactivated,
     onMounted,
-    onUnmounted,
     type PropType,
     type Ref,
     ref,
@@ -297,6 +296,9 @@ const route = useRoute();
 const isEditable = computed(() => {
     return route.name == Route.Edit;
 });
+const isMixable = computed(() => {
+    return route.name == Route.Mix;
+});
 
 // --- Media Setup ---
 
@@ -346,7 +348,7 @@ let onFadingChangedSubsription: Subscription;
 const mediaHandler: Ref<IMediaHandler | null> = ref(null);
 
 /** Properly destroy the handler, and abandon the video element, including it's handlers */
-function destroyHandler(video: HTMLMediaElement): void {
+function destroyHandler(mediaElement: HTMLMediaElement): void {
     if (mediaHandler.value) {
         audio.removeMediaHandler(mediaHandler.value);
         //properly destroy the audio element and the audio context
@@ -359,12 +361,12 @@ function destroyHandler(video: HTMLMediaElement): void {
         onDurationChangedSubsription?.cancel();
         onCanPlaySubsription?.cancel();
         onFadingChangedSubsription?.cancel();
-
-        if (video) {
-            video.removeAttribute('src'); // empty resource
-        }
-        console.log('TrackMediaElement:destroyed');
     }
+
+    if (mediaElement) {
+        mediaElement.removeAttribute('src'); // empty resource
+    }
+    console.log('TrackMediaElement:destroyed');
 }
 
 function createAndEmitHandler(video: HTMLMediaElement): IMediaHandler {
@@ -407,7 +409,8 @@ function createAndEmitHandler(video: HTMLMediaElement): IMediaHandler {
 
 /** Teardown of the element and handler.
  */
-onUnmounted(() => {
+onBeforeUnmount(() => {
+    console.debug('TrackMediaElement:onBeforeUnmount');
     if (mediaElement.value) {
         destroyHandler(mediaElement.value);
     }
@@ -510,7 +513,7 @@ watchEffect(() => {
 
 // --- Audio Metering Setup---
 
-const { context, isContextRunning } = storeToRefs(audio);
+const { audioContext, isContextRunning } = storeToRefs(audio);
 
 /** The optional audio source node, required when metering is requested
  */
@@ -535,7 +538,7 @@ watch(
         if (showLevelMeterForEdit) {
             // Metering is only used in edit mode
             if (isEditable) {
-                if (context.value && isContextRunning.value) {
+                if (audioContext.value && isContextRunning.value) {
                     // Create the level meter and associated routing only when requested, and only for local files
                     if (
                         showLevelMeterForEdit &&
@@ -545,24 +548,26 @@ watch(
                     ) {
                         if (audioSource.value === null) {
                             audioSource.value =
-                                context.value.createMediaElementSource(
+                                audioContext.value.createMediaElementSource(
                                     newMediaElement,
                                 );
                         }
-                        audioSource.value.connect(context.value.destination);
+                        audioSource.value.connect(
+                            audioContext.value.destination,
+                        );
                     } else {
                         //NOTE: a MediaElementAudioSourceNode can not get destroyed, so this will be reused if later required
                         //See https://stackoverflow.com/a/38631334/79485
                         audioSource.value?.disconnect(/* from analyser */);
-                        audioSource.value?.connect(context.value.destination);
+                        audioSource.value?.connect(
+                            audioContext.value.destination,
+                        );
                     }
                 } else {
                     console.warn(
                         'Audio context is not available or not (yet) running. Audio Level Meter remains disconnected.',
                     );
                 }
-            } else {
-                console.debug('Track is not editable');
             }
         }
     },

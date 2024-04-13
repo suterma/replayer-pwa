@@ -5,28 +5,25 @@
             'is-inactive': !isSelected,
         }"
         :is-engaged="isSelected"
-        engaged-label=""
+        engaged-label="Selected"
         disengaged-label="Select"
-        >SEL
+    >
+        <slot></slot>
     </ToggleButton>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
+import { mdiSquareRounded, mdiSquareRoundedOutline } from '@mdi/js';
 
-/** A toggle button for the mute state
+/** A toggle button for the select state
  */
-export default defineComponent({
-    name: 'SelectButton',
-    components: { ToggleButton },
-
-    props: {
-        isSelected: {
-            type: Boolean,
-            required: true,
-            default: null,
-        },
+defineProps({
+    isSelected: {
+        type: Boolean,
+        required: true,
+        default: null,
     },
 });
 </script>

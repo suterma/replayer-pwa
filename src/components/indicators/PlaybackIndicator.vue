@@ -6,8 +6,7 @@
         :class="{
             'has-text-warning has-tooltip-warning': isUnavailable,
             'has-text-dark': isUnloaded,
-            'has-text-success has-tooltip-success':
-                isTrackPlaying && !isUnavailable,
+            'has-text-success has-tooltip-success': isPlaying && !isUnavailable,
             'has-text-grey-dark': isReady && isUnavailable,
             'has-text-grey': isReady && !isUnavailable,
         }"
@@ -22,7 +21,7 @@
 import NavButton from '@/components/buttons/NavButton.vue';
 import { mdiAlert, mdiCircle } from '@mdi/js';
 import { computed, inject } from 'vue';
-import { isPlayingInjectionKey } from './track/TrackInjectionKeys';
+import { isPlayingInjectionKey } from '../track/TrackInjectionKeys';
 
 const props = defineProps({
     /** Whether the indicator should convey the ready state */
@@ -48,7 +47,7 @@ const props = defineProps({
 const indication = computed(() => {
     if (props.isUnavailable) {
         return 'Track media is unavailable. Please reload or replace it in the editor.';
-    } else if (isTrackPlaying?.value) {
+    } else if (isPlaying?.value) {
         return 'Track is playing';
     } else if (props.isReady) {
         return 'Track is loaded and ready to play';
@@ -59,9 +58,9 @@ const indication = computed(() => {
     return 'Track is in an unknown state';
 });
 
-/** Flag to indicate whether this track's player is currently playing
+/** Flag to indicate whether this track is currently playing
  */
-const isTrackPlaying = inject(isPlayingInjectionKey);
+const isPlaying = inject(isPlayingInjectionKey);
 </script>
 <style scoped>
 .is-indicator {

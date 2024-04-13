@@ -57,7 +57,8 @@ export interface IMediaHandler {
      */
     readonly paused: boolean;
 
-    /** Gets the media duration. Might be a non-finite number, if data is not available.
+    /** Gets the media duration, in [seconds].
+     * @remarks Might be a non-finite number, if data is not (yet) available.
      */
     get duration(): number;
 
@@ -82,7 +83,17 @@ export interface IMediaHandler {
     /** Seeks to the given time position, if the media is loaded and the position is valid.
      * @remarks Immediately also advertises the new temporal position
      * @param {number} seconds - the temporal position, in [seconds], to seek to
-     * @returns {Promise<void>} Promise - resolves when the seek operation has finished
+     * @param {boolean} waitOnCanPlay - optionally, whether the promise only resolves when the
+     * media can play, instead of already when the seek operation completed.
+     * Default is false, only to wait for the seek.
+     * @returns {Promise<void>} Promise - resolves when the seek operation completed.
+     */
+    seekTo(seconds: number, waitOnCanPlay: boolean): Promise<void>;
+
+    /** Seeks to the given time position, if the media is loaded and the position is valid.
+     * @remarks Immediately also advertises the new temporal position
+     * @param {number} seconds - the temporal position, in [seconds], to seek to
+     * @returns {Promise<void>} Promise - resolves when the seek operation completed.
      */
     seekTo(seconds: number): Promise<void>;
 
@@ -120,17 +131,15 @@ export interface IMediaHandler {
      */
     mediaSourceUrl: string;
 
-    /** Gets the duration of the current track, in [seconds]
-     * @remarks This is only available after successful load of the media metadata.
-     * Could be NaN or infinity, depending on the source
-     */
-    readonly durationSeconds: number | null;
-
     /** Emitted when the media data has loaded enough to start playback
      * @devdoc This is emitted separately from the data loading state and events, since the underlying
      * implementation might handle it separately.
      */
     onCanPlay: SubEvent<void>;
+
+    /** Whether the media data has loaded enough to start playback.
+     */
+    readonly canPlay: boolean;
 
     /** Whether the media metadata has loaded. Duration is available now.
      */
