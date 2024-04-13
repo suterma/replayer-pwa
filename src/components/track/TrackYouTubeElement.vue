@@ -228,6 +228,7 @@ onReady(() => {
     }
 });
 
+/** Create a new media handler for this YouTube video */
 function createAndEmitHandler(
     onStateChange: (...cb: PlayerStateChangeCallback[]) => void,
     player: Player,

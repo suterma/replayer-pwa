@@ -49,16 +49,29 @@ export const useAudioStore = defineStore(Store.Audio, () => {
     const isContextRunning = readonly(isContextRunningFlag);
 
     /** Adds the given media handler to the set of available media handlers
-     * @remark Handlers need to have a unique id, which is used to identify the internal set entry
+     * @remarks Handlers need to have a unique id, which is used to identify the
+     * internal set entry.
+     * NOTE: The id refers to a track, thus a redundant entry, by id, would be a
+     * duplicated handler for the same track. A possibly already exsting handler
+     * with the same id is destroyed and removed before the new handler is added.
      */
     function addMediaHandler(handler: IMediaHandler) {
+        // find and possibly remove pre-existing handler for the same track
+        const existingHandler = [...mediaHandlers].find(
+            (h) => h.id == handler.id,
+        );
+        if (existingHandler) {
+            removeMediaHandler(existingHandler);
+        }
+
         mediaHandlers.add(handler);
     }
 
     /** Removes the given media handler from the set of available media handlers
-     * @remark internally uses the handler id to identify the internal set entry
+     * @remarks internally uses the handler id to identify the internal set entry
      */
     function removeMediaHandler(handler: IMediaHandler) {
+        handler.destroy();
         mediaHandlers.delete(handler);
     }
 
