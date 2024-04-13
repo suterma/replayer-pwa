@@ -31,6 +31,12 @@ export default class CompilationHandler {
         return FileHandler.isTextFileName(track.Url);
     }
 
+    /** Determines whether this is a non-playable (PDF) track
+     */
+    static isPdfTrack(track: ITrack): boolean {
+        return FileHandler.isPdfFileName(track.Url);
+    }
+
     /** Determines whether this is an audio track
      * @devdoc track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,

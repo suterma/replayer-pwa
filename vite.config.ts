@@ -124,6 +124,7 @@ export default defineConfig({
                             'text/xml': ['.xml', '.rex'],
 
                             'text/plain': ['.txt'],
+                            'application/pdf': ['.pdf'],
 
                             'audio/mp3': ['.mp3'],
                             'audio/mpeg': ['.mp3'],

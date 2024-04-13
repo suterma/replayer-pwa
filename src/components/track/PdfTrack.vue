@@ -8,8 +8,18 @@
         >
             <div class="notification is-size-7">
                 <span>
-                    {{ textContent }}
+                    {{ track.Url }}
+                    <!-- {{ textContent }} -->
                 </span>
+
+                <object
+                    :data="mediaUrl"
+                    type="application/pdf"
+                    width="100%"
+                    height="33%"
+                    max-height="33%"
+                ></object>
+
                 <CloseButton v-model="closed" class="top-right"> </CloseButton>
             </div>
         </div>
@@ -17,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-/** A track variant that displays plain text, and offers to close the display */
+/** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
 import { type PropType, computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';

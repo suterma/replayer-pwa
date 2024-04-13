@@ -88,6 +88,13 @@ export const getters = {
         );
     }),
 
+    /** Gets the set of PDF tracks */
+    pdfTracks: computed(() => {
+        return state.compilation.value?.Tracks?.filter((track) =>
+            CompilationHandler.isPdfTrack(track),
+        );
+    }),
+
     /** Gets the Id of the active track
      * @remarks The active track is either:
      * - the track that contains the currently selected cue, if any

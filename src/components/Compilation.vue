@@ -22,6 +22,14 @@
                 >
                 </NoticeTrack>
             </template>
+            <template v-for="track in pdfTracks" :key="track.Id">
+                <PdfTrack
+                    :id="'track-' + track.Id"
+                    class="block"
+                    :track="track"
+                >
+                </PdfTrack>
+            </template>
             <template v-for="(track, index) in tracks" :key="track.Id">
                 <MediaTrack
                     :id="'track-' + track.Id"
@@ -71,6 +79,7 @@ import MediaTrack from '@/components/track/MediaTrack.vue';
 import MasterTrack from '@/components/track/MasterTrack.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import NoticeTrack from '@/components/track/NoticeTrack.vue';
+import PdfTrack from '@/components/track/PdfTrack.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { storeToRefs } from 'pinia';
@@ -115,6 +124,7 @@ const {
     activeTrackId,
     hasSingleMediaTrack,
     textTracks,
+    pdfTracks,
     mediaTracks,
     playbackMode,
     isFadingEnabled,
