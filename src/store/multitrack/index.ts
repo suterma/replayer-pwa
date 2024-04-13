@@ -214,112 +214,71 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
             //Thus comparison is pointless, and all existingsubscriptions are always
             //removed, then new subscriptions added again for all received handlers.
 
-            // Get the current handler id's (for comparison with subscription names)
-            const handlerIds = new Set<string>();
-            mediaHandlers.forEach((handler) => {
-                handlerIds.add(handler.id);
-            });
             // Remove all subscriptions that are not in the current set
             _pausedSubscriptons.forEach((subscription) => {
-                //if (subscription.name && !handlerIds.has(subscription.name)) {
                 subscription.cancel();
-                //}
             });
             _fadingSubscriptons.forEach((subscription) => {
-                //if (subscription.name && !handlerIds.has(subscription.name)) {
                 subscription.cancel();
-                //}
             });
             _mutedSubscriptions.forEach((subscription) => {
-                //if (subscription.name && !handlerIds.has(subscription.name)) {
                 subscription.cancel();
-                //}
             });
             _soloedSubscriptions.forEach((subscription) => {
-                //if (subscription.name && !handlerIds.has(subscription.name)) {
                 subscription.cancel();
-                //}
             });
             _canPlaySubscriptons.forEach((subscription) => {
-                //if (subscription.name && !handlerIds.has(subscription.name)) {
                 subscription.cancel();
-                // }/
             });
             _durationSubscriptons.forEach((subscription) => {
-                //if (subscription.name && !handlerIds.has(subscription.name)) {
                 subscription.cancel();
-                //}
             });
             _positionSubscriptons.forEach((subscription) => {
-                //if (subscription.name && !handlerIds.has(subscription.name)) {
                 subscription.cancel();
-                //}
             });
 
-            // Add missing subscriptions
+            // Add new subscriptions
             mediaHandlers.forEach((handler) => {
-                //if (!_pausedSubscriptons.some((s) => s.name === handler.id)) {
                 _pausedSubscriptons.push(
-                    handler.onPausedChanged.subscribe(updatePauseChanged, {
-                        //          name: handler.id,
-                    }),
+                    handler.onPausedChanged.subscribe(updatePauseChanged),
                 );
-                //}
 
-                // if (!_mutedSubscriptions.some((s) => s.name === handler.id)) {
                 _mutedSubscriptions.push(
-                    handler.fader.onMutedChanged.subscribe(updateMutedChanged, {
-                        //            name: handler.id,
-                    }),
+                    handler.fader.onMutedChanged.subscribe(updateMutedChanged),
                 );
-                //  }
 
-                //      if (!_soloedSubscriptions.some((s) => s.name === handler.id)) {
                 _soloedSubscriptions.push(
                     handler.fader.onSoloedChanged.subscribe(
                         updateSoloedChanged,
-                        {
-                            //                  name: handler.id,
-                        },
                     ),
                 );
-                // }
 
-                // if (!_fadingSubscriptons.some((s) => s.name === handler.id)) {
                 _fadingSubscriptons.push(
                     handler.fader.onFadingChanged.subscribe(
                         updateFadingChanged,
-                        {
-                            //                  name: handler.id,
-                        },
                     ),
                 );
-                //  }
-                // if (!_canPlaySubscriptons.some((s) => s.name === handler.id)) {
+
                 _canPlaySubscriptons.push(
-                    handler.onCanPlay.subscribe(updateCanPlayChanged, {
-                        //              name: handler.id,
-                    }),
+                    handler.onCanPlay.subscribe(updateCanPlayChanged),
                 );
-                //  }
-                //  if (!_durationSubscriptons.some((s) => s.name === handler.id)) {
+
                 _durationSubscriptons.push(
-                    handler.onDurationChanged.subscribe(updateDurationChanged, {
-                        //                name: handler.id,
-                    }),
+                    handler.onDurationChanged.subscribe(updateDurationChanged),
                 );
-                //  }
-                //  if (!_positionSubscriptons.some((s) => s.name === handler.id)) {
+
                 _positionSubscriptons.push(
                     handler.onCurrentTimeChanged.subscribe(
                         updateCurrentTimeChanged,
-                        {
-                            //               name: handler.id,
-                        },
                     ),
                 );
-                // }
+
+                // set initial time value
+                updateCurrentTimeChanged(handler.currentTime);
             });
+            // set initial values
+            updateDurationChanged();
+            updateCanPlayChanged();
         },
         {
             immediate: true /* to handle it right after mount time */,
@@ -457,6 +416,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
         canAllPlay.value = true;
     }
 
+    /** Updates the duration by taking the shortest duration of all hadeled tracks */
     function updateDurationChanged() {
         let duration = NaN;
         audio.mediaHandlers.forEach((handler) => {
@@ -475,7 +435,6 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     }
 
     /** Updates the common current time indication for all tracks.
-     * @remarks Also triggers a sync operation
      * @devdoc To keep system load low, just use a simple pass-thru
      */
     function updateCurrentTimeChanged(time: number) {
