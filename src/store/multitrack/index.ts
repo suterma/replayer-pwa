@@ -24,16 +24,6 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      */
     const millisecondsPerSecond = 1000;
 
-    /** The maximum track timing deviation allowed, in [seconds],
-     * before an auto-sync operation executed
-     * @remarks The value is chosen to keep sync errors mostly inaudible
-     * @remarks See https://sengpielaudio.com/calculator-soundpath.htm for
-     * details.
-     * A value of 15 milliseconds represents a distance of 5 meters at room temperature.
-     * This value might be considered typical for a small stage or rehearsal romm.
-     */
-    const maxTrackTimeDeviation = 0.015;
-
     /** A predetermined compensation offset, in [seconds], for the sync operation
      * @remarks This value is updated each time;
      * the initial value was empirically determined
@@ -438,8 +428,9 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     /**
      * @devdoc All handlers need to be checked every time
      */
-    function updateSoloedChanged(_soloed: boolean): void {
-        let anySoloed = false;
+    function updateSoloedChanged(soloed: boolean): void {
+        // initial values will be updated in the loop anyway
+        let anySoloed = soloed;
         let allSoloed = true;
         for (const media of audio.mediaHandlers) {
             if (media.fader.soloed) {

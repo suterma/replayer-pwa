@@ -64,7 +64,7 @@
 </template>
 <script setup lang="ts">
 import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';
-import StageMark from '@/components/StageMark.vue';
+import StageMark from '@/components/indicators/StageMark.vue';
 import MessageOverlay from '@/components/MessageOverlay.vue';
 //@ts-ignore (because the vue3-promise-dialog does not provide types)
 import { DialogWrapper } from 'vue3-promise-dialog';

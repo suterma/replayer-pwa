@@ -89,11 +89,33 @@
                             >
                         </button>
                         <button
-                            class="button is-info"
+                            v-tooltip.top="
+                                `Spreading: ${(multitrack.timeSpreading * 1000).toFixed(0)} ms`
+                            "
+                            class="button is-info is-outlined"
                             title="Click to synch tracks"
                             @click="multitrack.syncTracks()"
                         >
-                            Synch
+                            Sync
+
+                            <CircularProgress
+                                v-if="Number.isFinite(multitrack.timeSpreading)"
+                                class="ml-2 is-info"
+                                :class="{
+                                    'is-warning':
+                                        multitrack.timeSpreading >
+                                        Multitrack.MaxTrackTimeDeviation,
+                                    'is-error':
+                                        multitrack.timeSpreading >
+                                        Multitrack.MaxTrackTimeDeviation * 2,
+                                }"
+                                :value="(multitrack.timeSpreading * 1000) / 2"
+                            />
+                            <BaseIcon
+                                v-else
+                                class="ml-2 has-text-black"
+                                :path="mdiCircle"
+                            />
                         </button>
 
                         <ToggleButton
@@ -134,16 +156,22 @@
 </template>
 
 <script setup lang="ts">
-import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
+import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
+import CircularProgress from '@/components/indicators/CircularProgress.vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import { useMultitrackStore } from '@/store/multitrack';
+import { Multitrack } from '@/store/multitrack/Multitrack';
 import { storeToRefs } from 'pinia';
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
 import { provide, readonly, ref } from 'vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { mdiRotateLeftVariant, mdiRotateRightVariant } from '@mdi/js';
+import {
+    mdiRotateLeftVariant,
+    mdiRotateRightVariant,
+    mdiCircle,
+} from '@mdi/js';
 import VueScrollTo from 'vue-scrollto';
 import { useStyleTag } from '@vueuse/core';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';

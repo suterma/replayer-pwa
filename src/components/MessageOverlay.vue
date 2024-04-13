@@ -93,11 +93,10 @@
 
                             <div class="level-right">
                                 <div class="level-item">
-                                    <div
-                                        class="progress-circle is-success is-colorless"
+                                    <CircularProgress
+                                        class="is-success is-colorless"
                                         :value="progressMessage.Percentage"
-                                        max="100"
-                                    ></div>
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -134,6 +133,7 @@
  * feedback */
 import { storeToRefs } from 'pinia';
 import { useMessageStore } from '@/store/messages';
+import CircularProgress from '@/components/indicators/CircularProgress.vue';
 
 const message = useMessageStore();
 const {

@@ -86,7 +86,7 @@
                             }"
                             :is-loading="isFading !== FadingMode.None"
                             data-cy="toggle-playback"
-                            @click="skipToPlayPause"
+                            @click="skipToPlayPause()"
                         />
 
                         <!-- Title input -->
@@ -787,7 +787,7 @@ import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import VolumeKnob from '@/components/controls/VolumeKnob.vue';
-import PlaybackIndicator from '@/components/PlaybackIndicator.vue';
+import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import FullscreenPanel from '@/components/FullscreenPanel.vue';
 import TrackTitleName from '@/components/track/TrackTitleName.vue';
 import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
