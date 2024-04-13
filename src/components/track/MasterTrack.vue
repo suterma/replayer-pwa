@@ -37,7 +37,7 @@
                             @click="multitrack.toggleAllMute()"
                         />
                         <div class="is-flex-shrink-1 ml-3 is-clickable">
-                            <p class="title is-4" title="MASTER">
+                            <p class="title is-4" :title="name">
                                 <span
                                     class="has-text-weight-light"
                                     data-cy="track-name-master"
@@ -224,12 +224,10 @@ const {
     transform-origin: top left;
     overflow-y: auto;
 }
-/** Rotate knobs back to their upright position */
-.tracks .track .is-knob {
-    transform: rotate(+90deg);
-}
 
-/** Rotate buttons back to their upright position */
+/** Rotate buttons back to their upright position
+ * @remarks This includes the volume knob (which is technically a button)
+ */
 .tracks .track .button {
     transform: rotate(+90deg);
     width: 2.5em;

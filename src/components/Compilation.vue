@@ -51,7 +51,7 @@
         <!-- Multi-track-Controller -->
         <Teleport to="#media-player-panel">
             <div v-if="isMixable" class="section has-background-grey-dark pb-0">
-                <MasterTrack name="MASTER"> </MasterTrack>
+                <MasterTrack></MasterTrack>
             </div>
         </Teleport>
     </div>

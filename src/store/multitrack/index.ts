@@ -211,6 +211,8 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
 
             //NOTE: The old and new media handlers are the same object, as
             //mentioned here: https://github.com/vuejs/vue/issues/2164#issuecomment-2038959990
+            //Thus comparison is pointless, and all existingsubscriptions are always
+            //removed, then new subscriptions added again for all received handlers.
 
             // Get the current handler id's (for comparison with subscription names)
             const handlerIds = new Set<string>();
@@ -219,110 +221,104 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
             });
             // Remove all subscriptions that are not in the current set
             _pausedSubscriptons.forEach((subscription) => {
-                if (subscription.name && !handlerIds.has(subscription.name)) {
-                    subscription.cancel();
-                }
+                //if (subscription.name && !handlerIds.has(subscription.name)) {
+                subscription.cancel();
+                //}
             });
             _fadingSubscriptons.forEach((subscription) => {
-                if (subscription.name && !handlerIds.has(subscription.name)) {
-                    subscription.cancel();
-                }
+                //if (subscription.name && !handlerIds.has(subscription.name)) {
+                subscription.cancel();
+                //}
             });
             _mutedSubscriptions.forEach((subscription) => {
-                if (subscription.name && !handlerIds.has(subscription.name)) {
-                    subscription.cancel();
-                }
+                //if (subscription.name && !handlerIds.has(subscription.name)) {
+                subscription.cancel();
+                //}
             });
             _soloedSubscriptions.forEach((subscription) => {
-                if (subscription.name && !handlerIds.has(subscription.name)) {
-                    subscription.cancel();
-                }
+                //if (subscription.name && !handlerIds.has(subscription.name)) {
+                subscription.cancel();
+                //}
             });
             _canPlaySubscriptons.forEach((subscription) => {
-                if (subscription.name && !handlerIds.has(subscription.name)) {
-                    subscription.cancel();
-                }
+                //if (subscription.name && !handlerIds.has(subscription.name)) {
+                subscription.cancel();
+                // }/
             });
             _durationSubscriptons.forEach((subscription) => {
-                if (subscription.name && !handlerIds.has(subscription.name)) {
-                    subscription.cancel();
-                }
+                //if (subscription.name && !handlerIds.has(subscription.name)) {
+                subscription.cancel();
+                //}
             });
             _positionSubscriptons.forEach((subscription) => {
-                if (subscription.name && !handlerIds.has(subscription.name)) {
-                    subscription.cancel();
-                }
+                //if (subscription.name && !handlerIds.has(subscription.name)) {
+                subscription.cancel();
+                //}
             });
 
             // Add missing subscriptions
             mediaHandlers.forEach((handler) => {
-                if (!_pausedSubscriptons.some((s) => s.name === handler.id)) {
-                    _pausedSubscriptons.push(
-                        handler.onPausedChanged.subscribe(updatePauseChanged, {
-                            name: handler.id,
-                        }),
-                    );
-                }
+                //if (!_pausedSubscriptons.some((s) => s.name === handler.id)) {
+                _pausedSubscriptons.push(
+                    handler.onPausedChanged.subscribe(updatePauseChanged, {
+                        //          name: handler.id,
+                    }),
+                );
+                //}
 
-                if (!_mutedSubscriptions.some((s) => s.name === handler.id)) {
-                    _mutedSubscriptions.push(
-                        handler.fader.onMutedChanged.subscribe(
-                            updateMutedChanged,
-                            {
-                                name: handler.id,
-                            },
-                        ),
-                    );
-                }
+                // if (!_mutedSubscriptions.some((s) => s.name === handler.id)) {
+                _mutedSubscriptions.push(
+                    handler.fader.onMutedChanged.subscribe(updateMutedChanged, {
+                        //            name: handler.id,
+                    }),
+                );
+                //  }
 
-                if (!_soloedSubscriptions.some((s) => s.name === handler.id)) {
-                    _soloedSubscriptions.push(
-                        handler.fader.onSoloedChanged.subscribe(
-                            updateSoloedChanged,
-                            {
-                                name: handler.id,
-                            },
-                        ),
-                    );
-                }
+                //      if (!_soloedSubscriptions.some((s) => s.name === handler.id)) {
+                _soloedSubscriptions.push(
+                    handler.fader.onSoloedChanged.subscribe(
+                        updateSoloedChanged,
+                        {
+                            //                  name: handler.id,
+                        },
+                    ),
+                );
+                // }
 
-                if (!_fadingSubscriptons.some((s) => s.name === handler.id)) {
-                    _fadingSubscriptons.push(
-                        handler.fader.onFadingChanged.subscribe(
-                            updateFadingChanged,
-                            {
-                                name: handler.id,
-                            },
-                        ),
-                    );
-                }
-                if (!_canPlaySubscriptons.some((s) => s.name === handler.id)) {
-                    _canPlaySubscriptons.push(
-                        handler.onCanPlay.subscribe(updateCanPlayChanged, {
-                            name: handler.id,
-                        }),
-                    );
-                }
-                if (!_durationSubscriptons.some((s) => s.name === handler.id)) {
-                    _durationSubscriptons.push(
-                        handler.onDurationChanged.subscribe(
-                            updateDurationChanged,
-                            {
-                                name: handler.id,
-                            },
-                        ),
-                    );
-                }
-                if (!_positionSubscriptons.some((s) => s.name === handler.id)) {
-                    _positionSubscriptons.push(
-                        handler.onCurrentTimeChanged.subscribe(
-                            updateCurrentTimeChanged,
-                            {
-                                name: handler.id,
-                            },
-                        ),
-                    );
-                }
+                // if (!_fadingSubscriptons.some((s) => s.name === handler.id)) {
+                _fadingSubscriptons.push(
+                    handler.fader.onFadingChanged.subscribe(
+                        updateFadingChanged,
+                        {
+                            //                  name: handler.id,
+                        },
+                    ),
+                );
+                //  }
+                // if (!_canPlaySubscriptons.some((s) => s.name === handler.id)) {
+                _canPlaySubscriptons.push(
+                    handler.onCanPlay.subscribe(updateCanPlayChanged, {
+                        //              name: handler.id,
+                    }),
+                );
+                //  }
+                //  if (!_durationSubscriptons.some((s) => s.name === handler.id)) {
+                _durationSubscriptons.push(
+                    handler.onDurationChanged.subscribe(updateDurationChanged, {
+                        //                name: handler.id,
+                    }),
+                );
+                //  }
+                //  if (!_positionSubscriptons.some((s) => s.name === handler.id)) {
+                _positionSubscriptons.push(
+                    handler.onCurrentTimeChanged.subscribe(
+                        updateCurrentTimeChanged,
+                        {
+                            //               name: handler.id,
+                        },
+                    ),
+                );
+                // }
             });
         },
         {
@@ -464,6 +460,9 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     function updateDurationChanged() {
         let duration = NaN;
         audio.mediaHandlers.forEach((handler) => {
+            console.debug(
+                `Multitrack::updateDurationChanged:forEach:handler.duration:${handler.duration}`,
+            );
             if (
                 /* First finite number? */
                 (Number.isFinite(handler.duration) && Number.isNaN(duration)) ||
