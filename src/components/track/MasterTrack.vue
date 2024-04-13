@@ -163,7 +163,7 @@ import { useMultitrackStore } from '@/store/multitrack';
 import { Multitrack } from '@/store/multitrack/Multitrack';
 import { storeToRefs } from 'pinia';
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
-import { provide, readonly, ref } from 'vue';
+import { provide, readonly } from 'vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
@@ -191,6 +191,8 @@ const props = defineProps({
 });
 
 // --- Multitrack ---
+
+console.debug(`MasterTrack::useMultitrackStore`);
 const multitrack = useMultitrackStore();
 const {
     canAllPlay,
