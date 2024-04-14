@@ -101,7 +101,11 @@
                                 v-if="Number.isFinite(multitrack.timeSpreading)"
                                 class="ml-2 is-info"
                                 :class="spreadingClass"
-                                :value="multitrack.timeSpreading * 1000 * 4"
+                                :value="
+                                    multitrack.timeSpreading *
+                                    1000 *
+                                    3.33 /* 15ms equals 50% */
+                                "
                             />
                             <BaseIcon
                                 v-else
