@@ -66,7 +66,6 @@
                             type="url"
                             pattern="^https?://.+$"
                             required
-                            size="120"
                             inputmode="url"
                             :title="
                                 replaceInfo +

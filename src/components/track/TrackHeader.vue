@@ -2,10 +2,7 @@
     <!-- Header level with wrap for items in the left part.
          Using flex-start on the level, to cause the left and right parts to both 
          begin at the same, upper vertical position -->
-    <div
-        class="track-header level is-mobile is-align-items-flex-start"
-        :class="$attrs.class"
-    >
+    <div class="track-header level is-mobile is-align-items-flex-start">
         <!-- Left side -->
         <div class="level-left level-wrap is-justify-content-flex-start">
             <!-- Slot for prepending level items -->
@@ -411,6 +408,7 @@ const hasCues = computed(() => {
 const isTrackPlaying = inject(isPlayingInjectionKey);
 
 // --- drop zone handling ---
+
 const mediaDropZonePanel: Ref<typeof CoveredPanel | null> = ref(null);
 
 function acceptedMedia() {

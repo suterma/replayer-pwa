@@ -37,7 +37,7 @@
                 :can-collapse="!isOnlyMediaTrack"
                 :track="track"
                 :is-track-loaded="isTrackLoaded"
-                :is-track-media-available="isMediaAvailable"
+                :is-track-media-available="Boolean(mediaUrl)"
                 :is-active="isActiveTrack"
                 :is-first="isFirst"
                 :is-last="isLast"
@@ -88,7 +88,7 @@
                             @click="skipToPlayPause()"
                         />
 
-                        <!-- Title input -->
+                        <!-- Title -->
                         <!-- The title is the only header element that should shrink (break on words) if necessary -->
                         <div
                             v-if="!isEditable"
@@ -472,7 +472,6 @@
                                             v-if="hasNative"
                                             :model-value="isFullscreen"
                                             title="Toggle full-screen mode"
-                                            collapsed-chevron-direction="up"
                                             @click="toggle"
                                         ></FullscreenToggler>
                                         <CollapsibleButton
@@ -628,9 +627,7 @@
                                                     isTrackLoaded
                                                 "
                                                 :is-unloaded="!isTrackLoaded"
-                                                :is-unavailable="
-                                                    !isMediaAvailable
-                                                "
+                                                :is-unavailable="!mediaUrl"
                                                 data-cy="playback-indicator"
                                             />
                                         </MediaControlsBar>
@@ -794,7 +791,6 @@ import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
-import FileHandler from '@/store/filehandler';
 import { Meter } from '@/code/music/Meter';
 import {
     currentPositionDisplayInjectionKey,
@@ -1593,27 +1589,10 @@ const playingCue = computed(() => {
     );
 });
 
-/** Whether the playback media is available
- * @devdoc This is only working for local file paths, not for online URL's, because these are directly fetched from the media element.
- */
-const isMediaAvailable = computed(() => {
-    if (mediaUrl.value) {
-        return true;
-    }
-    return false;
-});
-
-/** Gets the media URL, if available
- * @remarks For non-online URL's, a match is sought from previously stored binary blobs
+/** Gets the effective media source URL for this track
  */
 const mediaUrl = computed(() => {
-    if (FileHandler.isValidHttpUrl(props.track.Url)) {
-        return props.track.Url;
-    }
-    return CompilationHandler.getMatchingPackageMediaUrl(
-        props.track?.Url,
-        mediaUrls.value,
-    )?.url;
+    return app.getMediaUrlByTrack(props.track);
 });
 
 /** Returns all cues of this track */

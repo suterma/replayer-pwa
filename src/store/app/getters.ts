@@ -6,7 +6,9 @@
  */
 
 import type { ICompilation } from '../ICompilation';
+import type { ITrack } from '../ITrack';
 import CompilationHandler from '../compilation-handler';
+import FileHandler from '../filehandler';
 import { state } from './state';
 import { computed } from 'vue';
 
@@ -139,6 +141,24 @@ export const getters = {
                 state.compilation.value.Tracks,
                 trackId,
             );
+        };
+    }),
+
+    /** Gets the media URL for the given track
+     * @remarks For non-online URL's, a match is sought from previously stored binary blobs
+     */
+    getMediaUrlByTrack: computed(() => {
+        return (track: ITrack) => {
+            if (FileHandler.isValidHttpUrl(track.Url)) {
+                return track.Url;
+            }
+
+            // Get the corresponding object url from the stored blobs
+            const url = CompilationHandler.getMatchingPackageMediaUrl(
+                track?.Url,
+                state.mediaUrls.value,
+            )?.url;
+            return url;
         };
     }),
 };

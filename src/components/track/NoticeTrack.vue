@@ -41,20 +41,10 @@ const textContent = ref('');
 const app = useAppStore();
 const { mediaUrls } = storeToRefs(app);
 
-/** Gets the media URL
- * @remarks For non-online URL's, a match is sought from previously stored binary blobs
+/** Gets the effective media source URL for this track
  */
 const mediaUrl = computed(() => {
-    if (FileHandler.isValidHttpUrl(props.track.Url)) {
-        return props.track.Url;
-    }
-
-    // Get the corresponding object url from the stored blobs
-    const url = CompilationHandler.getMatchingPackageMediaUrl(
-        props.track?.Url,
-        mediaUrls.value,
-    )?.url;
-    return url;
+    return app.getMediaUrlByTrack(props.track);
 });
 
 /** Updates the text by fetching the media URL */
