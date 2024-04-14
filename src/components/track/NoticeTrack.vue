@@ -4,7 +4,7 @@
             v-if="!closed"
             name="item-expand"
             class="track is-together-print"
-            data-cy="notice-track"
+            data-cy="track-notice"
         >
             <div class="notification is-size-7">
                 <span>

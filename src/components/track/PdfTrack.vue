@@ -3,8 +3,11 @@
         <div
             v-if="!closed"
             name="item-expand"
-            class="track is-together-print"
-            data-cy="notice-track"
+            class="track is-pdf is-together-print"
+            :class="{
+                'is-editable': trackViewMode == TrackViewMode.Edit,
+            }"
+            data-cy="track-pdf"
         >
             <div class="notification is-size-7">
                 <span>
@@ -28,13 +31,15 @@
 
 <script setup lang="ts">
 /** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
-import { type PropType, computed, ref, watch } from 'vue';
+import { type PropType, computed, ref, watch, inject } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import CompilationHandler from '@/store/compilation-handler';
 import FileHandler from '@/store/filehandler';
 import CloseButton from '../buttons/CloseButton.vue';
 import type { ITrack } from '@/store/ITrack';
+import { trackViewModeInjectionKey } from '@/components/track/TrackInjectionKeys';
+import { TrackViewMode } from '@/store/TrackViewMode';
 
 const props = defineProps({
     /** The track to display
@@ -44,6 +49,8 @@ const props = defineProps({
         required: true,
     },
 });
+
+const trackViewMode = inject(trackViewModeInjectionKey);
 
 const closed = ref(false);
 const textContent = ref('');

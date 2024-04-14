@@ -2,7 +2,7 @@
     <div
         v-if="
             mediaElement &&
-            isEditable &&
+            trackViewMode === TrackViewMode.Edit &&
             showWaveformsOnEdit &&
             !FileHandler.isValidHttpUrl(mediaUrl)
         "
@@ -103,7 +103,8 @@
          The solution for this is using a v-if instead of disableing. -->
     <div
         v-if="
-            ((isEditable && showLevelMeterForEdit) || isMixable) &&
+            ((trackViewMode === TrackViewMode.Edit && showLevelMeterForEdit) ||
+                trackViewMode === TrackViewMode.Mix) &&
             audioSource &&
             audioContext &&
             isContextRunning &&
@@ -114,7 +115,7 @@
     >
         <!-- Show possibly large meters only on edit -->
         <AudioLevelMeter
-            v-if="levelMeterSizeIsLarge && isEditable"
+            v-if="levelMeterSizeIsLarge && trackViewMode === TrackViewMode.Edit"
             ref="audioLevelMeter"
             :key="trackId"
             :vertical="false"
@@ -158,6 +159,7 @@ import {
     onBeforeUnmount,
     onDeactivated,
     onMounted,
+    inject,
     type PropType,
     type Ref,
     ref,
@@ -185,6 +187,8 @@ import { useElementVisibility } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import type { ICue } from '@/store/ICue';
 import { Route } from '@/router';
+import { trackViewModeInjectionKey } from '@/components/track/TrackInjectionKeys';
+import { TrackViewMode } from '@/store/TrackViewMode';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -280,6 +284,8 @@ console.debug(
     `TrackMediaElement:setup:using mediaUrl '${props.mediaUrl}' for trackId '${props.trackId}' at start '${props.start}'`,
 );
 
+const trackViewMode = inject(trackViewModeInjectionKey);
+
 // --- visibility ---
 
 const showVideo = ref(true);
@@ -289,16 +295,6 @@ const isAppVisible = computed(() => {
 });
 const audioLevelMeter = ref(null);
 const audioLevelMeterIsVisible = useElementVisibility(audioLevelMeter);
-
-// --- route ---
-
-const route = useRoute();
-const isEditable = computed(() => {
-    return route.name == Route.Edit;
-});
-const isMixable = computed(() => {
-    return route.name == Route.Mix;
-});
 
 // --- Media Setup ---
 
@@ -530,14 +526,17 @@ watch(
         () => props.showLevelMeterForEdit,
         () => props.mediaUrl,
         () => mediaElement.value,
-        () => isEditable.value,
+        () => trackViewMode,
         () => isPaused.value /* only used as trigger */,
         () => isContextRunning.value /* only used as trigger */,
     ],
-    ([showLevelMeterForEdit, mediaUrl, newMediaElement, isEditable]) => {
+    ([showLevelMeterForEdit, mediaUrl, newMediaElement, trackViewMode]) => {
         if (showLevelMeterForEdit) {
-            // Metering is only used in edit mode
-            if (isEditable) {
+            // Metering is only used in edit or mix mode
+            if (
+                trackViewMode?.value === TrackViewMode.Edit ||
+                trackViewMode?.value === TrackViewMode.Mix
+            ) {
                 if (audioContext.value && isContextRunning.value) {
                     // Create the level meter and associated routing only when requested, and only for local files
                     if (

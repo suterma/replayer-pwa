@@ -12,14 +12,12 @@
         <!-- In playback/mix view, do not require the CTRL modifier -->
         <!-- In edit view, the CTRL modifier helps disambiguate
          between other uses of the shortcut keys-->
-        <CompilationKeyboardHandler :require-ctrl-modifier="isEditMode" />
+        <CompilationKeyboardHandler
+            :require-ctrl-modifier="trackViewMode === TrackViewMode.Edit"
+        />
 
         <!-- If available, show the compilation -->
-        <Compilation
-            v-if="hasCompilation"
-            :compilation="compilation"
-            :track-viewode="trackViewode"
-        />
+        <Compilation v-if="hasCompilation" :compilation="compilation" />
 
         <!-- Otherwise, show the claim -->
         <div v-else class="section pl-0 pr-0 block">
@@ -31,7 +29,7 @@
 
         <!--During edit or when nothing yet loaded, offer the drop zone -->
         <div
-            v-if="isEditMode || !hasCompilation"
+            v-if="trackViewMode === TrackViewMode.Edit || !hasCompilation"
             class="section pt-6 pl-0 pr-0 block"
         >
             <!-- Offer the demo only when no compilation/track is shown -->
@@ -39,7 +37,9 @@
         </div>
 
         <!--During edit, with available media, offer the media list -->
-        <template v-if="isEditMode && hasAvailableMedia">
+        <template
+            v-if="trackViewMode === TrackViewMode.Edit && hasAvailableMedia"
+        >
             <div class="has-text-centered block">
                 <CollapsiblePanel>
                     <template #caption>
@@ -68,8 +68,10 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+/** A view for playing an existing compilation */
+
+import { inject } from 'vue';
 import Compilation from '@/components/Compilation.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import FooterLinks from '@/components/FooterLinks.vue';
@@ -77,46 +79,13 @@ import CompilationLoader from '@/components/CompilationLoader.vue';
 import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
 import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
-import { mapState } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
+import { trackViewModeInjectionKey } from '@/components/track/TrackInjectionKeys';
 import { TrackViewMode } from '@/store/TrackViewMode';
-import { Route } from '@/router';
 
-/** A view for playing an existing compilation */
-export default defineComponent({
-    name: 'PlaybackView',
-    components: {
-        Compilation,
-        CompilationKeyboardHandler,
-        MediaDropZone,
-        CompilationLoader,
-        FooterLinks,
-        CollapsiblePanel,
-        MediaList,
-    },
+const trackViewMode = inject(trackViewModeInjectionKey);
 
-    computed: {
-        ...mapState(useAppStore, [
-            'compilation',
-            'hasCompilation',
-            'mediaUrls',
-            'hasAvailableMedia',
-        ]),
-
-        /** Gets the track display mode */
-        trackViewode(): TrackViewMode {
-            if (this.$route.name === Route.Edit) {
-                return TrackViewMode.Edit;
-            }
-            if (this.$route.name === Route.Mix) {
-                return TrackViewMode.Mix;
-            }
-            return TrackViewMode.Play;
-        },
-        /** Whether the compilation is shown as editable */
-        isEditMode(): boolean {
-            return this.trackViewode === TrackViewMode.Edit;
-        },
-    },
-});
+const app = useAppStore();
+const { compilation, hasCompilation, hasAvailableMedia } = storeToRefs(app);
 </script>

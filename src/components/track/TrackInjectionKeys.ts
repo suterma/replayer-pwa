@@ -6,6 +6,7 @@
  */
 
 import type { IMeter } from '@/code/music/IMeter';
+import type { TrackViewMode } from '@/store/TrackViewMode';
 import type { InjectionKey, Ref } from 'vue';
 
 /** @file A set of injection keys for providing track state to descendant components of a track,
@@ -37,4 +38,12 @@ export const currentPositionInjectionKey = Symbol() as InjectionKey<
  */
 export const currentPositionDisplayInjectionKey = Symbol() as InjectionKey<
     Ref<string>
+>;
+
+/** A symbol for providing and injecting the track view mode
+ * @remarks This is provided readonly, and not updates are supported.
+ * @devdoc The track view mode is currently determined and provided on the router level.
+ */
+export const trackViewModeInjectionKey = Symbol() as InjectionKey<
+    Ref<TrackViewMode>
 >;
