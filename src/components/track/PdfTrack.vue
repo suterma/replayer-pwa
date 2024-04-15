@@ -6,186 +6,135 @@
         }"
         data-cy="track-pdf"
     >
-        <div class="block">
-            <!-- Header -->
-            <div class="track-header level is-mobile is-align-items-flex-start">
-                <!-- Left side -->
-                <div
-                    class="level-left level-wrap is-justify-content-flex-start"
-                >
-                    <!-- Expander -->
-                    <div class="level-item is-narrow">
-                        <CollapsibleButton
-                            class="is-nav"
-                            :model-value="isExpanded"
-                            title="PDF"
-                            collapsed-text="Click to expand / show PDF"
-                            expanded-text="Click to collapse"
-                            @update:model-value="isExpanded = !isExpanded"
-                        >
-                        </CollapsibleButton>
-                    </div>
-
-                    <!-- The edit part -->
-                    <template v-if="trackViewMode === TrackViewMode.Edit">
-                        <CoveredPanel
-                            ref="mediaDropZonePanel"
-                            class="level-item"
-                        >
-                            <template #caption>
-                                <MediaSourceIndicator
-                                    :source="track?.Url"
-                                    :unavailable="!mediaUrl"
-                                >
-                                </MediaSourceIndicator>
-                            </template>
-                            <MediaDropZone
-                                ref="mediaDropZone"
-                                :replace-url="track.Url"
-                                :track-id="track.Id"
-                                @accepted="acceptedMedia()"
-                            >
-                            </MediaDropZone>
-                        </CoveredPanel>
-
-                        <!-- Title (make it wide) -->
-                        <div class="level-item is-flex-grow-2">
-                            <LabeledInput label="Title" class="is-fullwidth">
-                                <StyledInput
-                                    class="input"
-                                    :model-value="track?.Name"
-                                    type="text"
-                                    placeholder="Track name"
-                                    title="Track name"
-                                    data-cy="track-name-input"
-                                    :focus-on-mounted="false"
-                                    @change="updateName($event.target.value)"
-                                />
-                            </LabeledInput>
-                        </div>
-                        <!-- <CoveredPanel
-                            :reveal-for="[track.Artist]"
-                            title="Artist name for this track"
-                            class="level-item"
-                        >
-                            <template #caption>
-                                <span class="label">by</span>
-                            </template>
-
-                            <div class="field is-fullwidth">
-                                <p class="control is-expanded">
-                                    <LabeledInput label="by">
-                                        <StyledInput
-                                            class="input is-italic"
-                                            :model-value="track.Artist"
-                                            type="text"
-                                            placeholder="Artist"
-                                            title="Artist"
-                                            data-cy="track-artist"
-                                            focus-on-mounted
-                                            @update:model-value="
-                                                (value) => {
-                                                    updateArtist(value);
-                                                }
-                                            "
-                                        >
-                                        </StyledInput>
-                                    </LabeledInput>
-                                </p>
-                            </div>
-                        </CoveredPanel>
-                        <CoveredPanel
-                            :reveal-for="[track.Album]"
-                            title="Album name for this track"
-                            class="level-item"
-                        >
-                            <template #caption
-                                ><span class="label">on</span></template
-                            >
-
-                            <div class="field is-fullwidth">
-                                <p class="control is-expanded">
-                                    <LabeledInput label="on">
-                                        <StyledInput
-                                            class="input is-italic"
-                                            :model-value="track.Album"
-                                            type="text"
-                                            placeholder="Album"
-                                            title="Album"
-                                            data-cy="track-album"
-                                            focus-on-mounted
-                                            @update:model-value="
-                                                (value) => {
-                                                    updateAlbum(value);
-                                                }
-                                            "
-                                        >
-                                        </StyledInput>
-                                    </LabeledInput>
-                                </p>
-                            </div>
-                        </CoveredPanel> -->
-                    </template>
-
-                    <!-- Title -->
-                    <!-- The title is the only header element that should shrink (break on words) if necessary -->
-                    <div
-                        v-else
-                        class="is-flex-shrink-1"
-                        :class="{
-                            'is-clickable': Boolean(mediaUrl),
-                            'has-cursor-not-allowed': !Boolean(mediaUrl),
-                        }"
-                        @click="isExpanded = !isExpanded"
-                    >
-                        <p class="title is-4" :title="track.Url">
-                            <TrackTitleName :name="track.Name"></TrackTitleName>
-                        </p>
-                    </div>
-                </div>
-                <!-- Right side -->
-                <div class="level-right is-justify-content-flex-end">
-                    <div class="level-item"></div>
-                    <!-- Slot for additional level items -->
-                </div>
-            </div>
-        </div>
         <FullscreenPanel
             ref="fullscreenPanel"
             v-slot="{ isFullscreen, hasNative, toggle }"
         >
+            <div class="block" v-if="!isFullscreen">
+                <!-- Header -->
+                <div
+                    class="track-header level is-mobile is-align-items-flex-start"
+                >
+                    <!-- Left side -->
+                    <div
+                        class="level-left level-wrap is-justify-content-flex-start"
+                    >
+                        <!-- Expander -->
+                        <div class="level-item is-narrow">
+                            <CollapsibleButton
+                                class="is-nav"
+                                :model-value="isExpanded"
+                                title="PDF"
+                                collapsed-text="Click to expand / show PDF"
+                                expanded-text="Click to collapse"
+                                @update:model-value="isExpanded = !isExpanded"
+                            >
+                            </CollapsibleButton>
+                        </div>
+
+                        <!-- The edit part -->
+                        <template v-if="trackViewMode === TrackViewMode.Edit">
+                            <CoveredPanel
+                                ref="mediaDropZonePanel"
+                                class="level-item"
+                            >
+                                <template #caption>
+                                    <MediaSourceIndicator
+                                        :source="track?.Url"
+                                        :unavailable="!mediaUrl"
+                                    >
+                                    </MediaSourceIndicator>
+                                </template>
+                                <MediaDropZone
+                                    ref="mediaDropZone"
+                                    :replace-url="track.Url"
+                                    :track-id="track.Id"
+                                    @accepted="acceptedMedia()"
+                                >
+                                </MediaDropZone>
+                            </CoveredPanel>
+
+                            <!-- Title (make it wide) -->
+                            <div class="level-item is-flex-grow-2">
+                                <LabeledInput
+                                    label="Title"
+                                    class="is-fullwidth"
+                                >
+                                    <StyledInput
+                                        class="input"
+                                        :model-value="track?.Name"
+                                        type="text"
+                                        placeholder="Track name"
+                                        title="Track name"
+                                        data-cy="track-name-input"
+                                        :focus-on-mounted="false"
+                                        @change="
+                                            updateName($event.target.value)
+                                        "
+                                    />
+                                </LabeledInput>
+                            </div>
+                        </template>
+
+                        <!-- Title -->
+                        <!-- The title is the only header element that should shrink (break on words) if necessary -->
+                        <div
+                            v-else
+                            class="is-flex-shrink-1"
+                            :class="{
+                                'is-clickable': Boolean(mediaUrl),
+                                'has-cursor-not-allowed': !Boolean(mediaUrl),
+                            }"
+                            @click="isExpanded = !isExpanded"
+                        >
+                            <p class="title is-4" :title="track.Url">
+                                <TrackTitleName
+                                    :name="track.Name"
+                                ></TrackTitleName>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Right side -->
+                    <div class="level-right is-justify-content-flex-end">
+                        <div class="level-item">
+                            <!-- Offer the full screen-->
+                            <template v-if="!isFullscreen">
+                                <FullscreenToggler
+                                    v-if="hasNative"
+                                    :model-value="isFullscreen"
+                                    title="Toggle full-screen mode"
+                                    @click="toggle"
+                                ></FullscreenToggler>
+                                <CollapsibleButton
+                                    v-else
+                                    :model-value="isFullscreen"
+                                    title="Toggle full-page mode"
+                                    collapsed-chevron-direction="up"
+                                    @click="toggle"
+                                ></CollapsibleButton>
+                            </template>
+                        </div>
+                        <!-- Slot for additional level items -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spacer -->
+            <div class="block" v-if="!isExpanded && !isFullscreen"></div>
+
             <div v-if="isExpanded" class="block">
                 <Transition name="item-expand">
                     <div v-if="isExpanded" class="block">
-                        <!-- Offer the full screen-->
-                        <template v-if="!isFullscreen">
-                            <FullscreenToggler
-                                v-if="hasNative"
-                                :model-value="isFullscreen"
-                                title="Toggle full-screen mode"
-                                @click="toggle"
-                            ></FullscreenToggler>
-                            <CollapsibleButton
-                                v-else
-                                :model-value="isFullscreen"
-                                title="Toggle full-page mode"
-                                collapsed-chevron-direction="up"
-                                @click="toggle"
-                            ></CollapsibleButton>
-                        </template>
-
                         <object
                             :data="mediaUrl"
                             type="application/pdf"
                             width="100%"
                             standby="Loading PDF"
                             :style="{
-                                'min-height': isFullscreen ? '100vh' : '33vh',
+                                'min-height': isFullscreen ? '100vh' : '25vh',
                                 width: '100%',
                             }"
                         >
-                            <!-- :height="objectHeight" -->
-
                             <!-- Alternatively, just present a link -->
                             <p>
                                 <a :href="mediaUrl" target="_blank">{{
@@ -258,30 +207,6 @@ function updateName(name: string) {
 
     app.updateTrackData(trackId, name, artist, album);
 }
-
-/** Updates the track artist */
-function updateArtist(artist: string) {
-    const trackId = props.track.Id;
-    const name = props.track.Name;
-    const album = props.track.Album;
-    app.updateTrackData(trackId, name, artist, album);
-}
-
-/** Updates the track album */
-function updateAlbum(album: string) {
-    const trackId = props.track.Id;
-    const name = props.track.Name;
-    const artist = props.track.Artist;
-    app.updateTrackData(trackId, name, artist, album);
-}
-
-// --- size ---
-
-const { width, height } = useWindowSize();
-
-const objectHeight = computed(() => {
-    return height.value;
-});
 </script>
 
 <style>
