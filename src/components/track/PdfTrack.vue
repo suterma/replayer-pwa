@@ -150,24 +150,53 @@
                 </div>
             </div>
         </div>
-        <Transition name="item-expand">
+        <FullscreenPanel
+            ref="fullscreenPanel"
+            v-slot="{ isFullscreen, hasNative, toggle }"
+        >
             <div v-if="isExpanded" class="block">
-                <object
-                    :data="mediaUrl"
-                    type="application/pdf"
-                    width="100%"
-                    standby="Loading PDF"
-                    style="min-height: 33vh; width: 100%"
-                >
-                    <!-- :height="objectHeight" -->
+                <Transition name="item-expand">
+                    <div v-if="isExpanded" class="block">
+                        <!-- Offer the full screen-->
+                        <template v-if="!isFullscreen">
+                            <FullscreenToggler
+                                v-if="hasNative"
+                                :model-value="isFullscreen"
+                                title="Toggle full-screen mode"
+                                @click="toggle"
+                            ></FullscreenToggler>
+                            <CollapsibleButton
+                                v-else
+                                :model-value="isFullscreen"
+                                title="Toggle full-page mode"
+                                collapsed-chevron-direction="up"
+                                @click="toggle"
+                            ></CollapsibleButton>
+                        </template>
 
-                    <!-- Alternatively, just present a link -->
-                    <p>
-                        <a :href="mediaUrl" target="_blank">{{ track.Url }}</a>
-                    </p>
-                </object>
+                        <object
+                            :data="mediaUrl"
+                            type="application/pdf"
+                            width="100%"
+                            standby="Loading PDF"
+                            :style="{
+                                'min-height': isFullscreen ? '100vh' : '33vh',
+                                width: '100%',
+                            }"
+                        >
+                            <!-- :height="objectHeight" -->
+
+                            <!-- Alternatively, just present a link -->
+                            <p>
+                                <a :href="mediaUrl" target="_blank">{{
+                                    track.Url
+                                }}</a>
+                            </p>
+                        </object>
+                    </div>
+                </Transition>
             </div>
-        </Transition>
+        </FullscreenPanel>
     </div>
 </template>
 
@@ -186,6 +215,8 @@ import LabeledInput from '@/components/editor/LabeledInput.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import TrackTitleName from '@/components/track/TrackTitleName.vue';
 import { useWindowSize } from '@vueuse/core';
+import FullscreenPanel from '@/components/FullscreenPanel.vue';
+import FullscreenToggler from '@/components/buttons/FullscreenToggler.vue';
 
 const props = defineProps({
     /** The track to display
