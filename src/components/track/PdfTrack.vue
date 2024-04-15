@@ -29,8 +29,8 @@
                     <!-- The edit part -->
                     <template v-if="trackViewMode === TrackViewMode.Edit">
                         <CoveredPanel
-                            class="level-item"
                             ref="mediaDropZonePanel"
+                            class="level-item"
                         >
                             <template #caption>
                                 <MediaSourceIndicator
@@ -151,14 +151,21 @@
             </div>
         </div>
         <Transition name="item-expand">
-            <div class="block video-containerx is-smallx" v-if="isExpanded">
+            <div v-if="isExpanded" class="block">
                 <object
-                    class="videox"
                     :data="mediaUrl"
                     type="application/pdf"
                     width="100%"
-                    :height="objectHeight"
-                ></object>
+                    standby="Loading PDF"
+                    style="min-height: 33vh; width: 100%"
+                >
+                    <!-- :height="objectHeight" -->
+
+                    <!-- Alternatively, just present a link -->
+                    <p>
+                        <a :href="mediaUrl" target="_blank">{{ track.Url }}</a>
+                    </p>
+                </object>
             </div>
         </Transition>
     </div>
