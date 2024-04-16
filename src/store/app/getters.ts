@@ -73,7 +73,12 @@ export const getters = {
         );
     }),
 
-    /** Gets the set of media tracks */
+    /** Gets the set of all tracks, in their order */
+    allTracks: computed(() => {
+        return state.compilation.value?.Tracks;
+    }),
+
+    /** Gets the set of media tracks (audio, video, YouTube), in their order */
     mediaTracks: computed(() => {
         return state.compilation.value?.Tracks?.filter(
             (track) =>
@@ -83,14 +88,14 @@ export const getters = {
         );
     }),
 
-    /** Gets the set of text tracks */
+    /** Gets the set of text tracks, in their order */
     textTracks: computed(() => {
         return state.compilation.value?.Tracks?.filter((track) =>
             CompilationHandler.isTextTrack(track),
         );
     }),
 
-    /** Gets the set of PDF tracks */
+    /** Gets the set of PDF tracks, in their order */
     pdfTracks: computed(() => {
         return state.compilation.value?.Tracks?.filter((track) =>
             CompilationHandler.isPdfTrack(track),

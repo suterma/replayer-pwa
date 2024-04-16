@@ -2,6 +2,18 @@
     <nav class="level is-mobile">
         <!-- Left side -->
         <div class="level-left">
+            <div class="level-item">
+                <!-- Just show the type icon here -->
+                <MediaSourceIndicator
+                    v-once
+                    :source="track.Url"
+                    :showSourceText="false"
+                    :showSourceIcon="false"
+                    :showSize="true"
+                    :showType="true"
+                >
+                </MediaSourceIndicator>
+            </div>
             <div
                 class="level-item has-cropped-text"
                 style="max-width: calc(100vw - 60px)"
@@ -33,19 +45,27 @@
     </nav>
 
     <h3 v-if="showMediaSource" class="subtitle">
-        <span class="is-size-7">
-            {{ track.Url }}
-        </span>
-        <span v-if="track.Duration !== null" class="is-size-7">
-            (<TimeDisplay
-                class="is-size-7"
-                :model-value="track.Duration"
-            ></TimeDisplay
-            >)
+        <span class="is-size-7 is-family-monospace">
+            <MediaSourceIndicator
+                class="pl-6 ml-1"
+                v-once
+                :source="track.Url"
+                :showSourceText="true"
+                :showSourceIcon="false"
+                :showTypeIcon="false"
+            >
+                <span v-if="track.Duration !== null">
+                    &nbsp; (<TimeDisplay
+                        class="is-size-7"
+                        :model-value="track.Duration"
+                    ></TimeDisplay
+                    >)
+                </span>
+            </MediaSourceIndicator>
         </span>
     </h3>
 
-    <table v-if="showCues" class="table is-narrow">
+    <table v-if="showCues && track.Cues.length > 0" class="table is-narrow">
         <thead>
             <tr>
                 <th class="is-size-7">Shortcut</th>
@@ -96,6 +116,7 @@ import TrackTitleName from '@/components/track/TrackTitleName.vue';
 import { useSettingsStore } from '@/store/settings';
 import { meterInjectionKey } from './track/TrackInjectionKeys';
 import type { ITrack } from '@/store/ITrack';
+import MediaSourceIndicator from '@/components/indicators/MediaSourceIndicator.vue';
 
 const props = defineProps({
     /** The track to show an item for */

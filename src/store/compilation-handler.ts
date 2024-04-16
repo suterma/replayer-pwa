@@ -37,6 +37,19 @@ export default class CompilationHandler {
         return FileHandler.isPdfFileName(track.Url);
     }
 
+    /** Determines whether this is a media track (audio, video, YouTube)
+     * @devdoc track types should later be determined by MIME type.
+     * For this, the MIME type should become part of the (readonly) track information,
+     * determined when the track URL is evaluated.
+     */
+    static isMediaTrack(track: ITrack): boolean {
+        return (
+            CompilationHandler.isAudioTrack(track) ||
+            CompilationHandler.isVideoTrack(track) ||
+            CompilationHandler.isYoutubeVideoTrack(track)
+        );
+    }
+
     /** Determines whether this is an audio track
      * @devdoc track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,

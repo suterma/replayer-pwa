@@ -14,24 +14,9 @@
         />
 
         <div class="tracks">
-            <template v-for="track in textTracks" :key="track.Id">
-                <NoticeTrack
-                    :id="'track-' + track.Id"
-                    class="block"
-                    :track="track"
-                >
-                </NoticeTrack>
-            </template>
-            <template v-for="track in pdfTracks" :key="track.Id">
-                <PdfTrack
-                    :id="'track-' + track.Id"
-                    class="block"
-                    :track="track"
-                >
-                </PdfTrack>
-            </template>
-            <template v-for="(track, index) in tracks" :key="track.Id">
+            <template v-for="(track, index) in allTracks" :key="track.Id">
                 <MediaTrack
+                    v-if="CompilationHandler.isMediaTrack(track)"
                     :id="'track-' + track.Id"
                     :ref="'track-' + track.Id"
                     class="block"
@@ -53,6 +38,20 @@
                     @next-track="toNextTrack(track.Id, isLoopingPlaybackMode)"
                     @track-ended="continueAfterTrack(track.Id)"
                 />
+                <NoticeTrack
+                    v-else-if="CompilationHandler.isTextTrack(track)"
+                    :id="'track-' + track.Id"
+                    class="block"
+                    :track="track"
+                >
+                </NoticeTrack>
+                <PdfTrack
+                    v-else-if="CompilationHandler.isPdfTrack(track)"
+                    :id="'track-' + track.Id"
+                    class="block"
+                    :track="track"
+                >
+                </PdfTrack>
             </template>
         </div>
         <!-- Multi-track-Controller -->
@@ -122,6 +121,7 @@ const {
     textTracks,
     pdfTracks,
     mediaTracks,
+    allTracks,
     playbackMode,
     isFadingEnabled,
     isPreRollEnabled,

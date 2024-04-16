@@ -9,17 +9,19 @@
         "
     >
         <label
+            v-if="showTypeIcon || showSourceIcon"
             class="button is-indicator"
             :class="{ 'has-text-warning': unavailable }"
         >
-            <BaseIcon :path="typeIconPath" />
-            <BaseIcon :path="sourceIconPath" />
+            <BaseIcon v-if="showTypeIcon" :path="typeIconPath" />
+            <BaseIcon v-if="showSourceIcon" :path="sourceIconPath" />
         </label>
         <span
-            class="has-cropped-text is-indicator"
+            class="has-cropped-text is-indicator is-family-monospace"
             :class="{ 'has-text-warning': unavailable }"
             data-cy="media-source"
-            ><span>{{ mediaSource }}</span>
+        >
+            <span v-if="showSourceText">{{ mediaSource }}</span>
 
             <template
                 v-if="
@@ -28,21 +30,18 @@
                 "
             >
                 <span class="has-opacity-half is-size-7 is-hidden-mobile">
-                    <span class="is-family-monospace">
-                        <span>(</span>
-                        <span v-if="mediaUrlSizeInMegaByte"
-                            >{{ mediaUrlSizeInMegaByte }}
-                        </span>
-                        <span>&nbsp;MB</span>
-                        <span
-                            v-if="mediaUrlSizeInMegaByte && mediaUrl?.mediaType"
-                            >,&nbsp;</span
-                        >
-                        <span v-if="mediaUrl?.mediaType"
-                            >{{ mediaUrl?.mediaType }}
-                        </span>
-                        <span>)</span>
+                    <span>(</span>
+                    <span v-if="mediaUrlSizeInMegaByte"
+                        >{{ mediaUrlSizeInMegaByte }}
                     </span>
+                    <span>&nbsp;MB</span>
+                    <span v-if="mediaUrlSizeInMegaByte && mediaUrl?.mediaType"
+                        >,&nbsp;</span
+                    >
+                    <span v-if="mediaUrl?.mediaType"
+                        >{{ mediaUrl?.mediaType }}
+                    </span>
+                    <span>)</span>
                 </span>
             </template>
         </span>
@@ -67,7 +66,6 @@ import {
     mdiMusicBox,
     mdiHelpBox,
     mdiWeb,
-    mdiFolderFileOutline,
     mdiFileOutline,
 } from '@mdi/js';
 import { MediaUrl } from '@/store/types';
@@ -103,6 +101,22 @@ const props = defineProps({
         type: Boolean,
         required: false,
         default: false,
+    },
+    showTypeIcon: {
+        type: Boolean,
+        required: false,
+        default: true,
+    },
+    showSourceIcon: {
+        type: Boolean,
+        required: false,
+        default: true,
+    },
+    /** Whether to show the media source (file name or URL) as text */
+    showSourceText: {
+        type: Boolean,
+        required: false,
+        default: true,
     },
     /** Whether the media is unavailable */
     unavailable: {
