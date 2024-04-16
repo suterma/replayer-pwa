@@ -63,7 +63,7 @@ import {
     mdiFilePdfBox,
     mdiVideoBox,
     mdiYoutube,
-    mdiMusicBox,
+    mdiSpeaker,
     mdiHelpBox,
     mdiWeb,
     mdiFileOutline,
@@ -132,7 +132,7 @@ const isUrl = computed(() => {
 
 const typeIconPath = computed(() => {
     if (FileHandler.isAudioFileName(props.source)) {
-        return mdiMusicBox;
+        return mdiSpeaker;
     } else if (FileHandler.isVideoFileName(props.source)) {
         return mdiVideoBox;
     } else if (FileHandler.isYouTubeUrl(props.source)) {

@@ -1,17 +1,14 @@
 <template>
     <div
-        class="track is-pdf is-together-print"
+        class="track is-together-print is-inactive-track is-pdf block"
+        data-cy="track-pdf"
         :class="{
             'is-editable': trackViewMode == TrackViewMode.Edit,
         }"
-        data-cy="track-pdf"
     >
-        <FullscreenPanel
-            ref="fullscreenPanel"
-            v-slot="{ isFullscreen, hasNative, toggle }"
-        >
+        <FullscreenPanel v-slot="{ isFullscreen, hasNative, toggle }">
             <div class="block" v-if="!isFullscreen">
-                <!-- Header -->
+                <!-- Each track is an item in a list -->
                 <div
                     class="track-header level is-mobile is-align-items-flex-start"
                 >
@@ -19,11 +16,11 @@
                     <div
                         class="level-left level-wrap is-justify-content-flex-start"
                     >
-                        <!-- Expander -->
                         <div class="level-item is-narrow">
                             <!-- Offer the full screen-->
                             <template v-if="!isFullscreen">
                                 <FullscreenToggler
+                                    v-once
                                     v-if="hasNative"
                                     :model-value="isFullscreen"
                                     title="Toggle full-screen mode"
@@ -37,45 +34,68 @@
                                     @click="toggle"
                                 ></CollapsibleButton>
                             </template>
-                        </div>
-                        <div
-                            class="level-item is-narrow"
-                            v-if="trackViewMode === TrackViewMode.Edit"
-                        >
-                            <CollapsibleButton
-                                class="is-nav"
-                                :model-value="isExpanded"
-                                title="PDF"
-                                collapsed-text="Click to expand / show PDF"
-                                expanded-text="Click to collapse"
-                                @update:model-value="isExpanded = !isExpanded"
+
+                            <!-- Title --><!-- The title is the only header element that should shrink (break on words) if necessary -->
+                            <div
+                                v-if="trackViewMode !== TrackViewMode.Edit"
+                                class="is-flex-shrink-1 ml-3"
+                                :class="{
+                                    'is-clickable': Boolean(mediaUrl),
+                                    'has-cursor-not-allowed':
+                                        !Boolean(mediaUrl),
+                                }"
+                                @click="isExpanded = !isExpanded"
                             >
-                            </CollapsibleButton>
+                                <p class="title is-4" :title="track.Url">
+                                    <BaseIcon
+                                        class="mr-2"
+                                        :path="mdiFilePdfBox"
+                                    />
+                                    <TrackTitleName :name="track.Name">
+                                    </TrackTitleName>
+                                </p>
+                            </div>
                         </div>
 
-                        <!-- The edit part -->
+                        <!-- Edit -->
                         <template v-if="trackViewMode === TrackViewMode.Edit">
-                            <CoveredPanel
-                                ref="mediaDropZonePanel"
-                                :icon-path="mdiSwapVertical"
-                                class="level-item"
-                            >
-                                <template #caption>
-                                    <MediaSourceIndicator
-                                        :source="track.Url"
-                                        :unavailable="!mediaUrl"
-                                    >
-                                    </MediaSourceIndicator>
-                                </template>
-                                <MediaDropZone
-                                    ref="mediaDropZone"
-                                    :replace-url="track.Url"
-                                    :track-id="track.Id"
-                                    @accepted="acceptedMedia()"
+                            <div class="level-item is-narrow">
+                                <CollapsibleButton
+                                    class="is-nav"
+                                    :model-value="isExpanded"
+                                    title="PDF"
+                                    collapsed-text="Click to expand / show PDF"
+                                    expanded-text="Click to collapse"
+                                    @update:model-value="
+                                        isExpanded = !isExpanded
+                                    "
                                 >
-                                </MediaDropZone>
-                            </CoveredPanel>
-
+                                </CollapsibleButton>
+                            </div>
+                            <div class="level-item is-narrow">
+                                <!-- The edit title and file part -->
+                                <CoveredPanel
+                                    ref="mediaDropZonePanel"
+                                    :icon-path="mdiSwapVertical"
+                                    class="level-item"
+                                >
+                                    <template #caption>
+                                        <MediaSourceIndicator
+                                            :source="track.Url"
+                                            :unavailable="!mediaUrl"
+                                            :show-source-icon="false"
+                                        >
+                                        </MediaSourceIndicator>
+                                    </template>
+                                    <MediaDropZone
+                                        ref="mediaDropZone"
+                                        :replace-url="track.Url"
+                                        :track-id="track.Id"
+                                        @accepted="acceptedMedia()"
+                                    >
+                                    </MediaDropZone>
+                                </CoveredPanel>
+                            </div>
                             <!-- Title (make it wide) -->
                             <div class="level-item is-flex-grow-2">
                                 <LabeledInput
@@ -97,33 +117,13 @@
                                 </LabeledInput>
                             </div>
                         </template>
-
-                        <!-- Title -->
-                        <!-- The title is the only header element that should shrink (break on words) if necessary -->
-                        <div
-                            v-else
-                            class="is-flex-shrink-1"
-                            :class="{
-                                'is-clickable': Boolean(mediaUrl),
-                                'has-cursor-not-allowed': !Boolean(mediaUrl),
-                            }"
-                            @click="isExpanded = !isExpanded"
-                        >
-                            <p class="title is-4" :title="track.Url">
-                                <TrackTitleName
-                                    :name="track.Name"
-                                ></TrackTitleName>
-                            </p>
-                        </div>
                     </div>
                     <!-- Right side -->
                     <div class="level-right is-justify-content-flex-end">
-                        <div class="level-item"></div>
                         <!-- Slot for additional level items -->
                     </div>
                 </div>
             </div>
-
             <div class="block">
                 <Transition name="item-expand">
                     <object
@@ -166,7 +166,8 @@ import StyledInput from '@/components/StyledInput.vue';
 import TrackTitleName from '@/components/track/TrackTitleName.vue';
 import FullscreenPanel from '@/components/FullscreenPanel.vue';
 import FullscreenToggler from '@/components/buttons/FullscreenToggler.vue';
-import { mdiSwapVertical } from '@mdi/js';
+import { mdiSwapVertical, mdiFilePdfBox } from '@mdi/js';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
 
 const props = defineProps({
     /** The track to display
@@ -223,5 +224,44 @@ function updateName(name: string) {
     padding: calc(0.5rem + 2px);
     padding-right: 2.5rem;
     min-height: 40px;
+}
+</style>
+
+<style lang="scss" scoped>
+/* Track item styles*/
+
+/* Define an overall width allocation for fixed right-hand side of the playback control level items*/
+
+.level {
+    .level-left {
+        /* 
+        The value for the basis have been empirically found to work best on
+        Google Chrome, Brave and Firefox, on Ubuntu
+        for the given set of playback controls
+        (slider, next/previous cue, playback mode, pre-roll toggler, fading toggler, volume knob, playback indicator)*/
+        flex-basis: calc(100% - 0px);
+        .level-item {
+            flex-shrink: 1;
+        }
+    }
+    .level-right {
+        flex-basis: 0px;
+        .level-item {
+            flex-shrink: 1;
+        }
+    }
+}
+/*Note: The used width is smaller in edit mode, since there are less buttons on the right side (no track skip, no play/pause)*/
+.level.is-editable {
+    .level-left {
+        flex-basis: auto;
+    }
+    .level-right {
+        flex-basis: auto;
+    }
+}
+
+.is-fullwidth {
+    width: 100%;
 }
 </style>

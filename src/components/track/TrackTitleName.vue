@@ -1,5 +1,6 @@
 <template>
     <span v-if="name" class="has-text-weight-light" data-cy="track-name">
+        <slot></slot>
         <LinkableText :text="name"></LinkableText>
     </span>
 </template>

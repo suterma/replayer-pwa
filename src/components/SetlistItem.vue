@@ -48,7 +48,6 @@
         <span class="is-size-7 is-family-monospace">
             <MediaSourceIndicator
                 class="pl-6 ml-1"
-                v-once
                 :source="track.Url"
                 :showSourceText="true"
                 :showSourceIcon="false"
