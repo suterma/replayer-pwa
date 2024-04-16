@@ -118,8 +118,6 @@ const app = useAppStore();
 const {
     activeTrackId,
     hasSingleMediaTrack,
-    textTracks,
-    pdfTracks,
     mediaTracks,
     allTracks,
     playbackMode,
