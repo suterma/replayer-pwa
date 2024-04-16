@@ -72,10 +72,13 @@ import { useSettingsStore } from '@/store/settings';
 import { useAppStore } from './store/app';
 import { acknowledgeVersion } from './code/ui/dialogs';
 import { compare } from 'compare-versions';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, provide, readonly, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { refDebounced, useElementSize } from '@vueuse/core';
 import { useRouter } from 'vue-router';
+import { trackViewModeInjectionKey } from '@/components/track/TrackInjectionKeys';
+import { Route } from '@/router';
+import { TrackViewMode } from '@/store/TrackViewMode';
 
 onMounted(() => {
     handleAppUpdate();
@@ -150,7 +153,26 @@ function handleAppUpdate() {
     console.debug('App.vue::handleAppUpdate done.');
 }
 
+// --- track view mode ---
+
+const trackViewMode = computed(() => {
+    const routeName = router.currentRoute.value.name;
+    switch (routeName) {
+        case Route.Edit:
+            return TrackViewMode.Edit;
+        case Route.Play:
+            return TrackViewMode.Play;
+        case Route.Mix:
+            return TrackViewMode.Mix;
+        default:
+            return TrackViewMode.Play;
+    }
+});
+
+provide(trackViewModeInjectionKey, readonly(trackViewMode));
+
 // --- bottom navbar spacing ---
+
 const mediaPlayerPanel = ref();
 const { height } = useElementSize(mediaPlayerPanel);
 

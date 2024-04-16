@@ -2,10 +2,7 @@
     <!-- Header level with wrap for items in the left part.
          Using flex-start on the level, to cause the left and right parts to both 
          begin at the same, upper vertical position -->
-    <div
-        class="track-header level is-mobile is-align-items-flex-start"
-        :class="$attrs.class"
-    >
+    <div class="track-header level is-mobile is-align-items-flex-start">
         <!-- Left side -->
         <div class="level-left level-wrap is-justify-content-flex-start">
             <!-- Slot for prepending level items -->
@@ -13,7 +10,10 @@
 
             <!-- Expander -->
             <div
-                v-if="isEditMode && !(/*is single track*/ (isFirst && isLast))"
+                v-if="
+                    trackViewMode === TrackViewMode.Edit &&
+                    !(/*is single track*/ (isFirst && isLast))
+                "
                 class="level-item is-narrow"
             >
                 <CollapsibleButton
@@ -36,7 +36,7 @@
             </div>
 
             <!-- The edit part -->
-            <template v-if="isEditMode">
+            <template v-if="trackViewMode === TrackViewMode.Edit">
                 <CoveredPanel ref="mediaDropZonePanel">
                     <template #caption>
                         <MediaSourceIndicator
@@ -229,7 +229,7 @@
                 />
 
                 <TrackContextMenu
-                    v-if="isEditMode"
+                    v-if="trackViewMode === TrackViewMode.Edit"
                     :is-first-track="isFirst"
                     :is-last-track="isLast"
                     :track="track"
@@ -274,6 +274,7 @@ import {
 import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import type { ITrack } from '@/store/ITrack';
+import { trackViewModeInjectionKey } from '@/components/track/TrackInjectionKeys';
 import { TrackViewMode } from '@/store/TrackViewMode';
 
 const emit = defineEmits(['update:isExpanded']);
@@ -332,16 +333,9 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
-
-    /** The display mode of this track.
-     * @devdoc Allows to reuse this component for more than one view mode.
-     * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
-     */
-    displayMode: {
-        type: String as () => TrackViewMode,
-        default: TrackViewMode.Play,
-    },
 });
+
+const trackViewMode = inject(trackViewModeInjectionKey);
 
 const app = useAppStore();
 
@@ -404,10 +398,6 @@ function updatePreRoll(preRoll: number | null) {
     app.updateTrackPreRoll(trackId, preRoll);
 }
 
-const isEditMode = computed(() => {
-    return props.displayMode === TrackViewMode.Edit;
-});
-
 /** Whether this track has any cues */
 const hasCues = computed(() => {
     return props.track.Cues.length > 0;
@@ -418,6 +408,7 @@ const hasCues = computed(() => {
 const isTrackPlaying = inject(isPlayingInjectionKey);
 
 // --- drop zone handling ---
+
 const mediaDropZonePanel: Ref<typeof CoveredPanel | null> = ref(null);
 
 function acceptedMedia() {

@@ -25,7 +25,7 @@ export default class FileHandler {
     }
     /** The set of accepted file extensions */
     static acceptedFileList =
-        '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.mp4,.m4v,.webm,.ogv,.txt';
+        '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.mp4,.m4v,.webm,.ogv,.txt,.pdf';
 
     /** Returns whether the given path represents a Mac OS X resource fork.
      * @remarks Mac OS X resource forks are not processed by Replayer.
@@ -249,7 +249,7 @@ export default class FileHandler {
         return false;
     }
     /** Returns whether the given file name (by prefix/suffix) is a supported media file name by Replayer
-     * @remarks Currently, some audio, video, youtube plus txt, with name variations, are supported
+     * @remarks Currently, some audio, video, youtube plus txt, pdf, with name variations, are supported
      */
     static isSupportedMediaFileName(fileName: string | undefined): boolean {
         let isSupportedMediaFileName = false;
@@ -258,7 +258,8 @@ export default class FileHandler {
                 this.isAudioFileName(fileName) ||
                 this.isVideoFileName(fileName) ||
                 this.isYouTubeUrl(fileName) ||
-                this.isTextFileName(fileName)
+                this.isTextFileName(fileName) ||
+                this.isPdfFileName(fileName)
             ) {
                 isSupportedMediaFileName = true;
             }
@@ -322,6 +323,7 @@ export default class FileHandler {
             const priority = [
                 /* unknown is possibly larger */
                 'mp3',
+                'pdf',
                 'txt',
                 /* xml with highest priority */
                 'xml',
@@ -393,6 +395,16 @@ export default class FileHandler {
         return name.endsWith('.txt');
     }
 
+    /** Returns whether the given file name (by prefix/suffix) is a supported PDF file name by Replayer
+     * @devdoc track types should later be determined by MIME type.
+     * For this, the MIME type should become part of the (readonly) track information,
+     * determined when the track URL is evaluated.
+     */
+    static isPdfFileName(fileName: string): boolean {
+        const name = fileName.split('?')[0] ?? ''; //remove query from URL's
+        return name.endsWith('.pdf');
+    }
+
     /** Returns whether the given MIME type is a supported package MIME type by Replayer
      * @devdoc See https://stackoverflow.com/a/72232884/79485 about mime types
      */
@@ -433,8 +445,14 @@ export default class FileHandler {
         return !!type && ['text/plain' /*text*/].includes(type);
     }
 
+    /** Returns whether the given MIME type is a supported PDF file MIME type by Replayer
+     */
+    static isPdfMimeType(type: string | undefined): boolean {
+        return !!type && ['application/pdf' /*PDF*/].includes(type);
+    }
+
     /** Returns whether the given MIME type is a supported media MIME type by Replayer
-     * @remarks Currently, MIME types for various audio, video, plus plain text, are supported.
+     * @remarks Currently, MIME types for various audio, video, plus plain text and PDF, are supported.
      */
     static isSupportedMediaMimeType(type: string | undefined): boolean {
         //Check for supported MIME types (see https://stackoverflow.com/a/29672957)
@@ -457,6 +475,7 @@ export default class FileHandler {
                 'audio/aiff' /*aiff*/,
                 'audio/aac' /*aac*/,
                 'text/plain' /*plain text*/,
+                'application/pdf' /*PDF*/,
                 /** Video */
                 'video/mp4' /*MP4 video*/,
                 'video/webm' /*WebM video*/,
@@ -535,6 +554,9 @@ export default class FileHandler {
         } else if (fileExtension == 'txt') {
             /** Text */
             mimeType = RezMimeTypes.TEXT_PLAIN /*text*/;
+        } else if (fileExtension == 'pdf') {
+            /** Text */
+            mimeType = RezMimeTypes.APPLICATION_PDF /*text*/;
         }
 
         return mimeType;

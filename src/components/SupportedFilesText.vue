@@ -70,6 +70,13 @@
                         ><span></span>)</span
                     >,&nbsp;for additional content.
                 </li>
+                <li>
+                    <span class="has-text-weight-bold">PDF</span>
+                    <span
+                        >&nbsp;(<span class="is-family-monospace">.pdf</span
+                        ><span></span>)</span
+                    >,&nbsp;for additional content.
+                </li>
             </ul>
         </div>
         <p>Compilations files (with multiple tracks):</p>

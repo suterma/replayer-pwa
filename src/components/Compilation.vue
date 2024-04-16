@@ -10,7 +10,7 @@
 
         <CompilationHeader
             :compilation="compilation"
-            :is-editable="isEditable"
+            :is-editable="trackViewMode === TrackViewMode.Edit"
         />
 
         <div class="tracks">
@@ -22,13 +22,20 @@
                 >
                 </NoticeTrack>
             </template>
+            <template v-for="track in pdfTracks" :key="track.Id">
+                <PdfTrack
+                    :id="'track-' + track.Id"
+                    class="block"
+                    :track="track"
+                >
+                </PdfTrack>
+            </template>
             <template v-for="(track, index) in tracks" :key="track.Id">
                 <MediaTrack
                     :id="'track-' + track.Id"
                     :ref="'track-' + track.Id"
                     class="block"
                     :track="track"
-                    :view-mode="trackViewode as TrackViewMode"
                     :playback-mode="playbackMode as PlaybackMode"
                     :is-fading-enabled="isFadingEnabled"
                     :is-pre-roll-enabled="isPreRollEnabled"
@@ -50,7 +57,10 @@
         </div>
         <!-- Multi-track-Controller -->
         <Teleport to="#media-player-panel">
-            <div v-if="isMixable" class="section has-background-grey-dark pb-0">
+            <div
+                v-if="trackViewMode === TrackViewMode.Mix"
+                class="section has-background-grey-dark pb-0"
+            >
                 <MasterTrack></MasterTrack>
             </div>
         </Teleport>
@@ -63,6 +73,7 @@ import {
     computed,
     watch,
     nextTick,
+    inject,
     onMounted,
     onUnmounted,
 } from 'vue';
@@ -71,6 +82,7 @@ import MediaTrack from '@/components/track/MediaTrack.vue';
 import MasterTrack from '@/components/track/MasterTrack.vue';
 import ReplayerEventHandler from '@/components/ReplayerEventHandler.vue';
 import NoticeTrack from '@/components/track/NoticeTrack.vue';
+import PdfTrack from '@/components/track/PdfTrack.vue';
 import CompilationHeader from '@/components/CompilationHeader.vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { storeToRefs } from 'pinia';
@@ -78,9 +90,10 @@ import { useAppStore } from '@/store/app';
 import NoSleep from 'nosleep.js';
 import { useSettingsStore } from '@/store/settings';
 import type { ICompilation } from '@/store/ICompilation';
-import { TrackViewMode } from '@/store/TrackViewMode';
 import { PlaybackMode } from '@/store/PlaybackMode';
 import type { ITrack } from '@/store/ITrack';
+import { trackViewModeInjectionKey } from '@/components/track/TrackInjectionKeys';
+import { TrackViewMode } from '@/store/TrackViewMode';
 
 /** Displays the contained set of tracks according to the required mode.
  * @remarks Also handles the common replayer events for compilations
@@ -88,17 +101,9 @@ import type { ITrack } from '@/store/ITrack';
  */
 const props = defineProps({
     compilation: { type: Object as PropType<ICompilation>, required: true },
-
-    /** The display mode of the contained tracks.
-     * @devdoc Allows to reuse this component for more than one view.
-     * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
-     */
-    trackViewode: {
-        type: String as () => TrackViewMode,
-        default: TrackViewMode.Play,
-        required: false,
-    },
 });
+
+const trackViewMode = inject(trackViewModeInjectionKey);
 
 /** The wake lock fill-in that can prevent screen timeout */
 const noSleep: NoSleep = new NoSleep();
@@ -115,6 +120,7 @@ const {
     activeTrackId,
     hasSingleMediaTrack,
     textTracks,
+    pdfTracks,
     mediaTracks,
     playbackMode,
     isFadingEnabled,
@@ -163,19 +169,6 @@ const isLoopingPlaybackMode = computed(() => {
     );
 });
 
-/** Whether the edit mode is active
- * @remarks For simplicity, the header is shown as editable, as long as the tracks are editable, too.
- */
-const isEditable = computed(() => {
-    return props.trackViewode === TrackViewMode.Edit;
-});
-
-/** Whether the mix mode is active
- */
-const isMixable = computed(() => {
-    return props.trackViewode === TrackViewMode.Mix;
-});
-
 /** Handle scrolling to the changed active track.
  * @remarks This is intentionally only invoked on when the active track changes (and it's not the only audio track).
  * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
@@ -197,7 +190,7 @@ watch(
  * @remarks This is intentionally only invoked on when the display mode changes (and it's not the only track).
  */
 watch(
-    () => props.trackViewode,
+    () => trackViewMode,
     () => {
         const trackId = activeTrackId;
 

@@ -548,8 +548,8 @@ export const actions = {
     },
 
     /** Loads a single file or package from a file
-     * @remarks The file might have been downloaded or stem from the local file
-     * syste. I might be a package or a single file of any supported content.
+     * @remarks The file might have been downloaded or loaded from the local file
+     * system. I might be a package or a single file of any supported content.
      * @remarks This method can be called multiple times, each resource gets appropriately added to the current compilation
      * @param file - The file to use
      */

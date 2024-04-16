@@ -89,7 +89,7 @@
                         </button>
                         <button
                             v-tooltip.top="
-                                `Spreading: ${(multitrack.timeSpreading * 1000).toFixed(0)} ms`
+                                `Spreading: ${(multitrack.timeSpreading * 1000).toFixed(0)} ms (${spreadingInfo})`
                             "
                             class="button is-info is-outlined"
                             title="Click to synch tracks"
@@ -100,15 +100,12 @@
                             <CircularProgress
                                 v-if="Number.isFinite(multitrack.timeSpreading)"
                                 class="ml-2 is-info"
-                                :class="{
-                                    'is-warning':
-                                        multitrack.timeSpreading >
-                                        Multitrack.MaxTrackTimeDeviation,
-                                    'is-danger':
-                                        multitrack.timeSpreading >
-                                        Multitrack.MaxTrackTimeDeviation * 2,
-                                }"
-                                :value="(multitrack.timeSpreading * 1000) / 2"
+                                :class="spreadingClass"
+                                :value="
+                                    multitrack.timeSpreading *
+                                    1000 *
+                                    3.33 /* 15ms equals 50% */
+                                "
                             />
                             <BaseIcon
                                 v-else
@@ -162,7 +159,7 @@ import { useMultitrackStore } from '@/store/multitrack';
 import { Multitrack } from '@/store/multitrack/Multitrack';
 import { storeToRefs } from 'pinia';
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
-import { provide, readonly } from 'vue';
+import { provide, readonly, computed } from 'vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
@@ -253,4 +250,26 @@ function toggleVertical(event: Event): void {
         });
     }
 }
+
+// --- spreading info ---
+
+const spreadingClass = computed(() => {
+    if (multitrack.timeSpreading > Multitrack.MaxTrackTimeDeviation * 2) {
+        return 'is-danger'; /* bad */
+    }
+    if (multitrack.timeSpreading > Multitrack.MaxTrackTimeDeviation) {
+        return 'is-warning'; /* acceptable */
+    }
+    return 'is-info'; /* good */
+});
+
+const spreadingInfo = computed(() => {
+    if (multitrack.timeSpreading > Multitrack.MaxTrackTimeDeviation * 2) {
+        return 'bad'; /* bad */
+    }
+    if (multitrack.timeSpreading > Multitrack.MaxTrackTimeDeviation) {
+        return 'acceptable'; /* acceptable */
+    }
+    return 'good'; /* good */
+});
 </script>

@@ -10,7 +10,7 @@
             'is-video': isVideoTrack,
             'is-youtube-video': isYoutubeVideoTrack,
         }"
-        data-cy="track"
+        data-cy="track-media"
     >
         <!-- Handle all track-relevant events here
         Note: A check for the active track is done in the handler methods. 
@@ -34,11 +34,10 @@
             <!-- NOTE: The @click handler on the header component only handles clicks on otherwise non-interactive elements -->
             <TrackHeader
                 v-model:is-expanded="isExpanded"
-                :display-mode="viewMode"
                 :can-collapse="!isOnlyMediaTrack"
                 :track="track"
                 :is-track-loaded="isTrackLoaded"
-                :is-track-media-available="isMediaAvailable"
+                :is-track-media-available="Boolean(mediaUrl)"
                 :is-active="isActiveTrack"
                 :is-first="isFirst"
                 :is-last="isLast"
@@ -89,7 +88,7 @@
                             @click="skipToPlayPause()"
                         />
 
-                        <!-- Title input -->
+                        <!-- Title -->
                         <!-- The title is the only header element that should shrink (break on words) if necessary -->
                         <div
                             v-if="!isEditable"
@@ -473,7 +472,6 @@
                                             v-if="hasNative"
                                             :model-value="isFullscreen"
                                             title="Toggle full-screen mode"
-                                            collapsed-chevron-direction="up"
                                             @click="toggle"
                                         ></FullscreenToggler>
                                         <CollapsibleButton
@@ -629,9 +627,7 @@
                                                     isTrackLoaded
                                                 "
                                                 :is-unloaded="!isTrackLoaded"
-                                                :is-unavailable="
-                                                    !isMediaAvailable
-                                                "
+                                                :is-unavailable="!mediaUrl"
                                                 data-cy="playback-indicator"
                                             />
                                         </MediaControlsBar>
@@ -759,6 +755,7 @@ import {
     provide,
     readonly,
     ref,
+    inject,
     watch,
     watchEffect,
     nextTick,
@@ -794,7 +791,6 @@ import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
-import FileHandler from '@/store/filehandler';
 import { Meter } from '@/code/music/Meter';
 import {
     currentPositionDisplayInjectionKey,
@@ -810,7 +806,6 @@ import { MediaLooper } from '@/code/media/MediaLooper';
 import { FadingMode } from '@/code/media/IAudioFader';
 import type { ICueScheduler } from '@/code/media/ICueScheduler';
 import { CueScheduler } from '@/code/media/CueScheduler';
-import { TrackViewMode } from '@/store/TrackViewMode';
 import type { ICue } from '@/store/ICue';
 import { PlaybackMode } from '@/store/PlaybackMode';
 import type { ITrack } from '@/store/ITrack';
@@ -818,6 +813,8 @@ import { useTitle } from '@vueuse/core';
 import router, { Route } from '@/router';
 import MessageOverlay from '@/components/MessageOverlay.vue';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
+import { trackViewModeInjectionKey } from '@/components/track/TrackInjectionKeys';
+import { TrackViewMode } from '@/store/TrackViewMode';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -891,15 +888,6 @@ const props = defineProps({
         default: false,
     },
 
-    /** The display mode of this track.
-     * @devdoc Allows to reuse this component for more than one view mode.
-     * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
-     */
-    viewMode: {
-        type: String as () => TrackViewMode,
-        default: TrackViewMode.Play,
-    },
-
     /** The playback mode
      * @remarks Used overall in the compilation, not per track
      */
@@ -926,6 +914,29 @@ const props = defineProps({
         required: false,
         default: true,
     },
+});
+
+const trackViewMode = inject(trackViewModeInjectionKey);
+
+/** Whether this component is viewed for the "Edit" mode, and thus shows editable inputs for the contained data
+ * @devdoc Allows to reuse this component for more than one view mode.
+ */
+const isEditable = computed(() => {
+    return trackViewMode?.value === TrackViewMode.Edit;
+});
+
+/** Whether this component is viewed for the "Mix" mode, and thus shows mixing controls
+ * @devdoc Allows to reuse this component for more than one view mode.
+ */
+const isMixable = computed(() => {
+    return trackViewMode?.value === TrackViewMode.Mix;
+});
+
+/** Whether this component is viewed for the "Play" mode, and thus shows non-collapsible playback buttons
+ * @devdoc Allows to reuse this component for more than one view mode.
+ */
+const isPlayable = computed(() => {
+    return trackViewMode?.value === TrackViewMode.Play;
 });
 
 // --- metering ---
@@ -1578,48 +1589,10 @@ const playingCue = computed(() => {
     );
 });
 
-/** Whether this component is viewed for the "Edit" mode, and thus shows editable inputs for the contained data
- * @devdoc Allows to reuse this component for more than one view mode.
- */
-const isEditable = computed(() => {
-    return props.viewMode === TrackViewMode.Edit;
-});
-
-/** Whether this component is viewed for the "Mix" mode, and thus shows mixing controls
- * @devdoc Allows to reuse this component for more than one view mode.
- */
-const isMixable = computed(() => {
-    return props.viewMode === TrackViewMode.Mix;
-});
-
-/** Whether this component is viewed for the "Play" mode, and thus shows non-collapsible playback buttons
- * @devdoc Allows to reuse this component for more than one view mode.
- */
-const isPlayable = computed(() => {
-    return props.viewMode === TrackViewMode.Play;
-});
-
-/** Whether the playback media is available
- * @devdoc This is only working for local file paths, not for online URL's, because these are directly fetched from the media element.
- */
-const isMediaAvailable = computed(() => {
-    if (mediaUrl.value) {
-        return true;
-    }
-    return false;
-});
-
-/** Gets the media URL, if available
- * @remarks For non-online URL's, a match is sought from previously stored binary blobs
+/** Gets the effective media source URL for this track
  */
 const mediaUrl = computed(() => {
-    if (FileHandler.isValidHttpUrl(props.track.Url)) {
-        return props.track.Url;
-    }
-    return CompilationHandler.getMatchingPackageMediaUrl(
-        props.track?.Url,
-        mediaUrls.value,
-    )?.url;
+    return app.getMediaUrlByTrack(props.track);
 });
 
 /** Returns all cues of this track */

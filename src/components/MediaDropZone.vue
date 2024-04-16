@@ -59,6 +59,7 @@
                 <div class="field has-addons">
                     <p class="control">
                         <!-- The URL is required for form submit -->
+                        <!-- The size should be large for initial input, but fit the smaller area when replacing the source -->
                         <input
                             v-model="url"
                             v-focus
@@ -66,7 +67,7 @@
                             type="url"
                             pattern="^https?://.+$"
                             required
-                            size="120"
+                            :size="isReplacementMode ? 20 : 120"
                             inputmode="url"
                             :title="
                                 replaceInfo +
