@@ -124,30 +124,26 @@
                 </div>
             </div>
 
-            <!-- Spacer -->
-            <div class="block" v-if="!isExpanded && !isFullscreen"></div>
-
-            <div v-if="isExpanded" class="block">
+            <div class="block">
                 <Transition name="item-expand">
-                    <div v-if="isExpanded" class="block">
-                        <object
-                            :data="mediaUrl"
-                            type="application/pdf"
-                            width="100%"
-                            standby="Loading PDF"
-                            :style="{
-                                'min-height': isFullscreen ? '100vh' : '25vh',
-                                width: '100%',
-                            }"
-                        >
-                            <!-- Alternatively, just present a link -->
-                            <p>
-                                <a :href="mediaUrl" target="_blank">{{
-                                    track.Url
-                                }}</a>
-                            </p>
-                        </object>
-                    </div>
+                    <object
+                        v-if="isExpanded || isFullscreen"
+                        :data="mediaUrl"
+                        type="application/pdf"
+                        width="100%"
+                        standby="Loading PDF"
+                        :style="{
+                            'min-height': isFullscreen ? '100vh' : '25vh',
+                            width: '100%',
+                        }"
+                    >
+                        <!-- Alternatively, just present a link -->
+                        <p>
+                            <a :href="mediaUrl" target="_blank">{{
+                                track.Url
+                            }}</a>
+                        </p>
+                    </object>
                 </Transition>
             </div>
         </FullscreenPanel>
