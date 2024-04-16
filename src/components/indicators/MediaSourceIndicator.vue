@@ -64,7 +64,15 @@
 import { defineComponent } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import FileHandler from '@/store/filehandler';
-import { mdiMusicCircleOutline, mdiMusicNote } from '@mdi/js';
+import {
+    mdiMusicCircleOutline,
+    mdiMusicNote,
+    mdiFilePdfBox,
+    mdiVideoBox,
+    mdiYoutube,
+    mdiMusicBox,
+    mdiHelpBox,
+} from '@mdi/js';
 import { MediaUrl } from '@/store/types';
 
 /** A display for the media source of a track
@@ -114,6 +122,11 @@ export default defineComponent({
             /** Icons from @mdi/js */
             mdiMusicCircleOutline: mdiMusicCircleOutline,
             mdiMusicNote: mdiMusicNote,
+            mdiVideoBox: mdiVideoBox,
+            mdiFilePdfBox: mdiFilePdfBox,
+            mdiYoutube: mdiYoutube,
+            mdiMusicBox: mdiMusicBox,
+            mdiHelpBox: mdiHelpBox,
         };
     },
     computed: {
@@ -125,11 +138,17 @@ export default defineComponent({
             return 'File';
         },
         iconPath(): string {
-            if (this.isUrl) {
-                return mdiMusicCircleOutline;
+            if (FileHandler.isAudioFileName(this.source)) {
+                return mdiMusicBox;
+            } else if (FileHandler.isVideoFileName(this.source)) {
+                return mdiVideoBox;
+            } else if (FileHandler.isYouTubeUrl(this.source)) {
+                return mdiYoutube;
+            } else if (FileHandler.isPdfFileName(this.source)) {
+                return mdiFilePdfBox;
             }
 
-            return mdiMusicNote;
+            return mdiHelpBox;
         },
         isUrl() {
             return FileHandler.isValidHttpUrl(this.mediaSource);

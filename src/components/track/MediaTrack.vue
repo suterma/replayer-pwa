@@ -1164,7 +1164,6 @@ const {
      * @remarks A selected cue's data is used for looping on a cue's boundaries
      */
     selectedCue,
-    mediaUrls,
     activeTrackId,
 } = storeToRefs(app);
 

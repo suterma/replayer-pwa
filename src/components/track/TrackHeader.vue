@@ -42,6 +42,7 @@
                         <MediaSourceIndicator
                             :source="track?.Url"
                             :unavailable="!isTrackMediaAvailable"
+                            showSize
                         >
                         </MediaSourceIndicator>
                     </template>

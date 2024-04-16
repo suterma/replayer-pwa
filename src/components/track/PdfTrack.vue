@@ -40,7 +40,7 @@
                             >
                                 <template #caption>
                                     <MediaSourceIndicator
-                                        :source="track?.Url"
+                                        :source="track.Url"
                                         :unavailable="!mediaUrl"
                                     >
                                     </MediaSourceIndicator>
