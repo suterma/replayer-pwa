@@ -37,7 +37,10 @@
 
             <!-- The edit part -->
             <template v-if="trackViewMode === TrackViewMode.Edit">
-                <CoveredPanel ref="mediaDropZonePanel">
+                <CoveredPanel
+                    ref="mediaDropZonePanel"
+                    :iconPath="mdiSwapVertical"
+                >
                     <template #caption>
                         <MediaSourceIndicator
                             :source="track?.Url"
@@ -254,7 +257,7 @@ import {
     watchEffect,
 } from 'vue';
 import { TrackApi } from '@/code/api/TrackApi';
-import { mdiShareVariant } from '@mdi/js';
+import { mdiShareVariant, mdiSwapVertical } from '@mdi/js';
 import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';

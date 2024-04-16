@@ -12,13 +12,9 @@
             class="button is-indicator"
             :class="{ 'has-text-warning': unavailable }"
         >
-            <BaseIcon :path="iconPath" />
+            <BaseIcon :path="typeIconPath" />
+            <BaseIcon :path="sourceIconPath" />
         </label>
-        <span
-            class="is-indicator is-hidden-mobile"
-            :class="{ 'has-text-warning': unavailable }"
-            >{{ typeText }}:&nbsp;
-        </span>
         <span
             class="has-cropped-text is-indicator"
             :class="{ 'has-text-warning': unavailable }"
@@ -60,18 +56,19 @@
     </p>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { computed } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import FileHandler from '@/store/filehandler';
 import {
-    mdiMusicCircleOutline,
-    mdiMusicNote,
     mdiFilePdfBox,
     mdiVideoBox,
     mdiYoutube,
     mdiMusicBox,
     mdiHelpBox,
+    mdiWeb,
+    mdiFolderFileOutline,
+    mdiFileOutline,
 } from '@mdi/js';
 import { MediaUrl } from '@/store/types';
 
@@ -79,92 +76,79 @@ import { MediaUrl } from '@/store/types';
  * @remarks Includes a slot at the end of the indicative text, for an adornment icon
  * of size 40px
  */
-export default defineComponent({
-    name: 'MediaSourceIndicator',
-    components: { BaseIcon },
-    props: {
-        /** The source of the media. A path to a file or an URL
-         * @remarks Alternatively, the mediaUrl property may be used
-         */
-        source: {
-            type: String,
-            default: '',
-            required: false,
-        },
-
-        /** The media URL
-         * @remarks Alternatively, the source property may be used
-         */
-        mediaUrl: {
-            type: MediaUrl,
-            default: null,
-            required: false,
-        },
-        showSize: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
-        showType: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
-        /** Whether the media is unavailable */
-        unavailable: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
+const props = defineProps({
+    /** The source of the media. A path to a file or an URL
+     * @remarks Alternatively, the mediaUrl property may be used
+     */
+    source: {
+        type: String,
+        default: '',
+        required: false,
     },
-    data() {
-        return {
-            /** Icons from @mdi/js */
-            mdiMusicCircleOutline: mdiMusicCircleOutline,
-            mdiMusicNote: mdiMusicNote,
-            mdiVideoBox: mdiVideoBox,
-            mdiFilePdfBox: mdiFilePdfBox,
-            mdiYoutube: mdiYoutube,
-            mdiMusicBox: mdiMusicBox,
-            mdiHelpBox: mdiHelpBox,
-        };
-    },
-    computed: {
-        typeText(): string {
-            if (this.isUrl) {
-                return 'URL';
-            }
 
-            return 'File';
-        },
-        iconPath(): string {
-            if (FileHandler.isAudioFileName(this.source)) {
-                return mdiMusicBox;
-            } else if (FileHandler.isVideoFileName(this.source)) {
-                return mdiVideoBox;
-            } else if (FileHandler.isYouTubeUrl(this.source)) {
-                return mdiYoutube;
-            } else if (FileHandler.isPdfFileName(this.source)) {
-                return mdiFilePdfBox;
-            }
-
-            return mdiHelpBox;
-        },
-        isUrl() {
-            return FileHandler.isValidHttpUrl(this.mediaSource);
-        },
-        /** Arbitration of the source provided */
-        mediaSource(): string {
-            if (this.source) {
-                return this.source;
-            } else {
-                return this.mediaUrl?.source;
-            }
-        },
-        /** Get the content size in MB, rounded to one decimal place */
-        mediaUrlSizeInMegaByte(): number | null {
-            return FileHandler.AsMegabytes(this.mediaUrl?.size);
-        },
+    /** The media URL
+     * @remarks Alternatively, the source property may be used
+     */
+    mediaUrl: {
+        type: MediaUrl,
+        default: null,
+        required: false,
     },
+    showSize: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
+    showType: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
+    /** Whether the media is unavailable */
+    unavailable: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
+});
+
+const isUrl = computed(() => {
+    return FileHandler.isValidHttpUrl(mediaSource.value);
+});
+
+const typeIconPath = computed(() => {
+    if (FileHandler.isAudioFileName(props.source)) {
+        return mdiMusicBox;
+    } else if (FileHandler.isVideoFileName(props.source)) {
+        return mdiVideoBox;
+    } else if (FileHandler.isYouTubeUrl(props.source)) {
+        return mdiYoutube;
+    } else if (FileHandler.isPdfFileName(props.source)) {
+        return mdiFilePdfBox;
+    }
+
+    return mdiHelpBox;
+});
+
+const sourceIconPath = computed(() => {
+    if (isUrl.value) {
+        return mdiWeb;
+    } else {
+        return mdiFileOutline;
+    }
+});
+
+/** Arbitration of the source provided */
+const mediaSource = computed(() => {
+    if (props.source) {
+        return props.source;
+    } else {
+        return props.mediaUrl?.source;
+    }
+});
+
+/** Get the content size in MB, rounded to one decimal place */
+const mediaUrlSizeInMegaByte = computed(() => {
+    return FileHandler.AsMegabytes(props.mediaUrl?.size);
 });
 </script>

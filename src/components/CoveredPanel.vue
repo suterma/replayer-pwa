@@ -9,6 +9,7 @@
     >
         <CollapsibleButton
             v-show="isCovered"
+            :icon-path="iconPath"
             class="is-nav"
             :model-value="isRevelationRequested"
             collapsed-text="Click to reveal"
@@ -47,6 +48,7 @@
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import { type PropType, computed, ref, nextTick } from 'vue';
 import DismissiblePanel from '@/components/DismissiblePanel.vue';
+import { mdiPlus } from '@mdi/js';
 
 /** Whether to show this panel as revealed is requested */
 const isRevelationRequested = ref(false);
@@ -88,6 +90,12 @@ const props = defineProps({
     revealFor: {
         type: Array as PropType<Array<unknown> | undefined>,
         default: undefined,
+    },
+
+    /** The icon path, if any. Default is mdiPlus */
+    iconPath: {
+        type: String,
+        default: mdiPlus,
     },
 
     /** The name of the transition to use for revealing

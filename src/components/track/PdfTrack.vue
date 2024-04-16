@@ -21,6 +21,27 @@
                     >
                         <!-- Expander -->
                         <div class="level-item is-narrow">
+                            <!-- Offer the full screen-->
+                            <template v-if="!isFullscreen">
+                                <FullscreenToggler
+                                    v-if="hasNative"
+                                    :model-value="isFullscreen"
+                                    title="Toggle full-screen mode"
+                                    @click="toggle"
+                                ></FullscreenToggler>
+                                <CollapsibleButton
+                                    v-else
+                                    :model-value="isFullscreen"
+                                    title="Toggle full-page mode"
+                                    collapsed-chevron-direction="up"
+                                    @click="toggle"
+                                ></CollapsibleButton>
+                            </template>
+                        </div>
+                        <div
+                            class="level-item is-narrow"
+                            v-if="trackViewMode === TrackViewMode.Edit"
+                        >
                             <CollapsibleButton
                                 class="is-nav"
                                 :model-value="isExpanded"
@@ -36,6 +57,7 @@
                         <template v-if="trackViewMode === TrackViewMode.Edit">
                             <CoveredPanel
                                 ref="mediaDropZonePanel"
+                                :icon-path="mdiSwapVertical"
                                 class="level-item"
                             >
                                 <template #caption>
@@ -96,24 +118,7 @@
                     </div>
                     <!-- Right side -->
                     <div class="level-right is-justify-content-flex-end">
-                        <div class="level-item">
-                            <!-- Offer the full screen-->
-                            <template v-if="!isFullscreen">
-                                <FullscreenToggler
-                                    v-if="hasNative"
-                                    :model-value="isFullscreen"
-                                    title="Toggle full-screen mode"
-                                    @click="toggle"
-                                ></FullscreenToggler>
-                                <CollapsibleButton
-                                    v-else
-                                    :model-value="isFullscreen"
-                                    title="Toggle full-page mode"
-                                    collapsed-chevron-direction="up"
-                                    @click="toggle"
-                                ></CollapsibleButton>
-                            </template>
-                        </div>
+                        <div class="level-item"></div>
                         <!-- Slot for additional level items -->
                     </div>
                 </div>
@@ -163,9 +168,9 @@ import MediaSourceIndicator from '@/components/indicators/MediaSourceIndicator.v
 import LabeledInput from '@/components/editor/LabeledInput.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import TrackTitleName from '@/components/track/TrackTitleName.vue';
-import { useWindowSize } from '@vueuse/core';
 import FullscreenPanel from '@/components/FullscreenPanel.vue';
 import FullscreenToggler from '@/components/buttons/FullscreenToggler.vue';
+import { mdiSwapVertical } from '@mdi/js';
 
 const props = defineProps({
     /** The track to display
