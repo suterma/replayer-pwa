@@ -596,6 +596,15 @@
                         >, easily display a tooltip. (Released under the MIT
                         License, by CreativeBulma)
                     </li>
+                    <li>
+                        <a
+                            href="https://github.com/CreativeBulma/bulma-tooltip"
+                            target="_blank"
+                            >PDFObject </a
+                        >, a lightweight JavaScript utility for dynamically
+                        embedding PDFs in HTML documents. (Released under an
+                        MIT-style License, by Philip Hutchison)
+                    </li>
                 </ul>
             </div>
         </CollapsiblePanel>

@@ -7,7 +7,7 @@
         }"
     >
         <FullscreenPanel v-slot="{ isFullscreen, hasNative, toggle }">
-            <div class="block" v-if="!isFullscreen">
+            <div v-if="!isFullscreen" class="block">
                 <!-- Each track is an item in a list -->
                 <div
                     class="track-header level is-mobile is-align-items-flex-start"
@@ -18,16 +18,19 @@
                     >
                         <div class="level-item is-narrow">
                             <!-- Offer the full screen-->
-                            <template v-if="!isFullscreen">
+                            <template
+                                v-if="!isFullscreen && hasNativePdfSupport"
+                            >
                                 <FullscreenToggler
-                                    v-once
                                     v-if="hasNative"
+                                    :disabled="!Boolean(mediaUrl)"
                                     :model-value="isFullscreen"
                                     title="Toggle full-screen mode"
                                     @click="toggle"
                                 ></FullscreenToggler>
                                 <CollapsibleButton
                                     v-else
+                                    :disabled="!Boolean(mediaUrl)"
                                     :model-value="isFullscreen"
                                     title="Toggle full-page mode"
                                     collapsed-chevron-direction="up"
@@ -36,25 +39,50 @@
                             </template>
 
                             <!-- Title --><!-- The title is the only header element that should shrink (break on words) if necessary -->
-                            <div
+                            <template
                                 v-if="trackViewMode !== TrackViewMode.Edit"
-                                class="is-flex-shrink-1 ml-3"
-                                :class="{
-                                    'is-clickable': Boolean(mediaUrl),
-                                    'has-cursor-not-allowed':
-                                        !Boolean(mediaUrl),
-                                }"
-                                @click="isExpanded = !isExpanded"
                             >
-                                <p class="title is-4" :title="track.Url">
-                                    <BaseIcon
-                                        class="mr-2"
-                                        :path="mdiFilePdfBox"
-                                    />
-                                    <TrackTitleName :name="track.Name">
-                                    </TrackTitleName>
-                                </p>
-                            </div>
+                                <!-- Expansible with native PDF support -->
+                                <div
+                                    v-if="hasNativePdfSupport"
+                                    class="is-flex-shrink-1 ml-3"
+                                    :class="{
+                                        'is-clickable': Boolean(mediaUrl),
+                                        'has-cursor-not-allowed':
+                                            !Boolean(mediaUrl),
+                                    }"
+                                    @click="isExpanded = !isExpanded"
+                                >
+                                    <p class="title is-4" :title="track.Url">
+                                        <BaseIcon
+                                            class="mr-2"
+                                            :path="mdiFilePdfBox"
+                                        />
+                                        <TrackTitleName :name="track.Name">
+                                        </TrackTitleName>
+                                    </p>
+                                </div>
+                                <!-- Just as link without native PDF support -->
+                                <div
+                                    v-else
+                                    class="is-flex-shrink-1 ml-3"
+                                    :class="{
+                                        'is-clickable': Boolean(mediaUrl),
+                                        'has-cursor-not-allowed':
+                                            !Boolean(mediaUrl),
+                                    }"
+                                >
+                                    <p :title="track.Url">
+                                        <BaseIcon
+                                            class="mr-2"
+                                            :path="mdiFilePdfBox"
+                                        />
+                                        <a :href="mediaUrl" target="_blank">
+                                            {{ track.Name }}
+                                        </a>
+                                    </p>
+                                </div>
+                            </template>
                         </div>
 
                         <!-- Edit -->
@@ -168,6 +196,7 @@ import FullscreenPanel from '@/components/FullscreenPanel.vue';
 import FullscreenToggler from '@/components/buttons/FullscreenToggler.vue';
 import { mdiSwapVertical, mdiFilePdfBox } from '@mdi/js';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
+import PDFObject from 'pdfobject';
 
 const props = defineProps({
     /** The track to display
@@ -190,6 +219,14 @@ const app = useAppStore();
 const mediaUrl = computed(() => {
     return app.getMediaUrlByTrack(props.track);
 });
+
+/** Whether this browser instance has native embedded PDF support
+ * @remarks This is only updated once by the pdfobject library on app start.
+ * @devdoc NOTE: The PDFObject library is only used for
+ * support detection, not for PDF display, to keep the
+ * Replayer implementation more concise.
+ */
+const hasNativePdfSupport = ref(PDFObject.supportsPDFs as Boolean);
 
 // --- drop zone handling ---
 
