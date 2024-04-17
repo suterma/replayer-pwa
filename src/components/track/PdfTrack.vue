@@ -152,10 +152,18 @@
                     </div>
                 </div>
             </div>
-            <div class="block">
-                <Transition name="item-expand">
+            <Transition name="item-expand">
+                <div
+                    v-if="
+                        (isExpanded &&
+                            // never expand on non-edit pages without native support
+                            (trackViewMode == TrackViewMode.Edit ||
+                                hasNativePdfSupport)) ||
+                        isFullscreen
+                    "
+                    class="block"
+                >
                     <object
-                        v-if="isExpanded || isFullscreen"
                         :data="mediaUrl"
                         type="application/pdf"
                         width="100%"
@@ -165,15 +173,17 @@
                             width: '100%',
                         }"
                     >
-                        <!-- Alternatively, just present a link -->
+                        <!-- A fallback just present a link -->
                         <p>
                             <a :href="mediaUrl" target="_blank">{{
                                 track.Url
                             }}</a>
                         </p>
                     </object>
-                </Transition>
-            </div>
+                </div>
+            </Transition>
+            <!-- Spacer -->
+            <div class="block"></div>
         </FullscreenPanel>
     </div>
 </template>
