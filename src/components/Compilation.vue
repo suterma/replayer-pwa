@@ -9,6 +9,7 @@
         />
 
         <CompilationHeader
+            id="compilation-header"
             :compilation="compilation"
             :is-editable="trackViewMode === TrackViewMode.Edit"
         />

@@ -128,13 +128,13 @@
                                 }"
                             />
                         </ToggleButton>
-
                         <PlaybackIndicator
                             :is-ready="!isAllPlaying && canAllPlay"
                             :is-track-playing="isAllPlaying"
                             :is-unloaded="!canAllPlay"
                             :is-unavailable="!isAllMediaAvailable"
                             data-cy="playback-indicator-all"
+                            @click="updateTracksCss()"
                         />
                     </div>
                 </div>
@@ -151,8 +151,8 @@ import { useMultitrackStore } from '@/store/multitrack';
 import { Multitrack } from '@/store/multitrack/Multitrack';
 import { storeToRefs } from 'pinia';
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
-import { provide, readonly, computed } from 'vue';
-import TimeDisplay from '@/components/TimeDisplay.vue';
+import { provide, readonly, computed, ref } from 'vue';
+import { useElementSize } from '@vueuse/core';
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import {
@@ -161,7 +161,7 @@ import {
     mdiCircle,
 } from '@mdi/js';
 import VueScrollTo from 'vue-scrollto';
-import { useStyleTag } from '@vueuse/core';
+import { useStyleTag, refDebounced } from '@vueuse/core';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import SoloButton from '../buttons/SoloButton.vue';
 import MuteButton from '../buttons/MuteButton.vue';
@@ -187,7 +187,7 @@ const {
     isAllMuted,
     isAllSoloed,
     isAllPlaying,
-    isAllPaused,
+    /*isAllPaused,*/
     isAllMediaAvailable,
     isAnyFading,
     allTrackDuration,
@@ -196,33 +196,33 @@ const {
 
 provide(isPlayingInjectionKey, readonly(isAllPlaying));
 
-// --- vertical display ---
+// --- vertical with adapted bottom spacing ---
 
-const {
-    load,
-    unload,
-    /** Whether to show the track in a vertical orientation */
-    isLoaded: showVertical,
-} = useStyleTag(
-    `
-.tracks {
-    /* background-color: darkslategray; */
-    max-width: calc(100vh - 200px);
-    min-width: calc(100vh - 200px);
-    transform: rotate(-90deg) translate(calc(-100vh + 200px), 0);
-    transform-origin: top left;
-    overflow-y: auto;
-}
+const mediaPlayerPanel = document.getElementById('media-player-panel');
+const compilationHeader = document.getElementById('compilation-header');
+const { height: mediaPlayerPanelHeight } = useElementSize(mediaPlayerPanel);
+const { height: compilationHeaderHeight } = useElementSize(compilationHeader);
 
-/** Rotate buttons back to their upright position
- * @remarks This includes the volume knob (which is technically a button)
+/** A computed compensation height, using a fixed value as a fallback.
+ * @devdoc Some devices, notably older iOS devices can not get the panel
+ * height (equals zero), thus a useful default is assumed instead.
  */
-.tracks .track .button {
-    transform: rotate(+90deg);
-    width: 2.5em;
-}
-`,
-    { /*Do not load the style initially*/ immediate: false },
+const mediaPlayerPanelComputedHeight = computed(() => {
+    return mediaPlayerPanelHeight.value && compilationHeaderHeight.value
+        ? mediaPlayerPanelHeight.value +
+              compilationHeaderHeight.value +
+              80 /* additional fixed spacing to compensate for various 
+              media width-related margins and paddings */
+        : 205 /*empirically determined useful max height*/;
+});
+
+/** The body height compensation for the fixed navbar.
+ * @remark Debounced to prevent excess updates
+ * @devdoc Debouncing also solves a update loop error
+ */
+const navbarCompensationHeight = refDebounced(
+    mediaPlayerPanelComputedHeight,
+    300 /*replayer-transition-duration*/,
 );
 
 function toggleVertical(event: Event): void {
@@ -242,6 +242,42 @@ function toggleVertical(event: Event): void {
         });
     }
 }
+
+function updateTracksCss() {
+    css.value = tracksCss.value;
+}
+
+// --- vertical display ---
+
+const tracksCss = computed(() => {
+    return `
+        .tracks {
+            /* background-color: darkslategray; */
+            max-width: calc(100vh - ${navbarCompensationHeight.value}px);
+            min-width: calc(100vh - ${navbarCompensationHeight.value}px);
+            transform: rotate(-90deg) translate(calc(-100vh + ${navbarCompensationHeight.value}px), 0);
+            transform-origin: top left;
+            /*overflow-y: auto;*/
+        }
+
+        /** Rotate buttons back to their upright position
+         * @remarks This includes the volume knob (which is technically a button)
+         */
+        .tracks .track .button {
+            transform: rotate(+90deg);
+            width: 2.5em;
+        }`;
+});
+
+const {
+    load,
+    unload,
+    css,
+    /** Whether to show the track in a vertical orientation */
+    isLoaded: showVertical,
+} = useStyleTag(tracksCss, {
+    /*Do not load the style initially*/ immediate: false,
+});
 
 // --- spreading info ---
 
