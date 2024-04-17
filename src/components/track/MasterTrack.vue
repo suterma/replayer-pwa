@@ -4,13 +4,11 @@
             <!-- Each track is an item in a list and contains all the cues --><!-- Track header for editing, including artist info, expansion-toggler and adaptive spacing --><!-- NOTE: The @click handler on the header component only handles clicks on otherwise non-interactive elements --><!-- Header level with wrap for items in the left part.
          Using flex-start on the level, to cause the left and right parts to both 
          begin at the same, upper vertical position -->
-            <div class="track-header level is-mobile is-align-items-flex-start">
+            <div class="track-header level">
                 <!-- Left side -->
-                <div
-                    class="level-left level-wrap is-justify-content-flex-start"
-                >
+                <div class="level-left level-wrap">
                     <!-- Slot for prepending level items -->
-                    <div class="level-item is-narrow">
+                    <div class="level-item is-narrow is-justify-content-left">
                         <PlayPauseButton
                             :disabled="!canAllPlay"
                             :class="{
@@ -67,13 +65,7 @@
                 </div>
                 <!-- Right side -->
                 <div class="level-right">
-                    <div class="level-item">
-                        <button class="button is-nav is-indicator">
-                            <TimeDisplay
-                                :model-value="currentTime"
-                                :sub-second-digits="1"
-                            ></TimeDisplay>
-                        </button>
+                    <div class="level-item is-justify-content-right">
                         <!-- Updatedable time spreading display -->
                         <button
                             class="button is-nav"
