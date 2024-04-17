@@ -6,7 +6,13 @@
             'is-editable': trackViewMode == TrackViewMode.Edit,
         }"
     >
-        <FullscreenPanel v-slot="{ isFullscreen, hasNative, toggle }">
+        <FullscreenPanel
+            v-slot="{
+                isFullscreen,
+                hasNative: hasNativeFullscreenSupport,
+                toggle,
+            }"
+        >
             <div v-if="!isFullscreen" class="block">
                 <!-- Each track is an item in a list -->
                 <div
@@ -22,7 +28,7 @@
                                 v-if="!isFullscreen && hasNativePdfSupport"
                             >
                                 <FullscreenToggler
-                                    v-if="hasNative"
+                                    v-if="hasNativeFullscreenSupport"
                                     :disabled="!Boolean(mediaUrl)"
                                     :model-value="isFullscreen"
                                     title="Toggle full-screen mode"
@@ -55,6 +61,7 @@
                                 >
                                     <p class="title is-4" :title="track.Url">
                                         <BaseIcon
+                                            v-once
                                             class="mr-2"
                                             :path="mdiFilePdfBox"
                                         />
@@ -74,6 +81,7 @@
                                 >
                                     <p :title="track.Url">
                                         <BaseIcon
+                                            v-once
                                             class="mr-2"
                                             :path="mdiFilePdfBox"
                                         />
