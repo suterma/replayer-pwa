@@ -3,7 +3,7 @@
         class="track is-together-print is-inactive-track is-pdf block"
         data-cy="track-pdf"
         :class="{
-            'is-editable': trackViewMode == TrackViewMode.Edit,
+            'is-editable': isTrackEditable,
         }"
     >
         <FullscreenPanel
@@ -45,9 +45,7 @@
                             </template>
 
                             <!-- Title --><!-- The title is the only header element that should shrink (break on words) if necessary -->
-                            <template
-                                v-if="trackViewMode !== TrackViewMode.Edit"
-                            >
+                            <template v-if="isTrackEditable">
                                 <!-- Expansible with native PDF support -->
                                 <div
                                     v-if="hasNativePdfSupport"
@@ -94,7 +92,7 @@
                         </div>
 
                         <!-- Edit -->
-                        <template v-if="trackViewMode === TrackViewMode.Edit">
+                        <template v-if="isTrackEditable">
                             <div class="level-item is-narrow">
                                 <CollapsibleButton
                                     class="is-nav"
@@ -165,8 +163,7 @@
                     v-if="
                         (isExpanded &&
                             // never expand on non-edit pages without native support
-                            (trackViewMode == TrackViewMode.Edit ||
-                                hasNativePdfSupport)) ||
+                            (isTrackEditable || hasNativePdfSupport)) ||
                         isFullscreen
                     "
                     class="block"
@@ -201,8 +198,6 @@
 import { type PropType, computed, type Ref, ref, inject } from 'vue';
 import { useAppStore } from '@/store/app';
 import type { ITrack } from '@/store/ITrack';
-import { trackViewModeInjectionKey } from '@/components/track/TrackInjectionKeys';
-import { TrackViewMode } from '@/store/TrackViewMode';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
@@ -225,7 +220,14 @@ const props = defineProps({
     },
 });
 
-const trackViewMode = inject(trackViewModeInjectionKey);
+// --- track view mode ---
+
+import { trackViewModeIsEditableInjectionKey } from '@/components/track/TrackInjectionKeys';
+
+/** Whether this component is viewed for the "Edit" mode.
+ * @devdoc Allows to reuse this component for more than one view mode.
+ */
+const isTrackEditable = inject(trackViewModeIsEditableInjectionKey, ref(true));
 
 /** Whether the pdf is currently expanded */
 const isExpanded = ref(false);

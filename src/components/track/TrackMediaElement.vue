@@ -2,7 +2,7 @@
     <div
         v-if="
             mediaElement &&
-            trackViewMode === TrackViewMode.Edit &&
+            isTrackEditable &&
             showWaveformsOnEdit &&
             !FileHandler.isValidHttpUrl(mediaUrl)
         "
@@ -104,8 +104,7 @@
          The solution for this is using a v-if instead of disableing. -->
     <div
         v-if="
-            ((trackViewMode === TrackViewMode.Edit && showLevelMeterForEdit) ||
-                trackViewMode === TrackViewMode.Mix) &&
+            ((isTrackEditable && showLevelMeterForEdit) || isTrackMixable) &&
             audioSource &&
             audioContext &&
             isContextRunning &&
@@ -116,7 +115,7 @@
     >
         <!-- Show possibly large meters only on edit -->
         <AudioLevelMeter
-            v-if="levelMeterSizeIsLarge && trackViewMode === TrackViewMode.Edit"
+            v-if="levelMeterSizeIsLarge && isTrackEditable"
             ref="audioLevelMeter"
             :key="trackId"
             :vertical="false"
@@ -186,7 +185,6 @@ import { useDocumentVisibility } from '@vueuse/core';
 import { useElementVisibility } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import type { ICue } from '@/store/ICue';
-import { trackViewModeInjectionKey } from '@/components/track/TrackInjectionKeys';
 import { TrackViewMode } from '@/store/TrackViewMode';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
@@ -283,7 +281,33 @@ console.debug(
     `TrackMediaElement:setup:using mediaUrl '${props.mediaUrl}' for trackId '${props.trackId}' at start '${props.start}'`,
 );
 
-const trackViewMode = inject(trackViewModeInjectionKey);
+// --- track view mode ---
+
+import {
+    trackViewModeInjectionKey,
+    trackViewModeIsEditableInjectionKey,
+    trackViewModeIsPlayableInjectionKey,
+    trackViewModeIsMixableInjectionKey,
+} from '@/components/track/TrackInjectionKeys';
+
+const trackViewMode = inject(
+    trackViewModeInjectionKey,
+    ref(TrackViewMode.Edit),
+);
+
+/** Whether this component is viewed for the "Edit" mode, and thus shows editable inputs for the contained data
+ * @devdoc Allows to reuse this component for more than one view mode.
+ */
+const isTrackEditable = inject(trackViewModeIsEditableInjectionKey, ref(true));
+
+/** Whether this component is viewed for the "Play" mode, and thus shows non-collapsible playback buttons
+ * @devdoc Allows to reuse this component for more than one view mode.
+ */
+const isTrackPlayable = inject(trackViewModeIsPlayableInjectionKey, ref(false));
+/** Whether this component is viewed for the "Mix" mode, and thus shows mixing controls
+ * @devdoc Allows to reuse this component for more than one view mode.
+ */
+const isTrackMixable = inject(trackViewModeIsMixableInjectionKey, ref(false));
 
 // --- visibility ---
 
@@ -525,17 +549,21 @@ watch(
         () => props.showLevelMeterForEdit,
         () => props.mediaUrl,
         () => mediaElement.value,
-        () => trackViewMode,
+        () => isTrackEditable.value,
+        () => isTrackMixable.value,
         () => isPaused.value /* only used as trigger */,
         () => isContextRunning.value /* only used as trigger */,
     ],
-    ([showLevelMeterForEdit, mediaUrl, newMediaElement, trackViewMode]) => {
+    ([
+        showLevelMeterForEdit,
+        mediaUrl,
+        newMediaElement,
+        isTrackEditable,
+        isTrackMixable,
+    ]) => {
         if (showLevelMeterForEdit) {
             // Metering is only used in edit or mix mode
-            if (
-                trackViewMode?.value === TrackViewMode.Edit ||
-                trackViewMode?.value === TrackViewMode.Mix
-            ) {
+            if (isTrackEditable || isTrackMixable) {
                 if (audioContext.value && isContextRunning.value) {
                     // Create the level meter and associated routing only when requested, and only for local files
                     if (

@@ -41,9 +41,27 @@ export const currentPositionDisplayInjectionKey = Symbol() as InjectionKey<
 >;
 
 /** A symbol for providing and injecting the track view mode
- * @remarks This is provided readonly, and not updates are supported.
- * @devdoc The track view mode is currently determined and provided on the router level.
+ * @devdoc The track view mode is currently determined and provided based
+ * solely on the router level.
  */
 export const trackViewModeInjectionKey = Symbol() as InjectionKey<
     Ref<TrackViewMode>
+>;
+
+/** A symbol for providing and injecting whether the track view mode is "Edit"
+ */
+export const trackViewModeIsEditableInjectionKey = Symbol() as InjectionKey<
+    Ref<boolean>
+>;
+
+/** A symbol for providing and injecting whether the track view mode is "Play"
+ */
+export const trackViewModeIsPlayableInjectionKey = Symbol() as InjectionKey<
+    Ref<boolean>
+>;
+
+/** A symbol for providing and injecting whether the track view mode is "Mix"
+ */
+export const trackViewModeIsMixableInjectionKey = Symbol() as InjectionKey<
+    Ref<boolean>
 >;

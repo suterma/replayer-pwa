@@ -21,8 +21,6 @@
 import { type PropType, computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
-import CompilationHandler from '@/store/compilation-handler';
-import FileHandler from '@/store/filehandler';
 import CloseButton from '../buttons/CloseButton.vue';
 import type { ITrack } from '@/store/ITrack';
 

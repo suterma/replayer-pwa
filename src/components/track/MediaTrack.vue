@@ -5,7 +5,7 @@
         :class="{
             'is-active-track': isActiveTrack,
             'is-inactive-track': !isActiveTrack,
-            'is-editable': isEditable,
+            'is-editable': isTrackEditable,
             'is-audio': isAudioTrack,
             'is-video': isVideoTrack,
             'is-youtube-video': isYoutubeVideoTrack,
@@ -43,12 +43,12 @@
                 :is-last="isLast"
             >
                 <template
-                    v-if="isMixable || isPlayable || isEditable"
+                    v-if="isTrackMixable || isTrackPlayable || isTrackEditable"
                     #left-start
                 >
                     <div class="level-item is-narrow">
                         <!-- Routing controls only when mixable -->
-                        <template v-if="isMixable">
+                        <template v-if="isTrackMixable">
                             <SelectButton
                                 :disabled="!canPlay"
                                 :is-selected="isActiveTrack"
@@ -91,7 +91,7 @@
                         <!-- Title -->
                         <!-- The title is the only header element that should shrink (break on words) if necessary -->
                         <div
-                            v-if="!isEditable"
+                            v-if="!isTrackEditable"
                             class="is-flex-shrink-1 ml-3"
                             :class="{
                                 'is-clickable': isTrackLoaded,
@@ -114,7 +114,7 @@
 
                 <template #left-additional>
                     <MeterDisplay
-                        v-if="isPlayable"
+                        v-if="isTrackPlayable"
                         class="is-size-7 level-item is-hidden-mobile is-narrow"
                         :meter="track.Meter"
                     ></MeterDisplay>
@@ -140,7 +140,7 @@
                     the numeric value is truncated to one decimal digit, as displayed, avoiding
                     unnecessary update for actually non-distinctly displayed values. -->
                     <TimeDisplay
-                        v-if="isPlayable"
+                        v-if="isTrackPlayable"
                         class="level-item is-narrow is-hidden-mobile is-size-7"
                         :model-value="
                             remainingTime != null
@@ -170,7 +170,7 @@
                     <div class="level-item is-narrow mr-0 is-hidden-mobile">
                         <!-- NOTE: In edit mode, the volume button is displayed as part of the transport area, not in the header -->
                         <VolumeKnob
-                            v-if="!isEditable"
+                            v-if="!isTrackEditable"
                             :disabled="!isTrackLoaded"
                             :volume="track.Volume"
                             @update:volume="updateVolume"
@@ -181,7 +181,7 @@
 
         <!-- The buttons field (for a single track in play mode) -->
         <div
-            v-if="isPlayable && isOnlyMediaTrack && hasCues"
+            v-if="isTrackPlayable && isOnlyMediaTrack && hasCues"
             :key="track.Id"
             class="block transition-in-place"
         >
@@ -201,13 +201,13 @@
         <!-- The meter and cue level editors and playback bar (in edit mode for an expanded track)
          -->
         <Transition name="item-expand">
-            <div v-if="isEditable && isExpanded" class="block">
+            <div v-if="isTrackEditable && isExpanded" class="block">
                 <!-- @devdoc: MeterLevelEditor does not use the provide/inject pattern, 
                     although it is used for the track's descendant components otherwise,
                     because I have experienced problems with the reactivity inside MeterLevelEditor.
                     A standard property/event approach is used here instead. -->
                 <MeterLevelEditor
-                    v-if="experimentalUseMeter && isEditable"
+                    v-if="experimentalUseMeter && isTrackEditable"
                     v-experiment="experimentalUseMeter"
                     :meter="track.Meter"
                     :use-measure-numbers="track.UseMeasureNumbers"
@@ -293,7 +293,7 @@
         <!-- Main container -->
         <Transition name="item-expand">
             <div
-                v-if="isEditable && isExpanded"
+                v-if="isTrackEditable && isExpanded"
                 class="block levels"
                 data-cy="cue-editors"
             >
@@ -315,7 +315,7 @@
                     -->
         <Transition name="item-expand">
             <nav
-                v-if="isEditable && isExpanded"
+                v-if="isTrackEditable && isExpanded"
                 class="block level is-editable is-unselectable"
             >
                 <!-- Left side -->
@@ -408,7 +408,7 @@
             element) is also depending on the track state as a performance optimizations
             -->
         <div v-if="mediaUrl" class="block">
-            <Teleport to="#media-player-panel" :disabled="isEditable">
+            <Teleport to="#media-player-panel" :disabled="isTrackEditable">
                 <!-- The player widget for a track may be full screen only for the active track -->
                 <FullscreenPanel
                     ref="fullscreenPanel"
@@ -422,16 +422,16 @@
                         <!-- NOTE: A v-show is used instead of a v-if to keep the media players permanently in the DOM. -->
                         <div
                             v-show="
-                                (isMixable && isActiveTrack) ||
-                                (isPlayable && isActiveTrack) ||
-                                (isEditable && isExpanded)
+                                (isTrackMixable && isActiveTrack) ||
+                                (isTrackPlayable && isActiveTrack) ||
+                                (isTrackEditable && isExpanded)
                             "
                             :key="track.Id"
                             :class="{
-                                section: isPlayable || isMixable,
+                                section: isTrackPlayable || isTrackMixable,
                                 'transition-in-place':
-                                    isPlayable ||
-                                    isMixable /* because in playback  or mix view, the players are replaced in place, not expanded */,
+                                    isTrackPlayable ||
+                                    isTrackMixable /* because in playback  or mix view, the players are replaced in place, not expanded */,
                                 'has-background-grey-dark': !isFullscreen,
                                 'is-fullscreen': isFullscreen,
                                 'is-single-media-track': isOnlyMediaTrack,
@@ -453,7 +453,7 @@
                             In full screen, this level is at the top, and not visually separated from the cues -->
 
                             <div
-                                v-if="isPlayable"
+                                v-if="isTrackPlayable"
                                 class="widget level has-breakpoint-desktop"
                                 :class="{
                                     'is-audio': isAudioTrack,
@@ -659,8 +659,8 @@
                                     v-if="
                                         (!isOnlyMediaTrack &&
                                             !isFullscreen &&
-                                            isPlayable) ||
-                                        (!isFullscreen && isMixable)
+                                            isTrackPlayable) ||
+                                        (!isFullscreen && isTrackMixable)
                                     "
                                 >
                                     <CueButtonsBar
@@ -680,7 +680,7 @@
                             <!-- Hide the waveform and Video for non-expanded track during edit, save screen real estate -->
                             <!-- //TODO make a proper distance, (using block?), but only if there is content to display -->
                             <div
-                                v-show="!isEditable || isExpanded"
+                                v-show="!isTrackEditable || isExpanded"
                                 class="block"
                             >
                                 <!-- //TODO currently the mediaUrl is not using the optimized
@@ -813,8 +813,6 @@ import { useTitle } from '@vueuse/core';
 import router, { Route } from '@/router';
 import MessageOverlay from '@/components/MessageOverlay.vue';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
-import { trackViewModeInjectionKey } from '@/components/track/TrackInjectionKeys';
-import { TrackViewMode } from '@/store/TrackViewMode';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -916,28 +914,27 @@ const props = defineProps({
     },
 });
 
-const trackViewMode = inject(trackViewModeInjectionKey);
+// --- track view mode ---
+
+import {
+    trackViewModeIsEditableInjectionKey,
+    trackViewModeIsPlayableInjectionKey,
+    trackViewModeIsMixableInjectionKey,
+} from '@/components/track/TrackInjectionKeys';
 
 /** Whether this component is viewed for the "Edit" mode, and thus shows editable inputs for the contained data
  * @devdoc Allows to reuse this component for more than one view mode.
  */
-const isEditable = computed(() => {
-    return trackViewMode?.value === TrackViewMode.Edit;
-});
-
-/** Whether this component is viewed for the "Mix" mode, and thus shows mixing controls
- * @devdoc Allows to reuse this component for more than one view mode.
- */
-const isMixable = computed(() => {
-    return trackViewMode?.value === TrackViewMode.Mix;
-});
+const isTrackEditable = inject(trackViewModeIsEditableInjectionKey, ref(true));
 
 /** Whether this component is viewed for the "Play" mode, and thus shows non-collapsible playback buttons
  * @devdoc Allows to reuse this component for more than one view mode.
  */
-const isPlayable = computed(() => {
-    return trackViewMode?.value === TrackViewMode.Play;
-});
+const isTrackPlayable = inject(trackViewModeIsPlayableInjectionKey, ref(false));
+/** Whether this component is viewed for the "Mix" mode, and thus shows mixing controls
+ * @devdoc Allows to reuse this component for more than one view mode.
+ */
+const isTrackMixable = inject(trackViewModeIsMixableInjectionKey, ref(false));
 
 // --- metering ---
 
@@ -1629,7 +1626,7 @@ watch(
  * In other modes, slide according to the track index
  */
 watch(
-    [activeTrackId, isEditable],
+    [activeTrackId, isTrackEditable],
     ([activeTrackId, newIsEditable], [previousTrackId]) => {
         // console.debug(
         //     `MediaTrack(${props.track.Name})::activeTrack:activeTrackId:`,

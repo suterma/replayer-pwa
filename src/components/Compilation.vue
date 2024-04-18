@@ -11,7 +11,7 @@
         <CompilationHeader
             id="compilation-header"
             :compilation="compilation"
-            :is-editable="trackViewMode === TrackViewMode.Edit"
+            :is-editable="isTrackEditable"
         />
 
         <div class="tracks">
@@ -58,7 +58,7 @@
         <!-- Multi-track-Controller -->
         <Teleport to="#media-player-panel">
             <div
-                v-if="trackViewMode === TrackViewMode.Mix"
+                v-if="isTrackMixable"
                 class="section has-background-grey-dark pb-0"
             >
                 <MasterTrack></MasterTrack>
@@ -76,6 +76,7 @@ import {
     inject,
     onMounted,
     onUnmounted,
+    ref,
 } from 'vue';
 import VueScrollTo from 'vue-scrollto';
 import MediaTrack from '@/components/track/MediaTrack.vue';
@@ -92,7 +93,6 @@ import { useSettingsStore } from '@/store/settings';
 import type { ICompilation } from '@/store/ICompilation';
 import { PlaybackMode } from '@/store/PlaybackMode';
 import type { ITrack } from '@/store/ITrack';
-import { trackViewModeInjectionKey } from '@/components/track/TrackInjectionKeys';
 import { TrackViewMode } from '@/store/TrackViewMode';
 
 /** Displays the contained set of tracks according to the required mode.
@@ -103,7 +103,19 @@ const props = defineProps({
     compilation: { type: Object as PropType<ICompilation>, required: true },
 });
 
-const trackViewMode = inject(trackViewModeInjectionKey);
+// --- track view mode ---
+
+import {
+    trackViewModeInjectionKey,
+    trackViewModeIsEditableInjectionKey,
+    trackViewModeIsMixableInjectionKey,
+} from '@/components/track/TrackInjectionKeys';
+const trackViewMode = inject(
+    trackViewModeInjectionKey,
+    ref(TrackViewMode.Edit),
+);
+const isTrackEditable = inject(trackViewModeIsEditableInjectionKey, ref(true));
+const isTrackMixable = inject(trackViewModeIsMixableInjectionKey, ref(false));
 
 /** The wake lock fill-in that can prevent screen timeout */
 const noSleep: NoSleep = new NoSleep();

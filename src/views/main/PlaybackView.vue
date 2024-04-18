@@ -12,9 +12,7 @@
         <!-- In playback/mix view, do not require the CTRL modifier -->
         <!-- In edit view, the CTRL modifier helps disambiguate
          between other uses of the shortcut keys-->
-        <CompilationKeyboardHandler
-            :require-ctrl-modifier="trackViewMode === TrackViewMode.Edit"
-        />
+        <CompilationKeyboardHandler :require-ctrl-modifier="isTrackEditable" />
 
         <!-- If available, show the compilation -->
         <Compilation v-if="hasCompilation" :compilation="compilation" />
@@ -29,7 +27,7 @@
 
         <!--During edit or when nothing yet loaded, offer the drop zone -->
         <div
-            v-if="trackViewMode === TrackViewMode.Edit || !hasCompilation"
+            v-if="isTrackEditable || !hasCompilation"
             class="section pt-6 pl-0 pr-0 block"
         >
             <!-- Offer the demo only when no compilation/track is shown -->
@@ -37,9 +35,7 @@
         </div>
 
         <!--During edit, with available media, offer the media list -->
-        <template
-            v-if="trackViewMode === TrackViewMode.Edit && hasAvailableMedia"
-        >
+        <template v-if="isTrackEditable && hasAvailableMedia">
             <div class="has-text-centered block">
                 <CollapsiblePanel>
                     <template #caption>
@@ -71,7 +67,7 @@
 <script setup lang="ts">
 /** A view for playing an existing compilation */
 
-import { inject } from 'vue';
+import { inject, ref } from 'vue';
 import Compilation from '@/components/Compilation.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import FooterLinks from '@/components/FooterLinks.vue';
@@ -81,10 +77,15 @@ import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
-import { trackViewModeInjectionKey } from '@/components/track/TrackInjectionKeys';
-import { TrackViewMode } from '@/store/TrackViewMode';
 
-const trackViewMode = inject(trackViewModeInjectionKey);
+// --- track view mode ---
+
+import { trackViewModeIsEditableInjectionKey } from '@/components/track/TrackInjectionKeys';
+
+/** Whether this component is viewed for the "Edit" mode, and thus shows editable inputs for the contained data
+ * @devdoc Allows to reuse this component for more than one view mode.
+ */
+const isTrackEditable = inject(trackViewModeIsEditableInjectionKey, ref(true));
 
 const app = useAppStore();
 const { compilation, hasCompilation, hasAvailableMedia } = storeToRefs(app);

@@ -11,7 +11,7 @@
             <!-- Expander -->
             <div
                 v-if="
-                    trackViewMode === TrackViewMode.Edit &&
+                    isTrackEditable &&
                     !(/*is single track*/ (isFirst && isLast))
                 "
                 class="level-item is-narrow"
@@ -36,7 +36,7 @@
             </div>
 
             <!-- The edit part -->
-            <template v-if="trackViewMode === TrackViewMode.Edit">
+            <template v-if="isTrackEditable">
                 <CoveredPanel
                     ref="mediaDropZonePanel"
                     :iconPath="mdiSwapVertical"
@@ -234,7 +234,7 @@
                 />
 
                 <TrackContextMenu
-                    v-if="trackViewMode === TrackViewMode.Edit"
+                    v-if="isTrackEditable"
                     :is-first-track="isFirst"
                     :is-last-track="isLast"
                     :track="track"
@@ -279,8 +279,6 @@ import {
 import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import type { ITrack } from '@/store/ITrack';
-import { trackViewModeInjectionKey } from '@/components/track/TrackInjectionKeys';
-import { TrackViewMode } from '@/store/TrackViewMode';
 
 const emit = defineEmits(['update:isExpanded']);
 
@@ -340,7 +338,15 @@ const props = defineProps({
     },
 });
 
-const trackViewMode = inject(trackViewModeInjectionKey);
+// --- track view mode ---
+
+import { trackViewModeIsEditableInjectionKey } from '@/components/track/TrackInjectionKeys';
+
+/** Whether this component is viewed for the "Edit" mode,
+ * and thus shows editable inputs for the contained data
+ * @devdoc Allows to reuse this component for more than one view mode.
+ */
+const isTrackEditable = inject(trackViewModeIsEditableInjectionKey, ref(true));
 
 const app = useAppStore();
 
