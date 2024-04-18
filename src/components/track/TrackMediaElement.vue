@@ -15,10 +15,11 @@
             :disabled="disabled || !(mediaElement || audioSource)"
             title="Waveform"
             transition-name="item-expand"
+            :icon-path="mdiChevronDown"
         >
             <template #caption
                 ><span class="has-opacity-half">
-                    <BaseIcon :path="mdiWaveform" /> </span
+                    <BaseIcon v-once :path="mdiWaveform" /> </span
             ></template>
             <TrackAudioPeaks
                 v-if="mediaElement"
@@ -179,14 +180,12 @@ import VideoTextTrackController from '@/components/track/VideoTextTrackControlle
 import FileHandler from '@/store/filehandler';
 import CoveredPanel from '@/components/CoveredPanel.vue';
 import TrackAudioPeaks from './TrackAudioPeaks.vue';
-import { useRoute } from 'vue-router';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { mdiWaveform } from '@mdi/js';
+import { mdiChevronDown, mdiWaveform } from '@mdi/js';
 import { useDocumentVisibility } from '@vueuse/core';
 import { useElementVisibility } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import type { ICue } from '@/store/ICue';
-import { Route } from '@/router';
 import { trackViewModeInjectionKey } from '@/components/track/TrackInjectionKeys';
 import { TrackViewMode } from '@/store/TrackViewMode';
 
