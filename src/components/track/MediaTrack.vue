@@ -39,8 +39,8 @@
                 :is-track-loaded="isTrackLoaded"
                 :is-track-media-available="Boolean(mediaUrl)"
                 :is-active="isActiveTrack"
-                :is-first="isFirst"
-                :is-last="isLast"
+                :isFirstTrack="isFirstTrack"
+                :isLastTrack="isLastTrack"
             >
                 <template
                     v-if="isTrackMixable || isTrackPlayable || isTrackEditable"
@@ -336,12 +336,12 @@
                             :hide-stop-button="true"
                             :hide-track-navigation="false"
                             :has-previous-track="
-                                !isFirst ||
+                                !isFirstTrack ||
                                 playbackMode === PlaybackMode.LoopCompilation ||
                                 playbackMode === PlaybackMode.ShuffleCompilation
                             "
                             :has-next-track="
-                                !isLast ||
+                                !isLastTrack ||
                                 playbackMode === PlaybackMode.LoopCompilation ||
                                 playbackMode === PlaybackMode.ShuffleCompilation
                             "
@@ -539,14 +539,14 @@
                                             :hide-stop-button="true"
                                             :hide-track-navigation="false"
                                             :has-previous-track="
-                                                !isFirst ||
+                                                !isFirstTrack ||
                                                 playbackMode ===
                                                     PlaybackMode.LoopCompilation ||
                                                 playbackMode ===
                                                     PlaybackMode.ShuffleCompilation
                                             "
                                             :has-next-track="
-                                                !isLast ||
+                                                !isLastTrack ||
                                                 playbackMode ===
                                                     PlaybackMode.LoopCompilation ||
                                                 playbackMode ===
@@ -834,18 +834,6 @@ const props = defineProps({
         required: true,
     },
 
-    /** Whether this track is the first track in the set of (possibly shuffled) media tracks */
-    isFirst: {
-        type: Boolean,
-        required: true,
-    },
-
-    /** Whether this track is the last track in the set of (possibly shuffled) media tracks */
-    isLast: {
-        type: Boolean,
-        required: true,
-    },
-
     /** Whether any track (including this one) in the compilation is currently soloed.
      * This is required to determine the muting of non-soloed tracks.
      */
@@ -882,6 +870,8 @@ const props = defineProps({
         default: true,
     },
 });
+
+const app = useAppStore();
 
 // --- track view mode ---
 
@@ -1041,6 +1031,19 @@ provide(currentPositionDisplayInjectionKey, readonly(currentPositionDisplay));
 
 // --- Track state ---
 
+const { mediaTracks } = storeToRefs(app);
+
+/** Whether this is the first track in the set of media tracks */
+const isFirstTrack = computed(
+    () => mediaTracks.value[0]?.Id === props.track.Id,
+);
+
+/** Whether this is the last track in the set of media tracks */
+const isLastTrack = computed(
+    () =>
+        mediaTracks.value[mediaTracks.value.length - 1]?.Id === props.track.Id,
+);
+
 const isAudioTrack = computed(() =>
     CompilationHandler.isAudioTrack(props.track),
 );
@@ -1118,8 +1121,6 @@ watchEffect(() => {
         mediaHandler.value.fader.isPreRollEnabled = props.isPreRollEnabled;
     }
 });
-
-const app = useAppStore();
 
 const {
     selectedCueId,

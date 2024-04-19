@@ -12,7 +12,7 @@
             <div
                 v-if="
                     isTrackEditable &&
-                    !(/*is single track*/ (isFirst && isLast))
+                    !(/*is single track*/ (isFirstTrack && isLastTrack))
                 "
                 class="level-item is-narrow"
             >
@@ -235,8 +235,8 @@
 
                 <TrackContextMenu
                     v-if="isTrackEditable"
-                    :is-first-track="isFirst"
-                    :is-last-track="isLast"
+                    :is-first-track="isFirstTrack"
+                    :is-last-track="isLastTrack"
                     :track="track"
                 ></TrackContextMenu>
             </div>
@@ -295,13 +295,13 @@ const props = defineProps({
         default: false,
     },
     /** Whether this track is the first track in the set of tracks */
-    isFirst: {
+    isFirstTrack: {
         type: Boolean,
         required: false,
         default: false,
     },
     /** Whether this track is the last track in the set of tracks */
-    isLast: {
+    isLastTrack: {
         type: Boolean,
         required: false,
         default: false,

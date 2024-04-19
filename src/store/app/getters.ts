@@ -70,7 +70,7 @@ export const getters = {
         );
     }),
 
-    /** Gets the set of all tracks, in their order */
+    /** Gets the set of all tracks, of any type, in their order */
     allTracks: computed(() => {
         return state.compilation.value?.Tracks;
     }),
