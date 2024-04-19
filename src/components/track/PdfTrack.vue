@@ -45,7 +45,7 @@
                             </template>
 
                             <!-- Title --><!-- The title is the only header element that should shrink (break on words) if necessary -->
-                            <template v-if="isTrackEditable">
+                            <template v-if="isTrackPlayable">
                                 <!-- Expansible with native PDF support -->
                                 <div
                                     v-if="hasNativePdfSupport"
@@ -222,12 +222,16 @@ const props = defineProps({
 
 // --- track view mode ---
 
-import { trackViewModeIsEditableInjectionKey } from '@/components/track/TrackInjectionKeys';
+import {
+    trackViewModeIsEditableInjectionKey,
+    trackViewModeIsPlayableInjectionKey,
+} from '@/components/track/TrackInjectionKeys';
 
 /** Whether this component is viewed for the "Edit" mode.
  * @devdoc Allows to reuse this component for more than one view mode.
  */
 const isTrackEditable = inject(trackViewModeIsEditableInjectionKey, ref(true));
+const isTrackPlayable = inject(trackViewModeIsPlayableInjectionKey, ref(false));
 
 /** Whether the pdf is currently expanded */
 const isExpanded = ref(false);
