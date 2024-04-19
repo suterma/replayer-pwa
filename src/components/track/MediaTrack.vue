@@ -34,7 +34,7 @@
             <!-- NOTE: The @click handler on the header component only handles clicks on otherwise non-interactive elements -->
             <TrackHeader
                 v-model:is-expanded="isExpanded"
-                :can-collapse="!isOnlyMediaTrack"
+                :can-collapse="!hasSingleMediaTrack"
                 :track="track"
                 :is-track-loaded="isTrackLoaded"
                 :is-track-media-available="Boolean(mediaUrl)"
@@ -121,36 +121,6 @@
                 </template>
 
                 <template #right-start>
-                    <!-- NOTE: As a component update performance optimization, 
-                    the numeric value is truncated to one decimal digit, as displayed, avoiding
-                    unnecessary update for actually non-distinctly displayed values. -->
-                    <TimeDisplay
-                        v-if="experimentalShowPositionInTrackHeader"
-                        v-experiment="experimentalShowPositionInTrackHeader"
-                        class="level-item is-narrow is-size-7"
-                        :model-value="Math.floor(currentPosition * 10) / 10"
-                        :sub-second-digits="1"
-                        title="Current time"
-                    ></TimeDisplay>
-
-                    <!-- NOTE: In edit mode, the time is displayed as part of the transport area, not in the header -->
-                    <!-- NOTE: In mix mode, the time display is not needed on individual tracks -->
-                    <!-- NOTE: In playback mode, the currently remaining time is shown, to indicate any ongoing playback action -->
-                    <!-- NOTE: As a component update performance optimization, 
-                    the numeric value is truncated to one decimal digit, as displayed, avoiding
-                    unnecessary update for actually non-distinctly displayed values. -->
-                    <TimeDisplay
-                        v-if="isTrackPlayable"
-                        class="level-item is-narrow is-hidden-mobile is-size-7"
-                        :model-value="
-                            remainingTime != null
-                                ? Math.ceil(remainingTime * 10) / 10
-                                : null
-                        "
-                        :sub-second-digits="1"
-                        title="Remaining time"
-                    ></TimeDisplay>
-
                     <!-- Placeholder for the audio level meter (used for teleporting from the player component) -->
                     <div class="level-item is-narrow mr-0">
                         <div
@@ -181,7 +151,7 @@
 
         <!-- The buttons field (for a single track in play mode) -->
         <div
-            v-if="isTrackPlayable && isOnlyMediaTrack && hasCues"
+            v-if="isTrackPlayable && hasSingleMediaTrack && hasCues"
             :key="track.Id"
             class="block transition-in-place"
         >
@@ -434,7 +404,7 @@
                                     isTrackMixable /* because in playback  or mix view, the players are replaced in place, not expanded */,
                                 'has-background-grey-dark': !isFullscreen,
                                 'is-fullscreen': isFullscreen,
-                                'is-single-media-track': isOnlyMediaTrack,
+                                'is-single-media-track': hasSingleMediaTrack,
                             }"
                             :disabled="!canPlay"
                         >
@@ -657,7 +627,7 @@
                                 </div>
                                 <div
                                     v-if="
-                                        (!isOnlyMediaTrack &&
+                                        (!hasSingleMediaTrack &&
                                             !isFullscreen &&
                                             isTrackPlayable) ||
                                         (!isFullscreen && isTrackMixable)
@@ -855,14 +825,6 @@ const props = defineProps({
     track: {
         type: Object as PropType<ITrack>,
         required: true,
-    },
-
-    /** Whether this is the only track in the compilation
-     * @remarks Is used to visually omit some unnecessary items for a compilation with just a single track
-     */
-    isOnlyMediaTrack: {
-        type: Boolean,
-        default: false,
     },
 
     /** Whether this track is the first track in the set of (possibly shuffled) media tracks */
@@ -1115,7 +1077,6 @@ const {
     addFadeInPreRoll,
     defaultPreRollDuration,
     showLevelMeterForEdit,
-    experimentalShowPositionInTrackHeader,
     showWaveformsOnEdit,
     showOverviewWaveformOnEdit,
     experimentalUseMeter,
@@ -1597,6 +1558,8 @@ const cues = computed(() => {
 });
 
 // ---  Track/cue selection ---
+
+const { hasSingleMediaTrack } = storeToRefs(app);
 
 /** Whether this track is the active track in the set of tracks */
 const isActiveTrack = computed(() => activeTrackId.value === props.track.Id);

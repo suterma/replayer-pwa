@@ -31,7 +31,7 @@ export const getters = {
     }),
 
     /** Whether any Media URL's are available */
-    hasAvailableMedia: computed(() => {
+    hasAnyAvailableMedia: computed(() => {
         return state.mediaUrls.value.size > 0;
     }),
 
@@ -40,11 +40,8 @@ export const getters = {
      */
     hasSingleMediaTrack: computed(() => {
         return (
-            state.compilation.value?.Tracks?.filter(
-                (track) =>
-                    CompilationHandler.isAudioTrack(track) ||
-                    CompilationHandler.isYoutubeVideoTrack(track) ||
-                    CompilationHandler.isVideoTrack(track),
+            state.compilation.value?.Tracks?.filter((track) =>
+                CompilationHandler.isMediaTrack(track),
             )?.length == 1
         );
     }),
@@ -80,11 +77,8 @@ export const getters = {
 
     /** Gets the set of media tracks (audio, video, YouTube), in their order */
     mediaTracks: computed(() => {
-        return state.compilation.value?.Tracks?.filter(
-            (track) =>
-                CompilationHandler.isAudioTrack(track) ||
-                CompilationHandler.isYoutubeVideoTrack(track) ||
-                CompilationHandler.isVideoTrack(track),
+        return state.compilation.value?.Tracks?.filter((track) =>
+            CompilationHandler.isMediaTrack(track),
         );
     }),
 
@@ -106,7 +100,7 @@ export const getters = {
      * @remarks The active track is either:
      * - the track that contains the currently selected cue, if any
      * - or an explicitly selected track, if any
-     * - or the single audio track (if there is only one audio track)
+     * - or the single media track (if there is only one media track)
      * The active track is not dependend of any currently scheduled cues
      */
     activeTrackId: computed(() => {
@@ -124,14 +118,11 @@ export const getters = {
             return selectedTrackByTrackId;
         }
 
-        const single = getters.hasSingleMediaTrack;
-        if (single.value) {
-            return state.compilation.value?.Tracks?.filter(
-                (track) =>
-                    CompilationHandler.isAudioTrack(track) ||
-                    CompilationHandler.isVideoTrack(track) ||
-                    CompilationHandler.isYoutubeVideoTrack(track),
-            )[0]?.Id;
+        const mediaTracks = state.compilation.value?.Tracks?.filter((track) =>
+            CompilationHandler.isMediaTrack(track),
+        );
+        if (mediaTracks.length === 1) {
+            return mediaTracks[0].Id;
         }
 
         // none

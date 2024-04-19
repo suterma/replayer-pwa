@@ -35,7 +35,7 @@
         </div>
 
         <!--During edit, with available media, offer the media list -->
-        <template v-if="isTrackEditable && hasAvailableMedia">
+        <template v-if="isTrackEditable && hasAnyAvailableMedia">
             <div class="has-text-centered block">
                 <CollapsiblePanel>
                     <template #caption>
@@ -88,5 +88,5 @@ import { trackViewModeIsEditableInjectionKey } from '@/components/track/TrackInj
 const isTrackEditable = inject(trackViewModeIsEditableInjectionKey, ref(true));
 
 const app = useAppStore();
-const { compilation, hasCompilation, hasAvailableMedia } = storeToRefs(app);
+const { compilation, hasCompilation, hasAnyAvailableMedia } = storeToRefs(app);
 </script>

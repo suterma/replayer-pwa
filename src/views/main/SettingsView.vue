@@ -327,16 +327,6 @@
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
-                        v-model="experimentalShowPositionInTrackHeader"
-                        label="Show position in track headers"
-                        hint="Uses more space"
-                    ></LabeledCheckbox>
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <LabeledCheckbox
                         v-model="experimentalUseMeter"
                         label="Show meter editors / display"
                         hint="Uses more more space"
@@ -404,7 +394,6 @@ const {
     showOverviewWaveformOnEdit,
     youTubeConsent,
     extraVideoControls,
-    experimentalShowPositionInTrackHeader,
     experimentalShowEverythingEverywhereAllAtOnce,
     experimentalAllowTrackSharingByLink,
     experimentalMultitrack,

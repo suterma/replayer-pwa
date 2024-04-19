@@ -109,14 +109,6 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         TimeFormat.Iso8601Extended,
     );
 
-    /** EXPERIMENTAL: Whether to show the track position in the header
-     * @remarks Default is false
-     */
-    const experimentalShowPositionInTrackHeader = useLocalStorage(
-        'experimentalShowPositionInTrackHeader',
-        false,
-    );
-
     /** EXPERIMENTAL: Whether to show all playback views simultaneously
      * @remarks Default is false
      */
@@ -195,7 +187,6 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         showOverviewWaveformOnEdit.value = false;
         youTubeConsent.value = false;
         extraVideoControls.value = false;
-        experimentalShowPositionInTrackHeader.value = false;
         experimentalShowEverythingEverywhereAllAtOnce.value = false;
         experimentalAllowTrackSharingByLink.value = false;
         experimentalMultitrack.value = true;
@@ -221,7 +212,6 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         showOverviewWaveformOnEdit,
         youTubeConsent,
         extraVideoControls,
-        experimentalShowPositionInTrackHeader,
         experimentalShowEverythingEverywhereAllAtOnce,
         experimentalAllowTrackSharingByLink,
         experimentalMultitrack,
