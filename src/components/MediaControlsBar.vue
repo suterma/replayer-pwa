@@ -287,7 +287,6 @@ export default defineComponent({
         },
     },
 
-    watch: {},
     methods: {
         stop(): void {
             this.$emit('stop');
