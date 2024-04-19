@@ -382,7 +382,11 @@
                 <!-- The player widget for a track may be full screen only for the active track -->
                 <FullscreenPanel
                     ref="fullscreenPanel"
-                    v-slot="{ isFullscreen, hasNative, toggle }"
+                    v-slot="{
+                        isFullscreen,
+                        hasNative: hasNativeFullscreenSupport,
+                        toggle,
+                    }"
                 >
                     <Transition :name="skipTransitionName">
                         <!-- 
@@ -409,7 +413,11 @@
                             :disabled="!canPlay"
                         >
                             <!-- The messages need to be shown inside the native fullscren element; otherwise they would get hidden below -->
-                            <MessageOverlay v-if="isFullscreen && hasNative" />
+                            <MessageOverlay
+                                v-if="
+                                    isFullscreen && hasNativeFullscreenSupport
+                                "
+                            />
 
                             <!-- 
                             Track playback bar (In play mode, this contains:
@@ -439,7 +447,7 @@
                                     >
                                         <!-- Offer the full screen-->
                                         <FullscreenToggler
-                                            v-if="hasNative"
+                                            v-if="hasNativeFullscreenSupport"
                                             :model-value="isFullscreen"
                                             title="Toggle full-screen mode"
                                             @click="toggle"
@@ -748,7 +756,6 @@ import FullscreenToggler from '@/components/buttons/FullscreenToggler.vue';
 import MuteButton from '@/components/buttons/MuteButton.vue';
 import SoloButton from '@/components/buttons/SoloButton.vue';
 import SelectButton from '@/components/buttons/SelectButton.vue';
-import TimeDisplay from '@/components/TimeDisplay.vue';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import CompilationHandler from '@/store/compilation-handler';
