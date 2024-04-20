@@ -29,7 +29,10 @@ The **SETTINGS** store represents the various application options, including exp
 
 ### Audio store
 
-The **AUDIO** store represents the **audio environment**, consisting of the [Web Audio API context](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Using_Web_Audio_API#audio_context) and an object reference to the individual handlers for each track's media media source.
+The **AUDIO** store represents the **audio environment**, consisting of the [Web Audio API context](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Using_Web_Audio_API#audio_context) and an object reference to the individual media handlers, as ```IMediaHandler``` implementations, for each track's media source.
+
+### Multitrack store
+The **MULTITRACK** store represents the set of all ```IMediaHandler``` from the audio store, plus aggregate functions for handling multitrack playback.
 
 ### BLOB store
 
@@ -37,8 +40,9 @@ The set of local **media files**, as BLOBs, for playback with the compilation's 
 
 ### Store access
 
-Most components typically do not access the store directly, following the [dumb component pattern](https://namingconvention.org/vuejs/smart-dumb-naming.html).
+Most components typically do not access the store directly, following the [dumb component pattern](https://namingconvention.org/vuejs/smart-dumb-naming.html). The "smart" components are the App, the various views, plus the compilation and the tracks (e.g. ```PdfTrack```, ```MediaTrack``` and ```MasterTrack```).
 
 The following picture gives an overview:
 
 ![Store overview](./store.svg)
+_Illustration: store usage overview_
