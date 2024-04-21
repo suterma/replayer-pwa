@@ -7,7 +7,7 @@
         :is-engaged="model"
         engaged-label="fading is on"
         disengaged-label="fading is off"
-        @click="togglePlaybackMode()"
+        @click="toggleFading()"
     >
         <BaseIcon v-if="model" :path="mdiNetworkStrength4" />
         <BaseIcon v-else :path="mdiNetworkStrengthOutline" />
@@ -25,7 +25,7 @@ const model = defineModel({ type: Boolean, default: false, required: true });
 
 const emit = defineEmits(['update:modelValue']);
 
-function togglePlaybackMode() {
+function toggleFading() {
     emit('update:modelValue', !model.value);
 }
 </script>

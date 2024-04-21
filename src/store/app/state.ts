@@ -16,8 +16,8 @@ import type { ICompilation } from '../ICompilation';
 /** Implements the state of this application */
 export const state = {
     /** A compilation to work with
-     *@devdoc An initial, non-null value must be available, otherwise the reactive system does not work
-     @devdoc To always provide a typed object as expected, explicitly serialize to and from JSON strings */
+     * @devdoc An initial, non-null value must be available, otherwise the reactive system does not work
+     * @devdoc To always provide a typed object as expected, explicitly serialize to and from JSON strings */
     compilation: useLocalStorage('compilation', Compilation.empty(), {
         serializer: {
             read: (stringified: any) =>

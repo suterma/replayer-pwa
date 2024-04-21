@@ -7,16 +7,6 @@
         :render-closed="true"
         data-cy="context-menu-playbackmode"
     >
-        <!-- <DropdownMenuButton
-            v-for="mode in Object.values(PlaybackMode)"
-            :key="mode"
-            :title="modeText(mode)"
-            :icon-path="modeIcon(mode)"
-            :disabled="mode == props.modelValue"
-             :isActive="PlaybackMode.PlayTrack == props.modelValue"
-           @click="emit('update:modelValue', mode)"
-        /> -->
-
         <DropdownMenuButton
             :key="PlaybackMode.PlayTrack"
             :title="modeText(PlaybackMode.PlayTrack)"
