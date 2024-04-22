@@ -1,0 +1,9 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "readme": "./README.md",
+    "entryPoints": ["./src/"],
+    "entryPointStrategy": "expand",
+    // Deploy the docs along the app
+    "out": "dist/src-doc",
+    "sitemapBaseUrl": "https://web.replayer.app/src-doc/"
+}

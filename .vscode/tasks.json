@@ -14,7 +14,7 @@
                 "panel": "new"
             },
             "runOptions": {
-                "runOn": "folderOpen",
+                "runOn": "folderOpen"
             }
         },
         {
@@ -30,7 +30,7 @@
                 "panel": "new"
             },
             "runOptions": {
-                "runOn": "folderOpen",
+                "runOn": "folderOpen"
             }
         },
         {
@@ -46,7 +46,7 @@
                 "panel": "new"
             },
             "runOptions": {
-                "runOn": "folderOpen",
+                "runOn": "folderOpen"
             }
         },
         {
@@ -62,8 +62,24 @@
                 "panel": "new"
             },
             "runOptions": {
-                "runOn": "folderOpen",
+                "runOn": "folderOpen"
             }
         },
+        {
+            "label": "Run typescript documentation",
+            "type": "shell",
+            "command": "npx typedoc",
+            "windows": {
+                "command": "npx typedoc"
+            },
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        }
     ]
 }
