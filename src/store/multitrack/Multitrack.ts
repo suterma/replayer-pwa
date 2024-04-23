@@ -12,7 +12,7 @@ export class Multitrack {
     /** The maximum track timing deviation allowed, in [seconds],
      * before an auto-sync operation executed
      * @remarks The value is chosen to keep sync errors mostly inaudible
-     * @remarks See https://sengpielaudio.com/calculator-soundpath.htm for
+     * @ See https://sengpielaudio.com/calculator-soundpath.htm for
      * details.
      * A value of 15 milliseconds represents a distance of 5 meters at room temperature.
      * This value might be considered typical for a small stage or rehearsal romm.

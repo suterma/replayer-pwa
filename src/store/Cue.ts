@@ -7,9 +7,7 @@
 
 import type { ICue } from './ICue';
 
-/** Implements a Replayer cue
- *  @inheritdoc */
-
+/** Implements a Replayer cue*/
 export class Cue implements ICue {
     /**   @inheritdoc */
     Description = '';

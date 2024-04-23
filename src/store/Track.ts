@@ -15,9 +15,7 @@ export const DefaultTrackVolume = 0.5;
 /** The default track playback rate */
 export const DefaultPlaybackRate = 1;
 
-/** Implements a Replayer track
- *  @inheritdoc */
-
+/** Implements a Replayer track */
 export class Track implements ITrack {
     Name = '';
     Album = '';

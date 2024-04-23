@@ -168,7 +168,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     /** Gets the paused state.
      * @remarks Paused is anything except playing or buffering.
-     * @remarks During fading, the playback state is not considered as paused.
+     * During fading, the playback state is not considered as paused.
      */
     get paused(): boolean {
         return !this._isPlaying;

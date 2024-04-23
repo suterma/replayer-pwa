@@ -163,12 +163,12 @@ export class Meter implements IMeter {
      * @return The metrical position or null
      */
     public static fromTime(
-        seconds: number | null | undefined,
+        time: number | null | undefined,
         meter: IMeter,
     ): MetricalPosition | null {
         if (
-            seconds != null &&
-            Number.isFinite(seconds) &&
+            time != null &&
+            Number.isFinite(time) &&
             meter != null &&
             meter.OriginTime != null &&
             Number.isFinite(meter.OriginTime) &&
@@ -178,7 +178,7 @@ export class Meter implements IMeter {
             meter.TimeSignature.Denominator
         ) {
             // get the time relative to the teporal position of the declared first beat
-            const shiftedTime = seconds - meter.OriginTime;
+            const shiftedTime = time - meter.OriginTime;
 
             const beatsPerSecond = meter.BeatsPerMinute / 60;
 

@@ -178,7 +178,7 @@ export default class CompilationHandler {
     }
     /** Guesses the next useful shortcut, based on the previously existing shortcuts.
      * @remarks Simply tries to parse all existing shortcuts, then increases the number by 1.
-     * @remarks Cues without shortcut mnemonic are treated as having '0' as their shortcut.
+     * Cues without shortcut mnemonic are treated as having '0' as their shortcut.
      * @param compilation - The compilation to work on.
      */
     static getNextShortcut(compilation: ICompilation): number {
@@ -220,7 +220,7 @@ export default class CompilationHandler {
 
     /** Determines whether two time positions are not more than twice (as a grace range) the Replayer default precision apart.
      * @remarks This is useful to compare two timestamps of a cue time and a playhead position.
-     * @remarks If any of the numbers is not finite, the comparison returns false
+     * If any of the numbers is not finite, the comparison returns false
      */
     static areSimilar(
         a: number | null | undefined,
@@ -537,8 +537,8 @@ export default class CompilationHandler {
     /** Sorts the blobs by whether their fileName lazily
      * starts or ends with the given fileName, returning the matching one first.
      * @remarks This method is useful to speed up delayed loading, to make sure the initially
-     * used blob is handled first (or among the first)
-     * @remarks A lazy matching approach is always used here because an exact single match is not
+     * used blob is handled first (or among the first).
+     * A lazy matching approach is always used here because an exact single match is not
      * strictly necessary for this kind of sorting.
      * @param mediaBlobs - The array of media blobs to sort
      * @param sortFileName - The file name to sort for. If empty, no sorting does occur.

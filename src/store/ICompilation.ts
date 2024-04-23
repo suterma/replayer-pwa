@@ -10,7 +10,7 @@ import { CompilationType } from './CompilationType';
 
 /** @interface Defines a Replayer Compilation, consisting of a set of tracks with their cues.
  * @remarks This definition corresponds to the definitions in https://github.com/suterma/Replayer/blob/master/SOURCE/Replayer.Model/ICompilation.cs for the classic WinForms Replayer
- * @remarks The implemented type is advertised as the Type. Using this pattern saves the code from implementing a full blown plugin architecture.
+ * The implemented type is advertised as the Type. Using this pattern saves the code from implementing a full blown plugin architecture.
  */
 
 export interface ICompilation {

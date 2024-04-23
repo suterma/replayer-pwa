@@ -289,8 +289,7 @@ export default class YouTubeFader implements IAudioFader {
     }
 
     /** Gets the master audio volume, with the possible muted and soloed state (but not a possibly ongoing fade-in/fade-out) observed
-     * @remarks A muted state returns the min volume.
-     * @remarks A non-soloed and any-(other)-soloed state returns the min volume.
+     * @remarks A muted state returns the min volume. A non-soloed and any-(other)-soloed state returns the min volume.
      * @returns A value between 0 (zero) and 1 (representing full scale), while observing the muted state.
      */
     private getVolume(): number {

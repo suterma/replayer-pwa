@@ -7,9 +7,7 @@
 
 import type { ITimeSignature } from './ITimeSignature';
 
-/** Implements a time signature
- *  @inheritdoc */
-
+/** Implements a time signature */
 export class TimeSignature implements ITimeSignature {
     /** The number of beats per measure */
     Numerator: number | null;
