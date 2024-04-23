@@ -5,5 +5,15 @@
     "entryPointStrategy": "expand",
     // Deploy the docs along the app
     "out": "dist/src-doc",
-    "sitemapBaseUrl": "https://web.replayer.app/src-doc/"
+    "name": "Replayer source",
+    "includeVersion": true,
+    "sitemapBaseUrl": "https://web.replayer.app/src-doc/",
+
+    // typedoc.json
+
+    "navigationLinks": {
+        "Replayer app (live)": "https://web.replayer.app",
+        "Documentation": "https://replayer.app/en#documentation",
+        "GitHub": "https://github.com/suterma/replayer-pwa"
+    }
 }
