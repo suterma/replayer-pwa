@@ -12,9 +12,7 @@ import type { ICompilation } from './ICompilation';
 import { Cue } from './Cue';
 import { DefaultPlaybackRate, DefaultTrackVolume, Track } from './Track';
 
-/** Implements a Replayer Compilation, consisting of a set of tracks with their cues.
- *  @inheritdoc */
-
+/** Implements a Replayer Compilation, consisting of a set of tracks with their cues.  */
 export class Compilation implements ICompilation {
     Type: CompilationType = CompilationType.XML;
     MediaPath = '';

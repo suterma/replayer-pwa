@@ -20,7 +20,7 @@
         "css-watch": "npm run css-build -- --watch",
         "start": "npm run css-watch",
         "dev": "vite",
-        "build": "npm run type-check && npm run build-only",
+        "build": "npm run type-check && npm run build-only && npm run doc-build",
         "preview": "vite preview",
         "test:unit": "vitest",
         "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
@@ -28,7 +28,8 @@
         "build-only": "vite build",
         "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
         "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-        "format": "prettier --write src/"
+        "format": "prettier --write src/",
+        "doc-build": "npx typedoc"
     },
     "dependencies": {
         "@mdi/js": "^7.4.47",
@@ -91,6 +92,7 @@
         "sass": "^1.50.0",
         "sass-loader": "^10.2.1",
         "start-server-and-test": "^2.0.3",
+        "typedoc": "^0.25.13",
         "typescript": "^5.4.2",
         "typescript-eslint": "^7.3.1",
         "vite": "^5.0.12",

@@ -32,7 +32,7 @@ import { ProgressMessage } from '@/store/messages/ProgressMessage';
 export const actions = {
     /** Updates the currently selected cue Id, for application-wide handling
      * @remarks This does not control the playback itself. It is intended for display and handling purposes.
-     * @remarks Removes any explicit track id selection.
+     * Removes any explicit track id selection.
      */
     updateSelectedCueId(cueId: string): void {
         state.selectedCueId.value = cueId;
@@ -47,8 +47,8 @@ export const actions = {
 
     /** Updates the currently selected track Id, for application-wide handling
      * @remarks This does not control the playback itself. It is intended for display and handling purposes.
-     * @remarks Removes any previous cue id selection, then selects the first cue of this track, if available.
-     * @remarks Removes any previous next cue id selection.
+     * Removes any previous cue id selection, then selects the first cue of this track, if available.
+     * Removes any previous next cue id selection.
      */
     updateSelectedTrackId(trackId: string): void {
         state.selectedCueId.value = CompilationHandler.EmptyId;
@@ -116,8 +116,8 @@ export const actions = {
     },
 
     /** Update current playhead position for the given track
-     *  @remarks Implements #132
      *  @remarks Updates the persistently stored playback position.
+     *  Implements #132
      */
     updatePlayheadPosition(trackId: string, time: number): void {
         const matchingTrack = CompilationHandler.getTrackById(
@@ -160,7 +160,7 @@ export const actions = {
     /** Sets the track duration. Using the track duration and the existing cues,
      * calculates the durations of all cues, including the last one.
      * @remarks No ordering is done with this operation
-     * @remarks The calculated durations are only valid as long as the cues, their times, and the track does not change
+     * The calculated durations are only valid as long as the cues, their times, and the track does not change
      * @param {number} trackDuration - the track duratin in [seconds]. Could be NaN or infinity, depending on the source.
      */
     updateDurations(trackId: string, trackDuration: number): void {
@@ -346,8 +346,8 @@ export const actions = {
 
     /** Adds a new default track for the given file name or media URL to the compilation.
      * @remarks Track properties are derived from the given file name or url
-     * @remarks The new track is made the selected track
-     * @remarks No media data is added, it must get handled elsewhere.
+     * The new track is made the selected track
+     * No media data is added, it must get handled elsewhere.
      */
     addDefaultTrack(resourceName: string): void {
         console.debug('actions::ADD_DEFAULT_TRACK:', resourceName);
@@ -359,7 +359,7 @@ export const actions = {
 
     /** Adds a media blob URL to the store.
      * @remarks A new blob URL replaces any existing with an exact same path.
-     * @param url - The MediaUrl to use
+     * @param mediaUrl - The MediaUrl to use
      */
     addMediaUrl(mediaUrl: MediaUrl): void {
         //Remove any previously matching media URL, even it was the same object, because
@@ -395,7 +395,7 @@ export const actions = {
      * this track becomes the active track. For single-track compilations
      * this causes the widget player to be shown immediately.
      * Does not set the selected cue.
-     * @remarks Does not remove any existing media. If required, this must be done separately.
+     * Does not remove any existing media. If required, this must be done separately.
      */
     replaceCompilation(compilation: ICompilation): void {
         state.compilation.value = compilation;
@@ -430,8 +430,8 @@ export const actions = {
 
     /** Loads a single file or package from an URL
      * @remarks The content might be a package or single file of any supported content.
-     * @remarks This method can be called multiple times, each resource gets appropriately added to the current compilation
-     * @remarks The resource is expected to support appropriate CORS Headers
+     * This method can be called multiple times, each resource gets appropriately added to the current compilation
+     * The resource is expected to support appropriate CORS Headers
      * @param url - The URL to load the file from
      * @return A locally usable name, derived from the URL, which can be used to match the track to the stored media file
      */
@@ -550,7 +550,7 @@ export const actions = {
     /** Loads a single file or package from a file
      * @remarks The file might have been downloaded or loaded from the local file
      * system. I might be a package or a single file of any supported content.
-     * @remarks This method can be called multiple times, each resource gets appropriately added to the current compilation
+     * This method can be called multiple times, each resource gets appropriately added to the current compilation
      * @param file - The file to use
      */
 
@@ -742,7 +742,7 @@ export const actions = {
     },
 
     /** Discards a media blob URL from the store.
-     * @param url - The MediaUrl to use
+     * @param mediaUrl - The MediaUrl to use
      */
     discardMediaUrl(mediaUrl: MediaUrl): void {
         console.debug('actions::DISCARD_MEDIA_URL:mediaUrl', mediaUrl);
@@ -778,7 +778,7 @@ export const actions = {
 
     /** Adds a provided track to the compilation.
      * @remarks The new track is made the selected track
-     * @remarks No media data is added, it must get handled elsewhere.
+     * No media data is added, it must get handled elsewhere.
      */
     addTrack(track: ITrack): void {
         console.debug('actions::ADD_TRACK:', track);
@@ -790,8 +790,8 @@ export const actions = {
 
     /** Uses a single media resource from an URL, by adding the URL to the set of stored media URLs.
      * @remarks The resource must be a single media file.
-     * @remarks This method can be called multiple times, each URL gets appropriately added to the current compilation
-     * @remarks The resource does not need to support any CORS Headers, because it's only used as-is, as a media source
+     * This method can be called multiple times, each URL gets appropriately added to the current compilation
+     * The resource does not need to support any CORS Headers, because it's only used as-is, as a media source
      * @param url - The URL to use
      * @return A promise to a locally usable name, derived from the URL, which can be used to match the track to the stored media URL
      */

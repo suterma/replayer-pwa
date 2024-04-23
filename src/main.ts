@@ -41,6 +41,7 @@ const youtubeManager = createManager({
     },
 });
 
+/** Creates the Replayer VueJs app */
 createApp(App)
     .use(createPinia())
     .use(router)
@@ -53,11 +54,12 @@ createApp(App)
     .directive('tooltip', TooltipDirective)
     .mount('#app');
 
-// Show general errors (including unhandled promises)
+/** Show general errors (including unhandled promises) as message*/
 const message = useMessageStore();
 onerror = (_event, _source, _lineno, _colno, error) => {
     message.pushError(`${error?.name}: ${error?.message}`);
 };
+
 window.addEventListener(
     'unhandledrejection',
     function (event: PromiseRejectionEvent) {
@@ -66,7 +68,7 @@ window.addEventListener(
     },
 );
 
-// Handle the app title when the compilation title changes
+/** Handle the app title when the compilation title changes */
 const app = useAppStore();
 const title = useTitle();
 const { compilationTitle } = storeToRefs(app);

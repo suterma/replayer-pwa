@@ -37,7 +37,7 @@ export interface ITrack {
      * This value is intended to be periodically updated only to remember the
      * playback position a track (re-)load. When loading a track,
      * the value will be applied once after a media resource with a player has been mounted.
-     * @remarks If not set, zero may be used
+     * If not set, zero may be used
      */
     PlayheadPosition: number | null;
 

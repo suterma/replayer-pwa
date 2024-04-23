@@ -445,9 +445,9 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      * @remarks For any currently playing media,
      * this method corrects for the time passed from the first reading until all
      * readings have been gathered.
-     * @remarks This operation is quite expensive and should only used when
+     * This operation is quite expensive and should only used when
      * required, e.g. before or after sync operations
-     * @returns The average and spreading value of the multitrack current time in [seconds]
+     * The average and spreading value of the multitrack current time in [seconds]
      */
     function updateCurrentTime(): { avg: number; spreading: number } {
         const readings = new Array<Reading<number>>();

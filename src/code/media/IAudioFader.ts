@@ -7,23 +7,23 @@
 
 import { SubEvent } from 'sub-events';
 
-/** @interface Defines an audio fader. This fader supports two concepts:
- * A master volume, that emulates a an overall audio level, and
- * independent fading, mute and solo operations, which internally
- * control the actually set audio level on the media player. Soloing only
+/** @interface Defines an audio fader with fade-in/out operations, for use during playback,
+ * including a muted and soloed state. Soloing only
  * works in a multitrack context.
- * @remarks Visual fading indication like progress bars or brightness changes
- * must be implemented elsewhere, but can use the provided onFadingChanged event.
- * @remarks This defines audio fade-in/out operations, for use during playback,
- * sincluding a muted and soloed state.
- * The goal is to free the actual player from fading handling.
+ * This fader supports two concepts:
+ * - a master volume, that emulates a an overall audio level
+ * - independent fading, mute and solo operations, which internally
+ * control the actually set audio level on the media player.
+ * @remarks The goal is to free the actual player from fading handling.
  * Using this promise-based approach especially frees the using code from
  * using timers for calling delayed stop or pause operations after a fade operation.
- * @remarks Newly attempted fade operations are prevented during already ongoing fade operations. The ongoing
+ * Newly attempted fade operations are prevented during already ongoing fade operations. The ongoing
  * fade operation is however cancelled (and subsequently fades to min).
- * @remarks Fading is only actually executed for non-zero fading durations.
+ * Fading is only actually executed for non-zero fading durations.
  * For zero fading durations, the call immediately returns with a resolved promise, without any call to a fade operation.
  * This can be used as a convenient way to skip fadings.
+ * NOTE: Visual fading indication like progress bars or brightness changes
+ * must be implemented elsewhere, but can use the provided onFadingChanged event.
  */
 export interface IAudioFader {
     //TODO couldnt we just use getter/setters with properties???
@@ -128,10 +128,10 @@ export interface IAudioFader {
     /** Sets the master audio volume.
      * @remarks The new value is only applied if it actually changes, after limitation.
      * The 'onMasterVolumeChange' is also only emitted on actual changes.
-     * @remarks A changed value is applied immediately, without any fading, with the possible muted state observed
-     * @param {number} volume - A value between 0 (zero, will get limited to the minimum level) and 1 (representing full scale)
-     * @remarks Limits the minimum level at -90dB Full Scale
+     * - A changed value is applied immediately, without any fading, with the possible muted state observed
+     * - Limits the minimum level at -90dB Full Scale
      * @returns The new, possibly limited, master audio volume
+     * @param {number} volume - A value between 0 (zero, will get limited to the minimum level) and 1 (representing full scale)
      */
     setVolume(volume: number): number;
 

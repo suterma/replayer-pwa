@@ -105,7 +105,7 @@ export interface IMediaHandler {
 
     /** Occurs, when the end of the track has been reached and playback has ended.
      * @remarks This is not triggered when the track or a range is looping.
-     * @remarks Allows to select the next track in "play all" and "shuffle" mode.
+     * Allows to select the next track in "play all" and "shuffle" mode.
      */
     onEnded: SubEvent<void>;
 

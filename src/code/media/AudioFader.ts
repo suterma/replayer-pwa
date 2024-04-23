@@ -9,37 +9,41 @@ import { v4 as uuidv4 } from 'uuid';
 import { FadingMode, type IAudioFader } from './IAudioFader';
 import { SubEvent } from 'sub-events';
 
-/** @class Implements an audio fader for a media element instance. This fader supports two concepts:
- * A master volume, that emulates a set, overall audio level, and independent fading operations, which internally
- * control the actually set audio level at the media element.
- * @remarks Currently only supports a linear fade, with a constant gradient,
+/** @class Implements an audio fader for an HTML media element instance. This fader supports two concepts:
+ * - a master volume, that emulates a set, overall audio level
+ * - independent fading operations, which internally control the actually set audio level at the media element.
+ * @remarks Currently only supports a linear audio fade, with a constant gradient,
  * only determined by the predefined durations for a full-scale fade.
+ * Video content, in case of an HTMLVideoElement, is not changed in any way.
  */
 export default class AudioFader implements IAudioFader {
-    /** This is set to a fixed value, as a tradeoff between call frequency and smoothness
-     * @devdoc This should be set to a value that produces small volume changes, that are barely audible
+    /** The fading step duration, in [milliseconds]. This is set to a fixed value,
+     * as a tradeoff between call frequency and smoothness
+     * @devdoc This should be set to a value that produces small volume changes,
+     * that are barely audible
      */
-    stepDuration = 16;
+    private static stepDuration = 16;
 
     private static cancelOperationToken = 'CANCEL';
 
-    /** Token for the currently running fade operation.
+    /** The token for the currently running fade operation.
      * @remarks Allows an ongoing fading operation to determine whether it has been superseded
      * by a subsequent operation. This allows the first operation to reject the promise
-     * and abandon the fade operation.
+     * and abandon the fade operation in favor of the later one.
      */
     operationToken = AudioFader.cancelOperationToken;
 
     /** @constructor
-     * @param {HTMLAudioElement} audio - The audio element to act upon
-     * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
-     * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
-     * @param {number} preRollDuration - The amount of time to the seek backwards before a play operation. (Default: zero)
+     * @param {HTMLMediaElement} audio - The HTML media element to act upon
+     * @param {number} fadeInDuration - The fade-in duration in [seconds]. Default is 1000 (1 second)
+     * @param {number} fadeOutDuration - The fade-out duration in [seconds]. Default is 500 (500 milliseconds)
+     * @param {number} preRollDuration - The amount of time in [milliseconds] to the seek backwards before a play operation. (Default: zero)
      * @param {boolean} addFadeInPreRoll - Whether to apply the seek offset before fade-in operations, to compensate the fading duration. (Default: true)
-     * @param {number} masterVolume - The overall volume of the output. Can be used to control the output volume in addition to fadings. (Default: 1, representing full scale)
+     * @param {number} masterVolume - The overall volume of the output.
+     * Can be used to control the output volume in addition to fadings. (Default: 1, representing full scale)
      */
     constructor(
-        audio: HTMLAudioElement,
+        audio: HTMLMediaElement,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         fadeInDuration: number = 1000,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
@@ -66,10 +70,11 @@ export default class AudioFader implements IAudioFader {
         this.setupVolumeChangeEmissions();
     }
 
-    /** Sets up emission of intentional volume changes on the element.
-     * @remarks This allows a user to control the volume direcly from the audio element controls, which
-     * are usually coupled with external input devices like Bluetooth headsets.
-     * @remarks Only changes that are not caused by automation are considered
+    /** Sets up emission of intentional volume changes on the HTML media element.
+     * @remarks This allows a user to control the volume direcly from the
+     * HTML audio element controls, which are usually coupled with external input
+     * devices like Bluetooth headsets. NOTE: Only changes that are not caused by
+     * internal automation are considered.
      */
     setupVolumeChangeEmissions(): void {
         this.audio.onvolumechange = () => {
@@ -125,7 +130,7 @@ export default class AudioFader implements IAudioFader {
     fadeOutDuration;
     /** Whether to apply a seek offset before fade-in operations, to compensate the fading duration.*/
     addFadeInPreRoll = true;
-    /** The amount of time to the seek backwards before a play operation. (Default: zero) */
+    /** The amount of time in [milliseconds] to the seek backwards before a play operation. (Default: zero) */
     preRollDuration = 0;
 
     /** The master volume level
@@ -136,10 +141,10 @@ export default class AudioFader implements IAudioFader {
     /** The minimum audio volume level
      * @remarks  -90dbFS Amplitude
      */
-    public static audioVolumeMin = 0.00003162;
+    private static audioVolumeMin = 0.00003162;
 
     /** The maximum audio volume level */
-    public static audioVolumeMax = 1;
+    private static audioVolumeMax = 1;
 
     /** Resets the token for the currently running fade operation.
      * @remarks Allows operations to cancel themselves in favor of a subsequent operation.
@@ -192,14 +197,14 @@ export default class AudioFader implements IAudioFader {
         return false;
     }
 
-    /** Gets the effective fade-in duration, taking into account whether fade-in is enabled. */
+    /** Gets the effective fade-in duration, in [milliseconds], taking into account whether fade-in is enabled. */
     get effectiveFadeInDuration(): number {
         if (!this.isFadingEnabled) {
             return 0;
         }
         return this.fadeInDuration;
     }
-    /** Gets the effective fade-out duration, taking into account whether fade-in is enabled. */
+    /** Gets the effective fade-out duration, in [milliseconds], taking into account whether fade-out is enabled. */
     get effectiveFadeOutDuration(): number {
         if (!this.isFadingEnabled) {
             return 0;
@@ -315,9 +320,10 @@ export default class AudioFader implements IAudioFader {
         );
     }
 
-    /** Gets the master audio volume, with the possible muted and soloed state (but not a possibly ongoing fade-in/fade-out) observed
+    /** Gets the master audio volume, with the possible muted and soloed state
+     * (but not a possibly ongoing fade-in/fade-out) observed
      * @remarks A muted state returns the min volume.
-     * @remarks A non-soloed and any-(other)-soloed state returns the min volume.
+     * A non-soloed state, when any is soloed, returns the min volume.
      * @returns A value between 0 (zero) and 1 (representing full scale), while observing the muted state.
      */
     private getVolume(): number {
@@ -463,7 +469,7 @@ export default class AudioFader implements IAudioFader {
                 const passedTime = duration - remainingTime;
                 const stepTarget = from + (stepSize / duration) * passedTime;
                 this.audioVolume = stepTarget;
-            }, this.stepDuration);
+            }, AudioFader.stepDuration);
         });
     }
 

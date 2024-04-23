@@ -605,6 +605,13 @@
                         embedding PDFs in HTML documents. (Released under an
                         MIT-style License, by Philip Hutchison)
                     </li>
+                    <li>
+                        <a href="https://typedoc.org/" target="_blank"
+                            >TypeDoc </a
+                        >, a documentation generator for TypeScript projects.
+                        (Released under the Apache-2.0 license, by the
+                        TypeStrong team)
+                    </li>
                 </ul>
             </div>
         </CollapsiblePanel>

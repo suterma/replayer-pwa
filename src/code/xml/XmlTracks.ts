@@ -14,8 +14,7 @@ import { XmlTrack } from './XmlTrack';
  */
 export class XmlTracks {
     /** @constructor
-     * @param {string} fileName - The name of the original media file (from the disk or from within a REZ/ZIP-file)
-     * @param {string} objectUrl - The object URL representing the playable file content
+     * @param {ITrack[] | undefined} tracks - The tracks to covert to their XML representation.
      */
     constructor(tracks: ITrack[] | undefined) {
         if (tracks) {

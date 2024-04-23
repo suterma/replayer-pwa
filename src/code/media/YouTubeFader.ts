@@ -9,13 +9,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { FadingMode, type IAudioFader } from './IAudioFader';
 import { SubEvent } from 'sub-events';
 import type { Player } from '@vue-youtube/shared';
-import AudioFader from './AudioFader';
 
 /** @class Implements an audio fader for a YouTube player instance. This fader supports two concepts:
- * A master volume, that emulates a set, overall audio level, and independent fading operations, which internally
- * control the actually set audio level at the player instance.
+ * - a master volume, that emulates a set, overall audio level
+ * - independent fading operations, which internally control the actually set audio level at the YouTube player instance.
  * @remarks Currently only supports a linear fade, with a constant gradient,
  * only determined by the predefined durations for a full-scale fade.
+ * @devdoc This fader implementation borrows most code from the @see AudioFader
  */
 export default class YouTubeFader implements IAudioFader {
     /** This is set to a fixed value, as a tradeoff between call frequency and smoothness
@@ -111,10 +111,10 @@ export default class YouTubeFader implements IAudioFader {
     /** The minimum audio volume level
      * @remarks  -90dbFS Amplitude
      */
-    public static audioVolumeMin = 0.00003162;
+    private static audioVolumeMin = 0.00003162;
 
     /** The maximum audio volume level */
-    public static audioVolumeMax = 1;
+    private static audioVolumeMax = 1;
 
     /** Resets the token for the currently running fade operation.
      * @remarks Allows operations to cancel themselves in favor of a subsequent operation.
@@ -142,7 +142,7 @@ export default class YouTubeFader implements IAudioFader {
      */
     public reset(): void {
         if (this.effectiveFadeInDuration || this.effectiveFadeOutDuration) {
-            this.audioVolume = AudioFader.audioVolumeMin;
+            this.audioVolume = YouTubeFader.audioVolumeMin;
         } else {
             this.audioVolume = this.masterVolume;
         }
@@ -267,7 +267,7 @@ export default class YouTubeFader implements IAudioFader {
     /** @inheritdoc
      */
     set anySoloed(value: boolean) {
-        console.debug(`AudioFader::anySoloed:value:${value}`);
+        console.debug(`YouTubeFader::anySoloed:value:${value}`);
         this._anySoloed = value;
         this.audioVolume = this.getVolume();
     }
@@ -276,36 +276,35 @@ export default class YouTubeFader implements IAudioFader {
 
     volumeDown(): number {
         return this.setVolume(
-            Math.max(this.masterVolume * 0.71, AudioFader.audioVolumeMin),
+            Math.max(this.masterVolume * 0.71, YouTubeFader.audioVolumeMin),
         );
     }
     volumeUp(): number {
         return this.setVolume(
             Math.max(
                 Math.min(this.masterVolume * 1.41, 1),
-                AudioFader.audioVolumeMin,
+                YouTubeFader.audioVolumeMin,
             ),
         );
     }
 
     /** Gets the master audio volume, with the possible muted and soloed state (but not a possibly ongoing fade-in/fade-out) observed
-     * @remarks A muted state returns the min volume.
-     * @remarks A non-soloed and any-(other)-soloed state returns the min volume.
+     * @remarks A muted state returns the min volume. A non-soloed and any-(other)-soloed state returns the min volume.
      * @returns A value between 0 (zero) and 1 (representing full scale), while observing the muted state.
      */
     private getVolume(): number {
         if (!this.muted && (this.soloed || !this.anySoloed)) {
             return this.masterVolume;
         } else {
-            return AudioFader.audioVolumeMin;
+            return YouTubeFader.audioVolumeMin;
         }
     }
 
     /** Returns a limited volume value, that satisfies the allowed audio volume range */
     private limited(volume: number): number {
         return Math.min(
-            AudioFader.audioVolumeMax,
-            Math.max(AudioFader.audioVolumeMin, volume),
+            YouTubeFader.audioVolumeMax,
+            Math.max(YouTubeFader.audioVolumeMin, volume),
         );
     }
 
@@ -450,7 +449,7 @@ export default class YouTubeFader implements IAudioFader {
         } else {
             const duration = immediate ? 0 : this.effectiveFadeOutDuration;
             const currentMediaVolume = this.audioVolume;
-            if (duration && currentMediaVolume != AudioFader.audioVolumeMin) {
+            if (duration && currentMediaVolume != YouTubeFader.audioVolumeMin) {
                 return new Promise((resolve) => {
                     console.debug(
                         `YouTubeFader::fadeOut:currentMediaVolume:${currentMediaVolume}`,
@@ -458,7 +457,7 @@ export default class YouTubeFader implements IAudioFader {
                     this.onFadingChanged.emit(FadingMode.FadeOut);
                     return this.fade(
                         currentMediaVolume,
-                        AudioFader.audioVolumeMin,
+                        YouTubeFader.audioVolumeMin,
                         duration,
                     )
                         .catch(() => {
@@ -476,7 +475,7 @@ export default class YouTubeFader implements IAudioFader {
                 });
             } else {
                 //nothing to fade
-                this.audioVolume = AudioFader.audioVolumeMin;
+                this.audioVolume = YouTubeFader.audioVolumeMin;
                 return Promise.resolve();
             }
         }

@@ -31,10 +31,10 @@ export const state = {
     /** The currently selected cue Id, if any, otherwise CompilationHandler.EmptyId.
      * This is also used to determine the currently active track.
      * @remarks This does not control the playback itself. It is intended for display purposes.
-     * @remarks Set to CompilationHandler.EmptyId, when no cue should be considered selected.
-     * @remarks To determine which track is active, when a cue is selected, it always takes precedence
+     * Set to CompilationHandler.EmptyId, when no cue should be considered selected.
+     * To determine which track is active, when a cue is selected, it always takes precedence
      * over a possibly selected track
-     * (selectedTrackId should be CompilationHandler.EmptyId in this case anyway.)
+     * (selectedTrackId should be CompilationHandler.EmptyId in this case anyway).
      * If no cue is selected, selectedTrackId is used to determine the active track.
      * @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
     selectedCueId: useLocalStorage('selectedCueId', CompilationHandler.EmptyId),
@@ -42,7 +42,7 @@ export const state = {
     /** The currently scheduled cue Id, if any, otherwise CompilationHandler.EmptyId.
      * This is NOT used to determine the currently active track.
      * @remarks This does not control the playback itself. It is intended for display purposes.
-     * @remarks Set to CompilationHandler.EmptyId, when no cue should be considered scheduled.
+     * Set to CompilationHandler.EmptyId, when no cue should be considered scheduled.
      * @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
     scheduledCueId: useLocalStorage(
         'scheduledCueId',
@@ -53,7 +53,7 @@ export const state = {
      * This is also used to determine the currently active track.
      * This serves as alternative when no selected cue Id is set.
      * @remarks This does not control the playback itself. It is intended for display purposes.
-     * @remarks Set to CompilationHandler.EmptyId, when no track should be considered selected.
+     * Set to CompilationHandler.EmptyId, when no track should be considered selected.
      * @devdoc An initial, non-null value must be available, otherwise the reactive system does not work */
     selectedTrackId: useLocalStorage(
         'selectedTrackId',

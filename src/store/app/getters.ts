@@ -47,8 +47,8 @@ export const getters = {
     }),
 
     /** Gets the currently selected cue
-     * @remarks This is more expensive than only getting the selected cue id
-     * @remarks Only one cue may be selected at any time, within one compilation / application instance.
+     * @remarks This is more expensive than only getting the selected cue id.
+     * Only one cue may be selected at any time, within one compilation / application instance.
      * @returns The cue; or null, if no cue is selected or the selected cue is can not be found.
      */
     selectedCue: computed(() => {
@@ -59,8 +59,8 @@ export const getters = {
     }),
 
     /** Gets the currently scheduled cue
-     * @remarks This is more expensive than only getting the scheduled cue id
-     * @remarks Only one cue may be scheduled at any time, within one compilation / application instance.
+     * @remarks This is more expensive than only getting the scheduled cue id.
+     * Only one cue may be scheduled at any time, within one compilation / application instance.
      * @returns The cue; or null, if no cue is scheduled or the scheduled cue is can not be found.
      */
     scheduledCue: computed(() => {
