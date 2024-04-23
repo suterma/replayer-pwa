@@ -29,7 +29,10 @@ Try the <a href="https://web.replayer.app/#demo" target="_blank">demo in the bro
 
 # Documentation
 
-The full documentation is available at https://replayer.app/documentation
+-   [Overview](https://replayer.app)
+-   [App documentation](https://replayer.app/documentation)
+-   [Blog](https://replayer.app/blog)
+-   [Source code documentation](https://src-doc.replayer.app)
 
 # Tests
 

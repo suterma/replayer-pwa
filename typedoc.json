@@ -7,10 +7,7 @@
     "out": "dist/src-doc",
     "name": "Replayer source",
     "includeVersion": true,
-    "sitemapBaseUrl": "https://web.replayer.app/src-doc/",
-
-    // typedoc.json
-
+    "sitemapBaseUrl": "https://src-doc.replayer.app/",
     "navigationLinks": {
         "Replayer app (live)": "https://web.replayer.app",
         "Documentation": "https://replayer.app/en#documentation",
