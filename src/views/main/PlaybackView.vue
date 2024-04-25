@@ -78,15 +78,7 @@ import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 
-// --- track view mode ---
-
-import { trackViewModeIsEditableInjectionKey } from '@/components/track/TrackInjectionKeys';
-
-/** Whether this component is viewed for the "Edit" mode, and thus shows editable inputs for the contained data
- * @devdoc Allows to reuse this component for more than one view mode.
- */
-const isTrackEditable = inject(trackViewModeIsEditableInjectionKey, ref(true));
-
 const app = useAppStore();
-const { compilation, hasCompilation, hasAnyAvailableMedia } = storeToRefs(app);
+const { isTrackEditable, compilation, hasCompilation, hasAnyAvailableMedia } =
+    storeToRefs(app);
 </script>

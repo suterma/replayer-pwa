@@ -7,10 +7,10 @@
                 <MediaSourceIndicator
                     v-once
                     :source="track.Url"
-                    :showSourceText="false"
-                    :showSourceIcon="false"
-                    :showSize="true"
-                    :showType="true"
+                    :show-source-text="false"
+                    :show-source-icon="false"
+                    :show-size="true"
+                    :show-type="true"
                 >
                 </MediaSourceIndicator>
             </div>
@@ -49,9 +49,9 @@
             <MediaSourceIndicator
                 class="pl-6 ml-1"
                 :source="track.Url"
-                :showSourceText="true"
-                :showSourceIcon="false"
-                :showTypeIcon="false"
+                :show-source-text="true"
+                :show-source-icon="false"
+                :show-type-icon="false"
             >
                 <span v-if="track.Duration !== null">
                     &nbsp; (<TimeDisplay

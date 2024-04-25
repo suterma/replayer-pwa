@@ -192,18 +192,12 @@ export default defineComponent({
     },
 
     methods: {
-        ...mapActions(useAppStore, [
-            'updateCompilationData',
-            'downloadZipPackage',
-            'downloadXmlFile',
-        ]),
-
         /** Updates the compilation title */
         updateCompilationTitle(title: string) {
             if (this.compilation) {
                 const artist = this.compilation?.Artist;
                 const album = this.compilation?.Album;
-                this.updateCompilationData(title, artist, album);
+                useAppStore().updateCompilationData(title, artist, album);
             }
         },
 
@@ -211,22 +205,22 @@ export default defineComponent({
         updateArtist(artist: string) {
             const title = this.compilation.Title;
             const album = this.compilation.Album;
-            this.updateCompilationData(title, artist, album);
+            useAppStore().updateCompilationData(title, artist, album);
         },
         /** Updates the track album */
         updateAlbum(album: string) {
             const title = this.compilation.Title;
             const artist = this.compilation.Artist;
-            this.updateCompilationData(title, artist, album);
+            useAppStore().updateCompilationData(title, artist, album);
         },
 
         /** Initiates the download of the current compilation with the chosen target type
          */
         download(): void {
             if (this.isDownloadZip) {
-                this.downloadZipPackage();
+                useAppStore().downloadZipPackage();
             } else {
-                this.downloadXmlFile();
+                useAppStore().downloadXmlFile();
             }
         },
     },

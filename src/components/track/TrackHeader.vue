@@ -39,13 +39,13 @@
             <template v-if="isTrackEditable">
                 <CoveredPanel
                     ref="mediaDropZonePanel"
-                    :iconPath="mdiSwapVertical"
+                    :icon-path="mdiSwapVertical"
                 >
                     <template #caption>
                         <MediaSourceIndicator
                             :source="track?.Url"
                             :unavailable="!isTrackMediaAvailable"
-                            showSize
+                            show-size
                             :show-source-icon="false"
                         >
                         </MediaSourceIndicator>
@@ -338,17 +338,9 @@ const props = defineProps({
     },
 });
 
-// --- track view mode ---
-
-import { trackViewModeIsEditableInjectionKey } from '@/components/track/TrackInjectionKeys';
-
-/** Whether this component is viewed for the "Edit" mode,
- * and thus shows editable inputs for the contained data
- * @devdoc Allows to reuse this component for more than one view mode.
- */
-const isTrackEditable = inject(trackViewModeIsEditableInjectionKey, ref(true));
-
 const app = useAppStore();
+
+const { isTrackEditable } = storeToRefs(app);
 
 const settings = useSettingsStore();
 const { experimentalUseMeter, experimentalAllowTrackSharingByLink } =

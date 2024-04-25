@@ -185,7 +185,7 @@ import { useDocumentVisibility } from '@vueuse/core';
 import { useElementVisibility } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import type { ICue } from '@/store/ICue';
-import { TrackViewMode } from '@/store/TrackViewMode';
+import { useAppStore } from '@/store/app';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -281,33 +281,8 @@ console.debug(
     `TrackMediaElement:setup:using mediaUrl '${props.mediaUrl}' for trackId '${props.trackId}' at start '${props.start}'`,
 );
 
-// --- track view mode ---
-
-import {
-    trackViewModeInjectionKey,
-    trackViewModeIsEditableInjectionKey,
-    trackViewModeIsPlayableInjectionKey,
-    trackViewModeIsMixableInjectionKey,
-} from '@/components/track/TrackInjectionKeys';
-
-const trackViewMode = inject(
-    trackViewModeInjectionKey,
-    ref(TrackViewMode.Edit),
-);
-
-/** Whether this component is viewed for the "Edit" mode, and thus shows editable inputs for the contained data
- * @devdoc Allows to reuse this component for more than one view mode.
- */
-const isTrackEditable = inject(trackViewModeIsEditableInjectionKey, ref(true));
-
-/** Whether this component is viewed for the "Play" mode, and thus shows non-collapsible playback buttons
- * @devdoc Allows to reuse this component for more than one view mode.
- */
-const isTrackPlayable = inject(trackViewModeIsPlayableInjectionKey, ref(false));
-/** Whether this component is viewed for the "Mix" mode, and thus shows mixing controls
- * @devdoc Allows to reuse this component for more than one view mode.
- */
-const isTrackMixable = inject(trackViewModeIsMixableInjectionKey, ref(false));
+const app = useAppStore();
+const { isTrackEditable, isTrackPlayable, isTrackMixable } = storeToRefs(app);
 
 // --- visibility ---
 

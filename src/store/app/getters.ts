@@ -5,12 +5,15 @@
  * LICENSE file in the root of this projects source tree.
  */
 
+//import router, { Route } from '@/router';
+import router, { Route } from '@/router';
 import type { ICompilation } from '../ICompilation';
 import type { ITrack } from '../ITrack';
 import CompilationHandler from '../compilation-handler';
 import FileHandler from '../filehandler';
 import { state } from './state';
-import { computed } from 'vue';
+import { computed, type ComputedRef } from 'vue';
+import { TrackViewMode } from '../TrackViewMode';
 
 export const getters = {
     /** Defines the function to determine whether a compilation is available (created or loaded) */
@@ -156,5 +159,31 @@ export const getters = {
             )?.url;
             return url;
         };
+    }),
+
+    // --- track view mode ---
+
+    trackViewMode: computed(() => {
+        const routeName = router.currentRoute.value.name;
+        switch (routeName) {
+            case Route.Edit:
+                return TrackViewMode.Edit;
+            case Route.Play:
+                return TrackViewMode.Play;
+            case Route.Mix:
+                return TrackViewMode.Mix;
+            default:
+                return TrackViewMode.Edit;
+        }
+    }),
+
+    isTrackEditable: computed(() => {
+        return router.currentRoute.value.name == Route.Edit;
+    }),
+    isTrackPlayable: computed(() => {
+        return router.currentRoute.value.name == Route.Play;
+    }),
+    isTrackMixable: computed(() => {
+        return router.currentRoute.value.name == Route.Mix;
     }),
 };

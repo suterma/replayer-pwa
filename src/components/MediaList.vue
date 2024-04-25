@@ -33,45 +33,29 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { MediaUrl } from '@/store/types';
-import MediaSourceIndicator from '@/components/indicators/MediaSourceIndicator.vue';
-import { mdiMusicNotePlus, mdiTrashCanOutline } from '@mdi/js';
-import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { mapActions } from 'pinia';
-import { useAppStore } from '@/store/app';
-import { mapState } from 'pinia';
-
+<script setup lang="ts">
 /** Shows the available media URLs as a tag list
  * @remarks Also allows removal of the media URLs
  */
-export default defineComponent({
-    name: 'MediaList',
-    components: { MediaSourceIndicator, BaseIcon },
-    data() {
-        return {
-            /** Icons from @mdi/js */
+import { MediaUrl } from '@/store/types';
+import MediaSourceIndicator from '@/components/indicators/MediaSourceIndicator.vue';
+import { mdiTrashCanOutline } from '@mdi/js';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
+import { useAppStore } from '@/store/app';
+import { storeToRefs } from 'pinia';
 
-            mdiMusicNotePlus: mdiMusicNotePlus,
-            mdiTrashCanOutline: mdiTrashCanOutline,
-        };
-    },
-    computed: {
-        ...mapState(useAppStore, ['mediaUrls']),
-    },
-    methods: {
-        ...mapActions(useAppStore, ['addDefaultTrack', 'discardMediaUrl']),
+const app = useAppStore();
 
-        addTrack(mediaUrl: MediaUrl): void {
-            console.debug('MediaList::addTrack:source', mediaUrl);
-            const source = mediaUrl.resourceName;
-            this.addDefaultTrack(source);
-        },
-        discard(mediaUrl: MediaUrl): void {
-            console.debug('MediaList::discard:source', mediaUrl);
-            this.discardMediaUrl(mediaUrl);
-        },
-    },
-});
+const { mediaUrls } = storeToRefs(app);
+
+function addTrack(mediaUrl: MediaUrl): void {
+    console.debug('MediaList::addTrack:source', mediaUrl);
+    const source = mediaUrl.resourceName;
+    app.addDefaultTrack(source);
+}
+
+function discard(mediaUrl: MediaUrl): void {
+    console.debug('MediaList::discard:source', mediaUrl);
+    app.discardMediaUrl(mediaUrl);
+}
 </script>

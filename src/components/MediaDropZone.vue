@@ -219,13 +219,6 @@ export default defineComponent({
         this.registerLaunchQueue();
     },
     methods: {
-        ...mapActions(useAppStore, [
-            'addDefaultTrack',
-            'useMediaFromUrl',
-            'loadFromFile',
-            'loadFromUrl',
-            'updateTrackUrl',
-        ]),
         ...mapActions(useMessageStore, [
             'pushError',
             'pushProgress',
@@ -339,7 +332,8 @@ export default defineComponent({
             console.debug('MediaDropZone::loadMediaFile:file.name', file.name);
 
             this.isLoadingFromFile = true;
-            this.loadFromFile(file)
+            useAppStore()
+                .loadFromFile(file)
                 .then(() => {
                     if (FileHandler.isSupportedMediaFile(file)) {
                         if (this.isReplacementMode) {
@@ -347,7 +341,7 @@ export default defineComponent({
                                 this.updateFileForTrack(this.trackId, file);
                             }
                         } else {
-                            this.addDefaultTrack(file.name);
+                            useAppStore().addDefaultTrack(file.name);
                         }
                     }
                 })
@@ -402,17 +396,17 @@ export default defineComponent({
                 // Try to load the assumed type
                 const load = (url: string) => {
                     if (isUsingSingleMediaFile) {
-                        return this.useMediaFromUrl(url).catch(
-                            (errorMessage: string) => {
+                        return useAppStore()
+                            .useMediaFromUrl(url)
+                            .catch((errorMessage: string) => {
                                 this.pushError(errorMessage);
-                            },
-                        );
+                            });
                     } else {
-                        return this.loadFromUrl(url).catch(
-                            (errorMessage: string) => {
+                        return useAppStore()
+                            .loadFromUrl(url)
+                            .catch((errorMessage: string) => {
                                 this.pushError(errorMessage);
-                            },
-                        );
+                            });
                     }
                 };
                 load(this.url)
@@ -429,7 +423,7 @@ export default defineComponent({
                             if (isUsingSingleMediaFile) {
                                 //If a single new media file has been loaded, the intention was most likely to edit it
                                 this.$router.push(Route.Edit);
-                                this.addDefaultTrack(this.url);
+                                useAppStore().addDefaultTrack(this.url);
                             } else {
                                 //If a package has been loaded, the intention was most likely to play it
                                 this.$router.push(Route.Play);
@@ -464,7 +458,7 @@ export default defineComponent({
 
             url: string,
         ) {
-            this.updateTrackUrl(trackId, url);
+            useAppStore().updateTrackUrl(trackId, url);
         },
     },
 });

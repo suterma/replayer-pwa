@@ -39,8 +39,8 @@
                 :is-track-loaded="isTrackLoaded"
                 :is-track-media-available="Boolean(mediaUrl)"
                 :is-active="isActiveTrack"
-                :isFirstTrack="isFirstTrack"
-                :isLastTrack="isLastTrack"
+                :is-first-track="isFirstTrack"
+                :is-last-track="isLastTrack"
             >
                 <template
                     v-if="isTrackMixable || isTrackPlayable || isTrackEditable"
@@ -872,28 +872,7 @@ const props = defineProps({
 });
 
 const app = useAppStore();
-
-// --- track view mode ---
-
-import {
-    trackViewModeIsEditableInjectionKey,
-    trackViewModeIsPlayableInjectionKey,
-    trackViewModeIsMixableInjectionKey,
-} from '@/components/track/TrackInjectionKeys';
-
-/** Whether this component is viewed for the "Edit" mode, and thus shows editable inputs for the contained data
- * @devdoc Allows to reuse this component for more than one view mode.
- */
-const isTrackEditable = inject(trackViewModeIsEditableInjectionKey, ref(true));
-
-/** Whether this component is viewed for the "Play" mode, and thus shows non-collapsible playback buttons
- * @devdoc Allows to reuse this component for more than one view mode.
- */
-const isTrackPlayable = inject(trackViewModeIsPlayableInjectionKey, ref(false));
-/** Whether this component is viewed for the "Mix" mode, and thus shows mixing controls
- * @devdoc Allows to reuse this component for more than one view mode.
- */
-const isTrackMixable = inject(trackViewModeIsMixableInjectionKey, ref(false));
+const { isTrackEditable, isTrackPlayable, isTrackMixable } = storeToRefs(app);
 
 // --- metering ---
 

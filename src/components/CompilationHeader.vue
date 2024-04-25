@@ -130,72 +130,54 @@
     </nav>
 </template>
 
-<script lang="ts">
-import { type PropType, defineComponent } from 'vue';
+<script setup lang="ts">
+import { type PropType } from 'vue';
 import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 import LabeledInput from '@/components/editor/LabeledInput.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import CompilationContextMenu from '@/components/context-menu/CompilationContextMenu.vue';
-import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
-import { mdiPlus } from '@mdi/js';
 import type { ICompilation } from '@/store/ICompilation';
+
+const app = useAppStore();
 
 /**
  * A nav bar as header with a menu for a compilation
  */
-export default defineComponent({
-    name: 'CompilationHeader',
-    components: {
-        StyledInput,
-        LabeledInput,
-        CompilationContextMenu,
-        ArtistDisplay,
-        CoveredPanel,
+const props = defineProps({
+    compilation: {
+        type: Object as PropType<ICompilation>,
+        required: true,
     },
-    props: {
-        compilation: {
-            type: Object as PropType<ICompilation>,
-            required: true,
-        },
-        /** Whether this component show editable inputs for the contained data
-         * @devdoc Allows to reuse this component for more than one view mode.
-         */
-        isEditable: {
-            type: Boolean,
-            default: false,
-        },
-    },
-    data() {
-        return {
-            mdiPlus: mdiPlus,
-        };
-    },
-    methods: {
-        ...mapActions(useAppStore, ['updateCompilationData']),
-
-        /** Updates the compilation title */
-        updateTitle(title: string) {
-            const artist = this.compilation.Artist;
-            const album = this.compilation.Album;
-            this.updateCompilationData(title, artist, album);
-        },
-
-        /** Updates the track artist */
-        updateArtist(artist: string) {
-            const title = this.compilation.Title;
-            const album = this.compilation.Album;
-            this.updateCompilationData(title, artist, album);
-        },
-        /** Updates the track album */
-        updateAlbum(album: string) {
-            const title = this.compilation.Title;
-            const artist = this.compilation.Artist;
-            this.updateCompilationData(title, artist, album);
-        },
+    /** Whether this component show editable inputs for the contained data
+     * @devdoc Allows to reuse this component for more than one view mode.
+     */
+    isEditable: {
+        type: Boolean,
+        default: false,
     },
 });
+
+/** Updates the compilation title */
+function updateTitle(title: string) {
+    const artist = props.compilation.Artist;
+    const album = props.compilation.Album;
+    app.updateCompilationData(title, artist, album);
+}
+
+/** Updates the track artist */
+function updateArtist(artist: string) {
+    const title = props.compilation.Title;
+    const album = props.compilation.Album;
+    app.updateCompilationData(title, artist, album);
+}
+/** Updates the track album */
+function updateAlbum(album: string) {
+    const title = props.compilation.Title;
+    const artist = props.compilation.Artist;
+    app.updateCompilationData(title, artist, album);
+}
 </script>
 <style lang="scss" scoped>
 .is-fullwidth {

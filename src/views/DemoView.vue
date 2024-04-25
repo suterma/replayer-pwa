@@ -12,7 +12,6 @@
 <script lang="ts">
 import { Route } from '@/router';
 import { useAppStore } from '@/store/app';
-import { mapActions } from 'pinia';
 import { defineComponent } from 'vue';
 
 /** A view for demo purposes
@@ -28,15 +27,15 @@ export default defineComponent({
     },
 
     methods: {
-        ...mapActions(useAppStore, ['loadFromUrl']),
-
         loadDemo() {
             const url =
                 'https://lib.replayer.app/demo/demo-compilation-featuring-lidija-roos-with-info.xml';
             console.debug('loadDemo:', url);
-            this.loadFromUrl(url).catch((errorMessage: string) => {
-                console.error(errorMessage);
-            });
+            useAppStore()
+                .loadFromUrl(url)
+                .catch((errorMessage: string) => {
+                    console.error(errorMessage);
+                });
         },
     },
 });

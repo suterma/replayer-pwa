@@ -210,6 +210,7 @@ import FullscreenToggler from '@/components/buttons/FullscreenToggler.vue';
 import { mdiSwapVertical, mdiFilePdfBox } from '@mdi/js';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import PDFObject from 'pdfobject';
+import { storeToRefs } from 'pinia';
 
 const props = defineProps({
     /** The track to display
@@ -220,23 +221,11 @@ const props = defineProps({
     },
 });
 
-// --- track view mode ---
-
-import {
-    trackViewModeIsEditableInjectionKey,
-    trackViewModeIsPlayableInjectionKey,
-} from '@/components/track/TrackInjectionKeys';
-
-/** Whether this component is viewed for the "Edit" mode.
- * @devdoc Allows to reuse this component for more than one view mode.
- */
-const isTrackEditable = inject(trackViewModeIsEditableInjectionKey, ref(true));
-const isTrackPlayable = inject(trackViewModeIsPlayableInjectionKey, ref(false));
+const app = useAppStore();
+const { isTrackEditable, isTrackPlayable } = storeToRefs(app);
 
 /** Whether the pdf is currently expanded */
 const isExpanded = ref(false);
-
-const app = useAppStore();
 
 /** Gets the effective media source URL for this track
  */

@@ -136,66 +136,47 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+/** A printable display of a complete compilation, with a track and cue listing */
+import { computed, ref } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import SetlistItem from '@/components/SetlistItem.vue';
 import { mdiDrag, mdiPrinterOutline } from '@mdi/js';
 import draggable from 'vuedraggable';
-import { mapActions } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
-import { mapState } from 'pinia';
 import type { ITrack } from '@/store/ITrack';
 
-/** A printable display of a complete compilation, with a track and cue listing */
-export default defineComponent({
-    name: 'SetlistView',
-    components: {
-        BaseIcon,
-        SetlistItem,
-        draggable,
-    },
-    data() {
-        return {
-            drag: false,
-            /** Whether to print each track on a new page */
-            printTracksOnNewPage: false,
-            /** Whether to show the cues
-             * @remarks Default is true
-             */
-            showCues: false,
-            /** Whether to show the media source */
-            showMediaSource: false,
-            /** Whether to show the media source */
-            showNumbering: false,
-            /** Icons from @mdi/js */
-            mdiDrag: mdiDrag,
-            mdiPrinterOutline: mdiPrinterOutline,
-        };
-    },
-    computed: {
-        ...mapState(useAppStore, [
-            'compilation',
-            'hasCompilation',
-            'allTracks',
-        ]),
+const drag = ref(false);
 
-        orderedTracks: {
-            get(): ITrack[] {
-                return this.allTracks;
-            },
-            set(value: ITrack[]) {
-                const orderedTrackIds = value.map((item) => item.Id);
-                this.updateTrackOrder(orderedTrackIds);
-            },
-        },
-    },
-    methods: {
-        ...mapActions(useAppStore, ['updateTrackOrder']),
+/** Whether to print each track on a new page */
+const printTracksOnNewPage = ref(false);
 
-        printWindow: function () {
-            window.print();
-        },
+/** Whether to show the cues
+ * @remarks Default is true
+ */
+const showCues = ref(false);
+
+/** Whether to show the media source */
+const showMediaSource = ref(false);
+
+/** Whether to show the numbering */
+const showNumbering = ref(false);
+
+const app = useAppStore();
+const { compilation, hasCompilation, allTracks } = storeToRefs(app);
+
+const orderedTracks = computed<ITrack[]>({
+    get(): ITrack[] {
+        return allTracks.value;
+    },
+    set(value: ITrack[]) {
+        const orderedTrackIds = value.map((item) => item.Id);
+        app.updateTrackOrder(orderedTrackIds);
     },
 });
+
+function printWindow() {
+    window.print();
+}
 </script>

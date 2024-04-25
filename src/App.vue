@@ -72,25 +72,10 @@ import { useSettingsStore } from '@/store/settings';
 import { useAppStore } from './store/app';
 import { acknowledgeVersion } from './code/ui/dialogs';
 import { compare } from 'compare-versions';
-import {
-    computed,
-    onMounted,
-    provide,
-    readonly,
-    ref,
-    type ComputedRef,
-} from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { refDebounced, useElementSize } from '@vueuse/core';
 import { useRouter } from 'vue-router';
-import {
-    trackViewModeInjectionKey,
-    trackViewModeIsEditableInjectionKey,
-    trackViewModeIsPlayableInjectionKey,
-    trackViewModeIsMixableInjectionKey,
-} from '@/components/track/TrackInjectionKeys';
-import { Route } from '@/router';
-import { TrackViewMode } from '@/store/TrackViewMode';
 
 onMounted(() => {
     handleAppUpdate();
@@ -164,40 +149,6 @@ function handleAppUpdate() {
 
     console.debug('App.vue::handleAppUpdate done.');
 }
-
-// --- track view mode ---
-
-const trackViewMode = computed(() => {
-    const routeName = router.currentRoute.value.name;
-    switch (routeName) {
-        case Route.Edit:
-            return TrackViewMode.Edit;
-        case Route.Play:
-            return TrackViewMode.Play;
-        case Route.Mix:
-            return TrackViewMode.Mix;
-        default:
-            return TrackViewMode.Play;
-    }
-});
-
-/** Whether the track view is the edit view */
-const isTrackEditable = computed(() => {
-    return trackViewMode.value == TrackViewMode.Edit;
-});
-/** Whether the track view is the edit view */
-const isTrackPlayable = computed(() => {
-    return trackViewMode.value == TrackViewMode.Play;
-});
-/** Whether the track view is the edit view */
-const isTrackMixable = computed(() => {
-    return trackViewMode.value == TrackViewMode.Mix;
-});
-
-provide(trackViewModeInjectionKey, readonly(trackViewMode));
-provide(trackViewModeIsEditableInjectionKey, readonly(isTrackEditable));
-provide(trackViewModeIsPlayableInjectionKey, readonly(isTrackPlayable));
-provide(trackViewModeIsMixableInjectionKey, readonly(isTrackMixable));
 
 // --- bottom navbar spacing ---
 

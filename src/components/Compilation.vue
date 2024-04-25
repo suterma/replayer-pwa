@@ -70,10 +70,8 @@ import {
     computed,
     watch,
     nextTick,
-    inject,
     onMounted,
     onUnmounted,
-    ref,
 } from 'vue';
 import VueScrollTo from 'vue-scrollto';
 import MediaTrack from '@/components/track/MediaTrack.vue';
@@ -90,7 +88,6 @@ import { useSettingsStore } from '@/store/settings';
 import type { ICompilation } from '@/store/ICompilation';
 import { PlaybackMode } from '@/store/PlaybackMode';
 import type { ITrack } from '@/store/ITrack';
-import { TrackViewMode } from '@/store/TrackViewMode';
 
 /** Displays the contained set of tracks according to the required mode.
  * @remarks Also handles the common replayer events for compilations
@@ -100,19 +97,19 @@ const props = defineProps({
     compilation: { type: Object as PropType<ICompilation>, required: true },
 });
 
-// --- track view mode ---
-
-import {
-    trackViewModeInjectionKey,
-    trackViewModeIsEditableInjectionKey,
-    trackViewModeIsMixableInjectionKey,
-} from '@/components/track/TrackInjectionKeys';
-const trackViewMode = inject(
-    trackViewModeInjectionKey,
-    ref(TrackViewMode.Edit),
-);
-const isTrackEditable = inject(trackViewModeIsEditableInjectionKey, ref(true));
-const isTrackMixable = inject(trackViewModeIsMixableInjectionKey, ref(false));
+const app = useAppStore();
+const {
+    activeTrackId,
+    hasSingleMediaTrack,
+    mediaTracks,
+    allTracks,
+    playbackMode,
+    isFadingEnabled,
+    isPreRollEnabled,
+    trackViewMode,
+    isTrackEditable,
+    isTrackMixable,
+} = storeToRefs(app);
 
 /** The wake lock fill-in that can prevent screen timeout */
 const noSleep: NoSleep = new NoSleep();
@@ -122,18 +119,6 @@ const noSleep: NoSleep = new NoSleep();
  * @devdoc This allows to keep the shuffled order.
  */
 let shuffleSeed: number = 1;
-
-const app = useAppStore();
-
-const {
-    activeTrackId,
-    hasSingleMediaTrack,
-    mediaTracks,
-    allTracks,
-    playbackMode,
-    isFadingEnabled,
-    isPreRollEnabled,
-} = storeToRefs(app);
 
 const settings = useSettingsStore();
 const { preventScreenTimeout } = storeToRefs(settings);
@@ -182,9 +167,11 @@ const isLoopingPlaybackMode = computed(() => {
  * If a user scrolls to a certain cue within the same track, no scrolling should occur, to keep the UI calm.
  */
 watch(
-    () => activeTrackId,
-    (trackId) => {
-        if (trackId && !hasSingleMediaTrack) {
+    () => activeTrackId.value,
+    () => {
+        const trackId = activeTrackId;
+
+        if (trackId && !hasSingleMediaTrack.value) {
             console.debug('scrolling to activated track ', trackId.value);
             nextTick(() => {
                 scrollToTrack(trackId.value);
@@ -198,11 +185,11 @@ watch(
  * @remarks This is intentionally only invoked on when the display mode changes (and it's not the only track).
  */
 watch(
-    () => trackViewMode,
+    () => trackViewMode.value,
     () => {
         const trackId = activeTrackId;
 
-        if (trackId.value && !hasSingleMediaTrack) {
+        if (trackId.value && !hasSingleMediaTrack.value) {
             console.debug('scrolling to mode-changed track ', trackId.value);
             nextTick(() => {
                 if (trackId != null) {

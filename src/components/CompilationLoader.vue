@@ -32,22 +32,22 @@ export default defineComponent({
                     track.Url,
                 );
                 //Add the track, before the track media URL (to avoid the creation of a default track)
-                this.addTrack(track);
+                useAppStore().addTrack(track);
 
                 // Select cue matching the initial playhead position (see #134)
                 const initialCueId = track.Cues?.find(
                     (cue) => cue.Time == track.PlayheadPosition,
                 )?.Id;
                 if (initialCueId) {
-                    this.updateSelectedCueId(initialCueId);
+                    useAppStore().updateSelectedCueId(initialCueId);
                 } else {
                     const firstCueId = track.Cues?.[0]?.Id;
                     if (firstCueId) {
-                        this.updateSelectedCueId(firstCueId);
+                        useAppStore().updateSelectedCueId(firstCueId);
                     }
                 }
                 //Now, after the track has been added, add the track's media URL
-                this.useMediaFromUrl(track.Url);
+                useAppStore().useMediaFromUrl(track.Url);
             } else {
                 this.pushError(
                     'No valid track media URL found, no track is loaded',
@@ -61,21 +61,15 @@ export default defineComponent({
                 'CompilationLoader::mounted:adding package from URL:',
                 packageUrl,
             );
-            this.loadFromUrl(packageUrl).catch((errorMessage: string) => {
-                this.pushError(errorMessage);
-            });
+            useAppStore()
+                .loadFromUrl(packageUrl)
+                .catch((errorMessage: string) => {
+                    this.pushError(errorMessage);
+                });
         }
         this.removeQuery();
     },
     methods: {
-        ...mapActions(useAppStore, [
-            'loadFromUrl',
-            'updateSelectedCueId',
-            'updateScheduledCueId',
-            'addTrack',
-            'useMediaFromUrl',
-        ]),
-
         ...mapActions(useMessageStore, ['pushError']),
 
         /** Removes the API query from the fragment, since it has been applied now
