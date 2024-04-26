@@ -12,7 +12,7 @@ import type { ITrack } from '../ITrack';
 import CompilationHandler from '../compilation-handler';
 import FileHandler from '../filehandler';
 import { state } from './state';
-import { computed, type ComputedRef } from 'vue';
+import { computed } from 'vue';
 import { TrackViewMode } from '../TrackViewMode';
 
 export const getters = {
@@ -177,13 +177,13 @@ export const getters = {
         }
     }),
 
-    isTrackEditable: computed(() => {
-        return router.currentRoute.value.name == Route.Edit;
+    isTrackEditable: computed((): boolean => {
+        return getters.trackViewMode.value == TrackViewMode.Edit;
     }),
-    isTrackPlayable: computed(() => {
-        return router.currentRoute.value.name == Route.Play;
+    isTrackPlayable: computed((): boolean => {
+        return getters.trackViewMode.value == TrackViewMode.Play;
     }),
-    isTrackMixable: computed(() => {
-        return router.currentRoute.value.name == Route.Mix;
+    isTrackMixable: computed((): boolean => {
+        return getters.trackViewMode.value == TrackViewMode.Mix;
     }),
 };

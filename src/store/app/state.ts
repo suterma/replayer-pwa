@@ -62,15 +62,16 @@ export const state = {
 
     /** A dictionary of stored media URLs, representing playable media content from local or unzipped resources.
      * @remarks A name for the resource is used as key, preventing duplicate files for the same content.
-     * This is intentionally not persisted, to avoid using disposed object URL's after an app restart.
+     * @devdoc This is intentionally not persisted, to avoid using disposed object URL's after an app restart.
      */
     mediaUrls: ref(new Map<string, MediaUrl>()),
 
     /** Whether to use global app shortcuts
      * @remarks This can be used to temporarily pause global app shortcuts
      * in favor of use within modal or other dialogs.
+     * @devdoc This is intentionally not persisted, because it's temporay only.
      */
-    useAppShortcuts: useLocalStorage('useAppShortcuts', true),
+    useAppShortcuts: ref(true),
 
     /** The previous acknowledged version.
      * @remarks Used to let the user acknowledge (and internally handle) any new version

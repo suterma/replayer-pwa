@@ -13,10 +13,12 @@ import PersistentStorage from '../persistent-storage';
 import { Store } from '..';
 import { useMessageStore } from '../messages';
 
-/** A store for the app (compilation and associated) state
+/** A store for the general app state, including the currently loaded compilation
+ * @remarks This implements the application store part of the main concepts, documented at https://github.com/suterma/replayer-pwa/tree/main/doc#main-concepts
  * @devdoc This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores
  */
 export const useAppStore = defineStore(Store.App, () => {
+    //TODO actually create a separate store, as already pictured in the doc: https://github.com/suterma/replayer-pwa/tree/main/doc
     PersistentStorage.retrieveAllMediaBlobs()
         .then((mediaBlobs) => {
             mediaBlobs.forEach((blob) => {
