@@ -75,20 +75,6 @@
             @update:model-value="updatePlaybackMode"
         />
 
-        <PreRollToggler
-            v-if="!hidePreRollToggler"
-            :model-value="isPreRollEnabled"
-            data-cy="toggle-preroll-mode"
-            @update:model-value="updatedIsPreRollEnabled"
-        />
-
-        <FadingToggler
-            v-if="!hideFadingToggler"
-            :model-value="isFadingEnabled"
-            data-cy="toggle-fading-mode"
-            @update:model-value="updatedIsFadingEnabled"
-        />
-
         <VolumeKnob
             v-if="!hideVolumeButton"
             :disabled="disabled"
@@ -103,8 +89,6 @@
 import { defineComponent } from 'vue';
 import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import PlaybackModeMenu from '@/components/context-menu/PlaybackModeMenu.vue';
-import FadingToggler from '@/components/buttons/FadingToggler.vue';
-import PreRollToggler from '@/components/buttons/PreRollToggler.vue';
 import VolumeKnob from '@/components/controls/VolumeKnob.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import {
@@ -124,8 +108,6 @@ export default defineComponent({
     components: {
         PlayPauseButton,
         PlaybackModeMenu,
-        FadingToggler,
-        PreRollToggler,
         BaseIcon,
         VolumeKnob,
     },
@@ -215,20 +197,6 @@ export default defineComponent({
             default: false,
         },
 
-        /** Whether to hide the fading toggler button
-         */
-        hideFadingToggler: {
-            type: Boolean,
-            default: false,
-        },
-
-        /** Whether to hide the pre-roll toggler button
-         */
-        hidePreRollToggler: {
-            type: Boolean,
-            default: false,
-        },
-
         /** Whether the playing cue has a next cue
          */
         hasNextCue: {
@@ -261,8 +229,6 @@ export default defineComponent({
          */
         'togglePlaying',
         'update:playbackMode',
-        'update:isFadingEnabled',
-        'update:isPreRollEnabled',
         'update:volume',
         /** Emitted at a seek button click, with the amount of seconds as argument (can also be negative)
          */
@@ -316,16 +282,6 @@ export default defineComponent({
          */
         updatePlaybackMode(playbackMode: PlaybackMode): void {
             this.$emit('update:playbackMode', playbackMode);
-        },
-
-        /** Handling the enabled state of the fading */
-        updatedIsFadingEnabled(isFadingEnabled: boolean): void {
-            this.$emit('update:isFadingEnabled', isFadingEnabled);
-        },
-
-        /** Handling the enabled state of the pre-roll */
-        updatedIsPreRollEnabled(isPreRollEnabled: boolean): void {
-            this.$emit('update:isPreRollEnabled', isPreRollEnabled);
         },
 
         /** Handle a volume update

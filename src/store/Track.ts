@@ -8,6 +8,7 @@
 import type { IMeter } from '@/code/music/IMeter';
 import type { ITrack } from './ITrack';
 import type { ICue } from './ICue';
+import type { IMediaHandler } from '@/code/media/IMediaHandler';
 
 /** The default track volume */
 export const DefaultTrackVolume = 0.5;
@@ -35,6 +36,9 @@ export class Track implements ITrack {
     Duration: number | null = null;
     Volume: number = DefaultTrackVolume;
 
+    /**   @inheritdoc */
+    MediaHandler: IMediaHandler | null = null;
+
     /** Creates a new track
      * @param name {string} - The name for the track.
      * @param album {string} - The album name, if any.
@@ -45,6 +49,7 @@ export class Track implements ITrack {
      * @param playbackRate {number} - The track's playback rate. If not finite, a default value of 1 is used.
      * @param duration {number | null} - Duration of the media associated with the track. This is not persisted, but set to a specific value once after a matching track has been loaded.
      * @param volume {volume} - Track volume.
+     * @param mediaHandler {IMediaHandler | null} - The media handler. This is transient and never persisted.
      */
     constructor(
         name: string,
@@ -60,6 +65,7 @@ export class Track implements ITrack {
         cues: Array<ICue>,
         duration: number | null,
         volume: number,
+        mediaHandler: IMediaHandler | null,
     ) {
         this.Name = name;
         this.Album = album;
@@ -76,6 +82,14 @@ export class Track implements ITrack {
         this.Cues = cues;
         this.Duration = duration;
         this.Volume = volume;
+        //this.MediaHandler = mediaHandler;
+
+        Object.defineProperty(this, 'MediaHandler', {
+            value: mediaHandler,
+            writable: true,
+            configurable: true,
+            enumerable: false, // this is the default value, so it could be excluded
+        });
     }
 
     /** Parses the JSON and returns new instance of this class.
@@ -97,8 +111,9 @@ export class Track implements ITrack {
             obj.Url,
             obj.Id,
             obj.Cues,
-            null,
+            null /* duration not persisted */,
             obj.Volume ?? DefaultTrackVolume,
+            null /* media handler not persisted */,
         );
         console.debug('Track::fromJson:'), track;
         return track;

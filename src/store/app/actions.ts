@@ -28,6 +28,7 @@ import { useMessageStore } from '../messages';
 import type { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
 import { ProgressMessage } from '@/store/messages/ProgressMessage';
+import { getters } from './getters';
 
 export const actions = {
     /** Updates the currently selected cue Id, for application-wide handling
@@ -62,6 +63,53 @@ export const actions = {
         const firstCue = track?.Cues[0];
         if (firstCue) {
             state.selectedCueId.value = firstCue.Id;
+        }
+    },
+
+    toMnemonicCue(cueShortcut: string) {
+        console.debug('Compilation::toMnemonicCue:cueShortcut:', cueShortcut);
+        const allCues = getters.getAllCues.value;
+        const matchingCue = allCues.find((cue) => cue.Shortcut == cueShortcut);
+        if (matchingCue) {
+            actions.updateSelectedCueId(matchingCue.Id);
+        }
+    },
+
+    /** Selects the previous cue, if any. Otherwise, loop to the last cue */
+    toPreviousCue() {
+        console.debug('Compilation::toPreviousCue');
+        const allCueIds = getters.getAllCues.value.map((cue) => cue.Id);
+        const indexOfSelected = allCueIds.indexOf(state.selectedCueId.value);
+        if (indexOfSelected > 0) {
+            const prevCueId = allCueIds[indexOfSelected - 1];
+            if (prevCueId) {
+                actions.updateSelectedCueId(prevCueId);
+            }
+        } else {
+            //loop to last
+            const lastCueId = allCueIds.at(-1);
+            if (lastCueId) {
+                actions.updateSelectedCueId(lastCueId);
+            }
+        }
+    },
+
+    /** Selects the next cue, if any. Otherwise, loop to the first cue */
+    toNextCue() {
+        console.debug('Compilation::toNextCue');
+        const allCueIds = getters.getAllCues.value.map((cue) => cue.Id);
+        const indexOfSelected = allCueIds.indexOf(state.selectedCueId.value);
+        if (indexOfSelected < allCueIds.length - 1) {
+            const nextCueId = allCueIds[indexOfSelected + 1];
+            if (nextCueId) {
+                actions.updateSelectedCueId(nextCueId);
+            }
+        } else {
+            //loop to first
+            const firstCueId = allCueIds.at(0);
+            if (firstCueId) {
+                actions.updateSelectedCueId(firstCueId);
+            }
         }
     },
 

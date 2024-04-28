@@ -154,6 +154,7 @@ export default class CompilationHandler {
             new Array<ICue>(),
             null,
             DefaultTrackVolume,
+            null,
         );
         return newTrack;
     }

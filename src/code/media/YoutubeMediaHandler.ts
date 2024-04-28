@@ -16,6 +16,8 @@ import YouTubePlaybackRateController from './YouTubePlaybackRateController';
 import { DefaultPlaybackRate, DefaultTrackVolume } from '@/store/Track';
 import { nextTick } from 'vue';
 import chalk from 'chalk';
+import type { IMediaLooper } from './IMediaLooper';
+import { MediaLooper } from './MediaLooper';
 
 const mediaHandlerDebug = chalk.hex('#62c462'); // Replayer success color (bulma warning)
 
@@ -28,6 +30,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     // --- internals ---
 
     private _fader: IAudioFader;
+    private _looper: IMediaLooper;
     private _playbackRateController: IPlaybackRateController;
 
     /** The YouTube player instance to act upon */
@@ -49,6 +52,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
             player,
             DefaultPlaybackRate,
         );
+        this._looper = new MediaLooper(this);
 
         onStateChange((event) => {
             this.handleStateChange(event.data);
@@ -122,6 +126,14 @@ export default class YouTubeMediaHandler implements IMediaHandler {
      */
     get fader(): IAudioFader {
         return this._fader;
+    }
+
+    // --- looping ---
+
+    /** Gets the audio fading handler
+     */
+    get looper(): IMediaLooper {
+        return this._looper;
     }
 
     // --- transport ---

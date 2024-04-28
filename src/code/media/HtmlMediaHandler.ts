@@ -13,6 +13,8 @@ import { SubEvent } from 'sub-events';
 import type { IPlaybackRateController } from './IPlaybackRateController';
 import HtmlMediaPlaybackRateController from './HtmlMediaPlaybackRateController';
 import chalk from 'chalk';
+import { MediaLooper } from './MediaLooper';
+import type { IMediaLooper } from './IMediaLooper';
 
 const mediaHandlerDebug = chalk.hex('#62c462'); // Replayer success color (bulma warning)
 
@@ -25,6 +27,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
     // --- internals ---
 
     private _fader: IAudioFader;
+    private _looper: IMediaLooper;
     private _playbackRateController: IPlaybackRateController;
 
     /** The {HTMLMediaElement} instance to act upon */
@@ -52,6 +55,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
             media,
             playbackRate,
         );
+        this._looper = new MediaLooper(this);
 
         //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
         media.onloadeddata = () => {
@@ -187,6 +191,14 @@ export default class HtmlMediaHandler implements IMediaHandler {
      */
     get fader(): IAudioFader {
         return this._fader;
+    }
+
+    // --- looping ---
+
+    /** Gets the audio fading handler
+     */
+    get looper(): IMediaLooper {
+        return this._looper;
     }
 
     // --- transport ---

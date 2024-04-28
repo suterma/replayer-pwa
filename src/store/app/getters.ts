@@ -14,6 +14,8 @@ import FileHandler from '../filehandler';
 import { state } from './state';
 import { computed } from 'vue';
 import { TrackViewMode } from '../TrackViewMode';
+import type { ICue } from '../ICue';
+import { PlaybackMode } from '../PlaybackMode';
 
 export const getters = {
     /** Defines the function to determine whether a compilation is available (created or loaded) */
@@ -161,6 +163,22 @@ export const getters = {
         };
     }),
 
+    // --- cue selection ---
+
+    /** Gets all cues of all tracks in a flat array, or an empty array if there are none
+     */
+
+    getAllCues: computed(() => {
+        const tracks = getters.allTracks.value;
+        const cues = new Array<ICue>();
+        if (tracks) {
+            tracks.forEach((track) =>
+                track.Cues.forEach((cue) => cues.push(cue)),
+            );
+        }
+        return cues;
+    }),
+
     // --- track view mode ---
 
     trackViewMode: computed(() => {
@@ -185,5 +203,18 @@ export const getters = {
     }),
     isTrackMixable: computed((): boolean => {
         return getters.trackViewMode.value == TrackViewMode.Mix;
+    }),
+
+    // --- playback mode ---
+    /** Whether the PlaybackMode is looping the tracks
+     * in the compilation.
+     * @remarks These are PlaybackMode.LoopCompilation
+     * and PlaybackMode.ShuffleCompilation
+     */
+    isLoopingPlaybackMode: computed(() => {
+        return (
+            state.playbackMode.value === PlaybackMode.ShuffleCompilation ||
+            state.playbackMode.value === PlaybackMode.LoopCompilation
+        );
     }),
 };

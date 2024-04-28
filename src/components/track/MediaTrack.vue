@@ -157,7 +157,7 @@
         >
             <CueButtonsField
                 :disabled="!canPlay"
-                :playback-mode="playbackMode"
+                :playback-mode="playbackMode as PlaybackMode"
                 :track="track"
                 :is-active-track="isActiveTrack"
                 @click="
@@ -270,7 +270,7 @@
                 <CueLevelEditors
                     :cues="cues"
                     :disabled="!canPlay"
-                    :playback-mode="playbackMode"
+                    :playback-mode="playbackMode as PlaybackMode"
                     @click="cueClick"
                     @play="cuePlay"
                 >
@@ -346,18 +346,12 @@
                                 playbackMode === PlaybackMode.ShuffleCompilation
                             "
                             :hide-cue-navigation="true"
-                            :hide-pre-roll-toggler="hidePreRollToggler"
-                            :hide-fading-toggler="hideFadingToggler"
-                            :playback-mode="playbackMode"
+                            :playback-mode="playbackMode as PlaybackMode"
                             :is-fading-enabled="isFadingEnabled"
                             :is-pre-roll-enabled="isPreRollEnabled"
                             :volume="track.Volume"
                             :hide-play-pause-button="true"
                             @update:playback-mode="updatedPlaybackMode"
-                            @update:is-fading-enabled="updatedIsFadingEnabled"
-                            @update:is-pre-roll-enabled="
-                                updatedIsPreRollEnabled
-                            "
                             @update:volume="updateVolume"
                         >
                             <template #after-play>
@@ -554,7 +548,9 @@
                                             "
                                             :has-previous-cue="hasPreviousCue"
                                             :has-next-cue="hasNextCue"
-                                            :playback-mode="playbackMode"
+                                            :playback-mode="
+                                                playbackMode as PlaybackMode
+                                            "
                                             :is-fading-enabled="isFadingEnabled"
                                             :is-pre-roll-enabled="
                                                 isPreRollEnabled
@@ -564,12 +560,6 @@
                                                 isFading !== FadingMode.None
                                             "
                                             :hide-play-pause-button="false"
-                                            :hide-pre-roll-toggler="
-                                                hidePreRollToggler
-                                            "
-                                            :hide-fading-toggler="
-                                                hideFadingToggler
-                                            "
                                             :disabled="!canPlay"
                                             data-cy="media-controls-bar"
                                             @stop="stop()"
@@ -581,12 +571,6 @@
                                             @next-track="$emit('nextTrack')"
                                             @update:playback-mode="
                                                 updatedPlaybackMode
-                                            "
-                                            @update:is-fading-enabled="
-                                                updatedIsFadingEnabled
-                                            "
-                                            @update:is-pre-roll-enabled="
-                                                updatedIsPreRollEnabled
                                             "
                                             @update:volume="updateVolume"
                                             @seek="(seconds) => seek(seconds)"
@@ -622,7 +606,9 @@
                             >
                                 <div v-if="isFullscreen">
                                     <CueButtonsField
-                                        :playback-mode="playbackMode"
+                                        :playback-mode="
+                                            playbackMode as PlaybackMode
+                                        "
                                         :track="track"
                                         :disabled="!canPlay"
                                         :is-active-track="isActiveTrack"
@@ -642,7 +628,9 @@
                                     "
                                 >
                                     <CueButtonsBar
-                                        :playback-mode="playbackMode"
+                                        :playback-mode="
+                                            playbackMode as PlaybackMode
+                                        "
                                         :cues="track.Cues"
                                         :disabled="!canPlay"
                                         @click="
@@ -733,7 +721,6 @@ import {
     provide,
     readonly,
     ref,
-    inject,
     watch,
     watchEffect,
     nextTick,
@@ -790,6 +777,7 @@ import { useTitle } from '@vueuse/core';
 import router, { Route } from '@/router';
 import MessageOverlay from '@/components/MessageOverlay.vue';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
+import type { ICompilation } from '@/store/ICompilation';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -809,15 +797,6 @@ const emit = defineEmits([
     /** Occurs on a seek operation
      */
     'seekToSeconds',
-
-    /** Occurs, when the user toggles the playback mode */
-    'update:playbackMode',
-
-    /** Occurs, when the user changes the fading enabled state */
-    'update:isFadingEnabled',
-
-    /** Occurs, when the user changes the pre-roll enabled state */
-    'update:isPreRollEnabled',
 
     /** Occurs, when the end of the track has been reached and playback has ended.
      * @remarks This is not triggered when the track or one of it's cue is looping.
@@ -842,37 +821,17 @@ const props = defineProps({
         required: false,
         default: false,
     },
-
-    /** The playback mode
-     * @remarks Used overall in the compilation, not per track
-     */
-    playbackMode: {
-        type: String as PropType<PlaybackMode>,
-        required: true,
-        default: PlaybackMode.PlayTrack,
-    },
-
-    /** Whether fading is enabled
-     * @remarks Used overall in the compilation, not per track
-     */
-    isFadingEnabled: {
-        type: Boolean,
-        required: false,
-        default: true,
-    },
-
-    /** Whether pre-roll is enabled
-     * @remarks Used overall in the compilation, not per track
-     */
-    isPreRollEnabled: {
-        type: Boolean,
-        required: false,
-        default: true,
-    },
 });
 
 const app = useAppStore();
-const { isTrackEditable, isTrackPlayable, isTrackMixable } = storeToRefs(app);
+const {
+    isTrackEditable,
+    isTrackPlayable,
+    isTrackMixable,
+    playbackMode,
+    isFadingEnabled,
+    isPreRollEnabled,
+} = storeToRefs(app);
 
 // --- metering ---
 
@@ -900,12 +859,12 @@ provide(meterInjectionKey, readonly(meter));
 /** A reference to the appropriate media handler
  * @remarks Gets set only after the respective track media component emits the ready-to-play event.
  */
-const mediaHandler: Ref<IMediaHandler | null> = ref(null);
+const mediaHandler = computed(() => props.track.MediaHandler);
 
 /** A reference to the appropriate media looper
  * @remarks Gets set only after the media handler is avaialble and set.
  */
-const mediaLooper: Ref<IMediaLooper | null> = ref(null);
+//const mediaLooper: Ref<IMediaLooper | null> = ref(null);
 
 /** A reference to the cue scheduler
  */
@@ -986,9 +945,9 @@ function takeMediaHandler(handler: IMediaHandler) {
         app.updateTrackPlaybackRate(props.track?.Id, rate);
     });
 
-    mediaHandler.value = handler;
-    mediaLooper.value = new MediaLooper(handler);
     cueScheduler.value = new CueScheduler(handler);
+
+    props.track.MediaHandler = handler;
 }
 
 // --- Transport ---
@@ -1080,25 +1039,6 @@ watchEffect(() => {
         preRollDuration.value,
         addFadeInPreRoll.value,
     );
-});
-
-/** Computes whether the fading toggler is needed at all
- */
-const hideFadingToggler = computed(
-    () => fadeInDuration.value === 0 && fadeOutDuration.value === 0,
-);
-
-/** Computes whether the pre-roll toggler is needed at all
- */
-const hidePreRollToggler = computed(() => preRollDuration.value === 0);
-
-/** Applies updated fading and pre-roll to the media handler
- */
-watchEffect(() => {
-    if (mediaHandler.value && mediaHandler.value.fader) {
-        mediaHandler.value.fader.isFadingEnabled = props.isFadingEnabled;
-        mediaHandler.value.fader.isPreRollEnabled = props.isPreRollEnabled;
-    }
 });
 
 const {
@@ -1315,20 +1255,8 @@ function togglePlayback() {
 
 /** Handle playback mode updates
  */
-function updatedPlaybackMode(playbackMode: PlaybackMode): void {
-    emit('update:playbackMode', playbackMode);
-}
-
-/** Handle fading enabled updated
- */
-function updatedIsFadingEnabled(isFadingEnabled: boolean): void {
-    emit('update:isFadingEnabled', isFadingEnabled);
-}
-
-/** Handle pre-roll enabled updated
- */
-function updatedIsPreRollEnabled(isPreRollEnabled: boolean): void {
-    emit('update:isPreRollEnabled', isPreRollEnabled);
+function updatedPlaybackMode(updatedPlaybackMode: PlaybackMode): void {
+    playbackMode.value = updatedPlaybackMode;
 }
 
 /** Handles the click of a cue button, by seeking to it and, optionally, toggling playback
@@ -1342,7 +1270,7 @@ function cueClick(cue: ICue, togglePlayback = true) {
         // Handle cue as current or scheduled?
         if (
             selectedCueId /*any is selected?*/ &&
-            props.playbackMode == PlaybackMode.QueueCue &&
+            playbackMode.value == PlaybackMode.QueueCue &&
             isTrackPlaying.value
         ) {
             // Schedule the cue
@@ -1590,12 +1518,12 @@ watch(
         } else if (activeTrackId != null && previousTrackId != null) {
             const indexOfActive = CompilationHandler.getIndexOfTrackById(
                 //Because of the possible shuffling, the tracks computed property is not used
-                compilation.value.Tracks,
+                (compilation.value as ICompilation).Tracks,
                 activeTrackId,
             );
 
             const indexOfPrevious = CompilationHandler.getIndexOfTrackById(
-                compilation.value.Tracks,
+                (compilation.value as ICompilation).Tracks,
                 previousTrackId,
             );
 
@@ -1646,17 +1574,17 @@ watch(
 // --- looping ---
 
 watchEffect(() => {
-    switch (props.playbackMode) {
+    switch (playbackMode.value) {
         case PlaybackMode.LoopTrack:
-            if (mediaLooper.value && mediaHandler.value) {
-                mediaLooper.value.RemoveLoop();
+            if (mediaHandler.value) {
+                mediaHandler.value.looper?.RemoveLoop();
                 mediaHandler.value.loop = true;
             }
             break;
 
         case PlaybackMode.PlayCue:
         case PlaybackMode.LoopCue:
-            if (mediaLooper.value && mediaHandler.value) {
+            if (mediaHandler.value) {
                 mediaHandler.value.loop = false;
 
                 const cueBegin = selectedCue.value?.Time;
@@ -1671,10 +1599,10 @@ watchEffect(() => {
                     cueDuration > 0
                 ) {
                     const loopMode =
-                        props.playbackMode === PlaybackMode.LoopCue
+                        playbackMode.value === PlaybackMode.LoopCue
                             ? LoopMode.Recurring
                             : LoopMode.Once;
-                    mediaLooper.value.SetLoop(
+                    mediaHandler.value.looper?.SetLoop(
                         cueBegin,
                         cueBegin + cueDuration,
                         loopMode,
@@ -1687,9 +1615,7 @@ watchEffect(() => {
             if (mediaHandler.value) {
                 mediaHandler.value.loop = false;
             }
-            if (mediaLooper.value) {
-                mediaLooper.value.RemoveLoop();
-            }
+            mediaHandler.value?.looper?.RemoveLoop();
             break;
     }
 });

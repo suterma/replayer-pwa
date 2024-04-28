@@ -120,6 +120,7 @@ export default abstract class XmlCompilationParser {
                     null,
                     XmlCompilationParser.FirstNumberOf(xmlTrack.Volume) ??
                         DefaultTrackVolume,
+                    null,
                 );
                 tracks.push(track);
             });

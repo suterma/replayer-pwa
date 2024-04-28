@@ -8,6 +8,7 @@
 import { SubEvent } from 'sub-events';
 import type { IAudioFader } from './IAudioFader';
 import type { IPlaybackRateController } from './IPlaybackRateController';
+import type { IMediaLooper } from './IMediaLooper';
 
 /** @interface Defines a media handler.
  * This defines transport, loop and volume operations for media sources
@@ -31,6 +32,10 @@ export interface IMediaHandler {
     /** Gets the audio fading handler
      */
     readonly fader: IAudioFader;
+
+    /** Gets the audio loop handler
+     */
+    readonly looper: IMediaLooper;
 
     /** Gets the playback rate controller
      */
