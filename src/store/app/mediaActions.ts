@@ -28,6 +28,7 @@ import { useMessageStore } from '../messages';
 import type { IMeter } from '@/code/music/IMeter';
 import { getters } from './getters';
 import { actions } from './actions';
+import type { IMediaHandler } from '@/code/media/IMediaHandler';
 
 /** Playback actions using the the tracks from the application state with their media handlers.
  * @remarks These actions require the presence of an IMediaHandler on
@@ -64,5 +65,11 @@ export const mediaActions = {
             actions.updateSelectedTrackId(nextTrack.Id);
             nextTrack.MediaHandler?.playFrom(0);
         }
+    },
+
+    /** Sets the media handler for an existing track.
+     */
+    setMediaHandlerForTrack(track: ITrack, handler: IMediaHandler): void {
+        track.MediaHandler = handler;
     },
 };

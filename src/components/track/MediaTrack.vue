@@ -765,8 +765,7 @@ import {
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
 import { ReplayerEvent } from '@/code/ui/ReplayerEvent';
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
-import { type IMediaLooper, LoopMode } from '@/code/media/IMediaLooper';
-import { MediaLooper } from '@/code/media/MediaLooper';
+import { LoopMode } from '@/code/media/IMediaLooper';
 import { FadingMode } from '@/code/media/IAudioFader';
 import type { ICueScheduler } from '@/code/media/ICueScheduler';
 import { CueScheduler } from '@/code/media/CueScheduler';
@@ -947,7 +946,7 @@ function takeMediaHandler(handler: IMediaHandler) {
 
     cueScheduler.value = new CueScheduler(handler);
 
-    props.track.MediaHandler = handler;
+    app.setMediaHandlerForTrack(props.track, handler);
 }
 
 // --- Transport ---
