@@ -1622,35 +1622,33 @@ watchEffect(() => {
 
 // --- document title
 
-const title = useTitle();
-
 /** For an active track, show the cue, track and app name in the document title
- * @devdoc This does unfortunately not work when only the track changes, and
+ * @devdoc VueUse/useTitle does unfortunately not work when only the track
+ * changes from a track with cues and
  * no named cue is playing on a newly active track. The reason for this is
  * unknown.
- * Thus, an additional title update is implemented at a parent component level.
+ * Thus, an explicit document title update is used here.
  */
-watchEffect(() => {
-    const existingTitle = title.value;
-    let newTitle = 'Replayer';
 
-    if (isActiveTrack.value == true) {
-        newTitle =
-            (playingCueDescription.value
-                ? playingCueDescription.value + ' | '
-                : '') +
-            (props.track?.Name ? props.track?.Name + ' | ' : '') +
-            newTitle;
+watch(
+    [() => playingCueDescription.value, () => isActiveTrack.value],
+    ([playingCueDescription, isActiveTrack]) => {
+        const existingTitle = document.title;
+        let newTitle = 'Replayer';
 
-        if (existingTitle !== newTitle) {
-            console.debug(
-                `MediaTrack(${props.track.Name})::title.value:`,
-                newTitle,
-            );
-            title.value = newTitle;
+        if (isActiveTrack) {
+            newTitle =
+                (playingCueDescription ? playingCueDescription + ' | ' : '') +
+                (props.track?.Name ? props.track?.Name + ' | ' : '') +
+                newTitle;
+
+            if (existingTitle !== newTitle) {
+                document.title = newTitle;
+            }
         }
-    }
-});
+    },
+    { immediate: true },
+);
 
 // --- handling the cue scheduling
 

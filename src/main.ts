@@ -67,14 +67,3 @@ window.addEventListener(
         message.pushError(event?.reason);
     },
 );
-
-/** Handle the app title when the compilation title changes */
-const app = useAppStore();
-const title = useTitle();
-const { compilationTitle } = storeToRefs(app);
-watch(compilationTitle, () => {
-    const updatedTitle =
-        (compilationTitle.value ? compilationTitle.value + ' | ' : '') +
-        'Replayer';
-    title.value = updatedTitle;
-});
