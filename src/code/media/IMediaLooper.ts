@@ -21,10 +21,10 @@ export interface IMediaLooper {
      */
     get LoopMode(): LoopMode;
 
-    /** Sets a loop */
+    /** Sets a ranged loop */
     SetLoop(start: number, end: number, mode: LoopMode): void;
 
-    /** Removes a set loop */
+    /** Removes a ranged loop */
     RemoveLoop(): void;
 }
 

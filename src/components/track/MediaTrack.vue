@@ -1577,7 +1577,7 @@ watchEffect(() => {
     switch (playbackMode.value) {
         case PlaybackMode.LoopTrack:
             if (mediaHandler.value) {
-                mediaHandler.value.looper?.RemoveLoop();
+                mediaHandler.value.looper.RemoveLoop();
                 mediaHandler.value.loop = true;
             }
             break;
