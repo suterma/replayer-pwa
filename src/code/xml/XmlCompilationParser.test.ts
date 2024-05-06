@@ -253,6 +253,7 @@ describe('XmlCompilationParser.ts', () => {
             new Array<ICue>(),
             null,
             DefaultTrackVolume,
+            null,
         );
 
         const testCompilation = new Compilation(
@@ -288,6 +289,7 @@ describe('XmlCompilationParser.ts', () => {
             new Array<ICue>(),
             null,
             1,
+            null,
         );
 
         const testCompilation = new Compilation(

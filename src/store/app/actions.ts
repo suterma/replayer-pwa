@@ -28,6 +28,7 @@ import { useMessageStore } from '../messages';
 import type { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
 import { ProgressMessage } from '@/store/messages/ProgressMessage';
+import { getters } from './getters';
 
 export const actions = {
     /** Updates the currently selected cue Id, for application-wide handling
@@ -62,6 +63,53 @@ export const actions = {
         const firstCue = track?.Cues[0];
         if (firstCue) {
             state.selectedCueId.value = firstCue.Id;
+        }
+    },
+
+    toMnemonicCue(cueShortcut: string) {
+        console.debug('Compilation::toMnemonicCue:cueShortcut:', cueShortcut);
+        const allCues = getters.getAllCues.value;
+        const matchingCue = allCues.find((cue) => cue.Shortcut == cueShortcut);
+        if (matchingCue) {
+            actions.updateSelectedCueId(matchingCue.Id);
+        }
+    },
+
+    /** Selects the previous cue, if any. Otherwise, loop to the last cue */
+    toPreviousCue() {
+        console.debug('Compilation::toPreviousCue');
+        const allCueIds = getters.getAllCues.value.map((cue) => cue.Id);
+        const indexOfSelected = allCueIds.indexOf(state.selectedCueId.value);
+        if (indexOfSelected > 0) {
+            const prevCueId = allCueIds[indexOfSelected - 1];
+            if (prevCueId) {
+                actions.updateSelectedCueId(prevCueId);
+            }
+        } else {
+            //loop to last
+            const lastCueId = allCueIds.at(-1);
+            if (lastCueId) {
+                actions.updateSelectedCueId(lastCueId);
+            }
+        }
+    },
+
+    /** Selects the next cue, if any. Otherwise, loop to the first cue */
+    toNextCue() {
+        console.debug('Compilation::toNextCue');
+        const allCueIds = getters.getAllCues.value.map((cue) => cue.Id);
+        const indexOfSelected = allCueIds.indexOf(state.selectedCueId.value);
+        if (indexOfSelected < allCueIds.length - 1) {
+            const nextCueId = allCueIds[indexOfSelected + 1];
+            if (nextCueId) {
+                actions.updateSelectedCueId(nextCueId);
+            }
+        } else {
+            //loop to first
+            const firstCueId = allCueIds.at(0);
+            if (firstCueId) {
+                actions.updateSelectedCueId(firstCueId);
+            }
         }
     },
 
@@ -119,14 +167,8 @@ export const actions = {
      *  @remarks Updates the persistently stored playback position.
      *  Implements #132
      */
-    updatePlayheadPosition(trackId: string, time: number): void {
-        const matchingTrack = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
-        if (matchingTrack) {
-            matchingTrack.PlayheadPosition = time;
-        }
+    updatePersistedPlayheadPosition(track: ITrack, time: number): void {
+        track.PlayheadPosition = time;
     },
 
     /** Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.
@@ -1059,6 +1101,21 @@ export const actions = {
         state.compilation.value.Tracks.sort(
             (a, b) =>
                 orderedTrackIds.indexOf(a.Id) - orderedTrackIds.indexOf(b.Id),
+        );
+    },
+
+    // --- track positioning ---
+
+    /** Whether the track is the first track in the set of media tracks */
+    isFirstMediaTrack(track: ITrack): boolean {
+        return getters.mediaTracks.value[0]?.Id === track.Id;
+    },
+
+    /** Whether the track is the last track in the set of media tracks */
+    isLastMediaTrack(track: ITrack): boolean {
+        return (
+            getters.mediaTracks.value[getters.mediaTracks.value.length - 1]
+                ?.Id === track.Id
         );
     },
 

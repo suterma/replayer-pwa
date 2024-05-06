@@ -159,7 +159,6 @@ import {
     onBeforeUnmount,
     onDeactivated,
     onMounted,
-    inject,
     type PropType,
     type Ref,
     ref,

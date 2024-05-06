@@ -29,6 +29,7 @@ describe('the XML mapping', function () {
             new Array<ICue>(),
             60,
             0.9,
+            null,
         );
 
         //Act

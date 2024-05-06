@@ -12,6 +12,7 @@ import { actions } from './actions';
 import PersistentStorage from '../persistent-storage';
 import { Store } from '..';
 import { useMessageStore } from '../messages';
+import { mediaActions } from './mediaActions';
 
 /** A store for the general app state, including the currently loaded compilation
  * @remarks This implements the application store part of the main concepts, documented at https://github.com/suterma/replayer-pwa/tree/main/doc#main-concepts
@@ -35,5 +36,6 @@ export const useAppStore = defineStore(Store.App, () => {
         ...state,
         ...getters,
         ...actions,
+        ...mediaActions,
     };
 });

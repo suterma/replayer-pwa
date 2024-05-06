@@ -8,6 +8,7 @@
 import { SubEvent } from 'sub-events';
 import type { IAudioFader } from './IAudioFader';
 import type { IPlaybackRateController } from './IPlaybackRateController';
+import type { IMediaLooper } from './IMediaLooper';
 
 /** @interface Defines a media handler.
  * This defines transport, loop and volume operations for media sources
@@ -32,6 +33,10 @@ export interface IMediaHandler {
      */
     readonly fader: IAudioFader;
 
+    /** Gets the audio loop handler
+     */
+    readonly looper: IMediaLooper;
+
     /** Gets the playback rate controller
      */
     readonly playbackRateController: IPlaybackRateController;
@@ -53,7 +58,8 @@ export interface IMediaHandler {
      */
     readonly onSeeked: SubEvent<number>;
 
-    /** Gets the paused state
+    /** Whether the playback is currently paused (or otherwise not playing)
+     * @remarks A value of true indicates an ongoing playback operation.
      */
     readonly paused: boolean;
 

@@ -81,11 +81,30 @@ export class Compilation implements ICompilation {
                     }),
                     track.Duration,
                     track.Volume ?? DefaultTrackVolume,
+                    track.MediaHandler,
                 );
             }),
         );
         return compilation;
     }
+
+    // /** Writes the JSON
+    //  * @param jsonCompilation - a JSON representation of a Compilation
+    //  * @devdoc See https://stackoverflow.com/a/5874189/79485
+    //  */
+    // static toJson(compilation: Compilation): string {
+    //     const privateProperties = ['privateProperty1', 'privateProperty2'];
+    //     const excludePrivateProperties = (key: any, value: any) => {
+    //         console.debug('key:', key, 'value', value);
+    //         privateProperties.includes(key) ? undefined : value;
+    //     };
+
+    //     const jsonString = JSON.stringify(
+    //         compilation,
+    //         excludePrivateProperties,
+    //     );
+    //     return jsonString;
+    // }
 
     /** Returns a new, empty compilation
      */

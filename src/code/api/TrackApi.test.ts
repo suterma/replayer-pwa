@@ -36,6 +36,7 @@ describe('TrackApi.ts', () => {
             testCues,
             60,
             1,
+            null,
         );
 
         //Act
@@ -216,6 +217,7 @@ describe('TrackApi.ts', () => {
             new Array<Cue>(),
             60,
             1,
+            null,
         );
 
         //Act

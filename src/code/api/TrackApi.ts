@@ -164,6 +164,7 @@ export class TrackApi {
                 cues,
                 null,
                 DefaultTrackVolume,
+                null,
             );
             return newTrack;
         } else {

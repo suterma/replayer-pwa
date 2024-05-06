@@ -3,9 +3,9 @@
     <div v-if="compilation" class="compilation" data-cy="compilation">
         <!-- Handle all relevant Replayer events for the compilation level -->
         <ReplayerEventHandler
-            @tonextcue="toNextCue"
-            @topreviouscue="toPreviousCue"
-            @tomnemoniccue="toMnemonicCue($event)"
+            @tonextcue="app.toNextCue()"
+            @topreviouscue="app.toPreviousCue()"
+            @tomnemoniccue="app.toMnemonicCue(($event as CustomEvent).detail)"
         />
 
         <CompilationHeader
@@ -15,25 +15,14 @@
         />
 
         <div class="tracks">
-            <template v-for="(track, index) in allTracks" :key="track.Id">
+            <template v-for="track in allTracks" :key="track.Id">
                 <MediaTrack
                     v-if="CompilationHandler.isMediaTrack(track)"
                     :id="'track-' + track.Id"
-                    :ref="'track-' + track.Id"
                     class="block"
                     :track="track"
-                    :playback-mode="playbackMode as PlaybackMode"
-                    :is-fading-enabled="isFadingEnabled"
-                    :is-pre-roll-enabled="isPreRollEnabled"
-                    @update:playback-mode="updatePlaybackMode($event)"
-                    @update:is-fading-enabled="updatedIsFadingEnabled($event)"
-                    @update:is-pre-roll-enabled="
-                        updatedIsPreRollEnabled($event)
-                    "
-                    @previous-track="
-                        toPreviousTrack(track.Id, isLoopingPlaybackMode)
-                    "
-                    @next-track="toNextTrack(track.Id, isLoopingPlaybackMode)"
+                    @previous-track="app.playPreviousTrack()"
+                    @next-track="app.playNextTrack()"
                     @track-ended="continueAfterTrack(track.Id)"
                 />
                 <NoticeTrack
@@ -104,8 +93,6 @@ const {
     mediaTracks,
     allTracks,
     playbackMode,
-    isFadingEnabled,
-    isPreRollEnabled,
     trackViewMode,
     isTrackEditable,
     isTrackMixable,
@@ -148,18 +135,6 @@ const hasTracks = computed(() => {
         return true;
     }
     return false;
-});
-
-/** Whether the PlaybackMode is looping the tracks
- * in the compilation.
- * @remarks These are PlaybackMode.ShuffleCompilation
- * and PlaybackMode.ShuffleCompilation
- */
-const isLoopingPlaybackMode = computed(() => {
-    return (
-        playbackMode.value === PlaybackMode.ShuffleCompilation ||
-        playbackMode.value === PlaybackMode.LoopCompilation
-    );
 });
 
 /** Handle scrolling to the changed active track.
@@ -268,145 +243,15 @@ function scrollToTrack(trackId: string) {
     }
 }
 
-function updatePlaybackMode(mode: PlaybackMode): void {
-    //omit the modes that affect more than one track
-    if (hasSingleMediaTrack.value) {
-        if (
-            mode === PlaybackMode.LoopCompilation ||
-            mode === PlaybackMode.ShuffleCompilation
-        ) {
-            mode = PlaybackMode.PlayTrack;
-        }
-    }
-
-    playbackMode.value = mode;
-}
-
-/** Handle fading enabled updated
- */
-function updatedIsFadingEnabled(enabled: boolean): void {
-    isFadingEnabled.value = enabled;
-}
-
-/** Handle pre-roll enabled updated
- */
-function updatedIsPreRollEnabled(enabled: boolean): void {
-    isPreRollEnabled.value = enabled;
-}
-
-/** Moves playback to the previous track
- * @param trackId - The Id of the track to use the previous of
- * @param loop - When true, and the previous track is not defined, the last track is used.
- */
-function toPreviousTrack(trackId: string, loop = false): void {
-    //TODO maybe use a method with the media handers in the audio store to skip to the next track
-
-    if (tracks.value) {
-        const prevTrackId = CompilationHandler.getPreviousTrackById(
-            tracks.value,
-            trackId,
-            loop,
-        )?.Id;
-        if (prevTrackId) {
-            //getTrackInstance(prevTrackId).skipToPlayPause();
-        }
-    }
-}
-
-/** Moves playback to the next track
- * @remarks Optionally supports looping back to the beginning, if the end was reached.
- * @param trackId - The Id of the track to use the next of
- * @param loop - When true, and the next track is not defined, the first track is used.
- */
-function toNextTrack(trackId: string, loop = false): void {
-    //TODO maybe use a method with the media handers in the audio store to skip to the next track
-    console.debug('toNextTrack', trackId);
-    if (tracks.value) {
-        const nextTrackId = CompilationHandler.getNextTrackById(
-            tracks.value,
-            trackId,
-            loop,
-        )?.Id;
-        if (nextTrackId) {
-            //getTrackInstance(nextTrackId).skipToPlayPause();
-        }
-    }
-}
-
-/** Handles the playback mode after a track has ended. Implement the compilation loop and shuffle modes.
+/** Handles the playback after a track has ended. Implement the compilation loop and shuffle modes.
  */
 function continueAfterTrack(trackId: string): void {
     console.debug('continueAfterTrack', trackId);
-    if (hasTracks.value) {
-        if (
-            playbackMode.value === PlaybackMode.LoopCompilation ||
-            playbackMode.value === PlaybackMode.ShuffleCompilation
-        ) {
-            toNextTrack(trackId, true);
-        }
+    if (
+        playbackMode.value === PlaybackMode.LoopCompilation ||
+        playbackMode.value === PlaybackMode.ShuffleCompilation
+    ) {
+        app.playNextTrack();
     }
-}
-
-/** Gets a reference to the track component instance.
- * @devdoc $ref's are non-reactive, see https://v3.vuejs.org/api/special-attributes.html#ref
- * Thus, referencing an instance after it has been removed from the DOM (e.g. by v-if)
- * does not work, even after it's rendered again later.
- */
-// function getTrackInstance(trackId: string): InstanceType<typeof MediaTrack> {
-//     const trackRef = 'track-' + trackId;
-//     const track = ($refs[trackRef] as never)[0] as InstanceType<
-//         typeof MediaTrack
-//     >;
-//     return track;
-// };
-
-/** Selects the previous cue, if any. Otherwise, loop to the last cue */
-function toPreviousCue() {
-    // console.debug('Compilation::toPreviousCue');
-    // const allCueIds = this.allCues.map((cue) => cue.Id);
-    // const indexOfSelected = allCueIds.indexOf(this.selectedCueId);
-    // if (indexOfSelected > 0) {
-    //     const prevCueId = allCueIds[indexOfSelected - 1];
-    //     if (prevCueId) {
-    //         this.updateSelectedCueId(prevCueId);
-    //     }
-    // } else {
-    //     //loop to last
-    //     const lastCueId = allCueIds.at(-1);
-    //     if (lastCueId) {
-    //         this.updateSelectedCueId(lastCueId);
-    //     }
-    // }
-}
-
-/** Selects the next cue, if any. Otherwise, loop to the first cue */
-function toNextCue() {
-    // console.debug('Compilation::toNextCue');
-    // const allCueIds = this.allCues.map((cue) => cue.Id);
-    // //TODO maybe just use the scheduled cue here, if available?
-    // const indexOfSelected = allCueIds.indexOf(this.selectedCueId);
-    // if (indexOfSelected < allCueIds.length - 1) {
-    //     const nextCueId = allCueIds[indexOfSelected + 1];
-    //     if (nextCueId) {
-    //         this.updateSelectedCueId(nextCueId);
-    //     }
-    // } else {
-    //     //loop to first
-    //     const firstCueId = allCueIds.at(0);
-    //     if (firstCueId) {
-    //         this.updateSelectedCueId(firstCueId);
-    //     }
-    // }
-}
-
-function toMnemonicCue(event: Event) {
-    // console.debug('Compilation::toMnemonicCue');
-    // const allCues = this.allCues;
-    // const matchingCue = allCues.find(
-    //     (cue) => cue.Shortcut == (event as CustomEvent).detail,
-    // );
-    // if (matchingCue) {
-    //     this.updateSelectedCueId(matchingCue.Id);
-    // }
 }
 </script>

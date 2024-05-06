@@ -17,7 +17,7 @@ import { type IMediaLooper, LoopMode } from './IMediaLooper';
  */
 export class MediaLooper implements IMediaLooper {
     /** @constructor
-     * @param {IMediaHandler} media - The media handler to act upon
+     * @param {IMediaHandler} media - The media handler to act upon. The playback rate controller must already be available.
      */
     constructor(media: IMediaHandler) {
         this._media = media;
