@@ -85,7 +85,7 @@
                             }"
                             :is-loading="isFading !== FadingMode.None"
                             data-cy="toggle-playback"
-                            @click="skipToPlayPause()"
+                            @click="app.skipToPlayPause(props.track)"
                         />
 
                         <!-- Title -->
@@ -128,7 +128,7 @@
                                 'is-clickable': isTrackLoaded,
                                 'has-cursor-not-allowed': !isTrackLoaded,
                             }"
-                            @click="skipToPlayPause"
+                            @click="app.skipToPlayPause(props.track)"
                         >
                             <span
                                 :id="`track-${track.Id}-HeaderLevelPlaceholder`"
@@ -574,7 +574,9 @@
                                             "
                                             @update:volume="updateVolume"
                                             @seek="(seconds) => seek(seconds)"
-                                            @toggle-playing="skipToPlayPause()"
+                                            @toggle-playing="
+                                                app.skipToPlayPause(props.track)
+                                            "
                                         >
                                             <template #start>
                                                 <MediaContextMenu
@@ -1070,36 +1072,6 @@ function toNextCue() {
     document.dispatchEvent(new Event(ReplayerEvent.TO_NEXT_CUE));
 }
 
-/** Skips to this track (if loaded)
- * @remarks If the track is not loaded, does nothing.
- * If the track is not yet the active track, tries to activate the track and play.
- * If it's the active track, just toggles play/pause
- * @devdoc Conditional event registration inside the template did not work.
- */
-function skipToPlayPause(): void {
-    if (isTrackLoaded.value) {
-        if (!isActiveTrack.value) {
-            app.updateSelectedTrackId(props.track.Id);
-
-            // Since the track's viewport might be hidden in the DOM,
-            // let it first become un-hidden.
-            nextTick(() => {
-                // To account for the slide-in transition wait the
-                // complete transition duration
-                // This delay prevents error messages for video tracks, when the video
-                // element hast the native controls enabled,
-                // but is not completely visible yet
-                setTimeout(
-                    () => mediaHandler.value?.play(),
-                    300 /*replayer-transition-duration*/,
-                );
-            });
-        } else {
-            togglePlayback();
-        }
-    }
-}
-
 /** Sets this track as the active track (if loaded)
  * @remarks If the track is not loaded, does nothing.
  * If the track is not yet the active track, tries to activate the track (which will autoplay).
@@ -1338,11 +1310,6 @@ function createNewCue(): void {
     } else
         throw new Error('currentPosition must be available for adding a cue');
 }
-
-defineExpose({
-    /** For skipping from the compilation level, to a given track, the skipToPlayPause needs to be accessible from outside */
-    skipToPlayPause,
-});
 
 /** Handles changes in whether this track is playing.
  */

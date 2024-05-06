@@ -29,6 +29,7 @@ import type { IMeter } from '@/code/music/IMeter';
 import { getters } from './getters';
 import { actions } from './actions';
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
+import { nextTick } from 'vue';
 
 /** Playback actions using the the tracks from the application state with their media handlers.
  * @remarks These actions require the presence of an IMediaHandler on
@@ -71,5 +72,36 @@ export const mediaActions = {
      */
     setMediaHandlerForTrack(track: ITrack, handler: IMediaHandler): void {
         track.MediaHandler = handler;
+    },
+
+    /** Skips to this track (if loaded)
+     * @remarks If the track is not loaded, does nothing.
+     * If the track is not yet the active track, tries to activate the track and play.
+     * If it's the active track, just toggles play/pause
+     * @devdoc Conditional event registration inside the template did not work.
+     */
+    skipToPlayPause(track: ITrack): void {
+        if (track.MediaHandler?.canPlay) {
+            getters.activeTrackId;
+            if (!(getters.activeTrackId.value === track.Id)) {
+                actions.updateSelectedTrackId(track.Id);
+
+                // Since the track's viewport might be hidden in the DOM,
+                // let it first become un-hidden.
+                nextTick(() => {
+                    // To account for the slide-in transition wait the
+                    // complete transition duration
+                    // This delay prevents error messages for video tracks, when the video
+                    // element hast the native controls enabled,
+                    // but is not completely visible yet
+                    setTimeout(
+                        () => track.MediaHandler?.play(),
+                        300 /*replayer-transition-duration*/,
+                    );
+                });
+            } else {
+                track.MediaHandler?.togglePlayback();
+            }
+        }
     },
 };
