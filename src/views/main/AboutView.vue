@@ -597,9 +597,7 @@
                         License, by CreativeBulma)
                     </li>
                     <li>
-                        <a
-                            href="https://github.com/CreativeBulma/bulma-tooltip"
-                            target="_blank"
+                        <a href="https://pdfobject.com/" target="_blank"
                             >PDFObject </a
                         >, a lightweight JavaScript utility for dynamically
                         embedding PDFs in HTML documents. (Released under an
