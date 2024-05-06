@@ -726,6 +726,7 @@ import {
     watch,
     watchEffect,
     nextTick,
+    onBeforeUnmount,
 } from 'vue';
 import OnYouTubeConsent from '@/components/dialogs/OnYouTubeConsent.vue';
 import CueLevelEditors from '@/components/CueLevelEditors.vue';
@@ -944,6 +945,10 @@ function takeMediaHandler(handler: IMediaHandler) {
 
     app.setMediaHandlerForTrack(props.track, handler);
 }
+
+onBeforeUnmount(() => {
+    app.destroyMediaHandlerForTrack(props.track);
+});
 
 // --- Transport ---
 

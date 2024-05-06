@@ -74,6 +74,13 @@ export const mediaActions = {
         track.MediaHandler = handler;
     },
 
+    /** Destroys and removes the media handler for an existing track.
+     */
+    destroyMediaHandlerForTrack(track: ITrack): void {
+        track.MediaHandler?.destroy();
+        track.MediaHandler = null;
+    },
+
     /** Skips to this track (if loaded)
      * @remarks If the track is not loaded, does nothing.
      * If the track is not yet the active track, tries to activate the track and play.
