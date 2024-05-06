@@ -58,7 +58,8 @@ export interface IMediaHandler {
      */
     readonly onSeeked: SubEvent<number>;
 
-    /** Gets the paused state
+    /** Whether the playback is currently paused (or otherwise not playing)
+     * @remarks A value of true indicates an ongoing playback operation.
      */
     readonly paused: boolean;
 

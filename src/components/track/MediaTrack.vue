@@ -334,7 +334,7 @@
                         <MediaControlsBar
                             :disabled="!canPlay"
                             :hide-stop-button="true"
-                            :hide-track-navigation="false"
+                            :hide-track-navigation="isTrackEditable"
                             :has-previous-track="
                                 !isFirstTrack ||
                                 playbackMode === PlaybackMode.LoopCompilation ||
@@ -772,7 +772,6 @@ import { CueScheduler } from '@/code/media/CueScheduler';
 import type { ICue } from '@/store/ICue';
 import { PlaybackMode } from '@/store/PlaybackMode';
 import type { ITrack } from '@/store/ITrack';
-import { useTitle } from '@vueuse/core';
 import router, { Route } from '@/router';
 import MessageOverlay from '@/components/MessageOverlay.vue';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
@@ -1007,7 +1006,7 @@ const trackDuration: Ref<number | null> = ref(null);
 const isTrackPlaying = ref(false);
 provide(isPlayingInjectionKey, readonly(isTrackPlaying));
 
-/** Indicates the kind of current fading */
+/** Indicates the kind of current fading, if any */
 const isFading = ref(FadingMode.None);
 
 /** Whether the cues are currently expanded for editing */
