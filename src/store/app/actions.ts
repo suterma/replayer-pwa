@@ -167,14 +167,8 @@ export const actions = {
      *  @remarks Updates the persistently stored playback position.
      *  Implements #132
      */
-    updatePlayheadPosition(trackId: string, time: number): void {
-        const matchingTrack = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
-        if (matchingTrack) {
-            matchingTrack.PlayheadPosition = time;
-        }
+    updatePersistedPlayheadPosition(track: ITrack, time: number): void {
+        track.PlayheadPosition = time;
     },
 
     /** Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.
@@ -1107,6 +1101,21 @@ export const actions = {
         state.compilation.value.Tracks.sort(
             (a, b) =>
                 orderedTrackIds.indexOf(a.Id) - orderedTrackIds.indexOf(b.Id),
+        );
+    },
+
+    // --- track positioning ---
+
+    /** Whether the track is the first track in the set of media tracks */
+    isFirstMediaTrack(track: ITrack): boolean {
+        return getters.mediaTracks.value[0]?.Id === track.Id;
+    },
+
+    /** Whether the track is the last track in the set of media tracks */
+    isLastMediaTrack(track: ITrack): boolean {
+        return (
+            getters.mediaTracks.value[getters.mediaTracks.value.length - 1]
+                ?.Id === track.Id
         );
     },
 

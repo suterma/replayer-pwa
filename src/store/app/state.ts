@@ -84,7 +84,7 @@ export const state = {
     /** The playback mode.
      * @remarks This can be set by the user, and is persisted.
      */
-    playbackMode: useLocalStorage(
+    playbackMode: useLocalStorage<PlaybackMode>(
         'playbackMode',
         PlaybackMode.PlayTrack as PlaybackMode,
     ),

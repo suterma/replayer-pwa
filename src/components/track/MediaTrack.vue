@@ -855,14 +855,9 @@ provide(meterInjectionKey, readonly(meter));
 // --- playback handling
 
 /** A reference to the appropriate media handler
- * @remarks Gets set only after the respective track media component emits the ready-to-play event.
+ * @remarks This handler is available only after the respective track media component emits the ready-to-play event.
  */
 const mediaHandler = computed(() => props.track.MediaHandler);
-
-/** A reference to the appropriate media looper
- * @remarks Gets set only after the media handler is avaialble and set.
- */
-//const mediaLooper: Ref<IMediaLooper | null> = ref(null);
 
 /** A reference to the cue scheduler
  */
@@ -967,18 +962,11 @@ provide(currentPositionDisplayInjectionKey, readonly(currentPositionDisplay));
 
 // --- Track state ---
 
-const { mediaTracks } = storeToRefs(app);
-
 /** Whether this is the first track in the set of media tracks */
-const isFirstTrack = computed(
-    () => mediaTracks.value[0]?.Id === props.track.Id,
-);
+const isFirstTrack = computed(() => app.isFirstMediaTrack(props.track));
 
 /** Whether this is the last track in the set of media tracks */
-const isLastTrack = computed(
-    () =>
-        mediaTracks.value[mediaTracks.value.length - 1]?.Id === props.track.Id,
-);
+const isLastTrack = computed(() => app.isLastMediaTrack(props.track));
 
 const isAudioTrack = computed(() =>
     CompilationHandler.isAudioTrack(props.track),
@@ -1057,9 +1045,8 @@ const {
  * @devdoc Updates are only applied when mounted, to allow
  * proper application of the initial position before mount
  */
-
 function persistPlayheadPosition() {
-    app.updatePlayheadPosition(props.track.Id, currentPosition.value);
+    app.updatePersistedPlayheadPosition(props.track, currentPosition.value);
 }
 
 /// --- Transport ---
@@ -1073,10 +1060,12 @@ function stop(): void {
     app.updateScheduledCueId(CompilationHandler.EmptyId);
 }
 
+//TODO move all these events to app store
 function toPreviousCue() {
     document.dispatchEvent(new Event(ReplayerEvent.TO_PREV_CUE));
 }
 
+//TODO move all these events to app store
 function toNextCue() {
     document.dispatchEvent(new Event(ReplayerEvent.TO_NEXT_CUE));
 }

@@ -6,6 +6,9 @@
  */
 
 /** A set of Replayer events that are emitted by this Keyboard handler */
+
+//TODO move all the handling of these events to app store
+
 export enum ReplayerEvent {
     BACK_TO_CUE = 'backtocue',
     TO_NEXT_CUE = 'tonextcue',

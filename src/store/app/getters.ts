@@ -195,12 +195,17 @@ export const getters = {
         }
     }),
 
+    /** Whether the track is shown with editable inputs for the contained data */
     isTrackEditable: computed((): boolean => {
         return getters.trackViewMode.value == TrackViewMode.Edit;
     }),
+
+    /** Whether the track is shown optimized for playback */
     isTrackPlayable: computed((): boolean => {
         return getters.trackViewMode.value == TrackViewMode.Play;
     }),
+
+    /** Whether the track is shown optimized for multi-track/mixer playback */
     isTrackMixable: computed((): boolean => {
         return getters.trackViewMode.value == TrackViewMode.Mix;
     }),
