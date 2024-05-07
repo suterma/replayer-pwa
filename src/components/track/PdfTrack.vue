@@ -174,15 +174,20 @@
                 </div>
             </div>
             <Transition name="item-expand">
-                <div
+                <PdfElement
                     v-if="
-                        (isExpanded &&
+                        ((isExpanded &&
                             // never expand on non-edit pages without native support
                             (isTrackEditable || hasNativePdfSupport)) ||
-                        isFullscreen
+                            isFullscreen) &&
+                        mediaUrl
                     "
-                    ref="pdfContainer"
-                    :style="{
+                    class="block"
+                    :media-url="mediaUrl"
+                    :is-fullscreen="isFullscreen"
+                ></PdfElement>
+
+                <!-- :style="{
                         'min-height': isFullscreen
                             ? '100vh'
                             : availableHeight + 'px',
@@ -190,9 +195,7 @@
                             ? '100vh'
                             : availableHeight + 'px',
                         width: '100%',
-                    }"
-                    class="block"
-                ></div>
+                    }" -->
             </Transition>
             <!-- Spacer -->
             <div class="block"></div>
@@ -202,7 +205,7 @@
 
 <script setup lang="ts">
 /** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
-import { type PropType, computed, type Ref, ref, watch, inject } from 'vue';
+import { type PropType, computed, type Ref, ref } from 'vue';
 import { useAppStore } from '@/store/app';
 import type { ITrack } from '@/store/ITrack';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
@@ -218,7 +221,7 @@ import { mdiSwapVertical, mdiFilePdfBox } from '@mdi/js';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import PDFObject from 'pdfobject';
 import { storeToRefs } from 'pinia';
-import VueScrollTo from 'vue-scrollto';
+import PdfElement from '@/components/track/PdfElement.vue';
 
 const props = defineProps({
     /** The track to display
@@ -240,60 +243,6 @@ const isExpanded = ref(false);
 const mediaUrl = computed(() => {
     return app.getMediaUrlByTrack(props.track);
 });
-
-// --- PDF rendering ---
-
-import { navbarCompensationHeightInjectionKey } from '@/AppInjectionKeys';
-const navbarCompensationHeight = inject(navbarCompensationHeightInjectionKey);
-
-/** Gets the net available available window height
- * @remarks This is used for convenience to the user
- */
-const availableHeight = computed(() => {
-    const fullvh = Math.round(window.innerHeight);
-    const availableHeight = fullvh - (navbarCompensationHeight?.value ?? 0);
-    return availableHeight;
-});
-
-const pdfContainer = ref(null);
-watch(
-    () => pdfContainer.value,
-    () => {
-        if (pdfContainer.value) {
-            console.debug(
-                'PdfTrack::Rendering PDF for mediaUrl: ',
-                mediaUrl.value,
-            );
-
-            //TODO fix for full-screen, this should be the actuall full ehight then
-
-            PDFObject.embed(mediaUrl.value, pdfContainer.value, {
-                title: props.track.Name,
-                pdfOpenParams: { view: 'FitH' },
-                //TODO use proper CSP in combination with the sandbox
-                //customAttribute: { key: 'sandbox', value: 'true' },
-                height: availableHeight.value + 'px',
-                width: '100%',
-            });
-            scrollToPdf();
-        }
-    },
-    { immediate: true, deep: false },
-);
-
-/** Visually scrolls to the PDF, making it visually at the top of
- * the view.
- */
-function scrollToPdf() {
-    VueScrollTo.scrollTo(pdfContainer.value, {
-        /** Always scroll, make it on top of the view */
-        force: true,
-        /** empirical value (taking into account the non-existing fixed top navbar) */
-        offset: 0,
-        /** Avoid interference with the key press overlay */
-        cancelable: false,
-    });
-}
 
 /** Whether this browser instance has native embedded PDF support
  * @remarks This is only updated once by the pdfobject library on app start.
