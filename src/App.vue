@@ -72,10 +72,11 @@ import { useSettingsStore } from '@/store/settings';
 import { useAppStore } from './store/app';
 import { acknowledgeVersion } from './code/ui/dialogs';
 import { compare } from 'compare-versions';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, provide, readonly } from 'vue';
 import { storeToRefs } from 'pinia';
 import { refDebounced, useElementSize } from '@vueuse/core';
 import { useRouter } from 'vue-router';
+import { navbarCompensationHeightInjectionKey } from '@/AppInjectionKeys';
 
 onMounted(() => {
     handleAppUpdate();
@@ -172,6 +173,13 @@ const mediaPlayerPanelComputedHeight = computed(() => {
 const navbarCompensationHeight = refDebounced(
     mediaPlayerPanelComputedHeight,
     300 /*replayer-transition-duration*/,
+);
+
+/** Provide the debounced navbarCompensationHeight for visual adaptations in downstream components
+ */
+provide(
+    navbarCompensationHeightInjectionKey,
+    readonly(navbarCompensationHeight),
 );
 </script>
 

@@ -725,7 +725,6 @@ import {
     ref,
     watch,
     watchEffect,
-    nextTick,
     onBeforeUnmount,
 } from 'vue';
 import OnYouTubeConsent from '@/components/dialogs/OnYouTubeConsent.vue';
