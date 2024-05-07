@@ -22,11 +22,15 @@
                     <div
                         class="level-left level-wrap is-justify-content-flex-start"
                     >
-                        <div class="level-item is-narrow">
-                            <!-- Offer the full screen-->
-                            <template
-                                v-if="!isFullscreen && hasNativePdfSupport"
-                            >
+                        <template
+                            v-if="
+                                !isFullscreen &&
+                                hasNativePdfSupport &&
+                                isTrackPlayable
+                            "
+                        >
+                            <div class="level-item is-narrow">
+                                <!-- Offer the native full screen, if available -->
                                 <FullscreenToggler
                                     v-if="hasNativeFullscreenSupport"
                                     :disabled="!Boolean(mediaUrl)"
@@ -42,13 +46,23 @@
                                     collapsed-chevron-direction="up"
                                     @click="toggle"
                                 ></CollapsibleButton>
-                            </template>
+                            </div>
+                            <!-- Always offer the expander -->
+                            <div class="level-item is-narrow">
+                                <CollapsibleButton
+                                    class="is-nav"
+                                    :model-value="isExpanded"
+                                    title="PDF"
+                                    collapsed-text="Click to expand / show PDF"
+                                    expanded-text="Click to collapse"
+                                    @update:model-value="
+                                        isExpanded = !isExpanded
+                                    "
+                                >
+                                </CollapsibleButton>
 
-                            <!-- Title --><!-- The title is the only header element that should shrink (break on words) if necessary -->
-                            <template v-if="isTrackPlayable">
-                                <!-- Expansible with native PDF support -->
+                                <!-- Title --><!-- The title is the only header element that should shrink (break on words) if necessary -->
                                 <div
-                                    v-if="hasNativePdfSupport"
                                     class="is-flex-shrink-1 ml-3"
                                     :class="{
                                         'is-clickable': Boolean(mediaUrl),
@@ -67,8 +81,9 @@
                                         </TrackTitleName>
                                     </p>
                                 </div>
+                                <!-- //TODO create link when no native pdf support -->
                                 <!-- Just as link without native PDF support -->
-                                <div
+                                <!-- <div
                                     v-else
                                     class="is-flex-shrink-1 ml-3"
                                     :class="{
@@ -87,9 +102,9 @@
                                             {{ track.Name }}
                                         </a>
                                     </p>
-                                </div>
-                            </template>
-                        </div>
+                                </div> -->
+                            </div>
+                        </template>
 
                         <!-- Edit -->
                         <template v-if="isTrackEditable">
@@ -166,26 +181,13 @@
                             (isTrackEditable || hasNativePdfSupport)) ||
                         isFullscreen
                     "
+                    :style="{
+                        'min-height': isFullscreen ? '100vh' : '100vh',
+                        width: '100%',
+                    }"
+                    ref="pdfContainer"
                     class="block"
-                >
-                    <object
-                        :data="mediaUrl"
-                        type="application/pdf"
-                        width="100%"
-                        standby="Loading PDF"
-                        :style="{
-                            'min-height': isFullscreen ? '100vh' : '25vh',
-                            width: '100%',
-                        }"
-                    >
-                        <!-- A fallback just present a link -->
-                        <p>
-                            <a :href="mediaUrl" target="_blank">{{
-                                track.Url
-                            }}</a>
-                        </p>
-                    </object>
-                </div>
+                ></div>
             </Transition>
             <!-- Spacer -->
             <div class="block"></div>
@@ -195,7 +197,7 @@
 
 <script setup lang="ts">
 /** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
-import { type PropType, computed, type Ref, ref, inject } from 'vue';
+import { type PropType, computed, type Ref, ref, watch } from 'vue';
 import { useAppStore } from '@/store/app';
 import type { ITrack } from '@/store/ITrack';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
@@ -211,6 +213,7 @@ import { mdiSwapVertical, mdiFilePdfBox } from '@mdi/js';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import PDFObject from 'pdfobject';
 import { storeToRefs } from 'pinia';
+import { trackInstance } from 'node_modules/@vue/test-utils/dist/utils/autoUnmount';
 
 const props = defineProps({
     /** The track to display
@@ -232,6 +235,30 @@ const isExpanded = ref(false);
 const mediaUrl = computed(() => {
     return app.getMediaUrlByTrack(props.track);
 });
+
+// --- PDF rendering ---
+
+const pdfContainer = ref(null);
+watch(
+    () => pdfContainer.value,
+    () => {
+        if (pdfContainer.value) {
+            console.debug(
+                'PdfTrack::Rendering PDF for mediaUrl: ',
+                mediaUrl.value,
+            );
+            PDFObject.embed(mediaUrl.value, pdfContainer.value, {
+                title: props.track.Name,
+                pdfOpenParams: { view: 'FitH' },
+                //TODO use proper CSP in combination with the sandbox
+                //customAttribute: { key: 'sandbox', value: 'true' },
+                height: '100vh',
+                width: '100%',
+            });
+        }
+    },
+    { immediate: true, deep: false },
+);
 
 /** Whether this browser instance has native embedded PDF support
  * @remarks This is only updated once by the pdfobject library on app start.
