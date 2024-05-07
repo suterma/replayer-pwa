@@ -85,7 +85,6 @@ import { useAudioStore } from '@/store/audio';
 import { FadingMode } from '@/code/media/IAudioFader';
 import { Subscription } from 'sub-events';
 import type { ICue } from '@/store/ICue';
-import { DefaultTrackVolume } from '@/store/Track';
 
 /** A simple vue YouTube player, for a single track, using VueYoutube.
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playback.

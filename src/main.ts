@@ -5,18 +5,16 @@
  * LICENSE file in the root of this projects source tree.
  */
 
-import { createApp, watch } from 'vue';
+import { createApp } from 'vue';
 import App from './App.vue';
-import { createPinia, storeToRefs } from 'pinia';
+import { createPinia } from 'pinia';
 import router from './router';
 import VueScrollTo from 'vue-scrollto';
 import vClickOutside from 'click-outside-vue3';
 //@ts-ignore (because vue3-promise-dialog does not provide types)
 import { PromiseDialog } from 'vue3-promise-dialog';
 import { useMessageStore } from './store/messages';
-import { useAppStore } from './store/app';
 import { createManager } from '@vue-youtube/core';
-import { useTitle } from '@vueuse/core';
 import chalk from 'chalk';
 import { ExperimentDirective } from './directives/ExperimentDirective';
 import { FocusDirective } from './directives/FocusDirective';

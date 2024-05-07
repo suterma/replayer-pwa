@@ -164,7 +164,7 @@ const showMediaSource = ref(false);
 const showNumbering = ref(false);
 
 const app = useAppStore();
-const { compilation, hasCompilation, allTracks } = storeToRefs(app);
+const { compilation, allTracks } = storeToRefs(app);
 
 const orderedTracks = computed<ITrack[]>({
     get(): ITrack[] {

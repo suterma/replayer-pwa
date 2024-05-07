@@ -18,15 +18,20 @@ export const state = {
     /** A compilation to work with
      * @devdoc An initial, non-null value must be available, otherwise the reactive system does not work
      * @devdoc To always provide a typed object as expected, explicitly serialize to and from JSON strings */
-    compilation: useLocalStorage('compilation', Compilation.empty(), {
-        serializer: {
-            read: (stringified: any) =>
-                stringified
-                    ? Compilation.fromJson(stringified)
-                    : Compilation.empty(),
-            write: (compilation: ICompilation) => JSON.stringify(compilation),
+    compilation: useLocalStorage<ICompilation>(
+        'compilation',
+        Compilation.empty(),
+        {
+            serializer: {
+                read: (stringified: any) =>
+                    stringified
+                        ? Compilation.fromJson(stringified)
+                        : Compilation.empty(),
+                write: (compilation: ICompilation) =>
+                    JSON.stringify(compilation),
+            },
         },
-    }),
+    ),
 
     /** The currently selected cue Id, if any, otherwise CompilationHandler.EmptyId.
      * This is also used to determine the currently active track.

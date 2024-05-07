@@ -15,7 +15,10 @@
         <CompilationKeyboardHandler :require-ctrl-modifier="isTrackEditable" />
 
         <!-- If available, show the compilation -->
-        <Compilation v-if="hasCompilation" :compilation="compilation" />
+        <Compilation
+            v-if="hasCompilation"
+            :compilation="compilation as ICompilation"
+        />
 
         <!-- Otherwise, show the claim -->
         <div v-else class="section pl-0 pr-0 block">
@@ -67,7 +70,6 @@
 <script setup lang="ts">
 /** A view for playing an existing compilation */
 
-import { inject, ref } from 'vue';
 import Compilation from '@/components/Compilation.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import FooterLinks from '@/components/FooterLinks.vue';
@@ -77,6 +79,7 @@ import MediaList from '@/components/MediaList.vue';
 import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.vue';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
+import type { ICompilation } from '@/store/ICompilation';
 
 const app = useAppStore();
 const { isTrackEditable, compilation, hasCompilation, hasAnyAvailableMedia } =
