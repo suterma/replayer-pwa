@@ -604,8 +604,17 @@
                         MIT-style License, by Philip Hutchison)
                     </li>
                     <li>
+                        <a
+                            href="https://mozilla.github.io/pdf.js/"
+                            target="_blank"
+                            >PDFObject </a
+                        >, a general-purpose, web standards-based platform for
+                        parsing and rendering PDFs. (Released under the Apache
+                        License 2.0, by Mozilla and individual contributors)
+                    </li>
+                    <li>
                         <a href="https://typedoc.org/" target="_blank"
-                            >TypeDoc </a
+                            >PDF.js </a
                         >, a documentation generator for TypeScript projects.
                         (Released under the Apache-2.0 license, by the
                         TypeStrong team)
