@@ -61,8 +61,8 @@ const initPDF = () => {
             //customAttribute: { key: 'sandbox', value: 'true' },
             height: props.isFullscreen ? '100vh' : availableHeight.value + 'px',
             width: '100%',
-            forcePDFJS: true,
-            PDFJS_URL: '/pdfjs/viewer.html',
+            forcePDFJS: false,
+            PDFJS_URL: '/pdfjs/web/viewer.html',
         });
 
         /** When using non-full-screen, scroll back to the pdf viewport */
@@ -76,34 +76,6 @@ onMounted(initPDF);
 onUpdated(initPDF);
 
 const pdfContainer = ref(null);
-// watch(
-//     () => pdfContainer.value,
-//     () => {
-//         if (pdfContainer.value) {
-//             console.debug(
-//                 'PdfElement::Rendering PDF for mediaUrl: ',
-//                 props.mediaUrl,
-//             );
-//             PDFObject.embed(props.mediaUrl, pdfContainer.value, {
-//                 pdfOpenParams: { view: 'FitH' },
-//                 //TODO use proper CSP in combination with the sandbox
-//                 //customAttribute: { key: 'sandbox', value: 'true' },
-//                 height: props.isFullscreen
-//                     ? '100vh'
-//                     : availableHeight.value + 'px',
-//                 width: '100%',
-//                 // forcePDFJS: false,
-//                 // PDFJS_URL: '/pdfjs/web/viewer.html',
-//             });
-
-//             /** When using non-full-screen, scroll back to the pdf viewport */
-//             if (!props.isFullscreen) {
-//                 scrollToPdf();
-//             }
-//         }
-//     },
-//     { immediate: true, deep: false },
-// );
 
 /** Visually scrolls to the PDF, making it visually at the top of
  * the view.
