@@ -81,28 +81,29 @@
                                         </TrackTitleName>
                                     </p>
                                 </div>
-                                <!-- //TODO create link when no native pdf support -->
-                                <!-- Just as link without native PDF support -->
-                                <!-- <div
-                                    v-else
-                                    class="is-flex-shrink-1 ml-3"
-                                    :class="{
-                                        'is-clickable': Boolean(mediaUrl),
-                                        'has-cursor-not-allowed':
-                                            !Boolean(mediaUrl),
-                                    }"
-                                >
-                                    <p :title="track.Url">
-                                        <BaseIcon
-                                            v-once
-                                            class="mr-2"
-                                            :path="mdiFilePdfBox"
-                                        />
-                                        <a :href="mediaUrl" target="_blank">
-                                            {{ track.Name }}
-                                        </a>
-                                    </p>
-                                </div> -->
+                            </div>
+                        </template>
+                        <!-- Non-Native PDF support, just show a link -->
+                        <!-- //TODO later use pdfjs, if available -->
+                        <template v-else>
+                            <div
+                                class="is-flex-shrink-1 ml-3"
+                                :class="{
+                                    'is-clickable': Boolean(mediaUrl),
+                                    'has-cursor-not-allowed':
+                                        !Boolean(mediaUrl),
+                                }"
+                            >
+                                <p :title="track.Url">
+                                    <BaseIcon
+                                        v-once
+                                        class="mr-2"
+                                        :path="mdiFilePdfBox"
+                                    />
+                                    <a :href="mediaUrl" target="_blank">
+                                        {{ track.Name }}
+                                    </a>
+                                </p>
                             </div>
                         </template>
 
