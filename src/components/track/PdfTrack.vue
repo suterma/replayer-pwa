@@ -169,12 +169,24 @@
                 </div>
             </div>
             <Transition name="item-expand">
-                <PdfElement
-                    v-if="(isExpanded || isFullscreen) && mediaUrl"
+                <!--<PdfElement
+                    v-if="
+                        ((isExpanded &&
+                            // never expand on non-edit pages without native support
+                            (isTrackEditable || hasNativePdfSupport)) ||
+                            isFullscreen) &&
+                        mediaUrl
+                    "
                     class="block"
                     :media-url="mediaUrl"
                     :is-fullscreen="isFullscreen"
-                ></PdfElement>
+                ></PdfElement> -->
+                <PdfViewer
+                    v-if="mediaUrl"
+                    class="block"
+                    :media-url="mediaUrl"
+                    :is-fullscreen="isFullscreen"
+                ></PdfViewer>
             </Transition>
             <!-- Spacer -->
             <div class="block"></div>
@@ -199,7 +211,7 @@ import FullscreenToggler from '@/components/buttons/FullscreenToggler.vue';
 import { mdiSwapVertical, mdiFilePdfBox } from '@mdi/js';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { storeToRefs } from 'pinia';
-import PdfElement from '@/components/track/PdfElement.vue';
+import PdfViewer from '@/components/track/PdfViewer.vue';
 
 const props = defineProps({
     /** The track to display
