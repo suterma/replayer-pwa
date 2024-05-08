@@ -1,6 +1,8 @@
 <template>
-    <div ref="pageContainer" class="pageContainer">
-        <div ref="viewer" class="pdfViewer"></div>
+    <div style="height: 100px; width: 100%">
+        <div ref="pageContainer" class="pageContainer">
+            <div ref="viewer" class="pdfViewer"></div>
+        </div>
     </div>
 </template>
 
@@ -36,7 +38,7 @@ onMounted(async () => {
     loadingTask.promise.then(
         function (pdf) {
             console.log('PDF loaded');
-            let pdfViewer = new PDFViewer({
+            const pdfViewer = new PDFViewer({
                 container: pageContainer.value as unknown as HTMLDivElement,
                 eventBus: new EventBus(),
                 viewer: viewer.value as unknown as HTMLDivElement,
@@ -55,10 +57,12 @@ onMounted(async () => {
 div.pageContainer {
     display: inline-block;
     position: absolute;
-
-    height: 50%;
+    overflow: scroll;
+    height: 100px;
+    width: 100%;
 }
 div.pdfViewer {
     display: inline-block;
+    width: 100%;
 }
 </style>
