@@ -182,7 +182,7 @@
                     :is-fullscreen="isFullscreen"
                 ></PdfElement> -->
                 <PdfViewer
-                    v-if="mediaUrl"
+                    v-if="(isExpanded || isFullscreen) && mediaUrl"
                     class="block"
                     :media-url="mediaUrl"
                     :is-fullscreen="isFullscreen"

@@ -1,12 +1,14 @@
 <template>
-    <canvas ref="canvaselement"></canvas>
+    <div ref="pageContainer" class="pageContainer">
+        <div ref="viewer" class="pdfViewer"></div>
+    </div>
 </template>
 
 <script setup lang="ts">
 //import { getDocument } from 'pdfjs-dist';
 import { pdfjsLib } from './pdf';
 import { onMounted, ref } from 'vue';
-import { PDFViewer } from 'pdfjs-dist/web/pdf_viewer';
+import { EventBus, PDFViewer } from 'pdfjs-dist/web/pdf_viewer';
 import 'pdfjs-dist/web/pdf_viewer.css';
 
 const props = defineProps({
@@ -25,7 +27,8 @@ const props = defineProps({
     },
 });
 
-const canvaselement = ref(null);
+const pageContainer = ref(null);
+const viewer = ref(null);
 
 onMounted(async () => {
     const loadingTask = await pdfjsLib.getDocument(props.mediaUrl);
@@ -33,38 +36,12 @@ onMounted(async () => {
     loadingTask.promise.then(
         function (pdf) {
             console.log('PDF loaded');
-
-            // Fetch the first page
-            var pageNumber = 1;
-            pdf.getPage(pageNumber).then(function (page) {
-                console.log('Page loaded');
-
-                var scale = 1.0;
-                var viewport = page.getViewport({ scale: scale });
-
-                // Prepare canvas using PDF page dimensions
-                const canvas =
-                    canvaselement.value as unknown as HTMLCanvasElement;
-                if (canvas) {
-                    var context = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-
-                    if (context) {
-                        // Render PDF page into canvas context
-                        var renderContext = {
-                            canvasContext: context,
-                            viewport: viewport,
-                        };
-                        if (renderContext) {
-                            var renderTask = page.render(renderContext);
-                            renderTask.promise.then(function () {
-                                console.log('Page rendered');
-                            });
-                        }
-                    }
-                }
+            let pdfViewer = new PDFViewer({
+                container: pageContainer.value as unknown as HTMLDivElement,
+                eventBus: new EventBus(),
+                viewer: viewer.value as unknown as HTMLDivElement,
             });
+            pdfViewer.setDocument(pdf);
         },
         function (reason) {
             // PDF loading error
@@ -73,3 +50,15 @@ onMounted(async () => {
     );
 });
 </script>
+
+<style>
+div.pageContainer {
+    display: inline-block;
+    position: absolute;
+
+    height: 50%;
+}
+div.pdfViewer {
+    display: inline-block;
+}
+</style>
