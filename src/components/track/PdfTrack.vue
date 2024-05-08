@@ -22,13 +22,7 @@
                     <div
                         class="level-left level-wrap is-justify-content-flex-start"
                     >
-                        <template
-                            v-if="
-                                !isFullscreen &&
-                                hasNativePdfSupport &&
-                                isTrackPlayable
-                            "
-                        >
+                        <template v-if="!isFullscreen && isTrackPlayable">
                             <div class="level-item is-narrow">
                                 <!-- Offer the native full screen, if available -->
                                 <FullscreenToggler
@@ -176,27 +170,11 @@
             </div>
             <Transition name="item-expand">
                 <PdfElement
-                    v-if="
-                        ((isExpanded &&
-                            // never expand on non-edit pages without native support
-                            (isTrackEditable || hasNativePdfSupport)) ||
-                            isFullscreen) &&
-                        mediaUrl
-                    "
+                    v-if="(isExpanded || isFullscreen) && mediaUrl"
                     class="block"
                     :media-url="mediaUrl"
                     :is-fullscreen="isFullscreen"
                 ></PdfElement>
-
-                <!-- :style="{
-                        'min-height': isFullscreen
-                            ? '100vh'
-                            : availableHeight + 'px',
-                        'max-height': isFullscreen
-                            ? '100vh'
-                            : availableHeight + 'px',
-                        width: '100%',
-                    }" -->
             </Transition>
             <!-- Spacer -->
             <div class="block"></div>
@@ -220,7 +198,6 @@ import FullscreenPanel from '@/components/FullscreenPanel.vue';
 import FullscreenToggler from '@/components/buttons/FullscreenToggler.vue';
 import { mdiSwapVertical, mdiFilePdfBox } from '@mdi/js';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import PDFObject from 'pdfobject';
 import { storeToRefs } from 'pinia';
 import PdfElement from '@/components/track/PdfElement.vue';
 
@@ -244,14 +221,6 @@ const isExpanded = ref(false);
 const mediaUrl = computed(() => {
     return app.getMediaUrlByTrack(props.track);
 });
-
-/** Whether this browser instance has native embedded PDF support
- * @remarks This is only updated once by the pdfobject library on app start.
- * @devdoc NOTE: The PDFObject library is only used for
- * support detection, not for PDF display, to keep the
- * Replayer implementation more concise.
- */
-const hasNativePdfSupport = ref(PDFObject.supportsPDFs as Boolean);
 
 // --- drop zone handling ---
 

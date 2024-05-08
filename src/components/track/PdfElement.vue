@@ -1,7 +1,6 @@
 <template>
     <div
         ref="pdfContainer"
-        :key="isFullscreen.toString() + mediaUrl"
         :style="{
             'min-height': isFullscreen ? '100vh' : availableHeight + 'px',
             'max-height': isFullscreen ? '100vh' : availableHeight + 'px',
@@ -12,7 +11,7 @@
 
 <script setup lang="ts">
 /** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
-import { computed, ref, watch, inject, onMounted, onUpdated } from 'vue';
+import { computed, ref, inject, onMounted, onUpdated } from 'vue';
 
 import PDFObject from 'pdfobject';
 import VueScrollTo from 'vue-scrollto';
