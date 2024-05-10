@@ -175,12 +175,6 @@
                     :media-url="mediaUrl"
                     :is-fullscreen="isFullscreen"
                 ></PdfElement>
-                <!-- <PdfViewer
-                    v-if="(isExpanded || isFullscreen) && mediaUrl"
-                    class="block"
-                    :media-url="mediaUrl"
-                    :is-fullscreen="isFullscreen"
-                ></PdfViewer> -->
             </Transition>
             <!-- Spacer -->
             <div class="block"></div>
