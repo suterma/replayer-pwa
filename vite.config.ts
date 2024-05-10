@@ -48,7 +48,8 @@ export default defineConfig({
             workbox: {
                 globPatterns: [
                     /* Replayer VueJs app, including images*/
-                    '**/*.{js,css,html,ico,png,webp,svg}',
+                    /* For PdfJs, also mjs is included */
+                    '**/*.{js,mjs,css,html,ico,png,webp,svg}',
                 ],
                 /** PdfJs: using the large pdfjs/build/pdf.worker.mjs with precache */
                 maximumFileSizeToCacheInBytes: 2500000,
