@@ -50,8 +50,10 @@ export default defineConfig({
                     /* Replayer VueJs app, including images*/
                     '**/*.{js,css,html,ico,png,webp,svg}',
                 ],
-                /** To use the large pdfjs/build/pdf.worker.mjs with precache */
+                /** PdfJs: using the large pdfjs/build/pdf.worker.mjs with precache */
                 maximumFileSizeToCacheInBytes: 2500000,
+                /** PdfJs: ignoring the file parameter. Otherwise, workbox ends up with reloading index.html */
+                ignoreURLParametersMatching: [/^utm_/, /^fbclid$/, /^file/],
             },
             manifest: {
                 name: 'Replayer',
