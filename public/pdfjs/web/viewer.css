@@ -4698,7 +4698,12 @@ dialog :link {
     color: rgb(255 255 255);
 }
 
-/* NOTE: password is not supported in Replayer */
+#passwordDialog {
+    text-align: center;
+}
+#passwordDialog .toolbarField {
+    width: 200px;
+}
 
 #documentPropertiesDialog {
     text-align: left;

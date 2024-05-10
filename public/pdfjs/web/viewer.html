@@ -19,11 +19,6 @@ Adobe CMap resources are covered by their own copyright but the same license:
     Copyright 1990-2015 Adobe Systems Incorporated.
 
 See https://github.com/adobe-type-tools/cmap-resources
-
----
-
-This code has been slightly adapted for the Replayer project. See README.md
-
 -->
 <html dir="ltr" mozdisallowselectionprint>
   <head>
@@ -33,11 +28,12 @@ This code has been slightly adapted for the Replayer project. See README.md
     <title>PDF.js viewer</title>
 
 <!-- This snippet is used in production (included from viewer.html) -->
-<!-- NOTE: locales are not supported with Replayer -->
-<!-- <link rel="resource" type="application/l10n" href="locale/locale.json"> -->
-<script src="../build/pdf.min.js"></script>
-  <link rel="stylesheet" href="pdf_viewer.css">
-  <script src="pdf_viewer.js"></script>
+<link rel="resource" type="application/l10n" href="locale/locale.json">
+<script src="../build/pdf.mjs" type="module"></script>
+
+    <link rel="stylesheet" href="viewer.css">
+
+  <script src="viewer.mjs" type="module"></script>
   </head>
 
   <body tabindex="1">
@@ -373,7 +369,18 @@ This code has been slightly adapted for the Replayer project. See README.md
       </div> <!-- mainContainer -->
 
       <div id="dialogContainer">
-        <!-- NOTE: password is not supported in Replayer -->
+        <dialog id="passwordDialog">
+          <div class="row">
+            <label for="password" id="passwordText" data-l10n-id="pdfjs-password-label">Enter the password to open this PDF file:</label>
+          </div>
+          <div class="row">
+            <input type="password" id="password" class="toolbarField">
+          </div>
+          <div class="buttonRow">
+            <button id="passwordCancel" class="dialogButton"><span data-l10n-id="pdfjs-password-cancel-button">Cancel</span></button>
+            <button id="passwordSubmit" class="dialogButton"><span data-l10n-id="pdfjs-password-ok-button">OK</span></button>
+          </div>
+        </dialog>
         <dialog id="documentPropertiesDialog">
           <div class="row">
             <span id="fileNameLabel" data-l10n-id="pdfjs-document-properties-file-name">File name:</span>

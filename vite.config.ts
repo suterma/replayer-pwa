@@ -47,9 +47,11 @@ export default defineConfig({
             },
             workbox: {
                 globPatterns: [
-                    /* Replayer VueJs app, including images*/ '**/*.{js,css,html,ico,png,webp,svg}',
-                    /* PdfJs viewer*/ './pdfjs/**/*.{mjs,js,css,html,png,webp,svg}',
+                    /* Replayer VueJs app, including images*/
+                    '**/*.{js,css,html,ico,png,webp,svg}',
                 ],
+                /** To use the large pdfjs/build/pdf.worker.mjs with precache */
+                maximumFileSizeToCacheInBytes: 2500000,
             },
             manifest: {
                 name: 'Replayer',

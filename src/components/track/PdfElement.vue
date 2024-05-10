@@ -61,7 +61,7 @@ const initPDF = () => {
             //customAttribute: { key: 'sandbox', value: 'true' },
             height: props.isFullscreen ? '100vh' : availableHeight.value + 'px',
             width: '100%',
-            forcePDFJS: false,
+            forcePDFJS: true,
             PDFJS_URL: '/pdfjs/web/viewer.html',
         });
 
