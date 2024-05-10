@@ -1,21 +1,23 @@
 <template>
-    <div
-        ref="pdfContainer"
-        :style="{
-            'min-height': isFullscreen ? '100vh' : availableHeight + 'px',
-            'max-height': isFullscreen ? '100vh' : availableHeight + 'px',
-            width: '100%',
-        }"
-    ></div>
-    <!-- Spacer, for non-fullscreen usage, because the above is required to have absolute position always -->
-    <div
-        v-if="!isFullscreen"
-        :style="{
-            'min-height': isFullscreen ? '100vh' : availableHeight + 'px',
-            'max-height': isFullscreen ? '100vh' : availableHeight + 'px',
-            width: '100%',
-        }"
-    ></div>
+    <div>
+        <div
+            ref="pdfContainer"
+            :style="{
+                'min-height': isFullscreen ? '100vh' : availableHeight + 'px',
+                'max-height': isFullscreen ? '100vh' : availableHeight + 'px',
+                width: '100%',
+            }"
+        ></div>
+        <!-- Spacer, for non-fullscreen usage, because the above is required to have absolute position always -->
+        <div
+            v-if="!isFullscreen"
+            :style="{
+                'min-height': isFullscreen ? '100vh' : availableHeight + 'px',
+                'max-height': isFullscreen ? '100vh' : availableHeight + 'px',
+                width: '100%',
+            }"
+        ></div>
+    </div>
 </template>
 
 <script setup lang="ts">
