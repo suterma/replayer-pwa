@@ -59,10 +59,8 @@ div.pageContainer {
     position: absolute;
     overflow: scroll;
     height: 100px;
-    width: 100%;
 }
 div.pdfViewer {
     display: inline-block;
-    width: 100%;
 }
 </style>
