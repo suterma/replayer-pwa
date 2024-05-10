@@ -46,8 +46,15 @@ export default defineConfig({
                 enabled: true,
             },
             workbox: {
-                // Replayer has more than just the js, css and html in the dist folder
-                globPatterns: ['**/*.{js,css,html,ico,png,webp,svg}'],
+                globPatterns: [
+                    /* Replayer VueJs app, including images*/
+                    /* For PdfJs, also mjs is included */
+                    '**/*.{js,mjs,css,html,ico,png,webp,svg}',
+                ],
+                /** PdfJs: using the large pdfjs/build/pdf.worker.mjs with precache */
+                maximumFileSizeToCacheInBytes: 2500000,
+                /** PdfJs: ignoring the file parameter. Otherwise, workbox ends up with reloading index.html */
+                ignoreURLParametersMatching: [/^utm_/, /^fbclid$/, /^file/],
             },
             manifest: {
                 name: 'Replayer',

@@ -199,6 +199,7 @@ import FullscreenToggler from '@/components/buttons/FullscreenToggler.vue';
 import { mdiSwapVertical, mdiFilePdfBox } from '@mdi/js';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { storeToRefs } from 'pinia';
+// import PdfViewer from '@/components/track/PdfViewer.vue';
 import PdfElement from '@/components/track/PdfElement.vue';
 
 const props = defineProps({

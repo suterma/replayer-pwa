@@ -6,3 +6,4 @@ declare module '*.vue' {
 }
 declare module 'web-audio-peak-meter';
 declare module 'pdfobject';
+declare module 'pdfjs-dist/legacy/build/pdf.worker.js';
