@@ -54,7 +54,8 @@ export default defineConfig({
                 /** PdfJs: using the large pdfjs/build/pdf.worker.mjs with precache */
                 maximumFileSizeToCacheInBytes: 2500000,
                 /** PdfJs: ignoring the file parameter. Otherwise, workbox ends up with reloading index.html */
-                ignoreURLParametersMatching: [/^utm_/, /^fbclid$/, /^file/],
+                /** Cache-busting: ignoring the v parameter. */
+                ignoreURLParametersMatching: [/^file$/, /^v$/],
             },
             manifest: {
                 name: 'Replayer',
