@@ -26,6 +26,7 @@
                             <div class="level-item is-narrow">
                                 <!-- Offer the native full screen, if available -->
                                 <FullscreenToggler
+                                    class="is-nav"
                                     v-if="hasNativeFullscreenSupport"
                                     :disabled="!Boolean(mediaUrl)"
                                     :model-value="isFullscreen"
@@ -40,9 +41,8 @@
                                     collapsed-chevron-direction="up"
                                     @click="toggle"
                                 ></CollapsibleButton>
-                            </div>
-                            <!-- Always offer the expander -->
-                            <div class="level-item is-narrow">
+
+                                <!-- Always offer the expander -->
                                 <CollapsibleButton
                                     class="is-nav"
                                     :model-value="isExpanded"
