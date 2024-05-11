@@ -1,5 +1,12 @@
 <template>
-    <div>
+    <a
+        v-if="usePdfLinkFallback"
+        :href="mediaUrl"
+        alt="Show this track's PDF in an external viewer"
+        target="_blank"
+        >Show PDF in external viewer</a
+    >
+    <div v-else>
         <div
             ref="pdfContainer"
             :style="{
@@ -65,15 +72,32 @@ const initPDF = () => {
             'PdfElement::Rendering PDF for mediaUrl: ',
             props.mediaUrl,
         );
-        PDFObject.embed(props.mediaUrl, pdfContainer.value, {
-            pdfOpenParams: { view: 'FitH' },
-            //TODO use proper CSP in combination with the sandbox
-            //customAttribute: { key: 'sandbox', value: 'true' },
-            height: props.isFullscreen ? '100vh' : availableHeight.value + 'px',
-            width: '100%',
-            forcePDFJS: true,
-            PDFJS_URL: '/pdfjs/web/viewer.html',
-        });
+        try {
+            const success = PDFObject.embed(
+                props.mediaUrl,
+                pdfContainer.value,
+                {
+                    pdfOpenParams: { view: 'FitH' },
+                    customAttribute: {
+                        key: 'sandbox',
+                        value: 'allow-scripts allow-same-origin',
+                    },
+                    height: props.isFullscreen
+                        ? '100vh'
+                        : availableHeight.value + 'px',
+                    width: '100%',
+                    forcePDFJS: true,
+                    PDFJS_URL: '/pdfjs/web/viewer.html?v=2',
+                },
+            );
+            if (!success) {
+                console.warn('PdfElement::Rendering failed');
+                usePdfLinkFallback.value = true;
+            }
+        } catch (error) {
+            console.warn('PdfElement::Rendering failed because: ', error);
+            usePdfLinkFallback.value = true;
+        }
 
         /** When using non-full-screen, scroll back to the pdf viewport */
         if (!props.isFullscreen) {
@@ -101,6 +125,8 @@ function scrollToPdf() {
         cancelable: false,
     });
 }
+
+const usePdfLinkFallback = ref(false);
 </script>
 
 <style>
