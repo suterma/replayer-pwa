@@ -105,7 +105,7 @@ export default defineConfig({
                     },
                 ],
                 start_url: '.',
-                orientation: 'portrait',
+                orientation: 'any',
                 display: 'standalone',
                 display_override: [
                     'window-controls-overlay',
