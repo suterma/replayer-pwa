@@ -77,8 +77,6 @@
                                 </div>
                             </div>
                         </template>
-                        <!-- Non-Native PDF support, just show a link -->
-                        <!-- //TODO later use pdfjs, if available -->
                         <template v-else>
                             <div
                                 class="is-flex-shrink-1 ml-3"

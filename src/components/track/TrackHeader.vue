@@ -195,13 +195,13 @@
                 </CoveredPanel>
             </template>
             <template v-else>
-                <!-- Artist info (should not take too much width, and hide on small displays anyways)-->
-                <div class="level-item is-hidden-mobile">
+                <!-- Artist info (should not take too much width -->
+                <div class="level-item">
                     <p class="is-size-7">
                         <ArtistDisplay
                             :album="track.Album"
                             :artist="track.Artist"
-                            style="max-width: 25vw"
+                            style="min-width: 220px; width: 25vw"
                         />
                     </p>
                 </div>

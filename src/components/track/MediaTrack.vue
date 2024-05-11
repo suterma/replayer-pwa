@@ -115,7 +115,7 @@
                 <template #left-additional>
                     <MeterDisplay
                         v-if="isTrackPlayable"
-                        class="is-size-7 level-item is-hidden-mobile is-narrow"
+                        class="is-size-7 level-item is-narrow"
                         :meter="track.Meter"
                     ></MeterDisplay>
                 </template>
@@ -473,7 +473,7 @@
                                     </div>
                                     <!-- Artist etc... of the currently playing track-->
                                     <div
-                                        class="level-item is-justify-content-left"
+                                        class="level-item is-justify-content-left is-hidden-mobile"
                                     >
                                         <!-- Artist info-->
                                         <div class="is-size-7">
