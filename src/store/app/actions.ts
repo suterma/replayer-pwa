@@ -945,7 +945,7 @@ export const actions = {
                 );
             });
 
-            //Now, in the clone, reassign all variable items, like id's and shortcuts
+            //Now, in the clone, reassign all variable items
             let nextShortcut = CompilationHandler.getNextShortcut(
                 state.compilation.value,
             );
@@ -953,7 +953,6 @@ export const actions = {
             clonedTrack.Name = sourceTrack.Name + ' (cloned)';
             clonedTrack.Cues.forEach((cue) => {
                 cue.Id = uuidv4();
-                cue.Shortcut = (nextShortcut++).toString();
             });
 
             //Insert just after original
