@@ -66,10 +66,32 @@ export const actions = {
         }
     },
 
+    /** Selects the matching cue, by the given mnemonic, if any. Cues from the active track are considered first. */
     toMnemonicCue(cueShortcut: string) {
         console.debug('Compilation::toMnemonicCue:cueShortcut:', cueShortcut);
-        const allCues = getters.getAllCues.value;
-        const matchingCue = allCues.find((cue) => cue.Shortcut == cueShortcut);
+        let matchingCue = null;
+
+        // try the active track first
+        const activeTrackId = getters.activeTrackId.value;
+        if (activeTrackId) {
+            const activeTrack = CompilationHandler.getTrackById(
+                state.compilation.value.Tracks,
+                activeTrackId,
+            );
+            if (activeTrack) {
+                const allCues = activeTrack.Cues;
+                matchingCue = allCues.find(
+                    (cue) => cue.Shortcut == cueShortcut,
+                );
+            }
+        }
+
+        if (!matchingCue) {
+            // try any track
+            const allCues = getters.getAllCues.value;
+            matchingCue = allCues.find((cue) => cue.Shortcut == cueShortcut);
+        }
+
         if (matchingCue) {
             actions.updateSelectedCueId(matchingCue.Id);
         }

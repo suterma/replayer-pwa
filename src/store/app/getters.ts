@@ -134,17 +134,6 @@ export const getters = {
         return CompilationHandler.EmptyId;
     }),
 
-    /** Gets the track with the given Id
-     */
-    getTrackById: computed(() => {
-        return (trackId: string) => {
-            return CompilationHandler.getTrackById(
-                state.compilation.value.Tracks,
-                trackId,
-            );
-        };
-    }),
-
     /** Gets the media URL for the given track
      * @remarks For non-online URL's, a match is sought from previously stored binary blobs
      */
