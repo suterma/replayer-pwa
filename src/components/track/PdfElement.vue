@@ -6,25 +6,16 @@
         target="_blank"
         >Show PDF in external viewer</a
     >
-    <div v-else>
-        <div
-            ref="pdfContainer"
-            :style="{
-                'min-height': isFullscreen ? '100vh' : availableHeight + 'px',
-                'max-height': isFullscreen ? '100vh' : availableHeight + 'px',
-                width: '100%',
-            }"
-        ></div>
-        <!-- Spacer, for non-fullscreen usage, because the above is required to have absolute position always -->
-        <div
-            v-if="!isFullscreen"
-            :style="{
-                'min-height': isFullscreen ? '100vh' : availableHeight + 'px',
-                'max-height': isFullscreen ? '100vh' : availableHeight + 'px',
-                width: '100%',
-            }"
-        ></div>
-    </div>
+
+    <div
+        ref="pdfContainer"
+        v-else
+        :style="{
+            'min-height': isFullscreen ? '100vh' : availableHeight + 'px',
+            'max-height': isFullscreen ? '100vh' : availableHeight + 'px',
+            width: '100%',
+        }"
+    ></div>
 </template>
 
 <script setup lang="ts">
@@ -115,6 +106,7 @@ const pdfContainer = ref(null);
  * the view.
  */
 function scrollToPdf() {
+    //TODO fix scrolling, does not work with     display: contents;
     console.debug('PdfElement::scrollToPdf');
     VueScrollTo.scrollTo(pdfContainer.value, {
         /** Always scroll, make it on top of the view */
@@ -135,7 +127,8 @@ const usePdfLinkFallback = ref(false);
     position: absolute;
     left: 0;
     right: 0;
-    display: inline-block;
+    /** keep the PDF inside the track outline */
+    display: contents;
     overflow: hidden;
 }
 </style>
