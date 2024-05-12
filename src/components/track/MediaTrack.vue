@@ -99,26 +99,45 @@
                             }"
                             @click="setActiveTrack()"
                         >
-                            <p
-                                class="title is-4"
-                                :title="track.Url"
-                                :class="{ 'has-text-success': isActiveTrack }"
-                            >
+                            <p :title="track.Url">
                                 <TrackTitleName
+                                    class="title is-4"
+                                    :class="{
+                                        'has-text-success': isActiveTrack,
+                                    }"
                                     :name="track.Name"
                                 ></TrackTitleName>
+                                <!-- Cue count (without expander) -->
+                                <span
+                                    v-if="
+                                        !(
+                                            /*is single track*/ (
+                                                isFirstTrack && isLastTrack
+                                            )
+                                        )
+                                    "
+                                    :class="{
+                                        'is-invisible': track.Cues.length == 0,
+                                    }"
+                                    class="ml-2 tag is-warning is-rounded is-hidden-mobile"
+                                    >{{ track.Cues.length }}</span
+                                >
+                                <ArtistDisplay
+                                    class="ml-2 is-size-7"
+                                    :artist="track.Artist"
+                                    :album="track.Album"
+                                />
+                                <MeterDisplay
+                                    v-if="isTrackPlayable"
+                                    class="ml-2 is-size-7"
+                                    :meter="track.Meter"
+                                ></MeterDisplay>
                             </p>
                         </div>
                     </div>
                 </template>
 
-                <template #left-additional>
-                    <MeterDisplay
-                        v-if="isTrackPlayable"
-                        class="is-size-7 level-item is-narrow"
-                        :meter="track.Meter"
-                    ></MeterDisplay>
-                </template>
+                <template #left-additional> </template>
 
                 <template #right-start>
                     <!-- Placeholder for the audio level meter (used for teleporting from the player component) -->
@@ -478,11 +497,12 @@
                                         <!-- Artist info-->
                                         <div class="is-size-7">
                                             <ArtistDisplay
+                                                class="has-cropped-text"
                                                 :artist="track.Artist"
                                                 :album="track.Album"
                                             />
                                         </div>
-                                        <!-- Artist info-->
+                                        <!-- Meter display-->
                                         <div class="is-size-7">
                                             <MeterDisplay
                                                 :meter="track.Meter"

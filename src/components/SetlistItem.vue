@@ -31,6 +31,7 @@
                 <span v-if="track.Artist || track.Album" class="is-size-7 ml-2">
                     <!-- Artist info (should not take too much width, and hide on small displays anyways)-->
                     <ArtistDisplay
+                        class="has-cropped-text"
                         :artist="track.Artist"
                         :album="track.Album"
                         style="max-width: 50vw"

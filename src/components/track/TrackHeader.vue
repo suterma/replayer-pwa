@@ -194,18 +194,6 @@
                     </LabeledInput>
                 </CoveredPanel>
             </template>
-            <template v-else>
-                <!-- Artist info (should not take too much width -->
-                <div class="level-item">
-                    <p class="is-size-7">
-                        <ArtistDisplay
-                            :album="track.Album"
-                            :artist="track.Artist"
-                            style="min-width: 220px; width: 25vw"
-                        />
-                    </p>
-                </div>
-            </template>
             <!-- Slot for additional level items -->
             <slot name="left-additional"></slot>
         </div>
@@ -270,7 +258,6 @@ import StyledInput from '@/components/StyledInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import NavButton from '@/components/buttons/NavButton.vue';
-import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 import { useAppStore } from '@/store/app';
 import {
     isPlayingInjectionKey,

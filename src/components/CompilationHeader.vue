@@ -112,6 +112,7 @@
                 <div class="level-item">
                     <p class="is-size-7">
                         <ArtistDisplay
+                            class="has-cropped-text"
                             :album="compilation.Album"
                             :artist="compilation.Artist"
                         />

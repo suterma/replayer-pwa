@@ -1,8 +1,5 @@
 <template>
-    <!-- <span
-        class="is-flex is-flex-direction-row is-flex-wrap-wrap is-justify-content-flex-start is-align-content-center has-cropped-text"
-    > -->
-    <span class="has-cropped-text" :class="{ 'mr-3': artist || album }">
+    <span :class="{ 'mr-3': artist || album }">
         <span v-if="artist" class="is-single-line">
             <span class="has-opacity-half">by&nbsp;</span>
             <span class="is-italic">
