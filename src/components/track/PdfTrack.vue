@@ -45,6 +45,7 @@
                                 <!-- Always offer the expander -->
                                 <CollapsibleButton
                                     class="is-nav"
+                                    :disabled="!Boolean(mediaUrl)"
                                     :model-value="isExpanded"
                                     title="PDF"
                                     collapsed-text="Click to expand / show PDF"
@@ -163,6 +164,11 @@
                     <!-- Right side -->
                     <div class="level-right is-justify-content-flex-end">
                         <!-- Slot for additional level items -->
+                        <PlaybackIndicator
+                            :is-ready="!!mediaUrl"
+                            :is-unavailable="!mediaUrl"
+                            data-cy="playback-indicator"
+                        />
                     </div>
                 </div>
             </div>
@@ -188,6 +194,7 @@ import type { ITrack } from '@/store/ITrack';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
+import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import MediaSourceIndicator from '@/components/indicators/MediaSourceIndicator.vue';
 import LabeledInput from '@/components/editor/LabeledInput.vue';
 import StyledInput from '@/components/StyledInput.vue';
