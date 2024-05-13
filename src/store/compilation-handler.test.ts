@@ -8,6 +8,7 @@
 import { expect, describe, it, beforeEach, afterEach } from 'vitest';
 import { MediaBlob } from './types';
 import CompilationHandler from './compilation-handler';
+import { Compilation } from './Compilation';
 
 describe('CompilationHandler.ts', () => {
     let mediaBlobs = new Array<MediaBlob>();
@@ -45,6 +46,7 @@ describe('CompilationHandler.ts', () => {
         expect(sortedMediaBlobs[1]?.fileName).toBe('second.name');
         expect(sortedMediaBlobs[2]?.fileName).toBe('third.name');
     });
+
     it('should not sort the blobs when no name is given', async () => {
         //Arrange
 
@@ -60,6 +62,7 @@ describe('CompilationHandler.ts', () => {
         expect(sortedMediaBlobs[1]?.fileName).toBe('second.name');
         expect(sortedMediaBlobs[2]?.fileName).toBe('third.name');
     });
+
     it('should sort the blobs in order for the given track name', async () => {
         //Arrange
 
@@ -72,6 +75,7 @@ describe('CompilationHandler.ts', () => {
         //Assert
         expect(sortedMediaBlobs[0]?.fileName).toBe('third.name');
     });
+
     it('should sort the blobs in order for the given second track name', async () => {
         //Arrange
 
@@ -84,6 +88,7 @@ describe('CompilationHandler.ts', () => {
         //Assert
         expect(sortedMediaBlobs[0]?.fileName).toBe('second.name');
     });
+
     it('should sort the blobs in order for the given ending track name', async () => {
         //Arrange
 
@@ -119,6 +124,7 @@ describe('CompilationHandler.ts', () => {
         //Assert
         expect(actual).toEqual(CompilationHandler.getLazyFileName('somename'));
     });
+
     it('should resolve non-printable characters for lazy conversion', async () => {
         //Arrange
 
@@ -128,6 +134,7 @@ describe('CompilationHandler.ts', () => {
         //Assert
         expect(actual).toEqual(CompilationHandler.getLazyFileName('SOMEname'));
     });
+
     it('should resolve other non-printable characters for lazy conversion', async () => {
         //Arrange
 
@@ -140,5 +147,85 @@ describe('CompilationHandler.ts', () => {
         expect(actual).toEqual(
             CompilationHandler.getLazyFileName('01 Ouvertüre_pb.mp3'),
         );
+    });
+
+    it('should provide a proper file name for a fully annotated complilation', async () => {
+        //Arrange
+        const testCompilation = new Compilation(
+            'c:\\file',
+            'test-title',
+            'test-artist',
+            'test-album',
+            'test-url',
+            'test-id',
+            [],
+        );
+
+        //Act
+        const actual =
+            CompilationHandler.getCompilationFileName(testCompilation);
+
+        //Assert
+        expect(actual).toEqual('test-title by test-artist on test-album');
+    });
+
+    it('should provide a proper file name for a title-only complilation', async () => {
+        //Arrange
+        const testCompilation = new Compilation(
+            'c:\\file',
+            'test-title',
+            ' ',
+            ' ',
+            'test-url',
+            'test-id',
+            [],
+        );
+
+        //Act
+        const actual =
+            CompilationHandler.getCompilationFileName(testCompilation);
+
+        //Assert
+        expect(actual).toEqual('test-title');
+    });
+
+    it('should provide a proper file name for a title and artist complilation', async () => {
+        //Arrange
+        const testCompilation = new Compilation(
+            'c:\\file',
+            'test-title',
+            'test-artist',
+            ' ',
+            'test-url',
+            'test-id',
+            [],
+        );
+
+        //Act
+        const actual =
+            CompilationHandler.getCompilationFileName(testCompilation);
+
+        //Assert
+        expect(actual).toEqual('test-title by test-artist');
+    });
+
+    it('should provide a proper file name for a title and album complilation', async () => {
+        //Arrange
+        const testCompilation = new Compilation(
+            'c:\\file',
+            'test-title',
+            ' ',
+            'test-album ',
+            'test-url',
+            'test-id',
+            [],
+        );
+
+        //Act
+        const actual =
+            CompilationHandler.getCompilationFileName(testCompilation);
+
+        //Assert
+        expect(actual).toEqual('test-title on test-album');
     });
 });

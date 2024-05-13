@@ -710,15 +710,20 @@ export default class CompilationHandler {
     }
 
     /** Gets a usable file name (without extension), for a download operation,
-     * from a compilation title
+     * from a compilation title, artist and album
      * @param compilation - the compilation to derive a file name from
      */
     public static getCompilationFileName(compilation: ICompilation): string {
-        return (
-            (compilation?.Title?.trim() ?? '') +
-            (compilation?.Artist ? ' by ' + compilation.Artist.trim() : '') +
-            (compilation?.Album ? ' on ' + compilation.Album.trim() : '')
-        );
+        let fileName = compilation?.Title?.trim() ?? '';
+        const artist = compilation?.Artist.trim();
+        if (artist) {
+            fileName += ' by ' + artist;
+        }
+        const album = compilation?.Album.trim();
+        if (album) {
+            fileName += ' on ' + album;
+        }
+        return fileName;
     }
 
     /** Determines whether playback of the given cue has already passed

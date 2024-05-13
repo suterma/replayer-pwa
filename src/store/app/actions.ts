@@ -1036,8 +1036,9 @@ export const actions = {
     },
 
     /** Initiates the download of the current compilation as a single XML (.xml) file
+     * @param proposedFileName The proposed file name, without suffix.
      */
-    downloadXmlFile(): void {
+    downloadXmlFile(proposedFileName: string): void {
         const message = useMessageStore();
 
         message.pushProgress(`Downloading XML file...`);
@@ -1046,14 +1047,15 @@ export const actions = {
         const blob = new Blob([xml], {
             type: 'text/xml;charset=utf-8',
         });
-        FileSaver.saveAs(blob, `${state.compilation.value?.Title}.xml`);
+        FileSaver.saveAs(blob, `${proposedFileName}.xml`);
 
         message.popProgress();
     },
 
     /** Initiates the download of the current compilation as a ZIP (.zip) package
+     * @param proposedFileName The proposed file name, without suffix.
      */
-    downloadZipPackage(): void {
+    downloadZipPackage(proposedFileName: string): void {
         const message = useMessageStore();
 
         const downloadMessage = `Downloading ZIP file for '${state.compilation.value?.Title}'...`;
@@ -1087,7 +1089,7 @@ export const actions = {
                         .then(function (content) {
                             FileSaver.saveAs(
                                 content,
-                                `${state.compilation.value?.Title}.zip`,
+                                `${proposedFileName}.zip`,
                             );
                         })
                         .finally(() => {

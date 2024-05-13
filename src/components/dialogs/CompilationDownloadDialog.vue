@@ -143,7 +143,6 @@
 <script lang="ts">
 import { defineComponent, ref, type PropType } from 'vue';
 import CompilationHandler from '@/store/compilation-handler';
-import { mapActions } from 'pinia';
 import { useAppStore } from '@/store/app';
 import ModalDialog from '@/components/dialogs/ModalDialog.vue';
 import LabeledInput from '@/components/editor/LabeledInput.vue';
@@ -218,9 +217,9 @@ export default defineComponent({
          */
         download(): void {
             if (this.isDownloadZip) {
-                useAppStore().downloadZipPackage();
+                useAppStore().downloadZipPackage(this.proposedFileName);
             } else {
-                useAppStore().downloadXmlFile();
+                useAppStore().downloadXmlFile(this.proposedFileName);
             }
         },
     },
