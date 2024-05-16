@@ -431,7 +431,7 @@ export const actions = {
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
             console.debug(
-                `actions::ADD_MEDIA_URL:removing matching item for key:${
+                `actions::addMediaUrl:removing matching item for key:${
                     mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
@@ -441,7 +441,7 @@ export const actions = {
 
         //Now add the new media URL as a replacement
         console.debug(
-            `actions::ADD_MEDIA_URL:resourceName:${mediaUrl.resourceName},mime-type:${mediaUrl.mediaType}`,
+            `actions::addMediaUrl:resourceName:${mediaUrl.resourceName},mime-type:${mediaUrl.mediaType}`,
         );
         state.mediaUrls.value.set(mediaUrl.resourceName, mediaUrl);
 
@@ -853,9 +853,10 @@ export const actions = {
     },
 
     /** Uses a single media resource from an URL, by adding the URL to the set of stored media URLs.
-     * @remarks The resource must be a single media file.
-     * This method can be called multiple times, each URL gets appropriately added to the current compilation
-     * The resource does not need to support any CORS Headers, because it's only used as-is, as a media source
+     * @remarks The resource is expected to be a single, supported media file.
+     * No further assertion about the resource is made within this method, and
+     * the resource does not need to support any CORS Headers, because it's only used as-is, as a media source.
+     * This method can be called multiple times, each URL gets appropriately added to the current compilation.
      * @param url - The URL to use
      * @return A promise to a locally usable name, derived from the URL, which can be used to match the track to the stored media URL
      */
@@ -863,14 +864,6 @@ export const actions = {
         console.debug('actions::useMediaFromUrl::url', url);
         const message = useMessageStore();
         return new Promise((resolve, reject) => {
-            if (!FileHandler.isSupportedMediaFileName(url)) {
-                //message.popProgress();
-                reject(
-                    `Not supported: '${url}'. Please select another media resource. See the documentation for supported media types.`,
-                );
-                // Still let the user to continue with adding the (other) tracks or data
-            }
-
             if (!FileHandler.isValidHttpUrl(url)) {
                 //message.popProgress();
                 reject(
@@ -881,18 +874,15 @@ export const actions = {
 
             message.pushProgress(`Using URL '${url}'...`);
 
-            // Follow redirects, if appliccable
             let localResourceName = url;
             try {
                 const finalUrl = new URL(url);
                 localResourceName = FileHandler.getLocalResourceName(finalUrl);
-            } finally {
                 this.addMediaUrl(
                     new MediaUrl(localResourceName, url, null, null),
                 );
                 resolve(localResourceName);
-
-                //The action is done, so terminate the progress
+            } finally {
                 message.popProgress();
             }
         });
