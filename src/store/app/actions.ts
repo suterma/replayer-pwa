@@ -958,7 +958,7 @@ export const actions = {
             });
 
             //Now, in the clone, reassign all variable items
-            let nextShortcut = CompilationHandler.getNextShortcut(
+            const nextShortcut = CompilationHandler.getNextShortcut(
                 state.compilation.value,
             );
             clonedTrack.Id = uuidv4();
