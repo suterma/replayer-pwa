@@ -188,7 +188,7 @@
 
 <script setup lang="ts">
 /** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
-import { type PropType, computed, type Ref, ref } from 'vue';
+import { type PropType, computed, type Ref, ref, provide, readonly } from 'vue';
 import { useAppStore } from '@/store/app';
 import type { ITrack } from '@/store/ITrack';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
@@ -206,6 +206,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { storeToRefs } from 'pinia';
 // import PdfViewer from '@/components/track/PdfViewer.vue';
 import PdfElement from '@/components/track/PdfElement.vue';
+import { isPlayingInjectionKey } from './TrackInjectionKeys';
 
 const props = defineProps({
     /** The track to display
@@ -227,6 +228,11 @@ const isExpanded = ref(false);
 const mediaUrl = computed(() => {
     return app.getMediaUrlByTrack(props.track);
 });
+
+/** Flag to indicate whether this track's player is currently playing
+ * @remarks PDF's currently can not play or even scroll
+ */
+provide(isPlayingInjectionKey, readonly(ref(false)));
 
 // --- drop zone handling ---
 

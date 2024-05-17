@@ -183,6 +183,15 @@
                                         Multitrack Download Library by Mike
                                         Senior - has no CORS headers
                                     </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://lib.replayer.app/demo/Lidja%20Roos%20-%20Not%20For%20Sale%20-%20Booklet.pdf&title=Not%20for%20Sale%20Booklet"
+                                            target="_blank"
+                                        >
+                                            CD Booklet (PDF)</a
+                                        >, from the Album "Not for Sale" by
+                                        Lidija Roos
+                                    </li>
                                 </ul>
                             </div>
                             <h3 class="title is-5 mt-5">
