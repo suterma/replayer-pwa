@@ -34,7 +34,10 @@
                     <div v-if="modelValue">
                         <div class="block">
                             <!-- NOTE: These links use the blank target, to actually cause a reload. Just changing the URL does not trigger a track/package API reload -->
-                            <h3 class="title is-5 mt-5">Track API Demo</h3>
+                            <h2 class="title is-4 mt-4">Track API Demo</h2>
+                            <h3 class="title is-5 mt-5">
+                                Various media types (from the Replayer library)
+                            </h3>
                             <div class="content">
                                 <ul>
                                     <li>
@@ -96,17 +99,7 @@
                                             AAC audio</a
                                         >
                                     </li>
-                                    <li>
-                                        <a
-                                            href="./#/play?media=https://previews.cambridge-mt.com/ImAlright_Full_Preview.mp3&title=I'm+Allright&album='Mixing+Secrets'+Free+Multitrack+Download+Library+by+Mike+Senior&artist=Angels+in+Amplifiers"
-                                            target="_blank"
-                                        >
-                                            Angels In Amplifiers, Full Preview
-                                            Mix</a
-                                        >, from the 'Mixing Secrets' Free
-                                        Multitrack Download Library by Mike
-                                        Senior
-                                    </li>
+
                                     <li>
                                         <a
                                             href="./#/play?media=https://lib.replayer.app/nasa-4k/13537_Apollo13ViewsMoon4K_YouTube4K.mp4&title=Apollo+13+Views+of+the+Moon+in+4K+(online,+715+MB)&album=https://svs.gsfc.nasa.gov/13537&artist=NASA's+Goddard+Space+Flight+Center&0.755=Intro&12.771=Sunrise&18.875=Lunar+terrain&39.065=Craters&65.374=Crater&83.432=Crater+2&96.431=Earth+rise&120.341=Trajectory&133.114=Full+moon+%26+outro"
@@ -141,26 +134,6 @@
                                             von Remo Forrer</a
                                         >
                                     </li>
-                                    <li>
-                                        <a
-                                            href="./#/play?media=https://www.youtube.com/watch?v=USetyquP_dU&title=Crawling+Back+To+You+(Tom+Petty+Cover)&album=TELEFUNKEN+Live+From+The+Lab&artist=Szlachetka&0.0=Announcement&10.455=Piano+intro&63.697=Intro+Part+II&79.605=Verse+&112.158=Verse+2&143.779=Bridge&162.299=Instrumental&263.228=Verse+3&295.321=Refrain+(variation)&326.042=Guitar+solo&445.456=Refrain&477.8=Outro+%2B+Credits"
-                                            target="_blank"
-                                        >
-                                            YouTube video: Szlachetka playing
-                                            Crawling Back To You (Tom Petty
-                                            Cover)</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a
-                                            href="./#/play?media=https://www.youtube.com/watch?v=tR9FAtxBxUU&title=F%C3%BCr+immer+uf+di&album=Jodelcover&artist=Jodelklub+Edelweiss&3.581=Intro&24.206=Uf+Mueter's+Seel&70.078=Es+Glas...&99.315=Jodel&123.036=Zyt+wo+mir+no+blyybt..."
-                                            target="_blank"
-                                        >
-                                            YouTube video: Jodelklub Edelweiss
-                                            yodeling Für Immer Uf Di (Patent
-                                            Ochsner Cover)</a
-                                        >
-                                    </li>
 
                                     <li>
                                         <a
@@ -170,6 +143,75 @@
                                             MP4 video: at earth rise position
                                             (Credit: NASA's Goddard Space Flight
                                             Center)</a
+                                        >
+                                    </li>
+                                </ul>
+                            </div>
+                            <h3 class="title is-5 mt-5">
+                                Various media types (from other sources)
+                            </h3>
+                            <div class="content">
+                                <ul>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://www.youtube.com/watch?v=tR9FAtxBxUU&title=F%C3%BCr+immer+uf+di&album=Jodelcover&artist=Jodelklub+Edelweiss&3.581=Intro&24.206=Uf+Mueter's+Seel&70.078=Es+Glas...&99.315=Jodel&123.036=Zyt+wo+mir+no+blyybt..."
+                                            target="_blank"
+                                        >
+                                            YouTube video</a
+                                        >
+                                        Jodelklub Edelweiss yodeling Für Immer
+                                        Uf Di (Patent Ochsner Cover)
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://www.youtube.com/watch?v=USetyquP_dU&title=Crawling+Back+To+You+(Tom+Petty+Cover)&album=TELEFUNKEN+Live+From+The+Lab&artist=Szlachetka&0.0=Announcement&10.455=Piano+intro&63.697=Intro+Part+II&79.605=Verse+&112.158=Verse+2&143.779=Bridge&162.299=Instrumental&263.228=Verse+3&295.321=Refrain+(variation)&326.042=Guitar+solo&445.456=Refrain&477.8=Outro+%2B+Credits"
+                                            target="_blank"
+                                        >
+                                            YouTube video</a
+                                        >
+                                        Szlachetka playing Crawling Back To You
+                                        (Tom Petty Cover)
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https://previews.cambridge-mt.com/ImAlright_Full_Preview.mp3&title=I'm+Allright&album='Mixing+Secrets'+Free+Multitrack+Download+Library+by+Mike+Senior&artist=Angels+in+Amplifiers"
+                                            target="_blank"
+                                        >
+                                            Angels In Amplifiers, Full Preview
+                                            Mix</a
+                                        >, from the 'Mixing Secrets' Free
+                                        Multitrack Download Library by Mike
+                                        Senior - has no CORS headers
+                                    </li>
+                                </ul>
+                            </div>
+                            <h3 class="title is-5 mt-5">
+                                Various storage vendors
+                            </h3>
+                            <div class="content">
+                                <ul>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https%3A%2F%2Fdl.dropboxusercontent.com%2Fscl%2Ffi%2Flh4jw17lw5s0i847ogvzw%2Fyour-light-by-lidija-roos.mp3%3Frlkey%3Dznfw0etm3jqlne5q8lmr6a59l&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&17.5=Verse"
+                                            target="_blank"
+                                        >
+                                            MP3 on Dropbox</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https%3A%2F%2Fdrive.google.com%2Fuc%3Fexport%3Ddownload%26id%3D12pLN-awFxp1r-t5lBWNqCGFXoaCKI_eJ&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&17.5=Verse"
+                                            target="_blank"
+                                        >
+                                            MP3 on Google Drive</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="./#/play?media=https%3A%2F%2Fonedrive.live.com%2Fdownload%3Fresid%3D3DB905138F2203AA%25211420%26authkey%3D!ABKQ8jbDgCvjopg&title=Your+Light&album=Not+For+Sale&artist=Lidija+Roos&17.5=Verse"
+                                            target="_blank"
+                                        >
+                                            MP3 on Microsoft OneDrive</a
                                         >
                                     </li>
                                 </ul>
