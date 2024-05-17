@@ -163,4 +163,38 @@ describe('filehandler.ts', () => {
         expect(actualFileNameOrder[2]).toBe('Intro.mp3');
         expect(actualFileNameOrder[3]).toBe('Solo.mp3');
     });
+
+    it('should determine the missing file ending for a google drive file download properly', async () => {
+        // Arrange
+        const urlPath = '/uc';
+
+        // Act
+        const actual = FileHandler.hasNoFileEnding(urlPath);
+
+        // Assert
+        expect(actual).toBe(true);
+    });
+
+    it('should determine the missing file ending for a microsoft onedrive file download properly', async () => {
+        // Arrange
+        const urlPath = '/download';
+
+        // Act
+        const actual = FileHandler.hasNoFileEnding(urlPath);
+
+        // Assert
+        expect(actual).toBe(true);
+    });
+
+    it('should determine the existing file ending for a dropbox file download properly', async () => {
+        // Arrange
+        const urlPath =
+            '/scl/fi/lh4jw17lw5s0i847ogvzw/your-light-by-lidija-roos.mp3';
+
+        // Act
+        const actual = FileHandler.hasNoFileEnding(urlPath);
+
+        // Assert
+        expect(actual).toBe(false);
+    });
 });

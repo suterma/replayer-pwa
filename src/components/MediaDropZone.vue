@@ -385,7 +385,9 @@ export default defineComponent({
                 this.isProcessingDataFromUrl = true;
 
                 // Determine the type of data that is about to load
-                let isUsingSingleMediaFile = true; //USE_MEDIA_FROM_URL
+                // If unsure, assume it's a media file (possibly from an URL
+                // without any file extension in the path)
+                let isUsingSingleMediaFile = true;
                 if (
                     FileHandler.isSupportedPackageFileName(this.url) ||
                     FileHandler.isSupportedCompilationFileName(this.url)

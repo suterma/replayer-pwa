@@ -52,6 +52,19 @@ export default class FileHandler {
         return input.endsWith('/');
     }
 
+    /** Returns whether the given path/filename has no file extension
+     */
+    static hasNoFileEnding(urlPath: string): boolean {
+        const urlPathDotParts = urlPath?.split('.');
+        const urlPathHasEnding = urlPathDotParts.length > 1;
+        const urlPathEnding = urlPathDotParts.pop();
+        const urlPathEndingIs3Or4Characters =
+            urlPathEnding?.length &&
+            urlPathEnding?.length >= 3 &&
+            urlPathEnding?.length <= 4;
+        return !urlPathHasEnding || !urlPathEndingIs3Or4Characters;
+    }
+
     /** Maps a URL to a locally usable file name
      * @remarks can be used to match a track URL to a stored media file
      * @devdoc Just removes the protocol

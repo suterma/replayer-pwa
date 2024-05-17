@@ -51,12 +51,18 @@ export default class CompilationHandler {
     }
 
     /** Determines whether this is an audio track
+     * @remarks Tracks with an URL of undefined file ending are
+     * assumed to be of type audio.
+     * This allows to use file sharing services, that do not offer file endings for their files.
      * @devdoc track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,
      * determined when the track URL is evaluated.
      */
     static isAudioTrack(track: ITrack): boolean {
-        return FileHandler.isAudioFileName(track.Url);
+        return (
+            FileHandler.isAudioFileName(track.Url) ||
+            FileHandler.hasNoFileEnding(track.Url)
+        );
     }
 
     /** Determines whether this is a youtube video track

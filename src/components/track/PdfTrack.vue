@@ -26,8 +26,8 @@
                             <div class="level-item is-narrow">
                                 <!-- Offer the native full screen, if available -->
                                 <FullscreenToggler
-                                    class="is-nav"
                                     v-if="hasNativeFullscreenSupport"
+                                    class="is-nav"
                                     :disabled="!Boolean(mediaUrl)"
                                     :model-value="isFullscreen"
                                     title="Toggle full-screen mode"
