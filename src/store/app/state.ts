@@ -13,6 +13,22 @@ import { useLocalStorage } from '@vueuse/core';
 import { ref } from 'vue';
 import type { ICompilation } from '../ICompilation';
 
+/** Prevents unused objects in compilation objects, to enable straightforward
+ * JSON serilization
+ * @remarks Specifically removes MediaHander objects from serialization
+ * because they are circular, and not needed in the first place
+ * @devdoc Taken and simplified from
+ * https://bobbyhadz.com/blog/javascript-typeerror-converting-circular-structure-to-json#use-a-method-to-remove-all-circular-references-from-an-object
+ */
+function getCompilationSerializationReplacer() {
+    return (key: any, value: object | null) => {
+        if (key === 'MediaHandler') {
+            return;
+        }
+        return value;
+    };
+}
+
 /** Implements the state of this application */
 export const state = {
     /** A compilation to work with
@@ -28,7 +44,10 @@ export const state = {
                         ? Compilation.fromJson(stringified)
                         : Compilation.empty(),
                 write: (compilation: ICompilation) =>
-                    JSON.stringify(compilation),
+                    JSON.stringify(
+                        compilation,
+                        getCompilationSerializationReplacer(),
+                    ),
             },
         },
     ),
