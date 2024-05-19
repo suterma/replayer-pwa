@@ -188,15 +188,7 @@
 
 <script setup lang="ts">
 /** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
-import {
-    type PropType,
-    computed,
-    type Ref,
-    ref,
-    provide,
-    readonly,
-    watchEffect,
-} from 'vue';
+import { type PropType, computed, type Ref, ref, provide, readonly } from 'vue';
 import { useAppStore } from '@/store/app';
 import type { ITrack } from '@/store/ITrack';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
