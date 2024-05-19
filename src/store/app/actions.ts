@@ -118,7 +118,7 @@ export const actions = {
 
     /** Selects the next cue, if any. Otherwise, loop to the first cue */
     toNextCue() {
-        console.debug('Compilation::toNextCue');
+        console.debug('app::toNextCue');
         const allCueIds = getters.getAllCues.value.map((cue) => cue.Id);
         const indexOfSelected = allCueIds.indexOf(state.selectedCueId.value);
         if (indexOfSelected < allCueIds.length - 1) {
@@ -145,6 +145,7 @@ export const actions = {
         );
         if (track) {
             track.Volume = volume;
+            console.debug('app::updateTrackVolume:', volume);
         }
     },
 
@@ -158,6 +159,7 @@ export const actions = {
         );
         if (track) {
             track.PlaybackRate = playbackRate;
+            console.debug('app::updateTrackPlaybackRate:', playbackRate);
         }
     },
 
