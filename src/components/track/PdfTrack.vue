@@ -188,7 +188,15 @@
 
 <script setup lang="ts">
 /** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
-import { type PropType, computed, type Ref, ref, provide, readonly } from 'vue';
+import {
+    type PropType,
+    computed,
+    type Ref,
+    ref,
+    provide,
+    readonly,
+    watchEffect,
+} from 'vue';
 import { useAppStore } from '@/store/app';
 import type { ITrack } from '@/store/ITrack';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
@@ -229,7 +237,8 @@ const mediaUrl = computed(() => {
 });
 
 /** Flag to indicate whether this track's player is currently playing
- * @remarks PDF's currently can not play or even scroll
+ * @devdoc This is just provided to avoid a console warning;
+ *  PDF's currently can not play or even scroll
  */
 provide(isPlayingInjectionKey, readonly(ref(false)));
 
