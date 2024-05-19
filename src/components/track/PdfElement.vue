@@ -75,15 +75,11 @@ const initPDF = () => {
                 pdfContainer.value,
                 {
                     pdfOpenParams: { view: 'FitH' },
-                    customAttribute: {
-                        key: 'sandbox',
-                        value: 'allow-scripts allow-same-origin',
-                    },
                     height: props.isFullscreen
                         ? '100vh'
                         : availableHeight.value + 'px',
                     width: '100%',
-                    forcePDFJS: true,
+                    forcePDFJS: false,
                     PDFJS_URL: '/pdfjs/web/viewer.html?v=2',
                 },
             );
