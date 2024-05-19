@@ -6,9 +6,8 @@
             :href="mediaUrl"
             alt="Show this track's PDF in an external viewer"
             target="_blank"
-            >Show PDF in external viewer</a
+            >{{ mediaUrl }}</a
         >
-
         <div
             v-else
             ref="pdfContainer"
@@ -48,6 +47,7 @@ const props = defineProps({
 });
 
 import { navbarCompensationHeightInjectionKey } from '@/AppInjectionKeys';
+import FileHandler from '@/store/filehandler';
 const navbarCompensationHeight = inject(navbarCompensationHeightInjectionKey);
 
 /** Gets the net available available window height
@@ -121,7 +121,9 @@ function scrollToPdf() {
     });
 }
 
-const usePdfLinkFallback = ref(false);
+const usePdfLinkFallback = computed(() => {
+    return FileHandler.isValidHttpUrl(props.mediaUrl);
+});
 </script>
 
 <style>
