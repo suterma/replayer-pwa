@@ -25,7 +25,7 @@ const pdfContainer = ref(null);
 const pdfScrollContainer = ref(null);
 
 /** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
-import { computed, ref, inject, onMounted, onUpdated } from 'vue';
+import { computed, ref, inject, onMounted, onUpdated, watchEffect } from 'vue';
 
 import PDFObject from 'pdfobject';
 import VueScrollTo from 'vue-scrollto';
@@ -121,8 +121,10 @@ function scrollToPdf() {
     });
 }
 
-const usePdfLinkFallback = computed(() => {
-    return FileHandler.isValidHttpUrl(props.mediaUrl);
+const usePdfLinkFallback = ref(false);
+
+watchEffect(() => {
+    usePdfLinkFallback.value = FileHandler.isValidHttpUrl(props.mediaUrl);
 });
 </script>
 
