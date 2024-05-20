@@ -73,7 +73,7 @@
                         hint="Uses more more resources"
                     ></LabeledCheckbox>
                 </div>
-                <div class="control">
+                <div class="control ml-4">
                     <LabeledCheckbox
                         v-model="showOverviewWaveformOnEdit"
                         :disabled="!showWaveformsOnEdit"
@@ -91,7 +91,7 @@
                     ></LabeledCheckbox>
                 </div>
 
-                <div class="control">
+                <div class="control ml-4">
                     <LabeledCheckbox
                         v-model="levelMeterSizeIsLarge"
                         :disabled="!showLevelMeterForEdit"
