@@ -46,6 +46,15 @@
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
+                        v-model="showPdfInline"
+                        label="Offer PDF content inline (instead of link-only)"
+                        hint="Inline rendering does not work on older mobile devices"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
                         v-model="useWideContentWidth"
                         label="Use wide content width"
                         hint="Optimizes screen area usage"
@@ -378,6 +387,7 @@ import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 const settings = useSettingsStore();
 
 const {
+    showPdfInline,
     levelMeterSizeIsLarge,
     showInitialZeroTimeCue,
     showAddCueButtonInPlayView,

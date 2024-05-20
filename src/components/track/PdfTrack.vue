@@ -24,60 +24,54 @@
                     >
                         <template v-if="!isFullscreen">
                             <div class="level-item is-narrow">
-                                <!-- Offer the native full screen, if available -->
-                                <FullscreenToggler
-                                    v-if="hasNativeFullscreenSupport"
-                                    class="is-nav"
-                                    :disabled="!Boolean(mediaUrl)"
-                                    :model-value="isFullscreen"
-                                    title="Toggle full-screen mode"
-                                    @click="toggle"
-                                ></FullscreenToggler>
-                                <CollapsibleButton
-                                    v-else
-                                    :disabled="!Boolean(mediaUrl)"
-                                    :model-value="isFullscreen"
-                                    title="Toggle full-page mode"
-                                    collapsed-chevron-direction="up"
-                                    @click="toggle"
-                                ></CollapsibleButton>
+                                <template v-if="showPdfInline">
+                                    <!-- Offer the native full screen, if available -->
+                                    <FullscreenToggler
+                                        v-if="hasNativeFullscreenSupport"
+                                        class="is-nav"
+                                        :disabled="!Boolean(mediaUrl)"
+                                        :model-value="isFullscreen"
+                                        title="Toggle full-screen mode"
+                                        @click="toggle"
+                                    ></FullscreenToggler>
+                                    <CollapsibleButton
+                                        v-else
+                                        :disabled="!Boolean(mediaUrl)"
+                                        :model-value="isFullscreen"
+                                        title="Toggle full-page mode"
+                                        collapsed-chevron-direction="up"
+                                        @click="toggle"
+                                    ></CollapsibleButton>
 
-                                <!-- Always offer the expander -->
-                                <CollapsibleButton
-                                    class="is-nav"
-                                    :disabled="!Boolean(mediaUrl)"
-                                    :model-value="isExpanded"
-                                    title="PDF"
-                                    collapsed-text="Click to expand / show PDF"
-                                    expanded-text="Click to collapse"
-                                    @update:model-value="
-                                        isExpanded = !isExpanded
-                                    "
+                                    <!-- Always offer the expander -->
+                                    <CollapsibleButton
+                                        class="is-nav"
+                                        :disabled="!Boolean(mediaUrl)"
+                                        :model-value="isExpanded"
+                                        title="PDF"
+                                        collapsed-text="Click to expand / show PDF"
+                                        expanded-text="Click to collapse"
+                                        @update:model-value="
+                                            isExpanded = !isExpanded
+                                        "
+                                    >
+                                    </CollapsibleButton>
+                                </template>
+                                <!-- Icon and link -->
+                                <p
+                                    class="control is-flex is-align-items-center"
                                 >
-                                </CollapsibleButton>
-
-                                <!-- Link instead of title -->
-                                <!-- The title is the only header element that should shrink (break on words) if necessary -->
-                                <div
-                                    class="is-flex-shrink-1 ml-3"
-                                    :class="{
-                                        'is-clickable': Boolean(mediaUrl),
-                                        'has-cursor-not-allowed':
-                                            !Boolean(mediaUrl),
-                                    }"
-                                    @click="isExpanded = !isExpanded"
-                                >
-                                    <p :title="track.Url">
-                                        <BaseIcon
-                                            v-once
-                                            class="mr-2"
-                                            :path="mdiFilePdfBox"
-                                        />
+                                    <label class="button is-indicator">
+                                        <BaseIcon :path="mdiFilePdfBox" />
+                                    </label>
+                                    <span
+                                        class="has-text-break-word is-indicator"
+                                    >
                                         <a :href="mediaUrl" target="_blank">
                                             {{ track.Name }}
                                         </a>
-                                    </p>
-                                </div>
+                                    </span>
+                                </p>
                             </div>
                         </template>
 
@@ -142,7 +136,11 @@
             </div>
             <Transition name="item-expand">
                 <PdfElement
-                    v-if="(isExpanded || isFullscreen) && mediaUrl"
+                    v-if="
+                        (isExpanded || isFullscreen) &&
+                        mediaUrl &&
+                        showPdfInline
+                    "
                     class="block"
                     :media-url="mediaUrl"
                     :is-fullscreen="isFullscreen"
@@ -166,7 +164,6 @@ import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import MediaSourceIndicator from '@/components/indicators/MediaSourceIndicator.vue';
 import LabeledInput from '@/components/editor/LabeledInput.vue';
 import StyledInput from '@/components/StyledInput.vue';
-import TrackTitleName from '@/components/track/TrackTitleName.vue';
 import FullscreenPanel from '@/components/FullscreenPanel.vue';
 import FullscreenToggler from '@/components/buttons/FullscreenToggler.vue';
 import { mdiSwapVertical, mdiFilePdfBox } from '@mdi/js';
@@ -174,6 +171,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { storeToRefs } from 'pinia';
 import PdfElement from '@/components/track/PdfElement.vue';
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
+import { useSettingsStore } from '@/store/settings';
 
 const props = defineProps({
     /** The track to display
@@ -185,7 +183,10 @@ const props = defineProps({
 });
 
 const app = useAppStore();
-const { isTrackEditable, isTrackPlayable } = storeToRefs(app);
+const { isTrackEditable } = storeToRefs(app);
+
+const settings = useSettingsStore();
+const { showPdfInline } = storeToRefs(settings);
 
 /** Whether the pdf is currently expanded */
 const isExpanded = ref(false);

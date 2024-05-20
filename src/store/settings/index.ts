@@ -38,6 +38,9 @@ export enum TimeFormat {
 
 /** A store for application settings */
 export const useSettingsStore = defineStore(Store.Settings, () => {
+    /** Whether to render PDF files inline, instead of just showing a link */
+    const showPdfInline = useLocalStorage('showPdfInline', true);
+
     /** Whether the audio level meter size is large */
     const levelMeterSizeIsLarge = useLocalStorage(
         'levelMeterSizeIsLarge',
@@ -171,6 +174,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
 
     /** Returns the settings to their default value */
     function $reset() {
+        showPdfInline.value = true;
         levelMeterSizeIsLarge.value = false;
         showInitialZeroTimeCue.value = false;
         showAddCueButtonInPlayView.value = true;
@@ -196,6 +200,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
     }
 
     return {
+        showPdfInline,
         levelMeterSizeIsLarge,
         showInitialZeroTimeCue,
         showAddCueButtonInPlayView,
