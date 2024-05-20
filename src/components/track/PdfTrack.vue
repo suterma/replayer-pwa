@@ -22,7 +22,7 @@
                     <div
                         class="level-left level-wrap is-justify-content-flex-start"
                     >
-                        <template v-if="!isFullscreen && isTrackPlayable">
+                        <template v-if="!isFullscreen">
                             <div class="level-item is-narrow">
                                 <!-- Offer the native full screen, if available -->
                                 <FullscreenToggler
@@ -56,7 +56,8 @@
                                 >
                                 </CollapsibleButton>
 
-                                <!-- Title --><!-- The title is the only header element that should shrink (break on words) if necessary -->
+                                <!-- Link instead of title -->
+                                <!-- The title is the only header element that should shrink (break on words) if necessary -->
                                 <div
                                     class="is-flex-shrink-1 ml-3"
                                     :class="{
@@ -66,55 +67,22 @@
                                     }"
                                     @click="isExpanded = !isExpanded"
                                 >
-                                    <p class="title is-4" :title="track.Url">
+                                    <p :title="track.Url">
                                         <BaseIcon
                                             v-once
                                             class="mr-2"
                                             :path="mdiFilePdfBox"
                                         />
-                                        <TrackTitleName :name="track.Name">
-                                        </TrackTitleName>
+                                        <a :href="mediaUrl" target="_blank">
+                                            {{ track.Name }}
+                                        </a>
                                     </p>
                                 </div>
-                            </div>
-                        </template>
-                        <template v-else>
-                            <div
-                                class="is-flex-shrink-1 ml-3"
-                                :class="{
-                                    'is-clickable': Boolean(mediaUrl),
-                                    'has-cursor-not-allowed':
-                                        !Boolean(mediaUrl),
-                                }"
-                            >
-                                <p :title="track.Url">
-                                    <BaseIcon
-                                        v-once
-                                        class="mr-2"
-                                        :path="mdiFilePdfBox"
-                                    />
-                                    <a :href="mediaUrl" target="_blank">
-                                        {{ track.Name }}
-                                    </a>
-                                </p>
                             </div>
                         </template>
 
                         <!-- Edit -->
                         <template v-if="isTrackEditable">
-                            <div class="level-item is-narrow">
-                                <CollapsibleButton
-                                    class="is-nav"
-                                    :model-value="isExpanded"
-                                    title="PDF"
-                                    collapsed-text="Click to expand / show PDF"
-                                    expanded-text="Click to collapse"
-                                    @update:model-value="
-                                        isExpanded = !isExpanded
-                                    "
-                                >
-                                </CollapsibleButton>
-                            </div>
                             <div class="level-item is-narrow">
                                 <!-- The edit title and file part -->
                                 <CoveredPanel
@@ -306,5 +274,10 @@ function updateName(name: string) {
 
 .is-fullwidth {
     width: 100%;
+}
+
+/** Links in track headers should break on words */
+.track .track-header a {
+    white-space: normal;
 }
 </style>
