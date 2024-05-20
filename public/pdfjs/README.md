@@ -6,5 +6,4 @@ The [prebuilt, stable release](https://mozilla.github.io/pdf.js/getting_started/
 
 The following changes have been made:
 
--   The viewer.html has been slightly simplified, removing password handling
--   The viewer.css has been slightly simplified, removing password handling
+-   The viewer.html has been slightly simplified, hiding some elements via CSS
