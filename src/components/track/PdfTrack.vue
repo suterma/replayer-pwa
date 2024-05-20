@@ -34,15 +34,7 @@
                                         title="Toggle full-screen mode"
                                         @click="toggle"
                                     ></FullscreenToggler>
-                                    <CollapsibleButton
-                                        v-else
-                                        :disabled="!Boolean(mediaUrl)"
-                                        :model-value="isFullscreen"
-                                        title="Toggle full-page mode"
-                                        collapsed-chevron-direction="up"
-                                        @click="toggle"
-                                    ></CollapsibleButton>
-
+                                    <!-- A "full page" mode is not offered, the "expanded mode" fills this gap -->
                                     <!-- Always offer the expander -->
                                     <CollapsibleButton
                                         class="is-nav"
