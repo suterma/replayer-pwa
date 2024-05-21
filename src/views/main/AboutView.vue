@@ -28,7 +28,9 @@
             <hr />
         </div>
         <CollapsiblePanel>
-            <template #caption> <h1 class="title is-3">API Demos</h1></template>
+            <template #caption>
+                <h1 id="api-demos" class="title is-3">API Demos</h1></template
+            >
             <template #default="{ modelValue }">
                 <Transition name="item-expand">
                     <div v-if="modelValue">
@@ -297,8 +299,10 @@
         </CollapsiblePanel>
         <hr />
 
-        <CollapsiblePanel>
-            <template #caption><h1 class="title">Credits</h1></template>
+        <CollapsiblePanel expanded>
+            <template #caption
+                ><h1 id="credits" class="title">Credits</h1></template
+            >
             <div class="content">
                 <ul>
                     <li>
@@ -544,8 +548,22 @@
                         >.
                     </li>
                     <li>
+                        Replayer has been granted a free account on
+                        <a
+                            href="https://www.browserstack.com/live"
+                            target="_blank"
+                        >
+                            BrowserStack</a
+                        >, for live app testing.
+                    </li>
+                    <li>
                         Music from the Album "Not For Sale" by Lidija Roos
                         (Released to the public, by Lidija Roos)
+                    </li>
+                    <li>
+                        Video content from the echo conference. (Released under
+                        the MIT License, by
+                        <a href="http://j.hn/">John Dyer</a> & Nathan Smith)
                     </li>
                     <li>
                         <a

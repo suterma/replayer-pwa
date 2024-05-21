@@ -31,10 +31,10 @@
  */
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import { mdiChevronDown } from '@mdi/js';
-import { ref } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 
 // eslint-disable-next-line no-undef
-defineProps({
+const props = defineProps({
     /** The icon to use, which is a chevron by default
      */
     iconPath: {
@@ -48,10 +48,22 @@ defineProps({
         type: String,
         default: 'item-expand',
     },
+
+    /** Whether to show the panel in the expanded state at mount time
+     * @remarks Default is "false"
+     *  */
+    expanded: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 /** Whether to show this panel as expanded */
 const modelValue = ref(false);
+
+onBeforeMount(() => {
+    modelValue.value = props.expanded;
+});
 
 defineExpose({
     /** A parent component can handle expansion fullscreen */

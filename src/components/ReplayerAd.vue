@@ -1,5 +1,5 @@
 <template>
-    <h1 class="title">Replayer</h1>
+    <h1 id="replayer-ad" class="title">Replayer</h1>
     <div class="is-pulled-right ml-4 mt-4 mb-4">
         <a href="https://replayer.app" target="_blank">
             <img
