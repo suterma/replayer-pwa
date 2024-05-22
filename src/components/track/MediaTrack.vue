@@ -107,13 +107,7 @@
                                 ></TrackTitleName>
                                 <!-- Cue count (without expander) -->
                                 <span
-                                    v-if="
-                                        !(
-                                            /*is single track*/ (
-                                                isFirstTrack && isLastTrack
-                                            )
-                                        )
-                                    "
+                                    v-if="!hasSingleMediaTrack"
                                     :class="{
                                         'is-invisible': track.Cues.length == 0,
                                     }"
@@ -353,12 +347,12 @@
                             :hide-stop-button="true"
                             :hide-track-navigation="isTrackEditable"
                             :has-previous-track="
-                                !isFirstTrack ||
+                                !isFirstMediaTrack ||
                                 playbackMode === PlaybackMode.LoopCompilation ||
                                 playbackMode === PlaybackMode.ShuffleCompilation
                             "
                             :has-next-track="
-                                !isLastTrack ||
+                                !isLastMediaTrack ||
                                 playbackMode === PlaybackMode.LoopCompilation ||
                                 playbackMode === PlaybackMode.ShuffleCompilation
                             "
@@ -551,14 +545,14 @@
                                             :hide-stop-button="true"
                                             :hide-track-navigation="false"
                                             :has-previous-track="
-                                                !isFirstTrack ||
+                                                !isFirstMediaTrack ||
                                                 playbackMode ===
                                                     PlaybackMode.LoopCompilation ||
                                                 playbackMode ===
                                                     PlaybackMode.ShuffleCompilation
                                             "
                                             :has-next-track="
-                                                !isLastTrack ||
+                                                !isLastMediaTrack ||
                                                 playbackMode ===
                                                     PlaybackMode.LoopCompilation ||
                                                 playbackMode ===
@@ -987,10 +981,10 @@ provide(currentPositionDisplayInjectionKey, readonly(currentPositionDisplay));
 // --- Track state ---
 
 /** Whether this is the first track in the set of media tracks */
-const isFirstTrack = computed(() => app.isFirstMediaTrack(props.track));
+const isFirstMediaTrack = computed(() => app.isFirstMediaTrack(props.track));
 
 /** Whether this is the last track in the set of media tracks */
-const isLastTrack = computed(() => app.isLastMediaTrack(props.track));
+const isLastMediaTrack = computed(() => app.isLastMediaTrack(props.track));
 
 const isAudioTrack = computed(() =>
     CompilationHandler.isAudioTrack(props.track),
