@@ -10,10 +10,7 @@
 
             <!-- Expander -->
             <div
-                v-if="
-                    isTrackEditable &&
-                    !(/*is single track*/ (isFirstTrack && isLastTrack))
-                "
+                v-if="isTrackEditable && canCollapse"
                 class="level-item is-narrow"
             >
                 <CollapsibleButton
@@ -223,8 +220,6 @@
 
                 <TrackContextMenu
                     v-if="isTrackEditable"
-                    :is-first-track="isFirstTrack"
-                    :is-last-track="isLastTrack"
                     :track="track"
                 ></TrackContextMenu>
             </div>
@@ -277,18 +272,6 @@ const props = defineProps({
 
     /** Whether this track is to be considered as the active track */
     isActive: {
-        type: Boolean,
-        required: false,
-        default: false,
-    },
-    /** Whether this track is the first track in the set of tracks */
-    isFirstTrack: {
-        type: Boolean,
-        required: false,
-        default: false,
-    },
-    /** Whether this track is the last track in the set of tracks */
-    isLastTrack: {
         type: Boolean,
         required: false,
         default: false,

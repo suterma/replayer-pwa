@@ -39,8 +39,6 @@
                 :is-track-loaded="isTrackLoaded"
                 :is-track-media-available="Boolean(mediaUrl)"
                 :is-active="isActiveTrack"
-                :is-first-track="isFirstTrack"
-                :is-last-track="isLastTrack"
             >
                 <template
                     v-if="isTrackMixable || isTrackPlayable || isTrackEditable"

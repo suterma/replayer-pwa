@@ -72,14 +72,6 @@ import type { ITrack } from '@/store/ITrack';
 import FileHandler from '@/store/filehandler';
 
 const props = defineProps({
-    isFirstTrack: {
-        type: Boolean,
-        required: true,
-    },
-    isLastTrack: {
-        type: Boolean,
-        required: true,
-    },
     track: {
         type: Object as PropType<ITrack>,
         required: true,
