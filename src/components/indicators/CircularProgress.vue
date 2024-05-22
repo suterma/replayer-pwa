@@ -6,7 +6,7 @@
 /** A circualr progress indicator, for values in [percent]
  *
  */
-const props = defineProps({
+defineProps({
     /** The progress, in [percent]
      * @remarks There is no min/max, the used value must be between 0 and 100.
      */

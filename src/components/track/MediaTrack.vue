@@ -1337,13 +1337,6 @@ watch(isTrackPlaying, () => {
  */
 const hasMeter = computed(() => Meter.isValid(props.track.Meter));
 
-const remainingTime = computed(() => {
-    return CompilationHandler.calculateRemainingTime(
-        currentPosition.value,
-        trackDuration.value,
-    );
-});
-
 /** Calculate the custom pre-roll for this track */
 const preRollDuration = computed(() => {
     if (props.track.PreRoll !== null) {

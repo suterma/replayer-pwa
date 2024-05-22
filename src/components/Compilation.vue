@@ -82,7 +82,7 @@ import type { ITrack } from '@/store/ITrack';
  * @remarks Also handles the common replayer events for compilations
  * @remarks Also supports shuffling of tracks
  */
-const props = defineProps({
+defineProps({
     compilation: { type: Object as PropType<ICompilation>, required: true },
 });
 
@@ -90,7 +90,6 @@ const app = useAppStore();
 const {
     activeTrackId,
     hasSingleMediaTrack,
-    mediaTracks,
     allTracks,
     playbackMode,
     trackViewMode,
@@ -115,27 +114,6 @@ const { preventScreenTimeout } = storeToRefs(settings);
 const isTracksShuffled = computed(
     () => playbackMode.value === PlaybackMode.ShuffleCompilation,
 );
-
-/** The currently available media tracks in the compilation
- * @remarks The order may also be shuffled, depending on the PlaybackMode
- */
-const tracks = computed(() => {
-    const tracks = mediaTracks.value as Array<ITrack> | undefined;
-    //Deterministically shuffle if required
-    if (tracks && isTracksShuffled.value) {
-        return CompilationHandler.shuffle(tracks, shuffleSeed);
-    }
-    return tracks;
-});
-
-/** Whether this compilation has any tracks.
- */
-const hasTracks = computed(() => {
-    if (mediaTracks.value && mediaTracks.value.length > 0) {
-        return true;
-    }
-    return false;
-});
 
 /** Handle scrolling to the changed active track.
  * @remarks This is intentionally only invoked on when the active track changes (and it's not the only audio track).

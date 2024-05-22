@@ -281,7 +281,7 @@ console.debug(
 );
 
 const app = useAppStore();
-const { isTrackEditable, isTrackPlayable, isTrackMixable } = storeToRefs(app);
+const { isTrackEditable, isTrackMixable } = storeToRefs(app);
 
 // --- visibility ---
 

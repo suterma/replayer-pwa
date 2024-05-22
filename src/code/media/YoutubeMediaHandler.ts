@@ -202,10 +202,10 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     /**
      * @inheritDoc
-     * @param {boolean} waitOnCanPlay - optional, not handled, as the YouTube player does not support seek events.
+     * @param {boolean} _waitOnCanPlay - optional, not handled, as the YouTube player does not support seek events.
      * @returns {Promise<void>} Promise - always resolved, immediately, or after 300ms, as the YouTube player does not support seek events.
      */
-    seekTo(seconds: number, waitOnCanPlay = false): Promise<void> {
+    seekTo(seconds: number, _waitOnCanPlay = false): Promise<void> {
         if (!this.hasLoadedMetadata) return Promise.resolve();
         if (this.currentTime === seconds) {
             return Promise.resolve();

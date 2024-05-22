@@ -966,9 +966,6 @@ export const actions = {
             });
 
             //Now, in the clone, reassign all variable items
-            const nextShortcut = CompilationHandler.getNextShortcut(
-                state.compilation.value,
-            );
             clonedTrack.Id = uuidv4();
             clonedTrack.Name = sourceTrack.Name + ' (cloned)';
             clonedTrack.Cues.forEach((cue) => {

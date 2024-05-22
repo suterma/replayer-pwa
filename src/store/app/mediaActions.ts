@@ -11,27 +11,11 @@
  * JavaScript code in this page
  */
 
-import { Cue } from '../Cue';
-import { Track } from '../Track';
-import { Compilation } from '../Compilation';
-import { type ICue } from '../ICue';
-import { type ICompilation } from '../ICompilation';
-import { PlaybackMode } from '../PlaybackMode';
 import { type ITrack } from '../ITrack';
 import CompilationHandler from '../compilation-handler';
 import { state } from './state';
-import { v4 as uuidv4 } from 'uuid';
 
-import { ObjectUrlHandler } from '@/code/storage/ObjectUrlHandler';
 //@ts-ignore (because the file-saver does not provide types)
-import FileSaver from 'file-saver';
-import PersistentStorage from '../persistent-storage';
-import JSZip from 'jszip';
-import { MediaBlob, MediaUrl } from '../types';
-import FileHandler from '../filehandler';
-import CompilationParser from '../../code/xml/XmlCompilationParser';
-import { useMessageStore } from '../messages';
-import type { IMeter } from '@/code/music/IMeter';
 import { getters } from './getters';
 import { actions } from './actions';
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
