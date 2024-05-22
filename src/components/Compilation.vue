@@ -24,12 +24,14 @@
                     @previous-track="app.playPreviousTrack()"
                     @next-track="app.playNextTrack()"
                     @track-ended="continueAfterTrack(track.Id)"
+                    data-cy="track"
                 />
                 <NoticeTrack
                     v-else-if="CompilationHandler.isTextTrack(track)"
                     :id="'track-' + track.Id"
                     class="block"
                     :track="track"
+                    data-cy="notice-track"
                 >
                 </NoticeTrack>
                 <PdfTrack
@@ -37,6 +39,7 @@
                     :id="'track-' + track.Id"
                     class="block"
                     :track="track"
+                    data-cy="pdf-track"
                 >
                 </PdfTrack>
             </template>
@@ -76,7 +79,6 @@ import NoSleep from 'nosleep.js';
 import { useSettingsStore } from '@/store/settings';
 import type { ICompilation } from '@/store/ICompilation';
 import { PlaybackMode } from '@/store/PlaybackMode';
-import type { ITrack } from '@/store/ITrack';
 
 /** Displays the contained set of tracks according to the required mode.
  * @remarks Also handles the common replayer events for compilations
