@@ -38,3 +38,6 @@ cypress/downloads/
 # Bundling sizes of packages, useful for bundle size optimization efforts
 # stats.html
 stats.html
+
+# omit compiled config
+vite.config.ts.timestamp-*.mjs
