@@ -35,7 +35,7 @@
                         fill="currentColor"
                         :d="
                             iconPathOverride ??
-                            (isTrackPlaying ? mdiPause : mdiPlay)
+                            (isTrackPlaying ? mdiPause : rPlayPreplay)
                         "
                     />
                 </svg>
@@ -139,10 +139,11 @@
 </template>
 
 <script setup lang="ts">
-import { mdiPlay, mdiPause } from '@mdi/js';
+import { mdiPlay, mdiPause, mdiRayEnd } from '@mdi/js';
 import {
     rTrackPlayOnce,
     rTrackRepeatOnce,
+    rPlayPreplay,
 } from '@/components/icons/ReplayerIcon';
 import CompilationHandler from '@/store/compilation-handler';
 import { type PropType, computed, inject } from 'vue';
