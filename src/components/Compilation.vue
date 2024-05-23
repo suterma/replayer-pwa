@@ -21,10 +21,10 @@
                     :id="'track-' + track.Id"
                     class="block"
                     :track="track"
+                    data-cy="track"
                     @previous-track="app.playPreviousTrack()"
                     @next-track="app.playNextTrack()"
                     @track-ended="continueAfterTrack(track.Id)"
-                    data-cy="track"
                 />
                 <NoticeTrack
                     v-else-if="CompilationHandler.isTextTrack(track)"
