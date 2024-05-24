@@ -49,7 +49,9 @@ export default abstract class XmlCompilationParser {
         );
     }
 
-    /** Converts a compilation instance into its XML representation */
+    /** Converts a compilation instance into its XML representation
+     * @remarks Omits media positions in the output
+     */
     public static convertToXml(compilation: ICompilation): string {
         const obj = {
             XmlCompilation: new XmlCompilation(compilation),

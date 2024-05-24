@@ -1031,6 +1031,7 @@ export const actions = {
     },
 
     /** Initiates the download of the current compilation as a single XML (.xml) file
+     * @remarks Omits media positions in the output
      * @param proposedFileName The proposed file name, without suffix.
      */
     downloadXmlFile(proposedFileName: string): void {

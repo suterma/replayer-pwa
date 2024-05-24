@@ -20,6 +20,7 @@ import { XmlTracks } from './XmlTracks';
  */
 export class XmlCompilation {
     /** @constructor
+     * @remarks Omits media positions in the output
      * @param {Compilation} compilation - The Typescript track object to represent
      */
     constructor(compilation: ICompilation | undefined) {
