@@ -45,6 +45,10 @@
                     #left-start
                 >
                     <div class="level-item is-narrow">
+                        <div v-if="isYoutubeVideoTrack">
+                            <OnYouTubeConsent class="mr-2"></OnYouTubeConsent>
+                        </div>
+
                         <!-- Routing controls only when mixable -->
                         <template v-if="isTrackMixable">
                             <SelectButton
