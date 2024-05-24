@@ -9,24 +9,22 @@
             <div class="field">
                 <label class="label">Compilation title*</label>
                 <div class="control has-icons-right">
-                    <input
-                        v-focus
+                    <StyledInput
+                        focus-on-mounted
                         class="input"
                         :class="{ 'is-danger': !compilationTitle }"
+                        :model-value="compilation.Title"
                         type="text"
                         placeholder="Compilation title"
-                        :value="compilationTitle"
-                        @change="
-                            updateCompilationTitle(
-                                ($event.target as HTMLInputElement).value,
-                            )
+                        title="Compilation title"
+                        data-cy="compilation-title"
+                        @update:model-value="
+                            (value) => {
+                                updateCompilationTitle(value);
+                            }
                         "
-                        @input="
-                            updateCompilationTitle(
-                                ($event.target as HTMLInputElement).value,
-                            )
-                        "
-                    />
+                    >
+                    </StyledInput>
 
                     <i
                         v-show="!compilationTitle"
