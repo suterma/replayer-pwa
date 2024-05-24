@@ -135,6 +135,16 @@
                             ></MeasureDifferenceDisplay>
                         </button>
                     </div>
+                    <!-- Preplay usage -->
+                    <div class="level-item is-flex-shrink-1">
+                        <div class="field">
+                            <p class="control" title="Preplay usage">
+                                <LabeledCheckbox
+                                    label="Use pre-roll"
+                                ></LabeledCheckbox>
+                            </p>
+                        </div>
+                    </div>
                     <!-- A rather slim input for the shortcut (a short mnemonic) -->
                     <div class="level-item is-flex-shrink-1">
                         <div class="field">
@@ -202,6 +212,7 @@ import { useAppStore } from '@/store/app';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
+import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 import { useSettingsStore } from '@/store/settings';
 import { useMeasureNumbersInjectionKey } from '@/components/track/TrackInjectionKeys';
 import type { ICue } from '@/store/ICue';
