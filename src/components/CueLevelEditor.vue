@@ -115,7 +115,13 @@
                         class="level-item is-flex-shrink-1 is-narrow"
                         title="Duration (until next cue)"
                     >
-                        <TimeDisplay :model-value="cue.Duration"> </TimeDisplay>
+                        <div class="cue-duration-container">
+                            <TimeDisplay
+                                class="cue-duration"
+                                :model-value="cue.Duration"
+                            >
+                            </TimeDisplay>
+                        </div>
                     </div>
 
                     <div
@@ -413,5 +419,24 @@ input[type='text'] {
     input[type='text'] {
         min-width: 8ch;
     }
+}
+</style>
+
+<style lang="scss">
+/*************************************************************
+ * Specific styles for the cue duration
+**************************************************************
+*/
+/** Use a really small font for the time display
+(NOTE: this is similar to the playhead slider) */
+.cue-duration.is-family-monospace {
+    font-size: 0.65rem !important;
+    margin-bottom: -40px;
+}
+
+.cue-duration-container {
+    position: absolute;
+    /** keep the duration inside the track editor outline */
+    display: contents;
 }
 </style>
