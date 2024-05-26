@@ -35,7 +35,7 @@ export interface ITrack {
     Artist: string;
 
     /** The track's custom pre-roll duration, in [seconds]
-     * @remarks If not set, the default pre-roll duration will be used
+     * @remarks If not set, the default pre-roll duration, if any, should be used at playback
      */
     PreRoll: number | null;
 
