@@ -25,6 +25,8 @@ export class Cue implements ICue {
     Time: number | null = null;
     /**   @inheritdoc */
     Duration: number | null = null;
+    /**   @inheritdoc */
+    OmitPreRoll: boolean = false;
 
     /** Creates a new cue
      */
@@ -33,18 +35,20 @@ export class Cue implements ICue {
         shortcut: string | null,
         time: number | null,
         duration: number | null,
+        omitPreRoll: boolean,
         id: string,
     ) {
         this.Description = description;
         this.Shortcut = shortcut;
         this.Time = time;
         this.Duration = duration;
+        this.OmitPreRoll = omitPreRoll;
         this.Id = id;
     }
 
     /** Returns a new, empty cue
      */
     static empty(): Cue {
-        return new Cue('', '', 0, 0, '');
+        return new Cue('', '', 0, 0, false, '');
     }
 }

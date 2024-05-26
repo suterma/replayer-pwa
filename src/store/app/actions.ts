@@ -185,6 +185,7 @@ export const actions = {
             nextShortcut.toString(),
             roundedTime,
             null,
+            false,
             cueId,
         );
 
@@ -388,6 +389,19 @@ export const actions = {
                     }
                 }
             }
+        }
+    },
+
+    /** Updates whether the cue omits the pre-roll duration
+     * @remarks Also updates the persistent store of the compilation
+     */
+    updateCueOmitPreRoll(cueId: string, omitPreRoll: boolean): void {
+        const cue = CompilationHandler.getCompilationCueById(
+            state.compilation.value,
+            cueId,
+        );
+        if (cue) {
+            cue.OmitPreRoll = omitPreRoll;
         }
     },
 
@@ -961,6 +975,7 @@ export const actions = {
                     cue.Shortcut,
                     cue.Time,
                     cue.Duration,
+                    cue.OmitPreRoll,
                     cue.Id,
                 );
             });

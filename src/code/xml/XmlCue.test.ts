@@ -18,7 +18,14 @@ import { XmlCue } from './XmlCue';
 describe('the XML mapping', function () {
     it('should return an initialised XmlCue object', function () {
         // Arrange
-        const cue = new Cue('testDescription', '123', 88.8, 99.9, 'myId');
+        const cue = new Cue(
+            'testDescription',
+            '123',
+            88.8,
+            99.9,
+            false,
+            'myId',
+        );
 
         //Act
         const target = new XmlCue(cue);
@@ -28,5 +35,6 @@ describe('the XML mapping', function () {
         expect(target.Id).toBe(cue.Id);
         expect(target.Shortcut).toBe(cue.Shortcut);
         expect(target.Time).toBe(cue.Time);
+        expect(target.OmitPreRoll).toBe(cue.OmitPreRoll);
     });
 });

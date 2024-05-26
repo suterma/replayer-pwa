@@ -5,7 +5,18 @@
             <div class="level-left">
                 <!-- Play Button -->
                 <div class="level-item">
+                    preRollDuration{{ preRollDuration }} props.cue.OmitPreRoll{{
+                        props.cue.OmitPreRoll
+                    }}
                     <div class="field has-addons">
+                        <p class="control">
+                            <PreRollToggler
+                                v-if="preRollDuration"
+                                title="Toggle pre-roll usage"
+                                :model-value="props.cue.OmitPreRoll"
+                                @update:model-value="updateOmitPreRoll"
+                            ></PreRollToggler>
+                        </p>
                         <p class="control">
                             <CueButton
                                 :class="{
@@ -17,6 +28,7 @@
                                 :has-cue-passed="hasCuePassed"
                                 :is-cue-ahead="isCueAhead"
                                 :percent-complete="percentComplete"
+                                :omitPreRoll="omitPreRoll"
                                 :is-cue-selected="isCueSelected"
                                 :is-cue-scheduled="isCueScheduled"
                                 has-addons-right
@@ -135,12 +147,15 @@
                             ></MeasureDifferenceDisplay>
                         </button>
                     </div>
-                    <!-- Preplay usage -->
+                    <!-- pre-roll omission -->
                     <div class="level-item is-flex-shrink-1">
                         <div class="field">
-                            <p class="control" title="Preplay usage">
+                            <p
+                                class="control"
+                                title="Whether to omit the track's defined pre-roll for this cue"
+                            >
                                 <LabeledCheckbox
-                                    label="Use pre-roll"
+                                    :model-value="omitPreRoll"
                                 ></LabeledCheckbox>
                             </p>
                         </div>
@@ -207,16 +222,20 @@ import AdjustTimeButton from '@/components/buttons/AdjustTimeButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import IfMedia from '@/components/IfMedia.vue';
-import { mdiTrashCanOutline } from '@mdi/js';
+import { mdiTrashCanOutline, mdiRayStart, mdiCircleSmall } from '@mdi/js';
 import { useAppStore } from '@/store/app';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 import { useSettingsStore } from '@/store/settings';
-import { useMeasureNumbersInjectionKey } from '@/components/track/TrackInjectionKeys';
+import {
+    useMeasureNumbersInjectionKey,
+    trackPreRollDurationInjectionKey,
+} from '@/components/track/TrackInjectionKeys';
 import type { ICue } from '@/store/ICue';
 import type { PlaybackMode } from '@/store/PlaybackMode';
+import PreRollToggler from './buttons/PreRollToggler.vue';
 
 const emit = defineEmits(['click', 'play', 'adjust']);
 
@@ -325,6 +344,19 @@ const { experimentalUseMeter } = storeToRefs(settings);
 const cuePlaceholder = computed(() => `Cue description`);
 
 const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
+
+// --- pre-roll ---
+const preRollDuration = inject(trackPreRollDurationInjectionKey);
+
+/** Whether to omit the possibly defined default/track pre-roll for this cue.
+ */
+const omitPreRoll = computed(() => props.cue.OmitPreRoll);
+
+/** Updates the set omit pre-roll option */
+function updateOmitPreRoll(omit: boolean) {
+    const cueId = props.cue.Id;
+    app.updateCueOmitPreRoll(cueId, omit);
+}
 </script>
 <style lang="scss" scoped>
 /*************************************************************

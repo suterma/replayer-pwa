@@ -130,6 +130,7 @@ const prefixCue = computed(() => {
         '',
         0,
         props.cues?.[0]?.Time ?? null,
+        false,
         prefixCueButtonId,
     );
 });

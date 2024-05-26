@@ -35,11 +35,16 @@
                         fill="currentColor"
                         :d="
                             iconPathOverride ??
-                            (isTrackPlaying ? mdiPause : rPlayPreplay)
+                            (isTrackPlaying
+                                ? mdiPause
+                                : omitPreRoll
+                                  ? rPlayPreplay
+                                  : rPlayDirect)
                         "
                     />
                 </svg>
             </i>
+            omitPreRoll{{ omitPreRoll }} preRollDuration{{ preRollDuration }}
             <!-- Text depending on variant -->
             <template v-if="showText">
                 <span
@@ -144,6 +149,7 @@ import {
     rTrackPlayOnce,
     rTrackRepeatOnce,
     rPlayPreplay,
+    rPlayDirect,
 } from '@/components/icons/ReplayerIcon';
 import CompilationHandler from '@/store/compilation-handler';
 import { type PropType, computed, inject } from 'vue';
@@ -154,6 +160,7 @@ import {
     isPlayingInjectionKey,
     meterInjectionKey,
     useMeasureNumbersInjectionKey,
+    trackPreRollDurationInjectionKey,
 } from '@/components/track/TrackInjectionKeys';
 import { PlaybackMode } from '@/store/PlaybackMode';
 
@@ -219,6 +226,10 @@ const props = defineProps({
         required: false,
         default: null,
     },
+
+    /** Whether to omit the possibly defined default/track pre-roll for this cue.
+     */
+    omitPreRoll: Boolean,
 
     /** Whether this cue is disabled  */
     disabled: Boolean,
@@ -349,6 +360,10 @@ const isCuePlay = computed(() => {
 const hasMeter = computed(() => {
     return Meter.isValid(meter?.value);
 });
+
+// --- pre-roll ---
+
+const preRollDuration = inject(trackPreRollDurationInjectionKey);
 </script>
 <style scoped>
 /* Button progress-styles, in addition to player progress styles, that support also full/none progress specifically */

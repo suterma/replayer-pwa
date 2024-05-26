@@ -28,4 +28,7 @@ export interface ICue {
      * @devdoc This must get recalculated if the set of cues changes, or the track is loaded/unloaded. It must never get persisted.
      */
     Duration: number | null;
+
+    /** Whether to omit the possibly defined default/track pre-roll for this cue. */
+    OmitPreRoll: boolean;
 }

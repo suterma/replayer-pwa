@@ -272,6 +272,7 @@ const prefixCue = computed(() => {
         '',
         0,
         props.track.Cues?.[0]?.Time ?? null,
+        false,
         prefixCueButtonId,
     );
 });

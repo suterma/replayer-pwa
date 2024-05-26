@@ -20,9 +20,16 @@ import type { InjectionKey, Ref } from 'vue';
 /** A symbol for providing and injecting a @see IMeter */
 export const meterInjectionKey = Symbol() as InjectionKey<Ref<IMeter | null>>;
 
-/** A symbol for providing and injecting whethter to use measure numbers for cue position handling. This requires a valid @see IMeter */
+/** A symbol for providing and injecting whether to use measure numbers for cue
+ * position handling. This requires a valid @see IMeter */
 export const useMeasureNumbersInjectionKey = Symbol() as InjectionKey<
     Ref<boolean | null>
+>;
+
+/** A symbol for providing and injecting the pre-roll duration to use for a track
+ */
+export const trackPreRollDurationInjectionKey = Symbol() as InjectionKey<
+    Ref<number>
 >;
 
 /** A symbol for providing and injecting whether the track is playing. */

@@ -79,6 +79,7 @@ export default defineComponent({
                         shortcut ?? null,
                         cueTime,
                         null,
+                        false,
                         uuidv4(),
                     ),
                 );

@@ -779,6 +779,7 @@ import {
     currentPositionInjectionKey,
     meterInjectionKey,
     useMeasureNumbersInjectionKey,
+    trackPreRollDurationInjectionKey,
 } from './TrackInjectionKeys';
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
 import { ReplayerEvent } from '@/code/ui/ReplayerEvent';
@@ -930,9 +931,7 @@ function takeMediaHandler(handler: IMediaHandler) {
         settings.fadeInDuration,
         settings.fadeOutDuration,
         /** Use the default pre-roll duration, only if none set on the track */
-        preRollDuration.value == null
-            ? settings.defaultPreRollDuration
-            : preRollDuration.value,
+        preRollDuration.value,
         settings.addFadeInPreRoll,
     );
 
@@ -1341,13 +1340,20 @@ watch(isTrackPlaying, () => {
  */
 const hasMeter = computed(() => Meter.isValid(props.track.Meter));
 
-/** Calculate the custom pre-roll for this track */
+/** The pre-roll duration [in secods] to use for this track. Zero for no pre-roll.
+ * @remarks This considers the default pre-roll setting and the possibly
+ * defined track-specific pre-roll duration.
+ */
 const preRollDuration = computed(() => {
-    if (props.track.PreRoll !== null) {
+    if (props.track.PreRoll != null) {
         return props.track.PreRoll;
     }
     return defaultPreRollDuration.value;
 });
+
+/** Provide the pre-roll duration [in secods] to use for this track
+ */
+provide(trackPreRollDurationInjectionKey, readonly(preRollDuration));
 
 /** The description of the currently playing cue
  * @remarks The implementation makes sure that at least always an empty string

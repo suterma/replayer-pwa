@@ -129,6 +129,7 @@ export default class CompilationHandler {
             nextShortcut.toString(),
             time,
             null,
+            false,
             firstCueId,
         );
         return cue;

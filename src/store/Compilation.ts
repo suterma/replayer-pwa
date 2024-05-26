@@ -82,6 +82,7 @@ export class Compilation implements ICompilation {
                             cue.Shortcut,
                             cue.Time,
                             cue.Duration,
+                            cue.OmitPreRoll,
                             cue.Id,
                         );
                     }),

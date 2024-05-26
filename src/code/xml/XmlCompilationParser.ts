@@ -155,6 +155,8 @@ export default abstract class XmlCompilationParser {
                     ).normalize(),
                     XmlCompilationParser.FirstNumberOf(xmlCue.Time),
                     null,
+                    XmlCompilationParser.FirstBooleanOf(xmlCue.OmitPreRoll) ??
+                        false,
                     XmlCompilationParser.FirstStringOf(xmlCue.Id),
                 );
                 cues.push(cue);

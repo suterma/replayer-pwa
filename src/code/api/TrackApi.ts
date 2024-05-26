@@ -149,7 +149,9 @@ export class TrackApi {
                         query[key],
                     ) as string;
                     const cueId = uuidv4();
-                    cues.push(new Cue(description, null, time, null, cueId));
+                    cues.push(
+                        new Cue(description, null, time, null, false, cueId),
+                    );
                 }
             }
 

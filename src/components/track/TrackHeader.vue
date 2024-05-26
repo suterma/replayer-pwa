@@ -142,7 +142,7 @@
                 <!-- Pre-Roll (in time) (hide initially, as long as no cues are set) -->
                 <CoveredPanel
                     v-if="hasCues || track?.PreRoll"
-                    :reveal-for="[track.PreRoll]"
+                    :reveal-for="[track.PreRoll != null]"
                     title="The custom pre-roll duration for in track in [seconds]"
                     class="level-item"
                 >

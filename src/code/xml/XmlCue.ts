@@ -25,10 +25,12 @@ export class XmlCue {
         this.Description = cue.Description;
         this.Shortcut = cue.Shortcut;
         this.Time = cue.Time;
+        this.OmitPreRoll = cue.OmitPreRoll;
     }
 
     Id: string;
     Description: string;
     Shortcut: string | null;
     Time: number | null;
+    OmitPreRoll: boolean | null;
 }
