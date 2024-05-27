@@ -37,14 +37,13 @@
                             iconPathOverride ??
                             (isTrackPlaying
                                 ? mdiPause
-                                : omitPreRoll
+                                : hasPreRoll
                                   ? rPlayPreplay
                                   : rPlayDirect)
                         "
                     />
                 </svg>
             </i>
-            omitPreRoll{{ omitPreRoll }} preRollDuration{{ preRollDuration }}
             <!-- Text depending on variant -->
             <template v-if="showText">
                 <span
@@ -144,7 +143,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiPlay, mdiPause, mdiRayEnd } from '@mdi/js';
+import { mdiPause } from '@mdi/js';
 import {
     rTrackPlayOnce,
     rTrackRepeatOnce,
@@ -364,6 +363,11 @@ const hasMeter = computed(() => {
 // --- pre-roll ---
 
 const preRollDuration = inject(trackPreRollDurationInjectionKey);
+/** Whether this cue effectively has a pre-roll duration.
+ */
+const hasPreRoll = computed(() => {
+    return (preRollDuration?.value ?? 0 > 0) && !props.omitPreRoll;
+});
 </script>
 <style scoped>
 /* Button progress-styles, in addition to player progress styles, that support also full/none progress specifically */

@@ -5,8 +5,8 @@
             'is-inactive': !model,
         }"
         :is-engaged="model"
-        engaged-label="pre-roll is on"
-        disengaged-label="pre-roll is off"
+        engaged-label="pre-roll is omitted"
+        disengaged-label="pre-roll is applied"
         @click="togglePreRollMode()"
     >
         <BaseIcon v-if="model" :path="mdiCircleSmall" />

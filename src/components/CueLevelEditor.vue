@@ -5,9 +5,6 @@
             <div class="level-left">
                 <!-- Play Button -->
                 <div class="level-item">
-                    preRollDuration{{ preRollDuration }} props.cue.OmitPreRoll{{
-                        props.cue.OmitPreRoll
-                    }}
                     <div class="field has-addons">
                         <p class="control">
                             <PreRollToggler
@@ -28,7 +25,7 @@
                                 :has-cue-passed="hasCuePassed"
                                 :is-cue-ahead="isCueAhead"
                                 :percent-complete="percentComplete"
-                                :omitPreRoll="omitPreRoll"
+                                :omit-pre-roll="omitPreRoll"
                                 :is-cue-selected="isCueSelected"
                                 :is-cue-scheduled="isCueScheduled"
                                 has-addons-right
@@ -222,7 +219,7 @@ import AdjustTimeButton from '@/components/buttons/AdjustTimeButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import TimeInput from '@/components/TimeInput.vue';
 import IfMedia from '@/components/IfMedia.vue';
-import { mdiTrashCanOutline, mdiRayStart, mdiCircleSmall } from '@mdi/js';
+import { mdiTrashCanOutline } from '@mdi/js';
 import { useAppStore } from '@/store/app';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
