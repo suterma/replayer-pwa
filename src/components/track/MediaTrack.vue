@@ -793,6 +793,7 @@ import router, { Route } from '@/router';
 import MessageOverlay from '@/components/MessageOverlay.vue';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 import type { ICompilation } from '@/store/ICompilation';
+import type { LoDashImplicitNumberArrayWrapper } from 'node_modules/cypress/types/lodash';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -1188,8 +1189,10 @@ function updateVolume(volume: number) {
     mediaHandler.value?.fader.setVolume(volume);
 }
 
-/** Pauses playback and seeks to the currently selected cue's position, but only
+/** Pauses playback and seeks to the currently selected cue's start position, but only
  * if this track is the active track (i.e. the selected cue is within this track)
+ * @remarks Applies the effective start time for this cue, accounting for all
+ * possibly set pre-roll options.
  */
 function goToSelectedCue() {
     /*Check for the active track here (again), because otherwise some event handling
@@ -1197,21 +1200,14 @@ function goToSelectedCue() {
     if (isActiveTrack.value) {
         console.debug(`MediaTrack(${props.track.Name})::goToSelectedCue`);
         if (selectedCue.value) {
-            const cueTime = selectedCue.value.Time;
+            const startTime = getCuePreRollStartTime(selectedCue.value);
 
             //Control playback according to the play state, using a single operation.
             //This supports a possible fade operation.
-            //For the cue time, handle all non-null values (Zero is valid)
             if (isTrackPlaying.value) {
-                if (cueTime != null) {
-                    mediaHandler.value?.pauseAndSeekTo(cueTime);
-                } else {
-                    mediaHandler.value?.pause();
-                }
+                mediaHandler.value?.pauseAndSeekTo(startTime);
             } else {
-                if (cueTime != null) {
-                    seekToSeconds(cueTime);
-                }
+                seekToSeconds(startTime);
             }
         }
     }
@@ -1230,6 +1226,17 @@ function togglePlayback() {
  */
 function updatedPlaybackMode(updatedPlaybackMode: PlaybackMode): void {
     playbackMode.value = updatedPlaybackMode;
+}
+
+/** Gets the effective start time for this cue, accounting for all
+ * possibly set pre-roll options.
+ * @remarks Throws an error if no finite time is set on the cue.
+ */
+function getCuePreRollStartTime(cue: ICue): number {
+    if (cue.Time != null && Number.isFinite(cue.Time)) {
+        return cue.OmitPreRoll ? cue.Time : cue.Time - preRollDuration.value;
+    }
+    throw new Error(`Cue with id (${cue.Id}) does not have a valid time set`);
 }
 
 /** Handles the click of a cue button, by seeking to it and, optionally, toggling playback
@@ -1285,15 +1292,18 @@ function cueClick(cue: ICue, togglePlayback = true) {
         } else {
             app.updateSelectedCueId(cue.Id);
 
-            //Invoke the cue: set the position to this cue and handle playback
-            if (togglePlayback) {
-                if (isTrackPlaying.value) {
-                    mediaHandler.value?.pauseAndSeekTo(cue.Time);
+            //Invoke the cue: set the position to the start time for this cue and handle playback
+            const startTime = getCuePreRollStartTime(cue);
+            if (startTime != null) {
+                if (togglePlayback) {
+                    if (isTrackPlaying.value) {
+                        mediaHandler.value?.pauseAndSeekTo(startTime);
+                    } else {
+                        mediaHandler.value?.playFrom(startTime);
+                    }
                 } else {
-                    mediaHandler.value?.playFrom(cue.Time);
+                    seekToSeconds(startTime);
                 }
-            } else {
-                seekToSeconds(cue.Time);
             }
         }
     }

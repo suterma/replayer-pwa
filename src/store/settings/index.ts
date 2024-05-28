@@ -215,6 +215,8 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         fadeInDuration,
         fadeOutDuration,
         addFadeInPreRoll,
+        /** The default duration for a pre-roll for play operations, in [seconds]
+         */
         defaultPreRollDuration,
         showLevelMeterForEdit,
         keyboardShortcutTimeout,
