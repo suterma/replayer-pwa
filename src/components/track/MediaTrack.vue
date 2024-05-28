@@ -928,8 +928,6 @@ function takeMediaHandler(handler: IMediaHandler) {
     handler.fader.updateSettings(
         settings.fadeInDuration,
         settings.fadeOutDuration,
-        /** Use the default pre-roll duration, only if none set on the track */
-        preRollDuration.value,
         settings.addFadeInPreRoll,
     );
 
@@ -1041,7 +1039,6 @@ watchEffect(() => {
     mediaHandler.value?.fader?.updateSettings(
         fadeInDuration.value,
         fadeOutDuration.value,
-        preRollDuration.value,
         addFadeInPreRoll.value,
     );
 });
