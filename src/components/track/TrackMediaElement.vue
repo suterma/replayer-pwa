@@ -232,13 +232,6 @@ const props = defineProps({
         required: true,
     },
 
-    /** The custom pre-roll duration in this track. Default is zero. */
-    trackPreRoll: {
-        type: null as unknown as PropType<number | null>,
-        required: false,
-        default: 0,
-    },
-
     /** Whether to show the component in a disabled state
      * @devdoc This attribute is processed with "fallthrough", to propagate the state to the inner elements.
      */
@@ -490,19 +483,6 @@ watch(
     },
     { immediate: true /* to handle it at least once after mount time */ },
 );
-
-watchEffect(() => {
-    if (props.trackPreRoll != null) {
-        const fader = mediaHandler.value?.fader;
-        if (fader) {
-            fader.preRollDuration = props.trackPreRoll ?? 0;
-        } else {
-            console.warn(
-                `Pre-roll of '${props.trackPreRoll}' can not be applied; no fader available.`,
-            );
-        }
-    }
-});
 
 // --- Audio Metering Setup---
 

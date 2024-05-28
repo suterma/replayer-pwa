@@ -39,7 +39,6 @@ export interface IAudioFader {
      * the cancel operation is immediately called, resetting the volume to the initial value for this case.
      * @param {number} fadeInDuration - The fade-in duration. Default is 1000 (1 second)
      * @param {number} fadeOutDuration - The fade-out duration. Default is 500 (500 milliseconds)
-     * @param {boolean} preRollDuration - The amount of time to the seek backwards before a play operation. (Default: zero)
      * @param {boolean} addFadeInPreRoll - Whether to apply an additional seek offset before fade-in operations, to compensate the fading duration. (Default: true)
      */
     updateSettings(
@@ -47,8 +46,6 @@ export interface IAudioFader {
         fadeInDuration: number,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         fadeOutDuration: number,
-        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-        preRollDuration: number,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         addFadeInPreRoll: boolean,
     ): void;
@@ -73,14 +70,6 @@ export interface IAudioFader {
      */
     set isFadingEnabled(enabled: boolean);
 
-    /** Gets whether pre-roll is enabled.
-     */
-    get isPreRollEnabled(): boolean;
-
-    /** Sets whether pre-roll is enabled.
-     */
-    set isPreRollEnabled(enabled: boolean);
-
     /** Gets the fade-in duration in [milliseconds].
      */
     get fadeInDuration(): number;
@@ -92,14 +81,6 @@ export interface IAudioFader {
     /** Whether to apply an additional seek offset before fade-in operations, to compensate the fading duration.
      */
     get addFadeInPreRoll(): boolean;
-
-    /** Gets the amount of time to the seek backwards before a play operation.
-     */
-    get preRollDuration(): number;
-
-    /** Sets the amount of time to the seek backwards before a play operation.
-     */
-    set preRollDuration(duration: number);
 
     /** Gets the fading state, which is true for any kind of fading.
      */

@@ -679,7 +679,6 @@
                                     :start="track.PlayheadPosition"
                                     :track-id="track.Id"
                                     :cues="track.Cues"
-                                    :track-pre-roll="track.PreRoll"
                                     :show-level-meter-for-edit="
                                         showLevelMeterForEdit
                                     "
@@ -707,7 +706,6 @@
                                             :start="track.PlayheadPosition"
                                             :track-id="track.Id"
                                             :cues="track.Cues"
-                                            :track-pre-roll="track.PreRoll"
                                             :small-video="!isFullscreen"
                                             @ready="takeMediaHandler"
                                             @click="setActiveTrack"
