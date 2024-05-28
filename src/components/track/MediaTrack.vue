@@ -45,8 +45,8 @@
                     #left-start
                 >
                     <div class="level-item is-narrow">
-                        <div v-if="isYoutubeVideoTrack">
-                            <OnYouTubeConsent class="mr-2"></OnYouTubeConsent>
+                        <div v-if="isYoutubeVideoTrack" class="mr-2">
+                            <OnYouTubeConsent></OnYouTubeConsent>
                         </div>
 
                         <!-- Routing controls only when mixable -->
