@@ -12,7 +12,7 @@
  */
 
 /** @class Implements an XML-Representation of a time signature
- * @remarks This is intended to define the export structure for an export with the xml2js module
+ * @remarks This class is intended to define the export structure for an export with the xml2js module
  */
 export class XmlTimeSignature {
     /** @constructor

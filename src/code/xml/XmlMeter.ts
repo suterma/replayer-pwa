@@ -14,7 +14,7 @@
 import { XmlTimeSignature } from './XmlTimeSignature';
 
 /** @class Implements an XML-Representation of a musical meter
- * @remarks This is intended to define the export structure for an export with the xml2js module
+ * @remarks This class is intended to define the export structure for an export with the xml2js module
  */
 export class XmlMeter {
     /** @constructor

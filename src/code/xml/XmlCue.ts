@@ -14,7 +14,7 @@
 import { Cue } from '@/store/Cue';
 
 /** @class Implements an XML-Representation of a Cue
- * @remarks This is intended to define the export structure for an export with the xml2js module
+ * @remarks This class is intended to define the export structure for an export with the xml2js module
  */
 export class XmlCue {
     /** @constructor

@@ -16,8 +16,8 @@ import type { ITrack } from '@/store/ITrack';
 import { XmlTrack } from './XmlTrack';
 
 /** @class Implements an XML-Representation of a Tracks set
- * @remarks Omits media positions in the output
- * @remarks This is intended to define the export structure for an export with the xml2js module
+ * @remarks This class is intended to define the export structure for an export with the xml2js module.
+ * Omits media positions in the output.
  */
 export class XmlTracks {
     /** @constructor

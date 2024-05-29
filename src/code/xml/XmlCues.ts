@@ -15,7 +15,7 @@ import type { ICue } from '@/store/ICue';
 import { XmlCue } from './XmlCue';
 
 /** @class Implements an XML-Representation of a Cues set
- * @remarks This is intended to define the export structure for a compilation, for export with the xml2js module
+ * @remarks This class is intended to define the export structure for a compilation, for export with the xml2js module
  *  */
 export class XmlCues {
     /** @constructor

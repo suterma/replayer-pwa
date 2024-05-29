@@ -16,7 +16,7 @@ import { XmlCues } from './XmlCues';
 import { XmlMeter } from './XmlMeter';
 
 /** @class Implements an XML-Representation of a Track
- * @remarks This is intended to define the export structure for an export with the xml2js module
+ * @remarks This class is intended to define the export structure for an export with the xml2js module
  * Omits the media position in the output
  */
 export class XmlTrack {
