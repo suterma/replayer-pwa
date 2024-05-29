@@ -144,19 +144,6 @@
                             ></MeasureDifferenceDisplay>
                         </button>
                     </div>
-                    <!-- pre-roll omission -->
-                    <div class="level-item is-flex-shrink-1">
-                        <div class="field">
-                            <p
-                                class="control"
-                                title="Whether to omit the track's defined pre-roll for this cue"
-                            >
-                                <LabeledCheckbox
-                                    :model-value="omitPreRoll"
-                                ></LabeledCheckbox>
-                            </p>
-                        </div>
-                    </div>
                     <!-- A rather slim input for the shortcut (a short mnemonic) -->
                     <div class="level-item is-flex-shrink-1">
                         <div class="field">
