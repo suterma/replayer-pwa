@@ -26,6 +26,7 @@
             :is-cue-ahead="isCueAhead(prefixCue)"
             :percent-complete="percentComplete(prefixCue)"
             virtual
+            :omit-pre-roll="true"
             :is-cue-selected="isCueSelected(prefixCue)"
             :is-cue-scheduled="isCueScheduled(prefixCue)"
             @click="cueClicked"
@@ -53,6 +54,7 @@
                 :has-cue-passed="hasCuePassed(cue)"
                 :is-cue-ahead="isCueAhead(cue)"
                 :percent-complete="percentComplete(cue)"
+                :omit-pre-roll="cue.OmitPreRoll"
                 :is-cue-selected="isCueSelected(cue)"
                 :is-cue-scheduled="isCueScheduled(cue)"
                 @click="cueClicked"

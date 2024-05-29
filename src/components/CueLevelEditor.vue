@@ -25,7 +25,7 @@
                                 :has-cue-passed="hasCuePassed"
                                 :is-cue-ahead="isCueAhead"
                                 :percent-complete="percentComplete"
-                                :omit-pre-roll="omitPreRoll"
+                                :omit-pre-roll="props.cue.OmitPreRoll"
                                 :is-cue-selected="isCueSelected"
                                 :is-cue-scheduled="isCueScheduled"
                                 has-addons-right
@@ -211,7 +211,6 @@ import { useAppStore } from '@/store/app';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
-import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
 import { useSettingsStore } from '@/store/settings';
 import {
     useMeasureNumbersInjectionKey,
@@ -331,10 +330,6 @@ const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
 
 // --- pre-roll ---
 const preRollDuration = inject(trackPreRollDurationInjectionKey);
-
-/** Whether to omit the possibly defined default/track pre-roll for this cue.
- */
-const omitPreRoll = computed(() => props.cue.OmitPreRoll);
 
 /** Updates the set omit pre-roll option */
 function updateOmitPreRoll(omit: boolean) {
