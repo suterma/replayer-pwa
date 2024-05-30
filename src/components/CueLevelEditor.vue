@@ -5,6 +5,15 @@
             <div class="level-left">
                 <!-- Play Button -->
                 <div class="level-item">
+                    <!-- Use the pre-roll switch not as part of the field with addons -->
+                    <p class="control mr-2">
+                        <PreRollSwitch
+                            v-if="preRollDuration"
+                            title="Toggle pre-roll usage"
+                            :model-value="props.cue.OmitPreRoll"
+                            @update:model-value="updateOmitPreRoll"
+                        ></PreRollSwitch>
+                    </p>
                     <div class="field has-addons">
                         <p class="control">
                             <PreRollToggler
@@ -219,6 +228,7 @@ import {
 import type { ICue } from '@/store/ICue';
 import type { PlaybackMode } from '@/store/PlaybackMode';
 import PreRollToggler from './buttons/PreRollToggler.vue';
+import PreRollSwitch from './buttons/PreRollSwitch.vue';
 
 const emit = defineEmits(['click', 'play', 'adjust']);
 
