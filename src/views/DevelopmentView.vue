@@ -200,12 +200,50 @@
         </div>
 
         <h1 class="title has-text-danger">Icons test</h1>
-        <BaseIcon v-once :path="rTrackPlay" />
-        <BaseIcon v-once :path="rTrackRepeat" />
-        <BaseIcon v-once :path="rTrackPlayOnce" />
-        <BaseIcon v-once :path="rTrackRepeatOnce" />
-        <BaseIcon v-once :path="rRepeatVariant" />
-        <BaseIcon v-once :path="rShuffleVariant" />
+        <div class="buttons">
+            <button class="button toggle-item is-rounded">
+                <BaseIcon v-once :path="rTrackPlay" />
+                <span>rTrackPlay</span>
+            </button>
+            <button class="button toggle-item is-rounded">
+                <BaseIcon v-once :path="rTrackRepeat" />
+                <span>rTrackRepeat</span>
+            </button>
+            <button class="button toggle-item is-rounded">
+                <BaseIcon v-once :path="rTrackPlayOnce" />
+                <span>rTrackPlayOnce</span>
+            </button>
+            <button class="button toggle-item is-rounded">
+                <BaseIcon v-once :path="rTrackRepeatOnce" />
+                <span>rTrackRepeatOnce</span>
+            </button>
+            <button class="button toggle-item is-rounded">
+                <BaseIcon v-once :path="rRepeatVariant" />
+                <span>rRepeatVariant</span>
+            </button>
+            <button class="button toggle-item is-rounded">
+                <BaseIcon v-once :path="rShuffleVariant" />
+                <span>rShuffleVariant</span>
+            </button>
+            <button class="button toggle-item is-rounded">
+                <BaseIcon v-once :path="rFadeInFadeOutOff" />
+                <span>rFadeInFadeOutOff</span>
+            </button>
+            <button class="button toggle-item is-rounded">
+                <BaseIcon v-once :path="rFadeInFadeOutOn" />
+                <span>rFadeInFadeOutOn</span>
+            </button>
+
+            <button class="button toggle-item is-rounded">
+                <BaseIcon v-once :path="rPlayPreplay" />
+                <span>rPlayPreplay</span>
+            </button>
+
+            <button class="button toggle-item is-rounded">
+                <BaseIcon v-once :path="rPlayDirect" />
+                <span>rPlayDirect</span>
+            </button>
+        </div>
         <NavButton :icon-path="mdiPencil" title="some test title" />
         <CollapsibleButton
             v-model="isExpanded"
@@ -265,6 +303,10 @@ import {
     rShuffleVariant,
     rTrackPlayOnce,
     rTrackRepeatOnce,
+    rPlayDirect,
+    rFadeInFadeOutOff,
+    rFadeInFadeOutOn,
+    rPlayPreplay,
 } from '@/components/icons/ReplayerIcon';
 import { useAppStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
