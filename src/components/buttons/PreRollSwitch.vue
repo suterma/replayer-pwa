@@ -1,37 +1,55 @@
 <template>
-    <div class="field has-addons">
-        <p class="control">
-            <button
-                class="button toggle-item is-small is-rounded"
-                :class="{
-                    'is-active': !model,
-                    'is-selected': !model,
-                    'is-light': !model,
-                }"
-                :disabled="!model"
-                @click="togglePreRollMode"
-            >
-                <span>Pre-roll</span>
-            </button>
-        </p>
-        <p class="control">
-            <button
-                class="button toggle-item is-small is-rounded"
-                :class="{
-                    'is-active': model,
-                    'is-selected': model,
-                    'is-light': model,
-                }"
-                :disabled="model"
-                @click="togglePreRollMode"
-            >
-                <span>off</span>
-            </button>
-        </p>
-    </div>
+    <!-- To save space, only render a complete switch on larger screen (emulating is-hidden-desktop) -->
+    <IfMedia query="(min-width: 1215px)">
+        <template #default>
+            <div class="field has-addons">
+                <p class="control">
+                    <button
+                        class="button toggle-item is-small is-rounded is-colorless"
+                        :class="{
+                            'is-warning': !model,
+                            'is-active': !model,
+                        }"
+                        @click="togglePreRollMode"
+                    >
+                        <span>Pre-roll</span>
+                    </button>
+                </p>
+                <p class="control">
+                    <button
+                        class="button toggle-item is-small is-rounded is-colorless"
+                        :class="{
+                            'is-warning': model,
+                            'is-active': model,
+                        }"
+                        @click="togglePreRollMode"
+                    >
+                        <span>off</span>
+                    </button>
+                </p>
+            </div>
+        </template>
+        <template #else>
+            <div class="field">
+                <p class="control">
+                    <button
+                        class="button is-small is-rounded is-colorless"
+                        :class="{
+                            'is-warning': !model,
+                        }"
+                        @click="togglePreRollMode"
+                    >
+                        <span>Pre-roll</span>
+                    </button>
+                </p>
+            </div>
+        </template>
+    </IfMedia>
 </template>
 
 <script setup lang="ts">
+import IfMedia from '@/components/IfMedia.vue';
+
 /** A toggle button for the omit pre-roll state. Default is false, meaning no omission
  */
 const model = defineModel({ type: Boolean, default: false, required: true });
@@ -43,21 +61,17 @@ function togglePreRollMode() {
 }
 </script>
 <style scoped>
-/* The active (selected) option can not be manipulated by theirselves, so completely remove any indication of possible action
- * NOTE: This style is similar to an acive dropdown item
- * This style might later be moved to the global styles for a new toggle-item element
- */
-button.toggle-item.is-active:disabled {
-    text-shadow: none;
-    /* Do not handle hover, as there is nothing to activate for disabled elements */
-    pointer-events: none;
-}
-
-/* Active dropdown item with better suited contrast for a dark theme
+/* On a toggle item, the active (selected) option can not be manipulated by itself, 
+ * so completely remove any indication of possible action
  * NOTE: This style is similar to an acive dropdown item
  * This style might later be moved to the global styles for a new toggle-item element
  */
 button.toggle-item.is-active {
+    text-shadow: none;
+    /* Do not handle hover, as there is nothing to activate for disabled elements */
+    pointer-events: none;
+
+    /* Active dropdown item with better suited contrast for a dark theme  */
     color: #202328;
 }
 </style>
