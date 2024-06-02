@@ -31,4 +31,7 @@ export interface ICue {
 
     /** Whether to omit the possibly defined default/track pre-roll for this cue. */
     OmitPreRoll: boolean;
+
+    /** Whether to omit the possibly defined default/track fade-in for this cue. */
+    OmitFadeIn: boolean;
 }

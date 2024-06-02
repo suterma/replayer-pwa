@@ -778,6 +778,7 @@ import {
     meterInjectionKey,
     useMeasureNumbersInjectionKey,
     trackPreRollDurationInjectionKey,
+    trackFadeInDurationInjectionKey,
 } from './TrackInjectionKeys';
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
 import { ReplayerEvent } from '@/code/ui/ReplayerEvent';
@@ -1359,6 +1360,10 @@ const preRollDuration = computed(() => {
 /** Provide the pre-roll duration [in secods] to use for this track
  */
 provide(trackPreRollDurationInjectionKey, readonly(preRollDuration));
+
+/** Provide the fade-in duration [in secods] to use for this track
+ */
+provide(trackFadeInDurationInjectionKey, readonly(fadeInDuration));
 
 /** The description of the currently playing cue
  * @remarks The implementation makes sure that at least always an empty string

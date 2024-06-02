@@ -7,9 +7,9 @@
                     'is-warning': !model,
                     'is-active': !model,
                 }"
-                @click="togglePreRollMode"
+                @click="toggleFadeInMode"
             >
-                <span>Pre-roll</span>
+                <span>Fade-in</span>
             </button>
         </p>
         <p class="control">
@@ -19,7 +19,7 @@
                     'is-warning': model,
                     'is-active': model,
                 }"
-                @click="togglePreRollMode"
+                @click="toggleFadeInMode"
             >
                 <span>off</span>
             </button>
@@ -33,22 +33,22 @@
                 :class="{
                     'is-warning': !model,
                 }"
-                @click="togglePreRollMode"
+                @click="toggleFadeInMode"
             >
-                <span>Pre-roll</span>
+                <span>Fade-in</span>
             </button>
         </p>
     </div>
 </template>
 
 <script setup lang="ts">
-/** A toggle button for the omit pre-roll state. Default is false, meaning no omission
+/** A toggle button for the omit fade-in state. Default is false, meaning no omission
  */
 const model = defineModel({ type: Boolean, default: false, required: true });
 
 const emit = defineEmits(['update:modelValue']);
 
-function togglePreRollMode() {
+function toggleFadeInMode() {
     emit('update:modelValue', !(model.value === true));
 }
 </script>

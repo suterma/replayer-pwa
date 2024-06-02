@@ -14,15 +14,16 @@
                             @update:model-value="updateOmitPreRoll"
                         ></PreRollSwitch>
                     </p>
+                    <!-- Use the fade-in switch not as part of the field with addons -->
+                    <p class="control mr-2">
+                        <!-- <FadeInSwitch
+                            v-if="fadeInDuration"
+                            title="Toggle fade-in usage"
+                            :model-value="props.cue.OmitFadeIn"
+                            @update:model-value="updateOmitFadeIn"
+                        ></FadeInSwitch> -->
+                    </p>
                     <div class="field has-addons">
-                        <p class="control">
-                            <PreRollToggler
-                                v-if="preRollDuration"
-                                title="Toggle pre-roll usage"
-                                :model-value="props.cue.OmitPreRoll"
-                                @update:model-value="updateOmitPreRoll"
-                            ></PreRollToggler>
-                        </p>
                         <p class="control">
                             <CueButton
                                 :class="{
@@ -224,11 +225,12 @@ import { useSettingsStore } from '@/store/settings';
 import {
     useMeasureNumbersInjectionKey,
     trackPreRollDurationInjectionKey,
+    trackFadeInDurationInjectionKey,
 } from '@/components/track/TrackInjectionKeys';
 import type { ICue } from '@/store/ICue';
 import type { PlaybackMode } from '@/store/PlaybackMode';
-import PreRollToggler from './buttons/PreRollToggler.vue';
 import PreRollSwitch from './buttons/PreRollSwitch.vue';
+import FadeInSwitch from './buttons/FadeInSwitch.vue';
 
 const emit = defineEmits(['click', 'play', 'adjust']);
 
@@ -345,6 +347,15 @@ const preRollDuration = inject(trackPreRollDurationInjectionKey);
 function updateOmitPreRoll(omit: boolean) {
     const cueId = props.cue.Id;
     app.updateCueOmitPreRoll(cueId, omit);
+}
+
+// --- fade-in ---
+const fadeInDuration = inject(trackFadeInDurationInjectionKey);
+
+/** Updates the set omit fade-in option */
+function updateOmitFadeIn(omit: boolean) {
+    const cueId = props.cue.Id;
+    app.updateCueOmitFadeIn(cueId, omit);
 }
 </script>
 <style lang="scss" scoped>

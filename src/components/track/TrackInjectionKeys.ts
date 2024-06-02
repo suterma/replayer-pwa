@@ -32,6 +32,12 @@ export const trackPreRollDurationInjectionKey = Symbol() as InjectionKey<
     Ref<number>
 >;
 
+/** A symbol for providing and injecting the fade-in duration to use for a track
+ */
+export const trackFadeInDurationInjectionKey = Symbol() as InjectionKey<
+    Ref<number>
+>;
+
 /** A symbol for providing and injecting whether the track is playing. */
 export const isPlayingInjectionKey = Symbol() as InjectionKey<
     Ref<boolean | null>

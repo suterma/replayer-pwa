@@ -405,6 +405,19 @@ export const actions = {
         }
     },
 
+    /** Updates whether the cue omits the fade-in duration
+     * @remarks Also updates the persistent store of the compilation
+     */
+    updateCueOmitFadeIn(cueId: string, omitFadeIn: boolean): void {
+        const cue = CompilationHandler.getCompilationCueById(
+            state.compilation.value,
+            cueId,
+        );
+        if (cue) {
+            cue.OmitFadeIn = omitFadeIn;
+        }
+    },
+
     /** Deletes the cue
      * @remarks Also updates the persistent store of the compilation
      */
