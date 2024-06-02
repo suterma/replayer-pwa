@@ -1,55 +1,47 @@
 <template>
-    <!-- To save space, only render a complete switch on larger screen (emulating is-hidden-desktop) -->
-    <IfMedia query="(min-width: 1215px)">
-        <template #default>
-            <div class="field has-addons">
-                <p class="control">
-                    <button
-                        class="button toggle-item is-small is-rounded is-colorless"
-                        :class="{
-                            'is-warning': !model,
-                            'is-active': !model,
-                        }"
-                        @click="togglePreRollMode"
-                    >
-                        <span>Pre-roll</span>
-                    </button>
-                </p>
-                <p class="control">
-                    <button
-                        class="button toggle-item is-small is-rounded is-colorless"
-                        :class="{
-                            'is-warning': model,
-                            'is-active': model,
-                        }"
-                        @click="togglePreRollMode"
-                    >
-                        <span>off</span>
-                    </button>
-                </p>
-            </div>
-        </template>
-        <template #else>
-            <div class="field">
-                <p class="control">
-                    <button
-                        class="button is-small is-rounded is-colorless"
-                        :class="{
-                            'is-warning': !model,
-                        }"
-                        @click="togglePreRollMode"
-                    >
-                        <span>Pre-roll</span>
-                    </button>
-                </p>
-            </div>
-        </template>
-    </IfMedia>
+    <div class="field has-addons is-hidden-touch mb-0">
+        <p class="control">
+            <button
+                class="button toggle-item is-small is-rounded is-colorless"
+                :class="{
+                    'is-warning': !model,
+                    'is-active': !model,
+                }"
+                @click="togglePreRollMode"
+            >
+                <span>Pre-roll</span>
+            </button>
+        </p>
+        <p class="control">
+            <button
+                class="button toggle-item is-small is-rounded is-colorless"
+                :class="{
+                    'is-warning': model,
+                    'is-active': model,
+                }"
+                @click="togglePreRollMode"
+            >
+                <span>off</span>
+            </button>
+        </p>
+    </div>
+
+    <div class="field is-hidden-desktop mb-0">
+        <p class="control">
+            <button
+                class="button is-small is-rounded is-colorless"
+                :class="{
+                    'is-warning': !model,
+                }"
+                @click="togglePreRollMode"
+            >
+                <span>Pre-roll</span>
+            </button>
+        </p>
+    </div>
 </template>
 
 <script setup lang="ts">
-import IfMedia from '@/components/IfMedia.vue';
-
 /** A toggle button for the omit pre-roll state. Default is false, meaning no omission
  */
 const model = defineModel({ type: Boolean, default: false, required: true });
