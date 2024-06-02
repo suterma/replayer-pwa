@@ -38,8 +38,8 @@
                             (isTrackPlaying
                                 ? mdiPause
                                 : hasPreRoll
-                                  ? rPlayPreplay
-                                  : rPlayDirect)
+                                  ? rFadeInPreRollPlay
+                                  : rFadeInPlay)
                         "
                     />
                 </svg>
@@ -147,8 +147,8 @@ import { mdiPause } from '@mdi/js';
 import {
     rTrackPlayOnce,
     rTrackRepeatOnce,
-    rPlayPreplay,
-    rPlayDirect,
+    rFadeInPreRollPlay,
+    rFadeInPlay,
 } from '@/components/icons/ReplayerIcon';
 import CompilationHandler from '@/store/compilation-handler';
 import { type PropType, computed, inject } from 'vue';
