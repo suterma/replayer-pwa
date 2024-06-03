@@ -150,7 +150,15 @@ export class TrackApi {
                     ) as string;
                     const cueId = uuidv4();
                     cues.push(
-                        new Cue(description, null, time, null, false, cueId),
+                        new Cue(
+                            description,
+                            null,
+                            time,
+                            null,
+                            false,
+                            false,
+                            cueId,
+                        ),
                     );
                 }
             }

@@ -130,6 +130,7 @@ export default class CompilationHandler {
             time,
             null,
             false,
+            false,
             firstCueId,
         );
         return cue;

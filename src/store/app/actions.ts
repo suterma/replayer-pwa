@@ -186,6 +186,7 @@ export const actions = {
             roundedTime,
             null,
             false,
+            false,
             cueId,
         );
 
@@ -989,6 +990,7 @@ export const actions = {
                     cue.Time,
                     cue.Duration,
                     cue.OmitPreRoll,
+                    cue.OmitFadeIn,
                     cue.Id,
                 );
             });

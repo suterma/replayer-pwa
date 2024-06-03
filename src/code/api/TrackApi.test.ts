@@ -27,6 +27,7 @@ describe('TrackApi.ts', () => {
             45,
             15,
             false,
+            false,
             'cue-deadbeef',
         );
         const testTrack = new Track(

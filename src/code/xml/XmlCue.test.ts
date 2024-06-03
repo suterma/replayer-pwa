@@ -24,6 +24,7 @@ describe('the XML mapping', function () {
             88.8,
             99.9,
             false,
+            false,
             'myId',
         );
 
@@ -36,5 +37,6 @@ describe('the XML mapping', function () {
         expect(target.Shortcut).toBe(cue.Shortcut);
         expect(target.Time).toBe(cue.Time);
         expect(target.OmitPreRoll).toBe(cue.OmitPreRoll);
+        expect(target.OmitFadeIn).toBe(cue.OmitFadeIn);
     });
 });

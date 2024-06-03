@@ -55,6 +55,7 @@
                 :is-cue-ahead="isCueAhead(cue)"
                 :percent-complete="percentComplete(cue)"
                 :omit-pre-roll="cue.OmitPreRoll"
+                :omit-fade-in="cue.OmitFadeIn"
                 :is-cue-selected="isCueSelected(cue)"
                 :is-cue-scheduled="isCueScheduled(cue)"
                 @click="cueClicked"
@@ -132,7 +133,8 @@ const prefixCue = computed(() => {
         '',
         0,
         props.cues?.[0]?.Time ?? null,
-        false,
+        false /* //TODO later allow some virtual "pre-roll" using a timer*/,
+        false /* //TODO later allow some virtual "fade-ipre-roll", if defined, using a timer*/,
         prefixCueButtonId,
     );
 });

@@ -1,5 +1,5 @@
 <template>
-    <div v-bind="$attrs" class="field has-addons is-hidden-touch mb-0">
+    <div class="field has-addons is-hidden-touch mb-0">
         <p class="control">
             <button
                 class="button toggle-item is-small is-rounded is-colorless"
@@ -21,7 +21,7 @@
                 }"
                 @click="togglePreRollMode"
             >
-                <span>off</span>
+                <BaseIcon :path="rCloseCircleSmall" />
             </button>
         </p>
     </div>
@@ -42,6 +42,8 @@
 </template>
 
 <script setup lang="ts">
+import BaseIcon from '@/components/icons/BaseIcon.vue';
+import { rCloseCircleSmall } from '@/components/icons/ReplayerIcon';
 /** A toggle button for the omit pre-roll state. Default is false, meaning no omission
  */
 const model = defineModel({ type: Boolean, default: false, required: true });

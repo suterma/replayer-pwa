@@ -16,12 +16,12 @@
                     </p>
                     <!-- Use the fade-in switch not as part of the field with addons -->
                     <p class="control mr-2">
-                        <!-- <FadeInSwitch
+                        <FadeInSwitch
                             v-if="fadeInDuration"
                             title="Toggle fade-in usage"
                             :model-value="props.cue.OmitFadeIn"
                             @update:model-value="updateOmitFadeIn"
-                        ></FadeInSwitch> -->
+                        ></FadeInSwitch>
                     </p>
                     <div class="field has-addons">
                         <p class="control">
@@ -36,6 +36,7 @@
                                 :is-cue-ahead="isCueAhead"
                                 :percent-complete="percentComplete"
                                 :omit-pre-roll="props.cue.OmitPreRoll"
+                                :omit-fade-in="props.cue.OmitFadeIn"
                                 :is-cue-selected="isCueSelected"
                                 :is-cue-scheduled="isCueScheduled"
                                 has-addons-right

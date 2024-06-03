@@ -26,6 +26,7 @@ export class XmlCue {
         this.Shortcut = cue.Shortcut;
         this.Time = cue.Time;
         this.OmitPreRoll = cue.OmitPreRoll;
+        this.OmitFadeIn = cue.OmitFadeIn;
     }
 
     Id: string;
@@ -33,4 +34,5 @@ export class XmlCue {
     Shortcut: string | null;
     Time: number | null;
     OmitPreRoll: boolean | null;
+    OmitFadeIn: boolean | null;
 }

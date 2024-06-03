@@ -80,6 +80,7 @@ export default defineComponent({
                         cueTime,
                         null,
                         false,
+                        false,
                         uuidv4(),
                     ),
                 );

@@ -21,7 +21,7 @@
                 }"
                 @click="toggleFadeInMode"
             >
-                <span>off</span>
+                <BaseIcon :path="rCloseCircleSmall" />
             </button>
         </p>
     </div>
@@ -42,6 +42,9 @@
 </template>
 
 <script setup lang="ts">
+import BaseIcon from '@/components/icons/BaseIcon.vue';
+import { rCloseCircleSmall } from '@/components/icons/ReplayerIcon';
+
 /** A toggle button for the omit fade-in state. Default is false, meaning no omission
  */
 const model = defineModel({ type: Boolean, default: false, required: true });

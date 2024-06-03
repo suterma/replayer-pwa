@@ -31,17 +31,7 @@
             <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
             <i class="icon mdi foreground">
                 <svg viewBox="0 0 24 24">
-                    <path
-                        fill="currentColor"
-                        :d="
-                            iconPathOverride ??
-                            (isTrackPlaying
-                                ? mdiPause
-                                : hasPreRoll
-                                  ? rFadeInPreRollPlay
-                                  : rFadeInPlay)
-                        "
-                    />
+                    <path fill="currentColor" :d="iconPath" />
                 </svg>
             </i>
             <!-- Text depending on variant -->
@@ -149,6 +139,8 @@ import {
     rTrackRepeatOnce,
     rFadeInPreRollPlay,
     rFadeInPlay,
+    rPlayDirect,
+    rPreRollPlay,
 } from '@/components/icons/ReplayerIcon';
 import CompilationHandler from '@/store/compilation-handler';
 import { type PropType, computed, inject } from 'vue';
@@ -160,6 +152,7 @@ import {
     meterInjectionKey,
     useMeasureNumbersInjectionKey,
     trackPreRollDurationInjectionKey,
+    trackFadeInDurationInjectionKey,
 } from '@/components/track/TrackInjectionKeys';
 import { PlaybackMode } from '@/store/PlaybackMode';
 
@@ -230,6 +223,10 @@ const props = defineProps({
      */
     omitPreRoll: Boolean,
 
+    /** Whether to omit the possibly defined default/track fade-in for this cue.
+     */
+    omitFadeIn: Boolean,
+
     /** Whether this cue is disabled  */
     disabled: Boolean,
 
@@ -272,6 +269,19 @@ const props = defineProps({
     hasAddonsRight: Boolean,
 });
 
+const iconPath = computed(() => {
+    if (props.iconPathOverride) {
+        return props.iconPathOverride;
+    }
+    if ((isTrackPlaying?.value ?? false) == true) {
+        return mdiPause;
+    }
+    // Track is pausing, choose icon according to pre-roll/fade setting for this cue
+    if (hasPreRoll.value) {
+        return hasFadeIn.value ? rFadeInPreRollPlay : rPreRollPlay;
+    }
+    return hasFadeIn.value ? rFadeInPlay : rPlayDirect;
+});
 /** The musical meter */
 const meter = inject(meterInjectionKey);
 
@@ -367,6 +377,15 @@ const preRollDuration = inject(trackPreRollDurationInjectionKey);
  */
 const hasPreRoll = computed(() => {
     return (preRollDuration?.value ?? 0 > 0) && !props.omitPreRoll;
+});
+
+// --- fade-in ---
+
+const fadeInDuration = inject(trackFadeInDurationInjectionKey);
+/** Whether this cue effectively has a pre-roll duration.
+ */
+const hasFadeIn = computed(() => {
+    return (fadeInDuration?.value ?? 0 > 0) && !props.omitFadeIn;
 });
 </script>
 <style scoped>

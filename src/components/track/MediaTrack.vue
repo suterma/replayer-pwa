@@ -1231,7 +1231,8 @@ function updatedPlaybackMode(updatedPlaybackMode: PlaybackMode): void {
 
 /** Gets the effective start time for this cue, accounting for all
  * possibly set pre-roll options.
- * @remarks Throws an error if no finite time is set on the cue.
+ * @remarks NOTE: Fade-in specific additional pre-roll is not included.
+ * Throws an error if no finite time is set on the cue.
  */
 function getCuePreRollStartTime(cue: ICue): number {
     if (cue.Time != null && Number.isFinite(cue.Time)) {
