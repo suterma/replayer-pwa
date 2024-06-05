@@ -1243,7 +1243,8 @@ function getCuePreRollStartTime(cue: ICue): number {
 /** Handles the click of a cue button, by seeking to it and, optionally, toggling playback
  * @param cue The cue to handle
  * @param togglePlayback Whether to toggle playback. Optional, defaults to true
- * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
+ * @devdoc Click invocations by the ENTER key are explicitly not handled here.
+ * These should get handled by the keyboard shortcut engine.
  */
 function cueClick(cue: ICue, togglePlayback = true) {
     console.debug(`MediaTrack(${props.track.Name})::cueClick:cue:`, cue);
@@ -1298,9 +1299,12 @@ function cueClick(cue: ICue, togglePlayback = true) {
             if (startTime != null) {
                 if (togglePlayback) {
                     if (isTrackPlaying.value) {
-                        mediaHandler.value?.pauseAndSeekTo(startTime);
+                        mediaHandler.value?.pauseAndSeekTo(
+                            startTime,
+                            cue.OmitFadeIn,
+                        );
                     } else {
-                        mediaHandler.value?.playFrom(startTime);
+                        mediaHandler.value?.playFrom(startTime, cue.OmitFadeIn);
                     }
                 } else {
                     seekToSeconds(startTime);

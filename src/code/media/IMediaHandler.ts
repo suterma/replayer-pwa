@@ -39,11 +39,11 @@ export interface IMediaHandler {
      */
     readonly fader: IAudioFader;
 
-    /** Whether to omit the fade-in operation on the next, subsequent play operation
+    /** Flags to omit the fade-in operation on the next, subsequent play operation
      * @remarks This automatically gets reset at next play operation or any seek operation.
      * It can only be set when the media is not currently playing.
      */
-    omitNextFadeIn: boolean;
+    omitNextFadeIn(): void;
 
     /** Emits a changed next fading omission.
      * @param {boolean} omitted - whether the next fade-in is omitted
@@ -134,8 +134,9 @@ export interface IMediaHandler {
 
     /** Starts playback from the given temporal position
      * @remarks This first seeks to the position, then starts playing (with a possible fade-in)
+     * @param {boolean} [omitNextFadeIn=false] - When set, omits the fade-in at playback start. Default is false.
      */
-    playFrom(position: number): void;
+    playFrom(position: number, omitNextFadeIn?: boolean): void;
 
     /** Starts playback from the current temporal position
      * @remarks Applies a possible fade-in
@@ -147,8 +148,10 @@ export interface IMediaHandler {
      */
     togglePlayback(): void;
 
-    /** Pauses playback (with a possible fade-out), then seeks to the given position */
-    pauseAndSeekTo(position: number): void;
+    /** Pauses playback (with a possible fade-out), then seeks to the given position
+     * @param {boolean} [omitNextFadeIn=false] - When set, omits the fade-in at a subsequent playback start. Default is false.
+     */
+    pauseAndSeekTo(position: number, omitNextFadeIn?: boolean): void;
 
     // --- media loading ---
 

@@ -111,10 +111,15 @@ export default class HtmlMediaHandler implements IMediaHandler {
         media.onplay = () => {
             this.debugLog(`onplay`);
 
-            //Upon reception of this event, playback has already started. Fade-in is required if not yet ongoing.
+            //Upon reception of this event, playback has already started.
+            //Fade-in is required if not yet ongoing or omitted
             if (!this._fader.fading) {
-                this._fader.fadeIn().catch((message) => console.log(message));
+                //TODO add the immediate option to the fade operation
+                this._fader
+                    .fadeIn(/*immediate*/ this._omitNextFadeIn)
+                    .catch((message) => console.log(message));
             }
+            this.resetNextFadeInOmission();
 
             this.onPausedChanged.emit(false);
             this.repeatUpdateCurrentTime();
@@ -204,22 +209,23 @@ export default class HtmlMediaHandler implements IMediaHandler {
      * @remarks This automatically gets reset at next play operation or any seek operation.
      * It can only be set when the media is not currently playing.
      */
-    private _omitNextFadeIn: boolean = false;
+    private _omitNextFadeIn = false;
 
-    get omitNextFadeIn(): boolean {
-        return this._omitNextFadeIn;
+    /** Flags to omit the fade-in operation on the next, subsequent play operation
+     * @remarks The flag automatically gets reset after next play operation or at any seek operation.
+     * It can only be set when the media is not currently playing.
+     */
+    omitNextFadeIn(): void {
+        if (this.paused && this._omitNextFadeIn == false) {
+            this._omitNextFadeIn = true;
+            this.onNextFadingOmissionChanged.emit(true);
+        }
     }
 
-    /** Sets the omission, and notifies observers of the onNextFadingOmissionChanged event.
-     * @remarks Reset is always allowed, set only when paused.
-     */
-    set omitNextFade(value: boolean) {
-        if (
-            (value === false || this.paused) &&
-            this._omitNextFadeIn !== value
-        ) {
-            this._omitNextFadeIn = value;
-            this.onNextFadingOmissionChanged.emit(value);
+    private resetNextFadeInOmission() {
+        if (this._omitNextFadeIn == true) {
+            this._omitNextFadeIn = false;
+            this.onNextFadingOmissionChanged.emit(false);
         }
     }
 
@@ -325,9 +331,12 @@ export default class HtmlMediaHandler implements IMediaHandler {
         return this.seekTo(this.currentTime + seconds);
     }
 
-    public playFrom(position: number): void {
-        this.debugLog(`playFrom:${position}`);
+    playFrom(position: number, omitNextFadeIn: boolean = false): void {
+        this.debugLog(`playFrom:${position};omitNextFadeIn:${omitNextFadeIn}`);
         this.seekTo(position);
+        if (omitNextFadeIn) {
+            this.omitNextFadeIn();
+        }
         this.play();
     }
 
@@ -345,11 +354,17 @@ export default class HtmlMediaHandler implements IMediaHandler {
         }
     }
 
-    public pauseAndSeekTo(position: number): void {
+    public pauseAndSeekTo(
+        position: number,
+        omitNextFadeIn: boolean = false,
+    ): void {
         this.debugLog(`pauseAndSeekTo:${position}`);
         this._fader.fadeOut().finally(() => {
             this.pause();
             this.seekTo(position);
+            if (omitNextFadeIn) {
+                this.omitNextFadeIn();
+            }
         });
     }
 

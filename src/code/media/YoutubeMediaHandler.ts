@@ -140,20 +140,21 @@ export default class YouTubeMediaHandler implements IMediaHandler {
      */
     private _omitNextFadeIn: boolean = false;
 
-    get omitNextFadeIn(): boolean {
-        return this._omitNextFadeIn;
+    /** Flags to omit the fade-in operation on the next, subsequent play operation
+     * @remarks The flag automatically gets reset after next play operation or at any seek operation.
+     * It can only be set when the media is not currently playing.
+     */
+    omitNextFadeIn(): void {
+        if (this.paused && this._omitNextFadeIn == false) {
+            this._omitNextFadeIn = true;
+            this.onNextFadingOmissionChanged.emit(true);
+        }
     }
 
-    /** Sets the omission, and notifies observers of the onNextFadingOmissionChanged event.
-     * @remarks Reset is always allowed, set only when paused.
-     */
-    set omitNextFade(value: boolean) {
-        if (
-            (value === false || this.paused) &&
-            this._omitNextFadeIn !== value
-        ) {
-            this._omitNextFadeIn = value;
-            this.onNextFadingOmissionChanged.emit(value);
+    private resetNextFadeInOmission() {
+        if (this._omitNextFadeIn == true) {
+            this._omitNextFadeIn = false;
+            this.onNextFadingOmissionChanged.emit(false);
         }
     }
 
@@ -258,8 +259,11 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         return this.seekTo(this.currentTime + seconds);
     }
 
-    playFrom(position: number): void {
+    playFrom(position: number, omitNextFadeIn: boolean = false): void {
         this.seekTo(position);
+        if (omitNextFadeIn) {
+            this.omitNextFadeIn();
+        }
         this.play();
     }
 
@@ -312,12 +316,16 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                 this.updateCurrentTime();
                 if (!this._isPlaying) {
                     this._isPlaying = true;
-                    //Upon reception of this event, playback has already started. Fade-in is required if not yet ongoing.
-                    if (!this._fader.fading) {
+
+                    //Upon reception of this event, playback has already started.
+                    //Fade-in is required if not yet ongoing or omitted
+                    if (!this._fader.fading && !this._omitNextFadeIn) {
                         this._fader
                             .fadeIn()
                             .catch((message) => console.log(message));
                     }
+                    this.resetNextFadeInOmission();
+
                     this.onPausedChanged.emit(false);
                 }
                 break;
