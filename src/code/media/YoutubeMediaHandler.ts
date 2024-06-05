@@ -99,11 +99,11 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     public destroy(): void {
         // self
         this.onPausedChanged.cancelAll();
-        this.onPausedChanged.cancelAll();
         this.onSeekingChanged.cancelAll();
         this.onSeeked.cancelAll();
         this.onCurrentTimeChanged.cancelAll();
         this.onEnded.cancelAll();
+        this.onNextFadingOmissionChanged.cancelAll();
 
         // fader
         this.fader.destroy();
@@ -133,6 +133,31 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     get fader(): IAudioFader {
         return this._fader;
     }
+
+    /** Whether to omit the fade-in operation on the next, subsequent play operation
+     * @remarks This automatically gets reset at next play operation or any seek operation.
+     * It can only be set when the media is not currently playing.
+     */
+    private _omitNextFadeIn: boolean = false;
+
+    get omitNextFadeIn(): boolean {
+        return this._omitNextFadeIn;
+    }
+
+    /** Sets the omission, and notifies observers of the onNextFadingOmissionChanged event.
+     * @remarks Reset is always allowed, set only when paused.
+     */
+    set omitNextFade(value: boolean) {
+        if (
+            (value === false || this.paused) &&
+            this._omitNextFadeIn !== value
+        ) {
+            this._omitNextFadeIn = value;
+            this.onNextFadingOmissionChanged.emit(value);
+        }
+    }
+
+    onNextFadingOmissionChanged: SubEvent<boolean> = new SubEvent();
 
     // --- looping ---
 

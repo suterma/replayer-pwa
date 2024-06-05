@@ -160,6 +160,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
         this.onEnded.cancelAll();
         this.onCanPlay.cancelAll();
         this.onDurationChanged.cancelAll();
+        this.onNextFadingOmissionChanged.cancelAll();
 
         // fader
         this.fader.destroy();
@@ -198,6 +199,31 @@ export default class HtmlMediaHandler implements IMediaHandler {
     get fader(): IAudioFader {
         return this._fader;
     }
+
+    /** Whether to omit the fade-in operation on the next, subsequent play operation
+     * @remarks This automatically gets reset at next play operation or any seek operation.
+     * It can only be set when the media is not currently playing.
+     */
+    private _omitNextFadeIn: boolean = false;
+
+    get omitNextFadeIn(): boolean {
+        return this._omitNextFadeIn;
+    }
+
+    /** Sets the omission, and notifies observers of the onNextFadingOmissionChanged event.
+     * @remarks Reset is always allowed, set only when paused.
+     */
+    set omitNextFade(value: boolean) {
+        if (
+            (value === false || this.paused) &&
+            this._omitNextFadeIn !== value
+        ) {
+            this._omitNextFadeIn = value;
+            this.onNextFadingOmissionChanged.emit(value);
+        }
+    }
+
+    onNextFadingOmissionChanged: SubEvent<boolean> = new SubEvent();
 
     // --- looping ---
 

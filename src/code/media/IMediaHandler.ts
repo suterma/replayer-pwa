@@ -39,6 +39,17 @@ export interface IMediaHandler {
      */
     readonly fader: IAudioFader;
 
+    /** Whether to omit the fade-in operation on the next, subsequent play operation
+     * @remarks This automatically gets reset at next play operation or any seek operation.
+     * It can only be set when the media is not currently playing.
+     */
+    omitNextFadeIn: boolean;
+
+    /** Emits a changed next fading omission.
+     * @param {boolean} omitted - whether the next fade-in is omitted
+     */
+    readonly onNextFadingOmissionChanged: SubEvent<boolean>;
+
     /** Gets the audio loop handler
      */
     readonly looper: IMediaLooper;
