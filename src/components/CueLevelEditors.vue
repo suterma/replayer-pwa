@@ -28,7 +28,6 @@
                 :is-cue-selected="isCueSelected(cue)"
                 :is-cue-scheduled="isCueScheduled(cue)"
                 @click="cueClick(cue)"
-                @play="cuePlay(cue)"
                 @adjust="cueAdjust(cue)"
             />
         </TransitionGroup>
@@ -48,7 +47,7 @@ import type { PlaybackMode } from '@/store/PlaybackMode';
 /** An set of Editors for for cues in a track.
  */
 
-const emit = defineEmits(['click', 'play']);
+const emit = defineEmits(['click']);
 
 defineProps({
     cues: {
@@ -100,11 +99,6 @@ const app = useAppStore();
 /** Handles the click event of the cue button */
 function cueClick(cue: ICue) {
     emit('click', cue);
-}
-
-/** Handles the play event of the cue button */
-function cuePlay(cue: ICue) {
-    emit('play', cue);
 }
 
 /** Adjusts the time of the cue to the current playback time */

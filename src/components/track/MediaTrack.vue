@@ -287,7 +287,6 @@
                     :disabled="!canPlay"
                     :playback-mode="playbackMode as PlaybackMode"
                     @click="cueClick"
-                    @play="cuePlay"
                 >
                 </CueLevelEditors>
             </div>
