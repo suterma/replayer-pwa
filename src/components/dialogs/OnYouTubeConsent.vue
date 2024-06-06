@@ -1,7 +1,7 @@
 <template>
     <slot v-if="youTubeConsent"></slot>
     <template v-else>
-        <div class="field">
+        <div class="field" v-bind="$attrs">
             <p class="control">
                 <button class="button" @click="getConsent">
                     YouTube consent...
