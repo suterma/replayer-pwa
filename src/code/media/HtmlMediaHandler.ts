@@ -114,9 +114,8 @@ export default class HtmlMediaHandler implements IMediaHandler {
             //Upon reception of this event, playback has already started.
             //Fade-in is required if not yet ongoing or omitted
             if (!this._fader.fading) {
-                //TODO add the immediate option to the fade operation
                 this._fader
-                    .fadeIn(/*immediate*/ this._omitNextFadeIn)
+                    .fadeIn(this._omitNextFadeIn)
                     .catch((message) => console.log(message));
             }
             this.resetNextFadeInOmission();
@@ -210,6 +209,10 @@ export default class HtmlMediaHandler implements IMediaHandler {
      * It can only be set when the media is not currently playing.
      */
     private _omitNextFadeIn = false;
+
+    get omitsNextFadeIn(): boolean {
+        return this._omitNextFadeIn;
+    }
 
     /** Flags to omit the fade-in operation on the next, subsequent play operation
      * @remarks The flag automatically gets reset after next play operation or at any seek operation.

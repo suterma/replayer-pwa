@@ -214,15 +214,17 @@ export default class AudioFader implements IAudioFader {
     // --- transport ---
 
     /** Applies the pre-roll:
+     * - an general offset/pre-roll according to the setting
      * - an offset/pre-roll to compensate for fade-in durations, if appliccable
      * @remarks At the beginning of a resource, the offset is cut off at zero.
+     * @param {number} fadeInDuration - The fade-in duration.
      */
-    applyPreRoll(): void {
+    applyPreRoll(fadeInDuration: number): void {
         // The offset, in seconds
         let offset = 0;
 
-        if (this.addFadeInPreRoll && this.effectiveFadeInDuration) {
-            offset = offset + this.effectiveFadeInDuration / 1000;
+        if (this.addFadeInPreRoll && fadeInDuration) {
+            offset = offset + fadeInDuration / 1000;
         }
 
         if (offset) {
@@ -365,24 +367,22 @@ export default class AudioFader implements IAudioFader {
 
     onVolumeChanged: SubEvent<number> = new SubEvent();
 
-    fadeIn(): Promise<void> {
+    fadeIn(immediate?: boolean): Promise<void> {
         if (this.hadToCancel()) {
             return Promise.resolve();
         } else {
+            const duration = immediate ? 0 : this.effectiveFadeInDuration;
             const currentMediaVolume = this.audioVolume;
             const currentMasterAudioVolume = this.getVolume();
-            this.applyPreRoll();
+            this.applyPreRoll(duration);
 
-            if (
-                this.effectiveFadeInDuration &&
-                currentMediaVolume < currentMasterAudioVolume
-            ) {
+            if (duration && currentMediaVolume < currentMasterAudioVolume) {
                 return new Promise((resolve) => {
                     this.onFadingChanged.emit(FadingMode.FadeIn);
                     return this.fade(
                         currentMediaVolume,
                         currentMasterAudioVolume,
-                        this.effectiveFadeInDuration,
+                        duration,
                     )
                         .catch(() => {
                             console.debug(`AudioFader::fadeIn:linear:aborted`);
@@ -397,6 +397,7 @@ export default class AudioFader implements IAudioFader {
                 });
             } else {
                 //nothing to fade
+                console.debug(`AudioFader::fadeIn:immediate`);
                 this.audioVolume = currentMasterAudioVolume;
                 return Promise.resolve();
             }

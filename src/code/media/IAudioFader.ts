@@ -160,10 +160,12 @@ export interface IAudioFader {
      * An actual fade operation is only started when
      * - the set duration is non-zero and
      * - no previous fade operation is ongoing
+     * - the immediate parameter is not set to true
      * otherwise
-     * - the promise is immediately resolved.
+     * - a fade with duration zero is started and the promise is immediately resolved.
+     * @param immediate - When set to true, the fade operation is done with duration zero.
      */
-    fadeIn(): Promise<void>;
+    fadeIn(immediate?: boolean): Promise<void>;
 
     /** Returns a fade-out promise for the currently playing track
      * @remarks The sound is faded to the minimum audio level.

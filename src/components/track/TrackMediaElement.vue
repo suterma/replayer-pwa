@@ -412,11 +412,12 @@ const mediaElementId = computed(() => {
  * @remarks Provision of dynamic CSS for visual fade-in according to audio fading */
 const fadeInDuration = computed(() => {
     const fader = mediaHandler.value?.fader;
-    const duration = fader?.isFadingEnabled
-        ? fader?.fadeInDuration
-            ? fader?.fadeInDuration / 1000
-            : 0
-        : 0;
+    const duration =
+        fader?.isFadingEnabled && !mediaHandler.value?.omitsNextFadeIn
+            ? fader?.fadeInDuration
+                ? fader?.fadeInDuration / 1000
+                : 0
+            : 0;
 
     return `${duration}s`;
 });

@@ -140,12 +140,17 @@ export default class YouTubeMediaHandler implements IMediaHandler {
      */
     private _omitNextFadeIn: boolean = false;
 
+    get omitsNextFadeIn(): boolean {
+        return this._omitNextFadeIn;
+    }
+
     /** Flags to omit the fade-in operation on the next, subsequent play operation
      * @remarks The flag automatically gets reset after next play operation or at any seek operation.
      * It can only be set when the media is not currently playing.
      */
     omitNextFadeIn(): void {
         if (this.paused && this._omitNextFadeIn == false) {
+            this.debugLog(`omitNextFadeIn:set:true`);
             this._omitNextFadeIn = true;
             this.onNextFadingOmissionChanged.emit(true);
         }
@@ -153,6 +158,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     private resetNextFadeInOmission() {
         if (this._omitNextFadeIn == true) {
+            this.debugLog(`resetNextFadeInOmission:set:false`);
             this._omitNextFadeIn = false;
             this.onNextFadingOmissionChanged.emit(false);
         }
@@ -319,9 +325,9 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
                     //Upon reception of this event, playback has already started.
                     //Fade-in is required if not yet ongoing or omitted
-                    if (!this._fader.fading && !this._omitNextFadeIn) {
+                    if (!this._fader.fading) {
                         this._fader
-                            .fadeIn()
+                            .fadeIn(this._omitNextFadeIn)
                             .catch((message) => console.log(message));
                     }
                     this.resetNextFadeInOmission();
