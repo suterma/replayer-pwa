@@ -221,6 +221,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
     omitNextFadeIn(): void {
         if (this.paused && this._omitNextFadeIn == false) {
             this._omitNextFadeIn = true;
+            this.debugLog(`omitNextFadeIn:ON`);
             this.onNextFadingOmissionChanged.emit(true);
         }
     }
@@ -228,6 +229,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
     private resetNextFadeInOmission() {
         if (this._omitNextFadeIn == true) {
             this._omitNextFadeIn = false;
+            this.debugLog(`omitNextFadeIn:OFF`);
             this.onNextFadingOmissionChanged.emit(false);
         }
     }

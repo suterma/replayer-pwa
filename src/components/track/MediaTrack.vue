@@ -1199,15 +1199,17 @@ function goToSelectedCue() {
             sequences might cause actions on non-active tracks too.*/
     if (isActiveTrack.value) {
         console.debug(`MediaTrack(${props.track.Name})::goToSelectedCue`);
-        if (selectedCue.value) {
+        const cue = selectedCue.value;
+        if (cue) {
             const startTime = getCuePreRollStartTime(selectedCue.value);
 
             //Control playback according to the play state, using a single operation.
             //This supports a possible fade operation.
             if (isTrackPlaying.value) {
-                mediaHandler.value?.pauseAndSeekTo(startTime);
+                mediaHandler.value?.pauseAndSeekTo(startTime, cue.OmitFadeIn);
             } else {
                 seekToSeconds(startTime);
+                mediaHandler.value?.omitNextFadeIn();
             }
         }
     }

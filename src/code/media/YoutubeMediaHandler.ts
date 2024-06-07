@@ -150,16 +150,16 @@ export default class YouTubeMediaHandler implements IMediaHandler {
      */
     omitNextFadeIn(): void {
         if (this.paused && this._omitNextFadeIn == false) {
-            this.debugLog(`omitNextFadeIn:set:true`);
             this._omitNextFadeIn = true;
+            this.debugLog(`omitNextFadeIn:ON`);
             this.onNextFadingOmissionChanged.emit(true);
         }
     }
 
     private resetNextFadeInOmission() {
         if (this._omitNextFadeIn == true) {
-            this.debugLog(`resetNextFadeInOmission:set:false`);
             this._omitNextFadeIn = false;
+            this.debugLog(`omitNextFadeIn:OFF`);
             this.onNextFadingOmissionChanged.emit(false);
         }
     }
@@ -237,6 +237,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
      * @param {boolean} _waitOnCanPlay - optional, not handled, as the YouTube player does not support seek events.
      * @returns {Promise<void>} Promise - always resolved, immediately, or after 300ms, as the YouTube player does not support seek events.
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     seekTo(seconds: number, _waitOnCanPlay = false): Promise<void> {
         if (!this.hasLoadedMetadata) return Promise.resolve();
         if (this.currentTime === seconds) {
