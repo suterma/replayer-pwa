@@ -1335,23 +1335,6 @@ function cueClick(cue: ICue, togglePlayback = true) {
     }
 }
 
-/** Handles the play event of a cue button, by immediately restarting playback at the cue (instead of toggling)
- * @devdoc Click invocations by the ENTER key are explicitly not handled here. These should not get handled by the keyboard shortcut engine.
- */
-function cuePlay(cue: ICue) {
-    console.debug(`MediaTrack(${props.track.Name})::cuePlay:cue:`, cue);
-    if (cue.Time != null && Number.isFinite(cue.Time)) {
-        app.updateSelectedCueId(cue.Id);
-
-        //Set the position to this cue and handle playback
-        if (isTrackPlaying.value) {
-            seekToSeconds(cue.Time); //keep playing
-        } else {
-            mediaHandler.value?.playFrom(cue.Time);
-        }
-    }
-}
-
 /** Handles the request for a new cue by creating one for the current time
  */
 function createNewCue(): void {

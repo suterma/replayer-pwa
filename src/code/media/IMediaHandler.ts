@@ -45,7 +45,6 @@ export interface IMediaHandler {
 
     /** Flags to omit the fade-in operation on the next, subsequent play operation
      * @remarks This automatically gets reset at next play operation or any seek operation.
-     * It can only be set when the media is not currently playing.
      */
     omitNextFadeIn(): void;
 

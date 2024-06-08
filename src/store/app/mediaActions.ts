@@ -40,7 +40,7 @@ export const mediaActions = {
         );
         if (nextTrack) {
             actions.updateSelectedTrackId(nextTrack.Id);
-            nextTrack.MediaHandler?.playFrom(0);
+            nextTrack.MediaHandler?.playFrom(0, true);
         }
     },
     /** Skips to the previous media track (from the currently selected track) and plays it.
@@ -54,7 +54,7 @@ export const mediaActions = {
         );
         if (nextTrack) {
             actions.updateSelectedTrackId(nextTrack.Id);
-            nextTrack.MediaHandler?.playFrom(0);
+            nextTrack.MediaHandler?.playFrom(0, true);
         }
     },
 
