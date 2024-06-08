@@ -99,6 +99,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
 
         media.onseeking = () => {
             this.debugLog(`onseeking`);
+            this.resetNextFadeInOmission();
             this.onSeekingChanged.emit(true);
         };
 
@@ -307,12 +308,12 @@ export default class HtmlMediaHandler implements IMediaHandler {
      * @inheritDoc
      */
     public seekTo(seconds: number, waitOnCanPlay = false): Promise<void> {
+        this.debugLog(`seekTo`, seconds);
         if (
             this.hasLoadedMetadata &&
             this.currentTime !== seconds &&
             Number.isFinite(seconds)
         ) {
-            this.debugLog(`seekTo`, seconds);
             return new Promise((resolve) => {
                 this._media.addEventListener(
                     waitOnCanPlay ? 'canplay' : 'seeked',
@@ -336,13 +337,17 @@ export default class HtmlMediaHandler implements IMediaHandler {
         return this.seekTo(this.currentTime + seconds);
     }
 
-    playFrom(position: number, omitNextFadeIn: boolean = false): void {
+    /** @inheritdoc */
+    public playFrom(position: number, omitNextFadeIn: boolean = false): void {
         this.debugLog(`playFrom:${position};omitNextFadeIn:${omitNextFadeIn}`);
-        this.seekTo(position);
-        if (omitNextFadeIn) {
-            this.omitNextFadeIn();
-        }
-        this.play();
+        this.seekTo(position).then(() => {
+            if (omitNextFadeIn) {
+                this.omitNextFadeIn();
+            } else {
+                this.resetNextFadeInOmission();
+            }
+            this.play();
+        });
     }
 
     public play(): void {

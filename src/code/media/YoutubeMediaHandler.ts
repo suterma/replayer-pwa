@@ -238,16 +238,14 @@ export default class YouTubeMediaHandler implements IMediaHandler {
      * @returns {Promise<void>} Promise - always resolved, immediately, or after 300ms, as the YouTube player does not support seek events.
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    seekTo(seconds: number, _waitOnCanPlay = false): Promise<void> {
+    public seekTo(seconds: number, _waitOnCanPlay = false): Promise<void> {
+        this.debugLog(`seekTo`, seconds);
+        this.resetNextFadeInOmission();
         if (!this.hasLoadedMetadata) return Promise.resolve();
         if (this.currentTime === seconds) {
             return Promise.resolve();
         }
         if (Number.isFinite(seconds)) {
-            console.debug(
-                `YouTubeMediaHandler(${this._id})::seekTo:seconds:${seconds}:`,
-            );
-
             this.onSeekingChanged.emit(true);
             this._player.seekTo(seconds, true);
             this.onSeekingChanged.emit(false);
@@ -266,12 +264,17 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         return this.seekTo(this.currentTime + seconds);
     }
 
+    /** @inheritdoc */
     playFrom(position: number, omitNextFadeIn: boolean = false): void {
-        this.seekTo(position);
-        if (omitNextFadeIn) {
-            this.omitNextFadeIn();
-        }
-        this.play();
+        this.debugLog(`playFrom:${position};omitNextFadeIn:${omitNextFadeIn}`);
+        this.seekTo(position).then(() => {
+            if (omitNextFadeIn) {
+                this.omitNextFadeIn();
+            } else {
+                this.resetNextFadeInOmission();
+            }
+            this.play();
+        });
     }
 
     play(): void {
@@ -286,10 +289,18 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         }
     }
 
-    pauseAndSeekTo(position: number): void {
+    public pauseAndSeekTo(
+        position: number,
+        omitNextFadeIn: boolean = false,
+    ): void {
+        this.debugLog(`pauseAndSeekTo:${position}`);
         this._fader.fadeOut().finally(() => {
             this.pause();
-            this.seekTo(position);
+            this.seekTo(position).then(() => {
+                if (omitNextFadeIn) {
+                    this.omitNextFadeIn();
+                }
+            });
         });
     }
 

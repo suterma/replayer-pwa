@@ -1328,7 +1328,7 @@ function cueClick(cue: ICue, togglePlayback = true) {
                         mediaHandler.value?.playFrom(startTime, cue.OmitFadeIn);
                     }
                 } else {
-                    seekToSeconds(startTime);
+                    seekToSeconds(startTime, cue.OmitFadeIn);
                 }
             }
         }

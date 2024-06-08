@@ -140,7 +140,7 @@ export interface IMediaHandler {
      * @remarks This first seeks to the position, then starts playing (with a possible fade-in)
      * @param {boolean} [omitNextFadeIn=false] - When set, omits the fade-in at playback start. Default is false.
      */
-    playFrom(position: number, omitNextFadeIn?: boolean): void;
+    playFrom(position: number, omitNextFadeIn: boolean): void;
 
     /** Starts playback from the current temporal position
      * @remarks Applies a possible fade-in
