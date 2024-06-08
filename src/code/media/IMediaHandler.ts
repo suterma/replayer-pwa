@@ -49,10 +49,10 @@ export interface IMediaHandler {
      */
     omitNextFadeIn(): void;
 
-    /** Emits a changed next fading omission.
+    /** Emits a changed next fade-in omission.
      * @param {boolean} omitted - whether the next fade-in is omitted
      */
-    readonly onNextFadingOmissionChanged: SubEvent<boolean>;
+    readonly onNextFadeInOmissionChanged: SubEvent<boolean>;
 
     /** Gets the audio loop handler
      */

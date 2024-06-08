@@ -778,6 +778,7 @@ import {
     useMeasureNumbersInjectionKey,
     trackPreRollDurationInjectionKey,
     trackFadeInDurationInjectionKey,
+    isOmittingNextFadeInInjectionKey,
 } from './TrackInjectionKeys';
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
 import { ReplayerEvent } from '@/code/ui/ReplayerEvent';
@@ -912,6 +913,10 @@ function takeMediaHandler(handler: IMediaHandler) {
         }
     });
 
+    handler.onNextFadeInOmissionChanged.subscribe((omitsNextFadeIn) => {
+        isOmittingNextFadeIn.value = omitsNextFadeIn;
+    });
+
     handler.onEnded.subscribe(() => {
         removeCueScheduling();
         emit('trackEnded');
@@ -1012,9 +1017,6 @@ const trackDuration: Ref<number | null> = ref(null);
 const isTrackPlaying = ref(false);
 provide(isPlayingInjectionKey, readonly(isTrackPlaying));
 
-/** Indicates the kind of current fading, if any */
-const isFading = ref(FadingMode.None);
-
 /** Whether the cues are currently expanded for editing */
 const isExpanded = ref(false);
 
@@ -1034,16 +1036,6 @@ const {
     experimentalUseMeter,
 } = storeToRefs(settings);
 
-/** Handles changes in the fading settings
- */
-watchEffect(() => {
-    mediaHandler.value?.fader?.updateSettings(
-        fadeInDuration.value,
-        fadeOutDuration.value,
-        addFadeInPreRoll.value,
-    );
-});
-
 const {
     selectedCueId,
     scheduledCueId,
@@ -1054,6 +1046,25 @@ const {
     selectedCue,
     activeTrackId,
 } = storeToRefs(app);
+
+// --- fading ---
+
+/** Handles changes in the fading settings
+ */
+watchEffect(() => {
+    mediaHandler.value?.fader?.updateSettings(
+        fadeInDuration.value,
+        fadeOutDuration.value,
+        addFadeInPreRoll.value,
+    );
+});
+
+/** Indicates the kind of current fading, if any */
+const isFading = ref(FadingMode.None);
+
+const isOmittingNextFadeIn = ref(false);
+
+provide(isOmittingNextFadeInInjectionKey, readonly(isOmittingNextFadeIn));
 
 // --- Persisted playback position ---
 
@@ -1164,9 +1175,15 @@ function seek(seconds: number): void {
     mediaHandler.value?.seek(seconds);
 }
 
-/** Seeks to the position, in [seconds], with emitting an event */
-function seekToSeconds(seconds: number): void {
-    mediaHandler.value?.seekTo(seconds);
+/** Seeks to the position, in [seconds], with emitting an event
+ * @param {boolean} [omitNextFadeIn=false] - When set, omits the fade-in at a subsequent playback start. Default is false.
+ */
+function seekToSeconds(seconds: number, omitNextFadeIn?: boolean): void {
+    mediaHandler.value?.seekTo(seconds).then(() => {
+        if (omitNextFadeIn) {
+            mediaHandler.value?.omitNextFadeIn();
+        }
+    });
 }
 
 /** Handles the volume down command if this is the active track */
@@ -1198,8 +1215,11 @@ function goToSelectedCue() {
     /*Check for the active track here (again), because otherwise some event handling
             sequences might cause actions on non-active tracks too.*/
     if (isActiveTrack.value) {
-        console.debug(`MediaTrack(${props.track.Name})::goToSelectedCue`);
         const cue = selectedCue.value;
+        console.debug(
+            `MediaTrack(${props.track.Name})::goToSelectedCue:cue:`,
+            cue,
+        );
         if (cue) {
             const startTime = getCuePreRollStartTime(selectedCue.value);
 
@@ -1208,8 +1228,7 @@ function goToSelectedCue() {
             if (isTrackPlaying.value) {
                 mediaHandler.value?.pauseAndSeekTo(startTime, cue.OmitFadeIn);
             } else {
-                seekToSeconds(startTime);
-                mediaHandler.value?.omitNextFadeIn();
+                seekToSeconds(startTime, cue.OmitFadeIn);
             }
         }
     }

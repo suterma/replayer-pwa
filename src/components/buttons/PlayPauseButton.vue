@@ -7,7 +7,8 @@
         :title="isPlaying ? 'Pause' : 'Play'"
     >
         <BaseIcon v-if="isPlaying" :path="mdiPause" />
-        <BaseIcon v-else :path="mdiPlay" />
+        <BaseIcon v-else-if="isOmittingNextFadeIn" :path="mdiPlay" />
+        <BaseIcon v-else :path="rFadeInPlay" />
         <slot></slot>
     </button>
 </template>
@@ -17,8 +18,12 @@
  */
 import { inject } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { mdiPlay, mdiPause } from '@mdi/js';
-import { isPlayingInjectionKey } from '../track/TrackInjectionKeys';
+import { mdiPause, mdiPlay } from '@mdi/js';
+import {
+    isPlayingInjectionKey,
+    isOmittingNextFadeInInjectionKey,
+} from '../track/TrackInjectionKeys';
+import { rFadeInPlay } from '@/components/icons/ReplayerIcon';
 
 defineProps({
     /** Flag to indicate the loading state */
@@ -28,7 +33,6 @@ defineProps({
         default: false,
     },
 });
-/** Flag to indicate whether this track is currently playing
- */
 const isPlaying = inject(isPlayingInjectionKey);
+const isOmittingNextFadeIn = inject(isOmittingNextFadeInInjectionKey);
 </script>

@@ -164,7 +164,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
         this.onEnded.cancelAll();
         this.onCanPlay.cancelAll();
         this.onDurationChanged.cancelAll();
-        this.onNextFadingOmissionChanged.cancelAll();
+        this.onNextFadeInOmissionChanged.cancelAll();
 
         // fader
         this.fader.destroy();
@@ -222,7 +222,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
         if (this.paused && this._omitNextFadeIn == false) {
             this._omitNextFadeIn = true;
             this.debugLog(`omitNextFadeIn:ON`);
-            this.onNextFadingOmissionChanged.emit(true);
+            this.onNextFadeInOmissionChanged.emit(true);
         }
     }
 
@@ -230,11 +230,11 @@ export default class HtmlMediaHandler implements IMediaHandler {
         if (this._omitNextFadeIn == true) {
             this._omitNextFadeIn = false;
             this.debugLog(`omitNextFadeIn:OFF`);
-            this.onNextFadingOmissionChanged.emit(false);
+            this.onNextFadeInOmissionChanged.emit(false);
         }
     }
 
-    onNextFadingOmissionChanged: SubEvent<boolean> = new SubEvent();
+    onNextFadeInOmissionChanged: SubEvent<boolean> = new SubEvent();
 
     // --- looping ---
 
@@ -366,10 +366,11 @@ export default class HtmlMediaHandler implements IMediaHandler {
         this.debugLog(`pauseAndSeekTo:${position}`);
         this._fader.fadeOut().finally(() => {
             this.pause();
-            this.seekTo(position);
-            if (omitNextFadeIn) {
-                this.omitNextFadeIn();
-            }
+            this.seekTo(position).then(() => {
+                if (omitNextFadeIn) {
+                    this.omitNextFadeIn();
+                }
+            });
         });
     }
 

@@ -43,6 +43,12 @@ export const isPlayingInjectionKey = Symbol() as InjectionKey<
     Ref<boolean | null>
 >;
 
+/** A symbol for providing and injecting whether the media player will omit
+ * the fade-in operation on the next, subsequent play operation */
+export const isOmittingNextFadeInInjectionKey = Symbol() as InjectionKey<
+    Ref<boolean | null>
+>;
+
 /** A symbol for providing and injecting the exact current playhead position in the track.
  * @remarks This is provided readonly, updates must be emitted as events.
  */
