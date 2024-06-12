@@ -61,6 +61,26 @@
                                 @input="updateDescription($event)"
                             />
                         </p>
+
+                        <div class="control is-hidden-tablet">
+                            <AdjustTimeButton
+                                class="as-after-addon"
+                                :is-selected-item="isCueSelected"
+                                @adjust-time="$emit('adjust')"
+                            >
+                                <p
+                                    class="control is-minimum-5-characters has-cropped-text"
+                                    title="Time of this cue"
+                                >
+                                    <span
+                                        class="input is-static has-opacity-half"
+                                    >
+                                        <!-- Display the cue time, with just 1 decimal digit -->
+                                        {{ (cueTime ?? 0).toFixed(1) }}</span
+                                    >
+                                </p></AdjustTimeButton
+                            >
+                        </div>
                     </div>
                 </div>
                 <!-- at (keep as small as possible)-->
@@ -72,7 +92,7 @@
                     </p>
                 </div>
                 <!-- A normal input for the time, with an adjustment add-on (from a bit wider screens)-->
-                <div class="level-item is-flex-shrink-1">
+                <div class="level-item is-flex-shrink-1 is-hidden-mobile">
                     <div class="field has-addons has-addons-except-mobile">
                         <p class="control is-hidden-mobile">
                             <TimeInput
@@ -112,20 +132,6 @@
                                 @adjust-time="$emit('adjust')"
                             ></AdjustTimeButton>
                         </div>
-                    </div>
-                </div>
-
-                <div class="level-item is-flex-shrink-1 is-hidden-tablet">
-                    <div class="field">
-                        <p
-                            class="control is-minimum-5-characters has-cropped-text"
-                            title="Time of this cue"
-                        >
-                            <span class="input is-static has-opacity-half">
-                                <!-- Display the cue time, with just 1 decimal digit -->
-                                {{ (cueTime ?? 0).toFixed(1) }}</span
-                            >
-                        </p>
                     </div>
                 </div>
 
