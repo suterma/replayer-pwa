@@ -1477,14 +1477,19 @@ const isActiveTrack = computed(() => activeTrackId.value === props.track.Id);
 watch(
     () => isActiveTrack.value,
     (isActive, wasActive) => {
-        // console.debug(
-        //     `MediaTrack(${props.track.Name})::isActiveTrack:val:`,
-        //     isActive,
-        // );
+        console.debug(
+            `MediaTrack(${props.track.Name})::isActiveTrack:val:`,
+            isActive,
+        );
 
         // Pause this track, when it's no more active track
         if (wasActive === true && isActive === false) {
             mediaHandler.value?.pause();
+        }
+
+        // Start from beginning, when it became the active track
+        if (isActive === true) {
+            mediaHandler.value?.seekTo(0);
         }
     },
 );
