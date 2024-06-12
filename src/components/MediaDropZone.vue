@@ -85,7 +85,7 @@
                         <button
                             type="submit"
                             :disabled="!url"
-                            class="button is-primary"
+                            class="button is-primary as-after-addon"
                             :class="{
                                 'is-loading': isProcessingDataFromUrl,
                             }"

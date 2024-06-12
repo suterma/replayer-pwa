@@ -24,3 +24,8 @@
     font-style: italic;
 }
 
+/** Addon-buttons (for inputs on the right side) are
+visually tied to their left button */
+.field.has-addons button.button.as-after-addon:not(:hover) {
+    border-left-color: transparent;
+}

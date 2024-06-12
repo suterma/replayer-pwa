@@ -6,19 +6,25 @@
             }}</label>
         </div>
         <div class="field-body">
-            <div class="field">
-                <p class="control">
+            <!-- Note: the additional addon class is non-disturbing if no actual addon item is rendered -->
+            <div class="field has-addons">
+                <div class="control">
+                    <!-- The slot for the actual input control -->
                     <slot></slot>
-                </p>
+                </div>
+                <!-- The slot for the possible addon -->
+                <slot name="addon"></slot>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+
 /**
- * An input with a label
- * @devdoc This is to be used for arbitrary inputs, with the bulma layout.
+ * An input control with a label
+ * @remarks This is to be used for arbitrary inputs, with the bulma layout. It also supports an addon-slot, positioned after the input.
  */
 defineProps({
     /**

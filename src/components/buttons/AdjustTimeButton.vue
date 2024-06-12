@@ -11,6 +11,7 @@
         @hotkey="message.pushInputFeedback('SHIFT+INSERT', 'Adjust')"
     >
         <button
+            v-bind="$attrs"
             :ref="clickRef"
             class="button"
             title="Adjusts the time to the current playback time"

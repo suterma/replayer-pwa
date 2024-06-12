@@ -107,6 +107,7 @@
                         </div>
                         <div class="control">
                             <AdjustTimeButton
+                                class="as-after-addon"
                                 :is-selected-item="isCueSelected"
                                 @adjust-time="$emit('adjust')"
                             ></AdjustTimeButton>

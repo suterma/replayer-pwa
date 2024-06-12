@@ -14336,6 +14336,12 @@ button.dropdown-item.is-active:disabled {
   font-style: italic;
 }
 
+/** Addon-buttons (for inputs on the right side) are
+visually tied to their left button */
+.field.has-addons button.button.as-after-addon:not(:hover) {
+  border-left-color: transparent;
+}
+
 /*************************************************************
  * Styles for video container and content display
  * These styles are suitable both for HTML5 video and the 

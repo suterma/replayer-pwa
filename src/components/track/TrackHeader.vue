@@ -158,6 +158,23 @@
                                 (value: number | null) => updatePreRoll(value)
                             "
                         />
+                        <template #addon>
+                            <div
+                                v-show="track.PreRoll"
+                                class="control"
+                                title="Reset pre-roll for this track"
+                            >
+                                <button
+                                    class="button as-after-addon"
+                                    @click="updatePreRoll(null)"
+                                >
+                                    <BaseIcon
+                                        v-once
+                                        :path="mdiTrashCanOutline"
+                                    />
+                                </button>
+                            </div>
+                        </template>
                     </LabeledInput>
                 </CoveredPanel>
                 <!-- Pre-Roll (in measures) (hide initially, as long as no cues are set) -->
@@ -254,6 +271,8 @@ import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import NavButton from '@/components/buttons/NavButton.vue';
 import { useAppStore } from '@/store/app';
+import BaseIcon from '@/components/icons/BaseIcon.vue';
+import { mdiTrashCanOutline } from '@mdi/js';
 import {
     isPlayingInjectionKey,
     useMeasureNumbersInjectionKey,
