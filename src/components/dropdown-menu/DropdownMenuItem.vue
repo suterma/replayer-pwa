@@ -22,7 +22,8 @@ import MenuItemContent from '@/components/dropdown-menu/MenuItemContent.vue';
 defineProps({
     title: {
         type: String,
-        required: true,
+        required: false,
+        default: '',
     },
     disabled: {
         type: Boolean,

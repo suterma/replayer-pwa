@@ -1,5 +1,6 @@
 <template>
-    <div v-bind="$attrs" class="field has-addons is-hidden-touch mb-0">
+    <!-- Note: This wider variant is currently not used -->
+    <!-- <div v-bind="$attrs" class="field has-addons is-hidden-touch mb-0">
         <p class="control">
             <button
                 class="button toggle-item is-small is-rounded is-colorless"
@@ -24,9 +25,9 @@
                 <BaseIcon :path="rCloseCircleSmall" />
             </button>
         </p>
-    </div>
+    </div> -->
 
-    <div v-bind="$attrs" class="field is-hidden-desktop mb-0">
+    <div v-bind="$attrs" class="field mb-0">
         <p class="control">
             <button
                 class="button is-small is-rounded is-colorless"

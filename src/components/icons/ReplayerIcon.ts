@@ -62,3 +62,6 @@ export const rPreRollPlay =
 /** An close icon with a small cross */
 export const rCloseCircleSmall =
     'M 14.59,8 12,10.59 9.41,8 8,9.41 10.59,12 8,14.59 9.41,16 12,13.41 14.59,16 16,14.59 13.41,12 16,9.41 Z';
+
+/** An empty icon (as placeholder) */
+export const rNone = 'M Z';

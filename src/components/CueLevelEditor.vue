@@ -6,7 +6,7 @@
                 <!-- Play Button -->
                 <div class="level-item">
                     <!-- Use the pre-roll switch not as part of the field with addons -->
-                    <p class="control mr-2">
+                    <p class="control mr-2 is-hidden-mobile">
                         <PreRollSwitch
                             v-if="preRollDuration"
                             title="Toggle pre-roll usage"
@@ -15,7 +15,7 @@
                         ></PreRollSwitch>
                     </p>
                     <!-- Use the fade-in switch not as part of the field with addons -->
-                    <p class="control mr-2">
+                    <p class="control mr-2 is-hidden-mobile">
                         <FadeInSwitch
                             v-if="fadeInDuration"
                             title="Toggle fade-in usage"
@@ -181,7 +181,36 @@
 
             <!-- Right side -->
             <div class="level-right">
-                <div class="field">
+                <div class="level-item">
+                    <!-- Slot for additional level display items -->
+                    <slot name="right-start"></slot>
+
+                    <CueContextMenu class="is-hidden-tablet">
+                        <DropdownMenuButton
+                            title="Remove"
+                            sub-title="(remove the cue from the track)"
+                            :icon-path="mdiTrashCanOutline"
+                            @click="deleteThisCue()"
+                        />
+                        <DropdownMenuItem :icon-path="rNone">
+                            <PreRollSwitch
+                                v-if="preRollDuration"
+                                title="Toggle pre-roll usage"
+                                :model-value="props.cue.OmitPreRoll"
+                                @update:model-value="updateOmitPreRoll"
+                            ></PreRollSwitch
+                        ></DropdownMenuItem>
+                        <DropdownMenuItem :icon-path="rNone">
+                            <FadeInSwitch
+                                v-if="fadeInDuration"
+                                title="Toggle fade-in usage"
+                                :model-value="props.cue.OmitFadeIn"
+                                @update:model-value="updateOmitFadeIn"
+                            ></FadeInSwitch
+                        ></DropdownMenuItem>
+                    </CueContextMenu>
+                </div>
+                <div class="field is-hidden-mobile">
                     <p class="control" title="Trash this cue">
                         <button class="button" @click="deleteThisCue()">
                             <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
@@ -213,6 +242,7 @@
  */
 import { type PropType, computed, inject, ref, type Ref } from 'vue';
 import { storeToRefs } from 'pinia';
+import { rNone } from '@/components/icons/ReplayerIcon';
 import CueButton from '@/components/buttons/CueButton.vue';
 import AdjustTimeButton from '@/components/buttons/AdjustTimeButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
@@ -229,10 +259,13 @@ import {
     trackPreRollDurationInjectionKey,
     trackFadeInDurationInjectionKey,
 } from '@/components/track/TrackInjectionKeys';
+import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
+import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
 import type { ICue } from '@/store/ICue';
 import type { PlaybackMode } from '@/store/PlaybackMode';
 import PreRollSwitch from './buttons/PreRollSwitch.vue';
 import FadeInSwitch from './buttons/FadeInSwitch.vue';
+import CueContextMenu from '@/components/context-menu/CueContextMenu.vue';
 
 const emit = defineEmits(['click', 'play', 'adjust']);
 
