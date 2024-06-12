@@ -66,6 +66,16 @@ fieldset[disabled] .button:hover {
     background-color: transparent;
     border-color: transparent;
     box-shadow: none;
+    pointer-events: none;
+}
+
+/* Disabled links should be treated like buttons in this regard*/
+a[disabled],
+a[disabled]:hover {
+    background-color: transparent;
+    border-color: transparent;
+    pointer-events: none;
+    opacity: 0.5;
 }
 
 /*************************************************************

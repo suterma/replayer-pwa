@@ -59,7 +59,19 @@
                                     <span
                                         class="has-text-break-word is-indicator"
                                     >
-                                        <a :href="mediaUrl" target="_blank">
+                                        <a
+                                            v-if="Boolean(mediaUrl)"
+                                            :href="mediaUrl"
+                                            target="_blank"
+                                        >
+                                            {{ track.Name }}
+                                        </a>
+                                        <a
+                                            v-else
+                                            :href="mediaUrl"
+                                            target="_blank"
+                                            disabled
+                                        >
                                             {{ track.Name }}
                                         </a>
                                     </span>
@@ -117,12 +129,30 @@
                     </div>
                     <!-- Right side -->
                     <div class="level-right is-justify-content-flex-end">
-                        <!-- Slot for additional level items -->
+                        <a
+                            :href="mediaUrl"
+                            download
+                            v-if="Boolean(mediaUrl) && !isTrackEditable"
+                            class="button"
+                            title="Download PDF to device"
+                        >
+                            <BaseIcon :path="mdiTrayArrowDown" />
+                        </a>
                         <PlaybackIndicator
+                            v-else
                             :is-ready="!!mediaUrl"
                             :is-unavailable="!mediaUrl"
                             data-cy="playback-indicator"
                         />
+
+                        <button
+                            v-if="isTrackEditable"
+                            :disabled="!Boolean(mediaUrl)"
+                            class="button"
+                            title="Remove the PDF track from the compilation"
+                        >
+                            <BaseIcon :path="mdiTrashCanOutline" />
+                        </button>
                     </div>
                 </div>
             </div>
@@ -158,12 +188,19 @@ import LabeledInput from '@/components/editor/LabeledInput.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import FullscreenPanel from '@/components/FullscreenPanel.vue';
 import FullscreenToggler from '@/components/buttons/FullscreenToggler.vue';
-import { mdiSwapVertical, mdiFilePdfBox } from '@mdi/js';
+import {
+    mdiSwapVertical,
+    mdiFilePdfBox,
+    mdiTrayArrowDown,
+    mdiTrashCan,
+    mdiTrashCanOutline,
+} from '@mdi/js';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { storeToRefs } from 'pinia';
 import PdfElement from '@/components/track/PdfElement.vue';
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
 import { useSettingsStore } from '@/store/settings';
+import { addTextCues, confirm } from '@/code/ui/dialogs';
 
 const props = defineProps({
     /** The track to display
@@ -194,6 +231,19 @@ const mediaUrl = computed(() => {
  *  PDF's currently can not play or even scroll
  */
 provide(isPlayingInjectionKey, readonly(ref(false)));
+
+/** Removes the track from the compilation
+ */
+function remove() {
+    confirm(
+        'Removing track',
+        `Do you want to remove track "${props.track.Name}"?`,
+    ).then((ok) => {
+        if (ok) {
+            app.removeTrack(props.track.Id);
+        }
+    });
+}
 
 // --- drop zone handling ---
 
