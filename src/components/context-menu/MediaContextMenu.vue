@@ -5,7 +5,7 @@
         title="Media context menu"
         data-cy="context-menu-media"
     >
-        <div class="dropdown-item" data-cy="dropdown-menu-item">
+        <DropdownMenuItem>
             <MenuItemContent title="Speed">
                 <template #right-item>
                     <div class="button is-nav is-indicator">
@@ -50,7 +50,7 @@
                         @update:speed="updatePlaybackRate"
                 /></template>
             </MenuItemContent>
-        </div>
+        </DropdownMenuItem>
     </DropdownMenu>
 </template>
 
@@ -63,6 +63,8 @@ import type { IMediaHandler } from '@/code/media/IMediaHandler';
 import { DefaultPlaybackRate } from '@/store/Track';
 import SpeedKnob from '../controls/SpeedKnob.vue';
 import type { ITrack } from '@/store/ITrack';
+import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
+
 /** A nav bar as header with a menu for a compilation
  */
 
