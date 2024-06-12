@@ -422,31 +422,31 @@ function updateOmitFadeIn(omit: boolean) {
 
 @media screen and (min-width: 769px) {
     .cue.button {
-        padding-left: 2rem;
-        padding-right: 2rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
     }
 }
 /** desktop */
 @media screen and (min-width: 1024px) {
     .cue.button {
-        padding-left: 3rem;
-        padding-right: 3rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
 }
 
 /** widescreen */
 @media screen and (min-width: 1216px) {
     .cue.button {
-        padding-left: 4rem;
-        padding-right: 4rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
     }
 }
 
 /* fullhd */
 @media screen and (min-width: 1408px) {
     .cue.button {
-        padding-left: 5rem;
-        padding-right: 5rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
 }
 
