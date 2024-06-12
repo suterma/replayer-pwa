@@ -1,7 +1,7 @@
 <template>
     <DropdownMenu
         v-tooltip.top.hover="currentModeTitle"
-        right
+        left
         class="is-slim"
         :icon-path="currentModeIcon"
         :render-closed="true"

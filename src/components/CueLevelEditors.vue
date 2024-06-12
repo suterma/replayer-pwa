@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { type PropType, computed, inject, ref, type Ref } from 'vue';
+import { type PropType, computed, inject, ref, type Ref, nextTick } from 'vue';
 import CompilationHandler from '@/store/compilation-handler';
 import CueLevelEditor from '@/components/CueLevelEditor.vue';
 import { useAppStore } from '@/store/app';
@@ -108,11 +108,15 @@ function cueAdjust(cue: ICue) {
         currentPosition?.value !== undefined &&
         Number.isFinite(currentPosition.value)
     ) {
+        pause();
         const time = CompilationHandler.roundTime(currentPosition.value);
         const cueId = cue.Id;
         const shortcut = cue.Shortcut;
         const description = cue.Description;
         app.updateCueData(cueId, description, shortcut, time);
+        setTimeout(() => {
+            resume();
+        }, 300 /*replayer-transition-duration*/);
     }
 }
 
