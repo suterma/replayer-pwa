@@ -123,8 +123,10 @@ export interface IMediaHandler {
      */
     seekTo(seconds: number): Promise<void>;
 
-    /** Initiates a possible fade-out operation, then sets the state to paused */
-    pause(): void;
+    /** Initiates a possible fade-out operation, then sets the state to paused
+     * @returns {Promise<void>} Promise - resolves when the possible fade-out operation completed.
+     */
+    pause(): Promise<void>;
 
     /** Immediately pauses playback. Stops a possible ongoing fading operation. */
     stop(): void;

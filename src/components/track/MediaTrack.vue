@@ -1482,14 +1482,11 @@ watch(
             isActive,
         );
 
-        // Pause this track, when it's no more active track
+        // Pause and reset this track, when it's no more the active track
         if (wasActive === true && isActive === false) {
-            mediaHandler.value?.pause();
-        }
-
-        // Start from beginning, when it became the active track
-        if (isActive === true) {
-            mediaHandler.value?.seekTo(0);
+            mediaHandler.value?.pause().then(() => {
+                mediaHandler.value?.seekTo(0);
+            });
         }
     },
 );

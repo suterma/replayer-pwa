@@ -250,18 +250,22 @@ export default class HtmlMediaHandler implements IMediaHandler {
     onCurrentTimeChanged: SubEvent<number> = new SubEvent();
     onEnded: SubEvent<void> = new SubEvent();
 
-    /** Pauses playback, with fading if configured. */
-    public pause(): void {
+    /** @inheritdoc */
+    public pause(): Promise<void> {
         this.debugLog(`pause`);
-        if (!this.paused) {
+        if (this.paused) {
+            return Promise.resolve();
+        }
+        return new Promise((resolve) => {
             this._fader
                 .fadeOut()
                 .catch((message) => console.log(message))
                 .finally(() => {
                     this._media.pause();
                     this.onPausedChanged.emit(true);
+                    resolve();
                 });
-        }
+        });
     }
 
     public stop(): void {

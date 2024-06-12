@@ -182,10 +182,13 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     onCurrentTimeChanged: SubEvent<number> = new SubEvent();
     onEnded: SubEvent<void> = new SubEvent();
 
-    /** Pauses playback, with fading if configured. */
-    pause(): void {
+    /** @inheritdoc */
+    public pause(): Promise<void> {
         this.debugLog(`pause`);
-        if (!this.paused) {
+        if (this.paused) {
+            return Promise.resolve();
+        }
+        return new Promise((resolve) => {
             this._fader
                 .fadeOut()
                 .catch((message) => console.log(message))
@@ -195,8 +198,9 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                     // It's currently not addressed as it's not disturbing for the user.
                     this._player.pauseVideo();
                     this.onPausedChanged.emit(true);
+                    resolve();
                 });
-        }
+        });
     }
 
     stop(): void {
