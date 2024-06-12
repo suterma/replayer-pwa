@@ -165,7 +165,6 @@ import {
     shallowRef,
     type ShallowRef,
     watch,
-    watchEffect,
 } from 'vue';
 
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
