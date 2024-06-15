@@ -43,8 +43,6 @@
 </template>
 
 <script setup lang="ts">
-import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { rCloseCircleSmall } from '@/components/icons/ReplayerIcon';
 /** A toggle button for the omit pre-roll state. Default is false, meaning no omission
  */
 const model = defineModel({ type: Boolean, default: false, required: true });
