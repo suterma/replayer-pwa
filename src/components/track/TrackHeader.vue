@@ -32,6 +32,15 @@
                 >
             </div>
 
+            <TagsDisplay
+                class="level-item is-narrow"
+                v-experiment="experimentalUseTags"
+                v-if="trackHasTags && !isTrackEditable"
+                :tags="props.track.Tags"
+                small
+                readonly
+            ></TagsDisplay>
+
             <!-- The edit part -->
             <template v-if="isTrackEditable">
                 <CoveredPanel

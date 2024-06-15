@@ -1,11 +1,20 @@
 <template>
-    <div class="tags are-large">
+    <div
+        class="tags"
+        :class="{
+            'are-large': !small,
+        }"
+    >
         <TransitionGroup name="list">
             <span class="tag is-info is-rounded" v-for="tag in tags" :key="tag">
                 <div>
                     {{ tag }}
                     <button
-                        class="delete is-large"
+                        v-if="!readonly"
+                        class="delete"
+                        :class="{
+                            'is-large': !small,
+                        }"
                         @click="remove(tag)"
                     ></button>
                 </div>
@@ -23,6 +32,16 @@ defineProps({
     tags: {
         type: Set as PropType<Set<string>>,
         required: true,
+    },
+    small: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
+    readonly: {
+        type: Boolean,
+        required: false,
+        default: false,
     },
 });
 
