@@ -130,9 +130,9 @@
                     <!-- Right side -->
                     <div class="level-right is-justify-content-flex-end">
                         <a
+                            v-if="Boolean(mediaUrl) && !isTrackEditable"
                             :href="mediaUrl"
                             download
-                            v-if="Boolean(mediaUrl) && !isTrackEditable"
                             class="button"
                             title="Download PDF to device"
                         >
