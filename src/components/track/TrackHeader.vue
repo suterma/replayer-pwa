@@ -207,6 +207,46 @@
                         </MetricalEditor>
                     </LabeledInput>
                 </CoveredPanel>
+
+                <!-- Tags -->
+                <CoveredPanel
+                    v-experiment="experimentalUseTags"
+                    title="Tag"
+                    class="level-item"
+                >
+                    <template #caption
+                        ><span class="label">Tags</span></template
+                    >
+
+                    <LabeledInput label="Add Tag">
+                        <input
+                            class="input"
+                            ref="newTag"
+                            type="text"
+                            @keyup.enter="addNewTag"
+                        />
+
+                        <template #addon>
+                            <div class="control" title="Add new tag">
+                                <button
+                                    class="button as-after-addon"
+                                    @click="addNewTag"
+                                >
+                                    <BaseIcon
+                                        v-once
+                                        :path="mdiTagPlusOutline"
+                                    />
+                                </button>
+                            </div>
+                        </template>
+                    </LabeledInput>
+                </CoveredPanel>
+                <TagsDisplay
+                    v-experiment="experimentalUseTags"
+                    v-if="trackHasTags"
+                    :tags="props.track.Tags"
+                    @remove="removeTag"
+                ></TagsDisplay>
             </template>
             <!-- Slot for additional level items -->
             <slot name="left-additional"></slot>
@@ -258,7 +298,7 @@ import {
     watchEffect,
 } from 'vue';
 import { TrackApi } from '@/code/api/TrackApi';
-import { mdiShareVariant, mdiSwapVertical } from '@mdi/js';
+import { mdiShareVariant, mdiSwapVertical, mdiTagPlusOutline } from '@mdi/js';
 import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
@@ -266,6 +306,7 @@ import MediaSourceIndicator from '@/components/indicators/MediaSourceIndicator.v
 import TimeInput from '@/components/TimeInput.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import LabeledInput from '@/components/editor/LabeledInput.vue';
+import TagsDisplay from '@/components/displays/TagsDisplay.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
@@ -332,8 +373,11 @@ const app = useAppStore();
 const { isTrackEditable } = storeToRefs(app);
 
 const settings = useSettingsStore();
-const { experimentalUseMeter, experimentalAllowTrackSharingByLink } =
-    storeToRefs(settings);
+const {
+    experimentalUseMeter,
+    experimentalAllowTrackSharingByLink,
+    experimentalUseTags,
+} = storeToRefs(settings);
 
 const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
 
@@ -398,6 +442,28 @@ const hasCues = computed(() => {
 /** Flag to indicate whether this track's player is currently playing
  */
 const isTrackPlaying = inject(isPlayingInjectionKey);
+
+// --- Tag handling ---
+
+const newTag = ref(null);
+
+/** Adds the text from the tag input as new tag and clears the input */
+function addNewTag() {
+    const trackId = props.track.Id;
+    const tagInput = newTag.value as unknown as HTMLInputElement;
+    const tag = tagInput.value;
+    app.addTag(trackId, tag);
+    tagInput.value = '';
+}
+
+function removeTag(tag: string) {
+    const trackId = props.track.Id;
+    app.removeTag(trackId, tag);
+}
+
+const trackHasTags = computed(() => {
+    return props.track.Tags.size > 0;
+});
 
 // --- drop zone handling ---
 

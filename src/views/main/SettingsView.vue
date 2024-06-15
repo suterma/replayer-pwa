@@ -342,6 +342,16 @@
                     ></LabeledCheckbox>
                 </div>
             </div>
+
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="experimentalUseTags"
+                        label="Show tags"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
+
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
@@ -409,6 +419,7 @@ const {
     experimentalMultitrack,
     experimentalUseQueueCueMode,
     experimentalUseMeter,
+    experimentalUseTags,
     experimentalHideStageMark,
 } = storeToRefs(settings);
 

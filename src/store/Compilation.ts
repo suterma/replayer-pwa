@@ -87,6 +87,7 @@ export class Compilation implements ICompilation {
                             cue.Id,
                         );
                     }),
+                    new Set<string>(track.Tags),
                     track.Duration,
                     track.Volume ?? DefaultTrackVolume,
                     track.MediaHandler,

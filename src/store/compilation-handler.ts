@@ -166,6 +166,7 @@ export default class CompilationHandler {
             trackUrl,
             trackId,
             new Array<ICue>(),
+            new Set<string>(['default-tag']),
             null,
             DefaultTrackVolume,
             null,

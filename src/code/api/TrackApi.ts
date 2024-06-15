@@ -178,6 +178,9 @@ export class TrackApi {
                 mediaUrl,
                 trackId,
                 cues,
+                new Set<string>([
+                    '',
+                ]) /* Tags are not currently supported by the Track API*/,
                 null,
                 DefaultTrackVolume,
                 null,

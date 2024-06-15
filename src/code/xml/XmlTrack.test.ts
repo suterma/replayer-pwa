@@ -33,6 +33,7 @@ describe('the XML mapping', function () {
             'https://test.example.com?myfile.mp3',
             'testId',
             new Array<ICue>(),
+            new Set<string>(['default-tag']),
             60,
             0.9,
             null,
@@ -48,6 +49,7 @@ describe('the XML mapping', function () {
         expect(target.PlayheadPosition).toBe(track.PlayheadPosition);
         expect(target.PlaybackRate).toBe(track.PlaybackRate);
         expect(target.Cues.Cue).toHaveLength(0);
+        expect(target.Tags).toHaveLength(0);
         expect(target.Id).toBe(track.Id);
         expect(target.Meter?.BeatsPerMinute).toBe(track.Meter?.BeatsPerMinute);
         expect(target.Meter?.TimeSignature).toBe(track.Meter?.TimeSignature);

@@ -37,6 +37,7 @@ export class Track implements ITrack {
     Url = '';
     Id = '';
     Cues: Array<ICue> = new Array<ICue>();
+    Tags: Set<string> = new Set<string>(['Default tag']);
 
     /**   @inheritdoc */
     Duration: number | null = null;
@@ -69,6 +70,7 @@ export class Track implements ITrack {
         url: string,
         id: string,
         cues: Array<ICue>,
+        tags: Set<string>,
         duration: number | null,
         volume: number,
         mediaHandler: IMediaHandler | null,
@@ -86,6 +88,7 @@ export class Track implements ITrack {
         this.Url = url;
         this.Id = id;
         this.Cues = cues;
+        this.Tags = tags;
         this.Duration = duration;
         this.Volume = volume;
         //this.MediaHandler = mediaHandler;
@@ -117,6 +120,7 @@ export class Track implements ITrack {
             obj.Url,
             obj.Id,
             obj.Cues,
+            obj.Tags ?? new Set<string>(['default-tag']),
             null /* duration not persisted */,
             obj.Volume ?? DefaultTrackVolume,
             null /* media handler not persisted */,

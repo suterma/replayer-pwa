@@ -28,8 +28,13 @@ import type { ICompilation } from '../ICompilation';
  */
 function getCompilationSerializationReplacer() {
     return (key: any, value: object | null) => {
+        // Do not serialize media handers
         if (key === 'MediaHandler') {
             return;
+        }
+        // serialize sets as arrays. See https://stackoverflow.com/questions/31190885/json-stringify-a-set
+        if (key === 'Tags' && value !== null && value instanceof Set) {
+            return [...value];
         }
         return value;
     };

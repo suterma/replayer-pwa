@@ -20,6 +20,11 @@ export interface ITrack {
     /** The cues */
     Cues: Array<ICue>;
 
+    /** The tags
+     * @remarks The set of tags can be arbitrarily long. Tags classify a track.
+     */
+    Tags: Set<string>;
+
     /** The playback volume for this track in the range of [0..1].
      * @remarks This can be set by the user, and is persisted.
      */

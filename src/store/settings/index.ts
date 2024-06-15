@@ -173,6 +173,11 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
      */
     const experimentalUseMeter = useLocalStorage('experimentalUseMeter', false);
 
+    /** EXPERIMENTAL: Whether to show tags
+     * @remarks Default is false
+     */
+    const experimentalUseTags = useLocalStorage('experimentalUseTags', false);
+
     /** EXPERIMENTAL: Whether to hide the stage mark
      * @remarks This is not persisted to keep the user still informed after any restart
      */
@@ -202,6 +207,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalMultitrack.value = true;
         experimentalUseQueueCueMode.value = false;
         experimentalUseMeter.value = false;
+        experimentalUseTags.value = false;
         experimentalHideStageMark.value = false;
     }
 
@@ -230,6 +236,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalMultitrack,
         experimentalUseQueueCueMode,
         experimentalUseMeter,
+        experimentalUseTags,
         experimentalHideStageMark,
         $reset,
     };

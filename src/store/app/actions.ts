@@ -231,6 +231,39 @@ export const actions = {
         }
     },
 
+    /** Adds (inserts) a new tag for the given track.
+     */
+    addTag(trackId: string, tag: string): void {
+        if (tag) {
+            const matchingTrack = CompilationHandler.getTrackById(
+                state.compilation.value.Tracks,
+                trackId,
+            );
+            if (matchingTrack) {
+                console.debug('actions::addTag:matchingTrack', matchingTrack);
+
+                if (matchingTrack.Tags) {
+                    matchingTrack.Tags.add(tag);
+                } else {
+                    matchingTrack.Tags = new Set<string>([tag]);
+                }
+            }
+        }
+    },
+
+    /** Removes a tag from the given track.
+     */
+    removeTag(trackId: string, tag: string): void {
+        const matchingTrack = CompilationHandler.getTrackById(
+            state.compilation.value.Tracks,
+            trackId,
+        );
+        if (matchingTrack) {
+            console.debug('actions::removeTag:matchingTrack', matchingTrack);
+            matchingTrack.Tags.delete(tag);
+        }
+    },
+
     /** Sets the track duration. Using the track duration and the existing cues,
      * calculates the durations of all cues, including the last one.
      * @remarks No ordering is done with this operation

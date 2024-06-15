@@ -125,6 +125,7 @@ export default abstract class XmlCompilationParser {
                     XmlCompilationParser.parseFromXmlCues(
                         xmlTrack.Cues ? xmlTrack.Cues[0].Cue : null,
                     ),
+                    xmlTrack.Tags ?? new Set<string>(['default-tag']),
                     null,
                     XmlCompilationParser.FirstNumberOf(xmlTrack.Volume) ??
                         DefaultTrackVolume,
