@@ -44,9 +44,11 @@ export default abstract class XmlCompilationParser {
             '', //NOTE: URL will be set from calling code, with the standalone XML or ZIP file name
             XmlCompilationParser.FirstStringOf(xmlCompilation.Id),
             XmlCompilationParser.parseFromXmlTracks(
-                xmlCompilation?.Tracks ? xmlCompilation?.Tracks[0].Track : null,
+                xmlCompilation?.Tracks ? xmlCompilation.Tracks[0].Track : null,
             ),
-            xmlCompilation?.SelectedTags ?? new Set<string>([]),
+            xmlCompilation?.SelectedTags
+                ? new Set<string>(xmlCompilation.SelectedTags)
+                : new Set<string>([]),
         );
     }
 

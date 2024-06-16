@@ -1,14 +1,14 @@
 <template>
     <div class="buttons">
         <ToggleButton
-            class="button is-info is-rounded"
             v-for="tag in allTags"
             :key="tag"
+            class="button is-info is-rounded"
             :class="{
                 'is-inactive': !isSelected(tag),
             }"
-            @click="toggle(tag)"
             :is-engaged="isSelected(tag)"
+            @click="toggle(tag)"
             >{{ tag }}
         </ToggleButton>
     </div>

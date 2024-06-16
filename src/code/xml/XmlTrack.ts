@@ -35,7 +35,7 @@ export class XmlTrack {
         this.UseMeasureNumbers = track.UseMeasureNumbers;
         this.Volume = track.Volume;
         this.Cues = new XmlCues(track.Cues);
-        this.Tags = track.Tags;
+        this.Tags = [...track.Tags];
     }
 
     Id: string;
@@ -50,5 +50,5 @@ export class XmlTrack {
     UseMeasureNumbers: boolean | null;
     Volume: number;
     Cues: XmlCues;
-    Tags: Set<string>;
+    Tags: string[];
 }

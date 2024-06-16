@@ -120,7 +120,7 @@ export class Track implements ITrack {
             obj.Url,
             obj.Id,
             obj.Cues,
-            obj.Tags ?? new Set<string>([]),
+            new Set<string>(obj.Tags),
             null /* duration not persisted */,
             obj.Volume ?? DefaultTrackVolume,
             null /* media handler not persisted */,

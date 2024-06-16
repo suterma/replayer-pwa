@@ -33,9 +33,9 @@
             </div>
 
             <TagsDisplay
-                class="level-item is-narrow"
+                v-if="!isTrackEditable && trackHasTags"
                 v-experiment="experimentalUseTags"
-                v-if="trackHasTags && !isTrackEditable"
+                class="level-item is-narrow"
                 :tags="props.track.Tags"
                 small
                 readonly
@@ -220,6 +220,7 @@
                 <!-- Tags -->
                 <CoveredPanel
                     v-experiment="experimentalUseTags"
+                    v-if="trackHasTags"
                     title="Tag"
                     class="level-item"
                 >
@@ -229,8 +230,8 @@
 
                     <LabeledInput label="Add Tag">
                         <input
-                            class="input"
                             ref="newTag"
+                            class="input"
                             type="text"
                             @keyup.enter="addNewTag"
                         />
@@ -251,8 +252,8 @@
                     </LabeledInput>
                 </CoveredPanel>
                 <TagsDisplay
-                    v-experiment="experimentalUseTags"
                     v-if="trackHasTags"
+                    v-experiment="experimentalUseTags"
                     :tags="props.track.Tags"
                     @remove="removeTag"
                 ></TagsDisplay>

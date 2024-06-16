@@ -16,10 +16,10 @@
 
         <!-- Selectable tags -->
         <TagsSelector
-            v-experiment="experimentalUseTags"
             v-if="compilationHasTags"
-            :allTags="getAllTags"
-            :selectedTags="selectedTags"
+            v-experiment="experimentalUseTags"
+            :all-tags="getAllTags"
+            :selected-tags="selectedTags"
             @selected="selectTag"
             @deselected="deselectTag"
         ></TagsSelector>

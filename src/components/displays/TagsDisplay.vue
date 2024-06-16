@@ -6,7 +6,7 @@
         }"
     >
         <TransitionGroup name="list">
-            <span class="tag is-info is-rounded" v-for="tag in tags" :key="tag">
+            <span v-for="tag in tags" :key="tag" class="tag is-info is-rounded">
                 <div>
                     {{ tag }}
                     <button

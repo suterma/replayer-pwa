@@ -154,7 +154,7 @@ describe('XmlCompilationParser.ts', () => {
         expect(meter?.OriginTime).toBe(0);
     });
 
-    it('should provide the playhead position', async () => {
+    it('should parse the track playhead position', async () => {
         //Arrange
         const str = new Blob(
             [
@@ -162,26 +162,12 @@ describe('XmlCompilationParser.ts', () => {
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
         <XmlCompilation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
           <Id>30c291f0-825c-40ca-a772-b17cdda8f937</Id>
-          <MediaPath/>
-          <Title>test</Title>
-          <Artist/>
-          <Album/>
           <Tracks>
             <Track>
               <Id>4dbf78b7-0133-495f-8f71-de69708a9da6</Id>
-              <Artist/>
-              <PreRoll/>
               <PlayheadPosition>12.7</PlayheadPosition>
-               <Name>test</Name>
-              <Album/>
-              <Url>test.mp3</Url>
-              <Meter/>
-              <UseMeasureNumbers/>
-              <Volume>0.5</Volume>
-              <Cues/>
             </Track>
           </Tracks>
-          <PlaybackMode>PlayTrack</PlaybackMode>
         </XmlCompilation>        `,
             ],
             {
@@ -199,7 +185,41 @@ describe('XmlCompilationParser.ts', () => {
         expect(firstTrack.PlayheadPosition).toBe(12.7);
     });
 
-    it('should provide the playback rate', async () => {
+    it('should parse the track tags', async () => {
+        //Arrange
+        const str = new Blob(
+            [
+                `
+      <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+      <XmlCompilation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <Id>30c291f0-825c-40ca-a772-b17cdda8f937</Id>
+        <Tracks>
+          <Track>
+            <Id>4dbf78b7-0133-495f-8f71-de69708a9da6</Id>
+            <Tags>first-track-tag</Tags>
+            <Tags>second-track-tag</Tags>
+          </Track>
+        </Tracks>
+      </XmlCompilation>        `,
+            ],
+            {
+                type: 'text/plain',
+            },
+        );
+
+        //Act
+        const compilation = await CompilationParser.handleAsXmlCompilation(str);
+
+        //Assert
+        expect(compilation).toBeDefined();
+        expect(compilation.Tracks).toHaveLength(1);
+        const firstTrack = compilation.Tracks[0];
+        const iterator = firstTrack.Tags.values();
+        expect(iterator.next().value).toBe('first-track-tag');
+        expect(iterator.next().value).toBe('second-track-tag');
+    });
+
+    it('should parse the playback rate', async () => {
         //Arrange
         const str = new Blob(
             [
@@ -302,13 +322,48 @@ describe('XmlCompilationParser.ts', () => {
         expect(actual).toContain('<SelectedTags>second tag</SelectedTags>');
     });
 
-    it('should parse the selected tags', () => {
+    it('should store the track tags', () => {
         //Arrange
+        const testTrack = getTestTrack();
+        const testCompilation = getTestCompilation(testTrack);
+        testTrack.Tags.clear();
+        testTrack.Tags.add('first-track-tag');
+        testTrack.Tags.add('second track tag');
 
         //Act
+        const actual = CompilationParser.convertToXml(testCompilation);
 
         //Assert
-        expect(false).toContain('sss//TODO');
+        expect(actual).toContain('<Tags>first-track-tag</Tags>');
+        expect(actual).toContain('<Tags>second track tag</Tags>');
+    });
+
+    it('should parse the selected tags', async () => {
+        //Arrange
+        const str = new Blob(
+            [
+                `
+      <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+      <XmlCompilation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <Id>30c291f0-825c-40ca-a772-b17cdda8f937</Id>
+        <SelectedTags>first-tag</SelectedTags>
+        <SelectedTags>second tag</SelectedTags>
+       </XmlCompilation>        `,
+            ],
+            {
+                type: 'text/xml',
+            },
+        );
+
+        //Act
+        const compilation = await CompilationParser.handleAsXmlCompilation(str);
+
+        //Assert
+        expect(compilation).toBeDefined();
+        expect(compilation.SelectedTags.size).toBe(2);
+        const iterator = compilation.SelectedTags.values();
+        expect(iterator.next().value).toBe('first-tag');
+        expect(iterator.next().value).toBe('second tag');
     });
 
     function getTestTrack(): ITrack {
