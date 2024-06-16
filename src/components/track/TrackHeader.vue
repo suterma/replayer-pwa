@@ -220,7 +220,6 @@
                 <!-- Tags -->
                 <CoveredPanel
                     v-experiment="experimentalUseTags"
-                    v-if="trackHasTags"
                     title="Tag"
                     class="level-item"
                 >
