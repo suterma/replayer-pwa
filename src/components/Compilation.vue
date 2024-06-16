@@ -14,6 +14,16 @@
             :is-editable="isTrackEditable"
         />
 
+        <!-- Selectable tags -->
+        <TagsSelector
+            v-experiment="experimentalUseTags"
+            v-if="compilationHasTags"
+            :allTags="getAllTags"
+            :selectedTags="selectedTags"
+            @selected="selectTag"
+            @deselected="deselectTag"
+        ></TagsSelector>
+
         <div class="tracks">
             <template v-for="track in allTracks" :key="track.Id">
                 <MediaTrack
@@ -79,6 +89,8 @@ import NoSleep from 'nosleep.js';
 import { useSettingsStore } from '@/store/settings';
 import type { ICompilation } from '@/store/ICompilation';
 import { PlaybackMode } from '@/store/PlaybackMode';
+import TagsDisplay from '@/components/displays/TagsDisplay.vue';
+import TagsSelector from '@/components/editor/TagsSelector.vue';
 
 /** Displays the contained set of tracks according to the required mode.
  * @remarks Also handles the common replayer events for compilations
@@ -93,6 +105,7 @@ const {
     activeTrackId,
     hasSingleMediaTrack,
     allTracks,
+    getAllTags,
     playbackMode,
     trackViewMode,
     isTrackEditable,
@@ -109,7 +122,7 @@ const noSleep: NoSleep = new NoSleep();
 let shuffleSeed: number = 1;
 
 const settings = useSettingsStore();
-const { preventScreenTimeout } = storeToRefs(settings);
+const { preventScreenTimeout, experimentalUseTags } = storeToRefs(settings);
 
 /** Whether the tracks are currently in a shuffled order.
  */
@@ -233,5 +246,24 @@ function continueAfterTrack(trackId: string): void {
     ) {
         app.playNextTrack();
     }
+}
+
+// --- Tag handling ---
+
+const compilationHasTags = computed(() => {
+    return getAllTags.value.size > 0;
+});
+
+const { selectedTags } = storeToRefs(app);
+
+function selectTag(tag: string) {
+    console.debug('selectTag', tag);
+
+    selectedTags.value.add(tag);
+}
+function deselectTag(tag: string) {
+    console.debug('deselectTag', tag);
+
+    selectedTags.value.delete(tag);
 }
 </script>

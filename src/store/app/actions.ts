@@ -241,12 +241,7 @@ export const actions = {
             );
             if (matchingTrack) {
                 console.debug('actions::addTag:matchingTrack', matchingTrack);
-
-                if (matchingTrack.Tags) {
-                    matchingTrack.Tags.add(tag);
-                } else {
-                    matchingTrack.Tags = new Set<string>([tag]);
-                }
+                matchingTrack.Tags.add(tag);
             }
         }
     },

@@ -28,6 +28,7 @@ export class Compilation implements ICompilation {
     Url = '';
     Id = '';
     Tracks: Array<ITrack> = new Array<ITrack>();
+    SelectedTags: Set<string> = new Set<string>([]);
 
     /** Creates a new compilation
      * @remarks Playback mode is persisted in the application state for user convenience.
@@ -40,6 +41,7 @@ export class Compilation implements ICompilation {
         url: string,
         id: string,
         tracks: Array<ITrack>,
+        selectedTags: Set<string>,
     ) {
         this.MediaPath = mediaPath;
         this.Title = title;
@@ -48,6 +50,7 @@ export class Compilation implements ICompilation {
         this.Url = url;
         this.Id = id;
         this.Tracks = tracks;
+        this.SelectedTags = selectedTags;
     }
 
     /** Parses the JSON and returns new instance of this class.
@@ -93,6 +96,7 @@ export class Compilation implements ICompilation {
                     track.MediaHandler,
                 );
             }),
+            new Set<string>(obj.SelectedTags),
         );
         return compilation;
     }
@@ -108,6 +112,7 @@ export class Compilation implements ICompilation {
             '',
             uuidv4(),
             new Array<ITrack>(),
+            new Set<string>([]),
         );
     }
 

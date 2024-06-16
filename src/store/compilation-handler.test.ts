@@ -165,6 +165,7 @@ describe('CompilationHandler.ts', () => {
             'test-url',
             'test-id',
             [],
+            new Set<string>([]),
         );
 
         //Act
@@ -185,6 +186,7 @@ describe('CompilationHandler.ts', () => {
             'test-url',
             'test-id',
             [],
+            new Set<string>([]),
         );
 
         //Act
@@ -205,6 +207,7 @@ describe('CompilationHandler.ts', () => {
             'test-url',
             'test-id',
             [],
+            new Set<string>([]),
         );
 
         //Act
@@ -225,6 +228,7 @@ describe('CompilationHandler.ts', () => {
             'test-url',
             'test-id',
             [],
+            new Set<string>([]),
         );
 
         //Act

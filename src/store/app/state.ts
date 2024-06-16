@@ -33,7 +33,7 @@ function getCompilationSerializationReplacer() {
             return;
         }
         // serialize sets as arrays. See https://stackoverflow.com/questions/31190885/json-stringify-a-set
-        if (key === 'Tags' && value !== null && value instanceof Set) {
+        if (value !== null && value instanceof Set) {
             return [...value];
         }
         return value;

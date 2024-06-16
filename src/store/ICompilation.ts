@@ -49,6 +49,11 @@ export interface ICompilation {
     /** The set of tracks */
     Tracks: Array<ITrack>;
 
+    /** The set of selected track tags
+     * @remarks This is used to filter displayed tracks
+     */
+    SelectedTags: Set<string>;
+
     /** Whether any of title, album or artist is set to a non-empty value */
     hasLabels(): boolean;
 }

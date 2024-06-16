@@ -271,6 +271,7 @@ describe('XmlCompilationParser.ts', () => {
             'testUrl',
             'testId',
             new Array<ITrack>(testTrack),
+            new Set<string>(['default-tag']),
         );
 
         //Act
@@ -308,6 +309,7 @@ describe('XmlCompilationParser.ts', () => {
             'testUrl',
             'testId',
             new Array<ITrack>(testTrack),
+            new Set<string>(['default-tag']),
         );
 
         //Act

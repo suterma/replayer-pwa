@@ -33,6 +33,11 @@ defineProps({
         type: Set as PropType<Set<string>>,
         required: true,
     },
+    selectedTags: {
+        type: Set as PropType<Set<string>>,
+        required: false,
+        default: new Set<string>([]),
+    },
     small: {
         type: Boolean,
         required: false,
@@ -43,9 +48,16 @@ defineProps({
         required: false,
         default: false,
     },
+    selectable: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
 });
 
 function remove(tag: string) {
     emit('remove', tag);
 }
+
+function isSelected(tag: string) {}
 </script>

@@ -206,6 +206,7 @@ export const getters = {
     }),
 
     // --- playback mode ---
+
     /** Whether the PlaybackMode is looping the tracks
      * in the compilation.
      * @remarks These are PlaybackMode.LoopCompilation
@@ -216,5 +217,24 @@ export const getters = {
             state.playbackMode.value === PlaybackMode.ShuffleCompilation ||
             state.playbackMode.value === PlaybackMode.LoopCompilation
         );
+    }),
+
+    // --- tags ---
+
+    /** Gets all distinct tags of all tracks in a set, or an empty set if there are none */
+    getAllTags: computed(() => {
+        const tracks = state.compilation.value?.Tracks;
+        const tags = new Set<string>([]);
+        if (tracks) {
+            tracks.forEach((track) =>
+                track.Tags.forEach((tag) => tags.add(tag)),
+            );
+        }
+        return tags;
+    }),
+
+    /** Gets the selected tags from compilation, or an empty set if there are none */
+    selectedTags: computed(() => {
+        return state.compilation.value.SelectedTags ?? new Set<string>([]);
     }),
 };

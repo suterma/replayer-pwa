@@ -186,7 +186,10 @@ a[disabled]:hover {
  * "inactive" Buttons for actionable items
 **************************************************************/
 
-/** Buttons in inactive state should present themselves as actionable but deactivated */
+/** Buttons in inactive state should present themselves as actionable but deactivated
+ * The button colors are those from the actual buttons, but with a=0.25
+ * NOTE: only the actually used subset of colors is provided here
+ */
 
 // is-primary
 .button.is-primary.is-inactive:not(.is-outlined):not(.is-inverted) {
@@ -225,7 +228,7 @@ a[disabled]:hover {
     text-shadow: 1px 1px 1px rgb(10 10 10 / 30%);
 }
 
-//isWarning
+//is-warning
 .button.is-warning.is-inactive:not(.is-outlined):not(.is-inverted) {
     background-image: none;
     background-color: transparent;
@@ -238,6 +241,24 @@ a[disabled]:hover {
         rgba(250, 161, 35, 0.25) 0%,
         rgb(248, 148, 6, 0.25) 40%,
         rgb(228, 136, 6, 0.25) 100%
+    );
+    filter: none;
+    text-shadow: 1px 1px 1px rgb(10 10 10 / 30%);
+}
+
+//is-info
+.button.is-info.is-inactive:not(.is-outlined):not(.is-inverted) {
+    background-image: none;
+    background-color: transparent;
+    border-color: hsl(207, 61%, 53%);
+    color: $grey-lightest;
+}
+.button.is-info.is-inactive:not(.is-outlined):not(.is-inverted):hover {
+    background-image: linear-gradient(
+        180deg,
+        rgba(87, 157, 214, 0.25) 0%,
+        rgba(62, 142, 208, 0.25) 40%,
+        rgba(49, 133, 201, 0.25) 100%
     );
     filter: none;
     text-shadow: 1px 1px 1px rgb(10 10 10 / 30%);
