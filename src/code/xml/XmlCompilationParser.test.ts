@@ -14,9 +14,10 @@
 import { expect, describe, it } from 'vitest';
 import CompilationParser from './XmlCompilationParser';
 import { Compilation } from '@/store/Compilation';
-import { DefaultPlaybackRate, DefaultTrackVolume, Track } from '@/store/Track';
+import { Track } from '@/store/Track';
 import type { ICue } from '@/store/ICue';
 import type { ITrack } from '@/store/ITrack';
+import type { ICompilation } from '@/store/ICompilation';
 
 describe('XmlCompilationParser.ts', () => {
     it('should parse an empty compilation when the compilation is empty', async () => {
@@ -243,26 +244,9 @@ describe('XmlCompilationParser.ts', () => {
         expect(firstTrack.PlaybackRate).toBe(1.25);
     });
 
-    it('should parse the playhead position', () => {
+    it('should store the playhead position', () => {
         //Arrange
-        const testTrack = new Track(
-            'testName',
-            'testAlbum',
-            'testArtist',
-            0,
-            15.1,
-            DefaultPlaybackRate,
-            null,
-            null,
-            'testUrl',
-            'testId',
-            new Array<ICue>(),
-            new Set<string>(['default-tag']),
-            null,
-            DefaultTrackVolume,
-            null,
-        );
-
+        const testTrack = getTestTrack();
         const testCompilation = new Compilation(
             'testMediaPath',
             'testTitle',
@@ -281,26 +265,9 @@ describe('XmlCompilationParser.ts', () => {
         expect(actual).toContain('<PlayheadPosition>15.1</PlayheadPosition>');
     });
 
-    it('should parse the playback rate', () => {
+    it('should store the playback rate', () => {
         //Arrange
-        const testTrack = new Track(
-            'testName',
-            'testAlbum',
-            'testArtist',
-            0,
-            15.1,
-            0.75,
-            null,
-            null,
-            'testUrl',
-            'testId',
-            new Array<ICue>(),
-            new Set<string>(['default-tag']),
-            null,
-            1,
-            null,
-        );
-
+        const testTrack = getTestTrack();
         const testCompilation = new Compilation(
             'testMediaPath',
             'testTitle',
@@ -318,4 +285,62 @@ describe('XmlCompilationParser.ts', () => {
         //Assert
         expect(actual).toContain('<PlaybackRate>0.75</PlaybackRate>');
     });
+
+    it('should store the selected tags', () => {
+        //Arrange
+        const testTrack = getTestTrack();
+        const testCompilation = getTestCompilation(testTrack);
+        testCompilation.SelectedTags.clear();
+        testCompilation.SelectedTags.add('first-tag');
+        testCompilation.SelectedTags.add('second tag');
+
+        //Act
+        const actual = CompilationParser.convertToXml(testCompilation);
+
+        //Assert
+        expect(actual).toContain('<SelectedTags>first-tag</SelectedTags>');
+        expect(actual).toContain('<SelectedTags>second tag</SelectedTags>');
+    });
+
+    it('should parse the selected tags', () => {
+        //Arrange
+
+        //Act
+
+        //Assert
+        expect(false).toContain('sss//TODO');
+    });
+
+    function getTestTrack(): ITrack {
+        return new Track(
+            'testName',
+            'testAlbum',
+            'testArtist',
+            2.2 /*pre-roll*/,
+            15.1 /*initialPlayheadPosition*/,
+            0.75,
+            null,
+            null,
+            'testUrl',
+            'testId',
+            new Array<ICue>(),
+            new Set<string>(['default-tag']),
+            null,
+            1,
+            null,
+        );
+    }
+
+    function getTestCompilation(testTrack: ITrack): ICompilation {
+        return new Compilation(
+            'testMediaPath',
+            'testTitle',
+            'testArtist',
+            'testAlbum',
+            'testUrl',
+            'testId',
+            new Array<ITrack>(testTrack),
+            new Set<string>(['default-tag']),
+        );
+    }
 });

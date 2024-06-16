@@ -46,11 +46,11 @@ export default abstract class XmlCompilationParser {
             XmlCompilationParser.parseFromXmlTracks(
                 xmlCompilation?.Tracks ? xmlCompilation?.Tracks[0].Track : null,
             ),
+            xmlCompilation?.SelectedTags ?? new Set<string>([]),
         );
     }
 
     /** Converts a compilation instance into its XML representation
-     * @remarks Omits media positions in the output
      */
     public static convertToXml(compilation: ICompilation): string {
         const obj = {

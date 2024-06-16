@@ -17,7 +17,6 @@ import { XmlMeter } from './XmlMeter';
 
 /** @class Implements an XML-Representation of a Track
  * @remarks This class is intended to define the export structure for an export with the xml2js module
- * Omits the media position in the output
  */
 export class XmlTrack {
     /** @constructor
@@ -27,7 +26,7 @@ export class XmlTrack {
         this.Id = track.Id;
         this.Artist = track.Artist;
         this.PreRoll = track.PreRoll;
-        this.PlayheadPosition = null /* intentionally omitted */;
+        this.PlayheadPosition = track.PlayheadPosition;
         this.PlaybackRate = track.PlaybackRate;
         this.Name = track.Name;
         this.Album = track.Album;

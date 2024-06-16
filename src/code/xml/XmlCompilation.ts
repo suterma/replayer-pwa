@@ -20,8 +20,8 @@ import { XmlTracks } from './XmlTracks';
  */
 export class XmlCompilation {
     /** @constructor
-     * @remarks Omits media positions in the output
      * @param {Compilation} compilation - The Typescript track object to represent
+     * @devdoc Sets are stored as arrays and their items will be represented as individual XML elements
      */
     constructor(compilation: ICompilation | undefined) {
         if (compilation) {
@@ -31,6 +31,7 @@ export class XmlCompilation {
             this.Artist = compilation.Artist;
             this.Album = compilation.Album;
             this.Tracks = new XmlTracks(compilation.Tracks);
+            this.SelectedTags = [...compilation.SelectedTags];
         }
     }
     // for the $: any, because this is per the docs of the XML library
@@ -45,5 +46,6 @@ export class XmlCompilation {
     Artist = '';
     Album = '';
     Tracks: XmlTracks = new XmlTracks(undefined);
+    SelectedTags: string[] = new Array<string>();
     PlaybackMode: PlaybackMode = PlaybackMode.PlayTrack;
 }

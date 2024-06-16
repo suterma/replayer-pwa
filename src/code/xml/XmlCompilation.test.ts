@@ -27,6 +27,7 @@ describe('the XML mapping', function () {
             'https://test.example.com/music',
             'compilationId',
             new Array<ITrack>(),
+            new Set<string>(['someSelectedTag']),
         );
 
         //Act
@@ -39,5 +40,6 @@ describe('the XML mapping', function () {
         expect(target.Artist).toBe(compilation.Artist);
         expect(target.Album).toBe(compilation.Album);
         expect(target.Tracks.Track).toHaveLength(0);
+        expect(target.SelectedTags).toHaveLength(1);
     });
 });
