@@ -1,5 +1,5 @@
 <template>
-    <slot v-if="youTubeConsent"></slot>
+    <slot v-if="youTubeConsent" v-bind="$attrs"></slot>
     <template v-else>
         <div class="field" v-bind="$attrs">
             <p class="control">
