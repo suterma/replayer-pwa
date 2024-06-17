@@ -16,7 +16,7 @@
 
         <!-- Selectable tags -->
         <TagsSelector
-            v-if="compilationHasTags"
+            v-if="compilationHasTags && experimentalUseTags"
             v-experiment="experimentalUseTags"
             :all-tags="getAllTags"
             :selected-tags="selectedTags"

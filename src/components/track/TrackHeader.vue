@@ -219,6 +219,7 @@
 
                 <!-- Tags -->
                 <CoveredPanel
+                    v-if="experimentalUseTags"
                     v-experiment="experimentalUseTags"
                     title="Tag"
                     class="level-item"
@@ -251,7 +252,7 @@
                     </LabeledInput>
                 </CoveredPanel>
                 <TagsDisplay
-                    v-if="trackHasTags"
+                    v-if="trackHasTags && experimentalUseTags"
                     v-experiment="experimentalUseTags"
                     :tags="props.track.Tags"
                     @remove="removeTag"
