@@ -138,7 +138,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
      */
     const experimentalMultitrack = useLocalStorage(
         'experimentalMultitrack',
-        true,
+        false,
     );
 
     /** EXPERIMENTAL: Whether to use the queue cue mode
@@ -204,7 +204,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         extraVideoControls.value = false;
         experimentalShowEverythingEverywhereAllAtOnce.value = false;
         experimentalAllowTrackSharingByLink.value = false;
-        experimentalMultitrack.value = true;
+        experimentalMultitrack.value = false;
         experimentalUseQueueCueMode.value = false;
         experimentalUseMeter.value = false;
         experimentalUseTags.value = false;
