@@ -6,7 +6,6 @@
             }}</label>
         </div>
         <div class="field-body">
-            <!-- Note: the additional addon class is non-disturbing if no actual addon item is rendered -->
             <div
                 class="field"
                 :class="{

@@ -130,6 +130,14 @@
                                 ></MeterDisplay>
                             </p>
                         </div>
+
+                        <TagsDisplay
+                            v-if="!isTrackEditable && trackHasTags"
+                            v-experiment="experimentalUseTags"
+                            :tags="props.track.Tags"
+                            small
+                            readonly
+                        ></TagsDisplay>
                     </div>
                 </template>
 
@@ -794,6 +802,7 @@ import router, { Route } from '@/router';
 import MessageOverlay from '@/components/MessageOverlay.vue';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 import type { ICompilation } from '@/store/ICompilation';
+import TagsDisplay from '@/components/displays/TagsDisplay.vue';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -1033,6 +1042,7 @@ const {
     showWaveformsOnEdit,
     showOverviewWaveformOnEdit,
     experimentalUseMeter,
+    experimentalUseTags,
 } = storeToRefs(settings);
 
 const {
@@ -1656,6 +1666,12 @@ function removeCueScheduling(): void {
     // app.updateScheduledCueId(CompilationHandler.EmptyId);
     // cueScheduler.value?.RemoveSchedule();
 }
+
+// --- Tag handling ---
+
+const trackHasTags = computed(() => {
+    return props.track.Tags.size > 0;
+});
 </script>
 
 <style lang="scss" scoped>

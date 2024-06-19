@@ -76,6 +76,14 @@
                                         </a>
                                     </span>
                                 </p>
+                                <TagsDisplay
+                                    v-if="!isTrackEditable && trackHasTags"
+                                    v-experiment="experimentalUseTags"
+                                    class="ml-2"
+                                    :tags="props.track.Tags"
+                                    small
+                                    readonly
+                                ></TagsDisplay>
                             </div>
                         </template>
 
@@ -125,6 +133,25 @@
                                     />
                                 </LabeledInput>
                             </div>
+                            <!-- Tags -->
+                            <CoveredPanel
+                                v-if="experimentalUseTags"
+                                v-experiment="experimentalUseTags"
+                                title="Tag"
+                                class="level-item"
+                            >
+                                <template #caption
+                                    ><span class="label">Tags</span></template
+                                >
+                                <TagInput @new-tag="addNewTag"></TagInput>
+                            </CoveredPanel>
+                            <TagsDisplay
+                                v-if="trackHasTags && experimentalUseTags"
+                                v-experiment="experimentalUseTags"
+                                class="level-item"
+                                :tags="props.track.Tags"
+                                @remove="removeTag"
+                            ></TagsDisplay>
                         </template>
                     </div>
                     <!-- Right side -->
@@ -192,7 +219,6 @@ import {
     mdiSwapVertical,
     mdiFilePdfBox,
     mdiTrayArrowDown,
-    mdiTrashCan,
     mdiTrashCanOutline,
 } from '@mdi/js';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
@@ -200,7 +226,9 @@ import { storeToRefs } from 'pinia';
 import PdfElement from '@/components/track/PdfElement.vue';
 import { isPlayingInjectionKey } from './TrackInjectionKeys';
 import { useSettingsStore } from '@/store/settings';
-import { addTextCues, confirm } from '@/code/ui/dialogs';
+import { confirm } from '@/code/ui/dialogs';
+import TagInput from '@/components/editor/TagInput.vue';
+import TagsDisplay from '@/components/displays/TagsDisplay.vue';
 
 const props = defineProps({
     /** The track to display
@@ -215,7 +243,7 @@ const app = useAppStore();
 const { isTrackEditable } = storeToRefs(app);
 
 const settings = useSettingsStore();
-const { showPdfInline } = storeToRefs(settings);
+const { showPdfInline, experimentalUseTags } = storeToRefs(settings);
 
 /** Whether the pdf is currently expanded */
 const isExpanded = ref(false);
@@ -263,6 +291,23 @@ function updateName(name: string) {
 
     app.updateTrackData(trackId, name, artist, album);
 }
+
+// --- Tag handling ---
+
+/** Adds the text from the tag input as new tag and clears the input */
+function addNewTag(tag: string) {
+    const trackId = props.track.Id;
+    app.addTag(trackId, tag);
+}
+
+function removeTag(tag: string) {
+    const trackId = props.track.Id;
+    app.removeTag(trackId, tag);
+}
+
+const trackHasTags = computed(() => {
+    return props.track.Tags.size > 0;
+});
 </script>
 
 <style>

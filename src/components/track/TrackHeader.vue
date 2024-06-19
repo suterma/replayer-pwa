@@ -32,15 +32,6 @@
                 >
             </div>
 
-            <TagsDisplay
-                v-if="!isTrackEditable && trackHasTags"
-                v-experiment="experimentalUseTags"
-                class="level-item is-narrow"
-                :tags="props.track.Tags"
-                small
-                readonly
-            ></TagsDisplay>
-
             <!-- The edit part -->
             <template v-if="isTrackEditable">
                 <CoveredPanel
@@ -227,33 +218,12 @@
                     <template #caption
                         ><span class="label">Tags</span></template
                     >
-
-                    <LabeledInput label="Add Tag">
-                        <input
-                            ref="newTag"
-                            class="input"
-                            type="text"
-                            @keyup.enter="addNewTag"
-                        />
-
-                        <template #addon>
-                            <div class="control" title="Add new tag">
-                                <button
-                                    class="button as-after-addon"
-                                    @click="addNewTag"
-                                >
-                                    <BaseIcon
-                                        v-once
-                                        :path="mdiTagPlusOutline"
-                                    />
-                                </button>
-                            </div>
-                        </template>
-                    </LabeledInput>
+                    <TagInput @new-tag="addNewTag"></TagInput>
                 </CoveredPanel>
                 <TagsDisplay
                     v-if="trackHasTags && experimentalUseTags"
                     v-experiment="experimentalUseTags"
+                    class="level-item"
                     :tags="props.track.Tags"
                     @remove="removeTag"
                 ></TagsDisplay>
@@ -308,7 +278,7 @@ import {
     watchEffect,
 } from 'vue';
 import { TrackApi } from '@/code/api/TrackApi';
-import { mdiShareVariant, mdiSwapVertical, mdiTagPlusOutline } from '@mdi/js';
+import { mdiShareVariant, mdiSwapVertical } from '@mdi/js';
 import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
@@ -316,6 +286,7 @@ import MediaSourceIndicator from '@/components/indicators/MediaSourceIndicator.v
 import TimeInput from '@/components/TimeInput.vue';
 import MetricalEditor from '@/components/editor/MetricalEditor.vue';
 import LabeledInput from '@/components/editor/LabeledInput.vue';
+import TagInput from '@/components/editor/TagInput.vue';
 import TagsDisplay from '@/components/displays/TagsDisplay.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import TrackContextMenu from '@/components/context-menu/TrackContextMenu.vue';
@@ -455,15 +426,10 @@ const isTrackPlaying = inject(isPlayingInjectionKey);
 
 // --- Tag handling ---
 
-const newTag = ref(null);
-
 /** Adds the text from the tag input as new tag and clears the input */
-function addNewTag() {
+function addNewTag(tag: string) {
     const trackId = props.track.Id;
-    const tagInput = newTag.value as unknown as HTMLInputElement;
-    const tag = tagInput.value;
     app.addTag(trackId, tag);
-    tagInput.value = '';
 }
 
 function removeTag(tag: string) {
