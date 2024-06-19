@@ -181,8 +181,6 @@
                             <div class="select">
                                 <select v-model.number="fadeInDuration">
                                     <option :value="0">no fading</option>
-                                    <option :value="20">20 milliseconds</option>
-                                    <option :value="50">50 milliseconds</option>
                                     <option :value="100">
                                         100 milliseconds
                                     </option>
@@ -212,8 +210,6 @@
                             <div class="select">
                                 <select v-model.number="fadeOutDuration">
                                     <option :value="0">no fading</option>
-                                    <option :value="20">20 milliseconds</option>
-                                    <option :value="50">50 milliseconds</option>
                                     <option :value="100">
                                         100 milliseconds
                                     </option>
