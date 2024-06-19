@@ -794,7 +794,6 @@ import router, { Route } from '@/router';
 import MessageOverlay from '@/components/MessageOverlay.vue';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 import type { ICompilation } from '@/store/ICompilation';
-import type { LoDashImplicitNumberArrayWrapper } from 'node_modules/cypress/types/lodash';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -914,7 +913,7 @@ function takeMediaHandler(handler: IMediaHandler) {
     });
 
     handler.onNextFadeInOmissionChanged.subscribe((omitsNextFadeIn) => {
-        isOmittingNextFadeIn.value = omitsNextFadeIn;
+        isPlayerOmittingNextFadeIn.value = omitsNextFadeIn;
     });
 
     handler.onEnded.subscribe(() => {
@@ -1062,9 +1061,15 @@ watchEffect(() => {
 /** Indicates the kind of current fading, if any */
 const isFading = ref(FadingMode.None);
 
-const isOmittingNextFadeIn = ref(false);
+/** Whether the media player will omit the next fade-in */
+const isPlayerOmittingNextFadeIn = ref(false);
 
-provide(isOmittingNextFadeInInjectionKey, readonly(isOmittingNextFadeIn));
+/** Whether the next playback operation omits any fade-in */
+const isOmittingNextFadeInIn = computed(() => {
+    return isPlayerOmittingNextFadeIn.value || settings.fadeInDuration === 0;
+});
+
+provide(isOmittingNextFadeInInjectionKey, readonly(isOmittingNextFadeInIn));
 
 // --- Persisted playback position ---
 
