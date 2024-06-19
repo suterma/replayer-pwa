@@ -606,17 +606,6 @@ export default class CompilationHandler {
         );
     }
 
-    /** Gets the matching track, if any, in the compilation, by it's Id.
-     * @param tracks - The tracks that are searched
-     * @param trackId - The Id of the track to find
-     * */
-    public static getTrackById(
-        tracks: ITrack[],
-        trackId: string,
-    ): ITrack | undefined {
-        return tracks.find((t) => t.Id === trackId);
-    }
-
     /** Gets the the matching cue, if any, in the compilation, by it's Id.
      * @param compilation - The compilation, whose (tracks and) cues are searched
      * @param cueId - The Id of the cue to find.
@@ -641,74 +630,6 @@ export default class CompilationHandler {
     public static getCueById(cues: ICue[], cueId: string | null): ICue | null {
         const cue = cues.find((cue) => cue?.Id === cueId);
         return cue ?? null;
-    }
-
-    /** Gets the previous track, if any, in the compilation, by it's Id.
-     * @remarks Optionally supports looping back to the end of the compilation, if the end was reached.
-     * @param tracks - The tracks that are searched
-     * @param trackId - The Id of the track to find the previous of
-     * @param loop - When true, and the previous track is not defined, the last track is returned.
-     * */
-    public static getPreviousTrackById(
-        tracks: ITrack[],
-        trackId: string,
-        loop = false,
-    ): ITrack | undefined {
-        if (tracks) {
-            const allTrackIds = tracks?.map((track) => track.Id);
-            const indexOfSelected = CompilationHandler.getIndexOfTrackById(
-                tracks,
-                trackId,
-            );
-            if (allTrackIds && indexOfSelected !== undefined) {
-                const prevTrackId = allTrackIds[indexOfSelected - 1];
-                if (prevTrackId) {
-                    return CompilationHandler.getTrackById(tracks, prevTrackId);
-                } else if (loop) {
-                    const lastTrackId = allTrackIds[allTrackIds.length - 1];
-                    if (lastTrackId) {
-                        return CompilationHandler.getTrackById(
-                            tracks,
-                            lastTrackId,
-                        );
-                    }
-                }
-            }
-        }
-    }
-
-    /** Gets the next track, if any, in the compilation, by it's Id.
-     * @remarks Optionally supports looping back to the beginning of the compilation, if the end was reached.
-     * @param tracks - The tracks that are searched
-     * @param trackId - The Id of the track to find the next of
-     * @param loop - When true, and the next track is not defined, the first track is returned.
-     * */
-    public static getNextTrackById(
-        tracks: ITrack[],
-        trackId: string,
-        loop = false,
-    ): ITrack | undefined {
-        if (tracks) {
-            const allTrackIds = tracks?.map((track) => track.Id);
-            const indexOfSelected = CompilationHandler.getIndexOfTrackById(
-                tracks,
-                trackId,
-            );
-            if (allTrackIds && indexOfSelected !== undefined) {
-                const nextTrackId = allTrackIds[indexOfSelected + 1];
-                if (nextTrackId) {
-                    return CompilationHandler.getTrackById(tracks, nextTrackId);
-                } else if (loop) {
-                    const firstTrackId = allTrackIds[0];
-                    if (firstTrackId) {
-                        return CompilationHandler.getTrackById(
-                            tracks,
-                            firstTrackId,
-                        );
-                    }
-                }
-            }
-        }
     }
 
     /** Determines, whether the resource names match

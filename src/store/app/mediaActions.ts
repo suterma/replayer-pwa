@@ -33,8 +33,7 @@ export const mediaActions = {
      * @remarks Depending on the playback mode, loops back to the first of the set of media tracks.
      */
     playNextTrack(): void {
-        const nextTrack = CompilationHandler.getNextTrackById(
-            getters.mediaTracks.value,
+        const nextTrack = mediaActions.getNextTrackById(
             state.selectedTrackId.value,
             getters.isLoopingPlaybackMode.value,
         );
@@ -47,14 +46,68 @@ export const mediaActions = {
      * @remarks Depending on the playback mode, loops back to the last of the set of media tracks.
      */
     playPreviousTrack(): void {
-        const nextTrack = CompilationHandler.getPreviousTrackById(
-            getters.mediaTracks.value,
+        const nextTrack = mediaActions.getPreviousTrackById(
             state.selectedTrackId.value,
             getters.isLoopingPlaybackMode.value,
         );
         if (nextTrack) {
             actions.updateSelectedTrackId(nextTrack.Id);
             nextTrack.MediaHandler?.playFrom(0, true);
+        }
+    },
+
+    /** Gets the previous media track, if any, in the compilation, by it's Id.
+     * @remarks Optionally supports looping back to the end of the compilation, if the end was reached.
+     * @param trackId - The Id of the track to find the previous of
+     * @param loop - When true, and the previous track is not defined, the last track is returned.
+     * */
+    getPreviousTrackById(trackId: string, loop = false): ITrack | undefined {
+        const tracks = getters.mediaTracks.value;
+        if (tracks) {
+            const allTrackIds = tracks?.map((track) => track.Id);
+            const indexOfSelected = CompilationHandler.getIndexOfTrackById(
+                tracks,
+                trackId,
+            );
+            if (allTrackIds && indexOfSelected !== undefined) {
+                const prevTrackId = allTrackIds[indexOfSelected - 1];
+                if (prevTrackId) {
+                    return tracks.find((t) => t.Id === prevTrackId);
+                } else if (loop) {
+                    const lastTrackId = allTrackIds[allTrackIds.length - 1];
+                    if (lastTrackId) {
+                        return tracks.find((t) => t.Id === lastTrackId);
+                    }
+                }
+            }
+        }
+    },
+
+    /** Gets the next media track, if any, in the compilation, by it's Id.
+     * @remarks Optionally supports looping back to the beginning of the compilation, if the end was reached.
+     * @param trackId - The Id of the track to find the next of
+     * @param loop - When true, and the next track is not defined, the first track is returned.
+     * */
+    getNextTrackById(trackId: string, loop = false): ITrack | undefined {
+        const tracks = getters.mediaTracks.value;
+
+        if (tracks) {
+            const allTrackIds = tracks?.map((track) => track.Id);
+            const indexOfSelected = CompilationHandler.getIndexOfTrackById(
+                tracks,
+                trackId,
+            );
+            if (allTrackIds && indexOfSelected !== undefined) {
+                const nextTrackId = allTrackIds[indexOfSelected + 1];
+                if (nextTrackId) {
+                    return tracks.find((t) => t.Id === nextTrackId);
+                } else if (loop) {
+                    const firstTrackId = allTrackIds[0];
+                    if (firstTrackId) {
+                        return tracks.find((t) => t.Id === firstTrackId);
+                    }
+                }
+            }
         }
     },
 

@@ -62,10 +62,7 @@ export const actions = {
         state.scheduledCueId.value = CompilationHandler.EmptyId;
         state.selectedTrackId.value = trackId;
 
-        const track = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
+        const track = getters.getTrackById(trackId);
         const firstCue = track?.Cues[0];
         if (firstCue) {
             state.selectedCueId.value = firstCue.Id;
@@ -80,10 +77,7 @@ export const actions = {
         // try the active track first
         const activeTrackId = getters.activeTrackId.value;
         if (activeTrackId) {
-            const activeTrack = CompilationHandler.getTrackById(
-                state.compilation.value.Tracks,
-                activeTrackId,
-            );
+            const activeTrack = getters.getTrackById(activeTrackId);
             if (activeTrack) {
                 const allCues = activeTrack.Cues;
                 matchingCue = allCues.find(
@@ -145,10 +139,7 @@ export const actions = {
      * @remarks Also updates the persistent store of the compilation
      */
     updateTrackVolume(trackId: string, volume: number): void {
-        const track = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
+        const track = getters.getTrackById(trackId);
         if (track) {
             track.Volume = volume;
             console.debug('app::updateTrackVolume:', volume);
@@ -159,10 +150,7 @@ export const actions = {
      * @remarks Also updates the persistent store of the compilation
      */
     updateTrackPlaybackRate(trackId: string, playbackRate: number): void {
-        const track = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
+        const track = getters.getTrackById(trackId);
         if (track) {
             track.PlaybackRate = playbackRate;
             console.debug('app::updateTrackPlaybackRate:', playbackRate);
@@ -206,10 +194,7 @@ export const actions = {
     /** Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.
      */
     addCue(trackId: string, cue: ICue): void {
-        const matchingTrack = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
+        const matchingTrack = getters.getTrackById(trackId);
         if (matchingTrack) {
             console.debug('actions::ADD_CUE:matchingTrack', matchingTrack);
 
@@ -235,10 +220,7 @@ export const actions = {
      */
     addTag(trackId: string, tag: string): void {
         if (tag) {
-            const matchingTrack = CompilationHandler.getTrackById(
-                state.compilation.value.Tracks,
-                trackId,
-            );
+            const matchingTrack = getters.getTrackById(trackId);
             if (matchingTrack) {
                 console.debug('actions::addTag:matchingTrack', matchingTrack);
                 matchingTrack.Tags.add(tag);
@@ -249,10 +231,7 @@ export const actions = {
     /** Removes a tag from the given track.
      */
     removeTag(trackId: string, tag: string): void {
-        const matchingTrack = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
+        const matchingTrack = getters.getTrackById(trackId);
         if (matchingTrack) {
             console.debug('actions::removeTag:matchingTrack', matchingTrack);
             matchingTrack.Tags.delete(tag);
@@ -266,10 +245,7 @@ export const actions = {
      * @param {number} trackDuration - the track duratin in [seconds]. Could be NaN or infinity, depending on the source.
      */
     updateDurations(trackId: string, trackDuration: number): void {
-        const track = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
+        const track = getters.getTrackById(trackId);
 
         if (track) {
             track.Duration = trackDuration;
@@ -286,10 +262,7 @@ export const actions = {
         artist: string,
         album: string,
     ): void {
-        const track = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
+        const track = getters.getTrackById(trackId);
         if (track) {
             track.Name = name;
             track.Artist = artist;
@@ -301,10 +274,7 @@ export const actions = {
      * @remarks Also updates the persistent store of the compilation
      */
     updateBeatsPerMinute(trackId: string, beatsPerMinute: number): void {
-        const track = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
+        const track = getters.getTrackById(trackId);
         if (track) {
             const meter = new Meter(
                 track.Meter?.TimeSignature ?? null,
@@ -325,10 +295,7 @@ export const actions = {
      * @remarks Also updates the persistent store of the compilation
      */
     updateTrackPreRoll(trackId: string, preRoll: number | null): void {
-        const track = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
+        const track = getters.getTrackById(trackId);
         if (track) {
             track.PreRoll = preRoll;
         }
@@ -338,10 +305,7 @@ export const actions = {
      * @remarks This is only relevant for music tracks
      */
     updateMeter(trackId: string, meter: IMeter): void {
-        const track = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
+        const track = getters.getTrackById(trackId);
         if (track) {
             track.Meter = meter;
         }
@@ -350,10 +314,7 @@ export const actions = {
      * @remarks Creates a new, initial meter, when none is available yet.
      */
     updateTrackOriginTime(trackId: string, originTime: number | null): void {
-        const track = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
+        const track = getters.getTrackById(trackId);
         if (track) {
             if (!track.Meter) {
                 track.Meter = Meter.FromTimeSignature(originTime);
@@ -371,10 +332,7 @@ export const actions = {
         trackId: string,
         useMeasureNumbers: boolean | null,
     ): void {
-        const track = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
+        const track = getters.getTrackById(trackId);
         if (track) {
             track.UseMeasureNumbers = useMeasureNumbers;
         }
@@ -956,10 +914,7 @@ export const actions = {
      * @remarks Also updates the persistent store of the compilation
      */
     updateTrackUrl(trackId: string, url: string): void {
-        const track = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
+        const track = getters.getTrackById(trackId);
         if (track) {
             track.Url = url;
             //The duration is now stale, since the new track will have it's own duration, so remove it
@@ -972,10 +927,7 @@ export const actions = {
      * If the selected or next cue was one of the track, the selection is cleared.
      */
     removeTrack(trackId: string): void {
-        const trackToRemove = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
+        const trackToRemove = getters.getTrackById(trackId);
         const currentlySelectedCueId = state.selectedCueId.value;
         const scheduledCueId = state.scheduledCueId.value;
         trackToRemove?.Cues.forEach((cue) => {
@@ -1004,10 +956,7 @@ export const actions = {
      * @remarks Effectively copies the track, and replaces any previous ids.
      */
     cloneTrack(trackId: string): void {
-        const sourceTrack = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
+        const sourceTrack = getters.getTrackById(trackId);
 
         if (sourceTrack) {
             const clonedTrack = Track.fromJson(JSON.stringify(sourceTrack));
@@ -1043,10 +992,7 @@ export const actions = {
     reassignCueShortcuts(trackId: string): void {
         console.debug('actions::REASSIGN_CUE_SHORTCUTS:trackId', trackId);
 
-        const track = CompilationHandler.getTrackById(
-            state.compilation.value.Tracks,
-            trackId,
-        );
+        const track = getters.getTrackById(trackId);
 
         if (track) {
             let seed = parseInt(track.Cues[0]?.Shortcut ?? '');

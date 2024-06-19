@@ -41,6 +41,13 @@ export const getters = {
         return state.compilation.value?.Title;
     }),
 
+    /** Gets the matching track, if any, in the compilation, by it's Id.
+     * @param trackId - The Id of the track to find
+     * */
+    getTrackById(trackId: string): ITrack | undefined {
+        return state.compilation.value.Tracks?.find((t) => t.Id === trackId);
+    },
+
     /** Whether any Media URL's are available */
     hasAnyAvailableMedia: computed(() => {
         return state.mediaUrls.value.size > 0;
@@ -81,29 +88,53 @@ export const getters = {
         );
     }),
 
-    /** Gets the set of all tracks, of any type, in their order */
+    /** Gets the set of all tracks, of any type, in their order
+     * @rmarks The tracks are already filtered by the selected tags
+     */
     allTracks: computed(() => {
-        return state.compilation.value?.Tracks;
+        const selectedTags = state.compilation.value.SelectedTags;
+        const isAnyTagSelected = selectedTags.size > 0;
+
+        // if any tag is selected, filter by all selected tags
+        if (isAnyTagSelected) {
+            console.debug('app::allTracks:selectedTags', selectedTags);
+            return (
+                state.compilation.value.Tracks?.filter((track) => {
+                    selectedTags.forEach((selectedTag) => {
+                        return track.Tags.has(selectedTag);
+                    });
+                }) ?? new Array<ITrack>()
+            );
+        } else {
+            // the unfiltered set
+            return state.compilation.value.Tracks;
+        }
     }),
 
-    /** Gets the set of media tracks (audio, video, YouTube), in their order */
-    mediaTracks: computed(() => {
-        return state.compilation.value?.Tracks?.filter((track) =>
-            CompilationHandler.isMediaTrack(track),
+    /** Gets the list of media tracks (audio, video, YouTube), in their order, or an empty list */
+    mediaTracks: computed((): ITrack[] => {
+        return (
+            getters.allTracks.value?.filter((track) =>
+                CompilationHandler.isMediaTrack(track),
+            ) ?? new Array<ITrack>()
         );
     }),
 
-    /** Gets the set of text tracks, in their order */
-    textTracks: computed(() => {
-        return state.compilation.value?.Tracks?.filter((track) =>
-            CompilationHandler.isTextTrack(track),
+    /** Gets the list of text tracks, in their order, or an empty list */
+    textTracks: computed((): ITrack[] => {
+        return (
+            getters.allTracks.value?.filter((track) =>
+                CompilationHandler.isTextTrack(track),
+            ) ?? new Array<ITrack>()
         );
     }),
 
-    /** Gets the set of PDF tracks, in their order */
-    pdfTracks: computed(() => {
-        return state.compilation.value?.Tracks?.filter((track) =>
-            CompilationHandler.isPdfTrack(track),
+    /** Gets the list of PDF tracks, in their order, or an empty list */
+    pdfTracks: computed((): ITrack[] => {
+        return (
+            getters.allTracks.value?.filter((track) =>
+                CompilationHandler.isPdfTrack(track),
+            ) ?? new Array<ITrack>()
         );
     }),
 
