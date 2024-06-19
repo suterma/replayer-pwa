@@ -92,17 +92,30 @@ export const getters = {
      * @rmarks The tracks are already filtered by the selected tags
      */
     allTracks: computed(() => {
-        const selectedTags = state.compilation.value.SelectedTags;
-        const isAnyTagSelected = selectedTags.size > 0;
+        const selectedTags = [...state.compilation.value.SelectedTags];
+        const isAnyTagSelected = selectedTags.length > 0;
 
-        // if any tag is selected, filter by all selected tags
+        // if any tag is selected, filter by these selected tags
         if (isAnyTagSelected) {
             console.debug('app::allTracks:selectedTags', selectedTags);
             return (
                 state.compilation.value.Tracks?.filter((track) => {
+                    // let hasAllTags = true;
+                    // selectedTags.forEach((selectedTag) => {
+                    //     if (!track.Tags.has(selectedTag)) {
+                    //         hasAllTags = false;
+                    //     }
+                    // });
+                    // return hasAllTags;
+
+                    let hasAnyTag = false;
                     selectedTags.forEach((selectedTag) => {
-                        return track.Tags.has(selectedTag);
+                        if (track.Tags.has(selectedTag)) {
+                            hasAnyTag = true;
+                            return;
+                        }
                     });
+                    return hasAnyTag;
                 }) ?? new Array<ITrack>()
             );
         } else {
