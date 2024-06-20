@@ -50,5 +50,6 @@ export class XmlTrack {
     UseMeasureNumbers: boolean | null;
     Volume: number;
     Cues: XmlCues;
+    /** @devdoc An array is used to store the set */
     Tags: string[];
 }

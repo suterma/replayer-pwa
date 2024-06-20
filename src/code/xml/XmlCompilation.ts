@@ -46,6 +46,7 @@ export class XmlCompilation {
     Artist = '';
     Album = '';
     Tracks: XmlTracks = new XmlTracks(undefined);
+    /** @devdoc An array is used to store the set */
     SelectedTags: string[] = new Array<string>();
     PlaybackMode: PlaybackMode = PlaybackMode.PlayTrack;
 }
