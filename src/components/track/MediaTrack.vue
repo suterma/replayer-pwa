@@ -369,7 +369,6 @@
                             "
                             :hide-cue-navigation="true"
                             :playback-mode="playbackMode as PlaybackMode"
-                            :is-fading-enabled="isFadingEnabled"
                             :is-pre-roll-enabled="isPreRollEnabled"
                             :volume="track.Volume"
                             :hide-play-pause-button="true"
@@ -574,7 +573,6 @@
                                             :playback-mode="
                                                 playbackMode as PlaybackMode
                                             "
-                                            :is-fading-enabled="isFadingEnabled"
                                             :is-pre-roll-enabled="
                                                 isPreRollEnabled
                                             "
@@ -854,7 +852,6 @@ const {
     isTrackPlayable,
     isTrackMixable,
     playbackMode,
-    isFadingEnabled,
     isPreRollEnabled,
 } = storeToRefs(app);
 

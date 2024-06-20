@@ -140,14 +140,6 @@ export default defineComponent({
             required: true,
         },
 
-        /** Whether fading is currently enabled
-         * @remarks Implements a two-way binding
-         */
-        isFadingEnabled: {
-            type: Boolean,
-            required: true,
-        },
-
         /** Whether pre-roll is currently enabled
          * @remarks Implements a two-way binding
          */

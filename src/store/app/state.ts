@@ -124,11 +124,6 @@ export const state = {
         PlaybackMode.PlayTrack as PlaybackMode,
     ),
 
-    /** The fading enabled state.
-     * @remarks This can be set by the user, and is persisted.
-     */
-    isFadingEnabled: useLocalStorage('isFadingEnabled', true),
-
     /** The pre-roll enabled state.
      * @remarks This can be set by the user, and is persisted.
      */

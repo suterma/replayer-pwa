@@ -64,9 +64,6 @@ export default class AudioFader implements IAudioFader {
         this.addFadeInPreRoll = addFadeInPreRoll;
         this.masterVolume = masterVolume;
 
-        // Fixed default
-        this.isFadingEnabled = true;
-
         this.reset();
 
         this.setupVolumeChangeEmissions();
@@ -183,7 +180,9 @@ export default class AudioFader implements IAudioFader {
 
     // --- fading ---
 
-    /** Gets or sets whether fading is enabled.
+    /**
+     * @remarks Fading is generally enabled by default, but may
+     * get disabled permanently or on some events
      */
     isFadingEnabled = true;
 

@@ -1153,7 +1153,6 @@ export const actions = {
         state.useAppShortcuts.value = true;
         state.acknowledgedVersion.value = null;
         state.playbackMode.value = PlaybackMode.PlayTrack;
-        state.isFadingEnabled.value = true;
         state.isPreRollEnabled.value = true;
     },
 };

@@ -15,7 +15,7 @@ import type { IMediaHandler } from './IMediaHandler';
 import { type IMediaLooper, LoopMode } from './IMediaLooper';
 
 /** @class Implements range looping for an {IMediaHandler}, including fading.
- * @remarks Implements audio fading at the loop boundaries, with the help of an {IAudioFader}.
+ * @remarks Implements optional audio fading at the loop boundaries, with the help of an {IAudioFader}.
  * @devdoc This IMediaHandler based approach (with observing of the current time on the wrapped media element)
  * is used to emulate the buffer looping for the enclosed media element.
  * Replayer does intentionally not use buffered audio sources, to be able to play online media without CORS headers.
@@ -154,6 +154,11 @@ export class MediaLooper implements IMediaLooper {
         this._media.loop = false;
     }
 
+    /** Whether to use fading on loop boundaries
+     * @remarks Off by default to provide continuous playback when looping back to the start.
+     */
+    public useFadingOnLoopBoundaries = false;
+
     /** A handle to the scheduler for lopp handling */
     private schedulingHandle: NodeJS.Timeout | null = null;
 
@@ -235,8 +240,9 @@ export class MediaLooper implements IMediaLooper {
 
             //Handle the special case of uninterrupted, continuous loop
             if (
-                loopMode === LoopMode.Recurring &&
-                !this._media.fader.isFadingEnabled
+                (loopMode === LoopMode.Recurring &&
+                    !this._media.fader.isFadingEnabled) ||
+                this.useFadingOnLoopBoundaries == false
             ) {
                 const tLoopHandlingStart = performance.now();
                 console.debug(`MediaLooper::doLoop:fast`);

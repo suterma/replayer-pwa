@@ -27,6 +27,11 @@ export interface IMediaLooper {
      */
     get LoopMode(): LoopMode;
 
+    /** Whether to use fading on loop boundaries
+     * @remarks Off by default to provide continuous playback when looping back to the start.
+     */
+    useFadingOnLoopBoundaries: boolean;
+
     /** Sets a ranged loop */
     SetLoop(start: number, end: number, mode: LoopMode): void;
 

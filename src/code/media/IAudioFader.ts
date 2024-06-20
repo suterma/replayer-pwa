@@ -62,11 +62,14 @@ export interface IAudioFader {
      */
     destroy(): void;
 
-    /** Gets whether fading is enabled.
+    /** Gets whether fading is currently enabled.
+     * @remarks Fading is expected to be enabled by default.
      */
     get isFadingEnabled(): boolean;
 
-    /** Sets whether fading is enabled.
+    /** Sets whether fading is currently enabled.
+     * @remarks Fading is generally enabled by default, but may
+     * get disabled generally or on some events
      */
     set isFadingEnabled(enabled: boolean);
 

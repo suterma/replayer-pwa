@@ -36,6 +36,8 @@ export interface IMediaHandler {
     // --- fading ---
 
     /** Gets the audio fading handler
+     * @remarks Fade-in and fade-out operations are generally applied at play/pause operations.
+     * They can be controlled by a cue individually, and by various settings.
      */
     readonly fader: IAudioFader;
 
