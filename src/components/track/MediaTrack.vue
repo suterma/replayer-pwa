@@ -1038,6 +1038,7 @@ const {
     showLevelMeterForEdit,
     showWaveformsOnEdit,
     showOverviewWaveformOnEdit,
+    useFadingOnLoopBoundaries,
     experimentalUseMeter,
     experimentalUseTags,
 } = storeToRefs(settings);
@@ -1063,6 +1064,15 @@ watchEffect(() => {
         fadeOutDuration.value,
         addFadeInPreRoll.value,
     );
+});
+
+/** Handles changes in the loop fading settings
+ */
+watchEffect(() => {
+    const looper = mediaHandler.value?.looper;
+    if (looper) {
+        looper.useFadingOnLoopBoundaries = useFadingOnLoopBoundaries.value;
+    }
 });
 
 /** Indicates the kind of current fading, if any */

@@ -160,6 +160,13 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         false,
     );
 
+    /** Whether to use fading on loop boundaries (false by default)
+     */
+    const useFadingOnLoopBoundaries = useLocalStorage(
+        'useFadingOnLoopBoundaries',
+        false,
+    );
+
     /** Whether to consent to loading YouTube resources has been given
      */
     const youTubeConsent = useLocalStorage('youTubeConsent', false);
@@ -200,6 +207,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         timeFormat.value = TimeFormat.Iso8601Extended;
         showWaveformsOnEdit.value = true;
         showOverviewWaveformOnEdit.value = false;
+        useFadingOnLoopBoundaries.value = false;
         youTubeConsent.value = false;
         extraVideoControls.value = false;
         experimentalShowEverythingEverywhereAllAtOnce.value = false;
@@ -229,6 +237,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         timeFormat,
         showWaveformsOnEdit,
         showOverviewWaveformOnEdit,
+        useFadingOnLoopBoundaries,
         youTubeConsent,
         extraVideoControls,
         experimentalShowEverythingEverywhereAllAtOnce,

@@ -263,6 +263,19 @@
         </div>
 
         <div class="box">
+            <h3 class="subtitle">Looping</h3>
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="useFadingOnLoopBoundaries"
+                        label="Use fading on loop boundaries"
+                        hint=""
+                    ></LabeledCheckbox>
+                </div>
+            </div>
+        </div>
+
+        <div class="box">
             <h3 class="subtitle">Input</h3>
             <div class="field">
                 <label class="label"
@@ -408,6 +421,7 @@ const {
     timeFormat,
     showWaveformsOnEdit,
     showOverviewWaveformOnEdit,
+    useFadingOnLoopBoundaries,
     youTubeConsent,
     extraVideoControls,
     experimentalShowEverythingEverywhereAllAtOnce,
