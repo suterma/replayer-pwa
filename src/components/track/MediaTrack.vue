@@ -11,6 +11,7 @@
             'is-youtube-video': isYoutubeVideoTrack,
         }"
         data-cy="track-media"
+        @click="setActiveTrack()"
     >
         <!-- Handle all track-relevant events here
         Note: A check for the active track is done in the handler methods. 

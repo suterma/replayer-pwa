@@ -113,6 +113,14 @@ Not showing the border otherwise keeps the UI in non-edit modes calm */
     border-color: $button-background-color;
 }
 
+/* Highlighting hovered media tracks track to indicate clickability */
+.track:hover {
+    background-color: rgba(
+        $button-background-color,
+        0.5
+    ) !important; /* similar to has-background-grey-dark */
+}
+
 .track.is-active-track {
     background-color: $button-background-color !important; /* similar to has-background-grey-dark */
 }

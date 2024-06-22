@@ -5,6 +5,7 @@
         :class="{
             'is-editable': isTrackEditable,
         }"
+        @click="isExpanded = !isExpanded"
     >
         <FullscreenPanel
             v-slot="{
