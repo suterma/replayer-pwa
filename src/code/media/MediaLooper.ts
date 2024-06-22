@@ -240,9 +240,9 @@ export class MediaLooper implements IMediaLooper {
 
             //Handle the special case of uninterrupted, continuous loop
             if (
-                (loopMode === LoopMode.Recurring &&
-                    !this._media.fader.isFadingEnabled) ||
-                this.useFadingOnLoopBoundaries == false
+                loopMode === LoopMode.Recurring &&
+                (!this._media.fader.isFadingEnabled ||
+                    !this.useFadingOnLoopBoundaries)
             ) {
                 const tLoopHandlingStart = performance.now();
                 console.debug(`MediaLooper::doLoop:fast`);
