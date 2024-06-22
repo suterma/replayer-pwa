@@ -359,7 +359,7 @@
                         <MediaControlsBar
                             :disabled="!canPlay"
                             :hide-stop-button="true"
-                            :hide-track-navigation="isTrackEditable"
+                            :hide-track-navigation="true"
                             :has-previous-track="
                                 !isFirstMediaTrack ||
                                 playbackMode === PlaybackMode.LoopCompilation ||
@@ -556,7 +556,7 @@
                                     >
                                         <MediaControlsBar
                                             :hide-stop-button="true"
-                                            :hide-track-navigation="false"
+                                            :hide-track-navigation="true"
                                             :has-previous-track="
                                                 !isFirstMediaTrack ||
                                                 playbackMode ===
