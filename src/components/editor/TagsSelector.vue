@@ -3,7 +3,7 @@
         <ToggleButton
             v-for="tag in allTags"
             :key="tag"
-            class="button is-info is-rounded"
+            class="button is-info is-colorless is-rounded"
             :class="{
                 'is-inactive': !isSelected(tag),
             }"
