@@ -31,6 +31,36 @@ import { round } from 'lodash-es';
  * Provides compilation handling methods
  */
 export default class CompilationHandler {
+    /** Stringifies a compilation (or part thereof), with object handling suitable for persistence
+     */
+    static stringify(value: any): string {
+        return JSON.stringify(
+            value,
+            CompilationHandler.getCompilationSerializationReplacer(),
+        );
+    }
+
+    /** Prevents unused objects in compilation objects, to enable straightforward
+     * JSON serilization
+     * @remarks Specifically removes MediaHander objects from serialization
+     * because they are circular, and not needed in the first place
+     * @devdoc Taken and simplified from
+     * https://bobbyhadz.com/blog/javascript-typeerror-converting-circular-structure-to-json#use-a-method-to-remove-all-circular-references-from-an-object
+     */
+    private static getCompilationSerializationReplacer() {
+        return (key: any, value: object | null) => {
+            // Do not serialize media handers
+            if (key === 'MediaHandler') {
+                return;
+            }
+            // serialize sets as arrays. See https://stackoverflow.com/questions/31190885/json-stringify-a-set
+            if (value !== null && value instanceof Set) {
+                return [...value];
+            }
+            return value;
+        };
+    }
+
     /** Determines whether this is a non-playable (text-only) track
      */
     static isTextTrack(track: ITrack): boolean {

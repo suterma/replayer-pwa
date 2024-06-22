@@ -19,27 +19,6 @@ import { useLocalStorage } from '@vueuse/core';
 import { ref } from 'vue';
 import type { ICompilation } from '../ICompilation';
 
-/** Prevents unused objects in compilation objects, to enable straightforward
- * JSON serilization
- * @remarks Specifically removes MediaHander objects from serialization
- * because they are circular, and not needed in the first place
- * @devdoc Taken and simplified from
- * https://bobbyhadz.com/blog/javascript-typeerror-converting-circular-structure-to-json#use-a-method-to-remove-all-circular-references-from-an-object
- */
-function getCompilationSerializationReplacer() {
-    return (key: any, value: object | null) => {
-        // Do not serialize media handers
-        if (key === 'MediaHandler') {
-            return;
-        }
-        // serialize sets as arrays. See https://stackoverflow.com/questions/31190885/json-stringify-a-set
-        if (value !== null && value instanceof Set) {
-            return [...value];
-        }
-        return value;
-    };
-}
-
 /** Implements the state of this application */
 export const state = {
     /** A compilation to work with
@@ -55,10 +34,7 @@ export const state = {
                         ? Compilation.fromJson(stringified)
                         : Compilation.empty(),
                 write: (compilation: ICompilation) =>
-                    JSON.stringify(
-                        compilation,
-                        getCompilationSerializationReplacer(),
-                    ),
+                    CompilationHandler.stringify(compilation),
             },
         },
     ),

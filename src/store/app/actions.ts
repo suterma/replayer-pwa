@@ -959,7 +959,9 @@ export const actions = {
         const sourceTrack = getters.getTrackById(trackId);
 
         if (sourceTrack) {
-            const clonedTrack = Track.fromJson(JSON.stringify(sourceTrack));
+            const clonedTrack = Track.fromJson(
+                CompilationHandler.stringify(sourceTrack),
+            );
             clonedTrack.Cues = clonedTrack.Cues.map((cue) => {
                 return new Cue(
                     cue.Description,
