@@ -161,9 +161,11 @@
                 </template>
                 <template #right-action-items>
                     <div class="level-item is-narrow mr-0 is-hidden-mobile">
-                        <!-- NOTE: In edit mode, the volume button is displayed as part of the transport area, not in the header -->
+                        <!-- NOTE: In all except the mix mode, the volume button 
+                         is displayed as part of the transport/player widget area, 
+                         not in the header -->
                         <VolumeKnob
-                            v-if="!isTrackEditable"
+                            v-if="isTrackMixable"
                             :disabled="!isTrackLoaded"
                             :volume="track.Volume"
                             @update:volume="updateVolume"
