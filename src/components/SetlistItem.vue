@@ -22,6 +22,14 @@
                     <slot v-if="$slots.default"></slot>
                     <TrackTitleName :name="track.Name"></TrackTitleName>
                 </h2>
+                <TagsDisplay
+                    v-if="trackHasTags && experimentalUseTags"
+                    v-experiment="experimentalUseTags"
+                    class="ml-2"
+                    small
+                    readonly
+                    :tags="props.track.Tags"
+                ></TagsDisplay>
             </div>
         </div>
 
@@ -117,6 +125,7 @@ import { useSettingsStore } from '@/store/settings';
 import { meterInjectionKey } from './track/TrackInjectionKeys';
 import type { ITrack } from '@/store/ITrack';
 import MediaSourceIndicator from '@/components/indicators/MediaSourceIndicator.vue';
+import TagsDisplay from '@/components/displays/TagsDisplay.vue';
 
 const props = defineProps({
     /** The track to show an item for */
@@ -150,5 +159,12 @@ provide(meterInjectionKey, readonly(meter));
 
 const settings = useSettingsStore();
 const { experimentalUseMeter } = storeToRefs(settings);
+
+// --- Tag handling ---
+
+const { experimentalUseTags } = storeToRefs(settings);
+
+const trackHasTags = computed(() => {
+    return props.track.Tags.size > 0;
+});
 </script>
-import { Track } from '@/store/Track';

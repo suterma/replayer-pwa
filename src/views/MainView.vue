@@ -6,7 +6,9 @@
 -->
 <template>
     <!-- NOTE: the same audio context is reused for all playback operations and
-         must be resumed once in the main view lifetime, when used.  -->
+         must be resumed once in the main view lifetime, when used.
+         To prevent audio playback shutdown during switches of these
+         contained views, v-show is used on the PlaybackView instead of v-if -->
     <div @click="resumeAudioContext()">
         <PlaybackView
             v-show="
@@ -16,20 +18,20 @@
         ></PlaybackView>
         <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
         <SetlistView
-            v-show="
+            v-if="
                 routedToSetlist || experimentalShowEverythingEverywhereAllAtOnce
             "
         ></SetlistView>
         <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
         <SettingsView
-            v-show="
+            v-if="
                 routedToSettings ||
                 experimentalShowEverythingEverywhereAllAtOnce
             "
         ></SettingsView>
         <hr v-if="experimentalShowEverythingEverywhereAllAtOnce" />
         <AboutView
-            v-show="
+            v-if="
                 routedToAbout || experimentalShowEverythingEverywhereAllAtOnce
             "
         ></AboutView>

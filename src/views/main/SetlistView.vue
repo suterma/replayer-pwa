@@ -62,6 +62,17 @@
         <h1 v-if="!printTracksOnNewPage" class="title is-3">
             {{ compilation.Title }}
         </h1>
+
+        <!-- Selectable tags -->
+        <TagsSelector
+            v-if="compilationHasTags && experimentalUseTags"
+            v-experiment="experimentalUseTags"
+            :all-tags="getAllTags"
+            :selected-tags="selectedTags"
+            @selected="selectTag"
+            @deselected="deselectTag"
+        ></TagsSelector>
+
         <table class="table is-fullwidth">
             <draggable
                 v-model="orderedTracks"
@@ -146,6 +157,8 @@ import draggable from 'vuedraggable';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import type { ITrack } from '@/store/ITrack';
+import { useSettingsStore } from '@/store/settings';
+import TagsSelector from '@/components/editor/TagsSelector.vue';
 
 const drag = ref(false);
 
@@ -164,7 +177,7 @@ const showMediaSource = ref(false);
 const showNumbering = ref(false);
 
 const app = useAppStore();
-const { compilation, allTracks } = storeToRefs(app);
+const { compilation, allTracks, getAllTags } = storeToRefs(app);
 
 const orderedTracks = computed<ITrack[]>({
     get(): ITrack[] {
@@ -178,5 +191,27 @@ const orderedTracks = computed<ITrack[]>({
 
 function printWindow() {
     window.print();
+}
+
+// --- Tag handling ---
+
+const settings = useSettingsStore();
+const { experimentalUseTags } = storeToRefs(settings);
+
+const compilationHasTags = computed(() => {
+    return getAllTags.value.size > 0;
+});
+
+const { selectedTags } = storeToRefs(app);
+
+function selectTag(tag: string) {
+    console.debug('selectTag', tag);
+
+    selectedTags.value.add(tag);
+}
+function deselectTag(tag: string) {
+    console.debug('deselectTag', tag);
+
+    selectedTags.value.delete(tag);
 }
 </script>
