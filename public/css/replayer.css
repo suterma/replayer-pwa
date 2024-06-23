@@ -14935,6 +14935,9 @@ for all screen sizes. Keeps the display compact */
   transform: translateX(32px);
 }
 
+/* NOTE: Use .transition-in-place to 
+   ensure leaving items are taken out of layout flow so that moving
+   animations can be calculated correctly. */
 /*************************************************************
  * Stylings for draggable content
  * Dragged items should be similar in style as a drop down menu, 

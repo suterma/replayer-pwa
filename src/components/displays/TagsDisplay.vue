@@ -5,24 +5,22 @@
             'are-large': !small,
         }"
     >
-        <TransitionGroup name="list">
-            <span
+        <TransitionGroup name="list" tag="ul">
+            <li
                 v-for="tag in tags"
                 :key="tag"
-                class="tag is-info is-colorless is-rounded"
+                class="tag is-info is-colorless is-rounded transition-in-place"
             >
-                <div>
-                    {{ tag }}
-                    <button
-                        v-if="!readonly"
-                        class="delete"
-                        :class="{
-                            'is-large': !small,
-                        }"
-                        @click="remove(tag)"
-                    ></button>
-                </div>
-            </span>
+                {{ tag }}
+                <button
+                    v-if="!readonly"
+                    class="delete"
+                    :class="{
+                        'is-large': !small,
+                    }"
+                    @click="remove(tag)"
+                ></button>
+            </li>
         </TransitionGroup>
     </div>
 </template>

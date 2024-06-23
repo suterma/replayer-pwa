@@ -1,9 +1,9 @@
 <template>
-    <div class="buttons">
+    <TransitionGroup name="list" tag="div" class="buttons">
         <ToggleButton
             v-for="tag in allTags"
             :key="tag"
-            class="button is-info is-colorless is-rounded"
+            class="button is-info is-colorless is-rounded transition-in-place"
             :class="{
                 'is-inactive': !isSelected(tag),
             }"
@@ -11,7 +11,7 @@
             @click="toggle(tag)"
             >{{ tag }}
         </ToggleButton>
-    </div>
+    </TransitionGroup>
 </template>
 
 <script setup lang="ts">
