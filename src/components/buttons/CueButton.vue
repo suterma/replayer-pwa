@@ -70,6 +70,19 @@
                 <span class="level is-mobile">
                     <!-- Left side -->
                     <div class="level-left">
+                        <!-- The shortcut -->
+                        <p
+                            class="level-item"
+                            :class="{ 'is-invisible': disabled }"
+                        >
+                            <!-- NOTE: For performance reasons, this shortcut display is implemented inline, not using the ShortcutDisplay SFC -->
+                            <span
+                                v-if="shortcut"
+                                class="tag is-light is-outlined has-opacity-third is-family-monospace is-uppercase has-text-weight-bold foreground"
+                            >
+                                {{ shortcut }}</span
+                            >
+                        </p>
                         <div class="level-item mr-3">
                             <MeasureDisplay
                                 v-if="hasMeter && useMeasureNumbers"
@@ -90,6 +103,7 @@
 
                     <!-- Right side -->
                     <div class="level-right">
+                        <!-- The duration -->
                         <!-- For layout space reasons, only render this when requested and only on desktop and larger screens -->
                         <p
                             v-if="showDuration"
@@ -109,20 +123,6 @@
                                 class="has-text-left is-size-7 is-minimum-7-characters is-family-monospace has-opacity-half foreground"
                                 data-cy="remaining-time"
                                 >{{ cueDisplayDuration }}</span
-                            >
-                        </p>
-
-                        <p
-                            class="level-item"
-                            :class="{ 'is-invisible': disabled }"
-                        >
-                            <!-- Use a fixed right position for Shortcuts, to keep them as much out of visibility as possible -->
-                            <!-- NOTE: For performance reasons, this shortcut display is implemented inline, not using the ShortcutDisplay SFC -->
-                            <span
-                                v-if="shortcut"
-                                class="is-hidden-mobile ml-2 tag is-light is-outlined has-opacity-third is-family-monospace is-uppercase has-text-weight-bold foreground"
-                            >
-                                {{ shortcut }}</span
                             >
                         </p>
                     </div>
