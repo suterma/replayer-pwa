@@ -4,7 +4,7 @@
         left
         class="is-slim"
         :icon-path="currentModeIcon"
-        :render-closed="true"
+        :render-closed="false"
         data-cy="context-menu-playbackmode"
     >
         <DropdownMenuButton

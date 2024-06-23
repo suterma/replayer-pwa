@@ -15,19 +15,17 @@
             @dismissed="collapseDropdown"
         >
             <!-- dropdown-trigger -->
-            <div class="dropdown-trigger">
-                <!-- z-index must be larger than for h1 (but less then the fixed footer) -->
-                <NavButton
-                    ref="button"
-                    style="z-index: 1"
-                    aria-haspopup="true"
-                    aria-controls="dropdown-menu"
-                    :title="title"
-                    :icon-path="iconPath"
-                    data-cy="dropdown-menu-trigger"
-                    @click="toggleDropdownExpanded()"
-                />
-            </div>
+            <!-- z-index must be larger than for h1 (but less then the fixed footer) -->
+            <NavButton
+                ref="button"
+                style="z-index: 1"
+                aria-haspopup="true"
+                aria-controls="dropdown-menu"
+                :title="title"
+                :icon-path="iconPath"
+                data-cy="dropdown-menu-trigger"
+                @click="toggleDropdownExpanded()"
+            />
             <!-- Transition for the revealing action. 
                 Uses an additional element to make sure that there is a single root within the transition slot -->
             <Transition
@@ -107,6 +105,7 @@ const props = defineProps({
 
     /** Whether to render the closed menu
      * @remarks Set to true to handle shortcuts or other features on the closed menu / menu entries
+     * @devdoc Rendering closed menus can be expensive, depending on their content
      */
     renderClosed: {
         type: Boolean,
