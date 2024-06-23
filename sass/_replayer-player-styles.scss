@@ -114,11 +114,13 @@ Not showing the border otherwise keeps the UI in non-edit modes calm */
 }
 
 /* Highlighting hovered media tracks track to indicate clickability */
-.track:hover {
+.track.is-audio:hover,
+.track.is-video:hover,
+.track.is-youtube-video:hover {
     background-color: rgba(
         $button-background-color,
         0.5
-    ) !important; /* similar to has-background-grey-dark */
+    ); /* similar to has-background-grey-dark */
 }
 
 .track.is-active-track {

@@ -10745,8 +10745,10 @@ Not showing the border otherwise keeps the UI in non-edit modes calm */
 }
 
 /* Highlighting hovered media tracks track to indicate clickability */
-.track:hover {
-  background-color: rgba(58, 63, 68, 0.5) !important; /* similar to has-background-grey-dark */
+.track.is-audio:hover,
+.track.is-video:hover,
+.track.is-youtube-video:hover {
+  background-color: rgba(58, 63, 68, 0.5); /* similar to has-background-grey-dark */
 }
 
 .track.is-active-track {

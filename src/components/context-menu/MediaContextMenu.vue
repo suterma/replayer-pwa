@@ -65,7 +65,7 @@ import SpeedKnob from '../controls/SpeedKnob.vue';
 import type { ITrack } from '@/store/ITrack';
 import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
 
-/** A nav bar as header with a menu for a compilation
+/** A nav bar as header with a menu for a media item of a track
  */
 
 const props = defineProps({

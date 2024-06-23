@@ -181,6 +181,7 @@
                             :disabled="!Boolean(mediaUrl)"
                             class="button"
                             title="Remove the PDF track from the compilation"
+                            @click="remove"
                         >
                             <BaseIcon v-once :path="mdiTrashCanOutline" />
                         </button>

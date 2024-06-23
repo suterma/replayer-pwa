@@ -5,7 +5,12 @@
                 v-if="iconPath"
                 class="level-item dropdown-item-icon is-borderless has-background-transparent pl-0 pr-0"
             >
-                <BaseIcon :path="iconPath" />
+                <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
+                <i class="icon mdi">
+                    <svg viewBox="0 0 24 24">
+                        <path fill="currentColor" :d="iconPath" />
+                    </svg>
+                </i>
             </div>
             <div class="level-item">
                 <div>
@@ -26,7 +31,6 @@
 </template>
 
 <script setup lang="ts">
-import BaseIcon from '@/components/icons/BaseIcon.vue';
 import ShortcutDisplay from '@/components/ShortcutDisplay.vue';
 /** A content for a menu item */
 
