@@ -21,19 +21,18 @@ import ToggleButton from '@/components/buttons/ToggleButton.vue';
 const emit = defineEmits(['selected', 'deselected']);
 
 const props = defineProps({
+    /** All tags to offer to select from */
     allTags: {
         type: Set as PropType<Set<string>>,
         required: true,
     },
+    /** The currently selected tags
+     * @remarks Selection changes will be indicated via the respective events
+     */
     selectedTags: {
         type: Set as PropType<Set<string>>,
         required: false,
         default: new Set<string>([]),
-    },
-    small: {
-        type: Boolean,
-        required: false,
-        default: false,
     },
 });
 

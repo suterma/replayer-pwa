@@ -5,7 +5,6 @@
         :class="{
             'is-editable': isTrackEditable,
         }"
-        @click="isExpanded = !isExpanded"
     >
         <FullscreenPanel
             v-slot="{
@@ -55,11 +54,15 @@
                                     class="control is-flex is-align-items-center"
                                 >
                                     <label class="button is-indicator">
-                                        <BaseIcon :path="mdiFilePdfBox" />
+                                        <BaseIcon
+                                            v-once
+                                            :path="mdiFilePdfBox"
+                                        />
                                     </label>
                                     <span
                                         class="has-text-break-word is-indicator"
                                     >
+                                        <!-- NOTE: Toggling the disabled attribute does not work as intended -->
                                         <a
                                             v-if="Boolean(mediaUrl)"
                                             :href="mediaUrl"
@@ -164,7 +167,7 @@
                             class="button"
                             title="Download PDF to device"
                         >
-                            <BaseIcon :path="mdiTrayArrowDown" />
+                            <BaseIcon v-once :path="mdiTrayArrowDown" />
                         </a>
                         <PlaybackIndicator
                             v-else
@@ -179,7 +182,7 @@
                             class="button"
                             title="Remove the PDF track from the compilation"
                         >
-                            <BaseIcon :path="mdiTrashCanOutline" />
+                            <BaseIcon v-once :path="mdiTrashCanOutline" />
                         </button>
                     </div>
                 </div>

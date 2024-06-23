@@ -89,7 +89,6 @@ import NoSleep from 'nosleep.js';
 import { useSettingsStore } from '@/store/settings';
 import type { ICompilation } from '@/store/ICompilation';
 import { PlaybackMode } from '@/store/PlaybackMode';
-import TagsDisplay from '@/components/displays/TagsDisplay.vue';
 import TagsSelector from '@/components/editor/TagsSelector.vue';
 
 /** Displays the contained set of tracks according to the required mode.

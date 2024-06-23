@@ -5,14 +5,18 @@
         tabindex="0"
         :disabled="disabled"
     >
-        <BaseIcon :path="iconPath" :class="iconClass" />
+        <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
+        <i class="icon mdi" :class="iconClass">
+            <svg viewBox="0 0 24 24">
+                <path fill="currentColor" :d="iconPath" />
+            </svg>
+        </i>
         <slot></slot>
     </button>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import BaseIcon from '@/components/icons/BaseIcon.vue';
 
 /** A button for navigational purposes, featuring an optional icon
  * @remarks This button is intended for non-actionable buttons like menu togglers, edit togglers etc.
@@ -21,7 +25,6 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
  */
 export default defineComponent({
     name: 'NavButton',
-    components: { BaseIcon },
     props: {
         /** The text for a tooltip */
         title: {

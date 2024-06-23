@@ -8,14 +8,20 @@
         disengaged-label="fullscreen is off"
         @click="emit('update:modelValue', !modelValue)"
     >
-        <BaseIcon v-if="modelValue" :path="mdiFullscreenExit" />
-        <BaseIcon v-else :path="mdiFullscreen" />
+        <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
+        <i class="icon mdi">
+            <svg viewBox="0 0 24 24">
+                <path
+                    fill="currentColor"
+                    :d="modelValue ? mdiFullscreenExit : mdiFullscreen"
+                />
+            </svg>
+        </i>
     </ToggleButton>
 </template>
 
 <script setup lang="ts">
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
-import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiFullscreen, mdiFullscreenExit } from '@mdi/js';
 
 /** A toggle button for the fading state
