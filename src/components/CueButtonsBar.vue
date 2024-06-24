@@ -183,8 +183,14 @@ function percentComplete(cue: ICue): number | null {
 <style lang="scss">
 .cue-buttons-bar.buttons {
     /** Use a very slim margin between the button in this buttons bar, to save space */
-    .button:not(:last-child):not(.is-fullwidth) {
+    .button.cue:not(:last-child):not(.is-fullwidth) {
         margin-right: 2px;
+    }
+
+    /** Use a slim padding for the cue text, to save space */
+    .button.cue {
+        padding-left: 2px;
+        padding-right: 2px;
     }
 
     /** Allow for slim buttons in this buttons bar, to save space */
@@ -203,7 +209,7 @@ function percentComplete(cue: ICue): number | null {
             display: none;
         }
 
-        .button {
+        .button.cue {
             line-height: normal !important;
         }
     }
