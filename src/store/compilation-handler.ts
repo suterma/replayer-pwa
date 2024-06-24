@@ -145,7 +145,6 @@ export default class CompilationHandler {
         const order =
             id.charCodeAt(seed % inputLength) +
             id.charCodeAt(inputLength - (seed % inputLength));
-        console.debug('shuffleOrder', id, order);
         return order;
     }
 

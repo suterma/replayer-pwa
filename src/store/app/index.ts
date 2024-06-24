@@ -19,6 +19,7 @@ import PersistentStorage from '../persistent-storage';
 import { Store } from '..';
 import { useMessageStore } from '../messages';
 import { mediaActions } from './mediaActions';
+import { watch } from 'vue';
 
 /** A store for the general app state, including the currently loaded compilation
  * @remarks This implements the application store part of the main concepts, documented at https://github.com/suterma/replayer-pwa/tree/main/doc#main-concepts
@@ -37,6 +38,18 @@ export const useAppStore = defineStore(Store.App, () => {
                 `Some media files are not available from the persistent storage. These media files must get provided by the user.`,
             );
         });
+
+    /** Updates the shuffle seed if required by a playback mode change.
+     */
+    watch(
+        getters.isTracksShuffled,
+        (isShuffled) => {
+            if (isShuffled) {
+                state.shuffleSeed = ++state.shuffleSeed;
+            }
+        },
+        { deep: true },
+    );
 
     return {
         ...state,

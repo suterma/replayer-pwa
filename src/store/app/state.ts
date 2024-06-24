@@ -92,7 +92,7 @@ export const state = {
         null as string | null,
     ),
 
-    /** The playback mode.
+    /** The current playback mode.
      * @remarks This can be set by the user, and is persisted.
      */
     playbackMode: useLocalStorage<PlaybackMode>(
@@ -104,4 +104,10 @@ export const state = {
      * @remarks This can be set by the user, and is persisted.
      */
     isPreRollEnabled: useLocalStorage('isPreRollEnabled', true),
+
+    /** A seed for the deterministic shuffling (until next shuffling is requested)
+     * @remarks Reshuffling occurs when the PlaybackMode is toggled to ShuffleCompilation.
+     * @devdoc This allows to keep the shuffled order for the duration of the shuffle mode
+     */
+    shuffleSeed: 1,
 };

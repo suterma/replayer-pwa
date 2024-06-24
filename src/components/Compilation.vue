@@ -114,20 +114,8 @@ const {
 /** The wake lock fill-in that can prevent screen timeout */
 const noSleep: NoSleep = new NoSleep();
 
-/** A seed for the deterministic shuffling (until next shuffling is requested)
- * @remarks Reshuffling occurs when the PlaybackMode is toggled to ShuffleCompilation.
- * @devdoc This allows to keep the shuffled order.
- */
-let shuffleSeed: number = 1;
-
 const settings = useSettingsStore();
 const { preventScreenTimeout, experimentalUseTags } = storeToRefs(settings);
-
-/** Whether the tracks are currently in a shuffled order.
- */
-const isTracksShuffled = computed(
-    () => playbackMode.value === PlaybackMode.ShuffleCompilation,
-);
 
 /** Handle scrolling to the changed active track.
  * @remarks This is intentionally only invoked on when the active track changes (and it's not the only audio track).
@@ -163,19 +151,6 @@ watch(
                     scrollToTrack(trackId.value);
                 }
             });
-        }
-    },
-    { immediate: true /* to handle it at least once after mount time */ },
-);
-
-/** Updates the shuffle seed if required by a playback mode change.
- */
-watch(
-    () => isTracksShuffled,
-    (isShuffled) => {
-        if (isShuffled) {
-            shuffleSeed = ++shuffleSeed;
-            console.debug('Compilation::playbackMode:shuffleSeed', shuffleSeed);
         }
     },
     { immediate: true /* to handle it at least once after mount time */ },
@@ -235,14 +210,11 @@ function scrollToTrack(trackId: string) {
     }
 }
 
-/** Handles the playback after a track has ended. Implement the compilation loop and shuffle modes.
+/** Handles the playback after a track has ended.
  */
 function continueAfterTrack(trackId: string): void {
     console.debug('continueAfterTrack', trackId);
-    if (
-        playbackMode.value === PlaybackMode.LoopCompilation ||
-        playbackMode.value === PlaybackMode.ShuffleCompilation
-    ) {
+    if (isLoopingPlaybackMode) {
         app.playNextTrack();
     }
 }
@@ -253,7 +225,7 @@ const compilationHasTags = computed(() => {
     return getAllTags.value.size > 0;
 });
 
-const { selectedTags } = storeToRefs(app);
+const { selectedTags, isLoopingPlaybackMode } = storeToRefs(app);
 
 function selectTag(tag: string) {
     console.debug('selectTag', tag);

@@ -361,14 +361,10 @@
                             :hide-stop-button="true"
                             :hide-track-navigation="true"
                             :has-previous-track="
-                                !isFirstMediaTrack ||
-                                playbackMode === PlaybackMode.LoopCompilation ||
-                                playbackMode === PlaybackMode.ShuffleCompilation
+                                !isFirstMediaTrack || isLoopingPlaybackMode
                             "
                             :has-next-track="
-                                !isLastMediaTrack ||
-                                playbackMode === PlaybackMode.LoopCompilation ||
-                                playbackMode === PlaybackMode.ShuffleCompilation
+                                !isLastMediaTrack || isLoopingPlaybackMode
                             "
                             :hide-cue-navigation="true"
                             :playback-mode="playbackMode as PlaybackMode"
@@ -559,17 +555,11 @@
                                             :hide-track-navigation="true"
                                             :has-previous-track="
                                                 !isFirstMediaTrack ||
-                                                playbackMode ===
-                                                    PlaybackMode.LoopCompilation ||
-                                                playbackMode ===
-                                                    PlaybackMode.ShuffleCompilation
+                                                isLoopingPlaybackMode
                                             "
                                             :has-next-track="
                                                 !isLastMediaTrack ||
-                                                playbackMode ===
-                                                    PlaybackMode.LoopCompilation ||
-                                                playbackMode ===
-                                                    PlaybackMode.ShuffleCompilation
+                                                isLoopingPlaybackMode
                                             "
                                             :has-previous-cue="hasPreviousCue"
                                             :has-next-cue="hasNextCue"
@@ -855,6 +845,7 @@ const {
     isTrackPlayable,
     isTrackMixable,
     playbackMode,
+    isLoopingPlaybackMode,
     isPreRollEnabled,
 } = storeToRefs(app);
 

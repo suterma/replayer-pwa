@@ -90,15 +90,17 @@ export const getters = {
 
     /** Gets the set of all tracks, of any type, in their order
      * @rmarks The tracks are already filtered by the selected tags
+     * and shuffled, depending on the playback mode.
      */
     allTracks: computed(() => {
         const selectedTags = [...state.compilation.value.SelectedTags];
         const isAnyTagSelected = selectedTags.length > 0;
 
+        let tracks;
         // if any tag is selected, filter by these selected tags
         if (isAnyTagSelected) {
             console.debug('app::allTracks:selectedTags', selectedTags);
-            return (
+            tracks =
                 state.compilation.value.Tracks?.filter((track) => {
                     // let hasAllTags = true;
                     // selectedTags.forEach((selectedTag) => {
@@ -116,15 +118,20 @@ export const getters = {
                         }
                     });
                     return hasAnyTag;
-                }) ?? new Array<ITrack>()
-            );
+                }) ?? new Array<ITrack>();
         } else {
             // the unfiltered set
-            return state.compilation.value.Tracks;
+            tracks = state.compilation.value.Tracks;
         }
+        if (getters.isTracksShuffled.value) {
+            tracks = CompilationHandler.shuffle(tracks, state.shuffleSeed);
+        }
+        return tracks;
     }),
 
-    /** Gets the list of media tracks (audio, video, YouTube), in their order, or an empty list */
+    /** Gets the list of media tracks (audio, video, YouTube), in their order, or an empty list
+     * @remarks The tracks are already filtered by the selected tags
+     */
     mediaTracks: computed((): ITrack[] => {
         return (
             getters.allTracks.value?.filter((track) =>
@@ -133,7 +140,9 @@ export const getters = {
         );
     }),
 
-    /** Gets the list of text tracks, in their order, or an empty list */
+    /** Gets the list of text tracks, in their order, or an empty list
+     * @remarks The tracks are already filtered by the selected tags
+     */
     textTracks: computed((): ITrack[] => {
         return (
             getters.allTracks.value?.filter((track) =>
@@ -142,7 +151,9 @@ export const getters = {
         );
     }),
 
-    /** Gets the list of PDF tracks, in their order, or an empty list */
+    /** Gets the list of PDF tracks, in their order, or an empty list
+     * @remarks The tracks are already filtered by the selected tags
+     */
     pdfTracks: computed((): ITrack[] => {
         return (
             getters.allTracks.value?.filter((track) =>
@@ -205,8 +216,8 @@ export const getters = {
     // --- cue selection ---
 
     /** Gets all cues of all tracks in a flat array, or an empty array if there are none
+     * @remarks The tracks are already filtered by the selected tags
      */
-
     getAllCues: computed(() => {
         const tracks = getters.allTracks.value;
         const cues = new Array<ICue>();
@@ -251,7 +262,7 @@ export const getters = {
 
     // --- playback mode ---
 
-    /** Whether the PlaybackMode is looping the tracks
+    /** Whether the current PlaybackMode is looping the tracks
      * in the compilation.
      * @remarks These are PlaybackMode.LoopCompilation
      * and PlaybackMode.ShuffleCompilation
@@ -265,7 +276,8 @@ export const getters = {
 
     // --- tags ---
 
-    /** Gets all distinct tags of all tracks in a set, or an empty set if there are none */
+    /** Gets all distinct tags of all tracks in a set (including not currently
+     * matching tracks), or an empty set if there are none */
     getAllTags: computed(() => {
         const tracks = state.compilation.value?.Tracks;
         const tags = new Set<string>([]);
@@ -281,4 +293,12 @@ export const getters = {
     selectedTags: computed(() => {
         return state.compilation.value.SelectedTags ?? new Set<string>([]);
     }),
+
+    // --- shuffling ---
+
+    /** Whether the tracks are currently in a shuffled order.
+     */
+    isTracksShuffled: computed(
+        () => state.playbackMode.value === PlaybackMode.ShuffleCompilation,
+    ),
 };
