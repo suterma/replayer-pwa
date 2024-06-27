@@ -22,6 +22,8 @@ import { computed } from 'vue';
 import { TrackViewMode } from '../TrackViewMode';
 import type { ICue } from '../ICue';
 import { PlaybackMode } from '../PlaybackMode';
+import { useSettingsStore } from '../settings';
+import { storeToRefs } from 'pinia';
 
 export const getters = {
     /** Defines the function to determine whether a compilation is available (created or loaded) */
@@ -96,9 +98,13 @@ export const getters = {
         const selectedTags = [...state.compilation.value.SelectedTags];
         const isAnyTagSelected = selectedTags.length > 0;
 
+        // specifically handle the experiment - remove after official release of tags
+        const settings = useSettingsStore();
+        const { experimentalUseTags } = storeToRefs(settings);
+
         let tracks = new Array<ITrack>();
         // if any tag is selected, filter by these selected tags
-        if (isAnyTagSelected) {
+        if (isAnyTagSelected && experimentalUseTags.value) {
             console.debug('app::allTracks:selectedTags', selectedTags);
             tracks =
                 state.compilation.value.Tracks?.filter((track) => {
