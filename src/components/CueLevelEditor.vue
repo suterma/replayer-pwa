@@ -11,6 +11,7 @@
                             v-if="preRollDuration"
                             title="Toggle pre-roll usage"
                             :model-value="props.cue.OmitPreRoll"
+                            narrow
                             @update:model-value="updateOmitPreRoll"
                         ></PreRollSwitch>
                     </p>
@@ -20,6 +21,7 @@
                             v-if="fadeInDuration"
                             title="Toggle fade-in usage"
                             :model-value="props.cue.OmitFadeIn"
+                            narrow
                             @update:model-value="updateOmitFadeIn"
                         ></FadeInSwitch>
                     </p>
@@ -191,6 +193,7 @@
                     <!-- Slot for additional level display items -->
                     <slot name="right-start"></slot>
 
+                    <!-- This menu is only used on smaller devices, otherwise the actions are directly available via dedicated buttons -->
                     <CueContextMenu class="is-hidden-tablet">
                         <DropdownMenuButton
                             title="Remove"

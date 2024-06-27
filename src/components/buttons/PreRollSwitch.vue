@@ -1,6 +1,18 @@
 <template>
-    <!-- Note: This wider variant is currently not used -->
-    <!-- <div class="field has-addons is-hidden-touch mb-0">
+    <div v-if="narrow" v-bind="$attrs" class="field mb-0">
+        <p class="control">
+            <button
+                class="button is-small is-rounded is-colorless"
+                :class="{
+                    'is-warning': !model,
+                }"
+                @click="togglePreRollMode"
+            >
+                <span>Pre-roll</span>
+            </button>
+        </p>
+    </div>
+    <div v-else class="field has-addons mb-0">
         <p class="control">
             <button
                 class="button toggle-item is-small is-rounded is-colorless"
@@ -25,27 +37,25 @@
                 <BaseIcon :path="rCloseCircleSmall" />
             </button>
         </p>
-    </div> -->
-
-    <div v-bind="$attrs" class="field mb-0">
-        <p class="control">
-            <button
-                class="button is-small is-rounded is-colorless"
-                :class="{
-                    'is-warning': !model,
-                }"
-                @click="togglePreRollMode"
-            >
-                <span>Pre-roll</span>
-            </button>
-        </p>
     </div>
 </template>
 
 <script setup lang="ts">
+import BaseIcon from '@/components/icons/BaseIcon.vue';
+import { rCloseCircleSmall } from '@/components/icons/ReplayerIcon';
+
 /** A toggle button for the omit pre-roll state. Default is false, meaning no omission
  */
 const model = defineModel({ type: Boolean, default: false, required: true });
+
+defineProps({
+    /** Whether to render the menu in a narrow single-button style
+     */
+    narrow: {
+        type: Boolean,
+        default: false,
+    },
+});
 
 const emit = defineEmits(['update:modelValue']);
 

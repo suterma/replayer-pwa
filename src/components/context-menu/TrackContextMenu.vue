@@ -2,6 +2,7 @@
     <DropdownMenu
         v-memo="[props.track.Url]"
         title="Track context menu"
+        :render-closed="false"
         left
         down
         data-cy="context-menu-track"
