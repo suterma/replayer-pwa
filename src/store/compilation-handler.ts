@@ -120,10 +120,7 @@ export default class CompilationHandler {
     }
 
     /** Shuffles and returns the given tracks, using a deterministic method, based on the given seed */
-    static shuffle(
-        tracks: ITrack[],
-        shuffleSeed: number,
-    ): ITrack[] | undefined {
+    static shuffle(tracks: ITrack[], shuffleSeed: number): ITrack[] {
         const shuffledTracks = tracks
             .map((value) => ({
                 value,
