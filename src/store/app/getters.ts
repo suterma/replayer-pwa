@@ -96,20 +96,12 @@ export const getters = {
         const selectedTags = [...state.compilation.value.SelectedTags];
         const isAnyTagSelected = selectedTags.length > 0;
 
-        let tracks;
+        let tracks = new Array<ITrack>();
         // if any tag is selected, filter by these selected tags
         if (isAnyTagSelected) {
             console.debug('app::allTracks:selectedTags', selectedTags);
             tracks =
                 state.compilation.value.Tracks?.filter((track) => {
-                    // let hasAllTags = true;
-                    // selectedTags.forEach((selectedTag) => {
-                    //     if (!track.Tags.has(selectedTag)) {
-                    //         hasAllTags = false;
-                    //     }
-                    // });
-                    // return hasAllTags;
-
                     let hasAnyTag = false;
                     selectedTags.forEach((selectedTag) => {
                         if (track.Tags.has(selectedTag)) {
