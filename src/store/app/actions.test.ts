@@ -13,15 +13,18 @@
 
 import { expect, describe, it, beforeEach, afterEach } from 'vitest';
 import { MediaBlob } from '../types';
-import CompilationHandler from '../compilation-handler';
 import { getters } from './getters';
-import { actions } from './actions';
 import { Track } from '../Track';
 import type { ITrack } from '../ITrack';
 import type { ICue } from '../ICue';
+import { useAppStore } from '.';
+import { createPinia } from 'pinia';
 
 describe('actions.ts', () => {
     let mediaBlobs = new Array<MediaBlob>();
+
+    const pinia = createPinia();
+    const app = useAppStore(pinia);
 
     beforeEach(() => {
         const dataBase64 = 'VEhJUyBJUyBUSEUgQU5TV0VSCg==';
@@ -64,10 +67,10 @@ describe('actions.ts', () => {
     it('should clone a media track', async () => {
         //Arrange
         const testTrack = getTestTrack();
-        actions.addTrack(testTrack);
+        app.addTrack(testTrack);
 
         //Act
-        actions.cloneTrack(testTrack.Id);
+        app.cloneTrack(testTrack.Id);
 
         //Assert
         const actualTracks = getters.allTracks.value;
@@ -77,10 +80,10 @@ describe('actions.ts', () => {
     it('should clone a media track with all the tags cloned too', async () => {
         //Arrange
         const testTrack = getTestTrack();
-        actions.addTrack(testTrack);
+        app.addTrack(testTrack);
 
         //Act
-        actions.cloneTrack(testTrack.Id);
+        app.cloneTrack(testTrack.Id);
 
         //Assert
         const actualTracks = getters.allTracks.value;
@@ -93,10 +96,10 @@ describe('actions.ts', () => {
     it('should clone a media track with an updated name', async () => {
         //Arrange
         const testTrack = getTestTrack();
-        actions.addTrack(testTrack);
+        app.addTrack(testTrack);
 
         //Act
-        actions.cloneTrack(testTrack.Id);
+        app.cloneTrack(testTrack.Id);
 
         //Assert
         const actualTracks = getters.allTracks.value;

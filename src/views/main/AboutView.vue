@@ -688,6 +688,14 @@
                         (Released under the Apache-2.0 license, by the
                         TypeStrong team)
                     </li>
+                    <li>
+                        <a
+                            href="https://github.com/sindresorhus/slugify"
+                            target="_blank"
+                            >slugify</a
+                        >, useful for URLs, filenames, and IDs. (Released under
+                        the MIT License, by Sindre Sorhus)
+                    </li>
                 </ul>
             </div>
         </CollapsiblePanel>

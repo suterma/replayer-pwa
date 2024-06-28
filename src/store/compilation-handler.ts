@@ -26,6 +26,7 @@ import { MediaBlob, MediaUrl } from './types';
 import { v4 as uuidv4 } from 'uuid';
 import FileHandler from './filehandler';
 import { round } from 'lodash-es';
+import slugify from '@sindresorhus/slugify';
 
 /**
  * Provides compilation handling methods
@@ -672,20 +673,52 @@ export default class CompilationHandler {
     }
 
     /** Gets a usable file name (without extension), for a download operation,
-     * from a compilation title, artist and album
+     * from a compilation or track (using the respective title, artist and album)
+     * @remarks Slugifies the resulting file name.
      * @param compilation - the compilation to derive a file name from
+     * @returns A valid file name on all major operating systems.
      */
     public static getCompilationFileName(compilation: ICompilation): string {
-        let fileName = compilation?.Title?.trim() ?? '';
-        const artist = compilation?.Artist.trim();
+        const firstTrackTitle = compilation.Tracks.filter((t) => t.Name)
+            .map((t) => t.Name)
+            .at(0);
+
+        const firstTrackArtist = compilation.Tracks.filter((t) => t.Artist)
+            .map((t) => t.Artist)
+            .at(0);
+
+        const firstTrackAlbum = compilation.Tracks.filter((t) => t.Album)
+            .map((t) => t.Album)
+            .at(0);
+
+        const compilationTitle = compilation?.Title?.trim();
+        const compilationArtist = compilation?.Artist.trim();
+        const compilationAlbum = compilation?.Album?.trim();
+
+        let title = compilationTitle;
+        if (!title) {
+            title = firstTrackTitle ?? 'Replayer compilation';
+        }
+        let artist = compilationArtist;
+        if (!artist) {
+            artist = firstTrackArtist ?? '';
+        }
+
+        let album = compilationAlbum;
+        if (!album) {
+            album = firstTrackAlbum ?? '';
+        }
+
+        let fileName = title;
+
         if (artist) {
             fileName += ' by ' + artist;
         }
-        const album = compilation?.Album.trim();
+
         if (album) {
             fileName += ' on ' + album;
         }
-        return fileName;
+        return slugify(fileName);
     }
 
     /** Determines whether playback of the given cue has already passed

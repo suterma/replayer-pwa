@@ -1,85 +1,11 @@
 <template>
     <ModalDialog
         submit-button-text="Download"
-        :submit-button-disabled="!compilationTitle"
+        :submit-button-disabled="!proposedFileName"
         @submit="download()"
     >
         <template #title>Download compilation as...</template>
         <template #body>
-            <div class="field">
-                <label class="label">Compilation title*</label>
-                <div class="control has-icons-right">
-                    <StyledInput
-                        focus-on-mounted
-                        class="input"
-                        :class="{ 'is-danger': !compilationTitle }"
-                        :model-value="compilation.Title"
-                        type="text"
-                        placeholder="Compilation title"
-                        title="Compilation title"
-                        data-cy="compilation-title"
-                        @update:model-value="
-                            (value) => {
-                                updateCompilationTitle(value);
-                            }
-                        "
-                    >
-                    </StyledInput>
-
-                    <i
-                        v-show="!compilationTitle"
-                        class="icon is-small is-right mdi has-text-danger"
-                    >
-                        <svg viewBox="0 0 24 24">
-                            <path
-                                fill="currentColor"
-                                :d="mdiFlashTriangleOutline"
-                            />
-                        </svg>
-                    </i>
-                </div>
-                <p v-if="!compilationTitle" class="help is-danger">
-                    The compilation title is required
-                </p>
-                <p v-else class="help">
-                    The compilation title, plus artist and album if given, are
-                    used as file name
-                </p>
-            </div>
-            <div class="field is-horizontal">
-                <LabeledInput label="by">
-                    <StyledInput
-                        class="input is-italic"
-                        :model-value="compilation.Artist"
-                        type="text"
-                        placeholder="Artist"
-                        title="Artist"
-                        data-cy="track-artist"
-                        @update:model-value="
-                            (value) => {
-                                updateArtist(value);
-                            }
-                        "
-                    >
-                    </StyledInput>
-                </LabeledInput>
-                <LabeledInput label="on">
-                    <StyledInput
-                        class="input is-italic"
-                        :model-value="compilation.Album"
-                        type="text"
-                        placeholder="Album"
-                        title="Album"
-                        data-cy="track-album"
-                        @update:model-value="
-                            (value) => {
-                                updateAlbum(value);
-                            }
-                        "
-                    >
-                    </StyledInput>
-                </LabeledInput>
-            </div>
             <div class="field">
                 <div class="control">
                     <label class="radio">
@@ -146,7 +72,6 @@ import ModalDialog from '@/components/dialogs/ModalDialog.vue';
 import LabeledInput from '@/components/editor/LabeledInput.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import type { ICompilation } from '@/store/ICompilation';
-import { mdiFlashTriangleOutline } from '@mdi/js';
 
 export default defineComponent({
     name: 'CompilationDownloadDialog',
@@ -172,45 +97,14 @@ export default defineComponent({
             isDownloadZip,
         };
     },
-    data() {
-        return {
-            mdiFlashTriangleOutline: mdiFlashTriangleOutline,
-        };
-    },
 
     computed: {
-        compilationTitle(): string {
-            return this.compilation?.Title ?? '';
-        },
-
         proposedFileName(): string {
             return CompilationHandler.getCompilationFileName(this.compilation);
         },
     },
 
     methods: {
-        /** Updates the compilation title */
-        updateCompilationTitle(title: string) {
-            if (this.compilation) {
-                const artist = this.compilation?.Artist;
-                const album = this.compilation?.Album;
-                useAppStore().updateCompilationData(title, artist, album);
-            }
-        },
-
-        /** Updates the track artist */
-        updateArtist(artist: string) {
-            const title = this.compilation.Title;
-            const album = this.compilation.Album;
-            useAppStore().updateCompilationData(title, artist, album);
-        },
-        /** Updates the track album */
-        updateAlbum(album: string) {
-            const title = this.compilation.Title;
-            const artist = this.compilation.Artist;
-            useAppStore().updateCompilationData(title, artist, album);
-        },
-
         /** Initiates the download of the current compilation with the chosen target type
          */
         download(): void {

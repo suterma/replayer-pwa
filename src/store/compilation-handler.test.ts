@@ -15,6 +15,7 @@ import { expect, describe, it, beforeEach, afterEach } from 'vitest';
 import { MediaBlob } from './types';
 import CompilationHandler from './compilation-handler';
 import { Compilation } from './Compilation';
+import { Track } from './Track';
 
 describe('CompilationHandler.ts', () => {
     let mediaBlobs = new Array<MediaBlob>();
@@ -155,7 +156,7 @@ describe('CompilationHandler.ts', () => {
         );
     });
 
-    it('should provide a proper file name for a fully annotated complilation', async () => {
+    it('should provide a proper file name for a fully annotated compilation', async () => {
         //Arrange
         const testCompilation = new Compilation(
             'c:\\file',
@@ -173,10 +174,10 @@ describe('CompilationHandler.ts', () => {
             CompilationHandler.getCompilationFileName(testCompilation);
 
         //Assert
-        expect(actual).toEqual('test-title by test-artist on test-album');
+        expect(actual).toEqual('test-title-by-test-artist-on-test-album');
     });
 
-    it('should provide a proper file name for a title-only complilation', async () => {
+    it('should provide a proper file name for a title-only compilation', async () => {
         //Arrange
         const testCompilation = new Compilation(
             'c:\\file',
@@ -197,7 +198,7 @@ describe('CompilationHandler.ts', () => {
         expect(actual).toEqual('test-title');
     });
 
-    it('should provide a proper file name for a title and artist complilation', async () => {
+    it('should provide a proper file name for a title and artist compilation', async () => {
         //Arrange
         const testCompilation = new Compilation(
             'c:\\file',
@@ -215,10 +216,10 @@ describe('CompilationHandler.ts', () => {
             CompilationHandler.getCompilationFileName(testCompilation);
 
         //Assert
-        expect(actual).toEqual('test-title by test-artist');
+        expect(actual).toEqual('test-title-by-test-artist');
     });
 
-    it('should provide a proper file name for a title and album complilation', async () => {
+    it('should provide a proper file name for a title and album compilation', async () => {
         //Arrange
         const testCompilation = new Compilation(
             'c:\\file',
@@ -236,6 +237,88 @@ describe('CompilationHandler.ts', () => {
             CompilationHandler.getCompilationFileName(testCompilation);
 
         //Assert
-        expect(actual).toEqual('test-title on test-album');
+        expect(actual).toEqual('test-title-on-test-album');
+    });
+
+    it('should provide a proper file name with ugly input characters', async () => {
+        //Arrange
+        const testCompilation = new Compilation(
+            'c:\\file',
+            '"Don\'t Cry", Bass' /*title*/,
+            '',
+            '',
+            '',
+            '',
+            [],
+            new Set<string>([]),
+        );
+
+        //Act
+        const actual =
+            CompilationHandler.getCompilationFileName(testCompilation);
+
+        //Assert
+        expect(actual).toEqual('dont-cry-bass');
+    });
+
+    it('should provide a proper file name with german umlauts', async () => {
+        //Arrange
+        const testCompilation = new Compilation(
+            'c:\\file',
+            'Chömed, mier wänd go Chrieseli günne' /*title*/,
+            '',
+            '',
+            '',
+            '',
+            [],
+            new Set<string>([]),
+        );
+
+        //Act
+        const actual =
+            CompilationHandler.getCompilationFileName(testCompilation);
+
+        //Assert
+        expect(actual).toEqual('choemed-mier-waend-go-chrieseli-guenne');
+    });
+
+    it('should provide a proper file name for a track title only compilation', async () => {
+        //Arrange
+        const testCompilation = new Compilation(
+            'c:\\file',
+            '' /*title*/,
+            '',
+            '',
+            'test-url',
+            'test-id',
+            [],
+            new Set<string>([]),
+        );
+        testCompilation.Tracks.push(
+            new Track(
+                'testTrackName',
+                '',
+                '',
+                5 /*pre-roll*/,
+                null /*playheadPosition*/,
+                1 /*playbackRate*/,
+                null /*meter*/,
+                false /*useMeasureNumbers*/,
+                'https://example.com/test.mp3',
+                'track-deadbeef',
+                [] /*cues*/,
+                new Set<string>(['default-tag']),
+                60,
+                1,
+                null,
+            ),
+        );
+
+        //Act
+        const actual =
+            CompilationHandler.getCompilationFileName(testCompilation);
+
+        //Assert
+        expect(actual).toEqual('test-track-name');
     });
 });
