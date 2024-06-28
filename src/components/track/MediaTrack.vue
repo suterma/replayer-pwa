@@ -330,7 +330,7 @@
                     <PlayheadSlider
                         :disabled="!canPlay"
                         class="is-fullwidth ml-4-tablet mr-4-tablet"
-                        :model-value="currentPosition ?? 0"
+                        :model-value="currentPositionCoarse"
                         :track-duration="track.Duration"
                         @update:model-value="
                             (position) => seekToSeconds(position)
@@ -519,7 +519,7 @@
                                     >
                                         <PlayheadSlider
                                             class="is-fullwidth"
-                                            :model-value="currentPosition ?? 0"
+                                            :model-value="currentPositionCoarse"
                                             :track-duration="track.Duration"
                                             :disabled="!canPlay"
                                             @update:model-value="
@@ -981,6 +981,15 @@ const currentPositionDisplay = computed(() =>
     CompilationHandler.convertToDisplayTime(currentPosition.value),
 );
 provide(currentPositionDisplayInjectionKey, readonly(currentPositionDisplay));
+
+/** The coarse (with 1 digit after the comma) playback progress in the current track, in [seconds]
+ * @remarks This is used for the slider progress component only
+ * @devdoc A coarser value is used here to avoid unneccessarily frequent slider component updates.
+ * This is quite a micro optimisation, but still saves about 50% time when the playback is running.
+ */
+const currentPositionCoarse = computed(
+    () => Math.round(currentPosition.value * 10) / 10,
+);
 
 // --- Track state ---
 
