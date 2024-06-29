@@ -1,4 +1,6 @@
-<!-- Taken from slipmatio /control-knob (MIT-Licensed) -->
+<!-- Taken from https://github.com/slipmatio/control-knob/blob/main/src/ControlKnob.vue (MIT-Licensed) -->
+<!-- Credits: https://web.replayer.app/#/about -->
+<!-- This code has been slightly adapted for the Replayer project -->
 <script setup lang="ts">
 import {
     HALF_VIEWBOX,
