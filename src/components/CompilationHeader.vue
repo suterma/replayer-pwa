@@ -4,99 +4,108 @@
         <div class="level-left">
             <!-- Title and artist info is only used when set or in compilations with more than one track -->
             <!-- On small devices, only title is used -->
-            <template
-                v-if="
-                    isEditable &&
-                    (compilation.hasLabels() || compilation.Tracks.length > 1)
-                "
-            >
+            <template v-if="isEditable">
                 <!-- Display in edit view, when there is a Title or more than one track -->
-                <div
-                    class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
+                <template
+                    v-if="
+                        compilation.hasLabels() || compilation.Tracks.length > 1
+                    "
                 >
-                    <div class="field is-fullwidth">
-                        <p class="control is-expanded">
-                            <StyledInput
-                                v-if="
-                                    isEditable &&
-                                    (compilation.Title ||
-                                        compilation.Tracks.length > 1)
-                                "
-                                class="input title is-3"
-                                :model-value="compilation.Title"
-                                placeholder="Compilation title"
-                                title="Compilation title"
-                                @change="updateTitle($event.target.value)"
-                            />
-                        </p>
-                    </div>
-                </div>
-                <CoveredPanel
-                    v-if="compilation.Title"
-                    :reveal-for="[compilation.Artist]"
-                    title="Artist name for this compilation"
-                >
-                    <template #caption>
-                        <span class="label">by</span>
-                    </template>
                     <div
                         class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
                     >
                         <div class="field is-fullwidth">
                             <p class="control is-expanded">
-                                <LabeledInput label="by">
-                                    <StyledInput
-                                        class="input is-italic"
-                                        :model-value="compilation.Artist"
-                                        type="text"
-                                        placeholder="Artist"
-                                        title="Artist"
-                                        data-cy="track-artist"
-                                        focus-on-mounted
-                                        @update:model-value="
-                                            (value) => {
-                                                updateArtist(value);
-                                            }
-                                        "
-                                    >
-                                    </StyledInput>
-                                </LabeledInput>
+                                <StyledInput
+                                    v-if="
+                                        isEditable &&
+                                        (compilation.Title ||
+                                            compilation.Tracks.length > 1)
+                                    "
+                                    class="input title is-3"
+                                    :model-value="compilation.Title"
+                                    placeholder="Compilation title"
+                                    title="Compilation title"
+                                    @change="updateTitle($event.target.value)"
+                                />
                             </p>
                         </div>
                     </div>
-                </CoveredPanel>
-                <CoveredPanel
-                    v-if="compilation.Title"
-                    :reveal-for="[compilation.Album]"
-                    title="Album name for this compilation"
-                >
-                    <template #caption><span class="label">on</span></template>
-                    <div
-                        class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
+                    <CoveredPanel
+                        v-if="compilation.Title"
+                        :reveal-for="[compilation.Artist]"
+                        title="Artist name for this compilation"
                     >
-                        <div class="field is-fullwidth">
-                            <p class="control is-expanded">
-                                <LabeledInput label="on">
-                                    <StyledInput
-                                        class="input is-italic"
-                                        :model-value="compilation.Album"
-                                        type="text"
-                                        placeholder="Album"
-                                        title="Album"
-                                        data-cy="track-album"
-                                        focus-on-mounted
-                                        @update:model-value="
-                                            (value) => {
-                                                updateAlbum(value);
-                                            }
-                                        "
-                                    >
-                                    </StyledInput>
-                                </LabeledInput>
-                            </p>
+                        <template #caption>
+                            <span class="label">by</span>
+                        </template>
+                        <div
+                            class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
+                        >
+                            <div class="field is-fullwidth">
+                                <p class="control is-expanded">
+                                    <LabeledInput label="by">
+                                        <StyledInput
+                                            class="input is-italic"
+                                            :model-value="compilation.Artist"
+                                            type="text"
+                                            placeholder="Artist"
+                                            title="Artist"
+                                            data-cy="track-artist"
+                                            focus-on-mounted
+                                            @update:model-value="
+                                                (value) => {
+                                                    updateArtist(value);
+                                                }
+                                            "
+                                        >
+                                        </StyledInput>
+                                    </LabeledInput>
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                </CoveredPanel>
+                    </CoveredPanel>
+                    <CoveredPanel
+                        v-if="compilation.Title"
+                        :reveal-for="[compilation.Album]"
+                        title="Album name for this compilation"
+                    >
+                        <template #caption
+                            ><span class="label">on</span></template
+                        >
+                        <div
+                            class="level-item is-narrow is-flex-shrink-2 is-justify-content-flex-start"
+                        >
+                            <div class="field is-fullwidth">
+                                <p class="control is-expanded">
+                                    <LabeledInput label="on">
+                                        <StyledInput
+                                            class="input is-italic"
+                                            :model-value="compilation.Album"
+                                            type="text"
+                                            placeholder="Album"
+                                            title="Album"
+                                            data-cy="track-album"
+                                            focus-on-mounted
+                                            @update:model-value="
+                                                (value) => {
+                                                    updateAlbum(value);
+                                                }
+                                            "
+                                        >
+                                        </StyledInput>
+                                    </LabeledInput>
+                                </p>
+                            </div>
+                        </div>
+                    </CoveredPanel>
+                </template>
+                <template v-else>
+                    <span class="title is-3">
+                        <!-- Use a placeholder to still use the height when not actual title is displayed -->
+                        &nbsp;
+                    </span></template
+                >
             </template>
             <template v-else>
                 <!-- Display in non-edit view -->
