@@ -54,7 +54,6 @@
         "sub-events": "^1.9.0",
         "uuid": "^8.3.2",
         "vue": "^3.4.15",
-        "vue-audio-level-meter": "^1.1.8",
         "vue-global-events": "^2.2.0",
         "vue-peaks": "^2.0.2",
         "vue-router": "^4.4.0",

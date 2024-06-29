@@ -172,7 +172,7 @@ import HtmlMediaHandler from '@/code/media/HtmlMediaHandler';
 import { useAudioStore } from '@/store/audio';
 import { Subscription } from 'sub-events';
 import { FadingMode } from '@/code/media/IAudioFader';
-import AudioLevelMeter from 'vue-audio-level-meter/src/components/AudioLevelMeter.vue';
+import AudioLevelMeter from '@/components/displays/AudioLevelMeter.vue';
 import VideoTextTrackController from '@/components/track/VideoTextTrackController.vue';
 import FileHandler from '@/store/filehandler';
 import CoveredPanel from '@/components/CoveredPanel.vue';
