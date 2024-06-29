@@ -198,6 +198,46 @@ describe('CompilationHandler.ts', () => {
         expect(actual).toEqual('test-title');
     });
 
+    it('should provide a proper file name for a title-only compilation with track', async () => {
+        //Arrange
+        const testCompilation = new Compilation(
+            'c:\\file',
+            'testCompilationTitle',
+            ' ',
+            ' ',
+            'test-url',
+            'test-id',
+            [],
+            new Set<string>([]),
+        );
+        testCompilation.Tracks.push(
+            new Track(
+                'testTrackName',
+                'testTrackArtist',
+                'testTrackAlbum',
+                5 /*pre-roll*/,
+                null /*playheadPosition*/,
+                1 /*playbackRate*/,
+                null /*meter*/,
+                false /*useMeasureNumbers*/,
+                'https://example.com/test.mp3',
+                'track-deadbeef',
+                [] /*cues*/,
+                new Set<string>(['default-tag']),
+                60,
+                1,
+                null,
+            ),
+        );
+
+        //Act
+        const actual =
+            CompilationHandler.getCompilationFileName(testCompilation);
+
+        //Assert
+        expect(actual).toEqual('test-compilation-title');
+    });
+
     it('should provide a proper file name for a title and artist compilation', async () => {
         //Arrange
         const testCompilation = new Compilation(

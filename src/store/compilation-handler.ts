@@ -695,29 +695,33 @@ export default class CompilationHandler {
         const compilationArtist = compilation?.Artist.trim();
         const compilationAlbum = compilation?.Album?.trim();
 
-        let title = compilationTitle;
-        if (!title) {
-            title = firstTrackTitle ?? 'Replayer compilation';
-        }
-        let artist = compilationArtist;
-        if (!artist) {
-            artist = firstTrackArtist ?? '';
+        // provide the default
+        let fileName = 'Replayer compilation';
+
+        //  It the compilation has a title, use all copilation metadata
+        if (compilationTitle) {
+            fileName = compilationTitle;
+            if (compilationArtist) {
+                fileName += ' by ' + compilationArtist;
+            }
+
+            if (compilationAlbum) {
+                fileName += ' on ' + compilationAlbum;
+            }
+        } else {
+            // Try the first track metadata
+            if (firstTrackTitle) {
+                fileName = firstTrackTitle;
+                if (firstTrackArtist) {
+                    fileName += ' by ' + firstTrackArtist;
+                }
+
+                if (firstTrackAlbum) {
+                    fileName += ' on ' + firstTrackAlbum;
+                }
+            }
         }
 
-        let album = compilationAlbum;
-        if (!album) {
-            album = firstTrackAlbum ?? '';
-        }
-
-        let fileName = title;
-
-        if (artist) {
-            fileName += ' by ' + artist;
-        }
-
-        if (album) {
-            fileName += ' on ' + album;
-        }
         return slugify(fileName);
     }
 
