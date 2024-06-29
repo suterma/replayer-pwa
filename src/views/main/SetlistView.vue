@@ -55,6 +55,16 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Selectable tags -->
+            <TagsSelector
+                v-if="compilationHasTags && experimentalUseTags"
+                v-experiment="experimentalUseTags"
+                :all-tags="getAllTags"
+                :selected-tags="selectedTags"
+                @selected="selectTag"
+                @deselected="deselectTag"
+            ></TagsSelector>
         </div>
 
         <!-- When not each track is on a new page, show the compilation only once -->
@@ -62,16 +72,6 @@
         <h1 v-if="!printTracksOnNewPage" class="title is-3">
             {{ compilation.Title }}
         </h1>
-
-        <!-- Selectable tags -->
-        <TagsSelector
-            v-if="compilationHasTags && experimentalUseTags"
-            v-experiment="experimentalUseTags"
-            :all-tags="getAllTags"
-            :selected-tags="selectedTags"
-            @selected="selectTag"
-            @deselected="deselectTag"
-        ></TagsSelector>
 
         <table class="table is-fullwidth">
             <draggable
