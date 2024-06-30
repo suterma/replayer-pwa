@@ -13,8 +13,8 @@
 
 export const mediaSourceUrls = [
     {
-        name: 'PDF',
-        url: 'https://marcelsuter.ch/wp-content/uploads/2018/08/Complete-compilation-public.pdf',
+        name: 'DOCX',
+        url: 'https://example.com/this-does-not-exist.docx',
     },
     {
         name: 'webp image',
