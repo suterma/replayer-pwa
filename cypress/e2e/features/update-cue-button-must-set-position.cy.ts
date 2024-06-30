@@ -21,7 +21,10 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
             cy.load(`/#/edit?media=${mediaSourceUrl.url}`);
             cy.consentIfYouTube(mediaSourceUrl.url);
 
-            cy.get('button[data-cy="insert-cue"]').first().click();
+            cy.get('button[data-cy="insert-cue"]')
+                .filter(':visible')
+                .first()
+                .click();
 
             // ACT (go to the middle of the track)
             cy.get('button[data-cy="toggle-playback"]').first().click();
@@ -35,6 +38,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
 
             // ACT (update cue)
             cy.get('[data-cy="cue-editors"] button[data-cy="adjust-time"]')
+                .filter(':visible')
                 .first()
                 .click();
 
