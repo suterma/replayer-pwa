@@ -87,7 +87,6 @@ import { useAppStore } from '@/store/app';
 import NoSleep from 'nosleep.js';
 import { useSettingsStore } from '@/store/settings';
 import type { ICompilation } from '@/store/ICompilation';
-import { PlaybackMode } from '@/store/PlaybackMode';
 import TagsSelector from '@/components/editor/TagsSelector.vue';
 
 /** Displays the contained set of tracks according to the required mode.
@@ -122,14 +121,8 @@ const { preventScreenTimeout } = storeToRefs(settings);
 watch(
     () => activeTrackId.value,
     () => {
-        const trackId = activeTrackId;
-
-        if (trackId && !hasSingleMediaTrack.value) {
-            console.debug('scrolling to activated track ', trackId.value);
-            nextTick(() => {
-                scrollToTrack(trackId.value);
-            });
-        }
+        console.debug('scrolling to activated track:', activeTrackId);
+        scrollToActiveTrack();
     },
     { immediate: true /* to handle it at least once after mount time */ },
 );
@@ -140,18 +133,10 @@ watch(
 watch(
     () => trackViewMode.value,
     () => {
-        const trackId = activeTrackId;
-
-        if (trackId.value && !hasSingleMediaTrack.value) {
-            console.debug('scrolling to mode-changed track ', trackId.value);
-            nextTick(() => {
-                if (trackId != null) {
-                    scrollToTrack(trackId.value);
-                }
-            });
-        }
+        console.debug('scrolling to mode-changed track:', activeTrackId.value);
+        scrollToActiveTrack();
     },
-    { immediate: true /* to handle it at least once after mount time */ },
+    { immediate: false /* to handle it only at actual change */ },
 );
 
 /**
@@ -190,20 +175,34 @@ function deactivateWakeLock(): void {
     }
 }
 
-/** Visually scrolls to the given track, making it visually at the top of
+/** Visually scrolls to the active track, making it visually at the top of
  * the view.
+ * @remarks Scrolling is actually only executed if there is more than one track
+ * and there is an active track
  */
-function scrollToTrack(trackId: string) {
-    if (trackId) {
-        const trackElement = document.getElementById('track-' + trackId);
+function scrollToActiveTrack() {
+    if (
+        activeTrackId.value &&
+        activeTrackId.value != CompilationHandler.EmptyId &&
+        !hasSingleMediaTrack.value
+    ) {
+        nextTick(() => {
+            if (activeTrackId.value != null) {
+                const trackElement = document.getElementById(
+                    'track-' + activeTrackId.value,
+                );
 
-        VueScrollTo.scrollTo(trackElement, {
-            /** Always scroll, make it on top of the view */
-            force: true,
-            /** empirical value (taking into account the non-existing fixed top navbar) */
-            offset: -22,
-            /** Avoid interference with the key press overlay */
-            cancelable: false,
+                console.debug('scrolling to track:', activeTrackId.value);
+
+                VueScrollTo.scrollTo(trackElement, {
+                    /** Always scroll, make it on top of the view */
+                    force: true,
+                    /** empirical value (taking into account the non-existing fixed top navbar) */
+                    offset: -22,
+                    /** Avoid interference with the key press overlay */
+                    cancelable: false,
+                });
+            }
         });
     }
 }
