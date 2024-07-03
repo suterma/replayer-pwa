@@ -355,15 +355,6 @@
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
-                        v-model="experimentalUseTags"
-                        label="Show tags"
-                    ></LabeledCheckbox>
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <LabeledCheckbox
                         v-model="experimentalAllowTrackSharingByLink"
                         label="Show menu action to share a track by link"
                         hint="Uses the track API"
@@ -429,7 +420,6 @@ const {
     experimentalMultitrack,
     experimentalUseQueueCueMode,
     experimentalUseMeter,
-    experimentalUseTags,
     experimentalHideStageMark,
 } = storeToRefs(settings);
 

@@ -1,3 +1,18 @@
+## [2.4.0](https://github.com/suterma/replayer-pwa/compare/v2.3.0...v2.4.0) (2023-07-03)
+
+This release adds PDF display, improved fade- and preroll-handling, and tag-based filtering.
+
+## What's Changed
+
+-   Added tags for display and filtering
+-   Added omittable fades and pre-roll for cues
+-   No fades on loop (configurable)
+-   Updated filename handling when saving compilations
+-   Various bugfixes
+-   minor UI improvements
+
+**Full Changelog**: https://github.com/suterma/replayer-pwa/compare/v2.3.0...v2.4.0
+
 ## [2.3.0](https://github.com/suterma/replayer-pwa/compare/v2.1.0...v2.3.0) (2023-03-30)
 
 This release adds a playback rate setting, fixes some storage issues and implements various UI improvements.

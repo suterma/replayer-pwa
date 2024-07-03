@@ -16,8 +16,7 @@
 
         <!-- Selectable tags -->
         <TagsSelector
-            v-if="compilationHasTags && experimentalUseTags"
-            v-experiment="experimentalUseTags"
+            v-if="compilationHasTags"
             :all-tags="getAllTags"
             :selected-tags="selectedTags"
             @selected="selectTag"
@@ -105,7 +104,6 @@ const {
     hasSingleMediaTrack,
     allTracks,
     getAllTags,
-    playbackMode,
     trackViewMode,
     isTrackEditable,
     isTrackMixable,
@@ -115,7 +113,7 @@ const {
 const noSleep: NoSleep = new NoSleep();
 
 const settings = useSettingsStore();
-const { preventScreenTimeout, experimentalUseTags } = storeToRefs(settings);
+const { preventScreenTimeout } = storeToRefs(settings);
 
 /** Handle scrolling to the changed active track.
  * @remarks This is intentionally only invoked on when the active track changes (and it's not the only audio track).

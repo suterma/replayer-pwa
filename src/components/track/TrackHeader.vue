@@ -209,20 +209,14 @@
                 </CoveredPanel>
 
                 <!-- Tags -->
-                <CoveredPanel
-                    v-if="experimentalUseTags"
-                    v-experiment="experimentalUseTags"
-                    title="Tag"
-                    class="level-item"
-                >
+                <CoveredPanel title="Tag" class="level-item">
                     <template #caption
                         ><span class="label">Tags</span></template
                     >
                     <TagInput @new-tag="addNewTag"></TagInput>
                 </CoveredPanel>
                 <TagsDisplay
-                    v-if="trackHasTags && experimentalUseTags"
-                    v-experiment="experimentalUseTags"
+                    v-if="trackHasTags"
                     class="level-item"
                     :tags="props.track.Tags"
                     @remove="removeTag"
@@ -354,11 +348,8 @@ const app = useAppStore();
 const { isTrackEditable } = storeToRefs(app);
 
 const settings = useSettingsStore();
-const {
-    experimentalUseMeter,
-    experimentalAllowTrackSharingByLink,
-    experimentalUseTags,
-} = storeToRefs(settings);
+const { experimentalUseMeter, experimentalAllowTrackSharingByLink } =
+    storeToRefs(settings);
 
 const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
 

@@ -58,8 +58,7 @@
 
             <!-- Selectable tags -->
             <TagsSelector
-                v-if="compilationHasTags && experimentalUseTags"
-                v-experiment="experimentalUseTags"
+                v-if="compilationHasTags"
                 :all-tags="getAllTags"
                 :selected-tags="selectedTags"
                 @selected="selectTag"
@@ -194,9 +193,6 @@ function printWindow() {
 }
 
 // --- Tag handling ---
-
-const settings = useSettingsStore();
-const { experimentalUseTags } = storeToRefs(settings);
 
 const compilationHasTags = computed(() => {
     return getAllTags.value.size > 0;

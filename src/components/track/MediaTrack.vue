@@ -134,7 +134,6 @@
 
                         <TagsDisplay
                             v-if="!isTrackEditable && trackHasTags"
-                            v-experiment="experimentalUseTags"
                             :tags="props.track.Tags"
                             small
                             readonly
@@ -1043,7 +1042,6 @@ const {
     showOverviewWaveformOnEdit,
     useFadingOnLoopBoundaries,
     experimentalUseMeter,
-    experimentalUseTags,
 } = storeToRefs(settings);
 
 const {

@@ -100,11 +100,10 @@ export const getters = {
 
         // specifically handle the experiment - remove after official release of tags
         const settings = useSettingsStore();
-        const { experimentalUseTags } = storeToRefs(settings);
 
         let tracks = new Array<ITrack>();
         // if any tag is selected, filter by these selected tags
-        if (isAnyTagSelected && experimentalUseTags.value) {
+        if (isAnyTagSelected) {
             console.debug('app::allTracks:selectedTags', selectedTags);
             tracks =
                 state.compilation.value.Tracks?.filter((track) => {

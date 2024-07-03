@@ -23,8 +23,7 @@
                     <TrackTitleName :name="track.Name"></TrackTitleName>
                 </h2>
                 <TagsDisplay
-                    v-if="trackHasTags && experimentalUseTags"
-                    v-experiment="experimentalUseTags"
+                    v-if="trackHasTags"
                     class="ml-2"
                     small
                     readonly
@@ -161,8 +160,6 @@ const settings = useSettingsStore();
 const { experimentalUseMeter } = storeToRefs(settings);
 
 // --- Tag handling ---
-
-const { experimentalUseTags } = storeToRefs(settings);
 
 const trackHasTags = computed(() => {
     return props.track.Tags.size > 0;

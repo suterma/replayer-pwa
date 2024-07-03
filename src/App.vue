@@ -140,6 +140,11 @@ function handleAppUpdate() {
                 'Version 2.3.0: Storage bugfixes and minor UI improvements\r\n' +
                 updateText;
         }
+        if (compare(previousVersion, '2.4.0', '<')) {
+            updateText =
+                'Version 2.4.0: PDF display, improved fade- and preroll-handling, and tag-based filtering\r\n' +
+                updateText;
+        }
 
         acknowledgeVersion(currentVersion, updateText).then(() => {
             app.updateAcknowledgedVersion(currentVersion);
