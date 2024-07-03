@@ -46,7 +46,7 @@ const youtubeManager = createManager({
 });
 
 /** Creates the Replayer VueJs app */
-createApp(App)
+const app = createApp(App)
     .use(createPinia())
     .use(router)
     .use(VueScrollTo, { duration: 300 /* replayer-transition-duration */ })
@@ -55,19 +55,21 @@ createApp(App)
     .use(youtubeManager)
     .directive('focus', FocusDirective)
     .directive('experiment', ExperimentDirective)
-    .directive('tooltip', TooltipDirective)
-    .mount('#app');
+    .directive('tooltip', TooltipDirective);
 
-/** Show general errors (including unhandled promises) as message*/
+// --- Show general errors (including unhandled promises) as message ---
+
 const message = useMessageStore();
-onerror = (_event, _source, _lineno, _colno, error) => {
-    message.pushError(`${error?.name}: ${error?.message}`);
+// Add a custom error handler, useful for logging errors
+app.config.errorHandler = (err) => {
+    message.pushError(`${err}`);
 };
 
 window.addEventListener(
     'unhandledrejection',
     function (event: PromiseRejectionEvent) {
-        console.error(event?.reason, event);
         message.pushError(event?.reason);
     },
 );
+
+app.mount('#app');
