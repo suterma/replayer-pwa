@@ -11,7 +11,6 @@
  * JavaScript code in this page
  */
 
-//import router, { Route } from '@/router';
 import router, { Route } from '@/router';
 import type { ICompilation } from '../ICompilation';
 import type { ITrack } from '../ITrack';
@@ -22,8 +21,6 @@ import { computed } from 'vue';
 import { TrackViewMode } from '../TrackViewMode';
 import type { ICue } from '../ICue';
 import { PlaybackMode } from '../PlaybackMode';
-import { useSettingsStore } from '../settings';
-import { storeToRefs } from 'pinia';
 
 export const getters = {
     /** Defines the function to determine whether a compilation is available (created or loaded) */
@@ -97,9 +94,6 @@ export const getters = {
     allTracks: computed(() => {
         const selectedTags = [...state.compilation.value.SelectedTags];
         const isAnyTagSelected = selectedTags.length > 0;
-
-        // specifically handle the experiment - remove after official release of tags
-        const settings = useSettingsStore();
 
         let tracks = new Array<ITrack>();
         // if any tag is selected, filter by these selected tags
@@ -293,8 +287,11 @@ export const getters = {
 
     // --- shuffling ---
 
-    /** Whether the tracks are currently in a shuffled order.
+    /** Whether the tracks are currently in a shuffled order
+     * @remarks The reason would be
+     * the playback mode being PlaybackMode.ShuffleCompilation
      */
+
     isTracksShuffled: computed(
         () => state.playbackMode.value === PlaybackMode.ShuffleCompilation,
     ),

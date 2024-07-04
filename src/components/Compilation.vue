@@ -88,6 +88,7 @@ import NoSleep from 'nosleep.js';
 import { useSettingsStore } from '@/store/settings';
 import type { ICompilation } from '@/store/ICompilation';
 import TagsSelector from '@/components/editor/TagsSelector.vue';
+import { PlaybackMode } from '@/store/PlaybackMode';
 
 /** Displays the contained set of tracks according to the required mode.
  * @remarks Also handles the common replayer events for compilations
@@ -211,7 +212,7 @@ function scrollToActiveTrack() {
  */
 function continueAfterTrack(trackId: string): void {
     console.debug('continueAfterTrack', trackId);
-    if (isLoopingPlaybackMode) {
+    if (isLoopingPlaybackMode.value) {
         app.playNextTrack();
     }
 }
