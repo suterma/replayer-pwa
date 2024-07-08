@@ -1,4 +1,7 @@
 <template>
+    <router-link to="/demo"> Demo</router-link>
+    <span class="mx-2"></span>
+
     <a
         href="https://replayer.app#how-it-works"
         alt="Link to the Replayer app website with the how it works section"
