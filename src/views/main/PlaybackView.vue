@@ -33,8 +33,7 @@
             v-if="isTrackEditable || !hasCompilation"
             class="section pt-6 pl-0 pr-0 block"
         >
-            <!-- Offer the demo only when no compilation/track is shown -->
-            <MediaDropZone :offer-demo="!hasCompilation" />
+            <MediaDropZone />
         </div>
 
         <!--During edit, with available media, offer the media list -->
