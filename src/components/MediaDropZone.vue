@@ -32,7 +32,7 @@
                     type="file"
                     multiple
                     class="is-hidden"
-                    :accept="acceptedFiles"
+                    :accept="FileHandler.acceptedFileList"
                     data-cy="input-file"
                     @change="onChange"
                 />
@@ -106,19 +106,6 @@
             </form>
         </div>
 
-        <template v-if="offerDemo">
-            <div class="level-item has-text-centered">
-                <div class="ml-3 mr-3">&mdash; OR &mdash;</div>
-            </div>
-            <div class="level-item has-text-centered">
-                <router-link to="/demo">
-                    <button class="button">
-                        <span>Try the demo</span>
-                    </button></router-link
-                >
-            </div>
-        </template>
-
         <!-- A slot for an adornment -->
         <div v-if="$slots.default" class="level-item">
             <slot></slot>
@@ -126,17 +113,18 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue';
 import FileHandler from '@/store/filehandler';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiSwapHorizontal, mdiMusicNotePlus } from '@mdi/js';
-import { mapActions } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { useMessageStore } from '@/store/messages';
 import { Route } from '@/router';
+import { useRouter } from 'vue-router';
 
-/** Accepts input of files and URLs for tracks, by presenting a drop zone
+/** Accepts input of files and URLs for tracks and compilations, by presenting a drop zone
  * (with file input) and a URL text box
  * @remarks Supports collapsing the control after load, to keep the user
  * more focused
@@ -146,324 +134,286 @@ import { Route } from '@/router';
  * @remarks Includes a slot at the end of the indicative text, for an
  * adornment icon of size 40px
  */
-export default defineComponent({
-    name: 'MediaDropZone',
-    components: { BaseIcon },
-    props: {
-        /** The URL/file name of the media source to replace
-         * @remarks If set, the single-file "replace" mode is considered active
-         * @remarks In the store, the file is not replaced, since it may be used by other tracks.
-         */
-        replaceUrl: {
-            type: String,
-            default: undefined,
-        },
-        /** The track Id of the track, whose media source is to replace
-         * @remarks If set, the single-file "replace" mode is considered active
-         */
-        trackId: {
-            type: String,
-            default: undefined,
-        },
-        /** Whether to offer a demo button */
-        offerDemo: {
-            type: Boolean,
-            default: false,
-        },
+
+const props = defineProps({
+    /** The URL/file name of the media source to replace
+     * @remarks If set, the single-file "replace" mode is considered active
+     * @remarks In the store, the file is not replaced, since it may be used by other tracks.
+     */
+    replaceUrl: {
+        type: String,
+        default: undefined,
     },
-    emits: [
-        /** One or more files or an URL have been selected and are about to load
-         * @remarks This event can be used to trigger a perparatory action
-         * for the loading of the resources
-         */
-        'accepted',
-    ],
-    data() {
-        return {
-            /** Indicates whether there is currently a dragging operation ongoing */
-            isDraggingOver: false,
-
-            /** The URL from which the media can be fetched from */
-            url: '',
-
-            /** Whether this component is currently loading data from an URL */
-            isLoadingFromUrl: false,
-            /** Whether this component is currently processing data from an URL */
-            isProcessingDataFromUrl: false,
-            /** Whether this component is currently loading data from a file */
-            isLoadingFromFile: false,
-
-            /** Icons from @mdi/js */
-            mdiSwapHorizontal: mdiSwapHorizontal,
-            mdiMusicNotePlus: mdiMusicNotePlus,
-        };
-    },
-    computed: {
-        acceptedFiles(): string {
-            return FileHandler.acceptedFileList;
-        },
-        /** Determines whether this control is in the replacement mode */
-        isReplacementMode(): boolean {
-            if (this.replaceUrl && this.replaceUrl.length > 0) {
-                return true;
-            }
-            return false;
-        },
-        replaceInfo(): string {
-            return this.isReplacementMode
-                ? `Replace: '${this.replaceUrl}'. `
-                : '';
-        },
-    },
-    async mounted() {
-        this.registerLaunchQueue();
-    },
-    methods: {
-        ...mapActions(useMessageStore, [
-            'pushError',
-            'pushProgress',
-            'popProgress',
-        ]),
-
-        /** Registers the consumer for files received via the launch queue
-         * @remarks These are handeled similar to when loaded via the file input
-         */
-        registerLaunchQueue() {
-            console.debug('MediaDropZone::registerLaunchQueue');
-            if (
-                'launchQueue' in window /*&& 'files' in LaunchParams.prototype*/
-            ) {
-                console.log('File Handling API is supported!');
-
-                (window as any).launchQueue.setConsumer(
-                    async (launchParams: { files: unknown }): Promise<void> => {
-                        const launchFiles =
-                            launchParams.files as FileSystemFileHandle[];
-
-                        const lauchQueueMessage = `Loading a total of ${launchFiles.length} files from the launch queue`;
-                        this.pushProgress(lauchQueueMessage);
-
-                        const files = new Array<File>();
-                        for (const fileHandle of launchFiles) {
-                            const file: File = await (
-                                fileHandle as any
-                            ).getFile();
-                            files.push(file);
-                        }
-                        this.loadMediaFiles(files)
-                            .then(() => {
-                                console.log(
-                                    `Totally ${files.length} files (from launch queue) loaded.`,
-                                );
-                            })
-                            .catch((errorMessage: string) =>
-                                this.pushError(errorMessage),
-                            )
-                            .finally(() => {
-                                this.popProgress(lauchQueueMessage);
-                            });
-                    },
-                );
-            } else {
-                console.error('File Handling API is not supported!');
-            }
-        },
-
-        openFile() {
-            console.debug('MediaDropZone::openFile');
-            (this.$refs.file as HTMLInputElement).click();
-        },
-        onChange() {
-            const files = (this.$refs.file as HTMLInputElement)
-                .files as unknown as File[];
-            this.loadMediaFiles(files);
-        },
-        /** Checks whether a file is supported by examining mime type and/or the file name (by prefix/suffix) */
-        isSupported(file: File): boolean {
-            console.log('Filename: ' + file.name);
-            console.log('Type: ' + file.type);
-            console.log('Size: ' + file.size + ' bytes');
-
-            return FileHandler.isSupportedFile(file);
-        },
-
-        /** Immediately loads all available media files by loading their content
-         */
-        async loadMediaFiles(files: File[]): Promise<void> {
-            console.debug('MediaDropZone::loadMediaFiles');
-            this.$emit('accepted');
-
-            // Array is required to use the forEach and other functions
-            const filesArray = Array.from(files);
-            filesArray.forEach((file) => {
-                this.loadMediaFile(file);
-            });
-
-            console.table(
-                filesArray.map(function (file) {
-                    return {
-                        name: file.name,
-                        size: file.size,
-                        type: file.type,
-                    };
-                }),
-            );
-
-            //If a single package or compilation has been loaded, the intention was most likely to play it
-            if (
-                filesArray.length === 1 &&
-                filesArray[0] &&
-                (FileHandler.isSupportedPackageFile(filesArray[0]) ||
-                    FileHandler.isSupportedCompilationFileName(
-                        filesArray[0].name,
-                    ))
-            ) {
-                this.$router.push(Route.Play);
-            } else {
-                //otherwise (for a new media file, for example), suggest editing it's track
-                this.$router.push(Route.Edit);
-            }
-        },
-
-        /** Loads a single media file by loading it's content
-         * @param {File} file - Any supported file (package, compilation or media)
-         */
-        async loadMediaFile(file: File): Promise<void> {
-            console.debug('MediaDropZone::loadMediaFile:file.name', file.name);
-
-            this.isLoadingFromFile = true;
-            useAppStore()
-                .loadFromFile(file)
-                .then(() => {
-                    if (FileHandler.isSupportedMediaFile(file)) {
-                        if (this.isReplacementMode) {
-                            if (this.trackId) {
-                                this.updateFileForTrack(this.trackId, file);
-                            }
-                        } else {
-                            useAppStore().addDefaultTrack(file.name);
-                        }
-                    }
-                })
-                .catch((errorMessage: string) => {
-                    this.pushError(errorMessage);
-                })
-                .finally(() => {
-                    this.isLoadingFromFile = false;
-                });
-        },
-        dragover(event: DragEvent) {
-            event.preventDefault();
-            // Add some visual fluff to show the user can drop its files
-            console.debug('Dragging over...');
-            this.isDraggingOver = true;
-        },
-        dragleave(/*event: Event*/) {
-            // Clean up
-            console.debug('Drag leaves');
-            this.isDraggingOver = false;
-        },
-        drop(event: DragEvent) {
-            event.preventDefault();
-            const draggedFiles = event?.dataTransfer?.files;
-            if (draggedFiles) {
-                const fileElement = this.$refs.file as HTMLInputElement;
-                if (fileElement) {
-                    fileElement.files = draggedFiles;
-                    this.onChange(); // Trigger the onChange event manually
-                    this.isDraggingOver = false;
-                }
-            }
-        },
-
-        /** Uses a single URL and load it's content */
-        useUrl(): void {
-            console.debug('MediaDropZone::useUrl:url:', this.url);
-            this.$emit('accepted');
-
-            if (this.url) {
-                this.isProcessingDataFromUrl = true;
-
-                // Determine the type of data that is about to load
-                // If unsure, assume it's a media file (possibly from an URL
-                // without any file extension in the path)
-                let isUsingSingleMediaFile = true;
-                if (
-                    FileHandler.isSupportedPackageFileName(this.url) ||
-                    FileHandler.isSupportedCompilationFileName(this.url)
-                ) {
-                    isUsingSingleMediaFile = false;
-                }
-
-                // Try to load the assumed type
-                const load = (url: string) => {
-                    if (isUsingSingleMediaFile) {
-                        return useAppStore()
-                            .useMediaFromUrl(url)
-                            .catch((errorMessage: string) => {
-                                this.pushError(errorMessage);
-                            });
-                    } else {
-                        return useAppStore()
-                            .loadFromUrl(url)
-                            .catch((errorMessage: string) => {
-                                this.pushError(errorMessage);
-                            });
-                    }
-                };
-                load(this.url)
-                    .then(() => {
-                        if (this.isReplacementMode) {
-                            if (this.trackId) {
-                                this.updateExistingTrackWithUrl(
-                                    this.trackId,
-                                    this.url,
-                                );
-                            }
-                        } else {
-                            // Decide what to do with this new resource:
-                            if (isUsingSingleMediaFile) {
-                                //If a single new media file has been loaded, the intention was most likely to edit it
-                                this.$router.push(Route.Edit);
-                                useAppStore().addDefaultTrack(this.url);
-                            } else {
-                                //If a package has been loaded, the intention was most likely to play it
-                                this.$router.push(Route.Play);
-                            }
-                        }
-                    })
-                    .catch((errorMessage: string) => {
-                        this.pushError(errorMessage);
-                    })
-                    .finally(() => {
-                        this.isProcessingDataFromUrl = false;
-                        this.url = ''; //remove the now loaded url
-                    });
-            }
-        },
-
-        /** Replaces the track's URL with a reference to this replacement file
-         * @param {replacementFile} - the File to update the reference to
-         * @param {trackId} - The Id of the track to update
-         */
-        updateFileForTrack(trackId: string, replacementFile: File): void {
-            const fileName = replacementFile.name.normalize();
-            this.updateExistingTrackWithUrl(trackId, fileName);
-        },
-
-        /** Updates an existing track with the given URL
-         * @param trackId {string} - The Id of the track to update
-         *  @param url {string} - The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
-         */
-        updateExistingTrackWithUrl(
-            trackId: string,
-
-            url: string,
-        ) {
-            useAppStore().updateTrackUrl(trackId, url);
-        },
+    /** The track Id of the track, whose media source is to replace
+     * @remarks If set, the single-file "replace" mode is considered active
+     */
+    trackId: {
+        type: String,
+        default: undefined,
     },
 });
+
+const emit = defineEmits([
+    /** One or more files or an URL have been selected and are about to load
+     * @remarks This event can be used to trigger a perparatory action
+     * for the loading of the resources
+     */
+    'accepted',
+]);
+
+/** Indicates whether there is currently a dragging operation ongoing */
+const isDraggingOver = ref(false);
+
+/** The URL from which the media can be fetched from */
+const url = ref('');
+
+/** Whether this component is currently processing data from an URL */
+const isProcessingDataFromUrl = ref(false);
+
+/** Whether this component is currently loading data from a file */
+const isLoadingFromFile = ref(false);
+
+/** Determines whether this control is in the replacement mode */
+const isReplacementMode = computed(() => {
+    if (props.replaceUrl && props.replaceUrl.length > 0) {
+        return true;
+    }
+    return false;
+});
+
+const replaceInfo = computed(() => {
+    return isReplacementMode.value ? `Replace: '${props.replaceUrl}'. ` : '';
+});
+
+onMounted(() => {
+    registerLaunchQueue();
+});
+
+const router = useRouter();
+const message = useMessageStore();
+const app = useAppStore();
+
+/** Registers the consumer for files received via the launch queue
+ * @remarks These are handeled similar to when loaded via the file input
+ */
+function registerLaunchQueue() {
+    console.debug('MediaDropZone::registerLaunchQueue');
+    if ('launchQueue' in window /*&& 'files' in LaunchParams.prototype*/) {
+        console.log('File Handling API is supported!');
+
+        (window as any).launchQueue.setConsumer(
+            async (launchParams: { files: unknown }): Promise<void> => {
+                const launchFiles =
+                    launchParams.files as FileSystemFileHandle[];
+
+                const lauchQueueMessage = `Loading a total of ${launchFiles.length} files from the launch queue`;
+                message.pushProgress(lauchQueueMessage);
+
+                const files = new Array<File>();
+                for (const fileHandle of launchFiles) {
+                    const file: File = await (fileHandle as any).getFile();
+                    files.push(file);
+                }
+                loadMediaFiles(files)
+                    .then(() => {
+                        console.log(
+                            `Totally ${files.length} files (from launch queue) loaded.`,
+                        );
+                    })
+                    .catch((errorMessage: string) =>
+                        message.pushError(errorMessage),
+                    )
+                    .finally(() => {
+                        message.popProgress(lauchQueueMessage);
+                    });
+            },
+        );
+    } else {
+        console.error('File Handling API is not supported!');
+    }
+}
+
+const file = ref(null);
+
+function openFile() {
+    console.debug('MediaDropZone::openFile');
+    (file.value as never as HTMLInputElement).click();
+}
+
+function onChange() {
+    const files = (file.value as never as HTMLInputElement)
+        .files as unknown as File[];
+    loadMediaFiles(files);
+}
+
+/** Loads all available media files by loading their content
+ */
+async function loadMediaFiles(files: File[]): Promise<void> {
+    console.debug('MediaDropZone::loadMediaFiles');
+    emit('accepted');
+
+    // Array is required to use the forEach and other functions
+    const filesArray = Array.from(files);
+    filesArray.forEach((file) => {
+        loadMediaFile(file);
+    });
+
+    console.table(
+        filesArray.map(function (file) {
+            return {
+                name: file.name,
+                size: file.size,
+                type: file.type,
+            };
+        }),
+    );
+
+    //If a single package or compilation has been loaded, the intention was most likely to play it
+    if (
+        filesArray.length === 1 &&
+        filesArray[0] &&
+        (FileHandler.isSupportedPackageFile(filesArray[0]) ||
+            FileHandler.isSupportedCompilationFileName(filesArray[0].name))
+    ) {
+        router.push(Route.Play);
+    } else {
+        //otherwise (for a new media file, for example), suggest editing it's track
+        router.push(Route.Edit);
+    }
+}
+
+/** Loads a single media file by loading it's content
+ * @param {File} file - Any supported file (package, compilation or media)
+ */
+async function loadMediaFile(file: File): Promise<void> {
+    console.debug('MediaDropZone::loadMediaFile:file.name', file.name);
+
+    isLoadingFromFile.value = true;
+    app.loadFromFile(file)
+        .then(() => {
+            if (FileHandler.isSupportedMediaFile(file)) {
+                if (isReplacementMode.value) {
+                    if (props.trackId) {
+                        updateFileForTrack(props.trackId, file);
+                    }
+                } else {
+                    app.addDefaultTrack(file.name);
+                }
+            }
+        })
+        .catch((errorMessage: string) => {
+            message.pushError(errorMessage);
+        })
+        .finally(() => {
+            isLoadingFromFile.value = false;
+        });
+}
+
+function dragover(event: DragEvent) {
+    event.preventDefault();
+    // Add some visual fluff to show the user can drop its files
+    console.debug('Dragging over...');
+    isDraggingOver.value = true;
+}
+function dragleave(/*event: Event*/) {
+    // Clean up
+    console.debug('Drag leaves');
+    isDraggingOver.value = false;
+}
+function drop(event: DragEvent) {
+    event.preventDefault();
+    const draggedFiles = event?.dataTransfer?.files;
+    if (draggedFiles) {
+        const fileElement = file.value as never as HTMLInputElement;
+        if (fileElement) {
+            fileElement.files = draggedFiles;
+            onChange(); // Trigger the onChange event manually
+            isDraggingOver.value = false;
+        }
+    }
+}
+
+/** Uses a single URL from the URL input and load it's content */
+function useUrl(): void {
+    console.debug('MediaDropZone::useUrl:url:', url.value);
+    emit('accepted');
+
+    if (url.value) {
+        isProcessingDataFromUrl.value = true;
+
+        // Determine the type of data that is about to load
+        // If unsure, assume it's a media file (possibly from an URL
+        // without any file extension in the path)
+        let isUsingSingleMediaFile = true;
+        if (
+            FileHandler.isSupportedPackageFileName(url.value) ||
+            FileHandler.isSupportedCompilationFileName(url.value)
+        ) {
+            isUsingSingleMediaFile = false;
+        }
+
+        // Try to load the assumed type
+        const load = (url: string) => {
+            if (isUsingSingleMediaFile) {
+                return app
+                    .useMediaFromUrl(url)
+                    .catch((errorMessage: string) => {
+                        message.pushError(errorMessage);
+                    });
+            } else {
+                return app.loadFromUrl(url).catch((errorMessage: string) => {
+                    message.pushError(errorMessage);
+                });
+            }
+        };
+        load(url.value)
+            .then(() => {
+                if (isReplacementMode.value) {
+                    if (props.trackId) {
+                        updateExistingTrackWithUrl(props.trackId, url.value);
+                    }
+                } else {
+                    // Decide what to do with this new resource:
+                    if (isUsingSingleMediaFile) {
+                        //If a single new media file has been loaded, the intention was most likely to edit it
+                        router.push(Route.Edit);
+                        app.addDefaultTrack(url.value);
+                    } else {
+                        //If a package has been loaded, the intention was most likely to play it
+                        router.push(Route.Play);
+                    }
+                }
+            })
+            .catch((errorMessage: string) => {
+                message.pushError(errorMessage);
+            })
+            .finally(() => {
+                isProcessingDataFromUrl.value = false;
+                url.value = ''; //remove the now loaded url
+            });
+    }
+}
+
+/** Replaces the track's URL with a reference to this replacement file
+ * @param {replacementFile} - the File to update the reference to
+ * @param {trackId} - The Id of the track to update
+ */
+function updateFileForTrack(trackId: string, replacementFile: File): void {
+    const fileName = replacementFile.name.normalize();
+    updateExistingTrackWithUrl(trackId, fileName);
+}
+
+/** Updates an existing track with the given URL
+ * @param trackId {string} - The Id of the track to update
+ *  @param url {string} - The URL or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
+ */
+function updateExistingTrackWithUrl(
+    trackId: string,
+
+    url: string,
+) {
+    app.updateTrackUrl(trackId, url);
+}
 </script>
 <style scoped>
 /** Style the box like a typical drop zone */
