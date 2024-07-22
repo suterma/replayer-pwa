@@ -11,18 +11,16 @@
                  invokes the invisible file input -->
             <!-- @keydown.enter handler to have it working with the enter key, too -->
             <label
+                ref="dropZoneRef"
                 for="assetsFieldHandle"
                 class="is-clickable box button"
                 :class="{
-                    'has-background-info-dark': isDraggingOver,
-                    'has-border-info': isDraggingOver,
                     'is-loading': isLoadingFromFile,
+                    'has-background-info-dark': isOverDropZone,
+                    'has-border-info': isOverDropZone,
                 }"
                 :title="replaceInfo"
                 tabindex="0"
-                @dragover="dragover"
-                @dragleave="dragleave"
-                @drop="drop"
                 @keydown.enter="openFile()"
             >
                 <input
@@ -32,20 +30,17 @@
                     type="file"
                     multiple
                     class="is-hidden"
-                    :accept="FileHandler.acceptedFileList"
+                    :accept="FileHandler.supportedFileTypes"
                     data-cy="input-file"
                     @change="onChange"
                 />
                 <template v-if="isReplacementMode">
-                    <BaseIcon v-once :path="mdiSwapHorizontal" />
+                    <BaseIcon v-once class="mr-2" :path="mdiSwapHorizontal" />
                     <span>Click / drop to replace file</span>
                 </template>
                 <template v-else>
-                    <BaseIcon v-once :path="mdiMusicNotePlus" />
-                    <span class="is-hidden-desktop">Load file(s)</span>
-                    <span class="is-hidden-touch"
-                        >Click / drop to load file(s)</span
-                    >
+                    <BaseIcon v-once class="mr-2" :path="mdiMusicNotePlus" />
+                    <span>Load / Drop file(s)</span>
                 </template>
             </label>
         </div>
@@ -114,6 +109,7 @@
 </template>
 
 <script setup lang="ts">
+import { useDropZone } from '@vueuse/core';
 import { computed, onMounted, ref } from 'vue';
 import FileHandler from '@/store/filehandler';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
@@ -160,8 +156,21 @@ const emit = defineEmits([
     'accepted',
 ]);
 
-/** Indicates whether there is currently a dragging operation ongoing */
-const isDraggingOver = ref(false);
+const dropZoneRef = ref<HTMLDivElement>();
+const file = ref<HTMLInputElement>();
+
+/** Handles file drop on the drop zone */
+function onDrop(files: File[] | null) {
+    if (files) {
+        loadMediaFiles(files);
+    }
+}
+
+const { isOverDropZone } = useDropZone(dropZoneRef, {
+    onDrop,
+    // specify the types of data to be received.
+    dataTypes: FileHandler.supportedMimeTypes,
+});
 
 /** The URL from which the media can be fetched from */
 const url = ref('');
@@ -231,8 +240,6 @@ function registerLaunchQueue() {
         console.error('File Handling API is not supported!');
     }
 }
-
-const file = ref<HTMLInputElement>();
 
 function openFile() {
     console.debug('MediaDropZone::openFile');
@@ -304,30 +311,6 @@ async function loadMediaFile(file: File): Promise<void> {
         .finally(() => {
             isLoadingFromFile.value = false;
         });
-}
-
-function dragover(event: DragEvent) {
-    event.preventDefault();
-    // Add some visual fluff to show the user can drop its files
-    console.debug('Dragging over...');
-    isDraggingOver.value = true;
-}
-function dragleave(/*event: Event*/) {
-    // Clean up
-    console.debug('Drag leaves');
-    isDraggingOver.value = false;
-}
-function drop(event: DragEvent) {
-    event.preventDefault();
-    const draggedFiles = event?.dataTransfer?.files;
-    if (draggedFiles) {
-        const fileElement = file.value as never as HTMLInputElement;
-        if (fileElement) {
-            fileElement.files = draggedFiles;
-            onChange(); // Trigger the onChange event manually
-            isDraggingOver.value = false;
-        }
-    }
 }
 
 /** Uses a single URL from the URL input and load it's content */

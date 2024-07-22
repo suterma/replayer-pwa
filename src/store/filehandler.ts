@@ -29,9 +29,72 @@ export default class FileHandler {
         }
         return null;
     }
-    /** The set of accepted file extensions */
-    static acceptedFileList =
+    /** The set of supported file types
+     * @remarks Extensions, separated by comma */
+    static supportedFileTypes =
         '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.mp4,.m4v,.webm,.ogv,.txt,.pdf';
+
+    /** The set of supported media mime types
+     * @remarks Array of mime type strings */
+    static supportedMediaMimeTypes = [
+        /** Audio */
+        'audio/mp3' /*mp3, by chrome*/,
+        'audio/mpeg' /*mp3*/,
+        'audio/vnd.wave' /*wav*/,
+        'audio/wav' /*wav*/,
+        'audio/wave' /*wav*/,
+        'audio/x-wav' /*wav*/,
+        'audio/flac' /*flac*/,
+        'application/ogg' /*ogg*/,
+        'audio/ogg' /*ogg*/,
+        'audio/vorbis' /*ogg*/,
+        'audio/vorbis-config' /*ogg*/,
+        'audio/x-aiff' /*aiff*/,
+        'audio/aiff' /*aiff*/,
+        'audio/aac' /*aac*/,
+        'text/plain' /*plain text*/,
+        'application/pdf' /*PDF*/,
+        /** Video */
+        'video/mp4' /*MP4 video*/,
+        'video/webm' /*WebM video*/,
+        'video/ogg' /*Ogg Theora video*/,
+    ];
+
+    /** The set of supported package mime types
+     * @remarks Array of mime type strings */
+    static supportedPackageMimeTypes = [
+        'application/zip' /* zip, officially registered by IANA*/,
+        'application/octet-stream' /* arbitrary binary data */,
+        'application/x-zip-compressed' /* zip, non-standard */,
+        'binary/octet-stream' /*z ip, very unofficial, used by adonia */,
+    ];
+
+    /** The set of supported XML mime types
+     * @remarks Array of mime type strings */
+    static supportedXmlMimeTypes = [
+        'application/xml' /*xml*/,
+        'text/xml' /*xml*/,
+    ];
+
+    /** The set of supported text mime types
+     * @remarks Array of mime type strings */
+    static supportedTextMimeTypes = ['text/plain' /*text*/];
+
+    /** The set of supported PDF types
+     * @remarks Array of PDF type strings */
+    static supportedPdfMimeTypes = ['application/pdf' /*PDF*/];
+
+    /** The overall set of supported mime types
+     * @remarks This is a union of all spcifically supported mime types */
+    static supportedMimeTypes = [
+        ...new Set([
+            ...FileHandler.supportedMediaMimeTypes,
+            ...FileHandler.supportedPackageMimeTypes,
+            ...FileHandler.supportedXmlMimeTypes,
+            ...FileHandler.supportedTextMimeTypes,
+            ...FileHandler.supportedPdfMimeTypes,
+        ]),
+    ];
 
     /** Returns whether the given path represents a Mac OS X resource fork.
      * @remarks Mac OS X resource forks are not processed by Replayer.
@@ -428,46 +491,32 @@ export default class FileHandler {
      * @devdoc See https://stackoverflow.com/a/72232884/79485 about mime types
      */
     static isSupportedPackageMimeType(type: string | undefined): boolean {
-        return (
-            !!type &&
-            [
-                'application/zip' /* zip, officially registered by IANA*/,
-                'application/octet-stream' /* arbitrary binary data */,
-                'application/x-zip-compressed' /* zip, non-standard */,
-                'binary/octet-stream' /*z ip, very unofficial, used by adonia */,
-            ].includes(type)
-        );
+        return !!type && FileHandler.supportedPackageMimeTypes.includes(type);
     }
 
     /** Returns whether the given MIME type is a supported compilation MIME type by Replayer
      * @remarks XML data is always considered a Compilation in this context
      */
     static isSupportedCompilationMimeType(type: string | undefined): boolean {
-        return (
-            !!type &&
-            ['application/xml' /*xml*/, 'text/xml' /*xml*/].includes(type)
-        );
+        return !!type && FileHandler.supportedXmlMimeTypes.includes(type);
     }
 
     /** Returns whether the given MIME type is a supported XML compilation MIME type by Replayer
      */
     static isXmlMimeType(type: string | undefined): boolean {
-        return (
-            !!type &&
-            ['application/xml' /*xml*/, 'text/xml' /*xml*/].includes(type)
-        );
+        return !!type && FileHandler.supportedXmlMimeTypes.includes(type);
     }
 
     /** Returns whether the given MIME type is a supported text file MIME type by Replayer
      */
     static isTextMimeType(type: string | undefined): boolean {
-        return !!type && ['text/plain' /*text*/].includes(type);
+        return !!type && FileHandler.supportedTextMimeTypes.includes(type);
     }
 
     /** Returns whether the given MIME type is a supported PDF file MIME type by Replayer
      */
     static isPdfMimeType(type: string | undefined): boolean {
-        return !!type && ['application/pdf' /*PDF*/].includes(type);
+        return !!type && FileHandler.supportedPdfMimeTypes.includes(type);
     }
 
     /** Returns whether the given MIME type is a supported media MIME type by Replayer
@@ -475,32 +524,7 @@ export default class FileHandler {
      */
     static isSupportedMediaMimeType(type: string | undefined): boolean {
         //Check for supported MIME types (see https://stackoverflow.com/a/29672957)
-        return (
-            !!type &&
-            [
-                /** Audio */
-                'audio/mp3' /*mp3, by chrome*/,
-                'audio/mpeg' /*mp3*/,
-                'audio/vnd.wave' /*wav*/,
-                'audio/wav' /*wav*/,
-                'audio/wave' /*wav*/,
-                'audio/x-wav' /*wav*/,
-                'audio/flac' /*flac*/,
-                'application/ogg' /*ogg*/,
-                'audio/ogg' /*ogg*/,
-                'audio/vorbis' /*ogg*/,
-                'audio/vorbis-config' /*ogg*/,
-                'audio/x-aiff' /*aiff*/,
-                'audio/aiff' /*aiff*/,
-                'audio/aac' /*aac*/,
-                'text/plain' /*plain text*/,
-                'application/pdf' /*PDF*/,
-                /** Video */
-                'video/mp4' /*MP4 video*/,
-                'video/webm' /*WebM video*/,
-                'video/ogg' /*Ogg Theora video*/,
-            ].includes(type)
-        );
+        return !!type && FileHandler.supportedMediaMimeTypes.includes(type);
     }
 
     /** Gets the content MIME type from a fetch response
