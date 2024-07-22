@@ -3,7 +3,7 @@
         filling up the available horizontal space.
         The URL input is wider, because it should be able to easily deal with 
         lengthy input values -->
-    <div class="level media-drop-zone">
+    <div ref="dropZoneRef" class="level media-drop-zone">
         <div class="level-item has-text-centered">
             <!-- This is a combined file load and drop zone -->
             <!-- tabindex, to make the label tabbable with focus-->
@@ -11,13 +11,13 @@
                  invokes the invisible file input -->
             <!-- @keydown.enter handler to have it working with the enter key, too -->
             <label
-                ref="dropZoneRef"
                 for="assetsFieldHandle"
                 class="is-clickable box button"
                 :class="{
                     'is-loading': isLoadingFromFile,
                     'has-background-info-dark': isOverDropZone,
                     'has-border-info': isOverDropZone,
+                    'is-fullwidth': isOverDropZone,
                 }"
                 :title="replaceInfo"
                 tabindex="0"
@@ -45,11 +45,11 @@
             </label>
         </div>
 
-        <!-- The URL loading part -->
-        <div class="level-item has-text-centered">
+        <!-- The URL loading part (not shown during drop)-->
+        <div v-show="!isOverDropZone" class="level-item has-text-centered">
             <div class="ml-3 mr-3 is-single-line">&mdash; OR &mdash;</div>
         </div>
-        <div class="level-item is-flex-shrink-1">
+        <div v-show="!isOverDropZone" class="level-item is-flex-shrink-1">
             <form @submit.prevent="useUrl">
                 <div class="field has-addons">
                     <p class="control">
