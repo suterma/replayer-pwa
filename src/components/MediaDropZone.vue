@@ -118,7 +118,6 @@ import { computed, onMounted, ref } from 'vue';
 import FileHandler from '@/store/filehandler';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiSwapHorizontal, mdiMusicNotePlus } from '@mdi/js';
-import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import { useMessageStore } from '@/store/messages';
 import { Route } from '@/router';
@@ -233,33 +232,31 @@ function registerLaunchQueue() {
     }
 }
 
-const file = ref(null);
+const file = ref<HTMLInputElement>();
 
 function openFile() {
     console.debug('MediaDropZone::openFile');
-    (file.value as never as HTMLInputElement).click();
+    file.value?.click();
 }
 
 function onChange() {
-    const files = (file.value as never as HTMLInputElement)
-        .files as unknown as File[];
+    const files = Array.from(file.value?.files || []);
     loadMediaFiles(files);
 }
 
 /** Loads all available media files by loading their content
+ * @param files {File[]} - the files to load (Array is required to use the forEach and other functions)
  */
 async function loadMediaFiles(files: File[]): Promise<void> {
     console.debug('MediaDropZone::loadMediaFiles');
     emit('accepted');
 
-    // Array is required to use the forEach and other functions
-    const filesArray = Array.from(files);
-    filesArray.forEach((file) => {
+    files.forEach((file) => {
         loadMediaFile(file);
     });
 
     console.table(
-        filesArray.map(function (file) {
+        files.map(function (file) {
             return {
                 name: file.name,
                 size: file.size,
@@ -270,10 +267,10 @@ async function loadMediaFiles(files: File[]): Promise<void> {
 
     //If a single package or compilation has been loaded, the intention was most likely to play it
     if (
-        filesArray.length === 1 &&
-        filesArray[0] &&
-        (FileHandler.isSupportedPackageFile(filesArray[0]) ||
-            FileHandler.isSupportedCompilationFileName(filesArray[0].name))
+        files.length === 1 &&
+        files[0] &&
+        (FileHandler.isSupportedPackageFile(files[0]) ||
+            FileHandler.isSupportedCompilationFileName(files[0].name))
     ) {
         router.push(Route.Play);
     } else {
@@ -395,8 +392,8 @@ function useUrl(): void {
 }
 
 /** Replaces the track's URL with a reference to this replacement file
- * @param {replacementFile} - the File to update the reference to
- * @param {trackId} - The Id of the track to update
+ * @param replacementFile {string} - the File to update the reference to
+ * @param trackId {File}- The Id of the track to update
  */
 function updateFileForTrack(trackId: string, replacementFile: File): void {
     const fileName = replacementFile.name.normalize();
