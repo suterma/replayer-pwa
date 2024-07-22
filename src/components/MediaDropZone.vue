@@ -3,22 +3,21 @@
         filling up the available horizontal space.
         The URL input is wider, because it should be able to easily deal with 
         lengthy input values -->
-    <div ref="dropZoneRef" class="level media-drop-zone">
+    <div
+        ref="dropZoneRef"
+        class="level media-drop-zone box"
+        :class="{
+            'is-dropping': isOverDropZone,
+        }"
+    >
         <div class="level-item has-text-centered">
-            <!-- This is a combined file load and drop zone -->
             <!-- tabindex, to make the label tabbable with focus-->
             <!-- Because the label is tied to the file handler, clicking on it
                  invokes the invisible file input -->
             <!-- @keydown.enter handler to have it working with the enter key, too -->
             <label
                 for="assetsFieldHandle"
-                class="is-clickable box button"
-                :class="{
-                    'is-loading': isLoadingFromFile,
-                    'has-background-info-dark': isOverDropZone,
-                    'has-border-info': isOverDropZone,
-                    'is-fullwidth': isOverDropZone,
-                }"
+                class="is-clickable button"
                 :title="replaceInfo"
                 tabindex="0"
                 @keydown.enter="openFile()"
@@ -36,20 +35,20 @@
                 />
                 <template v-if="isReplacementMode">
                     <BaseIcon v-once class="mr-2" :path="mdiSwapHorizontal" />
-                    <span>Click / drop to replace file</span>
+                    <span>Select / drop to replace file</span>
                 </template>
                 <template v-else>
                     <BaseIcon v-once class="mr-2" :path="mdiMusicNotePlus" />
-                    <span>Load / Drop file(s)</span>
+                    <span>Select / Drop file(s)</span>
                 </template>
             </label>
         </div>
 
         <!-- The URL loading part (not shown during drop)-->
-        <div v-show="!isOverDropZone" class="level-item has-text-centered">
+        <div class="level-item has-text-centered">
             <div class="ml-3 mr-3 is-single-line">&mdash; OR &mdash;</div>
         </div>
-        <div v-show="!isOverDropZone" class="level-item is-flex-shrink-1">
+        <div class="level-item is-flex-shrink-1">
             <form @submit.prevent="useUrl">
                 <div class="field has-addons">
                     <p class="control">
@@ -178,9 +177,6 @@ const url = ref('');
 /** Whether this component is currently processing data from an URL */
 const isProcessingDataFromUrl = ref(false);
 
-/** Whether this component is currently loading data from a file */
-const isLoadingFromFile = ref(false);
-
 /** Determines whether this control is in the replacement mode */
 const isReplacementMode = computed(() => {
     if (props.replaceUrl && props.replaceUrl.length > 0) {
@@ -292,7 +288,6 @@ async function loadMediaFiles(files: File[]): Promise<void> {
 async function loadMediaFile(file: File): Promise<void> {
     console.debug('MediaDropZone::loadMediaFile:file.name', file.name);
 
-    isLoadingFromFile.value = true;
     app.loadFromFile(file)
         .then(() => {
             if (FileHandler.isSupportedMediaFile(file)) {
@@ -307,9 +302,6 @@ async function loadMediaFile(file: File): Promise<void> {
         })
         .catch((errorMessage: string) => {
             message.pushError(errorMessage);
-        })
-        .finally(() => {
-            isLoadingFromFile.value = false;
         });
 }
 
@@ -396,16 +388,31 @@ function updateExistingTrackWithUrl(
 }
 </script>
 <style scoped>
-/** Style the box like a typical drop zone */
-.media-drop-zone .box {
-    border-width: 1px;
-    border-style: dashed;
-}
-
-/* This level is designed to be contained inside other controls, possibly a level itself. Thus, no margin is applied here. 
+/* This level is designed to be contained inside other controls, possibly a level itself. Thus, no margin is applied here.
     If you require a typical BULMA level top/bottom margin, you must apply that externally. */
 .media-drop-zone {
     margin-top: 0;
     margin-bottom: 0;
+}
+
+/** Style the box like a typical drop zone, using a dashed border (initially invisible) */
+.media-drop-zone.box {
+    border-style: dashed;
+    border-color: transparent;
+
+    /* We need just the styles, not the layout of the box */
+    padding: 0;
+    background: none;
+
+    /* Make sure, the on-drop appearing border is not shifting the layout */
+    margin: -2px;
+}
+
+/** Show the typical style when dropping */
+.media-drop-zone.box.is-dropping {
+    border-color: inherit;
+}
+.media-drop-zone.box.is-dropping > * {
+    opacity: 0.5; /* like  'has-opacity-half' */
 }
 </style>
