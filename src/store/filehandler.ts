@@ -29,10 +29,6 @@ export default class FileHandler {
         }
         return null;
     }
-    /** The set of supported file types
-     * @remarks Extensions, separated by comma */
-    static supportedFileTypes =
-        '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.mp4,.m4v,.webm,.ogv,.txt,.pdf';
 
     /** The set of supported media mime types
      * @remarks Array of mime type strings */
@@ -95,6 +91,11 @@ export default class FileHandler {
             ...FileHandler.supportedPdfMimeTypes,
         ]),
     ];
+
+    /** The set of supported file types
+     * @remarks Lowercase extensions, separated by comma */
+    static supportedFileTypes =
+        '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.mp4,.m4v,.webm,.ogv,.txt,.pdf';
 
     /** Returns whether the given path represents a Mac OS X resource fork.
      * @remarks Mac OS X resource forks are not processed by Replayer.
@@ -289,7 +290,7 @@ export default class FileHandler {
         return false;
     }
 
-    /** Returns whether the given file name (by prefix/suffix) is any of the supported types by Replayer */
+    /** Returns whether the given file name (by it's extension) is any of the supported types by Replayer */
     static isSupportedFileName(fileName: string | undefined): boolean {
         if (
             this.isSupportedPackageFileName(fileName) ||
@@ -303,20 +304,10 @@ export default class FileHandler {
     /** Returns whether the given file name (by it's extension) is a supported package file name by Replayer
      */
     static isSupportedPackageFileName(fileName: string | undefined): boolean {
-        let isSupportedPackageFileName = false;
-        if (fileName) {
-            const fileExtension = this.getFileExtension(fileName);
-            if (fileExtension) {
-                if (['zip', 'rez' /*replayer zip*/].includes(fileExtension)) {
-                    isSupportedPackageFileName = true;
-                }
-            }
-        }
-
-        console.debug(
-            `filehander::isSupportedPackageFileName:fileName:'${fileName}' is isSupportedPackage?:'${isSupportedPackageFileName}'`,
-        );
-        return isSupportedPackageFileName;
+        return FileHandler.FileExtensionMatch(fileName, [
+            'zip',
+            'rez' /*replayer zip*/,
+        ]);
     }
 
     /** Returns whether the given file name (by it's extension) is a supported compilation file name by Replayer
@@ -346,10 +337,6 @@ export default class FileHandler {
                 isSupportedMediaFileName = true;
             }
         }
-
-        // console.debug(
-        //     `filehandler::isSupportedMediaFileName:fileName:'${fileName}' is isSupportedMedia?:'${isSupportedMediaFileName}'`,
-        // );
         return isSupportedMediaFileName;
     }
 
@@ -439,12 +426,13 @@ export default class FileHandler {
      */
     static isVideoFileName(fileName: string): boolean {
         const name = fileName.split('?')[0] ?? ''; //remove query from URL's
-        return (
-            name.endsWith('.mp4') ||
-            name.endsWith('.m4v') ||
-            name.endsWith('.webm') ||
-            name.endsWith('.ogv')
-        );
+
+        return FileHandler.FileExtensionMatch(fileName, [
+            'mp4',
+            'm4v',
+            'webm',
+            'ogv',
+        ]);
     }
 
     /** Returns whether the given file name (by prefix/suffix) is a supported audio file name by Replayer
@@ -454,17 +442,17 @@ export default class FileHandler {
      */
     static isAudioFileName(fileName: string): boolean {
         const name = fileName.split('?')[0] ?? ''; //remove query from URL's
-        return (
-            name.endsWith('.mp3') ||
-            name.endsWith('.wav') ||
-            name.endsWith('.wave') ||
-            name.endsWith('.flac') ||
-            name.endsWith('.ogg') ||
-            name.endsWith('.aiff') ||
-            name.endsWith('.aif') ||
-            name.endsWith('.aac') ||
-            name.endsWith('.m4a')
-        );
+        return FileHandler.FileExtensionMatch(fileName, [
+            'mp3',
+            'wav',
+            'wave',
+            'flac',
+            'ogg',
+            'aiff',
+            'aif',
+            'aac',
+            'm4a',
+        ]);
     }
 
     /** Returns whether the given file name (by prefix/suffix) is a supported text file name by Replayer
@@ -474,7 +462,7 @@ export default class FileHandler {
      */
     static isTextFileName(fileName: string): boolean {
         const name = fileName.split('?')[0] ?? ''; //remove query from URL's
-        return name.endsWith('.txt');
+        return FileHandler.FileExtensionMatch(fileName, ['txt']);
     }
 
     /** Returns whether the given file name (by prefix/suffix) is a supported PDF file name by Replayer
@@ -484,7 +472,7 @@ export default class FileHandler {
      */
     static isPdfFileName(fileName: string): boolean {
         const name = fileName.split('?')[0] ?? ''; //remove query from URL's
-        return name.endsWith('.pdf');
+        return FileHandler.FileExtensionMatch(fileName, ['pdf']);
     }
 
     /** Returns whether the given MIME type is a supported package MIME type by Replayer
@@ -550,7 +538,7 @@ export default class FileHandler {
         return mimeType;
     }
 
-    /** Gets the file extension (part after the last dot) of a filename
+    /** Gets the file extension (part after the last dot) of a filename, in lower case
      */
     static getFileExtension(fileName: string): string | undefined {
         return fileName?.split('.').pop()?.toLowerCase();
@@ -614,10 +602,7 @@ export default class FileHandler {
 
     /** Asserts whether the file name represents an XML compilation file */
     public static isXmlFileName(fileName: string): boolean {
-        const isXmlFileName =
-            fileName.toLowerCase().endsWith('.rex') ||
-            fileName.toLowerCase().endsWith('.xml');
-        return isXmlFileName;
+        return FileHandler.FileExtensionMatch(fileName, ['rex', 'xml']);
     }
 
     /** Determines whether the string contains a valid URL, starting with the http|https protocol.
@@ -650,6 +635,26 @@ export default class FileHandler {
             type: FileHandler.getFileMimeType(mediaFileName),
         });
         return new MediaBlob(mediaFileName, blob);
+    }
+
+    /** Whether the given filename's extionsion matches any of the provided extensions
+     * @param {string | undefined} fileName - the filename to test
+     * @param {string[]} extensions - a set of extensions to compare against. Expected to be lower case.
+     * @remarks The lower case variant of the file extension is compared.
+     */
+    public static FileExtensionMatch(
+        fileName: string | undefined,
+        extensions: string[],
+    ): boolean {
+        if (fileName) {
+            const fileExtension = this.getFileExtension(fileName);
+            if (fileExtension) {
+                if (extensions.includes(fileExtension.toLowerCase())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static BytesPerMegaByte = 1024 * 1024;

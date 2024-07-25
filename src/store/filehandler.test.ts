@@ -203,4 +203,29 @@ describe('filehandler.ts', () => {
         // Assert
         expect(actual).toBe(false);
     });
+
+    it('should recognise supported file types properly', async () => {
+        // Act & Assert
+        expect(FileHandler.isSupportedFileName('/path/file.PDF')).toBe(true);
+        expect(FileHandler.isSupportedFileName('/path/file.pdf')).toBe(true);
+        expect(FileHandler.isSupportedFileName('/path/file.mp3')).toBe(true);
+        expect(FileHandler.isSupportedFileName('/path/file.MP3')).toBe(true);
+        expect(FileHandler.isSupportedFileName('/path/file.txt')).toBe(true);
+        expect(FileHandler.isSupportedFileName('/path/file.flac')).toBe(true);
+        expect(FileHandler.isSupportedFileName('/path/file.Flac')).toBe(true);
+
+        expect(FileHandler.isSupportedFileName('/path/file.xyz')).toBe(false);
+        expect(FileHandler.isSupportedFileName('/path/file.abc')).toBe(false);
+        expect(FileHandler.isSupportedFileName('/path/file.1')).toBe(false);
+    });
+
+    it('should recognise supported file types properly', async () => {
+        // Act & Assert
+        expect(FileHandler.isVideoFileName('/path/file.mp4')).toBe(true);
+        expect(FileHandler.isVideoFileName('/path/file.MP4')).toBe(true);
+
+        expect(FileHandler.isVideoFileName('/path/file.xyz')).toBe(false);
+        expect(FileHandler.isVideoFileName('/path/file.abc')).toBe(false);
+        expect(FileHandler.isVideoFileName('/path/file.1')).toBe(false);
+    });
 });
