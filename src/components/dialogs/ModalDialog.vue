@@ -7,7 +7,7 @@
                     data-cy="modal-form"
                     @submit.prevent="
                         $emit('submit');
-                        closeDialog(true);
+                        closeDialog() /* providing the returnValue() */;
                     "
                 >
                     <header class="modal-card-head has-cropped-text">

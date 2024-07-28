@@ -430,6 +430,18 @@ export const actions = {
         }
     },
 
+    /** Deletes all cues of a track
+     * @remarks Also updates the persistent store of the compilation
+     */
+    deleteCues(trackId: string): void {
+        console.debug('actions::deleteCues:', trackId);
+
+        const matchingTrack = getters.getTrackById(trackId);
+        if (matchingTrack) {
+            matchingTrack.Cues = new Array<ICue>();
+        }
+    },
+
     /** Adds a new default track for the given file name or media URL to the compilation.
      * @remarks Track properties are derived from the given file name or url
      * The new track is made the selected track
@@ -491,7 +503,7 @@ export const actions = {
         state.scheduledCueId.value = CompilationHandler.EmptyId;
         state.selectedTrackId.value =
             compilation.Tracks.length == 1
-                ? compilation.Tracks[0]?.Id ?? CompilationHandler.EmptyId
+                ? (compilation.Tracks[0]?.Id ?? CompilationHandler.EmptyId)
                 : CompilationHandler.EmptyId;
     },
 

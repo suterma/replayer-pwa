@@ -17,6 +17,12 @@
             @click="addMultipleCues()"
         />
         <DropdownMenuButton
+            title="Inherit cues from..."
+            sub-title="(use cues from another track)"
+            :icon-path="mdiFileReplaceOutline"
+            @click="inheritMultipleCues()"
+        />
+        <DropdownMenuButton
             :disabled="props.track.Cues.length < 1"
             title="Reassign cue shortcuts"
             sub-title="(first as seed, then incrementing)"
@@ -64,13 +70,18 @@ import {
     mdiOrderNumericAscending,
     mdiFileDelimitedOutline,
     mdiDownload,
+    mdiFileReplaceOutline,
 } from '@mdi/js';
-import { addTextCues, confirm } from '@/code/ui/dialogs';
+import { addTextCues, inheritCues, confirm } from '@/code/ui/dialogs';
 import { useAppStore } from '@/store/app';
 import { computed, type PropType } from 'vue';
 import type { ICue } from '@/store/ICue';
 import type { ITrack } from '@/store/ITrack';
 import FileHandler from '@/store/filehandler';
+import { storeToRefs } from 'pinia';
+import { Cue } from '@/store/Cue';
+import { v4 as uuidv4 } from 'uuid';
+import { Meter } from '@/code/music/Meter';
 
 const props = defineProps({
     track: {
@@ -97,6 +108,56 @@ function addMultipleCues() {
     }
 }
 
+function inheritMultipleCues() {
+    if (props.track) {
+        inheritCues(props.track, mediaTracks.value).then(
+            ({ source, replaceCues, inheritMeterBpm, inheritTrackPreroll }) => {
+                if (source) {
+                    const targetTrackId = props.track.Id;
+
+                    // remove existing cues
+                    if (replaceCues) {
+                        app.deleteCues(targetTrackId);
+                    }
+
+                    // Inherit cues from source
+                    source.Cues.forEach((cue) => {
+                        // clone the cue, as this must not be the same object
+                        const clonedCue = new Cue(
+                            cue.Description,
+                            cue.Shortcut,
+                            cue.Time,
+                            cue.Duration,
+                            cue.OmitPreRoll,
+                            cue.OmitFadeIn,
+                            uuidv4(),
+                        );
+                        app.addCue(targetTrackId, clonedCue);
+                    });
+
+                    // Apply track properties
+                    if (inheritMeterBpm) {
+                        if (source.Meter) {
+                            app.updateMeter(targetTrackId, source.Meter);
+                        } else {
+                            const emptyMeter = new Meter(null, null, null);
+                            app.updateMeter(targetTrackId, emptyMeter);
+                        }
+                    }
+
+                    if (inheritTrackPreroll) {
+                        app.updateTrackPreRoll(targetTrackId, source.PreRoll);
+                    }
+
+                    console.debug(
+                        `TrackHeader::inheriting multiple cues from track done`,
+                    );
+                }
+            },
+        );
+    }
+}
+
 /** Removes the track from the compilation
  */
 function remove() {
@@ -113,6 +174,10 @@ function remove() {
 const isDownloadable = computed(() =>
     FileHandler.isDownloadableMediaFileName(props.track.Url),
 );
+
+// --- for inheriting cues ---
+
+const { mediaTracks } = storeToRefs(app);
 </script>
 <style scoped>
 /** Do not use the "external link" icon here */

@@ -1,16 +1,18 @@
 <template>
     <ModalDialog submit-button-text="Add" wide>
-        <template #title>Adding cues for '{{ track?.Name }}' from...</template>
+        <template #title>Adding cues for '{{ track?.Name }}' ...</template>
         <template #body>
-            <div class="control">
-                <textarea
-                    v-model="cueText"
-                    v-focus
-                    class="textarea is-size-7"
-                    placeholder="Description,Time[seconds],Shortcut"
-                    rows="8"
-                    autocomplete="off"
-                ></textarea>
+            <div class="field">
+                <div class="control">
+                    <textarea
+                        v-model="cueText"
+                        v-focus
+                        class="textarea is-size-7"
+                        placeholder="Description,Time[seconds],Shortcut"
+                        rows="8"
+                        autocomplete="off"
+                    ></textarea>
+                </div>
             </div>
 
             <div class="section pl-0 pr-0 block">
@@ -48,6 +50,7 @@ export default defineComponent({
         ModalDialog,
     },
     props: {
+        /** The target track to add cues to */
         track: {
             type: Object as PropType<ITrack>,
             required: true,
@@ -58,7 +61,7 @@ export default defineComponent({
         const cueText = ref('');
 
         /** NOTE: Returning the returnValue function is required by vue3-promise-dialog */
-        function returnValue(): ICue[] {
+        const returnValue = (): ICue[] => {
             const cues = new Array<ICue>();
             const lines = cueText.value.split('\n');
             let cueTime = 0;
@@ -89,7 +92,7 @@ export default defineComponent({
             console.debug('cues', cues);
 
             return cues;
-        }
+        };
 
         return {
             returnValue,
