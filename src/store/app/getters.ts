@@ -23,9 +23,10 @@ import type { ICue } from '../ICue';
 import { PlaybackMode } from '../PlaybackMode';
 
 export const getters = {
-    /** Defines the function to determine whether a compilation is available (created or loaded) */
+    /** Whether a compilation is currently loaded
+     * @remarks A compilation is recognized as existing, when there is at least one track, regardless of it's type
+     */
     hasCompilation: computed(() => {
-        //A compilation is recognized as existing, when there is at least one track, regardless of it's type
         if (
             state.compilation.value &&
             (state.compilation.value as ICompilation).Tracks.length > 0

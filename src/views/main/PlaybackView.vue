@@ -79,8 +79,25 @@ import CompilationKeyboardHandler from '@/components/CompilationKeyboardHandler.
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import type { ICompilation } from '@/store/ICompilation';
+import { watch } from 'vue';
 
 const app = useAppStore();
 const { isTrackEditable, compilation, hasCompilation, hasAnyAvailableMedia } =
     storeToRefs(app);
+
+// --- document title (for the compilation)
+
+/** For an unloaded compilation, the title is reverted to the default
+ */
+watch(
+    [() => hasCompilation.value],
+    ([hasCompilation]) => {
+        if (!hasCompilation) {
+            // use the default title
+            document.title =
+                'Replayer is a free, cue-based media player for rehearsals with playback music.';
+        }
+    },
+    { immediate: true },
+);
 </script>
