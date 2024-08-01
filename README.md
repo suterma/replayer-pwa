@@ -20,7 +20,7 @@ Try the <a href="https://web.replayer.app/#demo" target="_blank">demo in the bro
 
 # Latest release
 
--   The latest version is available at https://web.replayer.app (official release)
+-   The latest version is available live at https://web.replayer.app (official release)
     -   Test release at https://web-test.replayer.app
     -   Development release at https://web-devel.replayer.app
 -   Source code is availabe at [GitHub](https://github.com/suterma/replayer-pwa)
