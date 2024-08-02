@@ -66,14 +66,11 @@
 </template>
 
 <script setup lang="ts">
-import {
-    type PropType,
-    computed,
-    watch,
-    nextTick,
-    onMounted,
-    onUnmounted,
-} from 'vue';
+/** Displays the contained set of tracks according to the required mode.
+ * @remarks Also handles the common replayer events for compilations
+ * @remarks Also supports shuffling of tracks
+ */
+import { computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
 import VueScrollTo from 'vue-scrollto';
 import MediaTrack from '@/components/track/MediaTrack.vue';
 import MasterTrack from '@/components/track/MasterTrack.vue';
@@ -86,17 +83,7 @@ import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import NoSleep from 'nosleep.js';
 import { useSettingsStore } from '@/store/settings';
-import type { ICompilation } from '@/store/ICompilation';
 import TagsSelector from '@/components/editor/TagsSelector.vue';
-import { PlaybackMode } from '@/store/PlaybackMode';
-
-/** Displays the contained set of tracks according to the required mode.
- * @remarks Also handles the common replayer events for compilations
- * @remarks Also supports shuffling of tracks
- */
-defineProps({
-    compilation: { type: Object as PropType<ICompilation>, required: true },
-});
 
 const app = useAppStore();
 const {
@@ -107,6 +94,7 @@ const {
     trackViewMode,
     isTrackEditable,
     isTrackMixable,
+    compilation,
 } = storeToRefs(app);
 
 /** The wake lock fill-in that can prevent screen timeout */

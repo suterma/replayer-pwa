@@ -45,9 +45,9 @@
             </div>
 
             <div
-                class="field"
                 v-if="experimentalUseMeter"
                 v-experiment="experimentalUseMeter"
+                class="field"
             >
                 <div class="control">
                     <LabeledCheckbox
