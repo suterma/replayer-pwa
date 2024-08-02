@@ -16,7 +16,6 @@ import App from './App.vue';
 import { createPinia } from 'pinia';
 import router from './router';
 import VueScrollTo from 'vue-scrollto';
-import vClickOutside from 'click-outside-vue3';
 //@ts-ignore (because vue3-promise-dialog does not provide types)
 import { PromiseDialog } from 'vue3-promise-dialog';
 import { useMessageStore } from './store/messages';
@@ -50,7 +49,6 @@ const app = createApp(App)
     .use(createPinia())
     .use(router)
     .use(VueScrollTo, { duration: 300 /* replayer-transition-duration */ })
-    .use(vClickOutside)
     .use(PromiseDialog, {})
     .use(youtubeManager)
     .directive('focus', FocusDirective)

@@ -449,15 +449,6 @@
                         use, by Tiger Oakes)
                     </li>
                     <li>
-                        <a
-                            href="https://github.com/andymark-by/click-outside-vue3"
-                            target="_blank"
-                        >
-                            click-outside-vue3 </a
-                        >, a vue3 directive to react on clicks outside an
-                        element. (Released under the MIT License, by Andy Mark)
-                    </li>
-                    <li>
                         <a href="https://jestjs.io/" target="_blank"> Jest</a>,
                         a delightful JavaScript Testing Framework. (Released
                         under the MIT License, by Facebook)
