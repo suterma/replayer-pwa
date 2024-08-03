@@ -332,7 +332,7 @@ let onFadingChangedSubsription: Subscription;
 
 const mediaHandler: Ref<IMediaHandler | null> = ref(null);
 
-/** Properly destroy the handler, and abandon the video element, including it's handlers */
+/** Properly destroy the handler, and abandon the media element, including it's handlers */
 function destroyHandler(mediaElement: HTMLMediaElement): void {
     if (mediaHandler.value) {
         audio.removeMediaHandler(mediaHandler.value);
@@ -354,8 +354,8 @@ function destroyHandler(mediaElement: HTMLMediaElement): void {
     console.log('TrackMediaElement:destroyed');
 }
 
-function createAndEmitHandler(video: HTMLMediaElement): IMediaHandler {
-    const handler = new HtmlMediaHandler(video) as IMediaHandler;
+function createAndEmitHandler(mediaElement: HTMLMediaElement): IMediaHandler {
+    const handler = new HtmlMediaHandler(mediaElement) as IMediaHandler;
 
     console.log('TrackMediaElement:ready');
     emit('ready', handler);
@@ -511,7 +511,7 @@ watch(
     ([
         showLevelMeterForEdit,
         mediaUrl,
-        newMediaElement,
+        mediaElement,
         isTrackEditable,
         isTrackMixable,
     ]) => {
@@ -523,13 +523,13 @@ watch(
                     if (
                         showLevelMeterForEdit &&
                         mediaUrl &&
-                        newMediaElement &&
+                        mediaElement &&
                         !FileHandler.isValidHttpUrl(mediaUrl)
                     ) {
                         if (audioSource.value === null) {
                             audioSource.value =
                                 audioContext.value.createMediaElementSource(
-                                    newMediaElement,
+                                    mediaElement,
                                 );
                         }
                         audioSource.value.connect(
