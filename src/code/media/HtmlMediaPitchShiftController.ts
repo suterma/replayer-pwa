@@ -28,6 +28,11 @@ export default class HtmlMediaPitchShiftController
         MediaElementAudioSourceNode | AudioBufferSourceNode | null
     >;
 
+    /** The current pitch shift
+     * @remarks NOT IMPLEMENTED: this is just a dummy value
+     */
+    private _shift: number;
+
     /** @constructor
      * @param {HTMLMediaElement} media - The media element to act upon
      * @param {ShallowRef<MediaElementAudioSourceNode | AudioBufferSourceNode | null>} audioSource - A reference to the audio node, if set. Allows finer control over the media.
@@ -44,14 +49,11 @@ export default class HtmlMediaPitchShiftController
     ) {
         this._media = media;
         this._audioSource = audioSource;
+        this._shift = pitchShift;
 
-        // if (audioSource.value instanceof AudioBufferSourceNode) {
-        //     //TODO Maybes we should solve detune. with the new audiobuffersource node completely in this controller
-        //     const buffer = (audioSource.value as AudioBufferSourceNode).buffer;
-        //     audioSource.value  = new AudioBufferSourceNode()
-        // }
+        //TODO on pitch shift, initially and on change, repeatedly, detune the provided buffer
 
-        // //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
+        //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
         // media.onshiftchange = () => {
         //     const shift = 0; //TODOmedia.playbackRate;
         //     console.debug(`onshiftchange:shift:${shift}`);
@@ -72,11 +74,11 @@ export default class HtmlMediaPitchShiftController
     /** Gets the pitch shift.
      */
     get pitchShift(): number {
-        return 0; //TODO this._media.playbackRate;
+        return this._shift;
     }
     /** Sets the pitch shift.
      */
     set pitchShift(shift: number) {
-        //TODO this._media.playbackRate = rate;
+        this._shift = shift;
     }
 }

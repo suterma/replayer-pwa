@@ -5,7 +5,10 @@
         title="Media context menu"
         data-cy="context-menu-media"
     >
-        <DropdownMenuItem>
+        <DropdownMenuItem
+            v-if="experimentalPitchShift"
+            v-experiment="experimentalPitchShift"
+        >
             <MenuItemContent title="Shift">
                 <template #right-item>
                     <div class="button is-nav is-indicator">
@@ -104,6 +107,8 @@ import SpeedKnob from '../controls/SpeedKnob.vue';
 import type { ITrack } from '@/store/ITrack';
 import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
 import ParameterKnob from '../controls/ParameterKnob.vue';
+import { useSettingsStore } from '@/store/settings';
+import { storeToRefs } from 'pinia';
 
 /** A nav bar as header with a menu for a media item of a track
  */
@@ -118,6 +123,9 @@ const props = defineProps({
         required: true,
     },
 });
+
+const settings = useSettingsStore();
+const { experimentalPitchShift } = storeToRefs(settings);
 
 /** Updates the playback rate */
 function updatePlaybackRate(rate: number) {

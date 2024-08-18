@@ -141,6 +141,14 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         false,
     );
 
+    /** EXPERIMENTAL: Whether to show a menu for pitch shift
+     * @remarks Default is false
+     */
+    const experimentalPitchShift = useLocalStorage(
+        'experimentalPitchShift',
+        false,
+    );
+
     /** EXPERIMENTAL: Whether to use the queue cue mode
      * @remarks Default is false
      */
@@ -208,6 +216,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalShowEverythingEverywhereAllAtOnce.value = false;
         experimentalAllowTrackSharingByLink.value = false;
         experimentalMultitrack.value = false;
+        experimentalPitchShift.value = false;
         experimentalUseQueueCueMode.value = false;
         experimentalUseMeter.value = false;
         experimentalHideStageMark.value = false;
@@ -237,6 +246,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalShowEverythingEverywhereAllAtOnce,
         experimentalAllowTrackSharingByLink,
         experimentalMultitrack,
+        experimentalPitchShift,
         experimentalUseQueueCueMode,
         experimentalUseMeter,
         experimentalHideStageMark,

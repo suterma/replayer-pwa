@@ -374,6 +374,16 @@
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
+                        v-model="experimentalPitchShift"
+                        label="Allow pitch shift [NOT CURRENTLY IMPLEMENTED]"
+                        hint="Useful for intonation training"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
                         v-model="experimentalHideStageMark"
                         label="Hide stage mark"
                         hint="Useful for documentation purposes"
@@ -418,6 +428,7 @@ const {
     experimentalShowEverythingEverywhereAllAtOnce,
     experimentalAllowTrackSharingByLink,
     experimentalMultitrack,
+    experimentalPitchShift,
     experimentalUseQueueCueMode,
     experimentalUseMeter,
     experimentalHideStageMark,
