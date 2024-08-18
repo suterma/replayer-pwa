@@ -297,6 +297,16 @@
                     :disabled="!canPlay"
                     :playback-mode="playbackMode as PlaybackMode"
                     @click="cueClick"
+                    @seek="
+                        (cue: ICue) => {
+                            if (cue.Time) {
+                                seekToSeconds(
+                                    cue.Time,
+                                    true /* omit fade-in when editing*/,
+                                );
+                            }
+                        }
+                    "
                 >
                 </CueLevelEditors>
             </div>

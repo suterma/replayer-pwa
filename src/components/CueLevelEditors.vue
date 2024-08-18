@@ -28,6 +28,7 @@
                 :is-cue-selected="isCueSelected(cue)"
                 :is-cue-scheduled="isCueScheduled(cue)"
                 @click="cueClick(cue)"
+                @seek="cueSeek(cue)"
                 @adjust="cueAdjust(cue)"
             />
         </TransitionGroup>
@@ -47,7 +48,7 @@ import type { PlaybackMode } from '@/store/PlaybackMode';
 /** An set of Editors for for cues in a track.
  */
 
-const emit = defineEmits(['click']);
+const emit = defineEmits(['click', 'seek']);
 
 defineProps({
     cues: {
@@ -114,6 +115,21 @@ function cueAdjust(cue: ICue) {
         const shortcut = cue.Shortcut;
         const description = cue.Description;
         app.updateCueData(cueId, description, shortcut, time);
+        setTimeout(() => {
+            resume();
+        }, 300 /*replayer-transition-duration*/);
+    }
+}
+
+/** Seeks to the cue's time */
+function cueSeek(cue: ICue) {
+    if (
+        currentPosition?.value !== null &&
+        currentPosition?.value !== undefined &&
+        Number.isFinite(currentPosition.value)
+    ) {
+        pause();
+        emit('seek', cue);
         setTimeout(() => {
             resume();
         }, 300 /*replayer-transition-duration*/);

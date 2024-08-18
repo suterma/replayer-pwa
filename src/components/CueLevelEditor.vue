@@ -93,7 +93,7 @@
                         <span class="has-opacity-half">at</span>
                     </p>
                 </div>
-                <!-- A normal input for the time, with an adjustment add-on (from a bit wider screens)-->
+                <!-- A normal input for the time, with an adjustment add-on (for wider screens)-->
                 <div class="level-item is-flex-shrink-1 is-hidden-mobile">
                     <div class="field has-addons has-addons-except-mobile">
                         <p class="control is-hidden-mobile">
@@ -103,6 +103,7 @@
                                 :model-value="cueTime"
                                 size="9"
                                 @update:model-value="updateCueTime"
+                                @click="seekTo(cueTime)"
                             />
                         </p>
                         <div
@@ -276,7 +277,14 @@ import PreRollSwitch from './buttons/PreRollSwitch.vue';
 import FadeInSwitch from './buttons/FadeInSwitch.vue';
 import CueContextMenu from '@/components/context-menu/CueContextMenu.vue';
 
-const emit = defineEmits(['click', 'play', 'adjust']);
+const emit = defineEmits([
+    /** Invokes the cue (using it's time) */
+    'click',
+    /** Requires a seek to the cue's time */
+    'seek',
+    /** Requires adjustment of the cue time to the current playback time */
+    'adjust',
+]);
 
 const props = defineProps({
     cue: {
@@ -356,8 +364,13 @@ function updateCueTime(time: number | null) {
 
     //Also , for user convenience, to simplify adjusting cues, play at change
     //(while keeping the focus at the number spinner)
+    seekTo(time);
+}
+
+/** Seeks to the cue time */
+function seekTo(time: number | null) {
     if (Number.isFinite(time)) {
-        emit('play');
+        emit('seek');
     }
 }
 
