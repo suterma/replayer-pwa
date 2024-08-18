@@ -886,6 +886,7 @@ function takeMediaHandler(handler: IMediaHandler) {
     console.debug('MediaTrack::takeMediaHandler:id', handler.id);
     handler.fader.setVolume(props.track.Volume);
     handler.playbackRateController.playbackRate = props.track.PlaybackRate;
+    handler.pitchShiftController.pitchShift = props.track.PitchShift;
 
     // register for the required events
     handler.onCurrentTimeChanged.subscribe((currentTime) => {
@@ -953,6 +954,10 @@ function takeMediaHandler(handler: IMediaHandler) {
 
     handler.playbackRateController.onPlaybackRateChanged.subscribe((rate) => {
         app.updateTrackPlaybackRate(props.track?.Id, rate);
+    });
+
+    handler.pitchShiftController.onPitchShiftChanged.subscribe((shift) => {
+        app.updateTrackPitchShift(props.track?.Id, shift);
     });
 
     cueScheduler.value = new CueScheduler(handler);

@@ -53,8 +53,15 @@ export interface ITrack {
      */
     PlayheadPosition: number | null;
 
-    /** The rate at which the track's media is being played back. A value of 1.0, the default, indicates normal speed. */
+    /** The rate at which the track's media is being played back. A value of 1.0, the default, indicates normal speed.
+     * @remarks Not all types of track support a custom playback tempo.
+     */
     PlaybackRate: number;
+
+    /** The amount of pitch shift in [cents] (aka detune) at which the track's media is being played back. A value of 0, the default, indicates no shift.
+     * @remarks Not all types of track support a pitch shift.
+     */
+    PitchShift: number;
 
     /** The name of the track */
     Name: string;

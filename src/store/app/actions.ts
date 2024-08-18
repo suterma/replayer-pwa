@@ -157,6 +157,17 @@ export const actions = {
         }
     },
 
+    /** Updates the track pitch shift
+     * @remarks Also updates the persistent store of the compilation
+     */
+    updateTrackPitchShift(trackId: string, pitchShift: number): void {
+        const track = getters.getTrackById(trackId);
+        if (track) {
+            track.PitchShift = pitchShift;
+            console.debug('app::updateTrackPitchShift:', pitchShift);
+        }
+    },
+
     /** Adds a new cue with the given time
      * @remarks Adds (inserts) the new cue for the given track to the compilation, by inserting it by the order in time.
      * @return The id of the new cue

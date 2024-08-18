@@ -22,6 +22,11 @@ export const DefaultTrackVolume = 0.5;
 /** The default track playback rate */
 export const DefaultPlaybackRate = 1;
 
+/** The default pitch shift in [cents]
+ * @remarks default is zero, meaning no shift.
+ */
+export const DefaultPitchShift = 0;
+
 /** Implements a Replayer track */
 export class Track implements ITrack {
     Name = '';
@@ -32,6 +37,8 @@ export class Track implements ITrack {
 
     /**   @inheritdoc */
     PlaybackRate: number = DefaultPlaybackRate;
+    /**   @inheritdoc */
+    PitchShift: number = DefaultPitchShift;
     Meter: IMeter | null = null;
     UseMeasureNumbers: boolean | null = null;
     Url = '';
@@ -53,7 +60,8 @@ export class Track implements ITrack {
      * @param url {string} - The online URL (starting with http(s)) or the local file name (possibly including a path) for the media file. If it is relative, it may get made absolute using the compilation's media path.
      * @param preRoll {number | null} - The track's custom pre-roll duration, in [seconds]
      * @param initialPlayheadPosition {number | null} - The track's initial playhead position, in [seconds]. The value will be applied once after a media resource with a player has been mounted.
-     * @param playbackRate {number} - The track's playback rate. If not finite, a default value of 1 is used.
+     * @param playbackRate {number} - The track's playback rate. If not finite, a default value is used.
+     * @param pitchShift {number} - The track's pitch shift in [cents]. If not finite, a default value is used.
      * @param duration {number | null} - Duration of the media associated with the track. This is not persisted, but set to a specific value once after a matching track has been loaded.
      * @param volume {volume} - Track volume.
      * @param mediaHandler {IMediaHandler | null} - The media handler. This is transient and never persisted.
@@ -65,6 +73,7 @@ export class Track implements ITrack {
         preRoll: number | null,
         initialPlayheadPosition: number | null,
         playbackRate: number,
+        pitchShift: number,
         meter: IMeter | null,
         useMeasureNumbers: boolean | null,
         url: string,
@@ -83,6 +92,9 @@ export class Track implements ITrack {
         this.PlaybackRate = Number.isFinite(playbackRate)
             ? playbackRate
             : DefaultPlaybackRate;
+        this.PitchShift = Number.isFinite(pitchShift)
+            ? pitchShift
+            : DefaultPitchShift;
         this.Meter = meter;
         this.UseMeasureNumbers = useMeasureNumbers;
         this.Url = url;
@@ -115,6 +127,7 @@ export class Track implements ITrack {
             obj.PreRoll,
             obj.PlayheadPosition,
             obj.PlaybackRate,
+            obj.PitchShift,
             obj.Meter,
             obj.UseMeasureNumbers,
             obj.Url,

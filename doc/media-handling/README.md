@@ -27,6 +27,7 @@ A media handler instance (e.g. class `HtmlMediaHandler` of `IMediaHandler`) prov
 -   Mute/Solo state
 -   Volume
 -   Fading handling
+-   Detune/pitch shift handing (planned)
 
 The underlying source (HTML media element or some widget in case of 3rd party sources) is intentionally not exposed, all manipulation must be carried out in the Handler.
 
@@ -37,6 +38,7 @@ The following picture gives an overview of this architecture:
 ![Media components overview](./media-components.svg)
 
 ## Media Handler architecture
+
 The media handler interface`IMediaHandler` defines all necessary basic manipulations for a Replayer track (see above). It does so by either defining the methods on itself, or by providing further interfaces for it (`IAudioFader`).
 
 ![Media interface architecture](./media-interface-architecture.svg)
@@ -46,5 +48,3 @@ The `MediaTrack` component then makes use of the `IMediaHandler` features by its
 ## Using the stores
 
 The Replayer state is stored in [various stores](../store/README.md). For the media handling, the Object URL's from the App store are used, and for each playable track, a suitable media component is created. The resulting handlers are then provided to the Audio store.
-
-

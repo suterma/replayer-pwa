@@ -11,7 +11,7 @@
  * JavaScript code in this page
  */
 
-import { DefaultPlaybackRate } from '@/store/Track';
+import { DefaultPitchShift, DefaultPlaybackRate } from '@/store/Track';
 import AudioFader from './AudioFader';
 import type { IAudioFader } from './IAudioFader';
 import type { IMediaHandler } from './IMediaHandler';
@@ -21,6 +21,9 @@ import HtmlMediaPlaybackRateController from './HtmlMediaPlaybackRateController';
 import chalk from 'chalk';
 import { MediaLooper } from './MediaLooper';
 import type { IMediaLooper } from './IMediaLooper';
+import type { IPitchShiftController } from './IPitchShiftController';
+import HtmlMediaPitchShiftController from './HtmlMediaPitchShiftController';
+import type { ShallowRef } from 'vue';
 
 const mediaHandlerDebug = chalk.hex('#62c462'); // Replayer success color (bulma warning)
 
@@ -35,22 +38,30 @@ export default class HtmlMediaHandler implements IMediaHandler {
     private _fader: IAudioFader;
     private _looper: IMediaLooper;
     private _playbackRateController: IPlaybackRateController;
+    private _pitchShiftController: IPitchShiftController;
 
     /** The {HTMLMediaElement} instance to act upon */
     private _media: HTMLMediaElement;
 
     /** @constructor
      * @param {HTMLMediaElement} media - The media element to act upon
+     * @param {ShallowRef<MediaElementAudioSourceNode | AudioBufferSourceNode | null>} audioSource - A reference to the audio node, if set. Allows finer control over the media.
      * @param {number} masterVolume - The overall volume of the output. Can be used to control the output volume in addition to fadings. (Default: 1, representing 0 dBFS)
      * @param {number} playbackRate - The playback rate. (Default: 1, representing normal speed)
      * @param {string} id - The unique id
      */
     constructor(
         media: HTMLMediaElement,
+
+        audioSource: ShallowRef<
+            MediaElementAudioSourceNode | AudioBufferSourceNode | null
+        >,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         masterVolume: number = 1,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         playbackRate: number = DefaultPlaybackRate,
+        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+        pitchShift: number = DefaultPitchShift,
 
         id = '',
     ) {
@@ -60,6 +71,11 @@ export default class HtmlMediaHandler implements IMediaHandler {
         this._playbackRateController = new HtmlMediaPlaybackRateController(
             media,
             playbackRate,
+        );
+        this._pitchShiftController = new HtmlMediaPitchShiftController(
+            media,
+            audioSource,
+            pitchShift,
         );
         this._looper = new MediaLooper(this);
 
@@ -512,5 +528,13 @@ export default class HtmlMediaHandler implements IMediaHandler {
      */
     get playbackRateController(): IPlaybackRateController {
         return this._playbackRateController;
+    }
+
+    // --- pitch shift ---
+
+    /** Gets the pitch shift controller
+     */
+    get pitchShiftController(): IPitchShiftController {
+        return this._pitchShiftController;
     }
 }

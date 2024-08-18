@@ -15,7 +15,7 @@ import { expect, describe, it, beforeEach, afterEach } from 'vitest';
 import { MediaBlob } from './types';
 import CompilationHandler from './compilation-handler';
 import { Compilation } from './Compilation';
-import { Track } from './Track';
+import { DefaultPitchShift, DefaultPlaybackRate, Track } from './Track';
 
 describe('CompilationHandler.ts', () => {
     let mediaBlobs = new Array<MediaBlob>();
@@ -217,7 +217,8 @@ describe('CompilationHandler.ts', () => {
                 'testTrackAlbum',
                 5 /*pre-roll*/,
                 null /*playheadPosition*/,
-                1 /*playbackRate*/,
+                DefaultPlaybackRate,
+                DefaultPitchShift,
                 null /*meter*/,
                 false /*useMeasureNumbers*/,
                 'https://example.com/test.mp3',
@@ -341,7 +342,8 @@ describe('CompilationHandler.ts', () => {
                 '',
                 5 /*pre-roll*/,
                 null /*playheadPosition*/,
-                1 /*playbackRate*/,
+                DefaultPlaybackRate /*playbackRate*/,
+                DefaultPitchShift,
                 null /*meter*/,
                 false /*useMeasureNumbers*/,
                 'https://example.com/test.mp3',

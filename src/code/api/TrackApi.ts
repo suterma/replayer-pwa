@@ -173,6 +173,7 @@ export class TrackApi {
                 null /* pre-roll */,
                 initialPlayheadPosition /* initialPlayheadPosition */,
                 1 /*playbackRate */,
+                0 /*pitchShift*/,
                 null /* meter */,
                 null,
                 mediaUrl,

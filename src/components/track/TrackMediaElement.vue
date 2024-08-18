@@ -184,6 +184,7 @@ import { useElementVisibility } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import type { ICue } from '@/store/ICue';
 import { useAppStore } from '@/store/app';
+import { DefaultPitchShift } from '@/store/Track';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -247,6 +248,15 @@ const props = defineProps({
      * @remarks Default is true
      */
     showLevelMeterForEdit: Boolean,
+
+    /** The amount of pitch shift to apply
+     * @remarks Default is zero
+     */
+    pitchShift: {
+        type: Number,
+        required: false,
+        default: DefaultPitchShift,
+    },
 
     /** Whether to show the waveforms (in the edit view)
      */
@@ -355,7 +365,10 @@ function destroyHandler(mediaElement: HTMLMediaElement): void {
 }
 
 function createAndEmitHandler(mediaElement: HTMLMediaElement): IMediaHandler {
-    const handler = new HtmlMediaHandler(mediaElement) as IMediaHandler;
+    const handler = new HtmlMediaHandler(
+        mediaElement,
+        audioSource,
+    ) as IMediaHandler;
 
     console.log('TrackMediaElement:ready');
     emit('ready', handler);
@@ -488,16 +501,13 @@ watch(
 
 const { audioContext, isContextRunning } = storeToRefs(audio);
 
-/** The optional audio source node, required when metering is requested
+/** The optional, specific, audio source node
+ * @remarks It is required as type MediaElementAudioSourceNode when metering is requested.
  */
 const audioSource: ShallowRef<InstanceType<
     typeof MediaElementAudioSourceNode
 > | null> = shallowRef(null);
 
-/** Watch the showLevelMeterForEdit setting and media url changes, and act accordingly
- * @remarks This handles the audio setup for metering
- * @devdoc Handle the value also immediately at mount time
- */
 watch(
     [
         () => props.showLevelMeterForEdit,
@@ -511,7 +521,7 @@ watch(
     ([
         showLevelMeterForEdit,
         mediaUrl,
-        mediaElement,
+        newMediaElement,
         isTrackEditable,
         isTrackMixable,
     ]) => {
@@ -523,13 +533,13 @@ watch(
                     if (
                         showLevelMeterForEdit &&
                         mediaUrl &&
-                        mediaElement &&
+                        newMediaElement &&
                         !FileHandler.isValidHttpUrl(mediaUrl)
                     ) {
                         if (audioSource.value === null) {
                             audioSource.value =
                                 audioContext.value.createMediaElementSource(
-                                    mediaElement,
+                                    newMediaElement,
                                 );
                         }
                         audioSource.value.connect(

@@ -16,7 +16,12 @@ import type { ITrack } from './ITrack';
 import { CompilationType } from './CompilationType';
 import type { ICompilation } from './ICompilation';
 import { Cue } from './Cue';
-import { DefaultPlaybackRate, DefaultTrackVolume, Track } from './Track';
+import {
+    DefaultPitchShift,
+    DefaultPlaybackRate,
+    DefaultTrackVolume,
+    Track,
+} from './Track';
 
 /** Implements a Replayer Compilation, consisting of a set of tracks with their cues.  */
 export class Compilation implements ICompilation {
@@ -75,6 +80,7 @@ export class Compilation implements ICompilation {
                     track.PreRoll,
                     track.PlayheadPosition,
                     track.PlaybackRate ?? DefaultPlaybackRate,
+                    track.PitchShift ?? DefaultPitchShift,
                     track.Meter,
                     track.UseMeasureNumbers,
                     track.Url,

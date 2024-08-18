@@ -15,6 +15,7 @@ import { SubEvent } from 'sub-events';
 import type { IAudioFader } from './IAudioFader';
 import type { IPlaybackRateController } from './IPlaybackRateController';
 import type { IMediaLooper } from './IMediaLooper';
+import type { IPitchShiftController } from './IPitchShiftController';
 
 /** @interface Defines a media handler.
  * This defines transport, loop and volume operations for media sources
@@ -62,6 +63,10 @@ export interface IMediaHandler {
     /** Gets the playback rate controller
      */
     readonly playbackRateController: IPlaybackRateController;
+
+    /** Gets the pitch shift controller
+     */
+    readonly pitchShiftController: IPitchShiftController;
 
     // --- transport ---
 
