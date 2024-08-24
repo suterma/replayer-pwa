@@ -275,7 +275,7 @@ export const getters = {
         const tags = new Set<string>([]);
         if (tracks) {
             tracks.forEach((track) =>
-                track.Tags.forEach((tag) => tags.add(tag)),
+                track.Tags?.forEach((tag) => tags.add(tag)),
             );
         }
         return tags;
