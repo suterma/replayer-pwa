@@ -202,17 +202,15 @@
                             :icon-path="mdiTrashCanOutline"
                             @click="deleteThisCue()"
                         />
-                        <DropdownMenuItem :icon-path="rNone">
+                        <DropdownMenuItem v-if="preRollDuration">
                             <PreRollSwitch
-                                v-if="preRollDuration"
                                 title="Toggle pre-roll usage"
                                 :model-value="props.cue.OmitPreRoll"
                                 @update:model-value="updateOmitPreRoll"
                             ></PreRollSwitch
                         ></DropdownMenuItem>
-                        <DropdownMenuItem :icon-path="rNone">
+                        <DropdownMenuItem v-if="fadeInDuration">
                             <FadeInSwitch
-                                v-if="fadeInDuration"
                                 title="Toggle fade-in usage"
                                 :model-value="props.cue.OmitFadeIn"
                                 @update:model-value="updateOmitFadeIn"
@@ -252,7 +250,6 @@
  */
 import { type PropType, computed, inject, ref, type Ref } from 'vue';
 import { storeToRefs } from 'pinia';
-import { rNone } from '@/components/icons/ReplayerIcon';
 import CueButton from '@/components/buttons/CueButton.vue';
 import AdjustTimeButton from '@/components/buttons/AdjustTimeButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
