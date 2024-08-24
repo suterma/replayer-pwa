@@ -24,6 +24,8 @@ import { nextTick } from 'vue';
 import chalk from 'chalk';
 import type { IMediaLooper } from './IMediaLooper';
 import { MediaLooper } from './MediaLooper';
+import YouTubePitchShiftController from './YouTubePitchShiftController';
+import type { IPitchShiftController } from './IPitchShiftController';
 
 const mediaHandlerDebug = chalk.hex('#62c462'); // Replayer success color (bulma warning)
 
@@ -38,6 +40,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     private _fader: IAudioFader;
     private _looper: IMediaLooper;
     private _playbackRateController: IPlaybackRateController;
+    private _pitchShiftController: IPitchShiftController;
 
     /** The YouTube player instance to act upon */
     private _player: Player;
@@ -58,6 +61,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
             player,
             DefaultPlaybackRate,
         );
+        this._pitchShiftController = new YouTubePitchShiftController();
         this._looper = new MediaLooper(this);
 
         onStateChange((event) => {
@@ -448,5 +452,13 @@ export default class YouTubeMediaHandler implements IMediaHandler {
      */
     get playbackRateController(): IPlaybackRateController {
         return this._playbackRateController;
+    }
+
+    // --- pitch shift ---
+
+    /** Gets the pitch shift controller
+     */
+    get pitchShiftController(): IPitchShiftController {
+        return this._pitchShiftController;
     }
 }
