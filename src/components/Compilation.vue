@@ -110,8 +110,10 @@ const { preventScreenTimeout } = storeToRefs(settings);
 watch(
     () => activeTrackId.value,
     () => {
-        console.debug('scrolling to activated track:', activeTrackId);
-        scrollToActiveTrack();
+        if (activeTrackId.value) {
+            console.debug('scrolling to activated track:', activeTrackId.value);
+            scrollToActiveTrack();
+        }
     },
     { immediate: true /* to handle it at least once after mount time */ },
 );
@@ -122,8 +124,13 @@ watch(
 watch(
     () => trackViewMode.value,
     () => {
-        console.debug('scrolling to mode-changed track:', activeTrackId.value);
-        scrollToActiveTrack();
+        if (activeTrackId.value) {
+            console.debug(
+                'scrolling to mode-changed track:',
+                activeTrackId.value,
+            );
+            scrollToActiveTrack();
+        }
     },
     { immediate: false /* to handle it only at actual change */ },
 );
@@ -176,12 +183,13 @@ function scrollToActiveTrack() {
         !hasSingleMediaTrack.value
     ) {
         nextTick(() => {
-            if (activeTrackId.value != null) {
+            const trackId = activeTrackId.value;
+            if (trackId != null) {
                 const trackElement = document.getElementById(
-                    'track-' + activeTrackId.value,
+                    'track-' + trackId,
                 );
 
-                console.debug('scrolling to track:', activeTrackId.value);
+                console.debug('scrolling to track:', trackId);
 
                 VueScrollTo.scrollTo(trackElement, {
                     /** Always scroll, make it on top of the view */
