@@ -28,6 +28,7 @@ export class XmlTrack {
         this.PreRoll = track.PreRoll;
         this.PlayheadPosition = track.PlayheadPosition;
         this.PlaybackRate = track.PlaybackRate;
+        this.PitchShift = track.PitchShift;
         this.Name = track.Name;
         this.Album = track.Album;
         this.Url = track.Url;
@@ -43,6 +44,7 @@ export class XmlTrack {
     PreRoll: number | null;
     PlayheadPosition: number | null;
     PlaybackRate: number;
+    PitchShift: number;
     Name: string;
     Album: string;
     Url: string;

@@ -12,7 +12,12 @@
  */
 
 import { Cue } from '@/store/Cue';
-import { DefaultPlaybackRate, DefaultTrackVolume, Track } from '@/store/Track';
+import {
+    DefaultPitchShift,
+    DefaultPlaybackRate,
+    DefaultTrackVolume,
+    Track,
+} from '@/store/Track';
 import { Compilation } from '@/store/Compilation';
 import { type ICue } from '@/store/ICue';
 import { type ICompilation } from '@/store/ICompilation';
@@ -115,6 +120,8 @@ export default abstract class XmlCompilationParser {
                     ) ?? null,
                     XmlCompilationParser.FirstNumberOf(xmlTrack.PlaybackRate) ??
                         DefaultPlaybackRate,
+                    XmlCompilationParser.FirstNumberOf(xmlTrack.PitchShift) ??
+                        DefaultPitchShift,
                     /** NOTE: the formerly used measure property is deprecated */
                     XmlCompilationParser.parseFromXmlMeter(
                         xmlTrack.Meter ? xmlTrack.Meter[0] : null,

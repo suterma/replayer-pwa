@@ -374,6 +374,7 @@ describe('XmlCompilationParser.ts', () => {
             2.2 /*pre-roll*/,
             15.1 /*initialPlayheadPosition*/,
             0.75,
+            0 /*PitchShift*/,
             null,
             null,
             'testUrl',
