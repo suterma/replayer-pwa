@@ -52,6 +52,7 @@ describe('actions.ts', () => {
             2.2 /*pre-roll*/,
             15.1 /*initialPlayheadPosition*/,
             0.75,
+            0 /*pitchShift*/,
             null,
             null,
             'testUrl',
