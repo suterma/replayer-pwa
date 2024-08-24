@@ -507,11 +507,12 @@ export const actions = {
      * Does not remove any existing media. If required, this must be done separately.
      */
     replaceCompilation(compilation: ICompilation): void {
+        state.selectedCueId.value = CompilationHandler.EmptyId;
+        state.scheduledCueId.value = CompilationHandler.EmptyId;
+
         state.compilation.value = compilation;
 
         /* Set active track (if just one is available), like in MutationTypes.UPDATE_SELECTED_TRACK_ID */
-        state.selectedCueId.value = CompilationHandler.EmptyId;
-        state.scheduledCueId.value = CompilationHandler.EmptyId;
         state.selectedTrackId.value =
             compilation.Tracks.length == 1
                 ? (compilation.Tracks[0]?.Id ?? CompilationHandler.EmptyId)
