@@ -1478,7 +1478,7 @@ const playingCue = computed(() => {
     }
 
     return (
-        props.track.Cues.filter(
+        props.track?.Cues?.filter(
             (cue) =>
                 cue.Time !== null &&
                 Number.isFinite(cue.Time) &&
