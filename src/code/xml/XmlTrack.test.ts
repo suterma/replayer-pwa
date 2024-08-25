@@ -15,7 +15,7 @@ import { describe, it, expect } from 'vitest'; // import { type ICue, Track } fr
 import { XmlTrack } from './XmlTrack';
 import { TimeSignature } from '../music/TimeSignature';
 import { Meter } from '../music/Meter';
-import { Track } from '@/store/Track';
+import { DefaultPitchShift, Track } from '@/store/Track';
 import { type ICue } from '@/store/ICue';
 
 describe('the XML mapping', function () {
@@ -28,6 +28,7 @@ describe('the XML mapping', function () {
             9,
             15 /* initialPlayheadPosition */,
             0.75 /* playbackRate */,
+            DefaultPitchShift,
             new Meter(new TimeSignature(3, 4), 90, 0.1),
             false,
             'https://test.example.com?myfile.mp3',
