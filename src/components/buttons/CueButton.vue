@@ -74,15 +74,18 @@
                         <p
                             class="level-item"
                             :class="{ 'is-invisible': disabled }"
+                            v-if="shortcut"
                         >
                             <!-- NOTE: For performance reasons, this shortcut display is implemented inline, not using the ShortcutDisplay SFC -->
                             <span
-                                v-if="shortcut"
                                 class="tag is-light is-outlined has-opacity-third is-family-monospace is-uppercase has-text-weight-bold foreground"
                             >
                                 {{ shortcut }}</span
                             >
                         </p>
+
+                        <!-- a shortcut placeholder for vertical spacing-->
+                        <span v-else class="p-0 tag"></span>
                         <div class="level-item mr-3">
                             <MeasureDisplay
                                 v-if="hasMeter && useMeasureNumbers"
