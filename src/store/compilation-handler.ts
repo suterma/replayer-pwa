@@ -634,12 +634,9 @@ export default class CompilationHandler {
         compilation: ICompilation,
         cueId: string,
     ): ITrack | undefined {
-        if (compilation && cueId) {
-            return compilation?.Tracks?.find((t) => {
-                t?.Cues?.find((c) => c.Id === cueId);
-            });
-        }
-        return undefined;
+        return compilation?.Tracks?.find((t) =>
+            t.Cues?.find((c) => c.Id === cueId),
+        );
     }
 
     /** Gets the the matching cue, if any, in the compilation, by it's Id.
