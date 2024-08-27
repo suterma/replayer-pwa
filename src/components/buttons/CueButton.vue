@@ -1,5 +1,6 @@
 <template>
     <button
+        ref="cueButton"
         class="button cue has-text-left"
         :class="{
             'is-multiline': !minified,
@@ -72,9 +73,9 @@
                     <div class="level-left">
                         <!-- The shortcut -->
                         <p
+                            v-if="shortcut"
                             class="level-item"
                             :class="{ 'is-invisible': disabled }"
-                            v-if="shortcut"
                         >
                             <!-- NOTE: For performance reasons, this shortcut display is implemented inline, not using the ShortcutDisplay SFC -->
                             <span
@@ -146,7 +147,7 @@ import {
     rPreRollPlay,
 } from '@/components/icons/ReplayerIcon';
 import CompilationHandler from '@/store/compilation-handler';
-import { type PropType, computed, inject } from 'vue';
+import { type PropType, type Ref, computed, inject, ref, watch } from 'vue';
 import { Meter } from '@/code/music/Meter';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
@@ -244,6 +245,10 @@ const props = defineProps({
     /* Whether to show this cue as passive, in dimmed style. */
     virtual: Boolean,
 
+    /* Whether to focus the cue button on selection of the cue. Default is false.
+     */
+    focusOnSelection: Boolean,
+
     /** The playback mode
      * @remarks This is used to indicate looping behavior to the user
      * @devdoc casting the type for ts, see https://github.com/kaorun343/vue-property-decorator/issues/202#issuecomment-931484979
@@ -285,6 +290,24 @@ const iconPath = computed(() => {
     }
     return hasFadeIn.value ? rFadeInPlay : rPlayDirect;
 });
+
+// --- button selection ---
+
+const cueButton: Ref<InstanceType<typeof HTMLButtonElement> | null> = ref(null);
+
+/** Focus of the button follows the cue selection, if required */
+watch(
+    [() => props.isCueSelected, () => props.focusOnSelection],
+    ([isCueSelected, focusOnSelection]) => {
+        if (focusOnSelection && isCueSelected) {
+            cueButton.value?.focus();
+        }
+    },
+    { immediate: true },
+);
+
+// --- metering ---
+
 /** The musical meter */
 const meter = inject(meterInjectionKey);
 

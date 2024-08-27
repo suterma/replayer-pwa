@@ -248,7 +248,7 @@
  * This approach is chosen over the ...data pattern because the shortcut values can also change from a menu entry
  * in the track's dropdown menu.
  */
-import { type PropType, computed, inject, ref, type Ref } from 'vue';
+import { type PropType, computed, inject, ref, type Ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import CueButton from '@/components/buttons/CueButton.vue';
 import AdjustTimeButton from '@/components/buttons/AdjustTimeButton.vue';
@@ -338,12 +338,36 @@ const app = useAppStore();
 
 const cueTime = computed(() => props.cue.Time);
 
+const cueDescription: Ref<InstanceType<typeof HTMLInputElement> | null> =
+    ref(null);
+
 /** Updates the set cue description */
 function updateDescription(event: Event) {
     const cueId = props.cue.Id;
     const shortcut = props.cue.Shortcut;
     const description = (event.target as HTMLInputElement).value;
     app.updateCueData(cueId, description, shortcut, cueTime.value);
+}
+
+// --- focus ---
+
+/** Focus of the description follows the cue selection */
+watch(
+    () => props.isCueSelected,
+    () => {
+        if (props.isCueSelected) {
+            focusDescription();
+        }
+    },
+    {
+        immediate: true,
+    },
+);
+
+/** Sets the focus to the description input and sets the cursor to the start position */
+function focusDescription() {
+    cueDescription.value?.focus();
+    cueDescription.value?.setSelectionRange(0, 0);
 }
 
 /** Deletes the cue */
@@ -382,10 +406,8 @@ function updateShortcut(event: Event) {
 /** Handles the click event of the cue button */
 function cueClick() {
     emit('click');
+    focusDescription();
 }
-
-const cueDescription: Ref<InstanceType<typeof HTMLInputElement> | null> =
-    ref(null);
 
 const settings = useSettingsStore();
 const { experimentalUseMeter } = storeToRefs(settings);

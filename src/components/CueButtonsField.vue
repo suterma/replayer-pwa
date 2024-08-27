@@ -25,6 +25,7 @@
             :omit-pre-roll="true"
             :is-cue-selected="isCueSelected(prefixCue)"
             :is-cue-scheduled="isCueScheduled(prefixCue)"
+            focus-on-selection
             @click="cueClicked"
         >
         </CueButton>
@@ -54,6 +55,7 @@
                 :omit-fade-in="cue.OmitFadeIn"
                 :is-cue-selected="isCueSelected(cue)"
                 :is-cue-scheduled="isCueScheduled(cue)"
+                focus-on-selection
                 @click="cueClicked"
             >
             </CueButton>
