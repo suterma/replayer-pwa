@@ -85,6 +85,13 @@
                 >
                     Measure
                 </th>
+                <th
+                    v-if="props.track.UseMeasureNumbers"
+                    v-experiment="experimentalUseMeter"
+                    class="is-size-7"
+                >
+                    Duration [Measures]
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -106,6 +113,17 @@
                 >
                     <MeasureDisplay :model-value="cue.Time"></MeasureDisplay>
                 </td>
+                <div
+                    v-if="props.track.UseMeasureNumbers"
+                    v-experiment="experimentalUseMeter"
+                    class="level-item is-flex-shrink-1"
+                >
+                    <button class="button is-indicator">
+                        <MeasureDifferenceDisplay
+                            :model-value="cue.Duration"
+                        ></MeasureDifferenceDisplay>
+                    </button>
+                </div>
             </tr>
         </tbody>
     </table>
@@ -118,6 +136,7 @@ import { type PropType, computed, provide, readonly } from 'vue';
 import { storeToRefs } from 'pinia';
 import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
+import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import TrackTitleName from '@/components/track/TrackTitleName.vue';
 import { useSettingsStore } from '@/store/settings';
