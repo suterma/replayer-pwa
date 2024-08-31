@@ -90,6 +90,15 @@
                             data-cy="toggle-playback"
                             @click="app.skipToPlayPause(props.track)"
                         />
+                        <!-- Cue count (without expander in play mode) -->
+                        <span
+                            v-if="!hasSingleMediaTrack"
+                            :class="{
+                                'is-hidden': track.Cues.length == 0,
+                            }"
+                            class="ml-3 tag is-warning is-rounded is-hidden-mobile is-unselectable"
+                            >{{ track.Cues.length }}</span
+                        >
 
                         <!-- Title -->
                         <!-- The title is the only header element that should shrink (break on words) if necessary -->
@@ -110,15 +119,6 @@
                                     }"
                                     :name="track.Name"
                                 ></TrackTitleName>
-                                <!-- Cue count (without expander) -->
-                                <span
-                                    v-if="!hasSingleMediaTrack"
-                                    :class="{
-                                        'is-invisible': track.Cues.length == 0,
-                                    }"
-                                    class="ml-2 tag is-warning is-rounded is-hidden-mobile"
-                                    >{{ track.Cues.length }}</span
-                                >
                                 <ArtistDisplay
                                     class="ml-2 is-size-7"
                                     :artist="track.Artist"
