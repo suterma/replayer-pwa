@@ -153,11 +153,12 @@
                     </div>
                     <!-- Right side -->
                     <div class="level-right is-justify-content-flex-end">
+                        <!-- An indicator for a missing media URL; alternatively a download button (currently not shown)-->
                         <a
                             v-if="Boolean(mediaUrl) && !isTrackEditable"
                             :href="mediaUrl"
                             download
-                            class="button"
+                            class="button is-hidden"
                             title="Download PDF to device"
                         >
                             <BaseIcon v-once :path="mdiTrayArrowDown" />
