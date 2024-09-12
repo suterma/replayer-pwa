@@ -104,6 +104,13 @@
                 <td>
                     {{ cue.Description }}
                 </td>
+                <td
+                    v-if="experimentalShowRemarksEditors"
+                    v-experiment="experimentalShowRemarksEditors"
+                >
+                    //TODO FORMAT: {{ cue.Remarks }}
+                </td>
+
                 <td>
                     <TimeDisplay :model-value="cue.Time"></TimeDisplay>
                 </td>
@@ -176,7 +183,8 @@ const meter = computed(() => props.track.Meter);
 provide(meterInjectionKey, readonly(meter));
 
 const settings = useSettingsStore();
-const { experimentalUseMeter } = storeToRefs(settings);
+const { experimentalUseMeter, experimentalShowRemarksEditors } =
+    storeToRefs(settings);
 
 // --- Tag handling ---
 

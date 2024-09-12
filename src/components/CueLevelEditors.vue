@@ -114,7 +114,8 @@ function cueAdjust(cue: ICue) {
         const cueId = cue.Id;
         const shortcut = cue.Shortcut;
         const description = cue.Description;
-        app.updateCueData(cueId, description, shortcut, time);
+        const remarks = cue.Remarks;
+        app.updateCueData(cueId, description, remarks, shortcut, time);
         setTimeout(() => {
             resume();
         }, 300 /*replayer-transition-duration*/);

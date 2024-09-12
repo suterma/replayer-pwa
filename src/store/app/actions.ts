@@ -356,6 +356,7 @@ export const actions = {
     updateCueData(
         cueId: string,
         description: string,
+        remarks: string,
         shortcut: string | null,
         time: number | null,
     ): void {
@@ -367,6 +368,7 @@ export const actions = {
             const hasChangedTime = cue.Time !== time;
 
             cue.Description = description;
+            cue.Remarks = remarks;
             cue.Shortcut = shortcut;
             cue.Time = time;
 

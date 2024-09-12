@@ -64,6 +64,34 @@
                             />
                         </p>
 
+                        <!-- Cue Remarks -->
+
+                        <CoveredPanel
+                            v-if="experimentalShowRemarksEditors"
+                            :reveal-for="[cue.Remarks]"
+                            title="Cue remarks"
+                            class="control is-flex-grow-5 is-flex-shrink-1"
+                        >
+                            <template #caption
+                                ><span v-experiment="true" class="label"
+                                    >Remarks</span
+                                ></template
+                            >
+                            <LabeledInput v-experiment="true" label="Remarks">
+                                <input
+                                    ref="cueRemarks"
+                                    class="input"
+                                    type="text"
+                                    inputmode="text"
+                                    :value="cue.Remarks"
+                                    placeholder="Remarks (e.g. performance instructions)"
+                                    size="320"
+                                    @change="updateRemarks($event)"
+                                    @input="updateRemarks($event)"
+                                />
+                            </LabeledInput>
+                        </CoveredPanel>
+
                         <div class="control is-hidden-tablet">
                             <AdjustTimeButton
                                 class="as-after-addon"
@@ -254,6 +282,8 @@ import CueButton from '@/components/buttons/CueButton.vue';
 import AdjustTimeButton from '@/components/buttons/AdjustTimeButton.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
 import TimeInput from '@/components/TimeInput.vue';
+import LabeledInput from '@/components/editor/LabeledInput.vue';
+import CoveredPanel from '@/components/CoveredPanel.vue';
 import IfMedia from '@/components/IfMedia.vue';
 import { mdiTrashCanOutline } from '@mdi/js';
 import { useAppStore } from '@/store/app';
@@ -346,7 +376,17 @@ function updateDescription(event: Event) {
     const cueId = props.cue.Id;
     const shortcut = props.cue.Shortcut;
     const description = (event.target as HTMLInputElement).value;
-    app.updateCueData(cueId, description, shortcut, cueTime.value);
+    const remarks = props.cue.Remarks;
+    app.updateCueData(cueId, description, remarks, shortcut, cueTime.value);
+}
+
+/** Updates the set cue remarks */
+function updateRemarks(event: Event) {
+    const cueId = props.cue.Id;
+    const shortcut = props.cue.Shortcut;
+    const description = props.cue.Description;
+    const remarks = (event.target as HTMLInputElement).value;
+    app.updateCueData(cueId, description, remarks, shortcut, cueTime.value);
 }
 
 // --- focus ---
@@ -381,7 +421,8 @@ function updateCueTime(time: number | null) {
     const cueId = props.cue.Id;
     const shortcut = props.cue.Shortcut;
     const description = props.cue.Description;
-    app.updateCueData(cueId, description, shortcut, time);
+    const remarks = props.cue.Remarks;
+    app.updateCueData(cueId, description, remarks, shortcut, time);
 
     //Also , for user convenience, to simplify adjusting cues, play at change
     //(while keeping the focus at the number spinner)
@@ -399,8 +440,9 @@ function seekTo(time: number | null) {
 function updateShortcut(event: Event) {
     const cueId = props.cue.Id;
     const description = props.cue.Description;
+    const remarks = props.cue.Remarks;
     const shortcut = (event.target as HTMLInputElement).value;
-    app.updateCueData(cueId, description, shortcut, cueTime.value);
+    app.updateCueData(cueId, description, remarks, shortcut, cueTime.value);
 }
 
 /** Handles the click event of the cue button */
@@ -410,7 +452,8 @@ function cueClick() {
 }
 
 const settings = useSettingsStore();
-const { experimentalUseMeter } = storeToRefs(settings);
+const { experimentalUseMeter, experimentalShowRemarksEditors } =
+    storeToRefs(settings);
 
 const cuePlaceholder = computed(() => `Cue description`);
 

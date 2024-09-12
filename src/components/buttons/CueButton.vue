@@ -46,8 +46,15 @@
                     v-if="!minified && !virtual"
                     class="ml-2 has-text-weight-semibold foreground"
                     >{{ description }}</span
-                ></template
-            >
+                >
+
+                <!-- Remarks only on larger buttons -->
+                <span
+                    v-if="!minified"
+                    class="ml-2 is-italic foreground is-size-7"
+                    >{{ remarks }}</span
+                >
+            </template>
             <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
             <i class="icon mdi ml-2 mr-2 foreground">
                 <svg viewBox="0 0 24 24">
@@ -220,6 +227,7 @@ const props = defineProps({
         required: false,
         default: null,
     },
+
     /** Remarks to this cue
      * @remarks Rendering is controlled by the display properties
      */

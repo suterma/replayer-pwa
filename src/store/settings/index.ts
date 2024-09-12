@@ -193,6 +193,13 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
      */
     const experimentalHideStageMark = ref(false);
 
+    /** EXPERIMENTAL: Whether to show the remarks editors
+     */
+    const experimentalShowRemarksEditors = useLocalStorage(
+        'experimentalShowRemarksEditors',
+        false,
+    );
+
     /** Returns the settings to their default value */
     function $reset() {
         showPdfInline.value = true;
@@ -220,6 +227,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalUseQueueCueMode.value = false;
         experimentalUseMeter.value = false;
         experimentalHideStageMark.value = false;
+        experimentalShowRemarksEditors.value = false;
     }
 
     return {
@@ -250,6 +258,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalUseQueueCueMode,
         experimentalUseMeter,
         experimentalHideStageMark,
+        experimentalShowRemarksEditors,
         $reset,
     };
 });

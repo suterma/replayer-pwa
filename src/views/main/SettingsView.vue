@@ -384,6 +384,15 @@
             <div class="field">
                 <div class="control">
                     <LabeledCheckbox
+                        v-model="experimentalShowRemarksEditors"
+                        label="Show remarks editors"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
                         v-model="experimentalHideStageMark"
                         label="Hide stage mark"
                         hint="Useful for documentation purposes"
@@ -432,6 +441,7 @@ const {
     experimentalUseQueueCueMode,
     experimentalUseMeter,
     experimentalHideStageMark,
+    experimentalShowRemarksEditors,
 } = storeToRefs(settings);
 
 const router = useRouter();
