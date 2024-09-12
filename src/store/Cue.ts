@@ -16,7 +16,9 @@ import type { ICue } from './ICue';
 /** Implements a Replayer cue*/
 export class Cue implements ICue {
     /**   @inheritdoc */
-    Description = '';
+    Description: string | null = null;
+    /**   @inheritdoc */
+    Remarks: string | null = null;
     /**   @inheritdoc */
     Id = '';
     /**   @inheritdoc */
@@ -33,7 +35,8 @@ export class Cue implements ICue {
     /** Creates a new cue
      */
     constructor(
-        description: string,
+        description: string | null,
+        remarks: string | null,
         shortcut: string | null,
         time: number | null,
         duration: number | null,
@@ -42,6 +45,7 @@ export class Cue implements ICue {
         id: string,
     ) {
         this.Description = description;
+        this.Remarks = remarks;
         this.Shortcut = shortcut;
         this.Time = time;
         this.Duration = duration;
@@ -53,6 +57,6 @@ export class Cue implements ICue {
     /** Returns a new, empty cue
      */
     static empty(): Cue {
-        return new Cue('', '', 0, 0, false, false, '');
+        return new Cue(null, null, null, 0, 0, false, false, '');
     }
 }

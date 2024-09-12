@@ -14,7 +14,12 @@
 /** @interface Defines a Replayer cue */
 
 export interface ICue {
-    Description: string;
+    /** A short description of the cue, e.g. "Verse 1" or "Chorus" */
+    Description: string | null;
+
+    /** Remarks to this cue, e.g. performance instructions */
+    Remarks: string | null;
+
     /** A unique identifier for this cue.
      * @remarks To work correctly, this identifier must be unique among all currently loaded compilations. Best, to make it universally unique by using a UUID.
      * @devdoc This identifier allows to recognise this item over multiple edits

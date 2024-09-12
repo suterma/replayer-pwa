@@ -20,6 +20,7 @@ describe('the XML mapping', function () {
         // Arrange
         const cue = new Cue(
             'testDescription',
+            'testRemarks',
             '123',
             88.8,
             99.9,
@@ -33,6 +34,7 @@ describe('the XML mapping', function () {
 
         //Assert
         expect(target.Description).toBe(cue.Description);
+        expect(target.Remarks).toBe(cue.Remarks);
         expect(target.Id).toBe(cue.Id);
         expect(target.Shortcut).toBe(cue.Shortcut);
         expect(target.Time).toBe(cue.Time);

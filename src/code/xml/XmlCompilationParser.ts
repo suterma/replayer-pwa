@@ -163,6 +163,9 @@ export default abstract class XmlCompilationParser {
                         xmlCue.Description,
                     ).normalize(),
                     XmlCompilationParser.FirstStringOf(
+                        xmlCue.Remarks,
+                    ).normalize(),
+                    XmlCompilationParser.FirstStringOf(
                         xmlCue.Shortcut,
                     ).normalize(),
                     XmlCompilationParser.FirstNumberOf(xmlCue.Time),

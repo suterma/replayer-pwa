@@ -125,6 +125,7 @@ function inheritMultipleCues() {
                         // clone the cue, as this must not be the same object
                         const clonedCue = new Cue(
                             cue.Description,
+                            cue.Remarks,
                             cue.Shortcut,
                             cue.Time,
                             cue.Duration,

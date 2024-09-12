@@ -23,6 +23,7 @@ export class XmlCue {
     constructor(cue: Cue) {
         this.Id = cue.Id;
         this.Description = cue.Description;
+        this.Remarks = cue.Remarks;
         this.Shortcut = cue.Shortcut;
         this.Time = cue.Time;
         this.OmitPreRoll = cue.OmitPreRoll;
@@ -30,7 +31,8 @@ export class XmlCue {
     }
 
     Id: string;
-    Description: string;
+    Description: string | null;
+    Remarks: string | null;
     Shortcut: string | null;
     Time: number | null;
     OmitPreRoll: boolean | null;

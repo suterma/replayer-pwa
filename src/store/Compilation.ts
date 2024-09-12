@@ -88,6 +88,7 @@ export class Compilation implements ICompilation {
                     track.Cues.map((cue) => {
                         return new Cue(
                             cue.Description,
+                            cue.Remarks,
                             cue.Shortcut,
                             cue.Time,
                             cue.Duration,

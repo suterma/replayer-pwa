@@ -180,7 +180,8 @@ export const actions = {
 
         const cueId = uuidv4();
         const cue = new Cue(
-            '',
+            null,
+            null,
             nextShortcut.toString(),
             roundedTime,
             null,
@@ -989,6 +990,7 @@ export const actions = {
             clonedTrack.Cues = clonedTrack.Cues.map((cue) => {
                 return new Cue(
                     cue.Description,
+                    cue.Remarks,
                     cue.Shortcut,
                     cue.Time,
                     cue.Duration,

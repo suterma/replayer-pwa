@@ -48,6 +48,7 @@
                 :shortcut="cue.Shortcut"
                 :duration="cue.Duration"
                 :description="cue.Description"
+                :remarks="cue.Remarks"
                 :playback-mode="playbackMode"
                 has-addons-right
                 minified

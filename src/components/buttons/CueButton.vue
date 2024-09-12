@@ -212,10 +212,21 @@ const props = defineProps({
         default: null,
     },
 
+    /** A description of the cue
+     *    * @remarks Rendering is controlled by the display properties
+     */
     description: {
-        type: String,
+        type: null as unknown as PropType<string | null>,
         required: false,
-        default: undefined,
+        default: null,
+    },
+    /** Remarks to this cue
+     * @remarks Rendering is controlled by the display properties
+     */
+    remarks: {
+        type: null as unknown as PropType<string | null>,
+        required: false,
+        default: null,
     },
     shortcut: {
         type: null as unknown as PropType<string | null>,
