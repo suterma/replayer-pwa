@@ -355,8 +355,8 @@ export const actions = {
      */
     updateCueData(
         cueId: string,
-        description: string,
-        remarks: string,
+        description: string | null,
+        remarks: string | null,
         shortcut: string | null,
         time: number | null,
     ): void {

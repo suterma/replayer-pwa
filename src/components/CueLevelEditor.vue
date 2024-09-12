@@ -92,6 +92,39 @@
                             </LabeledInput>
                         </CoveredPanel>
 
+                        <DropdownMenu
+                            v-if="experimentalShowRemarksEditors"
+                            v-experiment="true"
+                            title="Cue remarks"
+                            left
+                            down
+                            sticky
+                            data-cy="dropdonw-menu-cue-remarks"
+                            :icon-path="mdiTextBoxPlusOutline"
+                            :render-closed="false"
+                        >
+                            <div class="dropdown-item is-hidden-mobile">
+                                <p class="menu-label">Cue Remarks</p>
+                            </div>
+                            <slot>
+                                <DropdownMenuItem>
+                                    <textarea
+                                        v-focus
+                                        ref="cueRemarks"
+                                        class="textarea"
+                                        type="text"
+                                        inputmode="text"
+                                        :value="cue.Remarks"
+                                        placeholder="Remarks (e.g. performance instructions)"
+                                        rows="4"
+                                        cols="12"
+                                        @change="updateRemarks($event)"
+                                        @input="updateRemarks($event)"
+                                    />
+                                </DropdownMenuItem>
+                            </slot>
+                        </DropdownMenu>
+
                         <div class="control is-hidden-tablet">
                             <AdjustTimeButton
                                 class="as-after-addon"
@@ -285,7 +318,7 @@ import TimeInput from '@/components/TimeInput.vue';
 import LabeledInput from '@/components/editor/LabeledInput.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
 import IfMedia from '@/components/IfMedia.vue';
-import { mdiTrashCanOutline } from '@mdi/js';
+import { mdiTrashCanOutline, mdiTextBoxPlusOutline } from '@mdi/js';
 import { useAppStore } from '@/store/app';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
@@ -296,8 +329,10 @@ import {
     trackPreRollDurationInjectionKey,
     trackFadeInDurationInjectionKey,
 } from '@/components/track/TrackInjectionKeys';
+import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
 import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
 import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
+import MenuItemContent from '@/components/dropdown-menu/MenuItemContent.vue';
 import type { ICue } from '@/store/ICue';
 import type { PlaybackMode } from '@/store/PlaybackMode';
 import PreRollSwitch from './buttons/PreRollSwitch.vue';
@@ -600,5 +635,14 @@ input[type='text'] {
     position: absolute;
     /** keep the duration inside the track editor outline */
     display: contents;
+}
+
+/*************************************************************
+ * Specific styles for the cue remarks
+**************************************************************
+*/
+/** Do not restrict height specifically */
+.cue textarea.textarea {
+    height: inherit;
 }
 </style>

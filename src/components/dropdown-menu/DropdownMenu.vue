@@ -40,7 +40,7 @@
                     style="z-index: 4"
                     class="dropdown-menu is-unselectable transition-in-place"
                     role="menu"
-                    @click="collapseDropdown()"
+                    @click="!sticky && collapseDropdown()"
                 >
                     <div class="dropdown-content">
                         <slot>
@@ -99,6 +99,13 @@ const props = defineProps({
      * @remarks Without direction, the menu opens according to the available space
      */
     down: {
+        type: Boolean,
+        default: false,
+    },
+
+    /** Whether to keep the menu open after a click
+     */
+    sticky: {
         type: Boolean,
         default: false,
     },
