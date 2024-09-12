@@ -23,6 +23,7 @@ describe('TrackApi.ts', () => {
         const testCues = new Array<Cue>();
         testCues[0] = new Cue(
             'testCueDescription',
+            'testCueRemarks',
             '1',
             45,
             15,
@@ -124,6 +125,7 @@ describe('TrackApi.ts', () => {
         expect(track?.Cues).toBeDefined();
         expect(track?.Cues).toHaveLength(1);
         expect(track?.Cues[0]?.Description).toBe('Intro');
+        expect(track?.Cues[0]?.Remarks).toBeNull();
         expect(track?.Cues[0]?.Time).toBe(6.49);
         expect(track?.Cues[0]?.Id).toBeDefined();
         expect(track?.Cues[0]?.Duration).toBeNull(); //"Because a duration is only available after track loading in the player."

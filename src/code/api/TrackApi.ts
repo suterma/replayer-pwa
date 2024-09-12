@@ -153,6 +153,7 @@ export class TrackApi {
                         new Cue(
                             description,
                             null,
+                            null,
                             time,
                             null,
                             false,

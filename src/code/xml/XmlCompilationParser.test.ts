@@ -77,6 +77,7 @@ describe('XmlCompilationParser.ts', () => {
                 <Cue>
                   <Id>22666d08-4400-40a2-bf6b-fc9e30b998be</Id>
                   <Description>Intro</Description>
+                  <Remarks>Some notes about the Intro</Remarks>
                   <Shortcut>10</Shortcut>
                   <Time>2.018</Time>
                 </Cue>
