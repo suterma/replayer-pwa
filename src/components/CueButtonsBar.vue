@@ -133,6 +133,7 @@ function cueClicked(event: PointerEvent): void {
 const prefixCue = computed(() => {
     return new Cue(
         'the Beginning',
+        null,
         '',
         0,
         props.cues?.[0]?.Time ?? null,

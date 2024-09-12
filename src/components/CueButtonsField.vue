@@ -277,6 +277,7 @@ function cueClicked(event: PointerEvent): void {
 const prefixCue = computed(() => {
     return new Cue(
         'the Beginning',
+        null,
         '',
         0,
         props.track.Cues?.[0]?.Time ?? null,

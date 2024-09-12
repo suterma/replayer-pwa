@@ -79,6 +79,7 @@ export default defineComponent({
                 cues.push(
                     new Cue(
                         description ?? '',
+                        null,
                         shortcut ?? null,
                         cueTime,
                         null,

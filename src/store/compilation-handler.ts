@@ -159,6 +159,7 @@ export default class CompilationHandler {
         const cue = new Cue(
             '',
             nextShortcut.toString(),
+            null,
             time,
             null,
             false,
