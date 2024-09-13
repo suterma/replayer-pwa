@@ -109,8 +109,8 @@
                             <slot>
                                 <DropdownMenuItem>
                                     <textarea
-                                        v-focus
                                         ref="cueRemarks"
+                                        v-focus
                                         class="textarea"
                                         type="text"
                                         inputmode="text"

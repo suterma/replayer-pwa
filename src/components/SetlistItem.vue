@@ -78,9 +78,9 @@
                 <th class="is-size-7">Shortcut</th>
                 <th class="is-size-7">Description</th>
                 <th
-                    class="is-size-7"
                     v-if="experimentalShowRemarksEditors"
                     v-experiment="experimentalShowRemarksEditors"
+                    class="is-size-7"
                 >
                     Remarks
                 </th>
