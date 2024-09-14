@@ -156,7 +156,6 @@ import draggable from 'vuedraggable';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import type { ITrack } from '@/store/ITrack';
-import { useSettingsStore } from '@/store/settings';
 import TagsSelector from '@/components/editor/TagsSelector.vue';
 
 const drag = ref(false);

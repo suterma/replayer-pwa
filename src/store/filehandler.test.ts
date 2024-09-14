@@ -228,4 +228,40 @@ describe('filehandler.ts', () => {
         expect(FileHandler.isVideoFileName('/path/file.abc')).toBe(false);
         expect(FileHandler.isVideoFileName('/path/file.1')).toBe(false);
     });
+
+    it('should recognise disregard URL query parameters', async () => {
+        // Act & Assert
+        expect(
+            FileHandler.isSupportedFileName('/path/file.PDF?param=val'),
+        ).toBe(true);
+        expect(
+            FileHandler.isSupportedFileName('/path/file.pdf?param=val'),
+        ).toBe(true);
+        expect(
+            FileHandler.isSupportedFileName('/path/file.mp3?param=val'),
+        ).toBe(true);
+        expect(
+            FileHandler.isSupportedFileName('/path/file.MP3?param=val'),
+        ).toBe(true);
+        expect(
+            FileHandler.isSupportedFileName('/path/file.txt?param=val'),
+        ).toBe(true);
+        expect(
+            FileHandler.isSupportedFileName('/path/file.flac?param=val'),
+        ).toBe(true);
+        expect(
+            FileHandler.isSupportedFileName('/path/file.Flac?param=val'),
+        ).toBe(true);
+
+        // some fake extensions
+        expect(
+            FileHandler.isSupportedFileName('/path/file.xyz?param=wouldbe.mp3'),
+        ).toBe(false);
+        expect(
+            FileHandler.isSupportedFileName('/path/file.abc?param=wouldbe.mp3'),
+        ).toBe(false);
+        expect(
+            FileHandler.isSupportedFileName('/path/file.1?param=wouldbe.mp3'),
+        ).toBe(false);
+    });
 });

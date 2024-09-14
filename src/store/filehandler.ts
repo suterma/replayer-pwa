@@ -290,7 +290,9 @@ export default class FileHandler {
         return false;
     }
 
-    /** Returns whether the given file name (by it's extension) is any of the supported types by Replayer */
+    /** Returns whether the given file name (by it's extension) is any of the supported types by Replayer
+     * @param {string | undefined} fileName - the filename to test; for media files this also can be a full URL
+     */
     static isSupportedFileName(fileName: string | undefined): boolean {
         if (
             this.isSupportedPackageFileName(fileName) ||
@@ -322,6 +324,7 @@ export default class FileHandler {
         return false;
     }
     /** Returns whether the given file name (by prefix/suffix) is a supported media file name by Replayer
+     * @param {string | undefined} fileName - the filename to test, which also can be a full URL
      * @remarks Currently, some audio, video, youtube plus txt, pdf, with name variations, are supported
      */
     static isSupportedMediaFileName(fileName: string | undefined): boolean {
@@ -420,6 +423,7 @@ export default class FileHandler {
     }
 
     /** Returns whether the given file name (by prefix/suffix) is a supported video file name by Replayer
+     * @param {string} fileName - the filename to test, which also can be a full URL
      * @devdoc track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,
      * determined when the track URL is evaluated.
@@ -427,7 +431,7 @@ export default class FileHandler {
     static isVideoFileName(fileName: string): boolean {
         const name = fileName.split('?')[0] ?? ''; //remove query from URL's
 
-        return FileHandler.FileExtensionMatch(fileName, [
+        return FileHandler.FileExtensionMatch(name, [
             'mp4',
             'm4v',
             'webm',
@@ -436,13 +440,14 @@ export default class FileHandler {
     }
 
     /** Returns whether the given file name (by prefix/suffix) is a supported audio file name by Replayer
+     * @param {string} fileName - the filename to test, which also can be a full URL
      * @devdoc track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,
      * determined when the track URL is evaluated.
      */
     static isAudioFileName(fileName: string): boolean {
         const name = fileName.split('?')[0] ?? ''; //remove query from URL's
-        return FileHandler.FileExtensionMatch(fileName, [
+        return FileHandler.FileExtensionMatch(name, [
             'mp3',
             'wav',
             'wave',
@@ -456,23 +461,25 @@ export default class FileHandler {
     }
 
     /** Returns whether the given file name (by prefix/suffix) is a supported text file name by Replayer
+     * @param {string} fileName - the filename to test, which also can be a full URL
      * @devdoc track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,
      * determined when the track URL is evaluated.
      */
     static isTextFileName(fileName: string): boolean {
         const name = fileName.split('?')[0] ?? ''; //remove query from URL's
-        return FileHandler.FileExtensionMatch(fileName, ['txt']);
+        return FileHandler.FileExtensionMatch(name, ['txt']);
     }
 
     /** Returns whether the given file name (by prefix/suffix) is a supported PDF file name by Replayer
+     * @param {string} fileName - the filename to test, which also can be a full URL
      * @devdoc track types should later be determined by MIME type.
      * For this, the MIME type should become part of the (readonly) track information,
      * determined when the track URL is evaluated.
      */
     static isPdfFileName(fileName: string): boolean {
         const name = fileName.split('?')[0] ?? ''; //remove query from URL's
-        return FileHandler.FileExtensionMatch(fileName, ['pdf']);
+        return FileHandler.FileExtensionMatch(name, ['pdf']);
     }
 
     /** Returns whether the given MIME type is a supported package MIME type by Replayer

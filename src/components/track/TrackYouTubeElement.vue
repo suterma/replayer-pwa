@@ -75,7 +75,6 @@ import {
     onBeforeUnmount,
     ref,
     watch,
-    watchEffect,
 } from 'vue';
 import type { Player } from '@vue-youtube/shared';
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
