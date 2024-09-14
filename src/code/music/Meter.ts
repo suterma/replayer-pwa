@@ -81,12 +81,12 @@ export class Meter implements IMeter {
                 measureNumberPrefix += ' ';
             }
 
-            return `#|${measureNumberPrefix}${metricalPosition.Measure} |.${metricalPosition.Beat}`;
+            return `${measureNumberPrefix}#${metricalPosition.Measure}.${metricalPosition.Beat}`;
         } else if (metricalPosition && metricalPosition.Beat) {
-            return `#|    |.${metricalPosition.Beat}`;
+            return `    #.${metricalPosition.Beat}`;
         }
 
-        return '#|    |. ';
+        return '    #. ';
     }
 
     /** Converts a temporal duration into a displayable multimeasure rest format,
