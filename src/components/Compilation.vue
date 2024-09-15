@@ -111,7 +111,6 @@ watch(
     () => activeTrackId.value,
     () => {
         if (activeTrackId.value) {
-            console.debug('scrolling to activated track:', activeTrackId.value);
             scrollToActiveTrack();
         }
     },
@@ -125,10 +124,6 @@ watch(
     () => trackViewMode.value,
     () => {
         if (activeTrackId.value) {
-            console.debug(
-                'scrolling to mode-changed track:',
-                activeTrackId.value,
-            );
             scrollToActiveTrack();
         }
     },
@@ -188,9 +183,6 @@ function scrollToActiveTrack() {
                 const trackElement = document.getElementById(
                     'track-' + trackId,
                 );
-
-                console.debug('scrolling to track:', trackId);
-
                 VueScrollTo.scrollTo(trackElement, {
                     /** Always scroll, make it on top of the view */
                     force: true,
