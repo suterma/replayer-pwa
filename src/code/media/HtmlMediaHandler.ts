@@ -166,7 +166,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
     debugLog(message: string, ...optionalParams: any[]): void {
         console.debug(
             mediaHandlerDebug(
-                `HtmlMediaHandler(${this._media.id})::${message}:`,
+                `HtmlMediaHandler(${this._media.src})::${message}:`,
                 optionalParams,
             ),
         );

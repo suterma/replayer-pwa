@@ -300,11 +300,6 @@ export default class CompilationHandler {
      * @param {number} trackDuration - could be NaN or infinity, depending on the source
      */
     static updateCueDurations(cues: ICue[], trackDuration: number): void {
-        console.debug(
-            'CompilationHandler::updateCueDurations:trackDuration',
-            trackDuration,
-        );
-
         const originalCues = cues.filter(function (el) {
             return el.Time !== null;
         });
