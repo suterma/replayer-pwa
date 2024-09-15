@@ -388,10 +388,17 @@ function createAndEmitHandler(mediaElement: HTMLMediaElement): IMediaHandler {
             mediaDuration.value = duration;
         },
     );
+    /** Handles an initial seek to the initial position, if applicable*/
     onCanPlaySubsription = handler.onCanPlay.subscribe(() => {
         if (isInitialPositionToBeApplied) {
-            handler.seekTo(props.start ?? 0);
-            console.debug('onCanPlaySubsription:seekTo', props.start ?? 0);
+            const initialPosition = props.start;
+            if (initialPosition) {
+                console.debug(
+                    'onCanPlaySubsription:applying initialPosition:',
+                    initialPosition,
+                );
+                handler.seekTo(initialPosition);
+            }
             isInitialPositionToBeApplied = false;
         }
     });
