@@ -44,6 +44,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     /** The YouTube player instance to act upon */
     private _player: Player;
+    private _videoUrl: string;
 
     /** @constructor
      * @param {Player} player - The YouTube player instance to act upon
@@ -55,6 +56,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         id: string,
     ) {
         this._player = player;
+        this._videoUrl = player.getVideoUrl();
         this._id = 'youtube-media-handler-' + (id ? id : player.getVideoUrl());
         this._fader = new YouTubeFader(player, DefaultTrackVolume);
         this._playbackRateController = new YouTubePlaybackRateController(
@@ -94,7 +96,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     debugLog(message: string, ...optionalParams: any[]): void {
         console.debug(
             mediaHandlerDebug(
-                `YouTubeMediaHandler(${this._id})::${message}:`,
+                `YouTubeMediaHandler(${this._videoUrl})::${message}:`,
                 optionalParams,
             ),
         );
@@ -118,7 +120,11 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     /** Keeper for the last emitted current time, to avoid multiple equal outputs. */
     private lastEmittedCurrentTime: number | null = null;
-    updateCurrentTime(): void {
+
+    /** Internally retrieves the current time, and issues an update, if changed.
+     * @returns The internally retrieved current time
+     */
+    updateCurrentTime(): number {
         const currentTime = this.currentTime;
         if (currentTime !== this.lastEmittedCurrentTime) {
             //this.debugLog(`updateCurrentTime:${currentTime}`);
@@ -128,6 +134,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         if (this._player.getPlayerState() == PlayerState.PLAYING) {
             window.requestAnimationFrame(() => this.updateCurrentTime());
         }
+        return currentTime;
     }
 
     // --- fading ---
@@ -239,31 +246,41 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     /**
      * @inheritDoc
-     * @param {boolean} _waitOnCanPlay - optional, not handled, as the YouTube player does not support seek events.
-     * @returns {Promise<void>} Promise - always resolved, immediately, or after 300ms, as the YouTube player does not support seek events.
+     * @param {boolean} _waitOnCanPlay - optional, not handled, as the YouTube
+     * player does not support seek progress events.
+     * @returns {Promise<void>} Promise - always resolved, immediately, or after 300ms,
+     * as the YouTube player does not support seek progress events.
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public seekTo(seconds: number, _waitOnCanPlay = false): Promise<void> {
         this.debugLog(`seekTo`, seconds);
         this.resetNextFadeInOmission();
-        if (!this.hasLoadedMetadata) return Promise.resolve();
-        if (this.currentTime === seconds) {
-            return Promise.resolve();
+        if (
+            this.hasLoadedMetadata &&
+            this.currentTime !== seconds &&
+            Number.isFinite(seconds)
+        ) {
+            return new Promise((resolve) => {
+                this._player.seekTo(seconds, true);
+                // Handle the seek end at some time after on our own,
+                // because there is no seek progress support in YouTube player
+                this.onSeekingChanged.emit(true);
+                setTimeout(() => {
+                    const currentTime = this.updateCurrentTime();
+                    this.debugLog(`seeked-to`, currentTime);
+                    this.onSeekingChanged.emit(false);
+                    this.onSeeked.emit(currentTime);
+                    resolve();
+                }, 300);
+            });
         }
-        if (Number.isFinite(seconds)) {
-            this.onSeekingChanged.emit(true);
-            this._player.seekTo(seconds, true);
-            this.onSeekingChanged.emit(false);
-            this.onSeeked.emit(seconds);
-            return new Promise((resolve) => setTimeout(resolve, 300));
-        } else {
-            return Promise.resolve();
-        }
+        return Promise.resolve();
     }
 
     /** Seeks forward or backward, for the given amount of seconds, if the media is loaded and the position is valid.
      * @param {number} seconds - amount of time, in [seconds], to seek
-     * @returns {Promise<void>} Promise - always resolved immediately, or after 300ms, as the YouTube player does not support seek events.
+     * @returns {Promise<void>} Promise - always resolved, immediately, or after 300ms,
+     * as the YouTube player does not support seek progress events.
      */
     seek(seconds: number): Promise<void> {
         return this.seekTo(this.currentTime + seconds);

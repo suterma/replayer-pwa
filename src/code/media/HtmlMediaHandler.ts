@@ -120,9 +120,10 @@ export default class HtmlMediaHandler implements IMediaHandler {
         };
 
         media.onseeked = () => {
-            this.debugLog(`onseeked`);
+            const currentTime = this.currentTime;
+            this.debugLog(`onseeked`, currentTime);
             this.onSeekingChanged.emit(false);
-            this.onSeeked.emit(this.currentTime);
+            this.onSeeked.emit(currentTime);
         };
 
         media.onplay = () => {
