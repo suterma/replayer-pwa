@@ -29,7 +29,7 @@ describe('testing the issue "90-downloading-a-newly-created-compilation-as-zip-d
 
         // ASSERT (the download)
         cy.readFile(
-            'cypress/downloads/Demo Compilation (Featuring Lidija Roos).zip',
+            'cypress/downloads/demo-compilation-featuring-lidija-roos.zip',
         );
     });
 });
