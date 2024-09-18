@@ -59,6 +59,9 @@ export default class CompilationHandler {
             if (key === 'MediaHandler') {
                 return;
             }
+            if (key === '_mediaHandler') {
+                return;
+            }
             // serialize sets as arrays. See https://stackoverflow.com/questions/31190885/json-stringify-a-set
             if (value !== null && value instanceof Set) {
                 return [...value];

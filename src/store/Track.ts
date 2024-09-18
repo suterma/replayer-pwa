@@ -50,8 +50,25 @@ export class Track implements ITrack {
     Duration: number | null = null;
     Volume: number = DefaultTrackVolume;
 
+    _mediaHandler: IMediaHandler | null = null;
+
     /**   @inheritdoc */
-    MediaHandler: IMediaHandler | null = null;
+    get MediaHandler(): IMediaHandler | null {
+        console.debug(
+            `Track::getMediaHandler:track=${this.Url};handler=${this._mediaHandler}`,
+        );
+        return this._mediaHandler;
+    }
+    /**   @inheritdoc */
+    set MediaHandler(val: IMediaHandler | null) {
+        console.debug(
+            `Track::setMediaHandler:track=${this.Url};handler=${val}`,
+        );
+        if (val === undefined) {
+            debugger;
+        }
+        this._mediaHandler = val;
+    }
 
     /** Creates a new track
      * @param name {string} - The name for the track.
@@ -103,14 +120,7 @@ export class Track implements ITrack {
         this.Tags = tags;
         this.Duration = duration;
         this.Volume = volume;
-        //this.MediaHandler = mediaHandler;
-
-        Object.defineProperty(this, 'MediaHandler', {
-            value: mediaHandler,
-            writable: true,
-            configurable: true,
-            enumerable: false, // this is the default value, so it could be excluded
-        });
+        this.MediaHandler = mediaHandler;
     }
 
     /** Parses the JSON and returns new instance of this class.

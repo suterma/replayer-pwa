@@ -114,12 +114,19 @@ export const mediaActions = {
     /** Sets the media handler for an existing track.
      */
     setMediaHandlerForTrack(track: ITrack, handler: IMediaHandler): void {
+        console.debug(
+            `mediaActions::skipToPlayPause:track=${track.Url};handler=${handler}`,
+        );
         track.MediaHandler = handler;
     },
 
     /** Destroys and removes the media handler for an existing track.
      */
     destroyMediaHandlerForTrack(track: ITrack): void {
+        console.debug(
+            'mediaActions::destroyMediaHandlerForTrack:track=',
+            track.Url,
+        );
         track.MediaHandler?.destroy();
         track.MediaHandler = null;
     },
@@ -131,27 +138,41 @@ export const mediaActions = {
      * @devdoc Conditional event registration inside the template did not work.
      */
     skipToPlayPause(track: ITrack): void {
-        if (track.MediaHandler?.canPlay) {
-            getters.activeTrackId;
-            if (!(getters.activeTrackId.value === track.Id)) {
-                actions.updateSelectedTrackId(track.Id);
+        if (track.MediaHandler) {
+            const canPlay = track.MediaHandler.canPlay;
+            console.debug(
+                `mediaActions::skipToPlayPause:track=${track.Url};canPlay=${canPlay}`,
+            );
+            if (canPlay) {
+                getters.activeTrackId;
+                if (!(getters.activeTrackId.value === track.Id)) {
+                    actions.updateSelectedTrackId(track.Id);
 
-                // Since the track's viewport might be hidden in the DOM,
-                // let it first become un-hidden.
-                nextTick(() => {
-                    // To account for the slide-in transition wait the
-                    // complete transition duration
-                    // This delay prevents error messages for video tracks, when the video
-                    // element hast the native controls enabled,
-                    // but is not completely visible yet
-                    setTimeout(
-                        () => track.MediaHandler?.play(),
-                        300 /*replayer-transition-duration*/,
-                    );
-                });
-            } else {
-                track.MediaHandler?.togglePlayback();
+                    // track.MediaHandler.play();
+                    // return;
+                    // TODO only use code below for videos, and not when the iOS condition is set
+
+                    // Since the track's viewport might be hidden in the DOM,
+                    // let it first become un-hidden.
+                    nextTick(() => {
+                        // To account for the slide-in transition wait the
+                        // complete transition duration
+                        // This delay prevents error messages for video tracks, when the video
+                        // element hast the native controls enabled,
+                        // but is not completely visible yet
+                        setTimeout(
+                            () => track.MediaHandler?.play(),
+                            300 /*replayer-transition-duration*/,
+                        );
+                    });
+                } else {
+                    track.MediaHandler?.togglePlayback();
+                }
             }
+        } else {
+            console.warn(
+                `mediaActions::skipToPlayPause:track=${track.Url};MediaHandler not available`,
+            );
         }
     },
 };
