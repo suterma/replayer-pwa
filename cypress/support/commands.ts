@@ -74,7 +74,7 @@ declare namespace Cypress {
 
 Cypress.Commands.add('loadDemo', (): void => {
     visitWithoutServiceWorker('/');
-    cy.contains('Try the demo').click();
+    cy.get('a[data-cy="demo-link"]').click();
     // ASSERT that the demo is loaded
     cy.get('.compilation span.title.is-3').contains(
         'Demo Compilation (Featuring Lidija Roos)',

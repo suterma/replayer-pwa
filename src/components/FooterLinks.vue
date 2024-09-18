@@ -1,5 +1,5 @@
 <template>
-    <router-link to="/demo"> Demo</router-link>
+    <router-link to="/demo" data-cy="demo-link">Demo</router-link>
     <span class="mx-2"></span>
 
     <a
