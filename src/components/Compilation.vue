@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <div v-if="compilation" class="compilation" data-cy="compilation">
+    <div class="compilation" data-cy="compilation">
         <!-- Handle all relevant Replayer events for the compilation level -->
         <ReplayerEventHandler
             @tonextcue="app.toNextCue()"
