@@ -9,34 +9,31 @@
     <p>Loading the demo....</p>
 </template>
 
-<script lang="ts">
-import { Route } from '@/router';
-import { useAppStore } from '@/store/app';
-import { defineComponent } from 'vue';
-
+<script setup lang="ts">
 /** A view for demo purposes
  * @remarks Just loads the demo compilation and navigates to the play view.
  */
-export default defineComponent({
-    name: 'DemoView',
-    components: {},
 
-    mounted() {
-        this.loadDemo();
-        this.$router.push(Route.Play);
-    },
+import { Route } from '@/router';
+import { useAppStore } from '@/store/app';
+import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
-    methods: {
-        loadDemo() {
-            const url =
-                'https://lib.replayer.app/demo/demo-compilation-featuring-lidija-roos-with-info.xml';
-            console.debug('loadDemo:', url);
-            useAppStore()
-                .loadFromUrl(url)
-                .catch((errorMessage: string) => {
-                    console.error(errorMessage);
-                });
-        },
-    },
+const router = useRouter();
+
+onMounted(() => {
+    loadDemo();
+    router.push(Route.Play);
 });
+
+function loadDemo() {
+    const demoCompilationUrl =
+        'https://lib.replayer.app/demo/demo-compilation-featuring-lidija-roos-with-info.xml';
+    console.debug('DemoView::loadDemo:', demoCompilationUrl);
+    useAppStore()
+        .loadFromUrl(demoCompilationUrl)
+        .catch((errorMessage: string) => {
+            console.error(errorMessage);
+        });
+}
 </script>
