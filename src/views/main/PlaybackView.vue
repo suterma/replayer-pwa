@@ -37,30 +37,29 @@
         </div>
 
         <!--During edit, with available media, offer the media list -->
-        <template v-if="isTrackEditable && hasAnyAvailableMedia">
-            <div class="has-text-centered block">
-                <CollapsiblePanel>
-                    <template #caption>
-                        <span class="has-opacity-half">Available media</span>
-                    </template>
+        <div
+            v-if="isTrackEditable && hasAnyAvailableMedia"
+            class="has-text-centered block"
+        >
+            <CollapsiblePanel>
+                <template #caption>
+                    <span class="has-opacity-half">Available media</span>
+                </template>
 
-                    <div class="block mt-5">
-                        <MediaList></MediaList>
-                    </div>
-                </CollapsiblePanel>
-            </div>
-        </template>
+                <div class="block mt-5">
+                    <MediaList></MediaList>
+                </div>
+            </CollapsiblePanel>
+        </div>
         <!-- The application footer (not for printout) -->
         <footer
             v-if="!hasCompilation"
             class="footer navbar is-fixed-bottom is-hidden-print"
         >
             <small>
-                <div class="content has-text-centered">
-                    <p>
-                        <FooterLinks />
-                    </p>
-                </div>
+                <p class="has-text-centered">
+                    <FooterLinks />
+                </p>
             </small>
         </footer>
     </div>
