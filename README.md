@@ -12,7 +12,7 @@ By the click of a button, Replayer starts to play at predefined times in the aud
 # How it works
 
 1. Add music files (mp3, wav, ...) to create a compilation of tracks.
-1. Add cues for specific points in time (e.g. intro, verse, chorus,...) in the playback file, with a name and an optional shortcut mnemonic
+1. Add cues for specific points in time (e.g. intro, verse, chorus, rehearsal marks,...) in the playback file, with a name and an optional shortcut mnemonic
 1. In the session, using Replayer on your portable computer, play any part of your set with the click of a cue button.
 1. Additionally, you can use a (bluetooth) numeric keypad, as a remote control
 
