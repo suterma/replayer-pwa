@@ -272,7 +272,7 @@ import {
     watchEffect,
 } from 'vue';
 import { TrackApi } from '@/code/api/TrackApi';
-import { mdiShareVariant, mdiSwapVertical } from '@mdi/js';
+import { mdiShareVariant, mdiSwapVertical, mdiTrashCanOutline } from '@mdi/js';
 import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
@@ -288,7 +288,6 @@ import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import NavButton from '@/components/buttons/NavButton.vue';
 import { useAppStore } from '@/store/app';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { mdiTrashCanOutline } from '@mdi/js';
 import {
     isPlayingInjectionKey,
     useMeasureNumbersInjectionKey,
