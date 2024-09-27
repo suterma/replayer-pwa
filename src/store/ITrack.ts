@@ -13,7 +13,6 @@
 
 import type { IMeter } from '@/code/music/IMeter';
 import type { ICue } from './ICue';
-import type { IMediaHandler } from '@/code/media/IMediaHandler';
 
 /** @interface Defines a Replayer track */
 export interface ITrack {
@@ -89,11 +88,4 @@ export interface ITrack {
      * @devdoc This identifier allows to recognise this item over multiple edits
      */
     Id: string;
-
-    /** An suitable media handler for this tracks media player.
-     * @remarks This is only set/unset when the track's Vue component has been mounted/unmounted.
-     * and a suitable player object has been created, using a matching media file for this track.
-     * @devdoc This property is transient; it must never get persisted.
-     */
-    MediaHandler: IMediaHandler | null;
 }

@@ -14,7 +14,6 @@
 import type { IMeter } from '@/code/music/IMeter';
 import type { ITrack } from './ITrack';
 import type { ICue } from './ICue';
-import type { IMediaHandler } from '@/code/media/IMediaHandler';
 
 /** The default track volume */
 export const DefaultTrackVolume = 0.5;
@@ -50,26 +49,6 @@ export class Track implements ITrack {
     Duration: number | null = null;
     Volume: number = DefaultTrackVolume;
 
-    _mediaHandler: IMediaHandler | null = null;
-
-    /**   @inheritdoc */
-    get MediaHandler(): IMediaHandler | null {
-        console.debug(
-            `Track::getMediaHandler:track=${this.Url};handler=${this._mediaHandler}`,
-        );
-        return this._mediaHandler;
-    }
-    /**   @inheritdoc */
-    set MediaHandler(val: IMediaHandler | null) {
-        console.debug(
-            `Track::setMediaHandler:track=${this.Url};handler=${val}`,
-        );
-        if (val === undefined) {
-            debugger;
-        }
-        this._mediaHandler = val;
-    }
-
     /** Creates a new track
      * @param name {string} - The name for the track.
      * @param album {string} - The album name, if any.
@@ -81,7 +60,6 @@ export class Track implements ITrack {
      * @param pitchShift {number} - The track's pitch shift in [cents]. If not finite, a default value is used.
      * @param duration {number | null} - Duration of the media associated with the track. This is not persisted, but set to a specific value once after a matching track has been loaded.
      * @param volume {volume} - Track volume.
-     * @param mediaHandler {IMediaHandler | null} - The media handler. This is transient and never persisted.
      */
     constructor(
         name: string,
@@ -99,7 +77,6 @@ export class Track implements ITrack {
         tags: Set<string>,
         duration: number | null,
         volume: number,
-        mediaHandler: IMediaHandler | null,
     ) {
         this.Name = name;
         this.Album = album;
@@ -120,7 +97,6 @@ export class Track implements ITrack {
         this.Tags = tags;
         this.Duration = duration;
         this.Volume = volume;
-        this.MediaHandler = mediaHandler;
     }
 
     /** Parses the JSON and returns new instance of this class.
@@ -146,7 +122,6 @@ export class Track implements ITrack {
             new Set<string>(obj.Tags),
             null /* duration not persisted */,
             obj.Volume ?? DefaultTrackVolume,
-            null /* media handler not persisted */,
         );
         console.debug('Track::fromJson:'), track;
         return track;

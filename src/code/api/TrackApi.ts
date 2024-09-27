@@ -185,7 +185,6 @@ export class TrackApi {
                 ) /* Tags are not currently supported by the Track API*/,
                 null,
                 DefaultTrackVolume,
-                null,
             );
             return newTrack;
         } else {

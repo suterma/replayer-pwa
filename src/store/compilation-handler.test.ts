@@ -16,9 +16,32 @@ import { MediaBlob } from './types';
 import CompilationHandler from './compilation-handler';
 import { Compilation } from './Compilation';
 import { DefaultPitchShift, DefaultPlaybackRate, Track } from './Track';
+import type { ITrack } from './ITrack';
+import type { ICue } from './ICue';
 
 describe('CompilationHandler.ts', () => {
     let mediaBlobs = new Array<MediaBlob>();
+
+    /** Gets a new default test track for testing purposes */
+    function getTestTrack(): ITrack {
+        return new Track(
+            'testName',
+            'testAlbum',
+            'testArtist',
+            2.2 /*pre-roll*/,
+            15.1 /*initialPlayheadPosition*/,
+            0.75,
+            0 /*PitchShift*/,
+            null,
+            null,
+            'testUrl',
+            'testId',
+            new Array<ICue>(),
+            new Set<string>(['default-tag']),
+            null,
+            1,
+        );
+    }
 
     beforeEach(() => {
         const dataBase64 = 'VEhJUyBJUyBUSEUgQU5TV0VSCg==';
@@ -210,26 +233,7 @@ describe('CompilationHandler.ts', () => {
             [],
             new Set<string>([]),
         );
-        testCompilation.Tracks.push(
-            new Track(
-                'testTrackName',
-                'testTrackArtist',
-                'testTrackAlbum',
-                5 /*pre-roll*/,
-                null /*playheadPosition*/,
-                DefaultPlaybackRate,
-                DefaultPitchShift,
-                null /*meter*/,
-                false /*useMeasureNumbers*/,
-                'https://example.com/test.mp3',
-                'track-deadbeef',
-                [] /*cues*/,
-                new Set<string>(['default-tag']),
-                60,
-                1,
-                null,
-            ),
-        );
+        testCompilation.Tracks.push(getTestTrack());
 
         //Act
         const actual =
@@ -335,26 +339,12 @@ describe('CompilationHandler.ts', () => {
             [],
             new Set<string>([]),
         );
-        testCompilation.Tracks.push(
-            new Track(
-                'testTrackName',
-                '',
-                '',
-                5 /*pre-roll*/,
-                null /*playheadPosition*/,
-                DefaultPlaybackRate /*playbackRate*/,
-                DefaultPitchShift,
-                null /*meter*/,
-                false /*useMeasureNumbers*/,
-                'https://example.com/test.mp3',
-                'track-deadbeef',
-                [] /*cues*/,
-                new Set<string>(['default-tag']),
-                60,
-                1,
-                null,
-            ),
-        );
+
+        const testTrack = getTestTrack();
+        testTrack.Name = 'testTrackName';
+        testTrack.Artist = '';
+        testTrack.Album = '';
+        testCompilation.Tracks.push(testTrack);
 
         //Act
         const actual =
@@ -362,5 +352,73 @@ describe('CompilationHandler.ts', () => {
 
         //Assert
         expect(actual).toEqual('test-track-name');
+    });
+
+    it('should recognise an audio track', async () => {
+        //Arrange
+        const testTrack = getTestTrack();
+        testTrack.Url = 'https://example.com/test.mp3';
+
+        //Act
+        const actualAudioTrack = CompilationHandler.isAudioTrack(testTrack);
+        const actualVideoTrack = CompilationHandler.isVideoTrack(testTrack);
+        const actualYouTubeTrack =
+            CompilationHandler.isYoutubeVideoTrack(testTrack);
+
+        //Assert
+        expect(actualAudioTrack).toBeTruthy();
+        expect(actualVideoTrack).toBeFalsy();
+        expect(actualYouTubeTrack).toBeFalsy();
+    });
+
+    it('should recognise a video track', async () => {
+        //Arrange
+        const testTrack = getTestTrack();
+        testTrack.Url = 'https://example.com/test.mp4';
+
+        //Act
+        const actualAudioTrack = CompilationHandler.isAudioTrack(testTrack);
+        const actualVideoTrack = CompilationHandler.isVideoTrack(testTrack);
+        const actualYouTubeTrack =
+            CompilationHandler.isYoutubeVideoTrack(testTrack);
+
+        //Assert
+        expect(actualAudioTrack).toBeFalsy();
+        expect(actualVideoTrack).toBeTruthy();
+        expect(actualYouTubeTrack).toBeFalsy();
+    });
+
+    it('should recognise a YouTube track', async () => {
+        //Arrange
+        const testTrack = getTestTrack();
+        testTrack.Url = 'https://www.youtube.com/watch?v=Oextk-If8HQ';
+
+        //Act
+        const actualAudioTrack = CompilationHandler.isAudioTrack(testTrack);
+        const actualVideoTrack = CompilationHandler.isVideoTrack(testTrack);
+        const actualYouTubeTrack =
+            CompilationHandler.isYoutubeVideoTrack(testTrack);
+
+        //Assert
+        expect(actualAudioTrack).toBeFalsy();
+        expect(actualVideoTrack).toBeFalsy();
+        expect(actualYouTubeTrack).toBeTruthy();
+    });
+
+    it('should recognise an unspecified track as audio', async () => {
+        //Arrange
+        const testTrack = getTestTrack();
+        testTrack.Url = 'https://www.somebox.example.com/mycustomfileid?dl=1';
+
+        //Act
+        const actualAudioTrack = CompilationHandler.isAudioTrack(testTrack);
+        const actualVideoTrack = CompilationHandler.isVideoTrack(testTrack);
+        const actualYouTubeTrack =
+            CompilationHandler.isYoutubeVideoTrack(testTrack);
+
+        //Assert
+        expect(actualAudioTrack).toBeTruthy();
+        expect(actualVideoTrack).toBeFalsy();
+        expect(actualYouTubeTrack).toBeFalsy();
     });
 });

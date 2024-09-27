@@ -100,7 +100,6 @@ export class Compilation implements ICompilation {
                     new Set<string>(track.Tags),
                     track.Duration,
                     track.Volume ?? DefaultTrackVolume,
-                    track.MediaHandler,
                 );
             }),
             new Set<string>(obj.SelectedTags),

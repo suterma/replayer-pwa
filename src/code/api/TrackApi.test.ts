@@ -47,7 +47,6 @@ describe('TrackApi.ts', () => {
             new Set<string>(['default-tag']),
             60,
             1,
-            null,
         );
 
         //Act
@@ -231,7 +230,6 @@ describe('TrackApi.ts', () => {
             new Set<string>(['default-tag']),
             60,
             1,
-            null,
         );
 
         //Act

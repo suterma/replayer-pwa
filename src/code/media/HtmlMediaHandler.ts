@@ -24,6 +24,7 @@ import type { IMediaLooper } from './IMediaLooper';
 import type { IPitchShiftController } from './IPitchShiftController';
 import HtmlMediaPitchShiftController from './HtmlMediaPitchShiftController';
 import type { ShallowRef } from 'vue';
+import Constants from './Constants';
 
 const mediaHandlerDebug = chalk.hex('#62c462'); // Replayer success color (bulma warning)
 
@@ -56,17 +57,16 @@ export default class HtmlMediaHandler implements IMediaHandler {
         audioSource: ShallowRef<
             MediaElementAudioSourceNode | AudioBufferSourceNode | null
         >,
+        id = '',
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         masterVolume: number = 1,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         playbackRate: number = DefaultPlaybackRate,
         // eslint-disable-next-line @typescript-eslint/no-inferrable-types
         pitchShift: number = DefaultPitchShift,
-
-        id = '',
     ) {
         this._media = media;
-        this._id = id ? id : 'handler-' + media.id;
+        this._id = Constants.HANDLER_ID_PREFIX + (id ? id : media.id);
         this._fader = new AudioFader(media, masterVolume);
         this._playbackRateController = new HtmlMediaPlaybackRateController(
             media,
@@ -296,7 +296,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
         return this._canPlay;
     }
 
-    /** Whether the media data has loaded enough to start playback.
+    /** Whether the media data had loaded enough to start playback.
      */
     _canPlay = false;
 

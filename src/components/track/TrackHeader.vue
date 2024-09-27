@@ -243,8 +243,8 @@
                 <slot name="right-action-items"></slot>
 
                 <PlaybackIndicator
-                    :is-ready="!isTrackPlaying && isTrackLoaded"
-                    :is-unloaded="!isTrackLoaded"
+                    :is-ready="!isTrackPlaying && canPlay"
+                    :is-unloaded="!canPlay"
                     :is-unavailable="!isTrackMediaAvailable"
                     data-cy="playback-indicator"
                 />
@@ -328,9 +328,10 @@ const props = defineProps({
         default: true,
     },
 
-    /** Flag to indicate whether the player has it's track loaded.
+    /** Whether the current track can play (the media is loaded to the extent that it's ready to play).
+     * @remarks This is used to toggle playback button states
      */
-    isTrackLoaded: {
+    canPlay: {
         type: Boolean,
         default: false,
     },

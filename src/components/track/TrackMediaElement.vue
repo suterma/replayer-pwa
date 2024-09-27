@@ -45,7 +45,7 @@
             }"
         >
             <video
-                :id="mediaElementId"
+                :id="Constants.MEDIATRACK_ID_PREFIX + props.trackId"
                 ref="mediaElement"
                 :key="trackId"
                 controls
@@ -70,7 +70,7 @@
     <template v-else>
         <!-- use the audio element -->
         <audio
-            :id="mediaElementId"
+            :id="Constants.MEDIATRACK_ID_PREFIX + props.trackId"
             ref="mediaElement"
             :key="trackId"
             preload="metadata"
@@ -185,6 +185,7 @@ import { storeToRefs } from 'pinia';
 import type { ICue } from '@/store/ICue';
 import { useAppStore } from '@/store/app';
 import { DefaultPitchShift } from '@/store/Track';
+import Constants from '@/code/media/Constants';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -195,7 +196,7 @@ import { DefaultPitchShift } from '@/store/Track';
  * @devdoc Autoplay after load is intentionally not supported, as this is of no use for the Replayer app.
  */
 
-const emit = defineEmits(['ready', 'click']);
+const emit = defineEmits(['click']);
 
 const props = defineProps({
     /** The media file URL
@@ -323,10 +324,10 @@ const videoElement = computed(() => {
 
 watch(mediaElement, async (newMediaElement, oldMediaElement) => {
     if (oldMediaElement !== null) {
-        destroyHandler(oldMediaElement);
+        destroyHandler();
     }
     if (newMediaElement !== null) {
-        mediaHandler.value = createAndEmitHandler(newMediaElement);
+        mediaHandler.value = createAndProvideHandler(newMediaElement);
     }
 });
 
@@ -343,7 +344,7 @@ let onFadingChangedSubsription: Subscription;
 const mediaHandler: Ref<IMediaHandler | null> = ref(null);
 
 /** Properly destroy the handler, and abandon the media element, including it's handlers */
-function destroyHandler(mediaElement: HTMLMediaElement): void {
+function destroyHandler(): void {
     if (mediaHandler.value) {
         audio.removeMediaHandler(mediaHandler.value);
         //properly destroy the audio element and the audio context
@@ -358,21 +359,23 @@ function destroyHandler(mediaElement: HTMLMediaElement): void {
         onFadingChangedSubsription?.cancel();
     }
 
-    if (mediaElement) {
-        mediaElement.removeAttribute('src'); // empty resource
+    if (mediaElement.value) {
+        mediaElement.value.removeAttribute('src'); // empty resource
     }
     console.log('TrackMediaElement:destroyed');
 }
 
-function createAndEmitHandler(mediaElement: HTMLMediaElement): IMediaHandler {
+function createAndProvideHandler(
+    mediaElement: HTMLMediaElement,
+): IMediaHandler {
     const handler = new HtmlMediaHandler(
         mediaElement,
         audioSource,
+        Constants.MEDIATRACK_ID_PREFIX + props.trackId,
     ) as IMediaHandler;
 
-    console.log('TrackMediaElement:ready');
-    emit('ready', handler);
     audio.addMediaHandler(handler);
+    console.log('TrackMediaElement:ready');
 
     // Internally handle some events of our own
     onPauseChangedSubsription = handler.onPausedChanged.subscribe((paused) => {
@@ -416,13 +419,7 @@ function createAndEmitHandler(mediaElement: HTMLMediaElement): IMediaHandler {
  */
 onBeforeUnmount(() => {
     console.debug('TrackMediaElement:onBeforeUnmount');
-    if (mediaElement.value) {
-        destroyHandler(mediaElement.value);
-    }
-});
-
-const mediaElementId = computed(() => {
-    return 'media-track-' + props.trackId;
+    destroyHandler();
 });
 
 // --- visual fading ---

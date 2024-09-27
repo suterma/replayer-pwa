@@ -171,13 +171,14 @@ export interface IMediaHandler {
      */
     mediaSourceUrl: string;
 
-    /** Emitted when the media data has loaded enough to start playback
+    /** Emitted once the media data has loaded enough to start playback
+     * @remarks This is a one-off event. Media is not expected to become unplayable once it could play.
      * @devdoc This is emitted separately from the data loading state and events, since the underlying
      * implementation might handle it separately.
      */
     onCanPlay: SubEvent<void>;
 
-    /** Whether the media data has loaded enough to start playback.
+    /** Whether the media data had loaded enough to start playback.
      */
     readonly canPlay: boolean;
 

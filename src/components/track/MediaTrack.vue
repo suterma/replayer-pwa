@@ -37,7 +37,7 @@
                 v-model:is-expanded="isExpanded"
                 :can-collapse="!hasSingleMediaTrack"
                 :track="track"
-                :is-track-loaded="isTrackLoaded"
+                :canPlay="canPlay"
                 :is-track-media-available="Boolean(mediaUrl)"
                 :is-active="isActiveTrack"
             >
@@ -83,8 +83,8 @@
                             :disabled="!canPlay"
                             :class="{
                                 'is-success': isActiveTrack,
-                                'is-clickable': isTrackLoaded,
-                                'has-cursor-not-allowed': !isTrackLoaded,
+                                'is-clickable': canPlay,
+                                'has-cursor-not-allowed': !canPlay,
                             }"
                             :is-loading="isFading !== FadingMode.None"
                             data-cy="toggle-playback"
@@ -106,8 +106,8 @@
                             v-if="!isTrackEditable"
                             class="is-flex-shrink-1 ml-3"
                             :class="{
-                                'is-clickable': isTrackLoaded,
-                                'has-cursor-not-allowed': !isTrackLoaded,
+                                'is-clickable': canPlay,
+                                'has-cursor-not-allowed': !canPlay,
                             }"
                             @click="setActiveTrack()"
                         >
@@ -148,8 +148,8 @@
                     <div class="level-item is-narrow mr-0">
                         <div
                             :class="{
-                                'is-clickable': isTrackLoaded,
-                                'has-cursor-not-allowed': !isTrackLoaded,
+                                'is-clickable': canPlay,
+                                'has-cursor-not-allowed': !canPlay,
                             }"
                             @click="app.skipToPlayPause(props.track)"
                         >
@@ -166,7 +166,7 @@
                          not in the header -->
                         <VolumeKnob
                             v-if="isTrackMixable"
-                            :disabled="!isTrackLoaded"
+                            :disabled="!canPlay"
                             :volume="track.Volume"
                             @update:volume="updateVolume"
                         /></div
@@ -376,7 +376,7 @@
                                 !isLastMediaTrack || isLoopingPlaybackMode
                             "
                             :hide-cue-navigation="true"
-                            :playback-mode="playbackMode as PlaybackMode"
+                            :playback-mode="playbackMode"
                             :is-pre-roll-enabled="isPreRollEnabled"
                             :volume="track.Volume"
                             :hide-play-pause-button="true"
@@ -610,10 +610,9 @@
                                             </template>
                                             <PlaybackIndicator
                                                 :is-ready="
-                                                    !isTrackPlaying &&
-                                                    isTrackLoaded
+                                                    !isTrackPlaying && canPlay
                                                 "
-                                                :is-unloaded="!isTrackLoaded"
+                                                :is-unloaded="!canPlay"
                                                 :is-unavailable="!mediaUrl"
                                                 data-cy="playback-indicator"
                                             />
@@ -699,7 +698,6 @@
                                         levelMeterSizeIsLarge
                                     "
                                     :small-video="!isFullscreen"
-                                    @ready="takeMediaHandler"
                                     @click="setActiveTrack"
                                 ></TrackMediaElement>
                                 <div v-if="isYoutubeVideoTrack">
@@ -714,7 +712,6 @@
                                             :track-id="track.Id"
                                             :cues="track.Cues"
                                             :small-video="!isFullscreen"
-                                            @ready="takeMediaHandler"
                                             @click="setActiveTrack"
                                         ></TrackYouTubeElement>
                                     </OnYouTubeConsent>
@@ -803,6 +800,8 @@ import MessageOverlay from '@/components/MessageOverlay.vue';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 import type { ICompilation } from '@/store/ICompilation';
 import TagsDisplay from '@/components/displays/TagsDisplay.vue';
+import { useAudioStore } from '@/store/audio';
+import { Subscription } from 'sub-events';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -881,64 +880,89 @@ provide(meterInjectionKey, readonly(meter));
 
 // --- playback handling
 
+const audio = useAudioStore();
+
 /** A reference to the appropriate media handler
- * @remarks This handler is available only after the respective track media component emits the ready-to-play event.
+ * @remarks This handler is available only after the respective track media component added it's handler to the audio store.
  */
-const mediaHandler = computed(() => props.track.MediaHandler);
+const mediaHandler = computed(() =>
+    audio.getMediaHandlerByTrackId(props.track.Id),
+);
 
 /** A reference to the cue scheduler
  */
 const cueScheduler: Ref<ICueScheduler | null> = ref(null);
 
-/** Updates the media handler for this track, with the emitted one from the underlying component */
-function takeMediaHandler(handler: IMediaHandler) {
+let currentTimeChangedSubscription: Subscription;
+let onCanPlaySubscription: Subscription;
+let onDurationChangedSubscription: Subscription;
+let onPauseChangedSubscription: Subscription;
+let onNextFadeInOmissionChangedSubscription: Subscription;
+let onEndedSubscription: Subscription;
+let onSeekingChangedSubscription: Subscription;
+let onFadingChangedSubscription: Subscription;
+let onVolumeChangedSubscription: Subscription;
+let onMutedChangedSubscription: Subscription;
+let onSoloedChangedSubscription: Subscription;
+let onPlaybackRateChangedSubscription: Subscription;
+let onPitchShiftChangedSubscription: Subscription;
+
+/** Updates a received media handler for this track */
+function assumeMediaHandler(handler: IMediaHandler) {
     // initialize
-    console.debug('MediaTrack::takeMediaHandler:id', handler.id);
+    console.debug('MediaTrack::assumeMediaHandler:id', handler.id);
     handler.fader.setVolume(props.track.Volume);
     handler.playbackRateController.playbackRate = props.track.PlaybackRate;
     handler.pitchShiftController.pitchShift = props.track.PitchShift;
 
-    // register for the required events
-    handler.onCurrentTimeChanged.subscribe((currentTime) => {
-        currentPosition.value = currentTime;
-    });
+    // register for the required events, and initialize some of the
+    // internal state to initial values from the handler
+    // NOTE: The SubEvent API does not provide an "immediate"-style subscription
+    currentTimeChangedSubscription = handler.onCurrentTimeChanged.subscribe(
+        (currentTime) => {
+            updateCurrentPosition(currentTime);
+        },
+    );
+    updateCurrentPosition(handler.currentTime);
 
-    handler.onCanPlay.subscribe(() => {
-        isTrackLoaded.value = true;
+    onCanPlaySubscription = handler.onCanPlay.subscribe(() => {
+        canPlay.value = true;
     });
+    canPlay.value = handler.canPlay;
 
-    handler.onDurationChanged.subscribe((duration) => {
-        removeCueScheduling();
-        trackDuration.value = duration;
-        app.updateDurations(props.track.Id, duration);
+    onDurationChangedSubscription = handler.onDurationChanged.subscribe(
+        (duration) => {
+            updateDuration(duration);
+        },
+    );
+    updateDuration(handler.duration);
+
+    onPauseChangedSubscription = handler.onPausedChanged.subscribe((paused) => {
+        updatePaused(paused);
     });
+    updatePaused(handler.paused);
 
-    handler.onPausedChanged.subscribe((paused) => {
-        removeCueScheduling();
-        isTrackPlaying.value = !paused;
-        if (paused) {
-            // mmake sure we keep up-to-date persisted position when paused
-            persistPlayheadPosition();
-        }
-    });
+    onNextFadeInOmissionChangedSubscription =
+        handler.onNextFadeInOmissionChanged.subscribe((omitsNextFadeIn) => {
+            isPlayerOmittingNextFadeIn.value = omitsNextFadeIn;
+        });
+    isPlayerOmittingNextFadeIn.value = handler.omitsNextFadeIn;
 
-    handler.onNextFadeInOmissionChanged.subscribe((omitsNextFadeIn) => {
-        isPlayerOmittingNextFadeIn.value = omitsNextFadeIn;
-    });
-
-    handler.onEnded.subscribe(() => {
+    onEndedSubscription = handler.onEnded.subscribe(() => {
         removeCueScheduling();
         emit('trackEnded');
     });
 
-    handler.onSeekingChanged.subscribe((seeking) => {
-        removeCueScheduling();
-        if (!seeking && !isTrackPlaying.value) {
-            // make sure we keep up-to-date persisted position after seeking,
-            // but, for playback performance reasons, only when paused
-            persistPlayheadPosition();
-        }
-    });
+    onSeekingChangedSubscription = handler.onSeekingChanged.subscribe(
+        (seeking) => {
+            removeCueScheduling();
+            if (!seeking && !isTrackPlaying.value) {
+                // make sure we keep up-to-date persisted position after seeking,
+                // but, for playback performance reasons, only when paused
+                persistPlayheadPosition();
+            }
+        },
+    );
 
     handler.fader.updateSettings(
         settings.fadeInDuration,
@@ -946,38 +970,111 @@ function takeMediaHandler(handler: IMediaHandler) {
         settings.addFadeInPreRoll,
     );
 
-    handler.fader.onFadingChanged.subscribe((fading) => {
-        isFading.value = fading;
-    });
+    onFadingChangedSubscription = handler.fader.onFadingChanged.subscribe(
+        (fading) => {
+            isFading.value = fading;
+        },
+    );
 
-    handler.fader.onVolumeChanged.subscribe((volume) => {
-        updateVolume(volume);
-    });
+    onVolumeChangedSubscription = handler.fader.onVolumeChanged.subscribe(
+        (volume) => {
+            updateVolume(volume);
+        },
+    );
 
-    handler.fader.onMutedChanged.subscribe((muted) => {
-        isMuted.value = muted;
-    });
+    onMutedChangedSubscription = handler.fader.onMutedChanged.subscribe(
+        (muted) => {
+            isMuted.value = muted;
+        },
+    );
+    isMuted.value = handler.fader.muted;
 
-    handler.fader.onSoloedChanged.subscribe((soloed) => {
-        isSoloed.value = soloed;
-    });
+    onSoloedChangedSubscription = handler.fader.onSoloedChanged.subscribe(
+        (soloed) => {
+            isSoloed.value = soloed;
+        },
+    );
+    isSoloed.value = handler.fader.soloed;
 
-    handler.playbackRateController.onPlaybackRateChanged.subscribe((rate) => {
-        app.updateTrackPlaybackRate(props.track?.Id, rate);
-    });
+    onPlaybackRateChangedSubscription =
+        handler.playbackRateController.onPlaybackRateChanged.subscribe(
+            (rate) => {
+                app.updateTrackPlaybackRate(props.track?.Id, rate);
+            },
+        );
 
-    handler.pitchShiftController.onPitchShiftChanged.subscribe((shift) => {
-        app.updateTrackPitchShift(props.track?.Id, shift);
-    });
+    onPitchShiftChangedSubscription =
+        handler.pitchShiftController.onPitchShiftChanged.subscribe((shift) => {
+            app.updateTrackPitchShift(props.track?.Id, shift);
+        });
 
     cueScheduler.value = new CueScheduler(handler);
+}
 
-    app.setMediaHandlerForTrack(props.track, handler);
+function updateCurrentPosition(currentTime: number) {
+    currentPosition.value = currentTime;
+}
+
+function updateDuration(duration: number) {
+    removeCueScheduling();
+    trackDuration.value = duration;
+    app.updateDurations(props.track.Id, duration);
+}
+
+function updatePaused(paused: boolean) {
+    removeCueScheduling();
+    isTrackPlaying.value = !paused;
+    if (paused) {
+        // mmake sure we keep up-to-date persisted position when paused
+        persistPlayheadPosition();
+    }
+}
+
+/** Releases a used media handler for this track */
+function releaseMediaHandler() {
+    const handler = mediaHandler.value;
+    console.debug('MediaTrack::releaseMediaHandler:id', handler?.id);
+
+    // un-register for the registered events
+    currentTimeChangedSubscription?.cancel;
+    onCanPlaySubscription?.cancel;
+    onDurationChangedSubscription?.cancel;
+    onPauseChangedSubscription?.cancel;
+    onNextFadeInOmissionChangedSubscription?.cancel;
+    onEndedSubscription?.cancel;
+    onSeekingChangedSubscription?.cancel;
+    onFadingChangedSubscription?.cancel;
+    onVolumeChangedSubscription?.cancel;
+    onMutedChangedSubscription?.cancel;
+    onSoloedChangedSubscription?.cancel;
+    onPlaybackRateChangedSubscription?.cancel;
+    onPitchShiftChangedSubscription?.cancel;
+
+    cueScheduler.value?.RemoveSchedule();
+    cueScheduler.value = null;
 }
 
 onBeforeUnmount(() => {
-    app.destroyMediaHandlerForTrack(props.track);
+    releaseMediaHandler();
 });
+
+/** Update for any media handler changes.
+ */
+watch(
+    mediaHandler,
+    (newMediaHandler, oldMediaHandler) => {
+        if (newMediaHandler?.id !== oldMediaHandler?.id) {
+            if (oldMediaHandler) {
+                releaseMediaHandler();
+            }
+
+            if (newMediaHandler) {
+                assumeMediaHandler(newMediaHandler);
+            }
+        }
+    },
+    { immediate: true },
+);
 
 // --- Transport ---
 
@@ -1023,10 +1120,10 @@ const isYoutubeVideoTrack = computed(() =>
     CompilationHandler.isYoutubeVideoTrack(props.track),
 );
 
-/** Flag to indicate whether the player has it's track loaded.
+/** Whether the current track can play (the media is loaded to the extent that it's ready to play).
  * @remarks This is used to toggle playback button states
  */
-const isTrackLoaded = ref(false);
+const canPlay = ref(false);
 
 /** Gets the duration of the current track, in [seconds]
  * @remarks This is only available after successful load of the track (i.e. it's media metadata).
@@ -1142,7 +1239,7 @@ function toNextCue() {
  * If it's the active track, does nothing
  */
 function setActiveTrack(): void {
-    if (isTrackLoaded.value) {
+    if (canPlay.value) {
         if (!isActiveTrack.value) {
             app.updateSelectedTrackId(props.track.Id);
         }
@@ -1156,7 +1253,7 @@ function setActiveTrack(): void {
  * @param mute - If null or not given, toggles the muted state. When given, sets to the specified state.
  */
 function toggleMute(mute: boolean | null = null): void {
-    if (isTrackLoaded.value) {
+    if (canPlay.value) {
         if (mediaHandler.value) {
             if (mute === null) {
                 mediaHandler.value.fader.muted =
@@ -1176,7 +1273,7 @@ const isMuted = ref(false);
  * @param solo - If null or not given, toggles the soloed state. When given, sets to the specified state.
  */
 function toggleSolo(solo: boolean | null = null): void {
-    if (isTrackLoaded.value) {
+    if (canPlay.value) {
         if (mediaHandler.value) {
             if (solo === null) {
                 mediaHandler.value.fader.soloed =
@@ -1425,11 +1522,6 @@ const playingCueDescription = computed(() => {
         return description;
     }
     return '';
-});
-
-/** Whether the current track can play, i.e. the mediaUrl is set and the track media is loaded */
-const canPlay = computed(() => {
-    return (mediaUrl.value ?? '').length > 0 && isTrackLoaded.value;
 });
 
 /** Whether the currently playing cue is the selected cue

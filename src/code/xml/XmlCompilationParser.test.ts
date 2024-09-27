@@ -384,7 +384,6 @@ describe('XmlCompilationParser.ts', () => {
             new Set<string>(['default-tag']),
             null,
             1,
-            null,
         );
     }
 

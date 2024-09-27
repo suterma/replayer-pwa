@@ -37,7 +37,6 @@ describe('the XML mapping', function () {
             new Set<string>(['default-tag']),
             60,
             0.9,
-            null,
         );
 
         //Act

@@ -26,6 +26,7 @@ import type { IMediaLooper } from './IMediaLooper';
 import { MediaLooper } from './MediaLooper';
 import YouTubePitchShiftController from './YouTubePitchShiftController';
 import type { IPitchShiftController } from './IPitchShiftController';
+import Constants from './Constants';
 
 const mediaHandlerDebug = chalk.hex('#62c462'); // Replayer success color (bulma warning)
 
@@ -57,7 +58,9 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     ) {
         this._player = player;
         this._videoUrl = player.getVideoUrl();
-        this._id = 'youtube-media-handler-' + (id ? id : player.getVideoUrl());
+        this._id =
+            Constants.HANDLER_ID_PREFIX + (id ? id : player.getVideoUrl());
+
         this._fader = new YouTubeFader(player, DefaultTrackVolume);
         this._playbackRateController = new YouTubePlaybackRateController(
             player,

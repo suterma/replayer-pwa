@@ -2,7 +2,6 @@
     <Transition name="item-expand">
         <div
             v-show="showVideo && !playerErrorCode"
-            :id="'track-youtube-element-' + trackId"
             class="block video-container youtube"
             :class="{
                 'is-small': smallVideo,
@@ -84,6 +83,7 @@ import { useAudioStore } from '@/store/audio';
 import { FadingMode } from '@/code/media/IAudioFader';
 import { Subscription } from 'sub-events';
 import type { ICue } from '@/store/ICue';
+import Constants from '@/code/media/Constants';
 
 /** A simple vue YouTube player, for a single track, using VueYoutube.
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playback.
@@ -92,7 +92,7 @@ import type { ICue } from '@/store/ICue';
  * @devdoc Autoplay is intentionally not supported, as this is of no use for the Replayer app.
  */
 
-const emit = defineEmits(['ready', 'click']);
+const emit = defineEmits(['click']);
 
 const props = defineProps({
     /** The title of the track */
@@ -148,6 +148,10 @@ const props = defineProps({
         required: false,
     },
 });
+
+console.debug(
+    `TrackYouTubeElement:setup:using url '${props.url}' for trackId '${props.trackId}' at start '${props.start}'`,
+);
 
 // --- visibility ---
 
@@ -212,7 +216,7 @@ const audio = useAudioStore();
 
 onReady(() => {
     if (instance.value) {
-        mediaHandler.value = createAndEmitHandler(
+        mediaHandler.value = createAndProvideHandler(
             onStateChange,
             instance.value,
         );
@@ -220,33 +224,30 @@ onReady(() => {
 });
 
 /** Create a new media handler for this YouTube video */
-function createAndEmitHandler(
+function createAndProvideHandler(
     onStateChange: (...cb: PlayerStateChangeCallback[]) => void,
     player: Player,
 ): IMediaHandler {
-    const mediaHandler = new YouTubeMediaHandler(
+    const handler = new YouTubeMediaHandler(
         onStateChange,
         player,
-        props.trackId,
+        Constants.MEDIATRACK_ID_PREFIX + props.trackId,
     ) as IMediaHandler;
 
-    audio.addMediaHandler(mediaHandler);
-    emit('ready', mediaHandler);
+    audio.addMediaHandler(handler);
     console.log('TrackYouTubeElement:ready');
 
     // Internally handle some events of our own
-    onPauseChangedSubsription = mediaHandler.onPausedChanged.subscribe(
-        (paused) => {
-            isPaused.value = paused;
-        },
-    );
-    onFadingChangedSubsription = mediaHandler.fader.onFadingChanged.subscribe(
+    onPauseChangedSubsription = handler.onPausedChanged.subscribe((paused) => {
+        isPaused.value = paused;
+    });
+    onFadingChangedSubsription = handler.fader.onFadingChanged.subscribe(
         (fading) => {
             isFading.value = fading;
         },
     );
 
-    return mediaHandler;
+    return handler;
 }
 
 const isPaused = ref(true);
@@ -257,6 +258,7 @@ let onFadingChangedSubsription: Subscription;
 /** Teardown of the YouTube player and handler.
  */
 onBeforeUnmount(() => {
+    console.debug('TrackYouTubeElement:onBeforeUnmount');
     destroyHandler();
 });
 
