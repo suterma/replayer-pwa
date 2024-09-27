@@ -1,8 +1,7 @@
 <template>
-    <NavButton
-        ref="indicator"
+    <label
         v-tooltip="indication"
-        class="is-indicator is-nav"
+        ref="indicator"
         :class="{
             'has-text-warning has-tooltip-warning': isUnavailable,
             'has-text-dark': isUnloaded,
@@ -10,15 +9,21 @@
             'has-text-grey-dark': isReady && isUnavailable,
             'has-text-grey': isReady && !isUnavailable,
         }"
-        :icon-path="isUnavailable ? mdiAlert : mdiCircle"
+        class="button is-indicator is-nav"
     >
-    </NavButton>
+        <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
+        <i class="icon mdi"
+            ><svg viewBox="0 0 24 24">
+                <path
+                    fill="currentColor"
+                    :d="isUnavailable ? mdiAlert : mdiCircle"
+                /></svg></i
+    ></label>
 </template>
 
 <script setup lang="ts">
 /** An indicator for the playback state of a track
  */
-import NavButton from '@/components/buttons/NavButton.vue';
 import { mdiAlert, mdiCircle } from '@mdi/js';
 import { computed, inject } from 'vue';
 import { isPlayingInjectionKey } from '../track/TrackInjectionKeys';
