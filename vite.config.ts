@@ -31,6 +31,14 @@ process.env.VITE_APP_GIT_AUTHOR_DATE = git('log -1 --format=%aI');
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    /** Use the modern preprocessor over the default "lecacy" one */
+    css: {
+        preprocessorOptions: {
+            scss: {
+                api: 'modern-compiler', // or "modern"
+            },
+        },
+    },
     build: {
         // Support older browser/os versions
         // See https://replayer.app/en/documentation/compatibility-known-issues
