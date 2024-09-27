@@ -14,11 +14,11 @@ A future version also may handle
 -   Vimeo videos
 -   Soundcloud tracks
 
-For handling the media sources in a suitable way for Replayer, various implementations encapsulate the necessary features for each type of source.
+For handling the media sources in a suitable way for Replayer, various classes/modules encapsulate the necessary features for each type of source.
 
 ## Media handling
 
-A media handler instance (e.g. class `HtmlMediaHandler` of `IMediaHandler`) provides all necessary manipulation features for the media of a Replayer track, including
+A media handler instance (e.g. class `HtmlMediaHandler` of `IMediaHandler`) implements and provides all necessary manipulation features for the media of a Replayer track, including
 
 -   Play/Pause/Stop
 -   Looping
@@ -29,7 +29,7 @@ A media handler instance (e.g. class `HtmlMediaHandler` of `IMediaHandler`) prov
 -   Fading handling
 -   Detune/pitch shift handing (planned)
 
-The underlying source (HTML media element or some widget in case of 3rd party sources) is intentionally not exposed, all manipulation must be carried out in the Handler.
+The underlying source (HTML media element or some widget in case of 3rd party sources) is intentionally not exposed, all manipulation must be carried out via the Handler.
 
 If outside access to the underlying media source is required (e.g. for additional visualization), it must be implemented separately from the handler.
 
@@ -39,7 +39,7 @@ The following picture gives an overview of this architecture:
 
 ## Media Handler architecture
 
-The media handler interface`IMediaHandler` defines all necessary basic manipulations for a Replayer track (see above). It does so by either defining the methods on itself, or by providing further interfaces for it (`IAudioFader`).
+The media handler interface `IMediaHandler` defines all necessary basic manipulations for a Replayer track (see above). It does so by either defining the methods on itself, or by providing further interfaces for it (e.g. `IAudioFader`).
 
 ![Media interface architecture](./media-interface-architecture.svg)
 
