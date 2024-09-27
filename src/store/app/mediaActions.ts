@@ -18,16 +18,13 @@ import { state } from './state';
 //@ts-ignore (because the file-saver does not provide types)
 import { getters } from './getters';
 import { actions } from './actions';
-import type { IMediaHandler } from '@/code/media/IMediaHandler';
 import { nextTick } from 'vue';
+import { useAudioStore } from '../audio';
 
 /** Playback actions using the the tracks from the application state with their media handlers.
- * @remarks These actions require the presence of an IMediaHandler on
- * the involved tracks.
  * @devdoc The actions in this specific file might later be implemented
  * separately in their own IMediaHandler store.
  */
-
 export const mediaActions = {
     /** Skips to the next media track (from the currently selected track) and plays it.
      * @remarks Depending on the playback mode, loops back to the first of the set of media tracks.
@@ -39,20 +36,24 @@ export const mediaActions = {
         );
         if (nextTrack) {
             actions.updateSelectedTrackId(nextTrack.Id);
-            nextTrack.MediaHandler?.playFrom(0, true);
+            useAudioStore()
+                .getMediaHandlerByTrackId(nextTrack.Id)
+                ?.playFrom(0, true);
         }
     },
     /** Skips to the previous media track (from the currently selected track) and plays it.
      * @remarks Depending on the playback mode, loops back to the last of the set of media tracks.
      */
     playPreviousTrack(): void {
-        const nextTrack = mediaActions.getPreviousTrackById(
+        const previousTrack = mediaActions.getPreviousTrackById(
             state.selectedTrackId.value,
             getters.isLoopingPlaybackMode.value,
         );
-        if (nextTrack) {
-            actions.updateSelectedTrackId(nextTrack.Id);
-            nextTrack.MediaHandler?.playFrom(0, true);
+        if (previousTrack) {
+            actions.updateSelectedTrackId(previousTrack.Id);
+            useAudioStore()
+                .getMediaHandlerByTrackId(previousTrack.Id)
+                ?.playFrom(0, true);
         }
     },
 
@@ -111,26 +112,6 @@ export const mediaActions = {
         }
     },
 
-    /** Sets the media handler for an existing track.
-     */
-    setMediaHandlerForTrack(track: ITrack, handler: IMediaHandler): void {
-        console.debug(
-            `mediaActions::skipToPlayPause:track=${track.Url};handler=${handler}`,
-        );
-        track.MediaHandler = handler;
-    },
-
-    /** Destroys and removes the media handler for an existing track.
-     */
-    destroyMediaHandlerForTrack(track: ITrack): void {
-        console.debug(
-            'mediaActions::destroyMediaHandlerForTrack:track=',
-            track.Url,
-        );
-        track.MediaHandler?.destroy();
-        track.MediaHandler = null;
-    },
-
     /** Skips to this track (if loaded)
      * @remarks If the track is not loaded, does nothing.
      * If the track is not yet the active track, tries to activate the track and play.
@@ -138,8 +119,10 @@ export const mediaActions = {
      * @devdoc Conditional event registration inside the template did not work.
      */
     skipToPlayPause(track: ITrack): void {
-        if (track.MediaHandler) {
-            const canPlay = track.MediaHandler.canPlay;
+        const handler = useAudioStore().getMediaHandlerByTrackId(track.Id);
+
+        if (handler) {
+            const canPlay = handler.canPlay;
             console.debug(
                 `mediaActions::skipToPlayPause:track=${track.Url};canPlay=${canPlay}`,
             );
@@ -161,12 +144,12 @@ export const mediaActions = {
                         // element hast the native controls enabled,
                         // but is not completely visible yet
                         setTimeout(
-                            () => track.MediaHandler?.play(),
+                            () => handler?.play(),
                             300 /*replayer-transition-duration*/,
                         );
                     });
                 } else {
-                    track.MediaHandler?.togglePlayback();
+                    handler?.togglePlayback();
                 }
             }
         } else {

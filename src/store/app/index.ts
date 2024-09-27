@@ -26,7 +26,6 @@ import { watch } from 'vue';
  * @devdoc This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores
  */
 export const useAppStore = defineStore(Store.App, () => {
-    //TODO actually create a separate store, as already pictured in the doc: https://github.com/suterma/replayer-pwa/tree/main/doc
     PersistentStorage.retrieveAllMediaBlobs()
         .then((mediaBlobs) => {
             mediaBlobs.forEach((blob) => {

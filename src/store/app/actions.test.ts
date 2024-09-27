@@ -61,7 +61,6 @@ describe('actions.ts', () => {
             new Set<string>(['testTag']),
             null,
             1,
-            null,
         );
     }
 
