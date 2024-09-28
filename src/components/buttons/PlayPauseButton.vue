@@ -21,6 +21,7 @@ import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiPause, mdiPlay } from '@mdi/js';
 import {
     isPlayingInjectionKey,
+    playbackStateInjectionKey,
     isOmittingNextFadeInInjectionKey,
 } from '../track/TrackInjectionKeys';
 import { rFadeInPlay } from '@/components/icons/ReplayerIcon';
@@ -34,5 +35,11 @@ defineProps({
     },
 });
 const isPlaying = inject(isPlayingInjectionKey);
+
+/** Indicates this track's playback state
+ * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
+ */
+const playbackState = inject(playbackStateInjectionKey);
+
 const isOmittingNextFadeIn = inject(isOmittingNextFadeInInjectionKey);
 </script>

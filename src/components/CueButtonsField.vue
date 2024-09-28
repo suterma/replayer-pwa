@@ -143,6 +143,7 @@ import { storeToRefs } from 'pinia';
 import {
     currentPositionInjectionKey,
     isPlayingInjectionKey,
+    playbackStateInjectionKey,
 } from './track/TrackInjectionKeys';
 import { PlaybackMode } from '@/store/PlaybackMode';
 import type { ICue } from '@/store/ICue';
@@ -242,6 +243,11 @@ const canCreateCue = computed(() => {
  * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
  */
 const isTrackPlaying = inject(isPlayingInjectionKey);
+
+/** Indicates this track's playback state
+ * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
+ */
+const playbackState = inject(playbackStateInjectionKey);
 
 const message = useMessageStore();
 

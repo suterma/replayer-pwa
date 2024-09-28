@@ -16,6 +16,7 @@ import type { IAudioFader } from './IAudioFader';
 import type { IPlaybackRateController } from './IPlaybackRateController';
 import type { IMediaLooper } from './IMediaLooper';
 import type { IPitchShiftController } from './IPitchShiftController';
+import type { PlaybackState } from './PlaybackState';
 
 /** @interface Defines a media handler.
  * This defines transport, loop and volume operations for media sources
@@ -69,6 +70,15 @@ export interface IMediaHandler {
     readonly pitchShiftController: IPitchShiftController;
 
     // --- transport ---
+
+    /** Emits a changed playback state.
+     * @param {PlabackState} playbackState - the playback state.
+     */
+    readonly onPlaybackStateChanged: SubEvent<PlaybackState>;
+
+    /** Gets the current playback state
+     */
+    readonly playbackState: PlaybackState;
 
     /** Emits a changed paused state.
      * @param {boolean} paused - whether the playback is currently paused (or otherwise not playing)
@@ -139,7 +149,7 @@ export interface IMediaHandler {
     stop(): void;
 
     /** Occurs, when the end of the track has been reached and playback has ended.
-     * @remarks This is not triggered when the track or a range is looping.
+     * @remarks This is not triggered when the track or a range of it is looping.
      * Allows to select the next track in "play all" and "shuffle" mode.
      */
     onEnded: SubEvent<void>;

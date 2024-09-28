@@ -11,6 +11,7 @@
  * JavaScript code in this page
  */
 
+import type { PlaybackState } from '@/code/media/PlaybackState';
 import type { IMeter } from '@/code/music/IMeter';
 import type { InjectionKey, Ref } from 'vue';
 
@@ -41,6 +42,11 @@ export const trackFadeInDurationInjectionKey = Symbol() as InjectionKey<
 /** A symbol for providing and injecting whether the track is playing. */
 export const isPlayingInjectionKey = Symbol() as InjectionKey<
     Ref<boolean | null>
+>;
+
+/** A symbol for providing and injecting the playback state. */
+export const playbackStateInjectionKey = Symbol() as InjectionKey<
+    Ref<PlaybackState>
 >;
 
 /** A symbol for providing and injecting whether the media player will omit

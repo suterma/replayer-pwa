@@ -165,8 +165,11 @@
                         </a>
                         <PlaybackIndicator
                             v-else
-                            :is-ready="!!mediaUrl"
-                            :is-unavailable="!mediaUrl"
+                            :state="
+                                !!mediaUrl
+                                    ? PlaybackState.Ready
+                                    : PlaybackState.Unavailable
+                            "
                             data-cy="playback-indicator"
                         />
 
@@ -223,11 +226,15 @@ import {
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { storeToRefs } from 'pinia';
 import PdfElement from '@/components/track/PdfElement.vue';
-import { isPlayingInjectionKey } from './TrackInjectionKeys';
+import {
+    isPlayingInjectionKey,
+    playbackStateInjectionKey,
+} from './TrackInjectionKeys';
 import { useSettingsStore } from '@/store/settings';
 import { confirm } from '@/code/ui/dialogs';
 import TagInput from '@/components/editor/TagInput.vue';
 import TagsDisplay from '@/components/displays/TagsDisplay.vue';
+import { PlaybackState } from '@/code/media/PlaybackState';
 
 const props = defineProps({
     /** The track to display
@@ -255,9 +262,21 @@ const mediaUrl = computed(() => {
 
 /** Flag to indicate whether this track's player is currently playing
  * @devdoc This is just provided to avoid a console warning;
- *  PDF's currently can not play or even scroll
+ *  PDF's can not play
  */
 provide(isPlayingInjectionKey, readonly(ref(false)));
+
+/** Indicates this track's playback state
+ * @devdoc This is just provided to avoid a console warning;
+ *  PDF's can not play
+ */
+const playbackState = computed(() => {
+    if (!mediaUrl) {
+        return PlaybackState.Unavailable;
+    }
+    return PlaybackState.Ready;
+});
+provide(playbackStateInjectionKey, readonly(playbackState));
 
 /** Removes the track from the compilation
  */

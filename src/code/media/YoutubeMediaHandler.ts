@@ -27,6 +27,7 @@ import { MediaLooper } from './MediaLooper';
 import YouTubePitchShiftController from './YouTubePitchShiftController';
 import type { IPitchShiftController } from './IPitchShiftController';
 import Constants from './Constants';
+import { PlaybackState } from './PlaybackState';
 
 const mediaHandlerDebug = chalk.hex('#62c462'); // Replayer success color (bulma warning)
 
@@ -108,6 +109,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     public destroy(): void {
         // self
         this.onPausedChanged.cancelAll();
+        this.onPlaybackStateChanged.cancelAll();
         this.onSeekingChanged.cancelAll();
         this.onSeeked.cancelAll();
         this.onCurrentTimeChanged.cancelAll();
@@ -189,11 +191,18 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     /** @remarks With the YouTube player, buffering counts as playing, as it's expected to occurr only during actual playback. */
     onPausedChanged: SubEvent<boolean> = new SubEvent();
+
+    /** @remarks With the YouTube player, buffering counts as playing, as it's expected to occurr only during actual playback. */
+    onPlaybackStateChanged: SubEvent<PlaybackState> = new SubEvent();
+
     /** @remarks Seek events are not supported by the YouTube player. However, this event is emitted on explicit seek operations through this API. */
     onSeekingChanged: SubEvent<boolean> = new SubEvent();
+
     /** @remarks Seek events are not supported by the YouTube player. However, this event is emitted on explicit seek operations through this API. */
     onSeeked: SubEvent<number> = new SubEvent();
+
     onCurrentTimeChanged: SubEvent<number> = new SubEvent();
+
     onEnded: SubEvent<void> = new SubEvent();
 
     /** @inheritdoc */
@@ -212,6 +221,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                     // It's currently not addressed as it's not disturbing for the user.
                     this._player.pauseVideo();
                     this.onPausedChanged.emit(true);
+                    this.onPlaybackStateChanged.emit(this.playbackState);
                     resolve();
                 });
         });
@@ -237,6 +247,22 @@ export default class YouTubeMediaHandler implements IMediaHandler {
      */
     get paused(): boolean {
         return !this._isPlaying;
+    }
+
+    /** Gets the playback state.
+     * @remarks During fading, the playback state is not considered as paused.
+     */
+    get playbackState(): PlaybackState {
+        if (!this.mediaSourceUrl) {
+            return PlaybackState.Unavailable;
+        }
+        if (!this.canPlay) {
+            return PlaybackState.Unloaded; //but is available
+        }
+        if (this.paused) {
+            return PlaybackState.Ready; // available/can play, but not playing
+        }
+        return PlaybackState.Playing; // because it's available and not paused, it must be playing
     }
 
     get duration(): number {
@@ -350,6 +376,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
             case PlayerState.UNSTARTED:
                 this._isPlaying = false;
                 this.onPausedChanged.emit(true);
+                this.onPlaybackStateChanged.emit(this.playbackState);
                 break;
             case PlayerState.ENDED:
                 /* occurs when the video has ended */
@@ -372,12 +399,14 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                     this.resetNextFadeInOmission();
 
                     this.onPausedChanged.emit(false);
+                    this.onPlaybackStateChanged.emit(this.playbackState);
                 }
                 break;
             case PlayerState.PAUSED:
                 this.updateCurrentTime();
                 this._isPlaying = false;
                 this.onPausedChanged.emit(true);
+                this.onPlaybackStateChanged.emit(this.playbackState);
                 //Upon reception of this event, playback has already paused.
                 //No actual fade-out is required. However, to reset the volume to the minimum, a fast fade-out is still triggered
                 this._fader.fadeOut(/*immediate*/ true);
@@ -390,6 +419,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                 this._isPlaying = false;
                 this._canPlay = true;
                 this.onPausedChanged.emit(true);
+                this.onPlaybackStateChanged.emit(this.playbackState);
                 this.onCanPlay.emit();
                 break;
 
@@ -460,6 +490,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     get loop(): boolean {
         return this._isLooping;
     }
+
     set loop(value: boolean) {
         this._isLooping = value;
         // NOTE: This handler maintains a playlist of one, so looping executes always on it's own track

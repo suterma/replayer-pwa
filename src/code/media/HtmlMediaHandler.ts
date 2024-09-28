@@ -25,6 +25,7 @@ import type { IPitchShiftController } from './IPitchShiftController';
 import HtmlMediaPitchShiftController from './HtmlMediaPitchShiftController';
 import type { ShallowRef } from 'vue';
 import Constants from './Constants';
+import { PlaybackState } from './PlaybackState';
 
 const mediaHandlerDebug = chalk.hex('#62c462'); // Replayer success color (bulma warning)
 
@@ -79,6 +80,9 @@ export default class HtmlMediaHandler implements IMediaHandler {
         );
         this._looper = new MediaLooper(this);
 
+        // Report initial state
+        this.onPlaybackStateChanged.emit(this.playbackState);
+
         //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
         media.onloadeddata = () => {
             this.isClickToLoadRequired = false;
@@ -97,6 +101,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
             this._canPlay = true;
             this.debugLog(`oncanplay`);
             this.onCanPlay.emit();
+            this.onPlaybackStateChanged.emit(this.playbackState);
         };
 
         media.ondurationchange = () => {
@@ -108,6 +113,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
         media.onpause = () => {
             this.debugLog(`onpause`);
             this.onPausedChanged.emit(true);
+            this.onPlaybackStateChanged.emit(this.playbackState);
             //Upon reception of this event, playback has already paused.
             //No actual fade-out is required. However, to reset the volume to the minimum, a fast fade-out is still triggered
             this._fader.fadeOut(/*immediate*/ true);
@@ -139,6 +145,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
             this.resetNextFadeInOmission();
 
             this.onPausedChanged.emit(false);
+            this.onPlaybackStateChanged.emit(this.playbackState);
             this.repeatUpdateCurrentTime();
         };
 
@@ -176,6 +183,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
     public destroy(): void {
         // self
         this.onPausedChanged.cancelAll();
+        this.onPlaybackStateChanged.cancelAll();
         this.onSeekingChanged.cancelAll();
         this.onSeeked.cancelAll();
         this.onCurrentTimeChanged.cancelAll();
@@ -262,6 +270,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
     // --- transport ---
 
     onPausedChanged: SubEvent<boolean> = new SubEvent();
+    onPlaybackStateChanged: SubEvent<PlaybackState> = new SubEvent();
     onSeekingChanged: SubEvent<boolean> = new SubEvent();
     onSeeked: SubEvent<number> = new SubEvent();
     onCurrentTimeChanged: SubEvent<number> = new SubEvent();
@@ -280,6 +289,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
                 .finally(() => {
                     this._media.pause();
                     this.onPausedChanged.emit(true);
+                    this.onPlaybackStateChanged.emit(this.playbackState);
                     resolve();
                 });
         });
@@ -305,6 +315,22 @@ export default class HtmlMediaHandler implements IMediaHandler {
      */
     get paused(): boolean {
         return this._media.paused;
+    }
+
+    /** Gets the playback state.
+     * @remarks During fading, the playback state is not considered as paused.
+     */
+    get playbackState(): PlaybackState {
+        if (!this.mediaSourceUrl) {
+            return PlaybackState.Unavailable;
+        }
+        if (!this.canPlay) {
+            return PlaybackState.Unloaded; //but is available
+        }
+        if (this.paused) {
+            return PlaybackState.Ready; // available/can play, but not playing
+        }
+        return PlaybackState.Playing; // because it's available and not paused, it must be playing
     }
 
     get duration(): number {

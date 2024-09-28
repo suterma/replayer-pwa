@@ -609,11 +609,7 @@
                                                 />
                                             </template>
                                             <PlaybackIndicator
-                                                :is-ready="
-                                                    !isTrackPlaying && canPlay
-                                                "
-                                                :is-unloaded="!canPlay"
-                                                :is-unavailable="!mediaUrl"
+                                                :state="playbackState"
                                                 data-cy="playback-indicator"
                                             />
                                         </MediaControlsBar>
@@ -785,7 +781,10 @@ import {
     trackFadeInDurationInjectionKey,
     isOmittingNextFadeInInjectionKey,
 } from './TrackInjectionKeys';
-import { isPlayingInjectionKey } from './TrackInjectionKeys';
+import {
+    isPlayingInjectionKey,
+    playbackStateInjectionKey,
+} from './TrackInjectionKeys';
 import { ReplayerEvent } from '@/code/ui/ReplayerEvent';
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
 import { LoopMode } from '@/code/media/IMediaLooper';
@@ -802,6 +801,7 @@ import type { ICompilation } from '@/store/ICompilation';
 import TagsDisplay from '@/components/displays/TagsDisplay.vue';
 import { useAudioStore } from '@/store/audio';
 import { Subscription } from 'sub-events';
+import { PlaybackState } from '@/code/media/PlaybackState';
 
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
@@ -942,6 +942,13 @@ function assumeMediaHandler(handler: IMediaHandler) {
     });
     updatePaused(handler.paused);
 
+    onPauseChangedSubscription = handler.onPlaybackStateChanged.subscribe(
+        (playbackState) => {
+            updatePlaybackState(playbackState);
+        },
+    );
+    updatePlaybackState(handler.playbackState);
+
     onNextFadeInOmissionChangedSubscription =
         handler.onNextFadeInOmissionChanged.subscribe((omitsNextFadeIn) => {
             isPlayerOmittingNextFadeIn.value = omitsNextFadeIn;
@@ -1028,6 +1035,10 @@ function updatePaused(paused: boolean) {
         // mmake sure we keep up-to-date persisted position when paused
         persistPlayheadPosition();
     }
+}
+
+function updatePlaybackState(state: PlaybackState) {
+    playbackState.value = state;
 }
 
 /** Releases a used media handler for this track */
@@ -1135,6 +1146,11 @@ const trackDuration: Ref<number | null> = ref(null);
  */
 const isTrackPlaying = ref(false);
 provide(isPlayingInjectionKey, readonly(isTrackPlaying));
+
+/** Indicates this track's playback state
+ */
+const playbackState = ref(PlaybackState.Unavailable);
+provide(playbackStateInjectionKey, readonly(playbackState));
 
 /** Whether the cues are currently expanded for editing */
 const isExpanded = ref(false);

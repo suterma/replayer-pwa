@@ -160,6 +160,7 @@ import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
 import {
     isPlayingInjectionKey,
+    playbackStateInjectionKey,
     meterInjectionKey,
     useMeasureNumbersInjectionKey,
     trackPreRollDurationInjectionKey,
@@ -338,6 +339,11 @@ const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
  * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
  */
 const isTrackPlaying = inject(isPlayingInjectionKey);
+
+/** Indicates this track's playback state
+ * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
+ */
+const playbackState = inject(playbackStateInjectionKey);
 
 /** The description of the position of this cue, with fallback if the cue does
  * not have a set description.

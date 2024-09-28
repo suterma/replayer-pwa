@@ -150,7 +150,10 @@ import PlayPauseButton from '@/components/buttons/PlayPauseButton.vue';
 import { useMultitrackStore } from '@/store/multitrack';
 import { Multitrack } from '@/store/multitrack/Multitrack';
 import { storeToRefs } from 'pinia';
-import { isPlayingInjectionKey } from './TrackInjectionKeys';
+import {
+    isPlayingInjectionKey,
+    playbackStateInjectionKey,
+} from './TrackInjectionKeys';
 import { provide, readonly, computed, ref, inject } from 'vue';
 import { useElementSize } from '@vueuse/core';
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
@@ -165,6 +168,7 @@ import { useStyleTag, refDebounced } from '@vueuse/core';
 import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import SoloButton from '../buttons/SoloButton.vue';
 import MuteButton from '../buttons/MuteButton.vue';
+import { PlaybackState } from '@/code/media/PlaybackState';
 
 /** Displays a master track div with a title, and controls for it.
  * @displayName MasterTrack
@@ -195,6 +199,21 @@ const {
 } = storeToRefs(multitrack);
 
 provide(isPlayingInjectionKey, readonly(isAllPlaying));
+
+const allPlaybackState = computed(() => {
+    if (!isAllMediaAvailable) {
+        return PlaybackState.Unavailable;
+    }
+    if (!canAllPlay) {
+        return PlaybackState.Unloaded;
+    }
+    if (isAllPlaying) {
+        return PlaybackState.Playing;
+    }
+    return PlaybackState.Ready;
+});
+
+provide(playbackStateInjectionKey, readonly(allPlaybackState));
 
 // --- vertical with adapted bottom spacing ---
 

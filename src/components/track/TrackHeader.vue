@@ -243,9 +243,7 @@
                 <slot name="right-action-items"></slot>
 
                 <PlaybackIndicator
-                    :is-ready="!isTrackPlaying && canPlay"
-                    :is-unloaded="!canPlay"
-                    :is-unavailable="!isTrackMediaAvailable"
+                    :state="playbackState"
                     data-cy="playback-indicator"
                 />
 
@@ -290,6 +288,7 @@ import { useAppStore } from '@/store/app';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import {
     isPlayingInjectionKey,
+    playbackStateInjectionKey,
     useMeasureNumbersInjectionKey,
 } from './TrackInjectionKeys';
 import { useSettingsStore } from '@/store/settings';
@@ -414,6 +413,11 @@ const hasCues = computed(() => {
 /** Flag to indicate whether this track's player is currently playing
  */
 const isTrackPlaying = inject(isPlayingInjectionKey);
+
+/** Indicates this track's playback state
+ * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
+ */
+const playbackState = inject(playbackStateInjectionKey);
 
 // --- Tag handling ---
 
