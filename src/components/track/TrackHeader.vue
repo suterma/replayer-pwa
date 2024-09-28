@@ -241,12 +241,6 @@
                 />
                 <!-- Slot for additional level action items -->
                 <slot name="right-action-items"></slot>
-
-                <PlaybackIndicator
-                    :state="playbackState"
-                    data-cy="playback-indicator"
-                />
-
                 <TrackContextMenu
                     v-if="isTrackEditable"
                     :track="track"

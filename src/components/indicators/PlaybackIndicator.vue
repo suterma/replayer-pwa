@@ -1,58 +1,47 @@
 <template>
     <label
-        v-if="state === PlaybackState.Unavailable"
-        v-tooltip="
-            'Track media is unavailable. Please reload or replace it in the editor.'
-        "
-        class="button is-indicator is-nav has-text-warning has-tooltip-warning"
+        v-bind="$attrs"
+        class="button is-indicator playback-indicator is-nav"
     >
-        <i class="icon mdi"
+        <i
+            v-if="state === PlaybackState.Unavailable"
+            class="icon mdi has-text-warning has-tooltip-warning"
+            v-tooltip="
+                'Track media is unavailable. Please reload or replace it in the editor.'
+            "
             ><svg viewBox="0 0 24 24">
                 <path fill="currentColor" :d="mdiAlert" />
             </svg>
         </i>
-    </label>
-    <template v-else>
-        <label
-            v-if="state === PlaybackState.Unloaded"
-            v-tooltip="'Track not loaded.'"
-            class="button is-indicator is-nav has-text-dark"
-        >
-            <i class="icon mdi"
+        <template v-else>
+            <i
+                v-if="state === PlaybackState.Unloaded"
+                class="icon mdi has-text-dark"
+                v-tooltip="'Track not loaded.'"
                 ><svg viewBox="0 0 24 24">
                     <path fill="currentColor" :d="mdiCircle" />
                 </svg>
             </i>
-        </label>
-        <template v-else>
-            <span class="is-relative">
-                <label
-                    v-tooltip="'Track is loaded and ready to play.'"
-                    class="button is-indicator is-nav has-text-grey"
-                >
-                    <i class="icon mdi"
-                        ><svg viewBox="0 0 24 24">
-                            <path fill="currentColor" :d="mdiCircle" />
-                        </svg>
-                    </i>
-                </label>
-                <label
-                    style="position: absolute; left: 0"
-                    v-tooltip="'Track is playing.'"
-                    class="button is-indicator is-nav has-text-success has-tooltip-success"
-                    :class="{
-                        'is-transparent': state !== PlaybackState.Playing,
-                    }"
-                >
-                    <i class="icon mdi"
-                        ><svg viewBox="0 0 24 24">
-                            <path fill="currentColor" :d="mdiCircle" />
-                        </svg>
-                    </i>
-                </label>
-            </span>
+
+            <template v-else>
+                <i style="position: relative" class="icon mdi"
+                    ><svg viewBox="0 0 24 24" class="has-text-grey">
+                        <path fill="currentColor" :d="mdiCircle" />
+                    </svg>
+                    <svg
+                        viewBox="0 0 24 24"
+                        style="position: absolute; left: 0"
+                        class="has-text-success"
+                        :class="{
+                            'is-transparent': isPausing,
+                        }"
+                    >
+                        <path fill="currentColor" :d="mdiCircle" />
+                    </svg>
+                </i>
+            </template>
         </template>
-    </template>
+    </label>
 </template>
 <script setup lang="ts">
 /** An indicator for the playback state of a track
@@ -63,8 +52,9 @@
  * NOTE: For performance reasons, the icon is implemented inline, not using the BaseIcon SFC -->
  */
 import { mdiAlert, mdiCircle } from '@mdi/js';
-import { type PropType } from 'vue';
+import { computed, type PropType } from 'vue';
 import { PlaybackState } from '@/code/media/PlaybackState';
+import { FadingMode } from '@/code/media/IAudioFader';
 
 const props = defineProps({
     /** The state the indicator should convey */
@@ -73,21 +63,45 @@ const props = defineProps({
         default: PlaybackState.Unavailable,
         required: false,
     },
+
+    /** The current fading action, or none if not fading */
+    fadingAction: {
+        type: null as unknown as PropType<FadingMode>,
+        default: FadingMode.None,
+        required: false,
+    },
+
+    /** The current fading duration, or zero if none */
+    fadingDuration: Number,
+});
+
+/** The currently appliccable fading time. Depends on the fading mode. */
+const fadingTime = computed(() => {
+    if (props.fadingAction !== FadingMode.None) {
+        return `${props.fadingDuration}ms`;
+    }
+    return '0ms';
+});
+
+/** Whether the playback is currently not playing, or is playing but fading out. */
+const isPausing = computed(() => {
+    if (props.state !== PlaybackState.Playing) {
+        return true;
+    }
+    if (props.fadingAction === FadingMode.FadeOut) {
+        return true;
+    }
+    return false;
 });
 </script>
-<style scoped>
-.is-indicator {
-    /** Playback Indicators do not interact, however, for the title tooltip, pointer-events none is not usable */
-    pointer-events: auto !important;
-    cursor: default;
+<style>
+/** Handling visibilty via opacity for rendering performance,
+ * avoiding non-composited animations. 
+ */
+label.is-indicator.playback-indicator i svg {
+    transition: opacity v-bind('fadingTime') linear;
 }
-
-.button.is-indicator.is-nav.has-text-success {
-    position: absolute !important;
-}
-
-.button.is-indicator.is-nav.is-transparent {
+label.is-indicator.playback-indicator i svg.is-transparent {
     opacity: 0;
-    pointer-events: none !important;
 }
 </style>

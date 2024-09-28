@@ -169,8 +169,21 @@
                             :disabled="!canPlay"
                             :volume="track.Volume"
                             @update:volume="updateVolume"
-                        /></div
-                ></template>
+                        />
+                    </div>
+                    <div class="level-item is-narrow mr-0">
+                        <PlaybackIndicator
+                            :fading-duration="
+                                isFading === FadingMode.FadeIn
+                                    ? fadeInDuration
+                                    : fadeOutDuration
+                            "
+                            :fading-action="isFading"
+                            :state="playbackState"
+                            data-cy="playback-indicator"
+                        />
+                    </div>
+                </template>
             </TrackHeader>
         </div>
 
@@ -609,6 +622,13 @@
                                                 />
                                             </template>
                                             <PlaybackIndicator
+                                                :fading-duration="
+                                                    isFading ===
+                                                    FadingMode.FadeIn
+                                                        ? fadeInDuration
+                                                        : fadeOutDuration
+                                                "
+                                                :fading-action="isFading"
                                                 :state="playbackState"
                                                 data-cy="playback-indicator"
                                             />
