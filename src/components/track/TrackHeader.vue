@@ -41,7 +41,9 @@
                     <template #caption>
                         <MediaSourceIndicator
                             :source="track?.Url"
-                            :unavailable="!isTrackMediaAvailable"
+                            :unavailable="
+                                playbackState === PlaybackState.Unavailable
+                            "
                             show-size
                             :show-source-icon="false"
                         >
@@ -265,7 +267,6 @@ import {
 } from 'vue';
 import { TrackApi } from '@/code/api/TrackApi';
 import { mdiShareVariant, mdiSwapVertical, mdiTrashCanOutline } from '@mdi/js';
-import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import MediaDropZone from '@/components/MediaDropZone.vue';
 import CoveredPanel from '@/components/CoveredPanel.vue';
 import MediaSourceIndicator from '@/components/indicators/MediaSourceIndicator.vue';
@@ -281,13 +282,13 @@ import NavButton from '@/components/buttons/NavButton.vue';
 import { useAppStore } from '@/store/app';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import {
-    isPlayingInjectionKey,
     playbackStateInjectionKey,
     useMeasureNumbersInjectionKey,
 } from './TrackInjectionKeys';
 import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import type { ITrack } from '@/store/ITrack';
+import { PlaybackState } from '@/code/media/PlaybackState';
 
 const emit = defineEmits(['update:isExpanded']);
 
@@ -318,21 +319,6 @@ const props = defineProps({
     canCollapse: {
         type: Boolean,
         default: true,
-    },
-
-    /** Whether the current track can play (the media is loaded to the extent that it's ready to play).
-     * @remarks This is used to toggle playback button states
-     */
-    canPlay: {
-        type: Boolean,
-        default: false,
-    },
-
-    /** Whether the media source is available
-     */
-    isTrackMediaAvailable: {
-        type: Boolean,
-        default: false,
     },
 });
 
@@ -403,10 +389,6 @@ function updatePreRoll(preRoll: number | null) {
 const hasCues = computed(() => {
     return props.track.Cues.length > 0;
 });
-
-/** Flag to indicate whether this track's player is currently playing
- */
-const isTrackPlaying = inject(isPlayingInjectionKey);
 
 /** Indicates this track's playback state
  * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.

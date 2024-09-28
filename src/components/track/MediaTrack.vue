@@ -37,8 +37,6 @@
                 v-model:is-expanded="isExpanded"
                 :can-collapse="!hasSingleMediaTrack"
                 :track="track"
-                :canPlay="canPlay"
-                :is-track-media-available="Boolean(mediaUrl)"
                 :is-active="isActiveTrack"
             >
                 <template
