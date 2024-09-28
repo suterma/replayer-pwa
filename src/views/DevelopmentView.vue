@@ -310,6 +310,31 @@
             valueArchClass: 'has-text-warning',
         }"
     /><ValueKnob v-model="knobValue" :min-value="0" :max-value="50"></ValueKnob>
+
+    <h3>Plaback state indicators</h3>
+
+    <label>Unavailable</label>
+    <PlaybackIndicator :state="PlaybackState.Unavailable"></PlaybackIndicator>
+    <label>Unloaded</label>
+    <PlaybackIndicator :state="PlaybackState.Unloaded"></PlaybackIndicator>
+    <label>Ready</label>
+    <PlaybackIndicator :state="PlaybackState.Ready"></PlaybackIndicator>
+    <label>Playing</label>
+    <PlaybackIndicator :state="PlaybackState.Playing"></PlaybackIndicator>
+
+    <hr />
+
+    <label>Switchable</label>
+    <PlaybackIndicator :state="switchabePlaybackState"></PlaybackIndicator>
+    <div>Selected: {{ switchabePlaybackState }}</div>
+
+    <select v-model="switchabePlaybackState">
+        <option disabled value="">Please select one</option>
+        <option :value="PlaybackState.Unavailable">Unavailable</option>
+        <option :value="PlaybackState.Unloaded">Unloaded</option>
+        <option :value="PlaybackState.Ready">Ready</option>
+        <option :value="PlaybackState.Playing">Playing</option>
+    </select>
 </template>
 
 <script setup lang="ts">
@@ -342,9 +367,12 @@ import { storeToRefs } from 'pinia';
 import CollapsiblePanel from '@/components/CollapsiblePanel.vue';
 import { useMessageStore } from '@/store/messages';
 import { ProgressMessage } from '@/store/messages/ProgressMessage';
+import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
+import { PlaybackState } from '@/code/media/PlaybackState';
 
 const isExpanded = ref(false);
 const knobValue = ref(0);
+const switchabePlaybackState = ref(PlaybackState.Unavailable);
 
 const message = useMessageStore();
 

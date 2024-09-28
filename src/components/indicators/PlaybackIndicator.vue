@@ -1,31 +1,69 @@
 <template>
     <label
-        v-tooltip="indication"
-        ref="indicator"
-        :class="{
-            'has-text-warning has-tooltip-warning':
-                state === PlaybackState.Unavailable,
-            'has-text-dark': state === PlaybackState.Unloaded,
-            'has-text-success has-tooltip-success':
-                state === PlaybackState.Playing,
-            'has-text-grey-dark': state === PlaybackState.Unavailable,
-            'has-text-grey': state === PlaybackState.Ready,
-        }"
-        class="button is-indicator is-nav"
+        v-if="state === PlaybackState.Unavailable"
+        v-tooltip="
+            'Track media is unavailable. Please reload or replace it in the editor.'
+        "
+        class="button is-indicator is-nav has-text-warning has-tooltip-warning"
     >
-        <!-- NOTE: For performance reasons, this icon is implemented inline, not using the BaseIcon SFC -->
         <i class="icon mdi"
             ><svg viewBox="0 0 24 24">
-                <path fill="currentColor" :d="path" />
+                <path fill="currentColor" :d="mdiAlert" />
             </svg>
         </i>
     </label>
+    <template v-else>
+        <label
+            v-if="state === PlaybackState.Unloaded"
+            v-tooltip="'Track not loaded.'"
+            class="button is-indicator is-nav has-text-dark"
+        >
+            <i class="icon mdi"
+                ><svg viewBox="0 0 24 24">
+                    <path fill="currentColor" :d="mdiCircle" />
+                </svg>
+            </i>
+        </label>
+        <template v-else>
+            <span class="is-relative">
+                <label
+                    v-tooltip="'Track is loaded and ready to play.'"
+                    class="button is-indicator is-nav has-text-grey"
+                >
+                    <i class="icon mdi"
+                        ><svg viewBox="0 0 24 24">
+                            <path fill="currentColor" :d="mdiCircle" />
+                        </svg>
+                    </i>
+                </label>
+                <label
+                    style="position: absolute; left: 0"
+                    v-tooltip="'Track is playing.'"
+                    class="button is-indicator is-nav has-text-success has-tooltip-success"
+                    :class="{
+                        'is-transparent': state !== PlaybackState.Playing,
+                    }"
+                >
+                    <i class="icon mdi"
+                        ><svg viewBox="0 0 24 24">
+                            <path fill="currentColor" :d="mdiCircle" />
+                        </svg>
+                    </i>
+                </label>
+            </span>
+        </template>
+    </template>
 </template>
 <script setup lang="ts">
 /** An indicator for the playback state of a track
+ * @devdoc For rendering optimization for the two most switched states,
+ * ready and playing, the transition is updating only opacity, when
+ * switching between these two states. Other states are implemented separately
+ * and are not optimized.
+ * NOTE: For performance reasons, the icon is implemented inline, not using the BaseIcon SFC -->
  */
 import { mdiAlert, mdiCircle } from '@mdi/js';
-import { computed, type PropType } from 'vue';
+import { type PropType } from 'vue';
 import { PlaybackState } from '@/code/media/PlaybackState';
 
 const props = defineProps({
@@ -36,31 +74,20 @@ const props = defineProps({
         required: false,
     },
 });
-
-const indication = computed(() => {
-    switch (props.state) {
-        case PlaybackState.Unavailable:
-            return 'Track media is unavailable. Please reload or replace it in the editor.';
-        case PlaybackState.Unloaded:
-            return 'Track not loaded.';
-        case PlaybackState.Ready:
-            return 'Track is loaded and ready to play.';
-        case PlaybackState.Playing:
-            return 'Track is playing.';
-    }
-});
-const path = computed(() => {
-    switch (props.state) {
-        case PlaybackState.Unavailable:
-            return mdiAlert;
-    }
-    return mdiCircle;
-});
 </script>
 <style scoped>
 .is-indicator {
     /** Playback Indicators do not interact, however, for the title tooltip, pointer-events none is not usable */
     pointer-events: auto !important;
     cursor: default;
+}
+
+.button.is-indicator.is-nav.has-text-success {
+    position: absolute !important;
+}
+
+.button.is-indicator.is-nav.is-transparent {
+    opacity: 0;
+    pointer-events: none !important;
 }
 </style>
