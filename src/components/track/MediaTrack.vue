@@ -343,8 +343,11 @@
                         >
                             <span>
                                 {{ playingCueDescription }}
-                                &nbsp;
                             </span>
+
+                            <span class="ml-2 is-italic is-size-7">{{
+                                playingCue?.Remarks
+                            }}</span>
                         </p>
                     </PlayheadSlider>
                 </div>
@@ -518,8 +521,13 @@
                                             >
                                                 <span>
                                                     {{ playingCueDescription }}
-                                                    &nbsp;
                                                 </span>
+                                                <span
+                                                    class="ml-2 is-italic is-size-7"
+                                                    >{{
+                                                        playingCue?.Remarks
+                                                    }}</span
+                                                >
                                             </p>
                                         </PlayheadSlider>
                                     </div>
@@ -1593,22 +1601,19 @@ const isActiveTrack = computed(() => activeTrackId.value === props.track.Id);
  * @remarks When this ceases to be the active track, pause playback.
  This avoids having multiple tracks playing at the same time.
 */
-watch(
-    () => isActiveTrack.value,
-    (isActive, wasActive) => {
-        console.debug(
-            `MediaTrack(${props.track.Name})::isActiveTrack:val:`,
-            isActive,
-        );
+watch(isActiveTrack, (isActive, wasActive) => {
+    console.debug(
+        `MediaTrack(${props.track.Name})::isActiveTrack:val:`,
+        isActive,
+    );
 
-        // Pause and reset this track, when it's no more the active track
-        if (wasActive === true && isActive === false) {
-            mediaHandler.value?.pause().then(() => {
-                mediaHandler.value?.seekTo(0);
-            });
-        }
-    },
-);
+    // Pause and reset this track, when it's no more the active track
+    if (wasActive === true && isActive === false) {
+        mediaHandler.value?.pause().then(() => {
+            mediaHandler.value?.seekTo(0);
+        });
+    }
+});
 
 /** Handles active track id changes.
  * @remarks Used to determine the requested player widget transition.
@@ -1741,7 +1746,7 @@ watchEffect(() => {
  * Thus, an explicit document title update is used here.
  */
 watch(
-    [() => playingCueDescription.value, () => isActiveTrack.value],
+    [playingCueDescription, isActiveTrack],
     ([playingCueDescription, isActiveTrack]) => {
         const existingTitle = document.title;
         let newTitle = 'Replayer';
