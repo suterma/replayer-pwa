@@ -91,7 +91,10 @@
                 @end="drag = false"
             >
                 <template #item="{ element, index }">
-                    <tr class="is-together-print" data-cy="track-list-item">
+                    <tr
+                        class="is-together-print track-list-item"
+                        data-cy="track-list-item"
+                    >
                         <td>
                             <!-- When each track is on a new page, also show the compilation each time -->
 

@@ -16,36 +16,17 @@
             </div>
             <div
                 class="level-item has-cropped-text"
-                style="max-width: calc(100vw - 60px)"
+                style="max-width: calc(100vw - 160px)"
             >
-                <h2 class="title is-4" :title="track.Url">
-                    <slot v-if="$slots.default"></slot>
-                    <TrackTitleName :name="track.Name"></TrackTitleName>
-                </h2>
-                <TagsDisplay
-                    v-if="trackHasTags"
-                    class="ml-2"
-                    small
-                    readonly
-                    :tags="props.track.Tags"
-                ></TagsDisplay>
+                <TrackTitle
+                    class="is-flex-shrink-1 ml-3"
+                    :track="track"
+                ></TrackTitle>
             </div>
         </div>
 
         <!-- Right side -->
         <div class="level-right">
-            <div class="level-item is-hidden-mobile">
-                <span v-if="track.Artist || track.Album" class="is-size-7 ml-2">
-                    <!-- Artist info (should not take too much width, and hide on small displays anyways)-->
-                    <ArtistDisplay
-                        class="has-cropped-text"
-                        :artist="track.Artist"
-                        :album="track.Album"
-                        style="max-width: 50vw"
-                    />
-                </span>
-            </div>
-
             <div class="level-item">
                 <slot name="title-end"> </slot>
             </div>
@@ -149,16 +130,14 @@
 
 import { type PropType, computed, provide, readonly } from 'vue';
 import { storeToRefs } from 'pinia';
-import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
 import TimeDisplay from '@/components/TimeDisplay.vue';
-import TrackTitleName from '@/components/track/TrackTitleName.vue';
 import { useSettingsStore } from '@/store/settings';
 import { meterInjectionKey } from './track/TrackInjectionKeys';
 import type { ITrack } from '@/store/ITrack';
 import MediaSourceIndicator from '@/components/indicators/MediaSourceIndicator.vue';
-import TagsDisplay from '@/components/displays/TagsDisplay.vue';
+import TrackTitle from '@/components/track/TrackTitle.vue';
 
 const props = defineProps({
     /** The track to show an item for */

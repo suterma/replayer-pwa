@@ -311,6 +311,30 @@
         }"
     /><ValueKnob v-model="knobValue" :min-value="0" :max-value="50"></ValueKnob>
 
+    <h3>Switches</h3>
+
+    <h4>Narrow</h4>
+    <FadeInSwitch
+        title="Toggle fade-in usage"
+        v-model="toggleValue"
+        narrow
+    ></FadeInSwitch>
+    <PreRollSwitch
+        title="Toggle pre-roll usage"
+        v-model="toggleValue"
+        narrow
+    ></PreRollSwitch>
+
+    <h4>Wide</h4>
+    <FadeInSwitch
+        title="Toggle fade-in usage"
+        v-model="toggleValue"
+    ></FadeInSwitch>
+    <PreRollSwitch
+        title="Toggle pre-roll usage"
+        v-model="toggleValue"
+    ></PreRollSwitch>
+
     <h3>Plaback state indicators</h3>
 
     <label>Unavailable</label>
@@ -369,9 +393,12 @@ import { useMessageStore } from '@/store/messages';
 import { ProgressMessage } from '@/store/messages/ProgressMessage';
 import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import { PlaybackState } from '@/code/media/PlaybackState';
+import FadeInSwitch from '@/components/buttons/FadeInSwitch.vue';
+import PreRollSwitch from '@/components/buttons/PreRollSwitch.vue';
 
 const isExpanded = ref(false);
 const knobValue = ref(0);
+const toggleValue = ref(false);
 const switchabePlaybackState = ref(PlaybackState.Unavailable);
 
 const message = useMessageStore();

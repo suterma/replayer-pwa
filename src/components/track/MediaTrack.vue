@@ -99,8 +99,7 @@
                         >
 
                         <!-- Title -->
-                        <!-- The title is the only header element that should shrink (break on words) if necessary -->
-                        <div
+                        <TrackTitle
                             v-if="!isTrackEditable"
                             class="is-flex-shrink-1 ml-3"
                             :class="{
@@ -108,34 +107,9 @@
                                 'has-cursor-not-allowed': !canPlay,
                             }"
                             @click="setActiveTrack()"
-                        >
-                            <p :title="track.Url">
-                                <TrackTitleName
-                                    class="title is-4"
-                                    :class="{
-                                        'has-text-success': isActiveTrack,
-                                    }"
-                                    :name="track.Name"
-                                ></TrackTitleName>
-                                <ArtistDisplay
-                                    class="ml-2 is-size-7"
-                                    :artist="track.Artist"
-                                    :album="track.Album"
-                                />
-                                <MeterDisplay
-                                    v-if="isTrackPlayable"
-                                    class="ml-2 is-size-7"
-                                    :meter="track.Meter"
-                                ></MeterDisplay>
-                            </p>
-                        </div>
-
-                        <TagsDisplay
-                            v-if="!isTrackEditable && trackHasTags"
-                            :tags="props.track.Tags"
-                            small
-                            readonly
-                        ></TagsDisplay>
+                            :track="track"
+                            :isActive="isActiveTrack"
+                        ></TrackTitle>
                     </div>
                 </template>
 
@@ -496,39 +470,22 @@
                                         <!-- Keep some distance to the fullscreen button -->
 
                                         <p class="ml-3">
-                                            <!-- Use smaller title in collapsed state, use regular size (4) when full screen -->
-                                            <span
+                                            <!-- Title -->
+                                            <!-- Use smaller title in collapsed/non-fullscreen state -->
+                                            <TrackTitle
+                                                v-if="!isTrackEditable"
+                                                class="is-flex-shrink-1 ml-3"
                                                 :class="{
-                                                    'has-text-success':
-                                                        isActiveTrack,
-                                                    'is-size-4': isFullscreen,
-                                                    'is-size-5': !isFullscreen,
+                                                    'is-clickable': canPlay,
+                                                    'has-cursor-not-allowed':
+                                                        !canPlay,
                                                 }"
-                                            >
-                                                <TrackTitleName
-                                                    :name="track.Name"
-                                                ></TrackTitleName>
-                                            </span>
+                                                @click="setActiveTrack()"
+                                                :track="track"
+                                                :isActive="isActiveTrack"
+                                                :small="!isFullscreen"
+                                            ></TrackTitle>
                                         </p>
-                                    </div>
-                                    <!-- Artist etc... of the currently playing track-->
-                                    <div
-                                        class="level-item is-justify-content-left is-hidden-mobile"
-                                    >
-                                        <!-- Artist info-->
-                                        <div class="is-size-7">
-                                            <ArtistDisplay
-                                                class="has-cropped-text"
-                                                :artist="track.Artist"
-                                                :album="track.Album"
-                                            />
-                                        </div>
-                                        <!-- Meter display-->
-                                        <div class="is-size-7">
-                                            <MeterDisplay
-                                                :meter="track.Meter"
-                                            ></MeterDisplay>
-                                        </div>
                                     </div>
                                 </div>
 
@@ -784,8 +741,7 @@ import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import VolumeKnob from '@/components/controls/VolumeKnob.vue';
 import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import FullscreenPanel from '@/components/FullscreenPanel.vue';
-import TrackTitleName from '@/components/track/TrackTitleName.vue';
-import ArtistDisplay from '@/components/displays/ArtistDisplay.vue';
+import TrackTitle from '@/components/track/TrackTitle.vue';
 import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
@@ -816,7 +772,6 @@ import router, { Route } from '@/router';
 import MessageOverlay from '@/components/MessageOverlay.vue';
 import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 import type { ICompilation } from '@/store/ICompilation';
-import TagsDisplay from '@/components/displays/TagsDisplay.vue';
 import { useAudioStore } from '@/store/audio';
 import { Subscription } from 'sub-events';
 import { PlaybackState } from '@/code/media/PlaybackState';
@@ -1669,7 +1624,6 @@ watch(
         //     'prev:',
         //     previousTrackId,
         // );
-
         if (newIsEditable) {
             skipTransitionName.value = 'item-expand';
         } else if (activeTrackId != null && previousTrackId != null) {
@@ -1786,7 +1740,6 @@ watchEffect(() => {
  * unknown.
  * Thus, an explicit document title update is used here.
  */
-
 watch(
     [() => playingCueDescription.value, () => isActiveTrack.value],
     ([playingCueDescription, isActiveTrack]) => {
@@ -1815,12 +1768,6 @@ function removeCueScheduling(): void {
     // app.updateScheduledCueId(CompilationHandler.EmptyId);
     // cueScheduler.value?.RemoveSchedule();
 }
-
-// --- Tag handling ---
-
-const trackHasTags = computed(() => {
-    return props.track.Tags.size > 0;
-});
 </script>
 
 <style lang="scss" scoped>

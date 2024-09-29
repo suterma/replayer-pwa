@@ -1,0 +1,47 @@
+@charset "utf-8";
+
+/*************************************************************
+ * Styles for elements for a track 
+ * These styles should optimize the layout for track headers
+ * and other track-related elements
+**************************************************************
+*/
+
+/* Keep small tags a little smaller */
+.tags .tag {
+    font-size: 0.75rem; /*instead of the default value*/
+}
+
+/* Keep large tags also a little smaller */
+.tags.are-large .tag:not(.is-normal):not(.is-medium) {
+    font-size: 1rem;
+
+    /* Keep large delete buttons of large tags properly aligned */
+    button.delete.is-large {
+        margin-right: -0.75rem;
+    }
+}
+
+/** In tracks (but not when in the widget), 
+keep track tags togheter as much as possible,
+and do not flex them,
+to keep them consistend with the level layout, as well
+as for better legibility */
+.track .tags
+/*.widget .tags,*/ {
+    display: inline-block;
+}
+
+/** In the track item list the tags should be together on a new line.
+There have been display issues with the ellipsis when overflowing.
+ */
+.track-list-item .tags {
+    display: block;
+}
+
+/** In tracks, title text should be vertically centered and 
+have a very small line height, to keep it together */
+.track .title {
+    line-height: 1;
+    vertical-align: middle;
+}

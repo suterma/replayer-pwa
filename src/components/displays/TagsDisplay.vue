@@ -1,15 +1,18 @@
 <template>
-    <div
+    <span
         class="tags"
         :class="{
             'are-large': !small,
         }"
     >
-        <TransitionGroup name="list" tag="ul">
-            <li
+        <TransitionGroup name="list">
+            <span
                 v-for="tag in tags"
                 :key="tag"
                 class="tag is-info is-colorless is-rounded transition-in-place"
+                :class="{
+                    'has-text-dark': readonly,
+                }"
             >
                 {{ tag }}
                 <button
@@ -20,9 +23,9 @@
                     }"
                     @click="remove(tag)"
                 ></button>
-            </li>
+            </span>
         </TransitionGroup>
-    </div>
+    </span>
 </template>
 
 <script setup lang="ts">
@@ -60,6 +63,4 @@ defineProps({
 function remove(tag: string) {
     emit('remove', tag);
 }
-
-function isSelected(tag: string) {}
 </script>
