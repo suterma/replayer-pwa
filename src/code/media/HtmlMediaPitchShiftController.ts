@@ -51,14 +51,7 @@ export default class HtmlMediaPitchShiftController
         this._audioSource = audioSource;
         this._shift = pitchShift;
 
-        //TODO on pitch shift, initially and on change, repeatedly, detune the provided buffer
-
-        //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
-        // media.onshiftchange = () => {
-        //     const shift = 0; //TODOmedia.playbackRate;
-        //     console.debug(`onshiftchange:shift:${shift}`);
-        //     this.updateShift(shift);
-        // };
+        //not yet implemented: on pitch shift, initially and on change, repeatedly, detune the provided buffer
     }
 
     public destroy(): void {

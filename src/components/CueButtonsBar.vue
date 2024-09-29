@@ -137,8 +137,8 @@ const prefixCue = computed(() => {
         '',
         0,
         props.cues?.[0]?.Time ?? null,
-        false /* //TODO later allow some virtual "pre-roll" using a timer*/,
-        false /* //TODO later allow some virtual "fade-ipre-roll", if defined, using a timer*/,
+        false /* //not yet implemented: later allow some virtual "pre-roll" using a timer*/,
+        false /* //not yet implemented: later allow some virtual "fade-ipre-roll", if defined, using a timer*/,
         prefixCueButtonId,
     );
 });

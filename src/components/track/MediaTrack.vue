@@ -341,10 +341,14 @@
                                 'has-text-warning': !playingCueIsSelected,
                             }"
                         >
+                            <!-- Avoid layout flicker by always having at least a neutral blank space -->
                             <span>
-                                {{ playingCueDescription }}
+                                {{
+                                    playingCueDescription
+                                        ? playingCueDescription
+                                        : '&nbsp;'
+                                }}
                             </span>
-
                             <span class="ml-2 is-italic is-size-7">{{
                                 playingCue?.Remarks
                             }}</span>
@@ -519,8 +523,13 @@
                                                         !playingCueIsSelected,
                                                 }"
                                             >
+                                                <!-- Avoid layout flicker by always having at least a neutral blank space -->
                                                 <span>
-                                                    {{ playingCueDescription }}
+                                                    {{
+                                                        playingCueDescription
+                                                            ? playingCueDescription
+                                                            : '&nbsp;'
+                                                    }}
                                                 </span>
                                                 <span
                                                     class="ml-2 is-italic is-size-7"
@@ -647,15 +656,10 @@
 
                             <!-- The media viewport -->
                             <!-- Hide the waveform and Video for non-expanded track during edit, save screen real estate -->
-                            <!-- //TODO make a proper distance, (using block?), but only if there is content to display -->
                             <div
                                 v-show="!isTrackEditable || isExpanded"
                                 class="block"
                             >
-                                <!-- //TODO currently the mediaUrl is not using the optimized
-                variant, because otherwise the track is not correctly loaded
-                after it has become the active track ( gets
-                play-request-was-interrupted) -->
                                 <TrackMediaElement
                                     v-if="isVideoTrack || isAudioTrack"
                                     :key="track.Id"
@@ -1409,7 +1413,6 @@ function cueClick(cue: ICue, togglePlayback = true) {
             isTrackPlaying.value
         ) {
             // Schedule the cue
-            //TODO simplify this code
             if (cueScheduler.value && selectedCue.value) {
                 //IDEA: Maybe we could also calculate the remaining
                 //time to the current cue, not the selected cue,
@@ -1506,19 +1509,9 @@ provide(trackPreRollDurationInjectionKey, readonly(preRollDuration));
 provide(trackFadeInDurationInjectionKey, readonly(fadeInDuration));
 
 /** The description of the currently playing cue
- * @remarks The implementation makes sure that at least always an empty string
- * is returned. If you add a neutral blank space character in HTML, this avoids
- * layout flicker.
  */
 const playingCueDescription = computed(() => {
-    //TODO later use a properly generated description like from the CueButton
-    //(centralize the implementation there)
-    const description = playingCue.value?.Description;
-
-    if (description) {
-        return description;
-    }
-    return '';
+    return playingCue.value?.Description;
 });
 
 /** Whether the currently playing cue is the selected cue
