@@ -142,7 +142,6 @@ import { useAppStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
 import {
     currentPositionInjectionKey,
-    isPlayingInjectionKey,
     playbackStateInjectionKey,
 } from './track/TrackInjectionKeys';
 import { PlaybackMode } from '@/store/PlaybackMode';
@@ -153,6 +152,7 @@ import { mdiTrashCanOutline, mdiPlus } from '@mdi/js';
 import { Hotkey } from '@simolation/vue-hotkey';
 import { useMessageStore } from '@/store/messages';
 import { useSettingsStore } from '@/store/settings';
+import { PlaybackState } from '@/code/media/PlaybackState';
 
 /** A field of large cue buttons for a track
  */
@@ -223,7 +223,7 @@ function deleteSelectedCue(): void {
  */
 const canDeleteCue = computed(() => {
     return (
-        !isTrackPlaying?.value &&
+        playbackState?.value !== PlaybackState.Playing &&
         selectedCue.value &&
         !selectedCue.value?.Description &&
         CompilationHandler.areSimilar(
@@ -238,11 +238,6 @@ const canDeleteCue = computed(() => {
 const canCreateCue = computed(() => {
     return selectedCue.value?.Time != currentPosition?.value;
 });
-
-/** Indicates whether this track's player is currently playing
- * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
- */
-const isTrackPlaying = inject(isPlayingInjectionKey);
 
 /** Indicates this track's playback state
  * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.

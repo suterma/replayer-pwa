@@ -159,7 +159,6 @@ import { Meter } from '@/code/music/Meter';
 import MeasureDisplay from '@/components/MeasureDisplay.vue';
 import MeasureDifferenceDisplay from '@/components/MeasureDifferenceDisplay.vue';
 import {
-    isPlayingInjectionKey,
     playbackStateInjectionKey,
     meterInjectionKey,
     useMeasureNumbersInjectionKey,
@@ -167,6 +166,7 @@ import {
     trackFadeInDurationInjectionKey,
 } from '@/components/track/TrackInjectionKeys';
 import { PlaybackMode } from '@/store/PlaybackMode';
+import { PlaybackState } from '@/code/media/PlaybackState';
 
 /** A button for displaying and invoking a cue
  * @remarks Shows playback progress with an inline progress bar
@@ -301,7 +301,7 @@ const iconPath = computed(() => {
     if (props.iconPathOverride) {
         return props.iconPathOverride;
     }
-    if ((isTrackPlaying?.value ?? false) == true) {
+    if (playbackState?.value === PlaybackState.Playing) {
         return mdiPause;
     }
     // Track is pausing, choose icon according to pre-roll/fade setting for this cue
@@ -332,13 +332,6 @@ watch(
 const meter = inject(meterInjectionKey);
 
 const useMeasureNumbers = inject(useMeasureNumbersInjectionKey);
-
-//TODO try to simiplify the progress with it's own control. Does this affect layouting performance positively
-
-/** Indicates whether this track's player is currently playing
- * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.
- */
-const isTrackPlaying = inject(isPlayingInjectionKey);
 
 /** Indicates this track's playback state
  * @remarks This is used to depict the expected action on button press. While playing, this is pause, and vice versa.

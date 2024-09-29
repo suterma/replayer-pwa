@@ -767,10 +767,7 @@ import {
     trackFadeInDurationInjectionKey,
     isOmittingNextFadeInInjectionKey,
 } from './TrackInjectionKeys';
-import {
-    isPlayingInjectionKey,
-    playbackStateInjectionKey,
-} from './TrackInjectionKeys';
+import { playbackStateInjectionKey } from './TrackInjectionKeys';
 import { ReplayerEvent } from '@/code/ui/ReplayerEvent';
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
 import { LoopMode } from '@/code/media/IMediaLooper';
@@ -798,10 +795,6 @@ const emit = defineEmits([
      * @remarks allows track navigation from within a track.
      */
     'nextTrack',
-
-    /** Occurs, when this track starts playing.
-     */
-    'isTrackPlaying',
 
     /** Occurs on a seek operation
      */
@@ -948,7 +941,7 @@ function assumeMediaHandler(handler: IMediaHandler) {
     onSeekingChangedSubscription = handler.onSeekingChanged.subscribe(
         (seeking) => {
             removeCueScheduling();
-            if (!seeking && !isTrackPlaying.value) {
+            if (!seeking && playbackState.value !== PlaybackState.Playing) {
                 // make sure we keep up-to-date persisted position after seeking,
                 // but, for playback performance reasons, only when paused
                 persistPlayheadPosition();
@@ -1015,7 +1008,6 @@ function updateDuration(duration: number) {
 
 function updatePaused(paused: boolean) {
     removeCueScheduling();
-    isTrackPlaying.value = !paused;
     if (paused) {
         // mmake sure we keep up-to-date persisted position when paused
         persistPlayheadPosition();
@@ -1116,8 +1108,10 @@ const isYoutubeVideoTrack = computed(() =>
     CompilationHandler.isYoutubeVideoTrack(props.track),
 );
 
-/** Whether the current track can play (the media is loaded to the extent that it's ready to play).
- * @remarks This is used to toggle playback button states
+/** Whether the current track can accept playback operations.
+ * (Here, this means that the media is loaded to the extent that it's ready to play,
+ * or it's actually already playing)
+ * @remarks This is used to toggle playback and other button states
  */
 const canPlay = ref(false);
 
@@ -1126,11 +1120,6 @@ const canPlay = ref(false);
  * Could be NaN or infinity, depending on the source
  */
 const trackDuration: Ref<number | null> = ref(null);
-
-/** Flag to indicate whether this track's player is currently playing
- */
-const isTrackPlaying = ref(false);
-provide(isPlayingInjectionKey, readonly(isTrackPlaying));
 
 /** Indicates this track's playback state
  */
@@ -1240,7 +1229,7 @@ function toNextCue() {
  * If it's the active track, does nothing
  */
 function setActiveTrack(): void {
-    if (canPlay.value) {
+    if (playbackState.value === PlaybackState.Ready) {
         if (!isActiveTrack.value) {
             app.updateSelectedTrackId(props.track.Id);
         }
@@ -1348,7 +1337,7 @@ function updateVolume(volume: number) {
  * possibly set pre-roll options.
  */
 function goToSelectedCue() {
-    /*Check for the active track here (again), because otherwise some event handling
+    /* Check for the active track here (again), because otherwise some event handling
             sequences might cause actions on non-active tracks too.*/
     if (isActiveTrack.value) {
         const cue = selectedCue.value;
@@ -1359,9 +1348,9 @@ function goToSelectedCue() {
         if (cue) {
             const startTime = getCuePreRollStartTime(selectedCue.value);
 
-            //Control playback according to the play state, using a single operation.
-            //This supports a possible fade operation.
-            if (isTrackPlaying.value) {
+            // Control playback according to the play state, using a single operation.
+            // This supports a possible fade operation.
+            if (playbackState.value === PlaybackState.Playing) {
                 mediaHandler.value?.pauseAndSeekTo(startTime, cue.OmitFadeIn);
             } else {
                 seekToSeconds(startTime, cue.OmitFadeIn);
@@ -1410,7 +1399,7 @@ function cueClick(cue: ICue, togglePlayback = true) {
         if (
             selectedCueId /*any is selected?*/ &&
             playbackMode.value == PlaybackMode.QueueCue &&
-            isTrackPlaying.value
+            playbackState.value === PlaybackState.Playing
         ) {
             // Schedule the cue
             if (cueScheduler.value && selectedCue.value) {
@@ -1454,7 +1443,7 @@ function cueClick(cue: ICue, togglePlayback = true) {
             const startTime = getCuePreRollStartTime(cue);
             if (startTime != null) {
                 if (togglePlayback) {
-                    if (isTrackPlaying.value) {
+                    if (playbackState.value === PlaybackState.Playing) {
                         mediaHandler.value?.pauseAndSeekTo(
                             startTime,
                             cue.OmitFadeIn,
@@ -1478,12 +1467,6 @@ function createNewCue(): void {
     } else
         throw new Error('currentPosition must be available for adding a cue');
 }
-
-/** Handles changes in whether this track is playing.
- */
-watch(isTrackPlaying, () => {
-    emit('isTrackPlaying', isTrackPlaying);
-});
 
 /** Whether all required values for the use of the measure number as position are available.
  */
@@ -1518,6 +1501,11 @@ const playingCueDescription = computed(() => {
  * @remarks used for the playhead slider visualization
  */
 const playingCueIsSelected = computed(() => {
+    if (!selectedCueId.value) {
+        // premature exit, if none selected none can match
+        return false;
+    }
+
     const playingCueId = playingCue.value?.Id;
 
     if (playingCueId != undefined && selectedCueId.value === playingCueId) {
@@ -1536,7 +1524,7 @@ const hasPreviousCue = computed(() => {
  */
 const hasNextCue = computed(() => {
     return (
-        //TODO maybe the also a possible scheduled cue should be considered?
+        //to be implemented: maybe the also a possible scheduled cue should be considered?
         selectedCueId !== null &&
         allCueIds.value.slice(-1)[0] !== selectedCueId.value
     );
@@ -1560,7 +1548,7 @@ const playingCue = computed(() => {
     }
 
     return (
-        props.track?.Cues?.filter(
+        props.track?.Cues?.find(
             (cue) =>
                 cue.Time !== null &&
                 Number.isFinite(cue.Time) &&
@@ -1568,7 +1556,7 @@ const playingCue = computed(() => {
                 Number.isFinite(cue.Duration) &&
                 time >= cue.Time &&
                 time < cue.Time + (cue.Duration ?? 0),
-        )[0] ?? null
+        ) ?? null
     );
 });
 

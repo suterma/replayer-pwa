@@ -226,10 +226,7 @@ import {
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { storeToRefs } from 'pinia';
 import PdfElement from '@/components/track/PdfElement.vue';
-import {
-    isPlayingInjectionKey,
-    playbackStateInjectionKey,
-} from './TrackInjectionKeys';
+import { playbackStateInjectionKey } from './TrackInjectionKeys';
 import { useSettingsStore } from '@/store/settings';
 import { confirm } from '@/code/ui/dialogs';
 import TagInput from '@/components/editor/TagInput.vue';
@@ -260,12 +257,6 @@ const mediaUrl = computed(() => {
     return app.getMediaUrlByTrack(props.track);
 });
 
-/** Flag to indicate whether this track's player is currently playing
- * @devdoc This is just provided to avoid a console warning;
- *  PDF's can not play
- */
-provide(isPlayingInjectionKey, readonly(ref(false)));
-
 /** Indicates this track's playback state
  * @devdoc This is just provided to avoid a console warning;
  *  PDF's can not play
@@ -276,6 +267,11 @@ const playbackState = computed(() => {
     }
     return PlaybackState.Ready;
 });
+
+/**
+ * @devdoc This is just provided to avoid a console warning;
+ *  PDF's can not play
+ */
 provide(playbackStateInjectionKey, readonly(playbackState));
 
 /** Removes the track from the compilation

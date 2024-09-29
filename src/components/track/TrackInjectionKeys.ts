@@ -39,11 +39,6 @@ export const trackFadeInDurationInjectionKey = Symbol() as InjectionKey<
     Ref<number>
 >;
 
-/** A symbol for providing and injecting whether the track is playing. */
-export const isPlayingInjectionKey = Symbol() as InjectionKey<
-    Ref<boolean | null>
->;
-
 /** A symbol for providing and injecting the playback state. */
 export const playbackStateInjectionKey = Symbol() as InjectionKey<
     Ref<PlaybackState>
