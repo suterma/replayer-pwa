@@ -5,10 +5,10 @@
     >
         <i
             v-if="state === PlaybackState.Unavailable"
-            class="icon mdi has-text-warning has-tooltip-warning"
             v-tooltip="
                 'Track media is unavailable. Please reload or replace it in the editor.'
             "
+            class="icon mdi has-text-warning has-tooltip-warning"
             ><svg viewBox="0 0 24 24">
                 <path fill="currentColor" :d="mdiAlert" />
             </svg>
@@ -16,8 +16,8 @@
         <template v-else>
             <i
                 v-if="state === PlaybackState.Unloaded"
-                class="icon mdi has-text-dark"
                 v-tooltip="'Track not loaded.'"
+                class="icon mdi has-text-dark"
                 ><svg viewBox="0 0 24 24">
                     <path fill="currentColor" :d="mdiCircle" />
                 </svg>

@@ -271,7 +271,7 @@ provide(isPlayingInjectionKey, readonly(ref(false)));
  *  PDF's can not play
  */
 const playbackState = computed(() => {
-    if (!mediaUrl) {
+    if (!mediaUrl.value) {
         return PlaybackState.Unavailable;
     }
     return PlaybackState.Ready;

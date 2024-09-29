@@ -38,7 +38,6 @@
                         :max="trackDuration ?? 0"
                         :value="modelValue"
                         type="range"
-                        @change="onValueChange"
                         @input="onValueChange"
                 /></label>
             </div>
