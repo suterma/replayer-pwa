@@ -178,14 +178,24 @@ watchEffect(() => {
 
             // Add the current cues
             props.cues?.forEach((cue) => {
-                if (cue.Time !== null && cue.Duration !== null) {
+                const time = cue.Time;
+                const duration = cue.Duration;
+                const description = cue.Description;
+
+                if (
+                    time !== null &&
+                    Number.isFinite(time) &&
+                    duration !== null &&
+                    Number.isFinite(duration) &&
+                    description
+                ) {
                     const formattedText = largeCaptions.value
-                        ? `<v.large>${cue.Description}</v>`
-                        : `<v>${cue.Description}</v>`;
+                        ? `<v.large>${description}</v>`
+                        : `<v>${description}</v>`;
 
                     const vttCue = new VTTCue(
-                        cue.Time - TemporalEpsilon,
-                        cue.Time + cue.Duration - 2 * TemporalEpsilon,
+                        time - TemporalEpsilon,
+                        time + duration - 2 * TemporalEpsilon,
                         formattedText,
                     );
                     vttCue.id = cue.Id;
