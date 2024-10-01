@@ -14,7 +14,7 @@
 import { Store } from '../store';
 
 /** Declares the store
- * @devdoc The reason why this store definition is necessary, is unknown. 
+ * @devdoc The reason why this store definition is necessary, is unknown.
  * However, otherwise store use in options-API-based components does not work.
  */
 declare module '@vue/runtime-core' {
