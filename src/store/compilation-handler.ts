@@ -55,13 +55,6 @@ export default class CompilationHandler {
      */
     private static getCompilationSerializationReplacer() {
         return (key: any, value: object | null) => {
-            // Do not serialize media handers
-            if (key === 'MediaHandler') {
-                return;
-            }
-            if (key === '_mediaHandler') {
-                return;
-            }
             // serialize sets as arrays. See https://stackoverflow.com/questions/31190885/json-stringify-a-set
             if (value !== null && value instanceof Set) {
                 return [...value];
