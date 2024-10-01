@@ -315,24 +315,24 @@
 
     <h4>Narrow</h4>
     <FadeInSwitch
-        title="Toggle fade-in usage"
         v-model="toggleValue"
+        title="Toggle fade-in usage"
         narrow
     ></FadeInSwitch>
     <PreRollSwitch
-        title="Toggle pre-roll usage"
         v-model="toggleValue"
+        title="Toggle pre-roll usage"
         narrow
     ></PreRollSwitch>
 
     <h4>Wide</h4>
     <FadeInSwitch
-        title="Toggle fade-in usage"
         v-model="toggleValue"
+        title="Toggle fade-in usage"
     ></FadeInSwitch>
     <PreRollSwitch
-        title="Toggle pre-roll usage"
         v-model="toggleValue"
+        title="Toggle pre-roll usage"
     ></PreRollSwitch>
 
     <h3>Plaback state indicators</h3>

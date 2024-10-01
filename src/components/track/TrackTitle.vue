@@ -20,8 +20,8 @@
         ></MeterDisplay>
 
         <TagsDisplay
-            class="ml-0 is-size-7"
             v-if="trackHasTags"
+            class="ml-0 is-size-7"
             :tags="props.track.Tags"
             small
             readonly

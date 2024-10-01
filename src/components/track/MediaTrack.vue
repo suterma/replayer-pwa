@@ -106,9 +106,9 @@
                                 'is-clickable': canPlay,
                                 'has-cursor-not-allowed': !canPlay,
                             }"
-                            @click="setActiveTrack()"
                             :track="track"
-                            :isActive="isActiveTrack"
+                            :is-active="isActiveTrack"
+                            @click="setActiveTrack()"
                         ></TrackTitle>
                     </div>
                 </template>
@@ -487,10 +487,10 @@
                                                     'has-cursor-not-allowed':
                                                         !canPlay,
                                                 }"
-                                                @click="setActiveTrack()"
                                                 :track="track"
-                                                :isActive="isActiveTrack"
+                                                :is-active="isActiveTrack"
                                                 :small="!isFullscreen"
+                                                @click="setActiveTrack()"
                                             ></TrackTitle>
                                         </p>
                                     </div>
