@@ -26,6 +26,7 @@ import HtmlMediaPitchShiftController from './HtmlMediaPitchShiftController';
 import type { ShallowRef } from 'vue';
 import Constants from './Constants';
 import { PlaybackState } from './PlaybackState';
+import { SubEventImmediate } from './SubEventImmediate';
 
 const mediaHandlerDebug = chalk.hex('#62c462'); // Replayer success color (bulma warning)
 
@@ -257,7 +258,8 @@ export default class HtmlMediaHandler implements IMediaHandler {
         }
     }
 
-    onNextFadeInOmissionChanged: SubEvent<boolean> = new SubEvent();
+    onNextFadeInOmissionChanged: SubEventImmediate<boolean> =
+        new SubEventImmediate();
 
     // --- looping ---
 
@@ -269,12 +271,13 @@ export default class HtmlMediaHandler implements IMediaHandler {
 
     // --- transport ---
 
-    onPausedChanged: SubEvent<boolean> = new SubEvent();
-    onPlaybackStateChanged: SubEvent<PlaybackState> = new SubEvent();
-    onSeekingChanged: SubEvent<boolean> = new SubEvent();
-    onSeeked: SubEvent<number> = new SubEvent();
-    onCurrentTimeChanged: SubEvent<number> = new SubEvent();
-    onEnded: SubEvent<void> = new SubEvent();
+    onPausedChanged: SubEventImmediate<boolean> = new SubEventImmediate();
+    onPlaybackStateChanged: SubEventImmediate<PlaybackState> =
+        new SubEventImmediate();
+    onSeekingChanged: SubEventImmediate<boolean> = new SubEventImmediate();
+    onSeeked: SubEventImmediate<number> = new SubEventImmediate();
+    onCurrentTimeChanged: SubEventImmediate<number> = new SubEventImmediate();
+    onEnded: SubEventImmediate<void> = new SubEventImmediate();
 
     /** @inheritdoc */
     public pause(): Promise<void> {
@@ -466,7 +469,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
      * @devdoc This is emitted separately from the data loading state and events, since the underlying
      * implementation does handle it separately.
      */
-    onCanPlay: SubEvent<void> = new SubEvent();
+    onCanPlay: SubEventImmediate<void> = new SubEventImmediate();
 
     /** Whether the media data has loaded (at least enough to start playback)
      * @remarks This implies that metadata also has been loaded already
@@ -504,7 +507,9 @@ export default class HtmlMediaHandler implements IMediaHandler {
             if (!this.hasLoadedMetadata && !this.hasLoadedData) {
                 this.hasLoadedMetadata = true;
                 this.hasLoadedData = true;
-                this.updateDuration(this._media.duration);
+                // NOTE: the update of the duration is received and
+                // handeled separately with the HTMLMediaElement
+                // thus not handeled explicitly here
             }
         }
 
@@ -538,7 +543,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
         }
     }
 
-    onDurationChanged: SubEvent<number> = new SubEvent();
+    onDurationChanged: SubEventImmediate<number> = new SubEventImmediate();
 
     // --- track looping ---
 

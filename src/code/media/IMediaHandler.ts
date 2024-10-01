@@ -11,12 +11,12 @@
  * JavaScript code in this page
  */
 
-import { SubEvent } from 'sub-events';
 import type { IAudioFader } from './IAudioFader';
 import type { IPlaybackRateController } from './IPlaybackRateController';
 import type { IMediaLooper } from './IMediaLooper';
 import type { IPitchShiftController } from './IPitchShiftController';
 import type { PlaybackState } from './PlaybackState';
+import type { SubEventImmediate } from './SubEventImmediate';
 
 /** @interface Defines a media handler.
  * This defines transport, loop and volume operations for media sources
@@ -55,7 +55,7 @@ export interface IMediaHandler {
     /** Emits a changed next fade-in omission.
      * @param {boolean} omitted - whether the next fade-in is omitted
      */
-    readonly onNextFadeInOmissionChanged: SubEvent<boolean>;
+    readonly onNextFadeInOmissionChanged: SubEventImmediate<boolean>;
 
     /** Gets the audio loop handler
      */
@@ -74,7 +74,7 @@ export interface IMediaHandler {
     /** Emits a changed playback state.
      * @param {PlabackState} playbackState - the playback state.
      */
-    readonly onPlaybackStateChanged: SubEvent<PlaybackState>;
+    readonly onPlaybackStateChanged: SubEventImmediate<PlaybackState>;
 
     /** Gets the current playback state
      */
@@ -83,17 +83,19 @@ export interface IMediaHandler {
     /** Emits a changed paused state.
      * @param {boolean} paused - whether the playback is currently paused (or otherwise not playing)
      */
-    readonly onPausedChanged: SubEvent<boolean>;
+    readonly onPausedChanged: SubEventImmediate<boolean>;
 
     /** Emits a changed seeking state.
+     * @remarks Seeking is a transient operation and thus not using the immediately providing event subscription.
      * @param {boolean} seeking - whether the media is currently seeked (while playing or not)
      */
-    readonly onSeekingChanged: SubEvent<boolean>;
+    readonly onSeekingChanged: SubEventImmediate<boolean>;
 
-    /** Emits an ocurred seek operation.
+    /** Emits an ended seek operation.
+     * @remarks Seeking is a transient operation and thus not using the immediately providing event subscription.
      * @param {number} targetTime - the target time of the seek operation
      */
-    readonly onSeeked: SubEvent<number>;
+    readonly onSeeked: SubEventImmediate<number>;
 
     /** Whether the playback is currently paused (or otherwise not playing)
      * @remarks A value of true indicates an ongoing playback operation.
@@ -109,7 +111,7 @@ export interface IMediaHandler {
      * @remarks The change can stem fron ongoing playback and/or a seek or loop operation.
      * @param {number} currentTime - could be NaN or infinity, depending on the source
      */
-    readonly onCurrentTimeChanged: SubEvent<number>;
+    readonly onCurrentTimeChanged: SubEventImmediate<number>;
 
     /** Gets the current time position in [seconds].
      * @remarks This is not necessarily the exact same value as was last emitted via {onCurrentTimeChanged}.
@@ -152,7 +154,7 @@ export interface IMediaHandler {
      * @remarks This is not triggered when the track or a range of it is looping.
      * Allows to select the next track in "play all" and "shuffle" mode.
      */
-    onEnded: SubEvent<void>;
+    onEnded: SubEventImmediate<void>;
 
     /** Starts playback from the given temporal position
      * @remarks This first seeks to the position, then starts playing (with a possible fade-in)
@@ -186,7 +188,7 @@ export interface IMediaHandler {
      * @devdoc This is emitted separately from the data loading state and events, since the underlying
      * implementation might handle it separately.
      */
-    onCanPlay: SubEvent<void>;
+    onCanPlay: SubEventImmediate<void>;
 
     /** Whether the media data had loaded enough to start playback.
      */
@@ -199,7 +201,7 @@ export interface IMediaHandler {
     /** Emits a changed duration.
      * @param {number} duration - could be NaN or infinity, depending on the source
      */
-    onDurationChanged: SubEvent<number>;
+    onDurationChanged: SubEventImmediate<number>;
 
     // --- looping ---
 

@@ -11,7 +11,7 @@
  * JavaScript code in this page
  */
 
-import { SubEvent } from 'sub-events';
+import type { SubEventImmediate } from './SubEventImmediate';
 
 /** @interface Defines a playback rate controller.
  */
@@ -23,5 +23,5 @@ export interface IPlaybackRateController {
     /** Emits a changed playback rate.
      * @param {number} rate - the changed rate
      */
-    readonly onPlaybackRateChanged: SubEvent<number>;
+    readonly onPlaybackRateChanged: SubEventImmediate<number>;
 }

@@ -145,11 +145,7 @@
                     </div>
                     <div class="level-item is-narrow mr-0">
                         <PlaybackIndicator
-                            :fading-duration="
-                                isFading === FadingMode.FadeIn
-                                    ? fadeInDuration
-                                    : fadeOutDuration
-                            "
+                            :fading-duration="fadingDuration"
                             :fading-action="isFading"
                             :state="playbackState"
                             data-cy="playback-indicator"
@@ -595,10 +591,7 @@
                                             </template>
                                             <PlaybackIndicator
                                                 :fading-duration="
-                                                    isFading ===
-                                                    FadingMode.FadeIn
-                                                        ? fadeInDuration
-                                                        : fadeOutDuration
+                                                    fadingDuration
                                                 "
                                                 :fading-action="isFading"
                                                 :state="playbackState"
@@ -779,10 +772,14 @@ import { PlaybackMode } from '@/store/PlaybackMode';
 import type { ITrack } from '@/store/ITrack';
 import router, { Route } from '@/router';
 import MessageOverlay from '@/components/MessageOverlay.vue';
-import MeterDisplay from '@/components/displays/MeterDisplay.vue';
 import type { ICompilation } from '@/store/ICompilation';
 import { useAudioStore } from '@/store/audio';
-import { Subscription } from 'sub-events';
+import {
+    SubEvent,
+    Subscription,
+    type ISubOptions,
+    type SubFunction,
+} from 'sub-events';
 import { PlaybackState } from '@/code/media/PlaybackState';
 
 const emit = defineEmits([
@@ -887,59 +884,64 @@ let onPitchShiftChangedSubscription: Subscription;
 
 /** Updates a received media handler for this track */
 function assumeMediaHandler(handler: IMediaHandler) {
-    // initialize
+    // initialize from persisted track values
     console.debug('MediaTrack::assumeMediaHandler:id', handler.id);
     handler.fader.setVolume(props.track.Volume);
+    handler.fader.updateSettings(
+        settings.fadeInDuration,
+        settings.fadeOutDuration,
+        settings.addFadeInPreRoll,
+    );
     handler.playbackRateController.playbackRate = props.track.PlaybackRate;
     handler.pitchShiftController.pitchShift = props.track.PitchShift;
+    //TODO why we do not have a persisted currentTime??
 
-    // register for the required events, and initialize some of the
-    // internal state to initial values from the handler
-    // NOTE: The SubEvent API does not provide an "immediate"-style subscription
-    currentTimeChangedSubscription = handler.onCurrentTimeChanged.subscribe(
-        (currentTime) => {
-            updateCurrentPosition(currentTime);
-        },
-    );
-    updateCurrentPosition(handler.currentTime);
+    // register for the required events (immediately initializing some of the
+    // internal state to initial values)
+    currentTimeChangedSubscription =
+        handler.onCurrentTimeChanged.subscribeImmediate(
+            (currentTime: number) => {
+                updateCurrentPosition(currentTime);
+            },
+        );
 
-    onCanPlaySubscription = handler.onCanPlay.subscribe(() => {
+    onCanPlaySubscription = handler.onCanPlay.subscribeImmediate(() => {
         canPlay.value = true;
     });
-    canPlay.value = handler.canPlay;
+    canPlay.value = handler.canPlay; // subscribeImmediate does not work for Events without value
 
-    onDurationChangedSubscription = handler.onDurationChanged.subscribe(
-        (duration) => {
+    onDurationChangedSubscription =
+        handler.onDurationChanged.subscribeImmediate((duration: number) => {
             updateDuration(duration);
+        });
+
+    onPauseChangedSubscription = handler.onPausedChanged.subscribeImmediate(
+        (paused: boolean) => {
+            updatePaused(paused);
         },
     );
-    updateDuration(handler.duration);
 
-    onPauseChangedSubscription = handler.onPausedChanged.subscribe((paused) => {
-        updatePaused(paused);
-    });
-    updatePaused(handler.paused);
-
-    onPauseChangedSubscription = handler.onPlaybackStateChanged.subscribe(
-        (playbackState) => {
-            updatePlaybackState(playbackState);
-        },
-    );
-    updatePlaybackState(handler.playbackState);
+    onPauseChangedSubscription =
+        handler.onPlaybackStateChanged.subscribeImmediate(
+            (playbackState: PlaybackState) => {
+                updatePlaybackState(playbackState);
+            },
+        );
 
     onNextFadeInOmissionChangedSubscription =
-        handler.onNextFadeInOmissionChanged.subscribe((omitsNextFadeIn) => {
-            isPlayerOmittingNextFadeIn.value = omitsNextFadeIn;
-        });
-    isPlayerOmittingNextFadeIn.value = handler.omitsNextFadeIn;
+        handler.onNextFadeInOmissionChanged.subscribeImmediate(
+            (omitsNextFadeIn: boolean) => {
+                isPlayerOmittingNextFadeIn.value = omitsNextFadeIn;
+            },
+        );
 
-    onEndedSubscription = handler.onEnded.subscribe(() => {
+    onEndedSubscription = handler.onEnded.subscribeImmediate(() => {
         removeCueScheduling();
         emit('trackEnded');
     });
 
     onSeekingChangedSubscription = handler.onSeekingChanged.subscribe(
-        (seeking) => {
+        (seeking: boolean) => {
             removeCueScheduling();
             if (!seeking && playbackState.value !== PlaybackState.Playing) {
                 // make sure we keep up-to-date persisted position after seeking,
@@ -949,49 +951,41 @@ function assumeMediaHandler(handler: IMediaHandler) {
         },
     );
 
-    handler.fader.updateSettings(
-        settings.fadeInDuration,
-        settings.fadeOutDuration,
-        settings.addFadeInPreRoll,
-    );
+    onFadingChangedSubscription =
+        handler.fader.onFadingChanged.subscribeImmediate(
+            (fading: FadingMode) => {
+                isFading.value = fading;
+            },
+        );
 
-    onFadingChangedSubscription = handler.fader.onFadingChanged.subscribe(
-        (fading) => {
-            isFading.value = fading;
-        },
-    );
-
-    onVolumeChangedSubscription = handler.fader.onVolumeChanged.subscribe(
-        (volume) => {
+    onVolumeChangedSubscription =
+        handler.fader.onVolumeChanged.subscribeImmediate((volume: number) => {
             updateVolume(volume);
-        },
-    );
+        });
 
-    onMutedChangedSubscription = handler.fader.onMutedChanged.subscribe(
-        (muted) => {
+    onMutedChangedSubscription =
+        handler.fader.onMutedChanged.subscribeImmediate((muted: boolean) => {
             isMuted.value = muted;
-        },
-    );
-    isMuted.value = handler.fader.muted;
+        });
 
-    onSoloedChangedSubscription = handler.fader.onSoloedChanged.subscribe(
-        (soloed) => {
+    onSoloedChangedSubscription =
+        handler.fader.onSoloedChanged.subscribeImmediate((soloed: boolean) => {
             isSoloed.value = soloed;
-        },
-    );
-    isSoloed.value = handler.fader.soloed;
+        });
 
     onPlaybackRateChangedSubscription =
-        handler.playbackRateController.onPlaybackRateChanged.subscribe(
-            (rate) => {
+        handler.playbackRateController.onPlaybackRateChanged.subscribeImmediate(
+            (rate: number) => {
                 app.updateTrackPlaybackRate(props.track?.Id, rate);
             },
         );
 
     onPitchShiftChangedSubscription =
-        handler.pitchShiftController.onPitchShiftChanged.subscribe((shift) => {
-            app.updateTrackPitchShift(props.track?.Id, shift);
-        });
+        handler.pitchShiftController.onPitchShiftChanged.subscribeImmediate(
+            (shift: number) => {
+                app.updateTrackPitchShift(props.track?.Id, shift);
+            },
+        );
 
     cueScheduler.value = new CueScheduler(handler);
 }
@@ -1180,6 +1174,21 @@ watchEffect(() => {
 
 /** Indicates the kind of current fading, if any */
 const isFading = ref(FadingMode.None);
+
+/** The currently fading duration in use
+ * @remarks Intended for visual feedback of an ongoing fade operation
+ */
+const fadingDuration = computed(() => {
+    if (playbackState.value === PlaybackState.Playing) {
+        if (isFading.value === FadingMode.FadeIn) {
+            return fadeInDuration.value;
+        }
+        if (isFading.value === FadingMode.FadeOut) {
+            return fadeOutDuration.value;
+        }
+    }
+    return 0; //no fading or no playback ended
+});
 
 /** Whether the media player will omit the next fade-in */
 const isPlayerOmittingNextFadeIn = ref(false);

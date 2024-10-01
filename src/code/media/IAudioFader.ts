@@ -11,7 +11,7 @@
  * JavaScript code in this page
  */
 
-import { SubEvent } from 'sub-events';
+import type { SubEventImmediate } from './SubEventImmediate';
 
 /** @interface Defines an audio fader with fade-in/out operations, for use during playback,
  * including a muted and soloed state. Soloing only
@@ -140,22 +140,22 @@ export interface IAudioFader {
     /** Emits a changed master volume state.
      * @param {number} volume - the changed master volume
      */
-    readonly onVolumeChanged: SubEvent<number>;
+    readonly onVolumeChanged: SubEventImmediate<number>;
 
     /** Emits a changed muted state.
      * @param {boolean} muted - the changed muted state
      */
-    readonly onMutedChanged: SubEvent<boolean>;
+    readonly onMutedChanged: SubEventImmediate<boolean>;
 
     /** Emits a changed soloed state.
      * @param {boolean} soloed - the changed soloed state
      */
-    readonly onSoloedChanged: SubEvent<boolean>;
+    readonly onSoloedChanged: SubEventImmediate<boolean>;
 
     /** Emits a changed fading state.
      * @param {FadingMode} fading - kind of fading operation that is currently ongoing
      */
-    readonly onFadingChanged: SubEvent<FadingMode>;
+    readonly onFadingChanged: SubEventImmediate<FadingMode>;
 
     /** Returns a fade-in promise for the currently playing track
      * @remarks The sound is faded to the master volume audio level.

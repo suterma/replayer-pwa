@@ -11,7 +11,7 @@
  * JavaScript code in this page
  */
 
-import { SubEvent } from 'sub-events';
+import type { SubEventImmediate } from './SubEventImmediate';
 
 /** @interface Defines a pitch shift controller.
  */
@@ -23,5 +23,5 @@ export interface IPitchShiftController {
     /** Emits an updated pitch shift.
      * @param {number} shift - the updated shift in [cents].
      */
-    readonly onPitchShiftChanged: SubEvent<number>;
+    readonly onPitchShiftChanged: SubEventImmediate<number>;
 }

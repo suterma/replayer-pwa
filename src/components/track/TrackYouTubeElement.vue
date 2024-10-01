@@ -238,14 +238,17 @@ function createAndProvideHandler(
     console.log('TrackYouTubeElement:ready');
 
     // Internally handle some events of our own
-    onPauseChangedSubsription = handler.onPausedChanged.subscribe((paused) => {
-        isPaused.value = paused;
-    });
-    onFadingChangedSubsription = handler.fader.onFadingChanged.subscribe(
-        (fading) => {
-            isFading.value = fading;
+    onPauseChangedSubsription = handler.onPausedChanged.subscribeImmediate(
+        (paused: boolean) => {
+            isPaused.value = paused;
         },
     );
+    onFadingChangedSubsription =
+        handler.fader.onFadingChanged.subscribeImmediate(
+            (fading: FadingMode) => {
+                isFading.value = fading;
+            },
+        );
 
     return handler;
 }

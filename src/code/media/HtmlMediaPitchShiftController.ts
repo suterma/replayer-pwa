@@ -12,9 +12,9 @@
  */
 
 import { DefaultPitchShift } from '@/store/Track';
-import { SubEvent } from 'sub-events';
 import type { IPitchShiftController } from './IPitchShiftController';
 import type { ShallowRef } from 'vue';
+import { SubEventImmediate } from './SubEventImmediate';
 
 /** @class Implements a pitch shift controller for a {HTMLMediaElement}.
  * @devdoc //NOTE This is currently only a skeleton without functionality
@@ -62,7 +62,7 @@ export default class HtmlMediaPitchShiftController
         this.onPitchShiftChanged.emit(shift);
     }
 
-    onPitchShiftChanged: SubEvent<number> = new SubEvent();
+    onPitchShiftChanged: SubEventImmediate<number> = new SubEventImmediate();
 
     /** Gets the pitch shift.
      */

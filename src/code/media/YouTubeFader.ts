@@ -13,8 +13,8 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { FadingMode, type IAudioFader } from './IAudioFader';
-import { SubEvent } from 'sub-events';
 import type { Player } from '@vue-youtube/shared';
+import { SubEventImmediate } from './SubEventImmediate';
 
 /** @class Implements an audio fader for a YouTube player instance. This fader supports two concepts:
  * - a master volume, that emulates a set, overall audio level
@@ -144,7 +144,6 @@ export default class YouTubeFader implements IAudioFader {
     public destroy(): void {
         this.cancel();
         this.reset();
-        this.operationToken = YouTubeFader.cancelOperationToken;
     }
 
     // --- fading ---
@@ -177,7 +176,7 @@ export default class YouTubeFader implements IAudioFader {
         return this.fadeOutDuration;
     }
 
-    onFadingChanged: SubEvent<FadingMode> = new SubEvent();
+    onFadingChanged: SubEventImmediate<FadingMode> = new SubEventImmediate();
 
     // --- transport ---
 
@@ -204,7 +203,7 @@ export default class YouTubeFader implements IAudioFader {
 
     // --- mute/solo ---
 
-    onMutedChanged: SubEvent<boolean> = new SubEvent();
+    onMutedChanged: SubEventImmediate<boolean> = new SubEventImmediate();
 
     /** The muted state */
     private _muted = false;
@@ -225,7 +224,7 @@ export default class YouTubeFader implements IAudioFader {
         this.onMutedChanged.emit(value);
     }
 
-    onSoloedChanged: SubEvent<boolean> = new SubEvent();
+    onSoloedChanged: SubEventImmediate<boolean> = new SubEventImmediate();
 
     /** The soloed state */
     private _soloed = false;
@@ -333,7 +332,7 @@ export default class YouTubeFader implements IAudioFader {
         return previousVolume;
     }
 
-    onVolumeChanged: SubEvent<number> = new SubEvent();
+    onVolumeChanged: SubEventImmediate<number> = new SubEventImmediate();
 
     fadeIn(immediate?: boolean): Promise<void> {
         if (this.hadToCancel()) {

@@ -12,9 +12,9 @@
  */
 
 import { DefaultPlaybackRate } from '@/store/Track';
-import { SubEvent } from 'sub-events';
 import type { IPlaybackRateController } from './IPlaybackRateController';
 import { type Player } from '@vue-youtube/core';
+import { SubEventImmediate } from './SubEventImmediate';
 
 /** @class Implements a playback rate controller for a YouTube player instance.
  */
@@ -49,7 +49,7 @@ export default class YouTubePlaybackRateController
         this.onPlaybackRateChanged.emit(this._player.getPlaybackRate());
     }
 
-    onPlaybackRateChanged: SubEvent<number> = new SubEvent();
+    onPlaybackRateChanged: SubEventImmediate<number> = new SubEventImmediate();
 
     /** Gets the playback rate.
      */

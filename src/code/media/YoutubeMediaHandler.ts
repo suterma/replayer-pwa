@@ -13,7 +13,6 @@
 
 import type { IAudioFader } from './IAudioFader';
 import type { IMediaHandler } from './IMediaHandler';
-import { SubEvent } from 'sub-events';
 import type { PlayerStateChangeCallback, Player } from '@vue-youtube/shared';
 import YouTubeFader from './YouTubeFader';
 import { PlayerState } from '@vue-youtube/core';
@@ -28,6 +27,7 @@ import YouTubePitchShiftController from './YouTubePitchShiftController';
 import type { IPitchShiftController } from './IPitchShiftController';
 import Constants from './Constants';
 import { PlaybackState } from './PlaybackState';
+import { SubEventImmediate } from './SubEventImmediate';
 
 const mediaHandlerDebug = chalk.hex('#62c462'); // Replayer success color (bulma warning)
 
@@ -177,7 +177,8 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         }
     }
 
-    onNextFadeInOmissionChanged: SubEvent<boolean> = new SubEvent();
+    onNextFadeInOmissionChanged: SubEventImmediate<boolean> =
+        new SubEventImmediate();
 
     // --- looping ---
 
@@ -190,20 +191,21 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     // --- transport ---
 
     /** @remarks With the YouTube player, buffering counts as playing, as it's expected to occurr only during actual playback. */
-    onPausedChanged: SubEvent<boolean> = new SubEvent();
+    onPausedChanged: SubEventImmediate<boolean> = new SubEventImmediate();
 
     /** @remarks With the YouTube player, buffering counts as playing, as it's expected to occurr only during actual playback. */
-    onPlaybackStateChanged: SubEvent<PlaybackState> = new SubEvent();
+    onPlaybackStateChanged: SubEventImmediate<PlaybackState> =
+        new SubEventImmediate();
 
     /** @remarks Seek events are not supported by the YouTube player. However, this event is emitted on explicit seek operations through this API. */
-    onSeekingChanged: SubEvent<boolean> = new SubEvent();
+    onSeekingChanged: SubEventImmediate<boolean> = new SubEventImmediate();
 
     /** @remarks Seek events are not supported by the YouTube player. However, this event is emitted on explicit seek operations through this API. */
-    onSeeked: SubEvent<number> = new SubEvent();
+    onSeeked: SubEventImmediate<number> = new SubEventImmediate();
 
-    onCurrentTimeChanged: SubEvent<number> = new SubEvent();
+    onCurrentTimeChanged: SubEventImmediate<number> = new SubEventImmediate();
 
-    onEnded: SubEvent<void> = new SubEvent();
+    onEnded: SubEventImmediate<void> = new SubEventImmediate();
 
     /** @inheritdoc */
     public pause(): Promise<void> {
@@ -469,7 +471,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     /** Emitted when the media data has loaded (at least enough to start playback)
      */
-    onCanPlay: SubEvent<void> = new SubEvent();
+    onCanPlay: SubEventImmediate<void> = new SubEventImmediate();
 
     /** Emits the durationChanged event
      * @param {number} duration - could be NaN or infinity, depending on the source
@@ -479,7 +481,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         this.onDurationChanged.emit(duration);
     }
 
-    onDurationChanged: SubEvent<number> = new SubEvent();
+    onDurationChanged: SubEventImmediate<number> = new SubEventImmediate();
 
     // --- track looping ---
 

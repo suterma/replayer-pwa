@@ -302,11 +302,10 @@ const isLoading = computed(() => {
     return props.mediaUrl && mediaHandler.value == null;
 });
 
-const isShortDuration = computed(() => {
-    return (
-        mediaDuration.value != null && mediaDuration.value < 600
-    ); /* 10 minutes*/
-});
+/** Whether the audio is shorter than 10 minutes
+ * @remarks Is internally used to decide only waveform display
+ */
+const isShortDuration = ref(false);
 
 const audio = useAudioStore();
 
@@ -333,7 +332,6 @@ watch(mediaElement, async (newMediaElement, oldMediaElement) => {
 
 const isPaused = ref(true);
 const isSeeking = ref(false);
-const mediaDuration: Ref<number | null> = ref(null);
 const isFading = ref(FadingMode.None);
 let onPauseChangedSubsription: Subscription;
 let onSeekingChangedSubsription: Subscription;
@@ -378,21 +376,25 @@ function createAndProvideHandler(
     console.log('TrackMediaElement:ready');
 
     // Internally handle some events of our own
-    onPauseChangedSubsription = handler.onPausedChanged.subscribe((paused) => {
-        isPaused.value = paused;
-    });
+    onPauseChangedSubsription = handler.onPausedChanged.subscribeImmediate(
+        (paused: boolean) => {
+            isPaused.value = paused;
+        },
+    );
+
     onSeekingChangedSubsription = handler.onSeekingChanged.subscribe(
-        (seeking) => {
+        (seeking: boolean) => {
             isSeeking.value = seeking;
         },
     );
-    onDurationChangedSubsription = handler.onDurationChanged.subscribe(
-        (duration) => {
-            mediaDuration.value = duration;
+
+    onDurationChangedSubsription = handler.onDurationChanged.subscribeImmediate(
+        (duration: number) => {
+            isShortDuration.value = duration < 600; /* 10 minutes*/
         },
     );
-    /** Handles an initial seek to the initial position, if applicable*/
-    onCanPlaySubsription = handler.onCanPlay.subscribe(() => {
+
+    onCanPlaySubsription = handler.onCanPlay.subscribeImmediate(() => {
         if (isInitialPositionToBeApplied) {
             const initialPosition = props.start;
             if (initialPosition) {
@@ -406,11 +408,12 @@ function createAndProvideHandler(
         }
     });
 
-    onFadingChangedSubsription = handler.fader.onFadingChanged.subscribe(
-        (fading) => {
-            isFading.value = fading;
-        },
-    );
+    onFadingChangedSubsription =
+        handler.fader.onFadingChanged.subscribeImmediate(
+            (fading: FadingMode) => {
+                isFading.value = fading;
+            },
+        );
 
     return handler;
 }

@@ -12,9 +12,8 @@
  */
 
 import { DefaultPitchShift } from '@/store/Track';
-import { SubEvent } from 'sub-events';
 import type { IPitchShiftController } from './IPitchShiftController';
-import type { ShallowRef } from 'vue';
+import { SubEventImmediate } from './SubEventImmediate';
 
 /** @class Implements an intert pitch shift controller for a {YouTubeElement}.
  * @remarks YouTube does not support pitch shift
@@ -34,7 +33,7 @@ export default class YouTubePitchShiftController
         this.onPitchShiftChanged.emit(shift);
     }
 
-    onPitchShiftChanged: SubEvent<number> = new SubEvent();
+    onPitchShiftChanged: SubEventImmediate<number> = new SubEventImmediate();
 
     /** Gets the pitch shift.
      */

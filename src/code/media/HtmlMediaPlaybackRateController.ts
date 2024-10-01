@@ -12,8 +12,8 @@
  */
 
 import { DefaultPlaybackRate } from '@/store/Track';
-import { SubEvent } from 'sub-events';
 import type { IPlaybackRateController } from './IPlaybackRateController';
+import { SubEventImmediate } from './SubEventImmediate';
 
 /** @class Implements a playback rate controller for a {HTMLMediaElement}.
  */
@@ -51,7 +51,7 @@ export default class HtmlMediaPlaybackRateController
         this.onPlaybackRateChanged.emit(rate);
     }
 
-    onPlaybackRateChanged: SubEvent<number> = new SubEvent();
+    onPlaybackRateChanged: SubEventImmediate<number> = new SubEventImmediate();
 
     /** Gets the playback rate.
      */
