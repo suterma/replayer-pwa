@@ -13,6 +13,7 @@
 
 import type { IMediaHandler } from './IMediaHandler';
 import { type IMediaLooper, LoopMode } from './IMediaLooper';
+import { PlaybackState } from './PlaybackState';
 
 /** @class Implements range looping for an {IMediaHandler}, including fading.
  * @remarks Implements optional audio fading at the loop boundaries, with the help of an {IAudioFader}.
@@ -28,14 +29,16 @@ export class MediaLooper implements IMediaLooper {
     constructor(media: IMediaHandler) {
         this._media = media;
 
-        media.onPausedChanged.subscribe((paused: boolean) => {
-            this._isPaused = paused;
-            if (paused) {
-                this.cancelLoopHandling();
-            } else {
-                this.scheduleNextLoopHandling();
-            }
-        });
+        media.onPlaybackStateChanged.subscribeImmediate(
+            (playbackState: PlaybackState) => {
+                this._isPaused = playbackState !== PlaybackState.Playing;
+                if (this._isPaused) {
+                    this.cancelLoopHandling();
+                } else {
+                    this.scheduleNextLoopHandling();
+                }
+            },
+        );
 
         media.onSeeked.subscribe(() => {
             if (!this._isPaused && !this.isLoopEndHandling)

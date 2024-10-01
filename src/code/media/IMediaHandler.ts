@@ -11,12 +11,13 @@
  * JavaScript code in this page
  */
 
+import { SubEvent } from 'sub-events';
 import type { IAudioFader } from './IAudioFader';
 import type { IPlaybackRateController } from './IPlaybackRateController';
 import type { IMediaLooper } from './IMediaLooper';
 import type { IPitchShiftController } from './IPitchShiftController';
 import type { PlaybackState } from './PlaybackState';
-import type { SubEventImmediate } from './SubEventImmediate';
+import { SubEventImmediate } from './SubEventImmediate';
 
 /** @interface Defines a media handler.
  * This defines transport, loop and volume operations for media sources
@@ -80,25 +81,20 @@ export interface IMediaHandler {
      */
     readonly playbackState: PlaybackState;
 
-    /** Emits a changed paused state.
-     * @param {boolean} paused - whether the playback is currently paused (or otherwise not playing)
-     */
-    readonly onPausedChanged: SubEventImmediate<boolean>;
-
     /** Emits a changed seeking state.
-     * @remarks Seeking is a transient operation and thus not using the immediately providing event subscription.
+     * @remarks Seeking is a
      * @param {boolean} seeking - whether the media is currently seeked (while playing or not)
      */
-    readonly onSeekingChanged: SubEventImmediate<boolean>;
+    readonly onSeekingChanged: SubEvent<boolean>;
 
-    /** Emits an ended seek operation.
-     * @remarks Seeking is a transient operation and thus not using the immediately providing event subscription.
+    /** Emits an ocurred seek operation.
      * @param {number} targetTime - the target time of the seek operation
      */
-    readonly onSeeked: SubEventImmediate<number>;
+    readonly onSeeked: SubEvent<number>;
 
     /** Whether the playback is currently paused (or otherwise not playing)
-     * @remarks A value of true indicates an ongoing playback operation.
+     * @remarks This is a shorthand for (playbackState !== PlaybackState.Playing).
+     * A value of false indicates an ongoing playback operation.
      */
     readonly paused: boolean;
 
@@ -154,7 +150,7 @@ export interface IMediaHandler {
      * @remarks This is not triggered when the track or a range of it is looping.
      * Allows to select the next track in "play all" and "shuffle" mode.
      */
-    onEnded: SubEventImmediate<void>;
+    onEnded: SubEvent<void>;
 
     /** Starts playback from the given temporal position
      * @remarks This first seeks to the position, then starts playing (with a possible fade-in)
@@ -188,7 +184,7 @@ export interface IMediaHandler {
      * @devdoc This is emitted separately from the data loading state and events, since the underlying
      * implementation might handle it separately.
      */
-    onCanPlay: SubEventImmediate<void>;
+    onCanPlay: SubEventImmediate<null>;
 
     /** Whether the media data had loaded enough to start playback.
      */

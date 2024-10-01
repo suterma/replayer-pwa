@@ -774,12 +774,7 @@ import router, { Route } from '@/router';
 import MessageOverlay from '@/components/MessageOverlay.vue';
 import type { ICompilation } from '@/store/ICompilation';
 import { useAudioStore } from '@/store/audio';
-import {
-    SubEvent,
-    Subscription,
-    type ISubOptions,
-    type SubFunction,
-} from 'sub-events';
+import { Subscription } from 'sub-events';
 import { PlaybackState } from '@/code/media/PlaybackState';
 
 const emit = defineEmits([
@@ -869,9 +864,8 @@ const mediaHandler = computed(() =>
 const cueScheduler: Ref<ICueScheduler | null> = ref(null);
 
 let currentTimeChangedSubscription: Subscription;
-let onCanPlaySubscription: Subscription;
+let onPlaybackStateChangedSubscription: Subscription;
 let onDurationChangedSubscription: Subscription;
-let onPauseChangedSubscription: Subscription;
 let onNextFadeInOmissionChangedSubscription: Subscription;
 let onEndedSubscription: Subscription;
 let onSeekingChangedSubscription: Subscription;
@@ -905,23 +899,12 @@ function assumeMediaHandler(handler: IMediaHandler) {
             },
         );
 
-    onCanPlaySubscription = handler.onCanPlay.subscribeImmediate(() => {
-        canPlay.value = true;
-    });
-    canPlay.value = handler.canPlay; // subscribeImmediate does not work for Events without value
-
     onDurationChangedSubscription =
         handler.onDurationChanged.subscribeImmediate((duration: number) => {
             updateDuration(duration);
         });
 
-    onPauseChangedSubscription = handler.onPausedChanged.subscribeImmediate(
-        (paused: boolean) => {
-            updatePaused(paused);
-        },
-    );
-
-    onPauseChangedSubscription =
+    onPlaybackStateChangedSubscription =
         handler.onPlaybackStateChanged.subscribeImmediate(
             (playbackState: PlaybackState) => {
                 updatePlaybackState(playbackState);
@@ -935,7 +918,7 @@ function assumeMediaHandler(handler: IMediaHandler) {
             },
         );
 
-    onEndedSubscription = handler.onEnded.subscribeImmediate(() => {
+    onEndedSubscription = handler.onEnded.subscribe(() => {
         removeCueScheduling();
         emit('trackEnded');
     });
@@ -1019,9 +1002,8 @@ function releaseMediaHandler() {
 
     // un-register for the registered events
     currentTimeChangedSubscription?.cancel;
-    onCanPlaySubscription?.cancel;
+    onPlaybackStateChangedSubscription?.cancel;
     onDurationChangedSubscription?.cancel;
-    onPauseChangedSubscription?.cancel;
     onNextFadeInOmissionChangedSubscription?.cancel;
     onEndedSubscription?.cancel;
     onSeekingChangedSubscription?.cancel;
@@ -1107,8 +1089,11 @@ const isYoutubeVideoTrack = computed(() =>
  * or it's actually already playing)
  * @remarks This is used to toggle playback and other button states
  */
-const canPlay = ref(false);
-
+const canPlay = computed(
+    () =>
+        playbackState.value === PlaybackState.Playing ||
+        playbackState.value === PlaybackState.Ready,
+);
 /** Gets the duration of the current track, in [seconds]
  * @remarks This is only available after successful load of the track (i.e. it's media metadata).
  * Could be NaN or infinity, depending on the source

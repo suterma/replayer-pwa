@@ -81,7 +81,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
             // The duration is available already, because the player is ready, when this constructor is called
             this.updateDuration(player.getDuration());
             this.updateCurrentTime();
-            this.onCanPlay.emit();
+            this.onCanPlay.emit(null);
         });
         this.debugLog('created');
     }
@@ -108,7 +108,6 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     public destroy(): void {
         // self
-        this.onPausedChanged.cancelAll();
         this.onPlaybackStateChanged.cancelAll();
         this.onSeekingChanged.cancelAll();
         this.onSeeked.cancelAll();
@@ -191,9 +190,6 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     // --- transport ---
 
     /** @remarks With the YouTube player, buffering counts as playing, as it's expected to occurr only during actual playback. */
-    onPausedChanged: SubEventImmediate<boolean> = new SubEventImmediate();
-
-    /** @remarks With the YouTube player, buffering counts as playing, as it's expected to occurr only during actual playback. */
     onPlaybackStateChanged: SubEventImmediate<PlaybackState> =
         new SubEventImmediate();
 
@@ -222,7 +218,6 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                     // gets destroyed during an ongoing fade operation.
                     // It's currently not addressed as it's not disturbing for the user.
                     this._player.pauseVideo();
-                    this.onPausedChanged.emit(true);
                     this.onPlaybackStateChanged.emit(this.playbackState);
                     resolve();
                 });
@@ -377,7 +372,6 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         switch (state) {
             case PlayerState.UNSTARTED:
                 this._isPlaying = false;
-                this.onPausedChanged.emit(true);
                 this.onPlaybackStateChanged.emit(this.playbackState);
                 break;
             case PlayerState.ENDED:
@@ -400,14 +394,12 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                     }
                     this.resetNextFadeInOmission();
 
-                    this.onPausedChanged.emit(false);
                     this.onPlaybackStateChanged.emit(this.playbackState);
                 }
                 break;
             case PlayerState.PAUSED:
                 this.updateCurrentTime();
                 this._isPlaying = false;
-                this.onPausedChanged.emit(true);
                 this.onPlaybackStateChanged.emit(this.playbackState);
                 //Upon reception of this event, playback has already paused.
                 //No actual fade-out is required. However, to reset the volume to the minimum, a fast fade-out is still triggered
@@ -420,9 +412,8 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                 this.updateCurrentTime();
                 this._isPlaying = false;
                 this._canPlay = true;
-                this.onPausedChanged.emit(true);
                 this.onPlaybackStateChanged.emit(this.playbackState);
-                this.onCanPlay.emit();
+                this.onCanPlay.emit(null);
                 break;
 
             default:
@@ -471,7 +462,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
 
     /** Emitted when the media data has loaded (at least enough to start playback)
      */
-    onCanPlay: SubEventImmediate<void> = new SubEventImmediate();
+    onCanPlay: SubEventImmediate<null> = new SubEventImmediate();
 
     /** Emits the durationChanged event
      * @param {number} duration - could be NaN or infinity, depending on the source

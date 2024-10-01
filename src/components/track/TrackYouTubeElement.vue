@@ -84,6 +84,7 @@ import { FadingMode } from '@/code/media/IAudioFader';
 import { Subscription } from 'sub-events';
 import type { ICue } from '@/store/ICue';
 import Constants from '@/code/media/Constants';
+import { PlaybackState } from '@/code/media/PlaybackState';
 
 /** A simple vue YouTube player, for a single track, using VueYoutube.
  * @remarks Repeatedly emits 'timeupdate' with the current playback time, during playback.
@@ -238,11 +239,6 @@ function createAndProvideHandler(
     console.log('TrackYouTubeElement:ready');
 
     // Internally handle some events of our own
-    onPauseChangedSubsription = handler.onPausedChanged.subscribeImmediate(
-        (paused: boolean) => {
-            isPaused.value = paused;
-        },
-    );
     onFadingChangedSubsription =
         handler.fader.onFadingChanged.subscribeImmediate(
             (fading: FadingMode) => {
@@ -253,9 +249,11 @@ function createAndProvideHandler(
     return handler;
 }
 
-const isPaused = ref(true);
+const isPaused = computed(() => {
+    return mediaHandler.value?.playbackState !== PlaybackState.Playing;
+});
+
 const isFading = ref(FadingMode.None);
-let onPauseChangedSubsription: Subscription;
 let onFadingChangedSubsription: Subscription;
 
 /** Teardown of the YouTube player and handler.
@@ -268,7 +266,6 @@ onBeforeUnmount(() => {
 /** Properly destroy the handler, and abandon the YouTube player, including it's handlers */
 function destroyHandler(): void {
     // cancel the internal event handlers
-    onPauseChangedSubsription?.cancel();
     onFadingChangedSubsription?.cancel();
 
     if (mediaHandler.value) {

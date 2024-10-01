@@ -186,6 +186,7 @@ import type { ICue } from '@/store/ICue';
 import { useAppStore } from '@/store/app';
 import { DefaultPitchShift } from '@/store/Track';
 import Constants from '@/code/media/Constants';
+import { PlaybackState } from '@/code/media/PlaybackState';
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -330,10 +331,12 @@ watch(mediaElement, async (newMediaElement, oldMediaElement) => {
     }
 });
 
-const isPaused = ref(true);
+const isPaused = computed(() => {
+    return mediaHandler.value?.playbackState !== PlaybackState.Playing;
+});
+
 const isSeeking = ref(false);
 const isFading = ref(FadingMode.None);
-let onPauseChangedSubsription: Subscription;
 let onSeekingChangedSubsription: Subscription;
 let onDurationChangedSubsription: Subscription;
 let onCanPlaySubsription: Subscription;
@@ -350,7 +353,6 @@ function destroyHandler(): void {
         mediaHandler.value.pause();
 
         // cancel the internal event handlers
-        onPauseChangedSubsription?.cancel();
         onSeekingChangedSubsription?.cancel();
         onDurationChangedSubsription?.cancel();
         onCanPlaySubsription?.cancel();
@@ -374,13 +376,6 @@ function createAndProvideHandler(
 
     audio.addMediaHandler(handler);
     console.log('TrackMediaElement:ready');
-
-    // Internally handle some events of our own
-    onPauseChangedSubsription = handler.onPausedChanged.subscribeImmediate(
-        (paused: boolean) => {
-            isPaused.value = paused;
-        },
-    );
 
     onSeekingChangedSubsription = handler.onSeekingChanged.subscribe(
         (seeking: boolean) => {

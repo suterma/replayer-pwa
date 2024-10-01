@@ -18,6 +18,7 @@ import { useAudioStore } from '../audio';
 import { Subscription } from 'sub-events';
 import { FadingMode } from '@/code/media/IAudioFader';
 import { Reading } from './Reading';
+import { PlaybackState } from '@/code/media/PlaybackState';
 
 /** A store for multitrack audio-related global state
  * @remarks This uses and extends the audio store, specifically for a
@@ -199,7 +200,8 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
 
     // --- subscribe to the events of the handlers ---
 
-    const _pausedSubscriptons: Subscription[] = new Array<Subscription>();
+    const _playbackStateSubscriptons: Subscription[] =
+        new Array<Subscription>();
     const _fadingSubscriptons: Subscription[] = new Array<Subscription>();
     const _mutedSubscriptions: Subscription[] = new Array<Subscription>();
     const _soloedSubscriptions: Subscription[] = new Array<Subscription>();
@@ -221,7 +223,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
             //removed, then new subscriptions added again for all received handlers.
 
             // Remove all subscriptions that are not in the current set
-            _pausedSubscriptons.forEach((subscription) => {
+            _playbackStateSubscriptons.forEach((subscription) => {
                 subscription.cancel();
             });
             _fadingSubscriptons.forEach((subscription) => {
@@ -245,46 +247,46 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
 
             // Add new subscriptions
             mediaHandlers.forEach((handler) => {
-                _pausedSubscriptons.push(
-                    handler.onPausedChanged.subscribe(updatePauseChanged),
+                _playbackStateSubscriptons.push(
+                    handler.onPlaybackStateChanged.subscribeImmediate(
+                        updatePlaybackStateChanged,
+                    ),
                 );
 
                 _mutedSubscriptions.push(
-                    handler.fader.onMutedChanged.subscribe(updateMutedChanged),
+                    handler.fader.onMutedChanged.subscribeImmediate(
+                        updateMutedChanged,
+                    ),
                 );
 
                 _soloedSubscriptions.push(
-                    handler.fader.onSoloedChanged.subscribe(
+                    handler.fader.onSoloedChanged.subscribeImmediate(
                         updateSoloedChanged,
                     ),
                 );
 
                 _fadingSubscriptons.push(
-                    handler.fader.onFadingChanged.subscribe(
+                    handler.fader.onFadingChanged.subscribeImmediate(
                         updateFadingChanged,
                     ),
                 );
 
                 _canPlaySubscriptons.push(
-                    handler.onCanPlay.subscribe(updateCanPlayChanged),
+                    handler.onCanPlay.subscribeImmediate(updateCanPlayChanged),
                 );
 
                 _durationSubscriptons.push(
-                    handler.onDurationChanged.subscribe(updateDurationChanged),
-                );
-
-                _positionSubscriptons.push(
-                    handler.onCurrentTimeChanged.subscribe(
-                        updateCurrentTimeChanged,
+                    handler.onDurationChanged.subscribeImmediate(
+                        updateDurationChanged,
                     ),
                 );
 
-                // set initial time value
-                updateCurrentTimeChanged(handler.currentTime);
+                _positionSubscriptons.push(
+                    handler.onCurrentTimeChanged.subscribeImmediate(
+                        updateCurrentTimeChanged,
+                    ),
+                );
             });
-            // set initial values
-            updateDurationChanged();
-            updateCanPlayChanged();
         },
         {
             immediate: true /* to handle it right after mount time */,
@@ -329,7 +331,8 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     /**
      * @devdoc This method is optimized for early termination
      */
-    function updatePauseChanged(paused: boolean) {
+    function updatePlaybackStateChanged(playbackState: PlaybackState) {
+        const paused = playbackState !== PlaybackState.Playing;
         if (paused) {
             isAllPlaying.value = false;
             for (const media of audio.mediaHandlers) {

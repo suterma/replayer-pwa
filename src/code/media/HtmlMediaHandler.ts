@@ -101,7 +101,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
         media.oncanplay = () => {
             this._canPlay = true;
             this.debugLog(`oncanplay`);
-            this.onCanPlay.emit();
+            this.onCanPlay.emit(null);
             this.onPlaybackStateChanged.emit(this.playbackState);
         };
 
@@ -113,7 +113,6 @@ export default class HtmlMediaHandler implements IMediaHandler {
 
         media.onpause = () => {
             this.debugLog(`onpause`);
-            this.onPausedChanged.emit(true);
             this.onPlaybackStateChanged.emit(this.playbackState);
             //Upon reception of this event, playback has already paused.
             //No actual fade-out is required. However, to reset the volume to the minimum, a fast fade-out is still triggered
@@ -145,7 +144,6 @@ export default class HtmlMediaHandler implements IMediaHandler {
             }
             this.resetNextFadeInOmission();
 
-            this.onPausedChanged.emit(false);
             this.onPlaybackStateChanged.emit(this.playbackState);
             this.repeatUpdateCurrentTime();
         };
@@ -183,7 +181,6 @@ export default class HtmlMediaHandler implements IMediaHandler {
 
     public destroy(): void {
         // self
-        this.onPausedChanged.cancelAll();
         this.onPlaybackStateChanged.cancelAll();
         this.onSeekingChanged.cancelAll();
         this.onSeeked.cancelAll();
@@ -271,7 +268,6 @@ export default class HtmlMediaHandler implements IMediaHandler {
 
     // --- transport ---
 
-    onPausedChanged: SubEventImmediate<boolean> = new SubEventImmediate();
     onPlaybackStateChanged: SubEventImmediate<PlaybackState> =
         new SubEventImmediate();
     onSeekingChanged: SubEventImmediate<boolean> = new SubEventImmediate();
@@ -291,7 +287,6 @@ export default class HtmlMediaHandler implements IMediaHandler {
                 .catch((message) => console.log(message))
                 .finally(() => {
                     this._media.pause();
-                    this.onPausedChanged.emit(true);
                     this.onPlaybackStateChanged.emit(this.playbackState);
                     resolve();
                 });
@@ -469,7 +464,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
      * @devdoc This is emitted separately from the data loading state and events, since the underlying
      * implementation does handle it separately.
      */
-    onCanPlay: SubEventImmediate<void> = new SubEventImmediate();
+    onCanPlay: SubEventImmediate<null> = new SubEventImmediate();
 
     /** Whether the media data has loaded (at least enough to start playback)
      * @remarks This implies that metadata also has been loaded already
@@ -539,7 +534,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
             // Clicking any of these buttons while the isClickToLoadRequired flag is set,
             // should then issue a user-triggered play command.
             // Finally, this will then further load and play the track media
-            this.onCanPlay.emit();
+            this.onCanPlay.emit(null);
         }
     }
 
