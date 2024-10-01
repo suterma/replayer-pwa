@@ -64,7 +64,7 @@ const props = defineProps({
         required: false,
     },
 
-    /** The current fading action, or none if not fading */
+    /** The current fading action, or none if not fading, plus the  */
     fadingAction: {
         type: null as unknown as PropType<FadingMode>,
         default: FadingMode.None,
@@ -75,12 +75,9 @@ const props = defineProps({
     fadingDuration: Number,
 });
 
-/** The currently appliccable fading time. Depends on the fading mode. */
+/** The currently appliccable fading time. */
 const fadingTime = computed(() => {
-    if (props.fadingAction !== FadingMode.None) {
-        return `${props.fadingDuration}ms`;
-    }
-    return '0ms';
+    return `${props.fadingDuration ?? 0}ms`;
 });
 
 /** Whether the playback is currently not playing, or is playing but fading out. */
