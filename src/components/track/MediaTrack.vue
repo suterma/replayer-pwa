@@ -84,7 +84,7 @@
                                 'is-clickable': canPlay,
                                 'has-cursor-not-allowed': !canPlay,
                             }"
-                            :is-loading="isFading !== FadingMode.None"
+                            :is-loading="fadingMode !== FadingMode.None"
                             data-cy="toggle-playback"
                             @click="app.skipToPlayPause(props.track)"
                         />
@@ -145,8 +145,10 @@
                     </div>
                     <div class="level-item is-narrow mr-0">
                         <PlaybackIndicator
-                            :fading-duration="fadingDuration"
-                            :fading-action="isFading"
+                            :fadeInDuration="fadeInDuration"
+                            :fadeOutDuration="fadeOutDuration"
+                            :isOmittingNextFadeIn="isPlayerOmittingNextFadeIn"
+                            :fading-action="fadingMode"
                             :state="playbackState"
                             data-cy="playback-indicator"
                         />
@@ -561,7 +563,7 @@
                                             "
                                             :volume="track.Volume"
                                             :is-fading="
-                                                isFading !== FadingMode.None
+                                                fadingMode !== FadingMode.None
                                             "
                                             :hide-play-pause-button="false"
                                             :disabled="!canPlay"
@@ -590,10 +592,14 @@
                                                 />
                                             </template>
                                             <PlaybackIndicator
-                                                :fading-duration="
-                                                    fadingDuration
+                                                :fadeInDuration="fadeInDuration"
+                                                :fadeOutDuration="
+                                                    fadeOutDuration
                                                 "
-                                                :fading-action="isFading"
+                                                :isOmittingNextFadeIn="
+                                                    isPlayerOmittingNextFadeIn
+                                                "
+                                                :fading-action="fadingMode"
                                                 :state="playbackState"
                                                 data-cy="playback-indicator"
                                             />
@@ -937,7 +943,7 @@ function assumeMediaHandler(handler: IMediaHandler) {
     onFadingChangedSubscription =
         handler.fader.onFadingChanged.subscribeImmediate(
             (fading: FadingMode) => {
-                isFading.value = fading;
+                fadingMode.value = fading;
             },
         );
 
@@ -1158,32 +1164,18 @@ watchEffect(() => {
 });
 
 /** Indicates the kind of current fading, if any */
-const isFading = ref(FadingMode.None);
-
-/** The currently fading duration in use
- * @remarks Intended for visual feedback of an ongoing fade operation
- */
-const fadingDuration = computed(() => {
-    if (playbackState.value === PlaybackState.Playing) {
-        if (isFading.value === FadingMode.FadeIn) {
-            return fadeInDuration.value;
-        }
-        if (isFading.value === FadingMode.FadeOut) {
-            return fadeOutDuration.value;
-        }
-    }
-    return 0; //no fading or no playback ended
-});
+const fadingMode = ref(FadingMode.None);
 
 /** Whether the media player will omit the next fade-in */
 const isPlayerOmittingNextFadeIn = ref(false);
 
-/** Whether the next playback operation omits any fade-in */
-const isOmittingNextFadeInIn = computed(() => {
-    return isPlayerOmittingNextFadeIn.value || settings.fadeInDuration === 0;
-});
+/** The duration of the next fade-in
+ * @remarks zero if omitting, the regular fade-in duration otherwiese */
+// const nextFadeInDuration = computed(() => {
+//     return isPlayerOmittingNextFadeIn.value ? 0 : settings.fadeInDuration;
+// });
 
-provide(isOmittingNextFadeInInjectionKey, readonly(isOmittingNextFadeInIn));
+provide(isOmittingNextFadeInInjectionKey, readonly(isPlayerOmittingNextFadeIn));
 
 // --- Persisted playback position ---
 

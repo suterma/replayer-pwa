@@ -33,6 +33,7 @@
                         style="position: absolute; left: 0"
                         class="has-text-success"
                         :class="{
+                            'has-transition': state === PlaybackState.Playing,
                             'is-transparent': isPausing,
                         }"
                     >
@@ -52,7 +53,7 @@
  * NOTE: For performance reasons, the icon is implemented inline, not using the BaseIcon SFC -->
  */
 import { mdiAlert, mdiCircle } from '@mdi/js';
-import { computed, type PropType } from 'vue';
+import { computed, ref, watch, type PropType } from 'vue';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import { FadingMode } from '@/code/media/IAudioFader';
 
@@ -71,17 +72,23 @@ const props = defineProps({
         required: false,
     },
 
-    /** The current fading duration, or zero if none */
-    fadingDuration: Number,
+    /** The current fade-in duration, or zero if none */
+    fadeInDuration: Number,
+
+    /** The current fade-out duration, or zero if none */
+    fadeOutDuration: Number,
+
+    /** Whether the media player will omit the next fade-in */
+    isOmittingNextFadeIn: Boolean,
 });
 
-/** The currently appliccable fading time. */
-const fadingTime = computed(() => {
-    return `${props.fadingDuration ?? 0}ms`;
-});
+/** The currently appliccable transition duration value, formatted in milliseconds.
+ * @remarks By default, start with the fade-in
+ */
+const transitionDurationValue = ref(`${props.fadeInDuration}ms`);
 
 /** Whether the playback is currently not playing, or is playing but fading out. */
-const isPausing = computed(() => {
+const isPausing = computed((): boolean => {
     if (props.state !== PlaybackState.Playing) {
         return true;
     }
@@ -90,13 +97,51 @@ const isPausing = computed(() => {
     }
     return false;
 });
+
+/** A keeper as whether the next fade-in will be omitted */
+const isOmittingNext = ref(false);
+
+/** Handles the omission of fade-ins
+ */
+watch([() => props.isOmittingNextFadeIn], ([isOmitting]) => {
+    isOmittingNext.value = isOmitting;
+    if (isOmitting) {
+        // prepare for the next, instant, transition
+        transitionDurationValue.value = '0s';
+    }
+});
+
+/** Handles the running fade-out, or the fade-in
+ */
+watch(
+    [
+        () => isPausing.value,
+        () => props.state,
+        () => props.fadeOutDuration,
+        () => props.fadeInDuration,
+    ],
+    ([pausing, state, fadeOut, fadeIn]) => {
+        if (pausing) {
+            transitionDurationValue.value = `${fadeOut ?? 0}ms`;
+        } else {
+            if (
+                fadeIn &&
+                state === PlaybackState.Playing &&
+                !isOmittingNext.value
+            ) {
+                // a regular fade-in
+                transitionDurationValue.value = `${fadeIn ?? 0}ms`;
+            }
+        }
+    },
+);
 </script>
 <style>
 /** Handling visibilty via opacity for rendering performance,
  * avoiding non-composited animations. 
  */
-label.is-indicator.playback-indicator i svg {
-    transition: opacity v-bind('fadingTime') linear;
+label.is-indicator.playback-indicator i svg.has-transition {
+    transition: opacity v-bind('transitionDurationValue') linear;
 }
 label.is-indicator.playback-indicator i svg.is-transparent {
     opacity: 0;
