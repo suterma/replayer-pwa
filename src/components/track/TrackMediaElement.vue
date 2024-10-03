@@ -331,15 +331,13 @@ watch(mediaElement, async (newMediaElement, oldMediaElement) => {
     }
 });
 
-const isPaused = computed(() => {
-    return mediaHandler.value?.playbackState !== PlaybackState.Playing;
-});
-
+const isPaused = ref(true);
 const isSeeking = ref(false);
 const isFading = ref(FadingMode.None);
 let onSeekingChangedSubsription: Subscription;
 let onDurationChangedSubsription: Subscription;
 let onCanPlaySubsription: Subscription;
+let onPlaybackStateChangedSubsription: Subscription;
 let onFadingChangedSubsription: Subscription;
 
 const mediaHandler: Ref<IMediaHandler | null> = ref(null);
@@ -356,6 +354,7 @@ function destroyHandler(): void {
         onSeekingChangedSubsription?.cancel();
         onDurationChangedSubsription?.cancel();
         onCanPlaySubsription?.cancel();
+        onPlaybackStateChangedSubsription?.cancel();
         onFadingChangedSubsription?.cancel();
     }
 
@@ -402,6 +401,11 @@ function createAndProvideHandler(
             isInitialPositionToBeApplied = false;
         }
     });
+
+    onPlaybackStateChangedSubsription =
+        handler.onPlaybackStateChanged.subscribeImmediate((state) => {
+            isPaused.value = state !== PlaybackState.Playing;
+        });
 
     onFadingChangedSubsription =
         handler.fader.onFadingChanged.subscribeImmediate(
