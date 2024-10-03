@@ -52,7 +52,7 @@
         "pinia": "^2.2.4",
         "sub-events": "^1.10.0",
         "uuid": "^8.3.2",
-        "vue": "^3.4.15",
+        "vue": "^3.5.10",
         "vue-global-events": "^2.2.0",
         "vue-peaks": "^2.0.2",
         "vue-router": "^4.4.5",
