@@ -108,7 +108,6 @@
             audioSource &&
             audioContext &&
             isContextRunning &&
-            isParentMounted &&
             mediaUrl
         "
         class="block"
@@ -126,7 +125,11 @@
             :running="!isPaused && isAppVisible && audioLevelMeterIsVisible"
         >
         </AudioLevelMeter>
-        <Teleport v-else :to="`#track-${trackId}-HeaderLevelPlaceholder`">
+        <Teleport
+            v-else
+            :to="`#track-${trackId}-HeaderLevelPlaceholder`"
+            deferred
+        >
             <AudioLevelMeter
                 ref="audioLevelMeter"
                 :key="trackId"
@@ -142,7 +145,7 @@
     </div>
 
     <VideoTextTrackController
-        v-if="isParentMounted && mediaUrl && props.enableVideo"
+        v-if="mediaUrl && props.enableVideo"
         v-model="showVideo"
         class="block"
         :cues="cues"
@@ -569,54 +572,29 @@ watch(
     },
     { immediate: true },
 );
-
-// --- Mounted check ---
-
-/** A fully mounted parent is required for the complete lifetime
- *  for a properly working level meter with it's teleportation
- * @devdoc To cater for a use with KeepAlive, the activated/deactivated events are also handled
- *  */
-const isParentMounted = ref(false);
-onMounted(() => {
-    nextTick(() => {
-        // Now also the parent track is completely mounted
-        isParentMounted.value = true;
-    });
-});
-onActivated(() => {
-    nextTick(() => {
-        // Now also the parent track is completely mounted
-        isParentMounted.value = true;
-    });
-});
-
-onBeforeUnmount(() => {
-    isParentMounted.value = false;
-});
-onDeactivated(() => {
-    isParentMounted.value = false;
-});
 </script>
 
-<style scoped>
-/** Match the animation duration to the fade duration
+<style lang="scss">
+.track {
+    /** Match the animation duration to the fade duration
 * @devdoc NOTE: The animation is defined in _replayer-video.scss
 */
-audio,
-video {
-    animation-duration: v-bind('fadeInDuration');
-}
+    audio,
+    video {
+        animation-duration: v-bind('fadeInDuration');
+    }
 
-/** During fading, slowly adapt the brightness 
+    /** During fading, slowly adapt the brightness 
 * @devdoc NOTE: The animation is defined in _replayer-video.scss
 */
-audio.fade-out,
-video.fade-out {
-    animation-duration: v-bind('fadeOutDuration');
-}
-/** When paused, immediately reduce the brightness */
-audio.paused,
-video.paused {
-    animation-duration: 0s;
+    audio.fade-out,
+    video.fade-out {
+        animation-duration: v-bind('fadeOutDuration');
+    }
+    /** When paused, immediately reduce the brightness */
+    audio.paused,
+    video.paused {
+        animation-duration: 0s;
+    }
 }
 </style>
