@@ -27,7 +27,6 @@ export default defineComponent({
         ReplayerEvent.FORWARD,
         ReplayerEvent.VOLUME_DOWN,
         ReplayerEvent.VOLUME_UP,
-        ReplayerEvent.CLEAN_UP,
     ],
     mounted: function (): void {
         //Register to the global events
@@ -52,7 +51,6 @@ export default defineComponent({
         );
         document.addEventListener(ReplayerEvent.VOLUME_DOWN, this.volumeDown);
         document.addEventListener(ReplayerEvent.VOLUME_UP, this.volumeUp);
-        document.addEventListener(ReplayerEvent.CLEAN_UP, this.cleanup);
     },
     unmounted: function (): void {
         //Deregister from the global events
@@ -83,7 +81,6 @@ export default defineComponent({
             this.volumeDown,
         );
         document.removeEventListener(ReplayerEvent.VOLUME_UP, this.volumeUp);
-        document.removeEventListener(ReplayerEvent.CLEAN_UP, this.cleanup);
     },
     methods: {
         //The functions for registration
@@ -113,9 +110,6 @@ export default defineComponent({
         },
         toMnemonicCue(event: Event) {
             this.$emit(ReplayerEvent.TO_MNEMONIC_CUE, event);
-        },
-        cleanup(event: Event) {
-            this.$emit(ReplayerEvent.CLEAN_UP, event);
         },
     },
 });

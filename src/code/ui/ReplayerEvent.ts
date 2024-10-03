@@ -27,7 +27,4 @@ export enum ReplayerEvent {
     FORWARD = 'forward',
     VOLUME_DOWN = 'volumedown',
     VOLUME_UP = 'volumeup',
-
-    /** Triggers terminal cleanup/persistence operations when the browser/tab closes/reloads */
-    CLEAN_UP = 'cleanup',
 }

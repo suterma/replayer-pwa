@@ -95,34 +95,8 @@ const routedToAbout = computed(() => {
 
 // --- resource and audio context handling
 
-/** Register a handler to handle page reloads and tab/browser exits
- * @devdoc Using the "unmounted" lifecycle event proved to be unreliable: The Browser did not trigger "unmounted".
- * Using the window's onbeforeunload causes the handler to get reliably triggered
- */
-onBeforeMount(() => {
-    window.onbeforeunload = cleanUp;
-});
-
-const app = useAppStore();
 const audio = useAudioStore();
 const { showLevelMeterForEdit } = storeToRefs(settings);
-
-function cleanUp() {
-    console.log('Main.vue::cleanUp...');
-
-    document.dispatchEvent(
-        new CustomEvent(ReplayerEvent.CLEAN_UP, {
-            detail: 'none',
-        }),
-    );
-
-    //Make sure, no object URLs are remaining
-    app.revokeAllMediaUrls();
-
-    audio.closeContext();
-
-    console.log('Main.vue::cleanUp done.');
-}
 
 /*
  * @devdoc Great care has been taken to only ever create and use the audio context

@@ -24,6 +24,9 @@ import chalk from 'chalk';
 import { ExperimentDirective } from './directives/ExperimentDirective';
 import { FocusDirective } from './directives/FocusDirective';
 import { TooltipDirective } from './directives/TooltipDirective';
+import { useAppStore } from './store/app';
+import { useAudioStore } from './store/audio';
+import { ReplayerEvent } from './code/ui/ReplayerEvent';
 
 const appInfo = chalk.bold.hex('#f89406'); // Replayer cue color (bulma warning)
 console.log(
@@ -69,5 +72,16 @@ window.addEventListener(
         message.pushError(event?.reason);
     },
 );
+
+/** Register a handler to handle page reloads and tab/browser exits
+ */
+window.onbeforeunload = app.unmount;
+
+app.onUnmount(() => {
+    console.log('app::cleanUp...');
+    useAppStore().revokeAllMediaUrls();
+    useAudioStore().closeContext();
+    console.log('app::cleanUp done.');
+});
 
 app.mount('#app');
