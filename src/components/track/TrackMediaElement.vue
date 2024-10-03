@@ -94,12 +94,7 @@
          but only the first time after a page reload/player instantiation.
          It's currently not consistently reproducible and goes away after a 
          subsequent sync (e.g. after pause/play) -->
-    <!-- NOTE: Teleportation of the AudioLevelMeter fails with a warning when 
-         the parent track component has not yet been mounted.
-         This situation is addressed with the isParentMounted flag. It's 
-         working for loading/unloading/reloading compilation and
-         adding new tracks.
-         Disabling the teleportation does not work currently: When the 
+    <!-- NOTE: Disabling the teleportation does not work currently: When the 
          application settings change to show the meter, produces a warning. 
          The solution for this is using a v-if instead of disableing. -->
     <div
@@ -125,6 +120,7 @@
             :running="!isPaused && isAppVisible && audioLevelMeterIsVisible"
         >
         </AudioLevelMeter>
+        <!-- Use deferred teleportation since the header might not be mounted already here -->
         <Teleport
             v-else
             :to="`#track-${trackId}-HeaderLevelPlaceholder`"
