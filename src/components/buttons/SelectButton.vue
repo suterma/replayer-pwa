@@ -14,8 +14,6 @@
 
 <script setup lang="ts">
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
-import BaseIcon from '@/components/icons/BaseIcon.vue';
-import { mdiSquareRounded, mdiSquareRoundedOutline } from '@mdi/js';
 
 /** A toggle button for the select state
  */

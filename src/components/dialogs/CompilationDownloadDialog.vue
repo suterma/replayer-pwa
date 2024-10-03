@@ -69,16 +69,12 @@ import { defineComponent, ref, type PropType } from 'vue';
 import CompilationHandler from '@/store/compilation-handler';
 import { useAppStore } from '@/store/app';
 import ModalDialog from '@/components/dialogs/ModalDialog.vue';
-import LabeledInput from '@/components/editor/LabeledInput.vue';
-import StyledInput from '@/components/StyledInput.vue';
 import type { ICompilation } from '@/store/ICompilation';
 
 export default defineComponent({
     name: 'CompilationDownloadDialog',
     components: {
         ModalDialog,
-        LabeledInput,
-        StyledInput,
     },
     props: {
         compilation: {

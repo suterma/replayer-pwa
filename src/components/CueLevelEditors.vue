@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { type PropType, computed, inject, ref, type Ref, nextTick } from 'vue';
+import { type PropType, computed, inject, ref, type Ref } from 'vue';
 import CompilationHandler from '@/store/compilation-handler';
 import CueLevelEditor from '@/components/CueLevelEditor.vue';
 import { useAppStore } from '@/store/app';

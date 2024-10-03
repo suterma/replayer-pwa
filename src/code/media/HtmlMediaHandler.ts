@@ -15,7 +15,6 @@ import { DefaultPitchShift, DefaultPlaybackRate } from '@/store/Track';
 import AudioFader from './AudioFader';
 import type { IAudioFader } from './IAudioFader';
 import type { IMediaHandler } from './IMediaHandler';
-import { SubEvent } from 'sub-events';
 import type { IPlaybackRateController } from './IPlaybackRateController';
 import HtmlMediaPlaybackRateController from './HtmlMediaPlaybackRateController';
 import chalk from 'chalk';

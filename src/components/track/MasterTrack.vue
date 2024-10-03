@@ -151,7 +151,7 @@ import { useMultitrackStore } from '@/store/multitrack';
 import { Multitrack } from '@/store/multitrack/Multitrack';
 import { storeToRefs } from 'pinia';
 import { playbackStateInjectionKey } from './TrackInjectionKeys';
-import { provide, readonly, computed, ref, inject } from 'vue';
+import { provide, readonly, computed } from 'vue';
 import { useElementSize } from '@vueuse/core';
 import ToggleButton from '@/components/buttons/ToggleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
@@ -176,6 +176,7 @@ const props = defineProps({
     name: {
         type: String,
         required: false,
+        default: 'MASTER',
     },
 });
 

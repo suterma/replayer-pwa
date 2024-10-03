@@ -172,10 +172,4 @@ provide(meterInjectionKey, readonly(meter));
 const settings = useSettingsStore();
 const { experimentalUseMeter, experimentalShowRemarksEditors } =
     storeToRefs(settings);
-
-// --- Tag handling ---
-
-const trackHasTags = computed(() => {
-    return props.track.Tags.size > 0;
-});
 </script>

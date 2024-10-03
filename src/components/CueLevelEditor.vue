@@ -332,7 +332,6 @@ import {
 import DropdownMenu from '@/components/dropdown-menu/DropdownMenu.vue';
 import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
 import DropdownMenuItem from '@/components/dropdown-menu/DropdownMenuItem.vue';
-import MenuItemContent from '@/components/dropdown-menu/MenuItemContent.vue';
 import type { ICue } from '@/store/ICue';
 import type { PlaybackMode } from '@/store/PlaybackMode';
 import PreRollSwitch from './buttons/PreRollSwitch.vue';

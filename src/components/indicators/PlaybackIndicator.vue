@@ -73,13 +73,25 @@ const props = defineProps({
     },
 
     /** The current fade-in duration, or zero if none */
-    fadeInDuration: Number,
+    fadeInDuration: {
+        type: Number,
+        default: 0,
+        required: false,
+    },
 
     /** The current fade-out duration, or zero if none */
-    fadeOutDuration: Number,
+    fadeOutDuration: {
+        type: Number,
+        default: 0,
+        required: false,
+    },
 
     /** Whether the media player will omit the next fade-in */
-    isOmittingNextFadeIn: Boolean,
+    isOmittingNextFadeIn: {
+        type: Boolean,
+        default: false,
+        required: false,
+    },
 });
 
 /** The currently appliccable transition duration value, formatted in milliseconds.

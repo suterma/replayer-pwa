@@ -63,7 +63,7 @@
                     'fade-in': isFading == FadingMode.FadeIn,
                 }"
                 title="Click to play/pause"
-                @click="$emit('click')"
+                @click="emit('click')"
             ></video>
         </div>
     </template>
@@ -86,7 +86,7 @@
                 'fade-in': isFading == FadingMode.FadeIn,
             }"
             title="Click to play/pause"
-            @click="$emit('click')"
+            @click="emit('click')"
         ></audio>
     </template>
     <!-- NOTE: the rendering of the AudioLevelMeter _might_ affect badly the 
