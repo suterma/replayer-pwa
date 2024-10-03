@@ -88,9 +88,9 @@
                             data-cy="toggle-playback"
                             @click="app.skipToPlayPause(props.track)"
                         />
-                        <!-- Cue count (without expander in play mode) -->
+                        <!-- Cue count (no expander in non-play mode) -->
                         <span
-                            v-if="!hasSingleMediaTrack"
+                            v-if="!hasSingleMediaTrack && !isTrackEditable"
                             :class="{
                                 'is-hidden': track.Cues.length == 0,
                             }"
