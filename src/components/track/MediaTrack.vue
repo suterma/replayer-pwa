@@ -145,9 +145,11 @@
                     </div>
                     <div class="level-item is-narrow mr-0">
                         <PlaybackIndicator
-                            :fadeInDuration="fadeInDuration"
-                            :fadeOutDuration="fadeOutDuration"
-                            :isOmittingNextFadeIn="isPlayerOmittingNextFadeIn"
+                            :fade-in-duration="fadeInDuration"
+                            :fade-out-duration="fadeOutDuration"
+                            :is-omitting-next-fade-in="
+                                isPlayerOmittingNextFadeIn
+                            "
                             :fading-action="fadingMode"
                             :state="playbackState"
                             data-cy="playback-indicator"
@@ -592,11 +594,13 @@
                                                 />
                                             </template>
                                             <PlaybackIndicator
-                                                :fadeInDuration="fadeInDuration"
-                                                :fadeOutDuration="
+                                                :fade-in-duration="
+                                                    fadeInDuration
+                                                "
+                                                :fade-out-duration="
                                                     fadeOutDuration
                                                 "
-                                                :isOmittingNextFadeIn="
+                                                :is-omitting-next-fade-in="
                                                     isPlayerOmittingNextFadeIn
                                                 "
                                                 :fading-action="fadingMode"
@@ -987,14 +991,6 @@ function updateDuration(duration: number) {
     removeCueScheduling();
     trackDuration.value = duration;
     app.updateDurations(props.track.Id, duration);
-}
-
-function updatePaused(paused: boolean) {
-    removeCueScheduling();
-    if (paused) {
-        // mmake sure we keep up-to-date persisted position when paused
-        persistPlayheadPosition();
-    }
 }
 
 function updatePlaybackState(state: PlaybackState) {

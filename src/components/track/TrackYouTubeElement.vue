@@ -16,7 +16,7 @@
             title="Click to play/pause"
             @click="
                 {
-                    $emit('click');
+                    emit('click');
                     mediaHandler?.play();
                 }
             "
@@ -246,14 +246,22 @@ function createAndProvideHandler(
             },
         );
 
+    onPlaybackStateChangedSubsription =
+        handler.onPlaybackStateChanged.subscribeImmediate(
+            (state: PlaybackState) => {
+                isPaused.value = state !== PlaybackState.Playing;
+            },
+        );
+
     return handler;
 }
 
-const isPaused = computed(() => {
-    return mediaHandler.value?.playbackState !== PlaybackState.Playing;
-});
+const isPaused = ref(true);
+
+let onPlaybackStateChangedSubsription: Subscription;
 
 const isFading = ref(FadingMode.None);
+
 let onFadingChangedSubsription: Subscription;
 
 /** Teardown of the YouTube player and handler.
@@ -267,6 +275,7 @@ onBeforeUnmount(() => {
 function destroyHandler(): void {
     // cancel the internal event handlers
     onFadingChangedSubsription?.cancel();
+    onPlaybackStateChangedSubsription?.cancel();
 
     if (mediaHandler.value) {
         audio.removeMediaHandler(mediaHandler.value);
