@@ -350,7 +350,7 @@
                                 }}
                             </span>
                             <span class="ml-2 is-italic is-size-7">{{
-                                playingCue?.Remarks
+                                playingCueRemarks
                             }}</span>
                         </p>
                     </PlayheadSlider>
@@ -534,7 +534,7 @@
                                                 <span
                                                     class="ml-2 is-italic is-size-7"
                                                     >{{
-                                                        playingCue?.Remarks
+                                                        playingCueRemarks
                                                     }}</span
                                                 >
                                             </p>
@@ -1479,6 +1479,12 @@ const playingCueDescription = computed(() => {
     return playingCue.value?.Description;
 });
 
+/** The remarks of the currently playing cue
+ */
+const playingCueRemarks = computed(() => {
+    return playingCue.value?.Remarks;
+});
+
 /** Whether the currently playing cue is the selected cue
  * @remarks used for the playhead slider visualization
  */
@@ -1701,7 +1707,7 @@ watchEffect(() => {
 
 // --- document title
 
-/** For an active track, show the cue, track and app name in the document title
+/** For an active track, show the cue (with remarks), track and app name in the document title
  * @devdoc VueUse/useTitle does unfortunately not work when only the track
  * changes from a track with cues and
  * no named cue is playing on a newly active track. The reason for this is
@@ -1709,14 +1715,19 @@ watchEffect(() => {
  * Thus, an explicit document title update is used here.
  */
 watch(
-    [playingCueDescription, isActiveTrack],
-    ([playingCueDescription, isActiveTrack]) => {
+    [playingCueDescription, playingCueRemarks, isActiveTrack],
+    ([playingCueDescription, playingCueRemarks, isActiveTrack]) => {
         const existingTitle = document.title;
         let newTitle = 'Replayer';
 
         if (isActiveTrack) {
             newTitle =
-                (playingCueDescription ? playingCueDescription + ' | ' : '') +
+                // Description and Remarks
+                (playingCueDescription ? playingCueDescription : '') +
+                (playingCueRemarks ? ' - ' + playingCueRemarks : '') +
+                // Separator for cue and tracks
+                (playingCueDescription || playingCueRemarks ? ' | ' : '') +
+                // Track with separator
                 (props.track?.Name ? props.track?.Name + ' | ' : '') +
                 newTitle;
 
