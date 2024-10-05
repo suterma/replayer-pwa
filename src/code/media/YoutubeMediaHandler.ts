@@ -81,7 +81,6 @@ export default class YouTubeMediaHandler implements IMediaHandler {
             // The duration is available already, because the player is ready, when this constructor is called
             this.updateDuration(player.getDuration());
             this.updateCurrentTime();
-            this.onCanPlay.emit(null);
         });
         this.debugLog('created');
     }
@@ -413,7 +412,6 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                 this._isPlaying = false;
                 this._canPlay = true;
                 this.onPlaybackStateChanged.emit(this.playbackState);
-                this.onCanPlay.emit(null);
                 break;
 
             default:
@@ -459,10 +457,6 @@ export default class YouTubeMediaHandler implements IMediaHandler {
             }
         }
     }
-
-    /** Emitted when the media data has loaded (at least enough to start playback)
-     */
-    onCanPlay: SubEventImmediate<null> = new SubEventImmediate();
 
     /** Emits the durationChanged event
      * @param {number} duration - could be NaN or infinity, depending on the source

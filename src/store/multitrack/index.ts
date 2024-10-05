@@ -271,10 +271,6 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
                     ),
                 );
 
-                _canPlaySubscriptons.push(
-                    handler.onCanPlay.subscribeImmediate(updateCanPlayChanged),
-                );
-
                 _durationSubscriptons.push(
                     handler.onDurationChanged.subscribeImmediate(
                         updateDurationChanged,
@@ -332,6 +328,8 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      * @devdoc This method is optimized for early termination
      */
     function updatePlaybackStateChanged(playbackState: PlaybackState) {
+        updateCanPlayChanged();
+
         const paused = playbackState !== PlaybackState.Playing;
         if (paused) {
             isAllPlaying.value = false;

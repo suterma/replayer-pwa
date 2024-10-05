@@ -153,11 +153,7 @@
 <script setup lang="ts">
 import {
     computed,
-    nextTick,
-    onActivated,
     onBeforeUnmount,
-    onDeactivated,
-    onMounted,
     type PropType,
     type Ref,
     ref,
@@ -335,7 +331,6 @@ const isSeeking = ref(false);
 const isFading = ref(FadingMode.None);
 let onSeekingChangedSubsription: Subscription;
 let onDurationChangedSubsription: Subscription;
-let onCanPlaySubsription: Subscription;
 let onPlaybackStateChangedSubsription: Subscription;
 let onFadingChangedSubsription: Subscription;
 
@@ -352,7 +347,6 @@ function destroyHandler(): void {
         // cancel the internal event handlers
         onSeekingChangedSubsription?.cancel();
         onDurationChangedSubsription?.cancel();
-        onCanPlaySubsription?.cancel();
         onPlaybackStateChangedSubsription?.cancel();
         onFadingChangedSubsription?.cancel();
     }
@@ -387,23 +381,22 @@ function createAndProvideHandler(
         },
     );
 
-    onCanPlaySubsription = handler.onCanPlay.subscribeImmediate(() => {
-        if (isInitialPositionToBeApplied) {
-            const initialPosition = props.start;
-            if (initialPosition) {
-                console.debug(
-                    'onCanPlaySubsription:applying initialPosition:',
-                    initialPosition,
-                );
-                handler.seekTo(initialPosition);
-            }
-            isInitialPositionToBeApplied = false;
-        }
-    });
-
     onPlaybackStateChangedSubsription =
         handler.onPlaybackStateChanged.subscribeImmediate((state) => {
             isPaused.value = state !== PlaybackState.Playing;
+
+            // Handle initial position after track load
+            if (state === PlaybackState.Ready && isInitialPositionToBeApplied) {
+                const initialPosition = props.start;
+                if (initialPosition) {
+                    console.debug(
+                        'onPlaybackStateChanged:applying initialPosition:',
+                        initialPosition,
+                    );
+                    handler.seekTo(initialPosition);
+                }
+                isInitialPositionToBeApplied = false;
+            }
         });
 
     onFadingChangedSubsription =

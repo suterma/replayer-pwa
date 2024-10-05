@@ -100,7 +100,6 @@ export default class HtmlMediaHandler implements IMediaHandler {
         media.oncanplay = () => {
             this._canPlay = true;
             this.debugLog(`oncanplay`);
-            this.onCanPlay.emit(null);
             this.onPlaybackStateChanged.emit(this.playbackState);
         };
 
@@ -185,7 +184,6 @@ export default class HtmlMediaHandler implements IMediaHandler {
         this.onSeeked.cancelAll();
         this.onCurrentTimeChanged.cancelAll();
         this.onEnded.cancelAll();
-        this.onCanPlay.cancelAll();
         this.onDurationChanged.cancelAll();
         this.onNextFadeInOmissionChanged.cancelAll();
 
@@ -321,7 +319,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
         if (!this.mediaSourceUrl) {
             return PlaybackState.Unavailable;
         }
-        if (!this.canPlay) {
+        if (!this._canPlay) {
             return PlaybackState.Unloaded; //but is available
         }
         if (this.paused) {
@@ -459,12 +457,6 @@ export default class HtmlMediaHandler implements IMediaHandler {
         }
     }
 
-    /** Emitted when the media data has loaded (at least enough to start playback)
-     * @devdoc This is emitted separately from the data loading state and events, since the underlying
-     * implementation does handle it separately.
-     */
-    onCanPlay: SubEventImmediate<null> = new SubEventImmediate();
-
     /** Whether the media data has loaded (at least enough to start playback)
      * @remarks This implies that metadata also has been loaded already
      * @devdoc see HAVE_CURRENT_DATA at https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState#examples
@@ -528,12 +520,14 @@ export default class HtmlMediaHandler implements IMediaHandler {
             console.warn(
                 'User gesture required (iOS-Condition) for further loading...',
             );
-            // In this specific case, prematurely emit the onCanPlay event,
+            // In this specific case, prematurely emit the ready
+            // value with the onPlaybackStateChanged event,
             // to initiate enabling of the play and cue buttons.
             // Clicking any of these buttons while the isClickToLoadRequired flag is set,
             // should then issue a user-triggered play command.
             // Finally, this will then further load and play the track media
-            this.onCanPlay.emit(null);
+            this._canPlay = true;
+            this.onPlaybackStateChanged.emit(this.playbackState);
         }
     }
 

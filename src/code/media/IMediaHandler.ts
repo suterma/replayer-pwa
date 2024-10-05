@@ -179,14 +179,10 @@ export interface IMediaHandler {
      */
     mediaSourceUrl: string;
 
-    /** Emitted once the media data has loaded enough to start playback
-     * @remarks This is a one-off event. Media is not expected to become unplayable once it could play.
-     * @devdoc This is emitted separately from the data loading state and events, since the underlying
-     * implementation might handle it separately.
-     */
-    onCanPlay: SubEventImmediate<null>;
-
     /** Whether the media data had loaded enough to start playback.
+     * @remarks This is a shorthand for (playbackState equal to
+     * playing or ready).
+     * A value of false indicates an a currently non-playable state.
      */
     readonly canPlay: boolean;
 
