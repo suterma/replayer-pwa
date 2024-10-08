@@ -283,12 +283,18 @@ function destroyHandler(): void {
         mediaHandler.value.destroy();
         mediaHandler.value = null;
     }
+    try {
+        // stopVideo may fail with "not a function" when this method is
+        // called very early in the loading process
+        instance.value?.stopVideo();
+    } catch {
+        console.warn('YouTube stopVideo did not execute as espected.');
+    } finally {
+        instance.value?.destroy();
+        instance.value = undefined;
 
-    instance.value?.stopVideo();
-    instance.value?.destroy();
-    instance.value = undefined;
-
-    console.log('TrackYouTubeElement:destroyed');
+        console.log('TrackYouTubeElement:destroyed');
+    }
 }
 
 // --- visual fading ---
