@@ -58,13 +58,7 @@
             <tr>
                 <th class="is-size-7">Shortcut</th>
                 <th class="is-size-7">Description</th>
-                <th
-                    v-if="experimentalShowRemarksEditors"
-                    v-experiment="experimentalShowRemarksEditors"
-                    class="is-size-7"
-                >
-                    Remarks
-                </th>
+                <th class="is-size-7">Remarks</th>
                 <th class="is-size-7">Time</th>
                 <th
                     v-if="props.track.UseMeasureNumbers"
@@ -92,11 +86,7 @@
                 <td>
                     {{ cue.Description }}
                 </td>
-                <td
-                    v-if="experimentalShowRemarksEditors"
-                    v-experiment="experimentalShowRemarksEditors"
-                    class="is-italic"
-                >
+                <td class="is-italic">
                     {{ cue.Remarks }}
                 </td>
 
