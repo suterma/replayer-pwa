@@ -3,6 +3,8 @@
         <!-- Left side -->
         <div class="level-left">
             <div class="level-item">
+                <span class="title is-4"><slot></slot></span>
+
                 <!-- Just show the type icon here -->
                 <MediaSourceIndicator
                     v-once
@@ -21,6 +23,7 @@
                 <TrackTitle
                     class="is-flex-shrink-1 ml-3"
                     :track="track"
+                    :tags="showTags"
                 ></TrackTitle>
             </div>
         </div>
@@ -149,6 +152,12 @@ const props = defineProps({
         required: false,
         default: false,
     },
+    /** Whether to show the item tags */
+    showTags: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
 });
 
 /** The track's meter
@@ -160,6 +169,5 @@ const meter = computed(() => props.track.Meter);
 provide(meterInjectionKey, readonly(meter));
 
 const settings = useSettingsStore();
-const { experimentalUseMeter, experimentalShowRemarksEditors } =
-    storeToRefs(settings);
+const { experimentalUseMeter } = storeToRefs(settings);
 </script>

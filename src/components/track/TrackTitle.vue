@@ -20,7 +20,7 @@
         ></MeterDisplay>
 
         <TagsDisplay
-            v-if="trackHasTags"
+            v-if="trackHasTags && tags"
             class="ml-0 is-size-7"
             :tags="props.track.Tags"
             small
@@ -55,6 +55,13 @@ const props = defineProps({
 
     /** Whether to use a smaller font */
     small: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
+
+    /** Whether to show the tags (if any) */
+    tags: {
         type: Boolean,
         required: false,
         default: false,

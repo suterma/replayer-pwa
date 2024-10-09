@@ -101,6 +101,7 @@
                         <!-- Title -->
                         <TrackTitle
                             v-if="!isTrackEditable"
+                            tags
                             class="is-flex-shrink-1 ml-3"
                             :class="{
                                 'is-clickable': canPlay,
@@ -481,6 +482,7 @@
                                             <!-- Use smaller title in collapsed/non-fullscreen state -->
                                             <TrackTitle
                                                 v-if="!isTrackEditable"
+                                                tags
                                                 class="is-flex-shrink-1 ml-3"
                                                 :class="{
                                                     'is-clickable': canPlay,

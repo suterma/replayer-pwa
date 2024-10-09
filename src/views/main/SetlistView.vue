@@ -34,6 +34,10 @@
                                 show numbering
                             </label>
                             <label class="checkbox mr-4">
+                                <input v-model="showItemTags" type="checkbox" />
+                                show item tags
+                            </label>
+                            <label class="checkbox mr-4">
                                 <input v-model="showCues" type="checkbox" />
                                 show cues
                             </label>
@@ -105,6 +109,7 @@
                                 :track="element"
                                 :show-cues="showCues"
                                 :show-media-source="showMediaSource"
+                                :show-tags="showItemTags"
                             >
                                 <!-- The track index (as part of the title) -->
                                 <span v-if="showNumbering" class="mr-2"
@@ -175,7 +180,10 @@ const showCues = ref(false);
 const showMediaSource = ref(false);
 
 /** Whether to show the numbering */
-const showNumbering = ref(false);
+const showNumbering = ref(true);
+
+/** Whether to show the tags on the items in the list */
+const showItemTags = ref(false);
 
 const app = useAppStore();
 const { compilation, allTracks, getAllTags } = storeToRefs(app);
