@@ -19,35 +19,23 @@
             class="d-flex align-center justify-center"
             style="min-height: 300px"
         >
-            <!-- Use the full width for a navigable channel arrangement the mix view, 
-        and a more accessible narrower blog style width for all other content -->
-            <div
-                :class="{
-                    'container is-fullhd':
-                        router.currentRoute.value.name != 'mix' &&
-                        !useWideContentWidth,
-                }"
+            <!-- The app menu, on the right, without bottom margin to not alter the layout of content below -->
+            <section
+                class="section has-background-none is-hidden-print is-pulled-right pb-0"
             >
-                <!-- The app menu, on the right, without bottom margin to not alter the layout of content below -->
-                <section
-                    class="section has-background-none is-hidden-print is-pulled-right pb-0"
-                >
-                    <AppContextMenu
-                        :has-compilation="hasCompilation"
-                    ></AppContextMenu>
-                </section>
+                <AppContextMenu
+                    :has-compilation="hasCompilation"
+                ></AppContextMenu>
+            </section>
 
-                <!-- The routed view section -->
-                <!-- To facilitate route-specific styles, the route name is provided as it's own class -->
-                <section
-                    class="section route"
-                    :class="router.currentRoute.value.name"
-                >
-                    <router-view></router-view>
-                    <MessageOverlay />
-                    <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
-                </section>
-            </div>
+            <!-- The routed view section -->
+            <!-- To facilitate route-specific styles, the route name is provided as it's own class -->
+            <section
+                class="section route"
+                :class="router.currentRoute.value.name"
+            >
+                <router-view></router-view>
+            </section>
         </v-main>
         <!-- The bottom bar, used as a media player panel
         for the media player widget in some view modes -->
@@ -61,6 +49,8 @@
         >
         </v-footer>
     </v-layout>
+    <MessageOverlay />
+    <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
 </template>
 <script setup lang="ts">
 import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';
