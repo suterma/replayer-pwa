@@ -5,62 +5,85 @@
  * LICENSE file in the root of this projects source tree.
 -->
 <template>
-    <!-- Use the full width for a navigable channel arrangement the mix view, 
-        and a more accessible narrower blog style width for all other content -->
-    <div
-        :class="{
-            'container is-fullhd':
-                router.currentRoute.value.name != 'mix' && !useWideContentWidth,
-        }"
-    >
-        <StageMark></StageMark>
-        <!-- The app menu, on the right, without bottom margin to not alter the layout of content below -->
-        <section
-            class="section has-background-none is-hidden-print is-pulled-right pb-0"
+    <v-layout ref="app" class="rounded rounded-md">
+        <v-app-bar :elevation="2">
+            <template v-slot:prepend>
+                <v-app-bar-nav-icon></v-app-bar-nav-icon>
+            </template>
+
+            <v-app-bar-title>Application Bar</v-app-bar-title>
+            <StageMark></StageMark>
+        </v-app-bar>
+
+        <v-main
+            class="d-flex align-center justify-center"
+            style="min-height: 300px"
         >
-            <AppContextMenu :has-compilation="hasCompilation"></AppContextMenu>
-        </section>
+            <!-- Use the full width for a navigable channel arrangement the mix view, 
+        and a more accessible narrower blog style width for all other content -->
+            <div
+                :class="{
+                    'container is-fullhd':
+                        router.currentRoute.value.name != 'mix' &&
+                        !useWideContentWidth,
+                }"
+            >
+                <!-- The app menu, on the right, without bottom margin to not alter the layout of content below -->
+                <section
+                    class="section has-background-none is-hidden-print is-pulled-right pb-0"
+                >
+                    <AppContextMenu
+                        :has-compilation="hasCompilation"
+                    ></AppContextMenu>
+                </section>
 
-        <!-- The routed view section -->
-        <!-- To facilitate route-specific styles, the route name is provided as it's own class -->
-        <section class="section route" :class="router.currentRoute.value.name">
-            <router-view></router-view>
-            <MessageOverlay />
-            <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
-        </section>
+                <!-- The routed view section -->
+                <!-- To facilitate route-specific styles, the route name is provided as it's own class -->
+                <section
+                    class="section route"
+                    :class="router.currentRoute.value.name"
+                >
+                    <router-view></router-view>
+                    <MessageOverlay />
+                    <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
+                </section>
 
-        <section class="is-hidden-print">
-            <!-- A placeholder that invisibly extends the view bottom,
+                <section class="is-hidden-print">
+                    <!-- A placeholder that invisibly extends the view bottom,
         taking into account the vertical size of the media player panel.
         An additional margin is used as an additional spacer
         to make it visually clear that no more content is available below.
         The min-height is the empirically determined minimal value.        
         -->
-            <div
-                class="mt-6"
-                :style="{
-                    'min-height': '153px',
-                    height: navbarCompensationHeight + 'px',
-                }"
-            ></div>
-        </section>
-    </div>
-    <!-- The bottom nav bar, used as a media player panel
+                    <div
+                        class="mt-6"
+                        :style="{
+                            'min-height': '153px',
+                            height: navbarCompensationHeight + 'px',
+                        }"
+                    ></div>
+                </section>
+            </div>
+        </v-main>
+        <v-footer name="footer" app>
+            <!-- The bottom nav bar, used as a media player panel
         for the media player widget in some view modes -->
-    <nav
-        class="navbar is-fixed-bottom has-background-grey-dark is-hidden-print"
-    >
-        <div
-            id="media-player-panel"
-            ref="mediaPlayerPanel"
-            :class="{
-                'container is-fullhd':
-                    router.currentRoute.value.name != 'mix' &&
-                    !useWideContentWidth,
-            }"
-            aria-label="media player"
-        ></div>
-    </nav>
+            <nav
+                class="navbar is-fixed-bottom has-background-grey-dark is-hidden-print"
+            >
+                <div
+                    id="media-player-panel"
+                    ref="mediaPlayerPanel"
+                    :class="{
+                        'container is-fullhd':
+                            router.currentRoute.value.name != 'mix' &&
+                            !useWideContentWidth,
+                    }"
+                    aria-label="media player"
+                ></div>
+            </nav>
+        </v-footer>
+    </v-layout>
 </template>
 <script setup lang="ts">
 import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';

@@ -26,7 +26,12 @@ import { FocusDirective } from './directives/FocusDirective';
 import { TooltipDirective } from './directives/TooltipDirective';
 import { useAppStore } from './store/app';
 import { useAudioStore } from './store/audio';
-import { ReplayerEvent } from './code/ui/ReplayerEvent';
+
+// Vuetify
+import 'vuetify/styles';
+import { createVuetify } from 'vuetify';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
 
 const appInfo = chalk.bold.hex('#f89406'); // Replayer cue color (bulma warning)
 console.log(
@@ -47,8 +52,14 @@ const youtubeManager = createManager({
     },
 });
 
+const vuetify = createVuetify({
+    components,
+    directives,
+});
+
 /** Creates the Replayer VueJs app */
 const app = createApp(App)
+    .use(vuetify)
     .use(createPinia())
     .use(router)
     .use(VueScrollTo, { duration: 300 /* replayer-transition-duration */ })
