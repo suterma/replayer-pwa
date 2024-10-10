@@ -47,41 +47,18 @@
                     <MessageOverlay />
                     <DialogWrapper :transition-attrs="{ name: 'dialog' }" />
                 </section>
-
-                <section class="is-hidden-print">
-                    <!-- A placeholder that invisibly extends the view bottom,
-        taking into account the vertical size of the media player panel.
-        An additional margin is used as an additional spacer
-        to make it visually clear that no more content is available below.
-        The min-height is the empirically determined minimal value.        
-        -->
-                    <div
-                        class="mt-6"
-                        :style="{
-                            'min-height': '153px',
-                            height: navbarCompensationHeight + 'px',
-                        }"
-                    ></div>
-                </section>
             </div>
         </v-main>
-        <v-footer name="footer" app>
-            <!-- The bottom nav bar, used as a media player panel
+        <!-- The bottom bar, used as a media player panel
         for the media player widget in some view modes -->
-            <nav
-                class="navbar is-fixed-bottom has-background-grey-dark is-hidden-print"
-            >
-                <div
-                    id="media-player-panel"
-                    ref="mediaPlayerPanel"
-                    :class="{
-                        'container is-fullhd':
-                            router.currentRoute.value.name != 'mix' &&
-                            !useWideContentWidth,
-                    }"
-                    aria-label="media player"
-                ></div>
-            </nav>
+        <v-footer
+            name="footer"
+            app
+            class="is-hidden-print"
+            id="media-player-panel"
+            ref="mediaPlayerPanel"
+            aria-label="media player"
+        >
         </v-footer>
     </v-layout>
 </template>
@@ -99,7 +76,6 @@ import { computed, onMounted, ref, provide, readonly } from 'vue';
 import { storeToRefs } from 'pinia';
 import { refDebounced, useElementSize } from '@vueuse/core';
 import { useRouter } from 'vue-router';
-import { navbarCompensationHeightInjectionKey } from '@/AppInjectionKeys';
 
 onMounted(() => {
     handleAppUpdate();
@@ -182,45 +158,4 @@ function handleAppUpdate() {
 // --- bottom navbar spacing ---
 
 const mediaPlayerPanel = ref();
-const { height } = useElementSize(mediaPlayerPanel);
-
-/** A computed compensation height, using a fixed value as a fallback.
- * @devdoc Some devices, notably older iOS devices can not get the panel
- * height (equals zero), thus a useful default is assumed instead.
- */
-const mediaPlayerPanelComputedHeight = computed(() => {
-    return height.value
-        ? height.value
-        : 205 /*empirically determined useful max height*/;
-});
-
-/** The body height compensation for the fixed navbar.
- * @remark Debounced to prevent excess updates
- * @devdoc Debouncing also solves a update loop error
- */
-const navbarCompensationHeight = refDebounced(
-    mediaPlayerPanelComputedHeight,
-    300 /*replayer-transition-duration*/,
-);
-
-/** Provide the debounced navbarCompensationHeight for visual adaptations in downstream components
- */
-provide(
-    navbarCompensationHeightInjectionKey,
-    readonly(navbarCompensationHeight),
-);
 </script>
-
-<!-- HINT: Uncomment to display the HTML structure for review -->
-<!--
-<style type="css">
-* {
-    border: 1px black solid;
-    margin: 2px;
-    padding: 2px;
-}
-*:hover {
-    background-color: pink;
-}
-</style>
--->

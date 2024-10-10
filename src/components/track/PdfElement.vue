@@ -25,7 +25,7 @@ const pdfContainer = ref(null);
 const pdfScrollContainer = ref(null);
 
 /** A track variant that displays a PDF document, either as link or as an expandable inline viewer */
-import { computed, ref, inject, onMounted, onUpdated, watchEffect } from 'vue';
+import { computed, ref, onMounted, onUpdated, watchEffect } from 'vue';
 
 import PDFObject from 'pdfobject';
 import VueScrollTo from 'vue-scrollto';
@@ -46,9 +46,7 @@ const props = defineProps({
     },
 });
 
-import { navbarCompensationHeightInjectionKey } from '@/AppInjectionKeys';
 import FileHandler from '@/store/filehandler';
-const navbarCompensationHeight = inject(navbarCompensationHeightInjectionKey);
 
 /** Gets the net available available window height
  * @remarks This is used for convenience to the user, to minimize
@@ -59,7 +57,9 @@ const availableHeight = computed(() => {
     if (props.isFullscreen) {
         return fullvh;
     }
-    const availableHeight = fullvh - (navbarCompensationHeight?.value ?? 0);
+    const availableHeight =
+        fullvh -
+        /*(navbarCompensationHeight?.value ?? //TODO later use some vuetify value, if available*/ 0;
     return availableHeight;
 });
 
