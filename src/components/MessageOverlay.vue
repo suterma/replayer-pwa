@@ -50,7 +50,7 @@
     <v-snackbar v-model="hasInputFeedback" location="center">
         <code class="text-h3 pa-4">{{ inputFeedback?.Data }}</code>
 
-        <template v-slot:actions>
+        <template #actions>
             <span class="text-h3 pa-4">{{
                 inputFeedback?.Action
             }}</span></template
@@ -66,7 +66,7 @@
                 :value="progressMessage"
                 color="primary"
             >
-                <template v-slot:prepend>
+                <template #prepend>
                     <v-progress-circular
                         v-if="progressMessage.Percentage"
                         :model-value="progressMessage.Percentage"

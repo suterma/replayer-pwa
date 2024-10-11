@@ -61,6 +61,7 @@
         "vuedraggable": "^4.1.0",
         "vuetify": "^3.7.2",
         "waveform-data": "^4.5.0",
+        "webpack-plugin-vuetify": "^3.0.3",
         "xml2js": "^0.6.2"
     },
     "devDependencies": {

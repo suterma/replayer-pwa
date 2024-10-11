@@ -7,7 +7,7 @@
 <template>
     <v-layout ref="app" class="rounded rounded-md">
         <v-app-bar :elevation="2">
-            <template v-slot:prepend>
+            <template #prepend>
                 <v-app-bar-nav-icon></v-app-bar-nav-icon>
             </template>
 
@@ -40,11 +40,11 @@
         <!-- The bottom bar, used as a media player panel
         for the media player widget in some view modes -->
         <v-footer
+            id="media-player-panel"
+            ref="mediaPlayerPanel"
             name="footer"
             app
             class="is-hidden-print"
-            id="media-player-panel"
-            ref="mediaPlayerPanel"
             aria-label="media player"
         >
         </v-footer>

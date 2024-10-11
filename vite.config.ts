@@ -17,6 +17,7 @@ import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig, type PluginOption } from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
+import vuetify from 'vite-plugin-vuetify';
 
 //Setting the environment variables
 import child_process from 'child_process';
@@ -52,6 +53,7 @@ export default defineConfig({
     },
     plugins: [
         vue(),
+        vuetify(),
         // Watch and possible reduce bundle size with this visualizer:
         // https://github.com/btd/rollup-plugin-visualizer
         [visualizer() as PluginOption],
