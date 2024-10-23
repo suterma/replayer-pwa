@@ -1,3 +1,17 @@
+## [2.5.0](https://github.com/suterma/replayer-pwa/compare/v2.4.0...v2.5.0) (2024-10-23)
+
+This release improves tag handling and cue display
+
+## What's Changed
+
+-   improved tag handling and cue display
+-   improved keyboard handling
+-   added experimental remarks for tracks
+-   various bugfixes
+-   improved internal state management
+
+**Full Changelog**: https://github.com/suterma/replayer-pwa/compare/v2.3.0...v2.4.0
+
 ## [2.4.0](https://github.com/suterma/replayer-pwa/compare/v2.3.0...v2.4.0) (2023-07-03)
 
 This release adds PDF display, improved fade- and preroll-handling, and tag-based filtering.

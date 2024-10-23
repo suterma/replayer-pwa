@@ -146,6 +146,12 @@ function handleAppUpdate() {
                 updateText;
         }
 
+        if (compare(previousVersion, '2.5.0', '<')) {
+            updateText =
+                'Version 2.5.0: Improves tag handling and cue display\r\n' +
+                updateText;
+        }
+
         acknowledgeVersion(currentVersion, updateText).then(() => {
             app.updateAcknowledgedVersion(currentVersion);
         });
