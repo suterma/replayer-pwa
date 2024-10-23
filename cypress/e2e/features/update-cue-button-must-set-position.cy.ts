@@ -31,7 +31,7 @@ mediaSourceUrls.forEach((mediaSourceUrl) => {
             cy.get('input[type=range]')
                 .as('range')
                 .invoke('val', cuePosition)
-                .trigger('change');
+                .trigger('input');
 
             // ACT (allow the seek operation to execute, then should be at least the desired seek position)
             cy.get('[data-cy="current-time"]').contains('00:10.');
