@@ -1,10 +1,10 @@
 <template>
     <hr />
-    SIMPLE file handler, with accept supported //TODO remove later
+    SIMPLE file handler, with audio video pdf supported //TODO remove later
     <input
         type="file"
         multiple
-        :accept="FileHandler.supportedUniqueFileTypeSpecifiers"
+        accept="audio/*,video/*,application/pdf"
         @change="
             (event) =>
                 loadMediaFiles(
