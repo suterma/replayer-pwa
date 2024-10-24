@@ -43,10 +43,10 @@ describe('interacting with the demo', () => {
 
     it('loads the media file', () => {
         // ASSERT
-        cy.get('.track button.is-nav.is-indicator.playback-indicator').should(
+        cy.get('.track .button.is-nav.is-indicator.playback-indicator').should(
             'have.attr',
             'data-tooltip',
-            'Track is loaded and ready to play',
+            'Track is paused',
         );
     });
 
@@ -55,7 +55,7 @@ describe('interacting with the demo', () => {
         cy.get('.track button.is-success').click();
 
         // ASSERT
-        cy.get('.track button.is-nav.is-indicator.playback-indicator').should(
+        cy.get('.track .button.is-nav.is-indicator.playback-indicator').should(
             'have.attr',
             'data-tooltip',
             'Track is playing',
