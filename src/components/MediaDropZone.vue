@@ -1,9 +1,10 @@
 <template>
     <hr />
-    SIMPLE file handler //TODO remove later
+    SIMPLE file handler, with accept supported //TODO remove later
     <input
         type="file"
         multiple
+        :accept="FileHandler.supportedUniqueFileTypeSpecifiers"
         @change="
             (event) =>
                 loadMediaFiles(
