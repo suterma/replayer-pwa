@@ -7,7 +7,7 @@
 <template>
     <div>
         <h1 class="title is-hidden-print">Set list</h1>
-        <div class="box is-hidden-print">
+        <div class="block box is-hidden-print">
             <div class="field">
                 <div class="control">
                     <button
@@ -76,81 +76,93 @@
             {{ compilation.Title }}
         </h1>
 
-        <table class="table is-fullwidth">
-            <draggable
-                v-model="orderedTracks"
-                handle=".handle"
-                ghost-class="drag-ghost"
-                drag-class="drag"
-                item-key="Id"
-                :animation="200"
-                tag="tbody"
-                :component-data="{
-                    tag: 'tbody',
-                    type: 'transition-group',
-                    name: !drag ? 'flip-list' : null,
-                }"
-                data-cy="track-list"
-                @start="drag = true"
-                @end="drag = false"
-            >
-                <template #item="{ element, index }">
-                    <tr
-                        class="is-together-print track-list-item"
-                        data-cy="track-list-item"
-                    >
-                        <td>
-                            <!-- When each track is on a new page, also show the compilation each time -->
+        <div class="block">
+            <table class="table is-fullwidth">
+                <draggable
+                    v-model="orderedTracks"
+                    handle=".handle"
+                    ghost-class="drag-ghost"
+                    drag-class="drag"
+                    item-key="Id"
+                    :animation="200"
+                    tag="tbody"
+                    :component-data="{
+                        tag: 'tbody',
+                        type: 'transition-group',
+                        name: !drag ? 'flip-list' : null,
+                    }"
+                    data-cy="track-list"
+                    @start="drag = true"
+                    @end="drag = false"
+                >
+                    <template #item="{ element, index }">
+                        <tr
+                            class="is-together-print track-list-item"
+                            data-cy="track-list-item"
+                        >
+                            <td>
+                                <!-- When each track is on a new page, also show the compilation each time -->
 
-                            <h1 v-if="printTracksOnNewPage" class="title is-3">
-                                <span> {{ compilation.Title }}</span>
-                            </h1>
-                            <SetlistItem
-                                :track="element"
-                                :show-cues="showCues"
-                                :show-media-source="showMediaSource"
-                                :show-tags="showItemTags"
-                            >
-                                <!-- The track index (as part of the title) -->
-                                <span v-if="showNumbering" class="mr-2"
-                                    >{{ index + 1 }})&nbsp;</span
+                                <h1
+                                    v-if="printTracksOnNewPage"
+                                    class="title is-3"
                                 >
-                                <template #title-end
-                                    ><BaseIcon
-                                        v-once
-                                        class="grabbable handle is-hidden-print"
-                                        :path="mdiDrag"
-                                        title="Drag and drop to reorder"
-                                        data-cy="drag-handle"
-                                /></template>
-                            </SetlistItem>
+                                    <span> {{ compilation.Title }}</span>
+                                </h1>
+                                <SetlistItem
+                                    :track="element"
+                                    :show-cues="showCues"
+                                    :show-media-source="showMediaSource"
+                                    :show-tags="showItemTags"
+                                >
+                                    <!-- The track index (as part of the title) -->
+                                    <span v-if="showNumbering" class="mr-2"
+                                        >{{ index + 1 }})&nbsp;</span
+                                    >
+                                    <template #title-end
+                                        ><BaseIcon
+                                            v-once
+                                            class="grabbable handle is-hidden-print"
+                                            :path="mdiDrag"
+                                            title="Drag and drop to reorder"
+                                            data-cy="drag-handle"
+                                    /></template>
+                                </SetlistItem>
 
-                            <template v-if="printTracksOnNewPage">
-                                <!-- Page break indicator (shown on screen, but not visually printed) -->
-                                <span
-                                    class="has-text-centered is-size-7 is-unselectable is-hidden-print"
-                                    style="
-                                        width: 100%;
-                                        margin-top: -2px;
-                                        position: absolute;
-                                    "
-                                    ><span
-                                        style="background-color: #272b30"
-                                        class="pl-2 pr-3"
-                                        >Page break</span
-                                    ></span
-                                >
-                                <!-- Page break, if requested, but no on last page -->
-                                <div
-                                    v-if="!(index + 1 === orderedTracks.length)"
-                                    class="has-page-break-after"
-                                ></div>
-                            </template>
-                        </td>
-                    </tr>
-                </template>
-            </draggable>
-        </table>
+                                <template v-if="printTracksOnNewPage">
+                                    <!-- Page break indicator (shown on screen, but not visually printed) -->
+                                    <span
+                                        class="has-text-centered is-size-7 is-unselectable is-hidden-print"
+                                        style="
+                                            width: 100%;
+                                            margin-top: -2px;
+                                            position: absolute;
+                                        "
+                                        ><span
+                                            style="background-color: #272b30"
+                                            class="pl-2 pr-3"
+                                            >Page break</span
+                                        ></span
+                                    >
+                                    <!-- Page break, if requested, but no on last page -->
+                                    <div
+                                        v-if="
+                                            !(
+                                                index + 1 ===
+                                                orderedTracks.length
+                                            )
+                                        "
+                                        class="has-page-break-after"
+                                    ></div>
+                                </template>
+                            </td>
+                        </tr>
+                    </template>
+                </draggable>
+            </table>
+        </div>
+
+        <div class="block is-print-only"><ReplayerAd /></div>
     </div>
 </template>
 
@@ -159,6 +171,7 @@
 import { computed, ref } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import SetlistItem from '@/components/SetlistItem.vue';
+import ReplayerAd from '@/components/ReplayerAd.vue';
 import { mdiDrag, mdiPrinterOutline } from '@mdi/js';
 import draggable from 'vuedraggable';
 import { storeToRefs } from 'pinia';

@@ -6,9 +6,6 @@
 -->
 <template v-once>
     <div>
-        <!-- <h1 class="title">About</h1> -->
-        <!-- The ad is only used for the screen here, because on printouts, 
-            it's added at the end of the document. -->
         <div class="block">
             <ReplayerAd />
         </div>
