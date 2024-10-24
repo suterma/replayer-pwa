@@ -1,14 +1,13 @@
 <template>
     <label
+        v-tooltip="playbackStateIndicationText"
         v-bind="$attrs"
         class="button is-indicator playback-indicator is-nav"
+        :class="{ 'has-tooltip-warning': state === PlaybackState.Unavailable }"
     >
         <i
             v-if="state === PlaybackState.Unavailable"
-            v-tooltip="
-                'Track media is unavailable. Please reload or replace it in the editor.'
-            "
-            class="icon mdi has-text-warning has-tooltip-warning"
+            class="icon mdi has-text-warning"
             ><svg viewBox="0 0 24 24">
                 <path fill="currentColor" :d="mdiAlert" />
             </svg>
@@ -16,7 +15,6 @@
         <template v-else>
             <i
                 v-if="state === PlaybackState.Unloaded"
-                v-tooltip="'Track not loaded.'"
                 class="icon mdi has-text-dark"
                 ><svg viewBox="0 0 24 24">
                     <path fill="currentColor" :d="mdiCircle" />
@@ -108,6 +106,21 @@ const isPausing = computed((): boolean => {
         return true;
     }
     return false;
+});
+
+/** A text indicating the playback state. */
+const playbackStateIndicationText = computed((): string => {
+    if (props.state === PlaybackState.Playing) {
+        return 'Track is playing';
+    }
+    if (props.state === PlaybackState.Ready) {
+        return 'Track is paused';
+    }
+
+    if (props.state === PlaybackState.Unloaded) {
+        return 'Track not loaded';
+    }
+    return 'Track media is unavailable. Please reload or replace it in the editor.';
 });
 
 /** A keeper as whether the next fade-in will be omitted */

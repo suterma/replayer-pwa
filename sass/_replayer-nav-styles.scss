@@ -83,6 +83,13 @@ nav .button:hover {
     color: $text;
 }
 
+/* The playback indicator specifically allows the hover pointer event to 
+ * enable tooltip display */
+.button.is-indicator.playback-indicator,
+.button.is-indicator.playback-indicator:hover {
+    pointer-events: all;
+}
+
 /*************************************************************
  * Specific styles for navbar items
  **************************************************************/
