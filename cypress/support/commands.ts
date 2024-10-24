@@ -125,6 +125,7 @@ Cypress.Commands.add('consentIfYouTube', (url): void => {
  * visit function. This overload fixes interference of the
  * service worker with cypress's handling of the
  * the page's load event. It specifically changes the onBeforeLoad option.
+ * @see https://github.com/cypress-io/cypress/issues/16192#issuecomment-1671777993
  * @see https://github.com/cypress-io/cypress/issues/16192#issuecomment-870421667
  * @param url The URL to visit. If relative uses baseUrl
  */
@@ -133,6 +134,16 @@ function visitWithoutServiceWorker(
 ): Cypress.Chainable<Cypress.AUTWindow> {
     return cy.visit(url, {
         onBeforeLoad(win) {
+            if (win.navigator && navigator.serviceWorker) {
+                navigator.serviceWorker
+                    .getRegistrations()
+                    .then((registrations) => {
+                        registrations.forEach((registration) => {
+                            registration.unregister();
+                        });
+                    });
+            }
+
             delete (win.navigator as any).__proto__.serviceWorker;
             delete (win.navigator as any).serviceWorker;
         },
