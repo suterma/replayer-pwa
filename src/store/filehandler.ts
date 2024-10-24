@@ -97,6 +97,14 @@ export default class FileHandler {
     static supportedFileTypes =
         '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.mp4,.m4v,.webm,.ogv,.txt,.pdf';
 
+    /** The complete, comma-separated set of supported unique file type specifiers
+     * @remarks This can be used for the accept attribute a file input element
+     */
+    static supportedUniqueFileTypeSpecifiers =
+        FileHandler.supportedMimeTypes.join(',') +
+        ',' +
+        FileHandler.supportedFileTypes;
+
     /** Returns whether the given path represents a Mac OS X resource fork.
      * @remarks Mac OS X resource forks are not processed by Replayer.
      */

@@ -29,7 +29,7 @@
                     type="file"
                     multiple
                     class="is-hidden"
-                    :accept="FileHandler.supportedFileTypes"
+                    :accept="FileHandler.supportedUniqueFileTypeSpecifiers"
                     data-cy="input-file"
                     @change="onChange"
                 />
@@ -98,11 +98,6 @@
                     </div>
                 </div>
             </form>
-        </div>
-
-        <!-- A slot for an adornment -->
-        <div v-if="$slots.default" class="level-item">
-            <slot></slot>
         </div>
     </div>
 </template>
