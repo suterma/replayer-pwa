@@ -17,14 +17,14 @@
                 v-if="state === PlaybackState.Unloaded"
                 class="icon mdi has-text-dark"
                 ><svg viewBox="0 0 24 24">
-                    <path fill="currentColor" :d="mdiCircle" />
+                    <path fill="currentColor" :d="playbackIconPath" />
                 </svg>
             </i>
 
             <template v-else>
                 <i style="position: relative" class="icon mdi"
                     ><svg viewBox="0 0 24 24" class="has-text-grey">
-                        <path fill="currentColor" :d="mdiCircle" />
+                        <path fill="currentColor" :d="playbackIconPath" />
                     </svg>
                     <svg
                         viewBox="0 0 24 24"
@@ -35,7 +35,7 @@
                             'is-transparent': isPausing,
                         }"
                     >
-                        <path fill="currentColor" :d="mdiCircle" />
+                        <path fill="currentColor" :d="playbackIconPath" />
                     </svg>
                 </i>
             </template>
@@ -90,6 +90,17 @@ const props = defineProps({
         default: false,
         required: false,
     },
+    /** The optional playback icon path. Default is mdiCircle */
+    playbackIconPath: {
+        type: String,
+        default: mdiCircle,
+    },
+
+    /** The optional playback icon path. Default is mdiCircle */
+    pausedText: {
+        type: String,
+        default: 'Track is paused',
+    },
 });
 
 /** The currently appliccable transition duration value, formatted in milliseconds.
@@ -114,7 +125,7 @@ const playbackStateIndicationText = computed((): string => {
         return 'Track is playing';
     }
     if (props.state === PlaybackState.Ready) {
-        return 'Track is paused';
+        return props.pausedText;
     }
 
     if (props.state === PlaybackState.Unloaded) {

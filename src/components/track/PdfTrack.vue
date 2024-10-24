@@ -53,12 +53,6 @@
                                 <p
                                     class="control is-flex is-align-items-center"
                                 >
-                                    <label class="button is-indicator">
-                                        <BaseIcon
-                                            v-once
-                                            :path="mdiFilePdfBox"
-                                        />
-                                    </label>
                                     <span
                                         class="has-text-break-word is-indicator"
                                     >
@@ -153,24 +147,15 @@
                     </div>
                     <!-- Right side -->
                     <div class="level-right is-justify-content-flex-end">
-                        <!-- An indicator for a missing media URL; alternatively a download button (currently not shown)-->
-                        <a
-                            v-if="Boolean(mediaUrl) && !isTrackEditable"
-                            :href="mediaUrl"
-                            download
-                            class="button is-hidden"
-                            title="Download PDF to device"
-                        >
-                            <BaseIcon v-once :path="mdiTrayArrowDown" />
-                        </a>
                         <PlaybackIndicator
-                            v-else
                             :state="
                                 !!mediaUrl
                                     ? PlaybackState.Ready
                                     : PlaybackState.Unavailable
                             "
+                            :playback-icon-path="mdiFilePdfBox"
                             data-cy="playback-indicator"
+                            paused-text="PDF track"
                         />
 
                         <button
