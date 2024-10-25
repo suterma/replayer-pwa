@@ -1,10 +1,11 @@
 <template>
     <hr />
-    SIMPLE file handler, with audio video pdf supported //TODO remove later
+    SIMPLE file handler, with audio video and all others supported //TODO remove
+    later
     <input
         type="file"
         multiple
-        accept="supportedSimplifiedUniqueFileTypeSpecifiers"
+        :accept="supportedSimplifiedUniqueFileTypeSpecifiers"
         @change="
             (event) =>
                 loadMediaFiles(
@@ -181,7 +182,7 @@ const supportedSimplifiedUniqueFileTypeSpecifiers =
     /*smilar to supportedXmlMimeTypes*/
     '.xml,.rex,' +
     /*smilar to FileHandler.supportedPackageMimeTypes*/
-    '.zip,.rez,';
+    '.zip,.rez';
 
 const dropZoneRef = ref<HTMLDivElement>();
 const file = ref<HTMLInputElement>();
