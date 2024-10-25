@@ -4,7 +4,7 @@
     <input
         type="file"
         multiple
-        accept="audio/*,video/*,application/pdf"
+        accept="supportedSimplifiedUniqueFileTypeSpecifiers"
         @change="
             (event) =>
                 loadMediaFiles(
@@ -44,7 +44,7 @@
                     type="file"
                     multiple
                     class="is-hidden"
-                    :accept="FileHandler.supportedUniqueFileTypeSpecifiers"
+                    :accept="supportedSimplifiedUniqueFileTypeSpecifiers"
                     data-cy="input-file"
                     @change="onChange"
                 />
@@ -164,6 +164,24 @@ const emit = defineEmits([
      */
     'accepted',
 ]);
+
+/** The simplified, comma-separated set of supported unique file type specifiers
+ * @remarks This is to be used specifically for loading from the file system
+ * @devdoc Audio and video are not individually specified,
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#unique_file_type_specifiers
+ * This helps mitigate file selection problems on android
+ * @see https://github.com/suterma/replayer-pwa/issues/153, where the long list from supportedMimeTypes did not work.
+ */
+const supportedSimplifiedUniqueFileTypeSpecifiers =
+    /*smilar to FileHandler.supportedMediaMimeTypes*/ 'audio/*,video/*,' +
+    /*smilar to supportedPdfMimeTypes*/
+    '.pdf,' +
+    /*smilar to supportedTextMimeTypes*/
+    '.txt,' +
+    /*smilar to supportedXmlMimeTypes*/
+    '.xml,.rex,' +
+    /*smilar to FileHandler.supportedPackageMimeTypes*/
+    '.zip,.rez,';
 
 const dropZoneRef = ref<HTMLDivElement>();
 const file = ref<HTMLInputElement>();

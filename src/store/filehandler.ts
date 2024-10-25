@@ -62,7 +62,7 @@ export default class FileHandler {
         'application/zip' /* zip, officially registered by IANA*/,
         'application/octet-stream' /* arbitrary binary data */,
         'application/x-zip-compressed' /* zip, non-standard */,
-        'binary/octet-stream' /*z ip, very unofficial, used by adonia */,
+        'binary/octet-stream' /*zip, very unofficial, used by adonia */,
     ];
 
     /** The set of supported XML mime types
@@ -81,7 +81,7 @@ export default class FileHandler {
     static supportedPdfMimeTypes = ['application/pdf' /*PDF*/];
 
     /** The overall set of supported mime types
-     * @remarks This is a union of all spcifically supported mime types */
+     * @remarks This is a union of all specifically supported mime types */
     static supportedMimeTypes = [
         ...new Set([
             ...FileHandler.supportedMediaMimeTypes,
@@ -96,14 +96,6 @@ export default class FileHandler {
      * @remarks Lowercase extensions, separated by comma */
     static supportedFileTypes =
         '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.mp4,.m4v,.webm,.ogv,.txt,.pdf';
-
-    /** The complete, comma-separated set of supported unique file type specifiers
-     * @remarks This can be used for the accept attribute a file input element
-     */
-    static supportedUniqueFileTypeSpecifiers =
-        FileHandler.supportedMimeTypes.join(',') +
-        ',' +
-        FileHandler.supportedFileTypes;
 
     /** Returns whether the given path represents a Mac OS X resource fork.
      * @remarks Mac OS X resource forks are not processed by Replayer.
