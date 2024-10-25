@@ -1,20 +1,4 @@
 <template>
-    <hr />
-    SIMPLE file handler, with audio video and all others supported (without rex,
-    rez) //TODO remove later
-    <input
-        type="file"
-        multiple
-        :accept="supportedSimplifiedUniqueFileTypeSpecifiers"
-        @change="
-            (event) =>
-                loadMediaFiles(
-                    Array.from((event.target as HTMLInputElement).files || []),
-                )
-        "
-    />
-    <hr />
-
     <!-- This level is designed that the two input methods can grow and shrink, 
         filling up the available horizontal space.
         The URL input is wider, because it should be able to easily deal with 
