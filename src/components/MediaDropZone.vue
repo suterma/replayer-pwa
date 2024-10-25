@@ -1,7 +1,7 @@
 <template>
     <hr />
-    SIMPLE file handler, with audio video and all others supported //TODO remove
-    later
+    SIMPLE file handler, with audio video and all others supported (without rex,
+    rez) //TODO remove later
     <input
         type="file"
         multiple
@@ -180,9 +180,9 @@ const supportedSimplifiedUniqueFileTypeSpecifiers =
     /*smilar to supportedTextMimeTypes*/
     '.txt,' +
     /*smilar to supportedXmlMimeTypes*/
-    '.xml,.rex,' +
+    '.xml,' +
     /*smilar to FileHandler.supportedPackageMimeTypes*/
-    '.zip,.rez';
+    '.zip';
 
 const dropZoneRef = ref<HTMLDivElement>();
 const file = ref<HTMLInputElement>();
