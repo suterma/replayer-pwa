@@ -399,6 +399,16 @@
                     ></LabeledCheckbox>
                 </div>
             </div>
+
+            <div class="field">
+                <div class="control">
+                    <LabeledCheckbox
+                        v-model="experimentalUseMobileDevTools"
+                        label="Use mobile developer tools"
+                        hint="For debugging, dynamically loads third party scripts"
+                    ></LabeledCheckbox>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -441,6 +451,7 @@ const {
     experimentalUseQueueCueMode,
     experimentalUseMeter,
     experimentalHideStageMark,
+    experimentalUseMobileDevTools,
     experimentalShowRemarksEditors,
 } = storeToRefs(settings);
 

@@ -193,6 +193,13 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
      */
     const experimentalHideStageMark = ref(false);
 
+    /** EXPERIMENTAL: Whether to load and show mobile dev tools
+     */
+    const experimentalUseMobileDevTools = useLocalStorage(
+        'experimentalUseMobileDevTools',
+        false,
+    );
+
     /** EXPERIMENTAL: Whether to show the remarks editors
      */
     const experimentalShowRemarksEditors = useLocalStorage(
@@ -227,6 +234,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalUseQueueCueMode.value = false;
         experimentalUseMeter.value = false;
         experimentalHideStageMark.value = false;
+        experimentalUseMobileDevTools.value = false;
         experimentalShowRemarksEditors.value = false;
     }
 
@@ -258,6 +266,7 @@ export const useSettingsStore = defineStore(Store.Settings, () => {
         experimentalUseQueueCueMode,
         experimentalUseMeter,
         experimentalHideStageMark,
+        experimentalUseMobileDevTools,
         experimentalShowRemarksEditors,
         $reset,
     };
