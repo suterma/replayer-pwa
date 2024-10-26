@@ -12,7 +12,7 @@
  */
 
 import type JSZip from 'jszip';
-import { MediaBlob, RezMimeTypes } from './types';
+import { MediaBlob, ZipMimeTypes } from './types';
 
 /**
  * Provides handling methods for package, media and compilation files,
@@ -95,7 +95,7 @@ export default class FileHandler {
     /** The set of supported file types
      * @remarks Lowercase extensions, separated by comma */
     static supportedFileTypes =
-        '.rex,.xml,.rez,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.mp4,.m4v,.webm,.ogv,.txt,.pdf';
+        '.xml,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.mp4,.m4v,.webm,.ogv,.txt,.pdf';
 
     /** Returns whether the given path represents a Mac OS X resource fork.
      * @remarks Mac OS X resource forks are not processed by Replayer.
@@ -306,14 +306,11 @@ export default class FileHandler {
     /** Returns whether the given file name (by it's extension) is a supported package file name by Replayer
      */
     static isSupportedPackageFileName(fileName: string | undefined): boolean {
-        return FileHandler.FileExtensionMatch(fileName, [
-            'zip',
-            'rez' /*replayer zip*/,
-        ]);
+        return FileHandler.FileExtensionMatch(fileName, ['zip']);
     }
 
     /** Returns whether the given file name (by it's extension) is a supported compilation file name by Replayer
-     * @remarks XML (.rex, .xml) data is always considered a Compilation in this context
+     * @remarks XML (.xml) data is always considered a Compilation in this context
      */
     static isSupportedCompilationFileName(
         fileName: string | undefined,
@@ -397,7 +394,7 @@ export default class FileHandler {
                 'mp3',
                 'pdf',
                 'txt',
-                /* xml with highest priority */
+                /* xml with highest priority (rex is supported for historical reasons) */
                 'xml',
                 'rex',
             ];
@@ -563,51 +560,52 @@ export default class FileHandler {
         let mimeType = undefined;
         // audio
         if (fileExtension == 'mp3') {
-            mimeType = RezMimeTypes.AUDIO_MPEG /*mp3*/;
+            mimeType = ZipMimeTypes.AUDIO_MPEG /*mp3*/;
         } else if (fileExtension == 'wav' || fileExtension == 'wave') {
-            mimeType = RezMimeTypes.AUDIO_WAV /*wav*/;
+            mimeType = ZipMimeTypes.AUDIO_WAV /*wav*/;
         } else if (fileExtension == 'flac') {
-            mimeType = RezMimeTypes.AUDIO_FLAC /*flac*/;
+            mimeType = ZipMimeTypes.AUDIO_FLAC /*flac*/;
         } else if (fileExtension == 'ogg') {
-            mimeType = RezMimeTypes.AUDIO_OGG /*ogg*/;
+            mimeType = ZipMimeTypes.AUDIO_OGG /*ogg*/;
         } else if (fileExtension == 'aiff' || fileExtension == 'aif') {
-            mimeType = RezMimeTypes.AUDIO_AIFF /*aiff*/;
+            mimeType = ZipMimeTypes.AUDIO_AIFF /*aiff*/;
         } else if (fileExtension == 'aac' || fileExtension == 'm4a') {
-            mimeType = RezMimeTypes.AUDIO_AAC /*aac*/;
+            mimeType = ZipMimeTypes.AUDIO_AAC /*aac*/;
         }
         // video
         else if (fileExtension == 'webm') {
-            mimeType = RezMimeTypes.VIDEO_WEBM;
+            mimeType = ZipMimeTypes.VIDEO_WEBM;
         } else if (fileExtension == 'mp4' || fileExtension == 'm4v') {
             /** Video */
-            mimeType = RezMimeTypes.VIDEO_MP4;
+            mimeType = ZipMimeTypes.VIDEO_MP4;
         } else if (fileExtension == 'ogv') {
             /** Video */
-            mimeType = RezMimeTypes.VIDEO_OGG;
-        } else if (fileExtension == 'zip' || fileExtension == 'rez') {
+            mimeType = ZipMimeTypes.VIDEO_OGG;
+        } else if (fileExtension == 'zip') {
             /** Package/Compilation */
-            mimeType = RezMimeTypes.APPLICATION_ZIP /*zip*/;
-        } else if (fileExtension == 'xml' || fileExtension == 'rex') {
-            mimeType = RezMimeTypes.TEXT_XML /*xml*/;
+            mimeType = ZipMimeTypes.APPLICATION_ZIP;
+        } else if (fileExtension == 'xml') {
+            mimeType = ZipMimeTypes.TEXT_XML;
         } else if (fileExtension == 'txt') {
             /** Text */
-            mimeType = RezMimeTypes.TEXT_PLAIN /*text*/;
+            mimeType = ZipMimeTypes.TEXT_PLAIN;
         } else if (fileExtension == 'pdf') {
             /** Text */
-            mimeType = RezMimeTypes.APPLICATION_PDF /*text*/;
+            mimeType = ZipMimeTypes.APPLICATION_PDF;
         }
 
         return mimeType;
     }
 
     /** Asserts whether the file represents an XML compilation file
-     * @remarks Currently, xml, rex are supported
      */
     public static isXmlFile(file: File): boolean {
         return this.isXmlFileName(file.name) || this.isXmlMimeType(file.type);
     }
 
-    /** Asserts whether the file name represents an XML compilation file */
+    /** Asserts whether the file name represents an XML compilation file
+     * @remarks (rex is supported for historical reasons)
+     */
     public static isXmlFileName(fileName: string): boolean {
         return FileHandler.FileExtensionMatch(fileName, ['rex', 'xml']);
     }

@@ -151,7 +151,7 @@
                 </li>
                 <li>
                     <a
-                        href="http://localhost:8080/#/play?package=https%3A%2F%2Fweb.replayer.app%2Fmusic%2Fdemo-compilation-featuring-lidija-roos.rez"
+                        href="http://localhost:8080/#/play?package=https%3A%2F%2Fweb.replayer.app%2Fmusic%2Fdemo-compilation-featuring-lidija-roos.zip"
                         alt="Link to the Replayer app demo"
                         target="_blank"
                     >
@@ -160,7 +160,7 @@
                 </li>
                 <li>
                     <a
-                        href="http://localhost:8080/#/play?package=%2Fdemo-compilation-featuring-lidija-roos.rez"
+                        href="http://localhost:8080/#/play?package=%2Fdemo-compilation-featuring-lidija-roos.zip"
                         alt="Link to the Replayer app demo"
                         target="_blank"
                     >
@@ -211,11 +211,11 @@
             </p>
             <ul>
                 <li>
-                    <a href="/#/play/demo-compilation-featuring-lidija-roos.rez"
+                    <a href="/#/play/demo-compilation-featuring-lidija-roos.zip"
                         >Demo package with a compilation featuring Lidija
                         Roos</a
                     ><br />
-                    A REZ Package containing an REX compilation with 2 tracks
+                    A ZIP Package containing an XML compilation with 2 tracks
                     and matching mp3 files.
                 </li>
             </ul>

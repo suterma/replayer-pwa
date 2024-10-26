@@ -234,16 +234,16 @@
                                             href="./#/play?package=https://lib.replayer.app/demo/demo-compilation-featuring-lidija-roos.zip"
                                             target="_blank"
                                         >
-                                            ZIP (.rez) compressed package, with
+                                            ZIP (.zip) compressed package, with
                                             1 track</a
                                         >
                                     </li>
                                     <li>
                                         <a
-                                            href="./#/play?package=https://lib.replayer.app/demo/Demo%20Compilation%20featuring%20Lidija%20Roos%20%28online%20resources%20of%20multiple%20types%29.rex"
+                                            href="./#/play?package=https://lib.replayer.app/demo/Demo%20Compilation%20featuring%20Lidija%20Roos%20%28online%20resources%20of%20multiple%20types%29.xml"
                                             target="_blank"
                                         >
-                                            XML (.rex) package, with 5 online
+                                            XML (.xml) package, with 5 online
                                             tracks</a
                                         >
                                     </li>
@@ -258,20 +258,20 @@
                                     </li>
                                     <li>
                                         <a
-                                            href="./#/play?package=https://lib.replayer.app/nasa-4k/13537_Apollo13ViewsMoon4K_YouTube4K.rex"
+                                            href="./#/play?package=https://lib.replayer.app/nasa-4k/13537_Apollo13ViewsMoon4K_YouTube4K.xml"
                                             target="_blank"
                                         >
-                                            Small XML (.rex) package (4k), with
+                                            Small XML (.xml) package (4k), with
                                             one large linked video (.mp4, 715MB)
                                             and a small linked text file.</a
                                         >
                                     </li>
                                     <li>
                                         <a
-                                            href="./#/play?package=https://lib.replayer.app/nasa-4k/Moonlight%20%28Clair%20de%20Lune%29.rez"
+                                            href="./#/play?package=https://lib.replayer.app/nasa-4k/Moonlight%20%28Clair%20de%20Lune%29.zip"
                                             target="_blank"
                                         >
-                                            Large ZIP (.rez) package (327MB),
+                                            Large ZIP (.zip) package (327MB),
                                             with one large included video (.mp4,
                                             327MB) and a small included text
                                             file.</a
@@ -279,10 +279,10 @@
                                     </li>
                                     <li>
                                         <a
-                                            href="./#/play?package=https://lib.replayer.app/test/audio-test-tracks.rez"
+                                            href="./#/play?package=https://lib.replayer.app/test/audio-test-tracks.zip"
                                             target="_blank"
                                         >
-                                            Small ZIP (.rez) package (28k), with
+                                            Small ZIP (.zip) package (28k), with
                                             22 audio test tracks, including sine
                                             chirps and noise.</a
                                         >

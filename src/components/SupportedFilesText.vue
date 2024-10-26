@@ -85,16 +85,14 @@
                 <li>
                     <span class="has-text-weight-bold">ZIP</span> (<span
                         class="is-family-monospace"
-                        >.rez</span
-                    >, <span class="is-family-monospace">.zip</span>), including
-                    media files
+                        >.zip</span
+                    >), including media files
                 </li>
                 <li>
                     <span class="has-text-weight-bold">XML</span> (<span
                         class="is-family-monospace"
-                        >.rex</span
-                    >, <span class="is-family-monospace">.xml</span>), with URLs
-                    to online media resources
+                        >.xml</span
+                    >), with URLs to online media resources
                 </li>
             </ul>
         </div>

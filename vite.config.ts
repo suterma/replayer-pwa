@@ -137,13 +137,13 @@ export default defineConfig({
                     {
                         action: '/#/edit',
                         accept: {
-                            'application/zip': ['.zip', '.rez'],
-                            'application/octet-stream': ['.zip', '.rez'],
-                            'application/x-zip-compressed': ['.zip', '.rez'],
-                            'binary/octet-stream': ['.zip', '.rez'],
+                            'application/zip': ['.zip'],
+                            'application/octet-stream': ['.zip'],
+                            'application/x-zip-compressed': ['.zip'],
+                            'binary/octet-stream': ['.zip'],
 
-                            'application/xml': ['.xml', '.rex'],
-                            'text/xml': ['.xml', '.rex'],
+                            'application/xml': ['.xml'],
+                            'text/xml': ['.xml'],
 
                             'text/plain': ['.txt'],
                             'application/pdf': ['.pdf'],
