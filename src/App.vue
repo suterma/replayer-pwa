@@ -61,13 +61,11 @@
             aria-label="media player"
         ></div>
     </nav>
-    <MobileDevTools v-if="experimentalUseMobileDevTools"></MobileDevTools>
 </template>
 <script setup lang="ts">
 import AppContextMenu from '@/components/context-menu/AppContextMenu.vue';
 import StageMark from '@/components/indicators/StageMark.vue';
 import MessageOverlay from '@/components/MessageOverlay.vue';
-import MobileDevTools from '@/components/MobileDevTools.vue';
 //@ts-ignore (because the vue3-promise-dialog does not provide types)
 import { DialogWrapper } from 'vue3-promise-dialog';
 import { useSettingsStore } from '@/store/settings';
@@ -87,8 +85,7 @@ onMounted(() => {
 const app = useAppStore();
 const { hasCompilation } = storeToRefs(app);
 const settings = useSettingsStore();
-const { useWideContentWidth, experimentalUseMobileDevTools } =
-    storeToRefs(settings);
+const { useWideContentWidth } = storeToRefs(settings);
 const router = useRouter();
 
 // --- app state ---

@@ -419,7 +419,8 @@ import { storeToRefs } from 'pinia';
 import { confirm } from '@/code/ui/dialogs';
 import { useRouter } from 'vue-router';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
-
+import eruda from 'eruda';
+import { watch } from 'vue';
 /** A Settings view for the settings store
  */
 
@@ -468,4 +469,17 @@ function reset() {
         }
     });
 }
+
+/** Handle eruda toggling */
+watch(
+    experimentalUseMobileDevTools,
+    async (mobileDevTools) => {
+        if (mobileDevTools) {
+            eruda.init();
+        } else {
+            eruda.destroy();
+        }
+    },
+    { immediate: true },
+);
 </script>
