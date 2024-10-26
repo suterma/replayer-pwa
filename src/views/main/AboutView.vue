@@ -684,6 +684,14 @@
                         >, useful for URLs, filenames, and IDs. (Released under
                         the MIT License, by Sindre Sorhus)
                     </li>
+                    <li>
+                        <a
+                            href="https://github.com/liriliri/eruda"
+                            target="_blank"
+                            >eruda</a
+                        >,Console for Mobile Browsers. (Released under the MIT
+                        License, by LiriLiri)
+                    </li>
                 </ul>
             </div>
         </CollapsiblePanel>
