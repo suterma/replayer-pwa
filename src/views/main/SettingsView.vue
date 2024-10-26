@@ -475,9 +475,9 @@ watch(
     experimentalUseMobileDevTools,
     async (mobileDevTools) => {
         if (mobileDevTools) {
-            eruda.init();
+            eruda?.init();
         } else {
-            eruda.destroy();
+            eruda?.destroy();
         }
     },
     { immediate: true },
