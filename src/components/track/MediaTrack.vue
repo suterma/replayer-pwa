@@ -1377,7 +1377,7 @@ function getCuePreRollStartTime(cue: ICue): number {
  * These should get handled by the keyboard shortcut engine.
  */
 function cueClick(cue: ICue, togglePlayback = true) {
-    console.debug(`MediaTrack(${props.track.Name})::cueClick:cue:`, cue);
+    //console.debug(`MediaTrack(${props.track.Name})::cueClick:cue:`, cue);
     if (cue.Time != null && Number.isFinite(cue.Time)) {
         // Handle cue as current or scheduled?
         if (
