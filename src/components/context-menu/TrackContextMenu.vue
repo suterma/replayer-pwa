@@ -29,18 +29,18 @@
             :icon-path="mdiOrderNumericAscending"
             @click="app.reassignCueShortcuts(props.track.Id)"
         />
+        <!-- Note: using disabled did not toggle the disabled state properly, 
+             thus a v-if is used here -->
         <a
+            v-if="isDownloadable"
             :href="props.track.Url"
             download
             target="_blank"
-            :disabled="!isDownloadable"
         >
             <DropdownMenuButton
-                :disabled="!isDownloadable"
                 title="Download media file"
                 sub-title="(to local file system)"
                 :icon-path="mdiDownload"
-                @click="app.cloneTrack(props.track.Id)"
             />
         </a>
         <DropdownMenuButton
