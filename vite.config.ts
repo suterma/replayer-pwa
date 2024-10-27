@@ -39,6 +39,10 @@ export default defineConfig({
             },
         },
     },
+    esbuild: {
+        /** Do not log by default, improves performnce */
+        drop: ['console'],
+    },
     build: {
         // Support older browser/os versions
         // See https://replayer.app/en/documentation/compatibility-known-issues
