@@ -17175,6 +17175,40 @@ input[type=range].slider.is-danger .has-output-tooltip + output {
 
 /* Below: general application-specific add-ons/modifications to the Bulma CSS */
 /*************************************************************
+ * Bulma fixes
+**************************************************************
+*/
+/** Fix the vertical alignment of the labels in a horizontal form 
+(this is a general Bulma issue, see https://github.com/jgthms/bulma/issues/3354) */
+@media screen and (min-width: 769px), print {
+  .field.is-horizontal .field-label.is-normal {
+    padding-top: 0.5em;
+  }
+}
+/**
+* Optimize rendering performance by not changing the z-index on hover/focus/selection
+* This causes small visual faults with the borders of grouped elements, but 
+* greatly reduces repaints on hover and with playback operations
+* see https://stackoverflow.com/questions/79130607/why-does-the-bulma-css-framwork-change-the-z-index-on-hover
+*/
+/* Use same z-index, regardless of state
+-none-
+:hover,
+.is-hovered 
+:focus,
+.is-focused,
+:active,
+.is-active,
+.is-selected
+ */
+.buttons.has-addons .button,
+.field.has-addons .control .button:not([disabled]),
+.field.has-addons .control .input:not([disabled]),
+.field.has-addons .control .select select:not([disabled]) {
+  z-index: 2 !important;
+}
+
+/*************************************************************
  * Overscroll / scrollbar handling
 **************************************************************
 */
@@ -17464,16 +17498,4 @@ a[target=_blank]:hover {
 /* elements on a slight danger-like background, but not the inputs */
 .is-experimental:not(input) {
   background-color: rgba(238, 95, 91, 0.14);
-}
-
-/*************************************************************
- * Bulma fixes
-**************************************************************
-*/
-/** Fix the vertical alignment of the labels in a horizontal form 
-(this is a general Bulma issue, see https://github.com/jgthms/bulma/issues/3354) */
-@media screen and (min-width: 769px), print {
-  .field.is-horizontal .field-label.is-normal {
-    padding-top: 0.5em;
-  }
 }

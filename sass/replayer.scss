@@ -45,6 +45,8 @@ $slider-track-background: $border !default;
 @import '_replayer-slider-playhead.scss';
 
 /* Below: general application-specific add-ons/modifications to the Bulma CSS */
+@import '_bulma-fixes.scss';
+
 /*************************************************************
  * Overscroll / scrollbar handling
 **************************************************************
@@ -344,19 +346,4 @@ a[target='_blank']:hover {
 /* elements on a slight danger-like background, but not the inputs */
 .is-experimental:not(input) {
     background-color: rgba($danger, 0.14);
-}
-
-/*************************************************************
- * Bulma fixes
-**************************************************************
-*/
-
-/** Fix the vertical alignment of the labels in a horizontal form 
-(this is a general Bulma issue, see https://github.com/jgthms/bulma/issues/3354) */
-@media screen and (min-width: 769px), print {
-    .field.is-horizontal {
-        .field-label.is-normal {
-            padding-top: 0.5em;
-        }
-    }
 }
