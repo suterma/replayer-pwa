@@ -92,11 +92,6 @@ export default class FileHandler {
         ]),
     ];
 
-    /** The set of supported file types
-     * @remarks Lowercase extensions, separated by comma */
-    static supportedFileTypes =
-        '.xml,.zip,.mp3,.wav,.wave,.flac,.ogg,.aiff,.aif,.aac,.m4a,.mp4,.m4v,.webm,.ogv,.txt,.pdf';
-
     /** Returns whether the given path represents a Mac OS X resource fork.
      * @remarks Mac OS X resource forks are not processed by Replayer.
      */
