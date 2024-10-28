@@ -1,4 +1,4 @@
-## [2.5.0](https://github.com/suterma/replayer-pwa/compare/v2.4.0...v2.5.0) (2024-10-23)
+## [2.5.0](https://github.com/suterma/replayer-pwa/compare/v2.4.0...v2.5.0) (2024-10-28)
 
 This release improves tag handling and cue display
 
@@ -9,6 +9,7 @@ This release improves tag handling and cue display
 -   added experimental remarks for tracks
 -   various bugfixes
 -   improved internal state management
+-   deprecated legacy package file support (.rez/.rex)
 
 **Full Changelog**: https://github.com/suterma/replayer-pwa/compare/v2.3.0...v2.4.0
 
