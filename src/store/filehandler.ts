@@ -571,21 +571,22 @@ export default class FileHandler {
         else if (fileExtension == 'webm') {
             mimeType = ZipMimeTypes.VIDEO_WEBM;
         } else if (fileExtension == 'mp4' || fileExtension == 'm4v') {
-            /** Video */
             mimeType = ZipMimeTypes.VIDEO_MP4;
         } else if (fileExtension == 'ogv') {
-            /** Video */
             mimeType = ZipMimeTypes.VIDEO_OGG;
-        } else if (fileExtension == 'zip') {
-            /** Package/Compilation */
+        } else if (
+            fileExtension == 'zip' ||
+            fileExtension == 'rez' /* rez is supported for historical reasons */
+        ) {
             mimeType = ZipMimeTypes.APPLICATION_ZIP;
-        } else if (fileExtension == 'xml') {
+        } else if (
+            fileExtension == 'xml' ||
+            fileExtension == 'rex' /* rex is supported for historical reasons */
+        ) {
             mimeType = ZipMimeTypes.TEXT_XML;
         } else if (fileExtension == 'txt') {
-            /** Text */
             mimeType = ZipMimeTypes.TEXT_PLAIN;
         } else if (fileExtension == 'pdf') {
-            /** Text */
             mimeType = ZipMimeTypes.APPLICATION_PDF;
         }
 
