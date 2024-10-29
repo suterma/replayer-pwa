@@ -40,8 +40,11 @@ export default defineConfig({
         },
     },
     esbuild: {
-        /** Do not log by default, improves performnce */
-        drop: ['console'],
+        /** Do not log on production, improves performnce */
+        drop:
+            process.env.NODE_ENV === 'production'
+                ? ['console', 'debugger']
+                : undefined,
     },
     build: {
         // Support older browser/os versions
