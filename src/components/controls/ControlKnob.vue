@@ -417,7 +417,7 @@ watch(
             mouseIsDown.value === false &&
             hasFocus.value === false
         ) {
-            // console.log('propvalue changed for ', knobElement.value.attributes.id)
+            // log.info('propvalue changed for ', knobElement.value.attributes.id)
             const controlValue = valueToControlAngle(
                 knobMinValue,
                 knobMaxValue,

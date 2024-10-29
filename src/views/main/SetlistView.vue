@@ -168,7 +168,7 @@
 
 <script setup lang="ts">
 /** A printable display of a complete compilation, with a track and cue listing */
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import SetlistItem from '@/components/SetlistItem.vue';
 import ReplayerAd from '@/components/ReplayerAd.vue';
@@ -178,9 +178,8 @@ import { storeToRefs } from 'pinia';
 import { useAppStore } from '@/store/app';
 import type { ITrack } from '@/store/ITrack';
 import TagsSelector from '@/components/editor/TagsSelector.vue';
-import { logInjectionKey } from '@/AppInjectionKeys';
-import type { ILogObj, Logger } from 'tslog';
-const log = inject(logInjectionKey) as Logger<ILogObj>;
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 const drag = ref(false);
 

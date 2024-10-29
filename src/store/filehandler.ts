@@ -13,6 +13,8 @@
 
 import type JSZip from 'jszip';
 import { MediaBlob, ZipMimeTypes } from './types';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 /**
  * Provides handling methods for package, media and compilation files,
@@ -525,7 +527,7 @@ export default class FileHandler {
         let mimeType = undefined;
         //Try to get the MIME type from the content type
         if (contentType) {
-            console.debug('FileHandler::getMimeType:contentType', contentType);
+            log.debug('FileHandler::getMimeType:contentType', contentType);
             //However, Replayer does currently only use the bare mime type, omitting any probable charset
             mimeType = contentType.split(';')[0];
         }
@@ -548,7 +550,7 @@ export default class FileHandler {
      */
     static getFileMimeType(fileName: string): string | undefined {
         const fileExtension = this.getFileExtension(fileName);
-        console.debug(
+        log.debug(
             'CompilationParser::getFileMimeType:fileExtension',
             fileExtension,
         );
@@ -631,7 +633,7 @@ export default class FileHandler {
         mediaFileName: string,
         content: Blob,
     ): MediaBlob {
-        console.debug('CompilationParser::handleAsMediaContent');
+        log.debug('CompilationParser::handleAsMediaContent');
         const blob = new Blob([content], {
             type: FileHandler.getFileMimeType(mediaFileName),
         });

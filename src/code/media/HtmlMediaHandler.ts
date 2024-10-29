@@ -25,6 +25,8 @@ import type { ShallowRef } from 'vue';
 import Constants from './Constants';
 import { PlaybackState } from './PlaybackState';
 import { SubEventImmediate } from './SubEventImmediate';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 /** @class Implements a playback handler for a {HTMLMediaElement}.
  * @remarks This handles transport/loop and volume operations for audio sources (HTML media elements).
@@ -135,7 +137,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
             if (!this._fader.fading) {
                 this._fader
                     .fadeIn(this._omitNextFadeIn)
-                    .catch((message) => console.log(message));
+                    .catch((message) => log.info(message));
             }
             this.resetNextFadeInOmission();
 
@@ -166,7 +168,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
     /** Writes a debug log message message for this component */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     debugLog(message: string, ...optionalParams: any[]): void {
-        console.debug(
+        log.debug(
             `HtmlMediaHandler(${this._media.src})::${message}:`,
             optionalParams,
         );
@@ -276,7 +278,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
         return new Promise((resolve) => {
             this._fader
                 .fadeOut()
-                .catch((message) => console.log(message))
+                .catch((message) => log.info(message))
                 .finally(() => {
                     this._media.pause();
                     this.onPlaybackStateChanged.emit(this.playbackState);
@@ -495,7 +497,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
         }
 
         this.debugLog(
-            `handleReadyState:readyState;${readyState};buffered:${this._media.buffered};buffered.length:${this._media.buffered.length};networkState:${this._media.networkState}`,
+            `handleReadyState:readyState;${readyState};buffered.length:${this._media.buffered.length};networkState:${this._media.networkState}`,
         );
 
         // When having metadata, while network is idle, but nothing is buffered at this moment,
@@ -512,7 +514,7 @@ export default class HtmlMediaHandler implements IMediaHandler {
             this._media.buffered.length === 0
         ) {
             this.isClickToLoadRequired = true;
-            console.warn(
+            log.warn(
                 'User gesture required (iOS-Condition) for further loading...',
             );
             // In this specific case, prematurely emit the ready

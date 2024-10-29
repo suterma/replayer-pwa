@@ -32,7 +32,8 @@ import { v4 as uuidv4 } from 'uuid';
 import FileHandler from './filehandler';
 import { round } from 'lodash-es';
 import slugify from '@sindresorhus/slugify';
-
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 /**
  * Provides compilation handling methods
  */
@@ -168,7 +169,7 @@ export default class CompilationHandler {
 
     /** Get a new track, with values derived from the resourceName */
     static createDefaultTrack(resourceName: string): ITrack {
-        console.debug(
+        log.debug(
             'CompilationHandler::createDefaultTrack:mediaUrl',
             resourceName,
         );

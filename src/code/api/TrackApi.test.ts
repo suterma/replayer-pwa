@@ -16,6 +16,8 @@ import { TrackApi } from './TrackApi';
 import { Track } from '@/store/Track';
 import { Cue } from '@/store/Cue';
 import type { LocationQuery } from 'vue-router';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 describe('TrackApi.ts', () => {
     it('should produce an URL for a simple track', async () => {
@@ -107,7 +109,7 @@ describe('TrackApi.ts', () => {
             '6.49': 'Intro',
         } as LocationQuery;
 
-        console.debug('jest', query);
+        log.debug('jest', query);
 
         //Act
         const track = TrackApi.parseFromUrlQuery(query);

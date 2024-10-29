@@ -27,6 +27,8 @@ import type { IPitchShiftController } from './IPitchShiftController';
 import Constants from './Constants';
 import { PlaybackState } from './PlaybackState';
 import { SubEventImmediate } from './SubEventImmediate';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 /** @class Implements a playback handler for a YouTube IFrame player with VueYoutube.
  * @remarks This handles transport/loop and volume operations for the audio.
@@ -94,7 +96,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     /** Writes a debug log message message for this component */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     debugLog(message: string, ...optionalParams: any[]): void {
-        console.debug(
+        log.debug(
             `YouTubeMediaHandler(${this._videoUrl})::${message}:`,
             optionalParams,
         );
@@ -206,7 +208,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
         return new Promise((resolve) => {
             this._fader
                 .fadeOut()
-                .catch((message) => console.log(message))
+                .catch((message) => log.info(message))
                 .finally(() => {
                     // NOTE: This currently throws an error, when the handler
                     // gets destroyed during an ongoing fade operation.
@@ -359,7 +361,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     private _isPlaying = false;
 
     handleStateChange(state: PlayerState): void {
-        console.debug(
+        log.debug(
             `YouTubeMediaHandler(${this._id})::onStateChange:${PlayerState[state]}`,
         );
 
@@ -384,7 +386,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
                     if (!this._fader.fading) {
                         this._fader
                             .fadeIn(this._omitNextFadeIn)
-                            .catch((message) => console.log(message));
+                            .catch((message) => log.info(message));
                     }
                     this.resetNextFadeInOmission();
 
@@ -457,7 +459,7 @@ export default class YouTubeMediaHandler implements IMediaHandler {
      * @param {number} duration - could be NaN or infinity, depending on the source
      */
     updateDuration(duration: number): void {
-        console.debug('TrackYoutubeElement::updateDuration:duration', duration);
+        log.debug('TrackYoutubeElement::updateDuration:duration', duration);
         this.onDurationChanged.emit(duration);
     }
 

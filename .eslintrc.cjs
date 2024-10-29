@@ -46,4 +46,6 @@ module.exports = {
     rules: {
         'license-header/header': ['error', './resources/license-header.js'],
     },
+    /** exclude all pdfjs files from linting */
+    ignorePatterns: ['**/pdfjs/*'],
 };

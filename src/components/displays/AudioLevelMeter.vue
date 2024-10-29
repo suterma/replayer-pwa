@@ -227,7 +227,7 @@ onBeforeUnmount(() => {
 
 /** Starts running the analyser */
 function start() {
-    console.debug('AudioLevelMeter::start');
+    log.debug('AudioLevelMeter::start');
 
     if (!analyser) {
         analyser = props.audioContext.createAnalyser();
@@ -258,7 +258,7 @@ function start() {
 }
 
 function stop() {
-    console.debug('AudioLevelMeter::stop');
+    log.debug('AudioLevelMeter::stop');
 
     cancelAnimationFrame(loopRequestId);
     if (analyser) {
@@ -271,7 +271,7 @@ function stop() {
  * @remarks chooses the appropriate algorithm according to the settings
  */
 function loop() {
-    //console.debug('AudioLevelMeter::loop');
+    //log.debug('AudioLevelMeter::loop');
 
     if (canUseFloatTimeDomainData) {
         analyser.getFloatTimeDomainData(floatSampleBuffer);

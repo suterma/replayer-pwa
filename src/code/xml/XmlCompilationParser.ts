@@ -29,7 +29,8 @@ import type { ITimeSignature } from '../music/ITimeSignature';
 import { Meter } from '../music/Meter';
 import type { IMeter } from '../music/IMeter';
 import FileHandler from '@/store/filehandler';
-
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 /**
  * Provides static helper methods for parsing compilations from and to XML.
  * @devdoc Code is written to work with the xml2js module specifically
@@ -40,7 +41,7 @@ export default abstract class XmlCompilationParser {
      * @devdoc The XML type contains all properties as arrays, even the single item ones. This is a limitation of the used XML-To-JS converter */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static parseFromXmlCompilation(xmlCompilation: any): ICompilation {
-        console.debug('Raw xmlCompilation:', xmlCompilation);
+        log.debug('Raw xmlCompilation:', xmlCompilation);
         return new Compilation(
             XmlCompilationParser.FirstStringOf(xmlCompilation.MediaPath),
             XmlCompilationParser.FirstStringOf(xmlCompilation.Title),
@@ -228,14 +229,14 @@ export default abstract class XmlCompilationParser {
     public static async handleAsXmlCompilation(
         content: Blob,
     ): Promise<ICompilation> {
-        console.debug('CompilationParser::handleAsXmlCompilation');
+        log.debug('CompilationParser::handleAsXmlCompilation');
         return FileHandler.ReadAsText(content).then((text) => {
             return (
                 xml2js
                     .parseStringPromise(text /*, options */)
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     .then((text: any) => {
-                        console.debug('Parsed XML compilation: ', text);
+                        log.debug('Parsed XML compilation: ', text);
                         return XmlCompilationParser.parseFromXmlCompilation(
                             text.XmlCompilation,
                         );

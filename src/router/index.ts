@@ -22,6 +22,8 @@ import MainView from '../views/MainView.vue';
 import ResetView from '../views/ResetView.vue';
 import DemoView from '../views/DemoView.vue';
 import DevelopmentView from '../views/DevelopmentView.vue';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 /** A set of route names. */
 export enum Route {
@@ -130,11 +132,11 @@ router.afterEach((to, from, failure) => {
     }
 
     if (isNavigationFailure(failure)) {
-        console.error(
+        log.error(
             `Route change from ${from.path?.toString()} to ${to.path?.toString()} failed`,
         );
     } else {
-        console.info(
+        log.info(
             `Changed route from ${from.path?.toString()} to ${to.path?.toString()}`,
         );
     }

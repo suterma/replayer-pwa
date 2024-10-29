@@ -11,15 +11,14 @@
  * as part of a component. Otherwise the URL fragment part is not processed
  * as the query part within vue-router
  */
-import { inject, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import { useAppStore } from '@/store/app';
 import { useMessageStore } from '@/store/messages';
 import { TrackApi } from '@/code/api/TrackApi';
 import { useRoute, useRouter } from 'vue-router';
-import { logInjectionKey } from '@/AppInjectionKeys';
-import type { ILogObj, Logger } from 'tslog';
+import useLog from '@/composables/LogComposable';
 
-const log = inject(logInjectionKey) as Logger<ILogObj>;
+const { log } = useLog();
 const message = useMessageStore();
 const router = useRouter();
 const route = useRoute();

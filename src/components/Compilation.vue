@@ -84,6 +84,8 @@ import { useAppStore } from '@/store/app';
 import NoSleep from 'nosleep.js';
 import { useSettingsStore } from '@/store/settings';
 import TagsSelector from '@/components/editor/TagsSelector.vue';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 const app = useAppStore();
 const {
@@ -150,7 +152,7 @@ function activateWakeLock(): void {
     if (preventScreenTimeout) {
         if (!noSleep.isEnabled) {
             noSleep.enable().catch((error) => {
-                console.warn(
+                log.warn(
                     `Swallowed error for failed WakeLock promise: ${error.name}, ${error.message}`,
                 );
             });
@@ -199,7 +201,7 @@ function scrollToActiveTrack() {
 /** Handles the playback after a track has ended.
  */
 function continueAfterTrack(trackId: string): void {
-    console.debug('continueAfterTrack', trackId);
+    log.debug('continueAfterTrack', trackId);
     if (isLoopingPlaybackMode.value) {
         app.playNextTrack();
     }
@@ -214,12 +216,12 @@ const compilationHasTags = computed(() => {
 const { selectedTags, isLoopingPlaybackMode } = storeToRefs(app);
 
 function selectTag(tag: string) {
-    console.debug('selectTag', tag);
+    log.debug('selectTag', tag);
 
     selectedTags.value.add(tag);
 }
 function deselectTag(tag: string) {
-    console.debug('deselectTag', tag);
+    log.debug('deselectTag', tag);
 
     selectedTags.value.delete(tag);
 }

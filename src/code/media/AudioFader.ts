@@ -14,6 +14,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { FadingMode, type IAudioFader } from './IAudioFader';
 import { SubEventImmediate } from './SubEventImmediate';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 /** @class Implements an audio fader for an HTML media element instance. This fader supports two concepts:
  * - a master volume, that emulates a set, overall audio level
@@ -89,7 +91,7 @@ export default class AudioFader implements IAudioFader {
                 const currentVolume = this.audio.volume;
                 if (currentVolume != this.masterVolume) {
                     this.masterVolume = currentVolume;
-                    console.debug('onvolumechange-non-fading:', currentVolume);
+                    log.debug('onvolumechange-non-fading:', currentVolume);
                     this.onVolumeChanged.emit(currentVolume);
                 }
             }
@@ -248,7 +250,7 @@ export default class AudioFader implements IAudioFader {
     /** @inheritdoc
      */
     set muted(value: boolean) {
-        console.debug(`AudioFader::muted:value:${value}`);
+        log.debug(`AudioFader::muted:value:${value}`);
 
         this._muted = value;
         this.audio.volume = this.getVolume();
@@ -269,7 +271,7 @@ export default class AudioFader implements IAudioFader {
     /** @inheritdoc
      */
     set soloed(value: boolean) {
-        console.debug(`AudioFader::soloed:value:${value}`);
+        log.debug(`AudioFader::soloed:value:${value}`);
 
         this._soloed = value;
         if (value) {
@@ -291,7 +293,7 @@ export default class AudioFader implements IAudioFader {
     /** @inheritdoc
      */
     set anySoloed(value: boolean) {
-        console.debug(`AudioFader::anySoloed:value:${value}`);
+        log.debug(`AudioFader::anySoloed:value:${value}`);
         this._anySoloed = value;
         this.audio.volume = this.getVolume();
     }
@@ -383,10 +385,10 @@ export default class AudioFader implements IAudioFader {
                         duration,
                     )
                         .catch(() => {
-                            console.debug(`AudioFader::fadeIn:linear:aborted`);
+                            log.debug(`AudioFader::fadeIn:linear:aborted`);
                         })
                         .then(() => {
-                            console.debug(`AudioFader::fadeIn:linear:ended`);
+                            log.debug(`AudioFader::fadeIn:linear:ended`);
                         })
                         .finally(() => {
                             resolve();
@@ -395,7 +397,7 @@ export default class AudioFader implements IAudioFader {
                 });
             } else {
                 //nothing to fade
-                console.debug(`AudioFader::fadeIn:immediate`);
+                log.debug(`AudioFader::fadeIn:immediate`);
                 this.audioVolume = currentMasterAudioVolume;
                 return Promise.resolve();
             }
@@ -408,7 +410,7 @@ export default class AudioFader implements IAudioFader {
      */
     private fade(from: number, to: number, duration: number): Promise<void> {
         return new Promise((resolve, reject) => {
-            console.debug(
+            log.debug(
                 `AudioFader::fading for:${duration}ms from:${from} to:${to}`,
             );
             //Set exactly to the expected begin volume
@@ -426,7 +428,7 @@ export default class AudioFader implements IAudioFader {
                     clearInterval(clearIntervalId);
                     const message =
                         'AudioFader::Linear fade aborted due to cancelling.';
-                    console.warn(message);
+                    log.warn(message);
                     reject(message);
                     return;
                 }
@@ -437,7 +439,7 @@ export default class AudioFader implements IAudioFader {
                     this.cancel();
                     const message =
                         'AudioFader::Linear fade aborted due to cancelling or a subsequent fade operation.';
-                    console.warn(message);
+                    log.warn(message);
                     //Set exactly to the expected end volume, starting from there for the next fade
                     this.audioVolume = to;
                     reject(message);
@@ -472,7 +474,7 @@ export default class AudioFader implements IAudioFader {
             const currentMediaVolume = this.audioVolume;
             if (duration && currentMediaVolume != AudioFader.audioVolumeMin) {
                 return new Promise((resolve) => {
-                    console.debug(
+                    log.debug(
                         `AudioFader::fadeOut:currentMediaVolume:${currentMediaVolume}`,
                     );
                     this.onFadingChanged.emit(FadingMode.FadeOut);
@@ -482,10 +484,10 @@ export default class AudioFader implements IAudioFader {
                         duration,
                     )
                         .catch(() => {
-                            console.debug(`AudioFader::fadeOut:linear:aborted`);
+                            log.debug(`AudioFader::fadeOut:linear:aborted`);
                         })
                         .then(() => {
-                            console.debug(`AudioFader::fadeOut:linear:ended`);
+                            log.debug(`AudioFader::fadeOut:linear:ended`);
                         })
                         .finally(() => {
                             resolve();

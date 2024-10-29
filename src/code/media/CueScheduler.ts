@@ -14,6 +14,8 @@
 import type { IMediaHandler } from './IMediaHandler';
 import type { ICueScheduler } from './ICueScheduler';
 import type { ICue } from '@/store/ICue';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 /** @class Implements scheduling cues in a track.
  */
@@ -37,7 +39,7 @@ export class CueScheduler implements ICueScheduler {
 
         const targetTime = targetCue.Time;
         this.RemoveSchedule();
-        console.debug(
+        log.debug(
             `CueScheduler::ScheduleCue:timeout,targetTime:`,
             timeout,
             targetTime,
@@ -45,7 +47,7 @@ export class CueScheduler implements ICueScheduler {
         return new Promise((resolve, reject) => {
             this.timeoutHandle = setTimeout(() => {
                 if (this.timeoutHandle) {
-                    console.debug(
+                    log.debug(
                         `CueScheduler::ScheduleCue:invoked:targetTime:`,
                         targetTime,
                     );
@@ -62,7 +64,7 @@ export class CueScheduler implements ICueScheduler {
     }
 
     RemoveSchedule(): void {
-        console.debug(
+        log.debug(
             `CueScheduler::RemoveSchedule:timeoutHandle:`,
             this.timeoutHandle,
         );

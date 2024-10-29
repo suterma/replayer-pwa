@@ -11,7 +11,6 @@
  * JavaScript code in this page
  */
 
-import type { ILogObj, Logger } from 'tslog';
 import type { InjectionKey, Ref } from 'vue';
 
 /** @file A set of injection keys for providing app state to descendant components of the app,
@@ -20,6 +19,3 @@ import type { InjectionKey, Ref } from 'vue';
 export const navbarCompensationHeightInjectionKey = Symbol() as InjectionKey<
     Ref<number>
 >;
-
-/** A symbol for providing and injecting the application log */
-export const logInjectionKey = Symbol() as InjectionKey<Logger<ILogObj>>;

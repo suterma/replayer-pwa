@@ -17,11 +17,10 @@
  * See https://caniuse.com/fullscreen
  */
 import { useFullscreen } from '@vueuse/core';
-import { inject, ref } from 'vue';
-import { logInjectionKey } from '@/AppInjectionKeys';
-import type { ILogObj, Logger } from 'tslog';
+import { ref } from 'vue';
+import useLog from '@/composables/LogComposable';
 
-const log = inject(logInjectionKey) as Logger<ILogObj>;
+const { log } = useLog();
 const container = ref<HTMLElement | null>(null);
 const hasNative = ref(document.fullscreenEnabled);
 

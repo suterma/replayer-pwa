@@ -16,12 +16,11 @@
 
 import { Route } from '@/router';
 import { useAppStore } from '@/store/app';
-import { inject, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { logInjectionKey } from '@/AppInjectionKeys';
-import type { ILogObj, Logger } from 'tslog';
+import useLog from '@/composables/LogComposable';
 
-const log = inject(logInjectionKey) as Logger<ILogObj>;
+const { log } = useLog();
 const router = useRouter();
 
 onMounted(() => {

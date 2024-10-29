@@ -788,7 +788,9 @@ import type { ICompilation } from '@/store/ICompilation';
 import { useAudioStore } from '@/store/audio';
 import { Subscription } from 'sub-events';
 import { PlaybackState } from '@/code/media/PlaybackState';
+import useLog from '@/composables/LogComposable';
 
+const { log } = useLog();
 const emit = defineEmits([
     /** Occurs, when the previous track should be set as the active track
      * @remarks allows track navigation from within a track.
@@ -891,7 +893,7 @@ let onPitchShiftChangedSubscription: Subscription;
 /** Updates a received media handler for this track */
 function assumeMediaHandler(handler: IMediaHandler) {
     // initialize from persisted track values
-    console.debug('MediaTrack::assumeMediaHandler:id', handler.id);
+    log.debug('MediaTrack::assumeMediaHandler:id', handler.id);
     handler.fader.setVolume(props.track.Volume);
     handler.fader.updateSettings(
         settings.fadeInDuration,
@@ -1002,7 +1004,7 @@ function updatePlaybackState(state: PlaybackState) {
 /** Releases a used media handler for this track */
 function releaseMediaHandler() {
     const handler = mediaHandler.value;
-    console.debug('MediaTrack::releaseMediaHandler:id', handler?.id);
+    log.debug('MediaTrack::releaseMediaHandler:id', handler?.id);
 
     // un-register for the registered events
     currentTimeChangedSubscription?.cancel;
@@ -1325,10 +1327,7 @@ function goToSelectedCue() {
             sequences might cause actions on non-active tracks too.*/
     if (isActiveTrack.value) {
         const cue = selectedCue.value;
-        console.debug(
-            `MediaTrack(${props.track.Name})::goToSelectedCue:cue:`,
-            cue,
-        );
+        log.debug(`MediaTrack(${props.track.Name})::goToSelectedCue:cue:`, cue);
         if (cue) {
             const startTime = getCuePreRollStartTime(selectedCue.value);
 
@@ -1377,7 +1376,7 @@ function getCuePreRollStartTime(cue: ICue): number {
  * These should get handled by the keyboard shortcut engine.
  */
 function cueClick(cue: ICue, togglePlayback = true) {
-    //console.debug(`MediaTrack(${props.track.Name})::cueClick:cue:`, cue);
+    //log.debug(`MediaTrack(${props.track.Name})::cueClick:cue:`, cue);
     if (cue.Time != null && Number.isFinite(cue.Time)) {
         // Handle cue as current or scheduled?
         if (
@@ -1397,7 +1396,7 @@ function cueClick(cue: ICue, togglePlayback = true) {
                         selectedCue.value,
                     );
                 if (remainingTime) {
-                    console.debug(
+                    log.debug(
                         `MediaTrack(${props.track.Name})::scheduling:remainingTime:`,
                         remainingTime,
                     );
@@ -1410,7 +1409,7 @@ function cueClick(cue: ICue, togglePlayback = true) {
                             );
                         })
                         .catch((reason) => {
-                            console.warn(
+                            log.warn(
                                 `MediaTrack(${props.track.Name})::ScheduleCue:aborted:`,
                                 reason,
                             );
@@ -1418,7 +1417,7 @@ function cueClick(cue: ICue, togglePlayback = true) {
                     app.updateScheduledCueId(cue.Id);
                 }
             } else {
-                console.warn('No cue selected, can not schedule the next cue');
+                log.warn('No cue selected, can not schedule the next cue');
             }
         } else {
             app.updateSelectedCueId(cue.Id);
@@ -1573,10 +1572,7 @@ const isActiveTrack = computed(() => activeTrackId.value === props.track.Id);
  This avoids having multiple tracks playing at the same time.
 */
 watch(isActiveTrack, (isActive, wasActive) => {
-    console.debug(
-        `MediaTrack(${props.track.Name})::isActiveTrack:val:`,
-        isActive,
-    );
+    log.debug(`MediaTrack(${props.track.Name})::isActiveTrack:val:`, isActive);
 
     // Pause and reset this track, when it's no more the active track
     if (wasActive === true && isActive === false) {
@@ -1594,7 +1590,7 @@ watch(isActiveTrack, (isActive, wasActive) => {
 watch(
     [activeTrackId, isTrackEditable],
     ([activeTrackId, newIsEditable], [previousTrackId]) => {
-        // console.debug(
+        // log.debug(
         //     `MediaTrack(${props.track.Name})::activeTrack:activeTrackId:`,
         //     activeTrackId,
         //     'prev:',

@@ -13,9 +13,16 @@
 
 import { Logger, type ILogObj, type ISettingsParam } from 'tslog';
 
-/** A logger for Replayer components */
-const useLog = (settings?: ISettingsParam<ILogObj> | undefined) => {
-    const log: Logger<ILogObj> = new Logger(settings);
+let log: Logger<ILogObj> | undefined = undefined;
+
+const settings: ISettingsParam<ILogObj> | undefined = {};
+
+/** An application global logger instance for Replayer */
+const useLog = () => {
+    if (log == undefined) {
+        log = new Logger(settings);
+        log.debug('Logger created');
+    }
     return {
         log,
     };

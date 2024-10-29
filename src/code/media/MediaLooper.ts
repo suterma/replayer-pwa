@@ -14,6 +14,8 @@
 import type { IMediaHandler } from './IMediaHandler';
 import { type IMediaLooper, LoopMode } from './IMediaLooper';
 import { PlaybackState } from './PlaybackState';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 /** @class Implements range looping for an {IMediaHandler}, including fading.
  * @remarks Implements optional audio fading at the loop boundaries, with the help of an {IAudioFader}.
@@ -78,7 +80,7 @@ export class MediaLooper implements IMediaLooper {
             const currentTime = this._media.currentTime;
             if (loopEnd != null) {
                 const timeout = this.getSafeTimeout(currentTime, loopEnd);
-                // console.debug(
+                // log.debug(
                 //     `MediaLooper::scheduleNextLoopHandling:timeout: ${timeout}`,
                 // );
 
@@ -98,7 +100,7 @@ export class MediaLooper implements IMediaLooper {
                         (timeout * 1000) /
                             this._media.playbackRateController.playbackRate,
                     );
-                    // console.debug(
+                    // log.debug(
                     //     `MediaLooper::scheduleNextLoopHandling:rescheduled`,
                     //     timeout,
                     // );
@@ -248,7 +250,7 @@ export class MediaLooper implements IMediaLooper {
                     !this.useFadingOnLoopBoundaries)
             ) {
                 const tLoopHandlingStart = performance.now();
-                console.debug(`MediaLooper::doLoop:fast`);
+                log.debug(`MediaLooper::doLoop:fast`);
                 this._media
                     .seekTo(start + this.loopSeekingDurationToCompensate)
                     .then(() => {
@@ -260,7 +262,7 @@ export class MediaLooper implements IMediaLooper {
                         );
                     });
             } else {
-                console.debug(`MediaLooper::doLoop:faded`);
+                log.debug(`MediaLooper::doLoop:faded`);
                 // Determine whether fadeout would be after track end
                 // Typically happens for the last cue in a track
                 const fadeEnd = end + this._media.fader.fadeOutDuration / 1000;
@@ -312,14 +314,14 @@ export class MediaLooper implements IMediaLooper {
      * measured start and end times (in [milliseconds]) of the loop seeking operation
      * @remarks Applies some simple averaging */
     updateLoopSeekingDuration(tStart: number, tFinish: number) {
-        // console.log(
+        // log.info(
         //     `Call to do looping took ${tFinish - tStart} milliseconds.`,
         // );
         const averageDuration =
             (this.loopSeekingDurationToCompensate * 1000 + (tFinish - tStart)) /
             2 /
             1000;
-        // console.log(
+        // log.info(
         //     `Updated measured loop seeking duration to ${averageDuration * 1000} milliseconds.`,
         // );
         this.loopSeekingDurationToCompensate = averageDuration;

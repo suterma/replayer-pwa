@@ -419,9 +419,8 @@ import { storeToRefs } from 'pinia';
 import { confirm } from '@/code/ui/dialogs';
 import { useRouter } from 'vue-router';
 import LabeledCheckbox from '@/components/editor/LabeledCheckbox.vue';
-import { inject } from 'vue';
-import { logInjectionKey } from '@/AppInjectionKeys';
-import type { ILogObj, Logger } from 'tslog';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 /** A Settings view for the settings store
  */
 
@@ -458,7 +457,6 @@ const {
 } = storeToRefs(settings);
 
 const router = useRouter();
-const log = inject(logInjectionKey) as Logger<ILogObj>;
 
 function reset() {
     confirm(

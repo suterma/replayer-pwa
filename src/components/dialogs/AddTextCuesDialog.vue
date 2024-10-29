@@ -43,6 +43,8 @@ import ModalDialog from '@/components/dialogs/ModalDialog.vue';
 import type { ITrack } from '@/store/ITrack';
 import type { ICue } from '@/store/ICue';
 import { Cue } from '@/store/Cue';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 export default defineComponent({
     name: 'AddTextCuesDialog',
@@ -89,8 +91,8 @@ export default defineComponent({
                     ),
                 );
             });
-            console.debug(cueText.value);
-            console.debug('cues', cues);
+            log.debug(cueText.value);
+            log.debug('cues', cues);
 
             return cues;
         };

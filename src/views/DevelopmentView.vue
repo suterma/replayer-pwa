@@ -362,7 +362,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import NavButton from '@/components/buttons/NavButton.vue';
@@ -395,10 +395,9 @@ import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import FadeInSwitch from '@/components/buttons/FadeInSwitch.vue';
 import PreRollSwitch from '@/components/buttons/PreRollSwitch.vue';
-import { logInjectionKey } from '@/AppInjectionKeys';
-import type { ILogObj, Logger } from 'tslog';
+import useLog from '@/composables/LogComposable';
 
-const log = inject(logInjectionKey) as Logger<ILogObj>;
+const { log } = useLog();
 
 const isExpanded = ref(false);
 const knobValue = ref(0);

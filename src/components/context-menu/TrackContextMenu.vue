@@ -82,6 +82,8 @@ import { storeToRefs } from 'pinia';
 import { Cue } from '@/store/Cue';
 import { v4 as uuidv4 } from 'uuid';
 import { Meter } from '@/code/music/Meter';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 const props = defineProps({
     track: {
@@ -100,9 +102,7 @@ function addMultipleCues() {
                     app.addCue(trackId, cue);
                 });
 
-                console.debug(
-                    `TrackHeader::adding multiple cues from text done`,
-                );
+                log.debug(`TrackHeader::adding multiple cues from text done`);
             }
         });
     }
@@ -150,7 +150,7 @@ function inheritMultipleCues() {
                         app.updateTrackPreRoll(targetTrackId, source.PreRoll);
                     }
 
-                    console.debug(
+                    log.debug(
                         `TrackHeader::inheriting multiple cues from track done`,
                     );
                 }

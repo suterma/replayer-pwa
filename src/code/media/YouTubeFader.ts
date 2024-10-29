@@ -15,6 +15,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { FadingMode, type IAudioFader } from './IAudioFader';
 import type { Player } from '@vue-youtube/shared';
 import { SubEventImmediate } from './SubEventImmediate';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 /** @class Implements an audio fader for a YouTube player instance. This fader supports two concepts:
  * - a master volume, that emulates a set, overall audio level
@@ -217,7 +219,7 @@ export default class YouTubeFader implements IAudioFader {
     /** @inheritdoc
      */
     set muted(value: boolean) {
-        console.debug(`YouTubeFader::muted:value:${value}`);
+        log.debug(`YouTubeFader::muted:value:${value}`);
 
         this._muted = value;
         this.audioVolume = this.getVolume();
@@ -238,7 +240,7 @@ export default class YouTubeFader implements IAudioFader {
     /** @inheritdoc
      */
     set soloed(value: boolean) {
-        console.debug(`AudioFader::soloed:value:${value}`);
+        log.debug(`AudioFader::soloed:value:${value}`);
 
         this._soloed = value;
         if (value) {
@@ -260,7 +262,7 @@ export default class YouTubeFader implements IAudioFader {
     /** @inheritdoc
      */
     set anySoloed(value: boolean) {
-        console.debug(`YouTubeFader::anySoloed:value:${value}`);
+        log.debug(`YouTubeFader::anySoloed:value:${value}`);
         this._anySoloed = value;
         this.audioVolume = this.getVolume();
     }
@@ -352,12 +354,10 @@ export default class YouTubeFader implements IAudioFader {
                         duration,
                     )
                         .catch(() => {
-                            console.debug(
-                                `YouTubeFader::fadeIn:linear:aborted`,
-                            );
+                            log.debug(`YouTubeFader::fadeIn:linear:aborted`);
                         })
                         .then(() => {
-                            console.debug(`YouTubeFader::fadeIn:linear:ended`);
+                            log.debug(`YouTubeFader::fadeIn:linear:ended`);
                         })
                         .finally(() => {
                             resolve();
@@ -366,7 +366,7 @@ export default class YouTubeFader implements IAudioFader {
                 });
             } else {
                 //nothing to fade
-                console.debug(`YouTubeFader::fadeIn:immediate`);
+                log.debug(`YouTubeFader::fadeIn:immediate`);
                 this.audioVolume = currentMasterAudioVolume;
                 return Promise.resolve();
             }
@@ -379,7 +379,7 @@ export default class YouTubeFader implements IAudioFader {
      */
     private fade(from: number, to: number, duration: number): Promise<void> {
         return new Promise((resolve, reject) => {
-            console.debug(
+            log.debug(
                 `YouTubeFader::fading for:${duration}ms from:${from} to:${to}`,
             );
             //Set exactly to the expected begin volume
@@ -397,7 +397,7 @@ export default class YouTubeFader implements IAudioFader {
                     clearInterval(clearIntervalId);
                     const message =
                         'YouTubeFader::Linear fade aborted due to cancelling.';
-                    console.warn(message);
+                    log.warn(message);
                     reject(message);
                     return;
                 }
@@ -408,7 +408,7 @@ export default class YouTubeFader implements IAudioFader {
                     this.cancel();
                     const message =
                         'YouTubeFader::Linear fade aborted due to cancelling or a subsequent fade operation.';
-                    console.warn(message);
+                    log.warn(message);
                     //Set exactly to the expected end volume, starting from there for the next fade
                     this.audioVolume = to;
                     reject(message);
@@ -443,7 +443,7 @@ export default class YouTubeFader implements IAudioFader {
             const currentMediaVolume = this.audioVolume;
             if (duration && currentMediaVolume != YouTubeFader.audioVolumeMin) {
                 return new Promise((resolve) => {
-                    console.debug(
+                    log.debug(
                         `YouTubeFader::fadeOut:currentMediaVolume:${currentMediaVolume}`,
                     );
                     this.onFadingChanged.emit(FadingMode.FadeOut);
@@ -453,12 +453,10 @@ export default class YouTubeFader implements IAudioFader {
                         duration,
                     )
                         .catch(() => {
-                            console.debug(
-                                `YouTubeFader::fadeOut:linear:aborted`,
-                            );
+                            log.debug(`YouTubeFader::fadeOut:linear:aborted`);
                         })
                         .then(() => {
-                            console.debug(`YouTubeFader::fadeOut:linear:ended`);
+                            log.debug(`YouTubeFader::fadeOut:linear:ended`);
                         })
                         .finally(() => {
                             resolve();

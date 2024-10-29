@@ -104,7 +104,7 @@
 
 <script setup lang="ts">
 import { useDropZone } from '@vueuse/core';
-import { computed, inject, onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import FileHandler from '@/store/filehandler';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiSwapHorizontal, mdiMusicNotePlus } from '@mdi/js';
@@ -112,10 +112,9 @@ import { useAppStore } from '@/store/app';
 import { useMessageStore } from '@/store/messages';
 import { Route } from '@/router';
 import { useRouter } from 'vue-router';
-import { logInjectionKey } from '@/AppInjectionKeys';
-import type { ILogObj, Logger } from 'tslog';
+import useLog from '@/composables/LogComposable';
 
-const log = inject(logInjectionKey) as Logger<ILogObj>;
+const { log } = useLog();
 
 /** Accepts input of files and URLs for tracks and compilations, by presenting a drop zone
  * (with file input) and a URL text box

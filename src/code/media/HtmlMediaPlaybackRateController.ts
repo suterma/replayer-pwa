@@ -14,6 +14,8 @@
 import { DefaultPlaybackRate } from '@/store/Track';
 import type { IPlaybackRateController } from './IPlaybackRateController';
 import { SubEventImmediate } from './SubEventImmediate';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 /** @class Implements a playback rate controller for a {HTMLMediaElement}.
  */
@@ -38,7 +40,7 @@ export default class HtmlMediaPlaybackRateController
         //Register event handlers first, as per https://github.com/shaka-project/shaka-player/issues/2483#issuecomment-619587797
         media.onratechange = () => {
             const rate = media.playbackRate;
-            console.debug(`onratechange:rate:${rate}`);
+            log.debug(`onratechange:rate:${rate}`);
             this.updateRate(rate);
         };
     }

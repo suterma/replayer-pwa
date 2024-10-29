@@ -22,6 +22,8 @@ import { shareTrack } from '@/code/ui/dialogs';
 import { Cue } from '@/store/Cue';
 import { DefaultTrackVolume, Track } from '@/store/Track';
 import { v4 as uuidv4 } from 'uuid';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 /** @class Static functions for the Track API
  * @remarks Implements the API from
@@ -61,7 +63,7 @@ export class TrackApi {
                 })),
             );
         }
-        console.debug('TrackApi::Url:', apiQuery);
+        log.debug('TrackApi::Url:', apiQuery);
 
         //Build the URL
         const route = {
@@ -116,7 +118,7 @@ export class TrackApi {
 
         if (isSupported.value) {
             share().catch((error) =>
-                console.error('Error while sharing track: ', error),
+                log.error('Error while sharing track: ', error),
             );
         } else {
             shareTrack(track);

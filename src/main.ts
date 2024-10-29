@@ -25,8 +25,7 @@ import { FocusDirective } from './directives/FocusDirective';
 import { TooltipDirective } from './directives/TooltipDirective';
 import { useAppStore } from './store/app';
 import { useAudioStore } from './store/audio';
-import useLog from './composables/LogComposable';
-import { logInjectionKey } from './AppInjectionKeys';
+import useLog from '@/composables/LogComposable';
 
 const { log } = useLog();
 log.info(`Replayer app version: ${import.meta.env.VITE_APP_VERSION}`);
@@ -45,7 +44,6 @@ const youtubeManager = createManager({
 
 /** Creates the Replayer VueJs app */
 const app = createApp(App)
-    .provide(logInjectionKey, log)
     .use(createPinia())
     .use(router)
     .use(VueScrollTo, { duration: 300 /* replayer-transition-duration */ })
@@ -75,10 +73,10 @@ window.addEventListener(
 window.onbeforeunload = app.unmount;
 
 app.onUnmount(() => {
-    log.info('app::cleanUp...');
+    log.info('cleanUp...');
     useAppStore().revokeAllMediaUrls();
     useAudioStore().closeContext();
-    log.info('app::cleanUp done.');
+    log.info('cleanUp done.');
 });
 
 app.mount('#app');

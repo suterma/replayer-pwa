@@ -150,7 +150,7 @@ const props = defineProps({
     },
 });
 
-console.debug(
+log.debug(
     `TrackYouTubeElement:setup:using url '${props.url}' for trackId '${props.trackId}' at start '${props.start}'`,
 );
 
@@ -236,7 +236,7 @@ function createAndProvideHandler(
     ) as IMediaHandler;
 
     audio.addMediaHandler(handler);
-    console.log('TrackYouTubeElement:ready');
+    log.info('TrackYouTubeElement:ready');
 
     // Internally handle some events of our own
     onFadingChangedSubsription =
@@ -267,7 +267,7 @@ let onFadingChangedSubsription: Subscription;
 /** Teardown of the YouTube player and handler.
  */
 onBeforeUnmount(() => {
-    console.debug('TrackYouTubeElement:onBeforeUnmount');
+    log.debug('TrackYouTubeElement:onBeforeUnmount');
     destroyHandler();
 });
 
@@ -288,12 +288,12 @@ function destroyHandler(): void {
         // called very early in the loading process
         instance.value?.stopVideo();
     } catch {
-        console.warn('YouTube stopVideo did not execute as espected.');
+        log.warn('YouTube stopVideo did not execute as espected.');
     } finally {
         instance.value?.destroy();
         instance.value = undefined;
 
-        console.log('TrackYouTubeElement:destroyed');
+        log.info('TrackYouTubeElement:destroyed');
     }
 }
 
@@ -359,7 +359,7 @@ onError((event: ErrorEvent) => {
         case PlayerError.NOT_ALLOWED_DISGUISE:
             // NOTE: This error will be handeled inline
             playerErrorMessage.value = `The owner of the requested video from YouTube URL '${videoUrl.value}' does not allow it to be played in embedded players like Replayer. Try another video or watch it online on YouTube (without Replayer).`;
-            console.error(playerErrorMessage.value);
+            log.error(playerErrorMessage.value);
             break;
         default:
             playerErrorMessage.value = `YouTube IFrame player error for YouTube URL '${videoUrl.value}' with code '${event.data}'.`;

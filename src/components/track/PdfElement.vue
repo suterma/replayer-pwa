@@ -29,7 +29,8 @@ import { computed, ref, inject, onMounted, onUpdated, watchEffect } from 'vue';
 
 import PDFObject from 'pdfobject';
 import VueScrollTo from 'vue-scrollto';
-
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 const props = defineProps({
     /** The PDF URL
      */
@@ -65,10 +66,7 @@ const availableHeight = computed(() => {
 
 const initPDF = () => {
     if (pdfContainer.value) {
-        console.debug(
-            'PdfElement::Rendering PDF for mediaUrl: ',
-            props.mediaUrl,
-        );
+        log.debug('PdfElement::Rendering PDF for mediaUrl: ', props.mediaUrl);
         try {
             const success = PDFObject.embed(
                 props.mediaUrl,
@@ -84,11 +82,11 @@ const initPDF = () => {
                 },
             );
             if (!success) {
-                console.warn('PdfElement::Rendering failed');
+                log.warn('PdfElement::Rendering failed');
                 usePdfLinkFallback.value = true;
             }
         } catch (error) {
-            console.warn('PdfElement::Rendering failed because: ', error);
+            log.warn('PdfElement::Rendering failed because: ', error);
             usePdfLinkFallback.value = true;
         }
 
@@ -106,7 +104,7 @@ onUpdated(initPDF);
  * the view.
  */
 function scrollToPdf() {
-    console.debug('PdfElement::scrollToPdf');
+    log.debug('PdfElement::scrollToPdf');
     VueScrollTo.scrollTo(pdfScrollContainer.value, {
         /** Always scroll, make it on top of the view */
         force: true,

@@ -166,6 +166,8 @@ import PlayheadSlider from '@/components/PlayheadSlider.vue';
 import SoloButton from '../buttons/SoloButton.vue';
 import MuteButton from '../buttons/MuteButton.vue';
 import { PlaybackState } from '@/code/media/PlaybackState';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 /** Displays a master track div with a title, and controls for it.
  * @displayName MasterTrack
@@ -182,7 +184,7 @@ defineProps({
 
 // --- Multitrack ---
 
-console.debug(`MasterTrack::useMultitrackStore`);
+log.debug(`MasterTrack::useMultitrackStore`);
 const multitrack = useMultitrackStore();
 const {
     canAllPlay,

@@ -182,6 +182,8 @@ import { useAppStore } from '@/store/app';
 import { DefaultPitchShift } from '@/store/Track';
 import Constants from '@/code/media/Constants';
 import { PlaybackState } from '@/code/media/PlaybackState';
+import useLog from '@/composables/LogComposable';
+const { log } = useLog();
 
 /** A simple vue video player element, for a single track, with associated visuals, using an {HTMLVideoElement}.
  * @devdoc Intentionally, the memory-consuming buffers from the Web Audio API are not used.
@@ -275,7 +277,7 @@ const props = defineProps({
     },
 });
 
-console.debug(
+log.debug(
     `TrackMediaElement:setup:using mediaUrl '${props.mediaUrl}' for trackId '${props.trackId}' at start '${props.start}'`,
 );
 
@@ -354,7 +356,7 @@ function destroyHandler(): void {
     if (mediaElement.value) {
         mediaElement.value.removeAttribute('src'); // empty resource
     }
-    console.log('TrackMediaElement:destroyed');
+    log.info('TrackMediaElement:destroyed');
 }
 
 function createAndProvideHandler(
@@ -367,7 +369,7 @@ function createAndProvideHandler(
     ) as IMediaHandler;
 
     audio.addMediaHandler(handler);
-    console.log('TrackMediaElement:ready');
+    log.info('TrackMediaElement:ready');
 
     onSeekingChangedSubsription = handler.onSeekingChanged.subscribe(
         (seeking: boolean) => {
@@ -389,7 +391,7 @@ function createAndProvideHandler(
             if (state === PlaybackState.Ready && isInitialPositionToBeApplied) {
                 const initialPosition = props.start;
                 if (initialPosition) {
-                    console.debug(
+                    log.debug(
                         'onPlaybackStateChanged:applying initialPosition:',
                         initialPosition,
                     );
@@ -412,7 +414,7 @@ function createAndProvideHandler(
 /** Teardown of the element and handler.
  */
 onBeforeUnmount(() => {
-    console.debug('TrackMediaElement:onBeforeUnmount');
+    log.debug('TrackMediaElement:onBeforeUnmount');
     destroyHandler();
 });
 
@@ -482,7 +484,7 @@ watch(
             if (canUseMediaFragment()) {
                 const fragment = props.start ? '#t=' + props.start : '';
                 const fragmentedUrl = props.mediaUrl + fragment;
-                console.debug(
+                log.debug(
                     `Applying url '${fragmentedUrl}' as mediaUrlWithFragment for trackId '${props.trackId}' at start '${props.start}'`,
                 );
                 mediaUrlWithFragment.value = fragmentedUrl;
@@ -552,7 +554,7 @@ watch(
                         );
                     }
                 } else {
-                    console.warn(
+                    log.warn(
                         'Audio context is not available or not (yet) running. Audio Level Meter remains disconnected.',
                     );
                 }
