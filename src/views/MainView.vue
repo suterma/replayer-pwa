@@ -44,13 +44,11 @@ import PlaybackView from '@/views/main/PlaybackView.vue';
 import SetlistView from '@/views/main/SetlistView.vue';
 import SettingsView from '@/views/main/SettingsView.vue';
 import AboutView from '@/views/main/AboutView.vue';
-import { computed, onBeforeMount } from 'vue';
+import { computed } from 'vue';
 import { Route } from '@/router';
 import { useSettingsStore } from '@/store/settings';
 import { storeToRefs } from 'pinia';
-import { useAppStore } from '@/store/app';
 import { useAudioStore } from '@/store/audio';
-import { ReplayerEvent } from '@/code/ui/ReplayerEvent';
 
 /** A main view for the Replayer application
  * @remarks This main view works similar but distinct from keep-alive with router-view.

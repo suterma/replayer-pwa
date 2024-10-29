@@ -170,7 +170,7 @@ import { PlaybackState } from '@/code/media/PlaybackState';
 /** Displays a master track div with a title, and controls for it.
  * @displayName MasterTrack
  */
-const props = defineProps({
+defineProps({
     /** The name to use for the master track
      */
     name: {

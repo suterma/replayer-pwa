@@ -26,7 +26,6 @@ import { FocusDirective } from './directives/FocusDirective';
 import { TooltipDirective } from './directives/TooltipDirective';
 import { useAppStore } from './store/app';
 import { useAudioStore } from './store/audio';
-import { ReplayerEvent } from './code/ui/ReplayerEvent';
 
 const appInfo = chalk.bold.hex('#f89406'); // Replayer cue color (bulma warning)
 console.log(

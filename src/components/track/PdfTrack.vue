@@ -202,12 +202,7 @@ import LabeledInput from '@/components/editor/LabeledInput.vue';
 import StyledInput from '@/components/StyledInput.vue';
 import FullscreenPanel from '@/components/FullscreenPanel.vue';
 import FullscreenToggler from '@/components/buttons/FullscreenToggler.vue';
-import {
-    mdiSwapVertical,
-    mdiFilePdfBox,
-    mdiTrayArrowDown,
-    mdiTrashCanOutline,
-} from '@mdi/js';
+import { mdiSwapVertical, mdiFilePdfBox, mdiTrashCanOutline } from '@mdi/js';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { storeToRefs } from 'pinia';
 import PdfElement from '@/components/track/PdfElement.vue';
