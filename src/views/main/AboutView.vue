@@ -678,6 +678,15 @@
                     </li>
                     <li>
                         <a
+                            href="https://github.com/fullstack-build/tslog"
+                            target="_blank"
+                            >tslog</a
+                        >, a beautiful logging experience for TypeScript and
+                        JavaScript. (Released under the MIT License, by
+                        fullstack-build)
+                    </li>
+                    <li>
+                        <a
                             href="https://github.com/sindresorhus/slugify"
                             target="_blank"
                             >slugify</a
