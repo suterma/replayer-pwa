@@ -670,7 +670,7 @@ export default class CompilationHandler {
         return first.endsWith(second) || second.endsWith(first);
     }
 
-    /** Gets a usable file name (without extension), for a download operation,
+    /** Gets a simple file name (without extension),
      * from a compilation or track (using the respective title, artist and album)
      * @remarks Slugifies the resulting file name.
      * @param compilation - the compilation to derive a file name from
@@ -694,7 +694,7 @@ export default class CompilationHandler {
         const compilationAlbum = compilation?.Album?.trim();
 
         // provide the default
-        let fileName = 'Replayer compilation';
+        let fileName = 'replayer-compilation';
 
         //  It the compilation has a title, use all copilation metadata
         if (compilationTitle) {

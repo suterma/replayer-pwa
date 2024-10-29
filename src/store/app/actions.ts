@@ -1104,9 +1104,13 @@ export const actions = {
                         type: 'text/xml;charset=utf-8',
                     });
 
-                    //Add the blobs
+                    //Add the blobs (XML and media)
                     const zip = new JSZip();
-                    zip.file(`${state.compilation.value?.Title}.xml`, xmlBlob);
+                    const compilationFileName =
+                        CompilationHandler.getCompilationFileName(
+                            state.compilation.value,
+                        );
+                    zip.file(`${compilationFileName}.xml`, xmlBlob);
                     mediaBlobs.forEach((mediaBlob) => {
                         console.debug(
                             `actions::pack-blob for ${mediaBlob.fileName}`,

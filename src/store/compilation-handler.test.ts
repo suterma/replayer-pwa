@@ -179,6 +179,18 @@ describe('CompilationHandler.ts', () => {
         );
     });
 
+    it('should provide a proper file name for an empty compilation', async () => {
+        //Arrange
+        const testCompilation = Compilation.empty();
+
+        //Act
+        const actual =
+            CompilationHandler.getCompilationFileName(testCompilation);
+
+        //Assert
+        expect(actual).toEqual('replayer-compilation');
+    });
+
     it('should provide a proper file name for a fully annotated compilation', async () => {
         //Arrange
         const testCompilation = new Compilation(
