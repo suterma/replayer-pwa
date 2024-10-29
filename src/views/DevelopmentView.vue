@@ -362,7 +362,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
 import CollapsibleButton from '@/components/buttons/CollapsibleButton.vue';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import NavButton from '@/components/buttons/NavButton.vue';
@@ -395,6 +395,10 @@ import PlaybackIndicator from '@/components/indicators/PlaybackIndicator.vue';
 import { PlaybackState } from '@/code/media/PlaybackState';
 import FadeInSwitch from '@/components/buttons/FadeInSwitch.vue';
 import PreRollSwitch from '@/components/buttons/PreRollSwitch.vue';
+import { logInjectionKey } from '@/AppInjectionKeys';
+import type { ILogObj, Logger } from 'tslog';
+
+const log = inject(logInjectionKey) as Logger<ILogObj>;
 
 const isExpanded = ref(false);
 const knobValue = ref(0);
@@ -412,16 +416,16 @@ const firstCueOfFirstTrack = computed(() => {
 });
 
 function writeDebug() {
-    console.debug('Just a debug log with an object', { some: 'data' });
+    log.debug('Just a debug log with an object', { some: 'data' });
 }
 function writeLog() {
-    console.log('Just a log');
+    log.info('Just an info log');
 }
 function writeWarnLog() {
-    console.warn('A warning');
+    log.warn('A warning');
 }
 function writeErrorLog() {
-    console.error('Something dangerous');
+    log.error('Something dangerous');
 }
 function throwException() {
     throw 'Something bad happened!';

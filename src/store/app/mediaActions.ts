@@ -20,6 +20,9 @@ import { getters } from './getters';
 import { actions } from './actions';
 import { nextTick } from 'vue';
 import { useAudioStore } from '../audio';
+import useLog from '@/composables/LogComposable';
+
+const { log } = useLog();
 
 /** Playback actions using the the tracks from the application state with their media handlers.
  * @devdoc The actions in this specific file might later be implemented
@@ -123,7 +126,7 @@ export const mediaActions = {
 
         if (handler) {
             const canPlay = handler.canPlay;
-            console.debug(
+            log.debug(
                 `mediaActions::skipToPlayPause:track=${track.Url};canPlay=${canPlay}`,
             );
             if (canPlay) {
@@ -153,7 +156,7 @@ export const mediaActions = {
                 }
             }
         } else {
-            console.warn(
+            log.warn(
                 `mediaActions::skipToPlayPause:track=${track.Url};MediaHandler not available`,
             );
         }

@@ -17,8 +17,11 @@
  * See https://caniuse.com/fullscreen
  */
 import { useFullscreen } from '@vueuse/core';
-import { ref } from 'vue';
+import { inject, ref } from 'vue';
+import { logInjectionKey } from '@/AppInjectionKeys';
+import type { ILogObj, Logger } from 'tslog';
 
+const log = inject(logInjectionKey) as Logger<ILogObj>;
 const container = ref<HTMLElement | null>(null);
 const hasNative = ref(document.fullscreenEnabled);
 
@@ -27,18 +30,16 @@ let { isFullscreen, exit, toggle } = useFullscreen(container);
 
 if (!hasNative.value) {
     // set a fallback for the already assumed functions
-    console.log('Providing Fullscreen API fallback features');
+    log.debug('Providing Fullscreen API fallback features');
     isFullscreen = ref(false);
     toggle = () => {
         isFullscreen.value = !isFullscreen.value;
-        console.log('Fullscreen API fallback state: ' + isFullscreen.value);
+        log.debug('Fullscreen API fallback state: ' + isFullscreen.value);
         return Promise.resolve();
     };
     exit = () => {
         isFullscreen.value = false;
-        console.log(
-            'Fullscreen API fallback exit state: ' + isFullscreen.value,
-        );
+        log.debug('Fullscreen API fallback exit state: ' + isFullscreen.value);
         return Promise.resolve();
     };
 }

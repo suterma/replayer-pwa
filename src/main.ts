@@ -25,13 +25,16 @@ import { FocusDirective } from './directives/FocusDirective';
 import { TooltipDirective } from './directives/TooltipDirective';
 import { useAppStore } from './store/app';
 import { useAudioStore } from './store/audio';
+import useLog from './composables/LogComposable';
+import { logInjectionKey } from './AppInjectionKeys';
 
-console.log(`Replayer app version: ${import.meta.env.VITE_APP_VERSION}`);
-console.log(`MODE: ${import.meta.env.MODE}`);
-console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
-console.debug(`BASE_URL: ${import.meta.env.BASE_URL}`);
-console.log(`GIT_VERSION: ${import.meta.env.VITE_APP_GIT_VERSION}`);
-console.log(`GIT_AUTHOR_DATE: ${import.meta.env.VITE_APP_GIT_AUTHOR_DATE}`);
+const { log } = useLog();
+log.info(`Replayer app version: ${import.meta.env.VITE_APP_VERSION}`);
+log.info(`MODE: ${import.meta.env.MODE}`);
+log.info(`NODE_ENV: ${process.env.NODE_ENV}`);
+log.info(`BASE_URL: ${import.meta.env.BASE_URL}`);
+log.info(`GIT_VERSION: ${import.meta.env.VITE_APP_GIT_VERSION}`);
+log.info(`GIT_AUTHOR_DATE: ${import.meta.env.VITE_APP_GIT_AUTHOR_DATE}`);
 
 const youtubeManager = createManager({
     deferLoading: {
@@ -42,6 +45,7 @@ const youtubeManager = createManager({
 
 /** Creates the Replayer VueJs app */
 const app = createApp(App)
+    .provide(logInjectionKey, log)
     .use(createPinia())
     .use(router)
     .use(VueScrollTo, { duration: 300 /* replayer-transition-duration */ })
@@ -71,10 +75,10 @@ window.addEventListener(
 window.onbeforeunload = app.unmount;
 
 app.onUnmount(() => {
-    console.log('app::cleanUp...');
+    log.info('app::cleanUp...');
     useAppStore().revokeAllMediaUrls();
     useAudioStore().closeContext();
-    console.log('app::cleanUp done.');
+    log.info('app::cleanUp done.');
 });
 
 app.mount('#app');

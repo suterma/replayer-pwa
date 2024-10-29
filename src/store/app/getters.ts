@@ -99,7 +99,6 @@ export const getters = {
         let tracks = new Array<ITrack>();
         // if any tag is selected, filter by these selected tags
         if (isAnyTagSelected) {
-            console.debug('app::allTracks:selectedTags', selectedTags);
             tracks =
                 state.compilation.value.Tracks?.filter((track) => {
                     let hasAnyTag = false;

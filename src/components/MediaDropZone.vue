@@ -104,7 +104,7 @@
 
 <script setup lang="ts">
 import { useDropZone } from '@vueuse/core';
-import { computed, onMounted, ref } from 'vue';
+import { computed, inject, onMounted, ref } from 'vue';
 import FileHandler from '@/store/filehandler';
 import BaseIcon from '@/components/icons/BaseIcon.vue';
 import { mdiSwapHorizontal, mdiMusicNotePlus } from '@mdi/js';
@@ -112,6 +112,10 @@ import { useAppStore } from '@/store/app';
 import { useMessageStore } from '@/store/messages';
 import { Route } from '@/router';
 import { useRouter } from 'vue-router';
+import { logInjectionKey } from '@/AppInjectionKeys';
+import type { ILogObj, Logger } from 'tslog';
+
+const log = inject(logInjectionKey) as Logger<ILogObj>;
 
 /** Accepts input of files and URLs for tracks and compilations, by presenting a drop zone
  * (with file input) and a URL text box
@@ -214,9 +218,9 @@ const app = useAppStore();
  * @remarks These are handeled similar to when loaded via the file input
  */
 function registerLaunchQueue() {
-    console.debug('MediaDropZone::registerLaunchQueue');
+    log.debug('MediaDropZone::registerLaunchQueue');
     if ('launchQueue' in window /*&& 'files' in LaunchParams.prototype*/) {
-        console.log('File Handling API is supported!');
+        log.info('File Handling API is supported!');
 
         (window as any).launchQueue.setConsumer(
             async (launchParams: { files: unknown }): Promise<void> => {
@@ -233,7 +237,7 @@ function registerLaunchQueue() {
                 }
                 loadMediaFiles(files)
                     .then(() => {
-                        console.log(
+                        log.info(
                             `Totally ${files.length} files (from launch queue) loaded.`,
                         );
                     })
@@ -246,12 +250,12 @@ function registerLaunchQueue() {
             },
         );
     } else {
-        console.error('File Handling API is not supported!');
+        log.error('File Handling API is not supported!');
     }
 }
 
 function openFile() {
-    console.debug('MediaDropZone::openFile');
+    log.debug('MediaDropZone::openFile');
     file.value?.click();
 }
 
@@ -264,22 +268,12 @@ function onChange() {
  * @param files {File[]} - the files to load (Array is required to use the forEach and other functions)
  */
 async function loadMediaFiles(files: File[]): Promise<void> {
-    console.debug('MediaDropZone::loadMediaFiles');
+    log.debug('MediaDropZone::loadMediaFiles');
     emit('accepted');
 
     files.forEach((file) => {
         loadMediaFile(file);
     });
-
-    console.table(
-        files.map(function (file) {
-            return {
-                name: file.name,
-                size: file.size,
-                type: file.type,
-            };
-        }),
-    );
 
     //If a single package or compilation has been loaded, the intention was most likely to play it
     if (
@@ -299,7 +293,7 @@ async function loadMediaFiles(files: File[]): Promise<void> {
  * @param {File} file - Any supported file (package, compilation or media)
  */
 async function loadMediaFile(file: File): Promise<void> {
-    console.debug('MediaDropZone::loadMediaFile:file.name', file.name);
+    log.debug('MediaDropZone::loadMediaFile:file.name', file.name);
 
     app.loadFromFile(file)
         .then(() => {
@@ -320,7 +314,6 @@ async function loadMediaFile(file: File): Promise<void> {
 
 /** Uses a single URL from the URL input and load it's content */
 function useUrl(): void {
-    console.debug('MediaDropZone::useUrl:url:', url.value);
     emit('accepted');
 
     if (url.value) {

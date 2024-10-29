@@ -11,12 +11,15 @@
  * as part of a component. Otherwise the URL fragment part is not processed
  * as the query part within vue-router
  */
-import { onMounted } from 'vue';
+import { inject, onMounted } from 'vue';
 import { useAppStore } from '@/store/app';
 import { useMessageStore } from '@/store/messages';
 import { TrackApi } from '@/code/api/TrackApi';
 import { useRoute, useRouter } from 'vue-router';
+import { logInjectionKey } from '@/AppInjectionKeys';
+import type { ILogObj, Logger } from 'tslog';
 
+const log = inject(logInjectionKey) as Logger<ILogObj>;
 const message = useMessageStore();
 const router = useRouter();
 const route = useRoute();
@@ -29,7 +32,7 @@ onMounted(() => {
     if (query && query['media'] !== undefined) {
         const track = TrackApi.parseFromUrlQuery(query);
         if (track && track.Url) {
-            console.log(
+            log.debug(
                 'CompilationLoader::mounted:adding track from URL:',
                 track.Url,
             );
@@ -59,7 +62,7 @@ onMounted(() => {
     //Handle a Package API Request (mandatory package is available)
     const packageUrl = query['package'] as string;
     if (query && packageUrl) {
-        console.log(
+        log.debug(
             'CompilationLoader::mounted:adding package from URL:',
             packageUrl,
         );

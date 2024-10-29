@@ -16,9 +16,12 @@
 
 import { Route } from '@/router';
 import { useAppStore } from '@/store/app';
-import { onMounted } from 'vue';
+import { inject, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { logInjectionKey } from '@/AppInjectionKeys';
+import type { ILogObj, Logger } from 'tslog';
 
+const log = inject(logInjectionKey) as Logger<ILogObj>;
 const router = useRouter();
 
 onMounted(() => {
@@ -29,11 +32,11 @@ onMounted(() => {
 function loadDemo() {
     const demoCompilationUrl =
         'https://lib.replayer.app/demo/demo-compilation-featuring-lidija-roos-with-info.xml';
-    console.debug('DemoView::loadDemo:', demoCompilationUrl);
+    log.debug('DemoView::loadDemo:', demoCompilationUrl);
     useAppStore()
         .loadFromUrl(demoCompilationUrl)
         .catch((errorMessage: string) => {
-            console.error(errorMessage);
+            log.error(errorMessage);
         });
 }
 </script>

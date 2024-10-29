@@ -19,6 +19,9 @@ import { Subscription } from 'sub-events';
 import { FadingMode } from '@/code/media/IAudioFader';
 import { Reading } from './Reading';
 import { PlaybackState } from '@/code/media/PlaybackState';
+import useLog from '@/composables/LogComposable';
+
+const { log } = useLog();
 
 /** A store for multitrack audio-related global state
  * @remarks This uses and extends the audio store, specifically for a
@@ -51,7 +54,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     function toggleAllSolo() {
         const isSoloed = !isAllSoloed.value;
         isAllSoloed.value = isSoloed;
-        console.debug(`Multitrack::toggleAllSolo:isSoloed:${isSoloed}`);
+        log.debug(`Multitrack::toggleAllSolo:isSoloed:${isSoloed}`);
 
         audio.mediaHandlers.forEach((handler) => {
             handler.fader.soloed = isSoloed;
@@ -66,7 +69,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     function toggleAllMute() {
         const isMuted = !isAllMuted.value;
         isAllMuted.value = isMuted;
-        console.debug(`Multitrack::toggleAllMute:isMuted:${isMuted}`);
+        log.debug(`Multitrack::toggleAllMute:isMuted:${isMuted}`);
 
         audio.mediaHandlers.forEach((handler) => {
             handler.fader.muted = isMuted;
@@ -94,7 +97,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
             );
         });
         await Promise.all(seeks);
-        console.debug(`Multitrack::seekAllToSeconds:canPlay:all`);
+        log.debug(`Multitrack::seekAllToSeconds:canPlay:all`);
     }
 
     /** Seeks all track by the given timespan in [seconds]
@@ -108,7 +111,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
      */
     async function syncTracks() {
         const originTime = performance.now();
-        //console.debug(`Multitrack::syncTracks:originTime:${originTime}`);
+        //log.debug(`Multitrack::syncTracks:originTime:${originTime}`);
         // get up-to date value
         const { avg } = updateCurrentTime();
         let targetTime = avg;
@@ -129,7 +132,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
             3;
         synchPlaybackOffset =
             synchPlaybackOffset + synchPlaybackOffsetCorrection;
-        // console.debug(
+        // log.debug(
         //     `Multitrack::syncTracks:doneTime:${doneTime}ms:synchPlaybackOffset:${synchPlaybackOffset}s`,
         // );
     }
@@ -213,7 +216,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     watch(
         () => audio.mediaHandlers,
         (mediaHandlers) => {
-            console.debug(
+            log.debug(
                 `Multitrack::watch:mediaHandlers.size:${mediaHandlers?.size}`,
             );
 
@@ -427,7 +430,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
     function updateDurationChanged() {
         let duration = NaN;
         audio.mediaHandlers.forEach((handler) => {
-            console.debug(
+            log.debug(
                 `Multitrack::updateDurationChanged:forEach:handler.duration:${handler.duration}`,
             );
             if (
@@ -475,7 +478,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
             return { avg: NaN, spreading: NaN };
         } else {
             // unskew the the readings
-            //console.debug('Multitrack:updateCurrentTime:readings:', readings);
+            //log.debug('Multitrack:updateCurrentTime:readings:', readings);
             const times = new Array<number>(readings.length);
             let index = 0;
             const now = performance.now() / millisecondsPerSecond;
@@ -487,7 +490,7 @@ export const useMultitrackStore = defineStore(Store.Multitrack, () => {
                 }
             });
 
-            //console.debug('Multitrack:updateCurrentTime:times:', times);
+            //log.debug('Multitrack:updateCurrentTime:times:', times);
 
             // The times now are the most truthful readings with regard to the current moment in time
             // Now provide the average current time as fast as possible

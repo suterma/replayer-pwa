@@ -15,6 +15,9 @@ import { MediaBlob } from './types';
 import { Store } from '.';
 import { useMessageStore } from './messages';
 import localForage from 'localforage';
+import useLog from '@/composables/LogComposable';
+
+const { log } = useLog();
 
 /**
  * Configure the store
@@ -41,10 +44,7 @@ export default class PersistentStorage {
      * @devdoc The indexed db is used for blob data, as recommended for large data.
      */
     static storeMediaBlob(data: { fileName: string; blob: Blob }): void {
-        console.debug(
-            'PersistentStorage::storeMediaBlob:fileName',
-            data.fileName,
-        );
+        log.debug('PersistentStorage::storeMediaBlob:fileName', data.fileName);
 
         // NOTE: blob storage is not guaranteed to be available
         localForage
@@ -60,14 +60,14 @@ export default class PersistentStorage {
      * @devdoc The indexed db is used for blob data, as recommended.
      */
     static retrieveAllMediaBlobs(): Promise<MediaBlob[]> {
-        console.debug('PersistentStorage::retrieveAllMediaBlobs');
+        log.debug('PersistentStorage::retrieveAllMediaBlobs');
         const mediaBlobs = new Array<MediaBlob>();
 
         return localForage
             .iterate((value, key) => {
                 if (key.startsWith(Store.MediaBlob)) {
                     const fileName = key.slice(Store.MediaBlob.length);
-                    console.debug(`PersistentStorage::iterate:${fileName}`);
+                    log.debug(`PersistentStorage::iterate:${fileName}`);
                     mediaBlobs.push(new MediaBlob(fileName, value as Blob));
                 }
             })
@@ -78,7 +78,7 @@ export default class PersistentStorage {
      * @devdoc The indexed db is used for blob data, as recommended.
      */
     static removeMediaBlob(fileName: string): Promise<void> {
-        console.debug('PersistentStorage::removeMediaBlob');
+        log.debug('PersistentStorage::removeMediaBlob');
         return localForage
             .removeItem(Store.MediaBlob + fileName)
             .catch((errorMessage: string) => {
@@ -90,7 +90,7 @@ export default class PersistentStorage {
      * @devdoc The indexed db is used for blob data, as recommended.
      */
     static removeAllMediaBlob(): Promise<void> {
-        console.debug('PersistentStorage::removeAllMediaBlob');
+        log.debug('PersistentStorage::removeAllMediaBlob');
         return localForage.clear().catch((errorMessage: string) => {
             useMessageStore().pushError(errorMessage);
         });

@@ -23,6 +23,10 @@ import { Store } from '..';
 import type { IMediaHandler } from '@/code/media/IMediaHandler';
 import Constants from '@/code/media/Constants';
 
+import useLog from '@/composables/LogComposable';
+
+const { log } = useLog();
+
 /**
  *  Defining the AudioContext
  *  @devdoc webkitAudioContext supports older versions of Safari
@@ -65,7 +69,7 @@ export const useAudioStore = defineStore(Store.Audio, () => {
      * with the same id is destroyed and removed before the new handler is added.
      */
     function addMediaHandler(handler: IMediaHandler) {
-        console.debug(
+        log.debug(
             'Store ' + Store.Audio + '::addMediaHandler:id:' + handler.id,
         );
         // find and possibly remove pre-existing handler for the same media source
@@ -83,7 +87,7 @@ export const useAudioStore = defineStore(Store.Audio, () => {
      * @remarks internally uses the handler id to identify the internal set entry
      */
     function removeMediaHandler(handler: IMediaHandler) {
-        console.debug(
+        log.debug(
             'Store ' + Store.Audio + '::removeMediaHandler:id:' + handler.id,
         );
         handler.destroy();
@@ -124,9 +128,9 @@ export const useAudioStore = defineStore(Store.Audio, () => {
             isContextRunningFlag.value = false;
             if (audioContext.value.state !== 'closed') {
                 audioContext.value.close();
-                console.info('AudioContext is closed now');
+                log.info('AudioContext is closed now');
             } else {
-                console.info('AudioContext was already closed');
+                log.info('AudioContext was already closed');
             }
         }
     }
@@ -142,7 +146,7 @@ export const useAudioStore = defineStore(Store.Audio, () => {
                 if (audioContext.value.state === 'running') {
                     reportRunningAudioContext();
                 } else {
-                    console.info('AudioContext resuming...');
+                    log.info('AudioContext resuming...');
                     audioContext.value.resume().then(() => {
                         reportRunningAudioContext();
                     });
@@ -153,17 +157,17 @@ export const useAudioStore = defineStore(Store.Audio, () => {
 
     function reportRunningAudioContext() {
         isContextRunningFlag.value = true;
-        console.info('AudioContext running');
+        log.info('AudioContext running');
 
         // Write additional info. Cast to any is necessary,
         // as the type does not know about these properties
-        console.info(
+        log.info(
             'AudioContext base latency: ' +
                 // eslint-disable-next-line
                 (audioContext.value as any)?.baseLatency +
                 'sec',
         );
-        console.info(
+        log.info(
             'AudioContext output latency: ' +
                 // eslint-disable-next-line
                 (audioContext.value as any)?.outputLatency +
@@ -178,7 +182,7 @@ export const useAudioStore = defineStore(Store.Audio, () => {
             audioContext.value = new AudioContext({
                 latencyHint: 'interactive',
             });
-            console.info('AudioContext created');
+            log.info('AudioContext created');
         }
     }
 

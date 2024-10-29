@@ -77,6 +77,9 @@ import { storeToRefs } from 'pinia';
 import { refDebounced, useElementSize } from '@vueuse/core';
 import { useRouter } from 'vue-router';
 import { navbarCompensationHeightInjectionKey } from '@/AppInjectionKeys';
+import useLog from './composables/LogComposable';
+
+const { log } = useLog();
 
 onMounted(() => {
     handleAppUpdate();
@@ -97,7 +100,7 @@ function handleAppUpdate() {
     const previousVersion = app.acknowledgedVersion ?? currentVersion;
 
     if (currentVersion != previousVersion) {
-        console.debug(
+        log.debug(
             `App.vue::handleAppUpdate from ${previousVersion} to ${currentVersion}`,
         );
 
@@ -159,7 +162,7 @@ function handleAppUpdate() {
         app.updateAcknowledgedVersion(currentVersion);
     }
 
-    console.debug('App.vue::handleAppUpdate done.');
+    log.debug('App.vue::handleAppUpdate done.');
 }
 
 // --- bottom navbar spacing ---

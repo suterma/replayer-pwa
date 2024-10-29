@@ -18,6 +18,10 @@ import { Store } from '..';
 import { useSettingsStore } from '../settings';
 import { InputFeedback } from './InputFeedback';
 import { ProgressMessage } from '@/store/messages/ProgressMessage';
+import useLog from '@/composables/LogComposable';
+
+const { log } = useLog();
+
 /** A store for messages, that are to be displayed.
  * @devdoc This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores
  * @devdoc The use of this separate store offloads the message handling from the other stores.
@@ -49,7 +53,7 @@ export const useMessageStore = defineStore(Store.Messages, () => {
     function pushProgress(message: string): Promise<void> {
         return new Promise((resolve) => {
             progressMessageStack.value.push(new ProgressMessage(message));
-            console.log('PROGRESS: ' + message);
+            log.info('PROGRESS: ' + message);
             nextTick(() => {
                 resolve();
             });
@@ -72,7 +76,7 @@ export const useMessageStore = defineStore(Store.Messages, () => {
             if (index >= 0) {
                 progressMessageStack.value[index] = progress;
             } else {
-                console.log('PROGRESS: ' + progress.Message);
+                log.info('PROGRESS: ' + progress.Message);
                 progressMessageStack.value.push(progress);
             }
 
@@ -95,13 +99,13 @@ export const useMessageStore = defineStore(Store.Messages, () => {
         ) {
             errorMessageStack.value.push(message);
         }
-        console.error('ERROR: ' + message);
+        log.error('ERROR: ' + message);
     }
 
     /** Initiates the display of a success message by pushing the message onto the stack of success messages */
     function pushSuccess(message: string): void {
         successMessageStack.value.push(message);
-        console.debug('SUCCESS: ' + message);
+        log.debug('SUCCESS: ' + message);
         setTimeout(popSuccess, 900);
     }
 
@@ -112,10 +116,10 @@ export const useMessageStore = defineStore(Store.Messages, () => {
             progressMessageStack.value = progressMessageStack.value.filter(
                 (e) => !(e.Message == message),
             );
-            console.debug('POP_PROGRESS: ' + message);
+            log.debug('POP_PROGRESS: ' + message);
         } else {
             const poppedMessage = progressMessageStack.value.pop();
-            console.debug('POP_PROGRESS: ' + poppedMessage);
+            log.debug('POP_PROGRESS: ' + poppedMessage);
         }
     }
 
@@ -132,7 +136,7 @@ export const useMessageStore = defineStore(Store.Messages, () => {
     /** Ends the display any previous progress message, by clearing all messages from the stack of progress messages */
     function finishProgress(): void {
         progressMessageStack.value.length = 0;
-        console.debug('FINISH_PROGRESS');
+        log.debug('FINISH_PROGRESS');
     }
 
     /** Gets the latest (newest) progress message from the stack */

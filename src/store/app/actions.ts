@@ -35,6 +35,9 @@ import type { IMeter } from '@/code/music/IMeter';
 import { Meter } from '@/code/music/Meter';
 import { ProgressMessage } from '@/store/messages/ProgressMessage';
 import { getters } from './getters';
+import useLog from '@/composables/LogComposable';
+
+const { log } = useLog();
 
 export const actions = {
     /** Updates the currently selected cue Id, for application-wide handling
@@ -71,7 +74,7 @@ export const actions = {
 
     /** Selects the matching cue, by the given mnemonic, if any. Cues from the active track are considered first. */
     toMnemonicCue(cueShortcut: string) {
-        console.debug('Compilation::toMnemonicCue:cueShortcut:', cueShortcut);
+        log.debug('Compilation::toMnemonicCue:cueShortcut:', cueShortcut);
         let matchingCue = null;
 
         // try the active track first
@@ -99,7 +102,7 @@ export const actions = {
 
     /** Selects the previous cue, if any. Otherwise, loop to the last cue */
     toPreviousCue() {
-        console.debug('Compilation::toPreviousCue');
+        log.debug('Compilation::toPreviousCue');
         const allCueIds = getters.getAllCues.value.map((cue) => cue.Id);
         const indexOfSelected = allCueIds.indexOf(state.selectedCueId.value);
         if (indexOfSelected > 0) {
@@ -118,7 +121,7 @@ export const actions = {
 
     /** Selects the next cue, if any. Otherwise, loop to the first cue */
     toNextCue() {
-        console.debug('app::toNextCue');
+        log.debug('app::toNextCue');
         const allCueIds = getters.getAllCues.value.map((cue) => cue.Id);
         const indexOfSelected = allCueIds.indexOf(state.selectedCueId.value);
         if (indexOfSelected < allCueIds.length - 1) {
@@ -142,7 +145,7 @@ export const actions = {
         const track = getters.getTrackById(trackId);
         if (track) {
             track.Volume = volume;
-            console.debug('app::updateTrackVolume:', volume);
+            log.debug('app::updateTrackVolume:', volume);
         }
     },
 
@@ -153,7 +156,7 @@ export const actions = {
         const track = getters.getTrackById(trackId);
         if (track) {
             track.PlaybackRate = playbackRate;
-            console.debug('app::updateTrackPlaybackRate:', playbackRate);
+            log.debug('app::updateTrackPlaybackRate:', playbackRate);
         }
     },
 
@@ -164,7 +167,7 @@ export const actions = {
         const track = getters.getTrackById(trackId);
         if (track) {
             track.PitchShift = pitchShift;
-            console.debug('app::updateTrackPitchShift:', pitchShift);
+            log.debug('app::updateTrackPitchShift:', pitchShift);
         }
     },
 
@@ -208,7 +211,7 @@ export const actions = {
     addCue(trackId: string, cue: ICue): void {
         const matchingTrack = getters.getTrackById(trackId);
         if (matchingTrack) {
-            console.debug('actions::ADD_CUE:matchingTrack', matchingTrack);
+            log.debug('actions::ADD_CUE:matchingTrack', matchingTrack);
 
             matchingTrack.Cues.push(cue);
 
@@ -216,7 +219,7 @@ export const actions = {
             CompilationHandler.sort(matchingTrack.Cues);
 
             if (matchingTrack.Duration != null) {
-                console.debug(
+                log.debug(
                     'actions::ADD_CUE:matchingTrack.Duration',
                     matchingTrack.Duration,
                 );
@@ -234,7 +237,7 @@ export const actions = {
         if (tag) {
             const matchingTrack = getters.getTrackById(trackId);
             if (matchingTrack) {
-                console.debug('actions::addTag:matchingTrack', matchingTrack);
+                log.debug('actions::addTag:matchingTrack', matchingTrack);
                 matchingTrack.Tags.add(tag);
             }
         }
@@ -245,7 +248,7 @@ export const actions = {
     removeTag(trackId: string, tag: string): void {
         const matchingTrack = getters.getTrackById(trackId);
         if (matchingTrack) {
-            console.debug('actions::removeTag:matchingTrack', matchingTrack);
+            log.debug('actions::removeTag:matchingTrack', matchingTrack);
             matchingTrack.Tags.delete(tag);
         }
     },
@@ -423,7 +426,7 @@ export const actions = {
      * @remarks Also updates the persistent store of the compilation
      */
     deleteCue(cueId: string): void {
-        console.debug('actions::DELETE_CUE:', cueId);
+        log.debug('actions::DELETE_CUE:', cueId);
         const matchingTrack = CompilationHandler.getTrackByCueId(
             state.compilation.value,
             cueId,
@@ -448,7 +451,7 @@ export const actions = {
      * @remarks Also updates the persistent store of the compilation
      */
     deleteCues(trackId: string): void {
-        console.debug('actions::deleteCues:', trackId);
+        log.debug('actions::deleteCues:', trackId);
 
         const matchingTrack = getters.getTrackById(trackId);
         if (matchingTrack) {
@@ -462,7 +465,7 @@ export const actions = {
      * No media data is added, it must get handled elsewhere.
      */
     addDefaultTrack(resourceName: string): void {
-        console.debug('actions::ADD_DEFAULT_TRACK:', resourceName);
+        log.debug('actions::ADD_DEFAULT_TRACK:', resourceName);
         const track = CompilationHandler.createDefaultTrack(resourceName);
         state.selectedCueId.value = CompilationHandler.EmptyId;
         state.selectedTrackId.value = track.Id;
@@ -478,7 +481,7 @@ export const actions = {
         //the caller has already created a new one for this mediaUrl's blob.
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
-            console.debug(
+            log.debug(
                 `actions::addMediaUrl:removing matching item for key:${
                     mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
@@ -488,7 +491,7 @@ export const actions = {
         }
 
         //Now add the new media URL as a replacement
-        console.debug(
+        log.debug(
             `actions::addMediaUrl:resourceName:${mediaUrl.resourceName},mime-type:${mediaUrl.mediaType}`,
         );
         state.mediaUrls.value.set(mediaUrl.resourceName, mediaUrl);
@@ -524,7 +527,7 @@ export const actions = {
 
     /** Adds a blob as a media source, using a name and a blob  */
     addMediaBlob(mediaBlob: MediaBlob): void {
-        console.debug(
+        log.debug(
             'actions::addMediaBlob::mediaBlob.fileName',
             mediaBlob.fileName,
         );
@@ -549,7 +552,7 @@ export const actions = {
      * @return A locally usable name, derived from the URL, which can be used to match the track to the stored media file
      */
     loadFromUrl(url: string): Promise<string> {
-        console.debug('actions::loadFromUrl::url', url);
+        log.debug('actions::loadFromUrl::url', url);
         const message = useMessageStore();
 
         return new Promise((resolve, reject) => {
@@ -571,7 +574,7 @@ export const actions = {
                         .then((response) => {
                             //Use the final (possibly redirected URL)
                             if (response.redirected) {
-                                console.debug(
+                                log.debug(
                                     `The GET request was redirected from fetch URL '${url}' to response URL '${response.url}'`,
                                 );
                             }
@@ -676,7 +679,7 @@ export const actions = {
             } (${FileHandler.AsMegabytes(file.size)}MB)`;
             message.pushProgress(loadingFileMessage);
             if (FileHandler.isSupportedPackageFile(file)) {
-                console.debug(
+                log.debug(
                     `Browser supports JSZip arraybuffer: ${JSZip.support.arraybuffer}; uint8array: ${JSZip.support.uint8array}; blob: ${JSZip.support.blob}; nodebuffer: ${JSZip.support.nodebuffer}`,
                 );
                 // 1) read the Blob
@@ -779,7 +782,7 @@ export const actions = {
                                                     //We do not handle packages within packages.
                                                     //HINT: Unfortunately JSZip seems to report the currently
                                                     //open package as file within itself. This mitigates that.
-                                                    console.debug(
+                                                    log.debug(
                                                         `ZIP: Not processing package file '${zipEntryName}' within package: '${file.name}'`,
                                                     );
                                                 } else if (
@@ -788,17 +791,17 @@ export const actions = {
                                                     )
                                                 ) {
                                                     //We do not handle paths on their own
-                                                    console.debug(
+                                                    log.debug(
                                                         `ZIP: Not processing path '${zipEntryName}' within package: '${file.name}'`,
                                                     );
                                                 } else {
-                                                    console.warn(
+                                                    log.warn(
                                                         `ZIP: Unknown content type for file '${zipEntryName}' within package: '${file.name}'`,
                                                     );
                                                 }
                                             })
                                             .catch((errorMessage: string) =>
-                                                console.error(errorMessage),
+                                                log.error(errorMessage),
                                             )
                                             .finally(() => {
                                                 // Remove message for this item
@@ -820,7 +823,7 @@ export const actions = {
                                 );
                         },
                         function (e) {
-                            console.error(
+                            log.error(
                                 `un-ZIP: Error reading ${file.name}: ${e.message}`,
                             );
                         },
@@ -858,18 +861,18 @@ export const actions = {
      * @param mediaUrl - The MediaUrl to use
      */
     discardMediaUrl(mediaUrl: MediaUrl): void {
-        console.debug('actions::DISCARD_MEDIA_URL:mediaUrl', mediaUrl);
+        log.debug('actions::DISCARD_MEDIA_URL:mediaUrl', mediaUrl);
 
         const matchingFile = state.mediaUrls.value.get(mediaUrl.resourceName);
         if (matchingFile) {
-            console.debug(
+            log.debug(
                 `actions::DISCARD_MEDIA_URL:removing matching item for key:${
                     mediaUrl.resourceName
                 }, normalized: ${mediaUrl.resourceName.normalize()}`,
             );
             ObjectUrlHandler.revokeObjectURL(matchingFile.url);
 
-            console.debug(
+            log.debug(
                 `actions::DISCARD_MEDIA_URL:localResourceName`,
                 mediaUrl.resourceName,
             );
@@ -894,7 +897,7 @@ export const actions = {
      * No media data is added, it must get handled elsewhere.
      */
     addTrack(track: ITrack): void {
-        console.debug('actions::ADD_TRACK:', track);
+        log.debug('actions::ADD_TRACK:', track);
         state.compilation.value.Tracks.push(track);
         state.selectedCueId.value = CompilationHandler.EmptyId;
         state.scheduledCueId.value = CompilationHandler.EmptyId;
@@ -910,7 +913,7 @@ export const actions = {
      * @return A promise to a locally usable name, derived from the URL, which can be used to match the track to the stored media URL
      */
     useMediaFromUrl(url: string): Promise<string> {
-        console.debug('actions::useMediaFromUrl::url', url);
+        log.debug('actions::useMediaFromUrl::url', url);
         const message = useMessageStore();
         return new Promise((resolve, reject) => {
             if (!FileHandler.isValidHttpUrl(url)) {
@@ -1020,7 +1023,7 @@ export const actions = {
 
         */
     reassignCueShortcuts(trackId: string): void {
-        console.debug('actions::REASSIGN_CUE_SHORTCUTS:trackId', trackId);
+        log.debug('actions::REASSIGN_CUE_SHORTCUTS:trackId', trackId);
 
         const track = getters.getTrackById(trackId);
 
@@ -1096,7 +1099,7 @@ export const actions = {
                 //Pack everything into the ZIP file
                 .then((mediaBlobs) => {
                     //Add the XML compilation
-                    console.debug('actions::pack-xml');
+                    log.debug('actions::pack-xml');
                     const xml = CompilationParser.convertToXml(
                         state.compilation.value,
                     );
@@ -1112,7 +1115,7 @@ export const actions = {
                         );
                     zip.file(`${compilationFileName}.xml`, xmlBlob);
                     mediaBlobs.forEach((mediaBlob) => {
-                        console.debug(
+                        log.debug(
                             `actions::pack-blob for ${mediaBlob.fileName}`,
                         );
                         zip.file(mediaBlob.fileName, mediaBlob.blob);

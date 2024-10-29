@@ -34,13 +34,18 @@
 </template>
 
 <script setup lang="ts">
-import { type PropType } from 'vue';
+import { inject, type PropType } from 'vue';
 import DropdownMenuButton from '@/components/dropdown-menu/DropdownMenuButton.vue';
 import { confirm, downloadCompilation } from '@/code/ui/dialogs';
 import { Hotkey } from '@simolation/vue-hotkey';
 import { mdiTrashCanOutline, mdiTrayArrowDown } from '@mdi/js';
 import { useAppStore } from '@/store/app';
 import type { ICompilation } from '@/store/ICompilation';
+import { logInjectionKey } from '@/AppInjectionKeys';
+import type { ILogObj, Logger } from 'tslog';
+
+const log = inject(logInjectionKey) as Logger<ILogObj>;
+
 /** A nav bar as header with a menu for a compilation
  */
 const props = defineProps({
@@ -68,7 +73,7 @@ function close(): void {
 function download() {
     downloadCompilation(props.compilation).then((ok) => {
         if (ok) {
-            console.debug(`CompilationContextMenu::download initiated`);
+            log.debug(`CompilationContextMenu::download initiated`);
         }
     });
 }

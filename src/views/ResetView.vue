@@ -20,7 +20,6 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 onBeforeMount(() => {
-    console.debug('Reset::onBeforeMount');
     useAppStore().$reset();
     useSettingsStore().$reset();
 

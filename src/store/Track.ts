@@ -123,7 +123,6 @@ export class Track implements ITrack {
             null /* duration not persisted */,
             obj.Volume ?? DefaultTrackVolume,
         );
-        console.debug('Track::fromJson:'), track;
         return track;
     }
 }

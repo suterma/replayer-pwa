@@ -49,13 +49,11 @@ const app = useAppStore();
 const { mediaUrls } = storeToRefs(app);
 
 function addTrack(mediaUrl: MediaUrl): void {
-    console.debug('MediaList::addTrack:source', mediaUrl);
     const source = mediaUrl.resourceName;
     app.addDefaultTrack(source);
 }
 
 function discard(mediaUrl: MediaUrl): void {
-    console.debug('MediaList::discard:source', mediaUrl);
     app.discardMediaUrl(mediaUrl);
 }
 </script>
