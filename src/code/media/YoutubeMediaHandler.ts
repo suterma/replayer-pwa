@@ -20,7 +20,6 @@ import type { IPlaybackRateController } from './IPlaybackRateController';
 import YouTubePlaybackRateController from './YouTubePlaybackRateController';
 import { DefaultPlaybackRate, DefaultTrackVolume } from '@/store/Track';
 import { nextTick } from 'vue';
-import chalk from 'chalk';
 import type { IMediaLooper } from './IMediaLooper';
 import { MediaLooper } from './MediaLooper';
 import YouTubePitchShiftController from './YouTubePitchShiftController';
@@ -28,8 +27,6 @@ import type { IPitchShiftController } from './IPitchShiftController';
 import Constants from './Constants';
 import { PlaybackState } from './PlaybackState';
 import { SubEventImmediate } from './SubEventImmediate';
-
-const mediaHandlerDebug = chalk.hex('#62c462'); // Replayer success color (bulma warning)
 
 /** @class Implements a playback handler for a YouTube IFrame player with VueYoutube.
  * @remarks This handles transport/loop and volume operations for the audio.
@@ -98,10 +95,8 @@ export default class YouTubeMediaHandler implements IMediaHandler {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     debugLog(message: string, ...optionalParams: any[]): void {
         console.debug(
-            mediaHandlerDebug(
-                `YouTubeMediaHandler(${this._videoUrl})::${message}:`,
-                optionalParams,
-            ),
+            `YouTubeMediaHandler(${this._videoUrl})::${message}:`,
+            optionalParams,
         );
     }
 

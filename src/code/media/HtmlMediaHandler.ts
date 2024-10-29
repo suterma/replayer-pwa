@@ -17,7 +17,6 @@ import type { IAudioFader } from './IAudioFader';
 import type { IMediaHandler } from './IMediaHandler';
 import type { IPlaybackRateController } from './IPlaybackRateController';
 import HtmlMediaPlaybackRateController from './HtmlMediaPlaybackRateController';
-import chalk from 'chalk';
 import { MediaLooper } from './MediaLooper';
 import type { IMediaLooper } from './IMediaLooper';
 import type { IPitchShiftController } from './IPitchShiftController';
@@ -26,8 +25,6 @@ import type { ShallowRef } from 'vue';
 import Constants from './Constants';
 import { PlaybackState } from './PlaybackState';
 import { SubEventImmediate } from './SubEventImmediate';
-
-const mediaHandlerDebug = chalk.hex('#62c462'); // Replayer success color (bulma warning)
 
 /** @class Implements a playback handler for a {HTMLMediaElement}.
  * @remarks This handles transport/loop and volume operations for audio sources (HTML media elements).
@@ -170,10 +167,8 @@ export default class HtmlMediaHandler implements IMediaHandler {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     debugLog(message: string, ...optionalParams: any[]): void {
         console.debug(
-            mediaHandlerDebug(
-                `HtmlMediaHandler(${this._media.src})::${message}:`,
-                optionalParams,
-            ),
+            `HtmlMediaHandler(${this._media.src})::${message}:`,
+            optionalParams,
         );
     }
 

@@ -18,16 +18,11 @@ import { Store } from '..';
 import { useSettingsStore } from '../settings';
 import { InputFeedback } from './InputFeedback';
 import { ProgressMessage } from '@/store/messages/ProgressMessage';
-import chalk from 'chalk';
 /** A store for messages, that are to be displayed.
  * @devdoc This follows the setup store syntax. See https://pinia.vuejs.org/core-concepts/#setup-stores
  * @devdoc The use of this separate store offloads the message handling from the other stores.
  */
 export const useMessageStore = defineStore(Store.Messages, () => {
-    /** A style for progress messages, simiar to UI progress display
-     */
-    const progressStyle = chalk.hex('#aaa').bgHex('#3a3f44');
-
     /** An application work message stack, used for progress indication
      * @remarks Progress messages are not persisted over app restarts
      * @remarks during ongoing work, the stack is non-empty
@@ -54,7 +49,7 @@ export const useMessageStore = defineStore(Store.Messages, () => {
     function pushProgress(message: string): Promise<void> {
         return new Promise((resolve) => {
             progressMessageStack.value.push(new ProgressMessage(message));
-            console.log(progressStyle('PROGRESS: ' + message));
+            console.log('PROGRESS: ' + message);
             nextTick(() => {
                 resolve();
             });
@@ -77,7 +72,7 @@ export const useMessageStore = defineStore(Store.Messages, () => {
             if (index >= 0) {
                 progressMessageStack.value[index] = progress;
             } else {
-                console.log(progressStyle('PROGRESS: ' + progress.Message));
+                console.log('PROGRESS: ' + progress.Message);
                 progressMessageStack.value.push(progress);
             }
 
@@ -117,10 +112,10 @@ export const useMessageStore = defineStore(Store.Messages, () => {
             progressMessageStack.value = progressMessageStack.value.filter(
                 (e) => !(e.Message == message),
             );
-            console.debug(progressStyle('POP_PROGRESS: ' + message));
+            console.debug('POP_PROGRESS: ' + message);
         } else {
             const poppedMessage = progressMessageStack.value.pop();
-            console.debug(progressStyle('POP_PROGRESS: ' + poppedMessage));
+            console.debug('POP_PROGRESS: ' + poppedMessage);
         }
     }
 
